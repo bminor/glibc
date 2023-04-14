@@ -29,7 +29,12 @@ static void
 __sigreturn2 (int *usp, struct sigcontext *scp)
 {
   mach_port_t reply_port;
-  struct hurd_sigstate *ss = _hurd_self_sigstate ();
+  struct hurd_sigstate *ss;
+
+  /* We know the sigstate must be initialized by the call below, but the
+     compiler does not.  Help it out a little bit by eliding the check that
+     _hurd_self_sigstate makes otherwise.  */
+  ss = THREAD_GETMEM (THREAD_SELF, _hurd_sigstate);
   _hurd_sigstate_unlock (ss);
 
   /* Destroy the MiG reply port used by the signal handler, and restore the
@@ -44,7 +49,7 @@ __sigreturn2 (int *usp, struct sigcontext *scp)
      do.  */
   reply_port = THREAD_GETMEM (THREAD_SELF, reply_port);
   THREAD_SETMEM (THREAD_SELF, reply_port, MACH_PORT_DEAD);
-  if (MACH_PORT_VALID (reply_port))
+  if (__glibc_likely (MACH_PORT_VALID (reply_port)))
     (void) __mach_port_mod_refs (__mach_task_self (), reply_port,
                                  MACH_PORT_RIGHT_RECEIVE, -1);
   THREAD_SETMEM (THREAD_SELF, reply_port, scp->sc_reply_port);
@@ -69,6 +74,7 @@ __sigreturn2 (int *usp, struct sigcontext *scp)
   /* Firewall.  */
   A (hlt);
 #undef A
+  __builtin_unreachable ();
 }
 
 int
@@ -77,7 +83,7 @@ __sigreturn (struct sigcontext *scp)
   struct hurd_sigstate *ss;
   struct hurd_userlink *link = (void *) &scp[1];
 
-  if (scp == NULL || (scp->sc_mask & _SIG_CANT_MASK))
+  if (__glibc_unlikely (scp == NULL || (scp->sc_mask & _SIG_CANT_MASK)))
     {
       errno = EINVAL;
       return -1;
