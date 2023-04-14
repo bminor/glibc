@@ -61,6 +61,8 @@ __malloc_thp_mode (void)
 
   char str[sizeof(mode_always)];
   ssize_t s = __read_nocancel (fd, str, sizeof (str));
+  if (s >= sizeof str || s < 0)
+    return malloc_thp_mode_not_supported;
   str[s] = '\0';
   __close_nocancel (fd);
 
