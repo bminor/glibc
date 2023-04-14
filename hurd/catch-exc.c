@@ -35,6 +35,7 @@ _S_catch_exception_raise (mach_port_t port,
 #endif
 			  )
 {
+  error_t err;
   struct hurd_sigstate *ss;
   int signo;
   struct hurd_signal_detail d;
@@ -82,6 +83,11 @@ _S_catch_exception_raise (mach_port_t port,
   _hurd_internal_post_signal (ss, signo, &d,
 			      MACH_PORT_NULL, MACH_MSG_TYPE_PORT_SEND,
 			      0);
+
+  err = __mach_port_deallocate (__mach_task_self (), task);
+  assert_perror (err);
+  err = __mach_port_deallocate (__mach_task_self (), thread);
+  assert_perror (err);
 
   return KERN_SUCCESS;
 }
