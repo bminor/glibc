@@ -21,6 +21,7 @@
 #include <pthreadP.h>
 
 size_t __nptl_stack_cache_maxsize = 40 * 1024 * 1024;
+int32_t __nptl_stack_hugetlb = 1;
 
 void
 __nptl_stack_list_del (list_t *elem)

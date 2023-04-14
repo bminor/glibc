@@ -459,6 +459,21 @@ registration on behalf of the application.
 Restartable sequences are a Linux-specific extension.
 @end deftp
 
+@deftp Tunable glibc.pthread.stack_hugetlb
+This tunable controls whether to use Huge Pages in the stacks created by
+@code{pthread_create}.  This tunable only affects the stacks created by
+@theglibc{}, it has no effect on stack assigned with
+@code{pthread_attr_setstack}.
+
+The default is @samp{1} where the system default value is used.  Setting
+its value to @code{0} enables the use of @code{madvise} with
+@code{MADV_NOHUGEPAGE} after stack creation with @code{mmap}.
+
+This is a memory utilization optimization, since internal glibc setup of either
+the thread descriptor and the guard page might force the kernel to move the
+thread stack originally backup by Huge Pages to default pages.
+@end deftp
+
 @node Hardware Capability Tunables
 @section Hardware Capability Tunables
 @cindex hardware capability tunables

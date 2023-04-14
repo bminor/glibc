@@ -21,6 +21,9 @@ Major new features:
 
 * PRIb* and PRIB* macros from C2X have been added to <inttypes.h>.
 
+* A new tunable, glibc.pthread.stack_hugetlb, can be used to disable
+  Transparent Huge Pages (THP) in stack allocation at pthread_create.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * In the Linux kernel for the hppa/parisc architecture some of the

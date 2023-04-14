@@ -369,6 +369,12 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	  if (__glibc_unlikely (mem == MAP_FAILED))
 	    return errno;
 
+	  /* Do madvise in case the tunable glibc.pthread.stack_hugetlb is
+	     set to 0, disabling hugetlb.  */
+	  if (__glibc_unlikely (__nptl_stack_hugetlb == 0)
+	      && __madvise (mem, size, MADV_NOHUGEPAGE) != 0)
+	    return errno;
+
 	  /* SIZE is guaranteed to be greater than zero.
 	     So we can never get a null pointer back from mmap.  */
 	  assert (mem != NULL);
