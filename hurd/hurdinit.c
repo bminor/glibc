@@ -54,6 +54,10 @@ _hurd_ports_use (int which, error_t (*operate) (mach_port_t))
 
 DEFINE_HOOK (_hurd_subinit, (void));
 
+/* Hook for things which should be initialized as soon as the proc
+   server is available.  */
+DEFINE_HOOK (_hurd_proc_subinit, (void));
+
 __typeof (_hurd_proc_init) _hurd_new_proc_init;	/* below */
 
 /* Initialize the library data structures from the
@@ -106,6 +110,11 @@ _hurd_init (int flags, char **argv,
     }
 
   /* Call other things which want to do some initialization.  These are not
+     on the _hurd_subinit hook because things there assume that things done
+     here, like _hurd_pid, are already initialized.  */
+  RUN_RELHOOK (_hurd_proc_subinit, ());
+
+  /* Call other things which want to do some initialization.  These are not
      on the __libc_subinit hook because things there like to be able to
      assume the availability of the POSIX.1 services we provide.  */
   RUN_RELHOOK (_hurd_subinit, ());
@@ -148,10 +157,6 @@ libc_hidden_def (_hurd_libc_proc_init)
    sure the arguments are never visible with `ps'.  */
 int _hide_arguments, _hide_environment;
 
-/* Hook for things which should be initialized as soon as the proc
-   server is available.  */
-DEFINE_HOOK (_hurd_proc_subinit, (void));
-
 /* Do startup handshaking with the proc server just installed in _hurd_ports.
    Call _hurdsig_init to set up signal processing.  */
 
@@ -186,11 +191,6 @@ _hurd_new_proc_init (char **argv,
 
   /* Initialize proc server-assisted fault recovery for the signal thread.  */
   _hurdsig_fault_init ();
-
-  /* Call other things which want to do some initialization.  These are not
-     on the _hurd_subinit hook because things there assume that things done
-     here, like _hurd_pid, are already initialized.  */
-  RUN_RELHOOK (_hurd_proc_subinit, ());
 
   /* XXX This code should probably be removed entirely at some point.  This
      conditional should make it reasonably usable with old gdb's for a
