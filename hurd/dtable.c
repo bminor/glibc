@@ -60,18 +60,50 @@ init_dtable (void)
 	_hurd_dtable[i] = NULL;
       else
 	{
+	  int copy;
 	  /* Allocate a new file descriptor structure.  */
 	  struct hurd_fd *new = malloc (sizeof (struct hurd_fd));
 	  if (new == NULL)
 	    __libc_fatal ("hurd: Can't allocate initial file descriptors\n");
 
-	  /* Initialize the port cells.  */
-	  _hurd_port_init (&new->port, MACH_PORT_NULL);
-	  _hurd_port_init (&new->ctty, MACH_PORT_NULL);
+	  /* See if this file descriptor is the same as a previous one we have
+	     already installed.  In this case, we can just copy over the same
+	     ctty port without making any more RPCs.  We only check the the
+	     immediately preceding fd and fd 0 -- this should be enough to
+	     handle the common cases while not requiring quadratic
+	     complexity.  */
+	  if (i > 0 && _hurd_init_dtable[i] == _hurd_init_dtable[i - 1])
+	    copy = i - 1;
+	  else if (i > 0 && _hurd_init_dtable[i] == _hurd_init_dtable[0])
+	    copy = 0;
+	  else
+	    copy = -1;
 
-	  /* Install the port in the descriptor.
-	     This sets up all the ctty magic.  */
-	  _hurd_port2fd (new, _hurd_init_dtable[i], 0);
+	  if (copy < 0)
+	    {
+	      /* Initialize the port cells.  */
+	      _hurd_port_init (&new->port, MACH_PORT_NULL);
+	      _hurd_port_init (&new->ctty, MACH_PORT_NULL);
+
+	      /* Install the port in the descriptor.
+	         This sets up all the ctty magic.  */
+	      _hurd_port2fd (new, _hurd_init_dtable[i], 0);
+	    }
+	  else
+	    {
+	      /* Copy over ctty from the already set up file descriptor that
+	         contains the same port.  We can access the contents of the
+	         cell without any locking since no one could have seen it
+	         yet.  */
+	      mach_port_t ctty = _hurd_dtable[copy]->ctty.port;
+
+	      if (MACH_PORT_VALID (ctty))
+	        __mach_port_mod_refs (__mach_task_self (), ctty,
+	                              MACH_PORT_RIGHT_SEND, +1);
+
+	      _hurd_port_init (&new->port, _hurd_init_dtable[i]);
+	      _hurd_port_init (&new->ctty, ctty);
+	    }
 
 	  _hurd_dtable[i] = new;
 	}
