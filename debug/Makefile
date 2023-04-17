@@ -28,30 +28,93 @@ headers	:= execinfo.h
 # Note that ptsname_r_chk and getlogin_r are not here, but in
 # login/Makefile instead.  If that subdir is omitted from the
 # build, its _FORTIFY_SOURCE support will be too.
-routines  = backtrace backtracesyms backtracesymsfd noophooks \
-	    memcpy_chk memmove_chk mempcpy_chk memset_chk stpcpy_chk \
-	    strcat_chk strcpy_chk strncat_chk strncpy_chk stpncpy_chk \
-	    sprintf_chk vsprintf_chk snprintf_chk vsnprintf_chk \
-	    printf_chk fprintf_chk vprintf_chk vfprintf_chk \
-	    gets_chk chk_fail readonly-area fgets_chk fgets_u_chk \
-	    read_chk pread_chk pread64_chk recv_chk recvfrom_chk \
-	    readlink_chk readlinkat_chk getwd_chk getcwd_chk \
-	    realpath_chk fread_chk fread_u_chk \
-	    wctomb_chk wcscpy_chk wmemcpy_chk wmemmove_chk wmempcpy_chk \
-	    wcpcpy_chk wcsncpy_chk wcscat_chk wcsncat_chk wmemset_chk \
-	    wcpncpy_chk \
-	    swprintf_chk vswprintf_chk wprintf_chk fwprintf_chk \
-	    vwprintf_chk vfwprintf_chk fgetws_chk fgetws_u_chk \
-	    confstr_chk getgroups_chk ttyname_r_chk \
-	    gethostname_chk getdomainname_chk wcrtomb_chk mbsnrtowcs_chk \
-	    wcsnrtombs_chk mbsrtowcs_chk wcsrtombs_chk mbstowcs_chk \
-	    wcstombs_chk asprintf_chk vasprintf_chk dprintf_chk \
-	    vdprintf_chk obprintf_chk vobprintf_chk \
-	    longjmp_chk ____longjmp_chk \
-	    fdelt_chk poll_chk ppoll_chk \
-	    explicit_bzero_chk \
-	    stack_chk_fail fortify_fail \
-	    $(static-only-routines)
+routines = \
+  ____longjmp_chk \
+  asprintf_chk \
+  backtrace \
+  backtracesyms \
+  backtracesymsfd \
+  chk_fail \
+  confstr_chk \
+  dprintf_chk \
+  explicit_bzero_chk \
+  fdelt_chk \
+  fgets_chk \
+  fgets_u_chk \
+  fgetws_chk \
+  fgetws_u_chk \
+  fortify_fail \
+  fprintf_chk \
+  fread_chk \
+  fread_u_chk \
+  fwprintf_chk \
+  getcwd_chk \
+  getdomainname_chk \
+  getgroups_chk \
+  gethostname_chk \
+  gets_chk \
+  getwd_chk \
+  longjmp_chk \
+  mbsnrtowcs_chk \
+  mbsrtowcs_chk \
+  mbstowcs_chk \
+  memcpy_chk \
+  memmove_chk \
+  mempcpy_chk \
+  memset_chk \
+  noophooks \
+  obprintf_chk \
+  poll_chk \
+  ppoll_chk \
+  pread64_chk \
+  pread_chk \
+  printf_chk \
+  read_chk \
+  readlink_chk \
+  readlinkat_chk \
+  readonly-area \
+  realpath_chk \
+  recv_chk \
+  recvfrom_chk \
+  snprintf_chk \
+  sprintf_chk \
+  stack_chk_fail \
+  stpcpy_chk \
+  stpncpy_chk \
+  strcat_chk \
+  strcpy_chk \
+  strncat_chk \
+  strncpy_chk \
+  swprintf_chk \
+  ttyname_r_chk \
+  vasprintf_chk \
+  vdprintf_chk \
+  vfprintf_chk \
+  vfwprintf_chk \
+  vobprintf_chk \
+  vprintf_chk \
+  vsnprintf_chk \
+  vsprintf_chk \
+  vswprintf_chk \
+  vwprintf_chk \
+  wcpcpy_chk \
+  wcpncpy_chk \
+  wcrtomb_chk \
+  wcscat_chk \
+  wcscpy_chk \
+  wcsncat_chk \
+  wcsncpy_chk \
+  wcsnrtombs_chk \
+  wcsrtombs_chk \
+  wcstombs_chk \
+  wctomb_chk \
+  wmemcpy_chk \
+  wmemmove_chk \
+  wmempcpy_chk \
+  wmemset_chk \
+  wprintf_chk \
+  $(static-only-routines) \
+  # routines
 static-only-routines := stack_chk_fail_local
 
 # Don't add stack_chk_fail_local.o to libc.a since __stack_chk_fail_local
