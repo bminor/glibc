@@ -26,46 +26,144 @@ headers	:= wchar.h bits/wchar.h bits/wchar2.h bits/wchar2-decl.h \
 	   bits/wchar-ldbl.h uchar.h bits/types/__mbstate_t.h \
 	   bits/types/mbstate_t.h bits/types/wint_t.h
 
-routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
-	    wcsncmp wcsncpy wcspbrk wcsrchr wcsspn wcstok wcsstr wmemchr \
-	    wmemcmp wmemcpy wmemmove wmemset wcpcpy wcpncpy wmempcpy \
-	    btowc wctob mbsinit \
-	    mbrlen mbrtowc wcrtomb mbsrtowcs wcsrtombs \
-	    mbsnrtowcs wcsnrtombs wcsnlen wcschrnul \
-	    wcstol wcstoul wcstoll wcstoull wcstod wcstold wcstof \
-	    wcstol_l wcstoul_l wcstoll_l wcstoull_l \
-	    wcstod_l wcstold_l wcstof_l \
-	    wcstod_nan wcstold_nan wcstof_nan \
-	    wcscoll wcsxfrm \
-	    wcwidth wcswidth \
-	    wcscoll_l wcsxfrm_l \
-	    wcscasecmp wcsncase wcscasecmp_l wcsncase_l \
-	    wcsmbsload mbsrtowcs_l \
-	    isoc99_wscanf isoc99_vwscanf isoc99_fwscanf isoc99_vfwscanf \
-	    isoc99_swscanf isoc99_vswscanf \
-	    isoc23_wscanf isoc23_vwscanf isoc23_fwscanf isoc23_vfwscanf \
-	    isoc23_swscanf isoc23_vswscanf \
-	    mbrtoc8 c8rtomb mbrtoc16 c16rtomb mbrtoc32 c32rtomb
+routines := \
+  btowc \
+  c16rtomb \
+  c32rtomb \
+  c8rtomb \
+  isoc23_fwscanf \
+  isoc23_swscanf \
+  isoc23_vfwscanf \
+  isoc23_vswscanf \
+  isoc23_vwscanf \
+  isoc23_wscanf \
+  isoc99_fwscanf \
+  isoc99_swscanf \
+  isoc99_vfwscanf \
+  isoc99_vswscanf \
+  isoc99_vwscanf \
+  isoc99_wscanf \
+  mbrlen \
+  mbrtoc16 \
+  mbrtoc32 \
+  mbrtoc8 \
+  mbrtowc \
+  mbsinit \
+  mbsnrtowcs \
+  mbsrtowcs \
+  mbsrtowcs_l \
+  wcpcpy \
+  wcpncpy \
+  wcrtomb \
+  wcscasecmp \
+  wcscasecmp_l \
+  wcscat \
+  wcschr \
+  wcschrnul \
+  wcscmp \
+  wcscoll \
+  wcscoll_l \
+  wcscpy \
+  wcscspn \
+  wcsdup \
+  wcslen \
+  wcsmbsload \
+  wcsncase \
+  wcsncase_l \
+  wcsncat \
+  wcsncmp \
+  wcsncpy \
+  wcsnlen \
+  wcsnrtombs \
+  wcspbrk \
+  wcsrchr \
+  wcsrtombs \
+  wcsspn \
+  wcsstr \
+  wcstod \
+  wcstod_l \
+  wcstod_nan \
+  wcstof \
+  wcstof_l \
+  wcstof_nan \
+  wcstok \
+  wcstol \
+  wcstol_l \
+  wcstold \
+  wcstold_l \
+  wcstold_nan \
+  wcstoll \
+  wcstoll_l \
+  wcstoul \
+  wcstoul_l \
+  wcstoull \
+  wcstoull_l \
+  wcswidth \
+  wcsxfrm \
+  wcsxfrm_l \
+  wctob \
+  wcwidth \
+  wmemchr \
+  wmemcmp \
+  wmemcpy \
+  wmemmove \
+  wmempcpy \
+  wmemset \
+  # routines
 
-strop-tests :=  wcscmp wcsncmp wmemcmp wcslen wcschr wcsrchr wcscpy wcsnlen \
-		wcpcpy wcsncpy wcpncpy wcscat wcsncat wcschrnul wcsspn wcspbrk \
-		wcscspn wmemchr wmemset
-tests := tst-wcstof wcsmbs-tst1 tst-wcsnlen tst-btowc tst-mbrtowc \
-	 tst-wcrtomb tst-wcpncpy tst-mbsrtowcs tst-wchar-h tst-mbrtowc2 \
-	 tst-c16c32-1 wcsatcliff tst-wcstol-locale tst-wcstod-nan-locale \
-	 tst-wcstod-round test-char-types tst-fgetwc-after-eof \
-	 tst-wcstod-nan-sign tst-c16-surrogate tst-c32-state \
-	 test-mbrtoc8 test-c8rtomb \
-	 $(addprefix test-,$(strop-tests)) tst-mbstowcs \
-	 tst-wprintf-binary \
-	 tst-wcstol-binary-c11 \
-	 tst-wcstol-binary-c2x \
-	 tst-wcstol-binary-gnu11 \
-	 tst-wcstol-binary-gnu2x \
-	 tst-wscanf-binary-c11 \
-	 tst-wscanf-binary-c2x \
-	 tst-wscanf-binary-gnu11 \
-	 tst-wscanf-binary-gnu89
+tests := \
+  test-c8rtomb \
+  test-char-types \
+  test-mbrtoc8 \
+  test-wcpcpy \
+  test-wcpncpy \
+  test-wcscat \
+  test-wcschr \
+  test-wcschrnul \
+  test-wcscmp \
+  test-wcscpy \
+  test-wcscspn \
+  test-wcslen \
+  test-wcsncat \
+  test-wcsncmp \
+  test-wcsncpy \
+  test-wcsnlen \
+  test-wcspbrk \
+  test-wcsrchr \
+  test-wcsspn \
+  test-wmemchr \
+  test-wmemcmp \
+  test-wmemset \
+  tst-btowc \
+  tst-c16-surrogate \
+  tst-c16c32-1 \
+  tst-c32-state \
+  tst-fgetwc-after-eof \
+  tst-mbrtowc \
+  tst-mbrtowc2 \
+  tst-mbsrtowcs \
+  tst-mbstowcs \
+  tst-wchar-h \
+  tst-wcpncpy \
+  tst-wcrtomb \
+  tst-wcsnlen \
+  tst-wcstod-nan-locale \
+  tst-wcstod-nan-sign \
+  tst-wcstod-round \
+  tst-wcstof \
+  tst-wcstol-binary-c11 \
+  tst-wcstol-binary-c2x \
+  tst-wcstol-binary-gnu11 \
+  tst-wcstol-binary-gnu2x \
+  tst-wcstol-locale \
+  tst-wprintf-binary \
+  tst-wscanf-binary-c11 \
+  tst-wscanf-binary-c2x \
+  tst-wscanf-binary-gnu11 \
+  tst-wscanf-binary-gnu89 \
+  wcsatcliff \
+  wcsmbs-tst1 \
+  # tests
 
 include ../Rules
 
