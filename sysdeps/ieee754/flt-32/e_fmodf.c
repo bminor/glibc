@@ -40,10 +40,10 @@
 
    r == x % y == (x % (N * y)) % y
 
-   And with mx/my being mantissa of double floating point number (which uses
+   And with mx/my being mantissa of a single floating point number (which uses
    less bits than the storage type), on each step the argument reduction can
    be improved by 8 (which is the size of uint32_t minus MANTISSA_WIDTH plus
-   the signal bit):
+   the implicit one bit):
 
    mx * 2^ex == 2^8 * mx * 2^(ex - 8)
 
@@ -54,7 +54,12 @@
        mx << 8;
        ex -= 8;
        mx %= my;
-     }  */
+     }
+
+   Special cases:
+     - If x or y is a NaN, a NaN is returned.
+     - If x is an infinity, or y is zero, a NaN is returned and EDOM is set.
+     - If x is +0/-0, and y is not zero, +0/-0 is returned.  */
 
 float
 __fmodf (float x, float y)
@@ -67,61 +72,69 @@ __fmodf (float x, float y)
   hx ^= sx;
   hy &= ~SIGN_MASK;
 
-  /* Special cases:
-     - If x or y is a Nan, NaN is returned.
-     - If x is an inifinity, a NaN is returned.
-     - If y is zero, Nan is returned.
-     - If x is +0/-0, and y is not zero, +0/-0 is returned.  */
-  if (__glibc_unlikely (hy == 0
-			|| hx >= EXPONENT_MASK || hy > EXPONENT_MASK))
+  if (__glibc_likely (hx < hy))
     {
-      if (is_nan (hx) || is_nan (hy))
-	return (x * y) / (x * y);
-      return __math_edomf ((x * y) / (x * y));
-    }
-
-  if (__glibc_unlikely (hx <= hy))
-    {
-      if (hx < hy)
-	return x;
-      return asfloat (sx);
+      /* If y is a NaN, return a NaN.  */
+      if (__glibc_unlikely (hy > EXPONENT_MASK))
+	return x * y;
+      return x;
     }
 
   int ex = hx >> MANTISSA_WIDTH;
   int ey = hy >> MANTISSA_WIDTH;
+  int exp_diff = ex - ey;
 
-  /* Common case where exponents are close: ey >= -103 and |x/y| < 2^8,  */
-  if (__glibc_likely (ey > MANTISSA_WIDTH && ex - ey <= EXPONENT_WIDTH))
+  /* Common case where exponents are close: |x/y| < 2^9, x not inf/NaN
+     and |x%y| not denormal.  */
+  if (__glibc_likely (ey < (EXPONENT_MASK >> MANTISSA_WIDTH) - EXPONENT_WIDTH
+		     && ey > MANTISSA_WIDTH
+		     && exp_diff <= EXPONENT_WIDTH))
     {
-      uint64_t mx = (hx & MANTISSA_MASK) | (MANTISSA_MASK + 1);
-      uint64_t my = (hy & MANTISSA_MASK) | (MANTISSA_MASK + 1);
+      uint32_t mx = (hx << EXPONENT_WIDTH) | SIGN_MASK;
+      uint32_t my = (hy << EXPONENT_WIDTH) | SIGN_MASK;
 
-      uint32_t d = (ex == ey) ? (mx - my) : (mx << (ex - ey)) % my;
-      return make_float (d, ey - 1, sx);
+      mx %= (my >> exp_diff);
+
+      if (__glibc_unlikely (mx == 0))
+	return asfloat (sx);
+      int shift = __builtin_clz (mx);
+      ex -= shift + 1;
+      mx <<= shift;
+      mx = sx | (mx >> EXPONENT_WIDTH);
+      return asfloat (mx + ((uint32_t)ex << MANTISSA_WIDTH));
     }
 
-  /* Special case, both x and y are subnormal.  */
-  if (__glibc_unlikely (ex == 0 && ey == 0))
+  if (__glibc_unlikely (hy == 0 || hx >= EXPONENT_MASK))
+    {
+      /* If x is a NaN, return a NaN.  */
+      if (hx > EXPONENT_MASK)
+	return x * y;
+
+      /* If x is an infinity or y is zero, return a NaN and set EDOM.  */
+      return __math_edomf ((x * y) / (x * y));
+    }
+
+  /* Special case, both x and y are denormal.  */
+  if (__glibc_unlikely (ex == 0))
     return asfloat (sx | hx % hy);
 
-  /* Convert |x| and |y| to 'mx + 2^ex' and 'my + 2^ey'.  Assume that hx is
-     not subnormal by conditions above.  */
+  /* Extract normalized mantissas - hx is not denormal and hy != 0.  */
   uint32_t mx = get_mantissa (hx) | (MANTISSA_MASK + 1);
-  ex--;
-
   uint32_t my = get_mantissa (hy) | (MANTISSA_MASK + 1);
   int lead_zeros_my = EXPONENT_WIDTH;
-  if (__glibc_likely (ey > 0))
-    ey--;
-  else
+
+  ey--;
+  /* Special case for denormal y.  */
+  if (__glibc_unlikely (ey < 0))
     {
       my = hy;
+      ey = 0;
+      exp_diff--;
       lead_zeros_my = __builtin_clz (my);
     }
 
   int tail_zeros_my = __builtin_ctz (my);
   int sides_zeroes = lead_zeros_my + tail_zeros_my;
-  int exp_diff = ex - ey;
 
   int right_shift = exp_diff < tail_zeros_my ? exp_diff : tail_zeros_my;
   my >>= right_shift;
@@ -140,8 +153,7 @@ __fmodf (float x, float y)
   if (exp_diff == 0)
     return make_float (mx, ey, sx);
 
-  /* Assume modulo/divide operation is slow, so use multiplication with invert
-     values.  */
+  /* Multiplication with the inverse is faster than repeated modulo.  */
   uint32_t inv_hy = UINT32_MAX / my;
   while (exp_diff > sides_zeroes) {
     exp_diff -= sides_zeroes;
