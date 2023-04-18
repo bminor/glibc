@@ -562,7 +562,7 @@ ruserok2_sa (struct sockaddr *ra, size_t ralen, int superuser,
 	  are protected read/write owner only.  */
        uid = __geteuid ();
        if (seteuid (pwd->pw_uid) < 0)
-	       return -1;
+	 return -1;
 
        hostf = iruserfopen (pbuf, pwd->pw_uid);
 
@@ -573,7 +573,7 @@ ruserok2_sa (struct sockaddr *ra, size_t ralen, int superuser,
 	 }
 
        if (seteuid (uid) < 0)
-	       return -1;
+	 return -1;
        return isbad;
     }
   return -1;
