@@ -561,7 +561,9 @@ ruserok2_sa (struct sockaddr *ra, size_t ralen, int superuser,
 	  reading an NFS mounted file system, can't read files that
 	  are protected read/write owner only.  */
        uid = __geteuid ();
-       seteuid (pwd->pw_uid);
+       if (seteuid (pwd->pw_uid) < 0)
+	       return -1;
+
        hostf = iruserfopen (pbuf, pwd->pw_uid);
 
        if (hostf != NULL)
@@ -570,7 +572,8 @@ ruserok2_sa (struct sockaddr *ra, size_t ralen, int superuser,
 	   fclose (hostf);
 	 }
 
-       seteuid (uid);
+       if (seteuid (uid) < 0)
+	       return -1;
        return isbad;
     }
   return -1;
