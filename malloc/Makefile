@@ -352,6 +352,7 @@ $(objpfx)tst-malloc-tcache-leak-malloc-hugetlb1: $(shared-thread-library)
 $(objpfx)tst-malloc-tcache-leak-malloc-hugetlb2: $(shared-thread-library)
 $(objpfx)tst-malloc_info-malloc-hugetlb1: $(shared-thread-library)
 $(objpfx)tst-malloc_info-malloc-hugetlb2: $(shared-thread-library)
+$(objpfx)tst-memalign-3: $(shared-thread-library)
 
 tst-compathooks-on-ENV = LD_PRELOAD=$(objpfx)libc_malloc_debug.so
 tst-compathooks-on-mcheck-ENV = LD_PRELOAD=$(objpfx)libc_malloc_debug.so
