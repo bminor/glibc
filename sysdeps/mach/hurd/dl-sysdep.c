@@ -289,8 +289,8 @@ open_file (const char *file_name, int flags,
       return MACH_PORT_NULL;
     }
 
-  assert (!(flags & ~(O_READ | O_EXEC | O_CLOEXEC)));
-  flags &= ~O_CLOEXEC;
+  assert (!(flags & ~(O_READ | O_EXEC | O_CLOEXEC | O_IGNORE_CTTY)));
+  flags &= ~(O_CLOEXEC | O_IGNORE_CTTY);
 
   startdir = _dl_hurd_data->portarray[file_name[0] == '/'
 				      ? INIT_PORT_CRDIR : INIT_PORT_CWDIR];
