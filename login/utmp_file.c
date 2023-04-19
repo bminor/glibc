@@ -463,7 +463,7 @@ __libc_updwtmp (const char *file, const struct utmp *utmp)
   int fd;
 
   /* Open WTMP file.  */
-  fd = __open_nocancel (file, O_WRONLY | O_LARGEFILE);
+  fd = __open_nocancel (file, O_WRONLY | O_LARGEFILE | O_CLOEXEC);
   if (fd < 0)
     return -1;
 

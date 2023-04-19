@@ -36,6 +36,7 @@ sem_t *
 __sem_open (const char *name, int oflag, ...)
 {
   int fd;
+  int open_flags;
   sem_t *result;
 
   /* Check that shared futexes are supported.  */
@@ -64,9 +65,10 @@ __sem_open (const char *name, int oflag, ...)
   /* If the semaphore object has to exist simply open it.  */
   if ((oflag & O_CREAT) == 0 || (oflag & O_EXCL) == 0)
     {
+      open_flags = O_RDWR | O_NOFOLLOW | O_CLOEXEC;
+      open_flags |= (oflag & ~(O_CREAT|O_ACCMODE));
     try_again:
-      fd = __open (dirname.name,
-		   (oflag & ~(O_CREAT|O_ACCMODE)) | O_NOFOLLOW | O_RDWR);
+      fd = __open (dirname.name, open_flags);
 
       if (fd == -1)
 	{
@@ -133,7 +135,8 @@ __sem_open (const char *name, int oflag, ...)
 	    }
 
 	  /* Open the file.  Make sure we do not overwrite anything.  */
-	  fd = __open (tmpfname, O_RDWR | O_CREAT | O_EXCL, mode);
+	  open_flags = O_RDWR | O_CREAT | O_EXCL | O_CLOEXEC;
+	  fd = __open (tmpfname, open_flags, mode);
 	  if (fd == -1)
 	    {
 	      if (errno == EEXIST)
