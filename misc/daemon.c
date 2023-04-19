@@ -43,50 +43,60 @@ static char sccsid[] = "@(#)daemon.c	8.1 (Berkeley) 6/4/93";
 int
 daemon (int nochdir, int noclose)
 {
-	int fd;
+  int fd;
 
-	switch (__fork()) {
-	case -1:
-		return (-1);
-	case 0:
-		break;
-	default:
-		_exit(0);
-	}
+  switch (__fork ())
+    {
+    case -1:
+      return -1;
 
-	if (__setsid() == -1)
-		return (-1);
+    case 0:
+      break;
 
-	if (!nochdir)
-		(void)__chdir("/");
+    default:
+      _exit (0);
+    }
 
-	if (!noclose) {
-		struct __stat64_t64 st;
+  if (__setsid () == -1)
+    return -1;
 
-		if ((fd = __open_nocancel(_PATH_DEVNULL, O_RDWR, 0)) != -1
-		    && __glibc_likely (__fstat64_time64 (fd, &st) == 0)) {
-			if (__builtin_expect (S_ISCHR (st.st_mode), 1) != 0
+  if (!nochdir)
+    (void) __chdir ("/");
+
+  if (!noclose)
+    {
+      struct __stat64_t64 st;
+
+      fd = __open_nocancel (_PATH_DEVNULL, O_RDWR, 0);
+      if (fd != -1 && __glibc_likely (__fstat64_time64 (fd, &st) == 0))
+        {
+          if (__builtin_expect (S_ISCHR (st.st_mode), 1) != 0
 #if defined DEV_NULL_MAJOR && defined DEV_NULL_MINOR
-			    && (st.st_rdev
-				== makedev (DEV_NULL_MAJOR, DEV_NULL_MINOR))
+              && (st.st_rdev == makedev (DEV_NULL_MAJOR, DEV_NULL_MINOR))
 #endif
-			    ) {
-				(void)__dup2(fd, STDIN_FILENO);
-				(void)__dup2(fd, STDOUT_FILENO);
-				(void)__dup2(fd, STDERR_FILENO);
-				if (fd > 2)
-					(void)__close (fd);
-			} else {
-				/* We must set an errno value since no
-				   function call actually failed.  */
-				__close_nocancel_nostatus (fd);
-				__set_errno (ENODEV);
-				return -1;
-			}
-		} else {
-			__close_nocancel_nostatus (fd);
-			return -1;
-		}
-	}
-	return (0);
+             )
+            {
+              (void) __dup2 (fd, STDIN_FILENO);
+              (void) __dup2 (fd, STDOUT_FILENO);
+              (void) __dup2 (fd, STDERR_FILENO);
+              if (fd > 2)
+                (void) __close (fd);
+            }
+          else
+            {
+              /* We must set an errno value since no function call
+                 actually failed.  */
+              __close_nocancel_nostatus (fd);
+              __set_errno (ENODEV);
+              return -1;
+            }
+        }
+      else
+        {
+          __close_nocancel_nostatus (fd);
+          return -1;
+        }
+    }
+
+  return 0;
 }
