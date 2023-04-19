@@ -7,7 +7,8 @@ sysdeps-linux-python-cc = \
 # Additional dependencies for Python scripts.
 sysdeps-linux-python-deps = \
   $(..)sysdeps/unix/sysv/linux/glibcsyscalls.py \
-  $(..)scripts/glibcextract.py
+  $(..)scripts/glibcextract.py \
+  # sysdeps-linux-python-deps
 
 # Invocation of the Python interpreter with the Python search path.
 sysdeps-linux-python = \
@@ -41,7 +42,9 @@ update-syscall-lists: arch-syscall.h
 endif
 
 ifeq ($(subdir),csu)
-sysdep_routines += errno-loc
+sysdep_routines += \
+  errno-loc \
+  # sysdep_routines
 endif
 
 ifeq ($(subdir),assert)
@@ -233,11 +236,15 @@ xtests += \
   # xtests
 
 # For +depfiles in Makerules.
-extra-test-objs += tst-sysconf-iov_max-uapi.o
+extra-test-objs += \
+  tst-sysconf-iov_max-uapi.o \
+  # extra-test-objs
 
 # Test for the symbol version of fcntl that was replaced in glibc 2.28.
 ifeq ($(have-GLIBC_2.27)$(build-shared),yesyes)
-tests += tst-ofdlocks-compat
+tests += \
+  tst-ofdlocks-compat \
+  # tests
 endif
 
 tests-internal += \
@@ -268,8 +275,12 @@ tests-clone-internal = \
   tst-clone2-internal \
   tst-clone3-internal \
   tst-getpid1-internal
-tests-internal += $(tests-clone-internal)
-tests-static += $(tests-clone-internal)
+tests-internal += \
+  $(tests-clone-internal) \
+  # tests-internal
+tests-static += \
+  $(tests-clone-internal) \
+  # tests-static
 
 CFLAGS-tst-sigcontext-get_pc.c = -fasynchronous-unwind-tables
 
@@ -308,7 +319,9 @@ $(objpfx)tst-syscall-list-sys.list: $(objpfx)tst-syscall-list-macros.list
 	LC_ALL=C $(AWK) '/^#define SYS_/ { print substr($$2, 5) }' $< > $@-tmp
 	$(move-if-change) $@-tmp $@
 
-tests-special += $(objpfx)tst-syscall-list.out
+tests-special += \
+  $(objpfx)tst-syscall-list.out
+  # tests-special
 $(objpfx)tst-syscall-list.out: \
   ../sysdeps/unix/sysv/linux/tst-syscall-list.sh \
   $(objpfx)tst-syscall-list-macros.list \
@@ -316,7 +329,9 @@ $(objpfx)tst-syscall-list.out: \
   $(objpfx)tst-syscall-list-sys.list
 	$(BASH) $^ $(AWK) > $@; $(evaluate-test)
 
-tests-special += $(objpfx)tst-glibcsyscalls.out
+tests-special += \
+  $(objpfx)tst-glibcsyscalls.out
+  # tests-special
 # arch-syscall.h is located via the sysdeps override search path.
 $(objpfx)tst-glibcsyscalls.out: arch-syscall.h \
   ../sysdeps/unix/sysv/linux/syscall-names.list
@@ -332,7 +347,9 @@ $(objpfx)tst-glibcsyscalls.out: \
 # Separate object file for access to the constant from the UAPI header.
 $(objpfx)tst-sysconf-iov_max: $(objpfx)tst-sysconf-iov_max-uapi.o
 
-tests-special += $(objpfx)tst-mman-consts.out
+tests-special += \
+  $(objpfx)tst-mman-consts.out \
+  # tests-special
 $(objpfx)tst-mman-consts.out: ../sysdeps/unix/sysv/linux/tst-mman-consts.py
 	$(sysdeps-linux-python) \
 	  ../sysdeps/unix/sysv/linux/tst-mman-consts.py \
@@ -340,7 +357,9 @@ $(objpfx)tst-mman-consts.out: ../sysdeps/unix/sysv/linux/tst-mman-consts.py
 	  < /dev/null > $@ 2>&1; $(evaluate-test)
 $(objpfx)tst-mman-consts.out: $(sysdeps-linux-python-deps)
 
-tests-special += $(objpfx)tst-pidfd-consts.out
+tests-special += \
+  $(objpfx)tst-pidfd-consts.out \
+  # tests-special
 $(objpfx)tst-pidfd-consts.out: ../sysdeps/unix/sysv/linux/tst-pidfd-consts.py
 	$(sysdeps-linux-python) \
 	  ../sysdeps/unix/sysv/linux/tst-pidfd-consts.py \
@@ -348,7 +367,9 @@ $(objpfx)tst-pidfd-consts.out: ../sysdeps/unix/sysv/linux/tst-pidfd-consts.py
 	  < /dev/null > $@ 2>&1; $(evaluate-test)
 $(objpfx)tst-pidfd-consts.out: $(sysdeps-linux-python-deps)
 
-tests-special += $(objpfx)tst-mount-consts.out
+tests-special += \
+  $(objpfx)tst-mount-consts.out \
+  # tests-special
 $(objpfx)tst-mount-consts.out: ../sysdeps/unix/sysv/linux/tst-mount-consts.py
 	$(sysdeps-linux-python) \
 	  ../sysdeps/unix/sysv/linux/tst-mount-consts.py \
@@ -356,7 +377,9 @@ $(objpfx)tst-mount-consts.out: ../sysdeps/unix/sysv/linux/tst-mount-consts.py
 	  < /dev/null > $@ 2>&1; $(evaluate-test)
 $(objpfx)tst-mount-consts.out: $(sysdeps-linux-python-deps)
 
-tests-special += $(objpfx)tst-mount-compile.out
+tests-special += \
+  $(objpfx)tst-mount-compile.out \
+  # tests-special
 $(objpfx)tst-mount-compile.out: ../sysdeps/unix/sysv/linux/tst-mount-compile.py
 	$(sysdeps-linux-python) \
 	  ../sysdeps/unix/sysv/linux/tst-mount-compile.py \
@@ -369,9 +392,15 @@ tst-rseq-disable-ENV = GLIBC_TUNABLES=glibc.pthread.rseq=0
 endif # $(subdir) == misc
 
 ifeq ($(subdir),time)
-sysdep_headers += sys/timex.h bits/timex.h
+sysdep_headers += \
+  bits/timex.h \
+  sys/timex.h \
+  # sysdep_headers
 
-sysdep_routines += ntp_gettime ntp_gettimex
+sysdep_routines += \
+  ntp_gettime \
+  ntp_gettimex \
+  # sysdep_routines
 
 tests += \
   tst-clock_gettime-clobber \
@@ -381,7 +410,10 @@ tests += \
 endif
 
 ifeq ($(subdir),signal)
-tests-special += $(objpfx)tst-signal-numbers.out
+tests-special += \
+  $(objpfx)tst-signal-numbers.out \
+  # tests-special
+
 # Depending on signal.o* is a hack.  What we actually want is a dependency
 # on signal.h and everything it includes.  That's impractical to write
 # in this context, but signal.c includes signal.h and not much else so it'll
@@ -397,11 +429,23 @@ $(objpfx)tst-signal-numbers.out: $(sysdeps-linux-python-deps)
 endif
 
 ifeq ($(subdir),socket)
-sysdep_headers += net/if_ppp.h net/ppp-comp.h \
-		  net/ppp_defs.h net/if_arp.h net/route.h net/ethernet.h \
-		  net/if_slip.h net/if_packet.h net/if_shaper.h \
-		  bits/socket-constants.h
-sysdep_routines += cmsg_nxthdr
+sysdep_headers += \
+  bits/socket-constants.h \
+  net/ethernet.h \
+  net/if_arp.h \
+  net/if_packet.h \
+  net/if_ppp.h \
+  net/if_shaper.h \
+  net/if_slip.h \
+  net/ppp-comp.h \
+  net/ppp_defs.h \
+  net/route.h \
+  # sysdep_headers
+
+sysdep_routines += \
+  cmsg_nxthdr \
+  # sysdep_routines
+
 CFLAGS-recvmmsg.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sendmmsg.c = -fexceptions -fasynchronous-unwind-tables
 
@@ -414,7 +458,9 @@ tests-time64 += \
   tst-socket-timestamp-compat-time64
   # tests-time64
 
-tests-special += $(objpfx)tst-socket-consts.out
+tests-special += \
+  $(objpfx)tst-socket-consts.out \
+  # tests-special
 $(objpfx)tst-socket-consts.out: ../sysdeps/unix/sysv/linux/tst-socket-consts.py
 	PYTHONPATH=../scripts \
 	$(PYTHON) ../sysdeps/unix/sysv/linux/tst-socket-consts.py \
@@ -425,22 +471,40 @@ $(objpfx)tst-socket-consts.out: ../sysdeps/unix/sysv/linux/tst-socket-consts.py
 endif # $(subdir) == socket
 
 ifeq ($(subdir),sunrpc)
-sysdep_headers += nfs/nfs.h
+sysdep_headers += \
+  nfs/nfs.h \
+  # sysdep_headers
 endif
 
 ifeq ($(subdir),termios)
-sysdep_headers += termio.h
+sysdep_headers += \
+  termio.h \
+  # sysdep_headers
 endif
 
 ifeq ($(subdir),posix)
-sysdep_headers += bits/initspin.h
+sysdep_headers += \
+  bits/initspin.h \
+  # sysdep_headers
 
-sysdep_routines += sched_getcpu oldglob getcpu
+sysdep_routines += \
+  getcpu \
+  oldglob \
+  sched_getcpu \
+  # sysdep_routines
 
-tests += tst-affinity tst-affinity-pid
+tests += \
+  tst-affinity \
+  tst-affinity-pid \
+  # tests
 
-tests-static := tst-affinity-static
-tests += $(tests-static)
+tests-static += \
+  tst-affinity-static \
+  # tests-static
+
+tests += \
+  $(tests-static) \
+  # tests
 
 CFLAGS-fork.c = $(libio-mtsafe)
 CFLAGS-getpid.o = -fomit-frame-pointer
@@ -448,18 +512,34 @@ CFLAGS-getpid.os = -fomit-frame-pointer
 endif
 
 ifeq ($(subdir),inet)
-sysdep_headers += netinet/if_fddi.h netinet/if_tr.h \
-		  netipx/ipx.h netash/ash.h netax25/ax25.h netatalk/at.h \
-		  netrom/netrom.h netpacket/packet.h netrose/rose.h \
-		  neteconet/ec.h netiucv/iucv.h
-sysdep_routines += netlink_assert_response
+sysdep_headers += \
+  netash/ash.h \
+  netatalk/at.h \
+  netax25/ax25.h \
+  neteconet/ec.h \
+  netinet/if_fddi.h \
+  netinet/if_tr.h \
+  netipx/ipx.h \
+  netiucv/iucv.h \
+  netpacket/packet.h \
+  netrom/netrom.h \
+  netrose/rose.h \
+  # sysdep_headers
+
+sysdep_routines += \
+  netlink_assert_response \
+  # sysdep_routines
 endif
 
 # Don't compile the ctype glue code, since there is no old non-GNU C library.
 inhibit-glue = yes
 
 ifeq ($(subdir),dirent)
-sysdep_routines += getdirentries getdirentries64
+sysdep_routines += \
+  getdirentries \
+  getdirentries64 \
+  # sysdep_routines
+
 tests += \
   tst-getdents64 \
   tst-readdir64-compat \
@@ -471,29 +551,54 @@ CFLAGS-ypclnt.c = -DUSE_BINDINGDIR=1
 endif
 
 ifeq ($(subdir),io)
-sysdep_routines += xstatconv internal_statvfs \
-		   sync_file_range fallocate fallocate64 \
-		   close_nocancel fcntl_nocancel \
-		   open_nocancel open64_nocancel \
-		   openat_nocancel openat64_nocancel \
-		   read_nocancel pread64_nocancel \
-		   write_nocancel statx_cp stat_t64_cp
+sysdep_routines += \
+  close_nocancel \
+  fallocate \
+  fallocate64 \
+  fcntl_nocancel \
+  internal_statvfs \
+  open64_nocancel \
+  open_nocancel \
+  openat64_nocancel \
+  openat_nocancel \
+  pread64_nocancel \
+  read_nocancel \
+  stat_t64_cp \
+  statx_cp \
+  sync_file_range \
+  write_nocancel \
+  xstatconv \
+  # sysdep_routines
 
-sysdep_headers += bits/fcntl-linux.h
+sysdep_headers += \
+  bits/fcntl-linux.h \
+  # sysdep_headers
 
 tests += \
   tst-fallocate \
   tst-fallocate64 \
   tst-getcwd-smallbuff \
   tst-o_path-locks \
-# tests
+  # tests
 endif
 
 ifeq ($(subdir),elf)
-sysdep-rtld-routines += dl-brk dl-sbrk dl-getcwd dl-openat64 dl-opendir
+sysdep-rtld-routines += \
+  dl-brk \
+  dl-getcwd \
+  dl-openat64 \
+  dl-opendir \
+  dl-sbrk \
+  # sysdep-rtld-routines
 
-others += pldd
-install-bin += pldd
+others += \
+  pldd \
+  # others
+
+install-bin += \
+  pldd \
+  # install-bin
+
 $(objpfx)pldd: $(objpfx)xmalloc.o
 endif
 
@@ -508,9 +613,14 @@ CFLAGS-gai.c += -DNEED_NETLINK
 endif
 
 ifeq ($(subdir),nptl)
-tests += tst-align-clone tst-getpid1
+tests += \
+  tst-align-clone \
+  tst-getpid1 \
+  # tests
 
 # tst-rseq-nptl is an internal test because it requires a definition of
 # __NR_rseq from the internal system call list.
-tests-internal += tst-rseq-nptl
+tests-internal += \
+  tst-rseq-nptl \
+  # tests-internal
 endif
