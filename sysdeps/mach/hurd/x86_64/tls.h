@@ -173,7 +173,7 @@ extern unsigned char __libc_tls_initialized;
 #  define __LIBC_NO_TLS() __builtin_expect (!__libc_tls_initialized, 0)
 
 static inline bool __attribute__ ((unused))
-_hurd_tls_init (tcbhead_t *tcb)
+_hurd_tls_init (tcbhead_t *tcb, bool full)
 {
   error_t err;
   thread_t self = __mach_thread_self ();
@@ -181,11 +181,12 @@ _hurd_tls_init (tcbhead_t *tcb)
 
   /* We always at least start the sigthread anyway.  */
   tcb->multiple_threads = 1;
-  /* Take over the reply port we've been using.  */
-  tcb->reply_port = __hurd_reply_port0;
+  if (full)
+    /* Take over the reply port we've been using.  */
+    tcb->reply_port = __hurd_reply_port0;
 
   err = _hurd_tls_new (self, tcb);
-  if (err == 0)
+  if (err == 0 && full)
     {
       __libc_tls_initialized = 1;
       /* This port is now owned by the TCB.  */
@@ -195,7 +196,7 @@ _hurd_tls_init (tcbhead_t *tcb)
   return err == 0;
 }
 
-#  define TLS_INIT_TP(descr) _hurd_tls_init ((tcbhead_t *) (descr))
+#  define TLS_INIT_TP(descr) _hurd_tls_init ((tcbhead_t *) (descr), 1)
 # else /* defined (SHARED) && !IS_IN (rtld) */
 #  define __LIBC_NO_TLS() 0
 # endif

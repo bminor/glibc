@@ -156,12 +156,7 @@ first_init (void)
 #ifndef SHARED
   /* In the static case, we need to set up TLS early so that the stack
      protection guard can be read at gs:0x14 by the gcc-generated snippets.  */
-  _hurd_tls_init (&__init1_tcbhead);
-
-  /* Make sure __LIBC_NO_TLS () keeps evaluating to 1.  */
-# ifndef __x86_64__
-  asm ("movw %%gs,%w0" : "=m" (__init1_desc));
-# endif
+  _hurd_tls_init (&__init1_tcbhead, 0);
 #endif
 
   RUN_RELHOOK (_hurd_preinit_hook, ());

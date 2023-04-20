@@ -136,7 +136,7 @@ __LIBC_NO_TLS (void)
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
 static inline bool __attribute__ ((unused))
-_hurd_tls_init (tcbhead_t *tcb)
+_hurd_tls_init (tcbhead_t *tcb, bool full)
 {
   HURD_TLS_DESC_DECL (desc, tcb);
   thread_t self = __mach_thread_self ();
@@ -148,8 +148,9 @@ _hurd_tls_init (tcbhead_t *tcb)
   tcb->tcb = tcb;
   /* We always at least start the sigthread anyway.  */
   tcb->multiple_threads = 1;
-  /* Take over the reply port we've been using.  */
-  tcb->reply_port = __hurd_reply_port0;
+  if (full)
+    /* Take over the reply port we've been using.  */
+    tcb->reply_port = __hurd_reply_port0;
 
   /* Get the first available selector.  */
   int sel = -1;
@@ -175,15 +176,20 @@ _hurd_tls_init (tcbhead_t *tcb)
 
   /* Now install the new selector.  */
   asm volatile ("mov %w0, %%gs" :: "q" (sel));
-  /* This port is now owned by the TCB.  */
-  __hurd_reply_port0 = MACH_PORT_NULL;
+  if (full)
+    /* This port is now owned by the TCB.  */
+    __hurd_reply_port0 = MACH_PORT_NULL;
+#ifndef SHARED
+  else
+    __init1_desc = sel;
+#endif
 
 out:
   __mach_port_deallocate (__mach_task_self (), self);
   return success;
 }
 
-# define TLS_INIT_TP(descr) _hurd_tls_init ((tcbhead_t *) (descr))
+# define TLS_INIT_TP(descr) _hurd_tls_init ((tcbhead_t *) (descr), 1)
 #else /* defined (SHARED) && !IS_IN (rtld) */
 # define __LIBC_NO_TLS() 0
 #endif
