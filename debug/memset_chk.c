@@ -26,3 +26,4 @@ __memset_chk (void *dstpp, int c, size_t len, size_t dstlen)
 
   return memset (dstpp, c, len);
 }
+libc_hidden_builtin_def (__memset_chk)

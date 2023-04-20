@@ -32,3 +32,4 @@ MEMMOVE_CHK (void *dest, const void *src, size_t len, size_t destlen)
 
   return memmove (dest, src, len);
 }
+libc_hidden_builtin_def (MEMMOVE_CHK)

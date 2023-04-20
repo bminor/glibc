@@ -32,3 +32,4 @@ __stpcpy_chk (char *dest, const char *src, size_t destlen)
 
   return memcpy (dest, src, len + 1) + len;
 }
+libc_hidden_builtin_def (__stpcpy_chk)

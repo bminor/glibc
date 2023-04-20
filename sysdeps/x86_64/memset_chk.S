@@ -30,4 +30,5 @@ ENTRY (__memset_chk)
 	jb	__chk_fail
 	jmp	memset
 END (__memset_chk)
+libc_hidden_builtin_def (__memset_chk)
 #endif

@@ -28,3 +28,4 @@ __memcpy_chk (void *dstpp, const void *srcpp, size_t len, size_t dstlen)
 
   return memcpy (dstpp, srcpp, len);
 }
+libc_hidden_builtin_def (__memcpy_chk)

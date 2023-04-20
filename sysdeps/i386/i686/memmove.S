@@ -35,6 +35,7 @@ ENTRY_CHK (__memmove_chk)
 	cmpl	%eax, 16(%esp)
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
 END_CHK (__memmove_chk)
+libc_hidden_builtin_def (__memmove_chk)
 #endif
 
 ENTRY (memmove)

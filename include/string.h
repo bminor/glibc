@@ -208,6 +208,13 @@ extern char *__strcat_chk (char *__restrict __dest,
 extern char *__strncat_chk (char *__restrict __dest,
 			    const char *__restrict __src,
 			    size_t __len, size_t __destlen) __THROW;
+
+libc_hidden_builtin_proto (__memcpy_chk)
+libc_hidden_builtin_proto (__memmove_chk)
+libc_hidden_builtin_proto (__mempcpy_chk)
+libc_hidden_builtin_proto (__memset_chk)
+libc_hidden_builtin_proto (__stpcpy_chk)
+
 #endif
 
 #endif

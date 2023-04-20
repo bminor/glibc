@@ -28,4 +28,8 @@
 
 libc_ifunc_redirected (__redirect_memmove_chk, __memmove_chk,
 		       IFUNC_SELECTOR ());
+# ifdef SHARED
+__hidden_ver1 (__memmove_chk, __GI___memmove_chk, __redirect_memmove_chk)
+  __attribute__ ((visibility ("hidden"))) __attribute_copy__ (__memmove_chk);
+# endif
 #endif

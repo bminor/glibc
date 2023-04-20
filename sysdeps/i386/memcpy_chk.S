@@ -31,4 +31,5 @@ ENTRY (__memcpy_chk)
 	jb	__chk_fail
 	jmp	memcpy
 END (__memcpy_chk)
+libc_hidden_builtin_def (__memcpy_chk)
 #endif

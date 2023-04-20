@@ -30,4 +30,5 @@ ENTRY (__memmove_chk)
 	jb	__chk_fail
 	jmp	memmove
 END (__memmove_chk)
+libc_hidden_builtin_def (MEMMOVE_CHK)
 #endif

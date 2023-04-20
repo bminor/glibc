@@ -33,6 +33,7 @@ ENTRY_CHK (__mempcpy_chk)
 	cmpl	%eax, 16(%esp)
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
 END_CHK (__mempcpy_chk)
+libc_hidden_builtin_def (__mempcpy_chk)
 #endif
 ENTRY (__mempcpy)
 
