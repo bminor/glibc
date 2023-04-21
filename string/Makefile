@@ -157,6 +157,7 @@ tests := \
   test-strcmp \
   test-strcpy \
   test-strcspn \
+  test-strdup \
   test-strlen \
   test-strncasecmp \
   test-strncat \
