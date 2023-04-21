@@ -163,6 +163,7 @@ tests := \
   test-strncat \
   test-strncmp \
   test-strncpy \
+  test-strndup \
   test-strnlen \
   test-strpbrk \
   test-strrchr \
