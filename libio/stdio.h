@@ -180,7 +180,7 @@ extern int renameat2 (int __oldfd, const char *__old, int __newfd,
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern int fclose (FILE *__stream);
+extern int fclose (FILE *__stream) __nonnull ((1));
 
 #undef __attr_dealloc_fclose
 #define __attr_dealloc_fclose __attr_dealloc (fclose, 1)
@@ -269,7 +269,7 @@ extern FILE *fopen (const char *__restrict __filename,
    marked with __THROW.  */
 extern FILE *freopen (const char *__restrict __filename,
 		      const char *__restrict __modes,
-		      FILE *__restrict __stream) __wur;
+		      FILE *__restrict __stream) __wur __nonnull ((3));
 #else
 # ifdef __REDIRECT
 extern FILE *__REDIRECT (fopen, (const char *__restrict __filename,
@@ -290,7 +290,7 @@ extern FILE *fopen64 (const char *__restrict __filename,
   __attribute_malloc__ __attr_dealloc_fclose __wur;
 extern FILE *freopen64 (const char *__restrict __filename,
 			const char *__restrict __modes,
-			FILE *__restrict __stream) __wur;
+			FILE *__restrict __stream) __wur __nonnull ((3));
 #endif
 
 #ifdef	__USE_POSIX
