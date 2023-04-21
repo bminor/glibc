@@ -127,6 +127,7 @@ tests := \
   test-wcsncat \
   test-wcsncmp \
   test-wcsncpy \
+  test-wcsdup \
   test-wcsnlen \
   test-wcspbrk \
   test-wcsrchr \
