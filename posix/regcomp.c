@@ -2940,7 +2940,7 @@ lookup_collation_sequence_value (bracket_elem_t *br_elem, uint32_t nrules,
 
 static inline reg_errcode_t
 __attribute__ ((always_inline))
-build_range_exp (bitset_t sbcset, re_charset_t *mbcset, int *range_alloc,
+build_range_exp (bitset_t sbcset, re_charset_t *mbcset, Idx *range_alloc,
 		 bracket_elem_t *start_elem, bracket_elem_t *end_elem,
 		 re_dfa_t *dfa, reg_syntax_t syntax, uint32_t nrules,
 		 const unsigned char *collseqmb, const char *collseqwc,
@@ -2984,7 +2984,7 @@ build_range_exp (bitset_t sbcset, re_charset_t *mbcset, int *range_alloc,
 	  /* There is not enough space, need realloc.  */
 	  uint32_t *new_array_start;
 	  uint32_t *new_array_end;
-	  int new_nranges;
+	  Idx new_nranges;
 
 	  /* +1 in case of mbcset->nranges is 0.  */
 	  new_nranges = 2 * mbcset->nranges + 1;
@@ -3030,7 +3030,7 @@ build_range_exp (bitset_t sbcset, re_charset_t *mbcset, int *range_alloc,
 static inline reg_errcode_t
 __attribute__ ((always_inline))
 build_collating_symbol (bitset_t sbcset, re_charset_t *mbcset,
-			int *coll_sym_alloc, const unsigned char *name,
+			Idx *coll_sym_alloc, const unsigned char *name,
 			uint32_t nrules, int32_t table_size,
 			const int32_t *symb_table, const unsigned char *extra)
 {
@@ -3063,7 +3063,7 @@ build_collating_symbol (bitset_t sbcset, re_charset_t *mbcset,
 	{
 	  /* Not enough, realloc it.  */
 	  /* +1 in case of mbcset->ncoll_syms is 0.  */
-	  int new_coll_sym_alloc = 2 * mbcset->ncoll_syms + 1;
+	  Idx new_coll_sym_alloc = 2 * mbcset->ncoll_syms + 1;
 	  /* Use realloc since mbcset->coll_syms is NULL
 	     if *alloc == 0.  */
 	  int32_t *new_coll_syms = re_realloc (mbcset->coll_syms, int32_t,

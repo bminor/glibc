@@ -11,27 +11,27 @@ extern const char *__re_compile_pattern (const char *pattern, size_t length,
 extern int __re_compile_fastmap (struct re_pattern_buffer *buffer)
      attribute_hidden;
 
-extern int __re_search (struct re_pattern_buffer *buffer, const char *string,
-			int length, int start, int range,
+extern regoff_t __re_search (struct re_pattern_buffer *buffer, const char *string,
+			regoff_t length, regoff_t start, regoff_t range,
 			struct re_registers *regs);
 
-extern int __re_search_2
+extern regoff_t __re_search_2
   (struct re_pattern_buffer *buffer, const char *string1,
-   int length1, const char *string2, int length2,
-   int start, int range, struct re_registers *regs, int stop);
+   regoff_t length1, const char *string2, regoff_t length2,
+   regoff_t start, regoff_t range, struct re_registers *regs, regoff_t stop);
 
-extern int __re_match
+extern regoff_t __re_match
   (struct re_pattern_buffer *buffer, const char *string,
-   int length, int start, struct re_registers *regs);
+   regoff_t length, regoff_t start, struct re_registers *regs);
 
-extern int __re_match_2
+extern regoff_t __re_match_2
   (struct re_pattern_buffer *buffer, const char *string1,
-   int length1, const char *string2, int length2,
-   int start, struct re_registers *regs, int stop);
+   regoff_t length1, const char *string2, regoff_t length2,
+   regoff_t start, struct re_registers *regs, regoff_t stop);
 
 extern void __re_set_registers
   (struct re_pattern_buffer *buffer, struct re_registers *regs,
-   unsigned num_regs, regoff_t *starts, regoff_t *ends);
+   __re_size_t num_regs, regoff_t *starts, regoff_t *ends);
 
 extern int __regcomp (regex_t *__preg, const char *__pattern, int __cflags);
 libc_hidden_proto (__regcomp)
