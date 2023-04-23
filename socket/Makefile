@@ -35,6 +35,7 @@ tests := \
   tst-accept4 \
   tst-sockopt \
   tst-cmsghdr \
+  tst-cmsg_cloexec \
   # tests
 
 tests-internal := \
