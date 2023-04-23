@@ -18,6 +18,7 @@
 #include <sys/types.h>
 #include <sys/mman.h>
 #include <errno.h>
+#include <ldsodefs.h>
 #include <hurd.h>
 #include <hurd/fd.h>
 
@@ -55,6 +56,11 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 
   copy = ! (flags & MAP_SHARED);
 
+#ifdef __LP64__
+  if ((addr == NULL) && (prot & PROT_EXEC)
+      && HAS_ARCH_FEATURE (Prefer_MAP_32BIT_EXEC))
+    flags |= MAP_32BIT;
+#endif
   mask = (flags & MAP_32BIT) ? ~(vm_address_t) 0x7FFFFFFF : 0;
 
   switch (flags & MAP_TYPE)

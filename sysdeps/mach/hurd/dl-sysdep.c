@@ -462,6 +462,11 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
   if (prot & PROT_EXEC)
     vmprot |= VM_PROT_EXECUTE;
 
+#ifdef __LP64__
+  if ((addr == NULL) && (prot & PROT_EXEC)
+      && HAS_ARCH_FEATURE (Prefer_MAP_32BIT_EXEC))
+    flags |= MAP_32BIT;
+#endif
   mask = (flags & MAP_32BIT) ? ~(vm_address_t) 0x7FFFFFFF : 0;
 
   if (flags & MAP_ANON)
