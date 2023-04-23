@@ -91,7 +91,7 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
             if (wobj == robj)
               max_vmprot |= VM_PROT_WRITE;
 	    memobj = robj;
-	    if (wobj != MACH_PORT_NULL)
+	    if (MACH_PORT_VALID (wobj))
 	      __mach_port_deallocate (__mach_task_self (), wobj);
 	    break;
 	  case PROT_WRITE:
@@ -99,7 +99,7 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
             if (robj == wobj)
               max_vmprot |= VM_PROT_READ|VM_PROT_EXECUTE;
 	    memobj = wobj;
-	    if (robj != MACH_PORT_NULL)
+	    if (MACH_PORT_VALID (robj))
 	      __mach_port_deallocate (__mach_task_self (), robj);
 	    break;
 	  case PROT_READ|PROT_WRITE:
@@ -167,7 +167,7 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 			copy ? VM_INHERIT_COPY : VM_INHERIT_SHARE);
     }
 
-  if (memobj != MACH_PORT_NULL)
+  if (MACH_PORT_VALID (memobj))
     __mach_port_deallocate (__mach_task_self (), memobj);
 
   if (err == KERN_PROTECTION_FAILURE)

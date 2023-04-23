@@ -472,7 +472,7 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
       err = __io_map ((mach_port_t) fd, &memobj_rd, &memobj_wr);
       if (err)
 	return __hurd_fail (err), MAP_FAILED;
-      if (memobj_wr != MACH_PORT_NULL)
+      if (MACH_PORT_VALID (memobj_wr))
 	__mach_port_deallocate (__mach_task_self (), memobj_wr);
     }
 
