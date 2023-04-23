@@ -451,7 +451,7 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 {
   error_t err;
   vm_prot_t vmprot;
-  vm_address_t mapaddr;
+  vm_address_t mapaddr, mask;
   mach_port_t memobj_rd, memobj_wr;
 
   vmprot = VM_PROT_NONE;
@@ -461,6 +461,8 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
     vmprot |= VM_PROT_WRITE;
   if (prot & PROT_EXEC)
     vmprot |= VM_PROT_EXECUTE;
+
+  mask = (flags & MAP_32BIT) ? ~(vm_address_t) 0x7FFFFFFF : 0;
 
   if (flags & MAP_ANON)
     memobj_rd = MACH_PORT_NULL;
@@ -476,7 +478,7 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 
   mapaddr = (vm_address_t) addr;
   err = __vm_map (__mach_task_self (),
-		  &mapaddr, (vm_size_t) len, 0,
+		  &mapaddr, (vm_size_t) len, mask,
 		  !(flags & MAP_FIXED),
 		  memobj_rd,
 		  (vm_offset_t) offset,
@@ -491,7 +493,7 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
       if (! err)
 	err = __vm_map (__mach_task_self (),
 			&mapaddr, (vm_size_t) len,
-			0,
+			mask,
 			!(flags & MAP_FIXED),
 			memobj_rd, (vm_offset_t) offset,
 			flags & (MAP_COPY|MAP_PRIVATE),

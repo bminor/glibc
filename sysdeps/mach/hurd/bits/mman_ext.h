@@ -22,4 +22,5 @@
 
 #ifdef __USE_GNU
 # define SHM_ANON	((const char *) 1)
+# define MAP_32BIT	0x1000
 #endif /* __USE_GNU  */

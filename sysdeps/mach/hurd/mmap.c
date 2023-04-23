@@ -36,7 +36,7 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
   error_t err;
   vm_prot_t vmprot, max_vmprot;
   memory_object_t memobj;
-  vm_address_t mapaddr;
+  vm_address_t mapaddr, mask;
   boolean_t copy;
 
   mapaddr = (vm_address_t) addr;
@@ -54,6 +54,8 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
     vmprot |= VM_PROT_EXECUTE;
 
   copy = ! (flags & MAP_SHARED);
+
+  mask = (flags & MAP_32BIT) ? ~(vm_address_t) 0x7FFFFFFF : 0;
 
   switch (flags & MAP_TYPE)
     {
@@ -134,7 +136,7 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
     max_vmprot = VM_PROT_ALL;
 
   err = __vm_map (__mach_task_self (),
-		  &mapaddr, (vm_size_t) len, (vm_address_t) 0,
+		  &mapaddr, (vm_size_t) len, mask,
 		  mapaddr == 0,
 		  memobj, (vm_offset_t) offset,
 		  copy, vmprot, max_vmprot,
@@ -149,7 +151,7 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 	  err = __vm_deallocate (__mach_task_self (), mapaddr, len);
 	  if (! err)
 	    err = __vm_map (__mach_task_self (),
-			    &mapaddr, (vm_size_t) len, (vm_address_t) 0,
+			    &mapaddr, (vm_size_t) len, mask,
 			    0, memobj, (vm_offset_t) offset,
 			    copy, vmprot, max_vmprot,
 			    copy ? VM_INHERIT_COPY : VM_INHERIT_SHARE);
@@ -159,7 +161,7 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
     {
       if (mapaddr != 0 && (err == KERN_NO_SPACE || err == KERN_INVALID_ADDRESS))
 	err = __vm_map (__mach_task_self (),
-			&mapaddr, (vm_size_t) len, (vm_address_t) 0,
+			&mapaddr, (vm_size_t) len, mask,
 			1, memobj, (vm_offset_t) offset,
 			copy, vmprot, max_vmprot,
 			copy ? VM_INHERIT_COPY : VM_INHERIT_SHARE);
