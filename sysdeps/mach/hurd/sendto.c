@@ -94,7 +94,7 @@ __sendto (int fd,
 			  err;
 			}));
 
-  if (aport != MACH_PORT_NULL)
+  if (MACH_PORT_VALID (aport))
     __mach_port_deallocate (__mach_task_self (), aport);
 
   return err ? __hurd_sockfail (fd, flags, err) : wrote;

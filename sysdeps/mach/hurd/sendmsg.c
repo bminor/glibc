@@ -195,8 +195,9 @@ __libc_sendmsg (int fd, const struct msghdr *message, int flags)
 						   message->msg_controllen,
 						   &amount);
 			      LIBC_CANCEL_RESET (cancel_oldtype);
-			      __mach_port_deallocate (__mach_task_self (),
-						      aport);
+			      if (MACH_PORT_VALID (aport))
+				__mach_port_deallocate (__mach_task_self (),
+							aport);
 			    }
 			  err;
 			}));

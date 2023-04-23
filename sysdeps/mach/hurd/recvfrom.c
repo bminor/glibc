@@ -94,7 +94,8 @@ __recvfrom (int fd, void *buf, size_t n, int flags, __SOCKADDR_ARG addrarg,
   else if (addr_len != NULL)
     *addr_len = 0;
 
-  __mach_port_deallocate (__mach_task_self (), addrport);
+  if (MACH_PORT_VALID (addrport))
+    __mach_port_deallocate (__mach_task_self (), addrport);
 
   /* Toss control data; we don't care.  */
   __vm_deallocate (__mach_task_self (), (vm_address_t) cdata, clen);

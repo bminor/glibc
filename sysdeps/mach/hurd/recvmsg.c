@@ -135,7 +135,8 @@ __libc_recvmsg (int fd, struct msghdr *message, int flags)
   else if (message->msg_name != NULL)
     message->msg_namelen = 0;
 
-  __mach_port_deallocate (__mach_task_self (), aport);
+  if (MACH_PORT_VALID (aport))
+    __mach_port_deallocate (__mach_task_self (), aport);
 
   if (buf == data)
     buf += len;
