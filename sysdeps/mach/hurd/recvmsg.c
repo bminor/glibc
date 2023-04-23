@@ -197,11 +197,13 @@ __libc_recvmsg (int fd, struct msghdr *message, int flags)
 
 	for (j = 0; j < nfds; j++)
 	  {
+	    int fd_flags = (flags & MSG_CMSG_CLOEXEC) ? O_CLOEXEC : 0;
 	    err = reauthenticate (ports[i], &newports[newfds]);
 	    if (err)
 	      goto cleanup;
 	    fds[j] = opened_fds[newfds] = _hurd_intern_fd (newports[newfds],
-							   fds[j], 0);
+							   fds[j] | fd_flags,
+							   0);
 	    if (fds[j] == -1)
 	      {
 		err = errno;

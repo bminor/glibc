@@ -197,8 +197,11 @@ enum
 #define MSG_WAITALL MSG_WAITALL
     MSG_DONTWAIT	= 0x80,	/* This message should be nonblocking.  */
 #define MSG_DONTWAIT MSG_DONTWAIT
-    MSG_NOSIGNAL	= 0x0400	/* Do not generate SIGPIPE on EPIPE.  */
+    MSG_NOSIGNAL	= 0x0400,	/* Do not generate SIGPIPE on EPIPE.  */
 #define MSG_NOSIGNAL MSG_NOSIGNAL
+    MSG_CMSG_CLOEXEC	= 0x40000	/* Atomically set close-on-exec flag
+					   for file descriptors in SCM_RIGHTS.  */
+#define MSG_CMSG_CLOEXEC MSG_CMSG_CLOEXEC
   };
 
 
