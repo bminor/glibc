@@ -201,8 +201,10 @@ __libc_recvmsg (int fd, struct msghdr *message, int flags)
 	    err = reauthenticate (ports[i], &newports[newfds]);
 	    if (err)
 	      goto cleanup;
+	    /* We do not currently take any flag from the sender.  */
 	    fds[j] = opened_fds[newfds] = _hurd_intern_fd (newports[newfds],
-							   fds[j] | fd_flags,
+							   (fds[j] & 0)
+							   | fd_flags,
 							   0);
 	    if (fds[j] == -1)
 	      {
