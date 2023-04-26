@@ -52,6 +52,7 @@ ___ieee128___syslog_chk (int pri, int flag, const char *fmt, ...)
   __vsyslog_internal (pri, fmt, ap, mode);
   va_end (ap);
 }
+hidden_def (___ieee128___syslog_chk)
 strong_alias (___ieee128___syslog_chk, __syslog_chkieee128)
 
 void

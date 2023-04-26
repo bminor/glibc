@@ -64,6 +64,7 @@ headers	:= \
   sys/xattr.h \
   syslog.h \
   sys/syslog.h \
+  bits/syslog-decl.h \
   bits/syslog.h \
   bits/syslog-ldbl.h \
   bits/syslog-path.h \
