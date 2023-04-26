@@ -5,6 +5,7 @@
 
 #  include <stdbool.h>
 #  include <kernel-features.h>
+#  include <bits/unistd-decl.h>
 
 libc_hidden_proto (_exit, __noreturn__)
 #  ifndef NO_RTLD_HIDDEN

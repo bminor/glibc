@@ -42,6 +42,7 @@ headers := \
   bits/types/idtype_t.h \
   bits/types/struct_sched_param.h \
   bits/typesizes.h \
+  bits/unistd-decl.h \
   bits/unistd.h \
   bits/unistd_ext.h \
   bits/utsname.h \
