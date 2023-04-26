@@ -222,8 +222,9 @@ __hurd_canonicalize_directory_name_internal (file_t thisdir,
       found:
 	{
 	  /* Prepend the directory name just discovered.  */
+	  size_t offset = file_namep - file_name;
 
-	  if (file_namep - file_name < d->d_namlen + 1)
+	  if (offset < d->d_namlen + 1)
 	    {
 	      if (orig_size > 0)
 		{
@@ -239,7 +240,7 @@ __hurd_canonicalize_directory_name_internal (file_t thisdir,
 		      free (file_name);
 		      return NULL;
 		    }
-		  file_namep = &buf[file_namep - file_name + size / 2];
+		  file_namep = &buf[offset + size / 2];
 		  file_name = buf;
 		  /* Move current contents up to the end of the buffer.
 		     This is guaranteed to be non-overlapping.  */
