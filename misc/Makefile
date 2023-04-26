@@ -68,6 +68,7 @@ headers	:= \
   bits/syslog-ldbl.h \
   bits/syslog-path.h \
   bits/error.h \
+  bits/select-decl.h \
   bits/select2.h \
   bits/hwcap.h \
   sys/auxv.h \
