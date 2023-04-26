@@ -35,4 +35,5 @@ ___ieee128___asprintf_chk (char **string_ptr, int flag, const char *format, ...)
 
   return done;
 }
+hidden_def (___ieee128___asprintf_chk)
 strong_alias (___ieee128___asprintf_chk, __asprintf_chkieee128)

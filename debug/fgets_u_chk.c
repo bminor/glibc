@@ -56,3 +56,4 @@ __fgets_unlocked_chk (char *buf, size_t size, int n, FILE *fp)
   fp->_flags |= old_error;
   return result;
 }
+libc_hidden_builtin_def (__fgets_unlocked_chk)

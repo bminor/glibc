@@ -42,4 +42,5 @@ ___sprintf_chk (char *s, int flag, size_t slen, const char *format, ...)
 
   return ret;
 }
+ldbl_hidden_def (___sprintf_chk, __sprintf_chk)
 ldbl_strong_alias (___sprintf_chk, __sprintf_chk)

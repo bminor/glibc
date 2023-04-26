@@ -35,4 +35,5 @@ ___fprintf_chk (FILE *fp, int flag, const char *format, ...)
 
   return ret;
 }
+ldbl_hidden_def (___fprintf_chk, __fprintf_chk)
 ldbl_strong_alias (___fprintf_chk, __fprintf_chk)

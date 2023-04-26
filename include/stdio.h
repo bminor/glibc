@@ -276,7 +276,18 @@ extern FILE *__open_memstream (char **, size_t *) __THROW __wur;
 libc_hidden_proto (__open_memstream)
 libc_hidden_proto (__libc_fatal)
 rtld_hidden_proto (__libc_fatal)
-libc_hidden_proto (__vsprintf_chk)
+
+libc_hidden_proto (__fgets_unlocked_chk)
+
+#if defined __LDBL_COMPAT || __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
+libc_hidden_ldbl_proto (__asprintf_chk)
+#else
+libc_hidden_proto (__asprintf_chk)
+#endif
+
+libc_hidden_ldbl_proto (__fprintf_chk)
+libc_hidden_ldbl_proto (__sprintf_chk)
+libc_hidden_ldbl_proto (__vsprintf_chk)
 
 extern FILE * __fmemopen (void *buf, size_t len, const char *mode);
 libc_hidden_proto (__fmemopen)

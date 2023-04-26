@@ -35,4 +35,5 @@ ___ieee128___vsprintf_chk (char *string, int flag, size_t slen,
 
   return __vsprintf_internal (string, slen, format, ap, mode);
 }
+hidden_def (___ieee128___vsprintf_chk)
 strong_alias (___ieee128___vsprintf_chk, __vsprintf_chkieee128)

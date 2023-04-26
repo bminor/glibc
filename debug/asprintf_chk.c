@@ -22,7 +22,7 @@
 /* Write formatted output from FORMAT to a string which is
    allocated with malloc and stored in *STRING_PTR.  */
 int
-__asprintf_chk (char **result_ptr, int flag, const char *format, ...)
+___asprintf_chk (char **result_ptr, int flag, const char *format, ...)
 {
   /* For flag > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
      can only come from read-only format strings.  */
@@ -36,3 +36,19 @@ __asprintf_chk (char **result_ptr, int flag, const char *format, ...)
 
   return ret;
 }
+#if defined __LDBL_COMPAT || __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
+/* This is needed since <bits/stdio-lbdl.h> is included in this case, leading to
+ * multiple asm redirection of the same symbol
+ */
+ldbl_hidden_def (___asprintf_chk, __asprintf_chk)
+ldbl_strong_alias (___asprintf_chk, __asprintf_chk)
+#else
+/* On some systems introduction of ldbl_* macros lead to ABI breakage due to the
+ * long_double_symbol aliasing, e.g. on s390x:
+ * /usr/bin/ld: glibc/iconv/../libio/bits/stdio2.h:137: undefined reference to
+ * `__asprintf_chk'
+ * Due to __asprintf_chk@@GLIBC_2.4 alias replacing __asprintf_chk.
+ */
+strong_alias (___asprintf_chk, __asprintf_chk)
+libc_hidden_def (__asprintf_chk)
+#endif

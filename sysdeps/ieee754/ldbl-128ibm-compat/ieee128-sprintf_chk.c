@@ -43,4 +43,5 @@ ___ieee128___sprintf_chk (char *s, int flag, size_t slen,
 
   return done;
 }
+hidden_def (___ieee128___sprintf_chk)
 strong_alias (___ieee128___sprintf_chk, __sprintf_chkieee128)
