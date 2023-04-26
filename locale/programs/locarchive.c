@@ -1156,7 +1156,7 @@ add_locale_to_archive (struct locarhandle *ah, const char *name,
        We will store it in the archive with a normalized name.  */
     asprintf (&normalized_name, "%s%s%s.%s%s%s",
 	      language, territory == NULL ? "" : "_", territory ?: "",
-	      (mask & XPG_NORM_CODESET) ? normalized_codeset : codeset,
+	      normalized_codeset,
 	      modifier == NULL ? "" : "@", modifier ?: "");
 
   /* This call does the main work.  */
