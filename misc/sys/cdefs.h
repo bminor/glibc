@@ -268,6 +268,14 @@
 # define __ASMNAME(cname)  __ASMNAME2 (__USER_LABEL_PREFIX__, cname)
 # define __ASMNAME2(prefix, cname) __STRING (prefix) cname
 
+#ifndef __REDIRECT_FORTIFY
+#define __REDIRECT_FORTIFY __REDIRECT
+#endif
+
+#ifndef __REDIRECT_FORTIFY_NTH
+#define __REDIRECT_FORTIFY_NTH __REDIRECT_NTH
+#endif
+
 /*
 #elif __SOME_OTHER_COMPILER__
 
