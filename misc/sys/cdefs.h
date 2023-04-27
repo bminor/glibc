@@ -98,6 +98,12 @@
 #  endif
 # endif
 
+# if __GNUC_PREREQ (4, 3) || __glibc_has_attribute (__cold__)
+#  define __COLD	__attribute__ ((__cold__))
+# else
+#  define __COLD
+# endif
+
 #else	/* Not GCC or clang.  */
 
 # if (defined __cplusplus						\
@@ -110,6 +116,7 @@
 # define __THROW
 # define __THROWNL
 # define __NTH(fct)	fct
+# define __COLD
 
 #endif	/* GCC || clang.  */
 
