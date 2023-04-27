@@ -292,6 +292,14 @@ make_request (int fd, pid_t pid)
   return NULL;
 }
 
+#ifdef __EXCEPTIONS
+static void
+cancel_handler (void *arg __attribute__((unused)))
+{
+  /* Release the lock.  */
+  __libc_lock_unlock (lock);
+}
+#endif
 
 void
 attribute_hidden
@@ -304,6 +312,10 @@ __check_pf (bool *seen_ipv4, bool *seen_ipv6,
   struct cached_data *olddata = NULL;
   struct cached_data *data = NULL;
 
+#ifdef __EXCEPTIONS
+  /* Make sure that lock is released when the thread is cancelled.  */
+  __libc_cleanup_push (cancel_handler, NULL);
+#endif
   __libc_lock_lock (lock);
 
   if (cache_valid_p ())
@@ -338,6 +350,9 @@ __check_pf (bool *seen_ipv4, bool *seen_ipv6,
 	}
     }
 
+#ifdef __EXCEPTIONS
+  __libc_cleanup_pop (0);
+#endif
   __libc_lock_unlock (lock);
 
   if (data != NULL)
