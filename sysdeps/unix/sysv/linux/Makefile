@@ -529,6 +529,8 @@ sysdep_headers += \
 sysdep_routines += \
   netlink_assert_response \
   # sysdep_routines
+
+CFLAGS-check_pf.c += -fexceptions
 endif
 
 # Don't compile the ctype glue code, since there is no old non-GNU C library.
