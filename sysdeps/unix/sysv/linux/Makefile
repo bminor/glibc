@@ -456,6 +456,8 @@ sysdep_headers += netinet/if_fddi.h netinet/if_tr.h \
 		  netrom/netrom.h netpacket/packet.h netrose/rose.h \
 		  neteconet/ec.h netiucv/iucv.h
 sysdep_routines += netlink_assert_response
+
+CFLAGS-check_pf.c += -fexceptions
 endif
 
 # Don't compile the ctype glue code, since there is no old non-GNU C library.
