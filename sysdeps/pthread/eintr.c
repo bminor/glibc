@@ -31,10 +31,12 @@ eintr_handler (int sig)
 {
   if (sig != the_sig)
     {
-      write (STDOUT_FILENO, "eintr_handler: signal number wrong\n", 35);
+      /* empty if statement avoids warn unused result */
+      if (write (STDOUT_FILENO,
+		 "eintr_handler: signal number wrong\n", 35) < 35) {};
       _exit (1);
     }
-  write (STDOUT_FILENO, ".", 1);
+  if (write (STDOUT_FILENO, ".", 1)) {/* Avoid warn unused result */};
 }
 
 
