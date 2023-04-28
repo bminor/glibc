@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <wchar.h>
 
+#include <support/xunistd.h>
 
 #define MB_EXP \
   "null mode test 1: Invalid or incomplete multibyte or wide character\n" \
@@ -94,7 +95,7 @@ do_test (void)
     puts ("multibyte test succeeded");
 
   lseek (fd, 0, SEEK_SET);
-  ftruncate (fd, 0);
+  xftruncate (fd, 0);
 
   if (dup2 (fd, 2) == -1)
     {

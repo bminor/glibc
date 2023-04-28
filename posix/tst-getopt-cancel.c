@@ -33,6 +33,7 @@
 #include <support/support.h>
 #include <support/temp_file.h>
 #include <support/xthread.h>
+#include <support/xunistd.h>
 
 static bool
 check_stderr (bool expect_errmsg, FILE *stderr_trapped)
@@ -48,7 +49,7 @@ check_stderr (bool expect_errmsg, FILE *stderr_trapped)
       fputs (lineptr, stdout);
     }
   rewind (stderr_trapped);
-  ftruncate (fileno (stderr_trapped), 0);
+  xftruncate (fileno (stderr_trapped), 0);
   return got_errmsg == expect_errmsg;
 }
 

@@ -166,7 +166,7 @@ short_copy (void)
           inoff = 3;
           xlseek (infd, shift, SEEK_SET);
         }
-      ftruncate (outfd, 0);
+      xftruncate (outfd, 0);
       xlseek (outfd, 0, SEEK_SET);
       outoff = 0;
 
