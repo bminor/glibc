@@ -96,7 +96,8 @@ host2netname (char netname[MAXNETNAMELEN + 1], const char *host,
       else
 	{
 	  domainname[0] = 0;
-	  getdomainname (domainname, MAXHOSTNAMELEN);
+	  if (getdomainname (domainname, MAXHOSTNAMELEN))
+	    return 0;
 	}
     }
   else
