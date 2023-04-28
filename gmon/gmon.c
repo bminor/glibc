@@ -46,11 +46,6 @@
 #include <libc-internal.h>
 #include <not-cancel.h>
 
-#if HAVE_TUNABLES
-# define TUNABLE_NAMESPACE gmon
-# include <elf/dl-tunables.h>
-#endif
-
 #ifdef PIC
 # include <link.h>
 
@@ -130,20 +125,9 @@ __monstartup (u_long lowpc, u_long highpc)
   struct gmonparam *p = &_gmonparam;
   long int minarcs, maxarcs;
 
-#if HAVE_TUNABLES
-  /* Read minarcs/maxarcs tunables. */
-  minarcs = TUNABLE_GET (minarcs, int32_t, NULL);
-  maxarcs = TUNABLE_GET (maxarcs, int32_t, NULL);
-  if (maxarcs < minarcs)
-    {
-      ERR("monstartup: maxarcs < minarcs, setting maxarcs = minarcs\n");
-      maxarcs = minarcs;
-    }
-#else
   /* No tunables, we use hardcoded defaults */
   minarcs = MINARCS;
   maxarcs = MAXARCS;
-#endif
 
   /*
    * If we are incorrectly called twice in a row (without an
