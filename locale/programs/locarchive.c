@@ -1154,10 +1154,14 @@ add_locale_to_archive (struct locarhandle *ah, const char *name,
   if (mask & XPG_NORM_CODESET)
     /* This name contains a codeset in unnormalized form.
        We will store it in the archive with a normalized name.  */
-    asprintf (&normalized_name, "%s%s%s.%s%s%s",
-	      language, territory == NULL ? "" : "_", territory ?: "",
-	      normalized_codeset,
-	      modifier == NULL ? "" : "@", modifier ?: "");
+    if (asprintf (&normalized_name, "%s%s%s.%s%s%s",
+		  language, territory == NULL ? "" : "_", territory ?: "",
+		  normalized_codeset,
+		  modifier == NULL ? "" : "@", modifier ?: "") < 0)
+      {
+	free ((char *) normalized_codeset);
+	return -1;
+      }
 
   /* This call does the main work.  */
   locrec_offset = add_locale (ah, normalized_name ?: name, data, replace);
@@ -1188,10 +1192,14 @@ add_locale_to_archive (struct locarhandle *ah, const char *name,
       normalized_codeset = _nl_normalize_codeset (codeset, strlen (codeset));
       mask |= XPG_NORM_CODESET;
 
-      asprintf (&normalized_codeset_name, "%s%s%s.%s%s%s",
-		language, territory == NULL ? "" : "_", territory ?: "",
-		normalized_codeset,
-		modifier == NULL ? "" : "@", modifier ?: "");
+      if (asprintf (&normalized_codeset_name, "%s%s%s.%s%s%s",
+		    language, territory == NULL ? "" : "_", territory ?: "",
+		    normalized_codeset,
+		    modifier == NULL ? "" : "@", modifier ?: "") < 0)
+	{
+	  free ((char *) normalized_codeset);
+	  return -1;
+	}
 
       add_alias (ah, normalized_codeset_name, replace,
 		 normalized_name ?: name, &locrec_offset);
