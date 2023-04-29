@@ -24,8 +24,9 @@
 void
 _hurd_exit (int status)
 {
-  /* Give the proc server our exit status.  */
-  __USEPORT (PROC, __proc_mark_exit (port, status, 0));
+  if (_hurd_ports != NULL)
+    /* Give the proc server our exit status.  */
+    __USEPORT (PROC, __proc_mark_exit (port, status, 0));
 
   /* Commit suicide.  */
   __task_terminate (__mach_task_self ());
