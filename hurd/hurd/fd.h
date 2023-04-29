@@ -73,18 +73,18 @@ _hurd_fd_get (int fd)
 
   HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_dtable_lock);
-  if (fd < 0 || fd >= _hurd_dtablesize)
+  if (__glibc_unlikely (fd < 0 || fd >= _hurd_dtablesize))
     descriptor = NULL;
   else
     {
       struct hurd_fd *cell = _hurd_dtable[fd];
-      if (cell == NULL)
+      if (__glibc_unlikely (cell == NULL))
 	/* No descriptor allocated at this index.  */
 	descriptor = NULL;
       else
 	{
 	  __spin_lock (&cell->port.lock);
-	  if (cell->port.port == MACH_PORT_NULL)
+	  if (__glibc_unlikely (cell->port.port == MACH_PORT_NULL))
 	    /* The descriptor at this index has no port in it.
 	       This happens if it existed before but was closed.  */
 	    descriptor = NULL;
@@ -107,7 +107,7 @@ _hurd_fd_get (int fd)
 
 #define	HURD_FD_USE(fd, expr)						      \
   ({ struct hurd_fd *descriptor = _hurd_fd_get (fd);			      \
-     descriptor == NULL ? EBADF : (expr); })
+     __glibc_unlikely (descriptor == NULL) ? EBADF : (expr); })
 
 /* Evaluate EXPR with the variable `port' bound to the port to FD, and
    `ctty' bound to the ctty port.  */
@@ -125,7 +125,7 @@ _hurd_fd_get (int fd)
      io_t port, ctty;							      \
      void *crit = _hurd_critical_section_lock ();			      \
      __spin_lock (&__d->port.lock);					      \
-     if (__d->port.port == MACH_PORT_NULL)				      \
+     if (__glibc_unlikely (__d->port.port == MACH_PORT_NULL))		      \
        {								      \
 	 __spin_unlock (&__d->port.lock);				      \
 	 _hurd_critical_section_unlock (crit);				      \

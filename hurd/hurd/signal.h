@@ -254,9 +254,9 @@ _hurd_critical_section_unlock (void *our_lock)
       sigset_t pending;
       _hurd_sigstate_lock (ss);
       __spin_unlock (&ss->critical_section_lock);
-      pending = _hurd_sigstate_pending(ss) & ~ss->blocked;
+      pending = _hurd_sigstate_pending (ss) & ~ss->blocked;
       _hurd_sigstate_unlock (ss);
-      if (! __sigisemptyset (&pending))
+      if (__glibc_unlikely (!__sigisemptyset (&pending)))
 	/* There are unblocked signals pending, which weren't
 	   delivered because we were in the critical section.
 	   Tell the signal thread to deliver them now.  */
