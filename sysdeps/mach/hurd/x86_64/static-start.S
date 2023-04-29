@@ -19,6 +19,9 @@
 	.text
 	.globl _start
 _start:
+
+	leaq __memcpy_sse2_unaligned(%rip), %rax
+	movq %rax, memcpy@GOTPCREL(%rip)
 	call _hurd_stack_setup
 	xorq %rdx, %rdx
 	jmp _start1
