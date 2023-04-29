@@ -323,7 +323,13 @@ _S_msg_set_fd (mach_port_t msgport, mach_port_t auth,
   AUTHCHECK;
 
   /* We consume the reference if successful.  */
-  err = HURD_FD_USE (which, (_hurd_port2fd (descriptor, port, 0), 0));
+  err = HURD_FD_USE (which,
+		     ({
+		       int flags = (descriptor->flags & FD_CLOEXEC)
+				   ? O_CLOEXEC : 0;
+		       _hurd_port2fd (descriptor, port, flags);
+		       0;
+		     }));
   if (err)
     return err;
 
