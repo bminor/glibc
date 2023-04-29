@@ -170,6 +170,11 @@ _hurd_self_sigstate (void)
   if (__glibc_unlikely (ss == NULL))
     {
       thread_t self = __mach_thread_self ();
+
+      /* The thread variable is unset; this must be the first time we've
+        asked for it.  In this case, the critical section flag cannot
+        possible already be set.  Look up our sigstate structure the slow
+        way.  */
       ss = _hurd_thread_sigstate (self);
       THREAD_SETMEM (THREAD_SELF, _hurd_sigstate, ss);
       __mach_port_deallocate (__mach_task_self (), self);
@@ -218,19 +223,7 @@ _hurd_critical_section_lock (void)
     return NULL;
 #endif
 
-  ss = THREAD_GETMEM (THREAD_SELF, _hurd_sigstate);
-  if (ss == NULL)
-    {
-      thread_t self = __mach_thread_self ();
-
-      /* The thread variable is unset; this must be the first time we've
-	 asked for it.  In this case, the critical section flag cannot
-	 possible already be set.  Look up our sigstate structure the slow
-	 way.  */
-      ss = _hurd_thread_sigstate (self);
-      THREAD_SETMEM (THREAD_SELF, _hurd_sigstate, ss);
-      __mach_port_deallocate (__mach_task_self (), self);
-    }
+  ss = _hurd_self_sigstate ();
 
   if (! __spin_try_lock (&ss->critical_section_lock))
     /* We are already in a critical section, so do nothing.  */
