@@ -149,7 +149,7 @@ _hurd_fd_get (int fd)
 /* Check if ERR should generate a signal.
    Returns the signal to take, or zero if none.  */
 
-extern int _hurd_fd_error_signal (error_t err);
+extern int _hurd_fd_error_signal (error_t err) __COLD;
 
 #ifdef __USE_EXTERN_INLINES
 _HURD_FD_H_EXTERN_INLINE int
@@ -174,7 +174,7 @@ _hurd_fd_error_signal (error_t err)
    always use this function to handle errors from RPCs made on file
    descriptor ports.  Some errors are translated into signals.  */
 
-extern error_t _hurd_fd_error (int fd, error_t err);
+extern error_t _hurd_fd_error (int fd, error_t err) __COLD;
 
 #ifdef __USE_EXTERN_INLINES
 _HURD_FD_H_EXTERN_INLINE error_t
@@ -194,7 +194,7 @@ _hurd_fd_error (int fd, error_t err)
 /* Handle error code ERR from an RPC on file descriptor FD's port.
    Set `errno' to the appropriate error code, and always return -1.  */
 
-extern int __hurd_dfail (int fd, error_t err);
+extern int __hurd_dfail (int fd, error_t err) __COLD;
 
 #ifdef __USE_EXTERN_INLINES
 _HURD_FD_H_EXTERN_INLINE int
@@ -208,7 +208,7 @@ __hurd_dfail (int fd, error_t err)
 /* Likewise, but do not raise SIGPIPE on EPIPE if flags contain
    MSG_NOSIGNAL.  */
 
-extern int __hurd_sockfail (int fd, int flags, error_t err);
+extern int __hurd_sockfail (int fd, int flags, error_t err) __COLD;
 
 #ifdef __USE_EXTERN_INLINES
 _HURD_FD_H_EXTERN_INLINE int

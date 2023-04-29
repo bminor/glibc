@@ -48,7 +48,7 @@
 #define _HURD_H_EXTERN_INLINE __extern_inline
 #endif
 
-extern int __hurd_fail (error_t err);
+extern int __hurd_fail (error_t err) __COLD;
 
 #ifdef __USE_EXTERN_INLINES
 _HURD_H_EXTERN_INLINE int
