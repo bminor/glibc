@@ -174,6 +174,7 @@ _hurd_sigstate_set_global_rcv (struct hurd_sigstate *ss)
   assert (ss->thread != MACH_PORT_NULL);
   ss->actions[0].sa_handler = SIG_IGN;
 }
+libc_hidden_def (_hurd_sigstate_set_global_rcv)
 
 /* Check whether SS is a global receiver.  */
 static int
@@ -193,6 +194,8 @@ _hurd_sigstate_lock (struct hurd_sigstate *ss)
     __spin_lock (&_hurd_global_sigstate->lock);
   __spin_lock (&ss->lock);
 }
+libc_hidden_def (_hurd_sigstate_lock)
+
 void
 _hurd_sigstate_unlock (struct hurd_sigstate *ss)
 {
@@ -200,7 +203,7 @@ _hurd_sigstate_unlock (struct hurd_sigstate *ss)
   if (sigstate_is_global_rcv (ss))
     __spin_unlock (&_hurd_global_sigstate->lock);
 }
-libc_hidden_def (_hurd_sigstate_set_global_rcv)
+libc_hidden_def (_hurd_sigstate_unlock)
 
 /* Retrieve a thread's full set of pending signals, including the global
    ones if appropriate.  SS must be locked.  */
@@ -212,6 +215,7 @@ _hurd_sigstate_pending (const struct hurd_sigstate *ss)
     __sigorset (&pending, &pending, &_hurd_global_sigstate->pending);
   return pending;
 }
+libc_hidden_def (_hurd_sigstate_pending)
 
 /* Clear a pending signal and return the associated detailed
    signal information. SS must be locked, and must have signal SIGNO
@@ -230,8 +234,6 @@ sigstate_clear_pending (struct hurd_sigstate *ss, int signo)
   __sigdelset (&ss->pending, signo);
   return ss->pending_data[signo];
 }
-libc_hidden_def (_hurd_sigstate_lock)
-libc_hidden_def (_hurd_sigstate_unlock)
 
 /* Retrieve a thread's action vector.  SS must be locked.  */
 struct sigaction *
@@ -242,7 +244,6 @@ _hurd_sigstate_actions (struct hurd_sigstate *ss)
   else
     return ss->actions;
 }
-libc_hidden_def (_hurd_sigstate_pending)
 
 
 /* Signal delivery itself is on this page.  */
