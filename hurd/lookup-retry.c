@@ -277,7 +277,6 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 		  error_t err;
 		  struct host_basic_info hostinfo;
 		  mach_msg_type_number_t hostinfocnt = HOST_BASIC_INFO_COUNT;
-		  char *p;
 		  /* XXX want client's host */
 		  if (err = __host_info (__mach_host_self (), HOST_BASIC_INFO,
 					 (integer_t *) &hostinfo,
@@ -288,13 +287,11 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 		      err = EGRATUITOUS;
 		      goto out;
 		    }
-		  p = _itoa (hostinfo.cpu_subtype, &retryname[8], 10, 0);
-		  *--p = '/';
-		  p = _itoa (hostinfo.cpu_type, &retryname[8], 10, 0);
-		  if (p < retryname)
+		  file_name = _itoa (hostinfo.cpu_subtype, &retryname[8], 10, 0);
+		  *--file_name = '/';
+		  file_name = _itoa (hostinfo.cpu_type, file_name, 10, 0);
+		  if (file_name < retryname)
 		    abort ();	/* XXX write this right if this ever happens */
-		  if (p > retryname)
-		    memmove (retryname, p, strlen(p) + 1);
 		  startdir = *result;
 		}
 	      else
