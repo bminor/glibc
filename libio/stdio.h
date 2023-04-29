@@ -859,7 +859,7 @@ extern int ferror_unlocked (FILE *__stream) __THROW __wur;
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern void perror (const char *__s);
+extern void perror (const char *__s) __COLD;
 
 
 #ifdef	__USE_POSIX
