@@ -477,9 +477,18 @@ _hurdsig_abort_rpcs (struct hurd_sigstate *ss, int signo, int sigthread,
           if (reply)
             {
               /* The interrupt didn't work.
-                 Destroy the receive right the thread is blocked on.  */
-              __mach_port_destroy (__mach_task_self (), *reply);
-              *reply = MACH_PORT_NULL;
+                 Destroy the receive right the thread is blocked on, and
+                 replace it with a dead name to keep the name from reuse until
+                 the therad is done with it.  To do this atomically, first
+                 insert a send right, and then destroy the receive right,
+                 turning the send right into a dead name.  */
+              err = __mach_port_insert_right (__mach_task_self (),
+                                              *reply, *reply,
+                                              MACH_MSG_TYPE_MAKE_SEND);
+              assert_perror (err);
+              err = __mach_port_mod_refs (__mach_task_self (), *reply,
+                                          MACH_PORT_RIGHT_RECEIVE, -1);
+              assert_perror (err);
             }
 
           /* The system call return value register now contains

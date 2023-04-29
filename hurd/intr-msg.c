@@ -305,6 +305,7 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 	{
 	  /* Make sure we have a valid reply port.  The one we were using
 	     may have been destroyed by interruption.  */
+	  __mig_dealloc_reply_port (rcv_name);
 	  m->header.msgh_local_port = rcv_name = __mig_get_reply_port ();
 	  m->header.msgh_bits = msgh_bits;
 	  option = user_option;

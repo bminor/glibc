@@ -69,29 +69,18 @@ __mig_dealloc_reply_port (mach_port_t arg)
   mach_port_t port = get_reply_port ();
 
   set_reply_port (MACH_PORT_NULL);	/* So the mod_refs RPC won't use it.  */
-
-  /* Normally, ARG should be the same as PORT that we store.  However, if a
-     signal has interrupted the RPC, the stored PORT has been deallocated and
-     reset to MACH_PORT_NULL (or possibly MACH_PORT_DEAD).  In this case the
-     MIG routine still has the old name, which it passes to us here.  We must
-     not deallocate (or otherwise touch) it, since it may be already allocated
-     to another port right.  Fortunately MIG itself doesn't do anything with
-     the reply port on errors either, other than immediately calling this
-     function.
-
-     And so:
-     1. Assert that things are sane, i.e. and PORT is either invalid or same
-        as ARG.
-     2. Only deallocate the name if our stored PORT still names it.  In that
-        case we're sure the right has not been deallocated / the name reused.
-    */
-
+  assert (port == arg);
   if (!MACH_PORT_VALID (port))
     return;
-  assert (port == arg);
 
   err = __mach_port_mod_refs (__mach_task_self (), port,
                               MACH_PORT_RIGHT_RECEIVE, -1);
+  if (err == KERN_INVALID_RIGHT)
+    /* It could be that during signal handling, the receive right had been
+       replaced with a dead name.  */
+    err = __mach_port_mod_refs (__mach_task_self (), port,
+                                MACH_PORT_RIGHT_DEAD_NAME, -1);
+
   assert_perror (err);
 }
 weak_alias (__mig_dealloc_reply_port, mig_dealloc_reply_port)
