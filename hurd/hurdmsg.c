@@ -35,11 +35,17 @@ kern_return_t
   _S_msg_get_init_port (mach_port_t msgport, mach_port_t auth, int which,
 			mach_port_t *result, mach_msg_type_name_t *result_type)
 {
+  error_t err;
+
   AUTHCHECK;
+
   *result_type = MACH_MSG_TYPE_MOVE_SEND;
   /* This function adds a new user reference for the *RESULT it gives back.
      Our reply message uses a move-send right that consumes this reference.  */
-  return _hurd_ports_get (which, result);
+  err = _hurd_ports_get (which, result);
+  if (!err && MACH_PORT_VALID (auth))
+    __mach_port_deallocate (__mach_task_self (), auth);
+  return err;
 }
 
 kern_return_t
@@ -51,10 +57,13 @@ _S_msg_set_init_port (mach_port_t msgport, mach_port_t auth,
   AUTHCHECK;
 
   err = _hurd_ports_set (which, port);
-  if (err == 0)
-    __mach_port_deallocate (__mach_task_self (), port);
 
-  return 0;
+  if (!err && MACH_PORT_VALID (port))
+    __mach_port_deallocate (__mach_task_self (), port);
+  if (!err && MACH_PORT_VALID (auth))
+    __mach_port_deallocate (__mach_task_self (), auth);
+
+  return err;
 }
 
 kern_return_t
@@ -88,6 +97,8 @@ _S_msg_get_init_ports (mach_port_t msgport, mach_port_t auth,
       }
 
   *ports_type = MACH_MSG_TYPE_MOVE_SEND;
+  if (MACH_PORT_VALID (auth))
+    __mach_port_deallocate (__mach_task_self (), auth);
   return 0;
 }
 
@@ -108,6 +119,8 @@ _S_msg_set_init_ports (mach_port_t msgport, mach_port_t auth,
 	__mach_port_deallocate (__mach_task_self (), ports[i]);
     }
 
+  if (MACH_PORT_VALID (auth))
+    __mach_port_deallocate (__mach_task_self (), auth);
   return 0;
 }
 
@@ -152,9 +165,16 @@ kern_return_t
 _S_msg_get_init_int (mach_port_t msgport, mach_port_t auth,
 		     int which, int *value)
 {
+  error_t err;
+
   AUTHCHECK;
 
-  return get_int (which, value);
+  err = get_int (which, value);
+  if (err)
+    return err;
+  if (MACH_PORT_VALID (auth))
+    __mach_port_deallocate (__mach_task_self (), auth);
+  return 0;
 }
 
 kern_return_t
@@ -185,6 +205,8 @@ _S_msg_get_init_ints (mach_port_t msgport, mach_port_t auth,
 	return err;
       }
 
+  if (MACH_PORT_VALID (auth))
+    __mach_port_deallocate (__mach_task_self (), auth);
   return 0;
 }
 
@@ -236,9 +258,16 @@ kern_return_t
 _S_msg_set_init_int (mach_port_t msgport, mach_port_t auth,
 		     int which, int value)
 {
+  error_t err;
+
   AUTHCHECK;
 
-  return set_int (which, value);
+  err = set_int (which, value);
+  if (err)
+    return err;
+  if (MACH_PORT_VALID (auth))
+    __mach_port_deallocate (__mach_task_self (), auth);
+  return 0;
 }
 
 kern_return_t
@@ -261,6 +290,8 @@ _S_msg_set_init_ints (mach_port_t msgport, mach_port_t auth,
 	return err;
       }
 
+  if (MACH_PORT_VALID (auth))
+    __mach_port_deallocate (__mach_task_self (), auth);
   return 0;
 }
 
@@ -278,6 +309,8 @@ _S_msg_get_fd (mach_port_t msgport, mach_port_t auth, int which,
     return errno;
   *result_type = MACH_MSG_TYPE_MOVE_SEND;
 
+  if (MACH_PORT_VALID (auth))
+    __mach_port_deallocate (__mach_task_self (), auth);
   return 0;
 }
 
@@ -285,17 +318,25 @@ kern_return_t
 _S_msg_set_fd (mach_port_t msgport, mach_port_t auth,
 	       int which, mach_port_t port)
 {
+  error_t err;
+
   AUTHCHECK;
 
   /* We consume the reference if successful.  */
-  return HURD_FD_USE (which, (_hurd_port2fd (descriptor, port, 0), 0));
+  err = HURD_FD_USE (which, (_hurd_port2fd (descriptor, port, 0), 0));
+  if (err)
+    return err;
+
+  if (MACH_PORT_VALID (auth))
+    __mach_port_deallocate (__mach_task_self (), auth);
+  return 0;
 }
 
 /* Snarfing and frobbing environment variables.  */
 
 kern_return_t
 _S_msg_get_env_variable (mach_port_t msgport,
-			 const_string_t variable, //
+			 const_string_t variable,
 			 char **data, mach_msg_type_number_t *datalen)
 {
   error_t err;
@@ -322,14 +363,17 @@ _S_msg_get_env_variable (mach_port_t msgport,
 
 kern_return_t
 _S_msg_set_env_variable (mach_port_t msgport, mach_port_t auth,
-			 const_string_t variable, //
-			 const_string_t value, //
+			 const_string_t variable,
+			 const_string_t value,
 			 int replace)
 {
   AUTHCHECK;
 
   if (__setenv (variable, value, replace)) /* XXX name space */
     return errno;
+
+  if (MACH_PORT_VALID (auth))
+    __mach_port_deallocate (__mach_task_self (), auth);
   return 0;
 }
 
@@ -381,6 +425,9 @@ _S_msg_set_environment (mach_port_t msgport, mach_port_t auth,
     return errno;
   __argz_extract (data, datalen, envp);
   __environ = envp;		/* XXX cooperate with loadenv et al */
+
+  if (MACH_PORT_VALID (auth))
+    __mach_port_deallocate (__mach_task_self (), auth);
   return 0;
 }
 
@@ -433,6 +480,8 @@ _S_msg_get_dtable (mach_port_t process,
 out:
   __mutex_unlock (&_hurd_dtable_lock);
   HURD_CRITICAL_END;
+  if (!err && MACH_PORT_VALID (auth))
+    __mach_port_deallocate (__mach_task_self (), auth);
   return err;
 }
 
