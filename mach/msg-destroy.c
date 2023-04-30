@@ -38,6 +38,7 @@
  *
  */
 
+#include <libc-pointer-arith.h>
 #if 1
 #include <mach.h>
 #else
@@ -162,9 +163,10 @@ __mach_msg_destroy (mach_msg_header_t *msg)
 		    saddr += sizeof(mach_msg_type_t);
 	    }
 
-	    /* calculate length of data in bytes, rounding up */
-	    length = (((((number * size) + 7) >> 3) + sizeof (int) - 1)
-		      &~ (sizeof (int) - 1));
+	    /* Calculate length of data in bytes... */
+	    length = ((number * size) + 7) >> 3;
+	    /* ... and round up using uintptr_t alignment */
+	    length = ALIGN_UP (length, __alignof__ (uintptr_t));
 
 	    addr = is_inline ? saddr : * (vm_offset_t *) saddr;
 
@@ -177,7 +179,6 @@ __mach_msg_destroy (mach_msg_header_t *msg)
 	    }
 
 	    if (is_inline) {
-		/* inline data sizes round up to int boundaries */
 		saddr += length;
 	    } else {
 		mach_msg_destroy_memory(addr, length);
