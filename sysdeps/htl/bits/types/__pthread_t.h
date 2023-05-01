@@ -1,5 +1,5 @@
-/* Common threading primitives definitions for both POSIX and C11.
-   Copyright (C) 2017-2023 Free Software Foundation, Inc.
+/* Thread type.  Generic version.
+   Copyright (C) 2002-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -13,25 +13,12 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
+   License along with the GNU C Library;  if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _THREAD_SHARED_TYPES_H
-#define _THREAD_SHARED_TYPES_H 1
+#ifndef _BITS_TYPES___PTHREAD_T_H
+#define _BITS_TYPES___PTHREAD_T_H	1
 
-#include <bits/pthreadtypes-arch.h>
-#include <bits/types/struct___pthread_once.h>
-#include <bits/types/__thrd_t.h>
+typedef long int __pthread_t;
 
-typedef int __tss_t;
-
-typedef union
-{
-  struct __pthread_once __data;
-  int __align __ONCE_ALIGNMENT;
-  char __size[__SIZEOF_PTHREAD_ONCE_T];
-} __once_flag;
-
-#define __ONCE_FLAG_INIT { { __PTHREAD_ONCE_INIT } }
-
-#endif /* _THREAD_SHARED_TYPES_H  */
+#endif /* bits/types/__pthread_t.h */
