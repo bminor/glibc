@@ -44,3 +44,7 @@ librt-sysdep_routines += rt-unwind-resume
 librt-shared-only-routines += rt-unwind-resume
 CFLAGS-rt-unwind-resume.c += -fexceptions -fasynchronous-unwind-tables
 endif
+
+ifeq ($(subdir),sysvipc)
+sysdep_headers += bits/ipc-perm.h
+endif

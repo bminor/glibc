@@ -125,7 +125,6 @@ sysdep_headers += \
   bits/epoll.h \
   bits/eventfd.h \
   bits/inotify.h \
-  bits/ipc-perm.h \
   bits/mman-linux.h \
   bits/mman-map-flags-generic.h \
   bits/mman-shared.h \

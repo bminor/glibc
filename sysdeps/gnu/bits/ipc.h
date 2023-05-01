@@ -37,15 +37,4 @@
 /* Special key values.  */
 #define IPC_PRIVATE	((__key_t) 0)	/* Private key.  */
 
-
-/* Data structure used to pass permission information to IPC operations.  */
-struct ipc_perm
-  {
-    __key_t __key;			/* Key.  */
-    unsigned short int uid;		/* Owner's user ID.  */
-    unsigned short int gid;		/* Owner's group ID.  */
-    unsigned short int cuid;		/* Creator's user ID.  */
-    unsigned short int cgid;		/* Creator's group ID.  */
-    unsigned short int mode;		/* Read/write permission.  */
-    unsigned short int __seq;		/* Sequence number.  */
-  };
+#include <bits/ipc-perm.h>
