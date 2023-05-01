@@ -46,5 +46,7 @@ CFLAGS-rt-unwind-resume.c += -fexceptions -fasynchronous-unwind-tables
 endif
 
 ifeq ($(subdir),sysvipc)
-sysdep_headers += bits/ipc-perm.h
+sysdep_headers += bits/ipc-perm.h \
+		  bits/types/struct_msqid_ds.h \
+		  bits/types/struct_shmid_ds.h
 endif

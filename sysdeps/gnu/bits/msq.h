@@ -32,25 +32,7 @@
 typedef unsigned short int msgqnum_t;
 typedef unsigned short int msglen_t;
 
-
-/* Structure of record for one message inside the kernel.
-   The type `struct msg' is opaque.  */
-struct msqid_ds
-{
-  struct ipc_perm msg_perm;	/* structure describing operation permission */
-  struct msg *__msg_first;	/* pointer to first message on queue */
-  struct msg *__msg_last;	/* pointer to last message on queue */
-  __time_t msg_stime;		/* time of last msgsnd command */
-  __time_t msg_rtime;		/* time of last msgrcv command */
-  __time_t msg_ctime;		/* time of last change */
-  struct __wait_queue *__wwait;	/* ??? */
-  struct __wait_queue *__rwait;	/* ??? */
-  unsigned short int __msg_cbytes;/* current number of bytes on queue */
-  msgqnum_t msg_qnum;		/* number of messages currently on queue */
-  msglen_t msg_qbytes;		/* max number of bytes allowed on queue */
-  __ipc_pid_t msg_lspid;	/* pid of last msgsnd() */
-  __ipc_pid_t msg_lrpid;	/* pid of last msgrcv() */
-};
+#include <bits/types/struct_msqid_ds.h>
 
 #ifdef __USE_MISC
 

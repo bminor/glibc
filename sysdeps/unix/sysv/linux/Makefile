@@ -156,13 +156,11 @@ sysdep_headers += \
   bits/timerfd.h \
   bits/types/struct_msqid64_ds.h \
   bits/types/struct_msqid64_ds_helper.h \
-  bits/types/struct_msqid_ds.h \
   bits/types/struct_semid64_ds.h \
   bits/types/struct_semid64_ds_helper.h \
   bits/types/struct_semid_ds.h \
   bits/types/struct_shmid64_ds.h \
   bits/types/struct_shmid64_ds_helper.h \
-  bits/types/struct_shmid_ds.h \
   scsi/scsi.h \
   scsi/scsi_ioctl.h \
   scsi/sg.h \
