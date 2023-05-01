@@ -49,7 +49,7 @@ RUN_TEST_FUNCNAME (CMSG_NXTHDR_IMPL) (void)
   /* The first header length is so big, using it would cause an overflow.  */
   cmsg = CMSG_FIRSTHDR (&m);
   TEST_VERIFY_EXIT ((char *) cmsg == cmsgbuf);
-  cmsg->cmsg_len = SIZE_MAX;
+  cmsg->cmsg_len = (__typeof (cmsg->cmsg_len)) SIZE_MAX;
   cmsg = CMSG_NXTHDR_IMPL (&m, cmsg);
   TEST_VERIFY_EXIT (cmsg == NULL);
 
