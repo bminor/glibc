@@ -209,6 +209,8 @@ sysdep_routines += f_setlk close_nocancel close_nocancel_nostatus \
 		   xstat fxstat lxstat xstat64 fxstat64 lxstat64 \
 		   xmknod xmknodat \
 		   fxstatat fxstatat64
+
+sysdep_headers += bits/types/struct_flock.h
 endif
 
 ifeq (misc, $(subdir))
