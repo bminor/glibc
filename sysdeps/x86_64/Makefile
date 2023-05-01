@@ -175,8 +175,6 @@ ifeq (no,$(build-hardcoded-path-in-tests))
 tests-container += tst-glibc-hwcaps-cache
 endif
 
-tests-internal += tst-x86-64-tls-1
-
 endif # $(subdir) == elf
 
 ifeq ($(subdir),csu)

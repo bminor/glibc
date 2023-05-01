@@ -18,3 +18,7 @@
 ifeq ($(subdir),csu)
 gen-as-const-headers += tcb-offsets.sym
 endif
+
+ifeq ($(subdir),elf)
+tests-internal += tst-x86-64-tls-1
+endif
