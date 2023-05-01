@@ -24,6 +24,11 @@
 #include <unistd.h>
 #include <sys/uio.h>
 
+/* GNU/Hurd does not define a IOV_MAX constraint.  */
+#ifndef IOV_MAX
+# define IOV_MAX 1024
+#endif
+
 
 /* The purpose of this test is to verify that the INTERNAL_[V]SYSCALL_NCS
    macros on 64-bit platforms don't cast the return type to (int) which would
