@@ -186,7 +186,7 @@ libresolv-routines := \
   resolv-deprecated \
   # libresolv-routines
 
-ifeq ($(have-GLIBC_2.34)$(have-thread-library),yesyes)
+ifeq ($(have-anl-library),yes)
 # Empty compatibility library for old binaries.
 extra-libs += libanl
 libanl-routines += libanl-compat

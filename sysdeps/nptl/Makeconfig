@@ -19,6 +19,7 @@
 # This gets included at the end of the main glibc Makeconfig.
 
 have-thread-library = yes
+have-anl-library = $(have-GLIBC_2.34)
 
 # The thread library is integrated.
 shared-thread-library =
