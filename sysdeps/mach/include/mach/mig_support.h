@@ -9,10 +9,11 @@ libc_hidden_proto (__mig_init)
 # include <libc-symbols.h>
 
 # if defined USE_MULTIARCH && (IS_IN (libmachuser) || IS_IN (libhurduser))
-/* Avoid directly calling ifunc-enabled memcpy or strpcpy,
+/* Avoid directly calling ifunc-enabled memcpy or strlen,
    because they would introduce a relocation loop between lib*user and
    libc.so.  */
 #  define memcpy(dest, src, n) __mig_memcpy(dest, src, n)
+#  define strlen(src) __mig_strlen(src)
 # endif
 #endif
 

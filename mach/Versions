@@ -71,5 +71,6 @@ libc {
   GLIBC_PRIVATE {
     # functions used by RPC stubs
     __mig_memcpy;
+    __mig_strlen;
   }
 }

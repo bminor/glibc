@@ -25,7 +25,7 @@ headers = mach_init.h mach.h mach_error.h mach-shortcuts.h mach/mach_traps.h \
 lock = spin-solid spin-lock mutex-init mutex-solid
 lock-headers = lock-intern.h spin-lock.h
 routines = $(mach-syscalls) $(mach-shortcuts) \
-	   mach_init mig_strncpy mig_memcpy msg \
+	   mach_init mig_strncpy mig_strlen mig_memcpy msg \
 	   mig-alloc mig-dealloc mig-reply \
 	   msg-destroy msgserver \
 	   mach_error errstring error_compat errsystems \
