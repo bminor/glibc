@@ -1428,6 +1428,7 @@ class Config(object):
                              '--build=%s' % self.ctx.build_triplet,
                              '--host=%s' % self.triplet,
                              '--prefix=',
+                             '--disable-user32',
                              'CC=%s-gcc -nostdlib' % self.triplet])
         cmdlist.add_command('install', ['make', 'DESTDIR=%s' % self.sysroot,
                                         'install-data'])
