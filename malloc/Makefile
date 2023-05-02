@@ -190,7 +190,6 @@ $(objpfx)tst-mallocfork2-malloc-hugetlb2: $(shared-thread-library)
 $(objpfx)tst-mallocfork3-malloc-hugetlb2: $(shared-thread-library)
 $(objpfx)tst-malloc-fork-deadlock-malloc-hugetlb2: $(shared-thread-library)
 $(objpfx)tst-malloc-stats-cancellation-malloc-hugetlb2: $(shared-thread-library)
-$(objpfx)tst-memalign-3: $(shared-thread-library)
 
 # These should be removed by `make clean'.
 extra-objs = mcheck-init.o libmcheck.a
@@ -354,6 +353,8 @@ $(objpfx)tst-malloc-tcache-leak-malloc-hugetlb2: $(shared-thread-library)
 $(objpfx)tst-malloc_info-malloc-hugetlb1: $(shared-thread-library)
 $(objpfx)tst-malloc_info-malloc-hugetlb2: $(shared-thread-library)
 $(objpfx)tst-memalign-3: $(shared-thread-library)
+$(objpfx)tst-memalign-3-malloc-hugetlb1: $(shared-thread-library)
+$(objpfx)tst-memalign-3-malloc-hugetlb2: $(shared-thread-library)
 
 tst-compathooks-on-ENV = LD_PRELOAD=$(objpfx)libc_malloc_debug.so
 tst-compathooks-on-mcheck-ENV = LD_PRELOAD=$(objpfx)libc_malloc_debug.so
