@@ -190,6 +190,7 @@ $(objpfx)tst-mallocfork2-malloc-hugetlb2: $(shared-thread-library)
 $(objpfx)tst-mallocfork3-malloc-hugetlb2: $(shared-thread-library)
 $(objpfx)tst-malloc-fork-deadlock-malloc-hugetlb2: $(shared-thread-library)
 $(objpfx)tst-malloc-stats-cancellation-malloc-hugetlb2: $(shared-thread-library)
+$(objpfx)tst-memalign-3: $(shared-thread-library)
 
 # These should be removed by `make clean'.
 extra-objs = mcheck-init.o libmcheck.a
