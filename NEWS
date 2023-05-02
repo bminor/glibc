@@ -24,6 +24,11 @@ Major new features:
 * A new tunable, glibc.pthread.stack_hugetlb, can be used to disable
   Transparent Huge Pages (THP) in stack allocation at pthread_create.
 
+* Support for x86_64 running on Hurd has been added.  This port requires
+  as least binutils 2.40 and GCC 13:
+
+    - x86_64-gnu
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * In the Linux kernel for the hppa/parisc architecture some of the
