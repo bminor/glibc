@@ -28,6 +28,11 @@
 # define mig_reply_header_t	mig_reply_error_t
 #endif
 
+/* Macro used by MIG to cleanly check the type.  */
+#define BAD_TYPECHECK(type, check) __glibc_unlikely (({	\
+  union { mach_msg_type_t t; uint32_t w; } _t, _c;	\
+  _t.t = *(type); _c.t = *(check);_t.w != _c.w; }))
+
 error_t
 _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 			 mach_msg_option_t option,
@@ -61,7 +66,7 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 #ifdef NDR_CHAR_ASCII
       NDR_record_t ndr;
 #else
-      int type;
+      mach_msg_type_t type;
 #endif
       int code;
     } check;
@@ -222,11 +227,12 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 
 	      if (ty->msgtl_header.msgt_inline)
 		{
+		  /* Calculate length of data in bytes.  */
+		  const vm_size_t length = ((number * size) + 7) >> 3;
 		  clean_ports ((void *) ty, 0);
-		  /* calculate length of data in bytes, rounding up */
-		  ty = (void *) ty + (((((number * size) + 7) >> 3)
-				       + sizeof (mach_msg_type_t) - 1)
-				      &~ (sizeof (mach_msg_type_t) - 1));
+		  /* Move to the next argument.  */
+		  ty = (void *) PTR_ALIGN_UP ((char *) ty + length,
+		      __alignof__ (uintptr_t));
 		}
 	      else
 		{
@@ -354,19 +360,21 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
       {
 	/* We got a reply.  Was it EINTR?  */
 #ifdef MACH_MSG_TYPE_BIT
-	const union
-	{
-	  mach_msg_type_t t;
-	  int i;
-	} check =
-	  { t: { MACH_MSG_TYPE_INTEGER_T, sizeof (integer_t) * 8,
-		 1, TRUE, FALSE, FALSE, 0 } };
+	static const mach_msg_type_t type_check = {
+	  .msgt_name = MACH_MSG_TYPE_INTEGER_T,
+	  .msgt_size = sizeof (integer_t) * 8,
+	  .msgt_number = 1,
+	  .msgt_inline = TRUE,
+	  .msgt_longform = FALSE,
+	  .msgt_deallocate = FALSE,
+	  .msgt_unused = 0
+	};
 #endif
 
         if (m->reply.RetCode == EINTR
 	    && m->header.msgh_size == sizeof m->reply
 #ifdef MACH_MSG_TYPE_BIT
-	    && m->check.type == check.i
+	    && !BAD_TYPECHECK(&m->check.type, &type_check)
 #endif
 	    && !(m->header.msgh_bits & MACH_MSGH_BITS_COMPLEX))
 	  {
