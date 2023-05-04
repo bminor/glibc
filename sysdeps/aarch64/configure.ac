@@ -107,13 +107,16 @@ if test x"$build_mathvec" = xnotset; then
 fi
 
 # Check if compiler is sufficient to build mathvec (needs SVE ACLE)
-AC_CACHE_CHECK(for availability of SVE ACLE, libc_cv_has_sve_acle, [dnl
-  if test $build_mathvec = yes; then
-    cat > conftest.c <<EOF
+AC_CACHE_CHECK(for availability of SVE ACLE, libc_cv_aarch64_sve_acle, [dnl
+  cat > conftest.c <<EOF
 #include <arm_sve.h>
 EOF
-    if ! ${CC-cc} conftest.c -fsyntax-only -ffreestanding; then
-      as_fn_error 1 "mathvec is enabled but compiler does not have SVE ACLE. Either use a compatible compiler or configure with --disable-mathvec (this results in incomplete ABI)."
-    fi
-    rm conftest.c
-  fi])
+  if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -fsyntax-only -ffreestanding conftest.c]); then
+    libc_cv_aarch64_sve_acle=yes
+  else
+    libc_cv_aarch64_sve_acle=no
+  fi
+  rm conftest.c])
+if test $build_mathvec = yes && test $libc_cv_aarch64_sve_acle = no; then
+  AC_MSG_ERROR([mathvec is enabled but compiler does not have SVE ACLE. Either use a compatible compiler or configure with --disable-mathvec (this results in incomplete ABI).])
+fi

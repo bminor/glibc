@@ -335,18 +335,26 @@ fi
 # Check if compiler is sufficient to build mathvec (needs SVE ACLE)
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for availability of SVE ACLE" >&5
 $as_echo_n "checking for availability of SVE ACLE... " >&6; }
-if ${libc_cv_has_sve_acle+:} false; then :
+if ${libc_cv_aarch64_sve_acle+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-    if test $build_mathvec = yes; then
     cat > conftest.c <<EOF
 #include <arm_sve.h>
 EOF
-    if ! ${CC-cc} conftest.c -fsyntax-only -ffreestanding; then
-      as_fn_error 1 "mathvec is enabled but compiler does not have SVE ACLE. Either use a compatible compiler or configure with --disable-mathvec (this results in incomplete ABI)."
-    fi
-    rm conftest.c
+  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -fsyntax-only -ffreestanding conftest.c'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then
+    libc_cv_aarch64_sve_acle=yes
+  else
+    libc_cv_aarch64_sve_acle=no
   fi
+  rm conftest.c
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_has_sve_acle" >&5
-$as_echo "$libc_cv_has_sve_acle" >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_aarch64_sve_acle" >&5
+$as_echo "$libc_cv_aarch64_sve_acle" >&6; }
+if test $build_mathvec = yes && test $libc_cv_aarch64_sve_acle = no; then
+  as_fn_error $? "mathvec is enabled but compiler does not have SVE ACLE. Either use a compatible compiler or configure with --disable-mathvec (this results in incomplete ABI)." "$LINENO" 5
+fi
