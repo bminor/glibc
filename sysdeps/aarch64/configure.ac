@@ -112,7 +112,7 @@ AC_CACHE_CHECK(for availability of SVE ACLE, libc_cv_has_sve_acle, [dnl
     cat > conftest.c <<EOF
 #include <arm_sve.h>
 EOF
-    if ! ${CC-cc} conftest.c -fsyntax-only; then
+    if ! ${CC-cc} conftest.c -fsyntax-only -ffreestanding; then
       as_fn_error 1 "mathvec is enabled but compiler does not have SVE ACLE. Either use a compatible compiler or configure with --disable-mathvec (this results in incomplete ABI)."
     fi
     rm conftest.c
