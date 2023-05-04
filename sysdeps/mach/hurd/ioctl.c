@@ -16,6 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
+#include <libc-pointer-arith.h>
 #include <sys/ioctl.h>
 #include <hurd.h>
 #include <hurd/fd.h>
@@ -31,29 +32,40 @@
 
 #include <hurd/ioctls.defs>
 
+#define msg_align(x) ALIGN_UP (x, __alignof__ (uintptr_t))
 #define typesize(type)	(1 << (type))
 
+/* Macro used by MIG to cleanly check the type.  */
+#define BAD_TYPECHECK(type, check) __glibc_unlikely (({	\
+  union { mach_msg_type_t t; uint32_t w; } _t, _c;	\
+  _t.t = *(type); _c.t = *(check);_t.w != _c.w; }))
 
 /* Perform the I/O control operation specified by REQUEST on FD.
    The actual type and use of ARG and the return value depend on REQUEST.  */
 int
 __ioctl (int fd, unsigned long int request, ...)
 {
-#ifdef MACH_MSG_TYPE_CHAR
+#ifdef MACH_MSG_TYPE_BIT
   /* Map individual type fields to Mach IPC types.  */
   static const int mach_types[] =
     { MACH_MSG_TYPE_CHAR, MACH_MSG_TYPE_INTEGER_16, MACH_MSG_TYPE_INTEGER_32,
       MACH_MSG_TYPE_INTEGER_64 };
-#define io2mach_type(count, type) \
-  ((mach_msg_type_t) { mach_types[type], typesize (type) * 8, count, 1, 0, 0 })
+#define io2mach_type(count, type)   \
+  ((mach_msg_type_t) {		    \
+   .msgt_name = mach_types[type],   \
+   .msgt_size = typesize(type) * 8, \
+   .msgt_number = count,	    \
+   .msgt_inline = TRUE,		    \
+   .msgt_longform = FALSE,	    \
+   .msgt_deallocate = FALSE,	    \
+   .msgt_unused = 0		    \
+   })
 #endif
 
   /* Extract the type information encoded in the request.  */
   unsigned int type = _IOC_TYPE (request);
 
   /* Message buffer.  */
-#define msg_align(x) \
-  (((x) + sizeof (mach_msg_type_t) - 1) & ~(sizeof (mach_msg_type_t) - 1))
   struct
   {
 #ifdef MACH_MSG_TYPE_BIT
@@ -63,14 +75,14 @@ __ioctl (int fd, unsigned long int request, ...)
       struct
       {
 	mach_msg_header_t	Head;
-	int			RetCodeType;
+	mach_msg_type_t		RetCodeType;
 	kern_return_t		RetCode;
       } header_typecheck;
     };
     char data[3 * sizeof (mach_msg_type_t)
 	      + msg_align (_IOT_COUNT0 (type) * typesize (_IOT_TYPE0 (type)))
 	      + msg_align (_IOT_COUNT1 (type) * typesize (_IOT_TYPE1 (type)))
-	      + _IOT_COUNT2 (type) * typesize (_IOT_TYPE2 (type))];
+	      + msg_align (_IOT_COUNT2 (type) * typesize (_IOT_TYPE2 (type)))];
 #else  /* Untyped Mach IPC format.  */
     mig_reply_error_t header;
     char data[_IOT_COUNT0 (type) * typesize (_IOT_TYPE0 (type))
@@ -128,8 +140,7 @@ __ioctl (int fd, unsigned long int request, ...)
 		  void *p = &t[1];
 		  *t = io2mach_type (count, type);
 		  p = __mempcpy (p, argptr, len);
-		  p = (void *) (((uintptr_t) p + sizeof (*t) - 1)
-				& ~(sizeof (*t) - 1));
+		  p = (void *) msg_align ((uintptr_t) p);
 		  t = p;
 #else
 		  p = __mempcpy (p, argptr, len);
@@ -150,7 +161,7 @@ __ioctl (int fd, unsigned long int request, ...)
 #ifdef MACH_MSG_TYPE_BIT
 	  *t++ = io2mach_type (1, _IOTS (integer_t));
 	  *(integer_t *) t = (integer_t) (intptr_t) arg;
-	  t = (void *) t + sizeof (integer_t);
+	  t = (void *) msg_align ((uintptr_t) t + sizeof (integer_t));
 #else
 	  *(integer_t *) p = (integer_t) (intptr_t) arg;
 	  p = (void *) p + sizeof (integer_t);
@@ -205,9 +216,8 @@ __ioctl (int fd, unsigned long int request, ...)
 	return MIG_TYPE_ERROR;
 
 #ifdef MACH_MSG_TYPE_BIT
-      if (msg.header_typecheck.RetCodeType
-	  != ((union { mach_msg_type_t t; int i; })
-	    { t: io2mach_type (1, _IOTS (msg.header.RetCode)) }).i)
+      mach_msg_type_t ipctype = io2mach_type(1, _IOTS (msg.header.RetCode));
+      if (BAD_TYPECHECK (&msg.header_typecheck.RetCodeType, &ipctype))
 	return MIG_TYPE_ERROR;
 #endif
       return msg.header.RetCode;
@@ -259,8 +269,7 @@ __ioctl (int fd, unsigned long int request, ...)
 	      /* Add the size of the type and data.  */
 	      reply_size += sizeof (mach_msg_type_t) + typesize (type) * count;
 	      /* Align it to word size.  */
-	      reply_size += sizeof (mach_msg_type_t) - 1;
-	      reply_size &= ~(sizeof (mach_msg_type_t) - 1);
+	      reply_size = msg_align (reply_size);
 #else
 	      reply_size += typesize (type) * count;
 #endif
@@ -299,16 +308,14 @@ __ioctl (int fd, unsigned long int request, ...)
 	    {
 	      const size_t len = count * typesize (type);
 #ifdef MACH_MSG_TYPE_BIT
-	      union { mach_msg_type_t t; int i; } ipctype;
-	      ipctype.t = io2mach_type (count, type);
-	      if (*(int *) t != ipctype.i)
+	      const mach_msg_type_t ipctype = io2mach_type(count, type);
+	      if (BAD_TYPECHECK (t, &ipctype))
 		return 1;
 	      ++t;
 	      memcpy (store, t, len);
 	      if (update != NULL)
 		*update += len;
-	      t = (void *) (((uintptr_t) t + len + sizeof (*t) - 1)
-			    & ~(sizeof (*t) - 1));
+	      t = (mach_msg_type_t *) msg_align ((uintptr_t) t + len);
 #else
 	      memcpy (store, p, len);
 	      p += len;
