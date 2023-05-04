@@ -45,14 +45,11 @@
    compiler compiles some other language than Standard C.
 
    REQUIREMENTS:
-     This program calls gcc to get the list of defined macros. If you
+     This program calls ${1-gcc} to get the list of defined macros. If you
      don't have gcc you're probably out of luck unless your compiler or
-     preprocessor has something similar to gcc's -dM option. Tune
-     PRINT_MACROS in this case. This program assumes headers are found
-     under /usr/include and that there is a writable /tmp directory.
-     Tune SYSTEM_INCLUDE if your system differs.
-     #define BROKEN_SYSTEM if system(NULL) bombs -- one more violation
-     of ISO C, by the way.
+     preprocessor has something similar to gcc's -dM option. This program
+     assumes headers are found in the default search path (pass -I... in
+     $2 if this is not the case) and that there is a writable /tmp directory.
 
    OUTPUT:
      Each header file name is printed, followed by illegal macro names
