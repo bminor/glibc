@@ -21,7 +21,7 @@
 int
 __pthread_spin_unlock (pthread_spinlock_t *lock)
 {
-  /* CONCURRENCTY NOTES:
+  /* CONCURRENCY NOTES:
 
      The atomic_exchange_release synchronizes-with the atomic_exhange_acq in
      pthread_spin_lock.
