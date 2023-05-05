@@ -332,7 +332,7 @@ if test x"$build_mathvec" = xnotset; then
   build_mathvec=yes
 fi
 
-# Check if compiler is sufficient to build mathvec (needs SVE ACLE)
+# Check if compiler supports SVE ACLE.
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for availability of SVE ACLE" >&5
 $as_echo_n "checking for availability of SVE ACLE... " >&6; }
 if ${libc_cv_aarch64_sve_acle+:} false; then :
@@ -355,6 +355,29 @@ EOF
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_aarch64_sve_acle" >&5
 $as_echo "$libc_cv_aarch64_sve_acle" >&6; }
-if test $build_mathvec = yes && test $libc_cv_aarch64_sve_acle = no; then
-  as_fn_error $? "mathvec is enabled but compiler does not have SVE ACLE. Either use a compatible compiler or configure with --disable-mathvec (this results in incomplete ABI)." "$LINENO" 5
+
+# Check if compiler is sufficient to build mathvec
+if test $build_mathvec = yes; then
+  fail=no
+  if test $libc_cv_aarch64_variant_pcs = no; then
+    fail=yes
+    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: mathvec is enabled but linker does not support variant PCS." >&5
+$as_echo "$as_me: WARNING: mathvec is enabled but linker does not support variant PCS." >&2;}
+  fi
+  if test $libc_cv_aarch64_sve_asm = no; then
+    fail=yes
+    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: mathvec is enabled but assembler does not support SVE." >&5
+$as_echo "$as_me: WARNING: mathvec is enabled but assembler does not support SVE." >&2;}
+  fi
+  if test $libc_cv_aarch64_sve_acle = no; then
+    fail=yes
+    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: mathvec is enabled but compiler does not have SVE ACLE." >&5
+$as_echo "$as_me: WARNING: mathvec is enabled but compiler does not have SVE ACLE." >&2;}
+  fi
+  if test $fail = yes; then
+    as_fn_error $? "use a compatible toolchain or configure with --disable-mathvec (this results in incomplete ABI)." "$LINENO" 5
+  fi
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: mathvec is disabled, this results in incomplete ABI." >&5
+$as_echo "$as_me: WARNING: mathvec is disabled, this results in incomplete ABI." >&2;}
 fi

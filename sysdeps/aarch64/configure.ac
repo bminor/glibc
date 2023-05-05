@@ -106,7 +106,7 @@ if test x"$build_mathvec" = xnotset; then
   build_mathvec=yes
 fi
 
-# Check if compiler is sufficient to build mathvec (needs SVE ACLE)
+# Check if compiler supports SVE ACLE.
 AC_CACHE_CHECK(for availability of SVE ACLE, libc_cv_aarch64_sve_acle, [dnl
   cat > conftest.c <<EOF
 #include <arm_sve.h>
@@ -117,6 +117,25 @@ EOF
     libc_cv_aarch64_sve_acle=no
   fi
   rm conftest.c])
-if test $build_mathvec = yes && test $libc_cv_aarch64_sve_acle = no; then
-  AC_MSG_ERROR([mathvec is enabled but compiler does not have SVE ACLE. Either use a compatible compiler or configure with --disable-mathvec (this results in incomplete ABI).])
+
+# Check if compiler is sufficient to build mathvec
+if test $build_mathvec = yes; then
+  fail=no
+  if test $libc_cv_aarch64_variant_pcs = no; then
+    fail=yes
+    AC_MSG_WARN([mathvec is enabled but linker does not support variant PCS.])
+  fi
+  if test $libc_cv_aarch64_sve_asm = no; then
+    fail=yes
+    AC_MSG_WARN([mathvec is enabled but assembler does not support SVE.])
+  fi
+  if test $libc_cv_aarch64_sve_acle = no; then
+    fail=yes
+    AC_MSG_WARN([mathvec is enabled but compiler does not have SVE ACLE.])
+  fi
+  if test $fail = yes; then
+    AC_MSG_ERROR([use a compatible toolchain or configure with --disable-mathvec (this results in incomplete ABI).])
+  fi
+else
+  AC_MSG_WARN([mathvec is disabled, this results in incomplete ABI.])
 fi
