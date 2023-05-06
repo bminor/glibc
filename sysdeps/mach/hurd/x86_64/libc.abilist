@@ -1197,6 +1197,7 @@ GLIBC_2.38 initstate_r F
 GLIBC_2.38 innetgr F
 GLIBC_2.38 insque F
 GLIBC_2.38 ioctl F
+GLIBC_2.38 ioperm F
 GLIBC_2.38 iruserok F
 GLIBC_2.38 iruserok_af F
 GLIBC_2.38 isalnum F
