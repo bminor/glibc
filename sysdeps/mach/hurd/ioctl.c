@@ -28,17 +28,13 @@
 #include <stdint.h>
 #include <hurd/ioctl.h>
 #include <mach/mig_support.h>
+#include <mach_rpc.h>
 #include <sysdep-cancel.h>
 
 #include <hurd/ioctls.defs>
 
 #define msg_align(x) ALIGN_UP (x, __alignof__ (uintptr_t))
 #define typesize(type)	(1 << (type))
-
-/* Macro used by MIG to cleanly check the type.  */
-#define BAD_TYPECHECK(type, check) __glibc_unlikely (({	\
-  union { mach_msg_type_t t; uint32_t w; } _t, _c;	\
-  _t.t = *(type); _c.t = *(check);_t.w != _c.w; }))
 
 /* Perform the I/O control operation specified by REQUEST on FD.
    The actual type and use of ARG and the return value depend on REQUEST.  */

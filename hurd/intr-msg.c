@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <mach.h>
+#include <mach_rpc.h>
 #include <mach/mig_errors.h>
 #include <mach/mig_support.h>
 #include <hurd/signal.h>
@@ -27,11 +28,6 @@
 #ifdef NDR_CHAR_ASCII		/* OSF Mach flavors have different names.  */
 # define mig_reply_header_t	mig_reply_error_t
 #endif
-
-/* Macro used by MIG to cleanly check the type.  */
-#define BAD_TYPECHECK(type, check) __glibc_unlikely (({	\
-  union { mach_msg_type_t t; uint32_t w; } _t, _c;	\
-  _t.t = *(type); _c.t = *(check);_t.w != _c.w; }))
 
 error_t
 _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
