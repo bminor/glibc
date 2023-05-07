@@ -3933,13 +3933,6 @@ enum
 
 #define R_TILEGX_NUM		130
 
-/* RISC-V specific values for the Dyn d_tag field.  */
-#define DT_RISCV_VARIANT_CC	(DT_LOPROC + 1)
-#define DT_RISCV_NUM		2
-
-/* RISC-V specific values for the st_other field.  */
-#define STO_RISCV_VARIANT_CC 0x80
-
 /* RISC-V ELF Flags */
 #define EF_RISCV_RVC 			0x0001
 #define EF_RISCV_FLOAT_ABI 		0x0006

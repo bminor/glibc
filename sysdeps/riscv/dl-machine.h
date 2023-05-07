@@ -53,9 +53,6 @@
      || (__WORDSIZE == 64 && (type) == R_RISCV_TLS_TPREL64)))	\
    | (ELF_RTYPE_CLASS_COPY * ((type) == R_RISCV_COPY)))
 
-//* Translate a processor specific dynamic tag to the index in l_info array.  */
-#define DT_RISCV(x) (DT_RISCV_##x - DT_LOPROC + DT_NUM)
-
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int __attribute_used__
 elf_machine_matches_host (const ElfW(Ehdr) *ehdr)
@@ -284,29 +281,6 @@ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
   /* Check for unexpected PLT reloc type.  */
   if (__glibc_likely (r_type == R_RISCV_JUMP_SLOT))
     {
-      if (__glibc_unlikely (map->l_info[DT_RISCV (VARIANT_CC)] != NULL))
-	{
-          /* Check the symbol table for variant CC symbols.  */
-          const Elf_Symndx symndx = ELFW(R_SYM) (reloc->r_info);
-          const ElfW(Sym) *symtab =
-            (const void *)D_PTR (map, l_info[DT_SYMTAB]);
-          const ElfW(Sym) *sym = &symtab[symndx];
-          if (__glibc_unlikely (sym->st_other & STO_RISCV_VARIANT_CC))
-            {
-              /* Avoid lazy resolution of variant CC symbols.  */
-              const struct r_found_version *version = NULL;
-              if (map->l_info[VERSYMIDX (DT_VERSYM)] != NULL)
-                {
-                  const ElfW(Half) *vernum =
-                    (const void *)D_PTR (map, l_info[VERSYMIDX (DT_VERSYM)]);
-                  version = &map->l_versions[vernum[symndx] & 0x7fff];
-                }
-              elf_machine_rela (map, scope, reloc, sym, version, reloc_addr,
-                                skip_ifunc);
-              return;
-            }
-	}
-
       if (__glibc_unlikely (map->l_mach.plt == 0))
 	{
 	  if (l_addr)
