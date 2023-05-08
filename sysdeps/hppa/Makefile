@@ -30,9 +30,6 @@ endif
 ifeq ($(subdir),csu)
 ifeq (yes,$(build-shared))
 # Compatibility
-ifeq (yes,$(have-protected))
-CPPFLAGS-libgcc-compat.c = -DHAVE_DOT_HIDDEN
-endif
 sysdep_routines += libgcc-compat
 shared-only-routines += libgcc-compat
 endif
