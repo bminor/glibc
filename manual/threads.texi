@@ -754,8 +754,8 @@ freed.
 
 @comment semaphore.h
 @comment POSIX-proposed
-@deftypefun int sem_clockwait (sem_t *@var{sem}, clockid_t @var{clockid},
-                               const struct timespec *@var{abstime})
+@deftypefun int sem_clockwait (sem_t *@var{sem}, clockid_t @var{clockid}, const struct timespec *@var{abstime})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 Behaves like @code{sem_timedwait} except the time @var{abstime} is measured
 against the clock specified by @var{clockid} rather than
 @code{CLOCK_REALTIME}.  Currently, @var{clockid} must be either
@@ -764,8 +764,7 @@ against the clock specified by @var{clockid} rather than
 
 @comment pthread.h
 @comment POSIX-proposed
-@deftypefun int pthread_cond_clockwait (pthread_cond_t *@var{cond}, pthread_mutex_t *@var{mutex},
-                                        clockid_t @var{clockid}, const struct timespec *@var{abstime})
+@deftypefun int pthread_cond_clockwait (pthread_cond_t *@var{cond}, pthread_mutex_t *@var{mutex}, clockid_t @var{clockid}, const struct timespec *@var{abstime})
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 @c If exactly the same function with arguments is called from a signal
 @c handler that interrupts between the mutex unlock and sleep then it
@@ -784,10 +783,7 @@ specified or defaulted when @code{pthread_cond_init} was called.  Currently,
 
 @comment pthread.h
 @comment POSIX-proposed
-@deftypefun int pthread_rwlock_clockrdlock (pthread_rwlock_t *@var{rwlock},
-				       clockid_t @var{clockid},
-				       const struct timespec *@var{abstime})
-
+@deftypefun int pthread_rwlock_clockrdlock (pthread_rwlock_t *@var{rwlock}, clockid_t @var{clockid}, const struct timespec *@var{abstime})
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 Behaves like @code{pthread_rwlock_timedrdlock} except the time
 @var{abstime} is measured against the clock specified by @var{clockid}
@@ -798,10 +794,7 @@ returned.
 
 @comment pthread.h
 @comment POSIX-proposed
-@deftypefun int pthread_rwlock_clockwrlock (pthread_rwlock_t *@var{rwlock},
-				       clockid_t @var{clockid},
-				       const struct timespec *@var{abstime})
-
+@deftypefun int pthread_rwlock_clockwrlock (pthread_rwlock_t *@var{rwlock}, clockid_t @var{clockid}, const struct timespec *@var{abstime})
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 Behaves like @code{pthread_rwlock_timedwrlock} except the time
 @var{abstime} is measured against the clock specified by @var{clockid}
@@ -812,8 +805,7 @@ returned.
 
 @comment pthread.h
 @comment GNU extension
-@deftypefun int pthread_tryjoin_np (pthread_t *@var{thread},
-				      void **@var{thread_return})
+@deftypefun int pthread_tryjoin_np (pthread_t *@var{thread}, void **@var{thread_return})
 @standards{GNU, pthread.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 Behaves like @code{pthread_join} except that it will return @code{EBUSY}
@@ -822,9 +814,7 @@ immediately if the thread specified by @var{thread} has not yet terminated.
 
 @comment pthread.h
 @comment GNU extension
-@deftypefun int pthread_timedjoin_np (pthread_t *@var{thread},
-				      void **@var{thread_return},
-				      const struct timespec *@var{abstime})
+@deftypefun int pthread_timedjoin_np (pthread_t *@var{thread}, void **@var{thread_return}, const struct timespec *@var{abstime})
 @standards{GNU, pthread.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 Behaves like @code{pthread_tryjoin_np} except that it will block until the
@@ -836,10 +826,7 @@ will wait forever in the same way as @code{pthread_join}.
 
 @comment pthread.h
 @comment GNU extension
-@deftypefun int pthread_clockjoin_np (pthread_t *@var{thread},
-				      void **@var{thread_return},
-                                      clockid_t @var{clockid},
-				      const struct timespec *@var{abstime})
+@deftypefun int pthread_clockjoin_np (pthread_t *@var{thread}, void **@var{thread_return}, clockid_t @var{clockid}, const struct timespec *@var{abstime})
 @standards{GNU, pthread.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 Behaves like @code{pthread_timedjoin_np} except that the absolute time in
