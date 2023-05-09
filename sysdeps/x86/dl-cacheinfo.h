@@ -749,8 +749,16 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
      reflected in the manual.  */
   unsigned long int maximum_non_temporal_threshold = SIZE_MAX >> 4;
   unsigned long int minimum_non_temporal_threshold = 0x4040;
+
+  /* If `non_temporal_threshold` less than `minimum_non_temporal_threshold`
+     it most likely means we failed to detect the cache info. We don't want
+     to default to `minimum_non_temporal_threshold` as such a small value,
+     while correct, has bad performance. We default to 64MB as reasonable
+     default bound. 64MB is likely conservative in that most/all systems would
+     choose a lower value so it should never forcing non-temporal stores when
+     they otherwise wouldn't be used.  */
   if (non_temporal_threshold < minimum_non_temporal_threshold)
-    non_temporal_threshold = minimum_non_temporal_threshold;
+    non_temporal_threshold = 64 * 1024 * 1024;
   else if (non_temporal_threshold > maximum_non_temporal_threshold)
     non_temporal_threshold = maximum_non_temporal_threshold;
 
