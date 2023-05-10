@@ -190,8 +190,8 @@ endif
 ifeq (yes,$(build-shared))
 extra-objs = \
   $(all-rtld-routines:%=%.os) \
-  sofini.os \
   interp.os \
+  sofini.os \
   # extra-objs
 generated += \
   dl-allobjs.os \
@@ -395,17 +395,17 @@ tests += \
   tst-deep1 \
   tst-dl-is_dso \
   tst-dlmodcount \
-  tst-dlmopen1 \
-  tst-dlmopen3 \
-  tst-dlmopen4 \
   tst-dlmopen-dlerror \
   tst-dlmopen-gethostbyname \
   tst-dlmopen-twice \
+  tst-dlmopen1 \
+  tst-dlmopen3 \
+  tst-dlmopen4 \
+  tst-dlopen-self \
+  tst-dlopen-tlsmodid \
   tst-dlopenfail \
   tst-dlopenfail-2 \
   tst-dlopenrpath \
-  tst-dlopen-self \
-  tst-dlopen-tlsmodid \
   tst-dlsym-error \
   tst-filterobj \
   tst-filterobj-dlopen \
@@ -420,9 +420,9 @@ tests += \
   tst-latepthread \
   tst-main1 \
   tst-next-ver \
-  tst-nodelete2 \
   tst-nodelete-dlclose \
   tst-nodelete-opened \
+  tst-nodelete2 \
   tst-noload \
   tst-null-argv \
   tst-p_align1 \
@@ -436,6 +436,10 @@ tests += \
   tst-sonamemove-dlopen \
   tst-sonamemove-link \
   tst-thrlock \
+  tst-tls-dlinfo \
+  tst-tls-ie \
+  tst-tls-ie-dlmopen \
+  tst-tls-manydynamic \
   tst-tls10 \
   tst-tls11 \
   tst-tls12 \
@@ -452,10 +456,6 @@ tests += \
   tst-tls5 \
   tst-tlsalign \
   tst-tlsalign-extern \
-  tst-tls-dlinfo \
-  tst-tls-ie \
-  tst-tls-ie-dlmopen \
-  tst-tls-manydynamic \
   tst-unique1 \
   tst-unique2 \
   tst-unwind-ctor \
@@ -547,27 +547,27 @@ tests += \
   tst-relr2 \
   tst-relr3 \
   tst-relr4 \
-# tests
+  # tests
 modules-names-dt-relr = \
   tst-relr-mod2 \
   tst-relr-mod3a \
   tst-relr-mod3b \
   tst-relr-mod4a \
   tst-relr-mod4b \
-# modules-names-dt-relr
+  # modules-names-dt-relr
 modules-names += $(modules-names-dt-relr)
 # These shared libraries have special build rules.
 modules-names-nobuild += $(modules-names-dt-relr)
 ifeq ($(have-fpie),yes)
 tests += \
   tst-relr-pie \
-# tests
+  # tests
 tests-pie += \
   tst-relr-pie \
-# tests-pie
+  # tests-pie
 tests-special += \
   $(objpfx)check-tst-relr-pie.out \
-# tests-special
+  # tests-special
 endif
 CFLAGS-tst-relr-pie.c += $(pie-ccflag)
 LDFLAGS-tst-relr += -Wl,-z,pack-relative-relocs
@@ -781,8 +781,6 @@ modules-names += \
   tst-auditmanymod9 \
   tst-auditmod-tlsdesc  \
   tst-auditmod1 \
-  tst-auditmod9a \
-  tst-auditmod9b \
   tst-auditmod11 \
   tst-auditmod12 \
   tst-auditmod18 \
@@ -799,6 +797,8 @@ modules-names += \
   tst-auditmod24d \
   tst-auditmod25 \
   tst-auditmod28 \
+  tst-auditmod9a \
+  tst-auditmod9b \
   tst-auxvalmod \
   tst-big-note-lib \
   tst-deep1mod1 \
@@ -813,11 +813,11 @@ modules-names += \
   tst-dl_find_object-mod7 \
   tst-dl_find_object-mod8 \
   tst-dl_find_object-mod9 \
-  tst-dlmopen1mod \
   tst-dlmopen-dlerror-mod \
   tst-dlmopen-gethostbyname-mod \
   tst-dlmopen-twice-mod1 \
   tst-dlmopen-twice-mod2 \
+  tst-dlmopen1mod \
   tst-dlopenfaillinkmod \
   tst-dlopenfailmod1 \
   tst-dlopenfailmod2 \
@@ -845,10 +845,10 @@ modules-names += \
   tst-ldconfig-soname-lib-with-soname \
   tst-ldconfig-soname-lib-without-soname \
   tst-main1mod \
-  tst-nodelete2mod \
   tst-nodelete-dlclose-dso \
   tst-nodelete-dlclose-plugin \
   tst-nodelete-opened-lib \
+  tst-nodelete2mod \
   tst-null-argv-lib \
   tst-p_alignmod-base \
   tst-p_alignmod3 \
@@ -863,12 +863,6 @@ modules-names += \
   tst-sonamemove-runmod1 \
   tst-sonamemove-runmod2 \
   tst-sprof-mod \
-  tst-tls19mod1 \
-  tst-tls19mod2 \
-  tst-tls19mod3 \
-  tst-tls20mod-bad \
-  tst-tls21mod \
-  tst-tlsalign-lib \
   tst-tls-ie-mod0 \
   tst-tls-ie-mod1 \
   tst-tls-ie-mod2 \
@@ -876,6 +870,12 @@ modules-names += \
   tst-tls-ie-mod4 \
   tst-tls-ie-mod5 \
   tst-tls-ie-mod6 \
+  tst-tls19mod1 \
+  tst-tls19mod2 \
+  tst-tls19mod3 \
+  tst-tls20mod-bad \
+  tst-tls21mod \
+  tst-tlsalign-lib \
   tst-tlsmod1 \
   tst-tlsmod10 \
   tst-tlsmod11 \
@@ -925,7 +925,7 @@ modules-names += \
   vismod1 \
   vismod2 \
   vismod3 \
-# modules-names
+  # modules-names
 
 modules-names-cxx = \
   tst-dlopen-nodelete-reloc-mod1 \
@@ -1015,22 +1015,22 @@ modules-names-nobuild += \
   tst-audit24bmod2 \
   tst-big-note-lib \
   tst-ro-dynamic-mod \
-# modules-names-nobuild
+  # modules-names-nobuild
 
 tests += $(tests-static)
 
 ifeq (yes,$(have-ifunc))
 tests-ifuncstatic := \
-  ifuncmain1static \
   ifuncmain1picstatic \
-  ifuncmain2static \
+  ifuncmain1static \
   ifuncmain2picstatic \
-  ifuncmain4static \
+  ifuncmain2static \
   ifuncmain4picstatic \
-  ifuncmain5static \
+  ifuncmain4static \
   ifuncmain5picstatic \
-  ifuncmain7static \
+  ifuncmain5static \
   ifuncmain7picstatic \
+  ifuncmain7static \
   # tests-ifuncstatic
 ifeq (yes,$(have-gcc-ifunc))
 tests-ifuncstatic += ifuncmain9static ifuncmain9picstatic
@@ -1143,13 +1143,13 @@ tests-special += \
   $(objpfx)tst-array5-static-cmp.out \
   $(objpfx)tst-initorder-cmp.out \
   $(objpfx)tst-initorder2-cmp.out \
-  $(objpfx)tst-unused-dep-cmp.out \
-  $(objpfx)tst-unused-dep.out \
   $(objpfx)tst-trace1.out \
   $(objpfx)tst-trace2.out \
   $(objpfx)tst-trace3.out \
   $(objpfx)tst-trace4.out \
   $(objpfx)tst-trace5.out \
+  $(objpfx)tst-unused-dep-cmp.out \
+  $(objpfx)tst-unused-dep.out \
   # tests-special
 endif
 
