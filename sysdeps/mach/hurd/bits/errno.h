@@ -4,11 +4,8 @@
      libc-symbols.h
      mach/message.h
      mach/kern_return.h
-     mach/i386/kern_return.h
      mach/port.h
      mach/boolean.h
-     mach/i386/boolean.h
-     mach/i386/vm_types.h
      stdint.h
      ../stdlib/stdint.h
      ../bits/libc-header-start.h
