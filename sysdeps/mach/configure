@@ -485,40 +485,4 @@ if test $libc_cv_mach_i386_gdt = yes; then
 fi
 
 
-
-# See if mig groks `retcode'.
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $MIG supports the retcode keyword" >&5
-$as_echo_n "checking whether $MIG supports the retcode keyword... " >&6; }
-if ${hurd_cv_mig_retcode+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat > conftest.defs <<\EOF
-#include <mach/std_types.defs>
-#include <mach/mach_types.defs>
-subsystem foobar 1000;
-type reply_port_t = polymorphic | MACH_MSG_TYPE_PORT_SEND_ONCE
-	ctype: mach_port_t;
-simpleroutine foobar_reply (
-	reply_port: reply_port_t;
-	err: kern_return_t, RetCode);
-EOF
-if { ac_try='CC="${CC}" ${MIG-false} -n conftest.defs 1>&5'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then
-  hurd_cv_mig_retcode=yes
-else
-  hurd_cv_mig_retcode=no
-fi
-rm -f conftest*
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $hurd_cv_mig_retcode" >&5
-$as_echo "$hurd_cv_mig_retcode" >&6; }
-if test $hurd_cv_mig_retcode = yes; then
-  $as_echo "#define HAVE_MIG_RETCODE 1" >>confdefs.h
-
-fi
-
 CPPFLAGS=$OLD_CPPFLAGS

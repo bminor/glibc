@@ -150,9 +150,6 @@
 /* Override abi-tags ABI version if necessary.  */
 #undef  __ABI_TAG_VERSION
 
-/* Mach/Hurd specific: define if mig supports the `retcode' keyword.  */
-#undef	HAVE_MIG_RETCODE
-
 /* Mach specific: define if the `host_page_size' RPC is available.  */
 #undef	HAVE_HOST_PAGE_SIZE
 
