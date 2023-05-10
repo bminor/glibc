@@ -576,6 +576,8 @@
 #  define __LDBL_REDIR(name, proto) ... unused__ldbl_redir
 #  define __LDBL_REDIR_DECL(name) \
   extern __typeof (name) name __asm (__ASMNAME ("__" #name "ieee128"));
+#  define __REDIRECT_LDBL(name, proto, alias) \
+  name proto __asm (__ASMNAME ("__" #alias "ieee128"))
 
 /* Alias name defined automatically, with leading underscores.  */
 #  define __LDBL_REDIR2_DECL(name) \
@@ -593,7 +595,6 @@
   __LDBL_REDIR1_NTH (name, proto, __##alias##ieee128)
 
 /* Unused.  */
-#  define __REDIRECT_LDBL(name, proto, alias) ... unused__redirect_ldbl
 #  define __LDBL_REDIR_NTH(name, proto) ... unused__ldbl_redir_nth
 
 # else

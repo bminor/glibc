@@ -215,6 +215,7 @@ endif
 ifeq ($(subdir), misc)
 tests-internal += tst-nldbl-warn
 tests-internal += tst-nldbl-error
+tests-internal += tst-nldbl-errorfptr
 
 $(objpfx)tst-nldbl-warn.c: tst-ldbl-warn.c
 	cp $< $@
@@ -222,8 +223,11 @@ $(objpfx)tst-nldbl-warn.c: tst-ldbl-warn.c
 $(objpfx)tst-nldbl-error.c: tst-ldbl-error.c
 	cp $< $@
 
+$(objpfx)tst-nldbl-errorfptr.c: tst-ldbl-errorfptr.c
+	cp $< $@
 CFLAGS-tst-nldbl-warn.c += -mlong-double-64
 CFLAGS-tst-nldbl-error.c += -mlong-double-64
+CFLAGS-tst-nldbl-errorfptr.c += -mlong-double-64
 endif
 
 ifeq ($(subdir), stdio-common)

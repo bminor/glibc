@@ -90,7 +90,7 @@ tests := tst-dirname tst-tsearch tst-fdset tst-mntent tst-hsearch \
 	 tst-preadvwritev2 tst-preadvwritev64v2 tst-warn-wide \
 	 tst-ldbl-warn tst-ldbl-error tst-dbl-efgcvt tst-ldbl-efgcvt \
 	 tst-mntent-autofs tst-syscalls tst-mntent-escape tst-select \
-	 tst-ioctl
+	 tst-ioctl tst-ldbl-errorfptr
 
 tests-time64 := \
   tst-select-time64 \

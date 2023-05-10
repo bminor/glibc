@@ -264,6 +264,7 @@ CFLAGS-ieee128-qefgcvt_r.c += -mabi=ieeelongdouble -Wno-psabi -mno-gnu-attribute
 tests-internal += tst-ibm128-warn tst-ieee128-warn
 tests-internal += tst-ibm128-error tst-ieee128-error
 tests-internal += tst-ibm128-efgcvt tst-ieee128-efgcvt
+tests-internal += tst-ieee128-errorfptr
 
 $(objpfx)tst-ibm128-%.c: tst-ldbl-%.c
 	cp $< $@
@@ -278,6 +279,7 @@ CFLAGS-tst-ibm128-efgcvt.c += -mabi=ibmlongdouble -Wno-psabi
 CFLAGS-tst-ieee128-warn.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
 CFLAGS-tst-ieee128-error.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
 CFLAGS-tst-ieee128-efgcvt.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
+CFLAGS-tst-ieee128-errorfptr.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
 
 tests-container += test-syslog-ieee128 test-syslog-ibm128
 CFLAGS-test-syslog-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi

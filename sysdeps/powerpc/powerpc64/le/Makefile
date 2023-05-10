@@ -104,6 +104,7 @@ ifeq ($(subdir),misc)
 $(foreach suf,$(all-object-suffixes),\
          $(objpfx)tst-nldbl-warn$(suf) \
          $(objpfx)tst-nldbl-error$(suf) \
+         $(objpfx)tst-nldbl-errorfptr$(suf) \
          ): sysdep-CFLAGS := $(filter-out -mabi=ieeelongdouble,$(sysdep-CFLAGS))
 endif
 
