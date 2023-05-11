@@ -31,8 +31,8 @@ headers := \
   bits/stdint-uintn.h \
   bits/stdlib-bsearch.h \
   bits/stdlib-float.h \
-  bits/stdlib.h \
   bits/stdlib-ldbl.h \
+  bits/stdlib.h \
   bits/time64.h \
   bits/timesize.h \
   bits/types/error_t.h \
@@ -59,7 +59,7 @@ routines := \
   atof \
   atoi \
   atol\
-  atoll	\
+  atoll \
   bsearch \
   canonicalize \
   cxa_at_quick_exit \
@@ -155,8 +155,8 @@ aux = \
 # Instead the static object files will be included in a special archive
 # linked against when the shared library will be used.
 static-only-routines = \
-  atexit \
   at_quick_exit \
+  atexit \
   # static-only-routines
 
 test-srcs := \
