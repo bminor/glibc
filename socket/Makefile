@@ -22,20 +22,49 @@ subdir	:= socket
 
 include ../Makeconfig
 
-headers	:= sys/socket.h sys/un.h bits/sockaddr.h bits/socket.h \
-	   bits/socket2.h bits/types/struct_osockaddr.h \
-	   sys/socketvar.h net/if.h
+headers := \
+  bits/sockaddr.h \
+  bits/socket.h \
+  bits/socket2.h \
+  bits/types/struct_osockaddr.h \
+  net/if.h \
+  sys/socket.h \
+  sys/socketvar.h \
+  sys/un.h \
+  # headers
 
-routines := accept bind connect getpeername getsockname getsockopt	\
-	    listen recv recvfrom recvmsg send sendmsg sendto		\
-	    setsockopt shutdown socket socketpair isfdtype opensock	\
-	    sockatmark accept4 recvmmsg sendmmsg sockaddr_un_set
+routines := \
+  accept \
+  accept4 \
+  bind \
+  connect \
+  getpeername \
+  getsockname \
+  getsockopt \
+  isfdtype \
+  listen \
+  opensock \
+  recv \
+  recvfrom \
+  recvmmsg \
+  recvmsg \
+  send \
+  sendmmsg \
+  sendmsg \
+  sendto \
+  setsockopt \
+  shutdown \
+  sockaddr_un_set \
+  sockatmark \
+  socket \
+  socketpair \
+  # routines
 
 tests := \
   tst-accept4 \
-  tst-sockopt \
-  tst-cmsghdr \
   tst-cmsg_cloexec \
+  tst-cmsghdr \
+  tst-sockopt \
   # tests
 
 tests-internal := \
