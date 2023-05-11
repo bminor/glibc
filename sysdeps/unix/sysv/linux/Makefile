@@ -6,8 +6,8 @@ sysdeps-linux-python-cc = \
 
 # Additional dependencies for Python scripts.
 sysdeps-linux-python-deps = \
-  $(..)sysdeps/unix/sysv/linux/glibcsyscalls.py \
   $(..)scripts/glibcextract.py \
+  $(..)sysdeps/unix/sysv/linux/glibcsyscalls.py \
   # sysdeps-linux-python-deps
 
 # Invocation of the Python interpreter with the Python search path.
@@ -109,7 +109,7 @@ sysdep_routines += \
   xmknodat \
   xstat \
   xstat64 \
-  # sysdeps-routines
+  # sysdep_routines
 
 CFLAGS-gethostid.c = -fexceptions
 CFLAGS-tee.c = -fexceptions -fasynchronous-unwind-tables
@@ -185,7 +185,7 @@ sysdep_headers += \
   sys/timerfd.h \
   sys/user.h \
   sys/vt.h \
-  # sysdep-headers
+  # sysdep_headers
 
 tests += \
   test-errno-linux \
@@ -261,10 +261,10 @@ tests-time64 += \
   tst-ntp_gettime-time64 \
   tst-ntp_gettimex-time64 \
   tst-ppoll-time64 \
-  tst-sigtimedwait-time64 \
-  tst-timerfd-time64 \
   tst-prctl-time64 \
   tst-scm_rights-time64 \
+  tst-sigtimedwait-time64 \
+  tst-timerfd-time64 \
   # tests-time64
 
 tests-clone-internal = \
@@ -272,6 +272,7 @@ tests-clone-internal = \
   tst-clone2-internal \
   tst-clone3-internal \
   tst-getpid1-internal
+  # tests-clone-internal
 tests-internal += \
   $(tests-clone-internal) \
   # tests-internal
@@ -451,8 +452,8 @@ tests += \
   tst-socket-timestamp-compat \
   # tests
 tests-time64 += \
+  tst-socket-timestamp-compat-time64 \
   tst-socket-timestamp-time64 \
-  tst-socket-timestamp-compat-time64
   # tests-time64
 
 tests-special += \
