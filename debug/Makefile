@@ -29,6 +29,7 @@ headers	:= execinfo.h
 # login/Makefile instead.  If that subdir is omitted from the
 # build, its _FORTIFY_SOURCE support will be too.
 routines = \
+  $(static-only-routines) \
   ____longjmp_chk \
   asprintf_chk \
   backtrace \
@@ -113,7 +114,6 @@ routines = \
   wmempcpy_chk \
   wmemset_chk \
   wprintf_chk \
-  $(static-only-routines) \
   # routines
 static-only-routines := stack_chk_fail_local
 
@@ -267,23 +267,25 @@ CFLAGS-tst-ssp-1.c += -fstack-protector-all
 CFLAGS-tst-sprintf-fortify-unchecked.c = \
   -fno-builtin-vsprintf -fno-builtin-__vsprintf_chk
 
-tests = backtrace-tst \
-	tst-longjmp_chk \
-	test-strcpy_chk \
-	test-stpcpy_chk \
-	tst-longjmp_chk2 \
-	tst-backtrace2 \
-	tst-backtrace3 \
-	tst-backtrace4 \
-	tst-backtrace5 \
-	tst-backtrace6 \
-	tst-realpath-chk \
-	tst-sprintf-fortify-unchecked \
-	$(tests-all-chk)
+tests = \
+  $(tests-all-chk) \
+  backtrace-tst \
+  test-stpcpy_chk \
+  test-strcpy_chk \
+  tst-backtrace2 \
+  tst-backtrace3 \
+  tst-backtrace4 \
+  tst-backtrace5 \
+  tst-backtrace6 \
+  tst-longjmp_chk \
+  tst-longjmp_chk2 \
+  tst-realpath-chk \
+  tst-sprintf-fortify-unchecked \
+  # tests
 
 tests-time64 += \
-	$(tests-all-time64-chk) \
-	# tests-time64
+  $(tests-all-time64-chk) \
+  # tests-time64
 
 ifeq ($(have-ssp),yes)
 tests += tst-ssp-1
