@@ -53,7 +53,7 @@ static struct nss_module *nss_module_list;
    modules.  */
 __libc_lock_define (static, nss_module_list_lock);
 
-#if defined USE_NSCD && (!defined DO_STATIC_NSS || defined SHARED)
+#if defined SHARED && defined USE_NSCD
 /* Nonzero if this is the nscd process.  */
 static bool is_nscd;
 /* The callback passed to the init functions when nscd is used.  */
@@ -147,7 +147,7 @@ module_load_builtin (struct nss_module *module,
 static bool
 module_load_nss_files (struct nss_module *module)
 {
-#ifdef USE_NSCD
+#if defined SHARED && defined USE_NSCD
   if (is_nscd)
     {
       void (*cb) (size_t, struct traced_file *) = nscd_init_cb;
@@ -238,7 +238,7 @@ module_load (struct nss_module *module)
       PTR_MANGLE (pointers[idx]);
     }
 
-# ifdef USE_NSCD
+# if defined SHARED && defined USE_NSCD
   if (is_nscd)
     {
       /* Call the init function when nscd is used.  */
