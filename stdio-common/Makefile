@@ -22,7 +22,12 @@ subdir	:= stdio-common
 
 include ../Makeconfig
 
-headers	:= stdio_ext.h printf.h bits/printf-ldbl.h bits/stdio_lim.h
+headers := \
+  bits/printf-ldbl.h \
+  bits/stdio_lim.h \
+  printf.h \
+  stdio_ext.h \
+  # headers
 
 routines := \
   _itoa \
@@ -41,18 +46,18 @@ routines := \
   getw \
   grouping_iterator \
   iovfscanf \
-  isoc99_fscanf \
-  isoc99_scanf \
-  isoc99_sscanf \
-  isoc99_vfscanf \
-  isoc99_vscanf \
-  isoc99_vsscanf \
   isoc23_fscanf \
   isoc23_scanf \
   isoc23_sscanf \
   isoc23_vfscanf \
   isoc23_vscanf \
   isoc23_vsscanf \
+  isoc99_fscanf \
+  isoc99_scanf \
+  isoc99_sscanf \
+  isoc99_vfscanf \
+  isoc99_vscanf \
+  isoc99_vsscanf \
   itoa-digits \
   itoa-udigits \
   itowa-digits \
@@ -238,9 +243,9 @@ tests := \
   tst-unlockedio \
   tst-vfprintf-mbs-prec \
   tst-vfprintf-user-type \
+  tst-vfprintf-width-i18n \
   tst-vfprintf-width-prec \
   tst-vfprintf-width-prec-alloc \
-  tst-vfprintf-width-i18n \
   tst-wc-printf \
   tstdiomisc \
   tstgetln \
@@ -250,6 +255,7 @@ tests := \
 
 tests-container += \
   tst-popen3
+  # tests-container
 
 generated += \
   errlist-data-aux-shared.S \
@@ -262,7 +268,11 @@ tests-internal = \
   tst-grouping_iterator \
   # tests-internal
 
-test-srcs = tst-unbputc tst-printf tst-printfsz-islongdouble
+test-srcs = \
+  tst-printf \
+  tst-printfsz-islongdouble \
+  tst-unbputc \
+  # test-srcs
 
 ifeq ($(run-built-tests),yes)
 tests-special += \
@@ -340,7 +350,7 @@ LOCALES := \
   ja_JP.EUC-JP \
   ps_AF.UTF-8 \
   tg_TJ.UTF-8 \
- # LOCALES
+  # LOCALES
 include ../gen-locales.mk
 
 $(objpfx)bug14.out: $(gen-locales)
