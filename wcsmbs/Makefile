@@ -22,9 +22,17 @@ subdir	:= wcsmbs
 
 include ../Makeconfig
 
-headers	:= wchar.h bits/wchar.h bits/wchar2.h bits/wchar2-decl.h \
-	   bits/wchar-ldbl.h uchar.h bits/types/__mbstate_t.h \
-	   bits/types/mbstate_t.h bits/types/wint_t.h
+headers := \
+  bits/types/__mbstate_t.h \
+  bits/types/mbstate_t.h \
+  bits/types/wint_t.h \
+  bits/wchar-ldbl.h \
+  bits/wchar.h \
+  bits/wchar2-decl.h \
+  bits/wchar2.h \
+  uchar.h \
+  wchar.h \
+  # headers
 
 routines := \
   btowc \
@@ -123,11 +131,11 @@ tests := \
   test-wcscmp \
   test-wcscpy \
   test-wcscspn \
+  test-wcsdup \
   test-wcslen \
   test-wcsncat \
   test-wcsncmp \
   test-wcsncpy \
-  test-wcsdup \
   test-wcsnlen \
   test-wcspbrk \
   test-wcsrchr \
@@ -169,8 +177,17 @@ tests := \
 include ../Rules
 
 ifeq ($(run-built-tests),yes)
-LOCALES := de_DE.ISO-8859-1 de_DE.UTF-8 en_US.ANSI_X3.4-1968 hr_HR.ISO-8859-2 \
-	   ja_JP.EUC-JP zh_TW.EUC-TW tr_TR.UTF-8 tr_TR.ISO-8859-9 zh_HK.BIG5-HKSCS
+LOCALES := \
+  de_DE.ISO-8859-1 \
+  de_DE.UTF-8 \
+  en_US.ANSI_X3.4-1968 \
+  hr_HR.ISO-8859-2 \
+  ja_JP.EUC-JP \
+  tr_TR.ISO-8859-9 \
+  tr_TR.UTF-8 \
+  zh_HK.BIG5-HKSCS \
+  zh_TW.EUC-TW \
+  # LOCALES
 include ../gen-locales.mk
 
 $(objpfx)tst-btowc.out: $(gen-locales)
