@@ -242,11 +242,17 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, const struct sigaction *action
 
       /* struct sigcontext is laid out so that starting at sc_gs mimics a
 	 struct i386_thread_state.  */
+      _Static_assert (offsetof (struct sigcontext, sc_i386_thread_state)
+		      % __alignof__ (struct i386_thread_state) == 0,
+		      "sc_i386_thread_state layout mismatch");
       memcpy (&scp->sc_i386_thread_state,
 	      &state->basic, sizeof (state->basic));
 
       /* struct sigcontext is laid out so that starting at sc_fpkind mimics
 	 a struct i386_float_state.  */
+      _Static_assert (offsetof (struct sigcontext, sc_i386_float_state)
+		      % __alignof__ (struct i386_float_state) == 0,
+		      "sc_i386_float_state layout mismatch");
       ok = machine_get_state (ss->thread, state, i386_FLOAT_STATE,
 			      &state->fpu, &scp->sc_i386_float_state,
 			      sizeof (state->fpu));

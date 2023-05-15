@@ -46,6 +46,11 @@ struct sigcontext
     /* Error code associated with this signal (interpreted as `error_t').  */
     int sc_error;
 
+    /* Make sure the below members are properly aligned, and not packed
+       together with sc_error -- otherwise the layout won't match that of
+       i386_thread_state.  */
+    int sc_pad1;
+
     /* All following members are machine-dependent.  The rest of this
        structure is written to be laid out identically to:
        {
@@ -85,6 +90,9 @@ struct sigcontext
 
     long sc_ursp;		/* This stack pointer is used.  */
     int sc_ss;			/* Stack segment register.  */
+
+    /* Make sure the below has the same layout as i386_float_state.  */
+    int sc_pad2;
 
     /* Following mimics struct i386_float_state.  Structures and symbolic
        values can be found in <mach/i386/fp_reg.h>.  */
