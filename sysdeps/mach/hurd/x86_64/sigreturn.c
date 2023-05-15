@@ -126,7 +126,7 @@ __sigreturn (struct sigcontext *scp)
        copy the registers onto the user's stack, switch there, pop and
        return.  */
 
-    uintptr_t *usp = (uintptr_t *) scp->sc_ursp - 128;
+    uintptr_t *usp = (uintptr_t *) (scp->sc_ursp - 128);
 
     *--usp = scp->sc_rip;
     *--usp = scp->sc_rfl;
