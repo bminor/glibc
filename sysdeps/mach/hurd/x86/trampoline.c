@@ -200,7 +200,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, const struct sigaction *action
   /* Align SP at 16 bytes.  Coupled with the fact that sigreturn_addr is
      16-byte aligned within the stackframe struct, this ensures that it ends
      up on a 16-byte aligned address, as required by the ABI.  */
-  sigsp = (void *) ((uintptr_t) sigsp & 16UL);
+  sigsp = (void *) ((uintptr_t) sigsp & ~15UL);
 #endif
 
   /* Push the arguments to call `trampoline' on the stack.  */
