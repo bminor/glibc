@@ -1859,7 +1859,7 @@ open_path (const char *name, size_t namelen, int mode,
 		     test whether there is any directory at all.  */
 		  struct __stat64_t64 st;
 
-		  buf[buflen - namelen - 1] = '\0';
+		  buf[buflen - namelen] = '\0';
 
 		  if (__stat64_time64 (buf, &st) != 0
 		      || ! S_ISDIR (st.st_mode))
