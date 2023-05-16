@@ -135,7 +135,14 @@ threadproc (void *ctx)
 {
   while (1)
     {
-      futex ((int *) &ftx, FUTEX_WAIT, 1, NULL, NULL, 0);
+      /* Continue to wait here until we've successfully waited, unless
+	 we're supposed to be clearing the LDT already.  */
+      while (futex ((int *) &ftx, FUTEX_WAIT, 1, NULL, NULL, 0) < 0)
+	if (atomic_load (&ftx) >= 2)
+	  break;
+
+      /* Normally there's time to hit this busy loop and wait for ftx
+	 to be set to 2.  */
       while (atomic_load (&ftx) != 2)
 	{
 	  if (atomic_load (&ftx) >= 3)
@@ -189,7 +196,14 @@ do_test (void)
       if (sigsetjmp (jmpbuf, 1) != 0)
 	continue;
 
-      /* Make sure the thread is ready after the last test. */
+      /* We may have longjmp'd before triggering the thread.  If so,
+	 trigger the thread now and wait for it.  */
+      if (atomic_load (&ftx) == 1)
+	atomic_store (&ftx, 2);
+
+      /* Make sure the thread is ready after the last test.  FTX is
+	 initially zero for the first loop, and set to zero each time
+	 the thread clears the LDT.  */
       while (atomic_load (&ftx) != 0)
 	;
 
@@ -207,15 +221,24 @@ do_test (void)
 
       xmodify_ldt (0x11, &desc, sizeof (desc));
 
-      /* Arm the thread.  */
-      ftx = 1;
-      futex ((int*) &ftx, FUTEX_WAKE, 0, NULL, NULL, 0);
+      /* Arm the thread.  We loop here until we've woken up one thread.  */
+      atomic_store (&ftx, 1);
+      while (futex ((int*) &ftx, FUTEX_WAKE, 1, NULL, NULL, 0) < 1)
+	;
 
+      /* Give the thread a chance to get into it's busy loop.  */
+      usleep (5);
+
+      /* At *ANY* point after this instruction, we may segfault and
+	 longjump back to the top of the loop.  The intention is to
+	 have this happen when the thread clears the LDT, but it could
+	 happen elsewhen.  */
       asm volatile ("mov %0, %%ss" : : "r" (0x7));
 
       /* Fire up thread modify_ldt call.  */
       atomic_store (&ftx, 2);
 
+      /* And wait for it.  */
       while (atomic_load (&ftx) != 0)
 	;
 
