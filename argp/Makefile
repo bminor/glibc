@@ -22,12 +22,30 @@ subdir	:= argp
 
 include ../Makeconfig
 
-headers		= argp.h bits/argp-ldbl.h
-routines	= $(addprefix argp-, ba fmtstream fs-xinl help parse pv \
-				     pvh xinl eexst)
+headers	= \
+  argp.h \
+  bits/argp-ldbl.h \
+  # headers
+routines = \
+  argp-ba \
+  argp-eexst \
+  argp-fmtstream \
+  argp-fs-xinl \
+  argp-help \
+  argp-parse \
+  argp-pv \
+  argp-pvh \
+  argp-xinl \
+  # routines
 
-tests		= argp-test tst-argp1 bug-argp1 tst-argp2 bug-argp2 \
-		  tst-ldbl-argp
+tests = \
+  argp-test \
+  bug-argp1 \
+  bug-argp2 \
+  tst-argp1 \
+  tst-argp2 \
+  tst-ldbl-argp \
+  # tests
 
 CFLAGS-argp-help.c += $(uses-callbacks) -fexceptions $(config-cflags-wno-ignored-attributes)
 CFLAGS-argp-parse.c += $(uses-callbacks) $(config-cflags-wno-ignored-attributes)
