@@ -102,7 +102,10 @@ def glibc_makefile_numeric(string1, string2):
             # string1 and string2 both share a prefix and
             # have a numeric suffix that can be compared.
             # Sort order is based on the numeric suffix.
-            return int(var1.group(1)) > int(var2.group(1))
+            # If the suffix is the same return 0, otherwise
+            # > 0 for greater-than, and < 0 for less-than.
+            # This is equivalent to the numerical difference.
+            return int(var1.group(1)) - int(var2.group(1))
     # Default to strcoll.
     return locale.strcoll(string1, string2)
 
