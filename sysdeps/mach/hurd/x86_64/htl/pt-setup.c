@@ -1,4 +1,4 @@
-/* Setup thread stack.  Hurd/x86 version.
+/* Setup thread stack.  Hurd/x86_64 version.
    Copyright (C) 2000-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -21,45 +21,20 @@
 #include <mach.h>
 #include <hurd.h>
 
+#include <thread_state.h>
 #include <pt-internal.h>
 
-/* The stack layout used on the x86 is:
-
-    -----------------
-   |  ARG            |
-    -----------------
-   |  START_ROUTINE  |
-    -----------------
-   |  0              |
-    -----------------
- */
-
-/* Set up the stack for THREAD, such that it appears as if
-   START_ROUTINE and ARG were passed to the new thread's entry-point.
-   Return the stack pointer for the new thread.  */
+/* Set up the stack for THREAD.  Return the stack pointer
+   for the new thread.  */
 static void *
-stack_setup (struct __pthread *thread,
-	     void *(*start_routine) (void *), void *arg)
+stack_setup (struct __pthread *thread)
 {
   error_t err;
-  uintptr_t *bottom, *top;
+  uintptr_t bottom, top;
 
   /* Calculate the top of the new stack.  */
-  bottom = thread->stackaddr;
-  top = (uintptr_t *) ((uintptr_t) bottom + thread->stacksize
-		       + ((thread->guardsize + __vm_page_size - 1)
-			  / __vm_page_size) * __vm_page_size);
-
-  if (start_routine != NULL)
-    {
-      /* And then the call frame.  */
-      top -= 3;
-      top = (uintptr_t *) ((uintptr_t) top & ~0xf);
-      top[2] = (uintptr_t) arg;	/* Argument to START_ROUTINE.  */
-      top[1] = (uintptr_t) start_routine;
-      top[0] = (uintptr_t) thread;
-      *--top = 0;		/* Fake return address.  */
-    }
+  bottom = (uintptr_t) thread->stackaddr;
+  top = bottom + thread->stacksize + round_page (thread->guardsize);
 
   if (thread->guardsize)
     {
@@ -68,7 +43,7 @@ stack_setup (struct __pthread *thread,
       assert_perror (err);
     }
 
-  return top;
+  return (void *) PTR_ALIGN_DOWN_8_16 (top);
 }
 
 int
@@ -78,6 +53,8 @@ __pthread_setup (struct __pthread *thread,
 		 void *arg)
 {
   error_t err;
+  struct i386_thread_state state;
+  struct i386_fsgs_base_state fsgs_state;
 
   if (thread->kernel_thread == hurd_thread_self ())
     /* Fix up the TCB for the main thread.  The C library has already
@@ -87,13 +64,29 @@ __pthread_setup (struct __pthread *thread,
        Leave the unused one registered so that it doesn't leak.  */
     return 0;
 
-  thread->mcontext.pc = entry_point;
-  thread->mcontext.sp = stack_setup (thread, start_routine, arg);
 
-  err = __thread_set_pcsptp (thread->kernel_thread,
-			     1, thread->mcontext.pc,
-			     1, thread->mcontext.sp,
-			     1, thread->tcb);
+  thread->mcontext.pc = entry_point;
+  thread->mcontext.sp = stack_setup (thread);
+
+  /* Set up the state to call entry_point (thread, start_routine, arg) */
+  memset (&state, 0, sizeof (state));
+  state.ursp = (uintptr_t) thread->mcontext.sp;
+  state.rip = (uintptr_t) thread->mcontext.pc;
+  state.rdi = (uintptr_t) thread;
+  state.rsi = (uintptr_t) start_routine;
+  state.rdx = (uintptr_t) arg;
+
+  err = __thread_set_state (thread->kernel_thread, i386_THREAD_STATE,
+			    (thread_state_t) &state,
+			    i386_THREAD_STATE_COUNT);
+  assert_perror (err);
+
+  /* Set fs_base to the TCB pointer for the thread.  */
+  memset (&fsgs_state, 0, sizeof (fsgs_state));
+  fsgs_state.fs_base = (uintptr_t) thread->tcb;
+  err = __thread_set_state (thread->kernel_thread, i386_FSGS_BASE_STATE,
+			    (thread_state_t) &fsgs_state,
+			    i386_FSGS_BASE_STATE_COUNT);
   assert_perror (err);
 
   return 0;
