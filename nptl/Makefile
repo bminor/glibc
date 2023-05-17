@@ -207,6 +207,7 @@ routines = \
   tpp \
   unwind \
   vars \
+  # routines
 
 static-only-routines = pthread_atfork
 libpthread-routines = libpthread-compat
@@ -270,68 +271,131 @@ LDLIBS-tst-thread-exit-clobber = -lstdc++
 CFLAGS-tst-minstack-throw.o = -std=gnu++11
 LDLIBS-tst-minstack-throw = -lstdc++
 
-tests = tst-attr2 tst-attr3 tst-default-attr \
-	tst-mutex5a tst-mutex7a \
-	tst-mutexpi1 tst-mutexpi2 tst-mutexpi3 tst-mutexpi4 \
-	tst-mutexpi5 tst-mutexpi5a tst-mutexpi6 tst-mutexpi7 tst-mutexpi7a \
-	tst-mutexpi9 tst-mutexpi10 \
-	tst-cond26 \
-	tst-robustpi1 tst-robustpi2 tst-robustpi3 tst-robustpi4 tst-robustpi5 \
-	tst-robustpi6 tst-robustpi7 tst-robustpi9 \
-	tst-rwlock2 tst-rwlock2a tst-rwlock2b tst-rwlock3 \
-	tst-rwlock6 tst-rwlock7 tst-rwlock8 \
-	tst-rwlock9 tst-rwlock10 tst-rwlock11 \
-	tst-rwlock15 tst-rwlock17 tst-rwlock18 \
-	tst-once5 \
-	tst-sem17 \
-	tst-tsd3 tst-tsd4 \
-	tst-cancel4_1 tst-cancel4_2 \
-	tst-cancel7 tst-cancel17 tst-cancel24 \
-	tst-signal3 \
-	tst-exec4 tst-exec5 \
-	tst-stack2 tst-stack3 tst-stack4 \
-	tst-pthread-attr-affinity \
-	tst-pthread-attr-affinity-fail \
-	tst-dlsym1 \
-	tst-context1 \
-	tst-sched1 \
-	tst-initializers1 $(addprefix tst-initializers1-,\
-			    c89 gnu89 c99 gnu99 c11 gnu11) \
-	tst-thread_local1 \
-	tst-robust-fork \
-	tst-thread-exit-clobber tst-minstack-cancel tst-minstack-exit \
-	tst-minstack-throw \
-	tst-rwlock-pwn \
-	tst-thread-affinity-pthread \
-	tst-thread-affinity-pthread2 \
-	tst-thread-affinity-sched \
-	tst-pthread-defaultattr-free \
-	tst-pthread-attr-sigmask \
-	tst-pthread-timedlock-lockloop \
-	tst-pthread-gdb-attach tst-pthread-gdb-attach-static \
-	tst-pthread_exit-nothreads \
-	tst-pthread_exit-nothreads-static \
-	tst-thread-setspecific
+tests = \
+  tst-attr2 \
+  tst-attr3 \
+  tst-cancel4_1 \
+  tst-cancel4_2 \
+  tst-cancel7 \
+  tst-cancel17 \
+  tst-cancel24 \
+  tst-cond26 \
+  tst-context1 \
+  tst-default-attr \
+  tst-dlsym1 \
+  tst-exec4 \
+  tst-exec5 \
+  tst-initializers1 \
+  tst-initializers1-c11 \
+  tst-initializers1-c89 \
+  tst-initializers1-c99 \
+  tst-initializers1-gnu11 \
+  tst-initializers1-gnu89 \
+  tst-initializers1-gnu99 \
+  tst-minstack-cancel \
+  tst-minstack-exit \
+  tst-minstack-throw \
+  tst-mutex5a \
+  tst-mutex7a \
+  tst-mutexpi1 \
+  tst-mutexpi2 \
+  tst-mutexpi3 \
+  tst-mutexpi4 \
+  tst-mutexpi5 \
+  tst-mutexpi6 \
+  tst-mutexpi7 \
+  tst-mutexpi9 \
+  tst-mutexpi10 \
+  tst-mutexpi11 \
+  tst-mutexpi12 \
+  tst-once5 \
+  tst-pthread-attr-affinity \
+  tst-pthread-attr-affinity-fail \
+  tst-pthread-attr-sigmask \
+  tst-pthread-defaultattr-free \
+  tst-pthread-gdb-attach \
+  tst-pthread-gdb-attach-static \
+  tst-pthread-timedlock-lockloop \
+  tst-pthread_exit-nothreads \
+  tst-pthread_exit-nothreads-static \
+  tst-robust-fork \
+  tst-robustpi1 \
+  tst-robustpi2 \
+  tst-robustpi3 \
+  tst-robustpi4 \
+  tst-robustpi5 \
+  tst-robustpi6 \
+  tst-robustpi7 \
+  tst-robustpi9 \
+  tst-rwlock-pwn \
+  tst-rwlock2 \
+  tst-rwlock3 \
+  tst-rwlock6 \
+  tst-rwlock7 \
+  tst-rwlock8 \
+  tst-rwlock9 \
+  tst-rwlock10 \
+  tst-rwlock11 \
+  tst-rwlock15 \
+  tst-rwlock17 \
+  tst-rwlock18 \
+  tst-rwlock21 \
+  tst-rwlock22 \
+  tst-sched1 \
+  tst-sem17 \
+  tst-signal3 \
+  tst-stack2 \
+  tst-stack3 \
+  tst-stack4 \
+  tst-thread-affinity-pthread \
+  tst-thread-affinity-pthread2 \
+  tst-thread-affinity-sched \
+  tst-thread-exit-clobber \
+  tst-thread-setspecific \
+  tst-thread_local1 \
+  tst-tsd3 \
+  tst-tsd4 \
+  # tests
 
 tests-nolibpthread = \
   tst-pthread_exit-nothreads \
   tst-pthread_exit-nothreads-static \
+  # tests-nolibpthread
 
 tests-container =  tst-pthread-getattr
 
-tests-internal := tst-robustpi8 tst-rwlock19 tst-rwlock20 \
-		  tst-sem11 tst-sem12 tst-sem13 \
-		  tst-barrier5 tst-signal7 tst-mutex8 tst-mutex8-static \
-		  tst-mutexpi8 tst-mutexpi8-static \
-		  tst-setgetname \
-		  tst-cond22 \
+tests-internal := \
+  tst-barrier5 \
+  tst-cond22 \
+  tst-mutex8 \
+  tst-mutex8-static \
+  tst-mutexpi8 \
+  tst-mutexpi8-static \
+  tst-robustpi8 \
+  tst-rwlock19 \
+  tst-rwlock20 \
+  tst-sem11 \
+  tst-sem12 \
+  tst-sem13 \
+  tst-setgetname \
+  tst-signal7 \
+  # tests-internal
 
-xtests = tst-setuid1 tst-setuid1-static tst-setuid2 \
-	tst-mutexpp1 tst-mutexpp6 tst-mutexpp10 tst-setgroups \
-	tst-mutexpp5 tst-mutexpp9
+xtests = \
+  tst-mutexpp1 \
+  tst-mutexpp5 \
+  tst-mutexpp6 \
+  tst-mutexpp9 \
+  tst-mutexpp10 \
+  tst-setgroups \
+  tst-setuid1 \
+  tst-setuid1-static \
+  tst-setuid2 \
+  # xtests
 
 tests-time64 := \
   tst-cancel4_2-time64
+  # tests-time64
 
 # This test can run into task limits because of a linux kernel bug
 # and then cause the make process to fail too, see bug 24537.
@@ -343,9 +407,14 @@ gen-as-const-headers = unwindbuf.sym
 
 gen-py-const-headers := nptl_lock_constants.pysym
 pretty-printers := nptl-printers.py
-tests-printers := test-mutexattr-printers test-mutex-printers \
-		  test-condattr-printers test-cond-printers \
-		  test-rwlockattr-printers test-rwlock-printers
+tests-printers := \
+  test-cond-printers \
+  test-condattr-printers \
+  test-mutex-printers \
+  test-mutexattr-printers \
+  test-rwlock-printers \
+  test-rwlockattr-printers \
+  # tests-printers
 
 # We must specify both CFLAGS and CPPFLAGS to override any
 # compiler options the user might have provided that conflict
@@ -380,25 +449,51 @@ CPPFLAGS-tst-pthread-gdb-attach-static.c := \
 # were launched with an explicit ld.so invocation.
 tst-pthread-gdb-attach-no-pie = yes
 
-tests += tst-cancelx7 tst-cancelx17
+tests += \
+  tst-cancelx7 \
+  tst-cancelx17 \
+  # tests
 
 ifeq ($(build-shared),yes)
-tests += tst-compat-forwarder tst-audit-threads
-tests-internal += tst-tls3 tst-tls3-malloc tst-tls5 tst-stackguard1
+tests += \
+  tst-audit-threads \
+  tst-compat-forwarder \
+  # tests
+tests-internal += \
+  tst-stackguard1 \
+  tst-tls3 \
+  tst-tls3-malloc \
+  tst-tls5 \
+  # tests-internal
 ifeq ($(have-z-execstack),yes)
 tests += tst-execstack
 endif
 endif
 
-modules-names = tst-tls3mod \
-		tst-tls5mod tst-tls5moda tst-tls5modb tst-tls5modc \
-		tst-tls5modd tst-tls5mode tst-tls5modf tst-stack4mod \
-		tst-execstack-mod \
-		tst-compat-forwarder-mod tst-audit-threads-mod1 \
-		tst-audit-threads-mod2
-extra-test-objs += $(addsuffix .os,$(strip $(modules-names))) \
-		   tst-cleanup4aux.o tst-cleanupx4aux.o
-test-extras += tst-cleanup4aux tst-cleanupx4aux
+modules-names = \
+  tst-audit-threads-mod1 \
+  tst-audit-threads-mod2 \
+  tst-compat-forwarder-mod \
+  tst-execstack-mod \
+  tst-stack4mod \
+  tst-tls3mod \
+  tst-tls5mod \
+  tst-tls5moda \
+  tst-tls5modb \
+  tst-tls5modc \
+  tst-tls5modd \
+  tst-tls5mode \
+  tst-tls5modf \
+  # modules-names
+extra-test-objs += \
+  $(addsuffix .os,$(strip $(modules-names))) \
+  tst-cleanup4aux.o \
+  tst-cleanupx4aux.o \
+  # extra-test-objs
+test-extras += \
+  tst-cleanup4aux \
+  tst-cleanupx4aux \
+  # test-extras
 
 # This test exercises compat symbols removed in glibc 2.34.
 ifdef have-GLIBC_2.33
@@ -436,20 +531,31 @@ CFLAGS-funlockfile.c += $(libio-mtsafe)
 link-libc-static := $(common-objpfx)libc.a $(static-gnulib) \
 		    $(common-objpfx)libc.a
 
-tests-static += tst-stackguard1-static \
-		tst-cancel24-static \
-		tst-mutex8-static tst-mutexpi8-static tst-sem11-static \
-		tst-sem12-static tst-cond11-static \
-		tst-pthread-gdb-attach-static \
-		tst-pthread_exit-nothreads-static
+tests-static += \
+  tst-cancel24-static \
+  tst-mutex8-static \
+  tst-mutexpi8-static \
+  tst-pthread-gdb-attach-static \
+  tst-pthread_exit-nothreads-static \
+  tst-sem11-static \
+  tst-sem12-static tst-cond11-static \
+  tst-stackguard1-static \
+  # tests-static
 
 tests += tst-cancel24-static
 
-tests-internal += tst-sem11-static tst-sem12-static tst-stackguard1-static
+tests-internal += \
+  tst-sem11-static \
+  tst-sem12-static \
+  tst-stackguard1-static \
+  # tests-internal
 xtests-static += tst-setuid1-static
 
 ifeq ($(run-built-tests),yes)
-tests-special += $(objpfx)tst-stack3-mem.out $(objpfx)tst-oddstacklimit.out
+tests-special += \
+  $(objpfx)tst-oddstacklimit.out \
+  $(objpfx)tst-stack3-mem.out \
+  # tests-special
 ifeq ($(build-shared),yes)
 tests-special += $(objpfx)tst-tls6.out
 endif
@@ -457,8 +563,13 @@ endif
 
 ifeq (,$(CXX))
 # These tests require a C++ compiler and runtime.
-tests-unsupported += tst-cancel24 tst-cancel24-static tst-once5 \
-  tst-thread-exit-clobber tst-minstack-throw
+tests-unsupported += \
+  tst-cancel24 \
+  tst-cancel24-static \
+  tst-minstack-throw \
+  tst-once5 \
+  tst-thread-exit-clobber \
+  # tests-unsupported
 endif
 # These tests require a C++ compiler and runtime with thread_local support.
 ifneq ($(have-cxx-thread_local),yes)
@@ -504,7 +615,10 @@ tst-stack3-ENV = MALLOC_TRACE=$(objpfx)tst-stack3.mtrace \
 $(objpfx)tst-stack3-mem.out: $(objpfx)tst-stack3.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-stack3.mtrace > $@; \
 	$(evaluate-test)
-generated += tst-stack3-mem.out tst-stack3.mtrace
+generated += \
+  tst-stack3-mem.out \
+  tst-stack3.mtrace \
+  # generated
 
 tst-stack4mod.sos=$(shell for i in 0 1 2 3 4 5 6 7 8 9 10 \
 				   11 12 13 14 15 16 17 18 19; do \
@@ -546,7 +660,10 @@ LDLIBS-tst-cancel24-static = $(LDLIBS-tst-cancel24)
 
 ifeq ($(build-shared),yes)
 
-generated += multidir.mk tst-tls6.out
+generated += \
+  multidir.mk \
+  tst-tls6.out \
+  # generated
 endif
 
 tst-exec4-ARGS = $(host-test-program-cmd)
