@@ -38,6 +38,15 @@
 #endif
 #endif
 
+/* Set up the thread state to call the given function on the given state.
+   Dependning on architecture, this may imply more than just setting PC
+   and SP.  */
+#ifndef MACHINE_THREAD_STATE_SETUP_CALL
+#define MACHINE_THREAD_STATE_SETUP_CALL(ts, stack, size, func) \
+  (MACHINE_THREAD_STATE_SET_PC (ts, func), \
+   MACHINE_THREAD_STATE_SET_SP (ts, stack, size))
+#endif
+
 /* This copies architecture-specific bits from the current thread to the new
    thread state.  */
 #ifndef MACHINE_THREAD_STATE_FIX_NEW

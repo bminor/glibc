@@ -20,6 +20,7 @@
 #define _MACH_X86_THREAD_STATE_H 1
 
 #include <mach/machine/thread_status.h>
+#include <libc-pointer-arith.h>
 
 /* This lets the kernel define segments for a new thread.  */
 #define MACHINE_NEW_THREAD_STATE_FLAVOR	i386_THREAD_STATE
@@ -53,6 +54,18 @@ struct machine_thread_all_state
     struct i386_thread_state basic;
     struct i386_float_state fpu;
   };
+
+#ifdef __x86_64__
+/* We're setting up the stack to perform a function call.  On function entry,
+   the stack pointer must be 8 bytes less than 16-aligned.  */
+#define PTR_ALIGN_DOWN_8_16(ptr)					      \
+ ({ uintptr_t __ptr = PTR_ALIGN_DOWN (ptr, 8);				      \
+    PTR_IS_ALIGNED (__ptr, 16) ? (__ptr - 8) : __ptr; })
+
+#define MACHINE_THREAD_STATE_SETUP_CALL(ts, stack, size, func)		      \
+  ((ts)->SP = PTR_ALIGN_DOWN_8_16 ((uintptr_t) (stack) + (size)),	      \
+   (ts)->PC = (uintptr_t) func)
+#endif
 
 #include <sysdeps/mach/thread_state.h>
 
