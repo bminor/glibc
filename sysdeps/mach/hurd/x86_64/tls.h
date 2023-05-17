@@ -35,7 +35,7 @@ typedef struct
 {
   void *tcb;			/* Points to this structure.  */
   dtv_t *dtv;			/* Vector of pointers to TLS data.  */
-  thread_t self;		/* This thread's control port.  */
+  thread_t self_do_no_use;	/* This thread's control port.  */
   int __glibc_padding1;
   int multiple_threads;
   int gscope_flag;
@@ -158,7 +158,6 @@ _hurd_tls_new (thread_t child, tcbhead_t *tcb)
   struct i386_fsgs_base_state state;
 
   tcb->tcb = tcb;
-  tcb->self = child;
 
   /* Install the TCB address into FS base.  */
   state.fs_base = (uintptr_t) tcb;

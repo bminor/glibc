@@ -32,7 +32,7 @@ typedef struct
 {
   void *tcb;			/* Points to this structure.  */
   dtv_t *dtv;			/* Vector of pointers to TLS data.  */
-  thread_t self;		/* This thread's control port.  */
+  thread_t self_do_not_use;	/* This thread's control port.  */
   int multiple_threads;
   uintptr_t sysinfo;
   uintptr_t stack_guard;
@@ -419,7 +419,6 @@ _hurd_tls_new (thread_t child, tcbhead_t *tcb)
   HURD_TLS_DESC_DECL (desc, tcb);
 
   tcb->tcb = tcb;
-  tcb->self = child;
 
   if (HURD_SEL_LDT (sel))
     err = __i386_set_ldt (child, sel, &desc, 1);
