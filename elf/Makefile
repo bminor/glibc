@@ -440,6 +440,8 @@ tests += \
   tst-tls-ie \
   tst-tls-ie-dlmopen \
   tst-tls-manydynamic \
+  tst-tls4 \
+  tst-tls5 \
   tst-tls10 \
   tst-tls11 \
   tst-tls12 \
@@ -452,8 +454,6 @@ tests += \
   tst-tls19 \
   tst-tls20 \
   tst-tls21 \
-  tst-tls4 \
-  tst-tls5 \
   tst-tlsalign \
   tst-tlsalign-extern \
   tst-unique1 \
@@ -929,14 +929,6 @@ modules-names += \
 
 modules-names-cxx = \
   tst-dlopen-nodelete-reloc-mod1 \
-  tst-dlopen-nodelete-reloc-mod10 \
-  tst-dlopen-nodelete-reloc-mod11 \
-  tst-dlopen-nodelete-reloc-mod12 \
-  tst-dlopen-nodelete-reloc-mod13 \
-  tst-dlopen-nodelete-reloc-mod14 \
-  tst-dlopen-nodelete-reloc-mod15 \
-  tst-dlopen-nodelete-reloc-mod16 \
-  tst-dlopen-nodelete-reloc-mod17 \
   tst-dlopen-nodelete-reloc-mod2 \
   tst-dlopen-nodelete-reloc-mod3 \
   tst-dlopen-nodelete-reloc-mod4 \
@@ -945,6 +937,14 @@ modules-names-cxx = \
   tst-dlopen-nodelete-reloc-mod7 \
   tst-dlopen-nodelete-reloc-mod8 \
   tst-dlopen-nodelete-reloc-mod9 \
+  tst-dlopen-nodelete-reloc-mod10 \
+  tst-dlopen-nodelete-reloc-mod11 \
+  tst-dlopen-nodelete-reloc-mod12 \
+  tst-dlopen-nodelete-reloc-mod13 \
+  tst-dlopen-nodelete-reloc-mod14 \
+  tst-dlopen-nodelete-reloc-mod15 \
+  tst-dlopen-nodelete-reloc-mod16 \
+  tst-dlopen-nodelete-reloc-mod17 \
   tst-nodelete-rtldmod \
   tst-nodelete-uniquemod \
   tst-nodelete-zmod \
