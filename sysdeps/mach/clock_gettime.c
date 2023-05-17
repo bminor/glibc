@@ -62,7 +62,7 @@ __clock_gettime (clockid_t clock_id, struct timespec *ts)
 	time_value_add (&t, &bi.system_time);
 
 	/* Live threads CPU time.  */
-	count = TASK_EVENTS_INFO_COUNT;
+	count = TASK_THREAD_TIMES_INFO_COUNT;
 	err = __task_info (__mach_task_self (), TASK_THREAD_TIMES_INFO,
 			   (task_info_t) &tti, &count);
 	if (err)
