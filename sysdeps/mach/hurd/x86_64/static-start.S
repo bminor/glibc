@@ -22,6 +22,9 @@ _start:
 
 	leaq __memcpy_sse2_unaligned(%rip), %rax
 	movq %rax, memcpy@GOTPCREL(%rip)
+	leaq __strlen_sse2(%rip), %rax
+	movq %rax, strlen@GOTPCREL(%rip)
+
 	call _hurd_stack_setup
 	xorq %rdx, %rdx
 	jmp _start1
