@@ -140,12 +140,25 @@ _hurd_tls_fork (thread_t child, thread_t orig,
   error_t err;
   struct i386_fsgs_base_state state;
   mach_msg_type_number_t state_count = i386_FSGS_BASE_STATE_COUNT;
-  err = __thread_get_state (orig, i386_FSGS_BASE_STATE,
-                            (thread_state_t) &state,
-                            &state_count);
-  if (err)
-    return err;
-  assert (state_count == i386_FSGS_BASE_STATE_COUNT);
+
+  extern thread_t hurd_thread_self (void);
+  if (orig != hurd_thread_self ())
+    {
+      err = __thread_get_state (orig, i386_FSGS_BASE_STATE,
+                                (thread_state_t) &state,
+                                &state_count);
+      if (err)
+        return err;
+      assert (state_count == i386_FSGS_BASE_STATE_COUNT);
+    }
+  else
+    {
+      /* It is illegal to call thread_get_state () on mach_thread_self ().
+         But we're only interested in the value of fs_base, and since we're
+         this thread, we know it points to our TCB.  */
+      state.fs_base = (unsigned long) THREAD_SELF;
+      state.gs_base = 0;
+    }
 
   return __thread_set_state (child, i386_FSGS_BASE_STATE,
                              (thread_state_t) &state,
