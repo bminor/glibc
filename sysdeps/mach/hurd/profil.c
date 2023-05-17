@@ -22,6 +22,7 @@
 #include <hurd.h>
 #include <mach/mach4.h>
 #include <mach/pc_sample.h>
+#include <mach/setup-thread.h>
 #include <lock-intern.h>
 #include <assert.h>
 #include <libc-internal.h>
@@ -68,8 +69,8 @@ update_waiter (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
       /* Set up the profiling collector thread.  */
       err = __thread_create (__mach_task_self (), &profile_thread);
       if (! err)
-	err = __mach_setup_thread (__mach_task_self (), profile_thread,
-				   &profile_waiter, NULL, NULL);
+	err = __mach_setup_thread_call (__mach_task_self (), profile_thread,
+					&profile_waiter, NULL, NULL);
       if (! err)
 	err = __mach_setup_tls(profile_thread);
     }

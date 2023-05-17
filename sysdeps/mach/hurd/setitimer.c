@@ -25,6 +25,7 @@
 #include <hurd/msg_request.h>
 #include <mach.h>
 #include <mach/message.h>
+#include <mach/setup-thread.h>
 
 /* XXX Temporary cheezoid implementation of ITIMER_REAL/SIGALRM.  */
 
@@ -227,11 +228,11 @@ setitimer_locked (const struct itimerval *new, struct itimerval *old,
 	    goto out;
 	  _hurd_itimer_thread_stack_base = 0; /* Anywhere.  */
 	  _hurd_itimer_thread_stack_size = __vm_page_size; /* Small stack.  */
-	  if ((err = __mach_setup_thread (__mach_task_self (),
-					 _hurd_itimer_thread,
-					 &timer_thread,
-					 &_hurd_itimer_thread_stack_base,
-					 &_hurd_itimer_thread_stack_size))
+	  if ((err = __mach_setup_thread_call (__mach_task_self (),
+					       _hurd_itimer_thread,
+					       &timer_thread,
+					       &_hurd_itimer_thread_stack_base,
+					       &_hurd_itimer_thread_stack_size))
 	      || (err = __mach_setup_tls(_hurd_itimer_thread)))
 	    {
 	      __thread_terminate (_hurd_itimer_thread);

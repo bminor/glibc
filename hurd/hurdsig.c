@@ -22,6 +22,7 @@
 #include <lock-intern.h>	/* For `struct mutex'.  */
 #include <pthreadP.h>
 #include <mach.h>
+#include <mach/setup-thread.h>
 #include <mach/thread_switch.h>
 #include <mach/mig_support.h>
 #include <mach/vm_param.h>
@@ -1525,10 +1526,11 @@ _hurdsig_init (const int *intarray, size_t intarraysize)
       assert_perror (err);
 
       stacksize = __vm_page_size * 8; /* Small stack for signal thread.  */
-      err = __mach_setup_thread (__mach_task_self (), _hurd_msgport_thread,
-				 _hurd_msgport_receive,
-				 (vm_address_t *) &__hurd_sigthread_stack_base,
-				 &stacksize);
+      err = __mach_setup_thread_call (__mach_task_self (),
+				      _hurd_msgport_thread,
+				      _hurd_msgport_receive,
+				      (vm_address_t *) &__hurd_sigthread_stack_base,
+				      &stacksize);
       assert_perror (err);
       err = __mach_setup_tls (_hurd_msgport_thread);
       assert_perror (err);
