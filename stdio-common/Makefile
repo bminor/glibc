@@ -130,6 +130,13 @@ aux := \
 tests := \
   bug-vfprintf-nargs \
   bug1 \
+  bug3 \
+  bug4 \
+  bug5 \
+  bug6 \
+  bug7 \
+  bug8 \
+  bug9 \
   bug10 \
   bug11 \
   bug12 \
@@ -146,31 +153,14 @@ tests := \
   bug21 \
   bug22 \
   bug23 \
-  bug23-2 \
-  bug23-3 \
-  bug23-4 \
   bug24 \
   bug25 \
   bug26 \
-  bug3 \
-  bug4 \
-  bug5 \
-  bug6 \
-  bug7 \
-  bug8 \
-  bug9 \
+  bug27 \
+  bug28 \
+  bug29 \
   errnobug \
   scanf1 \
-  scanf10 \
-  scanf11 \
-  scanf12 \
-  scanf13 \
-  scanf14 \
-  scanf14a \
-  scanf15 \
-  scanf16 \
-  scanf16a \
-  scanf17 \
   scanf2 \
   scanf3 \
   scanf4 \
@@ -178,6 +168,16 @@ tests := \
   scanf7 \
   scanf8 \
   scanf9 \
+  scanf10 \
+  scanf11 \
+  scanf12 \
+  scanf13 \
+  scanf14 \
+  scanf15 \
+  scanf16 \
+  scanf17 \
+  scanf18 \
+  scanf19 \
   temptest \
   test-fseek \
   test-fwrite \
@@ -442,11 +442,11 @@ CFLAGS-isoc23_scanf.c += -fexceptions
 
 CFLAGS-dprintf.c += $(config-cflags-wno-ignored-attributes)
 
-# scanf14a.c and scanf16a.c test a deprecated extension which is no
+# scanf18.c and scanf19.c test a deprecated extension which is no
 # longer visible under most conformance levels; see the source files
 # for more detail.
-CFLAGS-scanf14a.c += -std=gnu89
-CFLAGS-scanf16a.c += -std=gnu89
+CFLAGS-scanf18.c += -std=gnu89
+CFLAGS-scanf19.c += -std=gnu89
 
 CFLAGS-bug3.c += -DOBJPFX=\"$(objpfx)\"
 CFLAGS-bug4.c += -DOBJPFX=\"$(objpfx)\"
