@@ -156,14 +156,14 @@ routines := \
   munlockall \
   munmap \
   preadv \
-  preadv64 \
   preadv2 \
+  preadv64 \
   preadv64v2 \
   pselect \
   ptrace \
   pwritev \
-  pwritev64 \
   pwritev2 \
+  pwritev64 \
   pwritev64v2 \
   qefgcvt \
   qefgcvt_r \
@@ -243,8 +243,8 @@ tests := \
   tst-mntent-escape \
   tst-mntent2 \
   tst-preadvwritev \
-  tst-preadvwritev64 \
   tst-preadvwritev2 \
+  tst-preadvwritev64 \
   tst-preadvwritev64v2 \
   tst-pselect \
   tst-select \
