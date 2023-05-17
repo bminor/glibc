@@ -88,7 +88,11 @@ extern FILE *mach_open_devstream (mach_port_t device_port, const char *mode);
    If STACK_BASE is not null it is filled in with the chosen stack base.
    If STACK_SIZE is not null it is filled in with the chosen stack size.
    Regardless, an extra page of red zone is allocated off the end; this
-   is not included in *STACK_SIZE.  */
+   is not included in *STACK_SIZE.
+
+   Mote: this function is unsuitable for setting up the thread to call a
+   function at PC, since the architecture ABI may impose additional
+   requirements beyond setting PC and stack.  */
 kern_return_t __mach_setup_thread (task_t task, thread_t thread, void *pc,
 				   vm_address_t *stack_base,
 				   vm_size_t *stack_size);
