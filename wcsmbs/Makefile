@@ -52,9 +52,9 @@ routines := \
   isoc99_vwscanf \
   isoc99_wscanf \
   mbrlen \
+  mbrtoc8 \
   mbrtoc16 \
   mbrtoc32 \
-  mbrtoc8 \
   mbrtowc \
   mbsinit \
   mbsnrtowcs \
