@@ -22,8 +22,13 @@ subdir	:= catgets
 
 include ../Makeconfig
 
-headers		= nl_types.h
-routines	= catgets open_catalog
+headers	= \
+  nl_types.h \
+  # headers
+routines = \
+  catgets \
+  open_catalog \
+  # routines
 others		= gencat
 install-bin	= gencat
 extra-objs	= $(gencat-modules:=.o)
@@ -32,9 +37,14 @@ tests = tst-catgets
 test-srcs = test-gencat
 
 ifeq ($(run-built-tests),yes)
-tests-special += $(objpfx)de/libc.cat $(objpfx)test1.cat $(objpfx)test2.cat \
-		 $(objpfx)sample.SJIS.cat $(objpfx)test-gencat.out
-tests-special += $(objpfx)tst-catgets-mem.out
+tests-special += \
+  $(objpfx)de/libc.cat \
+  $(objpfx)sample.SJIS.cat \
+  $(objpfx)test-gencat.out \
+  $(objpfx)test1.cat \
+  $(objpfx)test2.cat \
+  $(objpfx)tst-catgets-mem.out
+  # tests-special
 endif
 
 gencat-modules	= xmalloc
@@ -50,11 +60,21 @@ $(objpfx)gencat: $(gencat-modules:%=$(objpfx)%.o)
 
 catgets-CPPFLAGS := -DNLSPATH='"$(localedir)/%L/%N:$(localedir)/%L/LC_MESSAGES/%N:$(localedir)/%l/%N:$(localedir)/%l/LC_MESSAGES/%N:"'
 
-generated += de.msg test1.cat test1.h test2.cat test2.h sample.SJIS.cat \
-	     test-gencat.h
-generated += tst-catgets.mtrace tst-catgets-mem.out
+generated += \
+  de.msg \
+  sample.SJIS.cat \
+  test-gencat.h \
+  test1.cat \
+  test1.h \
+  test2.cat \
+  test2.h \
+  tst-catgets-mem.out \
+  tst-catgets.mtrace \
+  # generated
 
-generated-dirs += de
+generated-dirs += \
+  de \
+  # generated-dirs
 
 tst-catgets-ENV = NLSPATH="$(objpfx)%l/%N.cat" LANG=de \
 		  MALLOC_TRACE=$(objpfx)tst-catgets.mtrace \
