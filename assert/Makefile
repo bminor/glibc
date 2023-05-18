@@ -22,10 +22,22 @@ subdir	:= assert
 
 include ../Makeconfig
 
-headers	:= assert.h
+headers := \
+  assert.h
+  # headers
 
-routines := assert assert-perr __assert
-tests := test-assert test-assert-perr tst-assert-c++ tst-assert-g++
+routines := \
+  __assert \
+  assert \
+  assert-perr \
+  # routines
+
+tests := \
+  test-assert \
+  test-assert-perr \
+  tst-assert-c++ \
+  tst-assert-g++ \
+  # tests
 
 ifeq ($(have-cxx-thread_local),yes)
 CFLAGS-tst-assert-c++.o = -std=c++11
@@ -33,7 +45,10 @@ LDLIBS-tst-assert-c++ = -lstdc++
 CFLAGS-tst-assert-g++.o = -std=gnu++11
 LDLIBS-tst-assert-g++ = -lstdc++
 else
-tests-unsupported += tst-assert-c++ tst-assert-g++
+tests-unsupported += \
+  tst-assert-c++ \
+  tst-assert-g++ \
+  # tests-unsupported
 endif
 
 include ../Rules
