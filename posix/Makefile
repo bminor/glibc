@@ -198,6 +198,13 @@ tests := \
   bug-glob2 \
   bug-glob3 \
   bug-regex1 \
+  bug-regex2 \
+  bug-regex3 \
+  bug-regex4 \
+  bug-regex6 \
+  bug-regex7 \
+  bug-regex8 \
+  bug-regex9 \
   bug-regex10 \
   bug-regex11 \
   bug-regex12 \
@@ -208,7 +215,6 @@ tests := \
   bug-regex17 \
   bug-regex18 \
   bug-regex19 \
-  bug-regex2 \
   bug-regex21 \
   bug-regex22 \
   bug-regex23 \
@@ -218,7 +224,6 @@ tests := \
   bug-regex27 \
   bug-regex28 \
   bug-regex29 \
-  bug-regex3 \
   bug-regex30 \
   bug-regex31 \
   bug-regex32 \
@@ -227,11 +232,6 @@ tests := \
   bug-regex36 \
   bug-regex37 \
   bug-regex38 \
-  bug-regex4 \
-  bug-regex6 \
-  bug-regex7 \
-  bug-regex8 \
-  bug-regex9 \
   regexbug1 \
   runptests \
   runtests \
@@ -336,9 +336,9 @@ tests += \
 endif
 
 tests-internal := \
+  bug-regex5 \
   bug-regex20 \
   bug-regex33 \
-  bug-regex5 \
   tst-rfc3484 \
   tst-rfc3484-2 \
   tst-rfc3484-3 \
@@ -492,18 +492,18 @@ $(objpfx)wordexp-tst.out: wordexp-tst.sh $(objpfx)wordexp-test
 endif
 
 LOCALES := \
-	cs_CZ.ISO-8859-2 \
-	cs_CZ.UTF-8 \
-	C.UTF-8 \
-	da_DK.ISO-8859-1 \
-	de_DE.ISO-8859-1 \
-	de_DE.UTF-8 \
-	en_US.UTF-8 \
-	es_US.ISO-8859-1 \
-	es_US.UTF-8 \
-	ja_JP.EUC-JP \
-	tr_TR.UTF-8 \
-	# LOCALES
+  C.UTF-8 \
+  cs_CZ.ISO-8859-2 \
+  cs_CZ.UTF-8 \
+  da_DK.ISO-8859-1 \
+  de_DE.ISO-8859-1 \
+  de_DE.UTF-8 \
+  en_US.UTF-8 \
+  es_US.ISO-8859-1 \
+  es_US.UTF-8 \
+  ja_JP.EUC-JP \
+  tr_TR.UTF-8 \
+  # LOCALES
 include ../gen-locales.mk
 
 $(objpfx)bug-regex1.out: $(gen-locales)
