@@ -564,6 +564,16 @@ $(objpfx)check-wrapper-headers.out: scripts/check-wrapper-headers.py $(headers)
 	  --generated $(common-generated) > $@; $(evaluate-test)
 endif # $(headers)
 
+# Lint all Makefiles; including this one.  Pass `pwd` as the source
+# directory since the top-level Makefile is in the root of the source
+# tree and these tests are run from there.  We add light-weight linting
+# to the 'check' target to support the existing developer workflow of:
+# edit -> make -> make check; without needing an additional step.
+tests-special += $(objpfx)lint-makefiles.out
+$(objpfx)lint-makefiles.out: scripts/lint-makefiles.sh
+	$(SHELL) $< "$(PYTHON)" `pwd` > $@ ; \
+	$(evaluate-test)
+
 define summarize-tests
 @grep -E -v '^(PASS|XFAIL):' $(objpfx)$1 || true
 @echo "Summary of test results$2:"
