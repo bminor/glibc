@@ -577,11 +577,14 @@ $(objpfx)lint-makefiles.out: scripts/lint-makefiles.sh
 	$(SHELL) $< "$(PYTHON)" `pwd` > $@ ; \
 	$(evaluate-test)
 
+# Print test summary for tests in $1 .sum file;
+# $2 is optional test identifier.
+# Fail if there are unexpected failures in the test results.
 define summarize-tests
-@grep -E -v '^(PASS|XFAIL):' $(objpfx)$1 || true
-@echo "Summary of test results$2:"
-@sed 's/:.*//' < $(objpfx)$1 | sort | uniq -c
-@! grep -E -q -v '^(X?PASS|XFAIL|UNSUPPORTED):' $(objpfx)$1
+@grep -E '^[A-Z]+:' $(objpfx)$1 | grep -E -v '^(PASS|XFAIL):' || true
+@echo "		=== Summary of results$2 ==="
+@sed -e '/:.*/!d' -e 's/:.*//' < $(objpfx)$1 | sort | uniq -c
+@! grep -E '^[A-Z]+:' $(objpfx)$1 | grep -E -q -v '^(X?PASS|XFAIL|UNSUPPORTED):'
 endef
 
 # The intention here is to do ONE install of our build into the

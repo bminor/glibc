@@ -50,7 +50,10 @@ case $type in
   -t)
     subdir_file_name=$1
     shift
+    echo "		=== glibc tests ==="
     for d in "$@"; do
+      echo
+      echo "Running $d ..."
       if [ -f "$objpfx$d/$subdir_file_name" ]; then
 	cat "$objpfx$d/$subdir_file_name"
       else
