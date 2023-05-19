@@ -155,6 +155,8 @@ versioned_symbol (libc, ___gai_suspend_time64, gai_suspend, GLIBC_2_34);
 #  if OTHER_SHLIB_COMPAT (libanl, GLIBC_2_2_3, GLIBC_2_34)
 compat_symbol (libanl, ___gai_suspend_time64, gai_suspend, GLIBC_2_2_3);
 #  endif
+# else
+weak_alias (___gai_suspend_time64, gai_suspend)
 # endif /* PTHREAD_IN_LIBC */
 
 #else /* __TIMESIZE != 64 */
