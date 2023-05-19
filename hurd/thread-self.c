@@ -19,7 +19,10 @@
 #include <hurd/signal.h>
 
 thread_t
-hurd_thread_self (void)
+__hurd_thread_self (void)
 {
   return _hurd_self_sigstate ()->thread;
 }
+
+libc_hidden_def (__hurd_thread_self)
+weak_alias (__hurd_thread_self, hurd_thread_self)

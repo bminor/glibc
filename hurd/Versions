@@ -156,6 +156,7 @@ libc {
     __libc_open; __libc_close;
 
     # Used by libpthread.
+    __hurd_thread_self;
     _hurd_sigstate_set_global_rcv;
     _hurd_sigstate_lock;
     _hurd_sigstate_pending;

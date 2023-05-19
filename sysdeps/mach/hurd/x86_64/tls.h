@@ -132,6 +132,10 @@ THREAD_TCB (thread_t thread,
   ((descr)->pointer_guard						\
    = THREAD_GETMEM (THREAD_SELF, pointer_guard))
 
+/* From hurd.h, reproduced here to avoid a circular include.  */
+extern thread_t __hurd_thread_self (void);
+libc_hidden_proto (__hurd_thread_self)
+
 /* Set up TLS in the new thread of a fork child, copying from the original.  */
 static inline kern_return_t __attribute__ ((unused))
 _hurd_tls_fork (thread_t child, thread_t orig,
@@ -141,8 +145,7 @@ _hurd_tls_fork (thread_t child, thread_t orig,
   struct i386_fsgs_base_state state;
   mach_msg_type_number_t state_count = i386_FSGS_BASE_STATE_COUNT;
 
-  extern thread_t hurd_thread_self (void);
-  if (orig != hurd_thread_self ())
+  if (orig != __hurd_thread_self ())
     {
       err = __thread_get_state (orig, i386_FSGS_BASE_STATE,
                                 (thread_state_t) &state,

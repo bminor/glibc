@@ -56,7 +56,7 @@ __pthread_setup (struct __pthread *thread,
   struct i386_thread_state state;
   struct i386_fsgs_base_state fsgs_state;
 
-  if (thread->kernel_thread == hurd_thread_self ())
+  if (thread->kernel_thread == __hurd_thread_self ())
     /* Fix up the TCB for the main thread.  The C library has already
        installed a TCB, which we want to keep using.  This TCB must not
        be freed so don't register it in the thread structure.  On the

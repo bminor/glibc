@@ -11,5 +11,8 @@ void _hurd_libc_proc_init (char **argv);
 libc_hidden_proto (_hurd_exec_paths)
 libc_hidden_proto (_hurd_init)
 libc_hidden_proto (_hurd_libc_proc_init)
+
+extern thread_t __hurd_thread_self (void);
+libc_hidden_proto (__hurd_thread_self)
 #endif
 #endif
