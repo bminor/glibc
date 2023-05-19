@@ -111,6 +111,7 @@ strong_alias (__clock_gettime, __clock_gettime_2);
 compat_symbol (libc, __clock_gettime_2, clock_gettime, GLIBC_2_2);
 #endif
 
+#if __TIMESIZE != 64
 int
 __clock_gettime64 (clockid_t clock_id, struct __timespec64 *ts64)
 {
@@ -124,3 +125,4 @@ __clock_gettime64 (clockid_t clock_id, struct __timespec64 *ts64)
   return ret;
 }
 libc_hidden_def (__clock_gettime64)
+#endif
