@@ -126,10 +126,7 @@ __fopenport (mach_port_t port, const char *mode)
 
   /* Check the access mode.  */
   if ((pflags & needflags) != needflags)
-    {
-      errno = EBADF;
-      return NULL;
-    }
+    return __hurd_fail (EBADF), NULL;
 
   return fopencookie ((void *) (uintptr_t) port,
                       mode, funcsio);

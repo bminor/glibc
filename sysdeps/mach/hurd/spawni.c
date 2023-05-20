@@ -216,8 +216,7 @@ __spawni (pid_t *pid, const char *file,
 				MACH_PORT_RIGHT_SEND, +1);
 	  return dtable[fd];
 	}
-      errno = EBADF;
-      return MACH_PORT_NULL;
+      return __hurd_fail (EBADF), MACH_PORT_NULL;
     }
   inline error_t child_lookup (const char *file, int oflag, mode_t mode,
 			       file_t *result)

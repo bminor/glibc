@@ -30,10 +30,7 @@ sigpending (sigset_t *set)
   sigset_t pending;
 
   if (set == NULL)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+    return __hurd_fail (EINVAL);
 
   ss = _hurd_self_sigstate ();
   _hurd_sigstate_lock (ss);

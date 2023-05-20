@@ -19,6 +19,7 @@
 #include <sys/mman.h>
 #include <sys/types.h>
 #include <mach/port.h>
+#include <hurd.h>
 
 /* Map addresses starting near ADDR and extending for LEN bytes.  From
    OFFSET into the file FD describes according to PROT and FLAGS.  If ADDR
@@ -36,11 +37,8 @@ __mmap64 (void *addr, size_t len, int prot, int flags, int fd,
   vm_offset_t small_offset = (vm_offset_t) offset;
 
   if (small_offset != offset)
-    {
-      /* We cannot do this since the offset is too large.  */
-      __set_errno (EOVERFLOW);
-      return MAP_FAILED;
-    }
+    /* We cannot do this since the offset is too large.  */
+    return __hurd_fail (EOVERFLOW), MAP_FAILED;
 
   return __mmap (addr, len, prot, flags, fd, small_offset);
 }

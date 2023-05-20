@@ -31,14 +31,11 @@ __getlogin_r (char *name, size_t name_len)
   error_t err;
 
   if (err = __USEPORT (PROC, __proc_getlogin (port, login)))
-    return errno = err;
+    return __hurd_fail (err), err;
 
   size_t len = __strnlen (login, sizeof login - 1) + 1;
   if (len > name_len)
-    {
-      errno = ERANGE;
-      return errno;
-    }
+    return __hurd_fail (ERANGE), ERANGE;
 
   memcpy (name, login, len);
   return 0;

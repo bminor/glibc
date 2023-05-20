@@ -40,10 +40,7 @@ _hurd_fd_opendir (struct hurd_fd *d)
   DIR *dirp;
 
   if (d == NULL)
-    {
-      errno = EBADF;
-      return NULL;
-    }
+    return __hurd_fail (EBADF), NULL;
 
   dirp = (DIR *) malloc (sizeof (DIR));
   if (dirp == NULL)
@@ -72,12 +69,9 @@ DIR *
 __opendirat (int dfd, const char *name)
 {
   if (name[0] == '\0')
-    {
-      /* POSIX.1-1990 says an empty name gets ENOENT;
-	 but `open' might like it fine.  */
-      __set_errno (ENOENT);
-      return NULL;
-    }
+    /* POSIX.1-1990 says an empty name gets ENOENT;
+       but `open' might like it fine.  */
+    return __hurd_fail (ENOENT), NULL;
 
   int flags = O_RDONLY | O_NONBLOCK | O_DIRECTORY | O_CLOEXEC;
   int fd;
@@ -107,12 +101,9 @@ __opendir (const char *name)
   return __opendirat (AT_FDCWD, name);
 #else
   if (name[0] == '\0')
-    {
-      /* POSIX.1-1990 says an empty name gets ENOENT;
-	 but `open' might like it fine.  */
-      __set_errno (ENOENT);
-      return NULL;
-    }
+    /* POSIX.1-1990 says an empty name gets ENOENT;
+       but `open' might like it fine.  */
+    return __hurd_fail (ENOENT), NULL;
 
   int fd = __open (name, O_RDONLY | O_NONBLOCK | O_DIRECTORY);
   if (fd < 0)

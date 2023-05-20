@@ -48,10 +48,7 @@ _hurd_socket_server (int domain, int dead)
   socket_t server;
 
   if (domain < 0)
-    {
-      errno = EAFNOSUPPORT;
-      return MACH_PORT_NULL;
-    }
+    return __hurd_fail (EAFNOSUPPORT), MACH_PORT_NULL;
 
 retry:
   HURD_CRITICAL_BEGIN;
@@ -99,7 +96,7 @@ retry:
 
   if (server == MACH_PORT_NULL && errno == ENOENT)
     /* If the server node is absent, we don't support that protocol.  */
-    errno = EAFNOSUPPORT;
+    __hurd_fail (EAFNOSUPPORT);
 
   __mutex_unlock (&lock);
   HURD_CRITICAL_END;

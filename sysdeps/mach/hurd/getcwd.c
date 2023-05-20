@@ -69,10 +69,7 @@ __hurd_canonicalize_directory_name_internal (file_t thisdir,
   if (size <= 0)
     {
       if (buf != NULL)
-	{
-	  errno = EINVAL;
-	  return NULL;
-	}
+        return __hurd_fail (EINVAL), NULL;
 
       size = FILENAME_MAX * 4 + 1;	/* Good starting guess.  */
     }
@@ -227,10 +224,7 @@ __hurd_canonicalize_directory_name_internal (file_t thisdir,
 	  if (offset < d->d_namlen + 1)
 	    {
 	      if (orig_size > 0)
-		{
-		  errno = ERANGE;
-		  return NULL;
-		}
+		return __hurd_fail (ERANGE), NULL;
 	      else
 		{
 		  size *= 2;

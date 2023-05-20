@@ -93,11 +93,8 @@ _hurd_set_brk (vm_address_t addr)
   __mutex_unlock (&_hurd_rlimit_lock);
 
   if (addr - brk_start > rlimit)
-    {
-      /* Need to increase the resource limit.  */
-      errno = ENOMEM;
-      return -1;
-    }
+    /* Need to increase the resource limit.  */
+    return __hurd_fail (ENOMEM);
 
   if (pagend > _hurd_data_end)
     {

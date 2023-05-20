@@ -82,10 +82,7 @@ __libc_sendmsg (int fd, const struct msghdr *message, int flags)
 	{
 	  err = __vm_allocate (__mach_task_self (), &data.addr, len, 1);
 	  if (err)
-	    {
-	      __set_errno (err);
-	      return -1;
-	    }
+	    return __hurd_fail (err);
 	  dealloc = 1;
 	}
       else

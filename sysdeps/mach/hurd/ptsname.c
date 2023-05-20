@@ -49,11 +49,8 @@ __ptsname_internal (int fd, char *buf, size_t buflen, struct stat64 *stp)
   int ttype;
 
   if (HURD_DPORT_USE (fd, __term_get_bottom_type (port, &ttype)) == 0)
-    {
-      /* get_bottom_type suceeded, this is the slave side.  */
-      errno = ENOTTY;
-      return ENOTTY;
-    }
+    /* get_bottom_type suceeded, this is the slave side.  */
+    return __hurd_fail (ENOTTY), ENOTTY;
 
   if (err = HURD_DPORT_USE (fd, __term_get_peername (port, peername)))
     {
@@ -64,10 +61,7 @@ __ptsname_internal (int fd, char *buf, size_t buflen, struct stat64 *stp)
 
   len = __strnlen (peername, sizeof peername - 1) + 1;
   if (len > buflen)
-    {
-      errno = ERANGE;
-      return ERANGE;
-    }
+    return __hurd_fail (ERANGE), ERANGE;
 
   if (stp)
     {

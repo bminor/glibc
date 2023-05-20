@@ -18,6 +18,7 @@
 
 #include <sys/statfs.h>
 #include <errno.h>
+#include <hurd.h>
 
 static inline int
 statfs64_conv (struct statfs *buf, const struct statfs64 *buf64)
@@ -25,10 +26,7 @@ statfs64_conv (struct statfs *buf, const struct statfs64 *buf64)
 # define DO(memb)							      \
   buf->memb = buf64->memb;						      \
   if (sizeof buf->memb != sizeof buf64->memb && buf->memb != buf64->memb)     \
-    {									      \
-      __set_errno (EOVERFLOW);						      \
-      return -1;							      \
-    }
+    return __hurd_fail (EOVERFLOW);
 
   DO (f_type);
   DO (f_bsize);

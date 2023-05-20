@@ -58,8 +58,7 @@ __sigprocmask (int how, const sigset_t *set, sigset_t *oset)
 
 	default:
 	  _hurd_sigstate_unlock (ss);
-	  errno = EINVAL;
-	  return -1;
+	  return __hurd_fail (EINVAL);
 	}
 
       ss->blocked &= ~_SIG_CANT_MASK;

@@ -33,10 +33,7 @@ __libc_sigaction (int sig, const struct sigaction *act,
 
   if (act != NULL && act->sa_handler != SIG_DFL
       && ((__sigmask (sig) & _SIG_CANT_MASK) || act->sa_handler == SIG_ERR))
-    {
-      errno = EINVAL;
-      return -1;
-    }
+    return __hurd_fail (EINVAL);
 
   /* Copy so we fault before taking locks.  */
   if (act != NULL)

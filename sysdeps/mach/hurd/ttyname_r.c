@@ -41,10 +41,7 @@ __ttyname_r (int fd, char *buf, size_t buflen)
 
   len = strlen (nodename) + 1;
   if (len > buflen)
-    {
-      errno = ERANGE;
-      return errno;
-    }
+    return __hurd_fail (ERANGE), ERANGE;
 
   memcpy (buf, nodename, len);
   return 0;

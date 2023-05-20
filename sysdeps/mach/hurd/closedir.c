@@ -32,10 +32,7 @@ __closedir (DIR *dirp)
   error_t err;
 
   if (dirp == NULL)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+    return __hurd_fail (EINVAL);
 
   __libc_lock_lock (dirp->__lock);
   err = __vm_deallocate (__mach_task_self (),

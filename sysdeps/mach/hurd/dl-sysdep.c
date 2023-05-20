@@ -285,8 +285,7 @@ open_file (const char *file_name, int flags,
 				MACH_PORT_RIGHT_SEND, +1);
 	  return _dl_hurd_data->dtable[fd];
 	}
-      errno = EBADF;
-      return MACH_PORT_NULL;
+      return __hurd_fail (EBADF), MACH_PORT_NULL;
     }
 
   assert (!(flags & ~(O_READ | O_EXEC | O_CLOEXEC | O_IGNORE_CTTY)));
@@ -403,10 +402,7 @@ __ssize_t weak_function
 __writev (int fd, const struct iovec *iov, int niov)
 {
   if (fd >= _hurd_init_dtablesize)
-    {
-      errno = EBADF;
-      return -1;
-    }
+    return __hurd_fail (EBADF);
 
   int i;
   size_t total = 0;
@@ -554,8 +550,7 @@ check_no_hidden(__access);
 int weak_function
 __access (const char *file, int type)
 {
-  errno = ENOSYS;
-  return -1;
+  return __hurd_fail (ENOSYS);
 }
 check_no_hidden(__access_noerrno);
 int weak_function
@@ -697,8 +692,7 @@ check_no_hidden(__getcwd);
 char *weak_function
 __getcwd (char *buf, size_t size)
 {
-  errno = ENOSYS;
-  return NULL;
+  return __hurd_fail (ENOSYS), NULL;
 }
 
 /* This is used by dl-tunables.c to strdup strings.  We can just make this a

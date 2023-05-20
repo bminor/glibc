@@ -71,10 +71,7 @@ _hurd_select (int nfds,
   struct hurd_sigstate *ss = NULL;
 
   if (nfds < 0 || (pollfds == NULL && nfds > FD_SETSIZE))
-    {
-      errno = EINVAL;
-      return -1;
-    }
+    return __hurd_fail (EINVAL);
 
 #define IO_SELECT_REPLY_MSGID (21012 + 100) /* XXX */
 #define IO_SELECT_TIMEOUT_REPLY_MSGID (21031 + 100) /* XXX */
@@ -86,10 +83,7 @@ _hurd_select (int nfds,
       struct timespec now;
 
       if (timeout->tv_sec < 0 || ! valid_nanoseconds (timeout->tv_nsec))
-	{
-	  errno = EINVAL;
-	  return -1;
-	}
+	return __hurd_fail (EINVAL);
 
       err = __clock_gettime (CLOCK_REALTIME, &now);
       if (err)
@@ -281,8 +275,7 @@ _hurd_select (int nfds,
 	{
 	  if (sigmask)
 	    __sigprocmask (SIG_SETMASK, &oset, NULL);
-	  errno = EBADF;
-	  return -1;
+	  return __hurd_fail (EBADF);
 	}
 
       if (nfds > _hurd_dtablesize)

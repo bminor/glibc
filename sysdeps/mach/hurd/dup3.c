@@ -103,7 +103,7 @@ __dup3 (int fd, int fd2, int flags)
 	    {
 	      fd2 = -1;
 	      if (errno == EINVAL)
-		errno = EBADF;	/* POSIX.1-1990 6.2.1.2 ll 54-55.  */
+		__hurd_fail (EBADF);	/* POSIX.1-1990 6.2.1.2 ll 54-55.  */
 	    }
 	  else
 	    {

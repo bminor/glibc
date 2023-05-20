@@ -81,8 +81,7 @@ __sigsuspend (const sigset_t *set)
   /* We've been interrupted!  And a good thing, too.
      Otherwise we'd never return.
      That's right; this function always returns an error.  */
-  errno = EINTR;
-  return -1;
+  return __hurd_fail (EINTR);
 }
 libc_hidden_def (__sigsuspend)
 weak_alias (__sigsuspend, sigsuspend)

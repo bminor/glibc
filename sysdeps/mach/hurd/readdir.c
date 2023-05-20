@@ -21,6 +21,7 @@
 #include <unistd.h>
 #include <endian.h>
 #include <assert.h>
+#include <hurd.h>
 
 /* Read a directory entry from DIRP.  */
 struct dirent *
@@ -52,10 +53,7 @@ __readdir (DIR *dirp)
 				- sizeof entry->d_ino);
   const ino_t d_ino = entry64->d_ino;
   if (d_ino != entry64->d_ino)
-    {
-      __set_errno (EOVERFLOW);
-      return NULL;
-    }
+    return __hurd_fail (EOVERFLOW), NULL;
 # if BYTE_ORDER != BIG_ENDIAN	/* We just skipped over the zero high word.  */
   entry->d_ino = d_ino;	/* ... or the nonzero low word, swap it.  */
 # endif

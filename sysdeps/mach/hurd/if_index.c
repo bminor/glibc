@@ -38,10 +38,7 @@ __if_nametoindex (const char *ifname)
     return 0;
 
   if (strlen (ifname) >= IFNAMSIZ)
-    {
-      __set_errno (ENODEV);
-      return 0;
-    }
+    return __hurd_fail (ENODEV), 0;
 
   strncpy (ifr.ifr_name, ifname, IFNAMSIZ);
   if (__ioctl (fd, SIOCGIFINDEX, &ifr) < 0)
@@ -49,7 +46,7 @@ __if_nametoindex (const char *ifname)
       int saved_errno = errno;
       __close (fd);
       if (saved_errno == EINVAL || saved_errno == ENOTTY)
-        __set_errno (ENOSYS);
+        __hurd_fail (ENOSYS);
       return 0;
     }
   __close (fd);
@@ -180,9 +177,9 @@ __if_indextoname (unsigned int ifindex, char ifname[IF_NAMESIZE])
       int saved_errno = errno;
       __close (fd);
       if (saved_errno == EINVAL || saved_errno == ENOTTY)
-        __set_errno (ENOSYS);
+        __hurd_fail (ENOSYS);
       else if (saved_errno == ENODEV)
-	__set_errno (ENXIO);
+	__hurd_fail (ENXIO);
       return NULL;
     }
   __close (fd);

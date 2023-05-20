@@ -20,6 +20,7 @@
 #include <assert.h>
 #include <errno.h>
 #include <unistd.h>
+#include <hurd.h>
 
 /* Write LENGTH bytes of randomness starting at BUFFER.  Return 0 on
    success and -1 on failure.  */
@@ -29,10 +30,7 @@ getentropy (void *buffer, size_t length)
   /* The interface is documented to return EIO for buffer lengths
      longer than 256 bytes.  */
   if (length > 256)
-    {
-      __set_errno (EIO);
-      return -1;
-    }
+    return __hurd_fail (EIO);
 
   /* Try to fill the buffer completely.  Even with the 256 byte limit
      above, we might still receive an EINTR error (when blocking
@@ -51,12 +49,9 @@ getentropy (void *buffer, size_t length)
             return -1;
         }
       if (bytes == 0)
-        {
-          /* No more bytes available.  This should not happen under
-             normal circumstances.  */
-          __set_errno (EIO);
-          return -1;
-        }
+        /* No more bytes available.  This should not happen under
+           normal circumstances.  */
+        return __hurd_fail (EIO);
       /* Try again in case of a short read.  */
       buffer += bytes;
     }

@@ -84,10 +84,7 @@ __sigreturn (struct sigcontext *scp)
   struct hurd_userlink *link = (void *) &scp[1];
 
   if (__glibc_unlikely (scp == NULL || (scp->sc_mask & _SIG_CANT_MASK)))
-    {
-      errno = EINVAL;
-      return -1;
-    }
+    return __hurd_fail (EINVAL);
 
   ss = _hurd_self_sigstate ();
   _hurd_sigstate_lock (ss);

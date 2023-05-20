@@ -63,10 +63,7 @@ __mknodat (int fd, const char *path, mode_t mode, dev_t dev)
       len = 0;
     }
   else
-    {
-      errno = EINVAL;
-      return -1;
-    }
+    return __hurd_fail (EINVAL);
 
   if (translator != NULL && ! S_ISFIFO (mode))
     {

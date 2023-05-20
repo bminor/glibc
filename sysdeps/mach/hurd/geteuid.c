@@ -32,21 +32,15 @@ retry:
   __mutex_lock (&_hurd_id.lock);
 
   if (err = _hurd_check_ids ())
-    {
-      errno = err;
-      euid = -1;
-    }
+    euid = __hurd_fail (err);
   else if (_hurd_id.gen.nuids >= 1)
     euid = _hurd_id.gen.uids[0];
   else if (_hurd_id.aux.nuids >= 1)
     /* We have no effective uids.  Return the real uid.  */
     euid = _hurd_id.aux.uids[0];
   else
-    {
-      /* We do not even have a real uid.  */
-      errno = EGRATUITOUS;
-      euid = -1;
-    }
+    /* We do not even have a real uid.  */
+    euid = __hurd_fail (EGRATUITOUS);
 
   __mutex_unlock (&_hurd_id.lock);
   HURD_CRITICAL_END;

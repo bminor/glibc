@@ -35,18 +35,12 @@ __getdport (int fd)
      so we don't bother allocating a real table.  */
 
   if (_hurd_init_dtable == NULL)
-    {
-      /* Never had a descriptor table.  */
-      errno = EBADF;
-      return MACH_PORT_NULL;
-    }
+    /* Never had a descriptor table.  */
+    return __hurd_fail (EBADF), MACH_PORT_NULL;
 
   if (fd < 0 || (unsigned int) fd > _hurd_init_dtablesize
       || _hurd_init_dtable[fd] == MACH_PORT_NULL)
-    {
-      errno = EBADF;
-      return MACH_PORT_NULL;
-    }
+    return __hurd_fail (EBADF), MACH_PORT_NULL;
   else
     {
       __mach_port_mod_refs (__mach_task_self (), _hurd_init_dtable[fd],

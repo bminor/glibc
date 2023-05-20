@@ -17,6 +17,7 @@
 
 #include <libc-lock.h>
 #include <errno.h>
+#include <hurd.h>
 #include <stdlib.h>
 #include <pthreadP.h>
 
@@ -25,9 +26,8 @@ int
 weak_function
 __cthread_keycreate (__cthread_key_t *key)
 {
-  __set_errno (ENOSYS);
- *key = -1;
-  return -1;
+  *key = -1;
+  return __hurd_fail (ENOSYS);
 }
 
 /* Placeholder for key retrieval routine from Hurd cthreads library.  */
@@ -36,8 +36,7 @@ weak_function
 __cthread_getspecific (__cthread_key_t key, void **pval)
 {
   *pval = NULL;
-  __set_errno (ENOSYS);
-  return -1;
+  return __hurd_fail (ENOSYS);
 }
 
 /* Placeholder for key setting routine from Hurd cthreads library.  */
@@ -45,6 +44,5 @@ int
 weak_function
 __cthread_setspecific (__cthread_key_t key, void *val)
 {
-  __set_errno (ENOSYS);
-  return -1;
+  return __hurd_fail (ENOSYS);
 }

@@ -30,10 +30,7 @@ __setrlimit (enum __rlimit_resource resource, const struct rlimit *rlimits)
   struct rlimit lim;
 
   if (rlimits == NULL || (unsigned int) resource >= RLIMIT_NLIMITS)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+    return __hurd_fail (EINVAL);
 
   lim = *rlimits;
 

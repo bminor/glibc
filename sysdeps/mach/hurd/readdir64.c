@@ -29,10 +29,7 @@ __readdir64 (DIR *dirp)
   struct dirent64 *dp;
 
   if (dirp == NULL)
-    {
-      errno = EINVAL;
-      return NULL;
-    }
+    return __hurd_fail (EINVAL), NULL;
 
   __libc_lock_lock (dirp->__lock);
 

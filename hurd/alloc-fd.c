@@ -34,10 +34,7 @@ _hurd_alloc_fd (int *fd, int first_fd)
   long int rlimit;
 
   if (first_fd < 0)
-    {
-      errno = EINVAL;
-      return NULL;
-    }
+    return __hurd_fail (EINVAL), NULL;
 
   crit = _hurd_critical_section_lock ();
 
@@ -99,7 +96,7 @@ _hurd_alloc_fd (int *fd, int first_fd)
 	  if (size * sizeof (*_hurd_dtable) < size)
 	    {
 	      /* Integer overflow! */
-	      errno = ENOMEM;
+	      __hurd_fail (ENOMEM);
 	      goto out;
 	    }
 
@@ -124,13 +121,13 @@ _hurd_alloc_fd (int *fd, int first_fd)
 	      goto search;
 	    }
 	  else
-	    errno = ENOMEM;
+	    __hurd_fail (ENOMEM);
 	}
       else
-	errno = EMFILE;
+	__hurd_fail (EMFILE);
     }
   else
-    errno = EINVAL;		/* Bogus FIRST_FD value.  */
+    __hurd_fail (EINVAL);	/* Bogus FIRST_FD value.  */
 
  out:
   __mutex_unlock (&_hurd_dtable_lock);

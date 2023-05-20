@@ -32,18 +32,12 @@ retry:
   __mutex_lock (&_hurd_id.lock);
 
   if (err = _hurd_check_ids ())
-    {
-      errno = err;
-      gid = -1;
-    }
+    gid = __hurd_fail (err);
   else if (_hurd_id.aux.ngids >= 1)
     gid = _hurd_id.aux.gids[0];
   else
-    {
-      /* We do not even have a real gid.  */
-      errno = EGRATUITOUS;
-      gid = -1;
-    }
+    /* We do not even have a real gid.  */
+    gid = __hurd_fail (EGRATUITOUS);
 
   __mutex_unlock (&_hurd_id.lock);
   HURD_CRITICAL_END;

@@ -48,8 +48,7 @@ __libc_fcntl (int fd, int cmd, ...)
       error_t err;
 
     default:			/* Bad command.  */
-      errno = EINVAL;
-      result = -1;
+      result = __hurd_fail (EINVAL);
       break;
 
       /* First the descriptor-based commands, which do no RPCs.  */
@@ -149,8 +148,7 @@ __libc_fcntl (int fd, int cmd, ...)
 	    cmd = F_SETLKW64;
 	    break;
 	  default:
-	    errno = EINVAL;
-	    return -1;
+	    return __hurd_fail (EINVAL);
 	  }
 
 	struct flock64 fl64 = {
@@ -183,8 +181,7 @@ __libc_fcntl (int fd, int cmd, ...)
 	    switch (cmd)
 	      {
 	      case F_GETLK64:
-		errno = ENOSYS;
-		return -1;
+		return __hurd_fail (ENOSYS);
 	      case F_SETLKW64:
 		wait = 1;
 		/* FALLTHROUGH */
@@ -192,8 +189,7 @@ __libc_fcntl (int fd, int cmd, ...)
 		return __f_setlk (fd, fl->l_type, fl->l_whence,
 				  fl->l_start, fl->l_len, wait);
 	      default:
-		errno = EINVAL;
-		return -1;
+		return __hurd_fail (EINVAL);
 	      }
 	  }
 	else if (cmd == F_GETLK64)
@@ -208,10 +204,7 @@ __libc_fcntl (int fd, int cmd, ...)
 		 && fl->l_start != fl64.l_start)
 	     || (sizeof fl->l_len != sizeof fl64.l_len
 		 && fl->l_len != fl64.l_len))
-	      {
-		errno = EOVERFLOW;
-		return -1;
-	      }
+	      return __hurd_fail (EOVERFLOW);
 	  }
 
 	result = err ? __hurd_dfail (fd, err) : 0;
@@ -246,8 +239,7 @@ __libc_fcntl (int fd, int cmd, ...)
 	    switch (cmd)
 	      {
 	      case F_GETLK64:
-		errno = ENOSYS;
-		return -1;
+		return __hurd_fail (ENOSYS);
 	      case F_SETLKW64:
 		wait = 1;
 		/* FALLTHROUGH */
@@ -255,8 +247,7 @@ __libc_fcntl (int fd, int cmd, ...)
 		return __f_setlk (fd, fl->l_type, fl->l_whence,
 				  fl->l_start, fl->l_len, wait);
 	      default:
-		errno = EINVAL;
-		return -1;
+		return __hurd_fail (EINVAL);
 	      }
 	  }
 

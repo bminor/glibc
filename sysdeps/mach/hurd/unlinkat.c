@@ -33,10 +33,7 @@ __unlinkat (int fd, const char *name, int flag)
   const char *file;
 
   if ((flag &~ AT_REMOVEDIR) != 0)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
+    return __hurd_fail (EINVAL);
 
   dir = __directory_name_split_at (fd, name, (char **) &file);
   if (dir == MACH_PORT_NULL)

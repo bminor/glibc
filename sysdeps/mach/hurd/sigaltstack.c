@@ -42,8 +42,7 @@ __sigaltstack (const stack_t *argss, stack_t *oss)
     {
       /* Can't disable a stack that is in use.  */
       __spin_unlock (&s->lock);
-      errno = EINVAL;
-      return -1;
+      return __hurd_fail (EINVAL);
     }
 
   old = s->sigaltstack;

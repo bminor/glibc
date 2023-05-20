@@ -380,8 +380,7 @@ ptrace (enum __ptrace_request request, ... )
       }
 
     default:
-      errno = EINVAL;
-      return -1;
+      return __hurd_fail (EINVAL);
     }
 
   return 0;

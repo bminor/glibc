@@ -18,6 +18,7 @@
 
 #include <errno.h>
 #include <sys/stat.h>
+#include <hurd.h>
 
 static inline int
 stat64_conv (struct stat *buf, const struct stat64 *buf64)
@@ -55,10 +56,7 @@ stat64_conv (struct stat *buf, const struct stat64 *buf64)
 	  && buf->st_size != buf64->st_size)
       || (sizeof buf->st_blocks != sizeof buf64->st_blocks
 	  && buf->st_blocks != buf64->st_blocks))
-    {
-      __set_errno (EOVERFLOW);
-      return -1;
-    }
+    return __hurd_fail (EOVERFLOW);
 
   return 0;
 }
