@@ -19,6 +19,7 @@
 #include <semaphore.h>
 #include <errno.h>
 
+#include <hurd.h>
 #include <pt-internal.h>
 
 int
@@ -26,10 +27,7 @@ __sem_init (sem_t *sem, int pshared, unsigned value)
 {
 #ifdef SEM_VALUE_MAX
   if (value > SEM_VALUE_MAX)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+    return __hurd_fail (EINVAL);
 #endif
 
   struct new_sem *isem = (struct new_sem *) sem;

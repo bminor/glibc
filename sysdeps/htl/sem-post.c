@@ -20,6 +20,7 @@
 #include <assert.h>
 
 #include <hurdlock.h>
+#include <hurd.h>
 
 #include <pt-internal.h>
 
@@ -35,10 +36,7 @@ __sem_post (sem_t *sem)
   do
     {
       if ((d & SEM_VALUE_MASK) == SEM_VALUE_MAX)
-	{
-	  errno = EOVERFLOW;
-	  return -1;
-	}
+	return __hurd_fail (EOVERFLOW);
     }
   while (!atomic_compare_exchange_weak_release (&isem->data, &d, d + 1));
 
@@ -51,10 +49,7 @@ __sem_post (sem_t *sem)
   do
     {
       if ((v >> SEM_VALUE_SHIFT) == SEM_VALUE_MAX)
-	{
-	  errno = EOVERFLOW;
-	  return -1;
-	}
+	return __hurd_fail (EOVERFLOW);
     }
   while (!atomic_compare_exchange_weak_release
 	  (&isem->value, &v, v + (1 << SEM_VALUE_SHIFT)));

@@ -19,6 +19,7 @@
 #include <semaphore.h>
 #include <errno.h>
 
+#include <hurd.h>
 #include <pt-internal.h>
 
 int
@@ -34,10 +35,7 @@ __sem_destroy (sem_t *sem)
 #endif
       )
     /* There are threads waiting on *SEM.  */
-    {
-      errno = EBUSY;
-      return -1;
-    }
+    return __hurd_fail (EBUSY);
 
   return 0;
 }
