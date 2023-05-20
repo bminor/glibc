@@ -86,7 +86,7 @@ __file_change_detection_for_path (struct file_change_detection *file,
         /* Other errors are fatal.  */
         return false;
       }
-  else /* stat64 was successfull.  */
+  else /* stat64 was successful.  */
     {
       __file_change_detection_for_stat (file, &st);
       return true;

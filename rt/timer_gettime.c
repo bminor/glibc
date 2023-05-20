@@ -22,7 +22,7 @@
 #include "posix-timer.h"
 
 
-/* Get current value of timer TIMERID and store it in VLAUE.  */
+/* Get current value of timer TIMERID and store it in VALUE.  */
 int
 timer_gettime (timer_t timerid, struct itimerspec *value)
 {

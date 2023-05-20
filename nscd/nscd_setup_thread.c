@@ -1,4 +1,4 @@
-/* Setup of nscd worker threads.  Stub verison.
+/* Setup of nscd worker threads.  Stub version.
    Copyright (C) 2004-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

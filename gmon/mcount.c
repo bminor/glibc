@@ -91,7 +91,7 @@ _MCOUNT_DECL(frompc, selfpc)	/* _mcount; may be static, inline, etc */
 	   But we can simplify this if we assume the profiling data
 	   is always initialized by the functions in gmon.c.  But
 	   then it is possible to avoid a runtime check and use the
-	   smae `if' as in gmon.c.  So keep these tests in sync.  */
+	   same `if' as in gmon.c.  So keep these tests in sync.  */
 	if ((HASHFRACTION & (HASHFRACTION - 1)) == 0) {
 	  /* avoid integer divide if possible: */
 	    i = frompc >> p->log_hashfraction;

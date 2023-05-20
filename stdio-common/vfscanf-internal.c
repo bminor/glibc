@@ -668,7 +668,7 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 	      /* We have a severe problem here.  The ISO C standard
 		 contradicts itself in explaining the effect of the %n
 		 format in `scanf'.  While in ISO C:1990 and the ISO C
-		 Amendement 1:1995 the result is described as
+		 Amendment 1:1995 the result is described as
 
 		   Execution of a %n directive does not effect the
 		   assignment count returned at the completion of
@@ -2749,7 +2749,7 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 #endif
 
 	      if (__glibc_unlikely (now == read_in))
-		/* We haven't succesfully read any character.  */
+		/* We haven't successfully read any character.  */
 		conv_error ();
 
 	      if (!(flags & SUPPRESS))
@@ -2947,7 +2947,7 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 #endif
 
 	      if (__glibc_unlikely (now == read_in))
-		/* We haven't succesfully read any character.  */
+		/* We haven't successfully read any character.  */
 		conv_error ();
 
 	      if (!(flags & SUPPRESS))

@@ -491,7 +491,7 @@ ns_sprintrrf(const u_char *msg, size_t msglen,
 		len = SPRINTF((tmp, "%lu ", t));
 		T(addstr(tmp, len, &buf, &buflen));
 
-		/* Experation. */
+		/* Expiration. */
 		t = ns_get32(rdata);  rdata += NS_INT32SZ;
 		len = SPRINTF((tmp, "%lu ", t));
 		T(addstr(tmp, len, &buf, &buflen));

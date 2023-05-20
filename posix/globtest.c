@@ -106,7 +106,7 @@ main (int argc, char *argv[])
   if ((glob_flags & GLOB_DOOFFS) && g.gl_pathv[0] == NULL)
     g.gl_pathv[0] = (char *) "abc";
 
-  /* Print out the names.  Unless otherwise specified, qoute them.  */
+  /* Print out the names.  Unless otherwise specified, quote them.  */
   if (g.gl_pathv)
     {
       for (i = 0; i < g.gl_offs + g.gl_pathc; ++i)

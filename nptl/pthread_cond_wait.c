@@ -583,7 +583,7 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
 		     the futex.  We also need to do that if we skipped adding
 		     a signal because the group is being closed because
 		     while __condvar_quiesce_and_switch_g1 could have closed
-		     the group, it might stil be waiting for futex waiters to
+		     the group, it might still be waiting for futex waiters to
 		     leave (and one of those waiters might be the one we stole
 		     the signal from, which cause it to block using the
 		     futex).  */
@@ -603,7 +603,7 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
   __condvar_confirm_wakeup (cond, private);
 
   /* Woken up; now re-acquire the mutex.  If this doesn't fail, return RESULT,
-     which is set to ETIMEDOUT if a timeout occured, or zero otherwise.  */
+     which is set to ETIMEDOUT if a timeout occurred, or zero otherwise.  */
   err = __pthread_mutex_cond_lock (mutex);
   /* XXX Abort on errors that are disallowed by POSIX?  */
   return (err != 0) ? err : result;

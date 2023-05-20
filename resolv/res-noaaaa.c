@@ -33,7 +33,7 @@ qtype_matches (const unsigned char *p, int expected)
 }
 
 /* Handle RES_NOAAAA translation of AAAA queries.  To produce a Name
-   Error (NXDOMAIN) repsonse for domain names that do not exist, it is
+   Error (NXDOMAIN) response for domain names that do not exist, it is
    still necessary to send a query.  Using question type A is a
    conservative choice.  In the returned answer, it is necessary to
    switch back the question type to AAAA.  */

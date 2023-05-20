@@ -83,7 +83,7 @@
    functions.
 
    Inline functions: Inlining functions should give an improvement in
-   speed - but not in precission.  The inlined functions return
+   speed - but not in precision.  The inlined functions return
    reasonable values for a reasonable range of input values.  The
    result is not necessarily correct for all values and exceptions are
    not correctly raised in all cases.  Problematic input and return

@@ -146,7 +146,7 @@ extern struct hurd_sigstate *_hurd_global_sigstate;
 extern void _hurd_sigstate_set_global_rcv (struct hurd_sigstate *ss);
 
 /* A thread can either use its own action vector and pending signal set
-   or use the global ones, depending on wether it has been marked as a
+   or use the global ones, depending on whether it has been marked as a
    global receiver. The accessors below take that into account.  */
 
 extern void _hurd_sigstate_lock (struct hurd_sigstate *ss);

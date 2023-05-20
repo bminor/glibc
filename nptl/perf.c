@@ -50,7 +50,7 @@
 static const struct argp_option options[] =
   {
     { NULL, 0, NULL, 0, "\
-This is a test for threads so we allow ther user to selection the number of \
+This is a test for threads so we allow the user to select the number of \
 threads which are used at any one time.  Independently the total number of \
 rounds can be selected.  This is the total number of threads which will have \
 run when the process terminates:" },
@@ -387,7 +387,7 @@ main (int argc, char *argv[])
   tmain = pthread_self ();
 
   /* We use signal SIGUSR1 for communication between the threads and
-     the main thread.  We only want sychronous notification.  */
+     the main thread.  We only want synchronous notification.  */
   if (sync_method == sync_signal)
     {
       sigemptyset (&ss);

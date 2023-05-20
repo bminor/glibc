@@ -30,7 +30,7 @@
  */
 /*
  * The original source is from the RPCSRC 4.0 package from Sun Microsystems.
- * The Interface to keyserver protocoll 2, RPC over AF_UNIX and Linux/doors
+ * The Interface to keyserver protocol 2, RPC over AF_UNIX and Linux/doors
  * was added by Thorsten Kukuk <kukuk@suse.de>
  * Since the Linux/doors project was stopped, I doubt that this code will
  * ever be useful <kukuk@suse.de>.

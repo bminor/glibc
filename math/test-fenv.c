@@ -761,7 +761,7 @@ initial_tests (void)
   test_exceptions ("Initially all exceptions should be cleared",
                    NO_EXC, 0);
 #ifdef FE_TONEAREST
-  test_rounding ("Rounding direction should be initalized to nearest",
+  test_rounding ("Rounding direction should be initialized to nearest",
                  FE_TONEAREST);
 #endif
 }

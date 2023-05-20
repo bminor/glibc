@@ -103,7 +103,7 @@ get_next_seq (coll_seq *seq, int nrules, const unsigned char *rulesets,
 	  else
 	    {
 	      /* XXX Traverse BACKW sequences from the beginning of
-		 BACKW_STOP to get the next sequence.  Is ther a quicker way
+		 BACKW_STOP to get the next sequence.  Is there a quicker way
 	         to do this?  */
 	      size_t i = backw_stop;
 	      us = seq->back_us;

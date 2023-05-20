@@ -110,7 +110,7 @@ struct igmp {
 #define IGMP_v2_ROUTER		2
 
 /*
- * The following four defininitions are for backwards compatibility.
+ * The following four definitions are for backwards compatibility.
  * They should be removed as soon as all applications are updated to
  * use the new constant names.
  */

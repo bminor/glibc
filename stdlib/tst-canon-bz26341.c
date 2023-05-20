@@ -1,5 +1,5 @@
 /* Check if realpath does not consume extra stack space based on symlink
-   existance in the path (BZ #26341)
+   existence in the path (BZ #26341)
    Copyright (C) 2021-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

@@ -1301,7 +1301,7 @@ iszero (__T __val)
    these operations.  Generic support in GCC for these as builtins went
    in 2.97, but not all cpus added their patterns until 3.1.  Therefore
    we enable the builtins from 3.1 onwards and use a generic implementation
-   othwerwise.  */
+   otherwise.  */
 #  define isgreater(x, y)	__builtin_isgreater(x, y)
 #  define isgreaterequal(x, y)	__builtin_isgreaterequal(x, y)
 #  define isless(x, y)		__builtin_isless(x, y)

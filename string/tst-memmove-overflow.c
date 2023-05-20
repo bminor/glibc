@@ -1,4 +1,4 @@
-/* Test for signed comparision bug in memmove (bug 25620).
+/* Test for signed comparison bug in memmove (bug 25620).
    Copyright (C) 2020-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

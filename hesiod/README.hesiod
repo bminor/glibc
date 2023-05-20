@@ -139,7 +139,7 @@ information like encrypted passwords in the Hesiod database.  There
 are some ways to improve security by using features provided by
 `named' (see the discussion about `secure zones' in the BIND
 documentation), but one should keep in mind that Hesiod was never
-intended to distribute passwords.  In the origional design
+intended to distribute passwords.  In the original design
 authenticating users was the job of the Kerberos service.
 
 

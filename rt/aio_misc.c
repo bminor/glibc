@@ -371,7 +371,7 @@ __aio_enqueue_request (aiocb_union *aiocbp, int operation)
       /* The current file descriptor is worked on.  It makes no sense
 	 to start another thread since this new thread would fight
 	 with the running thread for the resources.  But we also cannot
-	 say that the thread processing this desriptor shall immediately
+	 say that the thread processing this descriptor shall immediately
 	 after finishing the current job process this request if there
 	 are other threads in the running queue which have a higher
 	 priority.  */

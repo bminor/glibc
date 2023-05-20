@@ -1,4 +1,4 @@
-/* Dereived from the test case in BZ #2337.  */
+/* Derived from the test case in BZ #2337.  */
 #include <errno.h>
 #include <error.h>
 #include <fcntl.h>

@@ -338,7 +338,7 @@ for linking")
   _set_symbol_version (real, #name "@@" #version)
 # endif
 
-/* Evalutes to a string literal for VERSION in LIB.  */
+/* Evaluates to a string literal for VERSION in LIB.  */
 # define symbol_version_string(lib, version) \
   _symbol_version_stringify_1 (VERSION_##lib##_##version)
 # define _symbol_version_stringify_1(arg) _symbol_version_stringify_2 (arg)
@@ -712,7 +712,7 @@ for linking")
 
    If you have an implementation for foo which e.g. uses a special hardware
    feature which isn't available on all machines where this libc.so will be
-   used but decideable if available at runtime e.g. via hwcaps, you can provide
+   used but decidable if available at runtime e.g. via hwcaps, you can provide
    two or multiple implementations of foo:
 
    int __foo_default (int __bar)
@@ -765,7 +765,7 @@ for linking")
 			  : __foo_default);
 
    This will define the ifunc'ed symbol foo like above.  The redirection of foo
-   in header file is needed to omit an additional defintion of __GI_foo which
+   in header file is needed to omit an additional definition of __GI_foo which
    would end in a linker error while linking libc.so.  You have to specify
    __redirect_foo as first parameter which is used within libc_ifunc_redirected
    macro in conjunction with typeof to define the ifunc'ed symbol foo.

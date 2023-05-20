@@ -117,7 +117,7 @@ generate_arc4random_uniform (unsigned char *key)
 
 /* Test adapter for arc4random_uniform with argument 257.  This means
    that byte 0 happens more often, but we do not perform such a
-   statistcal check, so the test will still pass */
+   statistical check, so the test will still pass */
 static bool
 generate_arc4random_uniform_257 (unsigned char *key)
 {

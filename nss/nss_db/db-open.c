@@ -27,7 +27,7 @@
 
 #include "nss_db.h"
 
-/* Open the database stored in FILE.  If succesful, store either a
+/* Open the database stored in FILE.  If successful, store either a
    pointer to the mapped file or a file handle for the file in H and
    return NSS_STATUS_SUCCESS.  On failure, return the appropriate
    lookup status.  */

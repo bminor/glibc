@@ -961,7 +961,7 @@
 #define nexttoward(Val1, Val2) \
      __TGMATH_BINARY_FIRST_REAL_STD_ONLY (Val1, Val2, nexttoward)
 
-/* Return the remainder of integer divison X / Y with infinite precision.  */
+/* Return the remainder of integer division X / Y with infinite precision.  */
 #define remainder(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, remainder)
 
 /* Return X times (2 to the Nth power).  */

@@ -294,7 +294,7 @@ typedef wchar_t __gwchar_t;
 # define SCNuMAX	__PRI64_PREFIX "u"
 # define SCNxMAX	__PRI64_PREFIX "x"
 
-/* Macros for scaning `intptr_t' and `uintptr_t'.  */
+/* Macros for scanning `intptr_t' and `uintptr_t'.  */
 # define SCNdPTR	__PRIPTR_PREFIX "d"
 # define SCNiPTR	__PRIPTR_PREFIX "i"
 # define SCNoPTR	__PRIPTR_PREFIX "o"

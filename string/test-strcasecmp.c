@@ -99,7 +99,7 @@ do_test (size_t align1, size_t align2, size_t len, int max_char,
   else
     s2[len - 1] -= exp_result;
 
-  /* For some locals this is not guranteed yet.  */
+  /* For some locals this is not guaranteed yet.  */
   if (tolower (s1[len - 1]) - tolower (s2[len - 1]) != exp_result)
     {
       if (exp_result == -1)

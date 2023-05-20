@@ -351,7 +351,7 @@ test_producer_thread (void *v)
 
   for (j = iters; j >= 0; --j)
     {
-      /* Aquire lock on the queue.  */
+      /* Acquire lock on the queue.  */
       pthread_mutex_lock (&m);
       /* if something's already there, wait.  */
       while (queued > 0)
@@ -388,7 +388,7 @@ test_consumer_producer (long iters, int filler)
 
   for (long j = iters; j >= 0; --j)
     {
-      /* Aquire lock on the queue.  */
+      /* Acquire lock on the queue.  */
       pthread_mutex_lock (&m);
       /* Wait for something to be on the queue.  */
       while (queued == 0)

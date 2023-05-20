@@ -93,7 +93,7 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 
   long int size;
   if (limit > 0)
-    /* We limit the size of the intially allocated array.  */
+    /* We limit the size of the initially allocated array.  */
     size = MIN (limit, 64);
   else
     /* No fixed limit on groups.  Pick a starting buffer size.  */

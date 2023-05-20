@@ -58,7 +58,7 @@ res_use_inet6 (void)
 
 enum
   {
-    /* The advertized EDNS buffer size.  The value 1200 is derived
+    /* The advertised EDNS buffer size.  The value 1200 is derived
        from the IPv6 minimum MTU (1280 bytes) minus some arbitrary
        space for tunneling overhead.  If the DNS server does not react
        to ICMP Fragmentation Needed But DF Set messages, this should

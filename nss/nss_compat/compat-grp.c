@@ -213,7 +213,7 @@ getgrent_next_nss (struct group *result, ent_t *ent, char *buffer,
   return NSS_STATUS_SUCCESS;
 }
 
-/* This function handle the +group entrys in /etc/group */
+/* This function handle the +group entries in /etc/group */
 static enum nss_status
 getgrnam_plusgroup (const char *name, struct group *result, ent_t *ent,
 		    char *buffer, size_t buflen, int *errnop)

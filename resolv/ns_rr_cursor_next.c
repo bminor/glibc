@@ -54,7 +54,7 @@ __ns_rr_cursor_next (struct ns_rr_cursor *c, struct ns_rr_wire *rr)
     }
   memcpy (&metadata, c->current, sizeof (metadata));
   c->current += sizeof (metadata);
-  /* Endianess conversion.  */
+  /* Endianness conversion.  */
   rr->rtype = ntohs (metadata.rtype);
   rr->rclass = ntohs (metadata.rclass);
   rr->ttl = ntohl (metadata.ttl);

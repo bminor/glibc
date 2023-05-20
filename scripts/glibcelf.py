@@ -275,7 +275,7 @@ class ElfClass(_TypedConstant):
 _register_elf_h(ElfClass, prefix='ELFCLASS')
 
 class ElfData(_TypedConstant):
-    """ELF endianess.  Type of EI_DATA values."""
+    """ELF endianness.  Type of EI_DATA values."""
 _register_elf_h(ElfData, prefix='ELFDATA')
 
 class Machine(_TypedConstant):

@@ -14,7 +14,7 @@ error.  They are declared in these header files:
 
 In general, new wrappers should be added to support.h if possible.
 However, support.h must remain fully compatible with C90 and therefore
-cannot include headers which use identifers not reserved in C90.  If
+cannot include headers which use identifiers not reserved in C90.  If
 the wrappers need additional types, additional headers such as
 signal.h need to be introduced.
 

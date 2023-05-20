@@ -188,7 +188,7 @@ subdir_install: $(inst_libdir)/libpthread2.a $(inst_libdir)/libpthread_syms.a
 # XXX: These rules are a hack.  But it is better than messing with
 # ../Makeconf at the moment.  Note that the linker scripts
 # $(srcdir)/libpthread.a and $(srcdir)/libpthread_pic.a get overwritten
-# when building in $(srcdir) and not a seperate build directory.
+# when building in $(srcdir) and not a separate build directory.
 $(inst_libdir)/libpthread2.a: $(inst_libdir)/libpthread.a
 	mv $< $@
 	$(INSTALL_DATA) $(srcdir)/libpthread.a $<

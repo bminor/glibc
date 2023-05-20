@@ -111,7 +111,7 @@ test_stack (volatile int a, volatile int b,
 
   if (e != 5)
     {
-      printf ("%s: getcontext clobbers varible e\n", __FUNCTION__);
+      printf ("%s: getcontext clobbers variable e\n", __FUNCTION__);
       exit (1);
     }
 

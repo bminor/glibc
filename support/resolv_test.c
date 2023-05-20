@@ -91,7 +91,7 @@ ascii_tolower (unsigned char ch)
 }
 
 /* Compare both names, for use with tsearch.  The order is arbitrary,
-   but the comparison is case-insenstive.  */
+   but the comparison is case-insensitive.  */
 static int
 compare_compressed_name (const void *left, const void *right)
 {
@@ -119,7 +119,7 @@ compare_compressed_name (const void *left, const void *right)
       if (lenleft == 0)
         /* End of name reached without spotting a difference.  */
         return 0;
-      /* Compare the label in a case-insenstive manner.  */
+      /* Compare the label in a case-insensitive manner.  */
       const unsigned char *endnameleft = nameleft + lenleft;
       while (nameleft < endnameleft)
         {
@@ -525,7 +525,7 @@ parse_query (struct query_info *info,
       _Static_assert (sizeof (rr) == 11, "EDNS record size");
 
       if (remaining < 4 + sizeof (rr))
-        FAIL_EXIT1 ("mailformed DNS query: no room for EDNS record");
+        FAIL_EXIT1 ("malformed DNS query: no room for EDNS record");
       memcpy (&rr, buffer + 12 + ret + 4, sizeof (rr));
       if (rr.root != 0)
         FAIL_EXIT1 ("malformed DNS query: invalid OPT RNAME: %d\n", rr.root);
@@ -843,7 +843,7 @@ writev_fully (int fd, struct iovec *buffers, size_t count)
           --count;
           continue;
         }
-      /* Try to rewrite the remaing buffers.  */
+      /* Try to rewrite the remaining buffers.  */
       ssize_t ret = writev (fd, buffers, count);
       if (ret < 0)
         FAIL_EXIT1 ("writev: %m");
@@ -969,7 +969,7 @@ server_thread_tcp (struct resolv_test *obj, int server_index)
 {
   while (true)
     {
-      /* Get the client conenction.  */
+      /* Get the client connection.  */
       int client_socket = xaccept
         (obj->servers[server_index].socket_tcp, NULL, NULL);
 

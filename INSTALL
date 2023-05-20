@@ -469,7 +469,7 @@ build the GNU C Library:
 
    * GNU 'make' 4.0 or newer
 
-     As of relase time, GNU 'make' 4.4 is the newest verified to work to
+     As of release time, GNU 'make' 4.4 is the newest verified to work to
      build the GNU C Library.
 
    * GCC 6.2 or newer

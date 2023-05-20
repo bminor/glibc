@@ -32,7 +32,7 @@
    zero, the failure of a test can be detected.
 
    The init constructor function below puts *state on a shared
-   annonymous mapping, so that failure reports from subprocesses
+   anonymous mapping, so that failure reports from subprocesses
    propagate to the parent process.  */
 struct test_failures
 {

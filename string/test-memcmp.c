@@ -45,7 +45,7 @@ SIMPLE_MEMCMP (const wchar_t *s1, const wchar_t *s2, size_t n)
   int ret = 0;
   /* Warning!
 	wmemcmp has to use SIGNED comparison for elements.
-	memcmp has to use UNSIGNED comparison for elemnts.
+	memcmp has to use UNSIGNED comparison for elements.
   */
   while (n-- && (ret = *s1 < *s2 ? -1 : *s1 == *s2 ? 0 : 1) == 0) {s1++; s2++;}
   return ret;

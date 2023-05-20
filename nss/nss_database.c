@@ -331,7 +331,7 @@ nss_database_reload (struct nss_database_data *staging,
   if (fp != NULL)
     ok = nss_database_reload_1 (staging, fp);
 
-  /* Now we have non-NULL entries where the user explictly listed the
+  /* Now we have non-NULL entries where the user explicitly listed the
      service in nsswitch.conf.  */
 
   /* Apply defaults.  */

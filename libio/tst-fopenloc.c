@@ -47,7 +47,7 @@ do_bz17916 (void)
   FILE *fp = fopen (inputfile, ccs);
   if (fp != NULL)
     {
-      printf ("unxpected success\n");
+      printf ("unexpected success\n");
       return 1;
     }
   free (ccs);

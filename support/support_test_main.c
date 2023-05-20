@@ -469,7 +469,7 @@ support_test_main (int argc, char **argv, const struct test_config *config)
       exit (1);
     }
 
-  /* Process terminated normaly without timeout etc.  */
+  /* Process terminated normally without timeout etc.  */
   if (WIFEXITED (status))
     {
       if (config->expected_status == 0)

@@ -106,7 +106,7 @@ __aio_cancel (int fildes, struct aiocb *aiocbp)
   else
     {
       /* Find the beginning of the list of all requests for this
-	 desriptor.  */
+	 descriptor.  */
       req = __aio_find_req_fd (fildes);
 
       /* If any request is worked on by a thread it must be the first.

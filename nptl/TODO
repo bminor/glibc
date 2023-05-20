@@ -26,6 +26,6 @@ syscall needed.
     post if they get canceled.
 
   - possibly add counter field.  This requires reviving the
-    differences between old and new semaphose funtions.  The old ones
-    stay as they are now.  The new once can use an additional field
-    wich is the counter for the number of waiters
+    differences between old and new semaphore functions.  The old ones
+    stay as they are now.  The new ones can use an additional field
+    which is the counter for the number of waiters

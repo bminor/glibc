@@ -817,8 +817,8 @@ exec_comm_child (char *comm, int *fildes, bool showerr, bool noexec)
   __posix_spawn_file_actions_init (&fa);
 
   /* Redirect output.  For check syntax only (noexec being true), exec_comm
-     explicits sets fildes[1] to -1, so check its value to avoid a failure in
-     __posix_spawn_file_actions_adddup2.  */
+     explicitly sets fildes[1] to -1, so check its value to avoid a failure
+     in __posix_spawn_file_actions_adddup2.  */
   if (fildes[1] != -1)
     {
       if (__glibc_likely (fildes[1] != STDOUT_FILENO))

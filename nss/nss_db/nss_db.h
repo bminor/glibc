@@ -57,7 +57,7 @@ struct nss_db_map
 };
 
 
-/* Open the database stored in FILE.  If succesful, store the database
+/* Open the database stored in FILE.  If successful, store the database
    handle in *MAPPINGP or a file descriptor for the file in *FDP and
    return NSS_STATUS_SUCCESS.  On failure, return the appropriate
    lookup status.  */

@@ -77,7 +77,7 @@ main (int argc, char *argv[])
 	  }
 	else if (tests[cnt].start == -2)
 	  {
-	    puts ("compiling suceeds, FAIL");
+	    puts ("compiling succeeds, FAIL");
 	    errors++;
 	    continue;
 	  }

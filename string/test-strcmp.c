@@ -48,7 +48,7 @@
 # define CHAR__MIN WCHAR_MIN
 
 /* Wcscmp uses signed semantics for comparison, not unsigned */
-/* Avoid using substraction since possible overflow */
+/* Avoid using subtraction since possible overflow */
 
 int
 simple_wcscmp (const wchar_t *s1, const wchar_t *s2)

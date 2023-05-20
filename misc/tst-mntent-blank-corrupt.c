@@ -34,7 +34,7 @@ do_test (void)
 
   /* The corruption happens here ...  */
   getmntent (fp);
-  /* ... but trigers here.  */
+  /* ... but triggers here.  */
   endmntent (fp);
 
   /* If the test failed, we would crash, and not hit this point.  */

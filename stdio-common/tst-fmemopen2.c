@@ -157,7 +157,7 @@ do_test_without_buffer (void)
   return result;
 }
 
-/* Check fmemopen with a buffer lenght of zero.  */
+/* Check fmemopen with a buffer length of zero.  */
 static int
 do_test_length_zero (void)
 {

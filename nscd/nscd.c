@@ -600,7 +600,7 @@ check_pid (const char *file)
 
       /* If we cannot parse the file default to assuming nscd runs.
 	 If the PID is alive, assume it is running.  That all unless
-	 the PID is the same as the current process' since tha latter
+	 the PID is the same as the current process' since the latter
 	 can mean we re-exec.  */
       if ((n != 1 || kill (pid, 0) == 0) && pid != getpid ())
 	return 1;

@@ -116,7 +116,7 @@ struct resolv_redirect_config
   const struct sockaddr *const *server_address_overrides;
 };
 
-/* Configure NSS to use, nss_dns only for aplicable databases, and try
+/* Configure NSS to use, nss_dns only for applicable databases, and try
    to put the process into a network namespace for better isolation.
    This may have to be called before resolv_test_start, before the
    process creates any threads.  Otherwise, initialization is
@@ -125,7 +125,7 @@ void resolv_test_init (void);
 
 /* Initiate resolver testing.  This updates the _res variable as
    needed.  As a side effect, NSS is reconfigured to use nss_dns only
-   for aplicable databases, and the process may enter a network
+   for applicable databases, and the process may enter a network
    namespace for better isolation.  */
 struct resolv_test *resolv_test_start (struct resolv_redirect_config);
 

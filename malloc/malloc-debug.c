@@ -588,7 +588,7 @@ malloc_set_state (void *msptr)
   __malloc_debug_disable (MALLOC_CHECK_HOOK);
 
   /* We do not need to perform locking here because malloc_set_state
-     must be called before the first call into the malloc subsytem (usually via
+     must be called before the first call into the malloc subsystem (usually via
      __malloc_initialize_hook).  pthread_create always calls calloc and thus
      must be called only afterwards, so there cannot be more than one thread
      when we reach this point.  Also handle initialization if either we ended

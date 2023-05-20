@@ -1,4 +1,4 @@
-/* `long long int' divison with remainder.
+/* `long long int' division with remainder.
    Copyright (C) 1992-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

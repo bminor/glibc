@@ -29,7 +29,7 @@ static const char *tests[][2] =
     { "first char bad", "!x" },
     { "second char bad", "Z%" },
     { "both chars bad", ":@" },
-    { "un$upported algorithm", "$2$" },
+    { "unsupported algorithm", "$2$" },
     { "unsupported_algorithm", "_1" },
   };
 

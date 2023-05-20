@@ -463,12 +463,12 @@ do_test (void)
 
   if (mq_unlink ("/tst-mqueue2-which-should-never-exist") != -1)
     {
-      puts ("mq_unlink of non-existant message queue unexpectedly succeeded");
+      puts ("mq_unlink of non-existent message queue unexpectedly succeeded");
       result = 1;
     }
   else if (errno != ENOENT)
     {
-      printf ("mq_unlink of non-existant message queue did not fail with "
+      printf ("mq_unlink of non-existent message queue did not fail with "
 	      "ENOENT: %m\n");
       result = 1;
     }

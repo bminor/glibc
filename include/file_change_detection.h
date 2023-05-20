@@ -55,7 +55,7 @@ bool __file_change_detection_for_path (struct file_change_detection *file,
                                        const char *path);
 
 /* Writes file change information for the stream FP to *FILE.  Returns
-   ture on success, false on failure.  If FP is NULL, treat the file
+   true on success, false on failure.  If FP is NULL, treat the file
    as non-existing.  */
 bool __file_change_detection_for_fp (struct file_change_detection *file,
                                      FILE *fp);

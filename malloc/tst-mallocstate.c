@@ -45,7 +45,7 @@ enum allocation_action
     action_free,                /* Dumped and freed.  */
     action_realloc,             /* Dumped and realloc'ed.  */
     action_realloc_same,        /* Dumped and realloc'ed, same size.  */
-    action_realloc_smaller,     /* Dumped and realloc'ed, shrinked.  */
+    action_realloc_smaller,     /* Dumped and realloc'ed, shrunk.  */
     action_count
   };
 

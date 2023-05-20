@@ -58,7 +58,7 @@ struct requestlist
 struct gaiinit
   {
     int gai_threads;		/* Maximal number of threads.  */
-    int gai_num;		/* Number of expected simultanious requests. */
+    int gai_num;		/* Number of expected simultaneous requests. */
     int gai_locks;		/* Not used.  */
     int gai_usedba;		/* Not used.  */
     int gai_debug;		/* Not used.  */

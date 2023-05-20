@@ -3,7 +3,7 @@
 # other plain ASCII character had been used by a test.  Characters
 # outside the plain ASCII range have a risk of being mangled by modern
 # editors.  So, avoid using | in a test, or if needed, select a new
-# delimeter.
+# delimiter.
 # 2.8.2  Regular Expression General Requirement
 2|4|bb*|abbbc|
 2|2|bb*|ababbbc|

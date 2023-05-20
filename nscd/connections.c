@@ -1454,7 +1454,7 @@ cannot change to old working directory: %s; disabling paranoia mode"),
   paranoia = 0;
   free (cmdline);
 
-  /* Reenable the databases.  */
+  /* Re-enable the databases.  */
   time_t now = time (NULL);
   for (int cnt = 0; cnt < lastdb; ++cnt)
     if (dbs[cnt].enabled)
@@ -1532,11 +1532,11 @@ nscd_run_prune (void *p)
       if (e == ETIMEDOUT || now >= dbs[my_number].wakeup_time
 	  || dbs[my_number].clear_cache)
 	{
-	  /* We will determine the new timout values based on the
+	  /* We will determine the new timeout values based on the
 	     cache content.  Should there be concurrent additions to
 	     the cache which are not accounted for in the cache
 	     pruning we want to know about it.  Therefore set the
-	     timeout to the maximum.  It will be descreased when adding
+	     timeout to the maximum.  It will be decreased when adding
 	     new entries to the cache, if necessary.  */
 	  dbs[my_number].wakeup_time = MAX_TIMEOUT_VALUE;
 

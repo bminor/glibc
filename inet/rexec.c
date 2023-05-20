@@ -154,7 +154,7 @@ retry:
 	struct iovec iov[3] =
 	  {
 	    [0] = { .iov_base = (void *) name, .iov_len = strlen (name) + 1 },
-	    /* should public key encypt the password here */
+	    /* should public key encrypt the password here */
 	    [1] = { .iov_base = (void *) pass, .iov_len = strlen (pass) + 1 },
 	    [2] = { .iov_base = (void *) cmd, .iov_len = strlen (cmd) + 1 }
 	  };

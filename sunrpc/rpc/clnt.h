@@ -106,8 +106,8 @@ struct rpc_err {
     int RE_errno;		/* related system error */
     enum auth_stat RE_why;	/* why the auth error occurred */
     struct {
-      u_long low;		/* lowest verion supported */
-      u_long high;		/* highest verion supported */
+      u_long low;		/* lowest version supported */
+      u_long high;		/* highest version supported */
     } RE_vers;
     struct {			/* maybe meaningful if RPC_FAILED */
       long s1;

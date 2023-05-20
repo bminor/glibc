@@ -154,7 +154,7 @@ extern ssize_t sendto (int __fd, const void *__buf, size_t __n,
 		       socklen_t __addr_len);
 
 /* Read N bytes into BUF through socket FD.
-   If ADDR is not NULL, fill in *ADDR_LEN bytes of it with tha address of
+   If ADDR is not NULL, fill in *ADDR_LEN bytes of it with the address of
    the sender, and store the actual size of the address in *ADDR_LEN.
    Returns the number of bytes read or -1 for errors.
 

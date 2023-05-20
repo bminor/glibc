@@ -43,7 +43,7 @@ compat_symbol_reference (libc, glob, glob, GLIBC_2_0);
 #endif
 
 /* Compat glob should not call gl_lstat since for some old binaries it
-   might be unitialized (for instance GNUmake).  Check if it is indeed
+   might be uninitialized (for instance GNUmake).  Check if it is indeed
    not called.  */
 static bool stat_called;
 static bool lstat_called;

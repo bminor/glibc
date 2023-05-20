@@ -34,7 +34,7 @@ print_buffer (const char *s, size_t n)
     }
 }
 
-/* This test check append mode initial position (a/a+) based on POSIX defition
+/* This test check append mode initial position (a/a+) based on POSIX definition
    (BZ#6544 and BZ#13151).  */
 static int
 do_test_write_append (const char *mode)
@@ -59,7 +59,7 @@ do_test_write_append (const char *mode)
   return 0;
 }
 
-/* This test check append mode initial position (a/a+) based on POSIX defition
+/* This test check append mode initial position (a/a+) based on POSIX definition
    (BZ#6544 and BZ#13151) for buffer without null byte end.  */
 static int
 do_test_write_append_without_null (const char *mode)
@@ -94,7 +94,7 @@ do_test_write_append_without_null (const char *mode)
   return 0;
 }
 
-/* This test check for initial position and feek value for fmemopen objects
+/* This test check for initial position and seek value for fmemopen objects
    opened with append mode.  */
 static int
 do_test_read_append (void)

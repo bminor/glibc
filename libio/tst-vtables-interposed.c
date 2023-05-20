@@ -20,7 +20,7 @@
 
 /* Provide an interposed definition of the standard file handles with
    our own vtable.  stdout/stdin/stderr will not work as a result, but
-   a succesful test does not print anything, so this is fine.  */
+   a successful test does not print anything, so this is fine.  */
 #include "libioP.h"
 #undef _IO_file_jumps
 #define _IO_file_jumps jumps

@@ -48,7 +48,7 @@ fail_test (int c)
 
   if (wc != WEOF)
     {
-      printf ("%s: btowc('%c') succeded, returned L'\\x%x' instead of WEOF\n",
+      printf ("%s: btowc('%c') succeeded, returned L'\\x%x' instead of WEOF\n",
 	      current_locale, c, wc);
       return 1;
     }

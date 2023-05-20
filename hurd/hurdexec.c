@@ -234,7 +234,7 @@ retry:
   __mutex_lock (&_hurd_id.lock);
   err = _hurd_check_ids ();
 
-  /* Avoid leaking the rid_auth port reference to the new progam */
+  /* Avoid leaking the rid_auth port reference to the new program */
   if (_hurd_id.rid_auth != MACH_PORT_NULL)
     {
       __mach_port_deallocate (__mach_task_self (), _hurd_id.rid_auth);

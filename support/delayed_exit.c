@@ -33,7 +33,7 @@ delayed_exit_thread (void *seconds_as_ptr)
   struct timespec remaining = { 0 };
   if (nanosleep (&delay, &remaining) != 0)
     FAIL_EXIT1 ("nanosleep: %m");
-  /* Exit the process sucessfully.  */
+  /* Exit the process successfully.  */
   exit (0);
   return NULL;
 }

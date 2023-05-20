@@ -30,7 +30,7 @@
 
 #define THE_SIG SIGUSR1
 
-/* The stack size can be overriden.  With a sufficiently large stack
+/* The stack size can be overridden.  With a sufficiently large stack
    size, thread stacks for terminated threads are freed, but this does
    not happen with the default size of 1 MiB.  */
 enum { default_stack_size_in_mb = 1 };

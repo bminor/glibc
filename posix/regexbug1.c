@@ -26,7 +26,7 @@ main (void)
       error (0, 0, "\"0*[0-9][0-9]\" does not match \"002\"");
       res = 1;
     }
-  puts ("Succesful match with \"0*[0-9][0-9]\"");
+  puts ("Successful match with \"0*[0-9][0-9]\"");
 
   regfree (&re);
 
@@ -43,7 +43,7 @@ main (void)
       error (0, 0, "\"[0a]*[0-9][0-9]\" does not match \"002\"");
       res = 1;
     }
-  puts ("Succesful match with \"[0a]*[0-9][0-9]\"");
+  puts ("Successful match with \"[0a]*[0-9][0-9]\"");
 
   regfree (&re);
 

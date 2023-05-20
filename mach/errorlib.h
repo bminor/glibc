@@ -42,7 +42,7 @@
  *	Author:	Douglas Orr, Carnegie Mellon University
  *	Date:	Mar. 1988
  *
- *	Error bases for subsytems errors.
+ *	Error bases for subsystems errors.
  */
 
 #include <mach/error.h>

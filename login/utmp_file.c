@@ -153,7 +153,7 @@ __libc_setutent (void)
   return 1;
 }
 
-/* Preform initialization if necessary.  */
+/* Perform initialization if necessary.  */
 static bool
 maybe_setutent (void)
 {

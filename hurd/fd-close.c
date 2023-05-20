@@ -33,7 +33,7 @@ _hurd_fd_close (struct hurd_fd *fd)
   else
     {
       /* Clear the descriptor's port cells.
-	 This deallocates the ports if noone else is still using them.  */
+	 This deallocates the ports if no one else is still using them.  */
       _hurd_port_set (&fd->ctty, MACH_PORT_NULL);
       _hurd_port_locked_set (&fd->port, MACH_PORT_NULL);
       err = 0;

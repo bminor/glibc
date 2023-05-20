@@ -130,7 +130,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
     {
       /* We must not allow to read an arbitrary file in a setuid
 	 program.  So we fail for any file which is not in the
-	 directory hierachy starting at TZDIR
+	 directory hierarchy starting at TZDIR
 	 and which is not the system wide default TZDEFAULT.  */
       if (__libc_enable_secure
 	  && ((*file == '/'

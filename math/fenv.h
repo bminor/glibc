@@ -25,7 +25,7 @@
 #define __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION
 #include <bits/libc-header-start.h>
 
-/* Get the architecture dependend definitions.  The following definitions
+/* Get the architecture dependent definitions.  The following definitions
    are expected to be done:
 
    fenv_t	type for object representing an entire floating-point

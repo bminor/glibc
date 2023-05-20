@@ -142,7 +142,7 @@ do_test (void)
   sigusr2_sender = xpthread_create (NULL, signal_sender, &sigusr2_args);
 
   /* Send SIGUSR1 signals from several threads.  Hopefully, one
-     signal will hit one of the ciritical functions.  Use a barrier to
+     signal will hit one of the critical functions.  Use a barrier to
      avoid sending signals while not running fork/free/malloc.  */
   struct signal_send_args sigusr1_args = { self, SIGUSR1, false };
   xpthread_barrier_init (&barrier, NULL,

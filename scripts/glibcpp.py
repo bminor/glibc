@@ -222,7 +222,7 @@ class MacroDefinition(collections.namedtuple('MacroDefinition',
     args is None for a macro that is not function-like.  Otherwise, it
     is a tuple that contains the macro argument name tokens.
 
-    body is a tuple that contains the tokens that constitue the body
+    body is a tuple that contains the tokens that constitute the body
     of the macro definition (excluding whitespace).
 
     error is None if no error was detected, or otherwise a problem
@@ -242,7 +242,7 @@ class MacroDefinition(collections.namedtuple('MacroDefinition',
 
     @property
     def line(self):
-        """Return the line number of the macro defintion."""
+        """Return the line number of the macro definition."""
         return self.name_token.line
 
     @property
@@ -387,7 +387,7 @@ def macro_eval(macro_defs, reporter):
     evaluated = OrderedDict()
 
     # String to macro definitions during evaluation.  Nice error
-    # reporting relies on determinstic iteration order.
+    # reporting relies on deterministic iteration order.
     stack = OrderedDict()
 
     def eval_token(current, token):

@@ -62,7 +62,7 @@ do_test (void)
   mqd_t q2 = mq_open (name, O_CREAT | O_EXCL | O_RDWR, 0600, &attr);
   if (q2 == (mqd_t) -1)
     {
-      printf ("mq_open with NAME_MAX long name compoment failed with: %m\n");
+      printf ("mq_open with NAME_MAX long name component failed with: %m\n");
       result = 1;
     }
 

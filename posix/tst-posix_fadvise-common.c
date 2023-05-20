@@ -53,7 +53,7 @@ do_prepare (int argc, char **argv)
     FAIL_EXIT1 ("cannot open fifo: %m");
 }
 
-/* Effectivelly testing posix_fadvise is hard because side effects are not
+/* Effectively testing posix_fadvise is hard because side effects are not
    observed without checking either performance or any kernel specific
    supplied information.  Also, the syscall is meant to be an advisory,
    so the kernel is free to use this information in any way it deems fit,

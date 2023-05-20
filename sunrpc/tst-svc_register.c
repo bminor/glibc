@@ -241,7 +241,7 @@ do_test (void)
                                (NULL, test_server_thread, &args));
               else
                 test_server_thread (&args);
-              /* We cannnot use _exit here because we want to test the
+              /* We cannot use _exit here because we want to test the
                  process cleanup.  */
               exit (0);
             }

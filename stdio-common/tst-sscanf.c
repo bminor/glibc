@@ -237,7 +237,7 @@ do_test (void)
      The test will segfault during SSCANF if the buffer overflow
      is not fixed.  The size of `s` is such that it forces the use
      of malloc internally and this triggers the incorrect computation.
-     Thus the value for SIZE is arbitrariy high enough that malloc
+     Thus the value for SIZE is arbitrarily high enough that malloc
      is used.  */
   {
 #define SIZE 131072

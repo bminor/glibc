@@ -160,7 +160,7 @@ __hsearch_r (ENTRY item, ACTION action, ENTRY **retval,
   if (hval == 0)
     ++hval;
 
-  /* First hash function: simply take the modul but prevent zero. */
+  /* First hash function: simply take the modulo but prevent zero. */
   idx = hval % htab->size + 1;
 
   if (htab->table[idx].used)

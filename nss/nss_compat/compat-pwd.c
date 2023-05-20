@@ -437,7 +437,7 @@ getpwent_next_nss (struct passwd *result, ent_t *ent, char *buffer,
   return NSS_STATUS_SUCCESS;
 }
 
-/* This function handle the +user entrys in /etc/passwd */
+/* This function handle the +user entries in /etc/passwd */
 static enum nss_status
 getpwnam_plususer (const char *name, struct passwd *result, ent_t *ent,
 		   char *buffer, size_t buflen, int *errnop)

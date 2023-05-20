@@ -1372,7 +1372,7 @@ AC_SUBST(libc_cv_mtls_dialect_gnu2)
 LIBC_CONFIG_VAR([have-mtls-dialect-gnu2], [$libc_cv_mtls_dialect_gnu2])
 
 dnl clang emits an warning for a double alias redirection, to warn the
-dnl original symbol is sed even when weak definition overriddes it.
+dnl original symbol is sed even when weak definition overrides it.
 dnl It is a usual pattern for weak_alias, where multiple alias point to
 dnl same symbol.
 AC_CACHE_CHECK([if -Wno-ignored-attributes is required for aliases],

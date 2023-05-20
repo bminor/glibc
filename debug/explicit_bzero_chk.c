@@ -18,7 +18,7 @@
 
 /* This is the generic definition of __explicit_bzero_chk.  The
    __explicit_bzero_chk symbol is used as the implementation of
-   explicit_bzero throughout glibc.  If this file is overriden by an
+   explicit_bzero throughout glibc.  If this file is overridden by an
    architecture, both __explicit_bzero_chk and
    __explicit_bzero_chk_internal have to be defined (the latter not as
    an IFUNC).  */

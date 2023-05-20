@@ -147,7 +147,7 @@ do_test (void)
 {
   atexit (kill_children);
 
-  /* shared->barrier is intialized along with sigusr1_sender_pids
+  /* shared->barrier is initialized along with sigusr1_sender_pids
      below.  */
   shared = support_shared_allocate (sizeof (*shared));
 
@@ -175,7 +175,7 @@ do_test (void)
     signal_sender (SIGUSR2, true);
 
   /* Send SIGUSR1 signals from several processes.  Hopefully, one
-     signal will hit one of the ciritical functions.  Use a barrier to
+     signal will hit one of the critical functions.  Use a barrier to
      avoid sending signals while not running fork/free/malloc.  */
   {
     pthread_barrierattr_t attr;

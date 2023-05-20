@@ -183,7 +183,7 @@ Major new features:
 
 * On Linux, the pidfd_open, pidfd_getfd, and pidfd_send_signal functions
   have been added.  The pidfd functionality provides access to a process
-  while avoiding the issue of PID reuse on tranditional Unix systems.
+  while avoiding the issue of PID reuse on traditional Unix systems.
 
 * On Linux, the process_madvise function has been added. It has the
   same functionality as madvise but alters the target process identified
@@ -288,7 +288,7 @@ The following bugs are resolved with this release:
     inaccurate without /sys and /proc
   [28868] dynamic-link: Dynamic loader DFS algorithm segfaults on
     missing libraries
-  [28880] libc: Program crashes if date beyone 2038
+  [28880] libc: Program crashes if date beyond 2038
   [28883] libc: sysdeps/unix/sysv/linux/select.c: __select64
     !__ASSUME_TIME64_SYSCALLS && !__ASSUME_PSELECT fails on Microblaze
   [28896] string: strncmp-avx2-rtm and wcsncmp-avx2-rtm fallback on non-
@@ -529,7 +529,7 @@ Changes to build and runtime requirements:
 * The audit module interface version LAV_CURRENT is increased to enable
   proper bind-now support.  The loader now advertises via the la_symbind
   flags that PLT trace is not possible.  New audit modules require the
-  new dynamic loader supporing the latest LAV_CURRENT version. Old audit
+  new dynamic loader supporting the latest LAV_CURRENT version. Old audit
   modules are still loaded for all targets except aarch64.
 
 * The audit interface on aarch64 is extended to support both the indirect
@@ -765,7 +765,7 @@ Major new features:
   to configure the size of the thread stack cache.
 
 * The function _Fork has been added as an async-signal-safe fork replacement
-  since Austin Group issue 62 droped the async-signal-safe requirement for
+  since Austin Group issue 62 dropped the async-signal-safe requirement for
   fork (and it will be included in the future POSIX standard).  The new _Fork
   function does not run any atfork function neither resets any internal state
   or lock (such as the malloc one), and only sets up a minimal state required
@@ -1122,7 +1122,7 @@ Changes to build and runtime requirements:
 
 * On Linux, the system administrator needs to configure /dev/pts with
   the intended access modes for pseudo-terminals.  glibc no longer
-  attemps to adjust permissions of terminal devices.  The previous glibc
+  attempts to adjust permissions of terminal devices.  The previous glibc
   defaults ("tty" group, user read/write and group write) already
   corresponded to what most systems used, so that grantpt did not
   perform any adjustments.
@@ -1183,7 +1183,7 @@ The following bugs are resolved with this release:
   [26100] libc: Race in syslog(3) with regards to tag printing.
   [26124] libc: Export <cpu-features.h>
   [26130] nscd: Inconsistent nscd cache during pruning
-  [26203] libc: GLRO(dl_x86_cpu_features) may not be intialized
+  [26203] libc: GLRO(dl_x86_cpu_features) may not be initialized
   [26224] locale: iconv hangs when converting some invalid inputs from
     several IBM character sets (CVE-2020-27618)
   [26341] libc: realpath cyclically call __alloca(path_max) to consume
@@ -1472,7 +1472,7 @@ The following bugs are resolved with this release:
   [20338] libc: Parsing of /etc/gshadow can return bad pointers causing
     segfaults in applications
   [20543] libc: Please move from .gnu.linkonce to comdat
-  [22489] network: gcc warns about implicit convertion in
+  [22489] network: gcc warns about implicit conversion in
     ICMP6_FILTER_SETPASS with -Wsign-conversion
   [22525] localedata: or_IN  LC_COLLATE does not use copy "iso14651_t1"
   [23294] math: Complex _FloatN functions are redirected to the wrong
@@ -3513,7 +3513,7 @@ The following bugs are resolved with this release:
     frame-pointer on i386
   [21049] libc: segfault in longjmp_chk() due to clobbered processor
     register
-  [21075] libc: unused assigment to %g4 in sparc/sparc{64,32}/clone.S
+  [21075] libc: unused assignment to %g4 in sparc/sparc{64,32}/clone.S
   [21088] libc: Build fails with --enable-static-nss
   [21094] math: cosf(1.57079697) has 3 ulp error on targets where the
     generic c code is used
@@ -3920,7 +3920,7 @@ The following bugs are resolved with this release:
   [17730] malloc: thread-local storage is sometimes improperly free()'d
     after being __libc_memalign()'d
   [18241] stdio: failed fseek on memstream does not set errno and can fail
-    when it shouldnt
+    when it shouldn't
   [18243] nptl: sem_wait, sem_timedwait are cancellation points shm_open is
     not
   [18463] nptl: pthread_cond_broadcast issue when surrounded by
@@ -4384,7 +4384,7 @@ Version 2.23
   glibc 2.10 via --enable-experimental-malloc (2009), could result in the
   unnecessary serialization of memory allocation requests across threads.
   The defect is now corrected.  Users should see a substantial increase in
-  the concurent throughput of allocation requests for applications which
+  the concurrent throughput of allocation requests for applications which
   trigger this bug.  Affected applications typically create and
   destroy threads frequently.  (Bug 19048 was reported and analyzed by
   Ericsson.)
@@ -4462,7 +4462,7 @@ The following bugs are resolved with this release:
   [2898] libc: [improve]  warning: the use  of `mktemp' is dangerous, better
     use `mkstemp'
   [4404] localedata: German translation of "Alarm clock" is misleading
-  [6799] math: nextafter() and nexttoward() doen't set errno on
+  [6799] math: nextafter() and nexttoward() doesn't set errno on
     overflow/underflow errors
   [6803] math: scalb(), scalbln(), scalbn() do not set errno on
     overflow/underflow
@@ -4641,7 +4641,7 @@ The following bugs are resolved with this release:
   [19094] math: lrint, llrint missing exceptions close to overflow threshold
   [19095] math: dbl-64 lrint incorrect for 64-bit long
   [19122] dynamic-link: Unnecessary PLT relocations in librtld.os
-  [19124] dynamic-link: ld.so failed to build with older assmebler
+  [19124] dynamic-link: ld.so failed to build with older assembler
   [19125] math: [powerpc32] llroundf, llround incorrect exceptions
   [19129] dynamic-link: [arm] Concurrent lazy TLSDESC resolution can crash
   [19134] math: [powerpc32] lround, lroundf spurious exceptions
@@ -5809,7 +5809,7 @@ Version 2.8
 * ARG_MAX is not anymore constant on Linux.  Use sysconf(_SC_ARG_MAX).
   Implemented by Ulrich Drepper.
 
-* Faster sqrt and sqrtf implemention for some PPC variants.
+* Faster sqrt and sqrtf implementation for some PPC variants.
   Implemented by Steven Munroe.
 
 Version 2.7
@@ -6090,7 +6090,7 @@ Version 2.3.2
 * The `btowc' function should work at least twice as fast due to
   specialized callbacks in the iconv modules.  Implemented by Bruno Haible.
 
-* With approriate thread add-ons cancelable functions are now implemented
+* With appropriate thread add-ons cancelable functions are now implemented
   in libc.so as well.  No need to call the function in libpthread.  This
   change allowed to finally disable the incorrect and expensive handling
   of weak definition in ld.so.
@@ -6421,7 +6421,7 @@ Version 2.1
 * Eric Youngdale and Ulrich Drepper implemented versioning of objects on
   symbol level.
 
-* Miles Bader provided the `argp' function family to support hierachical
+* Miles Bader provided the `argp' function family to support hierarchical
   command line argument parsing, layered on top of getopt.
 
 * strtod accepts new hexadecimal floating-point format from ISO C 9X.
@@ -6965,7 +6965,7 @@ Version 2.0
 * Ulrich Drepper has contributed a new suite of functions for operation on
   wide-character and multibyte-character strings, in <wchar.h>;
   and classification and case conversion of wide characters, in <wctype.h>.
-  These new functions are conforming to the ISO C, Amendement 1 specification.
+  These new functions are conforming to the ISO C, Amendment 1 specification.
 
 * There is now a second implementation of the standard I/O library available.
   It comes from GNU libg++ as was written by Per Bothner, heavily modified

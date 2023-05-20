@@ -39,7 +39,7 @@ utf8_test_1 (void)
   assert (mbrtowc (&wc, "\xE2", 1, &s) == (size_t) -2);	/* 1st byte processed */
   assert (mbrtowc (&wc, "\x89", 1, &s) == (size_t) -2);	/* 2nd byte processed */
   assert (wc == 42);		/* no value has not been stored into &wc yet */
-  assert (mbrtowc (&wc, "\xA0", 1, &s) == 1);	/* 3nd byte processed */
+  assert (mbrtowc (&wc, "\xA0", 1, &s) == 1);	/* 3rd byte processed */
   assert (wc == 0x2260);	/* E2 89 A0 = U+2260 (not equal) decoded correctly */
   assert (mbrtowc (&wc, "", 1, &s) == 0);	/* test final byte processing */
   assert (wc == 0);		/* test final byte decoding */
@@ -88,7 +88,7 @@ utf8_test_2 (void)
   memset (&s, 0, sizeof (s));	/* get s into initial state */
   assert (mbrtowc (&wc, "\xE2", 1, &s) == (size_t) -2);	/* 1st byte processed */
   assert (mbrtowc (&wc, "\x89", 1, &s) == (size_t) -2);	/* 2nd byte processed */
-  assert (mbrtowc (&wc, "\xA0", 1, &s) == 1);	/* 3nd byte processed */
+  assert (mbrtowc (&wc, "\xA0", 1, &s) == 1);	/* 3rd byte processed */
   assert (mbrtowc (NULL, "", 1, &s) == 0); /* valid terminator */
   assert (mbsinit (&s));
 
@@ -122,7 +122,7 @@ utf8_test_3 (void)
   memset (&s, 0, sizeof (s));	/* get s into initial state */
   assert (mbrtowc (&wc, "\xE2", 1, &s) == (size_t) -2);	/* 1st byte processed */
   assert (mbrtowc (&wc, "\x89", 1, &s) == (size_t) -2);	/* 2nd byte processed */
-  assert (mbrtowc (&wc, "\xA0", 1, &s) == 1);	/* 3nd byte processed */
+  assert (mbrtowc (&wc, "\xA0", 1, &s) == 1);	/* 3rd byte processed */
   assert (mbrtowc (NULL, NULL, 0, &s) == 0); /* valid terminator */
   assert (mbsinit (&s));
 

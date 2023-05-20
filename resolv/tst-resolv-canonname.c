@@ -153,7 +153,7 @@ response (const struct resolv_response_context *ctx,
         }
       break;
     case 103:
-      /* NODATA repsonse.  */
+      /* NODATA response.  */
       resolv_response_init (b, (struct resolv_response_flags) {});
       resolv_response_add_question (b, qname, qclass, qtype);
       break;

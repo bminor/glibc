@@ -279,7 +279,7 @@ devmount (const char *new_root_path, const char *which)
 	    concat (new_root_path, "/dev/", which, NULL));
 }
 
-/* Returns true if the string "looks like" an environement variable
+/* Returns true if the string "looks like" an environment variable
    being set.  */
 static int
 is_env_setting (const char *a)
@@ -800,7 +800,7 @@ main (int argc, char **argv)
       --argc;
       while (is_env_setting (argv[1]))
 	{
-	  /* If there are variables we do NOT want to propogate, this
+	  /* If there are variables we do NOT want to propagate, this
 	     is where the test for them goes.  */
 	    {
 	      /* Need to keep these.  Note that putenv stores a
@@ -1175,7 +1175,7 @@ main (int argc, char **argv)
 
   /* To complete the containerization, we need to fork () at least
      once.  We can't exec, nor can we somehow link the new child to
-     our parent.  So we run the child and propogate it's exit status
+     our parent.  So we run the child and propagate it's exit status
      up.  */
   child = fork ();
   if (child < 0)
@@ -1233,11 +1233,11 @@ main (int argc, char **argv)
 	{
 	  /* This happens if we're trying to create a nested container,
 	     like if the build is running under podman, and we lack
-	     priviledges.
+	     privileges.
 
 	     Ideally we would WARN here, but that would just add noise to
 	     *every* test-container test, and the ones that care should
-	     have their own relevent diagnostics.
+	     have their own relevant diagnostics.
 
 	     FAIL_EXIT1 ("Unable to mount /proc: ");  */
 	}

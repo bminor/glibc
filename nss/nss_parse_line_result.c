@@ -29,7 +29,7 @@ __nss_parse_line_result (FILE *fp, off64_t offset, int parse_line_result)
   switch (__builtin_expect (parse_line_result, 1))
     {
     case 1:
-      /* Sucess.  */
+      /* Success.  */
       return 0;
     case 0:
       /* Parse error.  */

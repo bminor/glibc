@@ -32,7 +32,7 @@
 #include <gnu/lib-names.h>
 #include <libc-diag.h>
 
-/* Indeces for the symbol names.  */
+/* Indices for the symbol names.  */
 enum
   {
 # define DB_STRUCT(type)		SYM_SIZEOF_##type,

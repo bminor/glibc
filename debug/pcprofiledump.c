@@ -108,7 +108,7 @@ main (int argc, char *argv[])
     }
 
   /* Read the first 4-byte word.  It contains the information about
-     the word size and the endianess.  */
+     the word size and the endianness.  */
   uint32_t word;
   if (TEMP_FAILURE_RETRY (read (fd, &word, 4)) != 4)
     error (EXIT_FAILURE, errno, _("cannot read header"));

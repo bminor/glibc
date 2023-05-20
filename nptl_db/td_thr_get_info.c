@@ -85,7 +85,7 @@ td_thr_get_info (const td_thrhandle_t *th, td_thrinfo_t *infop)
   if (err != TD_OK)
     return err;
 
-  /* Fill in information.  Clear first to provide reproducable
+  /* Fill in information.  Clear first to provide reproducible
      results for the fields we do not fill in.  */
   memset (infop, '\0', sizeof (td_thrinfo_t));
 

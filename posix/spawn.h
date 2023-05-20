@@ -220,7 +220,7 @@ posix_spawn_file_actions_addclosefrom_np (posix_spawn_file_actions_t *,
 					  int __from)
      __THROW __nonnull ((1));
 
-/* Add an action to set the process group of the forground process group
+/* Add an action to set the process group of the foreground process group
    associated with the terminal TCFD.  */
 extern int
 posix_spawn_file_actions_addtcsetpgrp_np (posix_spawn_file_actions_t *,

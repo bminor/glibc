@@ -183,7 +183,7 @@ a\(***\)b	bC	BADRPT
 # The following two tests are not correct:
 #{		&	{	{
 #{abc		&	{abc	{abc
-# '{' is always a special char outside bracket expressions.  So test ony BRE:
+# '{' is always a special char outside bracket expressions.  So test only BRE:
 {		b	{	{
 {abc		b	{abc	{abc
 {1		C	BADRPT

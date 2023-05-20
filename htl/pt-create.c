@@ -199,7 +199,7 @@ __pthread_create_internal (struct __pthread **thread,
   /* Set the new thread's signal mask and set the pending signals to
      empty.  POSIX says: "The signal mask shall be inherited from the
      creating thread.  The set of signals pending for the new thread
-     shall be empty."  If the currnet thread is not a pthread then we
+     shall be empty."  If the current thread is not a pthread then we
      just inherit the process' sigmask.  */
   if (GL (dl_pthread_num_threads) == 1)
     err = __sigprocmask (0, 0, &pthread->init_sigset);

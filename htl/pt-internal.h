@@ -303,7 +303,7 @@ extern void __pthread_destroy_specific (struct __pthread *thread);
    structures.  */
 extern error_t __pthread_sigstate_init (struct __pthread *thread);
 
-/* Destroy the signal state data structures associcated with thread
+/* Destroy the signal state data structures associated with thread
    *THREAD.  */
 extern void __pthread_sigstate_destroy (struct __pthread *thread);
 

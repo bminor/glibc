@@ -387,7 +387,7 @@ getspent_next_nss (struct spwd *result, ent_t *ent,
 }
 
 
-/* This function handle the +user entrys in /etc/shadow */
+/* This function handle the +user entries in /etc/shadow */
 static enum nss_status
 getspnam_plususer (const char *name, struct spwd *result, ent_t *ent,
 		   char *buffer, size_t buflen, int *errnop)

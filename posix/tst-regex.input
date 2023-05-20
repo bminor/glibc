@@ -251,9 +251,9 @@
 
 1998-08-05  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
-	* libio/iofopen64.c: Fix typo.  Avoid unnessary casts.
+	* libio/iofopen64.c: Fix typo.  Avoid unnecessary casts.
 	* libio/iopopen.c: Unlink file before freeing it if command
-	creation failed.  Avoid unnessary casts.
+	creation failed.  Avoid unnecessary casts.
 	* libio/iofdopen.c:  Avoid unnecessary cast.
 	* pwd/fgetpwent_r.c [USE_IN_LIBIO]: Map funlockfile to
 	_IO_funlockfile.
@@ -276,7 +276,7 @@
 
 1998-08-07  Cristian Gafton  <gafton@redhat.com>
 
-	* pwd/putpwent.c (putpwent): Avoid writting (none) in the passwd file.
+	* pwd/putpwent.c (putpwent): Avoid writing (none) in the passwd file.
 	* shadow/putspent.c (putspent): Likewise.
 	* grp/putgrent.c: New file.
 	* grp/Makefile (routines): Add putgrent.
@@ -300,7 +300,7 @@
 1998-08-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* misc/mktemp.c: Add include <stlib.h> for prototype, remove
-	unneccessary includes.
+	unnecessary includes.
 	* misc/mkstemp.c: Likewise.
 
 1998-08-03 16:36  Ulrich Drepper  <drepper@cygnus.com>
@@ -402,7 +402,7 @@
 	as real name for system call and make setresuid a weak alias.  Set
 	caller to seteuid.
 	* sysdeps/unix/sysv/linux/seteuid.c (seteuid): Implement using
-	`setresuid' syscall if availble.  Fixes problems with sendmail
+	`setresuid' syscall if available.  Fixes problems with sendmail
 	which expects `seteuid' to not set the saved user ID.
 
 1998-07-30 20:09 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
@@ -2330,7 +2330,7 @@
 	* sysdeps/mach/hurd/ftruncate.c: Really define function as
 	__ftruncate.
 	* sysdeps/mach/hurd/truncate.c: Include <unistd.h>.
-	(truncate): Fix function defenition to match prototype.
+	(truncate): Fix function definition to match prototype.
 
 1998-06-20  Mark Kettenis  <kettenis@phys.uva.nl>
 
@@ -3619,7 +3619,7 @@
 
 1998-05-20  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
-	* sysdeps/unix/bsd/vax/vfork.S: Missed double occurences of "the
+	* sysdeps/unix/bsd/vax/vfork.S: Missed double occurrences of "the
 	the" in one line - fixed it.
 	* sysdeps/unix/bsd/sun/m68k/vfork.S: Likewise.
 	* sysdeps/unix/bsd/hp/m68k/vfork.S: Likewise.
@@ -3771,7 +3771,7 @@
 
 1998-05-19 12:16  Ulrich Drepper  <drepper@cygnus.com>
 
-	* manual/memory.texi: Add back accidently removed line.
+	* manual/memory.texi: Add back accidentally removed line.
 
 1998-04-25  Mark Kettenis  <kettenis@phys.uva.nl>
 
@@ -3833,7 +3833,7 @@
 
 1998-05-15  Ulrich Drepper  <drepper@cygnus.com>
 
-	* iconv/loop.c: Let user add code to use and set paramaters.
+	* iconv/loop.c: Let user add code to use and set parameters.
 
 	* iconvdata/iso-2022-kr.c: Correct to-loop.
 
@@ -4313,7 +4313,7 @@
 	$(objpfx)sysd-dirs): Move them...
 	* Makeconfig: ... here.
 	* Makerules (subdirs-stamps, subdirs-stamp-o): Always define.
-	(stubs): Fix circular depedency.
+	(stubs): Fix circular dependency.
 	(do-makelib): Clean up.
 	(lib): Don't depend on lib-noranlib.
 	($(objpfx)stamp.oS): Remove special case for empty
@@ -4533,7 +4533,7 @@
 	* intl/localealias.c (read_alias_file): Use unsigned char for
 	local variables.  Remove unused variable tp.
 	* intl/l10nflist.c (_nl_normalize_codeset): Use unsigned char *
-	for type of codeset.  For loosing Solaris systems.
+	for type of codeset.  For losing Solaris systems.
 	* intl/loadinfo.h: Adapt prototype of _nl_normalize_codeset.
 	* intl/bindtextdom.c (BINDTEXTDOMAIN): Don't define local variable
 	len if not needed.
@@ -4951,7 +4951,7 @@
 
 1998-04-22  Gordon Matzigkeit  <gord@profitpress.com>
 
-	* Makerules: Change occurances of `cd dir; cmd' to `cd dir && cmd'.
+	* Makerules: Change occurrences of `cd dir; cmd' to `cd dir && cmd'.
 	* Makefile: Likewise.
 	* posix/Makefile: Likewise.
 	* sysdeps/mach/hurd/Makefile: Likewise.
@@ -5381,7 +5381,7 @@
 	* iconv/gconv_builtin.h: Add UCS4 support.  Change references to
 	UCS4 into references to INTERNAL.
 	* iconv/gconv_simple.c: Implement UCS4<->INTERNAL converters.
-	Add endianess support to UCS functions.  Change references to
+	Add endianness support to UCS functions.  Change references to
 	UCS4 into references to INTERNAL.
 	* iconv/gconv_int.h: Change references to UCS4 into references to
 	INTERNAL.
@@ -5633,7 +5633,7 @@
 
 1998-04-12  Ulrich Drepper  <drepper@cygnus.com>
 
-	* iconvdata/sjis.c (gconv): Remove superfluous varaible declarations.
+	* iconvdata/sjis.c (gconv): Remove superfluous variable declarations.
 
 	* iconvdata/Makefile: Add rules for big5 conversion.
 	* iconvdata/gconv-modules: Likewise.
@@ -5969,7 +5969,7 @@
 1998-04-07  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/posix/mkstemp.c (mkstemp): Correct return value in case
-	template is wrong.  Remove unused varaible `ignored'.
+	template is wrong.  Remove unused variable `ignored'.
 
 1998-04-07  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
@@ -6667,7 +6667,7 @@
 	* elf/ldd.bash.in: Collect output of ldd --verify in verify_out.
 	* elf/ldd.sh.in: Likewise.
 	* elf/ldsodefs.h: Declare _dl_correct_cache_id.
-	* elf/rtld.c (dl_main): In --verify mode allow platform specifc action.
+	* elf/rtld.c (dl_main): In --verify mode allow platform specific action.
 	Use strsep correctly.
 	(process_envvars): Allow platform specific variables.
 	* sysdeps/generic/dl-cache.c (_dl_correct_cache_id): New variable.
@@ -7324,7 +7324,7 @@
 
 	* sysdeps/unix/opendir.c (__opendir): Don't block on FIFOs etc.
 	Optimize memory handling.
-	* sysdeps/unix/closedir.c: Optmize memory handling.
+	* sysdeps/unix/closedir.c: Optimize memory handling.
 
 1998-03-17  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -8495,7 +8495,7 @@
 	(_mcleanup): Don't call write_gmon if in error state.  Don't try
 	to free array if not  successfully allocated.
 
-	* elf/dl-load.c (STRING): Define to __STRING to enble expansion.
+	* elf/dl-load.c (STRING): Define to __STRING to enable expansion.
 	Include elf.h to get macro definitions.
 	Use __ELF?NATIVE?CLASS in message, not __ELF_WORDSIZE.
 
@@ -9351,7 +9351,7 @@
 	* login/Makefile ($(inst_libexecdir)/pt_chown): Make the target
 	directory first and ignore install error.
 
-	* sysdeps/unix/sysv/linux/ptsname.c (__ptsname_r): Substract
+	* sysdeps/unix/sysv/linux/ptsname.c (__ptsname_r): Subtract
 	128 from ptyno and fix a typo for the BSD style pty.
 
 1998-02-01  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
@@ -9534,7 +9534,7 @@
 	[PR libc/441]
 
 	* sysdeps/generic/dl-cache.c (_dl_load_cache_lookup): Use first
-	occurence in cache.  Reported by Rudolf Leitgeb
+	occurrence in cache.  Reported by Rudolf Leitgeb
 	<leitgeb@leland.stanford.edu>.
 	[PR libc/440]
 
@@ -10309,7 +10309,7 @@
 	* string/strsignal.c: Add support for real-time signals.
 
 	* sysdeps/generic/_strerror.c: Fix Handling of unknown error in
-	presense of small buffer.
+	presence of small buffer.
 
 	* sysdeps/i386/bits/string.h: Define _HAVE_STRING_ARCH_* macros.
 
@@ -11253,7 +11253,7 @@
 1997-12-06 17:00  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/posix/sigblock.c (__sigblock): Don't check int mask
-	beyound its size.
+	beyond its size.
 	* sysdeps/posix/sigsetmask.c (__sigsetmask): Ditto.
 	* sysdeps/posix/sigvec.c (convert_mask, __sigvec): Ditto.
 
@@ -11371,7 +11371,7 @@
 	declaration to __syscall_rt_sigaction.
 
 	* sysdeps/unix/sysv/linux/sigreturn.c: Remove inclusion of
-	non-existant <sigcontext.h>.
+	non-existent <sigcontext.h>.
 
 1997-12-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
@@ -11407,7 +11407,7 @@
 
 	* Makeconfig: Add shared-thread-library variable.
 
-	* math/Makfile (CPPFLAGS): Add -D__LIBC_INTERNAL_MATH_INLINES.
+	* math/Makefile (CPPFLAGS): Add -D__LIBC_INTERNAL_MATH_INLINES.
 	* sysdeps/i386/Makefile: Don't define ___LIBC_INTERNAL_MATH_INLINES
 	here.
 	* sysdeps/m68k/fpu/e_acos.c: Likewise.
@@ -12313,7 +12313,7 @@
 	(CFLAGS-locfile.c): Likewise.
 	Suggested by Zack Weinberg <zack@rabi.phys.columbia.edu>.
 
-	* misc/hsearch_r.c (hsearch_r): Avoid undefinitely search for
+	* misc/hsearch_r.c (hsearch_r): Avoid indefinitely search for
 	non-existing entry if the table is full.
 
 	* posix/regex.h: Pretty print.

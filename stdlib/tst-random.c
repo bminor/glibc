@@ -7,14 +7,14 @@
    is regenerated twice and checked against the stored values.
 
    First they are regenerated one sequence at a time, using srandom()
-   to set the initial state.  A discrepency here would suggest that
+   to set the initial state.  A discrepancy here would suggest that
    srandom() was failing to completely initialize the random number
    generator.
 
    Second the sequences are regenerated in an interleaved order.
    A state vector is created for each sequence using initstate().
    setstate() is used to switch from sequence to sequence during
-   the interleaved generation.  A discrepency here would suggest
+   the interleaved generation.  A discrepancy here would suggest
    a problem with either initstate() failing to initialize the
    random number generator properly, or the failure of setstate()
    to correctly save and restore state information.  Also, each
@@ -54,7 +54,7 @@ do_test (void)
   int s;			/* sequence index */
   int i;			/* element index */
 
-  printf ("Begining random package test using %d sequences of length %d.\n",
+  printf ("Beginning random package test using %d sequences of length %d.\n",
 	  nseq, nrnd);
 
   /* 1. Generate and store the sequences.  */

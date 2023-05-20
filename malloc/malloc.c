@@ -271,7 +271,7 @@
   is fairly extensive, and will slow down execution
   noticeably. Calling malloc_stats or mallinfo with MALLOC_DEBUG set
   will attempt to check every non-mmapped allocated and free chunk in
-  the course of computing the summmaries. (By nature, mmapped regions
+  the course of computing the summaries. (By nature, mmapped regions
   cannot be checked very much automatically.)
 
   Setting MALLOC_DEBUG may also be helpful if you are trying to modify
@@ -672,7 +672,7 @@ void*  __libc_valloc(size_t);
   arena:     current total non-mmapped bytes allocated from system
   ordblks:   the number of free chunks
   smblks:    the number of fastbin blocks (i.e., small chunks that
-	       have been freed but not use resused or consolidated)
+	       have been freed but not reused or consolidated)
   hblks:     current number of mmapped regions
   hblkhd:    total bytes held in mmapped regions
   usmblks:   always 0
@@ -1017,7 +1017,7 @@ libc_hidden_proto (__libc_mallopt)
 
   In 2001, the kernel had a maximum size for brk() which was about 800
   megabytes on 32 bit x86, at that point brk() would hit the first
-  mmaped shared libaries and couldn't expand anymore. With current 2.6
+  mmaped shared libraries and couldn't expand anymore. With current 2.6
   kernels, the VA space layout is different and brk() and mmap
   both can span the entire heap at will.
 
@@ -1486,7 +1486,7 @@ tag_new_usable (void *ptr)
     and consolidated sets of chunks, which is what these bins hold, so
     they can be found quickly.  All procedures maintain the invariant
     that no consolidated chunk physically borders another one, so each
-    chunk in a list is known to be preceeded and followed by either
+    chunk in a list is known to be preceded and followed by either
     inuse chunks or the ends of memory.
 
     Chunks in bins are kept in size order, with ties going to the
@@ -2475,7 +2475,7 @@ sysmalloc_mmap (INTERNAL_SIZE_T nb, size_t pagesize, int extra_flags, mstate av)
 /*
    Allocate memory using mmap() based on S and NB requested size, aligning to
    PAGESIZE if required.  The EXTRA_FLAGS is used on mmap() call.  If the call
-   succeedes S is updated with the allocated size.  This is used as a fallback
+   succeeds S is updated with the allocated size.  This is used as a fallback
    if MORECORE fails.
  */
 static void *
@@ -2557,7 +2557,7 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
       char *mm;
       if (mp_.hp_pagesize > 0 && nb >= mp_.hp_pagesize)
 	{
-	  /* There is no need to isse the THP madvise call if Huge Pages are
+	  /* There is no need to issue the THP madvise call if Huge Pages are
 	     used directly.  */
 	  mm = sysmalloc_mmap (nb, mp_.hp_pagesize, mp_.hp_flags, av);
 	  if (mm != MAP_FAILED)
@@ -3439,7 +3439,7 @@ __libc_realloc (void *oldmem, size_t bytes)
     }
 
   /* Little security check which won't hurt performance: the allocator
-     never wrapps around at the end of the address space.  Therefore
+     never wraps around at the end of the address space.  Therefore
      we can exclude some size values which might appear here by
      accident or by "design" from some intruder.  */
   if ((__builtin_expect ((uintptr_t) oldp > (uintptr_t) -oldsize, 0)
@@ -4486,7 +4486,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
   size = chunksize (p);
 
   /* Little security check which won't hurt performance: the
-     allocator never wrapps around at the end of the address space.
+     allocator never wraps around at the end of the address space.
      Therefore we can exclude some size values which might appear
      here by accident or by "design" from some intruder.  */
   if (__builtin_expect ((uintptr_t) p > (uintptr_t) -size, 0)

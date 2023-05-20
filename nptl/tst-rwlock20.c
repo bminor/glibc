@@ -26,7 +26,7 @@
 #include <atomic.h>
 #include <support/xthread.h>
 
-/* We realy want to set threads to 2 to reproduce this issue. The goal
+/* We really want to set threads to 2 to reproduce this issue. The goal
    is to have one primary writer and a single reader, and to hit the
    bug that happens in the interleaving of those two phase transitions.
    However, on most hardware, adding a second writer seems to help the

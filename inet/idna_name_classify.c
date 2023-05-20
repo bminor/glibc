@@ -40,7 +40,7 @@ __idna_name_classify (const char *name)
         break;
       else if (result == (size_t) -2)
         /* Incomplete trailing multi-byte character.  This is an
-           encoding error becaue we received the full name.  */
+           encoding error because we received the full name.  */
         return idna_name_encoding_error;
       else if (result == (size_t) -1)
         {

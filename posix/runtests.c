@@ -81,7 +81,7 @@ run_a_test (int id, const struct a_test * t)
       else if (t->expected == 2)
 	{
 	  printf ("test %d\n", id);
-	  printf ("pattern \"%s\" successfull compilation not expected\n",
+	  printf ("pattern \"%s\" successful compilation not expected\n",
 		  t->pattern);
 	  return 1;
 	}

@@ -201,7 +201,7 @@ do_test (void)
 	}
     }
   /* fts_read returns NULL when done (and clears errno)
-     or when an error occured (with errno set).  */
+     or when an error occurred (with errno set).  */
   if (errno != 0)
     {
       printf ("FAIL: fts_read: %m\n");

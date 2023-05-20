@@ -191,7 +191,7 @@ initgroups (const char *user, gid_t group)
   long int limit = __sysconf (_SC_NGROUPS_MAX);
 
   if (limit > 0)
-    /* We limit the size of the intially allocated array.  */
+    /* We limit the size of the initially allocated array.  */
     size = MIN (limit, 64);
   else
     /* No fixed limit on groups.  Pick a starting buffer size.  */

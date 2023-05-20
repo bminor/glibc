@@ -40,7 +40,7 @@ struct response_data
    response data.  The test DNS server returns the index of the array
    element which contains the actual response data.  This enables the
    test case to return arbitrary amounts of data with the limited
-   number of bits which fit into an IP addres.
+   number of bits which fit into an IP address.
 
    The volatile specifier is needed because the test case accesses
    these variables from a callback function called from a function

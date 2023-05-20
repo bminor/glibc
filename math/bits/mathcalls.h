@@ -271,7 +271,7 @@ __MATHCALL (nextdown,, (_Mdouble_ __x));
 __MATHCALL (nextup,, (_Mdouble_ __x));
 # endif
 
-/* Return the remainder of integer divison X / Y with infinite precision.  */
+/* Return the remainder of integer division X / Y with infinite precision.  */
 __MATHCALL (remainder,, (_Mdouble_ __x, _Mdouble_ __y));
 
 # ifdef __USE_ISOC99

@@ -58,7 +58,7 @@ do_test (void)
     free (winput);
   }
 
-  /* For 's' converstion specifier the array is interpreted as a multibyte
+  /* For 's' conversion specifier the array is interpreted as a multibyte
      character sequence and converted to wide characters up to the precision
      specific value.  */
   {

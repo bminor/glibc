@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 /* This file is intentionally left empty.  It exists so that both
-   architectures which implement __memcmpeq seperately from memcmp and
+   architectures which implement __memcmpeq separately from memcmp and
    architectures which implement __memcmpeq by having it alias memcmp will
    build.
 

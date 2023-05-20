@@ -218,7 +218,7 @@ late_init (void)
    __pthread_current_priority reuse the same lock, PD->lock, for a
    similar purpose e.g. synchronizing the setting of similar thread
    attributes.  These functions are never called before the thread is
-   created, so don't participate in startup syncronization, but given
+   created, so don't participate in startup synchronization, but given
    that the lock is present already and in the unlocked state, reusing
    it saves space.
 

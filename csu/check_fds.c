@@ -68,7 +68,7 @@ check_one_fd (int fd, int mode)
 
 	 Note that the following code assumes that STDIN_FILENO,
 	 STDOUT_FILENO, STDERR_FILENO are the three lowest file
-	 decsriptor numbers, in this order.  */
+	 descriptor numbers, in this order.  */
       struct __stat64_t64 st;
       if (__glibc_unlikely (nullfd != fd)
 	  || __glibc_likely (__fstat64_time64 (fd, &st) != 0)

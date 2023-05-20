@@ -85,11 +85,11 @@ static int idle_thread_count;
 
 
 /* These are the values used for optimization.  We will probably
-   create a funcion to set these values.  */
+   create a function to set these values.  */
 static struct gaiinit optim =
 {
   20,	/* int gai_threads;	Maximal number of threads.  */
-  64,	/* int gai_num;		Number of expected simultanious requests. */
+  64,	/* int gai_num;		Number of expected simultaneous requests. */
   0,
   0,
   0,

@@ -121,7 +121,7 @@ inet_pton4 (const char *src, const char *end, unsigned char *dst)
   return 1;
 }
 
-/* Return the value of CH as a hexademical digit, or -1 if it is a
+/* Return the value of CH as a hexadecimal digit, or -1 if it is a
    different type of character.  */
 static int
 hex_digit_value (char ch)

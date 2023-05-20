@@ -917,7 +917,7 @@ post_signal (struct hurd_sigstate *ss,
 			       | __sigmask (SIGTSTP))))
     {
       /* If we would ordinarily stop for a job control signal, but we are
-	 orphaned so noone would ever notice and continue us again, we just
+	 orphaned so no one would ever notice and continue us again, we just
 	 quietly die, alone and in the dark.  */
       detail->code = signo;
       signo = SIGKILL;

@@ -249,7 +249,7 @@ support_delete_temp_files (void)
   pid_t pid = getpid ();
   while (temp_name_list != NULL)
     {
-      /* Only perform the removal if the path was registed in the same
+      /* Only perform the removal if the path was registered in the same
 	 process, as identified by the PID.  (This assumes that the
 	 parent process which registered the temporary file sticks
 	 around, to prevent PID reuse.)  */

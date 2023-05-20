@@ -18,7 +18,7 @@
 #include <sys/sem.h>
 #include <errno.h>
 
-/* Perform user-defined atomical operation of array of semaphores.  */
+/* Perform user-defined atomic operation of array of semaphores.  */
 
 int
 __semtimedop (int semid, struct sembuf *sops, size_t nsops,

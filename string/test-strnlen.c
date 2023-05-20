@@ -260,7 +260,7 @@ do_page_tests (void)
 }
 
 /* Tests meant to unveil fail on implementations that access bytes
-   beyond the maxium length.  */
+   beyond the maximum length.  */
 
 static void
 do_page_2_tests (void)

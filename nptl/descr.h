@@ -119,7 +119,7 @@ struct robust_list_head
 };
 
 
-/* Data strcture used to handle thread priority protection.  */
+/* Data structure used to handle thread priority protection.  */
 struct priority_protection_data
 {
   int priomax;

@@ -110,7 +110,7 @@ do_test (void)
     /* XXX It's not yet a bug when this fails.  */
     clock_test (cl);
   else
-	  printf("CPU clock unavailble, skipping test\n");
+	  printf("CPU clock unavailable, skipping test\n");
 
   return result;
 }

@@ -715,7 +715,7 @@ getanswer_r (unsigned char *packet, size_t packetlen, uint16_t qtype,
   if (!__ns_rr_cursor_init (&c, packet, packetlen))
     {
       /* This should not happen because __res_context_query already
-	 perfroms response validation.  */
+	 performs response validation.  */
       *h_errnop = NO_RECOVERY;
       return NSS_STATUS_UNAVAIL;
     }
@@ -811,7 +811,7 @@ getanswer_ptr (unsigned char *packet, size_t packetlen,
   if (!__ns_rr_cursor_init (&c, packet, packetlen))
     {
       /* This should not happen because __res_context_query already
-	 perfroms response validation.  */
+	 performs response validation.  */
       *h_errnop = NO_RECOVERY;
       return NSS_STATUS_UNAVAIL;
     }
@@ -906,7 +906,7 @@ gaih_getanswer_slice (unsigned char *packet, size_t packetlen,
   if (!__ns_rr_cursor_init (&c, packet, packetlen))
     {
       /* This should not happen because __res_context_query already
-	 perfroms response validation.  */
+	 performs response validation.  */
       *h_errnop = NO_RECOVERY;
       return NSS_STATUS_UNAVAIL;
     }

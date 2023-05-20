@@ -1509,7 +1509,7 @@ do_test (void)
       CHK_FAIL_END
 #endif
 
-      /* Bug 29030 regresion check */
+      /* Bug 29030 regression check */
       cp = "HelloWorld";
       if (mbsrtowcs (NULL, &cp, (size_t)-1, &s) != 10)
         FAIL ();

@@ -251,7 +251,7 @@ __nscd_unmap (struct mapped_database *mapped)
 }
 
 
-/* Try to get a file descriptor for the shared meory segment
+/* Try to get a file descriptor for the shared memory segment
    containing the database.  */
 struct mapped_database *
 __nscd_get_mapping (request_type type, const char *key,
@@ -443,7 +443,7 @@ __nscd_get_map_ref (request_type type, const char *name,
 #define MINIMUM_HASHENTRY_SIZE \
   (offsetof (struct hashentry, dellist) + sizeof (int32_t))
 
-/* Don't return const struct datahead *, as eventhough the record
+/* Don't return const struct datahead *, as even though the record
    is normally constant, it can change arbitrarily during nscd
    garbage collection.  */
 struct datahead *

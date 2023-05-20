@@ -204,7 +204,7 @@ static const ufc_long longmask[32] = {
  * do_pc1: permform pc1 permutation in the key schedule generation.
  *
  * The first   index is the byte number in the 8 byte ASCII key
- *  -  second    -      -    the two 28 bits halfs of the result
+ *  -  second    -      -    the two 28 bits halves of the result
  *  -  third     -   selects the 7 bits actually used of each byte
  *
  * The result is kept with 28 bit per 32 bit with the 4 most significant

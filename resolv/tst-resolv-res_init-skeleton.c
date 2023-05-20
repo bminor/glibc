@@ -1,4 +1,4 @@
-/* Test parsing of /etc/resolv.conf.  Genric version.
+/* Test parsing of /etc/resolv.conf.  Generic version.
    Copyright (C) 2017-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -669,7 +669,7 @@ struct test_case test_cases[] =
      "; nameserver[0]: [192.0.2.1]:53\n"
      "; nameserver[1]: [192.0.2.3]:53\n"
     },
-    {.name = "RES_OPTIONS is cummulative",
+    {.name = "RES_OPTIONS is cumulative",
      .conf = "options timeout:7 ndots:2 use-vc\n"
      "nameserver 192.0.2.1\n",
      .expected = "options ndots:3 timeout:7 attempts:5 use-vc edns0\n"

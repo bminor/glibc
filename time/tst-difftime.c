@@ -30,7 +30,7 @@ test_difftime_helper (time_t t1, time_t t0, double exp_val)
 static int
 do_test (void)
 {
-  time_t t = 1383791700; /* Provide reproductible start value.  */
+  time_t t = 1383791700; /* Provide reproducible start value.  */
 
   /* Check if difftime works with current time.  */
   test_difftime_helper (t + 1800, t - 1800, 3600.0);

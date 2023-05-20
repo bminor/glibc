@@ -269,7 +269,7 @@ do_test (int argc, char *argv[])
        + argv[1]: the application name
        + argv[2]: the lowest file descriptor expected
        + argv[3]: first expected open file descriptor   optional
-       + argv[n]: last expected open file descritptor   optional
+       + argv[n]: last expected open file descriptor   optional
 
      * When built with --enable-hardcoded-path-in-tests or issued without
        using the loader directly.  */

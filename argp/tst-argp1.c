@@ -30,7 +30,7 @@
 static const struct argp_option test_options[] =
   {
     { NULL, 0, NULL, 0, "\
-This is a test for threads so we allow ther user to selection the number of \
+This is a test for threads so we allow the user to select the number of \
 threads which are used at any one time.  Independently the total number of \
 rounds can be selected.  This is the total number of threads which will have \
 run when the process terminates:" },

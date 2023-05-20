@@ -37,7 +37,7 @@ static bool verbose;
      Sign field consisting of a '+' or '-' sign,
      Hours field in two decimal digits, and
      optional Minutes field in two decimal digits. Optionally,
-     a ':' is used to seperate hours and minutes.
+     a ':' is used to separate hours and minutes.
 
    This function may write test strings with minutes values outside
    the valid range 00-59.  These are invalid strings and useful for

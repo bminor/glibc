@@ -22,12 +22,12 @@ static volatile unsigned int dontoptimize = 0;
 void
 bench_start (void)
 {
-  /* This loop should cause CPU to switch to maximal freqency.
+  /* This loop should cause CPU to switch to maximal frequency.
      This makes subsequent measurement more accurate.  We need a side effect
      to prevent the loop being deleted by compiler.
      This should be enough to cause CPU to speed up and it is simpler than
      running loop for constant time.  This is used when user does not have root
-     access to set a constant freqency.  */
+     access to set a constant frequency.  */
 
   for (int k = 0; k < START_ITER; k++)
     dontoptimize += 23 * dontoptimize + 2;

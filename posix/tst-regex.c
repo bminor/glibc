@@ -127,7 +127,7 @@ do_test (void)
   result |= test_expr ("[äáàâéèêíìîñöóòôüúùû]", 4, 4);
   result |= test_expr ("G.ran", 2, 3);
   result |= test_expr ("G.\\{1\\}ran", 2, 3);
-  result |= test_expr ("G.*ran", 3, 44);
+  result |= test_expr ("G.*ran", 3, 43);
   result |= test_expr ("[äáàâ]", 0, 0);
   result |= test_expr ("Uddeborg", 2, 2);
   result |= test_expr (".Uddeborg", 2, 2);
@@ -511,7 +511,7 @@ run_test_backwards (const char *expr, const char *mem, size_t memlen,
   return cnt != expected;
 }
 
-/* If --timing is used we will need a larger timout.  */
+/* If --timing is used we will need a larger timeout.  */
 #define TIMEOUT 50
 #define CMDLINE_OPTIONS \
    {"timing", no_argument, &timing, 1 },

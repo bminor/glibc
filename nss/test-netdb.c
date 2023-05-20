@@ -157,7 +157,7 @@ test_hosts (void)
 	}
       else if (strcmp (hptr1->h_name, hptr2->h_name) != 0)
 	{
-	  printf ("localhost and LocalHost have different canoncial name\n");
+	  printf ("localhost and LocalHost have different canonical name\n");
 	  printf ("gethostbyname (\"localhost\")->%s\n", hptr1->h_name);
 	  printf ("gethostbyname (\"LocalHost\")->%s\n", hptr2->h_name);
 	  ++error_count;

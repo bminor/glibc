@@ -156,7 +156,7 @@ void __printf_buffer_pad_1 (struct __printf_buffer *buf,
                             char ch, size_t count) attribute_hidden;
 
 /* __printf_buffer_pad with fast path for no padding.  COUNT is
-   ssize_t to accomodate signed uses in printf and elsewhere.  */
+   ssize_t to accommodate signed uses in printf and elsewhere.  */
 static inline void
 __printf_buffer_pad (struct __printf_buffer *buf, char ch, ssize_t count)
 {

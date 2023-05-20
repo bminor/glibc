@@ -39,7 +39,7 @@
    mmap threshold, so that requests with a size just below that
    threshold can be fulfilled without creating too many heaps.  */
 
-/* When huge pages are used to create new arenas, the maximum and minumum
+/* When huge pages are used to create new arenas, the maximum and minimum
    size are based on the runtime defined huge page size.  */
 
 static inline size_t

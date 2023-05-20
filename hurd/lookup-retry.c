@@ -144,7 +144,7 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 		     refusing symlinks while accepting mount points.
 		     Note that we actually permit something Linux doesn't:
 		     we follow root-owned symlinks; if that is deemed
-		     undesireable, we can add a final check for that
+		     undesirable, we can add a final check for that
 		     one exception to our general translator-based rule.  */
 		  struct stat64 st;
 		  err = __io_stat (*result, &st);

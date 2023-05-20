@@ -42,7 +42,7 @@ LINE_PARSER
 
    STRING_FIELD (addr, isspace, 1);
    /* 'inet_network' does not add zeroes at the end if the network number
-      does not four byte values.  We add them outselves if necessary.  */
+      does not four byte values.  We add them ourselves if necessary.  */
    cp = strchr (addr, '.');
    if (cp != NULL)
      {

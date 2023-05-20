@@ -126,7 +126,7 @@ ns_rr_cursor_qtype (const struct ns_rr_cursor *c)
   return c->first_rr[-4] * 256 + c->first_rr[-3];
 }
 
-/* Returns the clss of the first and only question (usally C_IN).  */
+/* Returns the clss of the first and only question (usually C_IN).  */
 static inline const int
 ns_rr_cursor_qclass (const struct ns_rr_cursor *c)
 {

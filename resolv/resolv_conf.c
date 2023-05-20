@@ -81,7 +81,7 @@ static struct resolv_conf_global *global;
 __libc_lock_define_initialized (static, lock);
 
 /* Ensure that GLOBAL is allocated and lock it.  Return NULL if
-   memory allocation failes.  */
+   memory allocation fails.  */
 static struct resolv_conf_global *
 get_locked_global (void)
 {
@@ -174,7 +174,7 @@ __resolv_conf_get_current (void)
 static struct resolv_conf *
 resolv_conf_get_1 (const struct __res_state *resp)
 {
-  /* Not initialized, and therefore no assoicated context.  */
+  /* Not initialized, and therefore no associated context.  */
   if (!(resp->options & RES_INIT))
     return NULL;
 
@@ -243,7 +243,7 @@ resolv_conf_matches (const struct __res_state *resp,
                      const struct resolv_conf *conf)
 {
   /* NB: Do not compare the options, retrans, retry, ndots.  These can
-     be changed by applicaiton.  */
+     be changed by application.  */
 
   /* Check that the name servers in *RESP have not been modified by
      the application.  */

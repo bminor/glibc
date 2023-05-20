@@ -295,7 +295,7 @@ do_test_func (const char *fname, void (*func)(unsigned char *, size_t))
   run_outer_threads (func);
 
   /* The forking thread delivers a non-deterministic number of
-     results, which is why expected_blobs is only a minimun number of
+     results, which is why expected_blobs is only a minimum number of
      results.  */
   printf ("info: %s: %zu blob results observed\n", fname,
           dynarray_blob_size (&global_result));

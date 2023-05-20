@@ -55,8 +55,8 @@ do_test (void)
           TEST_VERIFY (conf != NULL);
         }
       else
-        /* The underyling configuration should be identical across all
-           res_state opjects because resolv.conf did not change.  */
+        /* The underlying configuration should be identical across all
+           res_state objects because resolv.conf did not change.  */
         TEST_VERIFY (ctx->conf == conf);
     }
   qsort (array, count, sizeof (*array), sort_res_state);

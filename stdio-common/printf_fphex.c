@@ -380,7 +380,7 @@ __printf_fphex_l_buffer (struct __printf_buffer *buf, locale_t loc,
 
 
 /* The wide buffer version is implemented by translating the output of
-   the multibyte verison.  */
+   the multibyte version.  */
 
 struct __printf_buffer_fphex_to_wide
 {

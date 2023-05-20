@@ -25,7 +25,7 @@
 #include <support/test-driver.h>
 #include <support/xmemstream.h>
 
-/* If ture, the response function will send the actual response packet
+/* If true, the response function will send the actual response packet
    over TCP instead of UDP.  */
 static volatile bool force_tcp;
 

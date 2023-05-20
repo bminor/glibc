@@ -19,7 +19,7 @@
 #include <errno.h>
 #include <sys/uio.h>
 
-/* Same as preadv64 but with an addional flag argument.  */
+/* Same as preadv64 but with an additional flag argument.  */
 ssize_t
 pwritev64v2 (int fd, const struct iovec *vector, int count, off64_t offset,
 	     int flags)

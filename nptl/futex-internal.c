@@ -59,7 +59,7 @@ __futex_abstimed_wait_common64 (unsigned int* futex_word,
 				    FUTEX_BITSET_MATCH_ANY);
   else
     return INTERNAL_SYSCALL_CALL (futex_time64, futex_word, op, expected,
-				  abstime, NULL /* Ununsed.  */,
+				  abstime, NULL /* Unused.  */,
 				  FUTEX_BITSET_MATCH_ANY);
 }
 

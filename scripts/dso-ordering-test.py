@@ -1069,7 +1069,7 @@ def process_testcase(t):
                           t.test_name))
     t.sh.close()
 
-# Decription file parsing
+# Description file parsing
 def parse_description_file(filename):
     global default_tunable_options
     global current_input_lineno
