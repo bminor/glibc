@@ -92,7 +92,7 @@ wrap_openat64 (const char *path, int flags, mode_t mode)
 /* Return true if FD is flagged as deleted in /proc/self/fd, false if
    not.  */
 static bool
-is_file_deteted (int fd)
+is_file_deleted (int fd)
 {
   char *proc_fd_path = xasprintf ("/proc/self/fd/%d", fd);
   char file_path[4096];
@@ -172,7 +172,7 @@ check_wrapper_flags_mode (const char *op, wrapper_func wrapper,
     }
 
   /* Check that the file is marked as deleted in /proc.  */
-  if (!is_file_deteted (fd))
+  if (!is_file_deleted (fd))
     {
       printf ("error: path in /proc is not marked as deleted\n");
       exit (1);
