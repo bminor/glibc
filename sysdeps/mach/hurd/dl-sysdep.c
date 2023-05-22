@@ -303,7 +303,7 @@ open_file (const char *file_name, int flags,
   if (!err)
     err = __hurd_file_name_lookup_retry (use_init_port, get_dtable_port,
 					 __dir_lookup, doretry, retryname,
-					 O_RDONLY, 0, port);
+					 flags, 0, port);
   if (!err && stat)
     {
       err = __io_stat (*port, stat);
