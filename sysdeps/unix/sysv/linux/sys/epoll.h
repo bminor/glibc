@@ -123,7 +123,7 @@ extern int epoll_ctl (int __epfd, int __op, int __fd,
    __THROW.  */
 extern int epoll_wait (int __epfd, struct epoll_event *__events,
 		       int __maxevents, int __timeout)
-	__attr_access ((__write_only__, 2, 3));
+	__attr_access ((__write_only__, 2, 3)) __nonnull ((2));
 
 
 /* Same as epoll_wait, but the thread's signal mask is temporarily
@@ -134,7 +134,7 @@ extern int epoll_wait (int __epfd, struct epoll_event *__events,
 extern int epoll_pwait (int __epfd, struct epoll_event *__events,
 			int __maxevents, int __timeout,
 			const __sigset_t *__ss)
-	__attr_access ((__write_only__, 2, 3));
+	__attr_access ((__write_only__, 2, 3)) __nonnull ((2));
 
 /* Same as epoll_pwait, but the timeout as a timespec.
 
@@ -144,7 +144,7 @@ extern int epoll_pwait (int __epfd, struct epoll_event *__events,
 extern int epoll_pwait2 (int __epfd, struct epoll_event *__events,
 			 int __maxevents, const struct timespec *__timeout,
 			 const __sigset_t *__ss)
-	__attr_access ((__write_only__, 2, 3));
+	__attr_access ((__write_only__, 2, 3)) __nonnull ((2));
 #else
 # ifdef __REDIRECT
 extern int __REDIRECT (epoll_pwait2, (int __epfd, struct epoll_event *__ev,
@@ -152,7 +152,7 @@ extern int __REDIRECT (epoll_pwait2, (int __epfd, struct epoll_event *__ev,
 				      const struct timespec *__timeout,
 				      const __sigset_t *__ss),
 		       __epoll_pwait2_time64)
-	__attr_access ((__write_only__, 2, 3));
+	__attr_access ((__write_only__, 2, 3)) __nonnull ((2));
 # else
 #  define epoll_pwait2 __epoll_pwait2_time64
 # endif

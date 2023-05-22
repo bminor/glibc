@@ -9,7 +9,8 @@ libc_hidden_proto (epoll_pwait)
 #else
 extern int __epoll_pwait2_time64 (int fd, struct epoll_event *ev, int maxev,
 				  const struct __timespec64 *tmo,
-				  const sigset_t *s);
+				  const sigset_t *s)
+       __nonnull ((2));
 libc_hidden_proto (__epoll_pwait2_time64)
 #endif
 
