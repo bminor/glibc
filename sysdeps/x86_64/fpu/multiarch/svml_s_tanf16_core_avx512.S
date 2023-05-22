@@ -94,11 +94,11 @@ ENTRY(_ZGVeN16v_tanf_skx)
 	vfnmadd231ps {rn-sae}, %zmm5, %zmm2, %zmm4
 	vfnmadd213ps {rn-sae}, %zmm4, %zmm3, %zmm5
 
-	/* Go to auxilary branch */
+	/* Go to auxiliary branch */
 	jne	L(AUX_BRANCH)
 	# LOE rbx r12 r13 r14 r15 edx zmm0 zmm5 zmm10 zmm11 k6
 
-	/* Return from auxilary branch
+	/* Return from auxiliary branch
 	 * for out of main path inputs
 	 */
 
@@ -229,7 +229,7 @@ L(SPECIAL_VALUES_LOOP):
 	.cfi_escape 0x10, 0x0e, 0x0e, 0x38, 0x1c, 0x0d, 0xc0, 0xff, 0xff, 0xff, 0x1a, 0x0d, 0x40, 0xff, 0xff, 0xff, 0x22
 	# LOE rbx r12 r13 r14 r15 zmm0
 
-	/* Scalar math fucntion call
+	/* Scalar math function call
 	 * to process special input
 	 */
 
@@ -248,7 +248,7 @@ L(SCALAR_MATH_CALL):
 	cfi_restore(14)
 	# LOE rbx r15 r12d r13d
 
-	/* Auxilary branch
+	/* Auxiliary branch
 	 * for out of main path inputs
 	 */
 

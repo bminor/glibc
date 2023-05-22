@@ -24,7 +24,7 @@
  *    - all arguments processed in the main path
  *        - final VSCALEF assists branch-free design (correct overflow/underflow and special case responses)
  *        - a VAND is used to ensure the reduced argument |R|<2, even for large inputs
- *        - RZ mode used to avoid oveflow to +/-Inf for x*log2(e); helps with special case handling
+ *        - RZ mode used to avoid overflow to +/-Inf for x*log2(e); helps with special case handling
  *
  *
  */
@@ -205,7 +205,7 @@ L(SPECIAL_VALUES_LOOP):
 	.cfi_escape 0x10, 0x0e, 0x0e, 0x38, 0x1c, 0x0d, 0xc0, 0xff, 0xff, 0xff, 0x1a, 0x0d, 0x40, 0xff, 0xff, 0xff, 0x22
 	# LOE rbx r12 r13 r14 r15 zmm0
 
-	/* Scalar math fucntion call
+	/* Scalar math function call
 	 * to process special input
 	 */
 

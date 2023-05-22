@@ -221,7 +221,7 @@ L(SPECIAL_VALUES_LOOP):
 	xorl	%ebp, %ebp
 	tzcntl	%ebx, %ebp
 
-	/* Scalar math fucntion call to process special input.  */
+	/* Scalar math function call to process special input.  */
 	vmovss	64(%rsp, %rbp, 4), %xmm0
 	call	atanhf@PLT
 

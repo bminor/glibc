@@ -150,11 +150,11 @@ ENTRY(_ZGVeN16vv_atan2f_skx)
 	vaddps	{rn-sae}, %zmm11, %zmm9, %zmm9{%k4}
 	vorps	%zmm6, %zmm9, %zmm10
 
-	/* Go to auxilary branch */
+	/* Go to auxiliary branch */
 	jne	L(AUX_BRANCH)
 	# LOE rbx r12 r13 r14 r15 edx zmm0 zmm1 zmm2 zmm3 zmm4 zmm5 zmm6 zmm7 zmm8 zmm10 zmm11
 
-	/* Return from auxilary branch
+	/* Return from auxiliary branch
 	 * for out of main path inputs
 	 */
 
@@ -251,7 +251,7 @@ L(SPECIAL_VALUES_LOOP):
 	.cfi_escape 0x10, 0x0e, 0x0e, 0x38, 0x1c, 0x0d, 0xc0, 0xff, 0xff, 0xff, 0x1a, 0x0d, 0x00, 0xff, 0xff, 0xff, 0x22
 	# LOE rbx r12 r13 r14 r15 zmm10
 
-	/* Scalar math fucntion call
+	/* Scalar math function call
 	 * to process special input
 	 */
 
@@ -271,7 +271,7 @@ L(SCALAR_MATH_CALL):
 	cfi_restore(14)
 	# LOE rbx r15 r12d r13d
 
-	/* Auxilary branch
+	/* Auxiliary branch
 	 * for out of main path inputs
 	 */
 

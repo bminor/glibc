@@ -73,7 +73,7 @@
 
 #include <sysdep.h>
 
-/* tanhf data tables for avx2 and sse4 implementatins defined here.
+/* tanhf data tables for avx2 and sse4 implementations defined here.
  */
 #define ONLY_DECL_OFFSET
 #include "svml_s_tanhf_rodata.S"
@@ -217,7 +217,7 @@ L(SPECIAL_VALUES_LOOP):
 	xorl	%ebp, %ebp
 	bsfl	%ebx, %ebp
 
-	/* Scalar math fucntion call to process special input.  */
+	/* Scalar math function call to process special input.  */
 	movss	40(%rsp, %rbp, 4), %xmm0
 	call	tanhf@PLT
 	/* No good way to avoid the store-forwarding fault this will cause on

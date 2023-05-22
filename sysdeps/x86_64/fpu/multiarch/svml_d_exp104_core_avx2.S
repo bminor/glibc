@@ -73,7 +73,7 @@ ENTRY(_ZGVdN4v_exp10_avx2)
 	vmovapd	%ymm0, %ymm2
 	vmovupd	_dbShifter+__svml_dexp10_data_internal(%rip), %ymm3
 
-	/*  Load arument  */
+	/*  Load argument  */
 	vmovupd	_dbLg2_10+__svml_dexp10_data_internal(%rip), %ymm0
 	vfmadd213pd %ymm3, %ymm2, %ymm0
 	vsubpd	%ymm3, %ymm0, %ymm1
@@ -225,7 +225,7 @@ L(SPECIAL_VALUES_LOOP):
 	.cfi_escape 0x10, 0x0e, 0x0e, 0x38, 0x1c, 0x0d, 0xe0, 0xff, 0xff, 0xff, 0x1a, 0x0d, 0xa0, 0xff, 0xff, 0xff, 0x22
 	# LOE rbx r12 r13 r14 r15 ymm0
 
-	/* Scalar math fucntion call
+	/* Scalar math function call
 	 * to process special input
 	 */
 

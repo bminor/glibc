@@ -45,7 +45,7 @@
  *    No multiprecision branch for _LA_ and _EP_
  *      _z = _VARG1 * _VARG1 + _VARG2 * _VARG2
  *
- *    Check _z exponent to be withing borders [1E3 ; 60A] else goto Callout
+ *    Check _z exponent to be within borders [1E3 ; 60A] else goto Callout
  *
  *    Compute resciplicle sqrt s0 ~ 1.0/sqrt(_z),
  *      that multiplied by _z, is final result for _EP_ version.
@@ -107,7 +107,7 @@ ENTRY(_ZGVdN8vv_hypotf_avx2)
 	 */
 	vmovups	_sHalf+__svml_shypot_data_internal(%rip), %ymm7
 
-	/* Check _z exponent to be withing borders [1E3 ; 60A] else goto Callout */
+	/* Check _z exponent to be within borders [1E3 ; 60A] else goto Callout */
 	vmovups	_LowBoundary+__svml_shypot_data_internal(%rip), %ymm2
 	vfmadd231ps %ymm1, %ymm1, %ymm8
 
@@ -220,7 +220,7 @@ L(SPECIAL_VALUES_LOOP):
 	.cfi_escape 0x10, 0x0e, 0x0e, 0x38, 0x1c, 0x0d, 0xe0, 0xff, 0xff, 0xff, 0x1a, 0x0d, 0x80, 0xff, 0xff, 0xff, 0x22
 	# LOE rbx r12 r13 r14 r15 ymm2
 
-	/* Scalar math fucntion call
+	/* Scalar math function call
 	 * to process special input
 	 */
 

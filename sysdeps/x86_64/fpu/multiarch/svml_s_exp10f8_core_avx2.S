@@ -69,7 +69,7 @@ ENTRY(_ZGVdN8v_exp10f_avx2)
 	lea	__svml_sexp10_data_internal(%rip), %rax
 	vmovups	_sShifter+__svml_sexp10_data_internal(%rip), %ymm4
 
-	/*  Load arument  */
+	/*  Load argument  */
 	vmovups	_sLg2_10+__svml_sexp10_data_internal(%rip), %ymm1
 	vmovups	_iIndexMask+__svml_sexp10_data_internal(%rip), %ymm2
 	vmovaps	%ymm0, %ymm3
@@ -232,7 +232,7 @@ L(SPECIAL_VALUES_LOOP):
 	.cfi_escape 0x10, 0x0e, 0x0e, 0x38, 0x1c, 0x0d, 0xe0, 0xff, 0xff, 0xff, 0x1a, 0x0d, 0xa0, 0xff, 0xff, 0xff, 0x22
 	# LOE rbx r12 r13 r14 r15 ymm0
 
-	/* Scalar math fucntion call
+	/* Scalar math function call
 	 * to process special input
 	 */
 

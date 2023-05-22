@@ -72,7 +72,7 @@
 
 #include <sysdep.h>
 
-/* tanhf data tables for avx2 and sse4 implementatins defined here.
+/* tanhf data tables for avx2 and sse4 implementations defined here.
  */
 #include "svml_s_tanhf_rodata.S"
 

@@ -71,7 +71,7 @@ ENTRY(_ZGVdN4v_exp2_avx2)
 	vmovupd	_lIndexMask+__svml_dexp2_data_internal(%rip), %ymm3
 	vmovapd	%ymm0, %ymm1
 
-	/*  Load arument  */
+	/*  Load argument  */
 	vaddpd	%ymm4, %ymm1, %ymm2
 	vsubpd	%ymm4, %ymm2, %ymm0
 
@@ -217,7 +217,7 @@ L(SPECIAL_VALUES_LOOP):
 	.cfi_escape 0x10, 0x0e, 0x0e, 0x38, 0x1c, 0x0d, 0xe0, 0xff, 0xff, 0xff, 0x1a, 0x0d, 0xa0, 0xff, 0xff, 0xff, 0x22
 	# LOE rbx r12 r13 r14 r15 ymm0
 
-	/* Scalar math fucntion call
+	/* Scalar math function call
 	 * to process special input
 	 */
 

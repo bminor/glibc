@@ -47,7 +47,7 @@
  *    No multiprecision branch for _LA_ and _EP_
  *      _z = _VARG1 * _VARG1 + _VARG2 * _VARG2
  *
- *    Check _z exponent to be withing borders [3BC ; 441] else goto Callout
+ *    Check _z exponent to be within borders [3BC ; 441] else goto Callout
  *
  *    _s  ~ 1.0/sqrt(_z)
  *    _s2 ~ 1.0/(sqrt(_z)*sqrt(_z)) ~ 1.0/_z = (1.0/_z + O)
@@ -127,7 +127,7 @@ ENTRY(_ZGVbN2vv_hypot_sse4)
 	mulpd	%xmm10, %xmm11
 	mulpd	%xmm10, %xmm2
 
-	/* Check _z exponent to be withing borders [3BC ; 441] else goto Callout */
+	/* Check _z exponent to be within borders [3BC ; 441] else goto Callout */
 	movq	_LowBoundary+__svml_dhypot_data_internal(%rip), %xmm5
 	movq	_HighBoundary+__svml_dhypot_data_internal(%rip), %xmm3
 	pshufd	$221, %xmm10, %xmm4
@@ -215,7 +215,7 @@ L(SPECIAL_VALUES_LOOP):
 	cfi_offset(14, -96)
 	# LOE rbx rbp r12 r13 r14 r15 xmm2
 
-	/* Scalar math fucntion call
+	/* Scalar math function call
 	 * to process special input
 	 */
 

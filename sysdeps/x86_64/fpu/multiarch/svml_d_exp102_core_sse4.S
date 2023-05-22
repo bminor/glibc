@@ -68,7 +68,7 @@ ENTRY(_ZGVbN2v_exp10_sse4)
 	/*  R  */
 	movaps	%xmm0, %xmm12
 
-	/*  Load arument  */
+	/*  Load argument  */
 	movups	_dbLg2_10+__svml_dexp10_data_internal(%rip), %xmm13
 	lea	__svml_dexp10_data_internal(%rip), %rsi
 	mulpd	%xmm0, %xmm13
@@ -214,7 +214,7 @@ L(SPECIAL_VALUES_LOOP):
 	cfi_offset(14, -80)
 	# LOE rbx rbp r12 r13 r14 r15 xmm1
 
-	/* Scalar math fucntion call
+	/* Scalar math function call
 	 * to process special input
 	 */
 

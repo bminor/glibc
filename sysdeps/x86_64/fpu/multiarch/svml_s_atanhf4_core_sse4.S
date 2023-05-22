@@ -242,7 +242,7 @@ L(SPECIAL_VALUES_LOOP):
 	xorl	%ebp, %ebp
 	bsfl	%ebx, %ebp
 
-	/* Scalar math fucntion call to process special input.  */
+	/* Scalar math function call to process special input.  */
 	movss	40(%rsp, %rbp, 4), %xmm0
 	call	atanhf@PLT
 	/* No good way to avoid the store-forwarding fault this will cause on

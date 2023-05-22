@@ -47,7 +47,7 @@
  *    No multiprecision branch for _LA_ and _EP_
  *      _z = _VARG1 * _VARG1 + _VARG2 * _VARG2
  *
- *    Check _z exponent to be withing borders [3BC ; 441] else goto Callout
+ *    Check _z exponent to be within borders [3BC ; 441] else goto Callout
  *
  *    _s  ~ 1.0/sqrt(_z)
  *    _s2 ~ 1.0/(sqrt(_z)*sqrt(_z)) ~ 1.0/_z = (1.0/_z + O)
@@ -111,7 +111,7 @@ ENTRY(_ZGVdN4vv_hypot_avx2)
 	 */
 	vcvtpd2ps %ymm0, %xmm12
 
-	/* Check _z exponent to be withing borders [3BC ; 441] else goto Callout */
+	/* Check _z exponent to be within borders [3BC ; 441] else goto Callout */
 	vextractf128 $1, %ymm0, %xmm3
 	vrsqrtps %xmm12, %xmm13
 	vshufps	$221, %xmm3, %xmm0, %xmm5
@@ -225,7 +225,7 @@ L(SPECIAL_VALUES_LOOP):
 	.cfi_escape 0x10, 0x0e, 0x0e, 0x38, 0x1c, 0x0d, 0xe0, 0xff, 0xff, 0xff, 0x1a, 0x0d, 0x80, 0xff, 0xff, 0xff, 0x22
 	# LOE rbx r12 r13 r14 r15 ymm0
 
-	/* Scalar math fucntion call
+	/* Scalar math function call
 	 * to process special input
 	 */
 

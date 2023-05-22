@@ -229,11 +229,11 @@ ENTRY(_ZGVbN2vv_atan2_sse4)
 	/*  Special branch for fast (vector) processing of zero arguments  */
 	testb	$3, %cl
 
-	/* Go to auxilary branch */
+	/* Go to auxiliary branch */
 	jne	L(AUX_BRANCH)
 	# LOE rbx rbp r12 r13 r14 r15 eax edx xmm0 xmm1 xmm2 xmm3 xmm4 xmm5 xmm6 xmm7 xmm8 xmm9 xmm10 xmm11
 
-	/* Return from auxilary branch
+	/* Return from auxiliary branch
 	 * for out of main path inputs
 	 */
 
@@ -316,7 +316,7 @@ L(SPECIAL_VALUES_LOOP):
 	cfi_offset(14, -96)
 	# LOE rbx rbp r12 r13 r14 r15 xmm0
 
-	/* Scalar math fucntion call
+	/* Scalar math function call
 	 * to process special input
 	 */
 
@@ -336,7 +336,7 @@ L(SCALAR_MATH_CALL):
 	cfi_restore(14)
 	# LOE rbx rbp r15 r12d r13d
 
-	/* Auxilary branch
+	/* Auxiliary branch
 	 * for out of main path inputs
 	 */
 

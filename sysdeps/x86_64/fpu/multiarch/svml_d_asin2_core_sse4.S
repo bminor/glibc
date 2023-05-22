@@ -211,7 +211,7 @@ L(SPECIAL_VALUES_LOOP):
 	cfi_offset(14, -80)
 	# LOE rbx rbp r12 r13 r14 r15 xmm0
 
-	/* Scalar math fucntion call
+	/* Scalar math function call
 	 * to process special input
 	 */
 

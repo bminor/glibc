@@ -161,13 +161,13 @@ ENTRY(_ZGVdN8v_tanf_avx2)
 
 	testl	%edx, %edx
 
-	/* Go to auxilary branch */
+	/* Go to auxiliary branch */
 	jne	L(AUX_BRANCH)
 	/*  DW_CFA_expression: r3 (rbx) (DW_OP_lit8; DW_OP_minus; DW_OP_const4s: -32; DW_OP_and; DW_OP_const4s: -8; DW_OP_plus)  */
 	.cfi_escape 0x10, 0x03, 0x0e, 0x38, 0x1c, 0x0d, 0xe0, 0xff, 0xff, 0xff, 0x1a, 0x0d, 0xf8, 0xff, 0xff, 0xff, 0x22
 	# LOE r12 r13 r14 r15 eax ymm0 ymm1 ymm10 ymm11 ymm12
 
-	/* Return from auxilary branch
+	/* Return from auxiliary branch
 	 * for out of main path inputs
 	 */
 
@@ -255,7 +255,7 @@ L(SPECIAL_VALUES_LOOP):
 	.cfi_escape 0x10, 0x0d, 0x0e, 0x38, 0x1c, 0x0d, 0xe0, 0xff, 0xff, 0xff, 0x1a, 0x0d, 0x40, 0xff, 0xff, 0xff, 0x22
 	# LOE r12 r13 r14 r15 ymm0
 
-	/* Scalar math fucntion call
+	/* Scalar math function call
 	 * to process special input
 	 */
 
@@ -273,7 +273,7 @@ L(SCALAR_MATH_CALL):
 	cfi_restore(13)
 	# LOE r14 r15 ebx r12d
 
-	/* Auxilary branch
+	/* Auxiliary branch
 	 * for out of main path inputs
 	 */
 

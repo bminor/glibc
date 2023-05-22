@@ -166,11 +166,11 @@ ENTRY(_ZGVdN4v_tan_avx2)
 	vxorpd	%ymm0, %ymm8, %ymm0
 	testl	%eax, %eax
 
-	/* Go to auxilary branch */
+	/* Go to auxiliary branch */
 	jne	L(AUX_BRANCH)
 	# LOE rbx r12 r13 r14 r15 r9d ymm0 ymm1 ymm14 ymm15
 
-	/* Return from auxilary branch
+	/* Return from auxiliary branch
 	 * for out of main path inputs
 	 */
 
@@ -261,7 +261,7 @@ L(SPECIAL_VALUES_LOOP):
 	.cfi_escape 0x10, 0x0e, 0x0e, 0x38, 0x1c, 0x0d, 0xe0, 0xff, 0xff, 0xff, 0x1a, 0x0d, 0xa0, 0xff, 0xff, 0xff, 0x22
 	# LOE rbx r12 r13 r14 r15 ymm0
 
-	/* Scalar math fucntion call
+	/* Scalar math function call
 	 * to process special input
 	 */
 
@@ -280,7 +280,7 @@ L(SCALAR_MATH_CALL):
 	cfi_restore(14)
 	# LOE rbx r15 r12d r13d
 
-	/* Auxilary branch
+	/* Auxiliary branch
 	 * for out of main path inputs
 	 */
 
