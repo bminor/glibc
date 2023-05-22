@@ -33,7 +33,7 @@ mach_setup_thread_impl (task_t task, thread_t thread, int is_call,
   kern_return_t error;
   struct machine_thread_state ts;
   mach_msg_type_number_t tssize = MACHINE_THREAD_STATE_COUNT;
-  vm_address_t stack;
+  vm_address_t stack, stack_start;
   vm_size_t size;
   int anywhere;
 
@@ -51,22 +51,22 @@ mach_setup_thread_impl (task_t task, thread_t thread, int is_call,
     *stack_size = size;
 
 #ifdef STACK_GROWTH_DOWN
-  if (stack_base)
-    *stack_base = stack + __vm_page_size;
+  stack_start = stack + __vm_page_size;
 #elif defined (STACK_GROWTH_UP)
-  if (stack_base)
-    *stack_base = stack;
+  stack_start = stack;
   stack += size;
 #else
   #error stack direction unknown
 #endif
+  if (stack_base)
+    *stack_base = stack_start;
 
   if (is_call)
-    MACHINE_THREAD_STATE_SETUP_CALL (&ts, *stack_base, size, pc);
+    MACHINE_THREAD_STATE_SETUP_CALL (&ts, stack_start, size, pc);
   else
     {
       MACHINE_THREAD_STATE_SET_PC (&ts, pc);
-      MACHINE_THREAD_STATE_SET_SP (&ts, *stack_base, size);
+      MACHINE_THREAD_STATE_SET_SP (&ts, stack_start, size);
     }
 
   /* Create the red zone.  */
