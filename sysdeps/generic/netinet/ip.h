@@ -187,6 +187,11 @@ struct ip_timestamp
 #define	IPTOS_DSCP_EF		0xb8
 
 /*
+ * Voice-Admit DSCP code point from RFC-5865, Section 4.
+ */
+#define	IPTOS_DSCP_VA		0xb0
+
+/*
  * In RFC 2474, Section 4.2.2.1, the Class Selector Codepoints subsume
  * the old ToS Precedence values.
  */
