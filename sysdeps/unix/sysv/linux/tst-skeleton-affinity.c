@@ -18,7 +18,7 @@
 
 /* This file is included by the tst-affinity*.c files to test the two
    variants of the functions, under different conditions.  The
-   following functions have to be definied:
+   following functions have to be defined:
 
    static int getaffinity (size_t, cpu_set_t *);
    static int setaffinity (size_t, const cpu_set_t *);

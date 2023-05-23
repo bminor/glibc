@@ -508,7 +508,7 @@ run_chroot_tests (const char *slavename, int slave)
     char *linkname = xasprintf ("/proc/self/fd/%d", slave);
     char *target = proc_fd_readlink (linkname);
     free (linkname);
-    /* Depeding on how we set up the chroot, the kernel may or may not
+    /* Depending on how we set up the chroot, the kernel may or may not
        trim the leading path to the target (it may give us "/6",
        instead of "/dev/pts/6").  We test it both ways (do_in_chroot_1
        and do_in_chroot_2).  This test group relies on the target

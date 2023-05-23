@@ -57,7 +57,7 @@ get_timebase_freq_fallback (void)
          the last 512 bytes of cpuinfo, so two 512 byte half_bufs
          will be sufficient to contain the timebase and will
          handle the case where the timebase spans the half_buf
-         boundry.  */
+         boundary.  */
       const ssize_t half_buf = sizeof (buf) / 2;
       while (n >= half_buf)
 	{

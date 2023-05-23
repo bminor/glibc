@@ -42,7 +42,7 @@
    a large offset.  Therefore we must not anymore test for < 0, but test
    for a real error by making sure the value in gpr2 is a real error
    number.  Linus said he will make sure that no syscall returns a value
-   in -1 .. -4095 as a valid result so we can savely test with -4095.  */
+   in -1 .. -4095 as a valid result so we can safely test with -4095.  */
 
 #undef PSEUDO
 #define	PSEUDO(name, syscall_name, args)				      \

@@ -60,7 +60,7 @@ do_test (void)
   int fd = open64 (temp_filename, O_RDWR, 0666);
   TEST_VERIFY_EXIT (fd != -1);
 
-  /* It tries then to allocate another open file descriptior with a valid
+  /* It tries then to allocate another open file descriptor with a valid
      non-LFS bits struct flock but which will result in a conflicted region
      which can not be represented in a non-LFS struct flock.  */
   struct flock lck = {

@@ -53,7 +53,7 @@ static inline void
 __always_inline
 do_set_elision_enable (int32_t elision_enable)
 {
-  /* Enable elision if it's avaliable in hardware. It's not necessary to check
+  /* Enable elision if it's available in hardware. It's not necessary to check
      if __libc_enable_secure isn't enabled since elision_enable will be set
      according to the default, which is disabled.  */
   if (elision_enable == 1)

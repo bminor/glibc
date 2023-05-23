@@ -203,7 +203,7 @@ __spawni_child (void *arguments)
 	      {
 		/* POSIX states that if fildes was already an open file descriptor,
 		   it shall be closed before the new file is opened.  This avoid
-		   pontential issues when posix_spawn plus addopen action is called
+		   potential issues when posix_spawn plus addopen action is called
 		   with the process already at maximum number of file descriptor
 		   opened and also for multiple actions on single-open special
 		   paths (like /dev/watchdog).  */
@@ -325,7 +325,7 @@ __spawnix (pid_t * pid, const char *file,
   ptrdiff_t argc = 0;
   /* Linux allows at most max (0x7FFFFFFF, 1/4 stack size) arguments
      to be used in a execve call.  We limit to INT_MAX minus one due the
-     compatiblity code that may execute a shell script (maybe_script_execute)
+     compatibility code that may execute a shell script (maybe_script_execute)
      where it will construct another argument list with an additional
      argument.  */
   ptrdiff_t limit = INT_MAX - 1;

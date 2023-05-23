@@ -164,7 +164,7 @@ typedef greg_t  gregset_t[__NGREG];
  * The following structures define how a register window can appear on the
  * stack. This structure is available (when required) through the `gwins'
  * field of an mcontext (nested within ucontext). SPARC_MAXWINDOW is the
- * maximum number of outstanding regiters window defined in the SPARC
+ * maximum number of outstanding registers window defined in the SPARC
  * architecture (*not* implementation).
  */
 # define __SPARC_MAXREGWINDOW	31	/* max windows in SPARC arch. */
@@ -200,7 +200,7 @@ typedef struct
 /*
  * struct fq defines the minimal format of a floating point instruction queue
  * entry. The size of entries in the floating point queue are implementation
- * dependent. The union FQu is guarenteed to be the first field in any ABI
+ * dependent. The union FQu is guaranteed to be the first field in any ABI
  * conformant system implementation. Any additional fields provided by an
  * implementation should not be used applications designed to be ABI conformant. */
 

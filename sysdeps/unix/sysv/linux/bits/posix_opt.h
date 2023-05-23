@@ -84,7 +84,7 @@
 /* We support user-defined stacks.  */
 #define _POSIX_THREAD_ATTR_STACKADDR	200809L
 
-/* We support priority inheritence.  */
+/* We support priority inheritance.  */
 #define _POSIX_THREAD_PRIO_INHERIT	200809L
 
 /* We support priority protection, though only for non-robust
@@ -92,7 +92,7 @@
 #define _POSIX_THREAD_PRIO_PROTECT	200809L
 
 #ifdef __USE_XOPEN2K8
-/* We support priority inheritence for robust mutexes.  */
+/* We support priority inheritance for robust mutexes.  */
 # define _POSIX_THREAD_ROBUST_PRIO_INHERIT	200809L
 
 /* We do not support priority protection for robust mutexes.  */

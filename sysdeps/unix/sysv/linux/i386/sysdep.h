@@ -61,7 +61,7 @@
    might return a large offset.  Therefore we must not anymore test
    for < 0, but test for a real error by making sure the value in %eax
    is a real error number.  Linus said he will make sure the no syscall
-   returns a value in -1 .. -4095 as a valid result so we can savely
+   returns a value in -1 .. -4095 as a valid result so we can safely
    test with -4095.  */
 
 /* We don't want the label for the error handle to be global when we define

@@ -20,7 +20,7 @@
 
 #define SP_ALIGN_MASK	   ~15
 
-/* Size of an X regiser in bytes. */
+/* Size of an X register in bytes. */
 #define SZREG                8
 
 /* Size of a V register in bytes. */

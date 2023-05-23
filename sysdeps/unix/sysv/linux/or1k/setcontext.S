@@ -80,7 +80,7 @@ weak_alias (__setcontext, setcontext)
 	   makecontext we have set r9 to the start of &__startcontext.
 
 	   If this NOP did not exist the unwinder would repeatedly find
-	   __setcontext's FDE in an infinite loop.  Modifiying/deleting the below
+	   __setcontext's FDE in an infinite loop.  Modifying/deleting the below
 	   __startcontext's FDE has no help on this.  */
 	l.nop
 

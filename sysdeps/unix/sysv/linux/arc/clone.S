@@ -43,7 +43,7 @@ ENTRY (__clone)
 	bz	L (__sys_err)
 
 	/* save some of the orig args
-	   r0 containg @fn will be clobbered AFTER syscall (with ret val)
+	   r0 containing @fn will be clobbered AFTER syscall (with ret val)
 	   rest are clobbered BEFORE syscall due to different arg ordering.  */
 	mov	r10, r0		/* @fn.  */
 	mov	r11, r3		/* @args.  */

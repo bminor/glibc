@@ -32,7 +32,7 @@ def extract_system_call_name(macro):
     else:
         raise ValueError('invalid system call name: {!r}'.format(macro))
 
-# Matches macros for systme call names.
+# Matches macros for system call names.
 RE_SYSCALL = re.compile('__NR_.*')
 
 # Some __NR_ constants are not real
@@ -54,7 +54,7 @@ def kernel_constants(cc):
     return {extract_system_call_name(name) : int(value)
             for name, value in glibcextract.compute_macro_consts(
                     '#include <asm/unistd.h>\n'
-                    # Regularlize the kernel definitions if necessary.
+                    # Regularize the kernel definitions if necessary.
                     '#include <fixup-asm-unistd.h>',
                     cc, macro_re=RE_SYSCALL, exclude_re=RE_PSEUDO_SYSCALL)
             .items()}

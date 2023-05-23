@@ -1,4 +1,4 @@
-/* Tests register values retreived by getcontext() for mips o32.
+/* Tests register values retrieved by getcontext() for mips o32.
    Copyright (C) 2017-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

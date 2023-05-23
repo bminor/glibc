@@ -86,6 +86,6 @@ libc_hidden_def (__clone2)
 
 /* For now we leave __clone undefined.  This is unlikely to be a	*/
 /* problem, since at least the i386 __clone in glibc always failed	*/
-/* with a 0 sp (eventhough the kernel explicitly handled it).		*/
+/* with a 0 sp (even though the kernel explicitly handled it).		*/
 /* Thus all such calls needed to pass an explicit sp, and as a result,	*/
 /* would be unlikely to work on ia64.					*/

@@ -36,7 +36,7 @@ print_auxv (void)
           || av->a_type == AT_PLATFORM
           || av->a_type == AT_BASE_PLATFORM)
         /* The address of the strings is not useful at all, so print
-           the strings themselvs.  */
+           the strings themselves.  */
         _dl_diagnostics_print_string ((const char *) av->a_un.a_val);
       else
         _dl_printf ("0x%lx", (unsigned long int) av->a_un.a_val);

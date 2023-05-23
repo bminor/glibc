@@ -24,7 +24,7 @@ static long int linux_sysconf (int name);
 
 /* Possible arguments for get_cache_info.
    The values are reflecting the level/attribute/type indications
-   of ecag-instruction (extract cpu attribue).  */
+   of ecag-instruction (extract cpu attribute).  */
 #define CACHE_LEVEL_MAX        8
 #define CACHE_ATTR_LINESIZE    1
 #define CACHE_ATTR_SIZE        2

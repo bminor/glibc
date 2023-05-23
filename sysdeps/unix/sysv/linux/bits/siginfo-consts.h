@@ -143,7 +143,7 @@ enum
 {
   BUS_ADRALN = 1,		/* Invalid address alignment.  */
 #  define BUS_ADRALN	BUS_ADRALN
-  BUS_ADRERR,			/* Non-existant physical address.  */
+  BUS_ADRERR,			/* Non-existent physical address.  */
 #  define BUS_ADRERR	BUS_ADRERR
   BUS_OBJERR,			/* Object specific hardware error.  */
 #  define BUS_OBJERR	BUS_OBJERR

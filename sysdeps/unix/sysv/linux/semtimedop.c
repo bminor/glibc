@@ -34,7 +34,7 @@ semtimedop_syscall (int semid, struct sembuf *sops, size_t nsops,
 #endif
 }
 
-/* Perform user-defined atomical operation of array of semaphores.  */
+/* Perform user-defined atomic operation of array of semaphores.  */
 int
 __semtimedop64 (int semid, struct sembuf *sops, size_t nsops,
 		const struct __timespec64 *timeout)

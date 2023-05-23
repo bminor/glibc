@@ -83,7 +83,7 @@ __netlink_assert_response (int fd, ssize_t result)
           __libc_fatal (message);
         }
       else
-        /* Restore orignal errno value.  */
+        /* Restore original errno value.  */
         __set_errno (error_code);
     }
   else if (result < sizeof (struct nlmsghdr))

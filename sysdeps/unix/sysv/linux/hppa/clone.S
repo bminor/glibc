@@ -51,7 +51,7 @@
 
    Return:
 
-	On success the thread ID of the child process is returend in
+	On success the thread ID of the child process is returned in
 	the callers context.
 	On error return -1, and set errno to the value returned by
 	the syscall.

@@ -21,7 +21,7 @@
 #include <asm/ptrace.h>
 #include <stddef.h>
 
-/* asm/ptrace.h polutes the namespace.  */
+/* asm/ptrace.h pollutes the namespace.  */
 #undef PTRACE_GETREGS
 #undef PTRACE_SETREGS
 #undef PTRACE_GETFPREGS

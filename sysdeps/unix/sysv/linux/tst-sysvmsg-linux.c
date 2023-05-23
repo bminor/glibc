@@ -55,7 +55,7 @@ struct test_msginfo
   int msgmni;
 };
 
-/* It tries to obtain some system-wide SysV messsage queue information from
+/* It tries to obtain some system-wide SysV message queue information from
    /proc to check against IPC_INFO/MSG_INFO.  The /proc only returns the
    tunables value of MSGMAX, MSGMNB, and MSGMNI.
 

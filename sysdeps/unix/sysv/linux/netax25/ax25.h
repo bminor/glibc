@@ -62,7 +62,7 @@
 #define AX25_DIGI_INBAND	0x01	/* Allow digipeating within port */
 #define AX25_DIGI_XBAND		0x02	/* Allow digipeating across ports */
 
-/* Maximim number of digipeaters: */
+/* Maximum number of digipeaters: */
 #define AX25_MAX_DIGIS 8
 
 
@@ -80,7 +80,7 @@ struct sockaddr_ax25
   };
 
 /*
- * The sockaddr struct with the digipeater adresses:
+ * The sockaddr struct with the digipeater addresses:
  */
 struct full_sockaddr_ax25
   {

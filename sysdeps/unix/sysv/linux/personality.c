@@ -28,7 +28,7 @@ __personality (unsigned long persona)
      task_struct->pesonality is "unsigned int".
      Starting with kernel commit v2.6.35-rc1-372-g485d527, the personality
      syscall accepts "unsigned int" instead of "long unsigned int".
-     Inbetween, a personality argument that does not fit into "unsigned int"
+     In between, a personality argument that does not fit into "unsigned int"
      would result to system call returning -EINVAL.
      We explicitly truncate the personality argument to "unsigned int"
      to eliminate the uncertainty.  */

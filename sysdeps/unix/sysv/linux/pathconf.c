@@ -139,7 +139,7 @@ __statfs_link_max (int result, const struct statfs *fsbuf, const char *file,
 	/* Not possible, return the default value.  */
 	return LINUX_LINK_MAX;
 
-      /* Some error occured.  */
+      /* Some error occurred.  */
       return -1;
     }
 
@@ -202,7 +202,7 @@ __statfs_filesize_max (int result, const struct statfs *fsbuf)
 	/* Not possible, return the default value.  */
 	return 32;
 
-      /* Some error occured.  */
+      /* Some error occurred.  */
       return -1;
     }
 
@@ -251,7 +251,7 @@ __statfs_symlinks (int result, const struct statfs *fsbuf)
 	/* Not possible, return the default value.  */
 	return 1;
 
-      /* Some error occured.  */
+      /* Some error occurred.  */
       return -1;
     }
 
@@ -286,7 +286,7 @@ __statfs_chown_restricted (int result, const struct statfs *fsbuf)
 	/* Not possible, return the default value.  */
 	return 1;
 
-      /* Some error occured.  */
+      /* Some error occurred.  */
       return -1;
     }
 

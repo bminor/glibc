@@ -27,7 +27,7 @@ __BEGIN_DECLS
 
 #define SHAPER_QLEN	10
 /*
- *	This is a bit speed dependant (read it shouldnt be a constant!)
+ *	This is a bit speed dependent (read it shouldn't be a constant!)
  *
  *	5 is about right for 28.8 upwards. Below that double for every
  *	halving of speed or so. - ie about 20 for 9600 baud.

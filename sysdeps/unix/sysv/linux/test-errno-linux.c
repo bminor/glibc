@@ -70,7 +70,7 @@
    Some tests assume "/bin/sh" names a file that exists and is not a
    directory.  */
 
-/* Evalutes to the arguments in a list initializer which can be used
+/* Evaluates to the arguments in a list initializer which can be used
    as a single macro argument.  */
 #define LIST(...) { __VA_ARGS__ }
 

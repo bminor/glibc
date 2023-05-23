@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #if BUILD_PIE_DEFAULT
-/* Can't use "call *%gs:SYSINFO_OFFSET" during statup in static PIE.  */
+/* Can't use "call *%gs:SYSINFO_OFFSET" during startup in static PIE.  */
 # define I386_USE_SYSENTER 0
 #endif
 

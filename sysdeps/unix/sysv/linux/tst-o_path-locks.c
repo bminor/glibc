@@ -55,7 +55,7 @@ probe_lock (void)
   *shared_errno = -1;
   support_isolate_in_subprocess (subprocess, NULL);
   if (*shared_errno == 0)
-    /* Lock was aquired by the subprocess, so this process has not
+    /* Lock was acquired by the subprocess, so this process has not
        locked it.  */
     return false;
   else

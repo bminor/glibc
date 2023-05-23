@@ -31,5 +31,5 @@
 typedef unsigned long int elf_greg_t;
 typedef unsigned long int elf_gregset_t[ELF_NGREG];
 
-/* There's no seperate floating point reg file in ARCv2.  */
+/* There's no separate floating point reg file in ARCv2.  */
 typedef struct { } elf_fpregset_t;

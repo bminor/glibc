@@ -121,7 +121,7 @@
 			      pointer access) are filtered and the	\
 			      transaction will abort.  In this case	\
 			      the normal lock path will execute it	\
-			      again and result in a core dump wich does	\
+			      again and result in a core dump which does	\
 			      now show at tbegin but the real executed	\
 			      instruction.				\
 			      However it is not guaranteed that this	\
@@ -131,7 +131,7 @@
 			      memory for being accessible!  */		\
 			   "2: tbegin 0, 0xFF0E\n\t"			\
 			   /* Branch away in abort case (this is the	\
-			      prefered sequence.  See PoP in chapter 5	\
+			      preferred sequence.  See PoP in chapter 5	\
 			      Transactional-Execution Facility		\
 			      Operation).  */				\
 			   "   jnz 0f\n\t"				\

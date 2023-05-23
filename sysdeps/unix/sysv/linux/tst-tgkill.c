@@ -66,7 +66,7 @@ subprocess (void *closure)
 {
   int original_tid = expected_signal_tid;
 
-  /* Do not expect that the folloing signals are delivered to the
+  /* Do not expect that the following signals are delivered to the
      subprocess.  The parent process retains the original
      expected_signal_tid value.  */
   expected_signal_tid = 0;
@@ -77,7 +77,7 @@ subprocess (void *closure)
   TEST_COMPARE (expected_signal_tid, 0);
 
   /* This call has the correct PID/TID combination and is therefore
-     expected to suceed.  */
+     expected to succeed.  */
   TEST_COMPARE (tgkill (getppid (), original_tid, SIGUSR1), 0);
 }
 

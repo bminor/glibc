@@ -29,7 +29,7 @@
 
    Second option will be used by arm which define __NR_arm_fadvise64_64
    (redefined to __NR_fadvise64_64 in kernel-features.h) that behaves as
-   __NR_fadvise64_64 (without the aligment argument required for the ABI).
+   __NR_fadvise64_64 (without the alignment argument required for the ABI).
 
    Third option will be used by mips o32.  Mips will use a 7 argument
    syscall with __NR_fadvise64.

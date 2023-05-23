@@ -20,7 +20,7 @@
    and shared (rtld) modes:
 
    1. PROCINFO_DECL is defined, meaning we are only interested in
-      declarations.  For static it requires use the extern keywork along with
+      declarations.  For static it requires use the extern keyword along with
       the attribute_relro while for shared it will be embedded in the
       rtld_global_ro.
 

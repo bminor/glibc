@@ -68,7 +68,7 @@ struct timer
 
 
 /* For !SIGEV_THREAD, the resulting 'timer_t' is the returned kernel timer
-   identifer (kernel_timer_t), while for SIGEV_THREAD it uses the fact malloc
+   identifier (kernel_timer_t), while for SIGEV_THREAD it uses the fact malloc
    returns at least _Alignof (max_align_t) pointers plus that valid
    kernel_timer_t are always positive to set the MSB bit of the returned
    'timer_t' to indicate the timer handles a SIGEV_THREAD.  */

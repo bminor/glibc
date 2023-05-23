@@ -284,7 +284,7 @@ do_test_multiple_ancillary (void)
     TEST_VERIFY_EXIT (r != -1);
   }
 
-  /* Enougth data for default SO_TIMESTAMP, the IP_RECVORIGDSTADDR, and the
+  /* Enough data for default SO_TIMESTAMP, the IP_RECVORIGDSTADDR, and the
      extra 64-bit SO_TIMESTAMP.  */
   enum { msgbuflen = CMSG_SPACE (2 * sizeof (uint64_t))
 		     + CMSG_SPACE (sizeof (struct sockaddr_in))

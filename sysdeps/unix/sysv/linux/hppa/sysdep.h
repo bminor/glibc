@@ -53,7 +53,7 @@
 #define LOAD_PIC(LREG) \
 	copy LREG , %r19
 /* Inline assembly defines */
-#define TREG_ASM "%r4" /* Cant clobber r3, it holds framemarker */
+#define TREG_ASM "%r4" /* Can't clobber r3, it holds framemarker */
 #define SAVE_ASM_PIC	"       copy %%r19, %" TREG_ASM "\n"
 #define LOAD_ASM_PIC	"       copy %" TREG_ASM ", %%r19\n"
 #define CLOB_TREG	TREG_ASM ,
@@ -134,7 +134,7 @@
 	/* SAVE_RP says we do */			ASM_LINE_SEP	\
 	stw %rp, -20(%sr0,%sp)				ASM_LINE_SEP	\
 	.cfi_offset 2, -20				ASM_LINE_SEP	\
-	/*FIXME: Call mcount? (carefull with stack!) */
+	/*FIXME: Call mcount? (careful with stack!) */
 
 /* Some syscall wrappers do not call other functions, and
    hence are classified as leaf, so add NO_CALLS for gdb */
@@ -151,7 +151,7 @@
 	/* SAVE_RP says we do */			ASM_LINE_SEP	\
 	stw %rp, -20(%sr0,%sp)				ASM_LINE_SEP	\
 	.cfi_offset 2, -20				ASM_LINE_SEP	\
-	/*FIXME: Call mcount? (carefull with stack!) */
+	/*FIXME: Call mcount? (careful with stack!) */
 
 #undef	END
 #define END(name)							\

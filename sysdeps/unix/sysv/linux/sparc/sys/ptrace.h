@@ -24,7 +24,7 @@
 #include <bits/wordsize.h>
 
 /* Linux/SPARC kernels up to 2.3.18 do not care much
-   about what namespace polution, so use a kludge now.  */
+   about what namespace pollution, so use a kludge now.  */
 #undef PTRACE_GETREGS
 #undef PTRACE_SETREGS
 #undef PTRACE_GETFPREGS
