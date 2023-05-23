@@ -20,7 +20,7 @@
 
 #include <mach.h>
 #include <mach/machine/thread_status.h>
-#include <mach/machine/mach_i386.h>
+#include <mach/i386/mach_i386.h>
 #include <mach/mig_errors.h>
 #include <mach/thread_status.h>
 

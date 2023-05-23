@@ -18,7 +18,11 @@
 
 #include <sys/io.h>
 #include <hurd.h>
-#include <mach/machine/mach_i386.h>
+#ifdef __x86_64__
+#include <mach/x86_64/mach_i386.h>
+#else
+#include <mach/i386/mach_i386.h>
+#endif
 
 int
 ioperm (unsigned long int from, unsigned long int num, int turn_on)
