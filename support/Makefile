@@ -41,7 +41,7 @@ libsupport-routines = \
   resolv_response_context_free \
   resolv_test \
   set_fortify_handler \
-  support_stack_alloc \
+  support-open-dev-null-range \
   support-xfstat \
   support-xfstat-time64 \
   support-xstat \
@@ -67,12 +67,11 @@ libsupport-routines = \
   support_isolate_in_subprocess \
   support_mutex_pi_monotonic \
   support_need_proc \
+  support_openpty \
   support_path_support_time64 \
+  support_paths \
   support_process_state \
   support_ptrace \
-  support-open-dev-null-range \
-  support_openpty \
-  support_paths \
   support_quote_blob \
   support_quote_blob_wide \
   support_quote_string \
@@ -84,6 +83,7 @@ libsupport-routines = \
   support_shared_allocate \
   support_small_stack_thread_attribute \
   support_socket_so_timestamp_time64 \
+  support_stack_alloc \
   support_stat_nanoseconds \
   support_subprocess \
   support_test_compare_blob \
@@ -96,11 +96,11 @@ libsupport-routines = \
   support_write_file_string \
   temp_file \
   timespec \
-  timespec-time64 \
   timespec-add \
   timespec-add-time64 \
   timespec-sub \
   timespec-sub-time64 \
+  timespec-time64 \
   write_message \
   xaccept \
   xaccept4 \
@@ -108,6 +108,7 @@ libsupport-routines = \
   xbind \
   xcalloc \
   xchdir \
+  xchmod \
   xchroot \
   xclock_gettime \
   xclock_gettime_time64 \
@@ -115,7 +116,6 @@ libsupport-routines = \
   xclock_settime_time64 \
   xclone \
   xclose \
-  xchmod \
   xconnect \
   xcopy_file_range \
   xdlfcn \
@@ -146,11 +146,14 @@ libsupport-routines = \
   xpipe \
   xpoll \
   xposix_memalign \
+  xposix_spawn \
+  xposix_spawn_file_actions_addclose \
+  xposix_spawn_file_actions_adddup2 \
   xpthread_attr_destroy \
   xpthread_attr_init \
+  xpthread_attr_setaffinity_np \
   xpthread_attr_setdetachstate \
   xpthread_attr_setguardsize \
-  xpthread_attr_setaffinity_np \
   xpthread_attr_setstack \
   xpthread_attr_setstacksize \
   xpthread_barrier_destroy \
@@ -161,8 +164,8 @@ libsupport-routines = \
   xpthread_barrierattr_setpshared \
   xpthread_cancel \
   xpthread_check_return \
-  xpthread_cond_wait \
   xpthread_cond_signal \
+  xpthread_cond_wait \
   xpthread_create \
   xpthread_detach \
   xpthread_join \
@@ -181,8 +184,8 @@ libsupport-routines = \
   xpthread_mutexattr_setrobust \
   xpthread_mutexattr_settype \
   xpthread_once \
-  xpthread_rwlock_init \
   xpthread_rwlock_destroy \
+  xpthread_rwlock_init \
   xpthread_rwlock_rdlock \
   xpthread_rwlock_unlock \
   xpthread_rwlock_wrlock \
@@ -202,9 +205,6 @@ libsupport-routines = \
   xsignal \
   xsigstack \
   xsocket \
-  xposix_spawn \
-  xposix_spawn_file_actions_addclose \
-  xposix_spawn_file_actions_adddup2 \
   xstrdup \
   xstrndup \
   xsymlink \
@@ -213,6 +213,7 @@ libsupport-routines = \
   xuselocale \
   xwaitpid \
   xwrite \
+  # libsupport-routines
 
 libsupport-static-only-routines := $(libsupport-routines)
 # Only build one variant of the library.
@@ -277,8 +278,16 @@ LDLIBS-test-container = $(libsupport)
 others += test-container
 others-noinstall += test-container
 
-others += shell-container echo-container true-container
-others-noinstall += shell-container echo-container true-container
+others += \
+  echo-container \
+  shell-container \
+  true-container \
+  # others
+others-noinstall += \
+  echo-container \
+  shell-container \
+  true-container \
+  # others-noinstall
 
 others += $(LINKS_DSO_PROGRAM)
 others-noinstall += $(LINKS_DSO_PROGRAM)
@@ -314,6 +323,7 @@ tests = \
   tst-timespec \
   tst-xreadlink \
   tst-xsigstack \
+  # tests
 
 ifeq ($(run-built-tests),yes)
 tests-special = \
