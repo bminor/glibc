@@ -101,7 +101,7 @@ L(align_8b):
 	b	L(loop_ne_align_1)
 
 	/* If source2 is unaligned to doubleword, the code needs to check
-	   on each interation if the unaligned doubleword access will cross
+	   on each iteration if the unaligned doubleword access will cross
 	   a 4k page boundary.  */
 	.align 4
 L(loop_ne_align_0):

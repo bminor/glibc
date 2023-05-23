@@ -1,4 +1,4 @@
-/* Optimized strcasecmp_l implememtation for POWER7.
+/* Optimized strcasecmp_l implementation for POWER7.
    Copyright (C) 2013-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

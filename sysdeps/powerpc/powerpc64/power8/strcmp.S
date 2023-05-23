@@ -207,7 +207,7 @@ L(check_source2_byte_loop):
 	bdnz	L(check_source2_byte_loop)
 
 	/* If source2 is unaligned to doubleword, the code needs to check
-	   on each interation if the unaligned doubleword access will cross
+	   on each iteration if the unaligned doubleword access will cross
 	   a 4k page boundary.  */
 	.align	5
 L(loop_unaligned):

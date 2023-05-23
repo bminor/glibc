@@ -26,10 +26,10 @@
        r5:byte count
 
        Save return address in r0.
-       If destinationn and source are unaligned and copy count is greater than 256
+       If destination and source are unaligned and copy count is greater than 256
        then copy 0-3 bytes to make destination aligned.
        If 32 or more bytes to copy we use 32 byte copy loop.
-       Finaly we copy 0-31 extra bytes. */
+       Finally we copy 0-31 extra bytes. */
 
 EALIGN (memcpy, 5, 0)
 /* Check if bytes to copy are greater than 256 and if

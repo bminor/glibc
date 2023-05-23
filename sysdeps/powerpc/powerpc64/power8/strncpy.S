@@ -144,7 +144,7 @@ L(short_path_2):
 	.align	4
 L(short_path_loop):
 	/* At this point, the induction variable, r5, as well as the pointers
-	   to dest and src (r9 and r4, respectivelly) have been updated.
+	   to dest and src (r9 and r4, respectively) have been updated.
 
 	   Note: The registers r7 and r10 are induction variables derived from
 	   r5.  They are used to determine if the total number of writes has
@@ -351,7 +351,7 @@ L(pagecross):
 	cmpdi	cr7,r9,0
 	bne	cr7,L(short_path_prepare_2)
 
-	/* No null byte found in the 32 bytes readed and length not reached,
+	/* No null byte found in the 32 bytes read and length not reached,
 	   read source again using unaligned loads and store them.  */
 	ld	r9,0(r4)
 	addi	r29,r3,16

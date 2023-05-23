@@ -479,7 +479,7 @@ L(storebyte2):
 	rldicl	r6, r3, 0, 61	/* Recalculate padding */
 	mr	r7, r6
 
-	/* src is algined */
+	/* src is aligned */
 L(srcaligndstunalign):
 	mr	r9, r3
 	mr	r6, r7

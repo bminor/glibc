@@ -65,7 +65,7 @@ ENTRY_TOCLESS (STRLEN, 4)
 
 L(align64):
 	/* Proceed to the old (POWER7) implementation, checking two doublewords
-	   per iteraction.  For the first 56 bytes, we will just check for null
+	   per iteration.  For the first 56 bytes, we will just check for null
 	   characters.  After that, we will also check if we are 64-byte aligned
 	   so we can jump to the vectorized implementation.  We will unroll
 	   these loops to avoid excessive branching.  */

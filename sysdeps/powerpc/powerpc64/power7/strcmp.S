@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 /* The optimization is achieved here through cmpb instruction.
-   8byte aligned strings are processed with double word comparision
+   8byte aligned strings are processed with double word comparison
    and unaligned strings are handled effectively with loop unrolling
    technique  */
 

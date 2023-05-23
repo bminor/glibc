@@ -44,7 +44,7 @@
 
 #include <float128-ifunc-macros.h>
 
-/* Declare these now.  These prototyes are not included
+/* Declare these now.  These prototypes are not included
    in any header.  */
 extern __typeof (cosf128) __ieee754_cosf128;
 extern __typeof (asinhf128) __ieee754_asinhf128;

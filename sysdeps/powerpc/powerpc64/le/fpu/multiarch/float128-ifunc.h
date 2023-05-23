@@ -68,7 +68,7 @@
         _F128_IFUNC2 (__ ## func ## f128, pfx2 ## func ## f128, r);
 
 /* GEN_COMPAT_R_e(f)
-     Generate a compatability symbol for finite alias of ieee function.  */
+     Generate a compatibility symbol for finite alias of ieee function.  */
 #define GEN_COMPAT_R_e(f, r) \
 	libm_alias_finite (__ieee754_ ## f ## f128 ## r, __ ## f ## f128 ## r)
 

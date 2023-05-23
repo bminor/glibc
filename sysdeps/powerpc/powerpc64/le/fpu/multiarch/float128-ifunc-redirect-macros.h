@@ -34,7 +34,7 @@
      Redirect func to a function named function ## variant ## reentrant_suffix
 
    F128_REDIR(function)
-     Convience wrapper for F128_REDIR_R where function does not require
+     Convenience wrapper for F128_REDIR_R where function does not require
      a suffix argument.
 
 */

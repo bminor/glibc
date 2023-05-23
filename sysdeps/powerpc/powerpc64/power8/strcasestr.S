@@ -137,7 +137,7 @@ ENTRY (STRCASESTR, 4)
 	beq	cr7, L(skipcheck)
 	cmpw	cr7, r3, r29
 	ble 	cr7, L(firstpos)
-	/* Move r3 to the first occurence.  */
+	/* Move r3 to the first occurrence.  */
 L(skipcheck):
 	mr	r3, r29
 L(firstpos):
@@ -448,7 +448,7 @@ L(loop1):
 	beq	cr7, L(skipcheck1)
 	cmpw	cr7, r3, r29
 	ble 	cr7, L(nextpos)
-	/* Move r3 to first occurence.  */
+	/* Move r3 to first occurrence.  */
 L(skipcheck1):
 	mr	r3, r29
 L(nextpos):

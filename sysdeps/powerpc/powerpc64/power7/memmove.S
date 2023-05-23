@@ -425,7 +425,7 @@ L(end_unaligned_loop):
 	/* Return original DST pointer.  */
 	blr
 
-	/* Start to memcpy backward implementation: the algorith first check if
+	/* Start to memcpy backward implementation: the algorithm first check if
 	   src and dest have the same alignment and if it does align both to 16
 	   bytes and copy using VSX instructions.
 	   If does not, align dest to 16 bytes and use VMX (altivec) instruction

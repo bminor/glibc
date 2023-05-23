@@ -27,13 +27,13 @@
        r12:temp return address
 
        Save return address in r12
-       If destinationn is unaligned and count is greater tha 255 bytes
+       If destination is unaligned and count is greater than 255 bytes
        set 0-3 bytes to make destination aligned
-       If count is greater tha 255 bytes and setting zero to memory
-       use dbcz to set memeory when we can
-       otherwsie do the follwoing
+       If count is greater than 255 bytes and setting zero to memory
+       use dbcz to set memory when we can
+       otherwise do the following
        If 16 or more words to set we use 16 word copy loop.
-       Finaly we set 0-15 extra bytes with string store. */
+       Finally we set 0-15 extra bytes with string store. */
 
 EALIGN (memset, 5, 0)
        rlwinm  r11,r4,0,24,31

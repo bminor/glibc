@@ -27,7 +27,7 @@ fi
 # We check if compiler supports @notoc generation since there is no
 # gain by enabling it if it will be optimized away by the linker.
 # It also helps linkers that might not optimize it and end up
-# generating stubs with ISA 3.1 instruction even targetting older ISA.
+# generating stubs with ISA 3.1 instruction even targeting older ISA.
 AC_CACHE_CHECK([if the compiler supports @notoc],
 	       libc_cv_ppc64_notoc, [dnl
   cat > conftest.c <<EOF
