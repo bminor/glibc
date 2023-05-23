@@ -267,15 +267,6 @@ static const CHAR_T zeroes[16] = /* "0000000000000000" */
 #  undef __mbsrtowcs_l
 #  define __mbsrtowcs_l(d, s, l, st, loc) __mbsrtowcs (d, s, l, st)
 # endif
-# define widen(os, ws, l) \
-  {									      \
-    mbstate_t __st;							      \
-    const char *__s = os;						      \
-    memset (&__st, '\0', sizeof (__st));				      \
-    l = __mbsrtowcs_l (NULL, &__s, 0, &__st, loc);			      \
-    ws = alloca ((l + 1) * sizeof (wchar_t));				      \
-    (void) __mbsrtowcs_l (ws, &__s, l, &__st, loc);			      \
-  }
 #endif
 
 
@@ -1342,11 +1333,31 @@ __strftime_internal (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 #ifdef COMPILE_WIDE
 	  {
 	    /* The zone string is always given in multibyte form.  We have
-	       to transform it first.  */
-	    wchar_t *wczone;
-	    size_t len;
-	    widen (zone, wczone, len);
-	    cpy (len, wczone);
+               to convert it to wide character.  */
+            size_t w = pad == L_('-') || width < 0 ? 0 : width;
+            char const *z = zone;
+            mbstate_t st = {0};
+            size_t len = __mbsrtowcs_l (p, &z, maxsize - i, &st, loc);
+            if (len == (size_t) -1)
+              return 0;
+            size_t incr = len < w ? w : len;
+            if (incr >= maxsize - i)
+              {
+                errno = ERANGE;
+                return 0;
+              }
+            if (p)
+              {
+                if (len < w)
+                  {
+                    size_t delta = w - len;
+                    __wmemmove (p + delta, p, len);
+                    wchar_t wc = pad == L_('0') || pad == L_('+') ? L'0' : L' ';
+                    wmemset (p, wc, delta);
+                  }
+                p += incr;
+              }
+            i += incr;
 	  }
 #else
 	  cpy (strlen (zone), zone);
