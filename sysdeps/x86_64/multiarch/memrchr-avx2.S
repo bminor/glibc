@@ -65,7 +65,7 @@ ENTRY_P2ALIGN(MEMRCHR, 6)
 
 L(ret_vec_x0_test):
 	/* If ecx is zero (no matches) lzcnt will set it 32 (VEC_SIZE) which
-	   will gurantee edx (len) is less than it.  */
+	   will guarantee edx (len) is less than it.  */
 	lzcntl	%ecx, %ecx
 
 	/* Hoist vzeroupper (not great for RTM) to save code size. This allows
@@ -233,7 +233,7 @@ L(more_4x_vec):
 	jnz	L(ret_vec_x3)
 
 	/* Check if near end before re-aligning (otherwise might do an
-	   unnecissary loop iteration).  */
+	   unnecessary loop iteration).  */
 	addq	$-(VEC_SIZE * 4), %rax
 	cmpq	$(VEC_SIZE * 4), %rdx
 	jbe	L(last_4x_vec)

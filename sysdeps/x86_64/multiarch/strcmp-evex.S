@@ -217,7 +217,7 @@ ENTRY (STRCASECMP)
 	movq	__libc_tsd_LOCALE@gottpoff(%rip), %rax
 	mov	%fs:(%rax), %LOCALE_REG_LP
 
-	/* Either 1 or 5 bytes (dependeing if CET is enabled).  */
+	/* Either 1 or 5 bytes (depending if CET is enabled).  */
 	.p2align 4
 END (STRCASECMP)
 	/* FALLTHROUGH to strcasecmp/strncasecmp_l.  */
@@ -455,7 +455,7 @@ L(return_vec_3):
 # endif
 
 	/* If CHAR_PER_VEC == 64 we can't combine matches from the last
-	   2x VEC so need seperate return label.  */
+	   2x VEC so need separate return label.  */
 L(return_vec_2):
 # if (CHAR_PER_VEC <= 16) || !(defined USE_AS_STRNCMP)
 	bsf	%VRCX, %VRCX
@@ -567,7 +567,7 @@ L(prepare_loop_no_len):
 	shrl	$2, %ecx
 	leaq	(CHAR_PER_VEC * 2)(%rdx, %rcx), %rdx
 #  else
-	/* Store N + (VEC_SIZE * 4) and place check at the begining of
+	/* Store N + (VEC_SIZE * 4) and place check at the beginning of
 	   the loop.  */
 	leaq	(VEC_SIZE * 2)(%rdi, %rdx), %rdx
 L(prepare_loop_no_len):
@@ -840,7 +840,7 @@ L(ret7):
 
 
 	/* If CHAR_PER_VEC == 64 we can't combine matches from the last
-	   2x VEC so need seperate return label.  */
+	   2x VEC so need separate return label.  */
 # if CHAR_PER_VEC == 64
 L(return_vec_2_end):
 	bsf	%VRCX, %VRCX
@@ -906,7 +906,7 @@ L(page_cross_during_loop):
 	.p2align 4,, 4
 L(less_1x_vec_till_page_cross):
 	subl	$-(VEC_SIZE * 4), %eax
-	/* Guranteed safe to read from rdi - VEC_SIZE here. The only
+	/* Guaranteed safe to read from rdi - VEC_SIZE here. The only
 	   concerning case is first iteration if incoming s1 was near start
 	   of a page and s2 near end. If s1 was near the start of the page
 	   we already aligned up to nearest VEC_SIZE * 4 so gurnateed safe
@@ -997,7 +997,7 @@ L(return_page_cross_end_check):
 	and	%VR10, %VRCX
 	/* Need to use tzcnt here as VRCX may be zero.  If VRCX is zero
 	   tzcnt(VRCX) will be CHAR_PER and remaining length (edx) is
-	   guranteed to be <= CHAR_PER_VEC so we will only use the return
+	   guaranteed to be <= CHAR_PER_VEC so we will only use the return
 	   idx if VRCX was non-zero.  */
 	tzcnt	%VRCX, %VRCX
 	leal	-VEC_SIZE(%rax, %rcx, SIZE_OF_CHAR), %ecx
@@ -1147,7 +1147,7 @@ L(ret9):
 L(page_cross):
 # ifndef USE_AS_STRNCMP
 	/* If both are VEC aligned we don't need any special logic here.
-	   Only valid for strcmp where stop condition is guranteed to
+	   Only valid for strcmp where stop condition is guaranteed to
 	   be reachable by just reading memory.  */
 	testl	$((VEC_SIZE - 1) << 20), %eax
 	jz	L(no_page_cross)
@@ -1185,7 +1185,7 @@ L(page_cross):
 	jg	L(less_1x_vec_till_page)
 
 
-	/* If more than 1x VEC till page cross, loop throuh safely
+	/* If more than 1x VEC till page cross, loop through safely
 	   loadable memory until within 1x VEC of page cross.  */
 	.p2align 4,, 8
 L(page_cross_loop):
@@ -1209,9 +1209,9 @@ L(page_cross_loop):
 
 
 	subl	%eax, %OFFSET_REG
-	/* OFFSET_REG has distance to page cross - VEC_SIZE. Guranteed
+	/* OFFSET_REG has distance to page cross - VEC_SIZE. Guaranteed
 	   to not cross page so is safe to load. Since we have already
-	   loaded at least 1 VEC from rsi it is also guranteed to be
+	   loaded at least 1 VEC from rsi it is also guaranteed to be
 	   safe.  */
 	VMOVU	(%rdi, %OFFSET_REG64, SIZE_OF_CHAR), %VMM(0)
 	VPTESTM	%VMM(0), %VMM(0), %k2

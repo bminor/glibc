@@ -139,7 +139,7 @@ L(first_vec_x1_or_x2):
 	KORTEST %k2, %k3
 	jz	L(first_vec_x0_test)
 
-	/* Guranteed that VEC(2) and VEC(3) are within range so merge
+	/* Guaranteed that VEC(2) and VEC(3) are within range so merge
 	   the two bitmasks then get last result.  */
 	kunpck_2x %k2, %k3, %k3
 	kmov_2x	%k3, %maskm_2x
@@ -192,7 +192,7 @@ L(first_vec_x2):
 
 	.p2align 4,, 12
 L(aligned_more):
-	/* Need to keep original pointer incase VEC(1) has last match.
+	/* Need to keep original pointer in case VEC(1) has last match.
 	 */
 	movq	%rdi, %rsi
 	andq	$-VEC_SIZE, %rdi
@@ -222,7 +222,7 @@ L(aligned_more):
 	.p2align 4,, 10
 L(first_aligned_loop):
 	/* Preserve VEC(1), VEC(2), VEC(3), and VEC(4) until we can
-	   gurantee they don't store a match.  */
+	   guarantee they don't store a match.  */
 	VMOVA	(VEC_SIZE * 4)(%rdi), %VMM(5)
 	VMOVA	(VEC_SIZE * 5)(%rdi), %VMM(6)
 
@@ -285,7 +285,7 @@ L(second_aligned_loop_prep):
 L(second_aligned_loop_set_furthest_match):
 	movq	%rdi, %rsi
 	/* Ideally we would safe k2/k3 but `kmov/kunpck` take uops on
-	   port0 and have noticable overhead in the loop.  */
+	   port0 and have noticeable overhead in the loop.  */
 	VMOVA	%VMM(5), %VMM(7)
 	VMOVA	%VMM(6), %VMM(8)
 	.p2align 4
@@ -351,7 +351,7 @@ L(cross_page_boundary):
 	/* eax contains all the page offset bits of src (rdi). `xor rdi,
 	   rax` sets pointer will all page offset bits cleared so
 	   offset of (PAGE_SIZE - VEC_SIZE) will get last aligned VEC
-	   before page cross (guranteed to be safe to read). Doing this
+	   before page cross (guaranteed to be safe to read). Doing this
 	   as opposed to `movq %rdi, %rax; andq $-VEC_SIZE, %rax` saves
 	   a bit of code size.  */
 	xorq	%rdi, %rax
@@ -359,7 +359,7 @@ L(cross_page_boundary):
 	VPTESTN	%VMM(1), %VMM(1), %k0
 	KMOV	%k0, %VRCX
 
-	/* Shift out zero CHAR matches that are before the begining of
+	/* Shift out zero CHAR matches that are before the beginning of
 	   src (rdi).  */
 # ifdef USE_AS_WCSRCHR
 	movl	%edi, %esi
@@ -374,7 +374,7 @@ L(cross_page_boundary):
 	/* Found zero CHAR so need to test for search CHAR.  */
 	VPCMP	$0, %VMATCH, %VMM(1), %k1
 	KMOV	%k1, %VRAX
-	/* Shift out search CHAR matches that are before the begining of
+	/* Shift out search CHAR matches that are before the beginning of
 	   src (rdi).  */
 	shrx	%VGPR(SHIFT_REG), %VRAX, %VRAX
 

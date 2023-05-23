@@ -140,7 +140,7 @@ __strstr_avx512 (const char *haystack, const char *ned)
       = cvtmask64_u64 (_mm512_mask_testn_epi8_mask (loadmask, hay0, hay0));
   uint64_t cmpmask = nullmask ^ (nullmask - ONE_64BIT);
   cmpmask = cmpmask & cvtmask64_u64 (loadmask);
-  /* Search for the 2 charaters of needle */
+  /* Search for the 2 characters of needle */
   __mmask64 k0 = _mm512_cmpeq_epi8_mask (hay0, ned0);
   __mmask64 k1 = _mm512_cmpeq_epi8_mask (hay0, ned1);
   k1 = kshiftri_mask64 (k1, 1);

@@ -50,7 +50,7 @@ ENTRY_P2ALIGN(MEMRCHR, 6)
 	jz	L(page_cross)
 
 	/* NB: This load happens regardless of whether rdx (len) is zero. Since
-	   it doesn't cross a page and the standard gurantees any pointer have
+	   it doesn't cross a page and the standard guarantees any pointer have
 	   at least one-valid byte this load must be safe. For the entire
 	   history of the x86 memrchr implementation this has been possible so
 	   no code "should" be relying on a zero-length check before this load.

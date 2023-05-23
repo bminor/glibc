@@ -194,7 +194,7 @@ ENTRY (STRCASECMP)
 	movq	__libc_tsd_LOCALE@gottpoff(%rip), %rax
 	mov	%fs:(%rax), %LOCALE_REG_LP
 
-	/* Either 1 or 5 bytes (dependeing if CET is enabled).  */
+	/* Either 1 or 5 bytes (depending if CET is enabled).  */
 	.p2align 4
 END (STRCASECMP)
 	/* FALLTHROUGH to strcasecmp/strncasecmp_l.  */
@@ -501,7 +501,7 @@ L(more_3x_vec):
 L(prepare_loop):
 
 # ifdef USE_AS_STRNCMP
-	/* Store N + (VEC_SIZE * 4) and place check at the begining of
+	/* Store N + (VEC_SIZE * 4) and place check at the beginning of
 	   the loop.  */
 	leaq	(VEC_SIZE * 2)(%rdi, %rdx), %rdx
 # endif
@@ -762,7 +762,7 @@ L(page_cross_during_loop):
 	.p2align 4,, 4
 L(less_1x_vec_till_page_cross):
 	subl	$-(VEC_SIZE * 4), %eax
-	/* Guranteed safe to read from rdi - VEC_SIZE here. The only
+	/* Guaranteed safe to read from rdi - VEC_SIZE here. The only
 	   concerning case is first iteration if incoming s1 was near start
 	   of a page and s2 near end. If s1 was near the start of the page
 	   we already aligned up to nearest VEC_SIZE * 4 so gurnateed safe
@@ -948,7 +948,7 @@ L(ret9):
 L(page_cross):
 # ifndef USE_AS_STRNCMP
 	/* If both are VEC aligned we don't need any special logic here.
-	   Only valid for strcmp where stop condition is guranteed to be
+	   Only valid for strcmp where stop condition is guaranteed to be
 	   reachable by just reading memory.  */
 	testl	$((VEC_SIZE - 1) << 20), %eax
 	jz	L(no_page_cross)
@@ -984,7 +984,7 @@ L(page_cross):
 	subl	$(VEC_SIZE * 3), %eax
 	jg	L(less_1x_vec_till_page)
 
-	/* If more than 1x VEC till page cross, loop throuh safely
+	/* If more than 1x VEC till page cross, loop through safely
 	   loadable memory until within 1x VEC of page cross.  */
 
 	.p2align 4,, 10
@@ -1007,9 +1007,9 @@ L(page_cross_loop):
 	jl	L(page_cross_loop)
 
 	subl	%eax, %OFFSET_REG
-	/* OFFSET_REG has distance to page cross - VEC_SIZE. Guranteed
+	/* OFFSET_REG has distance to page cross - VEC_SIZE. Guaranteed
 	   to not cross page so is safe to load. Since we have already
-	   loaded at least 1 VEC from rsi it is also guranteed to be
+	   loaded at least 1 VEC from rsi it is also guaranteed to be
 	   safe.  */
 
 	VMOVU	(%rdi, %OFFSET_REG64), %ymm0

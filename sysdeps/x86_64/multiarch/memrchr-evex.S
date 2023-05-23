@@ -119,7 +119,7 @@ L(last_2x_vec):
 # endif
 	jle	L(zero_2)
 
-	/* We adjusted rax (length) for VEC_SIZE == 64 so need seperate
+	/* We adjusted rax (length) for VEC_SIZE == 64 so need separate
 	   offsets.  */
 # if VEC_SIZE == 64
 	vpcmpeqb (VEC_SIZE * -1)(%rdi, %rax), %VMATCH, %k0
@@ -354,7 +354,7 @@ L(loop_4x_vec):
 	jnz	L(first_vec_x1_end)
 	KMOV	%k2, %VRCX
 
-	/* Seperate logic for VEC_SIZE == 64 and VEC_SIZE == 32 for
+	/* Separate logic for VEC_SIZE == 64 and VEC_SIZE == 32 for
 	   returning last 2x VEC. For VEC_SIZE == 64 we test each VEC
 	   individually, for VEC_SIZE == 32 we combine them in a single
 	   64-bit GPR.  */

@@ -187,13 +187,13 @@ L(loop_4x_vec):
 	   ymm0-15 is used at all is because there is no EVEX encoding
 	   vpcmpeq and with vpcmpeq this loop can be performed more
 	   efficiently.  The non-vzeroupper version is safe for RTM
-	   while the vzeroupper version should be prefered if RTM are
+	   while the vzeroupper version should be preferred if RTM are
 	   not supported.   Which loop version we use is determined by
 	   USE_TERN_IN_LOOP.  */
 
 # if USE_TERN_IN_LOOP
 	/* Since vptern can only take 3x vectors fastest to do 1 vec
-	   seperately with EVEX vpcmp.  */
+	   separately with EVEX vpcmp.  */
 	VPCMPEQ	(VEC_SIZE * 4)(%rdi), %VMATCH, %k1
 	/* Compare 3x with vpcmpeq and or them all together with vptern.
 	 */
@@ -256,7 +256,7 @@ L(loop_4x_vec):
 	   (only if used VEX encoded loop).  */
 	COND_VZEROUPPER
 
-	/* Seperate logic for VEC_SIZE == 64 and VEC_SIZE == 32 for
+	/* Separate logic for VEC_SIZE == 64 and VEC_SIZE == 32 for
 	   returning last 2x VEC. For VEC_SIZE == 64 we test each VEC
 	   individually, for VEC_SIZE == 32 we combine them in a single
 	   64-bit GPR.  */

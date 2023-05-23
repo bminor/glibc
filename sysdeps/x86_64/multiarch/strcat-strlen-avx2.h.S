@@ -1,4 +1,4 @@
-/* strlen used for begining of str{n}cat using AVX2.
+/* strlen used for beginning of str{n}cat using AVX2.
    Copyright (C) 2011-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

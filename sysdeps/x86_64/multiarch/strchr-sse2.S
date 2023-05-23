@@ -86,7 +86,7 @@ L(next_48_bytes):
 	jne	L(return)
 L(loop_start):
 	/* We use this alignment to force loop be aligned to 8 but not
-	   16 bytes.  This gives better sheduling on AMD processors.  */
+	   16 bytes.  This gives better scheduling on AMD processors.  */
 	.p2align 4
 	pxor	%xmm6, %xmm6
 	andq	$-64, %rdi

@@ -199,7 +199,7 @@ L(less_vec_from_wmemset):
 	   MEMSET_VDUP_TO_VEC0_AND_SET_RETURN as ptr from here on out.  */
 	andl	$(PAGE_SIZE - 1), %edi
 	/* Check if VEC_SIZE store cross page. Mask stores suffer
-	   serious performance degradation when it has to fault supress.
+	   serious performance degradation when it has to fault suppress.
 	 */
 	cmpl	$(PAGE_SIZE - VEC_SIZE), %edi
 	/* This is generally considered a cold target.  */

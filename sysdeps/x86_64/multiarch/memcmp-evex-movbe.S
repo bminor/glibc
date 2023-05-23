@@ -30,7 +30,7 @@
    3. Use xmm vector compare when size >= 4 bytes for memcmp or
       size >= 8 bytes for wmemcmp.
    4. Optimistically compare up to first 4 * CHAR_PER_VEC one at a
-      to check for early mismatches. Only do this if its guranteed the
+      to check for early mismatches. Only do this if its guaranteed the
       work is not wasted.
    5. If size is 8 * VEC_SIZE or less, unroll the loop.
    6. Compare 4 * VEC_SIZE at a time with the aligned first memory
@@ -90,7 +90,7 @@ Latency:
 
 /* Warning!
            wmemcmp has to use SIGNED comparison for elements.
-           memcmp has to use UNSIGNED comparison for elemnts.
+           memcmp has to use UNSIGNED comparison for elements.
 */
 
 	.section SECTION(.text), "ax", @progbits
@@ -105,7 +105,7 @@ ENTRY_P2ALIGN (MEMCMP, 6)
 	/* Fall through for [0, VEC_SIZE] as its the hottest.  */
 	ja	L(more_1x_vec)
 
-	/* Create mask of bytes that are guranteed to be valid because
+	/* Create mask of bytes that are guaranteed to be valid because
 	   of length (edx). Using masked movs allows us to skip checks
 	   for page crosses/zero size.  */
 	mov	$-1, %VRAX
@@ -365,7 +365,7 @@ L(loop_4x_vec):
 	/* Load regardless of branch.  */
 	VMOVU	(VEC_SIZE * 2)(%rsi, %rdx), %VMM(3)
 
-	/* Seperate logic as we can only use testb for VEC_SIZE == 64.
+	/* Separate logic as we can only use testb for VEC_SIZE == 64.
 	 */
 # if VEC_SIZE == 64
 	testb	%dil, %dil

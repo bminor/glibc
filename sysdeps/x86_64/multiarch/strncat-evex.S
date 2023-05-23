@@ -236,7 +236,7 @@ L(more_1x_vec):
 	VMOVU	%VMM(0), (%rdi)
 
 	/* We are going to align rsi here so will need to be able to re-
-	   adjust rdi/rdx afterwords. NB: We filtered out huge lengths
+	   adjust rdi/rdx afterwards. NB: We filtered out huge lengths
 	   so rsi + rdx * CHAR_SIZE cannot overflow.  */
 
 	leaq	(VEC_SIZE * -1)(%rsi, %rdx, CHAR_SIZE), %rdx

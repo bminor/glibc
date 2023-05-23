@@ -1,4 +1,4 @@
-/* Common definition for strcasecmp famly ifunc selections.
+/* Common definition for strcasecmp family ifunc selections.
    All versions must be listed in ifunc-impl-list.c.
    Copyright (C) 2017-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.

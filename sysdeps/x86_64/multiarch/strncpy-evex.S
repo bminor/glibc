@@ -130,7 +130,7 @@ L(page_cross_continue):
 	jae	L(more_1x_vec)
 
 	/* If there where multiple zero-CHAR matches in the first VEC,
-	   VRCX will be overset but thats fine since any oversets where
+	   VRCX will be overset but that's fine since any oversets where
 	   at zero-positions anyways.  */
 
 #  ifdef USE_AS_STPCPY
@@ -177,7 +177,7 @@ L(more_1x_vec):
 # endif
 
 
-	/* This may overset but thats fine because we still need to zero
+	/* This may overset but that's fine because we still need to zero
 	   fill.  */
 	VMOVU	%VMM(0), (%rdi)
 
@@ -189,7 +189,7 @@ L(more_1x_vec):
 
 
 	/* We are going to align rsi here so will need to be able to re-
-	   adjust rdi/rdx afterwords. NB: We filtered out huge lengths
+	   adjust rdi/rdx afterwards. NB: We filtered out huge lengths
 	   so rsi + rdx * CHAR_SIZE cannot overflow.  */
 	leaq	(VEC_SIZE * -1)(%rsi, %rdx, CHAR_SIZE), %rdx
 	subq	%rsi, %rdi
@@ -221,7 +221,7 @@ L(last_2x_vec):
 	cmpl	$(CHAR_PER_VEC), %edx
 	jb	L(ret_vec_x1_len)
 
-	/* Seperate logic for CHAR_PER_VEC == 64 because we already did
+	/* Separate logic for CHAR_PER_VEC == 64 because we already did
 	   `tzcnt` on VRCX.  */
 # if CHAR_PER_VEC == 64
 	/* cl == CHAR_PER_VEC iff it was zero before the `tzcnt`.  */
@@ -296,7 +296,7 @@ L(ret_vec_x1_no_bsf):
 
 	.p2align 4,, 8
 L(last_4x_vec):
-	/* Seperate logic for CHAR_PER_VEC == 64 because we can do `andl
+	/* Separate logic for CHAR_PER_VEC == 64 because we can do `andl
 	   $(CHAR_PER_VEC * 4 - 1), %edx` with less code size just
 	   using `movzbl`.  */
 # if CHAR_PER_VEC == 64
@@ -677,7 +677,7 @@ L(copy_16_31):
 	vmovdqu	%xmm1, -(16 - CHAR_SIZE)(%rdi, %rdx, CHAR_SIZE)
 	cmpl	%ecx, %edx
 
-	/* Seperate logic depending on VEC_SIZE. If VEC_SIZE == 64 then
+	/* Separate logic depending on VEC_SIZE. If VEC_SIZE == 64 then
 	   we have a larger copy block for 32-63 so this is just falls
 	   through to zfill 16-31. If VEC_SIZE == 32 then we check for
 	   full zfill of less 1x VEC.  */

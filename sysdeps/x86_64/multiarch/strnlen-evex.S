@@ -336,7 +336,7 @@ L(loop_last_4x_vec):
 
 	VPTESTN	%VMM(3), %VMM(3), %k0
 
-	/* Seperate logic for VEC_SIZE == 64 and VEC_SIZE == 32 for
+	/* Separate logic for VEC_SIZE == 64 and VEC_SIZE == 32 for
 	   returning last 2x VEC. For VEC_SIZE == 64 we test each VEC
 	   individually, for VEC_SIZE == 32 we combine them in a single
 	   64-bit GPR.  */

@@ -440,13 +440,13 @@ L(loop_4x_vec):
 	   ymm0-15 is used at all is because there is no EVEX encoding
 	   vpcmpeq and with vpcmpeq this loop can be performed more
 	   efficiently.  The non-vzeroupper version is safe for RTM
-	   while the vzeroupper version should be prefered if RTM are
+	   while the vzeroupper version should be preferred if RTM are
 	   not supported.   Which loop version we use is determined by
 	   USE_TERN_IN_LOOP.  */
 
 # if USE_TERN_IN_LOOP
 	/* Since vptern can only take 3x vectors fastest to do 1 vec
-	   seperately with EVEX vpcmp.  */
+	   separately with EVEX vpcmp.  */
 #  ifdef USE_AS_WMEMCHR
 	/* vptern can only accept masks for epi32/epi64 so can only save
 	   instruction using not equals mask on vptern with wmemchr.
@@ -539,7 +539,7 @@ L(last_vec_x1_novzero):
 
 # if CHAR_PER_VEC == 64
 	/* Since we can't combine the last 2x VEC when CHAR_PER_VEC ==
-	   64 it needs a seperate return label.  */
+	   64 it needs a separate return label.  */
 	.p2align 4,, 4
 L(last_vec_x2):
 L(last_vec_x2_novzero):
@@ -579,8 +579,8 @@ L(loop_vec_ret):
 	   (only if used VEX encoded loop).  */
 	COND_VZEROUPPER
 
-	/* Seperate logic for CHAR_PER_VEC == 64 vs the rest.  For
-	   CHAR_PER_VEC we test the last 2x VEC seperately, for
+	/* Separate logic for CHAR_PER_VEC == 64 vs the rest.  For
+	   CHAR_PER_VEC we test the last 2x VEC separately, for
 	   CHAR_PER_VEC <= 32 we can combine the results from the 2x
 	   VEC in a single GPR.  */
 # if CHAR_PER_VEC == 64

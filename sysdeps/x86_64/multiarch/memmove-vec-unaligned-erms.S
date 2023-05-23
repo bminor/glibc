@@ -445,7 +445,7 @@ L(more_8x_vec_check):
 	shrq	$63, %r8
 	/* Get 4k difference dst - src.  */
 	andl	$(PAGE_SIZE - 256), %ecx
-	/* If r8 is non-zero must do foward for correctness. Otherwise
+	/* If r8 is non-zero must do forward for correctness. Otherwise
 	   if ecx is non-zero there is 4k False Alaising so do backward
 	   copy.  */
 	addl	%r8d, %ecx
@@ -460,7 +460,7 @@ L(more_8x_vec_forward):
 	/* First vec was already loaded into VEC(0).  */
 	VMOVU	-VEC_SIZE(%rsi, %rdx), %VMM(5)
 	VMOVU	-(VEC_SIZE * 2)(%rsi, %rdx), %VMM(6)
-	/* Save begining of dst.  */
+	/* Save beginning of dst.  */
 	movq	%rdi, %rcx
 	/* Align dst to VEC_SIZE - 1.  */
 	orq	$(VEC_SIZE - 1), %rdi
@@ -517,7 +517,7 @@ L(more_8x_vec_backward):
 	/* First vec was also loaded into VEC(0).  */
 	VMOVU	VEC_SIZE(%rsi), %VMM(5)
 	VMOVU	(VEC_SIZE * 2)(%rsi), %VMM(6)
-	/* Begining of region for 4x backward copy stored in rcx.  */
+	/* Beginning of region for 4x backward copy stored in rcx.  */
 	leaq	(VEC_SIZE * -4 + -1)(%rdi, %rdx), %rcx
 	VMOVU	(VEC_SIZE * 3)(%rsi), %VMM(7)
 	VMOVU	-VEC_SIZE(%rsi, %rdx), %VMM(8)
@@ -611,7 +611,7 @@ L(movsb):
 	movq	%rdi, %r8
 # endif
 	/* If above __x86_rep_movsb_stop_threshold most likely is
-	   candidate for NT moves aswell.  */
+	   candidate for NT moves as well.  */
 	cmp	__x86_rep_movsb_stop_threshold(%rip), %RDX_LP
 	jae	L(large_memcpy_2x_check)
 # if AVOID_SHORT_DISTANCE_REP_MOVSB || ALIGN_MOVSB

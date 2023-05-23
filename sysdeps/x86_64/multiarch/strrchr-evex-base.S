@@ -152,7 +152,7 @@ L(loop):
 	jnz	L(loop_vec_x2_match)
 
 	KMOV	%k1, %VRDX
-	/* Match is in first vector, rdi offset need to be substracted
+	/* Match is in first vector, rdi offset need to be subtracted
 	  by VEC_SIZE.  */
 	sub	$VEC_SIZE, %r8
 
@@ -216,7 +216,7 @@ L(check_last_match):
 	ret
 
 	/* No match recorded in r8. Check the second saved vector
-	   in begining.  */
+	   in beginning.  */
 L(vector_x2_ret):
 	VPCMPEQ %VMM(2), %VMM(0), %k2
 	KMOV	%k2, %VRAX

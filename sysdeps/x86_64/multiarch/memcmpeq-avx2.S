@@ -26,7 +26,7 @@
       and loading from either s1 or s2 would cause a page cross.
    2. Use xmm vector compare when size >= 8 bytes.
    3. Optimistically compare up to first 4 * VEC_SIZE one at a
-      to check for early mismatches. Only do this if its guranteed the
+      to check for early mismatches. Only do this if its guaranteed the
       work is not wasted.
    4. If size is 8 * VEC_SIZE or less, unroll the loop.
    5. Compare 4 * VEC_SIZE at a time with the aligned first memory
@@ -302,7 +302,7 @@ L(between_9_15):
 	movq	-8(%rsi, %rdx), %rdi
 	subq	%rdi, %rcx
 	orq	%rcx, %rax
-	/* edx is guranteed to be a non-zero int.  */
+	/* edx is guaranteed to be a non-zero int.  */
 	cmovnz	%edx, %eax
 	ret
 

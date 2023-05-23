@@ -29,7 +29,7 @@
    3. Use xmm vector compare when size >= 4 bytes for memcmp or
       size >= 8 bytes for wmemcmp.
    4. Optimistically compare up to first 4 * VEC_SIZE one at a
-      to check for early mismatches. Only do this if its guranteed the
+      to check for early mismatches. Only do this if its guaranteed the
       work is not wasted.
    5. If size is 8 * VEC_SIZE or less, unroll the loop.
    6. Compare 4 * VEC_SIZE at a time with the aligned first memory
@@ -66,7 +66,7 @@
 
 /* Warning!
            wmemcmp has to use SIGNED comparison for elements.
-           memcmp has to use UNSIGNED comparison for elemnts.
+           memcmp has to use UNSIGNED comparison for elements.
 */
 
 	.section SECTION(.text),"ax",@progbits

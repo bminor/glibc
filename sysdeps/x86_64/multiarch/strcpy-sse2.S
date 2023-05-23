@@ -50,7 +50,7 @@ ENTRY (STRCPY)
 5:
 	movq $0xfefefefefefefeff,%r8
 
-	/* Now the sources is aligned.  Unfortunatly we cannot force
+	/* Now the sources is aligned.  Unfortunately we cannot force
 	   to have both source and destination aligned, so ignore the
 	   alignment of the destination.  */
 	.p2align 4

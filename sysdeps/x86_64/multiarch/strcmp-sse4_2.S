@@ -84,7 +84,7 @@ ENTRY (STRCASECMP)
 	movq	__libc_tsd_LOCALE@gottpoff(%rip),%rax
 	mov	%fs:(%rax),%RDX_LP
 
-	/* Either 1 or 5 bytes (dependeing if CET is enabled).  */
+	/* Either 1 or 5 bytes (depending if CET is enabled).  */
 	.p2align 4
 END (STRCASECMP)
 	/* FALLTHROUGH to strcasecmp_l.  */
@@ -94,7 +94,7 @@ ENTRY (STRCASECMP)
 	movq	__libc_tsd_LOCALE@gottpoff(%rip),%rax
 	mov	%fs:(%rax),%RCX_LP
 
-	/* Either 1 or 5 bytes (dependeing if CET is enabled).  */
+	/* Either 1 or 5 bytes (depending if CET is enabled).  */
 	.p2align 4
 END (STRCASECMP)
 	/* FALLTHROUGH to strncasecmp_l.  */

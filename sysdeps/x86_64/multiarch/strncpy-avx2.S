@@ -99,7 +99,7 @@ L(page_cross_continue):
 	/* `jb` because length rdx is now length - CHAR_SIZE.  */
 	jbe	L(less_1x_vec)
 
-	/* This may overset but thats fine because we still need to zero
+	/* This may overset but that's fine because we still need to zero
 	   fill.  */
 	VMOVU	%VMM(0), (%rdi)
 

@@ -166,7 +166,7 @@ L(first_loop):
 	/* Do 2x VEC at a time.  */
 	movaps	(VEC_SIZE * 2)(%rdi), %xmm4
 	movaps	(VEC_SIZE * 3)(%rdi), %xmm5
-	/* Since SSE2 no pminud so wcsrchr needs seperate logic for
+	/* Since SSE2 no pminud so wcsrchr needs separate logic for
 	   detecting zero. Note if this is found to be a bottleneck it
 	   may be worth adding an SSE4.1 wcsrchr implementation.  */
 # ifdef USE_AS_WCSRCHR
@@ -238,7 +238,7 @@ L(new_match):
 
 	/* We can't reuse either of the old comparisons as since we mask
 	   of zeros after first zero (instead of using the full
-	   comparison) we can't gurantee no interference between match
+	   comparison) we can't guarantee no interference between match
 	   after end of string and valid match.  */
 	pmovmskb %xmm4, %eax
 	pmovmskb %xmm7, %edx
@@ -268,7 +268,7 @@ L(second_loop_match):
 L(second_loop):
 	movaps	(VEC_SIZE * 2)(%rdi), %xmm4
 	movaps	(VEC_SIZE * 3)(%rdi), %xmm5
-	/* Since SSE2 no pminud so wcsrchr needs seperate logic for
+	/* Since SSE2 no pminud so wcsrchr needs separate logic for
 	   detecting zero. Note if this is found to be a bottleneck it
 	   may be worth adding an SSE4.1 wcsrchr implementation.  */
 # ifdef USE_AS_WCSRCHR
@@ -297,11 +297,11 @@ L(second_loop):
 	pmovmskb %xmm6, %eax
 
 	addq	$(VEC_SIZE * 2), %rdi
-	/* Either null term or new occurence of CHAR.  */
+	/* Either null term or new occurrence of CHAR.  */
 	addl	%ecx, %eax
 	jz	L(second_loop)
 
-	/* No null term so much be new occurence of CHAR.  */
+	/* No null term so much be new occurrence of CHAR.  */
 	testl	%ecx, %ecx
 	jz	L(second_loop_match)
 
@@ -331,7 +331,7 @@ L(second_loop_new_match):
 
 	/* We can't reuse either of the old comparisons as since we mask
 	   of zeros after first zero (instead of using the full
-	   comparison) we can't gurantee no interference between match
+	   comparison) we can't guarantee no interference between match
 	   after end of string and valid match.  */
 	pmovmskb %xmm4, %eax
 	pmovmskb %xmm7, %edx

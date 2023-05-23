@@ -160,7 +160,7 @@ L(last_vec_x2):
 # endif
 L(first_vec_x1):
 	/* Use bsf here to save 1-byte keeping keeping the block in 1x
-	   fetch block. eax guranteed non-zero.  */
+	   fetch block. eax guaranteed non-zero.  */
 	bsf	%VRCX, %VRCX
 # ifndef USE_AS_STRCHRNUL
 	/* Found CHAR or the null byte.  */
@@ -294,7 +294,7 @@ L(loop_4x_vec):
 
 	/* Two methods for loop depending on VEC_SIZE.  This is because
 	   with zmm registers VPMINU can only run on p0 (as opposed to
-	   p0/p1 for ymm) so it is less prefered.  */
+	   p0/p1 for ymm) so it is less preferred.  */
 # if VEC_SIZE == 32
 	/* For VEC_2 and VEC_3 use xor to set the CHARs matching esi to
 	   zero.  */
@@ -340,7 +340,7 @@ L(loop_4x_vec):
 	   esi, the corresponding bit in %k3 is zero so the
 	   VPMINU_MASKZ will have a zero in the result).  NB: This make
 	   the VPMINU 3c latency.  The only way to avoid it is to
-	   createa a 12c dependency chain on all the `VPCMP $4, ...`
+	   create a 12c dependency chain on all the `VPCMP $4, ...`
 	   which has higher total latency.  */
 	VPMINU	%VMM(2), %VMM(4), %VMM(4){%k3}{z}
 # endif
@@ -366,7 +366,7 @@ L(loop_4x_vec):
 # endif
 
 
-	/* COND_MASK integates the esi matches for VEC_SIZE == 64. For
+	/* COND_MASK integrates the esi matches for VEC_SIZE == 64. For
 	   VEC_SIZE == 32 they are already integrated.  */
 	VPTEST	%VMM(2), %VMM(2), %k0 COND_MASK(k2)
 	KMOV	%k0, %VRCX
@@ -403,7 +403,7 @@ L(zero_end):
 # endif
 
 
-	/* Seperate return label for last VEC1 because for VEC_SIZE ==
+	/* Separate return label for last VEC1 because for VEC_SIZE ==
 	   32 we can reuse return code in L(page_cross) but VEC_SIZE ==
 	   64 has mismatched registers.  */
 # if VEC_SIZE == 64
@@ -480,7 +480,7 @@ L(cross_page_boundary_real):
 	 */
 	xorl	$((1 << CHAR_PER_VEC)- 1), %eax
 # endif
-	/* Use arithmatic shift so that leading 1s are filled in.  */
+	/* Use arithmetic shift so that leading 1s are filled in.  */
 	sarx	%VGPR(SHIFT_REG), %VRAX, %VRAX
 	/* If eax is all ones then no matches for esi or NULL.  */
 
