@@ -17,6 +17,7 @@ Major new features:
 The following bugs are resolved with this release:
 
   [12154] Do not fail DNS resolution for CNAMEs which are not host names
+  [20975] Deferred cancellation triggers in __check_pf and looses lock leading to deadlock
   [24816] Fix tst-nss-files-hosts-long on single-stack hosts
   [25812] Libio vtable protection is sometimes only partially enforced
   [27576] gmon: improve mcount overflow handling
