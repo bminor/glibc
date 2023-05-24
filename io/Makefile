@@ -18,7 +18,7 @@
 #
 #	Sub-makefile for I/O portion of the library.
 #
-subdir	:= io
+subdir := io
 
 include ../Makeconfig
 
