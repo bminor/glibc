@@ -24,13 +24,23 @@
 #include <support/capture_subprocess.h>
 #include <support/check.h>
 
+#ifndef TST_LOCKFD
+# define TST_LOCKFD "tst-lockfd."
+#endif
+#ifndef LOCKF
+# define LOCKF lockf
+#endif
+#ifndef LOCKF64
+# define LOCKF64 lockf64
+#endif
+
 static char *temp_filename;
 static int temp_fd;
 
 static void
 do_prepare (int argc, char **argv)
 {
-  temp_fd = create_temp_file ("tst-lockfd.", &temp_filename);
+  temp_fd = create_temp_file (TST_LOCKFD, &temp_filename);
   TEST_VERIFY_EXIT (temp_fd != -1);
 }
 #define PREPARE do_prepare
@@ -40,22 +50,22 @@ do_test_child_lockf (void *closure)
 {
   /* Check if parent has [0, 1024) locked.  */
   TEST_COMPARE (lseek (temp_fd, 0, SEEK_SET), 0);
-  TEST_COMPARE (lockf (temp_fd, F_TLOCK, 1024), -1);
+  TEST_COMPARE (LOCKF (temp_fd, F_TLOCK, 1024), -1);
   TEST_COMPARE (errno, EAGAIN);
-  TEST_COMPARE (lockf (temp_fd, F_TEST, 1024), -1);
+  TEST_COMPARE (LOCKF (temp_fd, F_TEST, 1024), -1);
   TEST_COMPARE (errno, EACCES);
   /* Also Check if parent has last 1024 bytes locked.  */
   TEST_COMPARE (lseek (temp_fd, INT32_MAX-1024, SEEK_SET), INT32_MAX-1024);
-  TEST_COMPARE (lockf (temp_fd, F_TEST, 1024), -1);
+  TEST_COMPARE (LOCKF (temp_fd, F_TEST, 1024), -1);
 
   /* And try to lock [1024, 2048).  */
   TEST_COMPARE (lseek (temp_fd, 1024, SEEK_SET), 1024);
-  TEST_COMPARE (lockf (temp_fd, F_LOCK, 1024), 0);
+  TEST_COMPARE (LOCKF (temp_fd, F_LOCK, 1024), 0);
 
   /* Check if non-LFS interface cap access to 32-bif off_t.  */
   TEST_COMPARE (lseek64 (temp_fd, (off64_t)INT32_MAX, SEEK_SET),
 		(off64_t)INT32_MAX);
-  TEST_COMPARE (lockf64 (temp_fd, F_TEST, 1024), 0);
+  TEST_COMPARE (LOCKF64 (temp_fd, F_TEST, 1024), 0);
 }
 
 static void
@@ -63,32 +73,32 @@ do_test_child_lockf64 (void *closure)
 {
   /* Check if parent has [0, 1024) locked.  */
   TEST_COMPARE (lseek64 (temp_fd, 0, SEEK_SET), 0);
-  TEST_COMPARE (lockf64 (temp_fd, F_TLOCK, 1024), -1);
+  TEST_COMPARE (LOCKF64 (temp_fd, F_TLOCK, 1024), -1);
   TEST_COMPARE (errno, EAGAIN);
-  TEST_COMPARE (lockf64 (temp_fd, F_TEST, 1024), -1);
+  TEST_COMPARE (LOCKF64 (temp_fd, F_TEST, 1024), -1);
   TEST_COMPARE (errno, EACCES);
   /* Also Check if parent has last 1024 bytes locked.  */
   TEST_COMPARE (lseek64 (temp_fd, INT32_MAX-1024, SEEK_SET), INT32_MAX-1024);
-  TEST_COMPARE (lockf64 (temp_fd, F_TEST, 1024), -1);
+  TEST_COMPARE (LOCKF64 (temp_fd, F_TEST, 1024), -1);
 
   /* And try to lock [1024, 2048).  */
   TEST_COMPARE (lseek64 (temp_fd, 1024, SEEK_SET), 1024);
-  TEST_COMPARE (lockf64 (temp_fd, F_LOCK, 1024), 0);
+  TEST_COMPARE (LOCKF64 (temp_fd, F_LOCK, 1024), 0);
 
   /* And also [INT32_MAX, INT32_MAX+1024).  */
   {
     off64_t off = (off64_t)INT32_MAX;
     TEST_COMPARE (lseek64 (temp_fd, off, SEEK_SET), off);
-    TEST_COMPARE (lockf64 (temp_fd, F_LOCK, 1024), 0);
+    TEST_COMPARE (LOCKF64 (temp_fd, F_LOCK, 1024), 0);
   }
 
   /* Check if [INT32_MAX+1024, INT64_MAX) is locked.  */
   {
     off64_t off = (off64_t)INT32_MAX+1024;
     TEST_COMPARE (lseek64 (temp_fd, off, SEEK_SET), off);
-    TEST_COMPARE (lockf64 (temp_fd, F_TLOCK, 1024), -1);
+    TEST_COMPARE (LOCKF64 (temp_fd, F_TLOCK, 1024), -1);
     TEST_COMPARE (errno, EAGAIN);
-    TEST_COMPARE (lockf64 (temp_fd, F_TEST, 1024), -1);
+    TEST_COMPARE (LOCKF64 (temp_fd, F_TEST, 1024), -1);
     TEST_COMPARE (errno, EACCES);
   }
 }
@@ -97,38 +107,38 @@ static int
 do_test (void)
 {
   /* Basic tests to check if a lock can be obtained and checked.  */
-  TEST_COMPARE (lockf (temp_fd, F_LOCK, 1024), 0);
-  TEST_COMPARE (lockf (temp_fd, F_LOCK, INT32_MAX), 0);
-  TEST_COMPARE (lockf (temp_fd, F_TLOCK, 1024), 0);
-  TEST_COMPARE (lockf (temp_fd, F_TEST, 1024), 0);
+  TEST_COMPARE (LOCKF (temp_fd, F_LOCK, 1024), 0);
+  TEST_COMPARE (LOCKF (temp_fd, F_LOCK, INT32_MAX), 0);
+  TEST_COMPARE (LOCKF (temp_fd, F_TLOCK, 1024), 0);
+  TEST_COMPARE (LOCKF (temp_fd, F_TEST, 1024), 0);
   TEST_COMPARE (lseek (temp_fd, 1024, SEEK_SET), 1024);
-  TEST_COMPARE (lockf (temp_fd, F_ULOCK, 1024), 0);
+  TEST_COMPARE (LOCKF (temp_fd, F_ULOCK, 1024), 0);
   /* Parent process should have ([0, 1024), [2048, INT32_MAX)) ranges locked.  */
 
   {
     struct support_capture_subprocess result;
     result = support_capture_subprocess (do_test_child_lockf, NULL);
-    support_capture_subprocess_check (&result, "lockf", 0, sc_allow_none);
+    support_capture_subprocess_check (&result, "LOCKF", 0, sc_allow_none);
   }
 
   if (sizeof (off_t) != sizeof (off64_t))
     {
       /* Check if previously locked regions with LFS symbol.  */
       TEST_COMPARE (lseek (temp_fd, 0, SEEK_SET), 0);
-      TEST_COMPARE (lockf64 (temp_fd, F_LOCK, 1024), 0);
-      TEST_COMPARE (lockf64 (temp_fd, F_TLOCK, 1024), 0);
-      TEST_COMPARE (lockf64 (temp_fd, F_TEST, 1024), 0);
+      TEST_COMPARE (LOCKF64 (temp_fd, F_LOCK, 1024), 0);
+      TEST_COMPARE (LOCKF64 (temp_fd, F_TLOCK, 1024), 0);
+      TEST_COMPARE (LOCKF64 (temp_fd, F_TEST, 1024), 0);
       /* Lock region [INT32_MAX+1024, INT64_MAX).  */
       off64_t off = (off64_t)INT32_MAX + 1024;
       TEST_COMPARE (lseek64 (temp_fd, off, SEEK_SET), off);
-      TEST_COMPARE (lockf64 (temp_fd, F_LOCK, 1024), 0);
+      TEST_COMPARE (LOCKF64 (temp_fd, F_LOCK, 1024), 0);
       /* Parent process should have ([0, 1024), [2048, INT32_MAX),
 	 [INT32_MAX+1024, INT64_MAX)) ranges locked.  */
 
       {
 	struct support_capture_subprocess result;
 	result = support_capture_subprocess (do_test_child_lockf64, NULL);
-	support_capture_subprocess_check (&result, "lockf", 0, sc_allow_none);
+	support_capture_subprocess_check (&result, "LOCKF", 0, sc_allow_none);
       }
     }
 

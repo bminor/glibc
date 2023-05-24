@@ -175,6 +175,7 @@ tests := \
   tst-fchmodat \
   tst-fchownat \
   tst-fcntl \
+  tst-fcntl-lock \
   tst-fstatat \
   tst-fts \
   tst-fts-lfs \
