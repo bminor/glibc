@@ -80,7 +80,8 @@ tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
 		   tst-utimensat \
 		   tst-closefrom \
 		   tst-close_range \
-		   tst-ftw-bz28126
+		   tst-ftw-bz28126 \
+		   tst-fcntl-lock
 
 tests-time64 := \
   tst-fcntl-time64 \
