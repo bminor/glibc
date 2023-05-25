@@ -1,5 +1,6 @@
 /* printf implementation for the dynamic loader.
    Copyright (C) 1997-2023 Free Software Foundation, Inc.
+   Copyright The GNU Toolchain Authors.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -150,19 +151,25 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
 		    if (long_mod)
 		      {
 			if ((long int) num < 0)
-			  negative = true;
+			  {
+			    num = -num;
+			    negative = true;
+			  }
 		      }
 		    else
 		      {
 			if ((int) num < 0)
 			  {
-			    num = (unsigned int) num;
+			    num = -(unsigned int) num;
 			    negative = true;
 			  }
 		      }
 #else
 		    if ((int) num < 0)
-		      negative = true;
+		      {
+			num = -num;
+			negative = true;
+		      }
 #endif
 		  }
 
