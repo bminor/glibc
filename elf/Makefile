@@ -275,6 +275,7 @@ tests-static-normal := \
 
 tests-static-internal := \
   tst-dl_find_object-static \
+  tst-dl-printf-static \
   tst-ptrguard1-static \
   tst-stackguard1-static \
   tst-tls1-static \
