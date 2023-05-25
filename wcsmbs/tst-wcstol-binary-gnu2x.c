@@ -18,6 +18,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define CHAR wchar_t
+#define WIDE 1
 #define FNPFX wcsto
 #define L_(C) L ## C
 #define TEST_C2X 1
