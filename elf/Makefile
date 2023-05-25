@@ -325,6 +325,7 @@ static-dlopen-environment = \
   LD_LIBRARY_PATH=$(ld-library-path):$(common-objpfx)dlfcn
 tst-tls9-static-ENV = $(static-dlopen-environment)
 tst-single_threaded-static-dlopen-ENV = $(static-dlopen-environment)
+tst-rootdir-ENV = LD_LIBRARY_PATH=/
 
 tests += \
   argv0test \
@@ -506,6 +507,7 @@ tests-container += \
   tst-dlopen-tlsmodid-container \
   tst-pldd \
   tst-preload-pthread-libc \
+  tst-rootdir \
   # tests-container
 
 test-srcs = \
@@ -855,6 +857,7 @@ modules-names += \
   tst-relsort1mod1 \
   tst-relsort1mod2 \
   tst-ro-dynamic-mod \
+  tst-rootdir-lib \
   tst-single_threaded-mod1 \
   tst-single_threaded-mod2 \
   tst-single_threaded-mod3 \
