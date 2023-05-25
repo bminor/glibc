@@ -1779,12 +1779,11 @@ open_verify (const char *name, int fd,
   return fd;
 }
 
-/* Try to open NAME in one of the directories in *DIRSP.
-   Return the fd, or -1.  If successful, fill in *REALNAME
-   with the malloc'd full directory name.  If it turns out
-   that none of the directories in *DIRSP exists, *DIRSP is
-   replaced with (void *) -1, and the old value is free()d
-   if MAY_FREE_DIRS is true.  */
+/* Try to open NAME in one of the directories in SPS.  Return the fd, or -1.
+   If successful, fill in *REALNAME with the malloc'd full directory name.  If
+   it turns out that none of the directories in SPS exists, SPS->DIRS is
+   replaced with (void *) -1, and the old value is free()d if SPS->MALLOCED is
+   true.  */
 
 static int
 open_path (const char *name, size_t namelen, int mode,
