@@ -32,6 +32,10 @@
 #  define MFD_ALLOW_SEALING 2U
 #  define MFD_HUGETLB 4U
 # endif
+# ifndef MFD_NOEXEC_SEAL
+#  define MFD_NOEXEC_SEAL 8U
+#  define MFD_EXEC 0x10U
+# endif
 
 /* Flags for mlock2.  */
 # ifndef MLOCK_ONFAULT
