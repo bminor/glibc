@@ -128,6 +128,7 @@
 #define IP_MSFILTER			41
 #define IP_MULTICAST_ALL		49
 #define IP_UNICAST_IF			50
+#define IP_LOCAL_PORT_RANGE		51
 
 /* To select the IP level.  */
 #define SOL_IP	0
