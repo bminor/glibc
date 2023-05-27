@@ -945,7 +945,7 @@ undefined behavior.)  In any case, an application must not write to
 @code{__libc_single_threaded} even if it has joined the last
 application-created thread because future versions of @theglibc{} may
 create background threads after the first thread has been created, and
-the application has no way of knowning that these threads are present.
+the application has no way of knowing that these threads are present.
 
 @node Restartable Sequences
 @subsubsection Restartable Sequences

@@ -258,7 +258,7 @@ containing a given name.
 The @code{glob} function reads the @code{struct dirent} members listed
 above and makes a copy of the file name in the @code{d_name} member
 immediately after the @code{gl_readdir} callback function returns.
-Future invocations of any of the callback functions may dealloacte or
+Future invocations of any of the callback functions may deallocate or
 reuse the buffer.  It is the responsibility of the caller of the
 @code{glob} function to allocate and deallocate the buffer, around the
 call to @code{glob} or using the callback functions.  For example, an

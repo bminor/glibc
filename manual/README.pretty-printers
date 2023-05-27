@@ -140,7 +140,7 @@ its name to the 'tests-printers-libs' variable in your submodule's Makefile.
 Known issues
 ------------
 
-* Pretty printers are inherently coupled to the code they're targetting, thus
+* Pretty printers are inherently coupled to the code they're targeting, thus
 any changes to the target code must also update the corresponding printers.
 On the plus side, the printer code itself may serve as a kind of documentation
 for the target code.

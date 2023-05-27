@@ -509,7 +509,7 @@ build @theglibc{}:
 @item
 GNU @code{make} 4.0 or newer
 
-As of relase time, GNU @code{make} 4.4 is the newest verified to work
+As of release time, GNU @code{make} 4.4 is the newest verified to work
 to build @theglibc{}.
 
 @item

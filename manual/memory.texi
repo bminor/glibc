@@ -1746,7 +1746,7 @@ are no problems with the code, all allocated memory was freed
 afterwards.
 
 If we call @code{mtrace} on the example trace given above we would get a
-different outout:
+different output:
 
 @example
 drepper$ mtrace errlog

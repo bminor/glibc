@@ -821,7 +821,7 @@ here.  The address is stored in network byte order.
 This combines the IPv6 traffic class and flow label values, as found
 in the IPv6 header.  This field is stored in network byte order.  Only
 the 28 lower bits (of the number in network byte order) are used; the
-remainig bits must be zero.  The lower 20 bits are the flow label, and
+remaining bits must be zero.  The lower 20 bits are the flow label, and
 bits 20 to 27 are the the traffic class.  Typically, this field is
 zero.
 

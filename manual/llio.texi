@@ -320,7 +320,7 @@ is used.
 
 @item ENOMEM
 Either there is not enough memory for the operation, or the process is
-out of address space.  It can only happnes when @code{CLOSE_RANGE_UNSHARED}
+out of address space.  It can only happen when @code{CLOSE_RANGE_UNSHARED}
 flag is used.
 
 @item EMFILE

@@ -254,7 +254,7 @@ It is declared in the header file @file{unistd.h}.
 @c handlers, and unlocks the internal lock.  The child bumps the fork
 @c generation, sets the thread-local pid, resets cpu clocks, initializes
 @c the robust mutex list, the stream locks, the IO_list lock, the dynamic
-@c loader lock, runs the child handlers, reseting ref counters to 1, and
+@c loader lock, runs the child handlers, resetting ref counters to 1, and
 @c initializes the fork lock.  These are all safe, unless atfork
 @c handlers themselves are unsafe.
 The @code{fork} function creates a new process.

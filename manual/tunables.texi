@@ -446,7 +446,7 @@ stack cache exceeds this size, unused thread stacks are returned to
 the kernel, to bring the cache size below this limit.
 
 The value is measured in bytes.  The default is @samp{41943040}
-(fourty mibibytes).
+(forty mibibytes).
 @end deftp
 
 @deftp Tunable glibc.pthread.rseq
@@ -625,7 +625,7 @@ and the process manage memory.
 @deftp Tunable glibc.mem.tagging
 If the hardware supports memory tagging, this tunable can be used to
 control the way @theglibc{} uses this feature.  At present this is only
-supported on AArch64 systems with the MTE extention; it is ignored for
+supported on AArch64 systems with the MTE extension; it is ignored for
 all other systems.
 
 This tunable takes a value between 0 and 255 and acts as a bitmask

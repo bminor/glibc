@@ -62,7 +62,7 @@ by @theglibc{}.
 @safety{@prelim{}@mtsafe{}@asunsafe{@asuinit{}}@acunsafe{@acuinit{}}}
 @c pthread_once asuinit
 @c
-@c We are AC-Unsafe becuase we use pthread_once to initialize
+@c We are AC-Unsafe because we use pthread_once to initialize
 @c a global variable that holds the location of the mounted
 @c shmfs on Linux.
 @end deftypefun
