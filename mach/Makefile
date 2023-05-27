@@ -62,6 +62,7 @@ CFLAGS-RPC_vm_protect.o = $(no-stack-protector)
 CFLAGS-RPC_i386_set_gdt.o = $(no-stack-protector)
 CFLAGS-RPC_i386_set_ldt.o = $(no-stack-protector)
 CFLAGS-RPC_task_get_special_port.o = $(no-stack-protector)
+CFLAGS-RPC_thread_set_state.o = $(no-stack-protector)
 
 # Translate GNU names for CPUs into the names used in Mach header files.
 mach-machine = $(patsubst powerpc,ppc,$(base-machine))
