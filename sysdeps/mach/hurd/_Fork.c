@@ -481,13 +481,11 @@ retry:
 				    MACHINE_THREAD_STATE_FLAVOR,
 				    (natural_t *) &state, &statecount))
 	LOSE;
-#ifdef STACK_GROWTH_UP
-      state.SP = __hurd_sigthread_stack_base;
-#else
-      state.SP = __hurd_sigthread_stack_end;
-#endif
-      MACHINE_THREAD_STATE_SET_PC (&state,
-				   (unsigned long int) _hurd_msgport_receive);
+
+      MACHINE_THREAD_STATE_SETUP_CALL(&state,
+	  __hurd_sigthread_stack_base,
+	  __hurd_sigthread_stack_end - __hurd_sigthread_stack_base,
+	  (uintptr_t) _hurd_msgport_receive);
 
       /* Do special signal thread setup for TLS if needed.  */
       if (err = _hurd_tls_fork (sigthread, _hurd_msgport_thread, &state))
