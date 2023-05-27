@@ -537,7 +537,7 @@ incomplete character or shift sequence at end of buffer"));
 static int
 process_fd (iconv_t cd, int fd, FILE **output, const char *output_file)
 {
-  /* we have a problem with reading from a desriptor since we must not
+  /* we have a problem with reading from a descriptor since we must not
      provide the iconv() function an incomplete character or shift
      sequence at the end of the buffer.  Since we have to deal with
      arbitrary encodings we must read the whole text in a buffer and

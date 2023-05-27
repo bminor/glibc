@@ -181,10 +181,10 @@ __gconv_create_spec (struct gconv_spec *conv_spec, const char *fromcode,
      implementation has always handled them.  Only suffixes in the tocode are
      processed and handled.  The reality is that invalid input in the input
      character set should only be ignored if the fromcode specifies IGNORE.
-     The current implementation ignores invalid intput in the input character
+     The current implementation ignores invalid input in the input character
      set if the tocode contains IGNORE.  We preserve this behavior for
      backwards compatibility.  In the future we may split the handling of
-     IGNORE to allow a finer grained specification of ignorning invalid input
+     IGNORE to allow a finer grained specification of ignoring invalid input
      and/or ignoring invalid output.  */
   conv_spec->translit = ptc.translit;
   conv_spec->ignore = ptc.ignore;

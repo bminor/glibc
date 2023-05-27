@@ -445,7 +445,7 @@ static void
 add_alias (char *rp)
 {
   /* We now expect two more string.  The strings are normalized
-     (converted to UPPER case) and strored in the alias database.  */
+     (converted to UPPER case) and stored in the alias database.  */
   char *from;
   char *to;
   char *wp;

@@ -80,7 +80,7 @@
 
 
 /* Since we might have to reset input pointer we must be able to save
-   and retore the state.  */
+   and restore the state.  */
 #define SAVE_RESET_STATE(Save) \
   if (Save)								      \
     save_curcs = *curcsp;						      \

@@ -44,7 +44,7 @@ if test ${charset} = GB18030; then
   mv ${objpfx}tst-${charset}.truncated.table ${objpfx}tst-${charset}.charmap.table
 fi
 
-# Precomputed expexted differences between the charmap and iconv forward.
+# Precomputed expected differences between the charmap and iconv forward.
 precomposed=${charset}.precomposed
 
 # Precompute expected differences between the charmap and iconv backward.

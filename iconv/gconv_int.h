@@ -172,7 +172,7 @@ __libc_lock_define (extern, __gconv_lock attribute_hidden)
   })
 
 
-/* Return in *HANDLE, a decriptor for the transformation.  The function expects
+/* Return in *HANDLE, a descriptor for the transformation.  The function expects
    the specification of the transformation in the structure pointed to by
    CONV_SPEC.  It only reads *CONV_SPEC and does not take ownership of it.  */
 extern int __gconv_open (struct gconv_spec *conv_spec,

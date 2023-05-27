@@ -56,7 +56,7 @@ __gconv_btwoc_ascii (struct __gconv_step *step, unsigned char c)
 
 /* Transform from the internal, UCS4-like format, to UCS4.  The
    difference between the internal ucs4 format and the real UCS4
-   format is, if any, the endianess.  The Unicode/ISO 10646 says that
+   format is, if any, the endianness.  The Unicode/ISO 10646 says that
    unless some higher protocol specifies it differently, the byte
    order is big endian.*/
 #define DEFINE_INIT		0
@@ -100,7 +100,7 @@ internal_ucs4_loop (struct __gconv_step *step,
   *inptrp = inptr + n_convert * 4;
   *outptrp = __mempcpy (outptr, inptr, n_convert * 4);
 #else
-# error "This endianess is not supported."
+# error "This endianness is not supported."
 #endif
 
   /* Determine the status.  */
@@ -153,7 +153,7 @@ internal_ucs4_loop_single (struct __gconv_step *step,
   (*outptrp)[2] = state->__value.__wchb[2];
   (*outptrp)[3] = state->__value.__wchb[3];
 #else
-# error "This endianess is not supported."
+# error "This endianness is not supported."
 #endif
   *outptrp += 4;
 
@@ -347,7 +347,7 @@ internal_ucs4le_loop (struct __gconv_step *step,
   *inptrp = inptr + n_convert * 4;
   *outptrp = __mempcpy (outptr, inptr, n_convert * 4);
 #else
-# error "This endianess is not supported."
+# error "This endianness is not supported."
 #endif
 
   /* Determine the status.  */

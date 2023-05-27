@@ -29,7 +29,7 @@ do_test (void)
    /*
     * result: -1 84 0 0        (84=EILSEQ)
     *
-    * Error is returnd but inbuf is consumed.
+    * Error is returned but inbuf is consumed.
     *
     * \x83\xd9 is valid shift-jis sequence but no character is assigned
     * to it.
