@@ -73,7 +73,7 @@ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
 /* On some machines, notably SPARC, DT_REL* includes DT_JMPREL in its
    range.  Note that according to the ELF spec, this is completely legal!
 
-   We are guarenteed that we have one of three situations.  Either DT_JMPREL
+   We are guaranteed that we have one of three situations.  Either DT_JMPREL
    comes immediately after DT_REL*, or there is overlap and DT_JMPREL
    consumes precisely the very end of the DT_REL*, or DT_JMPREL and DT_REL*
    are completely separate and there is a gap between them.  */

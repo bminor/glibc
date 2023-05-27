@@ -66,7 +66,7 @@ glibc_hwcaps_subdirectory_name (const struct glibc_hwcaps_subdirectory *dir)
   return dir->name->string;
 }
 
-/* Linked list of known hwcaps subdirecty names.  */
+/* Linked list of known hwcaps subdirectory names.  */
 static struct glibc_hwcaps_subdirectory *hwcaps;
 
 struct glibc_hwcaps_subdirectory *

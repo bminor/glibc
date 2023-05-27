@@ -71,7 +71,7 @@ pldd_process (void *arg)
 }
 
 /* The test runs in a container because pldd does not support tracing
-   a binary started by the loader iself (as with testrun.sh).  */
+   a binary started by the loader itself (as with testrun.sh).  */
 
 static bool
 in_str_list (const char *libname, const char *const strlist[])

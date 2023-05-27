@@ -233,7 +233,7 @@ _dl_determine_tlsoffset (void)
      and an alignment requirement.  The GNU ld computes the alignment
      requirements for the data at the positions *in the file*, though.
      I.e, it is not simply possible to allocate a block with the size
-     of the TLS program header entry.  The data is layed out assuming
+     of the TLS program header entry.  The data is laid out assuming
      that the first byte of the TLS block fulfills
 
        p_vaddr mod p_align == &TLS_BLOCK mod p_align

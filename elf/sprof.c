@@ -119,7 +119,7 @@ static enum
 /* Nozero for testing.  */
 static int do_test;
 
-/* Strcuture describing calls.  */
+/* Structure describing calls.  */
 struct here_fromstruct
 {
   struct here_cg_arc_record volatile *here;
@@ -413,7 +413,7 @@ load_shobj (const char *name)
 
   /* Since we use dlopen() we must be prepared to work around the sometimes
      strange lookup rules for the shared objects.  If we have a file foo.so
-     in the current directory and the user specfies foo.so on the command
+     in the current directory and the user specifies foo.so on the command
      line (without specifying a directory) we should load the file in the
      current directory even if a normal dlopen() call would read the other
      file.  We do this by adding a directory portion to the name.  */
@@ -809,7 +809,7 @@ load_profdata (const char *name, struct shobj *shobj)
       return NULL;
     }
 
-  /* We don't need the file desriptor anymore.  */
+  /* We don't need the file descriptor anymore.  */
   if (close (fd) < 0)
     {
       error (0, errno, _("error while closing the profiling data file"));

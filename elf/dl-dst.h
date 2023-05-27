@@ -1,4 +1,4 @@
-/* Handling of dynamic sring tokens.
+/* Handling of dynamic string tokens.
    Copyright (C) 1999-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

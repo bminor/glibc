@@ -631,7 +631,7 @@ out:
    - search for libraries which will be added to the cache
    - create symbolic links to the soname for each library
 
-   This has to be done separatly for each directory.
+   This has to be done separately for each directory.
 
    To keep track of which libraries to add to the cache and which
    links to create, we save a list of all libraries.
@@ -875,7 +875,7 @@ search_dir (const struct dir_entry *entry)
 	     or downgrade. The problems will arise because ldconfig will,
 	     depending on directory ordering, creat symlinks against libfoo.so
 	     e.g. libfoo.so.1.2 -> libfoo.so, but when libfoo.so is removed
-	     (typically by the removal of a development pacakge not required
+	     (typically by the removal of a development package not required
 	     for the runtime) it will break the libfoo.so.1.2 symlink and the
 	     application will fail to start.  */
 	  const char *real_base_name = basename (real_file_name);

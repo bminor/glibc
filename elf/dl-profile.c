@@ -38,7 +38,7 @@
 
 /* The LD_PROFILE feature has to be implemented different to the
    normal profiling using the gmon/ functions.  The problem is that an
-   arbitrary amount of processes simulataneously can be run using
+   arbitrary amount of processes simultaneously can be run using
    profiling and all write the results in the same file.  To provide
    this mechanism one could implement a complicated mechanism to merge
    the content of two profiling runs or one could extend the file
@@ -177,7 +177,7 @@ static unsigned int log_hashfraction;
 
 
 
-/* Set up profiling data to profile object desribed by MAP.  The output
+/* Set up profiling data to profile object described by MAP.  The output
    file is found (or created) in OUTPUT_DIR.  */
 void
 _dl_start_profile (void)
@@ -218,7 +218,7 @@ _dl_start_profile (void)
       }
 
   /* Now we can compute the size of the profiling data.  This is done
-     with the same formulars as in `monstartup' (see gmon.c).  */
+     with the same formulas as in `monstartup' (see gmon.c).  */
   running = 0;
   lowpc = ROUNDDOWN (mapstart + GL(dl_profile_map)->l_addr,
 		     HISTFRACTION * sizeof (HISTCOUNTER));

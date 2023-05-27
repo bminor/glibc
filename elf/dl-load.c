@@ -44,7 +44,7 @@
    long respectively.  I.e., even with a file which has 10 program
    header entries we only have to read 372B/624B respectively.  Add to
    this a bit of margin for program notes and reading 512B and 832B
-   for 32-bit and 64-bit files respecitvely is enough.  If this
+   for 32-bit and 64-bit files respectively is enough.  If this
    heuristic should really fail for some file the code in
    `_dl_map_object_from_fd' knows how to recover.  */
 struct filebuf
@@ -270,7 +270,7 @@ _dl_dst_count (const char *input)
    least equal to the value returned by DL_DST_REQUIRED.  Note that it
    is possible for a DT_NEEDED, DT_AUXILIARY, and DT_FILTER entries to
    have colons, but we treat those as literal colons here, not as path
-   list delimeters.  */
+   list delimiters.  */
 char *
 _dl_dst_substitute (struct link_map *l, const char *input, char *result)
 {

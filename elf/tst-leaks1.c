@@ -9,7 +9,7 @@ do_test (void)
   void *h;
   int ret = 0;
   /* Carry out *one* failing call to dlopen before starting mtrace to
-     force any one-time inintialization that may happen to the
+     force any one-time initialization that may happen to the
      executable link map e.g. expansion and caching of $ORIGIN.  */
   h = dlopen ("$ORIGIN/tst-leaks1.o", RTLD_LAZY);
   if (h != NULL)

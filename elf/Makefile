@@ -2723,7 +2723,7 @@ $(objpfx)tst-tls-manydynamic0mod-dep.so: $(objpfx)tst-tls-manydynamic1mod-dep.so
 # Double dependencies.
 $(objpfx)tst-tls-manydynamic2mod-dep.so: $(objpfx)tst-tls-manydynamic3mod-dep.so \
 					 $(objpfx)tst-tls-manydynamic4mod-dep.so
-# Double dependencies with each dependency depent of another module.
+# Double dependencies with each dependency dependent of another module.
 $(objpfx)tst-tls-manydynamic5mod-dep.so: $(objpfx)tst-tls-manydynamic6mod-dep.so \
 					 $(objpfx)tst-tls-manydynamic7mod-dep.so
 $(objpfx)tst-tls-manydynamic6mod-dep.so: $(objpfx)tst-tls-manydynamic8mod-dep.so
@@ -2733,7 +2733,7 @@ $(objpfx)tst-tls-manydynamic9mod-dep.so: $(objpfx)tst-tls-manydynamic10mod-dep.s
 					 $(objpfx)tst-tls-manydynamic11mod-dep.so
 $(objpfx)tst-tls-manydynamic10mod-dep.so: $(objpfx)tst-tls-manydynamic12mod-dep.so
 $(objpfx)tst-tls-manydynamic12mod-dep.so: $(objpfx)tst-tls-manydynamic13mod-dep.so
-# Long chain with two double depedencies in the middle
+# Long chain with two double dependencies in the middle
 $(objpfx)tst-tls-manydynamic14mod-dep.so: $(objpfx)tst-tls-manydynamic15mod-dep.so
 $(objpfx)tst-tls-manydynamic15mod-dep.so: $(objpfx)tst-tls-manydynamic16mod-dep.so \
 					  $(objpfx)tst-tls-manydynamic17mod-dep.so
@@ -2747,7 +2747,7 @@ LDFLAGS-tst-tls-manydynamic0mod-dep-bad.so = -Wl,--no-as-needed
 $(objpfx)tst-tls-manydynamic1mod-dep-bad.so: $(objpfx)tst-tls-manydynamic2mod-dep-bad.so \
 					     $(objpfx)tst-tls20mod-bad.so
 LDFLAGS-tst-tls-manydynamic1mod-dep-bad.so = -Wl,--no-as-needed
-# Double dependencies with each dependency depent of another module.
+# Double dependencies with each dependency dependent of another module.
 $(objpfx)tst-tls-manydynamic3mod-dep-bad.so: $(objpfx)tst-tls-manydynamic4mod-dep-bad.so \
 					     $(objpfx)tst-tls-manydynamic5mod-dep-bad.so
 LDFLAGS-tst-tls-manydynamic3mod-dep-bad.so = -Wl,--no-as-needed
@@ -2763,7 +2763,7 @@ $(objpfx)tst-tls-manydynamic7mod-dep-bad.so: $(objpfx)tst-tls-manydynamic9mod-de
 LDFLAGS-tst-tls-manydynamic7mod-dep-bad.so = -Wl,--no-as-needed
 $(objpfx)tst-tls-manydynamic9mod-dep-bad.so: $(objpfx)tst-tls20mod-bad.so
 LDFLAGS-tst-tls-manydynamic9mod-dep-bad.so = -Wl,--no-as-needed
-# Long chain with two double depedencies in the middle
+# Long chain with two double dependencies in the middle
 $(objpfx)tst-tls-manydynamic10mod-dep-bad.so: $(objpfx)tst-tls-manydynamic11mod-dep-bad.so
 LDFLAGS-tst-tls-manydynamic10mod-dep-bad.so = -Wl,--no-as-needed
 $(objpfx)tst-tls-manydynamic11mod-dep-bad.so: $(objpfx)tst-tls-manydynamic12mod-dep-bad.so \

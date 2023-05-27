@@ -457,7 +457,7 @@ _dl_load_cache_lookup (const char *name)
 		  /* The old-format part of the cache is bogus as well
 		     if the endianness does not match.  (But it is
 		     unclear how the new header can be located if the
-		     endianess does not match.)  */
+		     endianness does not match.)  */
 		  cache = (void *) -1;
 		  cache_new = (void *) -1;
 		  __munmap (file, cachesize);

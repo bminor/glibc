@@ -77,7 +77,7 @@ __rtld_malloc_init_real (struct link_map *main_map)
   /* We cannot use relocations and initializers for this because the
      changes made by __rtld_malloc_init_stubs break REL-style
      (non-RELA) relocations that depend on the previous pointer
-     contents.  Also avoid direct relocation depedencies for the
+     contents.  Also avoid direct relocation dependencies for the
      malloc symbols so this function can be called before the final
      rtld relocation (which enables RELRO, after which the pointer
      variables cannot be written to).  */

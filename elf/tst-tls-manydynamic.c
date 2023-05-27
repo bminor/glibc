@@ -117,7 +117,7 @@ do_test (void)
   init_functions ();
 
   struct value values[COUNT];
-  /* Initialze the TLS variables.  */
+  /* Initialize the TLS variables.  */
   for (int i = 0; i < COUNT; ++i)
     {
       for (int j = 0; j < PER_VALUE_COUNT; ++j)

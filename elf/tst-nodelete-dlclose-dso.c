@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* This is the primary DSO that is loaded by the appliation.  This DSO
+/* This is the primary DSO that is loaded by the application.  This DSO
    then loads a plugin with RTLD_NODELETE.  This plugin depends on this
    DSO.  This dependency chain means that at application shutdown the
    plugin will be destructed first.  Thus by the time this DSO is

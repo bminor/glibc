@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 /* This DSO simulates a plugin with a dependency on the
-   primary DSO loaded by the appliation.  */
+   primary DSO loaded by the application.  */
 #include <stdio.h>
 
 extern void primary_reference (void);

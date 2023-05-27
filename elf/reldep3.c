@@ -78,7 +78,7 @@ main (void)
       exit (1);
     }
 
-  /* The variable now must have its originial value.  */
+  /* The variable now must have its original value.  */
   if (*vp != 0)
     {
       puts ("variable \"some_var\" not reset");

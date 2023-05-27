@@ -454,7 +454,7 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
   ElfW(Addr) start_addr;
 
   /* Do not use an initializer for these members because it would
-     intefere with __rtld_static_init.  */
+     interfere with __rtld_static_init.  */
   GLRO (dl_find_object) = &_dl_find_object;
 
   /* If it hasn't happen yet record the startup time.  */
@@ -1067,7 +1067,7 @@ load_audit_modules (struct link_map *main_map, struct audit_list *audit_list)
     }
 }
 
-/* Check if the executable is not actualy dynamically linked, and
+/* Check if the executable is not actually dynamically linked, and
    invoke it directly in that case.  */
 static void
 rtld_chain_load (struct link_map *main_map, char *argv0)
@@ -1167,7 +1167,7 @@ rtld_setup_main_map (struct link_map *main_map)
 	/* _dl_rtld_libname.next = NULL;	Already zero.  */
 	GL(dl_rtld_map).l_libname = &_dl_rtld_libname;
 
-	/* Ordinarilly, we would get additional names for the loader from
+	/* Ordinarily, we would get additional names for the loader from
 	   our DT_SONAME.  This can't happen if we were actually linked as
 	   a static executable (detect this case when we have no DYNAMIC).
 	   If so, assume the filename component of the interpreter path to

@@ -206,7 +206,7 @@ struct link_map *_dl_sysinfo_map;
 #include <dl-vdso-setup.c>
 
 /* During the program run we must not modify the global data of
-   loaded shared object simultanously in two threads.  Therefore we
+   loaded shared object simultaneously in two threads.  Therefore we
    protect `_dl_open' and `_dl_close' in dl-close.c.
 
    This must be a recursive lock since the initializer function of

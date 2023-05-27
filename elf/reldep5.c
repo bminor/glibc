@@ -57,7 +57,7 @@ main (void)
       puts ("function \"call_me\" the second time returned wrong result");
       exit (1);
     }
-  puts ("second call suceeded as well");
+  puts ("second call succeeded as well");
 
   /* Close the second object, we are done.  */
   if (dlclose (h2) != 0)

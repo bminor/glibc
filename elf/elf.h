@@ -210,7 +210,7 @@ typedef struct
 #define EM_68HC12	53	/* Motorola M68HC12 */
 #define EM_MMA		54	/* Fujitsu MMA Multimedia Accelerator */
 #define EM_PCP		55	/* Siemens PCP */
-#define EM_NCPU		56	/* Sony nCPU embeeded RISC */
+#define EM_NCPU		56	/* Sony nCPU embedded RISC */
 #define EM_NDR1		57	/* Denso NDR1 microprocessor */
 #define EM_STARCORE	58	/* Motorola Start*Core processor */
 #define EM_ME16		59	/* Toyota ME16 processor */
@@ -559,7 +559,7 @@ typedef struct
 
 /* Possible bitmasks for si_flags.  */
 #define SYMINFO_FLG_DIRECT	0x0001	/* Direct bound symbol */
-#define SYMINFO_FLG_PASSTHRU	0x0002	/* Pass-thru symbol for translator */
+#define SYMINFO_FLG_PASSTHRU	0x0002	/* Pass-through symbol for translator */
 #define SYMINFO_FLG_COPY	0x0004	/* Symbol is a copy-reloc */
 #define SYMINFO_FLG_LAZYLOAD	0x0008	/* Symbol bound to object to be lazy
 					   loaded */

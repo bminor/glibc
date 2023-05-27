@@ -160,7 +160,7 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
   /* Pointer to dynamic section with definitions.  */
   ElfW(Dyn) *def;
   /* We need to find out which is the highest version index used
-    in a dependecy.  */
+    in a dependency.  */
   unsigned int ndx_high = 0;
   struct dl_exception exception;
   /* Initialize to make the compiler happy.  */
