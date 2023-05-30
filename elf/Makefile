@@ -396,6 +396,7 @@ tests += \
   tst-debug1 \
   tst-deep1 \
   tst-dl-is_dso \
+  tst-dlclose-lazy \
   tst-dlmodcount \
   tst-dlmopen-dlerror \
   tst-dlmopen-gethostbyname \
@@ -816,6 +817,8 @@ modules-names += \
   tst-dl_find_object-mod7 \
   tst-dl_find_object-mod8 \
   tst-dl_find_object-mod9 \
+  tst-dlclose-lazy-mod1 \
+  tst-dlclose-lazy-mod2 \
   tst-dlmopen-dlerror-mod \
   tst-dlmopen-gethostbyname-mod \
   tst-dlmopen-twice-mod1 \
@@ -3001,3 +3004,8 @@ $(objpfx)tst-sprof-basic.out: tst-sprof-basic.sh $(objpfx)tst-sprof-basic
 		 '$(run-program-env)' > $@; \
 	$(evaluate-test)
 generated += tst-sprof-mod.so.profile
+
+LDFLAGS-tst-dlclose-lazy-mod1.so = -Wl,-z,lazy,--no-as-needed
+$(objpfx)tst-dlclose-lazy-mod1.so: $(objpfx)tst-dlclose-lazy-mod2.so
+$(objpfx)tst-dlclose-lazy.out: \
+  $(objpfx)tst-dlclose-lazy-mod1.so $(objpfx)tst-dlclose-lazy-mod2.so

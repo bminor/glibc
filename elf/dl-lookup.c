@@ -366,8 +366,25 @@ do_lookup_x (const char *undef_name, unsigned int new_hash,
       if ((type_class & ELF_RTYPE_CLASS_COPY) && map->l_type == lt_executable)
 	continue;
 
-      /* Do not look into objects which are going to be removed.  */
-      if (map->l_removed)
+      /* Do not look into objects which are going to be removed,
+	 except when the referencing object itself is being removed.
+
+	 The second part covers the situation when an object lazily
+	 binds to another object while running its destructor, but the
+	 destructor of the other object has already run, so that
+	 dlclose has set l_removed.  It may not always be obvious how
+	 to avoid such a scenario to programmers creating DSOs,
+	 particularly if C++ vague linkage is involved and triggers
+	 symbol interposition.
+
+	 Accepting these to-be-removed objects makes the lazy and
+	 BIND_NOW cases more similar.  (With BIND_NOW, the symbol is
+	 resolved early, before the destructor call, so the issue does
+	 not arise.).  Behavior matches the constructor scenario: the
+	 implementation allows binding to symbols of objects whose
+	 constructors have not run.  In fact, not doing this would be
+	 mostly incompatible with symbol interposition.  */
+      if (map->l_removed && !(undef_map != NULL && undef_map->l_removed))
 	continue;
 
       /* Print some debugging info if wanted.  */
