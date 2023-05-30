@@ -294,7 +294,7 @@ L(lb1):
 
 L(aligned):
 /* If USE_DOUBLE is not set we may still want to align the data on a 16
-   byte boundry instead of an 8 byte boundry to maximize the opportunity
+   byte boundary instead of an 8 byte boundary to maximize the opportunity
    of proAptiv chips to do memory bonding (combining two sequential 4
    byte stores into one 8 byte store).  We know there are at least 4 bytes
    left to store or we would have jumped to L(lastb) earlier in the code.  */

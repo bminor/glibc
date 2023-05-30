@@ -138,10 +138,10 @@ ENTRY(WCSNCMP_Z13)
 	vlef	%v16,0(%r5,%r2),0 /* Load one character.  */
 	lghi	%r0,4		/* Loaded byte count is 4.  */
 	vlef	%v17,0(%r5,%r3),0
-	j	.Llt_cmp	/* Proceed with comparision.  */
+	j	.Llt_cmp	/* Proceed with comparison.  */
 
 .Llastcmp:
-	/* Use comparision result only if located within first n characters.
+	/* Use comparison result only if located within first n characters.
 	   %r0: loaded byte count in vreg;
 	   %r5: current_len;
 	   %r4: n;

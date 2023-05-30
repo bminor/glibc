@@ -93,7 +93,7 @@ $(common-objpfx)stamp-errnos: $(hurd)/errnos.awk $(errno.texinfo) \
 			      $(mach-errnos-deps) $(common-objpfx)errnos.d
 	mkdir -p $(hurd-objpfx)bits
 	$(AWK) -f $^ > $(hurd-objpfx)bits/errno.h-tmp
-# Make it unwritable so noone will edit it by mistake.
+# Make it unwritable so no one will edit it by mistake.
 	-chmod a-w $(hurd-objpfx)bits/errno.h-tmp
 	$(move-if-change) $(hurd-objpfx)bits/errno.h-tmp $(hurd)/bits/errno.h
 	touch $@

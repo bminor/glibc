@@ -39,12 +39,12 @@ ENTRY (strlen)
 
 	@ Loop until we find ...
 1:	ldrb	r2, [r0, #1]!
-	subs	r3, r3, #1		@ ... the aligment point
+	subs	r3, r3, #1		@ ... the alignment point
 	it	ne
 	cmpne	r2, #0			@ ... or EOS
 	bne	1b
 
-	@ Disambiguate the exit possibilites above
+	@ Disambiguate the exit possibilities above
 	cmp	r2, #0			@ Found EOS
 	beq	99f
 	add	r0, r0, #1

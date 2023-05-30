@@ -98,7 +98,7 @@
 //
 //    This branch is cut off by one fclass operation.
 //    Then zeros+nans, infinities and denormals processed separately.
-//    For denormals we use simple fma operaton x+x*x (- for +denorms)
+//    For denormals we use simple fma operation x+x*x (- for +denorms)
 //
 // 2. [0;1/8] path: 0.0 < |x| < 1/8
 //

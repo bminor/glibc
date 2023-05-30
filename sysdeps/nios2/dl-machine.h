@@ -137,7 +137,7 @@ _start:\n\
         ldw r2, %got(_dl_argc)(r22)\n\
 	ldw r5, 0(r2)\n\
 \n\
-        /* Load adjsuted argv.  */\n\
+        /* Load adjusted argv.  */\n\
         ldw r2, %got(_dl_argv)(r22)\n\
 	ldw r6, 0(r2)\n\
 \n\

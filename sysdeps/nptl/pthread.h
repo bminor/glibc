@@ -516,7 +516,7 @@ extern int pthread_once (pthread_once_t *__once_control,
    exception in C++ code.  If cancellation is implemented by unwinding
    this is necessary to have the compiler generate the unwind information.  */
 
-/* Set cancelability state of current thread to STATE, returning old
+/* Set cancellability state of current thread to STATE, returning old
    state in *OLDSTATE if OLDSTATE is not NULL.  */
 extern int pthread_setcancelstate (int __state, int *__oldstate);
 
@@ -981,7 +981,7 @@ extern int pthread_rwlock_tryrdlock (pthread_rwlock_t *__rwlock)
   __THROWNL __nonnull ((1));
 
 # ifdef __USE_XOPEN2K
-/* Try to acquire read lock for RWLOCK or return after specfied time.  */
+/* Try to acquire read lock for RWLOCK or return after specified time.  */
 #  ifndef __USE_TIME_BITS64
 extern int pthread_rwlock_timedrdlock (pthread_rwlock_t *__restrict __rwlock,
 				       const struct timespec *__restrict
@@ -1028,7 +1028,7 @@ extern int pthread_rwlock_trywrlock (pthread_rwlock_t *__rwlock)
      __THROWNL __nonnull ((1));
 
 # ifdef __USE_XOPEN2K
-/* Try to acquire write lock for RWLOCK or return after specfied time.  */
+/* Try to acquire write lock for RWLOCK or return after specified time.  */
 #  ifndef __USE_TIME_BITS64
 extern int pthread_rwlock_timedwrlock (pthread_rwlock_t *__restrict __rwlock,
 				       const struct timespec *__restrict

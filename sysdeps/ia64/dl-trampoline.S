@@ -370,7 +370,7 @@ ENTRY(_dl_runtime_profile)
 	{ .mmi
 	  and r15 = -16, r15
 	  ;;
-	  /* We don't copy the 16byte scatch area. Prepare r16/r17 as
+	  /* We don't copy the 16byte scratch area. Prepare r16/r17 as
 	     destination.  */
 	  sub r16 = r12, r15
 	  sub r17 = r12, r15
@@ -390,7 +390,7 @@ ENTRY(_dl_runtime_profile)
 	  ;;
 	}
 	{ .mii
-	  /* Skip the 16byte scatch area. Prepare r2/r3 as source.  */
+	  /* Skip the 16byte scratch area. Prepare r2/r3 as source.  */
 	  adds r2 = 16, loc10
 	  adds r3 = 24, loc10
 	  mov ar.lc = r15

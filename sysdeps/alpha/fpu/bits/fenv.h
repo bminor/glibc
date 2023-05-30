@@ -66,7 +66,7 @@ enum
       FE_ALL_EXCEPT
   };
 
-/* Alpha chips support all four defined rouding modes.
+/* Alpha chips support all four defined rounding modes.
 
    Note that code must be compiled to use dynamic rounding (/d) instructions
    to see these changes.  For gcc this is -mfp-rounding-mode=d; for DEC cc

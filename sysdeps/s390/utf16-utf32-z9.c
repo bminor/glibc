@@ -449,7 +449,7 @@ gconv_end (struct __gconv_step *data)
 		  "    slgr %[R_OUTLEN],%[R_TMP3]\n\t"			\
 		  /* Handles UTF16 surrogates with convert instruction.  */ \
 		  "20: cu24 %[R_OUT],%[R_IN],1\n\t"			\
-		  "    jo 0b\n\t" /* Try vector implemenation again.  */ \
+		  "    jo 0b\n\t" /* Try vector implementation again.  */ \
 		  "    lochil %[R_RES],%[RES_OUT_FULL]\n\t" /* cc == 1.  */ \
 		  "    lochih %[R_RES],%[RES_IN_ILL]\n\t" /* cc == 2.  */ \
 		  ".machine pop"					\
@@ -760,7 +760,7 @@ gconv_end (struct __gconv_step *data)
 		  "    slgr %[R_OUTLEN],%[R_TMP3]\n\t"			\
 		  /* Handles UTF16 surrogates with convert instruction.  */ \
 		  "20: cu42 %[R_OUT],%[R_IN]\n\t"			\
-		  "    jo 0b\n\t" /* Try vector implemenation again.  */ \
+		  "    jo 0b\n\t" /* Try vector implementation again.  */ \
 		  "    lochil %[R_RES],%[RES_OUT_FULL]\n\t" /* cc == 1.  */ \
 		  "    lochih %[R_RES],%[RES_IN_ILL]\n\t" /* cc == 2.  */ \
 		  ".machine pop"					\

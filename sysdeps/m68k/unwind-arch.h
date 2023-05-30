@@ -29,7 +29,7 @@
   assert (local.ptr__Unwind_GetGR != NULL);                   \
   PTR_MANGLE (local.ptr__Unwind_GetGR);
 
-/* This is overriden by the m680x0 variant.  */
+/* This is overridden by the m680x0 variant.  */
 #define UNWIND_LINK_FRAME_STATE_FOR 0
 
 #endif /* _ARCH_UNWIND_LINK_H */

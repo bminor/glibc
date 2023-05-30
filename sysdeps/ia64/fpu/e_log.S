@@ -121,7 +121,7 @@
 //   L2 = 1.0/log(10)
 //
 // So common code with two different entry points those set pointers
-// to the base address of coresponding data sets containing values
+// to the base address of corresponding data sets containing values
 // of L2,T and prepare integer representation of L1 needed for following
 // setf instruction.
 //

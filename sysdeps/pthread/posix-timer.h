@@ -74,7 +74,7 @@ extern struct timer_node __timer_array[TIMER_MAX];
 /* Global lock to protect operation on the lists.  */
 extern pthread_mutex_t __timer_mutex;
 
-/* Variable to protext initialization.  */
+/* Variable to protect initialization.  */
 extern pthread_once_t __timer_init_once_control;
 
 /* Nonzero if initialization of timer implementation failed.  */

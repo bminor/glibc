@@ -59,7 +59,7 @@ ENTRY(__stpncpy)
 	or	t2, t8, t2	# e0    : clear the bits between the last
 	or	t3, t10, t3	# .. e1 : written byte and the last byte in
 	andnot	t3, t2, t3	# e0    : COUNT
-	cmovne	t4, t5, v0	# .. e1 : if last written wasnt null, inc v0
+	cmovne	t4, t5, v0	# .. e1 : if last written wasn't null, inc v0
 	zap	t0, t3, t0	# e0    :
 	stq_u	t0, 0(a0)	# e1    :
 	ret			# .. e1 :

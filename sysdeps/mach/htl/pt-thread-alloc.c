@@ -61,7 +61,7 @@ create_wakeupmsg (struct __pthread *thread)
   return 0;
 }
 
-/* Allocate any resouces for THREAD.  The new kernel thread should not
+/* Allocate any resources for THREAD.  The new kernel thread should not
    be eligible to be scheduled.  */
 int
 __pthread_thread_alloc (struct __pthread *thread)

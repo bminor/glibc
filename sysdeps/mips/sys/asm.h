@@ -198,7 +198,7 @@ symbol		=	value
 		TEXT(msg)
 
 /*
- * Print formated string
+ * Print formatted string
  */
 #define PRINT(string)                                   \
 		.set	push;				\

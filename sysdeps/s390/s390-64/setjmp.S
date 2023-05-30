@@ -38,13 +38,13 @@
 	/* We include the BSD entry points here as well.  */
 ENTRY (setjmp)
 	lghi   %r3,1                /* Second argument of one.  */
-	j      .Linternal_sigsetjmp /* Branch relativ to __sigsetjmp.  */
+	j      .Linternal_sigsetjmp /* Branch relative to __sigsetjmp.  */
 END (setjmp)
 
 	/* Binary compatibility entry point.  */
 ENTRY(_setjmp)
 	slgr   %r3,%r3              /* Second argument of zero.  */
-	j      .Linternal_sigsetjmp /* Branch relativ to __sigsetjmp.  */
+	j      .Linternal_sigsetjmp /* Branch relative to __sigsetjmp.  */
 END (_setjmp)
 #if NEED_COMPAT_SYMBOLS
 strong_alias (_setjmp, __GI__setjmp)
@@ -54,7 +54,7 @@ libc_hidden_def (_setjmp)
 
 ENTRY(__setjmp)
 	slgr   %r3,%r3              /* Second argument of zero.  */
-	j      .Linternal_sigsetjmp /* Branch relativ to __sigsetjmp.  */
+	j      .Linternal_sigsetjmp /* Branch relative to __sigsetjmp.  */
 END (__setjmp)
 
 ENTRY(__sigsetjmp)

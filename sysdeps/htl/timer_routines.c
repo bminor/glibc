@@ -46,7 +46,7 @@ struct timer_node __timer_array[TIMER_MAX];
 /* Global lock to protect operation on the lists.  */
 pthread_mutex_t __timer_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-/* Variable to protext initialization.  */
+/* Variable to protect initialization.  */
 pthread_once_t __timer_init_once_control = PTHREAD_ONCE_INIT;
 
 /* Nonzero if initialization of timer implementation failed.  */

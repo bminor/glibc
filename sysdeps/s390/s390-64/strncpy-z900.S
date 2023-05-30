@@ -52,7 +52,7 @@ ENTRY(STRNCPY_Z900_G5)
 	jz    .L8
 	icm   %r0,2,6(%r3)	    # seventh byte
 	jz    .L9
-	icm   %r0,1,7(%r3)	    # eigth byte
+	icm   %r0,1,7(%r3)	    # eighth byte
 	jz    .L10
 	stg   %r0,0(%r2,%r3)	    # store all eight to dest.
 	la    %r3,8(%r3)

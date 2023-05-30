@@ -43,7 +43,7 @@ tf (void *arg)
   e = pthread_mutex_trylock (&m);
   if (e == 0)
     {
-      puts ("child: 1st trylock suceeded");
+      puts ("child: 1st trylock succeeded");
       exit (1);
     }
   if (e != EBUSY)

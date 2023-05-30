@@ -89,7 +89,7 @@ _dl_process_property_note (struct link_map *l, const ElfW(Nhdr) *note,
   if (l->l_property != lc_property_unknown)
     return;
 
-  /* The NT_GNU_PROPERTY_TYPE_0 note must be aliged to 4 bytes in
+  /* The NT_GNU_PROPERTY_TYPE_0 note must be aligned to 4 bytes in
      32-bit objects and to 8 bytes in 64-bit objects.  Skip notes
      with incorrect alignment.  */
   if (align != (__ELF_NATIVE_CLASS / 8))

@@ -47,7 +47,7 @@ thr_func (void *arg)
 	 There was a race in FORCE_ELISION macro which leads to either
 	 pthread_mutex_destroy returning EBUSY as the owner was recorded
 	 by pthread_mutex_lock - in "normal mutex" code path - but was not
-	 resetted in pthread_mutex_unlock - in "elision" code path.
+	 reset in pthread_mutex_unlock - in "elision" code path.
 	 Or it leads to the assertion in nptl/pthread_mutex_lock.c:
 	 assert (mutex->__data.__owner == 0);
 	 Please ensure that the test is run with lock elision:

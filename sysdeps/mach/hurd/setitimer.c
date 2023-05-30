@@ -85,7 +85,7 @@ timer_thread (void)
 	  error_t return_code;
 	} msg;
 
-      /* Wait for a message on a port that noone sends to.  The purpose is
+      /* Wait for a message on a port that no one sends to.  The purpose is
 	 the receive timeout.  Notice interrupts so that if we are
 	 thread_abort'd, we will loop around and fetch new values from
 	 _hurd_itimerval.  */

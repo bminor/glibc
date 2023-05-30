@@ -1,4 +1,4 @@
-/* Compute hash alue for given string according to ELF standard.
+/* Compute hash value for given string according to ELF standard.
    Copyright (C) 1998-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

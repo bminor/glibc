@@ -26,7 +26,7 @@ struct unw_eh_callback_data
 };
 
 
-/* Callback to determins if the PC lies within an object, and remember the
+/* Callback to determines if the PC lies within an object, and remember the
    location of the exception index table if it does.  */
 
 static int

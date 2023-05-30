@@ -1,7 +1,7 @@
 /*
  * Sparc v9 has divide.
  * As divx takes 68 cycles and udiv only 37,
- * we use udiv eventhough it is deprecated.
+ * we use udiv even though it is deprecated.
  */
 
 #include <sysdep.h>

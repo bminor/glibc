@@ -52,7 +52,7 @@ unwind_arch_adjustment (void *prev, void *addr)
   if ((uintptr_t) pc & 0x3)
     return addr;
 
-  /* The vDSO containes either
+  /* The vDSO contains either
 
      24021061 li v0, 0x1061 (rt_sigreturn)
      0000000c syscall

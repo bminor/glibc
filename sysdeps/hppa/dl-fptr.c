@@ -252,7 +252,7 @@ _dl_make_fptr (struct link_map *map, const ElfW(Sym) *sym,
       if (__builtin_expect (COMPARE_AND_SWAP (&ftab[symidx], (ElfW(Addr)) NULL,
 					      fdesc), 1))
 	{
-	  /* Noone has updated the entry and the new function
+	  /* No one has updated the entry and the new function
 	     descriptor has been installed.  */
 #if 0
 	  const char *strtab

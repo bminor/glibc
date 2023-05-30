@@ -151,7 +151,7 @@ GLOBAL_LIBM_ENTRY(modfl)
       nop.i 999 ;;
 }
 
-// p11 <== SMALL, no integer part, fraction is everyting
+// p11 <== SMALL, no integer part, fraction is everything
 // p9  <== HUGE,  no fraction part, integer is everything
 // p12 <== NORMAL, fraction part and integer part
 { .mii

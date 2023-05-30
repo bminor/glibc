@@ -61,7 +61,7 @@ ENTRY (strcpy)
 	cmpne	r2, #0			@ ... or EOS
 	bne	1b
 
-	@ Disambiguate the exit possibilites above
+	@ Disambiguate the exit possibilities above
 	cmp	r2, #0			@ Found EOS
 	beq	.Lreturn
 
@@ -70,7 +70,7 @@ ENTRY (strcpy)
 	pld	[r0, #64]
 	pld	[r1, #64]
 
-	@ For longer strings, we actaully need a stack frame.
+	@ For longer strings, we actually need a stack frame.
 	push	{ r4, r5, r6, r7 }
 	cfi_adjust_cfa_offset (16)
 	cfi_rel_offset (r4, 0)

@@ -161,7 +161,7 @@
 //   precision number.
 //
 //
-// Claculation of logarithm
+// Calculation of logarithm
 // ------------------------
 //   Consider  x = 2^N * xf so
 //   ln(x) = ln(frcpa(x)*x/frcpa(x))

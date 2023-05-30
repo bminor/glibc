@@ -1,4 +1,4 @@
-/* Cancelation.  Generic version.
+/* Cancellation.  Generic version.
    Copyright (C) 2002-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

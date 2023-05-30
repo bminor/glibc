@@ -133,7 +133,7 @@
 // ==============
 //
 // This describes the algorithm in the most natural way using
-// unsigned interger multiplication. The implementation section
+// unsigned integer multiplication. The implementation section
 // describes how the integer arithmetic is simulated.
 //
 // STEP 0. Initialization
@@ -158,7 +158,7 @@
 //
 //      P_1    =      b   b    b     ...    b
 //
-// each b can be 0 or 1. Also, let P_0 be the two bits correspoding to
+// each b can be 0 or 1. Also, let P_0 be the two bits corresponding to
 // bit positions L+2 and L+1. So, when each of the P_j is interpreted
 // with appropriate scaling, we have
 //

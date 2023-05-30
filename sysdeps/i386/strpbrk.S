@@ -1,4 +1,4 @@
-/* strcspn (str, ss) -- Return the length of the initial segement of STR
+/* strcspn (str, ss) -- Return the length of the initial segment of STR
 			which contains no characters from SS.
    For Intel 80x86, x>=3.
    Copyright (C) 1994-2023 Free Software Foundation, Inc.

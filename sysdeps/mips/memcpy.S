@@ -88,7 +88,7 @@
 
 /*
  * Using PREFETCH_HINT_LOAD_STREAMED instead of PREFETCH_LOAD on load
- * prefetches appears to offer a slight preformance advantage.
+ * prefetches appear to offer a slight performance advantage.
  *
  * Using PREFETCH_HINT_PREPAREFORSTORE instead of PREFETCH_STORE
  * or PREFETCH_STORE_STREAMED offers a large performance advantage
@@ -317,7 +317,7 @@ L(memcpy):
 
 	andi	a3,a3,(NSIZE-1)		/* copy a3 bytes to align a0/a1	  */
 	beq	a3,zero,L(aligned)	/* if a3=0, it is already aligned */
-	PTR_SUBU a2,a2,a3		/* a2 is the remining bytes count */
+	PTR_SUBU a2,a2,a3		/* a2 is the remaining bytes count */
 
 	C_LDHI	t8,0(a1)
 	PTR_ADDU a1,a1,a3
@@ -626,7 +626,7 @@ L(wcopy_loop):
 L(unaligned):
 	andi	a3,a3,(NSIZE-1)	/* copy a3 bytes to align a0/a1 */
 	beqz	a3,L(ua_chk16w) /* if a3=0, it is already aligned */
-	PTR_SUBU a2,a2,a3	/* a2 is the remining bytes count */
+	PTR_SUBU a2,a2,a3	/* a2 is the remaining bytes count */
 
 	C_LDHI	v1,UNIT(0)(a1)
 	C_LDLO	v1,UNITM1(1)(a1)

@@ -143,7 +143,7 @@ __pthread_hurd_cond_timedwait_internal (pthread_cond_t *cond,
 	drain = err ? 1 : 0;
       else
 	{
-	  /* We're still in the list of waiters.  Noone attempted to wake us
+	  /* We're still in the list of waiters.  No one attempted to wake us
 	     up, i.e. we timed out.  */
 	  __pthread_dequeue (self);
 	  drain = 0;

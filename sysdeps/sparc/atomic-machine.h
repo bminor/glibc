@@ -30,7 +30,7 @@
 #define ATOMIC_EXCHANGE_USES_CAS     __HAVE_64B_ATOMICS
 
 /* Compare and exchange.
-   For all "bool" routines, we return FALSE if exchange succesful.  */
+   For all "bool" routines, we return FALSE if exchange successful.  */
 
 #define __arch_compare_and_exchange_val_int(mem, newval, oldval, model) \
   ({									\

@@ -715,7 +715,7 @@ unload_object (enum fp_obj obj)
   return true;
 }
 
-/* Load every permuation of OBJECTS.  */
+/* Load every permutation of OBJECTS.  */
 static bool
 test_permutations (enum fp_obj objects[], int count)
 {

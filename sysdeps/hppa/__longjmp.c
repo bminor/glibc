@@ -61,7 +61,7 @@ __longjmp (__jmp_buf env, int val)
 	"ldw	76(%1), %%r30\n\t"
 	/* Load return pointer. */
 	"ldw	80(%1), %%rp\n\t"
-	/* Ues a spare caller saves register.  */
+	/* Use a spare caller saves register.  */
 	"ldo	88(%1),%%r25\n\t"
 	/* Load callee saves from fr12 to fr21.  */
 	"fldds,ma 8(%%r25), %%fr12\n\t"

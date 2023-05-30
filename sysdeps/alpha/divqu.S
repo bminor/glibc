@@ -30,7 +30,7 @@
    convert back to integer.
 
    When the dividend is outside the range for which we can compute exact
-   results, we use the fp quotent as an estimate from which we begin refining
+   results, we use the fp quotient as an estimate from which we begin refining
    an exact integral value.  This reduces the number of iterations in the
    shift-and-subtract loop significantly.
 

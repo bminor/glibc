@@ -169,7 +169,7 @@
 //   Step 3: Division
 //   ----------------
 //    To calculate 1/(x*GAMMA(x)*S21(r)) we use frcpa instruction
-//    with following Newton-Raphson interations.
+//    with following Newton-Raphson iterations.
 //
 //
 //*********************************************************************
@@ -331,7 +331,7 @@ RODATA
 
 LOCAL_OBJECT_START(tgamma_data)
 data8 0x406573FAE561F648 // overflow boundary (171.624376956302739927196)
-data8 0x3FDD8B618D5AF8FE // point of local minium (0.461632144968362356785)
+data8 0x3FDD8B618D5AF8FE // point of local minimum (0.461632144968362356785)
 //
 //[2; 3]
 data8 0xEF0E85C9AE40ABE2,0x00004000 // C01

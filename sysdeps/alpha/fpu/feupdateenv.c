@@ -29,7 +29,7 @@ __feupdateenv (const fenv_t *envp)
   /* Install new environment.  */
   __fesetenv (envp);
 
-  /* Raise the saved exception.  Incidently for us the implementation
+  /* Raise the saved exception.  Incidentally for us the implementation
      defined format of the values in objects of type fexcept_t is the
      same as the ones specified using the FE_* constants.  */
   __feraiseexcept (tmp & SWCR_STATUS_MASK);

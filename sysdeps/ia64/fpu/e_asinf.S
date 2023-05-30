@@ -56,12 +56,12 @@
 // Description
 //=========================================
 // The asinf function computes the arc sine of x in the range [-pi,+pi].
-// A doman error occurs for arguments not in the range [-1,+1].
+// A domain error occurs for arguments not in the range [-1,+1].
 // asinf(+-0) returns +-0
 // asinf(x) returns a Nan and raises the invalid exception for |x| >1
 
 // The acosf function returns the arc cosine in the range [0, +pi] radians.
-// A doman error occurs for arguments not in the range [-1,+1].
+// A domain error occurs for arguments not in the range [-1,+1].
 // acosf(1) returns +0
 // acosf(x) returns a Nan and raises the invalid exception for |x| >1
 

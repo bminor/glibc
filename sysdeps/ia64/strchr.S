@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* Return: the address of the first occurence of chr in str or NULL
+/* Return: the address of the first occurrence of chr in str or NULL
 
    Inputs:
         in0:    str

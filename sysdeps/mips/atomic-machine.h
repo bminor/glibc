@@ -53,7 +53,7 @@
 #endif
 
 /* Compare and exchange.
-   For all "bool" routines, we return FALSE if exchange succesful.  */
+   For all "bool" routines, we return FALSE if exchange successful.  */
 
 #define __arch_compare_and_exchange_bool_8_int(mem, newval, oldval, model) \
   (abort (), 0)

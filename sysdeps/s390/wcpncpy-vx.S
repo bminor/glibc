@@ -174,7 +174,7 @@ ENTRY(WCPNCPY_Z13)
 	lay	%r0,-3(%r2)	/* Save return-pointer to found zero.  */
 	clgije	%r4,1,.Lend	/* Skip zero-filling, if found-zero is last
 				   possible character.
-				   (1 is substracted from r4 below!).  */
+				   (1 is subtracted from r4 below!).  */
 	aghi	%r4,-2		/* mvc with exrl needs count - 1.
 				   (additional -1, see remaining bytes above) */
 	srlg	%r6,%r4,8	/* Split into 256 byte blocks.  */

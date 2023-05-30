@@ -60,7 +60,7 @@
 		...
 					NULL
    ra ($31)	The return address register is set to zero so that programs
-		that search backword through stack frames recognize the last
+		that search backward through stack frames recognize the last
 		stack frame.
 */
 

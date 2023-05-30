@@ -1,4 +1,4 @@
-/* C11 threads conditional wait implementaiton.
+/* C11 threads conditional wait implementation.
    Copyright (C) 2018-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

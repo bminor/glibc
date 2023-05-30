@@ -50,7 +50,7 @@
 //=========================================
 // The acos function computes the principal value of the arc cosine of x.
 // acos(0) returns Pi/2, acos(1) returns 0, acos(-1) returns Pi.
-// A doman error occurs for arguments not in the range [-1,+1].
+// A domain error occurs for arguments not in the range [-1,+1].
 //
 // The acos function returns the arc cosine in the range [0, Pi] radians.
 //
@@ -100,7 +100,7 @@
 //    Return acos(1.0) = 0.0, acos(-1.0) = Pi
 //
 // 5. 1.0 < |x| <= +INF
-//    A doman error occurs for arguments not in the range [-1,+1]
+//    A domain error occurs for arguments not in the range [-1,+1]
 //
 // 6. x = [S,Q]NaN
 //    Return acos(x) = QNaN

@@ -118,7 +118,7 @@
 //   L2 = 1.0/log(10)
 //
 // So common code with two different entry points those set pointers
-// to the base address of coresponding data sets containing values
+// to the base address of corresponding data sets containing values
 // of L2,T and prepare integer representation of L1 needed for following
 // setf instruction can be used.
 //
@@ -171,7 +171,7 @@
 //         0xFFFEFF00000000000000 and 0xFFFF8080000000000000 correspondingly.
 //         As far as biased exponent of x here can be equal only to 0xFFFE or
 //         0xFFFF we need to test only last bit of it. Also signifigand always
-//         has implicit bit set to 1 that can be exluded from comparison.
+//         has implicit bit set to 1 that can be excluded from comparison.
 //         Thus it's quite enough to generate 64-bit integer bits of that are
 //         ix[63] = biased_exponent_of_x[0] and ix[62-0] = significand_of_x[62-0]
 //         and compare it with 0x7F00000000000000 and 0x80800000000000000 (those

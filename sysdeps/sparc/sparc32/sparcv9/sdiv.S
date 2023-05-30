@@ -1,7 +1,7 @@
 /*
  * Sparc v9 has divide.
  * As divx takes 68 cycles and sdivcc only 36,
- * we use sdivcc eventhough it is deprecated.
+ * we use sdivcc even though it is deprecated.
  */
 
 #include <sysdep.h>

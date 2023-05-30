@@ -170,7 +170,7 @@
 //   Step 3: Division
 //   ----------------
 //    To calculate 1/x and 1/(GAMMA(x)*S12(rs)) we use frcpa
-//    instruction with following Newton-Raphson interations.
+//    instruction with following Newton-Raphson iterations.
 //
 //
 //*********************************************************************

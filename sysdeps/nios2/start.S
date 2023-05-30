@@ -46,8 +46,8 @@
 	    Unspecified			High Addresses
 	    Referenced strings, etc.			Varies
 	    Unspecified
-	    Null auxilliary vector entry		4bytes
-	    Auxilliary vector entries			8bytes each
+	    Null auxiliary vector entry		4bytes
+	    Auxiliary vector entries			8bytes each
 	    NULL terminator for envp			4bytes
 	    Environment pointers	sp+8+4*argc	4bytes each
 	    NULL terminator for argv	sp+4+4*argc	4bytes
@@ -61,7 +61,7 @@
 	The contents of all other registers are unspecified. User code should
 	set fp to zero to mark the end of the frame chain.
 
-	The auxilliary vector is a series of pairs of 32-bit tag and 32-bit
+	The auxiliary vector is a series of pairs of 32-bit tag and 32-bit
 	value, terminated by an AT_NULL tag.
 */
 

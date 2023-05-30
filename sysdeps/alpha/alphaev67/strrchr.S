@@ -79,7 +79,7 @@ $loop:
 
 	cmpbge	zero, t0, t1	# E : bits set iff byte == zero
 	cmpbge	zero, t2, t3	# E : bits set iff byte == c
-	beq	t1, $loop	# U : if we havnt seen a null, loop
+	beq	t1, $loop	# U : if we haven't seen a null, loop
 	nop
 
 	/* Mask out character matches after terminator */

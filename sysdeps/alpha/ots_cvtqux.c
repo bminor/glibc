@@ -19,7 +19,7 @@
 #include "local-soft-fp.h"
 
 /* Should never actually be used, since we've more bits of precision
-   than the incomming long, but needed for linkage.  */
+   than the incoming long, but needed for linkage.  */
 #undef FP_ROUNDMODE
 #define FP_ROUNDMODE  FP_RND_ZERO
 

@@ -35,7 +35,7 @@
 # endif
 #endif
 
-/* Makros to generate eh_frame unwind information.  */
+/* Macros to generate eh_frame unwind information.  */
 #ifdef __ASSEMBLER__
 # define cfi_startproc			.cfi_startproc
 # define cfi_endproc			.cfi_endproc

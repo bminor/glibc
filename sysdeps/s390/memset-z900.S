@@ -166,7 +166,7 @@ ENTRY(__memset_mvcle)
 	lgr	%r3,%r4             # move length to r3
 	sgr	%r4,%r4		    # no source for MVCLE, only a pad byte
 	sgr	%r5,%r5
-.L0:	mvcle	%r2,%r4,0(%r1)	    # thats it, MVCLE is your friend
+.L0:	mvcle	%r2,%r4,0(%r1)	    # that's it, MVCLE is your friend
 	jo	.L0
 	lgr	%r2,%r0		    # return value is source address
 .L1:

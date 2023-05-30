@@ -94,7 +94,7 @@ ENTRY(WCSCMP_Z13)
 	vlef	%v16,0(%r5,%r2),0 /* Load one character.  */
 	vlef	%v17,0(%r5,%r3),0
 	lghi	%r1,4		/* Loaded byte count is 4.  */
-	j	.Llt_cmp	/* Proceed with comparision.  */
+	j	.Llt_cmp	/* Proceed with comparison.  */
 
 .Llt16_1:
 	lcbb	%r4,0(%r5,%r3),6 /* Get loaded byte count of s2.  */

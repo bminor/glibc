@@ -1083,7 +1083,7 @@ SINCOSL_COMMON:
 ;;
 
 //
-//     For big s: r = s - w: No futher reduction is necessary
+//     For big s: r = s - w: No further reduction is necessary
 //     For small s: w = N * P_3 (change sign) More reduction
 //
 { .mfi

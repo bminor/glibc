@@ -9,7 +9,7 @@ dnl Test if the toolchain is new enough for static PIE.
 dnl We need a GAS supporting explicit reloc (older GAS produces stack-based
 dnl reloc and triggers an internal error in the linker).  And, we need GCC to
 dnl pass the correct linker flags for static PIE.  GCC >= 13 and GAS >= 2.40
-dnl satisify the requirement, but a distro may backport static PIE support into
+dnl satisfy the requirement, but a distro may backport static PIE support into
 dnl earlier GCC or Binutils releases as well.
 AC_CACHE_CHECK([if the toolchain is sufficient to build static PIE on LoongArch],
 libc_cv_static_pie_on_loongarch, [

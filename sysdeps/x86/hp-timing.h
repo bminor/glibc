@@ -31,7 +31,7 @@ typedef unsigned long long int hp_timing_t;
 /* That's quite simple.  Use the `rdtsc' instruction.  Note that the value
    might not be 100% accurate since there might be some more instructions
    running in this moment.  This could be changed by using a barrier like
-   'cpuid' right before the `rdtsc' instruciton.  But we are not interested
+   'cpuid' right before the `rdtsc' instruction.  But we are not interested
    in accurate clock cycles here so we don't do this.
 
    NB: Use __builtin_ia32_rdtsc directly since including <x86intrin.h>

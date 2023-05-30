@@ -56,7 +56,7 @@
 // Description
 //=========================================
 // The acosf function computes the principle value of the arc sine of x.
-// A doman error occurs for arguments not in the range [-1,+1].
+// A domain error occurs for arguments not in the range [-1,+1].
 
 // The acosf function returns the arc cosine in the range [0, +pi] radians.
 // acos(1) returns +0

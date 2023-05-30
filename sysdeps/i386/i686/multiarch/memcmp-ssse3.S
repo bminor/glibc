@@ -44,7 +44,7 @@
 
 /* Warning!
            wmemcmp has to use SIGNED comparison for elements.
-           memcmp has to use UNSIGNED comparison for elemnts.
+           memcmp has to use UNSIGNED comparison for elements.
 */
 
 	atom_text_section

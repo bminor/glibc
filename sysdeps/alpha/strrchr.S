@@ -68,7 +68,7 @@ $loop:
 	xor	t0, a1, t2	# e0    :
 	cmpbge	zero, t0, t1	# .. e1 : bits set iff byte == zero
 	cmpbge	zero, t2, t3	# e0    : bits set iff byte == c
-	beq	t1, $loop	# .. e1 : if we havnt seen a null, loop
+	beq	t1, $loop	# .. e1 : if we haven't seen a null, loop
 
 	/* Mask out character matches after terminator */
 $eos:

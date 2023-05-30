@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* The default "nor" constraint produces unparseable memory references
+/* The default "nor" constraint produces unparsable memory references
    for constants.  Omit the problematic "o" constraint.  See bug 24164
    and GCC PR 89146.  */
 #define STAP_SDT_ARG_CONSTRAINT nr

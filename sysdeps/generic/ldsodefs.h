@@ -357,7 +357,7 @@ struct rtld_global
   EXTERN size_t _dl_nns;
 
   /* During the program run we must not modify the global data of
-     loaded shared object simultanously in two threads.  Therefore we
+     loaded shared object simultaneously in two threads.  Therefore we
      protect `_dl_open' and `_dl_close' in dl-close.c.
 
      This must be a recursive lock since the initializer function of
@@ -1181,7 +1181,7 @@ extern struct link_map * _dl_get_dl_main_map (void)
 # endif
 #endif
 
-/* Perform early memory allocation, avoding a TCB dependency.
+/* Perform early memory allocation, avoiding a TCB dependency.
    Terminate the process if allocation fails.  May attempt to use
    brk.  */
 void *_dl_early_allocate (size_t size) attribute_hidden;

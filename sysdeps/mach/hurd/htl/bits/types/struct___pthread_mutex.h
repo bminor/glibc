@@ -41,7 +41,7 @@ struct __pthread_mutex
 #define __PTHREAD_MUTEX_INITIALIZER   \
   { 0, 0, 0, 0, __PTHREAD_MUTEX_TIMED, 0, { { 0, 0 } } }
 
-/* The +1 is to mantain binary compatibility with the old
+/* The +1 is to maintain binary compatibility with the old
  * libpthread implementation. */
 #define __PTHREAD_ERRORCHECK_MUTEX_INITIALIZER   \
   { 0, 0, 0, 0, __PTHREAD_MUTEX_ERRORCHECK + 1, 0, { { 0, 0 } } }

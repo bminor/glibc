@@ -124,7 +124,7 @@ do_test (void)
       return 1;
     }
 
-  puts ("get lock outselves");
+  puts ("get lock ourselves");
 
   err = pthread_mutex_lock (&mut);
   if (err != 0)

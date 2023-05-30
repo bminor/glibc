@@ -102,9 +102,9 @@ L(set_long):
 	sub	count, dstend, dst
 
 	/*
-	 * Adjust count and bias for loop. By substracting extra 1 from count,
+	 * Adjust count and bias for loop. By subtracting extra 1 from count,
 	 * it is easy to use tbz instruction to check whether loop tailing
-	 * count is less than 33 bytes, so as to bypass 2 unneccesary stps.
+	 * count is less than 33 bytes, so as to bypass 2 unnecessary stps.
 	 */
 	sub	count, count, 64+16+1
 
@@ -151,9 +151,9 @@ L(zva_64):
 
 	sub	count, dstend, dst
 	/*
-	 * Adjust count and bias for loop. By substracting extra 1 from count,
+	 * Adjust count and bias for loop. By subtracting extra 1 from count,
 	 * it is easy to use tbz instruction to check whether loop tailing
-	 * count is less than 33 bytes, so as to bypass 2 unneccesary stps.
+	 * count is less than 33 bytes, so as to bypass 2 unnecessary stps.
 	 */
 	sub	count, count, 128+64+64+1
 	add	dst, dst, 128

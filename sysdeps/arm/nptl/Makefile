@@ -19,7 +19,7 @@ ifeq ($(subdir),nptl)
 # This test relies on compiling part of the binary with EH information,
 # part without, and unwinding through.  The .ARM.exidx tables have
 # start addresses for EH regions, but no end addresses.  Every
-# region an exception needs to propogate through must have unwind
+# region an exception needs to propagate through must have unwind
 # information, or a previous function's unwind table may be used
 # by mistake.
 tests := $(filter-out tst-cleanupx4,$(tests))

@@ -118,7 +118,7 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
     {
       pltgot = (ElfW(Addr) *) D_PTR (l, l_info[DT_PLTGOT]);
 
-      /* Fill in initial entrys of the plt */
+      /* Fill in initial entries of the plt */
 
       /* Register the link_map address in the plt at pltgot[1].
 	 This will also be used in the resolver for accessing the

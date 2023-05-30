@@ -110,7 +110,7 @@ ENTRY(__memcpy_mvcle)
 	LGR     %r2,%r1             # destination address
 	LGR     %r3,%r5             # destination length = source length
 .L_MVCLE_1:
-	mvcle   %r2,%r4,0           # thats it, MVCLE is your friend
+	mvcle   %r2,%r4,0           # that's it, MVCLE is your friend
 	jo      .L_MVCLE_1
 	LGR     %r2,%r0             # return destination address
 	br      %r14

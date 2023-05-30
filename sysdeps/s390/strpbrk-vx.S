@@ -262,7 +262,7 @@ ENTRY(STRPBRK_Z13)
 					  if first char in this part of accept
 					  is a zero.  */
 	/* r8>0 -> zero found in this acc-part.  */
-	vrepb	%v18,%v17,0	/* Replicate first char accross all chars.  */
+	vrepb	%v18,%v17,0	/* Replicate first char across all chars.  */
 	vceqb	%v22,%v20,%v17	/* Create a mask (v22) of null chars
 				   by comparing with 0 (v20).  */
 	vsel	%v17,%v18,%v17,%v22 /* Replace null chars with first char.  */

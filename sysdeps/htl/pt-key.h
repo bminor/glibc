@@ -1,4 +1,4 @@
-/* pthread_key internal declatations for the Hurd version.
+/* pthread_key internal declarations for the Hurd version.
    Copyright (C) 2002-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

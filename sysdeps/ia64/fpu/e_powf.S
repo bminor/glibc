@@ -108,7 +108,7 @@
 //
 //      Log(1/Cm) = log(1/frcpa(1+m/256)) where m goes from 0 to 255.
 //
-// We tabluate as one double, T for single precision power
+// We tabulate as one double, T for single precision power
 //
 //      Log(x)   = (K Log(2)_hi + T) + (K Log(2)_lo) + Log( 1 + (Bx-1))
 //      Log(x)   =  G                +     delta     + Log( 1 + (Bx-1))
@@ -353,7 +353,7 @@
 //  +0     -inf               +inf   error 27   33  divide-by-zero
 //  -0     -inf               +inf   error 27   33  divide-by-zero
 
-// X zero  Y positve
+// X zero  Y positive
 //  +0     +odd integer       +0
 //  -0     +odd integer       -0
 //  +0     !+odd integer      +0
@@ -927,7 +927,7 @@ WEAK_LIBM_ENTRY(powf)
           fclass.m  p14,p0              = f8, 0x07
           nop.i 999
 }
-// Note POW_Xm1 and POW_r1 are used interchangably
+// Note POW_Xm1 and POW_r1 are used interchangeably
 { .mfb
           nop.m 999
 (p8)      fnma.s1        POW_Xm1        = POW_Xp1,f1,f0

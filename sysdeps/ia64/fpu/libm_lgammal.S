@@ -219,7 +219,7 @@
 //    EDP_Root is the exact value of the corresponding root rounded to double
 //    extended precision. So, we have 35 different polynomials which make our
 //    table rather big. We may hope that x falls in root "neighbourhood"
-//    quite rarely -> ther might be no need in frequent use of different
+//    quite rarely -> there might be no need in frequent use of different
 //    polynomials.
 //    A0, A1, A2, A3 are represented as pairs of double precision numbers,
 //    A4, A5 are long doubles, and to decrease the size of the table we
@@ -2423,7 +2423,7 @@ _deno_back_to_main_path:
       adds               rPolDataPtr = 3440, rTbl3Addr
 }
 { .mfi
-      // (i*16)*4 + (i*16)*8 - offsett of polynomial on range [-6.0, -0.75]
+      // (i*16)*4 + (i*16)*8 - offset of polynomial on range [-6.0, -0.75]
       shladd             rTmpPtr = rIndexPol, 2, rIndexPol
       fma.s1             fXSqr = FR_FracX, FR_FracX, f0 // y^2
       // point to left "near root" bound
@@ -2433,7 +2433,7 @@ _deno_back_to_main_path:
 { .mfi
       ldfpd              fLnSin34, fLnSin36 = [rTmpPtr3], 16
       fma.s1             fRcpX = fInvX, fRcpX, fRcpX // end of 2nd NR iteration
-      // add special offsett if -4 < x <= -3.0
+      // add special offset if -4 < x <= -3.0
 (p6)  adds               rPolDataPtr = 640, rPolDataPtr
 }
 { .mfi
@@ -2448,7 +2448,7 @@ _deno_back_to_main_path:
       // left bound of "near root" range
 (p12) ld8                rLeftBound = [rRootsBndAddr]
       fmerge.se          fNormDx = f1, fDx // significand of DeltaX
-      // base address + offsett for polynomial coeff. on range [-6.0, -0.75]
+      // base address + offset for polynomial coeff. on range [-6.0, -0.75]
       add                rPolDataPtr = rPolDataPtr, rTmpPtr
 }
 { .mfi
@@ -4565,7 +4565,7 @@ _negRoots:
       nop.i              0
 }
 { .mfi
-      add                rPolDataPtr = rPolDataPtr, rTmpPtr // begin + offsett
+      add                rPolDataPtr = rPolDataPtr, rTmpPtr // begin + offset
       nop.f              0
       nop.i              0
 }

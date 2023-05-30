@@ -50,7 +50,7 @@
 //=========================================
 // The asin function computes the principal value of the arc sine of x.
 // asin(0) returns 0, asin(1) returns pi/2, asin(-1) returns -pi/2.
-// A doman error occurs for arguments not in the range [-1,+1].
+// A domain error occurs for arguments not in the range [-1,+1].
 //
 // The asin function returns the arc sine in the range [-pi/2, +pi/2] radians.
 //
@@ -98,7 +98,7 @@
 //    Return asin(x) = sign(x)*Pi/2
 //
 // 5. 1.0 < |x| <= +INF
-//    A doman error occurs for arguments not in the range [-1,+1]
+//    A domain error occurs for arguments not in the range [-1,+1]
 //
 // 6. x = [S,Q]NaN
 //    Return asin(x) = QNaN

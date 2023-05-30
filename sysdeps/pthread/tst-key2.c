@@ -55,7 +55,7 @@ tf (void *arg)
 {
   pthread_key_t *key = (pthread_key_t *) arg;
 
-  /* Use an arbirary but valid pointer to avoid GCC warnings.  */
+  /* Use an arbitrary but valid pointer to avoid GCC warnings.  */
   if (pthread_setspecific (*key, arg) != 0)
     {
       write_message ("setspecific failed\n");

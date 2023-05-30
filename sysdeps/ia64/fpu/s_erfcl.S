@@ -1547,7 +1547,7 @@ GLOBAL_LIBM_ENTRY(erfcl)
 { .mfi
       ldfe           FR_A12 = [GR_P_POINT_1], -64
       nop.f          0
-      extr           GR_K = GR_N_fix, 12, 32         // Extract limite range K
+      extr           GR_K = GR_N_fix, 12, 32         // Extract limit range K
 }
 { .mfi
       ldfe           FR_A13 = [GR_P_POINT_2], -64

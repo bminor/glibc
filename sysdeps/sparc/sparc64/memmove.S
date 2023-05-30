@@ -58,7 +58,7 @@ ENTRY(memmove)
 	inc	2, %o1
 	srl	%o3, 8, %o4
 	stb	%o4, [%o0]	/* have to do bytes,  */
-	stb	%o3, [%o0 + 1]	/* don't know dst alingment  */
+	stb	%o3, [%o0 + 1]	/* don't know dst alignment  */
 	inc	2, %o0
 	dec	2, %o2
 

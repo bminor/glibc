@@ -255,7 +255,7 @@ ENTRY(WCSCSPN_Z13)
 					  character in this part of reject
 					  is a zero.  */
 	/* r8>0 -> zero found in this acc-part.  */
-	vrepf	%v18,%v17,0	/* Replicate first char accross all chars.  */
+	vrepf	%v18,%v17,0	/* Replicate first char across all chars.  */
 	vceqf	%v22,%v20,%v17	/* Create a mask (v22) of null chars
 				   by comparing with 0 (v20).  */
 	vsel	%v17,%v18,%v17,%v22 /* Replace null chars with first char.  */

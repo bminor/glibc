@@ -75,7 +75,7 @@ do_test (void)
     }
 
   /* A value higher than 0 will check for uncontended pthread cancellation,
-     where the sem_wait operation will return immediatelly.  */
+     where the sem_wait operation will return immediately.  */
   if (sem_init (&sem, 0, 1) != 0)
     {
       puts ("error: sem_init failed");

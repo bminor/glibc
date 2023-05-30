@@ -27,7 +27,7 @@ struct __pthread_mutex_s
   /* KIND must stay at this position in the structure to maintain
      binary compatibility with static initializers.  */
   int __kind;
-  /* The old 4-word 16-byte aligned lock. This is initalized
+  /* The old 4-word 16-byte aligned lock. This is initialized
      to all ones by the Linuxthreads PTHREAD_MUTEX_INITIALIZER.
      Unused in NPTL.  */
   int __glibc_compat_padding[4];

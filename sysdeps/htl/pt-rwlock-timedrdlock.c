@@ -92,7 +92,7 @@ __pthread_rwlock_timedrdlock_internal (struct __pthread_rwlock *rwlock,
     drain = err ? 1 : 0;
   else
     {
-      /* We're still in the queue.  Noone attempted to wake us up, i.e. we
+      /* We're still in the queue.  No one attempted to wake us up, i.e. we
          timed out.  */
       __pthread_dequeue (self);
       drain = 0;

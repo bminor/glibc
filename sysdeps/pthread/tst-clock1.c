@@ -35,7 +35,7 @@ do_test (void)
       if (sysconf (_SC_THREAD_CPUTIME) >= 0)
 # endif
 	{
-	  puts ("cpuclock advertized, but cannot get ID");
+	  puts ("cpuclock advertised, but cannot get ID");
 	  exit (1);
 	}
     }

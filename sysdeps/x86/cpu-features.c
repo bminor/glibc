@@ -50,7 +50,7 @@ static void
 update_active (struct cpu_features *cpu_features)
 {
   /* Copy the cpuid bits to active bits for CPU featuress whose usability
-     in user space can be detected without additonal OS support.  */
+     in user space can be detected without additional OS support.  */
   CPU_FEATURE_SET_ACTIVE (cpu_features, SSE3);
   CPU_FEATURE_SET_ACTIVE (cpu_features, PCLMULQDQ);
   CPU_FEATURE_SET_ACTIVE (cpu_features, SSSE3);

@@ -67,7 +67,7 @@
 	movl	- 4 byte
 	movlpd	- 8 byte
 	movaps	- 16 byte - requires 16 byte alignment
-	of	sourse and destination adresses.
+	          of source and destination addresses.
 */
 
 .text

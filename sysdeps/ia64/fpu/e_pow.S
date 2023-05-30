@@ -108,7 +108,7 @@
 //
 //      Log(1/Cm) = log(1/frcpa(1+m/256)) where m goes from 0 to 255.
 //
-// We tabluate as two doubles, T and t, where T +t is the value itself.
+// We tabulate as two doubles, T and t, where T +t is the value itself.
 //
 //      Log(x)   = (K Log(2)_hi + T) + (Log(2)_hi + t) + Log( 1 + (Bx-1))
 //      Log(x)   =  G + delta           + Log( 1 + (Bx-1))
@@ -357,7 +357,7 @@
 //  +0     -inf               +inf   error 27   33  divide-by-zero
 //  -0     -inf               +inf   error 27   33  divide-by-zero
 
-// X zero  Y positve
+// X zero  Y positive
 //  +0     +odd integer       +0
 //  -0     +odd integer       -0
 //  +0     !+odd integer      +0
@@ -991,7 +991,7 @@ POW_COMMON:
 }
 ;;
 
-// Note POW_Xm1 and POW_r1 are used interchangably
+// Note POW_Xm1 and POW_r1 are used interchangeably
 { .mfi
           alloc         r32=ar.pfs,2,19,4,0
           fms.s1        POW_r           = POW_B, POW_NORM_X,f1

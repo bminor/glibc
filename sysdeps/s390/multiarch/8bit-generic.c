@@ -34,7 +34,7 @@
 # undef from_generic
 # undef to_generic
 
-/* Generate the converion routines with vector instructions. The vector
+/* Generate the conversion routines with vector instructions. The vector
    routines can only be used with charsets where the maximum UCS4 value
    fits in 1 byte size. Then the hardware translate-instruction is used
    to translate between multiple generic characters and "1 byte UCS4"
@@ -172,7 +172,7 @@
 			     ASM_CLOBBER_VR ("v21") ASM_CLOBBER_VR ("v22") \
 			     ASM_CLOBBER_VR ("v23") ASM_CLOBBER_VR ("v24") \
 			   );						\
-	 /* Error occured?  */						\
+	 /* Error occurred?  */						\
 	 if (loop_count != 0)						\
 	   {								\
 	     /* Found an invalid character!  */				\
@@ -278,8 +278,8 @@
 			    ASM_CLOBBER_VR ("v20") ASM_CLOBBER_VR ("v21") \
 			    ASM_CLOBBER_VR ("v22")			\
 			  );						\
-	/* Error occured in step 1? An error (ch >= max || ch == 0)	\
-	   occured, if remaining_loop_count > 0. The error occured	\
+	/* Error occurred in step 1? An error (ch >= max || ch == 0)	\
+	   occurred, if remaining_loop_count > 0. The error occurred	\
 	   at character-index (index) after already processed blocks.  */ \
 	loop_count -= remaining_loop_count;				\
 	if (loop_count > 0)						\
@@ -321,15 +321,15 @@
 				ASM_CLOBBER_VR ("v16")			\
 				ASM_CLOBBER_VR ("v17")			\
 			      );					\
-	    /* Error occured in processed bytes of step 2?		\
-	       Thus possible error in step 1 is obselete.*/		\
+	    /* Error occurred in processed bytes of step 2?		\
+	       Thus possible error in step 1 is obsolete.*/		\
 	    if (tmp < 16)						\
 	      {								\
 		index = tmp;						\
 		inptr -= loop_count * 64;				\
 	      }								\
 	  }								\
-	/* Error occured in step 1/2?  */				\
+	/* Error occurred in step 1/2?  */				\
 	if (index < 16)							\
 	  {								\
 	    /* Found an invalid character (see step 2) or zero		\

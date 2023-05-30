@@ -1,4 +1,4 @@
-/* Install given floating-point environment (doesnot raise exceptions).
+/* Install given floating-point environment (does not raise exceptions).
    Copyright (C) 2020-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

@@ -68,11 +68,11 @@
    391                                                 r ^ PTHREAD_RWLOCK_WRPHASE))
    392         {
 
-   And then attemps to start the read phase.
+   And then attempts to start the read phase.
 
    Assume there happens to be a tryrdlock at this point, noting
    that PTHREAD_RWLOCK_WRLOCKED is clear, and PTHREAD_RWLOCK_WRPHASE
-   is 1. So the try lock attemps to start the read phase.
+   is 1. So the try lock attempts to start the read phase.
 
    In __pthread_rwlock_tryrdlock:
 
@@ -136,7 +136,7 @@
    readers might indeed be waiting, and they are.
 
    The atomic_store_relaxed throws away PTHREAD_RWLOCK_FUTEX_USED,
-   and the waiting reader is never worken becuase as noted
+   and the waiting reader is never worken because as noted
    above it is conditional on the futex being used.
 
    The solution is for the trylock thread to inspect
@@ -257,7 +257,7 @@
    If we did not install the write phase then the readers may already
    be waiting on the futex, the original writer wrote 1 to __wrphase_futex
    as part of starting the write phase, and we cannot also write 1
-   without loosing the PTHREAD_RWLOCK_FUTEX_USED bit.
+   without losing the PTHREAD_RWLOCK_FUTEX_USED bit.
 
    ---
 

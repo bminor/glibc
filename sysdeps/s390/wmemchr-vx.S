@@ -108,7 +108,7 @@ ENTRY(WMEMCHR_Z13)
 	aghi	%r5,16
 
 .Llastcmp:
-	/* Use comparision result only if located within first n characters.
+	/* Use comparison result only if located within first n characters.
 	   %r5: current_len;
 	   %r4: n;
 	   (current_len - n): [0...16[

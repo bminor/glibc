@@ -1174,7 +1174,7 @@ SINCOS_CONTINUE:
 { .mfi
       nop.m 999
 //
-//     For big s: r = s - w: No futher reduction is necessary
+//     For big s: r = s - w: No further reduction is necessary
 //     For small s: w = N * P_3 (change sign) More reduction
 //
 (p6)   fcmp.lt.unc.s1 p8, p9 = FR_r, FR_Two_to_M3

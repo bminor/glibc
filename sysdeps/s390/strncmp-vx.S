@@ -110,7 +110,7 @@ ENTRY(STRNCMP_Z13)
 	j	.Lloop
 
 .Llastcmp:
-	/* Use comparision result only if located within first n characters.
+	/* Use comparison result only if located within first n characters.
 	   %r0: loaded byte count in vreg;
 	   %r5: current_len;
 	   %r4: n;
