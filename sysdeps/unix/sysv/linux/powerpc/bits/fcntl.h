@@ -33,6 +33,12 @@
 # define __O_LARGEFILE	0200000
 #endif
 
+#if __WORDSIZE == 64
+# define F_GETLK	5
+# define F_SETLK	6
+# define F_SETLKW	7
+#endif
+
 struct flock
   {
     short int l_type;	/* Type of lock: F_RDLCK, F_WRLCK, or F_UNLCK.	*/
