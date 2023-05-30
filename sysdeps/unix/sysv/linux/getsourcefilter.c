@@ -16,10 +16,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <alloca.h>
 #include <assert.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <scratch_buffer.h>
 #include <string.h>
 #include <stdint.h>
 #include <netatalk/at.h>
@@ -95,17 +95,12 @@ getsourcefilter (int s, uint32_t interface, const struct sockaddr *group,
   /* We have to create an struct ip_msfilter object which we can pass
      to the kernel.  */
   socklen_t needed = GROUP_FILTER_SIZE (*numsrc);
-  int use_alloca = __libc_use_alloca (needed);
 
-  struct group_filter *gf;
-  if (use_alloca)
-    gf = (struct group_filter *) alloca (needed);
-  else
-    {
-      gf = (struct group_filter *) malloc (needed);
-      if (gf == NULL)
-	return -1;
-    }
+  struct scratch_buffer buf;
+  scratch_buffer_init (&buf);
+  if (!scratch_buffer_set_array_size (&buf, 1, needed))
+    return -1;
+  struct group_filter *gf = buf.data;
 
   gf->gf_interface = interface;
   memcpy (&gf->gf_group, group, grouplen);
@@ -135,12 +130,7 @@ getsourcefilter (int s, uint32_t interface, const struct sockaddr *group,
 	}
     }
 
-  if (! use_alloca)
-    {
-      int save_errno = errno;
-      free (gf);
-      __set_errno (save_errno);
-    }
+  scratch_buffer_free (&buf);
 
   return result;
 }
