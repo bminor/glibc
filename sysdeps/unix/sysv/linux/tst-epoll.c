@@ -180,6 +180,8 @@ epoll_pwait2_check (int epfd, struct epoll_event *ev, int maxev, int tmo,
 static int
 do_test (void)
 {
+  struct epoll_event ev;
+
   {
     struct sigaction sa;
     sa.sa_handler = handler;
@@ -191,7 +193,7 @@ do_test (void)
     xsigaction (SIGCHLD, &sa, NULL);
   }
 
-  int r = epoll_pwait2 (-1, NULL, 0, NULL, NULL);
+  int r = epoll_pwait2 (-1, &ev, 0, NULL, NULL);
   TEST_COMPARE (r, -1);
   bool pwait2_supported = errno != ENOSYS;
 
