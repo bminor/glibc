@@ -2386,10 +2386,8 @@ dl_main (const ElfW(Phdr) *phdr,
      _dl_relocate_object might need to call `mprotect' for DT_TEXTREL.  */
   _dl_sysdep_start_cleanup ();
 
-#ifdef SHARED
   /* Auditing checkpoint: we have added all objects.  */
   _dl_audit_activity_nsid (LM_ID_BASE, LA_ACT_CONSISTENT);
-#endif
 
   /* Notify the debugger all new objects are now ready to go.  We must re-get
      the address since by now the variable might be in another object.  */
