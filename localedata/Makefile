@@ -112,6 +112,7 @@ test-input := \
 	syr.UTF-8 \
 	szl_PL.UTF-8 \
 	tg_TJ.UTF-8 \
+	th_TH.UTF-8 \
 	tk_TM.UTF-8 \
 	tr_TR.UTF-8 \
 	tt_RU.UTF-8 \
@@ -305,6 +306,7 @@ LOCALES := \
 	syr.UTF-8 \
 	szl_PL.UTF-8 \
 	tg_TJ.UTF-8 \
+	th_TH.UTF-8 \
 	tk_TM.UTF-8 \
 	tr_TR.ISO-8859-9 \
 	tr_TR.UTF-8 \
