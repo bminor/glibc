@@ -153,9 +153,18 @@ copy_and_spawn_sgid (const char *child_id, gid_t gid)
 	  p += wrcount;
 	}
     }
-  TEST_VERIFY (fchown (outfd, getuid (), gid) == 0);
+
+  bool chowned = false;
+  TEST_VERIFY ((chowned = fchown (outfd, getuid (), gid) == 0)
+	       || errno == EPERM);
   if (support_record_failure_is_failed ())
     goto err;
+  else if (!chowned)
+    {
+      ret = 77;
+      goto err;
+    }
+
   TEST_VERIFY (fchmod (outfd, 02750) == 0);
   if (support_record_failure_is_failed ())
     goto err;
@@ -192,8 +201,10 @@ err:
       free (dirname);
     }
 
+  if (ret == 77)
+    FAIL_UNSUPPORTED ("Failed to make sgid executable for test\n");
   if (ret != 0)
-    FAIL_EXIT1("Failed to make sgid executable for test\n");
+    FAIL_EXIT1 ("Failed to make sgid executable for test\n");
 
   return status;
 }
