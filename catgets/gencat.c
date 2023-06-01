@@ -838,6 +838,26 @@ invalid character: message ignored"));
   return current;
 }
 
+static void
+write_all (int fd, const void *buffer, size_t length)
+{
+  const char *p = buffer;
+  const char *end = p + length;
+  while (p < end)
+    {
+      ssize_t ret = write (fd, p, end - p);
+      if (ret < 0)
+	error (EXIT_FAILURE, errno,
+	       gettext ("write of %zu bytes failed after %td: %m"),
+	       length, p - (const char *) buffer);
+
+      if (ret == 0)
+	error (EXIT_FAILURE, 0,
+	       gettext ("write returned 0 after writing %td bytes of %zu"),
+	       p - (const char *) buffer, length);
+      p += ret;
+    }
+}
 
 static void
 write_out (struct catalog *catalog, const char *output_name,
@@ -927,12 +947,11 @@ write_out (struct catalog *catalog, const char *output_name,
   obj.plane_size = best_size;
   obj.plane_depth = best_depth;
 
+  uint32_t array_size = best_size * best_depth * sizeof (uint32_t) * 3;
   /* Allocate room for all needed arrays.  */
-  array1 =
-    (uint32_t *) alloca (best_size * best_depth * sizeof (uint32_t) * 3);
-  memset (array1, '\0', best_size * best_depth * sizeof (uint32_t) * 3);
-  array2
-    = (uint32_t *) alloca (best_size * best_depth * sizeof (uint32_t) * 3);
+  array1 = (uint32_t *) alloca (array_size);
+  memset (array1, '\0', array_size);
+  array2 = (uint32_t *) alloca (array_size);
   obstack_init (&string_pool);
 
   set_run = catalog->all_sets;
@@ -985,22 +1004,22 @@ write_out (struct catalog *catalog, const char *output_name,
     }
 
   /* Write out header.  */
-  write (fd, &obj, sizeof (obj));
+  write_all(fd, &obj, sizeof (obj));
 
   /* We always write out the little endian version of the index
      arrays.  */
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-  write (fd, array1, best_size * best_depth * sizeof (uint32_t) * 3);
-  write (fd, array2, best_size * best_depth * sizeof (uint32_t) * 3);
+  write_all(fd, array1, array_size);
+  write_all(fd, array2, array_size);
 #elif __BYTE_ORDER == __BIG_ENDIAN
-  write (fd, array2, best_size * best_depth * sizeof (uint32_t) * 3);
-  write (fd, array1, best_size * best_depth * sizeof (uint32_t) * 3);
+  write_all(fd, array2, array_size);
+  write_all(fd, array1, array_size);
 #else
 # error Cannot handle __BYTE_ORDER byte order
 #endif
 
   /* Finally write the strings.  */
-  write (fd, strings, strings_size);
+  write_all(fd, strings, strings_size);
 
   if (fd != STDOUT_FILENO)
     close (fd);
