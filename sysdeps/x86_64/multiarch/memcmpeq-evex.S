@@ -42,7 +42,7 @@
 # endif
 
 # ifndef VEC_SIZE
-#  include "x86-evex512-vecs.h"
+#  include "x86-evex256-vecs.h"
 # endif
 # include "reg-macros.h"
 
