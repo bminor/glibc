@@ -253,7 +253,11 @@ do_test (int argc, char *argv[])
   cwd = getcwd (NULL, 0);
 
   /* Set up arena for pathname expansion */
-  tmpnam (tmpdir);
+  if (!tmpnam (tmpdir))
+    {
+      printf ("Failed to create a temporary directory with a unique name: %m");
+      return 1;
+    }
   xmkdir (tmpdir, S_IRWXU);
   TEST_VERIFY_EXIT (chdir (tmpdir) == 0);
 

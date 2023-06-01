@@ -200,8 +200,8 @@ special (void)
     output_error (NAME (ECVT), INFINITY, 10, "inf", 0, 0, p, decpt, sign);
 
   /* Simply make sure these calls with large NDIGITs don't crash.  */
-  (void) ECVT (123.456, 10000, &decpt, &sign);
-  (void) FCVT (123.456, 10000, &decpt, &sign);
+  p = ECVT (123.456, 10000, &decpt, &sign);
+  p = FCVT (123.456, 10000, &decpt, &sign);
 
   /* Some tests for the reentrant functions.  */
   /* Use a too small buffer.  */

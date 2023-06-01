@@ -123,8 +123,13 @@ do_test (int argc, char ** argv)
   int i, errors = 0;
   char buf[PATH_MAX];
 
-  getcwd (cwd, sizeof (buf));
-  cwd_len = strlen (cwd);
+  if (getcwd (cwd, sizeof (buf)))
+    cwd_len = strlen (cwd);
+  else
+    {
+      printf ("%s: current working directory couldn't be retrieved\n", argv[0]);
+      ++errors;
+    }
 
   errno = 0;
   if (realpath (NULL, buf) != NULL || errno != EINVAL)
@@ -205,7 +210,12 @@ do_test (int argc, char ** argv)
       free (result2);
     }
 
-  getcwd (buf, sizeof (buf));
+  if (!getcwd (buf, sizeof (buf)))
+    {
+      printf ("%s: current working directory couldn't be retrieved\n", argv[0]);
+      ++errors;
+    }
+
   if (strcmp (buf, cwd))
     {
       printf ("%s: current working directory changed from %s to %s\n",

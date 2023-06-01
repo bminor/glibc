@@ -120,7 +120,12 @@ main (int argc, char **argv)
     int i;
     float x;
     char name[50];
-    (void) fscanf (in, "%2d%f%*d %[0123456789]", &i, &x, name);
+    if (fscanf (in, "%2d%f%*d %[0123456789]", &i, &x, name) < 3)
+      {
+	fputs ("test failed!\n", stdout);
+	result = 1;
+      }
+
     fprintf (out, "i = %d, x = %f, name = \"%.50s\"\n", i, x, name);
     if (i != 56 || x != 789.0F || strcmp (name, "56"))
       {
@@ -164,7 +169,12 @@ main (int argc, char **argv)
 	quant = 0.0;
 	units[0] = item[0] = '\0';
 	count = fscanf (in, "%f%20s of %20s", &quant, units, item);
-	(void) fscanf (in, "%*[^\n]");
+	if (fscanf (in, "%*[^\n]") < 0 && ferror (in))
+	  {
+	    fputs ("test failed!\n", stdout);
+	    result = 1;
+	  }
+
 	fprintf (out, "count = %d, quant = %f, item = %.21s, units = %.21s\n",
 		 count, quant, item, units);
 	if (count != ok[rounds-1].count || quant != ok[rounds-1].quant

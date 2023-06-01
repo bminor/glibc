@@ -714,8 +714,8 @@ check_for_unshare_hints (int require_pidns)
         continue;
 
       val = -1; /* Sentinel.  */
-      fscanf (f, "%d", &val);
-      if (val != files[i].bad_value)
+      int cnt = fscanf (f, "%d", &val);
+      if (cnt == 1 && val != files[i].bad_value)
 	continue;
 
       printf ("To enable test-container, please run this as root:\n");

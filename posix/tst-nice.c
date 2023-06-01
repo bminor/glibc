@@ -58,8 +58,7 @@ do_test (void)
 
   /* BZ #18086. Make sure we don't reset errno.  */
   errno = EBADF;
-  nice (0);
-  if (errno != EBADF)
+  if (nice (0) == -1 || errno != EBADF)
     {
       printf ("FAIL: errno = %i, but wanted EBADF (%i)\n", errno, EBADF);
       return 1;

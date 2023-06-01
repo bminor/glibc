@@ -50,7 +50,11 @@ tf (void *arg)
   pthread_cleanup_push (cl, NULL);
 
   /* This call should never return.  */
-  (void) lockf (fd, F_LOCK, 0);
+  if (lockf (fd, F_LOCK, 0))
+    {
+      puts ("child thread: lockf failed");
+      exit (1);
+    }
 
   pthread_cleanup_pop (0);
 

@@ -29,12 +29,17 @@ do_test (void)
   printf("checking sscanf\n");
 
   int i, j, n;
+  int result = 0;
 
   i = j = n = 0;
-  FSCANF (fp, L(" %i - %i %n"), &i, &j, &n);
+  if (FSCANF (fp, L(" %i - %i %n"), &i, &j, &n) < 2)
+    {
+      printf ("FSCANF couldn't read all parameters %d\n", errno);
+      result = 1;
+    }
+
   printf ("found %i-%i (length=%i)\n", i, j, n);
 
-  int result = 0;
   if (i != 7)
     {
       printf ("i is %d, expected 7\n", i);
