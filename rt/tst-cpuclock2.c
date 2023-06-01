@@ -37,6 +37,8 @@ do_test ()
 #include <errno.h>
 #include <pthread.h>
 
+#include <support/xunistd.h>
+
 static pthread_barrier_t barrier;
 
 /* This function is intended to rack up both user and system time.  */
@@ -55,7 +57,7 @@ chew_cpu (void *arg)
       for (int i = 0; i < 100; ++i)
 	for (size_t j = 0; j < sizeof buf; ++j)
 	  buf[j] = 0xbb;
-      write (nullfd, (char *) buf, sizeof buf);
+      xwrite (nullfd, (char *) buf, sizeof buf);
       close (nullfd);
     }
 

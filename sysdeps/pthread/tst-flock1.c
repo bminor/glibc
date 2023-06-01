@@ -21,6 +21,7 @@
 #include <unistd.h>
 #include <sys/file.h>
 
+#include <support/xunistd.h>
 
 static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 
@@ -56,7 +57,7 @@ do_test (void)
 
   unlink (tmp);
 
-  write (fd, "foobar xyzzy", 12);
+  xwrite (fd, "foobar xyzzy", 12);
 
   if (flock (fd, LOCK_EX | LOCK_NB) != 0)
     {

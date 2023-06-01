@@ -7,6 +7,8 @@
 #include <string.h>
 #include <sys/stat.h>
 
+#include <support/xunistd.h>
+
 #ifndef O_NOATIME
 # define O_NOATIME	0
 #endif
@@ -22,7 +24,7 @@ do_test (void)
       return 1;
     }
 
-  write (fd, "hello", 5);
+  xwrite (fd, "hello", 5);
   close (fd);
 
   struct stat64 st;

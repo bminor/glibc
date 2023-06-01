@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
+#include <support/xunistd.h>
 
 static void prepare (void);
 #define PREPARE(argc, argv) prepare ()
@@ -94,7 +95,7 @@ do_test (void)
       puts ("file creation failed");
       return 1;
     }
-  write (fd, "hello", 5);
+  xwrite (fd, "hello", 5);
   puts ("file created");
 
   struct stat64 st1;

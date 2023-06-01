@@ -27,6 +27,8 @@
 #include <tls.h>
 #include <unistd.h>
 
+#include <support/xunistd.h>
+
 static const char *command;
 static bool child;
 static uintptr_t stack_chk_guard_copy;
@@ -96,7 +98,7 @@ do_test (void)
 	else if (ret != NULL)
 	  return 1;
 
-      write (2, &stack_chk_guard_copy, sizeof (stack_chk_guard_copy));
+      xwrite (2, &stack_chk_guard_copy, sizeof (stack_chk_guard_copy));
       return 0;
     }
 

@@ -28,6 +28,7 @@
 
 #include <support/test-driver.h>
 #include <support/temp_file.h>
+#include <support/xunistd.h>
 
 #ifndef struct_stat
 # define struct_stat struct stat64
@@ -114,7 +115,7 @@ do_test (void)
       puts ("file creation failed");
       return 1;
     }
-  write (fd, "hello", 5);
+  xwrite (fd, "hello", 5);
   puts ("file created");
 
   struct_stat st1;

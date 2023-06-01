@@ -11,6 +11,8 @@
 #include <time.h>
 #include <pthread.h>
 
+#include <support/xunistd.h>
+
 #define TEST_CLOCK CLOCK_PROCESS_CPUTIME_ID
 #define TEST_CLOCK_MISSING(clock) \
   (setup_test () ? "process CPU clock timer support" : NULL)
@@ -29,7 +31,7 @@ chew_cpu (void *arg)
       for (int i = 0; i < 100; ++i)
 	for (size_t j = 0; j < sizeof buf; ++j)
 	  buf[j] = 0xbb;
-      write (nullfd, (char *) buf, sizeof buf);
+      xwrite (nullfd, (char *) buf, sizeof buf);
       close (nullfd);
     }
 

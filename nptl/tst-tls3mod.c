@@ -25,6 +25,7 @@
 #include <pthreaddef.h>
 #include <descr.h>
 
+#include <support/xunistd.h>
 
 extern pthread_barrier_t b;
 
@@ -43,7 +44,7 @@ handler (int sig)
 {
   if (sig != THE_SIG)
     {
-      write (STDOUT_FILENO, "wrong signal\n", 13);
+      xwrite (STDOUT_FILENO, "wrong signal\n", 13);
       _exit (1);
     }
 
@@ -51,7 +52,7 @@ handler (int sig)
 
   if (sem_post (&s) != 0)
     {
-      write (STDOUT_FILENO, "sem_post failed\n", 16);
+      xwrite (STDOUT_FILENO, "sem_post failed\n", 16);
       _exit (1);
     }
 }

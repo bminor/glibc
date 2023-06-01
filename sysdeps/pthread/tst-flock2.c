@@ -24,6 +24,7 @@
 #include <sys/mman.h>
 #include <sys/wait.h>
 
+#include <support/xunistd.h>
 
 static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t lock2 = PTHREAD_MUTEX_INITIALIZER;
@@ -70,7 +71,7 @@ do_test (void)
 
   int i;
   for (i = 0; i < 20; ++i)
-    write (fd, "foobar xyzzy", 12);
+    xwrite (fd, "foobar xyzzy", 12);
 
   pthread_barrier_t *b;
   b = mmap (NULL, sizeof (pthread_barrier_t), PROT_READ | PROT_WRITE,

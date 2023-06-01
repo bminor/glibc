@@ -13,6 +13,8 @@
 #include <signal.h>
 #include <sys/wait.h>
 
+#include <support/xunistd.h>
+
 static clockid_t child_clock;
 
 #define TEST_CLOCK child_clock
@@ -33,7 +35,7 @@ chew_cpu (void)
       for (int i = 0; i < 100; ++i)
 	for (size_t j = 0; j < sizeof buf; ++j)
 	  buf[j] = 0xbb;
-      write (nullfd, (char *) buf, sizeof buf);
+      xwrite (nullfd, (char *) buf, sizeof buf);
       close (nullfd);
       if (getppid () == 1)
 	_exit (2);

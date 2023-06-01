@@ -26,6 +26,8 @@
 #include <unistd.h>
 #include <pthreaddef.h>
 
+#include <support/xunistd.h>
+
 #define THE_SIG SIGUSR1
 
 /* The stack size can be overriden.  With a sufficiently large stack

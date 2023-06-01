@@ -18,6 +18,8 @@
 
 #include <stdio.h>
 
+#include <support/xunistd.h>
+
 static void do_prepare (void);
 #define PREPARE(argc, argv) do_prepare ()
 static int do_test (void);
@@ -36,7 +38,7 @@ do_prepare (void)
       printf ("cannot create temporary file: %m\n");
       exit (1);
     }
-  write (fd, pattern, sizeof (pattern) - 1);
+  xwrite (fd, pattern, sizeof (pattern) - 1);
   close (fd);
 }
 

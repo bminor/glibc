@@ -1186,7 +1186,7 @@ main (int argc, char **argv)
       int status;
 
       /* Send the child's "outside" pid to it.  */
-      write (pipes[1], &child, sizeof(child));
+      xwrite (pipes[1], &child, sizeof(child));
       close (pipes[0]);
       close (pipes[1]);
 
@@ -1255,7 +1255,7 @@ main (int argc, char **argv)
 
       sprintf (tmp, "%lld %lld 1\n",
 	       (long long) (be_su ? 0 : original_uid), (long long) original_uid);
-      write (UMAP, tmp, strlen (tmp));
+      xwrite (UMAP, tmp, strlen (tmp));
       xclose (UMAP);
 
       /* We must disable setgroups () before we can map our groups, else we
@@ -1264,7 +1264,7 @@ main (int argc, char **argv)
       if (GMAP >= 0)
 	{
 	  /* We support kernels old enough to not have this.  */
-	  write (GMAP, "deny\n", 5);
+	  xwrite (GMAP, "deny\n", 5);
 	  xclose (GMAP);
 	}
 
@@ -1276,7 +1276,7 @@ main (int argc, char **argv)
 
       sprintf (tmp, "%lld %lld 1\n",
 	       (long long) (be_su ? 0 : original_gid), (long long) original_gid);
-      write (GMAP, tmp, strlen (tmp));
+      xwrite (GMAP, tmp, strlen (tmp));
       xclose (GMAP);
     }
 

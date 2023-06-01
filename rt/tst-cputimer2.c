@@ -12,6 +12,8 @@
 #include <time.h>
 #include <pthread.h>
 
+#include <support/xunistd.h>
+
 static clockid_t worker_thread_clock;
 
 #define TEST_CLOCK worker_thread_clock
@@ -32,7 +34,7 @@ chew_cpu (void *arg)
       for (int i = 0; i < 100; ++i)
 	for (size_t j = 0; j < sizeof buf; ++j)
 	  buf[j] = 0xbb;
-      write (nullfd, (char *) buf, sizeof buf);
+      xwrite (nullfd, (char *) buf, sizeof buf);
       close (nullfd);
     }
 
