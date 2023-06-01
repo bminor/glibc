@@ -114,6 +114,45 @@ static int time_based;
 static int also_total = 0;
 
 
+static void
+read_all (int fd, void *buffer, size_t length)
+{
+  char *p = buffer;
+  char *end = p + length;
+  while (p < end)
+    {
+      ssize_t ret = read (fd, p, end - p);
+      if (ret < 0)
+	error (EXIT_FAILURE, errno,
+	       gettext ("read of %zu bytes failed after %td: %m"),
+	       length, p - (char *) buffer);
+
+      p += ret;
+    }
+}
+
+static void
+write_all (int fd, const void *buffer, size_t length)
+{
+  const char *p = buffer;
+  const char *end = p + length;
+  while (p < end)
+    {
+      ssize_t ret = write (fd, p, end - p);
+      if (ret < 0)
+	error (EXIT_FAILURE, errno,
+	       gettext ("write of %zu bytes failed after %td: %m"),
+	       length, p - (const char *) buffer);
+
+      if (ret == 0)
+	error (EXIT_FAILURE, 0,
+	       gettext ("write returned 0 after writing %td bytes of %zu"),
+	       p - (const char *) buffer, length);
+      p += ret;
+    }
+}
+
+
 int
 main (int argc, char *argv[])
 {
@@ -188,7 +227,7 @@ main (int argc, char *argv[])
   total = st.st_size / sizeof (struct entry) - 2;
 
   /* Read the administrative information.  */
-  read (fd, headent, sizeof (headent));
+  read_all (fd, headent, sizeof (headent));
   maxsize_heap = headent[1].heap;
   maxsize_stack = headent[1].stack;
   maxsize_total = headent[0].stack;
@@ -220,7 +259,8 @@ main (int argc, char *argv[])
 
       /* Write the computed values in the file.  */
       lseek (fd, 0, SEEK_SET);
-      write (fd, headent, 2 * sizeof (struct entry));
+      write_all (fd, headent, sizeof (headent));
+
     }
 
   if (also_total)
@@ -372,7 +412,7 @@ main (int argc, char *argv[])
           size_t new[2];
           uint64_t now;
 
-          read (fd, &entry, sizeof (entry));
+          read_all (fd, &entry, sizeof (entry));
 
           now = ((uint64_t) entry.time_high) << 32 | entry.time_low;
 
@@ -455,7 +495,7 @@ main (int argc, char *argv[])
           size_t xpos;
           uint64_t now;
 
-          read (fd, &entry, sizeof (entry));
+          read_all (fd, &entry, sizeof (entry));
 
           now = ((uint64_t) entry.time_high) << 32 | entry.time_low;
           xpos = 40 + ((xsize - 80) * (now - start_time)) / total_time;
