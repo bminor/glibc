@@ -30,6 +30,7 @@
 #include <sys/mman.h>
 #include <sys/time.h>
 #include <unistd.h>
+#include <unistd_ext.h>
 
 #include <hp-timing.h>
 #include <machine-sp.h>
@@ -143,27 +144,6 @@ peak_atomic_max (_Atomic size_t *peak, size_t val)
 	break;
     }
   while (! atomic_compare_exchange_weak (peak, &v, val));
-}
-
-static void
-write_all (int fd, const void *buffer, size_t length)
-{
-  const char *p = buffer;
-  const char *end = p + length;
-  while (p < end)
-    {
-      ssize_t ret = write (fd, p, end - p);
-      if (ret < 0)
-	error (EXIT_FAILURE, errno,
-	       gettext ("write of %zu bytes failed after %td: %m"),
-	       length, p - (const char *) buffer);
-
-      if (ret == 0)
-	error (EXIT_FAILURE, 0,
-	       gettext ("write returned 0 after writing %td bytes of %zu"),
-	       p - (const char *) buffer, length);
-      p += ret;
-    }
 }
 
 /* Update the global data after a successful function call.  */

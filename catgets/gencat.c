@@ -37,6 +37,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <unistd_ext.h>
 #include <wchar.h>
 
 #include "version.h"
@@ -836,27 +837,6 @@ invalid character: message ignored"));
   if (fp != stdin)
     fclose (fp);
   return current;
-}
-
-static void
-write_all (int fd, const void *buffer, size_t length)
-{
-  const char *p = buffer;
-  const char *end = p + length;
-  while (p < end)
-    {
-      ssize_t ret = write (fd, p, end - p);
-      if (ret < 0)
-	error (EXIT_FAILURE, errno,
-	       gettext ("write of %zu bytes failed after %td: %m"),
-	       length, p - (const char *) buffer);
-
-      if (ret == 0)
-	error (EXIT_FAILURE, 0,
-	       gettext ("write returned 0 after writing %td bytes of %zu"),
-	       p - (const char *) buffer, length);
-      p += ret;
-    }
 }
 
 static void
