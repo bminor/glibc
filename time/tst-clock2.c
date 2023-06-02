@@ -1,43 +1,44 @@
-/* Test setting the monotonic clock.  */
+/* Test setting the monotonic clock.
+   Copyright (C) 2007-2023 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
+
+#include <errno.h>
+#include <support/check.h>
 #include <time.h>
 #include <unistd.h>
 
-#if defined CLOCK_MONOTONIC && defined _POSIX_MONOTONIC_CLOCK
-
-# include <errno.h>
-# include <stdio.h>
-
-static int
+int
 do_test (void)
 {
+#if defined CLOCK_MONOTONIC && defined _POSIX_MONOTONIC_CLOCK
   if (sysconf (_SC_MONOTONIC_CLOCK) <= 0)
-    return 0;
+    FAIL_UNSUPPORTED ("_SC_MONOTONIC_CLOCK not supported");
 
   struct timespec ts;
-  if (clock_gettime (CLOCK_MONOTONIC, &ts) != 0)
-    {
-      puts ("clock_gettime(CLOCK_MONOTONIC) failed");
-      return 1;
-    }
+  TEST_COMPARE (clock_gettime (CLOCK_MONOTONIC, &ts), 0);
 
   /* Setting the monotonic clock must fail.  */
-  if (clock_settime (CLOCK_MONOTONIC, &ts) != -1)
-    {
-      puts ("clock_settime(CLOCK_MONOTONIC) did not fail");
-      return 1;
-    }
-  if (errno != EINVAL)
-    {
-      printf ("clock_settime(CLOCK_MONOTONIC) set errno to %d, expected %d\n",
-	      errno, EINVAL);
-      return 1;
-    }
-  return 0;
-}
-# define TEST_FUNCTION do_test ()
+  TEST_VERIFY (clock_settime (CLOCK_MONOTONIC, &ts) == -1);
+  TEST_VERIFY (errno == EINVAL || errno == EPERM);
 
+  return 0;
 #else
-# define TEST_FUNCTION	0
+  return EXIT_UNSUPPORTED;
 #endif
-#include "../test-skeleton.c"
+}
+
+#include <support/test-driver.c>
