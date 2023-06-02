@@ -5,11 +5,13 @@
 #include <wchar.h>
 #include <libc-diag.h>
 
+#include <support/xstdio.h>
+
 static int
 do_test (int argc, char *argv[])
 {
   mtrace ();
-  (void) freopen (argc == 1 ? "/dev/stdout" : argv[1], "a", stderr);
+  xfreopen (argc == 1 ? "/dev/stdout" : argv[1], "a", stderr);
   /* Orient the stream.  */
   fwprintf (stderr, L"hello world\n");
   char buf[20000];

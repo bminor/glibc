@@ -27,6 +27,8 @@
 #include <sys/param.h>
 #include <sys/stat.h>
 
+#include <support/xunistd.h>
+
 /* Prototype for our test function.  */
 extern int do_test (int argc, char *argv[]);
 #include <test-skeleton.c>
@@ -159,7 +161,7 @@ do_test (int argc, char ** argv)
     }
 
   for (i = 0; i < (int) (sizeof (symlinks) / sizeof (symlinks[0])); ++i)
-    symlink (symlinks[i].value, symlinks[i].name);
+    xsymlink (symlinks[i].value, symlinks[i].name);
 
   int has_dir = mkdir ("doesExist", 0777) == 0;
 

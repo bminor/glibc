@@ -121,7 +121,7 @@ do_test (void)
   /* Change the root dir.  */
 
   TEST_VERIFY (chroot ("/subdir") == 0);
-  chdir ("/");
+  xchdir ("/");
 
   /* Check we're NOT using the "inner" nsswitch.conf.  */
 

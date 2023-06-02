@@ -336,7 +336,7 @@ do_test (int argc, char *argv[])
   if (cwd == NULL)
     cwd = "..";
 
-  chdir (cwd);
+  xchdir (cwd);
   rmdir (tmpdir);
 
   return 0;

@@ -27,6 +27,8 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
+#include <support/xunistd.h>
+
 
 #define OUT_OF_MEMORY \
   do {									      \
@@ -229,7 +231,8 @@ do_test (int argc, char *argv[])
   close (fd);
 
   snprintf (buf, buflen, "%s/..", testdir);
-  chdir (buf);
+  xchdir (buf);
+
   /* We are now in the directory above the one we create the test
      directory in.  */
 
@@ -349,7 +352,7 @@ do_test (int argc, char *argv[])
     }
 
  fail:
-  chdir (startdir);
+  xchdir (startdir);
 
   /* Remove all the files.  */
   chmod (testdir, 0700);
