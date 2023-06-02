@@ -25,12 +25,8 @@ prepare (int argc, char *argv[])
 {
   char *buf;
   int off;
-  asprintf (&buf, "cp %s %n%s-copy", argv[0], &off, argv[0]);
-  if (buf == NULL)
-    {
-      puts ("asprintf  failed");
-      exit (1);
-    }
+
+  buf = xasprintf ("cp %s %n%s-copy", argv[0], &off, argv[0]);
   if (system (buf) != 0)
     {
       puts ("system  failed");
@@ -61,13 +57,8 @@ do_test (void)
       puts ("canonicalize_file_name failed");
       return 1;
     }
-  char *path;
-  asprintf (&path, "%s:../libio:../elf", bindir);
-  if (path == NULL)
-    {
-      puts ("asprintf  failed");
-      return 1;
-    }
+
+  char *path = xasprintf ("%s:../libio:../elf", bindir);
 
   setenv ("PATH", path, 1);
 

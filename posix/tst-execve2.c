@@ -18,12 +18,8 @@ prepare (int argc, char *argv[])
 {
   char *buf;
   int off;
-  asprintf (&buf, "cp %s %n%s-copy", argv[0], &off, argv[0]);
-  if (buf == NULL)
-    {
-      puts ("asprintf  failed");
-      exit (1);
-    }
+
+  buf = xasprintf ("cp %s %n%s-copy", argv[0], &off, argv[0]);
   if (system (buf) != 0)
     {
       puts ("system  failed");

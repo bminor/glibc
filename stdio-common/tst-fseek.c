@@ -25,6 +25,7 @@
 #include <time.h>
 #include <sys/stat.h>
 
+#include <support/support.h>
 
 static int
 do_test (void)
@@ -44,9 +45,7 @@ do_test (void)
   if (tmpdir == NULL || tmpdir[0] == '\0')
     tmpdir = "/tmp";
 
-  asprintf (&fname, "%s/tst-fseek.XXXXXX", tmpdir);
-  if (fname == NULL)
-    error (EXIT_FAILURE, errno, "cannot generate name for temporary file");
+  fname = xasprintf ("%s/tst-fseek.XXXXXX", tmpdir);
 
   /* Create a temporary file.   */
   fd = mkstemp (fname);

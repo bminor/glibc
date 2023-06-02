@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include <support/support.h>
+
 static char buf[8192];
 
 int
@@ -60,7 +62,7 @@ main (void)
      the perhaps incompatible new shared libraries.  */
   unsetenv ("LD_LIBRARY_PATH");
 
-  asprintf (&printbuf, "cmp %s %s", inname, outname);
+  printbuf = xasprintf ("cmp %s %s", inname, outname);
   result = system (printbuf);
   remove (inname);
   remove (outname);

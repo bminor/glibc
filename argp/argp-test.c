@@ -25,6 +25,8 @@
 #include <string.h>
 #include <argp.h>
 
+#include <support/support.h>
+
 const char *argp_program_version = "argp-test 1.0";
 
 struct argp_option sub_options[] =
@@ -178,12 +180,12 @@ help_filter (int key, const char *text, void *input)
   if (key == ARGP_KEY_HELP_POST_DOC && text)
     {
       time_t now = time (0);
-      asprintf (&new_text, text, ctime (&now));
+      new_text = xasprintf (text, ctime (&now));
     }
   else if (key == 'f')
     /* Show the default for the --foonly option.  */
-    asprintf (&new_text, "%s (ZOT defaults to %x)",
-	      text, params->foonly_default);
+    new_text = xasprintf ("%s (ZOT defaults to %x)",
+		          text, params->foonly_default);
   else
     new_text = (char *)text;
 

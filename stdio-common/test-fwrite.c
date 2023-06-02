@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <support/support.h>
+
 static int
 do_test (void)
 {
@@ -57,7 +59,7 @@ do_test (void)
       return 1;
     }
 
-  asprintf (&line, "\
+  line = xasprintf ("\
 GDB is free software and you are welcome to distribute copies of it\n\
  under certain conditions; type \"show copying\" to see the conditions.\n\
 There is absolutely no warranty for GDB; type \"show warranty\" for details.\n\
