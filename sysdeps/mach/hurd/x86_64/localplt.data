@@ -8,7 +8,7 @@ libc.so: free + RELA R_X86_64_GLOB_DAT
 libc.so: malloc + RELA R_X86_64_GLOB_DAT
 libc.so: realloc + RELA R_X86_64_GLOB_DAT
 # The dynamic linker has its own versions of basic functions for initial loading
-# of shared libraries.  These need to be overriden by libc once loaded.
+# of shared libraries.  These need to be overridden by libc once loaded.
 ld.so: __open ?
 ld.so: __open64 ?
 ld.so: __open_nocancel

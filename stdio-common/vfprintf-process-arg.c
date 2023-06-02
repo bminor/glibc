@@ -187,7 +187,7 @@ LABEL (unsigned_number):      /* Unsigned number of base BASE.  */
                        && alt && base == 8);
 
   /* At this point prec_inc is the additional bytes required for the
-     specificed precision.  It is 0 if the precision would not have
+     specified precision.  It is 0 if the precision would not have
      required additional bytes i.e. the number of input digits is more
      than the precision.  It is greater than zero if the precision is
      more than the number of digits without grouping (precision only

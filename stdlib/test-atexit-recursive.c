@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* Check that atexit handler registed from another handler still called. */
+/* Check that atexit handler registered from another handler still called. */
 
 #include <stdio.h>
 #include <stdlib.h>

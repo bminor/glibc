@@ -5,7 +5,7 @@
 
 /* The clone3 syscall provides a superset of the functionality of the clone
    interface.  The kernel might extend __CL_ARGS struct in the future, with
-   each version with a diffent __SIZE.  If the child is created, it will
+   each version with a different __SIZE.  If the child is created, it will
    start __FUNC function with __ARG arguments.
 
    Different than kernel, the implementation also returns EINVAL for an

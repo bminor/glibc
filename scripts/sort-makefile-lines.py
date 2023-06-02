@@ -38,7 +38,7 @@
 # Sorting is only carried out between two special markers:
 # (a) Marker start is '<variable> += \' (or '= \', or ':= \')
 # (b) Marker end is '  # <variable>' (whitespace matters)
-# With everthing between (a) and (b) being sorted accordingly.
+# With everything between (a) and (b) being sorted accordingly.
 #
 # You can use it like this:
 # $ scripts/sort-makefile-lines.py < elf/Makefile > elf/Makefile.tmp
@@ -80,7 +80,7 @@
 #   No manually listed test currently uses more than that (though
 #   automatically generated tests may; they don't need sorting).
 # - Avoid including another test and instead refactor into common
-#   code with all tests including hte common code, then give the
+#   code with all tests including the common code, then give the
 #   tests unique names.
 #
 # If you have a Makefile that needs converting, then you can
@@ -143,7 +143,7 @@ def sort_makefile_lines():
         reg = r'^  # ' + sm[1] + r'$'
         for j in range(sm[0] + 1, len(lines)):
             if re.search(reg, lines[j]):
-                # Rembember the block to sort (inclusive).
+                # Remember the block to sort (inclusive).
                 rangemarks.append((sm[0] + 1, j))
                 break
 

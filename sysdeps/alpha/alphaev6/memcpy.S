@@ -190,7 +190,7 @@ $tail_bytes:
 $misaligned:
 	mov	$0, $4			# E : dest temp
 	and	$0, 7, $1		# E : dest alignment mod8
-	beq	$1, $dest_0mod8		# U : life doesnt totally suck
+	beq	$1, $dest_0mod8		# U : life doesn't totally suck
 	nop
 
 $aligndest:

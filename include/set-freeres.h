@@ -33,7 +33,7 @@
    memory leaks.
 
    A single public API exists and is __libc_freeres, and this is used
-   by applications like valgrind to freee resouces.
+   by applications like valgrind to free resources.
 
    Each free routines must be explicit listed below.  */
 

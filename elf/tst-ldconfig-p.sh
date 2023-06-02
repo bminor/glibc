@@ -63,7 +63,7 @@ case $status in
     (1)
 	if head -n 1 "$testout" | \
 		grep -q ": Cache file has wrong endianness\.$" ; then
-	    echo "info: cache file has wrong endianess" >> "$testout"
+	    echo "info: cache file has wrong endianness" >> "$testout"
 	else
 	    echo "error: unexpected ldconfig error message" >> "$testout"
 	    errors=1
