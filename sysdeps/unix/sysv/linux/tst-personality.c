@@ -19,27 +19,36 @@
 
 #include <errno.h>
 #include <sys/personality.h>
+#include <support/check.h>
 
 static int
 do_test (void)
 {
-  int rc = 0;
   unsigned int test_persona = -EINVAL;
   unsigned int saved_persona;
 
   errno = 0xdefaced;
   saved_persona = personality (0xffffffff);
 
-  if (personality (test_persona) != saved_persona
-      || personality (0xffffffff) == -1
-      || personality (PER_LINUX) == -1
-      || personality (0xffffffff) != PER_LINUX
-      || 0xdefaced != errno)
-    rc = 1;
+  unsigned int r = personality (test_persona);
+  if (r == -1)
+    {
+      /* The syscall argument might be filtered by kernel, so the
+        test can not check for the bug issue.  */
+      if (errno == EPERM)
+       FAIL_UNSUPPORTED ("personality syscall argument are filtered");
+      FAIL_EXIT1 ("personality (%#x) failed: %m", test_persona);
+    }
 
-  (void) personality (saved_persona);
-  return rc;
+  TEST_COMPARE (r, saved_persona);
+  TEST_VERIFY (personality (0xffffffff) != -1);
+  TEST_VERIFY (personality (PER_LINUX) != -1);
+  TEST_COMPARE (personality (0xffffffff), PER_LINUX);
+  TEST_COMPARE (0xdefaced, errno);
+
+  personality (saved_persona);
+
+  return 0;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>
