@@ -24,7 +24,7 @@
    unlock SS off sigstack.  */
 void
 __sigreturn2 (struct hurd_sigstate *ss, uintptr_t *usp,
-              struct sigcontext *scp)
+              mach_port_t sc_reply_port)
 {
   mach_port_t reply_port;
   _hurd_sigstate_unlock (ss);
@@ -44,7 +44,7 @@ __sigreturn2 (struct hurd_sigstate *ss, uintptr_t *usp,
   if (__glibc_likely (MACH_PORT_VALID (reply_port)))
     (void) __mach_port_mod_refs (__mach_task_self (), reply_port,
                                  MACH_PORT_RIGHT_RECEIVE, -1);
-  THREAD_SETMEM (THREAD_SELF, reply_port, scp->sc_reply_port);
+  THREAD_SETMEM (THREAD_SELF, reply_port, sc_reply_port);
 
   asm volatile (
                 /* Point the stack to the register dump.  */
@@ -77,6 +77,8 @@ __sigreturn (struct sigcontext *scp)
 {
   struct hurd_sigstate *ss;
   struct hurd_userlink *link = (void *) &scp[1];
+  uintptr_t *usp;
+  mach_port_t sc_reply_port;
 
   if (__glibc_unlikely (scp == NULL || (scp->sc_mask & _SIG_CANT_MASK)))
     return __hurd_fail (EINVAL);
@@ -118,42 +120,48 @@ __sigreturn (struct sigcontext *scp)
        in the format the i387 `frstor' instruction uses to restore it.  */
     asm volatile ("frstor %0" : : "m" (scp->sc_fpsave));
 
-  {
-    /* There are convenient instructions to pop state off the stack, so we
-       copy the registers onto the user's stack, switch there, pop and
-       return.  */
+  /* Copy the registers onto the user's stack, to be able to release the
+     altstack (by unlocking sigstate).  Note that unless an altstack is used,
+     the sigcontext will itself be located on the user's stack, so we may well
+     be overwriting it here (or later in __sigreturn2).
 
-    uintptr_t *usp = (uintptr_t *) (scp->sc_ursp - 128);
+     So: do this very carefully.  First, load sc_reply_port, which is the only
+     other bit of sigcontext that __sigreturn2 needs.  Then copy the registers
+     without reordering them, but skipping the ones we won't need.  We have to
+     copy starting from the larger addresses down, since our register dump is
+     located at a larger address than the sigcontext.  */
 
-    *--usp = scp->sc_rip;
-    *--usp = scp->sc_rfl;
-    *--usp = scp->sc_rax;
-    *--usp = scp->sc_rcx;
-    *--usp = scp->sc_rdx;
-    *--usp = scp->sc_rbx;
-    *--usp = scp->sc_rbp;
-    *--usp = scp->sc_rsi;
-    *--usp = scp->sc_rdi;
-    *--usp = scp->sc_r15;
-    *--usp = scp->sc_r14;
-    *--usp = scp->sc_r13;
-    *--usp = scp->sc_r12;
-    *--usp = scp->sc_r11;
-    *--usp = scp->sc_r10;
-    *--usp = scp->sc_r9;
-    *--usp = scp->sc_r8;
+  sc_reply_port = scp->sc_reply_port;
+  usp = (uintptr_t *) (scp->sc_ursp - 128);
 
-    /* Switch to the user's stack that we have just prepared, and call
-       __sigreturn2.  Clobber "memory" to make sure GCC flushes the stack
-       setup to actual memory.  We align the stack as per the ABI, but pass
-       the original usp to __sigreturn2 as an argument.  */
-    asm volatile ("movq %1, %%rsp\n"
-                  "andq $-16, %%rsp\n"
-                  "call __sigreturn2" :
-                  : "D" (ss), "S" (usp), "d" (scp)
-                  : "memory");
-    __builtin_unreachable ();
-  }
+  *--usp = scp->sc_rip;
+  *--usp = scp->sc_rfl;
+  *--usp = scp->sc_rax;
+  *--usp = scp->sc_rcx;
+  *--usp = scp->sc_rdx;
+  *--usp = scp->sc_rbx;
+  *--usp = scp->sc_rbp;
+  *--usp = scp->sc_rsi;
+  *--usp = scp->sc_rdi;
+  *--usp = scp->sc_r15;
+  *--usp = scp->sc_r14;
+  *--usp = scp->sc_r13;
+  *--usp = scp->sc_r12;
+  *--usp = scp->sc_r11;
+  *--usp = scp->sc_r10;
+  *--usp = scp->sc_r9;
+  *--usp = scp->sc_r8;
+
+  /* Switch to the user's stack that we have just prepared, and call
+     __sigreturn2.  Clobber "memory" to make sure GCC flushes the stack
+     setup to actual memory.  We align the stack as per the ABI, but pass
+     the original usp to __sigreturn2 as an argument.  */
+  asm volatile ("movq %1, %%rsp\n"
+                "andq $-16, %%rsp\n"
+                "call __sigreturn2" :
+                : "D" (ss), "S" (usp), "d" (sc_reply_port)
+                : "memory");
+  __builtin_unreachable ();
 }
 
 weak_alias (__sigreturn, sigreturn)
