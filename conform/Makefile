@@ -25,78 +25,290 @@ include ../Makeconfig
 conformtest-headers-data := $(wildcard data/*.h-data) \
 			    $(wildcard data/*/*.h-data)
 
-conformtest-standards := ISO ISO99 ISO11 POSIX XPG4 XPG42 UNIX98 XOPEN2K \
-			 POSIX2008 XOPEN2K8
-
-conformtest-headers-ISO := assert.h ctype.h errno.h float.h limits.h locale.h \
-			   math.h setjmp.h signal.h stdarg.h stddef.h stdio.h \
-			   stdlib.h string.h time.h
-conformtest-headers-ISO99 := $(conformtest-headers-ISO) complex.h fenv.h \
-			     inttypes.h iso646.h stdbool.h stdint.h tgmath.h \
-			     wchar.h wctype.h
+conformtest-standards := \
+  ISO \
+  ISO11 \
+  ISO99 \
+  POSIX \
+  POSIX2008 \
+  UNIX98 \
+  XOPEN2K \
+  XOPEN2K8 \
+  XPG4 \
+  XPG42 \
+  # conformtest-standards
+conformtest-headers-ISO := \
+  assert.h \
+  ctype.h \
+  errno.h \
+  float.h \
+  limits.h \
+  locale.h \
+  math.h \
+  setjmp.h \
+  signal.h \
+  stdarg.h \
+  stddef.h \
+  stdio.h \
+  stdlib.h \
+  string.h \
+  time.h \
+  # conformtest-headers-ISO
+conformtest-headers-ISO99 := \
+  $(conformtest-headers-ISO) \
+  complex.h \
+  fenv.h \
+  inttypes.h \
+  iso646.h \
+  stdbool.h \
+  stdint.h \
+  tgmath.h \
+  wchar.h \
+  wctype.h \
+  # conformtest-headers-ISO99
 # Missing ISO11 expectations for: stdatomic.h
-conformtest-headers-ISO11 := $(conformtest-headers-ISO99) stdalign.h \
-			     stdnoreturn.h threads.h uchar.h
-conformtest-headers-POSIX := $(conformtest-headers-ISO) aio.h dirent.h \
-			     fcntl.h fnmatch.h glob.h grp.h mqueue.h \
-			     pthread.h pwd.h regex.h sched.h semaphore.h \
-			     sys/mman.h sys/stat.h sys/times.h sys/types.h \
-			     sys/utsname.h sys/wait.h tar.h termios.h \
-			     unistd.h utime.h wordexp.h
+conformtest-headers-ISO11 := \
+  $(conformtest-headers-ISO99) \
+  stdalign.h \
+  stdnoreturn.h \
+  threads.h \
+  uchar.h \
+  # conformtest-headers-ISO11
+conformtest-headers-POSIX := \
+  $(conformtest-headers-ISO) \
+  aio.h \
+  dirent.h \
+  fcntl.h \
+  fnmatch.h \
+  glob.h \
+  grp.h \
+  mqueue.h \
+  pthread.h \
+  pwd.h \
+  regex.h \
+  sched.h \
+  semaphore.h \
+  sys/mman.h \
+  sys/stat.h \
+  sys/times.h \
+  sys/types.h \
+  sys/utsname.h \
+  sys/wait.h \
+  tar.h \
+  termios.h \
+  unistd.h \
+  utime.h \
+  wordexp.h \
+  # conformtest-headers-POSIX
 # Missing XPG4 expectations for: regexp.h wchar.h.
-conformtest-headers-XPG4 := $(conformtest-headers-ISO) cpio.h dirent.h \
-			    fcntl.h fnmatch.h ftw.h glob.h grp.h iconv.h \
-			    langinfo.h monetary.h nl_types.h pwd.h regex.h \
-			    search.h sys/ipc.h sys/msg.h sys/sem.h sys/shm.h \
-			    sys/stat.h sys/times.h sys/types.h sys/utsname.h \
-			    sys/wait.h tar.h termios.h ulimit.h unistd.h \
-			    utime.h varargs.h wordexp.h
-# Missing XPG42 expectations for: re_comp.h regexp.h wchar.h.
+conformtest-headers-XPG4 := \
+  $(conformtest-headers-ISO) \
+  cpio.h \
+  dirent.h \
+  fcntl.h \
+  fnmatch.h \
+  ftw.h \
+  glob.h \
+  grp.h \
+  iconv.h \
+  langinfo.h \
+  monetary.h \
+  nl_types.h \
+  pwd.h \
+  regex.h \
+  search.h \
+  sys/ipc.h \
+  sys/msg.h \
+  sys/sem.h \
+  sys/shm.h \
+  sys/stat.h \
+  sys/times.h \
+  sys/types.h \
+  sys/utsname.h \
+  sys/wait.h \
+  tar.h \
+  termios.h \
+  ulimit.h \
+  unistd.h \
+  utime.h \
+  varargs.h \
+  wordexp.h \
+  # conformtest-headers-XPG4
+# Missing XPG42 expectations for:
+#   re_comp.h
+#   regexp.h
+#   wchar.h
 # XPG42 includes XTI and STREAMS, but those are not implemented by glibc.
-conformtest-headers-XPG42 := $(conformtest-headers-XPG4) arpa/inet.h fmtmsg.h \
-			    libgen.h ndbm.h netdb.h netinet/in.h poll.h \
-			    strings.h sys/mman.h sys/resource.h \
-			    sys/socket.h sys/statvfs.h sys/time.h sys/timeb.h \
-			    sys/uio.h sys/un.h syslog.h ucontext.h utmpx.h
-# Missing UNIX98 expectations for: inttypes.h re_comp.h regexp.h.
+conformtest-headers-XPG42 := \
+  $(conformtest-headers-XPG4) \
+  arpa/inet.h \
+  fmtmsg.h \
+  libgen.h \
+  ndbm.h \
+  netdb.h \
+  netinet/in.h \
+  poll.h \
+  strings.h \
+  sys/mman.h \
+  sys/resource.h \
+  sys/socket.h \
+  sys/statvfs.h \
+  sys/time.h \
+  sys/timeb.h \
+  sys/uio.h \
+  sys/un.h \
+  syslog.h \
+  ucontext.h \
+  utmpx.h \
+  # conformtest-headers-XPG42
+# Missing UNIX98 expectations for:
+#   inttypes.h
+#   re_comp.h
+#   regexp.h
 # The online UNIX98 includes XCURSES, but curses.h, term.h and
 # unctrl.h are outside the scope of these tests.  It also includes
 # XTI and STREAMS, but those are not implemented by glibc.
-conformtest-headers-UNIX98 := $(conformtest-headers-POSIX) arpa/inet.h cpio.h \
-			      dlfcn.h fmtmsg.h ftw.h iconv.h iso646.h \
-			      langinfo.h libgen.h monetary.h ndbm.h netdb.h \
-			      netinet/in.h nl_types.h poll.h search.h \
-			      strings.h sys/ipc.h sys/msg.h \
-			      sys/resource.h sys/sem.h sys/shm.h sys/socket.h \
-			      sys/statvfs.h sys/time.h sys/timeb.h sys/uio.h \
-			      sys/un.h syslog.h ucontext.h ulimit.h utmpx.h \
-			      varargs.h wchar.h wctype.h
-# Missing XOPEN2K expectations for: trace.h, stropts.h.
-conformtest-headers-XOPEN2K := $(conformtest-headers-POSIX) arpa/inet.h \
-			       complex.h cpio.h dlfcn.h fenv.h fmtmsg.h ftw.h \
-			       iconv.h inttypes.h iso646.h langinfo.h \
-			       libgen.h monetary.h ndbm.h net/if.h netdb.h \
-			       netinet/in.h netinet/tcp.h nl_types.h poll.h \
-			       search.h spawn.h stdbool.h stdint.h strings.h \
-			       sys/ipc.h sys/msg.h sys/resource.h \
-			       sys/select.h sys/sem.h sys/shm.h sys/socket.h \
-			       sys/statvfs.h sys/time.h sys/timeb.h sys/uio.h \
-			       sys/un.h syslog.h tgmath.h ucontext.h ulimit.h \
-			       utmpx.h wchar.h wctype.h
-# Missing POSIX2008 expectations for: trace.h, stropts.h.
-conformtest-headers-POSIX2008 := $(conformtest-headers-POSIX) arpa/inet.h \
-				 complex.h cpio.h dlfcn.h fenv.h iconv.h \
-				 inttypes.h iso646.h langinfo.h monetary.h \
-				 net/if.h netdb.h netinet/in.h netinet/tcp.h \
-				 nl_types.h poll.h spawn.h stdbool.h stdint.h \
-				 strings.h sys/select.h \
-				 sys/socket.h sys/statvfs.h sys/un.h tgmath.h \
-				 wchar.h wctype.h
-# Missing XOPEN2K8 expectations for: trace.h.
-conformtest-headers-XOPEN2K8 := $(conformtest-headers-POSIX2008) fmtmsg.h \
-				ftw.h libgen.h ndbm.h search.h sys/ipc.h \
-				sys/msg.h sys/resource.h sys/sem.h sys/shm.h \
-				sys/time.h sys/uio.h syslog.h ulimit.h utmpx.h
+conformtest-headers-UNIX98 := \
+  $(conformtest-headers-POSIX) \
+  arpa/inet.h \
+  cpio.h \
+  dlfcn.h \
+  fmtmsg.h \
+  ftw.h \
+  iconv.h \
+  iso646.h \
+  langinfo.h \
+  libgen.h \
+  monetary.h \
+  ndbm.h \
+  netdb.h \
+  netinet/in.h \
+  nl_types.h \
+  poll.h \
+  search.h \
+  strings.h \
+  sys/ipc.h \
+  sys/msg.h \
+  sys/resource.h \
+  sys/sem.h \
+  sys/shm.h \
+  sys/socket.h \
+  sys/statvfs.h \
+  sys/time.h \
+  sys/timeb.h \
+  sys/uio.h \
+  sys/un.h \
+  syslog.h \
+  ucontext.h \
+  ulimit.h \
+  utmpx.h \
+  varargs.h \
+  wchar.h \
+  wctype.h \
+  # conformtest-headers-UNIX98
+# Missing XOPEN2K expectations for:
+#   trace.h
+#   stropts.h
+conformtest-headers-XOPEN2K := \
+  $(conformtest-headers-POSIX) \
+  arpa/inet.h \
+  complex.h \
+  cpio.h \
+  dlfcn.h \
+  fenv.h \
+  fmtmsg.h \
+  ftw.h \
+  iconv.h \
+  inttypes.h \
+  iso646.h \
+  langinfo.h \
+  libgen.h \
+  monetary.h \
+  ndbm.h \
+  net/if.h \
+  netdb.h \
+  netinet/in.h \
+  netinet/tcp.h \
+  nl_types.h \
+  poll.h \
+  search.h \
+  spawn.h \
+  stdbool.h \
+  stdint.h \
+  strings.h \
+  sys/ipc.h \
+  sys/msg.h \
+  sys/resource.h \
+  sys/select.h \
+  sys/sem.h \
+  sys/shm.h \
+  sys/socket.h \
+  sys/statvfs.h \
+  sys/time.h \
+  sys/timeb.h \
+  sys/uio.h \
+  sys/un.h \
+  syslog.h \
+  tgmath.h \
+  ucontext.h \
+  ulimit.h \
+  utmpx.h \
+  wchar.h \
+  wctype.h \
+  # conformtest-headers-XOPEN2K
+# Missing POSIX2008 expectations for:
+#   trace.h
+#   stropts.h
+conformtest-headers-POSIX2008 := \
+  $(conformtest-headers-POSIX) \
+  arpa/inet.h \
+  complex.h \
+  cpio.h \
+  dlfcn.h \
+  fenv.h \
+  iconv.h \
+  inttypes.h \
+  iso646.h \
+  langinfo.h \
+  monetary.h \
+  net/if.h \
+  netdb.h \
+  netinet/in.h \
+  netinet/tcp.h \
+  nl_types.h \
+  poll.h \
+  spawn.h \
+  stdbool.h \
+  stdint.h \
+  strings.h \
+  sys/select.h \
+  sys/socket.h \
+  sys/statvfs.h \
+  sys/un.h \
+  tgmath.h \
+  wchar.h \
+  wctype.h \
+  # conformtest-headers-POSIX2008
+# Missing XOPEN2K8 expectations for:
+#   trace.h
+conformtest-headers-XOPEN2K8 := \
+  $(conformtest-headers-POSIX2008) \
+  fmtmsg.h \
+  ftw.h \
+  libgen.h \
+  ndbm.h \
+  search.h \
+  sys/ipc.h \
+  sys/msg.h \
+  sys/resource.h \
+  sys/sem.h \
+  sys/shm.h \
+  sys/time.h \
+  sys/uio.h \
+  syslog.h \
+  ulimit.h \
+  utmpx.h \
+  # conformtest-headers-XOPEN2K8
 
 conformtest-header-list-base := $(foreach std,$(conformtest-standards),\
 					      header-list-$(std).out)
