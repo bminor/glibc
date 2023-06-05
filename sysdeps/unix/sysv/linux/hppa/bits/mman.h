@@ -24,7 +24,6 @@
 
 /* Other flags.  */
 #define __MAP_ANONYMOUS	0x10		/* Don't use a file */
-#define MAP_VARIABLE	0
 
 /* These are Linux-specific.  */
 #define MAP_DENYWRITE	0x0800		/* ETXTBSY */
