@@ -25,10 +25,13 @@
 
 __BEGIN_DECLS
 
-/* Terminate the process (with exit status 0) after SECONDS have
-   elapsed, from a helper thread.  The process is terminated with the
-   exit function, so atexit handlers are executed.  */
+/* Terminate the process (with exit (0)) after SECONDS have elapsed,
+   from a helper thread.  The process is terminated with the exit
+   function, so atexit handlers are executed.  */
 void delayed_exit (int seconds);
+
+/* Like delayed_exit, but use _exit (0).  */
+void delayed__exit (int seconds);
 
 /* Returns true if Priority Inheritance support CLOCK_MONOTONIC.  */
 bool support_mutex_pi_monotonic (void);
