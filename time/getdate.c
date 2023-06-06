@@ -114,6 +114,7 @@ __getdate_r (const char *string, struct tm *tp)
   struct tm tm;
   struct __stat64_t64 st;
   bool mday_ok = false;
+  bool found = false;
 
   datemsk = getenv ("DATEMSK");
   if (datemsk == NULL || *datemsk == '\0')
@@ -181,7 +182,7 @@ __getdate_r (const char *string, struct tm *tp)
       tp->tm_gmtoff = 0;
       tp->tm_zone = NULL;
       result = strptime (string, line, tp);
-      if (result && *result == '\0')
+      if ((found = (result && *result == '\0')))
 	break;
     }
   while (!__feof_unlocked (fp));
@@ -201,7 +202,7 @@ __getdate_r (const char *string, struct tm *tp)
   /* Close template file.  */
   fclose (fp);
 
-  if (result == NULL || *result != '\0')
+  if (!found)
     return 7;
 
   /* Get current time.  */
