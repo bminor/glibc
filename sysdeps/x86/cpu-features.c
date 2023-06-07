@@ -417,6 +417,216 @@ _Static_assert (((index_arch_Fast_Unaligned_Load
 		     == index_arch_Fast_Copy_Backward)),
 		"Incorrect index_arch_Fast_Unaligned_Load");
 
+
+/* Intel Family-6 microarch list.  */
+enum
+{
+  /* Atom processors.  */
+  INTEL_ATOM_BONNELL,
+  INTEL_ATOM_SILVERMONT,
+  INTEL_ATOM_AIRMONT,
+  INTEL_ATOM_GOLDMONT,
+  INTEL_ATOM_GOLDMONT_PLUS,
+  INTEL_ATOM_SIERRAFOREST,
+  INTEL_ATOM_GRANDRIDGE,
+  INTEL_ATOM_TREMONT,
+
+  /* Bigcore processors.  */
+  INTEL_BIGCORE_MEROM,
+  INTEL_BIGCORE_PENRYN,
+  INTEL_BIGCORE_DUNNINGTON,
+  INTEL_BIGCORE_NEHALEM,
+  INTEL_BIGCORE_WESTMERE,
+  INTEL_BIGCORE_SANDYBRIDGE,
+  INTEL_BIGCORE_IVYBRIDGE,
+  INTEL_BIGCORE_HASWELL,
+  INTEL_BIGCORE_BROADWELL,
+  INTEL_BIGCORE_SKYLAKE,
+  INTEL_BIGCORE_KABYLAKE,
+  INTEL_BIGCORE_COMETLAKE,
+  INTEL_BIGCORE_SKYLAKE_AVX512,
+  INTEL_BIGCORE_CANNONLAKE,
+  INTEL_BIGCORE_ICELAKE,
+  INTEL_BIGCORE_TIGERLAKE,
+  INTEL_BIGCORE_ROCKETLAKE,
+  INTEL_BIGCORE_SAPPHIRERAPIDS,
+  INTEL_BIGCORE_RAPTORLAKE,
+  INTEL_BIGCORE_EMERALDRAPIDS,
+  INTEL_BIGCORE_METEORLAKE,
+  INTEL_BIGCORE_LUNARLAKE,
+  INTEL_BIGCORE_ARROWLAKE,
+  INTEL_BIGCORE_GRANITERAPIDS,
+
+  /* Mixed (bigcore + atom SOC).  */
+  INTEL_MIXED_LAKEFIELD,
+  INTEL_MIXED_ALDERLAKE,
+
+  /* KNL.  */
+  INTEL_KNIGHTS_MILL,
+  INTEL_KNIGHTS_LANDING,
+
+  /* Unknown.  */
+  INTEL_UNKNOWN,
+};
+
+static unsigned int
+intel_get_fam6_microarch (unsigned int model,
+			  __attribute__ ((unused)) unsigned int stepping)
+{
+  switch (model)
+    {
+    case 0x1C:
+    case 0x26:
+      return INTEL_ATOM_BONNELL;
+    case 0x27:
+    case 0x35:
+    case 0x36:
+      /* Really Saltwell, but Saltwell is just a die shrink of Bonnell
+         (microarchitecturally identical).  */
+      return INTEL_ATOM_BONNELL;
+    case 0x37:
+    case 0x4A:
+    case 0x4D:
+    case 0x5D:
+      return INTEL_ATOM_SILVERMONT;
+    case 0x4C:
+    case 0x5A:
+    case 0x75:
+      return INTEL_ATOM_AIRMONT;
+    case 0x5C:
+    case 0x5F:
+      return INTEL_ATOM_GOLDMONT;
+    case 0x7A:
+      return INTEL_ATOM_GOLDMONT_PLUS;
+    case 0xAF:
+      return INTEL_ATOM_SIERRAFOREST;
+    case 0xB6:
+      return INTEL_ATOM_GRANDRIDGE;
+    case 0x86:
+    case 0x96:
+    case 0x9C:
+      return INTEL_ATOM_TREMONT;
+    case 0x0F:
+    case 0x16:
+      return INTEL_BIGCORE_MEROM;
+    case 0x17:
+      return INTEL_BIGCORE_PENRYN;
+    case 0x1D:
+      return INTEL_BIGCORE_DUNNINGTON;
+    case 0x1A:
+    case 0x1E:
+    case 0x1F:
+    case 0x2E:
+      return INTEL_BIGCORE_NEHALEM;
+    case 0x25:
+    case 0x2C:
+    case 0x2F:
+      return INTEL_BIGCORE_WESTMERE;
+    case 0x2A:
+    case 0x2D:
+      return INTEL_BIGCORE_SANDYBRIDGE;
+    case 0x3A:
+    case 0x3E:
+      return INTEL_BIGCORE_IVYBRIDGE;
+    case 0x3C:
+    case 0x3F:
+    case 0x45:
+    case 0x46:
+      return INTEL_BIGCORE_HASWELL;
+    case 0x3D:
+    case 0x47:
+    case 0x4F:
+    case 0x56:
+      return INTEL_BIGCORE_BROADWELL;
+    case 0x4E:
+    case 0x5E:
+      return INTEL_BIGCORE_SKYLAKE;
+    case 0x8E:
+    /*
+     Stepping = {9}
+        -> Amberlake
+     Stepping = {10}
+        -> Coffeelake
+     Stepping = {11, 12}
+        -> Whiskeylake
+     else
+        -> Kabylake
+
+     All of these are derivatives of Kabylake (Skylake client).
+     */
+	  return INTEL_BIGCORE_KABYLAKE;
+    case 0x9E:
+    /*
+     Stepping = {10, 11, 12, 13}
+        -> Coffeelake
+     else
+        -> Kabylake
+
+     Coffeelake is a derivatives of Kabylake (Skylake client).
+     */
+	  return INTEL_BIGCORE_KABYLAKE;
+    case 0xA5:
+    case 0xA6:
+      return INTEL_BIGCORE_COMETLAKE;
+    case 0x66:
+      return INTEL_BIGCORE_CANNONLAKE;
+    case 0x55:
+    /*
+     Stepping = {6, 7}
+        -> Cascadelake
+     Stepping = {11}
+        -> Cooperlake
+     else
+        -> Skylake-avx512
+
+     These are all microarchitecturally indentical, so use
+     Skylake-avx512 for all of them.
+     */
+      return INTEL_BIGCORE_SKYLAKE_AVX512;
+    case 0x6A:
+    case 0x6C:
+    case 0x7D:
+    case 0x7E:
+    case 0x9D:
+      return INTEL_BIGCORE_ICELAKE;
+    case 0x8C:
+    case 0x8D:
+      return INTEL_BIGCORE_TIGERLAKE;
+    case 0xA7:
+      return INTEL_BIGCORE_ROCKETLAKE;
+    case 0x8F:
+      return INTEL_BIGCORE_SAPPHIRERAPIDS;
+    case 0xB7:
+    case 0xBA:
+    case 0xBF:
+      return INTEL_BIGCORE_RAPTORLAKE;
+    case 0xCF:
+      return INTEL_BIGCORE_EMERALDRAPIDS;
+    case 0xAA:
+    case 0xAC:
+      return INTEL_BIGCORE_METEORLAKE;
+    case 0xbd:
+      return INTEL_BIGCORE_LUNARLAKE;
+    case 0xc6:
+      return INTEL_BIGCORE_ARROWLAKE;
+    case 0xAD:
+    case 0xAE:
+      return INTEL_BIGCORE_GRANITERAPIDS;
+    case 0x8A:
+      return INTEL_MIXED_LAKEFIELD;
+    case 0x97:
+    case 0x9A:
+    case 0xBE:
+      return INTEL_MIXED_ALDERLAKE;
+    case 0x85:
+      return INTEL_KNIGHTS_MILL;
+    case 0x57:
+      return INTEL_KNIGHTS_LANDING;
+    default:
+      return INTEL_UNKNOWN;
+    }
+}
+
 static inline void
 init_cpu_features (struct cpu_features *cpu_features)
 {
@@ -453,129 +663,147 @@ init_cpu_features (struct cpu_features *cpu_features)
       if (family == 0x06)
 	{
 	  model += extended_model;
-	  switch (model)
+	  unsigned int microarch
+	      = intel_get_fam6_microarch (model, stepping);
+
+	  switch (microarch)
 	    {
-	    case 0x1c:
-	    case 0x26:
-	      /* BSF is slow on Atom.  */
+	      /* Atom / KNL tuning.  */
+	    case INTEL_ATOM_BONNELL:
+	      /* BSF is slow on Bonnell.  */
 	      cpu_features->preferred[index_arch_Slow_BSF]
-		|= bit_arch_Slow_BSF;
+		  |= bit_arch_Slow_BSF;
 	      break;
 
-	    case 0x57:
-	      /* Knights Landing.  Enable Silvermont optimizations.  */
-
-	    case 0x7a:
 	      /* Unaligned load versions are faster than SSSE3
-		 on Goldmont Plus.  */
+		     on Airmont, Silvermont, Goldmont, and Goldmont Plus.  */
+	    case INTEL_ATOM_AIRMONT:
+	    case INTEL_ATOM_SILVERMONT:
+	    case INTEL_ATOM_GOLDMONT:
+	    case INTEL_ATOM_GOLDMONT_PLUS:
 
-	    case 0x5c:
-	    case 0x5f:
-	      /* Unaligned load versions are faster than SSSE3
-		 on Goldmont.  */
+          /* Knights Landing.  Enable Silvermont optimizations.  */
+	    case INTEL_KNIGHTS_LANDING:
 
-	    case 0x4c:
-	    case 0x5a:
-	    case 0x75:
-	      /* Airmont is a die shrink of Silvermont.  */
-
-	    case 0x37:
-	    case 0x4a:
-	    case 0x4d:
-	    case 0x5d:
-	      /* Unaligned load versions are faster than SSSE3
-		 on Silvermont.  */
 	      cpu_features->preferred[index_arch_Fast_Unaligned_Load]
-		|= (bit_arch_Fast_Unaligned_Load
-		    | bit_arch_Fast_Unaligned_Copy
-		    | bit_arch_Prefer_PMINUB_for_stringop
-		    | bit_arch_Slow_SSE4_2);
+		  |= (bit_arch_Fast_Unaligned_Load
+		      | bit_arch_Fast_Unaligned_Copy
+		      | bit_arch_Prefer_PMINUB_for_stringop
+		      | bit_arch_Slow_SSE4_2);
 	      break;
 
-	    case 0x86:
-	    case 0x96:
-	    case 0x9c:
+	    case INTEL_ATOM_TREMONT:
 	      /* Enable rep string instructions, unaligned load, unaligned
-	         copy, pminub and avoid SSE 4.2 on Tremont.  */
+		 copy, pminub and avoid SSE 4.2 on Tremont.  */
 	      cpu_features->preferred[index_arch_Fast_Rep_String]
-		|= (bit_arch_Fast_Rep_String
-		    | bit_arch_Fast_Unaligned_Load
-		    | bit_arch_Fast_Unaligned_Copy
-		    | bit_arch_Prefer_PMINUB_for_stringop
-		    | bit_arch_Slow_SSE4_2);
+		  |= (bit_arch_Fast_Rep_String
+		      | bit_arch_Fast_Unaligned_Load
+		      | bit_arch_Fast_Unaligned_Copy
+		      | bit_arch_Prefer_PMINUB_for_stringop
+		      | bit_arch_Slow_SSE4_2);
 	      break;
 
+	   /*
+	    Default tuned Knights microarch.
+	    case INTEL_KNIGHTS_MILL:
+        */
+
+	   /*
+	    Default tuned atom microarch.
+	    case INTEL_ATOM_SIERRAFOREST:
+	    case INTEL_ATOM_GRANDRIDGE:
+	   */
+
+	      /* Bigcore/Default Tuning.  */
 	    default:
 	      /* Unknown family 0x06 processors.  Assuming this is one
 		 of Core i3/i5/i7 processors if AVX is available.  */
 	      if (!CPU_FEATURES_CPU_P (cpu_features, AVX))
 		break;
 	      /* Fall through.  */
-
-	    case 0x1a:
-	    case 0x1e:
-	    case 0x1f:
-	    case 0x25:
-	    case 0x2c:
-	    case 0x2e:
-	    case 0x2f:
+	    case INTEL_BIGCORE_NEHALEM:
+	    case INTEL_BIGCORE_WESTMERE:
 	      /* Rep string instructions, unaligned load, unaligned copy,
 		 and pminub are fast on Intel Core i3, i5 and i7.  */
 	      cpu_features->preferred[index_arch_Fast_Rep_String]
-		|= (bit_arch_Fast_Rep_String
-		    | bit_arch_Fast_Unaligned_Load
-		    | bit_arch_Fast_Unaligned_Copy
-		    | bit_arch_Prefer_PMINUB_for_stringop);
+		  |= (bit_arch_Fast_Rep_String
+		      | bit_arch_Fast_Unaligned_Load
+		      | bit_arch_Fast_Unaligned_Copy
+		      | bit_arch_Prefer_PMINUB_for_stringop);
 	      break;
+
+	   /*
+	    Default tuned Bigcore microarch.
+	    case INTEL_BIGCORE_SANDYBRIDGE:
+	    case INTEL_BIGCORE_IVYBRIDGE:
+	    case INTEL_BIGCORE_HASWELL:
+	    case INTEL_BIGCORE_BROADWELL:
+	    case INTEL_BIGCORE_SKYLAKE:
+	    case INTEL_BIGCORE_KABYLAKE:
+	    case INTEL_BIGCORE_COMETLAKE:
+	    case INTEL_BIGCORE_SKYLAKE_AVX512:
+	    case INTEL_BIGCORE_CANNONLAKE:
+	    case INTEL_BIGCORE_ICELAKE:
+	    case INTEL_BIGCORE_TIGERLAKE:
+	    case INTEL_BIGCORE_ROCKETLAKE:
+	    case INTEL_BIGCORE_RAPTORLAKE:
+	    case INTEL_BIGCORE_METEORLAKE:
+	    case INTEL_BIGCORE_LUNARLAKE:
+	    case INTEL_BIGCORE_ARROWLAKE:
+	    case INTEL_BIGCORE_SAPPHIRERAPIDS:
+	    case INTEL_BIGCORE_EMERALDRAPIDS:
+	    case INTEL_BIGCORE_GRANITERAPIDS:
+	    */
+
+	   /*
+	    Default tuned Mixed (bigcore + atom SOC).
+	    case INTEL_MIXED_LAKEFIELD:
+	    case INTEL_MIXED_ALDERLAKE:
+	    */
 	    }
 
-	 /* Disable TSX on some processors to avoid TSX on kernels that
-	    weren't updated with the latest microcode package (which
-	    disables broken feature by default).  */
-	 switch (model)
+	      /* Disable TSX on some processors to avoid TSX on kernels that
+		 weren't updated with the latest microcode package (which
+		 disables broken feature by default).  */
+	  switch (microarch)
 	    {
-	    case 0x55:
+	    case INTEL_BIGCORE_SKYLAKE_AVX512:
+	      /* 0x55 (Skylake-avx512) && stepping <= 5 disable TSX. */
 	      if (stepping <= 5)
 		goto disable_tsx;
 	      break;
-	    case 0x8e:
-	      /* NB: Although the errata documents that for model == 0x8e,
-		 only 0xb stepping or lower are impacted, the intention of
-		 the errata was to disable TSX on all client processors on
-		 all steppings.  Include 0xc stepping which is an Intel
-		 Core i7-8665U, a client mobile processor.  */
-	    case 0x9e:
+
+	    case INTEL_BIGCORE_KABYLAKE:
+	      /* NB: Although the errata documents that for model == 0x8e
+		     (kabylake skylake client), only 0xb stepping or lower are
+		     impacted, the intention of the errata was to disable TSX on
+		     all client processors on all steppings.  Include 0xc
+		     stepping which is an Intel Core i7-8665U, a client mobile
+		     processor.  */
 	      if (stepping > 0xc)
 		break;
 	      /* Fall through.  */
-	    case 0x4e:
-	    case 0x5e:
-	      {
+	    case INTEL_BIGCORE_SKYLAKE:
 		/* Disable Intel TSX and enable RTM_ALWAYS_ABORT for
 		   processors listed in:
 
 https://www.intel.com/content/www/us/en/support/articles/000059422/processors.html
 		 */
-disable_tsx:
+	    disable_tsx:
 		CPU_FEATURE_UNSET (cpu_features, HLE);
 		CPU_FEATURE_UNSET (cpu_features, RTM);
 		CPU_FEATURE_SET (cpu_features, RTM_ALWAYS_ABORT);
-	      }
-	      break;
-	    case 0x3f:
-	      /* Xeon E7 v3 with stepping >= 4 has working TSX.  */
-	      if (stepping >= 4)
 		break;
-	      /* Fall through.  */
-	    case 0x3c:
-	    case 0x45:
-	    case 0x46:
-	      /* Disable Intel TSX on Haswell processors (except Xeon E7 v3
-		 with stepping >= 4) to avoid TSX on kernels that weren't
-		 updated with the latest microcode package (which disables
-		 broken feature by default).  */
-	      CPU_FEATURE_UNSET (cpu_features, RTM);
-	      break;
+
+	    case INTEL_BIGCORE_HASWELL:
+		/* Xeon E7 v3 (model == 0x3f) with stepping >= 4 has working
+		   TSX.  Haswell also include other model numbers that have
+		   working TSX.  */
+		if (model == 0x3f && stepping >= 4)
+		break;
+
+		CPU_FEATURE_UNSET (cpu_features, RTM);
+		break;
 	    }
 	}
 
