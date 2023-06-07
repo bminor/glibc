@@ -74,7 +74,10 @@ test-srcs = tst-mtrace
 # with MALLOC_CHECK_=3 because they expect a specific failure.
 tests-exclude-malloc-check = tst-malloc-check tst-malloc-usable \
 	tst-mxfast tst-safe-linking \
-	tst-compathooks-off tst-compathooks-on tst-memalign-2 tst-memalign-3
+	tst-compathooks-off tst-compathooks-on tst-memalign-2 tst-memalign-3 \
+	tst-mallocfork2 \
+	tst-mallocfork3 \
+	tst-malloc-tcache-leak
 
 # Run all tests with MALLOC_CHECK_=3
 tests-malloc-check = $(filter-out $(tests-exclude-malloc-check) \
@@ -92,7 +95,10 @@ tests-exclude-hugetlb1 = \
 	tst-interpose-static-thread \
 	tst-malloc-usable \
 	tst-malloc-usable-tunables \
-	tst-mallocstate
+	tst-mallocstate \
+	tst-malloc-tcache-leak \
+	tst-mallocfork2 \
+	tst-mallocfork3
 # The tst-free-errno relies on the used malloc page size to mmap an
 # overlapping region.
 tests-exclude-hugetlb2 = \
@@ -121,7 +127,9 @@ tests-exclude-mcheck = tst-mallocstate \
 	tst-compathooks-off tst-compathooks-on \
 	tst-memalign-2 \
 	tst-memalign-3 \
-	tst-mxfast
+	tst-mxfast \
+	tst-mallocfork2 \
+	tst-mallocfork3
 
 tests-mcheck = $(filter-out $(tests-exclude-mcheck) $(tests-static), $(tests))
 endif
@@ -182,14 +190,10 @@ $(objpfx)tst-malloc-fork-deadlock-malloc-check: $(shared-thread-library)
 $(objpfx)tst-malloc-stats-cancellation-malloc-check: $(shared-thread-library)
 $(objpfx)tst-malloc-thread-exit-malloc-hugetlb1: $(shared-thread-library)
 $(objpfx)tst-malloc-thread-fail-malloc-hugetlb1: $(shared-thread-library)
-$(objpfx)tst-mallocfork2-malloc-hugetlb1: $(shared-thread-library)
-$(objpfx)tst-mallocfork3-malloc-hugetlb1: $(shared-thread-library)
 $(objpfx)tst-malloc-fork-deadlock-malloc-hugetlb1: $(shared-thread-library)
 $(objpfx)tst-malloc-stats-cancellation-malloc-hugetlb1: $(shared-thread-library)
 $(objpfx)tst-malloc-thread-exit-malloc-hugetlb2: $(shared-thread-library)
 $(objpfx)tst-malloc-thread-fail-malloc-hugetlb2: $(shared-thread-library)
-$(objpfx)tst-mallocfork2-malloc-hugetlb2: $(shared-thread-library)
-$(objpfx)tst-mallocfork3-malloc-hugetlb2: $(shared-thread-library)
 $(objpfx)tst-malloc-fork-deadlock-malloc-hugetlb2: $(shared-thread-library)
 $(objpfx)tst-malloc-stats-cancellation-malloc-hugetlb2: $(shared-thread-library)
 
@@ -344,14 +348,9 @@ $(objpfx)tst-dynarray-fail-mem.out: $(objpfx)tst-dynarray-fail.out
 $(objpfx)tst-malloc-tcache-leak: $(shared-thread-library)
 $(objpfx)tst-malloc_info: $(shared-thread-library)
 $(objpfx)tst-mallocfork2: $(shared-thread-library)
-$(objpfx)tst-malloc-tcache-leak-mcheck: $(shared-thread-library)
 $(objpfx)tst-malloc_info-mcheck: $(shared-thread-library)
-$(objpfx)tst-mallocfork2-mcheck: $(shared-thread-library)
-$(objpfx)tst-malloc-tcache-leak-malloc-check: $(shared-thread-library)
 $(objpfx)tst-malloc_info-malloc-check: $(shared-thread-library)
 $(objpfx)tst-mallocfork2-malloc-check: $(shared-thread-library)
-$(objpfx)tst-malloc-tcache-leak-malloc-hugetlb1: $(shared-thread-library)
-$(objpfx)tst-malloc-tcache-leak-malloc-hugetlb2: $(shared-thread-library)
 $(objpfx)tst-malloc_info-malloc-hugetlb1: $(shared-thread-library)
 $(objpfx)tst-malloc_info-malloc-hugetlb2: $(shared-thread-library)
 $(objpfx)tst-memalign-3: $(shared-thread-library)
