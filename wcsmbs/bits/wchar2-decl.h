@@ -71,7 +71,7 @@ extern wchar_t *__REDIRECT_NTH (__wmempcpy_chk_warn,
 
 extern wchar_t *__wmemset_chk (wchar_t *__s, wchar_t __c, size_t __n,
 			       size_t __ns) __THROW;
-extern wchar_t *__REDIRECT_NTH (__wmemset_alias, (wchar_t *__s, wchar_t __c,
+extern wchar_t *__REDIRECT_FORTIFY_NTH (__wmemset_alias, (wchar_t *__s, wchar_t __c,
 							  size_t __n), wmemset);
 extern wchar_t *__REDIRECT_NTH (__wmemset_chk_warn,
 				(wchar_t *__s, wchar_t __c, size_t __n,
@@ -203,7 +203,7 @@ extern wchar_t *__REDIRECT (__fgetws_unlocked_chk_warn,
 extern size_t __wcrtomb_chk (char *__restrict __s, wchar_t __wchar,
 			     mbstate_t *__restrict __p,
 			     size_t __buflen) __THROW __wur;
-extern size_t __REDIRECT_NTH (__wcrtomb_alias,
+extern size_t __REDIRECT_FORTIFY_NTH (__wcrtomb_alias,
 				      (char *__restrict __s, wchar_t __wchar,
 				      mbstate_t *__restrict __ps), wcrtomb) __wur;
 

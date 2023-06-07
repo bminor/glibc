@@ -28,3 +28,4 @@ __wcrtomb_chk (char *s, wchar_t wchar, mbstate_t *ps, size_t buflen)
 {
   return __wcrtomb_internal (s, wchar, ps, buflen);
 }
+libc_hidden_def (__wcrtomb_chk)

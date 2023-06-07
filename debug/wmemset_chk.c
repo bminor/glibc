@@ -26,3 +26,4 @@ __wmemset_chk (wchar_t *s, wchar_t c, size_t n, size_t dstlen)
 
   return wmemset (s, c, n);
 }
+libc_hidden_builtin_def (__wmemset_chk)

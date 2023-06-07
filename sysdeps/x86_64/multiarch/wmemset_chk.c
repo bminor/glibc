@@ -28,4 +28,8 @@
 
 libc_ifunc_redirected (__redirect_wmemset_chk, __wmemset_chk,
 		       IFUNC_SELECTOR ());
+# ifdef SHARED
+__hidden_ver1 (__wmemset_chk, __GI___wmemset_chk, __redirect_wmemset_chk)
+  __attribute__ ((visibility ("hidden"))) __attribute_copy__ (__wmemset_chk);
+# endif
 #endif
