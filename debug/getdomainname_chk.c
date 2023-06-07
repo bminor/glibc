@@ -26,3 +26,4 @@ __getdomainname_chk (char *buf, size_t buflen, size_t nreal)
 
   return getdomainname (buf, buflen);
 }
+libc_hidden_def (__getdomainname_chk)

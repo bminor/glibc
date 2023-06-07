@@ -26,3 +26,4 @@ __getlogin_r_chk (char *buf, size_t buflen, size_t nreal)
 
   return getlogin_r (buf, buflen);
 }
+libc_hidden_def (__getlogin_r_chk)

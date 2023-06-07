@@ -26,7 +26,7 @@
 extern ssize_t __read_chk (int __fd, void *__buf, size_t __nbytes,
 			   size_t __buflen)
      __wur __attr_access ((__write_only__, 2, 3));
-extern ssize_t __REDIRECT (__read_alias, (int __fd, void *__buf,
+extern ssize_t __REDIRECT_FORTIFY (__read_alias, (int __fd, void *__buf,
 						  size_t __nbytes), read)
      __wur __attr_access ((__write_only__, 2, 3));
 extern ssize_t __REDIRECT (__read_chk_warn,
@@ -157,7 +157,7 @@ extern int __REDIRECT_NTH (__ttyname_r_chk_warn,
 #ifdef __USE_POSIX199506
 extern int __getlogin_r_chk (char *__buf, size_t __buflen, size_t __nreal)
      __nonnull ((1)) __attr_access ((__write_only__, 1, 2));
-extern int __REDIRECT (__getlogin_r_alias, (char *__buf, size_t __buflen),
+extern int __REDIRECT_FORTIFY (__getlogin_r_alias, (char *__buf, size_t __buflen),
 		       getlogin_r) __nonnull ((1));
 extern int __REDIRECT (__getlogin_r_chk_warn,
 		       (char *__buf, size_t __buflen, size_t __nreal),
@@ -184,7 +184,7 @@ extern int __REDIRECT_NTH (__gethostname_chk_warn,
 #if defined __USE_MISC || (defined __USE_XOPEN && !defined __USE_UNIX98)
 extern int __getdomainname_chk (char *__buf, size_t __buflen, size_t __nreal)
      __THROW __nonnull ((1)) __wur __attr_access ((__write_only__, 1, 2));
-extern int __REDIRECT_NTH (__getdomainname_alias, (char *__buf,
+extern int __REDIRECT_FORTIFY_NTH (__getdomainname_alias, (char *__buf,
 						   size_t __buflen),
 			   getdomainname) __nonnull ((1))
      __wur __attr_access ((__write_only__, 1, 2));
