@@ -636,6 +636,7 @@ init_cpu_features (struct cpu_features *cpu_features)
   unsigned int stepping = 0;
   enum cpu_features_kind kind;
 
+  cpu_features->cachesize_non_temporal_divisor = 4;
 #if !HAS_CPUID
   if (__get_cpuid_max (0, 0) == 0)
     {
@@ -716,13 +717,13 @@ init_cpu_features (struct cpu_features *cpu_features)
 
 	      /* Bigcore/Default Tuning.  */
 	    default:
+	    default_tuning:
 	      /* Unknown family 0x06 processors.  Assuming this is one
 		 of Core i3/i5/i7 processors if AVX is available.  */
 	      if (!CPU_FEATURES_CPU_P (cpu_features, AVX))
 		break;
-	      /* Fall through.  */
-	    case INTEL_BIGCORE_NEHALEM:
-	    case INTEL_BIGCORE_WESTMERE:
+
+	    enable_modern_features:
 	      /* Rep string instructions, unaligned load, unaligned copy,
 		 and pminub are fast on Intel Core i3, i5 and i7.  */
 	      cpu_features->preferred[index_arch_Fast_Rep_String]
@@ -732,12 +733,23 @@ init_cpu_features (struct cpu_features *cpu_features)
 		      | bit_arch_Prefer_PMINUB_for_stringop);
 	      break;
 
-	   /*
-	    Default tuned Bigcore microarch.
+	    case INTEL_BIGCORE_NEHALEM:
+	    case INTEL_BIGCORE_WESTMERE:
+	      /* Older CPUs prefer non-temporal stores at lower threshold.  */
+	      cpu_features->cachesize_non_temporal_divisor = 8;
+	      goto enable_modern_features;
+
+	      /* Older Bigcore microarch (smaller non-temporal store
+		 threshold).  */
 	    case INTEL_BIGCORE_SANDYBRIDGE:
 	    case INTEL_BIGCORE_IVYBRIDGE:
 	    case INTEL_BIGCORE_HASWELL:
 	    case INTEL_BIGCORE_BROADWELL:
+	      cpu_features->cachesize_non_temporal_divisor = 8;
+	      goto default_tuning;
+
+	      /* Newer Bigcore microarch (larger non-temporal store
+		 threshold).  */
 	    case INTEL_BIGCORE_SKYLAKE:
 	    case INTEL_BIGCORE_KABYLAKE:
 	    case INTEL_BIGCORE_COMETLAKE:
@@ -753,13 +765,14 @@ init_cpu_features (struct cpu_features *cpu_features)
 	    case INTEL_BIGCORE_SAPPHIRERAPIDS:
 	    case INTEL_BIGCORE_EMERALDRAPIDS:
 	    case INTEL_BIGCORE_GRANITERAPIDS:
-	    */
+	      cpu_features->cachesize_non_temporal_divisor = 2;
+	      goto default_tuning;
 
-	   /*
-	    Default tuned Mixed (bigcore + atom SOC).
+	      /* Default tuned Mixed (bigcore + atom SOC). */
 	    case INTEL_MIXED_LAKEFIELD:
 	    case INTEL_MIXED_ALDERLAKE:
-	    */
+	      cpu_features->cachesize_non_temporal_divisor = 2;
+	      goto default_tuning;
 	    }
 
 	      /* Disable TSX on some processors to avoid TSX on kernels that

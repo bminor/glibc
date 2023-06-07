@@ -113,8 +113,11 @@ _dl_diagnostics_cpu (void)
                             cpu_features->level3_cache_linesize);
   print_cpu_features_value ("level4_cache_size",
                             cpu_features->level4_cache_size);
-  _Static_assert (offsetof (struct cpu_features, level4_cache_size)
-                  + sizeof (cpu_features->level4_cache_size)
-                  == sizeof (*cpu_features),
-                  "last cpu_features field has been printed");
+  print_cpu_features_value ("cachesize_non_temporal_divisor",
+			    cpu_features->cachesize_non_temporal_divisor);
+  _Static_assert (
+      offsetof (struct cpu_features, cachesize_non_temporal_divisor)
+	      + sizeof (cpu_features->cachesize_non_temporal_divisor)
+	  == sizeof (*cpu_features),
+      "last cpu_features field has been printed");
 }

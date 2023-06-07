@@ -738,19 +738,25 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
   cpu_features->level3_cache_linesize = level3_cache_linesize;
   cpu_features->level4_cache_size = level4_cache_size;
 
-  /* The default setting for the non_temporal threshold is 1/4 of size
-     of the chip's cache. For most Intel and AMD processors with an
-     initial release date between 2017 and 2023, a thread's typical
-     share of the cache is from 18-64MB. Using the 1/4 L3 is meant to
-     estimate the point where non-temporal stores begin out-competing
-     REP MOVSB. As well the point where the fact that non-temporal
-     stores are forced back to main memory would already occurred to the
-     majority of the lines in the copy. Note, concerns about the
-     entire L3 cache being evicted by the copy are mostly alleviated
-     by the fact that modern HW detects streaming patterns and
-     provides proper LRU hints so that the maximum thrashing
-     capped at 1/associativity. */
-  unsigned long int non_temporal_threshold = shared / 4;
+  unsigned long int cachesize_non_temporal_divisor
+      = cpu_features->cachesize_non_temporal_divisor;
+  if (cachesize_non_temporal_divisor <= 0)
+    cachesize_non_temporal_divisor = 4;
+
+  /* The default setting for the non_temporal threshold is [1/8, 1/2] of size
+     of the chip's cache (depending on `cachesize_non_temporal_divisor` which
+     is microarch specific. The defeault is 1/4). For most Intel and AMD
+     processors with an initial release date between 2017 and 2023, a thread's
+     typical share of the cache is from 18-64MB. Using a reasonable size
+     fraction of L3 is meant to estimate the point where non-temporal stores
+     begin out-competing REP MOVSB. As well the point where the fact that
+     non-temporal stores are forced back to main memory would already occurred
+     to the majority of the lines in the copy. Note, concerns about the entire
+     L3 cache being evicted by the copy are mostly alleviated by the fact that
+     modern HW detects streaming patterns and provides proper LRU hints so that
+     the maximum thrashing capped at 1/associativity. */
+  unsigned long int non_temporal_threshold
+      = shared / cachesize_non_temporal_divisor;
   /* If no ERMS, we use the per-thread L3 chunking. Normal cacheable stores run
      a higher risk of actually thrashing the cache as they don't have a HW LRU
      hint. As well, their performance in highly parallel situations is

@@ -945,6 +945,9 @@ struct cpu_features
   unsigned long int level3_cache_linesize;
   /* /_SC_LEVEL4_CACHE_SIZE.  */
   unsigned long int level4_cache_size;
+  /* When no user non_temporal_threshold is specified. We default to
+     cachesize / cachesize_non_temporal_divisor.  */
+  unsigned long int cachesize_non_temporal_divisor;
 };
 
 /* Get a pointer to the CPU features structure.  */
