@@ -93,7 +93,10 @@ get_locked_global (void)
     {
       global_copy = calloc (1, sizeof (*global));
       if (global_copy == NULL)
-        return NULL;
+	{
+	  __libc_lock_unlock (lock);
+	  return NULL;
+	}
       atomic_store_relaxed (&global, global_copy);
       resolv_conf_array_init (&global_copy->array);
     }
