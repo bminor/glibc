@@ -19,7 +19,11 @@ subdir		:= dlfcn
 
 include ../Makeconfig
 
-headers		:= bits/dlfcn.h bits/dl_find_object.h dlfcn.h
+headers := \
+  bits/dl_find_object.h \
+  bits/dlfcn.h \
+  dlfcn.h \
+  # headers
 extra-libs	:= libdl
 libdl-routines	:= libdl-compat
 routines = \
@@ -33,6 +37,7 @@ routines = \
   dlsym \
   dlvsym \
   libc_dlerror_result \
+  # routines
 
 extra-libs-others := libdl
 
@@ -49,24 +54,69 @@ shared-only-routines := dlopenold
 endif
 
 ifeq (yes,$(build-shared))
-tests = glrefmain failtest tst-dladdr default errmsg1 tstcxaatexit \
-	bug-dlopen1 bug-dlsym1 tst-dlinfo bug-atexit1 bug-atexit2 \
-	bug-atexit3 tstatexit bug-dl-leaf tst-rec-dlopen
+tests = \
+  bug-atexit1 \
+  bug-atexit2 \
+  bug-atexit3 \
+  bug-dl-leaf \
+  bug-dlopen1 \
+  bug-dlsym1 \
+  default \
+  errmsg1 \
+  failtest \
+  glrefmain \
+  tst-dladdr \
+  tst-dlinfo \
+  tst-rec-dlopen \
+  tstatexit \
+  tstcxaatexit \
+  # tests
 endif
-modules-names = glreflib1 glreflib2 glreflib3 failtestmod defaultmod1 \
-		defaultmod2 errmsg1mod modatexit modcxaatexit \
-		bug-dlsym1-lib1 bug-dlsym1-lib2 bug-atexit1-lib \
-		bug-atexit2-lib bug-dl-leaf-lib \
-		bug-dl-leaf-lib-cb moddummy1 moddummy2
+modules-names = \
+  bug-atexit1-lib \
+  bug-atexit2-lib \
+  bug-dl-leaf-lib \
+  bug-dl-leaf-lib-cb \
+  bug-dlsym1-lib1 \
+  bug-dlsym1-lib2 \
+  defaultmod1 \
+  defaultmod2 \
+  errmsg1mod \
+  failtestmod \
+  glreflib1 \
+  glreflib2 \
+  glreflib3 \
+  modatexit \
+  modcxaatexit \
+  moddummy1 \
+  moddummy2 \
+  # modules-names
 
 failtestmod.so-no-z-defs = yes
 glreflib2.so-no-z-defs = yes
 errmsg1mod.so-no-z-defs = yes
 
 ifeq (yes,$(build-shared))
-tests += tststatic tststatic2 tststatic3 tststatic4 tststatic5
-tests-static += tststatic tststatic2 tststatic3 tststatic4 tststatic5
-modules-names += modstatic modstatic2 modstatic3 modstatic5
+tests += \
+  tststatic \
+  tststatic2 \
+  tststatic3 \
+  tststatic4 \
+  tststatic5 \
+  # tests
+tests-static += \
+  tststatic \
+  tststatic2 \
+  tststatic3 \
+  tststatic4 \
+  tststatic5 \
+  # tests-static
+modules-names += \
+  modstatic \
+  modstatic2 \
+  modstatic3 \
+  modstatic5 \
+  # modules-names
 tststatic-ENV = LD_LIBRARY_PATH=$(ld-library-path):$(common-objpfx)elf
 tststatic2-ENV = $(tststatic-ENV)
 tststatic3-ENV = $(tststatic-ENV)
