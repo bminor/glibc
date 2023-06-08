@@ -23,13 +23,28 @@ subdir	:= gmon
 
 include ../Makeconfig
 
-headers	:= sys/gmon.h sys/gmon_out.h sys/profil.h
-routines := gmon mcount profil sprofil prof-freq
+headers := \
+  sys/gmon.h \
+  sys/gmon_out.h \
+  sys/profil.h \
+  # headers
+routines := \
+  gmon \
+  mcount \
+  prof-freq \
+  profil \
+  sprofil \
+  # routines
 
-tests	= tst-sprofil tst-gmon tst-mcount-overflow tst-mcleanup
+tests = \
+  tst-gmon \
+  tst-mcleanup \
+  tst-mcount-overflow \
+  tst-sprofil \
+  # tests
 ifeq ($(build-profile),yes)
-tests	+= tst-profile-static
-tests-static	+= tst-profile-static
+tests += tst-profile-static
+tests-static += tst-profile-static
 
 LDFLAGS-tst-profile-static = -profile
 endif
