@@ -22,16 +22,48 @@ subdir		:= dirent
 
 include ../Makeconfig
 
-headers		:= dirent.h bits/dirent.h bits/dirent_ext.h
-routines	:= opendir closedir readdir readdir_r rewinddir \
-		   seekdir telldir scandir alphasort versionsort \
-		   getdents getdents64 dirfd readdir64 readdir64_r scandir64 \
-		   alphasort64 versionsort64 fdopendir \
-		   scandirat scandirat64 \
-		   scandir-cancel scandir-tail scandir64-tail
+headers := \
+  bits/dirent.h \
+  bits/dirent_ext.h \
+  dirent.h \
+  # headers
+routines := \
+  alphasort \
+  alphasort64 \
+  closedir \
+  dirfd \
+  fdopendir \
+  getdents \
+  getdents64 \
+  opendir \
+  readdir \
+  readdir64 \
+  readdir64_r \
+  readdir_r \
+  rewinddir \
+  scandir \
+  scandir-cancel \
+  scandir-tail \
+  scandir64 \
+  scandir64-tail \
+  scandirat \
+  scandirat64 \
+  seekdir \
+  telldir \
+  versionsort \
+  versionsort64 \
+  # routines
 
-tests	   := list tst-seekdir opendir-tst1 bug-readdir1 tst-fdopendir \
-	      tst-fdopendir2 tst-scandir tst-scandir64
+tests := \
+  bug-readdir1 \
+  list \
+  opendir-tst1 \
+  tst-fdopendir \
+  tst-fdopendir2 \
+  tst-scandir \
+  tst-scandir64 \
+  tst-seekdir \
+  # tests
 
 CFLAGS-scandir.c += $(uses-callbacks)
 CFLAGS-scandir64.c += $(uses-callbacks)
