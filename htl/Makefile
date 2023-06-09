@@ -24,150 +24,192 @@ SYSDEPS := lockfile
 
 LCLHDRS :=
 
-libpthread-routines := pt-attr pt-attr-destroy                   	    \
-	pt-attr-getguardsize                     			    \
-	pt-attr-getscope	                                            \
-	pt-attr-getstack pt-attr-getstackaddr pt-attr-getstacksize	    \
-	pt-attr-init pt-attr-setguardsize                       	    \
-	pt-attr-setschedparam			                            \
-	pt-attr-setscope pt-attr-setstack	                            \
-	pt-attr-setstackaddr pt-attr-setstacksize			    \
-									    \
-	pt-barrier-destroy pt-barrier-init pt-barrier-wait		    \
-	pt-barrier pt-barrierattr-destroy pt-barrierattr-init		    \
-	pt-barrierattr-getpshared pt-barrierattr-setpshared		    \
-									    \
-	pt-destroy-specific pt-init-specific				    \
-	pt-key-create pt-key-delete					    \
-	pt-getspecific pt-setspecific					    \
-									    \
-	pt-once								    \
-									    \
-	pt-alloc							    \
-	pt-create							    \
-	pt-getattr							    \
-	pt-dealloc							    \
-	pt-detach							    \
-	pt-exit								    \
-	pt-initialize							    \
-	pt-join								    \
-	pt-sigmask							    \
-	pt-spin-inlines							    \
-	pt-cleanup							    \
-	pt-setcancelstate						    \
-	pt-setcanceltype						    \
-	pt-testcancel							    \
-	pt-cancel							    \
-									    \
-	pt-mutexattr-destroy pt-mutexattr-init				    \
-	pt-mutexattr-getprioceiling pt-mutexattr-getprotocol		    \
-	pt-mutexattr-getpshared pt-mutexattr-gettype			    \
-	pt-mutexattr-setprioceiling pt-mutexattr-setprotocol		    \
-	pt-mutexattr-setpshared pt-mutexattr-settype			    \
-	pt-mutexattr-getrobust pt-mutexattr-setrobust			    \
-									    \
-	pt-mutex-init pt-mutex-destroy pt-mutex-checklocked		    \
-	pt-mutex-lock pt-mutex-trylock pt-mutex-timedlock		    \
-	pt-mutex-unlock							    \
-	pt-mutex-transfer-np						    \
-	pt-mutex-getprioceiling pt-mutex-setprioceiling			    \
-	pt-mutex-consistent 						    \
-									    \
-	pt-rwlock-attr							    \
-	pt-rwlockattr-init pt-rwlockattr-destroy			    \
-	pt-rwlockattr-getpshared pt-rwlockattr-setpshared		    \
-									    \
-	pt-rwlock-init pt-rwlock-destroy				    \
-	pt-rwlock-rdlock pt-rwlock-tryrdlock				    \
-	pt-rwlock-trywrlock pt-rwlock-wrlock				    \
-	pt-rwlock-timedrdlock pt-rwlock-timedwrlock			    \
-	pt-rwlock-unlock						    \
-									    \
-	pt-cond								    \
-	pt-condattr-init pt-condattr-destroy				    \
-	pt-condattr-getclock pt-condattr-getpshared			    \
-	pt-condattr-setclock pt-condattr-setpshared			    \
-									    \
-	pt-cond-destroy pt-cond-init					    \
-	pt-cond-brdcast							    \
-	pt-cond-signal							    \
-	pt-cond-wait							    \
-	pt-cond-timedwait						    \
-	pt-hurd-cond-wait						    \
-	pt-hurd-cond-timedwait						    \
-									    \
-	pt-stack-alloc							    \
-	pt-thread-alloc							    \
-	pt-thread-start							    \
-	pt-thread-terminate						    \
-	pt-startup							    \
-									    \
-	pt-getconcurrency pt-setconcurrency				    \
-									    \
-	pt-block							    \
-	pt-timedblock							    \
-	pt-block-intr							    \
-	pt-timedblock-intr						    \
-	pt-wakeup							    \
-	pt-docancel							    \
-	pt-sysdep							    \
-	pt-setup							    \
-	pt-machdep							    \
-	pt-spin								    \
-									    \
-	pt-sigstate-init						    \
-	pt-sigstate-destroy						    \
-	pt-sigstate							    \
-									    \
-	pt-kill								    \
-	pt-getcpuclockid						    \
-									    \
-	pt-setschedprio		                                            \
-	pt-yield							    \
-									    \
-	sem_close sem-destroy sem-getvalue sem-init sem_open		    \
-	sem-post sem-timedwait sem-trywait sem_unlink			    \
-	sem-wait sem-waitfast						    \
-	sem_routines							    \
-									    \
-	cancellation							    \
-	cthreads-compat							    \
-	herrno								    \
-	$(SYSDEPS)
+libpthread-routines := \
+  pt-attr \
+  pt-attr-destroy \
+  pt-attr-getguardsize \
+  pt-attr-getscope \
+  pt-attr-getstack \
+  pt-attr-getstackaddr \
+  pt-attr-getstacksize \
+  pt-attr-init \
+  pt-attr-setguardsize \
+  pt-attr-setschedparam \
+  pt-attr-setscope \
+  pt-attr-setstack \
+  pt-attr-setstackaddr \
+  pt-attr-setstacksize \
+  pt-barrier-destroy \
+  pt-barrier-init \
+  pt-barrier-wait \
+  pt-barrier \
+  pt-barrierattr-destroy \
+  pt-barrierattr-init \
+  pt-barrierattr-getpshared \
+  pt-barrierattr-setpshared \
+  pt-destroy-specific \
+  pt-init-specific \
+  pt-key-create \
+  pt-key-delete \
+  pt-getspecific \
+  pt-setspecific \
+  pt-once \
+  pt-alloc \
+  pt-create \
+  pt-getattr \
+  pt-dealloc \
+  pt-detach \
+  pt-exit \
+  pt-initialize \
+  pt-join \
+  pt-sigmask \
+  pt-spin-inlines \
+  pt-cleanup \
+  pt-setcancelstate \
+  pt-setcanceltype \
+  pt-testcancel \
+  pt-cancel \
+  pt-mutexattr-destroy \
+  pt-mutexattr-init \
+  pt-mutexattr-getprioceiling \
+  pt-mutexattr-getprotocol \
+  pt-mutexattr-getpshared \
+  pt-mutexattr-gettype \
+  pt-mutexattr-setprioceiling \
+  pt-mutexattr-setprotocol \
+  pt-mutexattr-setpshared \
+  pt-mutexattr-settype \
+  pt-mutexattr-getrobust \
+  pt-mutexattr-setrobust \
+  pt-mutex-init \
+  pt-mutex-destroy \
+  pt-mutex-checklocked \
+  pt-mutex-lock \
+  pt-mutex-trylock \
+  pt-mutex-timedlock \
+  pt-mutex-unlock \
+  pt-mutex-transfer-np \
+  pt-mutex-getprioceiling \
+  pt-mutex-setprioceiling \
+  pt-mutex-consistent \
+  pt-rwlock-attr \
+  pt-rwlockattr-init \
+  pt-rwlockattr-destroy \
+  pt-rwlockattr-getpshared \
+  pt-rwlockattr-setpshared \
+  pt-rwlock-init \
+  pt-rwlock-destroy \
+  pt-rwlock-rdlock \
+  pt-rwlock-tryrdlock \
+  pt-rwlock-trywrlock \
+  pt-rwlock-wrlock \
+  pt-rwlock-timedrdlock \
+  pt-rwlock-timedwrlock \
+  pt-rwlock-unlock \
+  pt-cond \
+  pt-condattr-init \
+  pt-condattr-destroy \
+  pt-condattr-getclock \
+  pt-condattr-getpshared \
+  pt-condattr-setclock \
+  pt-condattr-setpshared \
+  pt-cond-destroy \
+  pt-cond-init \
+  pt-cond-brdcast \
+  pt-cond-signal \
+  pt-cond-wait \
+  pt-cond-timedwait \
+  pt-hurd-cond-wait \
+  pt-hurd-cond-timedwait \
+  pt-stack-alloc \
+  pt-thread-alloc \
+  pt-thread-start \
+  pt-thread-terminate \
+  pt-startup \
+  pt-getconcurrency \
+  pt-setconcurrency \
+  pt-block \
+  pt-timedblock \
+  pt-block-intr \
+  pt-timedblock-intr \
+  pt-wakeup \
+  pt-docancel \
+  pt-sysdep \
+  pt-setup \
+  pt-machdep \
+  pt-spin \
+  pt-sigstate-init \
+  pt-sigstate-destroy \
+  pt-sigstate \
+  pt-kill \
+  pt-getcpuclockid \
+  pt-setschedprio \
+  pt-yield \
+  sem_close \
+  sem-destroy \
+  sem-getvalue \
+  sem-init \
+  sem_open \
+  sem-post \
+  sem-timedwait \
+  sem-trywait \
+  sem_unlink \
+  sem-wait \
+  sem-waitfast \
+  sem_routines \
+  cancellation \
+  cthreads-compat \
+  herrno \
+  $(SYSDEPS) \
+  # libpthread-routine
 
-headers :=				\
-              pthread.h				\
-	      semaphore.h			\
-						\
-              bits/pthread.h			\
-              bits/pthread-np.h			\
-              bits/pthreadtypes.h		\
-              bits/pthreadtypes-arch.h		\
-              bits/thread-shared-types.h	\
-              bits/types/struct___pthread_mutex.h	\
-              bits/types/struct___pthread_cond.h	\
-              bits/types/struct___pthread_condattr.h	\
-              bits/types/__pthread_spinlock_t.h	\
-              bits/spin-lock-inline.h		\
-              bits/cancelation.h		\
-              bits/types/struct___pthread_attr.h	\
-              bits/types/struct___pthread_barrierattr.h	\
-              bits/types/struct___pthread_barrier.h	\
-              bits/types/__pthread_key.h		\
-              bits/types/struct___pthread_once.h	\
-              bits/types/struct___pthread_mutexattr.h	\
-              bits/types/struct___pthread_rwlock.h	\
-              bits/types/struct___pthread_rwlockattr.h	\
-              bits/types/__pthread_t.h		\
-              bits/types/__thrd_t.h		\
-	      bits/semaphore.h
+headers := \
+  bits/cancelation.h \
+  bits/pthread-np.h \
+  bits/pthread.h \
+  bits/pthreadtypes-arch.h \
+  bits/pthreadtypes.h \
+  bits/semaphore.h \
+  bits/spin-lock-inline.h \
+  bits/thread-shared-types.h \
+  bits/types/__pthread_key.h \
+  bits/types/__pthread_spinlock_t.h \
+  bits/types/__pthread_t.h \
+  bits/types/__thrd_t.h \
+  bits/types/struct___pthread_attr.h \
+  bits/types/struct___pthread_barrier.h \
+  bits/types/struct___pthread_barrierattr.h \
+  bits/types/struct___pthread_cond.h \
+  bits/types/struct___pthread_condattr.h \
+  bits/types/struct___pthread_mutex.h \
+  bits/types/struct___pthread_mutexattr.h \
+  bits/types/struct___pthread_once.h \
+  bits/types/struct___pthread_rwlock.h \
+  bits/types/struct___pthread_rwlockattr.h \
+  pthread.h \
+  semaphore.h \
+  # headers
 
 distribute :=
 
-routines := forward libc_pthread_init alloca_cutoff htlfreeres pt-nthreads pt-pthread_self pt-self pt-equal \
-	pt-getschedparam pt-setschedparam pt-attr-getschedparam pt-attr-getinheritsched                     \
-	pt-attr-setinheritsched pt-attr-getschedpolicy pt-attr-setschedpolicy pt-attr-getdetachstate        \
-	pt-attr-setdetachstate
+routines := \
+  alloca_cutoff \
+  forward \
+  htlfreeres \
+  libc_pthread_init \
+  pt-attr-getdetachstate \
+  pt-attr-getinheritsched \
+  pt-attr-getschedparam \
+  pt-attr-getschedpolicy \
+  pt-attr-setdetachstate \
+  pt-attr-setinheritsched \
+  pt-attr-setschedpolicy \
+  pt-getschedparam \
+  pt-nthreads \
+  pt-pthread_self \
+  pt-self pt-equal \
+  pt-setschedparam \
+  # routines
 shared-only-routines = forward
 
 extra-libs := libpthread
