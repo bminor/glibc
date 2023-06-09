@@ -98,7 +98,7 @@ static const char datemskstr[] =
 static void
 do_prepare (int argc, char **argv)
 {
-  int fd = create_temp_file ("tst-chk1.", &datemsk);
+  int fd = create_temp_file ("tst-getdate.", &datemsk);
   xwrite (fd, datemskstr, sizeof (datemskstr) - 1);
 
   setenv ("DATEMSK", datemsk, 1);
