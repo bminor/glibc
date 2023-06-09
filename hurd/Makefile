@@ -19,51 +19,138 @@ subdir := hurd
 
 include ../Makeconfig
 
-headers = hurd.h $(interface-headers) \
-	  $(addprefix hurd/,fd.h id.h port.h signal.h sigpreempt.h ioctl.h\
-			    userlink.h resource.h lookup.h)
+headers = \
+  $(interface-headers) \
+  hurd.h \
+  hurd/fd.h \
+  hurd/id.h \
+  hurd/ioctl.h \
+  hurd/lookup.h \
+  hurd/port.h \
+  hurd/resource.h \
+  hurd/signal.h \
+  hurd/sigpreempt.h \
+  hurd/userlink.h \
+  # headers
 
-inline-headers = hurd.h $(addprefix hurd/,fd.h signal.h \
-					  userlink.h port.h)
+inline-headers = \
+  hurd.h \
+  hurd/fd.h \
+  hurd/port.h \
+  hurd/signal.h \
+  hurd/userlink.h \
+  # inline-headers
 
 # The RPC interfaces go in a separate library.
 interface-library := libhurduser
-user-interfaces		:= $(addprefix hurd/,\
-				       auth startup \
-				       process process_request \
-				       msg msg_reply msg_request \
-				       exec exec_startup crash interrupt \
-				       fs fsys io io_reply io_request \
-				       term tioctl socket ifsock \
-				       login password pfinet pci \
-				       )
-server-interfaces	:= hurd/msg faultexc
+user-interfaces := \
+  hurd/auth \
+  hurd/crash \
+  hurd/exec \
+  hurd/exec_startup \
+  hurd/fs \
+  hurd/fsys \
+  hurd/ifsock \
+  hurd/interrupt \
+  hurd/io \
+  hurd/io_reply \
+  hurd/io_request \
+  hurd/login \
+  hurd/msg \
+  hurd/msg_reply \
+  hurd/msg_request \
+  hurd/password \
+  hurd/pci \
+  hurd/pfinet \
+  hurd/process \
+  hurd/process_request \
+  hurd/socket \
+  hurd/startup \
+  hurd/term \
+  hurd/tioctl \
+  # user-interfaces
 
-routines = hurdstartup hurdinit \
-	   hurdid hurdpid hurdrlimit hurdprio hurdexec hurdselect \
-	   hurdlookup lookup-retry lookup-at \
-	   get-host set-host \
-	   path-lookup \
-	   setauth \
-	   pid2task task2pid \
-	   geteuids seteuids getumask fchroot \
-	   hurdsock hurdauth \
-	   hurdchdir hurdfchdir \
-	   privports \
-	   msgportdemux \
-	   fopenport \
-	   vpprintf \
-	   ports-get ports-set hurdports hurdmsg \
-	   errno-loc \
-	   hurdlock \
-	   $(sig) $(dtable) $(inlines) \
-	   fd-cleanup port-cleanup report-wait xattr
-sig	= hurdsig hurdfault siginfo hurd-raise preempt-sig \
-	  trampoline longjmp-ts catch-exc exc2signal hurdkill sigunwind \
-	  thread-self thread-cancel intr-msg catch-signal
-dtable	= dtable port2fd new-fd alloc-fd intern-fd \
-	  getdport openport \
-	  fd-close fd-read fd-write hurdioctl ctty-input ctty-output
+server-interfaces := \
+  faultexc \
+  hurd/msg \
+  # server-interfaces
+
+routines = \
+  $(dtable) \
+  $(inlines) \
+  $(sig) \
+  errno-loc \
+  fchroot \
+  fd-cleanup \
+  fopenport \
+  get-host \
+  geteuids \
+  getumask \
+  hurdauth \
+  hurdchdir \
+  hurdexec \
+  hurdfchdir \
+  hurdid \
+  hurdinit \
+  hurdlock \
+  hurdlookup \
+  hurdmsg \
+  hurdpid \
+  hurdports \
+  hurdprio \
+  hurdrlimit \
+  hurdselect \
+  hurdsock \
+  hurdstartup \
+  lookup-at \
+  lookup-retry \
+  msgportdemux \
+  path-lookup \
+  pid2task \
+  port-cleanup \
+  ports-get \
+  ports-set \
+  privports \
+  report-wait \
+  set-host \
+  setauth \
+  seteuids \
+  task2pid \
+  vpprintf \
+  xattr \
+  # routines
+sig = \
+  catch-exc \
+  catch-signal \
+  exc2signal \
+  hurd-raise \
+  hurdfault \
+  hurdkill \
+  hurdsig \
+  intr-msg \
+  longjmp-ts \
+  preempt-sig \
+  siginfo \
+  sigunwind \
+  thread-cancel \
+  thread-self \
+  trampoline \
+  # sig
+dtable = \
+  alloc-fd \
+  ctty-input \
+  ctty-output \
+  dtable \
+  fd-close \
+  fd-read \
+  fd-write \
+  getdport \
+  hurdioctl \
+  intern-fd \
+  new-fd \
+  openport \
+  port2fd \
+  # dtable
 inlines = $(inline-headers:%.h=%-inlines)
 
 # XXX this is a temporary hack; see hurdmalloc.h
