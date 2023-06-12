@@ -20,12 +20,13 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include <support/xstdio.h>
 
 static void *
 tf (void *arg)
 {
   char buf[100];
-  fgets (buf, sizeof (buf), arg);
+  xfgets (buf, sizeof (buf), arg);
   /* This call should never return.  */
   return NULL;
 }

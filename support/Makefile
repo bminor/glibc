@@ -123,6 +123,7 @@ libsupport-routines = \
   xdup2 \
   xfchmod \
   xfclose \
+  xfgets \
   xfopen \
   xfork \
   xfread \

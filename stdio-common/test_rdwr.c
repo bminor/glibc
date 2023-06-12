@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <support/xstdio.h>
 
 int
 main (int argc, char **argv)
@@ -49,7 +50,7 @@ main (int argc, char **argv)
 
   (void) fputs (hello, f);
   rewind (f);
-  (void) fgets (buf, sizeof (buf), f);
+  xfgets (buf, sizeof (buf), f);
   rewind (f);
   (void) fputs (buf, f);
   rewind (f);
@@ -104,12 +105,8 @@ main (int argc, char **argv)
   if (!lose)
     {
       rewind (f);
-      if (fgets (buf, sizeof (buf), f) == NULL)
-	{
-	  printf ("fgets got %s.\n", strerror(errno));
-	  lose = 1;
-	}
-      else if (strcmp (buf, replace))
+      xfgets (buf, sizeof (buf), f);
+      if (strcmp (buf, replace))
 	{
 	  printf ("Read \"%s\" instead of \"%s\".\n", buf, replace);
 	  lose = 1;

@@ -28,6 +28,7 @@ FILE *xfopen (const char *path, const char *mode);
 void xfclose (FILE *);
 FILE *xfreopen (const char *path, const char *mode, FILE *stream);
 void xfread (void *ptr, size_t size, size_t nmemb, FILE *stream);
+char *xfgets (char *s, int size, FILE *stream);
 
 /* Read a line from FP, using getline.  *BUFFER must be NULL, or a
    heap-allocated pointer of *LENGTH bytes.  Return the number of

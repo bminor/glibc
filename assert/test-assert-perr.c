@@ -11,6 +11,8 @@
 #include <string.h>
 #include <setjmp.h>
 
+#include <support/xstdio.h>
+
 jmp_buf rec;
 char buf[160];
 
@@ -70,15 +72,15 @@ main(void)
     failed = 1; /* should not happen */
 
   rewind (stderr);
-  fgets (buf, 160, stderr);
+  xfgets (buf, 160, stderr);
   if (!strstr(buf, strerror (1)))
     failed = 1;
 
-  fgets (buf, 160, stderr);
+  xfgets (buf, 160, stderr);
   if (strstr (buf, strerror (0)))
     failed = 1;
 
-  fgets (buf, 160, stderr);
+  xfgets (buf, 160, stderr);
   if (strstr (buf, strerror (2)))
     failed = 1;
 
