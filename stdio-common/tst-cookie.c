@@ -5,6 +5,8 @@
 
 #include <stdio.h>
 
+#include <support/xstdio.h>
+
 
 #define THE_COOKIE ((void *) 0xdeadbeeful)
 
@@ -77,7 +79,8 @@ do_test (void)
 
   f = fopencookie (THE_COOKIE, "r+", fcts);
 
-  fread (buf, 1, 1, f);
+  xfread (buf, 1, 1, f);
+
   fwrite (buf, 1, 1, f);
   fseek (f, 0, SEEK_CUR);
   fclose (f);

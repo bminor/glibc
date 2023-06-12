@@ -125,6 +125,7 @@ libsupport-routines = \
   xfclose \
   xfopen \
   xfork \
+  xfread \
   xfreopen \
   xftruncate \
   xgetline \

@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <support/xstdio.h>
+
 int
 main (void)
 {
@@ -32,7 +34,7 @@ main (void)
 	      char buf[25];
 
 	      buf[0] = j;
-	      fread (buf + 1, 1, 23, f);
+	      xfread (buf + 1, 1, 23, f);
 	      buf[24] = '\0';
 	      if (strcmp (buf, "Where does this text go?") != 0)
 		{

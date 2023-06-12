@@ -1,5 +1,5 @@
-/* Error-checking wrappers for stdio functions.
-   Copyright (C) 2016-2023 Free Software Foundation, Inc.
+/* fread with error checking.
+   Copyright (C) 2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,24 +16,24 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef SUPPORT_XSTDIO_H
-#define SUPPORT_XSTDIO_H
+#include <support/xstdio.h>
 
-#include <stdio.h>
-#include <sys/cdefs.h>
+#include <support/check.h>
+#include <stdlib.h>
 
-__BEGIN_DECLS
+void
+xfread (void *ptr, size_t size, size_t nmemb, FILE *stream)
+{
+  size_t count = 0;
+  char *p = ptr;
 
-FILE *xfopen (const char *path, const char *mode);
-void xfclose (FILE *);
-FILE *xfreopen (const char *path, const char *mode, FILE *stream);
-void xfread (void *ptr, size_t size, size_t nmemb, FILE *stream);
-
-/* Read a line from FP, using getline.  *BUFFER must be NULL, or a
-   heap-allocated pointer of *LENGTH bytes.  Return the number of
-   bytes in the line if a line was read, or 0 on EOF.  */
-size_t xgetline (char **lineptr, size_t *n, FILE *stream);
-
-__END_DECLS
-
-#endif /* SUPPORT_XSTDIO_H */
+  while (count < nmemb)
+    {
+      size_t ret = fread (p, size, nmemb - count, stream);
+      if (ret <= 0 && ferror(stream))
+        FAIL_EXIT1 ("read of %zu bytes failed after %td: %m",
+                    size * nmemb, p - (char *) ptr);
+      count += ret;
+      p += size * ret;
+    }
+}

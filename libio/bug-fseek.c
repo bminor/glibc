@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include <support/xstdio.h>
 
 static char *fname;
 
@@ -48,7 +49,7 @@ do_test (void)
       perror ("fopen(\"r\")");
     }
 
-  fread (buf, 3, 1, f);
+  xfread (buf, 3, 1, f);
   errno = 0;
   if (fseek (f, -10, SEEK_CUR) == 0)
     {
@@ -72,7 +73,7 @@ Got %d instead\n",
       perror ("fopen(\"r+\")");
     }
 
-  fread (buf, 3, 1, f);
+  xfread (buf, 3, 1, f);
   errno = 0;
   if (fseek (f, -10, SEEK_CUR) == 0)
     {
@@ -96,7 +97,7 @@ Got %d instead\n",
       perror ("fopen(\"r+\")");
     }
 
-  fread (buf, 3, 1, f);
+  xfread (buf, 3, 1, f);
   if (ftell (f) != 3)
     {
       puts ("ftell failed");

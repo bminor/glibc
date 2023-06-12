@@ -2,6 +2,8 @@
 #include <unistd.h>
 #include <string.h>
 
+#include <support/xstdio.h>
+
 int stdio_block_read = 1, stdio_block_write = 1;
 
 int
@@ -30,7 +32,7 @@ main (int argc, char *argv[])
   fseek (f, 8180L, 0);
   fwrite ("Where does this text come from?", 1, 31, f);
   fseek (f, 8180L, 0);
-  fread (buffer, 1, 31, f);
+  xfread (buffer, 1, 31, f);
   fwrite (buffer, 1, 31, stdout);
   fclose (f);
   remove (filename);

@@ -21,6 +21,8 @@
 #include <string.h>
 #include <sys/types.h>
 
+#include <support/xstdio.h>
+
 static void
 print_buffer (const char *s, size_t n)
 {
@@ -153,7 +155,7 @@ do_test_read_seek_neg (const char *mode, const char *expected)
 
   FILE *fp = fmemopen (buf, sizeof (buf), mode);
   fseek (fp, offset, SEEK_END);
-  fread (tmp, tmps, 1, fp);
+  xfread (tmp, tmps, 1, fp);
 
   if (memcmp (tmp, expected, tmps) != 0)
     {
