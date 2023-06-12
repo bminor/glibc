@@ -1,4 +1,5 @@
-/* Copyright (C) 2017-2023 Free Software Foundation, Inc.
+/* Common definitions for ttyname tests.
+   Copyright (C) 2017-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,19 +20,16 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
-#include <sched.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/mount.h>
-#include <sys/prctl.h>
-#include <sys/stat.h>
-#include <sys/wait.h>
 #include <sys/resource.h>
+#include <sys/stat.h>
 #include <unistd.h>
 
 #include <support/check.h>
-#include <support/namespace.h>
 #include <support/support.h>
 #include <support/temp_file.h>
 #include <support/test-driver.h>
@@ -266,187 +264,6 @@ adjust_file_limit (const char *pty)
     }
 }
 
-/* These chroot setup functions put the TTY at at "/console" (where it
-   won't be found by ttyname), and create "/dev/console" as an
-   ordinary file.  This way, it's easier to write test-cases that
-   expect ttyname to fail; test-cases that expect it to succeed need
-   to explicitly remount it at "/dev/console".  */
-
-static int
-do_in_chroot_1 (int (*cb)(const char *, int))
-{
-  printf ("info:  entering chroot 1\n");
-
-  /* Open the PTS that we'll be testing on.  */
-  int master;
-  char *slavename;
-  master = posix_openpt (O_RDWR|O_NOCTTY|O_NONBLOCK);
-  if (master < 0)
-    {
-      if (errno == ENOENT)
-	FAIL_UNSUPPORTED ("posix_openpt: %m");
-      else
-	FAIL_EXIT1 ("posix_openpt: %m");
-    }
-  VERIFY ((slavename = ptsname (master)));
-  VERIFY (unlockpt (master) == 0);
-  if (strncmp (slavename, "/dev/pts/", 9) != 0)
-    FAIL_UNSUPPORTED ("slave pseudo-terminal is not under /dev/pts/: %s",
-                      slavename);
-  adjust_file_limit (slavename);
-  int slave = xopen (slavename, O_RDWR, 0);
-  if (!doit (slave, "basic smoketest",
-             (struct result_r){.name=slavename, .ret=0, .err=0}))
-    return 1;
-
-  pid_t pid = xfork ();
-  if (pid == 0)
-    {
-      xclose (master);
-
-      if (!support_enter_mount_namespace ())
-	FAIL_UNSUPPORTED ("could not enter new mount namespace");
-
-      VERIFY (mount ("tmpfs", chrootdir, "tmpfs", 0, "mode=755") == 0);
-      VERIFY (chdir (chrootdir) == 0);
-
-      xmkdir ("proc", 0755);
-      xmkdir ("dev", 0755);
-      xmkdir ("dev/pts", 0755);
-
-      VERIFY (mount ("/proc", "proc", NULL, MS_BIND|MS_REC, NULL) == 0);
-      VERIFY (mount ("devpts", "dev/pts", "devpts",
-                     MS_NOSUID|MS_NOEXEC,
-                     "newinstance,ptmxmode=0666,mode=620") == 0);
-      VERIFY (symlink ("pts/ptmx", "dev/ptmx") == 0);
-
-      touch ("console", 0);
-      touch ("dev/console", 0);
-      VERIFY (mount (slavename, "console", NULL, MS_BIND, NULL) == 0);
-
-      xchroot (".");
-
-      char *linkname = xasprintf ("/proc/self/fd/%d", slave);
-      char *target = proc_fd_readlink (linkname);
-      VERIFY (strcmp (target, slavename) == 0);
-      free (linkname);
-
-      _exit (cb (slavename, slave));
-    }
-  int status;
-  xwaitpid (pid, &status, 0);
-  VERIFY (WIFEXITED (status));
-  xclose (master);
-  xclose (slave);
-  return WEXITSTATUS (status);
-}
-
-static int
-do_in_chroot_2 (int (*cb)(const char *, int))
-{
-  printf ("info:  entering chroot 2\n");
-
-  int pid_pipe[2];
-  xpipe (pid_pipe);
-  int exit_pipe[2];
-  xpipe (exit_pipe);
-
-  /* Open the PTS that we'll be testing on.  */
-  int master;
-  char *slavename;
-  VERIFY ((master = posix_openpt (O_RDWR|O_NOCTTY|O_NONBLOCK)) >= 0);
-  VERIFY ((slavename = ptsname (master)));
-  VERIFY (unlockpt (master) == 0);
-  if (strncmp (slavename, "/dev/pts/", 9) != 0)
-    FAIL_UNSUPPORTED ("slave pseudo-terminal is not under /dev/pts/: %s",
-                      slavename);
-  adjust_file_limit (slavename);
-  /* wait until in a new mount ns to open the slave */
-
-  /* enable `wait`ing on grandchildren */
-  VERIFY (prctl (PR_SET_CHILD_SUBREAPER, 1) == 0);
-
-  pid_t pid = xfork (); /* outer child */
-  if (pid == 0)
-    {
-      xclose (master);
-      xclose (pid_pipe[0]);
-      xclose (exit_pipe[1]);
-
-      if (!support_enter_mount_namespace ())
-	FAIL_UNSUPPORTED ("could not enter new mount namespace");
-
-      int slave = xopen (slavename, O_RDWR, 0);
-      if (!doit (slave, "basic smoketest",
-                 (struct result_r){.name=slavename, .ret=0, .err=0}))
-        _exit (1);
-
-      VERIFY (mount ("tmpfs", chrootdir, "tmpfs", 0, "mode=755") == 0);
-      VERIFY (chdir (chrootdir) == 0);
-
-      xmkdir ("proc", 0755);
-      xmkdir ("dev", 0755);
-      xmkdir ("dev/pts", 0755);
-
-      VERIFY (mount ("devpts", "dev/pts", "devpts",
-                     MS_NOSUID|MS_NOEXEC,
-                     "newinstance,ptmxmode=0666,mode=620") == 0);
-      VERIFY (symlink ("pts/ptmx", "dev/ptmx") == 0);
-
-      touch ("console", 0);
-      touch ("dev/console", 0);
-      VERIFY (mount (slavename, "console", NULL, MS_BIND, NULL) == 0);
-
-      xchroot (".");
-
-      if (unshare (CLONE_NEWNS | CLONE_NEWPID) < 0)
-        FAIL_UNSUPPORTED ("could not enter new PID namespace");
-      pid = xfork (); /* inner child */
-      if (pid == 0)
-        {
-          xclose (pid_pipe[1]);
-
-          /* wait until the outer child has exited */
-          char c;
-          VERIFY (read (exit_pipe[0], &c, 1) == 0);
-          xclose (exit_pipe[0]);
-
-          VERIFY (mount ("proc", "/proc", "proc",
-                         MS_NOSUID|MS_NOEXEC|MS_NODEV, NULL) == 0);
-
-          char *linkname = xasprintf ("/proc/self/fd/%d", slave);
-          char *target = proc_fd_readlink (linkname);
-          VERIFY (strcmp (target, strrchr (slavename, '/')) == 0);
-          free (linkname);
-
-          _exit (cb (slavename, slave));
-        }
-      xwrite (pid_pipe[1], &pid, sizeof pid);
-      _exit (0);
-    }
-  xclose (pid_pipe[1]);
-  xclose (exit_pipe[0]);
-  xclose (exit_pipe[1]);
-
-  /* wait for the outer child */
-  int status;
-  xwaitpid (pid, &status, 0);
-  VERIFY (WIFEXITED (status));
-  int ret = WEXITSTATUS (status);
-  if (ret != 0)
-    return ret;
-
-  /* set 'pid' to the inner child */
-  VERIFY (read (pid_pipe[0], &pid, sizeof pid) == sizeof pid);
-  xclose (pid_pipe[0]);
-
-  /* wait for the inner child */
-  xwaitpid (pid, &status, 0);
-  VERIFY (WIFEXITED (status));
-  xclose (master);
-  return WEXITSTATUS (status);
-}
-
 /* main test */
 
 static int
@@ -596,21 +413,3 @@ run_chroot_tests (const char *slavename, int slave)
 
   return ok ? 0 : 1;
 }
-
-static int
-do_test (void)
-{
-  support_become_root ();
-
-  int ret1 = do_in_chroot_1 (run_chroot_tests);
-  if (ret1 == EXIT_UNSUPPORTED)
-    return ret1;
-
-  int ret2 = do_in_chroot_2 (run_chroot_tests);
-  if (ret2 == EXIT_UNSUPPORTED)
-    return ret2;
-
-  return  ret1 | ret2;
-}
-
-#include <support/test-driver.c>

@@ -224,7 +224,8 @@ tests += \
   tst-sysvshm-linux \
   tst-tgkill \
   tst-timerfd \
-  tst-ttyname \
+  tst-ttyname-direct \
+  tst-ttyname-namespace \
   # tests
 
 # process_madvise requires CAP_SYS_ADMIN.
