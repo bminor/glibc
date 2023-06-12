@@ -32,34 +32,42 @@ static const struct
   const char *tz;
   struct tm tm;
   bool time64;
+  int err_val;
+  bool check_tm;
 } tests [] =
 {
   {"21:01:10 1999-1-31", "Universal", {10, 1, 21, 31, 0, 99, 0, 0, 0},
-   false },
+   false , 0, true},
   {"21:01:10    1999-1-31", "Universal", {10, 1, 21, 31, 0, 99, 0, 0, 0},
-   false },
+   false , 0, true},
   {"   21:01:10 1999-1-31", "Universal", {10, 1, 21, 31, 0, 99, 0, 0, 0},
-   false },
+   false , 0, true},
   {"21:01:10 1999-1-31   ", "Universal", {10, 1, 21, 31, 0, 99, 0, 0, 0},
-   false },
+   false , 0, true},
   {"    21:01:10 1999-1-31   ", "Universal", {10, 1, 21, 31, 0, 99, 0, 0, 0},
-   false },
+   false , 0, true},
   {"21:01:10 1999-2-28", "Universal", {10, 1, 21, 28, 1, 99, 0, 0, 0},
-   false },
+   false , 0, true},
   {"16:30:46 2000-2-29", "Universal", {46, 30,16, 29, 1, 100, 0, 0, 0},
-   false },
+   false , 0, true},
   {"01-08-2000 05:06:07", "Europe/Berlin", {7, 6, 5, 1, 7, 100, 0, 0, 0},
-   false },
+   false , 0, true},
+  {"01-08-2000     05:06:07", "Europe/Berlin", {7, 6, 5, 1, 7, 100, 0, 0, 0},
+   false , 0, true},
+  {"01-08-2000 a 05:06:07", "Europe/Berlin", {0, 0, 0, 0, 0, 0, 0, 0, 0},
+   false , 7, false},
+  {"       12          AM     ", "Europe/Berlin", {0, 0, 0, 0, 0, 0, 0, 0, 0},
+   false , 0, false},
 
   /* 64 bit time_t tests.  */
   {"21:01:10 2038-1-31", "Universal", {10, 1, 21, 31, 0, 138, 0, 0, 0},
-   true },
+   true , 0, true},
   {"22:01:10 2048-5-20", "Universal", {10, 1, 22, 20, 4, 148, 0, 0, 0},
-   true },
+   true , 0, true},
   {"01-08-2038 05:06:07", "Europe/Berlin", {7, 6, 5, 1, 7, 138, 0, 0, 0},
-   true },
+   true , 0, true},
   {"20-03-2050 21:30:08", "Europe/Berlin", {8, 30, 21, 20, 2, 150, 0, 0, 0},
-   true }
+   true , 0, true}
 };
 
 static const char *
@@ -93,7 +101,8 @@ report_date_error (void)
 static char *datemsk;
 static const char datemskstr[] =
   "%H:%M:%S %F\n"
-  "%d-%m-%Y %T\n";
+  "%d-%m-%Y %T\n"
+  "%I %p\n";
 
 static void
 do_prepare (int argc, char **argv)
@@ -115,13 +124,22 @@ do_test (void)
       setenv ("TZ", tests[i].tz, 1);
 
       tm = getdate (tests[i].str);
-      TEST_COMPARE (getdate_err, 0);
-      if (getdate_err != 0)
+
+      /* Only check getdate_err when tm is NULL as getdate doesn't set
+         getdate_err on success. */
+      if (tm == NULL)
 	{
-	  support_record_failure ();
-	  printf ("%s\n", report_date_error ());
+          TEST_COMPARE (getdate_err, tests[i].err_val);
+          if (getdate_err != tests[i].err_val)
+            printf ("%s\n", report_date_error ());
 	}
-      else
+      if (tests[i].err_val != 0)  /* Expected failure */
+	{
+	  TEST_VERIFY (tm == NULL);
+	  continue;
+	}
+
+      if (tests[i].check_tm)
 	{
 	  TEST_COMPARE (tests[i].tm.tm_mon, tm->tm_mon);
 	  TEST_COMPARE (tests[i].tm.tm_year, tm->tm_year);
@@ -132,8 +150,9 @@ do_test (void)
 	}
 
       struct tm tms;
-      TEST_COMPARE (getdate_r (tests[i].str, &tms), 0);
-      if (getdate_err == 0)
+      int retval = getdate_r (tests[i].str, &tms);
+      TEST_COMPARE (retval, tests[i].err_val);
+      if (retval == tests[i].err_val && tests[i].check_tm)
 	{
 	  TEST_COMPARE (tests[i].tm.tm_mon, tms.tm_mon);
 	  TEST_COMPARE (tests[i].tm.tm_year, tms.tm_year);
