@@ -94,8 +94,17 @@ do_in_chroot_2 (int (*cb)(const char *, int))
           VERIFY (read (exit_pipe[0], &c, 1) == 0);
           xclose (exit_pipe[0]);
 
-          VERIFY (mount ("proc", "/proc", "proc",
-                         MS_NOSUID|MS_NOEXEC|MS_NODEV, NULL) == 0);
+	  if (mount ("proc", "/proc", "proc",
+		     MS_NOSUID|MS_NOEXEC|MS_NODEV, NULL) != 0)
+	    {
+	      /* This happens if we're trying to create a nested container,
+		 like if the build is running under podman, and we lack
+		 priviledges.  */
+	      if (errno == EPERM)
+		_exit (EXIT_UNSUPPORTED);
+	      else
+		_exit (EXIT_FAILURE);
+	    }
 
           char *linkname = xasprintf ("/proc/self/fd/%d", slave);
           char *target = proc_fd_readlink (linkname);
@@ -104,8 +113,9 @@ do_in_chroot_2 (int (*cb)(const char *, int))
 
           _exit (cb (slavename, slave));
         }
-      xwrite (pid_pipe[1], &pid, sizeof pid);
-      _exit (0);
+      int status;
+      xwaitpid (pid, &status, 0);
+      _exit (WEXITSTATUS (status));
     }
   xclose (pid_pipe[1]);
   xclose (exit_pipe[0]);
@@ -117,17 +127,11 @@ do_in_chroot_2 (int (*cb)(const char *, int))
   VERIFY (WIFEXITED (status));
   int ret = WEXITSTATUS (status);
   if (ret != 0)
-    return ret;
+    FAIL_UNSUPPORTED ("unable to mount /proc on inner child process");
 
-  /* set 'pid' to the inner child */
-  VERIFY (read (pid_pipe[0], &pid, sizeof pid) == sizeof pid);
   xclose (pid_pipe[0]);
 
-  /* wait for the inner child */
-  xwaitpid (pid, &status, 0);
-  VERIFY (WIFEXITED (status));
-  xclose (master);
-  return WEXITSTATUS (status);
+  return 0;
 }
 
 static int
