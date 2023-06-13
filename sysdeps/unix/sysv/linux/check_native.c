@@ -48,10 +48,19 @@ __check_native (uint32_t a1_index, int *a1_native,
   nladdr.nl_family = AF_NETLINK;
 
   socklen_t addr_len = sizeof (nladdr);
-  bool use_malloc = false;
 
   if (fd < 0)
     return;
+
+  /* Netlink requires that user buffer needs to be either 8kb or page size
+     (whichever is bigger), however this has been changed over time and now
+     8Kb is sufficient (check NLMSG_DEFAULT_SIZE on Linux
+     linux/include/linux/netlink.h).  */
+  const size_t buf_size = 8192;
+  char *buf = malloc (buf_size);
+
+  if (buf == NULL)
+    goto out;
 
   if (__bind (fd, (struct sockaddr *) &nladdr, sizeof (nladdr)) != 0
       || __getsockname (fd, (struct sockaddr *) &nladdr, &addr_len) != 0)
@@ -80,26 +89,6 @@ __check_native (uint32_t a1_index, int *a1_native,
 
   memset (&nladdr, '\0', sizeof (nladdr));
   nladdr.nl_family = AF_NETLINK;
-
-#ifdef PAGE_SIZE
-  /* Help the compiler optimize out the malloc call if PAGE_SIZE
-     is constant and smaller or equal to PTHREAD_STACK_MIN/4.  */
-  const size_t buf_size = PAGE_SIZE;
-#else
-  const size_t buf_size = __getpagesize ();
-#endif
-  char *buf;
-
-  if (__libc_use_alloca (buf_size))
-    buf = alloca (buf_size);
-  else
-    {
-      buf = malloc (buf_size);
-      if (buf != NULL)
-	use_malloc = true;
-      else
-	goto out;
-    }
 
   struct iovec iov = { buf, buf_size };
 
@@ -170,7 +159,5 @@ __check_native (uint32_t a1_index, int *a1_native,
 
 out:
   __close_nocancel_nostatus (fd);
-
-  if (use_malloc)
-    free (buf);
+  free (buf);
 }
