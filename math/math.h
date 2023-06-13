@@ -1015,7 +1015,8 @@ enum
 
 /* Return nonzero value if X is positive or negative infinity.  */
 # if __HAVE_DISTINCT_FLOAT128 && !__GNUC_PREREQ (7,0) \
-     && !defined __SUPPORT_SNAN__ && !defined __cplusplus
+     && !defined __SUPPORT_SNAN__ && !defined __cplusplus \
+     && !defined __clang__
    /* Since __builtin_isinf_sign is broken for float128 before GCC 7.0,
       use the helper function, __isinff128, with older compilers.  This is
       only provided for C mode, because in C++ mode, GCC has no support
