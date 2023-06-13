@@ -275,6 +275,7 @@ tests := \
   tst-fnmatch6 \
   tst-fnmatch7 \
   tst-fork \
+  tst-gai_strerror \
   tst-getaddrinfo \
   tst-getaddrinfo2 \
   tst-getaddrinfo3 \
