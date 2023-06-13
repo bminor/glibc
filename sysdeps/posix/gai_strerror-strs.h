@@ -1,3 +1,4 @@
+_S(0, N_("Success"))
 _S(EAI_ADDRFAMILY, N_("Address family for hostname not supported"))
 _S(EAI_AGAIN, N_("Temporary failure in name resolution"))
 _S(EAI_BADFLAGS, N_("Bad value for ai_flags"))
