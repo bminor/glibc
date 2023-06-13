@@ -20,6 +20,7 @@
 #include <fcntl.h>
 #include <grp.h>
 #include <limits.h>
+#include <scratch_buffer.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/resource.h>
@@ -147,10 +148,19 @@ grantpt (int fd)
 	/* `sysconf' does not support _SC_GETGR_R_SIZE_MAX.
 	   Try a moderate value.  */
 	grbuflen = 1024;
-      grtmpbuf = (char *) __alloca (grbuflen);
+      struct scratch_buffer sbuf;
+      scratch_buffer_init (&sbuf);
+      if (!scratch_buffer_set_array_size (&sbuf, 1, grbuflen))
+	{
+	  retval = -1;
+	  goto cleanup;
+	}
+      grtmpbuf = sbuf.data;
       __getgrnam_r (TTY_GROUP, &grbuf, grtmpbuf, grbuflen, &p);
       if (p != NULL)
 	tty_gid = p->gr_gid;
+
+      scratch_buffer_free(&sbuf);
     }
   gid_t gid = tty_gid == -1 ? __getgid () : tty_gid;
 
