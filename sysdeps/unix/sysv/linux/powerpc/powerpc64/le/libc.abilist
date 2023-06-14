@@ -2885,3 +2885,7 @@ GLIBC_2.38 __nldbl___isoc23_vsscanf F
 GLIBC_2.38 __nldbl___isoc23_vswscanf F
 GLIBC_2.38 __nldbl___isoc23_vwscanf F
 GLIBC_2.38 __nldbl___isoc23_wscanf F
+GLIBC_2.38 __strlcat_chk F
+GLIBC_2.38 __strlcpy_chk F
+GLIBC_2.38 strlcat F
+GLIBC_2.38 strlcpy F

@@ -58,6 +58,10 @@ libc {
   GLIBC_2.25 {
     __explicit_bzero_chk;
   }
+  GLIBC_2.38 {
+    __strlcat_chk;
+    __strlcpy_chk;
+  }
   GLIBC_PRIVATE {
     __fortify_fail;
   }

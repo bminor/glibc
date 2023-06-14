@@ -139,4 +139,40 @@ __NTH (strncat (char *__restrict __dest, const char *__restrict __src,
 				  __glibc_objsize (__dest));
 }
 
+#ifdef __USE_MISC
+extern size_t __strlcpy_chk (char *__dest, const char *__src, size_t __n,
+			     size_t __destlen) __THROW;
+extern size_t __REDIRECT_NTH (__strlcpy_alias,
+			      (char *__dest, const char *__src, size_t __n),
+			      strlcpy);
+
+__fortify_function size_t
+__NTH (strlcpy (char *__restrict __dest, const char *__restrict __src,
+		size_t __n))
+{
+  if (__glibc_objsize (__dest) != (size_t) -1
+      && (!__builtin_constant_p (__n > __glibc_objsize (__dest))
+	  || __n > __glibc_objsize (__dest)))
+    return __strlcpy_chk (__dest, __src, __n, __glibc_objsize (__dest));
+  return __strlcpy_alias (__dest, __src, __n);
+}
+
+extern size_t __strlcat_chk (char *__dest, const char *__src, size_t __n,
+			     size_t __destlen) __THROW;
+extern size_t __REDIRECT_NTH (__strlcat_alias,
+			      (char *__dest, const char *__src, size_t __n),
+			      strlcat);
+
+__fortify_function size_t
+__NTH (strlcat (char *__restrict __dest, const char *__restrict __src,
+		size_t __n))
+{
+  if (__glibc_objsize (__dest) != (size_t) -1
+      && (!__builtin_constant_p (__n > __glibc_objsize (__dest))
+	  || __n > __glibc_objsize (__dest)))
+    return __strlcat_chk (__dest, __src, __n, __glibc_objsize (__dest));
+  return __strlcat_alias (__dest, __src, __n);
+}
+#endif /* __USE_MISC */
+
 #endif /* bits/string_fortified.h */

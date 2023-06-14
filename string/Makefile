@@ -92,6 +92,8 @@ routines := \
   strerrorname_np \
   strfry \
   string-inlines \
+  strlcat \
+  strlcpy \
   strlen \
   strncase \
   strncase_l \
@@ -177,6 +179,8 @@ tests := \
   tst-inlcall \
   tst-memmove-overflow \
   tst-strfry \
+  tst-strlcat \
+  tst-strlcpy \
   tst-strlen \
   tst-strtok \
   tst-strtok_r \

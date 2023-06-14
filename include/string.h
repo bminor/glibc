@@ -88,6 +88,10 @@ libc_hidden_proto (__stpcpy)
 # define __stpcpy(dest, src) __builtin_stpcpy (dest, src)
 #endif
 libc_hidden_proto (__stpncpy)
+extern __typeof (strlcpy) __strlcpy;
+libc_hidden_proto (__strlcpy)
+extern __typeof (strlcat) __strlcat;
+libc_hidden_proto (__strlcat)
 libc_hidden_proto (__rawmemchr)
 libc_hidden_proto (__strcasecmp)
 libc_hidden_proto (__strcasecmp_l)

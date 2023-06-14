@@ -2680,3 +2680,7 @@ GLIBC_2.38 __isoc23_wcstoull F
 GLIBC_2.38 __isoc23_wcstoull_l F
 GLIBC_2.38 __isoc23_wcstoumax F
 GLIBC_2.38 __isoc23_wscanf F
+GLIBC_2.38 __strlcat_chk F
+GLIBC_2.38 __strlcpy_chk F
+GLIBC_2.38 strlcat F
+GLIBC_2.38 strlcpy F

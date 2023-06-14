@@ -501,6 +501,19 @@ extern char *stpncpy (char *__restrict __dest,
      __THROW __nonnull ((1, 2));
 #endif
 
+#ifdef __USE_MISC
+/* Copy at most N - 1 characters from SRC to DEST.  */
+extern size_t strlcpy (char *__restrict __dest,
+		       const char *__restrict __src, size_t __n)
+  __THROW __nonnull ((1, 2)) __attr_access ((__write_only__, 1, 3));
+
+/* Append SRC to DEST, possibly with truncation to keep the total size
+   below N.  */
+extern size_t strlcat (char *__restrict __dest,
+		       const char *__restrict __src, size_t __n)
+  __THROW __nonnull ((1, 2))  __attr_access ((__read_write__, 1, 3));
+#endif
+
 #ifdef	__USE_GNU
 /* Compare S1 and S2 as strings holding name & indices/version numbers.  */
 extern int strverscmp (const char *__s1, const char *__s2)

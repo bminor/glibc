@@ -35,6 +35,9 @@ Major new features:
   The symbol names follow the AArch64 vector ABI, they are declared
   in math.h and have to be called manually at this point.
 
+* The strlcpy and strlcat functions have been added.  They are derived
+  from OpenBSD, and are expected to be added to a future POSIX version.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * In the Linux kernel for the hppa/parisc architecture some of the

@@ -92,4 +92,8 @@ libc {
   GLIBC_2.35 {
     __memcmpeq;
   }
+  GLIBC_2.38 {
+    strlcat;
+    strlcpy;
+  }
 }

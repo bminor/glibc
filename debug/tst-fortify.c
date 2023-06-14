@@ -535,6 +535,20 @@ do_test (void)
   strncpy (a.buf1 + (O + 6), "X", l0 + 4);
   CHK_FAIL_END
 
+  CHK_FAIL_START
+  strlcpy (a.buf1 + (O + 6), "X", 4);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  strlcpy (a.buf1 + (O + 6), "X", l0 + 4);
+  CHK_FAIL_END
+
+  {
+    char *volatile buf2 = buf;
+    if (strlcpy (buf2, "a", sizeof (buf) + 1) != 1)
+      FAIL ();
+  }
+
 # if !defined __cplusplus || defined __va_arg_pack
   CHK_FAIL_START
   sprintf (a.buf1 + (O + 7), "%d", num1);
@@ -558,6 +572,23 @@ do_test (void)
   CHK_FAIL_START
   strncat (a.buf1, "ZYXWV", l0 + 3);
   CHK_FAIL_END
+
+  memset (a.buf1, 0, sizeof (a.buf1));
+  CHK_FAIL_START
+  strlcat (a.buf1 + (O + 6), "X", 4);
+  CHK_FAIL_END
+
+  memset (a.buf1, 0, sizeof (a.buf1));
+  CHK_FAIL_START
+  strlcat (a.buf1 + (O + 6), "X", l0 + 4);
+  CHK_FAIL_END
+
+  {
+    buf[0] = '\0';
+    char *volatile buf2 = buf;
+    if (strlcat (buf2, "a", sizeof (buf) + 1) != 1)
+      FAIL ();
+  }
 #endif
 
 

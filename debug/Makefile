@@ -84,6 +84,8 @@ routines = \
   stpncpy_chk \
   strcat_chk \
   strcpy_chk \
+  strlcat_chk \
+  strlcpy_chk \
   strncat_chk \
   strncpy_chk \
   swprintf_chk \
