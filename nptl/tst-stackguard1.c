@@ -28,6 +28,7 @@
 #include <unistd.h>
 
 #include <support/xunistd.h>
+#include <support/xstdlib.h>
 
 static const char *command;
 static bool child;
@@ -140,7 +141,8 @@ do_test (void)
 	  dup2 (fds[1], 2);
 	  close (fds[1]);
 
-	  system (command);
+	  xsystem (command);
+
 	  exit (0);
 	}
 
