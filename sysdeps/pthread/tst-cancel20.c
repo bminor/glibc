@@ -84,8 +84,6 @@ tf_body (void)
       exit (1);
     }
 
-  read (fd[0], &c, 1);
-
   pthread_cleanup_pop (0);
 }
 

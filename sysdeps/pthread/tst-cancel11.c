@@ -56,7 +56,11 @@ tf (void *arg)
 
   /* This call should block and be cancelable.  */
   char buf[20];
-  read (fd[0], buf, sizeof (buf));
+  if (read (fd[0], buf, sizeof (buf)))
+  {
+    puts ("read unexpectedly returned");
+    exit (1);
+  }
 
   pthread_cleanup_pop (0);
 

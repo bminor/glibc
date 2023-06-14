@@ -21,6 +21,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include <support/xunistd.h>
+
 /* LinuxThreads pthread_cleanup_{push,pop} helpers.  */
 extern void _pthread_cleanup_push (struct _pthread_cleanup_buffer *__buffer,
                                    void (*__routine) (void *),
@@ -64,7 +66,7 @@ fn_read (void)
     }
 
   char c;
-  read (fds[0], &c, 1);
+  xread (fds[0], &c, 1);
 }
 
 

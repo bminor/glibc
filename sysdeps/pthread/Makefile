@@ -464,7 +464,7 @@ $(objpfx)tst-cancel28: $(librt)
 
 $(objpfx)tst-fini1: $(shared-thread-library) $(objpfx)tst-fini1mod.so
 
-$(objpfx)tst-fini1mod.so: $(shared-thread-library)
+$(objpfx)tst-fini1mod.so: $(libsupport) $(shared-thread-library)
 
 $(objpfx)tst-_res1mod2.so: $(objpfx)tst-_res1mod1.so
 LDFLAGS-tst-_res1mod1.so = -Wl,-soname,tst-_res1mod1.so

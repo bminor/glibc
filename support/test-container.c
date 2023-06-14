@@ -1217,7 +1217,8 @@ main (int argc, char **argv)
 
   /* Get our "outside" pid from our parent.  We use this to help with
      debugging from outside the container.  */
-  read (pipes[0], &child, sizeof(child));
+  xread (pipes[0], &child, sizeof(child));
+
   close (pipes[0]);
   close (pipes[1]);
   sprintf (pid_buf, "%lu", (long unsigned)child);

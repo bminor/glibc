@@ -45,7 +45,8 @@ do_test (void)
     }
 
   char buf[5];
-  read(fd, buf, sizeof (buf));
+  xread(fd, buf, sizeof (buf));
+
   close(fd);
 
   struct stat64 st2;
