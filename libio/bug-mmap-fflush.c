@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <support/xstdlib.h>
 
 static char *fname;
 
@@ -35,14 +36,16 @@ do_test (void)
   char buffer[1024];
 
   snprintf (buffer, sizeof (buffer), "echo 'From foo@bar.com' > %s", fname);
-  system (buffer);
+  xsystem (buffer);
+
   f = fopen (fname, "r");
   fseek (f, 0, SEEK_END);
   o = ftello (f);
   fseek (f, 0, SEEK_SET);
   fflush (f);
   snprintf (buffer, sizeof (buffer), "echo 'From bar@baz.edu' >> %s", fname);
-  system (buffer);
+  xsystem (buffer);
+
   fseek (f, o, SEEK_SET);
   if (fgets (buffer, 1024, f) == NULL)
     exit (1);
