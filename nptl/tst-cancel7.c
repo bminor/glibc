@@ -43,7 +43,8 @@ tf (void *arg)
 {
   char *cmd = xasprintf ("%s --direct --sem %s --pidfile %s",
 			 command, semfilename, pidfilename);
-  system (cmd);
+  if (system (cmd))
+    FAIL_EXIT1("system call unexpectedly returned");
   /* This call should never return.  */
   return NULL;
 }

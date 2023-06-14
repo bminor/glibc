@@ -206,6 +206,7 @@ libsupport-routines = \
   xstrndup \
   xsymlink \
   xsysconf \
+  xsystem \
   xunlink \
   xuselocale \
   xwaitpid \
