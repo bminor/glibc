@@ -2573,8 +2573,12 @@ GLIBC_2.38 __nldbl___isoc23_vwscanf F
 GLIBC_2.38 __nldbl___isoc23_wscanf F
 GLIBC_2.38 __strlcat_chk F
 GLIBC_2.38 __strlcpy_chk F
+GLIBC_2.38 __wcslcat_chk F
+GLIBC_2.38 __wcslcpy_chk F
 GLIBC_2.38 strlcat F
 GLIBC_2.38 strlcpy F
+GLIBC_2.38 wcslcat F
+GLIBC_2.38 wcslcpy F
 GLIBC_2.4 _IO_fprintf F
 GLIBC_2.4 _IO_printf F
 GLIBC_2.4 _IO_sprintf F

@@ -61,6 +61,8 @@ libc {
   GLIBC_2.38 {
     __strlcat_chk;
     __strlcpy_chk;
+    __wcslcat_chk;
+    __wcslcpy_chk;
   }
   GLIBC_PRIVATE {
     __fortify_fail;

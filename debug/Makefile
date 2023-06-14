@@ -105,6 +105,8 @@ routines = \
   wcrtomb_chk \
   wcscat_chk \
   wcscpy_chk \
+  wcslcat_chk \
+  wcslcpy_chk \
   wcsncat_chk \
   wcsncpy_chk \
   wcsnrtombs_chk \

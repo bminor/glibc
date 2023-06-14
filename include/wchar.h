@@ -203,6 +203,8 @@ extern size_t __wcslen (const wchar_t *__s) __attribute_pure__;
 extern size_t __wcsnlen (const wchar_t *__s, size_t __maxlen)
      __attribute_pure__;
 extern wchar_t *__wcscat (wchar_t *dest, const wchar_t *src);
+extern __typeof (wcslcat) __wcslcat;
+libc_hidden_proto (__wcslcat)
 extern wint_t __btowc (int __c) attribute_hidden;
 extern int __mbsinit (const __mbstate_t *__ps);
 extern size_t __mbrtowc (wchar_t *__restrict __pwc,
@@ -237,8 +239,11 @@ extern wchar_t *__wcscpy (wchar_t *__restrict __dest,
 			  const wchar_t *__restrict __src)
 			  attribute_hidden __nonnull ((1, 2));
 libc_hidden_proto (__wcscpy)
+extern __typeof (wcslcpy) __wcslcpy;
+libc_hidden_proto (__wcslcpy)
 extern wchar_t *__wcsncpy (wchar_t *__restrict __dest,
 			   const wchar_t *__restrict __src, size_t __n);
+
 extern wchar_t *__wcpcpy (wchar_t *__dest, const wchar_t *__src);
 extern wchar_t *__wcpncpy (wchar_t *__dest, const wchar_t *__src,
 			   size_t __n);

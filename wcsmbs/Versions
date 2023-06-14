@@ -65,5 +65,7 @@ libc {
     __isoc23_vswscanf;
     __isoc23_vwscanf;
     __isoc23_wscanf;
+    wcslcat;
+    wcslcpy;
   }
 }

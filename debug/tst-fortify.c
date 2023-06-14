@@ -783,6 +783,18 @@ do_test (void)
   CHK_FAIL_END
 
   CHK_FAIL_START
+  wcslcpy (wbuf + 7, L"X", 4);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  wcslcpy (wbuf + 7, L"X", l0 + 4);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  wcslcpy (wbuf + 9, L"XABCDEFGH", 8);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
   wcpncpy (wbuf + 9, L"XABCDEFGH", 8);
   CHK_FAIL_END
 
@@ -802,6 +814,11 @@ do_test (void)
   wmemcpy (wbuf, wstr1 + 3, 8);
   CHK_FAIL_START
   wcsncat (wbuf, L"ZYXWV", l0 + 3);
+  CHK_FAIL_END
+
+  wmemcpy (wbuf, wstr1 + 4, 7);
+  CHK_FAIL_START
+  wcslcat (wbuf, L"ZYXWV", l0 + 11);
   CHK_FAIL_END
 
   CHK_FAIL_START

@@ -74,6 +74,8 @@ routines := \
   wcscpy \
   wcscspn \
   wcsdup \
+  wcslcat \
+  wcslcpy \
   wcslen \
   wcsmbsload \
   wcsncase \
@@ -155,6 +157,8 @@ tests := \
   tst-wchar-h \
   tst-wcpncpy \
   tst-wcrtomb \
+  tst-wcslcat \
+  tst-wcslcpy \
   tst-wcsnlen \
   tst-wcstod-nan-locale \
   tst-wcstod-nan-sign \

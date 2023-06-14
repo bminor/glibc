@@ -104,6 +104,19 @@ extern wchar_t *wcsncpy (wchar_t *__restrict __dest,
 			 const wchar_t *__restrict __src, size_t __n)
      __THROW __nonnull ((1, 2));
 
+#ifdef __USE_MISC
+/* Copy at most N - 1 characters from SRC to DEST.  */
+extern size_t wcslcpy (wchar_t *__restrict __dest,
+		       const wchar_t *__restrict __src, size_t __n)
+  __THROW __nonnull ((1, 2)) __attr_access ((__write_only__, 1, 3));
+
+/* Append SRC to DEST, possibly with truncation to keep the total size
+   below N.  */
+extern size_t wcslcat (wchar_t *__restrict __dest,
+		       const wchar_t *__restrict __src, size_t __n)
+  __THROW __nonnull ((1, 2))  __attr_access ((__read_write__, 1, 3));
+#endif
+
 /* Append SRC onto DEST.  */
 extern wchar_t *wcscat (wchar_t *__restrict __dest,
 			const wchar_t *__restrict __src)

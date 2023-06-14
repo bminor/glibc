@@ -199,6 +199,45 @@ __NTH (wcsncat (wchar_t *__restrict __dest, const wchar_t *__restrict __src,
   return __wcsncat_alias (__dest, __src, __n);
 }
 
+#ifdef __USE_MISC
+extern size_t __wcslcpy_chk (wchar_t *__dest, const wchar_t *__src, size_t __n,
+			     size_t __destlen) __THROW;
+extern size_t __REDIRECT_NTH (__wcslcpy_alias,
+			      (wchar_t *__dest, const wchar_t *__src,
+			       size_t __n), wcslcpy);
+
+__fortify_function size_t
+__NTH (wcslcpy (wchar_t *__restrict __dest, const wchar_t *__restrict __src,
+		size_t __n))
+{
+  if (__glibc_objsize (__dest) != (size_t) -1
+      && (!__builtin_constant_p (__n
+				 > __glibc_objsize (__dest) / sizeof (wchar_t))
+	  || __n > __glibc_objsize (__dest) / sizeof (wchar_t)))
+    return __wcslcpy_chk (__dest, __src, __n,
+			  __glibc_objsize (__dest) / sizeof (wchar_t));
+  return __wcslcpy_alias (__dest, __src, __n);
+}
+
+extern size_t __wcslcat_chk (wchar_t *__dest, const wchar_t *__src, size_t __n,
+			     size_t __destlen) __THROW;
+extern size_t __REDIRECT_NTH (__wcslcat_alias,
+			      (wchar_t *__dest, const wchar_t *__src,
+			       size_t __n), wcslcat);
+
+__fortify_function size_t
+__NTH (wcslcat (wchar_t *__restrict __dest, const wchar_t *__restrict __src,
+		size_t __n))
+{
+  if (__glibc_objsize (__dest) != (size_t) -1
+      && (!__builtin_constant_p (__n > __glibc_objsize (__dest)
+				 / sizeof (wchar_t))
+	  || __n > __glibc_objsize (__dest) / sizeof (wchar_t)))
+    return __wcslcat_chk (__dest, __src, __n,
+			  __glibc_objsize (__dest) / sizeof (wchar_t));
+  return __wcslcat_alias (__dest, __src, __n);
+}
+#endif /* __USE_MISC */
 
 
 extern int __REDIRECT_NTH_LDBL (__swprintf_alias,
