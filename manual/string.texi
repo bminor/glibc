@@ -726,8 +726,8 @@ This function has undefined results if the strings overlap.
 As noted below, this function has significant performance issues.
 @end deftypefun
 
-Programmers using the @code{strcat} or @code{wcscat} function (or the
-@code{strncat} or @code{wcsncat} functions defined in
+Programmers using the @code{strcat} or @code{wcscat} functions (or the
+@code{strlcat}, @code{strncat} and @code{wcsncat} functions defined in
 a later section, for that matter)
 can easily be recognized as lazy and reckless.  In almost all situations
 the lengths of the participating strings are known (it better should be
@@ -848,7 +848,8 @@ function.  The example would work for wide characters the same way.
 Whenever a programmer feels the need to use @code{strcat} she or he
 should think twice and look through the program to see whether the code cannot
 be rewritten to take advantage of already calculated results.
-The related functions @code{strncat} and @code{wcscat}
+The related functions @code{strlcat}, @code{strncat},
+@code{wcscat} and @code{wcsncat}
 are almost always unnecessary, too.
 Again: it is almost always unnecessary to use functions like @code{strcat}.
 
@@ -1074,6 +1075,95 @@ The behavior of @code{wcsncat} is undefined if the strings overlap.
 As noted below, this function is generally a poor choice for
 processing strings.  Also, this function has significant performance
 issues.  @xref{Concatenating Strings}.
+@end deftypefun
+
+@deftypefun size_t strlcpy (char *restrict @var{to}, const char *restrict @var{from}, size_t @var{size})
+@standards{BSD, string.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This function copies the string @var{from} to the destination array
+@var{to}, limiting the result's size (including the null terminator)
+to @var{size}.  The caller should ensure that @var{size} includes room
+for the result's terminating null byte.
+
+If @var{size} is greater than the length of the string @var{from},
+this function copies the non-null bytes of the string
+@var{from} to the destination array @var{to},
+and terminates the copy with a null byte.  Like other
+string functions such as @code{strcpy}, but unlike @code{strncpy}, any
+remaining bytes in the destination array remain unchanged.
+
+If @var{size} is nonzero and less than or equal to the the length of the string
+@var{from}, this function copies only the first @samp{@var{size} - 1}
+bytes to the destination array @var{to}, and writes a terminating null
+byte to the last byte of the array.
+
+This function returns the length of the string @var{from}.  This means
+that truncation occurs if and only if the returned value is greater
+than or equal to @var{size}.
+
+The behavior is undefined if @var{to} or @var{from} is a null pointer,
+or if the destination array's size is less than @var{size}, or if the
+string @var{from} overlaps the first @var{size} bytes of the
+destination array.
+
+As noted below, this function is generally a poor choice for
+processing strings.  Also, this function has a performance issue,
+as its time cost is proportional to the length of @var{from}
+even when @var{size} is small.
+
+This function is derived from OpenBSD 2.4.
+@end deftypefun
+
+@deftypefun size_t wcslcpy (wchar_t *restrict @var{to}, const wchar_t *restrict @var{from}, size_t @var{size})
+@standards{BSD, string.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This function is a variant of @code{strlcpy} for wide strings.
+The  @var{size} argument counts the length of the destination buffer in
+wide characters (and not bytes).
+
+This function is derived from BSD.
+@end deftypefun
+
+@deftypefun size_t strlcat (char *restrict @var{to}, const char *restrict @var{from}, size_t @var{size})
+@standards{BSD, string.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This function appends the string @var{from} to the
+string @var{to}, limiting the result's total size (including the null
+terminator) to @var{size}.  The caller should ensure that @var{size}
+includes room for the result's terminating null byte.
+
+This function copies as much as possible of the string @var{from} into
+the array at @var{to} of @var{size} bytes, starting at the terminating
+null byte of the original string @var{to}.  In effect, this appends
+the string @var{from} to the string @var{to}.  Although the resulting
+string will contain a null terminator, it can be truncated (not all
+bytes in @var{from} may be copied).
+
+This function returns the sum of the original length of @var{to} and
+the length of @var{from}.  This means that truncation occurs if and
+only if the returned value is greater than or equal to @var{size}.
+
+The behavior is undefined if @var{to} or @var{from} is a null pointer,
+or if the destination array's size is less than @var{size}, or if the
+destination array does not contain a null byte in its first @var{size}
+bytes, or if the string @var{from} overlaps the first @var{size} bytes
+of the destination array.
+
+As noted below, this function is generally a poor choice for
+processing strings.  Also, this function has significant performance
+issues.  @xref{Concatenating Strings}.
+
+This function is derived from OpenBSD 2.4.
+@end deftypefun
+
+@deftypefun size_t wcslcat (wchar_t *restrict @var{to}, const wchar_t *restrict @var{from}, size_t @var{size})
+@standards{BSD, string.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This function is a variant of @code{strlcat} for wide strings.
+The  @var{size} argument counts the length of the destination buffer in
+wide characters (and not bytes).
+
+This function is derived from BSD.
 @end deftypefun
 
 Because these functions can abruptly truncate strings or wide strings,

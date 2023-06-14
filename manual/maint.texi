@@ -371,6 +371,10 @@ The following functions and macros are fortified in @theglibc{}:
 
 @item @code{strcpy}
 
+@item @code{strlcat}
+
+@item @code{strlcpy}
+
 @item @code{strncat}
 
 @item @code{strncpy}
@@ -410,6 +414,10 @@ The following functions and macros are fortified in @theglibc{}:
 @item @code{wcscat}
 
 @item @code{wcscpy}
+
+@item @code{wcslcat}
+
+@item @code{wcslcpy}
 
 @item @code{wcsncat}
 
