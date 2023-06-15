@@ -518,7 +518,10 @@ mostlyclean: parent-mostlyclean
 	@$(MAKE) subdir_mostlyclean no_deps=t
 	-rm -f $(postclean)
 
-tests-clean:
+# Remove test artifacts from the whole glibc build.
+# do-tests-clean removes test artifacts from top-level directory, and
+# subdir_testclean removes them from individual sub-directories.
+tests-clean: do-tests-clean
 	@$(MAKE) subdir_testclean no_deps=t
 
 ifneq (,$(CXX))

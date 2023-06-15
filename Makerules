@@ -1334,18 +1334,13 @@ echo-headers:
 clean: common-clean
 mostlyclean: common-mostlyclean
 
+# Remove test artifacts from a given directory
 do-tests-clean:
-	-rm -f $(addprefix $(objpfx),$(addsuffix .out,$(tests) \
-						      $(tests-internal) \
-						      $(xtests) \
-						      $(test-srcs)) \
-				     $(addsuffix .test-result,$(tests) \
-							      $(tests-internal) \
-							      $(xtests) \
-							      $(test-srcs)))
+	-find $(objpfx) -name '*.out' -delete
+	-find $(objpfx) -name '*.test-result' -delete
 
 # Remove the object files.
-common-mostlyclean:
+common-mostlyclean: do-tests-clean
 	-rm -f $(addprefix $(objpfx),$(tests) $(tests-internal) $(xtests) \
 				     $(test-srcs) \
 				     $(others) $(sysdep-others) stubs \
@@ -1354,15 +1349,7 @@ common-mostlyclean:
 						    $(xtests) \
 						    $(test-srcs) \
 						    $(others) \
-						    $(sysdep-others)) \
-				     $(addsuffix .out,$(tests) \
-						      $(tests-internal) \
-						      $(xtests) \
-						      $(test-srcs)) \
-				     $(addsuffix .test-result,$(tests) \
-							      $(tests-internal) \
-							      $(xtests) \
-							      $(test-srcs)))
+						    $(sysdep-others)))
 	-rm -f $(addprefix $(objpfx),$(extra-objs) $(extra-test-objs) \
 				     $(install-lib) $(install-lib.so) \
 				     $(install-lib.so:%.so=%_pic.a))
