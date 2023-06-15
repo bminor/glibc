@@ -178,6 +178,7 @@ tests := \
   tst-endian \
   tst-inlcall \
   tst-memmove-overflow \
+  tst-strerror-fail \
   tst-strfry \
   tst-strlcat \
   tst-strlcpy \

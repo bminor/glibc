@@ -43,10 +43,15 @@ __strerror_l (int errnum, locale_t loc)
       struct tls_internal_t *tls_internal = __glibc_tls_internal ();
       free (tls_internal->strerror_l_buf);
       if (__asprintf (&tls_internal->strerror_l_buf, "%s%d",
-		      translate ("Unknown error ", loc), errnum) == -1)
-	tls_internal->strerror_l_buf = NULL;
-
-      err = tls_internal->strerror_l_buf;
+		      translate ("Unknown error ", loc), errnum) > 0)
+	err = tls_internal->strerror_l_buf;
+      else
+	{
+	  /* The memory was freed above.  */
+	  tls_internal->strerror_l_buf = NULL;
+	  /* Provide a fallback translation.  */
+	  err = (char *) translate ("Unknown error", loc);
+	}
     }
   else
     err = (char *) translate (err, loc);
