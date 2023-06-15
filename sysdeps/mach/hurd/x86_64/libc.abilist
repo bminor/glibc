@@ -447,6 +447,8 @@ GLIBC_2.38 __strdup F
 GLIBC_2.38 __strerror_r F
 GLIBC_2.38 __strfmon_l F
 GLIBC_2.38 __strftime_l F
+GLIBC_2.38 __strlcat_chk F
+GLIBC_2.38 __strlcpy_chk F
 GLIBC_2.38 __strncasecmp_l F
 GLIBC_2.38 __strncat_chk F
 GLIBC_2.38 __strncpy_chk F
@@ -514,6 +516,8 @@ GLIBC_2.38 __wcscat_chk F
 GLIBC_2.38 __wcscoll_l F
 GLIBC_2.38 __wcscpy_chk F
 GLIBC_2.38 __wcsftime_l F
+GLIBC_2.38 __wcslcat_chk F
+GLIBC_2.38 __wcslcpy_chk F
 GLIBC_2.38 __wcsncasecmp_l F
 GLIBC_2.38 __wcsncat_chk F
 GLIBC_2.38 __wcsncpy_chk F
@@ -1843,6 +1847,8 @@ GLIBC_2.38 strfroml F
 GLIBC_2.38 strfry F
 GLIBC_2.38 strftime F
 GLIBC_2.38 strftime_l F
+GLIBC_2.38 strlcat F
+GLIBC_2.38 strlcpy F
 GLIBC_2.38 strlen F
 GLIBC_2.38 strncasecmp F
 GLIBC_2.38 strncasecmp_l F
@@ -2040,6 +2046,8 @@ GLIBC_2.38 wcscspn F
 GLIBC_2.38 wcsdup F
 GLIBC_2.38 wcsftime F
 GLIBC_2.38 wcsftime_l F
+GLIBC_2.38 wcslcat F
+GLIBC_2.38 wcslcpy F
 GLIBC_2.38 wcslen F
 GLIBC_2.38 wcsncasecmp F
 GLIBC_2.38 wcsncasecmp_l F
