@@ -20,7 +20,7 @@
 #include <libio/libioP.h>
 
 extern int
-___ieee128_swprintf_chk (wchar_t *string, size_t maxlen, int flag,
+___ieee128___swprintf_chk (wchar_t *string, size_t maxlen, int flag,
 			size_t slen, const wchar_t *format, ...)
 {
   va_list ap;
@@ -39,4 +39,4 @@ ___ieee128_swprintf_chk (wchar_t *string, size_t maxlen, int flag,
 
   return done;
 }
-strong_alias (___ieee128_swprintf_chk, __swprintf_chkieee128)
+strong_alias (___ieee128___swprintf_chk, __swprintf_chkieee128)

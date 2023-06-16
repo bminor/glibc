@@ -19,7 +19,7 @@
 #include <libio/libioP.h>
 
 extern int
-___ieee128_vprintf_chk (int flag, const char *format, va_list ap)
+___ieee128___vprintf_chk (int flag, const char *format, va_list ap)
 {
   unsigned int mode = PRINTF_LDBL_USES_FLOAT128;
   if (flag > 0)
@@ -27,4 +27,4 @@ ___ieee128_vprintf_chk (int flag, const char *format, va_list ap)
 
   return __vfprintf_internal (stdout, format, ap, mode);
 }
-strong_alias (___ieee128_vprintf_chk, __vprintf_chkieee128)
+strong_alias (___ieee128___vprintf_chk, __vprintf_chkieee128)

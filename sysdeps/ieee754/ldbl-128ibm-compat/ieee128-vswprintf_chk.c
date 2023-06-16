@@ -19,7 +19,7 @@
 #include <libio/libioP.h>
 
 extern int
-___ieee128_vswprintf_chk (wchar_t *string, size_t maxlen, int flag,
+___ieee128___vswprintf_chk (wchar_t *string, size_t maxlen, int flag,
 			 size_t slen, const wchar_t *format, va_list ap)
 {
   unsigned int mode = PRINTF_LDBL_USES_FLOAT128;
@@ -31,4 +31,4 @@ ___ieee128_vswprintf_chk (wchar_t *string, size_t maxlen, int flag,
 
   return __vswprintf_internal (string, maxlen, format, ap, mode);
 }
-strong_alias (___ieee128_vswprintf_chk, __vswprintf_chkieee128)
+strong_alias (___ieee128___vswprintf_chk, __vswprintf_chkieee128)

@@ -20,7 +20,7 @@
 #include <libio/libioP.h>
 
 extern int
-___ieee128_fprintf_chk (FILE *fp, int flag, const char *format, ...)
+___ieee128___fprintf_chk (FILE *fp, int flag, const char *format, ...)
 {
   va_list ap;
   int done;
@@ -35,4 +35,4 @@ ___ieee128_fprintf_chk (FILE *fp, int flag, const char *format, ...)
 
   return done;
 }
-strong_alias (___ieee128_fprintf_chk, __fprintf_chkieee128)
+strong_alias (___ieee128___fprintf_chk, __fprintf_chkieee128)

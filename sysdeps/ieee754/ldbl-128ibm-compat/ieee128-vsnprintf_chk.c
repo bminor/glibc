@@ -19,7 +19,7 @@
 #include <libio/libioP.h>
 
 extern int
-___ieee128_vsnprintf_chk (char *string, size_t maxlen, int flag,
+___ieee128___vsnprintf_chk (char *string, size_t maxlen, int flag,
 			 size_t slen, const char *format, va_list ap)
 {
   if (__glibc_unlikely (slen < maxlen))
@@ -31,4 +31,4 @@ ___ieee128_vsnprintf_chk (char *string, size_t maxlen, int flag,
 
   return __vsnprintf_internal (string, maxlen, format, ap, mode);
 }
-strong_alias (___ieee128_vsnprintf_chk, __vsnprintf_chkieee128)
+strong_alias (___ieee128___vsnprintf_chk, __vsnprintf_chkieee128)

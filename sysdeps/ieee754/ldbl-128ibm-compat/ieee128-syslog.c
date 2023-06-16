@@ -40,7 +40,7 @@ ___ieee128_vsyslog (int pri, const char *fmt, va_list ap)
 strong_alias (___ieee128_vsyslog, __vsyslogieee128)
 
 void
-___ieee128_syslog_chk (int pri, int flag, const char *fmt, ...)
+___ieee128___syslog_chk (int pri, int flag, const char *fmt, ...)
 {
   va_list ap;
 
@@ -52,10 +52,10 @@ ___ieee128_syslog_chk (int pri, int flag, const char *fmt, ...)
   __vsyslog_internal (pri, fmt, ap, mode);
   va_end (ap);
 }
-strong_alias (___ieee128_syslog_chk, __syslog_chkieee128)
+strong_alias (___ieee128___syslog_chk, __syslog_chkieee128)
 
 void
-___ieee128_vsyslog_chk (int pri, int flag, const char *fmt, va_list ap)
+___ieee128___vsyslog_chk (int pri, int flag, const char *fmt, va_list ap)
 {
   unsigned int mode = PRINTF_LDBL_USES_FLOAT128;
   if (flag > 0)
@@ -63,4 +63,4 @@ ___ieee128_vsyslog_chk (int pri, int flag, const char *fmt, va_list ap)
 
   __vsyslog_internal (pri, fmt, ap, mode);
 }
-strong_alias (___ieee128_vsyslog_chk, __vsyslog_chkieee128)
+strong_alias (___ieee128___vsyslog_chk, __vsyslog_chkieee128)
