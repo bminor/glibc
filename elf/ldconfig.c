@@ -677,28 +677,18 @@ search_dir (const struct dir_entry *entry)
 
   char *dir_name;
   char *real_file_name;
-  size_t real_file_name_len;
-  size_t file_name_len = PATH_MAX;
-  char *file_name = alloca (file_name_len);
+  char *file_name;
   if (opt_chroot != NULL)
-    {
-      dir_name = chroot_canon (opt_chroot, entry->path);
-      real_file_name_len = PATH_MAX;
-      real_file_name = alloca (real_file_name_len);
-    }
+    dir_name = chroot_canon (opt_chroot, entry->path);
   else
-    {
-      dir_name = entry->path;
-      real_file_name_len = 0;
-      real_file_name = file_name;
-    }
+    dir_name = entry->path;
 
   DIR *dir;
   if (dir_name == NULL || (dir = opendir (dir_name)) == NULL)
     {
       if (opt_verbose)
 	error (0, errno, _("Can't open directory %s"), entry->path);
-      if (opt_chroot != NULL && dir_name != NULL)
+      if (opt_chroot != NULL)
 	free (dir_name);
       return;
     }
@@ -733,25 +723,16 @@ search_dir (const struct dir_entry *entry)
 			 + 1, ".#prelink#.", sizeof (".#prelink#.") - 1) == 0)
 	    continue;
 	}
-      len += strlen (entry->path) + 2;
-      if (len > file_name_len)
-	{
-	  file_name_len = len;
-	  file_name = alloca (file_name_len);
-	  if (!opt_chroot)
-	    real_file_name = file_name;
-	}
-      sprintf (file_name, "%s/%s", entry->path, direntry->d_name);
+      if (asprintf (&file_name, "%s/%s", entry->path, direntry->d_name) < 0)
+	error (EXIT_FAILURE, errno, _("Could not form library path"));
       if (opt_chroot != NULL)
 	{
-	  len = strlen (dir_name) + strlen (direntry->d_name) + 2;
-	  if (len > real_file_name_len)
-	    {
-	      real_file_name_len = len;
-	      real_file_name = alloca (real_file_name_len);
-	    }
-	  sprintf (real_file_name, "%s/%s", dir_name, direntry->d_name);
+	  if (asprintf (&real_file_name, "%s/%s",
+			dir_name, direntry->d_name) < 0)
+	    error (EXIT_FAILURE, errno, _("Could not form library path"));
 	}
+      else
+	real_file_name = xstrdup (file_name);
 
       struct stat lstat_buf;
       /* We optimize and try to do the lstat call only if needed.  */
@@ -761,7 +742,7 @@ search_dir (const struct dir_entry *entry)
 	if (__glibc_unlikely (lstat (real_file_name, &lstat_buf)))
 	  {
 	    error (0, errno, _("Cannot lstat %s"), file_name);
-	    continue;
+	    goto next;
 	  }
 
       struct stat stat_buf;
@@ -778,7 +759,7 @@ search_dir (const struct dir_entry *entry)
 		{
 		  if (strstr (file_name, ".so") == NULL)
 		    error (0, 0, _("Input file %s not found.\n"), file_name);
-		  continue;
+		  goto next;
 		}
 	    }
 	  if (__glibc_unlikely (stat (target_name, &stat_buf)))
@@ -793,7 +774,7 @@ search_dir (const struct dir_entry *entry)
 	      if (opt_chroot != NULL)
 		free (target_name);
 
-	      continue;
+	      goto next;
 	    }
 
 	  if (opt_chroot != NULL)
@@ -806,7 +787,7 @@ search_dir (const struct dir_entry *entry)
 	  lstat_buf.st_ctime = stat_buf.st_ctime;
 	}
       else if (!S_ISREG (lstat_buf.st_mode))
-	continue;
+	goto next;
 
       char *real_name;
       if (opt_chroot != NULL && is_link)
@@ -816,7 +797,7 @@ search_dir (const struct dir_entry *entry)
 	    {
 	      if (strstr (file_name, ".so") == NULL)
 		error (0, 0, _("Input file %s not found.\n"), file_name);
-	      continue;
+	      goto next;
 	    }
 	}
       else
@@ -828,7 +809,7 @@ search_dir (const struct dir_entry *entry)
 	  && __builtin_expect (lstat (real_file_name, &lstat_buf), 0))
 	{
 	  error (0, errno, _("Cannot lstat %s"), file_name);
-	  continue;
+	  goto next;
 	}
 
       /* First search whether the auxiliary cache contains this
@@ -842,7 +823,7 @@ search_dir (const struct dir_entry *entry)
 	    {
 	      if (real_name != real_file_name)
 		free (real_name);
-	      continue;
+	      goto next;
 	    }
 	  else if (opt_build_cache)
 	    add_to_aux_cache (&lstat_buf, flag, isa_level, soname);
@@ -948,6 +929,10 @@ search_dir (const struct dir_entry *entry)
 	  dlib_ptr->next = dlibs;
 	  dlibs = dlib_ptr;
 	}
+
+    next:
+      free (file_name);
+      free (real_file_name);
     }
 
   closedir (dir);
