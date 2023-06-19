@@ -19,6 +19,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <limits.h>
+#include <scratch_buffer.h>
 #include <stdbool.h>
 #include <sys/param.h>
 #include <sys/uio.h>
@@ -26,9 +27,9 @@
 
 
 static void
-ifree (char **ptrp)
+ifree (struct scratch_buffer *sbuf)
 {
-  free (*ptrp);
+  scratch_buffer_free (sbuf);
 }
 
 /* Read data from file descriptor FD, and put the result in the
@@ -52,20 +53,15 @@ __readv (int fd, const struct iovec *vector, int count)
       bytes += vector[i].iov_len;
     }
 
-  /* Allocate a temporary buffer to hold the data.  We should normally
-     use alloca since it's faster and does not require synchronization
-     with other threads.  But we cannot if the amount of memory
-     required is too large.  */
-  char *buffer;
-  char *malloced_buffer __attribute__ ((__cleanup__ (ifree))) = NULL;
-  if (__libc_use_alloca (bytes))
-    buffer = (char *) __alloca (bytes);
-  else
-    {
-      malloced_buffer = buffer = (char *) malloc (bytes);
-      if (buffer == NULL)
-	return -1;
-    }
+  /* Allocate a temporary buffer to hold the data.  Use a scratch_buffer
+     since it's faster for small buffer sizes but can handle larger
+     allocations as well.  */
+
+  struct scratch_buffer __attribute__ ((__cleanup__ (ifree))) buf;
+  scratch_buffer_init (&buf);
+  if (!scratch_buffer_set_array_size (&buf, 1, bytes))
+    return -1;
+  char *buffer = buf.data;
 
   /* Read the data.  */
   ssize_t bytes_read = __read (fd, buffer, bytes);
