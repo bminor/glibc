@@ -37,10 +37,10 @@
   ldptr = va_arg (args, long double *);					\
   fptr = va_arg (args, float *);					\
   va_end (args);							\
-  if (*ldptr == -1 && *fptr == -2)					\
+  if (*ldptr == -1 && *fptr == -2 && ret == 2)				\
     printf ("OK");							\
   else									\
-    printf ("ERROR (%Lf %f)", *ldptr, *fptr);				\
+    printf ("ERROR (%Lf %f %d)", *ldptr, *fptr, ret);			\
   printf ("\n");
 
 #define CLEAR_VALUE							\
@@ -48,10 +48,10 @@
   f = 0;
 
 #define CHECK_VALUE							\
-  if (ld == -1 && f == -2)						\
+  if (ld == -1 && f == -2 && ret == 2)					\
     printf ("OK");							\
   else									\
-    printf ("ERROR (%Lf %f)", ld, f);					\
+    printf ("ERROR (%Lf %f %d)", ld, f, ret);				\
   printf ("\n");
 
 static void
@@ -62,40 +62,41 @@ do_test_call (FILE *stream, CHAR *string, const CHAR *format, ...)
   float *fptr;
   long double *ldptr;
   va_list args;
+  int ret;
 
   CLEAR_VALUE
   printf ("fscanf: ");
-  FSCANF (stream, format, &ld, &f);
+  ret = FSCANF (stream, format, &ld, &f);
   CHECK_VALUE
 
   CLEAR_VALUE
   printf ("scanf: ");
-  SCANF (format, &ld, &f);
+  ret = SCANF (format, &ld, &f);
   CHECK_VALUE
 
   CLEAR_VALUE
   printf ("sscanf: ");
-  SSCANF (string, format, &ld, &f);
+  ret = SSCANF (string, format, &ld, &f);
   CHECK_VALUE
 
   CLEAR_VARGS
   printf ("vfscanf: ");
   va_start (args, format);
-  VFSCANF (stream, format, args);
+  ret = VFSCANF (stream, format, args);
   va_end (args);
   CHECK_VARGS
 
   CLEAR_VARGS
   printf ("vscanf: ");
   va_start (args, format);
-  VSCANF (format, args);
+  ret = VSCANF (format, args);
   va_end (args);
   CHECK_VARGS
 
   CLEAR_VARGS
   printf ("vsscanf: ");
   va_start (args, format);
-  VSSCANF (string, format, args);
+  ret = VSSCANF (string, format, args);
   va_end (args);
   CHECK_VARGS
 }
