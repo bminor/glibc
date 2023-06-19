@@ -26,6 +26,12 @@
 #include <errno.h>
 
 
+static void
+ifree (struct scratch_buffer *sbuf)
+{
+   scratch_buffer_free (sbuf);
+}
+
 /* Write data pointed by the buffers described by VECTOR, which
    is a vector of COUNT 'struct iovec's, to file descriptor FD.
    The data is written in the order specified.
@@ -51,7 +57,7 @@ __writev (int fd, const struct iovec *vector, int count)
      since it's faster for small buffer sizes but can handle larger
      allocations as well.  */
 
-  struct scratch_buffer buf;
+  struct scratch_buffer __attribute__ ((__cleanup__ (ifree))) buf;
   scratch_buffer_init (&buf);
   if (!scratch_buffer_set_array_size (&buf, 1, bytes))
     /* XXX I don't know whether it is acceptable to try writing
@@ -74,8 +80,6 @@ __writev (int fd, const struct iovec *vector, int count)
     }
 
   ssize_t bytes_written = __write (fd, buffer, bytes);
-
-  scratch_buffer_free (&buf);
 
   return bytes_written;
 }
