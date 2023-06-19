@@ -36,37 +36,43 @@ static const struct
   bool check_tm;
 } tests [] =
 {
-  {"21:01:10 1999-1-31", "Universal", {10, 1, 21, 31, 0, 99, 0, 0, 0},
+  {"21:01:10 1999-1-31", "Universal", {10, 1, 21, 31, 0, 99, 0, 30, 0},
    false , 0, true},
-  {"21:01:10    1999-1-31", "Universal", {10, 1, 21, 31, 0, 99, 0, 0, 0},
+  {"21:01:10    1999-1-31", "Universal", {10, 1, 21, 31, 0, 99, 0, 30, 0},
    false , 0, true},
-  {"   21:01:10 1999-1-31", "Universal", {10, 1, 21, 31, 0, 99, 0, 0, 0},
+  {"   21:01:10 1999-1-31", "Universal", {10, 1, 21, 31, 0, 99, 0, 30, 0},
    false , 0, true},
-  {"21:01:10 1999-1-31   ", "Universal", {10, 1, 21, 31, 0, 99, 0, 0, 0},
+  {"21:01:10 1999-1-31   ", "Universal", {10, 1, 21, 31, 0, 99, 0, 30, 0},
    false , 0, true},
-  {"    21:01:10 1999-1-31   ", "Universal", {10, 1, 21, 31, 0, 99, 0, 0, 0},
+  {"    21:01:10 1999-1-31   ", "Universal", {10, 1, 21, 31, 0, 99, 0, 30, 0},
    false , 0, true},
-  {"21:01:10 1999-2-28", "Universal", {10, 1, 21, 28, 1, 99, 0, 0, 0},
+  {"21:01:10 1999-2-28", "Universal", {10, 1, 21, 28, 1, 99, 0, 58, 0},
    false , 0, true},
-  {"16:30:46 2000-2-29", "Universal", {46, 30,16, 29, 1, 100, 0, 0, 0},
+  {"16:30:46 2000-2-29", "Universal", {46, 30,16, 29, 1, 100, 2, 59, 0},
    false , 0, true},
-  {"01-08-2000 05:06:07", "Europe/Berlin", {7, 6, 5, 1, 7, 100, 0, 0, 0},
+  {"01-08-2000 05:06:07", "Europe/Berlin", {7, 6, 5, 1, 7, 100, 2, 213, 0},
    false , 0, true},
-  {"01-08-2000     05:06:07", "Europe/Berlin", {7, 6, 5, 1, 7, 100, 0, 0, 0},
+  {"01-08-2000     05:06:07", "Europe/Berlin", {7, 6, 5, 1, 7, 100, 2, 213, 0},
    false , 0, true},
   {"01-08-2000 a 05:06:07", "Europe/Berlin", {0, 0, 0, 0, 0, 0, 0, 0, 0},
    false , 7, false},
   {"       12          AM     ", "Europe/Berlin", {0, 0, 0, 0, 0, 0, 0, 0, 0},
    false , 0, false},
+  {"01-01-1900 2 PM", "Universal", {0, 0, 14, 1, 0, 0, 1, 0, 0},
+   false, 0, true},
+  {"12-12-1850 16h", "Universal", {0, 0, 16, 12, 11, -50, 4, 345, 0},
+   false, 0, true},
+  {"12/31/93 21:35", "Universal", {0, 35, 21, 31, 11, 93, 5, 364, 0},
+   false, 0, true},
 
   /* 64 bit time_t tests.  */
-  {"21:01:10 2038-1-31", "Universal", {10, 1, 21, 31, 0, 138, 0, 0, 0},
+  {"21:01:10 2038-1-31", "Universal", {10, 1, 21, 31, 0, 138, 0, 30, 0},
    true , 0, true},
-  {"22:01:10 2048-5-20", "Universal", {10, 1, 22, 20, 4, 148, 0, 0, 0},
+  {"22:01:10 2048-5-20", "Universal", {10, 1, 22, 20, 4, 148, 3, 140, 0},
    true , 0, true},
-  {"01-08-2038 05:06:07", "Europe/Berlin", {7, 6, 5, 1, 7, 138, 0, 0, 0},
+  {"01-08-2038 05:06:07", "Europe/Berlin", {7, 6, 5, 1, 7, 138, 0, 212, 0},
    true , 0, true},
-  {"20-03-2050 21:30:08", "Europe/Berlin", {8, 30, 21, 20, 2, 150, 0, 0, 0},
+  {"20-03-2050 21:30:08", "Europe/Berlin", {8, 30, 21, 20, 2, 150, 0, 78, 0},
    true , 0, true}
 };
 
@@ -102,7 +108,10 @@ static char *datemsk;
 static const char datemskstr[] =
   "%H:%M:%S %F\n"
   "%d-%m-%Y %T\n"
-  "%I %p\n";
+  "%I %p\n"
+  "%d-%m-%Y %I %p\n"
+  "%d-%m-%Y %H%nh\n"
+  "%D %R\n";
 
 static void
 do_prepare (int argc, char **argv)
@@ -147,6 +156,8 @@ do_test (void)
 	  TEST_COMPARE (tests[i].tm.tm_hour, tm->tm_hour);
 	  TEST_COMPARE (tests[i].tm.tm_min, tm->tm_min);
 	  TEST_COMPARE (tests[i].tm.tm_sec, tm->tm_sec);
+	  TEST_COMPARE (tests[i].tm.tm_wday, tm->tm_wday);
+	  TEST_COMPARE (tests[i].tm.tm_yday, tm->tm_yday);
 	}
 
       struct tm tms;
@@ -160,6 +171,8 @@ do_test (void)
 	  TEST_COMPARE (tests[i].tm.tm_hour, tms.tm_hour);
 	  TEST_COMPARE (tests[i].tm.tm_min, tms.tm_min);
 	  TEST_COMPARE (tests[i].tm.tm_sec, tms.tm_sec);
+	  TEST_COMPARE (tests[i].tm.tm_wday, tms.tm_wday);
+	  TEST_COMPARE (tests[i].tm.tm_yday, tms.tm_yday);
 	}
     }
 
