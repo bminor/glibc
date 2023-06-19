@@ -3545,6 +3545,10 @@ Matches an optionally signed integer in any of the formats that the C
 language defines for specifying an integer constant.  @xref{Numeric
 Input Conversions}.
 
+@item @samp{%b}
+Matches an unsigned integer written in binary radix.  This is an ISO
+C2X feature.  @xref{Numeric Input Conversions}.
+
 @item @samp{%o}
 Matches an unsigned integer written in octal radix.
 @xref{Numeric Input Conversions}.
@@ -3652,11 +3656,13 @@ For example, any of the strings @samp{10}, @samp{0xa}, or @samp{012}
 could be read in as integers under the @samp{%i} conversion.  Each of
 these specifies a number with decimal value @code{10}.
 
-The @samp{%o}, @samp{%u}, and @samp{%x} conversions match unsigned
-integers in octal, decimal, and hexadecimal radices, respectively.  The
+The @samp{%b}, @samp{%o}, @samp{%u}, and @samp{%x} conversions match unsigned
+integers in binary, octal, decimal, and hexadecimal radices, respectively.  The
 syntax that is recognized is the same as that for the @code{strtoul}
 function (@pxref{Parsing of Integers}) with the appropriate value
-(@code{8}, @code{10}, or @code{16}) for the @var{base} argument.
+(@code{2}, @code{8}, @code{10}, or @code{16}) for the @var{base}
+argument.  The @samp{%b} conversion accepts an optional leading
+@samp{0b} or @samp{0B} in all standards modes.
 
 The @samp{%X} conversion is identical to the @samp{%x} conversion.  They
 both permit either uppercase or lowercase letters to be used as digits.

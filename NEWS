@@ -17,9 +17,12 @@ Major new features:
   wcstoull_l, wcstoimax, wcstoumax, wcstoq, wcstouq.  Similarly, the
   following functions support binary integers prefixed by 0b or 0B as
   input to the %i format: fscanf, scanf, sscanf, vscanf, vsscanf,
-  vfscanf, fwscanf, wscanf, swscanf, vfwscanf, vwscanf, vswscanf.
+  vfscanf, fwscanf, wscanf, swscanf, vfwscanf, vwscanf, vswscanf; those
+  functions also support the %b format for binary integers, with or
+  without such a prefix and independent of standards mode.
 
-* PRIb* and PRIB* macros from C2X have been added to <inttypes.h>.
+* PRIb*, PRIB* and SCNb* macros from C2X have been added to
+  <inttypes.h>.
 
 * printf-family functions now support the wN format length modifiers for
   arguments of type intN_t, int_leastN_t, uintN_t or uint_leastN_t (for

@@ -302,6 +302,28 @@ typedef wchar_t __gwchar_t;
 # define SCNxPTR	__PRIPTR_PREFIX "x"
 
 
+/* Binary notation.  */
+# if __GLIBC_USE (ISOC2X)
+#  define SCNb8		"hhb"
+#  define SCNb16	"hb"
+#  define SCNb32	"b"
+#  define SCNb64	__PRI64_PREFIX "b"
+
+#  define SCNbLEAST8	"hhb"
+#  define SCNbLEAST16	"hb"
+#  define SCNbLEAST32	"b"
+#  define SCNbLEAST64	__PRI64_PREFIX "b"
+
+#  define SCNbFAST8	"hhb"
+#  define SCNbFAST16	__PRIPTR_PREFIX "b"
+#  define SCNbFAST32	__PRIPTR_PREFIX "b"
+#  define SCNbFAST64	__PRI64_PREFIX "b"
+
+#  define SCNbMAX	__PRI64_PREFIX "b"
+#  define SCNbPTR	__PRIPTR_PREFIX "b"
+# endif
+
+
 __BEGIN_DECLS
 
 #if __WORDSIZE == 64
