@@ -16,8 +16,6 @@
 # <https://www.gnu.org/licenses/>.
 
 ifeq ($(subdir),rt)
-sysdep_routines += timer_routines
-
 tests += tst-mqueue8x
 CFLAGS-tst-mqueue8x.c += -fexceptions
 endif

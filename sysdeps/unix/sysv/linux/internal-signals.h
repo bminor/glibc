@@ -108,12 +108,4 @@ static const sigset_t sigtimer_set = {
   }
 };
 
-/* Unblock only SIGTIMER.  */
-static inline void
-signal_unblock_sigtimer (void)
-{
-  INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_UNBLOCK, &sigtimer_set, NULL,
-			 __NSIG_BYTES);
-}
-
 #endif

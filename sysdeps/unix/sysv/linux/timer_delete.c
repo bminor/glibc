@@ -15,10 +15,8 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If
    not, see <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <stdlib.h>
+#include <unistd.h>
 #include <time.h>
-#include <sysdep.h>
 #include "kernel-posix-timers.h"
 #include <pthreadP.h>
 #include <shlib-compat.h>
@@ -26,42 +24,20 @@
 int
 ___timer_delete (timer_t timerid)
 {
-  kernel_timer_t ktimerid = timerid_to_kernel_timer (timerid);
-  int res = INLINE_SYSCALL_CALL (timer_delete, ktimerid);
-
-  if (res == 0)
+  if (timer_is_sigev_thread (timerid))
     {
-      if (timer_is_sigev_thread (timerid))
-	{
-	  struct timer *kt = timerid_to_timer (timerid);
+      struct pthread *th = timerid_to_pthread (timerid);
 
-	  /* Remove the timer from the list.  */
-	  __pthread_mutex_lock (&__timer_active_sigev_thread_lock);
-	  if (__timer_active_sigev_thread == kt)
-	    __timer_active_sigev_thread = kt->next;
-	  else
-	    {
-	      struct timer *prevp = __timer_active_sigev_thread;
-	      while (prevp->next != NULL)
-		if (prevp->next == kt)
-		  {
-		    prevp->next = kt->next;
-		    break;
-		  }
-		else
-		  prevp = prevp->next;
-	    }
-	  __pthread_mutex_unlock (&__timer_active_sigev_thread_lock);
-
-	  free (kt);
-	}
-
+      /* The helper thread itself will be responsible to call the
+	 timer_delete syscall.  */
+      timerid_signal_delete (&th->timerid);
+      /* We can send the signal directly instead of through
+	 __pthread_kill_internal because the thread is not user-visible
+	 and it blocks SIGTIMER.  */
+      INTERNAL_SYSCALL_CALL (tgkill, __getpid (), th->tid, SIGTIMER);
       return 0;
     }
-
-  /* The kernel timer is not known or something else bad happened.
-     Return the error.  */
-  return -1;
+  return INLINE_SYSCALL_CALL (timer_delete, timerid);
 }
 versioned_symbol (libc, ___timer_delete, timer_delete, GLIBC_2_34);
 libc_hidden_ver (___timer_delete, __timer_delete)

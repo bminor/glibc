@@ -39,12 +39,9 @@ thread_handler (union sigval sv)
   for (int sig = 1; sig < NSIG; sig++)
     {
       /* POSIX timers threads created to handle SIGEV_THREAD block all
-	 signals except SIGKILL, SIGSTOP and glibc internals ones.  */
+	 signals except SIGKILL, SIGSTOP, and SIGSETXID.  */
       if (sigismember (&ss, sig))
-	{
-	  TEST_VERIFY (sig != SIGKILL && sig != SIGSTOP);
-	  TEST_VERIFY (!is_internal_signal (sig));
-	}
+	TEST_VERIFY (sig != SIGKILL && sig != SIGSTOP && sig != SIGSETXID);
       if (test_verbose && sigismember (&ss, sig))
 	printf ("%d, ", sig);
     }

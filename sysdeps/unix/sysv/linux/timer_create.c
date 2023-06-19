@@ -15,46 +15,196 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If
    not, see <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <pthread.h>
-#include <signal.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-#include <sysdep.h>
-#include <internaltypes.h>
+#include <jmpbuf-unwind.h>
+#include <kernel-posix-cpu-timers.h>
+#include <kernel-posix-timers.h>
+#include <ldsodefs.h>
+#include <libc-internal.h>
+#include <libc-lock.h>
 #include <pthreadP.h>
-#include "kernel-posix-timers.h"
-#include "kernel-posix-cpu-timers.h"
 #include <shlib-compat.h>
+
+struct timer_helper_thread_args_t
+{
+  /* The barrier is used to synchronize the arguments copy from timer_create
+     and the SIGEV_THREAD thread and to instruct the thread to exit if the
+     timer_create syscall fails.  */
+  pthread_barrier_t b;
+  struct sigevent *evp;
+};
+
+struct cleanup_args_t
+{
+  struct pthread_unwind_buf *cleanup_jmp_buf;
+  jmp_buf jb;
+};
+
+/* Reset internal thread state if the callback issues pthread_exit.  It avoids
+   recreating the thread and having possible unreported missed events due
+   thread creation failure.  */
+static void
+timer_helper_thread_cleanup (void *arg)
+{
+  struct pthread *self = THREAD_SELF;
+
+  /* Call destructors for the thread_local TLS variables.  */
+  call_function_static_weak (__call_tls_dtors);
+
+  /* Run the destructor for the thread-local data.  */
+  __nptl_deallocate_tsd ();
+
+  /* Clean up any state libc stored in thread-local variables.  */
+  __libc_thread_freeres ();
+
+  /* Reset internal TCB state.  */
+  struct cleanup_args_t *args = arg;
+  self->cleanup_jmp_buf = args->cleanup_jmp_buf;
+  self->cleanup_jmp_buf->priv.data.prev = NULL;
+  self->cleanup_jmp_buf->priv.data.cleanup = NULL;
+  self->cleanup_jmp_buf->priv.data.canceltype = 0;
+  self->cleanup = NULL;
+  self->exc = (struct _Unwind_Exception) { 0 };
+  self->cancelhandling = 0;
+  self->nextevent = NULL;
+
+  /* Re-initialize the TLS.  */
+  _dl_allocate_tls_init (TLS_TPADJ (self), true);
+
+  /* Reset to the expected initial signal mask.  */
+  internal_sigset_t ss;
+  internal_sigfillset (&ss);
+  internal_sigdelset (&ss, SIGSETXID);
+  internal_sigprocmask (SIG_SETMASK, &ss, NULL);
+
+  /* There is no need to perform any additional cleanup by the frames.  */
+  struct __jmp_buf_tag *env = args->jb;
+  __longjmp (env[0].__jmpbuf, 1);
+}
+
+static void *
+timer_helper_thread (void *arg)
+{
+  struct pthread *self = THREAD_SELF;
+  struct timer_helper_thread_args_t *args = arg;
+  struct cleanup_args_t clargs = {
+    .cleanup_jmp_buf = self->cleanup_jmp_buf
+  };
+
+  void (*thrfunc) (sigval_t) = args->evp->sigev_notify_function;
+  sigval_t sival = args->evp->sigev_value;
+
+  __pthread_barrier_wait (&args->b);
+  /* timer_create syscall failed.  */
+  if (self->exiting)
+    return 0;
+
+  while (1)
+    {
+      siginfo_t si;
+      while (__sigwaitinfo (&sigtimer_set, &si) < 0);
+
+      if (si.si_code == SI_TIMER && !setjmp (clargs.jb))
+	{
+	  pthread_cleanup_push (timer_helper_thread_cleanup, &clargs);
+	  thrfunc (sival);
+	  pthread_cleanup_pop (0);
+	}
+
+      /* timer_delete will set the MSB and signal the thread.  */
+      if (self->timerid < 0)
+	break;
+    }
+
+  /* Clear the MSB bit set by timer_delete.  */
+  INTERNAL_SYSCALL_CALL (timer_delete, timerid_clear (self->timerid));
+
+  return NULL;
+}
+
+static int
+timer_create_sigev_thread (clockid_t clockid, struct sigevent *evp,
+			   timer_t *timerid, pthread_attr_t *attr)
+{
+  /* Block all signals in the helper thread but SIGSETXID.  */
+  sigset_t ss;
+  __sigfillset (&ss);
+  __sigdelset (&ss, SIGSETXID);
+  if (__pthread_attr_setsigmask_internal (attr, &ss) < 0)
+    return -1;
+
+  struct timer_helper_thread_args_t args;
+  __pthread_barrier_init (&args.b, NULL, 2);
+  args.evp = evp;
+
+  pthread_t th;
+  int r = __pthread_create (&th, attr, timer_helper_thread, &args);
+  if (r != 0)
+    {
+      __set_errno (r);
+      return -1;
+    }
+
+  struct pthread *pthr = (struct pthread *)th;
+  struct sigevent kevp =
+    {
+      .sigev_value.sival_ptr = NULL,
+      .sigev_signo = SIGTIMER,
+      .sigev_notify = SIGEV_THREAD_ID,
+      ._sigev_un = { ._tid = pthr->tid },
+    };
+
+  kernel_timer_t ktimerid;
+  if (INLINE_SYSCALL_CALL (timer_create, clockid, &kevp, &ktimerid) < 0)
+    {
+      ktimerid = -1;
+      /* On timer creation failure we need to signal the helper thread to
+	 exit and we can not use the an negative timerid value after the
+	 ptherad_barrier_wait because we can not distinguish between
+	 a timer creation failure and request to delete a timer if it happens
+	 to arrive quickly (for where two timers are create in sequence,
+	 where first succeeds).
+
+	 We re-use the 'exiting' member to signal the failure, it is set only
+	 at pthread_create to avoid pthread_kill to send further signals.
+	 Since the thread should not be user-visible, signal are only sent
+	 during timer_delete.  */
+      pthr->exiting = true;
+    }
+  pthr->timerid = ktimerid;
+  /* Signal the thread to continue execution after it copies the arguments
+     or exit if the timer can not be created.  */
+  __pthread_barrier_wait (&args.b);
+
+  if (ktimerid < 0)
+    return -1;
+
+  *timerid = pthread_to_timerid (th);
+
+  return 0;
+}
 
 int
 ___timer_create (clockid_t clock_id, struct sigevent *evp, timer_t *timerid)
 {
-  {
-    clockid_t syscall_clockid = (clock_id == CLOCK_PROCESS_CPUTIME_ID
-				 ? PROCESS_CLOCK
-				 : clock_id == CLOCK_THREAD_CPUTIME_ID
-				 ? THREAD_CLOCK
-				 : clock_id);
+  clockid_t syscall_clockid = (clock_id == CLOCK_PROCESS_CPUTIME_ID
+			       ? PROCESS_CLOCK
+			       : clock_id == CLOCK_THREAD_CPUTIME_ID
+			       ? THREAD_CLOCK
+			       : clock_id);
 
-    /* If the user wants notification via a thread we need to handle
-       this special.  */
-    if (evp == NULL
-	|| __builtin_expect (evp->sigev_notify != SIGEV_THREAD, 1))
+  switch (evp != NULL ? evp->sigev_notify : SIGEV_SIGNAL)
+    {
+    case SIGEV_NONE:
+    case SIGEV_SIGNAL:
+    case SIGEV_THREAD_ID:
       {
-	struct sigevent local_evp;
-
+	struct sigevent kevp;
 	if (evp == NULL)
 	  {
-	    /* The kernel has to pass up the timer ID which is a
-	       userlevel object.  Therefore we cannot leave it up to
-	       the kernel to determine it.  */
-	    local_evp.sigev_notify = SIGEV_SIGNAL;
-	    local_evp.sigev_signo = SIGALRM;
-	    local_evp.sigev_value.sival_ptr = NULL;
-
-	    evp = &local_evp;
+	    kevp.sigev_notify = SIGEV_SIGNAL;
+	    kevp.sigev_signo = SIGALRM;
+	    kevp.sigev_value.sival_ptr = NULL;
+	    evp = &kevp;
 	  }
 
 	kernel_timer_t ktimerid;
@@ -64,75 +214,28 @@ ___timer_create (clockid_t clock_id, struct sigevent *evp, timer_t *timerid)
 
 	*timerid = kernel_timer_to_timerid (ktimerid);
       }
-    else
+      break;
+    case SIGEV_THREAD:
       {
-	/* Create the helper thread.  */
-	__pthread_once (&__timer_helper_once, __timer_start_helper_thread);
-	if (__timer_helper_tid == 0)
-	  {
-	    /* No resources to start the helper thread.  */
-	    __set_errno (EAGAIN);
-	    return -1;
-	  }
-
-	struct timer *newp = malloc (sizeof (struct timer));
-	if (newp == NULL)
-	  return -1;
-
-	/* Copy the thread parameters the user provided.  */
-	newp->sival = evp->sigev_value;
-	newp->thrfunc = evp->sigev_notify_function;
-
-	/* We cannot simply copy the thread attributes since the
-	   implementation might keep internal information for
-	   each instance.  */
-	__pthread_attr_init (&newp->attr);
+	pthread_attr_t attr;
 	if (evp->sigev_notify_attributes != NULL)
-	  {
-	    struct pthread_attr *nattr;
-	    struct pthread_attr *oattr;
+	  __pthread_attr_copy (&attr, evp->sigev_notify_attributes);
+	else
+	  __pthread_attr_init (&attr);
+	__pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
 
-	    nattr = (struct pthread_attr *) &newp->attr;
-	    oattr = (struct pthread_attr *) evp->sigev_notify_attributes;
+        int r = timer_create_sigev_thread (syscall_clockid, evp, timerid,
+					   &attr);
 
-	    nattr->schedparam = oattr->schedparam;
-	    nattr->schedpolicy = oattr->schedpolicy;
-	    nattr->flags = oattr->flags;
-	    nattr->guardsize = oattr->guardsize;
-	    nattr->stackaddr = oattr->stackaddr;
-	    nattr->stacksize = oattr->stacksize;
-	  }
+	if (&attr != evp->sigev_notify_attributes)
+	  __pthread_attr_destroy (&attr);
 
-	/* In any case set the detach flag.  */
-	__pthread_attr_setdetachstate (&newp->attr, PTHREAD_CREATE_DETACHED);
-
-	/* Create the event structure for the kernel timer.  */
-	struct sigevent sev =
-	  { .sigev_value.sival_ptr = newp,
-	    .sigev_signo = SIGTIMER,
-	    .sigev_notify = SIGEV_SIGNAL | SIGEV_THREAD_ID,
-	    ._sigev_un = { ._pad = { [0] = __timer_helper_tid } } };
-
-	/* Create the timer.  */
-	int res;
-	res = INTERNAL_SYSCALL_CALL (timer_create, syscall_clockid, &sev,
-				     &newp->ktimerid);
-	if (INTERNAL_SYSCALL_ERROR_P (res))
-	  {
-	    free (newp);
-	    __set_errno (INTERNAL_SYSCALL_ERRNO (res));
-	    return -1;
-	  }
-
-	/* Add to the queue of active timers with thread delivery.  */
-	__pthread_mutex_lock (&__timer_active_sigev_thread_lock);
-	newp->next = __timer_active_sigev_thread;
-	__timer_active_sigev_thread = newp;
-	__pthread_mutex_unlock (&__timer_active_sigev_thread_lock);
-
-	*timerid = timer_to_timerid (newp);
+	return r;
       }
-  }
+    default:
+      __set_errno (EINVAL);
+      return -1;
+    }
 
   return 0;
 }

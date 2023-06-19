@@ -8,6 +8,8 @@
   - A clockid is invalid if bits 2, 1, and 0 are all set.
  */
 
+#include <time.h>
+
 #define CPUCLOCK_PID(clock)		((pid_t) ~((clock) >> 3))
 #define CPUCLOCK_PERTHREAD(clock) \
 	(((clock) & (clockid_t) CPUCLOCK_PERTHREAD_MASK) != 0)

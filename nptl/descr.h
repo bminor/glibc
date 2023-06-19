@@ -413,6 +413,9 @@ struct pthread
   /* getrandom vDSO per-thread opaque state.  */
   void *getrandom_buf;
 
+  /* POSIX per-process timer.  */
+  int timerid;
+
   /* Amount of end padding, if any, in this structure.
      This definition relies on getrandom_buf being last.  */
 #define PTHREAD_STRUCT_END_PADDING \
