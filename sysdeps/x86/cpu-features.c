@@ -579,7 +579,7 @@ intel_get_fam6_microarch (unsigned int model,
      else
         -> Skylake-avx512
 
-     These are all microarchitecturally indentical, so use
+     These are all microarchitecturally identical, so use
      Skylake-avx512 for all of them.
      */
       return INTEL_BIGCORE_SKYLAKE_AVX512;

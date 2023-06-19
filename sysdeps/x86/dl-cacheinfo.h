@@ -745,7 +745,7 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
 
   /* The default setting for the non_temporal threshold is [1/8, 1/2] of size
      of the chip's cache (depending on `cachesize_non_temporal_divisor` which
-     is microarch specific. The defeault is 1/4). For most Intel and AMD
+     is microarch specific. The default is 1/4). For most Intel and AMD
      processors with an initial release date between 2017 and 2023, a thread's
      typical share of the cache is from 18-64MB. Using a reasonable size
      fraction of L3 is meant to estimate the point where non-temporal stores
