@@ -315,7 +315,7 @@ static const uint8_t jump_table[] =
     /* 'h' */ 10, /* 'i' */ 15, /* 'j' */ 28,            0,
     /* 'l' */ 11, /* 'm' */ 24, /* 'n' */ 23, /* 'o' */ 17,
     /* 'p' */ 22, /* 'q' */ 12,            0, /* 's' */ 21,
-    /* 't' */ 27, /* 'u' */ 16,            0,            0,
+    /* 't' */ 27, /* 'u' */ 16,            0, /* 'w' */ 31,
     /* 'x' */ 18,            0, /* 'z' */ 13
   };
 
@@ -356,7 +356,7 @@ static const uint8_t jump_table[] =
 
 #define STEP0_3_TABLE							      \
     /* Step 0: at the beginning.  */					      \
-    static JUMP_TABLE_TYPE step0_jumps[31] =				      \
+    static JUMP_TABLE_TYPE step0_jumps[32] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (flag_space),		/* for ' ' */				      \
@@ -389,9 +389,10 @@ static const uint8_t jump_table[] =
       REF (mod_intmax_t),       /* for 'j' */				      \
       REF (flag_i18n),		/* for 'I' */				      \
       REF (form_binary),	/* for 'B', 'b' */			      \
+      REF (mod_bitwidth),	/* for 'w' */				      \
     };									      \
     /* Step 1: after processing width.  */				      \
-    static JUMP_TABLE_TYPE step1_jumps[31] =				      \
+    static JUMP_TABLE_TYPE step1_jumps[32] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -424,9 +425,10 @@ static const uint8_t jump_table[] =
       REF (mod_intmax_t),       /* for 'j' */				      \
       REF (form_unknown),       /* for 'I' */				      \
       REF (form_binary),	/* for 'B', 'b' */			      \
+      REF (mod_bitwidth),	/* for 'w' */				      \
     };									      \
     /* Step 2: after processing precision.  */				      \
-    static JUMP_TABLE_TYPE step2_jumps[31] =				      \
+    static JUMP_TABLE_TYPE step2_jumps[32] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -459,9 +461,10 @@ static const uint8_t jump_table[] =
       REF (mod_intmax_t),       /* for 'j' */				      \
       REF (form_unknown),       /* for 'I' */				      \
       REF (form_binary),	/* for 'B', 'b' */			      \
+      REF (mod_bitwidth),	/* for 'w' */				      \
     };									      \
     /* Step 3a: after processing first 'h' modifier.  */		      \
-    static JUMP_TABLE_TYPE step3a_jumps[31] =				      \
+    static JUMP_TABLE_TYPE step3a_jumps[32] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -494,9 +497,10 @@ static const uint8_t jump_table[] =
       REF (form_unknown),       /* for 'j' */				      \
       REF (form_unknown),       /* for 'I' */				      \
       REF (form_binary),	/* for 'B', 'b' */			      \
+      REF (form_unknown),	/* for 'w' */				      \
     };									      \
     /* Step 3b: after processing first 'l' modifier.  */		      \
-    static JUMP_TABLE_TYPE step3b_jumps[31] =				      \
+    static JUMP_TABLE_TYPE step3b_jumps[32] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -529,11 +533,12 @@ static const uint8_t jump_table[] =
       REF (form_unknown),       /* for 'j' */				      \
       REF (form_unknown),       /* for 'I' */				      \
       REF (form_binary),	/* for 'B', 'b' */			      \
+      REF (form_unknown),	/* for 'w' */				      \
     }
 
 #define STEP4_TABLE							      \
     /* Step 4: processing format specifier.  */				      \
-    static JUMP_TABLE_TYPE step4_jumps[31] =				      \
+    static JUMP_TABLE_TYPE step4_jumps[32] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -566,6 +571,7 @@ static const uint8_t jump_table[] =
       REF (form_unknown),       /* for 'j' */				      \
       REF (form_unknown),       /* for 'I' */				      \
       REF (form_binary),	/* for 'B', 'b' */			      \
+      REF (form_unknown),	/* for 'w' */				      \
     }
 
 /* Handle positional format specifiers.  */
@@ -886,6 +892,56 @@ Xprintf_buffer (struct Xprintf_buffer *buf, const CHAR_T *format,
       is_long = sizeof (intmax_t) > sizeof (unsigned int);
       JUMP (*++f, step4_jumps);
 
+      /* Process 'wN' or 'wfN' modifier.  */
+    LABEL (mod_bitwidth):
+      ++f;
+      bool is_fast = false;
+      if (*f == L_('f'))
+	{
+	  ++f;
+	  is_fast = true;
+	}
+      int bitwidth = 0;
+      if (ISDIGIT (*f))
+	bitwidth = read_int (&f);
+      if (is_fast)
+	switch (bitwidth)
+	  {
+	  case 8:
+	    bitwidth = INT_FAST8_WIDTH;
+	    break;
+	  case 16:
+	    bitwidth = INT_FAST16_WIDTH;
+	    break;
+	  case 32:
+	    bitwidth = INT_FAST32_WIDTH;
+	    break;
+	  case 64:
+	    bitwidth = INT_FAST64_WIDTH;
+	    break;
+	  }
+      switch (bitwidth)
+	{
+	case 8:
+	  is_char = 1;
+	  break;
+	case 16:
+	  is_short = 1;
+	  break;
+	case 32:
+	  break;
+	case 64:
+	  is_long_double = 1;
+	  is_long = 1;
+	  break;
+	default:
+	  /* ISO C requires this error to be detected.  */
+	  __set_errno (EINVAL);
+	  Xprintf_buffer_mark_failed (buf);
+	  goto all_done;
+	}
+      JUMP (*f, step4_jumps);
+
       /* Process current format.  */
       while (1)
 	{
@@ -1053,11 +1109,19 @@ printf_positional (struct Xprintf_buffer * buf, const CHAR_T *format,
 	}
 
       /* Parse the format specifier.  */
+      bool failed;
 #ifdef COMPILE_WPRINTF
-      nargs += __parse_one_specwc (f, nargs, &specs[nspecs], &max_ref_arg);
+      nargs += __parse_one_specwc (f, nargs, &specs[nspecs], &max_ref_arg,
+				   &failed);
 #else
-      nargs += __parse_one_specmb (f, nargs, &specs[nspecs], &max_ref_arg);
+      nargs += __parse_one_specmb (f, nargs, &specs[nspecs], &max_ref_arg,
+				   &failed);
 #endif
+      if (failed)
+	{
+	  Xprintf_buffer_mark_failed (buf);
+	  goto all_done;
+	}
     }
 
   /* Determine the number of arguments the format string consumes.  */

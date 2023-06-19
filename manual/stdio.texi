@@ -2028,6 +2028,24 @@ Specifies that the argument is a @code{ptrdiff_t}.
 
 This modifier was introduced in @w{ISO C99}.
 
+@item w@var{n}
+Specifies that the argument is a @code{int@var{n}_t} or
+@code{int_least@var{n}_t} (which are the same type), for conversions
+taking signed integers, or @code{uint@var{n}_t} or
+@code{uint_least@var{n}_t} (which are the same type), for conversions
+taking unsigned integers.  If the type is narrower than @code{int},
+the promoted argument is converted back to the specified type.
+
+This modifier was introduced in @w{ISO C2X}.
+
+@item wf@var{n}
+Specifies that the argument is a @code{int_fast@var{n}_t} or
+@code{uint_fast@var{n}_t}, as appropriate.  If the type is narrower
+than @code{int}, the promoted argument is converted back to the
+specified type.
+
+This modifier was introduced in @w{ISO C2X}.
+
 @item z
 @itemx Z
 Specifies that the argument is a @code{size_t}.

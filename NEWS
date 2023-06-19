@@ -21,6 +21,13 @@ Major new features:
 
 * PRIb* and PRIB* macros from C2X have been added to <inttypes.h>.
 
+* printf-family functions now support the wN format length modifiers for
+  arguments of type intN_t, int_leastN_t, uintN_t or uint_leastN_t (for
+  example, %w32d to print int32_t or int_least32_t in decimal, or %w32x
+  to print uint32_t or uint_least32_t in hexadecimal) and the wfN format
+  length modifiers for arguments of type int_fastN_t or uint_fastN_t, as
+  specified in draft ISO C2X.
+
 * A new tunable, glibc.pthread.stack_hugetlb, can be used to disable
   Transparent Huge Pages (THP) in stack allocation at pthread_create.
 

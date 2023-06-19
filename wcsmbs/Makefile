@@ -170,6 +170,7 @@ tests := \
   tst-wcstol-binary-gnu2x \
   tst-wcstol-locale \
   tst-wprintf-binary \
+  tst-wprintf-intn \
   tst-wscanf-binary-c11 \
   tst-wscanf-binary-c2x \
   tst-wscanf-binary-gnu11 \
