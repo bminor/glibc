@@ -28,6 +28,6 @@ ENTRY (__mempcpy_chk)
 	movl	12(%esp), %eax
 	cmpl	%eax, 16(%esp)
 	jb	__chk_fail
-	jmp	mempcpy
+	jmp	__mempcpy
 END (__mempcpy_chk)
 #endif
