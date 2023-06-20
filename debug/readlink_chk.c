@@ -24,7 +24,8 @@
 
 
 ssize_t
-__readlink_chk (const char *path, void *buf, size_t len, size_t buflen)
+__readlink_chk (const char *__restrict path, char *__restrict buf, size_t len,
+		size_t buflen)
 {
   if (len > buflen)
     __chk_fail ();

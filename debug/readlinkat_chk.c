@@ -20,7 +20,8 @@
 
 
 ssize_t
-__readlinkat_chk (int fd, const char *path, void *buf, size_t len,
+__readlinkat_chk (int fd, const char *__restrict path,
+		  char *__restrict buf, size_t len,
 		  size_t buflen)
 {
   if (len > buflen)
