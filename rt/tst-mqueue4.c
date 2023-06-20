@@ -175,14 +175,14 @@ do_test (void)
       result = 1;
     }
 
-  q2 = mq_open (name, O_RDONLY, 0600);
+  q2 = mq_open (name, O_RDONLY);
   if (q2 == (mqd_t) -1)
     {
       printf ("mq_open without O_CREAT failed with %m\n");
       result = 1;
     }
 
-  mqd_t q3 = mq_open (name, O_RDONLY, 0600);
+  mqd_t q3 = mq_open (name, O_RDONLY);
   if (q3 == (mqd_t) -1)
     {
       printf ("mq_open without O_CREAT failed with %m\n");
