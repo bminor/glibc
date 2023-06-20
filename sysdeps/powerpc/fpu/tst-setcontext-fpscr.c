@@ -27,6 +27,8 @@
 #include <sys/auxv.h>
 #include <support/support.h>
 
+#include <support/xstdio.h>
+
 static ucontext_t ctx[3];
 
 
@@ -61,7 +63,7 @@ ElfW(Addr) query_auxv(int type)
 
       do
 	{
-	  fread (&auxv_struct, sizeof (ElfW(auxv_t)), 1, auxv_f);
+	  xfread (&auxv_struct, sizeof (ElfW(auxv_t)), 1, auxv_f);
 	  auxv[i] = auxv_struct;
 	  i++;
 	} while(auxv_struct.a_type != AT_NULL);
