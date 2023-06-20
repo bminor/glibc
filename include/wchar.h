@@ -12,6 +12,7 @@
 # ifndef _ISOMAC
 
 #include <bits/floatn.h>
+#include <bits/wchar2-decl.h>
 #include <stdbool.h>
 
 extern __typeof (wcscasecmp_l) __wcscasecmp_l;
