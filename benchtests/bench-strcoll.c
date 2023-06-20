@@ -254,7 +254,11 @@ main (void)
 	}
 
       char *filename;
-      asprintf (&filename, INPUT_PREFIX "%s", input_files[i]);
+      if (asprintf (&filename, INPUT_PREFIX "%s", input_files[i]) < 0)
+	{
+	  printf ("asprintf failed, aborting!\n");
+	  return ERROR_FILENAME;
+	}
       result = bench_file (json_ctx, input_files[i], filename, locale + 1);
 
       if (result != OK)
