@@ -78,12 +78,12 @@ do_test (void)
     wchar_t *result = xmalloc (resultsize);
     int ret;
 
-    ret = swprintf (result, resultsize, L"%.65537s", mbs);
+    ret = swprintf (result, mbssize, L"%.65537s", mbs);
     TEST_COMPARE (ret, mbssize - 1);
     TEST_COMPARE_BLOB (result, (ret + 1) * sizeof (wchar_t),
 		       expected, expectedsize * sizeof (wchar_t));
 
-    ret = swprintf (result, resultsize, L"%1$.65537s", mbs);
+    ret = swprintf (result, mbssize, L"%1$.65537s", mbs);
     TEST_COMPARE (ret, mbssize - 1);
     TEST_COMPARE_BLOB (result, (ret + 1) * sizeof (wchar_t),
 		       expected, expectedsize * sizeof (wchar_t));
@@ -91,10 +91,10 @@ do_test (void)
     /* Same test, but with an invalid multibyte sequence.  */
     mbs[mbssize - 2] = 0xff;
 
-    ret = swprintf (result, resultsize, L"%.65537s", mbs);
+    ret = swprintf (result, mbssize, L"%.65537s", mbs);
     TEST_COMPARE (ret, -1);
 
-    ret = swprintf (result, resultsize, L"%1$.65537s", mbs);
+    ret = swprintf (result, mbssize, L"%1$.65537s", mbs);
     TEST_COMPARE (ret, -1);
 
     free (mbs);

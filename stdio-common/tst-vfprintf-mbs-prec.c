@@ -441,7 +441,8 @@ test_mbs_long (const char *mbs, const wchar_t *wide, const size_t *length)
 static void
 test_wide_long (const char *mbs, const wchar_t *wide, const size_t *length)
 {
-  wchar_t buf[2000];
+#define BUF_SIZE 2000
+  wchar_t buf[BUF_SIZE];
   _Static_assert (sizeof (buf) > sizeof (wchar_t) * WIDE_STRING_LENGTH,
                   "buffer size consistent with string length");
   const wchar_t *suffix = L"||TERM";
@@ -450,13 +451,13 @@ test_wide_long (const char *mbs, const wchar_t *wide, const size_t *length)
 
   /* Test formatting of the entire string.  */
   {
-    int ret = swprintf (buf, sizeof (buf), L"%s%ls", mbs, suffix);
+    int ret = swprintf (buf, BUF_SIZE, L"%s%ls", mbs, suffix);
     TEST_VERIFY (ret == WIDE_STRING_LENGTH + wcslen (suffix));
     TEST_VERIFY (wmemcmp (buf, wide, WIDE_STRING_LENGTH) == 0);
     TEST_VERIFY (wcscmp (buf + WIDE_STRING_LENGTH, suffix) == 0);
 
     /* Left-justified string, printed in full.  */
-    ret = swprintf (buf, sizeof (buf), L"%-1500s%ls", mbs, suffix);
+    ret = swprintf (buf, BUF_SIZE, L"%-1500s%ls", mbs, suffix);
     TEST_VERIFY (ret == 1500 + wcslen (suffix));
     TEST_VERIFY (wmemcmp (buf, wide, WIDE_STRING_LENGTH) == 0);
     for (size_t i = WIDE_STRING_LENGTH; i < 1500; ++i)
@@ -464,7 +465,7 @@ test_wide_long (const char *mbs, const wchar_t *wide, const size_t *length)
     TEST_VERIFY (wcscmp (buf + 1500, suffix) == 0);
 
     /* Right-justified string, printed in full.   */
-    ret = swprintf (buf, sizeof (buf), L"%1500s%ls", mbs, suffix);
+    ret = swprintf (buf, BUF_SIZE, L"%1500s%ls", mbs, suffix);
     TEST_VERIFY (ret == 1500 + wcslen (suffix));
     size_t padding = 1500 - WIDE_STRING_LENGTH;
     for (size_t i = 0; i < padding; ++i)
@@ -484,14 +485,14 @@ test_wide_long (const char *mbs, const wchar_t *wide, const size_t *length)
         printf ("info: %s: wide_len=%d actual_wide_len=%zu\n",
                 __func__, wide_len, actual_wide_len);
 
-      int ret = swprintf (buf, sizeof (buf), L"%.*s%ls",
+      int ret = swprintf (buf, BUF_SIZE, L"%.*s%ls",
                           wide_len, mbs, suffix);
       TEST_VERIFY (ret == actual_wide_len + wcslen (suffix));
       TEST_VERIFY (wmemcmp (buf, wide, actual_wide_len) == 0);
       TEST_VERIFY (wcscmp (buf + actual_wide_len, suffix) == 0);
 
       /* Left-justified string, printed in full.  */
-      ret = swprintf (buf, sizeof (buf), L"%-1500.*s%ls",
+      ret = swprintf (buf, BUF_SIZE, L"%-1500.*s%ls",
                       wide_len, mbs, suffix);
       TEST_VERIFY (ret == 1500 + wcslen (suffix));
       TEST_VERIFY (wmemcmp (buf, wide, actual_wide_len) == 0);
@@ -500,7 +501,7 @@ test_wide_long (const char *mbs, const wchar_t *wide, const size_t *length)
       TEST_VERIFY (wcscmp (buf + 1500, suffix) == 0);
 
       /* Right-justified string, printed in full.   */
-      ret = swprintf (buf, sizeof (buf), L"%1500.*s%ls",
+      ret = swprintf (buf, BUF_SIZE, L"%1500.*s%ls",
                       wide_len, mbs, suffix);
       TEST_VERIFY (ret == 1500 + wcslen (suffix));
       size_t padding = 1500 - actual_wide_len;
