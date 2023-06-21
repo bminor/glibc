@@ -16,13 +16,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <alloca.h>
 #include <assert.h>
 #include <errno.h>
 #include <ifaddrs.h>
 #include <net/if.h>
 #include <netinet/in.h>
 #include <netpacket/packet.h>
+#include <scratch_buffer.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -131,26 +131,14 @@ __netlink_request (struct netlink_handle *h, int type)
   ssize_t read_len;
   bool done = false;
 
-#ifdef PAGE_SIZE
-  /* Help the compiler optimize out the malloc call if PAGE_SIZE
-     is constant and smaller or equal to PTHREAD_STACK_MIN/4.  */
-  const size_t buf_size = PAGE_SIZE;
-#else
-  const size_t buf_size = __getpagesize ();
-#endif
-  bool use_malloc = false;
-  char *buf;
-
-  if (__libc_use_alloca (buf_size))
-    buf = alloca (buf_size);
-  else
-    {
-      buf = malloc (buf_size);
-      if (buf != NULL)
-	use_malloc = true;
-      else
-	goto out_fail;
-    }
+  /* Netlink requires that user buffer needs to be either 8kb or page size
+     (whichever is bigger), however this has been changed over time and now
+     8Kb is sufficient (check NLMSG_DEFAULT_SIZE on Linux
+     linux/include/linux/netlink.h).  */
+  const size_t buf_size = 8192;
+  char *buf = malloc (buf_size);
+  if (buf == NULL)
+    goto out_fail;
 
   struct iovec iov = { buf, buf_size };
 
@@ -229,13 +217,11 @@ __netlink_request (struct netlink_handle *h, int type)
       h->end_ptr = nlm_next;
     }
 
-  if (use_malloc)
-    free (buf);
+  free(buf);
   return 0;
 
 out_fail:
-  if (use_malloc)
-    free (buf);
+  free(buf);
   return -1;
 }
 
@@ -324,6 +310,8 @@ getifaddrs_internal (struct ifaddrs **ifap)
   char *ifa_data_ptr;	/* Pointer to the unused part of memory for
 				ifa_data.  */
   int result = 0;
+  struct scratch_buffer buf;
+  scratch_buffer_init (&buf);
 
   *ifap = NULL;
 
@@ -425,7 +413,12 @@ getifaddrs_internal (struct ifaddrs **ifap)
     }
 
   /* Table for mapping kernel index to entry in our list.  */
-  map_newlink_data = alloca (newlink * sizeof (int));
+  if (!scratch_buffer_set_array_size (&buf, newlink, sizeof (int)))
+    {
+      result = -1;
+      goto exit_free;
+    }
+  map_newlink_data = buf.data;
   memset (map_newlink_data, '\xff', newlink * sizeof (int));
 
   ifa_data_ptr = (char *) &ifas[newlink + newaddr];
@@ -820,6 +813,7 @@ getifaddrs_internal (struct ifaddrs **ifap)
  exit_free:
   __netlink_free_handle (&nh);
   __netlink_close (&nh);
+  scratch_buffer_free (&buf);
 
   return result;
 }
