@@ -36,7 +36,7 @@ _dl_map_segment (const struct loadcmd *c, ElfW(Addr) mappref,
 		       : (2 * c->mapalign));
   ElfW(Addr) map_start = (ElfW(Addr)) __mmap ((void *) mappref, maplen,
 					      PROT_NONE,
-					      MAP_ANONYMOUS|MAP_PRIVATE,
+					      MAP_ANONYMOUS|MAP_COPY,
 					      -1, 0);
   if (__glibc_unlikely ((void *) map_start == MAP_FAILED))
     return map_start;
