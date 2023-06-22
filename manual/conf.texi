@@ -85,10 +85,10 @@ If defined, the unvarying maximum number of streams that a single
 process can have open simultaneously.  @xref{Opening Streams}.
 @end deftypevr
 
-@cindex limits, time zone name length
+@cindex limits, time zone abbreviation length
 @deftypevr Macro int TZNAME_MAX
 @standards{POSIX.1, limits.h}
-If defined, the unvarying maximum length of a time zone name.
+If defined, the unvarying maximum length of a time zone abbreviation.
 @xref{Time Zone Functions}.
 @end deftypevr
 
@@ -1044,7 +1044,7 @@ simultaneously.  Its value is @code{8}.
 @item _POSIX_TZNAME_MAX
 @standards{POSIX.1, limits.h}
 The value of this macro is the most restrictive limit permitted by POSIX
-for the maximum length of a time zone name.  Its value is @code{3}.
+for the maximum length of a time zone abbreviation.  Its value is @code{3}.
 
 @item _POSIX2_RE_DUP_MAX
 @standards{POSIX.2, limits.h}

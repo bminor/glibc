@@ -145,7 +145,7 @@ compute_offset (unsigned int ss, unsigned int mm, unsigned int hh)
   return ss + mm * 60 + hh * 60 * 60;
 }
 
-/* Parses the time zone name at *TZP, and writes a pointer to an
+/* Parses the time zone abbreviation at *TZP, and writes a pointer to an
    interned string to tz_rules[WHICHRULE].name.  On success, advances
    *TZP, and returns true.  Returns false otherwise.  */
 static bool
@@ -324,10 +324,10 @@ __tzset_parse_tz (const char *tz)
   memset (tz_rules, '\0', sizeof tz_rules);
   tz_rules[0].name = tz_rules[1].name = "";
 
-  /* Get the standard timezone name.  */
+  /* Get the standard time zone abbreviations.  */
   if (parse_tzname (&tz, 0) && parse_offset (&tz, 0))
     {
-      /* Get the DST timezone name (if any).  */
+      /* Get the DST time zone abbreviation (if any).  */
       if (*tz != '\0')
 	{
 	  if (parse_tzname (&tz, 1))

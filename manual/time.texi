@@ -1025,7 +1025,7 @@ The @code{tm_gmtoff} field is derived from BSD and is a GNU library
 extension; it is not visible in a strict @w{ISO C} environment.
 
 @item const char *tm_zone
-This field is the name for the time zone that was used to compute this
+This field is the abbreviation for the time zone that was used to compute this
 broken-down time value.  Like @code{tm_gmtoff}, this field is a BSD and
 GNU extension, and is not visible in a strict @w{ISO C} environment.
 @end table
@@ -2205,7 +2205,7 @@ The full alternative year representation.
 The offset from GMT in @w{ISO 8601}/RFC822 format.
 
 @item %Z
-The timezone name.
+The time zone abbreviation.
 
 @emph{Note:} Currently, this is not fully implemented.  The format is
 recognized, input is consumed but no field in @var{tm} is set.
@@ -2366,7 +2366,7 @@ current time of the timezone matched, not of the current timezone of the
 runtime environment.
 
 @emph{Note}: This is not implemented (currently).  The problem is that
-timezone names are not unique.  If a fixed timezone is assumed for a
+time zone abbreviations are not unique.  If a fixed time zone is assumed for a
 given string (say @code{EST} meaning US East Coast time), then uses for
 countries other than the USA will fail.  So far we have found no good
 solution to this.
@@ -2522,10 +2522,10 @@ summer time) in the local time zone:
 @r{@var{std} @var{offset}}
 @end smallexample
 
-The @var{std} string specifies the name of the time zone.  It must be
+The @var{std} string specifies the time zone abbreviation.  It must be
 three or more characters long and must not contain a leading colon,
 embedded digits, commas, nor plus and minus signs.  There is no space
-character separating the time zone name from the @var{offset}, so these
+character separating the time zone abbreviation from the @var{offset}, so these
 restrictions are necessary to parse the specification correctly.
 
 The @var{offset} specifies the time value you must add to the local time
@@ -2549,7 +2549,7 @@ The second format is used when there is Daylight Saving Time:
 @end smallexample
 
 The initial @var{std} and @var{offset} specify the standard time zone, as
-described above.  The @var{dst} string and @var{offset} specify the name
+described above.  The @var{dst} string and @var{offset} are the abbreviation
 and offset for the corresponding Daylight Saving Time zone; if the
 @var{offset} is omitted, it defaults to one hour ahead of standard time.
 
@@ -2678,10 +2678,10 @@ community of volunteers and put in the public domain.
 @deftypevar {char *} tzname [2]
 @standards{POSIX.1, time.h}
 The array @code{tzname} contains two strings, which are the standard
-names of the pair of time zones (standard and Daylight
-Saving) that the user has selected.  @code{tzname[0]} is the name of
+abbreviations of the pair of time zones (standard and Daylight
+Saving) that the user has selected.  @code{tzname[0]} abbreviates
 the standard time zone (for example, @code{"EST"}), and @code{tzname[1]}
-is the name for the time zone when Daylight Saving Time is in use (for
+abbreviates the time zone when Daylight Saving Time is in use (for
 example, @code{"EDT"}).  These correspond to the @var{std} and @var{dst}
 strings (respectively) from the @code{TZ} environment variable.  If
 Daylight Saving Time is never used, @code{tzname[1]} is the empty string.

@@ -536,7 +536,7 @@ __time64_t
 __mktime64 (struct tm *tp)
 {
   /* POSIX.1 8.1.1 requires that whenever mktime() is called, the
-     time zone names contained in the external variable 'tzname' shall
+     time zone abbreviations contained in the external variable 'tzname' shall
      be set as if the tzset() function had been called.  */
   __tzset ();
 

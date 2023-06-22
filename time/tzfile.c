@@ -408,7 +408,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
 
   fclose (f);
 
-  /* First "register" all timezone names.  */
+  /* First "register" all time zone abbreviations.  */
   for (i = 0; i < num_types; ++i)
     if (__tzstring (&zone_names[types[i].idx]) == NULL)
       goto ret_free_transitions;
@@ -565,7 +565,7 @@ __tzfile_default (const char *std, const char *dst,
   types[1].offset = dstoff;
   types[1].isdst = 1;
 
-  /* Reset the zone names to point to the user's names.  */
+  /* Reset time zone abbreviations to point to the user's abbreviations.  */
   __tzname[0] = (char *) std;
   __tzname[1] = (char *) dst;
 

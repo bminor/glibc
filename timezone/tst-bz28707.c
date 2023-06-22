@@ -37,7 +37,7 @@ do_test (void)
   tzset ();
 
   return
-    /* Sanity-check that we got the right timezone-name for DST.  For
+    /* Sanity-check that we got the right abbreviation for DST.  For
        normal time, we're likely to get "-00" (the "unspecified" marker),
        even though the POSIX timezone string says "-04".  Let's not test
        that.  */

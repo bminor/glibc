@@ -215,7 +215,7 @@ extern char *__REDIRECT_NTH (ctime_r, (const time_t *__restrict __timer,
 
 
 /* Defined in localtime.c.  */
-extern char *__tzname[2];	/* Current timezone names.  */
+extern char *__tzname[2];	/* Current time zone abbreviations.  */
 extern int __daylight;		/* If daylight-saving time is ever in use.  */
 extern long int __timezone;	/* Seconds west of UTC.  */
 
