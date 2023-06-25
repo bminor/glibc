@@ -64,9 +64,13 @@ __readdir64 (DIR *dirp)
 	      /* The data was passed out of line, so our old buffer is no
 		 longer useful.  Deallocate the old buffer and reset our
 		 information for the new buffer.  */
-	      __vm_deallocate (__mach_task_self (),
-			       (vm_address_t) dirp->__data,
-			       dirp->__allocation);
+	      if (dirp->__data != NULL)
+		{
+		  err = __vm_deallocate (__mach_task_self (),
+					 (vm_address_t) dirp->__data,
+					 dirp->__allocation);
+		  assert_perror (err);
+		}
 	      dirp->__data = data;
 	      dirp->__allocation = round_page (dirp->__size);
 	    }
