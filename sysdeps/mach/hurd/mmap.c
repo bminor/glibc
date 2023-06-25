@@ -46,6 +46,9 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
   if ((mapaddr & (__vm_page_size - 1)) || (offset & (__vm_page_size - 1)))
     return (void *) (long int) __hurd_fail (EINVAL);
 
+  if ((flags & MAP_EXCL) && ! (flags & MAP_FIXED))
+    return (void *) (long int) __hurd_fail (EINVAL);
+
   vmprot = VM_PROT_NONE;
   if (prot & PROT_READ)
     vmprot |= VM_PROT_READ;
@@ -156,15 +159,20 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
     {
       if (err == KERN_NO_SPACE)
 	{
-	  /* XXX this is not atomic as it is in unix! */
-	  /* The region is already allocated; deallocate it first.  */
-	  err = __vm_deallocate (__mach_task_self (), mapaddr, len);
-	  if (! err)
-	    err = __vm_map (__mach_task_self (),
-			    &mapaddr, (vm_size_t) len, mask,
-			    0, memobj, (vm_offset_t) offset,
-			    copy, vmprot, max_vmprot,
-			    copy ? VM_INHERIT_COPY : VM_INHERIT_SHARE);
+	  if (flags & MAP_EXCL)
+	    err = EEXIST;
+	  else
+	    {
+	      /* The region is already allocated; deallocate it first.  */
+	      /* XXX this is not atomic as it is in unix! */
+	      err = __vm_deallocate (__mach_task_self (), mapaddr, len);
+	      if (! err)
+		err = __vm_map (__mach_task_self (),
+				&mapaddr, (vm_size_t) len, mask,
+				0, memobj, (vm_offset_t) offset,
+				copy, vmprot, max_vmprot,
+				copy ? VM_INHERIT_COPY : VM_INHERIT_SHARE);
+	    }
 	}
     }
   else
