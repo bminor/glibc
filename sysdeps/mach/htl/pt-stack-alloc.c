@@ -19,13 +19,8 @@
 #include <errno.h>
 
 #include <mach.h>
-#include <mach/machine/vm_param.h>
 
 #include <pt-internal.h>
-
-/* The next address to use for stack allocation.  */
-static vm_address_t next_stack_base = VM_MIN_ADDRESS;
-
 
 /* Allocate a new stack of size STACKSIZE.  If successful, store the
    address of the newly allocated stack in *STACKADDR and return 0.
@@ -35,30 +30,12 @@ static vm_address_t next_stack_base = VM_MIN_ADDRESS;
 int
 __pthread_stack_alloc (void **stackaddr, size_t stacksize)
 {
-  vm_offset_t base;
-  int i = 0;
+  error_t err;
 
-get_stack:
-  i++;
-  for (base = next_stack_base;
-       base < VM_MAX_ADDRESS
-       && __vm_allocate (__mach_task_self (), &base,
-			 stacksize, FALSE) != KERN_SUCCESS; base += stacksize)
-    ;
+  err = __vm_allocate (__mach_task_self (), (vm_offset_t *) stackaddr,
+		       stacksize, TRUE);
 
-  if (base >= VM_MAX_ADDRESS)
-    {
-      if (i == 1)
-	{
-	  next_stack_base = VM_MIN_ADDRESS;
-	  goto get_stack;
-	}
-      else
-	return EAGAIN;
-    }
-
-  next_stack_base = base + stacksize;
-
-  (*stackaddr) = (void *) base;
-  return 0;
+  if (err == KERN_NO_SPACE)
+    err = EAGAIN;
+  return err;
 }
