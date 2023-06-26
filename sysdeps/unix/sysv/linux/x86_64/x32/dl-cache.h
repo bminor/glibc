@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sysdeps/unix/sysv/linux/x86_64/dl-cache.h>
+#include <sysdeps/x86_64/dl-cache.h>
 
 /* Defined as (FLAG_ELF_LIBC6 | FLAG_X8664_LIBX32).  */
 #undef _DL_CACHE_DEFAULT_ID
