@@ -244,6 +244,7 @@ tests := \
   tst-scanf-binary-gnu11 \
   tst-scanf-binary-gnu89 \
   tst-scanf-round \
+  tst-scanf-to_inpunct \
   tst-setvbuf1 \
   tst-sprintf \
   tst-sprintf-errno \
@@ -360,6 +361,7 @@ LOCALES := \
   de_DE.ISO-8859-1 \
   de_DE.UTF-8 \
   en_US.ISO-8859-1 \
+  fa_IR.UTF-8 \
   hi_IN.UTF-8 \
   ja_JP.EUC-JP \
   ps_AF.UTF-8 \
@@ -379,6 +381,7 @@ $(objpfx)tst-swprintf.out: $(gen-locales)
 $(objpfx)tst-vfprintf-mbs-prec.out: $(gen-locales)
 $(objpfx)tst-vfprintf-width-i18n.out: $(gen-locales)
 $(objpfx)tst-grouping3.out: $(gen-locales)
+$(objpfx)tst-scanf-to_inpunct.out: $(gen-locales)
 endif
 
 tst-printf-bz18872-ENV = MALLOC_TRACE=$(objpfx)tst-printf-bz18872.mtrace \
