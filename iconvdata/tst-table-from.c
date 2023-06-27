@@ -194,10 +194,9 @@ main (int argc, char *argv[])
       exit (1);
     }
 
-  /* When testing UTF-8 or GB18030, stop at 0x10000, otherwise the output
+  /* When testing UTF-8, stop at 0x10000, otherwise the output
      file gets too big.  */
-  bmp_only = (strcmp (charset, "UTF-8") == 0
-	      || strcmp (charset, "GB18030") == 0);
+  bmp_only = (strcmp (charset, "UTF-8") == 0);
   search_depth = (strcmp (charset, "UTF-8") == 0 ? 3 : 4);
 
   {

@@ -57234,32 +57234,16 @@ CHARMAP
 <UE78A>     /xa6/xbe         <Private Use>
 <UE78B>     /xa6/xbf         <Private Use>
 <UE78C>     /xa6/xc0         <Private Use>
-% The newest GB 18030-2005 standard still uses some private use area
-% code points.  Any implementation which has Unicode 4.1 or newer
-% support should not use these PUA code points, and instead should
-% map these entries to their equivalent non-PUA code points. There
-% are 24 idiograms in GB 18030-2005 which have non-PUA equivalents.
-% In glibc we only support roundtrip code points, and so must choose
-% between supporting the old PUA code points, or using the newer
-% non-PUA code points. We choose to use the non-PUA code points to
-% be compatible with ICU's similar choice. In choosing the non-PUA
-% code points we can no longer convert the old PUA code points back
-% to GB-18030-2005 (technically only fixable if we added support
-% for non-roundtrip code points e.g. ICU's "fallback mapping").
-% The recommendation to use the non-PUA code points, where available,
-% is based on "CJKV Information Processing" 2nd Ed. by Dr. Ken Lunde.
-%
-% These 10 PUA mappings use equivalents from <UFE10> to <UFE19>.
-% <UE78D>     /xa6/xd9         <Private Use>
-% <UE78E>     /xa6/xda         <Private Use>
-% <UE78F>     /xa6/xdb         <Private Use>
-% <UE790>     /xa6/xdc         <Private Use>
-% <UE791>     /xa6/xdd         <Private Use>
-% <UE792>     /xa6/xde         <Private Use>
-% <UE793>     /xa6/xdf         <Private Use>
-% <UE794>     /xa6/xec         <Private Use>
-% <UE795>     /xa6/xed         <Private Use>
-% <UE796>     /xa6/xf3         <Private Use>
+<UE78D>     /x84/x31/x82/x36 <Private Use>
+<UE78E>     /x84/x31/x82/x38 <Private Use>
+<UE78F>     /x84/x31/x82/x37 <Private Use>
+<UE790>     /x84/x31/x82/x39 <Private Use>
+<UE791>     /x84/x31/x83/x30 <Private Use>
+<UE792>     /x84/x31/x83/x31 <Private Use>
+<UE793>     /x84/x31/x83/x32 <Private Use>
+<UE794>     /x84/x31/x83/x33 <Private Use>
+<UE795>     /x84/x31/x83/x34 <Private Use>
+<UE796>     /x84/x31/x83/x35 <Private Use>
 <UE797>     /xa6/xf6         <Private Use>
 <UE798>     /xa6/xf7         <Private Use>
 <UE799>     /xa6/xf8         <Private Use>
@@ -57387,17 +57371,15 @@ CHARMAP
 <UE813>     /xd7/xfd         <Private Use>
 <UE814>     /xd7/xfe         <Private Use>
 <UE815>     /x83/x36/xc9/x34 <Private Use>
-% These 3 PUA mappings use equivalents <U20087>, <U20089> and <U200CC>.
-% <UE816>     /xfe/x51         <Private Use>
-% <UE817>     /xfe/x52         <Private Use>
-% <UE818>     /xfe/x53         <Private Use>
+<UE816>     /xfe/x51         <Private Use>
+<UE817>     /xfe/x52         <Private Use>
+<UE818>     /xfe/x53         <Private Use>
 <UE819>     /x83/x36/xc9/x35 <Private Use>
 <UE81A>     /x83/x36/xc9/x36 <Private Use>
 <UE81B>     /x83/x36/xc9/x37 <Private Use>
 <UE81C>     /x83/x36/xc9/x38 <Private Use>
 <UE81D>     /x83/x36/xc9/x39 <Private Use>
-% This 1 PUA mapping uses the equivalent <U9FB4>.
-% <UE81E>     /xfe/x59         <Private Use>
+<UE81E>     /x82/x35/x90/x37 <Private Use>
 <UE81F>     /x83/x36/xca/x30 <Private Use>
 <UE820>     /x83/x36/xca/x31 <Private Use>
 <UE821>     /x83/x36/xca/x32 <Private Use>
@@ -57405,22 +57387,19 @@ CHARMAP
 <UE823>     /x83/x36/xca/x34 <Private Use>
 <UE824>     /x83/x36/xca/x35 <Private Use>
 <UE825>     /x83/x36/xca/x36 <Private Use>
-% This 1 PUA mapping uses the equivalent <U9FB5>.
-% <UE826>     /xfe/x61         <Private Use>
+<UE826>     /x82/x35/x90/x38 <Private Use>
 <UE827>     /x83/x36/xca/x37 <Private Use>
 <UE828>     /x83/x36/xca/x38 <Private Use>
 <UE829>     /x83/x36/xca/x39 <Private Use>
 <UE82A>     /x83/x36/xcb/x30 <Private Use>
-% These 2 PUA mappings use the equivalents <U9FB6> and <U9FB7>.
-% <UE82B>     /xfe/x66         <Private Use>
-% <UE82C>     /xfe/x67         <Private Use>
+<UE82B>     /x82/x35/x90/x39 <Private Use>
+<UE82C>     /x82/x35/x91/x30 <Private Use>
 <UE82D>     /x83/x36/xcb/x31 <Private Use>
 <UE82E>     /x83/x36/xcb/x32 <Private Use>
 <UE82F>     /x83/x36/xcb/x33 <Private Use>
 <UE830>     /x83/x36/xcb/x34 <Private Use>
-% These 2 PUA mappings use the equivalents <U215D7> and <U9FB8>.
-% <UE831>     /xfe/x6c         <Private Use>
-% <UE832>     /xfe/x6d         <Private Use>
+<UE831>     /xfe/x6c         <Private Use>
+<UE832>     /x82/x35/x91/x31 <Private Use>
 <UE833>     /x83/x36/xcb/x35 <Private Use>
 <UE834>     /x83/x36/xcb/x36 <Private Use>
 <UE835>     /x83/x36/xcb/x37 <Private Use>
@@ -57429,8 +57408,7 @@ CHARMAP
 <UE838>     /x83/x36/xcc/x30 <Private Use>
 <UE839>     /x83/x36/xcc/x31 <Private Use>
 <UE83A>     /x83/x36/xcc/x32 <Private Use>
-% This 1 PUA mapping uses the equivalent <U2298F>.
-% <UE83B>     /xfe/x76         <Private Use>
+<UE83B>     /xfe/x76         <Private Use>
 <UE83C>     /x83/x36/xcc/x33 <Private Use>
 <UE83D>     /x83/x36/xcc/x34 <Private Use>
 <UE83E>     /x83/x36/xcc/x35 <Private Use>
@@ -57438,8 +57416,7 @@ CHARMAP
 <UE840>     /x83/x36/xcc/x37 <Private Use>
 <UE841>     /x83/x36/xcc/x38 <Private Use>
 <UE842>     /x83/x36/xcc/x39 <Private Use>
-% This 1 PUA mapping uses the equivalent <U9FB9>.
-% <UE843>     /xfe/x7e         <Private Use>
+<UE843>     /x82/x35/x91/x32 <Private Use>
 <UE844>     /x83/x36/xcd/x30 <Private Use>
 <UE845>     /x83/x36/xcd/x31 <Private Use>
 <UE846>     /x83/x36/xcd/x32 <Private Use>
@@ -57456,9 +57433,8 @@ CHARMAP
 <UE851>     /x83/x36/xce/x33 <Private Use>
 <UE852>     /x83/x36/xce/x34 <Private Use>
 <UE853>     /x83/x36/xce/x35 <Private Use>
-% These 2 PUA mappings use the equivalents <U9FBA> and <U241FE>.
-% <UE854>     /xfe/x90         <Private Use>
-% <UE855>     /xfe/x91         <Private Use>
+<UE854>     /x82/x35/x91/x33 <Private Use>
+<UE855>     /xfe/x91         <Private Use>
 <UE856>     /x83/x36/xce/x36 <Private Use>
 <UE857>     /x83/x36/xce/x37 <Private Use>
 <UE858>     /x83/x36/xce/x38 <Private Use>
@@ -57473,8 +57449,7 @@ CHARMAP
 <UE861>     /x83/x36/xcf/x37 <Private Use>
 <UE862>     /x83/x36/xcf/x38 <Private Use>
 <UE863>     /x83/x36/xcf/x39 <Private Use>
-% This 1 PUA mapping uses the equivalent <U9FBB>.
-% <UE864>     /xfe/xa0         <Private Use>
+<UE864>     /x82/x35/x91/x34 <Private Use>
 <UE865>     /x83/x36/xd0/x30 <Private Use>
 <UE866>     /x83/x36/xd0/x31 <Private Use>
 <UE867>     /x83/x36/xd0/x32 <Private Use>
@@ -70447,19 +70422,14 @@ CHARMAP
 <U00020068>..<U00020071> /x95/x32/x8d/x30 <CJK>
 <U00020072>..<U0002007B> /x95/x32/x8e/x30 <CJK>
 <U0002007C>..<U00020085> /x95/x32/x8f/x30 <CJK>
-<U00020086> /x95/x32/x90/x30 <CJK>
-<U00020087> /xfe/x51         <CJK>
-<U00020088> /x95/x32/x90/x32 <CJK>
-<U00020089> /xfe/x52         <CJK>
-<U0002008A>..<U0002008F> /x95/x32/x90/x34 <CJK>
+<U00020086>..<U0002008F> /x95/x32/x90/x30 <CJK>
 <U00020090>..<U00020099> /x95/x32/x91/x30 <CJK>
 <U0002009A>..<U000200A3> /x95/x32/x92/x30 <CJK>
 <U000200A4>..<U000200AD> /x95/x32/x93/x30 <CJK>
 <U000200AE>..<U000200B7> /x95/x32/x94/x30 <CJK>
 <U000200B8>..<U000200C1> /x95/x32/x95/x30 <CJK>
 <U000200C2>..<U000200CB> /x95/x32/x96/x30 <CJK>
-<U000200CC> /xfe/x53         <CJK>
-<U000200CD>..<U000200D5> /x95/x32/x97/x31 <CJK>
+<U000200CC>..<U000200D5> /x95/x32/x97/x30 <CJK>
 <U000200D6>..<U000200DF> /x95/x32/x98/x30 <CJK>
 <U000200E0>..<U000200E9> /x95/x32/x99/x30 <CJK>
 <U000200EA>..<U000200F3> /x95/x32/x9a/x30 <CJK>
@@ -70998,8 +70968,7 @@ CHARMAP
 <U000215BC>..<U000215C5> /x95/x36/xb7/x30 <CJK>
 <U000215C6>..<U000215CF> /x95/x36/xb8/x30 <CJK>
 <U000215D0>..<U000215D6> /x95/x36/xb9/x30 <CJK>
-<U000215D7> /xfe/x6c         <CJK>
-<U000215D8>..<U000215D9> /x95/x36/xb9/x38 <CJK>
+<U000215D7>..<U000215D9> /x95/x36/xb9/x37 <CJK>
 <U000215DA>..<U000215E3> /x95/x36/xba/x30 <CJK>
 <U000215E4>..<U000215ED> /x95/x36/xbb/x30 <CJK>
 <U000215EE>..<U000215F7> /x95/x36/xbc/x30 <CJK>
@@ -71505,8 +71474,7 @@ CHARMAP
 <U00022976>..<U0002297F> /x96/x30/xb8/x30 <CJK>
 <U00022980>..<U00022989> /x96/x30/xb9/x30 <CJK>
 <U0002298A>..<U0002298E> /x96/x30/xba/x30 <CJK>
-<U0002298F> /xfe/x76         <CJK>
-<U00022990>..<U00022993> /x96/x30/xba/x36 <CJK>
+<U0002298F>..<U00022993> /x96/x30/xba/x35 <CJK>
 <U00022994>..<U0002299D> /x96/x30/xbb/x30 <CJK>
 <U0002299E>..<U000229A7> /x96/x30/xbc/x30 <CJK>
 <U000229A8>..<U000229B1> /x96/x30/xbd/x30 <CJK>
@@ -72132,8 +72100,7 @@ CHARMAP
 <U000241E0>..<U000241E9> /x96/x35/xb3/x30 <CJK>
 <U000241EA>..<U000241F3> /x96/x35/xb4/x30 <CJK>
 <U000241F4>..<U000241FD> /x96/x35/xb5/x30 <CJK>
-<U000241FE> /xfe/x91         <CJK>
-<U000241FF>..<U00024207> /x96/x35/xb6/x31 <CJK>
+<U000241FE>..<U00024207> /x96/x35/xb6/x30 <CJK>
 <U00024208>..<U00024211> /x96/x35/xb7/x30 <CJK>
 <U00024212>..<U0002421B> /x96/x35/xb8/x30 <CJK>
 <U0002421C>..<U00024225> /x96/x35/xb9/x30 <CJK>
