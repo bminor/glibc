@@ -122,7 +122,7 @@ extern size_t __fread_chk (void *__restrict __ptr, size_t __ptrlen,
 			   FILE *__restrict __stream) __wur;
 
 #ifdef __USE_GNU
-extern char *__REDIRECT (__fgets_unlocked_alias,
+extern char *__REDIRECT_FORTIFY (__fgets_unlocked_alias,
 			 (char *__restrict __s, int __n,
 			  FILE *__restrict __stream), fgets_unlocked)
     __wur __attr_access ((__write_only__, 1, 2));
