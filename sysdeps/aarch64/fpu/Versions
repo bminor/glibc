@@ -1,13 +1,17 @@
 libmvec {
   GLIBC_2.38 {
     _ZGVnN2v_cos;
+    _ZGVnN2v_exp;
     _ZGVnN2v_log;
     _ZGVnN2v_sin;
     _ZGVnN4v_cosf;
+    _ZGVnN4v_expf;
     _ZGVnN4v_logf;
     _ZGVnN4v_sinf;
     _ZGVsMxv_cos;
     _ZGVsMxv_cosf;
+    _ZGVsMxv_exp;
+    _ZGVsMxv_expf;
     _ZGVsMxv_log;
     _ZGVsMxv_logf;
     _ZGVsMxv_sin;

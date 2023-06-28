@@ -1,11 +1,15 @@
 GLIBC_2.38 _ZGVnN2v_cos F
+GLIBC_2.38 _ZGVnN2v_exp F
 GLIBC_2.38 _ZGVnN2v_log F
 GLIBC_2.38 _ZGVnN2v_sin F
 GLIBC_2.38 _ZGVnN4v_cosf F
+GLIBC_2.38 _ZGVnN4v_expf F
 GLIBC_2.38 _ZGVnN4v_logf F
 GLIBC_2.38 _ZGVnN4v_sinf F
 GLIBC_2.38 _ZGVsMxv_cos F
 GLIBC_2.38 _ZGVsMxv_cosf F
+GLIBC_2.38 _ZGVsMxv_exp F
+GLIBC_2.38 _ZGVsMxv_expf F
 GLIBC_2.38 _ZGVsMxv_log F
 GLIBC_2.38 _ZGVsMxv_logf F
 GLIBC_2.38 _ZGVsMxv_sin F

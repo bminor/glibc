@@ -33,5 +33,6 @@
   }
 
 SVE_VECTOR_WRAPPER (cosf_sve, _ZGVsMxv_cosf)
+SVE_VECTOR_WRAPPER (expf_sve, _ZGVsMxv_expf)
 SVE_VECTOR_WRAPPER (logf_sve, _ZGVsMxv_logf)
 SVE_VECTOR_WRAPPER (sinf_sve, _ZGVsMxv_sinf)

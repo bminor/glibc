@@ -1005,7 +1005,15 @@ double: 1
 float: 1
 ldouble: 2
 
+Function: "exp_advsimd":
+double: 1
+float: 1
+
 Function: "exp_downward":
+double: 1
+float: 1
+
+Function: "exp_sve":
 double: 1
 float: 1
 
