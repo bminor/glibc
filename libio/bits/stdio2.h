@@ -182,10 +182,6 @@ __NTH (obstack_vprintf (struct obstack *__restrict __obstack,
 #endif
 
 #if __GLIBC_USE (DEPRECATED_GETS)
-extern char *__REDIRECT (__gets_warn, (char *__str), gets)
-     __wur __warnattr ("please use fgets or getline instead, gets can't "
-		       "specify buffer size");
-
 __fortify_function __wur char *
 gets (char *__str)
 {
@@ -194,16 +190,6 @@ gets (char *__str)
   return __gets_warn (__str);
 }
 #endif
-
-extern char *__REDIRECT (__fgets_alias,
-			 (char *__restrict __s, int __n,
-			  FILE *__restrict __stream), fgets)
-    __wur __attr_access ((__write_only__, 1, 2));
-extern char *__REDIRECT (__fgets_chk_warn,
-			 (char *__restrict __s, size_t __size, int __n,
-			  FILE *__restrict __stream), __fgets_chk)
-     __wur __warnattr ("fgets called with bigger size than length "
-		       "of destination buffer");
 
 __fortify_function __wur __fortified_attr_access (__write_only__, 1, 2) char *
 fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
@@ -215,18 +201,6 @@ fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
     return __fgets_chk_warn (__s, sz, __n, __stream);
   return __fgets_chk (__s, sz, __n, __stream);
 }
-
-extern size_t __REDIRECT (__fread_alias,
-			  (void *__restrict __ptr, size_t __size,
-			   size_t __n, FILE *__restrict __stream),
-			  fread) __wur;
-extern size_t __REDIRECT (__fread_chk_warn,
-			  (void *__restrict __ptr, size_t __ptrlen,
-			   size_t __size, size_t __n,
-			   FILE *__restrict __stream),
-			  __fread_chk)
-     __wur __warnattr ("fread called with bigger size * nmemb than length "
-		       "of destination buffer");
 
 __fortify_function __wur size_t
 fread (void *__restrict __ptr, size_t __size, size_t __n,
@@ -241,16 +215,6 @@ fread (void *__restrict __ptr, size_t __size, size_t __n,
 }
 
 #ifdef __USE_GNU
-extern char *__REDIRECT (__fgets_unlocked_alias,
-			 (char *__restrict __s, int __n,
-			  FILE *__restrict __stream), fgets_unlocked)
-    __wur __attr_access ((__write_only__, 1, 2));
-extern char *__REDIRECT (__fgets_unlocked_chk_warn,
-			 (char *__restrict __s, size_t __size, int __n,
-			  FILE *__restrict __stream), __fgets_unlocked_chk)
-     __wur __warnattr ("fgets_unlocked called with bigger size than length "
-		       "of destination buffer");
-
 __fortify_function __wur __fortified_attr_access (__write_only__, 1, 2) char *
 fgets_unlocked (char *__restrict __s, int __n, FILE *__restrict __stream)
 {
@@ -265,18 +229,6 @@ fgets_unlocked (char *__restrict __s, int __n, FILE *__restrict __stream)
 
 #ifdef __USE_MISC
 # undef fread_unlocked
-extern size_t __REDIRECT (__fread_unlocked_alias,
-			  (void *__restrict __ptr, size_t __size,
-			   size_t __n, FILE *__restrict __stream),
-			  fread_unlocked) __wur;
-extern size_t __REDIRECT (__fread_unlocked_chk_warn,
-			  (void *__restrict __ptr, size_t __ptrlen,
-			   size_t __size, size_t __n,
-			   FILE *__restrict __stream),
-			  __fread_unlocked_chk)
-     __wur __warnattr ("fread_unlocked called with bigger size * nmemb than "
-		       "length of destination buffer");
-
 __fortify_function __wur size_t
 fread_unlocked (void *__restrict __ptr, size_t __size, size_t __n,
 		FILE *__restrict __stream)
