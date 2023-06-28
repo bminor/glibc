@@ -33,3 +33,4 @@
   }
 
 SVE_VECTOR_WRAPPER (cosf_sve, _ZGVsMxv_cosf)
+SVE_VECTOR_WRAPPER (sinf_sve, _ZGVsMxv_sinf)

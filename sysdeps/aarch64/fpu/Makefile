@@ -1,10 +1,10 @@
-float-advsimd-funcs = cos
+libmvec-supported-funcs = cos \
+                          sin
 
-double-advsimd-funcs = cos
-
-float-sve-funcs = cos
-
-double-sve-funcs = cos
+float-advsimd-funcs = $(libmvec-supported-funcs)
+double-advsimd-funcs = $(libmvec-supported-funcs)
+float-sve-funcs = $(libmvec-supported-funcs)
+double-sve-funcs = $(libmvec-supported-funcs)
 
 ifeq ($(subdir),mathvec)
 libmvec-support = $(addsuffix f_advsimd,$(float-advsimd-funcs)) \

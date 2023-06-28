@@ -1257,10 +1257,18 @@ double: 1
 float: 1
 ldouble: 2
 
+Function: "sin_advsimd":
+double: 2
+float: 1
+
 Function: "sin_downward":
 double: 1
 float: 1
 ldouble: 3
+
+Function: "sin_sve":
+double: 2
+float: 1
 
 Function: "sin_towardzero":
 double: 1

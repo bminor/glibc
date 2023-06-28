@@ -24,3 +24,4 @@
 #define VEC_TYPE float32x4_t
 
 VPCS_VECTOR_WRAPPER (cosf_advsimd, _ZGVnN4v_cosf)
+VPCS_VECTOR_WRAPPER (sinf_advsimd, _ZGVnN4v_sinf)

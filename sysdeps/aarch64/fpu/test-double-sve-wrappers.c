@@ -33,3 +33,4 @@
   }
 
 SVE_VECTOR_WRAPPER (cos_sve, _ZGVsMxv_cos)
+SVE_VECTOR_WRAPPER (sin_sve, _ZGVsMxv_sin)
