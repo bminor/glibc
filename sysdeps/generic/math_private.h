@@ -193,7 +193,7 @@ do {								\
 # undef _Mdouble_
 #endif
 
-
+#define NOINLINE __attribute__ ((noinline))
 
 /* Prototypes for functions of the IBM Accurate Mathematical Library.  */
 extern double __sin (double __x);

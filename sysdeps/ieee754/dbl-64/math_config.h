@@ -148,9 +148,6 @@ make_double (uint64_t x, int64_t ep, uint64_t s)
   return asdouble (s + x + (ep << MANTISSA_WIDTH));
 }
 
-
-#define NOINLINE __attribute__ ((noinline))
-
 /* Error handling tail calls for special cases, with a sign argument.
    The sign of the return value is set if the argument is non-zero.  */
 

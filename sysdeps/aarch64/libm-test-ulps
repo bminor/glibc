@@ -642,7 +642,7 @@ float: 1
 ldouble: 2
 
 Function: "cos_advsimd":
-double: 1
+double: 2
 float: 1
 
 Function: "cos_downward":
