@@ -21,8 +21,8 @@
 # This file can list all potential system calls.  The names are only
 # used if the installed kernel headers also provide them.
 
-# The list of system calls is current as of Linux 6.3.
-kernel 6.3
+# The list of system calls is current as of Linux 6.4.
+kernel 6.4
 
 FAST_atomic_update
 FAST_cmpxchg
@@ -477,6 +477,7 @@ renameat2
 request_key
 restart_syscall
 riscv_flush_icache
+riscv_hwprobe
 rmdir
 rseq
 rt_sigaction

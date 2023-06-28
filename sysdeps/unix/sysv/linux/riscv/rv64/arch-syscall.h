@@ -205,6 +205,7 @@
 #define __NR_request_key 218
 #define __NR_restart_syscall 128
 #define __NR_riscv_flush_icache 259
+#define __NR_riscv_hwprobe 258
 #define __NR_rseq 293
 #define __NR_rt_sigaction 134
 #define __NR_rt_sigpending 136

@@ -152,6 +152,7 @@
 #define __NR_mbind 268
 #define __NR_membarrier 356
 #define __NR_memfd_create 350
+#define __NR_memfd_secret 447
 #define __NR_migrate_pages 287
 #define __NR_mincore 218
 #define __NR_mkdir 39
