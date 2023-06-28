@@ -50,9 +50,11 @@ typedef __SVBool_t __sv_bool_t;
 #  define __vpcs __attribute__ ((__aarch64_vector_pcs__))
 
 __vpcs __f32x4_t _ZGVnN4v_cosf (__f32x4_t);
+__vpcs __f32x4_t _ZGVnN4v_logf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_sinf (__f32x4_t);
 
 __vpcs __f64x2_t _ZGVnN2v_cos (__f64x2_t);
+__vpcs __f64x2_t _ZGVnN2v_log (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_sin (__f64x2_t);
 
 #  undef __ADVSIMD_VEC_MATH_SUPPORTED
@@ -61,9 +63,11 @@ __vpcs __f64x2_t _ZGVnN2v_sin (__f64x2_t);
 #ifdef __SVE_VEC_MATH_SUPPORTED
 
 __sv_f32_t _ZGVsMxv_cosf (__sv_f32_t, __sv_bool_t);
+__sv_f32_t _ZGVsMxv_logf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_sinf (__sv_f32_t, __sv_bool_t);
 
 __sv_f64_t _ZGVsMxv_cos (__sv_f64_t, __sv_bool_t);
+__sv_f64_t _ZGVsMxv_log (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_sin (__sv_f64_t, __sv_bool_t);
 
 #  undef __SVE_VEC_MATH_SUPPORTED

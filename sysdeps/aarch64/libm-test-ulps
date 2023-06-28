@@ -1219,9 +1219,17 @@ double: 3
 float: 3
 ldouble: 1
 
+Function: "log_advsimd":
+double: 1
+float: 3
+
 Function: "log_downward":
 float: 2
 ldouble: 1
+
+Function: "log_sve":
+double: 1
+float: 3
 
 Function: "log_towardzero":
 float: 2
