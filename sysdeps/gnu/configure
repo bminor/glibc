@@ -35,3 +35,4 @@ case "$prefix" in
   libc_cv_rootsbindir=/sbin
   ;;
 esac
+

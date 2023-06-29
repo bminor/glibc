@@ -3,31 +3,35 @@
 OLD_CFLAGS="$CFLAGS"
 CFLAGS="$CFLAGS -mcpu=power10"
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if the compiler supports -mcpu=power10" >&5
-$as_echo_n "checking if the compiler supports -mcpu=power10... " >&6; }
-if ${libc_cv_mcpu_power10+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking if the compiler supports -mcpu=power10" >&5
+printf %s "checking if the compiler supports -mcpu=power10... " >&6; }
+if test ${libc_cv_mcpu_power10+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
 
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 
 _ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
+if ac_fn_c_try_compile "$LINENO"
+then :
   libc_cv_mcpu_power10=yes
-else
+else $as_nop
   libc_cv_mcpu_power10=no
 fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_mcpu_power10" >&5
-$as_echo "$libc_cv_mcpu_power10" >&6; }
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_mcpu_power10" >&5
+printf "%s\n" "$libc_cv_mcpu_power10" >&6; }
 config_vars="$config_vars
 mcpu-power10 = $libc_cv_mcpu_power10"
-if test "$libc_cv_mcpu_power10" = "yes"; then :
+if test "$libc_cv_mcpu_power10" = "yes"
+then :
 
-	$as_echo "#define USE_PPC64_MCPU_POWER10 1" >>confdefs.h
+	printf "%s\n" "#define USE_PPC64_MCPU_POWER10 1" >>confdefs.h
 
 fi
 CFLAGS="$OLD_CFLAGS"
+

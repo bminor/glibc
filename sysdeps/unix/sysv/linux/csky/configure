@@ -2,3 +2,4 @@
  # Local configure fragment for sysdeps/unix/sysv/linux/csky
 
 arch_minimum_kernel=4.20.0
+

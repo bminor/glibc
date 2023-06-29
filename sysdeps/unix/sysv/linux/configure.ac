@@ -112,7 +112,7 @@ if test $host = $build; then
   fi
   if test -n "$ac_message"; then
     AC_MSG_ERROR([$ac_message
-\`make install' will destroy the target of the link(s).
+'make install' will destroy the target of the link(s).
 Delete the links and re-run configure, or better still, move the entire
 ${ac_prefix}/include directory out of the way.])
   else

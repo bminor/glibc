@@ -32,3 +32,4 @@ mips*)
 	with_fp_cond="defined __mips_hard_float"
 	;;
 esac
+

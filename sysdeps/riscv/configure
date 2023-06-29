@@ -2,11 +2,12 @@
  # Local configure fragment for sysdeps/riscv/elf.
 
 # Check if static linker supports R_RISCV_ALIGN
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for R_RISCV_ALIGN linker relaxation support" >&5
-$as_echo_n "checking for R_RISCV_ALIGN linker relaxation support... " >&6; }
-if ${libc_cv_riscv_r_align+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for R_RISCV_ALIGN linker relaxation support" >&5
+printf %s "checking for R_RISCV_ALIGN linker relaxation support... " >&6; }
+if test ${libc_cv_riscv_r_align+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
     cat > conftest.S <<EOF
 .align 3
 foo:
@@ -18,14 +19,15 @@ EOF
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; }
   then
     libc_cv_riscv_r_align=yes
   fi
   rm -rf conftest.*
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_riscv_r_align" >&5
-$as_echo "$libc_cv_riscv_r_align" >&6; }
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_riscv_r_align" >&5
+printf "%s\n" "$libc_cv_riscv_r_align" >&6; }
 config_vars="$config_vars
 riscv-r-align = $libc_cv_riscv_r_align"
+

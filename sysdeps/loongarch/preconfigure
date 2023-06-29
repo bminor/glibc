@@ -37,16 +37,13 @@ loongarch*)
 	;;
     esac
 
-    cat >>confdefs.h <<_ACEOF
-#define LOONGARCH_ABI_GRLEN $grlen
-_ACEOF
+    printf "%s\n" "#define LOONGARCH_ABI_GRLEN $grlen" >>confdefs.h
 
-    cat >>confdefs.h <<_ACEOF
-#define LOONGARCH_ABI_FRLEN $abi_flen
-_ACEOF
+    printf "%s\n" "#define LOONGARCH_ABI_FRLEN $abi_flen" >>confdefs.h
 
 
     base_machine=loongarch
     ;;
 esac
+
 

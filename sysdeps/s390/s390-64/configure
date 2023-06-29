@@ -4,12 +4,13 @@
 # Minimal checking for static PIE support in ld.
 # Compare to ld testcase/bugzilla:
 # <binutils-source>/ld/testsuite/ld-elf/pr22263-1.rd
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for s390-specific static PIE requirements" >&5
-$as_echo_n "checking for s390-specific static PIE requirements... " >&6; }
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for s390-specific static PIE requirements" >&5
+printf %s "checking for s390-specific static PIE requirements... " >&6; }
 if { as_var=\
-libc_cv_s390x_staticpie_req; eval \${$as_var+:} false; }; then :
-  $as_echo_n "(cached) " >&6
-else
+libc_cv_s390x_staticpie_req; eval test \${$as_var+y}; }
+then :
+  printf %s "(cached) " >&6
+else $as_nop
     cat > conftest1.c <<EOF
 __thread int * foo;
 
@@ -36,25 +37,25 @@ EOF
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; } \
      && { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -fPIE -c conftest2.c -o conftest2.o'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; } \
      && { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -pie -o conftest conftest1.o conftest2.o'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; } \
      && { ac_try='! LC_ALL=C $READELF -Wr conftest | grep R_390_TLS_TPOFF'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; }
   then
     libc_cv_s390x_staticpie_req=yes
@@ -63,8 +64,8 @@ EOF
 fi
 eval ac_res=\$\
 libc_cv_s390x_staticpie_req
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
+	       { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
+printf "%s\n" "$ac_res" >&6; }
 if test $libc_cv_s390x_staticpie_req = yes; then
    # Static PIE is supported only on 64bit.
    # Ensure you also have those patches for:
@@ -117,6 +118,7 @@ if test $libc_cv_s390x_staticpie_req = yes; then
    #     https://sourceware.org/git/?p=glibc.git;a=commit;h=f787e138aa0bf677bf74fa2a08595c446292f3d7
    #   The mentioned patch series by Florian Weimer avoids the mentioned failing
    #   sbrk syscall by falling back to mmap.
-   $as_echo "#define SUPPORT_STATIC_PIE 1" >>confdefs.h
+   printf "%s\n" "#define SUPPORT_STATIC_PIE 1" >>confdefs.h
 
 fi
+

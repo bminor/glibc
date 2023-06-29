@@ -1,14 +1,15 @@
 # This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
  # Local configure fragment for sysdeps/loongarch/elf.
 
-$as_echo "#define HIDDEN_VAR_NEEDS_DYNAMIC_RELOC 1" >>confdefs.h
+printf "%s\n" "#define HIDDEN_VAR_NEEDS_DYNAMIC_RELOC 1" >>confdefs.h
 
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if the toolchain is sufficient to build static PIE on LoongArch" >&5
-$as_echo_n "checking if the toolchain is sufficient to build static PIE on LoongArch... " >&6; }
-if ${libc_cv_static_pie_on_loongarch+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking if the toolchain is sufficient to build static PIE on LoongArch" >&5
+printf %s "checking if the toolchain is sufficient to build static PIE on LoongArch... " >&6; }
+if test ${libc_cv_static_pie_on_loongarch+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
 
   cat > conftest1.S <<\EOF
 .global _start
@@ -40,74 +41,76 @@ EOF
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; } \
      && { ac_try='LC_ALL=C $READELF -Wr conftest1 | grep -q R_LARCH_RELATIVE'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; } \
      && ! { ac_try='LC_ALL=C $READELF -Wl conftest1 | grep -q INTERP'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; } \
      && { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -shared -fPIC -o conftest2.so conftest2.S'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; } \
      && { ac_try='LC_ALL=C $READELF -Wr conftest2.so | grep -q 'R_LARCH_JUMP_SLOT.*external_func''
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; }
   then
     libc_cv_static_pie_on_loongarch=yes
   fi
   rm -rf conftest*
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_static_pie_on_loongarch" >&5
-$as_echo "$libc_cv_static_pie_on_loongarch" >&6; }
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_static_pie_on_loongarch" >&5
+printf "%s\n" "$libc_cv_static_pie_on_loongarch" >&6; }
 
 if test "$libc_cv_static_pie_on_loongarch" = yes; then
-  $as_echo "#define SUPPORT_STATIC_PIE 1" >>confdefs.h
+  printf "%s\n" "#define SUPPORT_STATIC_PIE 1" >>confdefs.h
 
 fi
 
   # Check if gcc supports option -mcmodel=medium.
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $CC supports option -mcmodel=medium" >&5
-$as_echo_n "checking whether $CC supports option -mcmodel=medium... " >&6; }
-if ${libc_cv_loongarch_cmodel_medium+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether $CC supports option -mcmodel=medium" >&5
+printf %s "checking whether $CC supports option -mcmodel=medium... " >&6; }
+if test ${libc_cv_loongarch_cmodel_medium+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
 
   if { ac_try='${CC-cc} -c $CFLAGS -mcmodel=medium /dev/null 1>&5'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; }; then
     libc_cv_loongarch_cmodel_medium=yes
   else
     libc_cv_loongarch_cmodel_medium=no
   fi
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_loongarch_cmodel_medium" >&5
-$as_echo "$libc_cv_loongarch_cmodel_medium" >&6; }
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_loongarch_cmodel_medium" >&5
+printf "%s\n" "$libc_cv_loongarch_cmodel_medium" >&6; }
 config_vars="$config_vars
 have-cmodel-medium = $libc_cv_loongarch_cmodel_medium"
 
 # Check if asm support vector instructions.
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for vector support in assembler" >&5
-$as_echo_n "checking for vector support in assembler... " >&6; }
-if ${libc_cv_loongarch_vec_asm+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for vector support in assembler" >&5
+printf %s "checking for vector support in assembler... " >&6; }
+if test ${libc_cv_loongarch_vec_asm+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
   cat > conftest.s <<\EOF
         vld  $vr0, $sp, 0
 EOF
@@ -115,7 +118,7 @@ if { ac_try='${CC-cc} -c $CFLAGS conftest.s -o conftest 1>&5'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; }; then
   libc_cv_loongarch_vec_asm=yes
 else
@@ -123,9 +126,10 @@ else
 fi
 rm -f conftest*
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_loongarch_vec_asm" >&5
-$as_echo "$libc_cv_loongarch_vec_asm" >&6; }
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_loongarch_vec_asm" >&5
+printf "%s\n" "$libc_cv_loongarch_vec_asm" >&6; }
 if test $libc_cv_loongarch_vec_asm = yes; then
-  $as_echo "#define HAVE_LOONGARCH_VEC_ASM 1" >>confdefs.h
+  printf "%s\n" "#define HAVE_LOONGARCH_VEC_ASM 1" >>confdefs.h
 
 fi
+

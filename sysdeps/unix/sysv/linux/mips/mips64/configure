@@ -2,3 +2,4 @@
  # Local configure fragment for sysdeps/unix/sysv/linux/mips/mips64.
 
 ldd_rewrite_script=$dir/ldd-rewrite.sed
+

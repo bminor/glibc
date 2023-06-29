@@ -2,18 +2,19 @@
  # Local configure fragment for sysdeps/unix/sysv/linux/powerpc/.
 
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $CC $CFLAGS -mlong-double-128 uses IBM extended format" >&5
-$as_echo_n "checking whether $CC $CFLAGS -mlong-double-128 uses IBM extended format... " >&6; }
-if ${libc_cv_mlong_double_128ibm+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether $CC $CFLAGS -mlong-double-128 uses IBM extended format" >&5
+printf %s "checking whether $CC $CFLAGS -mlong-double-128 uses IBM extended format... " >&6; }
+if test ${libc_cv_mlong_double_128ibm+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
   save_CFLAGS="$CFLAGS"
 CFLAGS="$CFLAGS -mlong-double-128"
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #include <float.h>
 int
-main ()
+main (void)
 {
 
 #if LDBL_MANT_DIG != 106
@@ -24,30 +25,32 @@ long double foobar (long double x) { return x; }
   return 0;
 }
 _ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
+if ac_fn_c_try_compile "$LINENO"
+then :
   libc_cv_mlong_double_128ibm=yes
-else
+else $as_nop
   libc_cv_mlong_double_128ibm=no
 fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
 CFLAGS="$save_CFLAGS"
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_mlong_double_128ibm" >&5
-$as_echo "$libc_cv_mlong_double_128ibm" >&6; }
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_mlong_double_128ibm" >&5
+printf "%s\n" "$libc_cv_mlong_double_128ibm" >&6; }
 
 if test "$libc_cv_mlong_double_128ibm" = no; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $CC $CFLAGS supports -mabi=ibmlongdouble" >&5
-$as_echo_n "checking whether $CC $CFLAGS supports -mabi=ibmlongdouble... " >&6; }
-if ${libc_cv_mabi_ibmlongdouble+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether $CC $CFLAGS supports -mabi=ibmlongdouble" >&5
+printf %s "checking whether $CC $CFLAGS supports -mabi=ibmlongdouble... " >&6; }
+if test ${libc_cv_mabi_ibmlongdouble+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
     save_CFLAGS="$CFLAGS"
   CFLAGS="$CFLAGS -mlong-double-128 -mabi=ibmlongdouble"
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #include <float.h>
 int
-main ()
+main (void)
 {
 
 #if LDBL_MANT_DIG != 106
@@ -58,16 +61,17 @@ long double foobar (long double x) { return x; }
   return 0;
 }
 _ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
+if ac_fn_c_try_compile "$LINENO"
+then :
   libc_cv_mabi_ibmlongdouble=yes
-else
+else $as_nop
   libc_cv_mabi_ibmlongdouble=no
 fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
   CFLAGS="$save_CFLAGS"
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_mabi_ibmlongdouble" >&5
-$as_echo "$libc_cv_mabi_ibmlongdouble" >&6; }
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_mabi_ibmlongdouble" >&5
+printf "%s\n" "$libc_cv_mabi_ibmlongdouble" >&6; }
 
   if test "$libc_cv_mabi_ibmlongdouble" = yes; then
     CFLAGS="$CFLAGS -mabi=ibmlongdouble"
@@ -76,8 +80,8 @@ $as_echo "$libc_cv_mabi_ibmlongdouble" >&6; }
   fi
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for linker that supports --no-tls-get-addr-optimize" >&5
-$as_echo_n "checking for linker that supports --no-tls-get-addr-optimize... " >&6; }
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for linker that supports --no-tls-get-addr-optimize" >&5
+printf %s "checking for linker that supports --no-tls-get-addr-optimize... " >&6; }
 libc_linker_feature=no
 cat > conftest.c <<EOF
 int _start (void) { return 42; }
@@ -89,7 +93,7 @@ if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; }
 then
   if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp -Wl,--no-tls-get-addr-optimize -nostdlib \
@@ -106,9 +110,10 @@ if test $libc_linker_feature = yes; then
 else
   libc_cv_tls_get_addr_optimize=no
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_linker_feature" >&5
-$as_echo "$libc_linker_feature" >&6; }
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_linker_feature" >&5
+printf "%s\n" "$libc_linker_feature" >&6; }
 config_vars="$config_vars
 have-tls-get-addr-optimize = $libc_cv_tls_get_addr_optimize"
 
 ldd_rewrite_script=sysdeps/unix/sysv/linux/powerpc/ldd-rewrite.sed
+

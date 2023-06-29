@@ -21,3 +21,4 @@ m68k)		variant=`(echo "#ifdef __mcoldfire__"
 		fi
 		;;
 esac
+

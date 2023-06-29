@@ -6,33 +6,35 @@ x86_64)
   base_machine=x86_64
   # Check if we are building for x32.
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $CC compiles in -mx32 mode by default" >&5
-$as_echo_n "checking whether $CC compiles in -mx32 mode by default... " >&6; }
-if ${libc_cv_x32+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether $CC compiles in -mx32 mode by default" >&5
+printf %s "checking whether $CC compiles in -mx32 mode by default... " >&6; }
+if test ${libc_cv_x32+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
     cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #ifndef __ILP32__
 # error not x32
 #endif
 int
-main ()
+main (void)
 {
 
   ;
   return 0;
 }
 _ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
+if ac_fn_c_try_compile "$LINENO"
+then :
   libc_cv_x32=yes
-else
+else $as_nop
   libc_cv_x32=no
 fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_x32" >&5
-$as_echo "$libc_cv_x32" >&6; }
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_x32" >&5
+printf "%s\n" "$libc_cv_x32" >&6; }
   if test $libc_cv_x32 = yes; then
     machine=x86_64/x32
   else
@@ -40,3 +42,4 @@ $as_echo "$libc_cv_x32" >&6; }
   fi
   ;;
 esac
+

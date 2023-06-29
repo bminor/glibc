@@ -3,5 +3,6 @@
 
 # Accessing static and hidden variables in a shared object needs relative
 # relocation.
-$as_echo "#define HIDDEN_VAR_NEEDS_DYNAMIC_RELOC 1" >>confdefs.h
+printf "%s\n" "#define HIDDEN_VAR_NEEDS_DYNAMIC_RELOC 1" >>confdefs.h
+
 

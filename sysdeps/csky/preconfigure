@@ -34,7 +34,7 @@ csky*)
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; }; then
       soft_float_abi_support=1
     else
@@ -60,17 +60,12 @@ csky*)
     base_machine=csky
     machine=csky/$machine
 
-    cat >>confdefs.h <<_ACEOF
-#define CSKYABI $abi
-_ACEOF
+    printf "%s\n" "#define CSKYABI $abi" >>confdefs.h
 
-    cat >>confdefs.h <<_ACEOF
-#define CSKY_HARD_FLOAT $with_fp_cond
-_ACEOF
+    printf "%s\n" "#define CSKY_HARD_FLOAT $with_fp_cond" >>confdefs.h
 
-    cat >>confdefs.h <<_ACEOF
-#define CSKY_HARD_FLOAT_ABI $with_hard_float_abi
-_ACEOF
+    printf "%s\n" "#define CSKY_HARD_FLOAT_ABI $with_hard_float_abi" >>confdefs.h
 
     ;;
 esac
+

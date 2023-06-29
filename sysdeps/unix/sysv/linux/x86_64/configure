@@ -2,3 +2,4 @@
  # Local configure fragment for sysdeps/unix/sysv/linux/x86_64.
 
 ldd_rewrite_script=sysdeps/unix/sysv/linux/x86_64/ldd-rewrite.sed
+

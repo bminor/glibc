@@ -1,10 +1,11 @@
 # This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for assembler line separator" >&5
-$as_echo_n "checking for assembler line separator... " >&6; }
-if ${libc_cv_asm_line_sep+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for assembler line separator" >&5
+printf %s "checking for assembler line separator... " >&6; }
+if test ${libc_cv_asm_line_sep+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
   cat > conftest.s <<EOF
 nop ; is_old_puffin
 EOF
@@ -12,7 +13,7 @@ if { ac_try='${CC-cc} -c $ASFLAGS conftest.s 1>&5'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; }; then
   libc_cv_asm_line_sep='!'
 else
@@ -25,18 +26,17 @@ else
 fi
 rm -f conftest*
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_asm_line_sep" >&5
-$as_echo "$libc_cv_asm_line_sep" >&6; }
-cat >>confdefs.h <<_ACEOF
-#define ASM_LINE_SEP $libc_cv_asm_line_sep
-_ACEOF
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_asm_line_sep" >&5
+printf "%s\n" "$libc_cv_asm_line_sep" >&6; }
+printf "%s\n" "#define ASM_LINE_SEP $libc_cv_asm_line_sep" >>confdefs.h
 
 
-$as_echo "#define HIDDEN_VAR_NEEDS_DYNAMIC_RELOC 1" >>confdefs.h
+printf "%s\n" "#define HIDDEN_VAR_NEEDS_DYNAMIC_RELOC 1" >>confdefs.h
 
 
 # PIE builds fail on binutils 2.37 and earlier, see:
 # https://sourceware.org/bugzilla/show_bug.cgi?id=28672
-$as_echo "#define PIE_UNSUPPORTED 1" >>confdefs.h
+printf "%s\n" "#define PIE_UNSUPPORTED 1" >>confdefs.h
 
 # work around problem with autoconf and empty lines at the end of files
+

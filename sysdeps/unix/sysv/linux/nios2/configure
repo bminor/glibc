@@ -2,3 +2,4 @@
  # Local configure fragment for sysdeps/unix/sysv/linux/nios2.
 
 arch_minimum_kernel=3.19.0
+

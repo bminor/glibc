@@ -231,7 +231,7 @@ AC_ARG_ENABLE([stack-protector],
 	      [enable_stack_protector=no])
 case "$enable_stack_protector" in
 all|yes|no|strong) ;;
-*) AC_MSG_ERROR([Not a valid argument for --enable-stack-protector: \"$enable_stack_protector\"]);;
+*) AC_MSG_ERROR([Not a valid argument for --enable-stack-protector: "$enable_stack_protector"]);;
 esac
 
 dnl On some platforms we cannot use dynamic loading.  We must provide
@@ -459,7 +459,7 @@ AC_ARG_ENABLE([cet],
 	      [enable_cet=$libc_cv_compiler_default_cet])
 
 AC_ARG_ENABLE([scv],
-	      AC_HELP_STRING([--disable-scv],
+	      AS_HELP_STRING([--disable-scv],
 			     [syscalls will not use scv instruction, even if the kernel supports it, powerpc only]),
 	      [use_scv=$enableval],
 	      [use_scv=yes])

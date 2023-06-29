@@ -39,18 +39,20 @@ case "${machine}:${submachine}" in
   case "$archcpu" in
   405fp|440fp|464fp|476fp)
     submachine=${archcpu%fp}
-    if ${libc_cv_cc_submachine+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
+    if test ${libc_cv_cc_submachine+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
   libc_cv_cc_submachine=""
 fi
 
     ;;
   405|440|464|476)
     submachine=${archcpu}
-    if ${libc_cv_cc_submachine+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
+    if test ${libc_cv_cc_submachine+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
   libc_cv_cc_submachine=""
 fi
 
@@ -58,9 +60,10 @@ fi
 
   a2|970|power[4-9]|power5x|power6+|power10)
     submachine=${archcpu}
-    if ${libc_cv_cc_submachine+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
+    if test ${libc_cv_cc_submachine+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
   libc_cv_cc_submachine=""
 fi
 
@@ -71,3 +74,4 @@ fi
   esac
   ;;
 esac
+
