@@ -182,18 +182,11 @@ __add_to_environ (const char *name, const char *value, const char *combined,
 	{
 	  const size_t varlen = namelen + 1 + vallen;
 #ifdef USE_TSEARCH
-	  char *new_value;
-	  int use_alloca = __libc_use_alloca (varlen);
-	  if (__builtin_expect (use_alloca, 1))
-	    new_value = (char *) alloca (varlen);
-	  else
+	  char *new_value = malloc (varlen);
+	  if (new_value == NULL)
 	    {
-	      new_value = malloc (varlen);
-	      if (new_value == NULL)
-		{
-		  UNLOCK;
-		  return -1;
-		}
+	      UNLOCK;
+	      return -1;
 	    }
 # ifdef _LIBC
 	  __mempcpy (__mempcpy (__mempcpy (new_value, name, namelen), "=", 1),
@@ -209,35 +202,14 @@ __add_to_environ (const char *name, const char *value, const char *combined,
 #endif
 	    {
 #ifdef USE_TSEARCH
-	      if (__glibc_unlikely (! use_alloca))
-		np = new_value;
-	      else
+	      np = new_value;
 #endif
-		{
-		  np = malloc (varlen);
-		  if (__glibc_unlikely (np == NULL))
-		    {
-		      UNLOCK;
-		      return -1;
-		    }
-
-#ifdef USE_TSEARCH
-		  memcpy (np, new_value, varlen);
-#else
-		  memcpy (np, name, namelen);
-		  np[namelen] = '=';
-		  memcpy (&np[namelen + 1], value, vallen);
-#endif
-		}
 	      /* And remember the value.  */
 	      STORE_VALUE (np);
 	    }
 #ifdef USE_TSEARCH
 	  else
-	    {
-	      if (__glibc_unlikely (! use_alloca))
-		free (new_value);
-	    }
+	    free (new_value);
 #endif
 	}
 
