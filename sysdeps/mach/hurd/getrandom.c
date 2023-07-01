@@ -123,8 +123,13 @@ again:
                                                     open_flags, 0);
       __libc_rwlock_unlock (lock);
       if (!MACH_PORT_VALID (server))
-        /* No luck.  */
-        return -1;
+	{
+	  if (errno == ENOENT)
+	    /* No translator set up, we won't have support for it.  */
+	    errno = ENOSYS;
+	  /* No luck.  */
+	  return -1;
+	}
 
       goto again;
     }
