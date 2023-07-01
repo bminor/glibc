@@ -239,6 +239,9 @@ CFLAGS-support_paths.c = \
 		-DCOMPLOCALEDIR_PATH=\"$(complocaledir)\" \
 		-DSYSCONFDIR_PATH=\"$(sysconfdir)\"
 
+# Build with exception handling and asynchronous unwind table support.
+CFLAGS-.oS += -fexceptions -fasynchronous-unwind-tables
+
 # In support_timespec_check_in_range we may be passed a very tight
 # range for which we should produce a correct result for expected
 # being within the observed range.  The code uses double internally
