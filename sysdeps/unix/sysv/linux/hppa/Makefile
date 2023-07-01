@@ -14,3 +14,7 @@ test-xfail-check-execstack = yes
 test-xfail-check-wx-segment = *
 
 endif # $(subdir) == elf
+
+ifeq ($(subdir),debug)
+test-xfail-tst-ssp-1 = $(have-ssp)
+endif # $(subdir) == debug
