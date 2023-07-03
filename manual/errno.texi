@@ -1147,42 +1147,111 @@ name of the program that encountered the error.
 
 @deftypefun {char *} strerror (int @var{errnum})
 @standards{ISO, string.h}
-@safety{@prelim{}@mtunsafe{@mtasurace{:strerror}}@asunsafe{@ascuheap{} @ascuintl{}}@acunsafe{@acsmem{}}}
-@c Calls strerror_r with a static buffer allocated with malloc on the
-@c first use.
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @ascuintl{}}@acunsafe{@acsmem{}}}
 The @code{strerror} function maps the error code (@pxref{Checking for
 Errors}) specified by the @var{errnum} argument to a descriptive error
-message string.  The return value is a pointer to this string.
+message string.  The string is translated according to the current
+locale.  The return value is a pointer to this string.
 
 The value @var{errnum} normally comes from the variable @code{errno}.
 
 You should not modify the string returned by @code{strerror}.  Also, if
-you make subsequent calls to @code{strerror}, the string might be
-overwritten.  (But it's guaranteed that no library function ever calls
-@code{strerror} behind your back.)
+you make subsequent calls to @code{strerror} or @code{strerror_l}, or
+the thread that obtained the string exits, the returned pointer will be
+invalidated.
+
+As there is no way to restore the previous state after calling
+@code{strerror}, library code should not call this function because it
+may interfere with application use of @code{strerror}, invalidating the
+string pointer before the application is done using it.  Instead,
+@code{strerror_r}, @code{snprintf} with the @samp{%m} or @samp{%#m}
+specifiers, @code{strerrorname_np}, or @code{strerrordesc_np} can be
+used instead.
+
+The @code{strerror} function preserves the value of @code{errno} and
+cannot fail.
 
 The function @code{strerror} is declared in @file{string.h}.
+@end deftypefun
+
+@deftypefun {char *} strerror_l (int @var{errnum}, locale_t @var{locale})
+@standards{POSIX, string.h}
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{} @ascuintl{}}@acunsafe{@acsmem{}}}
+This function is like @code{strerror}, except that the returned string
+is translated according to @var{locale} (instead of the current locale
+used by @code{strerror}).  Note that calling @code{strerror_l}
+invalidates the pointer returned by @code{strerror} and vice versa.
+
+The function @code{strerror_l} is defined by POSIX and is declared in
+@file{string.h}.
 @end deftypefun
 
 @deftypefun {char *} strerror_r (int @var{errnum}, char *@var{buf}, size_t @var{n})
 @standards{GNU, string.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuintl{}}@acunsafe{}}
+The following description is for the GNU variant of the function,
+used if @code{_GNU_SOURCE} is defined.  @xref{Feature Test Macros}.
+
 The @code{strerror_r} function works like @code{strerror} but instead of
-returning the error message in a statically allocated buffer shared by
-all threads in the process, it returns a private copy for the
-thread.  This might be either some permanent global data or a message
-string in the user supplied buffer starting at @var{buf} with the
-length of @var{n} bytes.
+returning a pointer to a string that is managed by @theglibc{}, it can
+use the user supplied buffer starting at @var{buf} for storing the
+string.
 
-At most @var{n} characters are written (including the NUL byte) so it is
-up to the user to select a buffer large enough.
+At most @var{n} characters are written (including the NUL byte) to
+@var{buf}, so it is up to the user to select a buffer large enough.
+Whether returned pointer points to the @var{buf} array or not depends on
+the @var{errnum} argument.  If the result string is not stored in
+@var{buf}, the string will not change for the remaining execution
+of the program.
 
-This function should always be used in multi-threaded programs since
-there is no way to guarantee the string returned by @code{strerror}
-really belongs to the last call of the current thread.
+The function @code{strerror_r} as described above is a GNU extension and
+it is declared in @file{string.h}.  There is a POSIX variant of this
+function, described next.
+@end deftypefun
 
-The function @code{strerror_r} is a GNU extension and it is declared in
-@file{string.h}.
+@deftypefun int strerror_r (int @var{errnum}, char *@var{buf}, size_t @var{n})
+@standards{POSIX, string.h}
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuintl{}}@acunsafe{}}
+
+This variant of the @code{strerror_r} function is used if a standard is
+selected that includes @code{strerror_r}, but @code{_GNU_SOURCE} is not
+defined.  This POSIX variant of the function always writes the error
+message to the specified buffer @var{buf} of size @var{n} bytes.
+
+Upon success, @code{strerror_r} returns 0.  Two more return values are
+used to indicate failure.
+
+@vtable @code
+@item EINVAL
+The @var{errnum} argument does not correspond to a known error constant.
+
+@item ERANGE
+The buffer size @var{n} is not large enough to store the entire error message.
+@end vtable
+
+Even if an error is reported, @code{strerror_r} still writes as much of
+the error message to the output buffer as possible.  After a call to
+@code{strerror_r}, the value of @code{errno} is unspecified.
+
+If you want to use the always-copying POSIX semantics of
+@code{strerror_r} in a program that is potentially compiled with
+@code{_GNU_SOURCE} defined, you can use @code{snprintf} with the
+@samp{%m} conversion specifier, like this:
+
+@smallexample
+int saved_errno = errno;
+errno = errnum;
+int ret = snprintf (buf, n, "%m");
+errno = saved_errno;
+if (strerrorname_np (errnum) == NULL)
+  return EINVAL;
+if (ret >= n)
+  return ERANGE:
+return 0;
+@end smallexample
+
+This function is declared in @file{string.h} if it is declared at all.
+It is a POSIX extension.
 @end deftypefun
 
 @deftypefun void perror (const char *@var{message})
@@ -1212,7 +1281,8 @@ The function @code{perror} is declared in @file{stdio.h}.
 @safety{@mtsafe{}@assafe{}@acsafe{}}
 This function returns the name describing the error @var{errnum} or
 @code{NULL} if there is no known constant with this value (e.g "EINVAL"
-for @code{EINVAL}).
+for @code{EINVAL}).  The returned string does not change for the
+remaining execution of the program.
 
 @pindex string.h
 This function is a GNU extension, declared in the header file @file{string.h}.
@@ -1223,18 +1293,20 @@ This function is a GNU extension, declared in the header file @file{string.h}.
 @safety{@mtsafe{}@assafe{}@acsafe{}}
 This function returns the message describing the error @var{errnum} or
 @code{NULL} if there is no known constant with this value (e.g "Invalid
-argument" for @code{EINVAL}).  Different than @code{strerror} the returned
-description is not translated.
+argument" for @code{EINVAL}).  Different than @code{strerror} the
+returned description is not translated, and the returned string does not
+change for the remaining execution of the program.
 
 @pindex string.h
 This function is a GNU extension, declared in the header file @file{string.h}.
 @end deftypefun
 
 @code{strerror} and @code{perror} produce the exact same message for any
-given error code; the precise text varies from system to system.  With
-@theglibc{}, the messages are fairly short; there are no multi-line
-messages or embedded newlines.  Each error message begins with a capital
-letter and does not include any terminating punctuation.
+given error code under the same locale; the precise text varies from
+system to system.  With @theglibc{}, the messages are fairly short;
+there are no multi-line messages or embedded newlines.  Each error
+message begins with a capital letter and does not include any
+terminating punctuation.
 
 @cindex program name
 @cindex name of running program
