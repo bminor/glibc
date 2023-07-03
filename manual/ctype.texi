@@ -40,21 +40,37 @@ one set works on @code{char} type characters, the other one on
 
 This section explains the library functions for classifying characters.
 For example, @code{isalpha} is the function to test for an alphabetic
-character.  It takes one argument, the character to test, and returns a
-nonzero integer if the character is alphabetic, and zero otherwise.  You
-would use it like this:
+character.  It takes one argument, the character to test as an
+@code{unsigned char} value, and returns a nonzero integer if the
+character is alphabetic, and zero otherwise.  You would use it like
+this:
 
 @smallexample
-if (isalpha (c))
+if (isalpha ((unsigned char) c))
   printf ("The character `%c' is alphabetic.\n", c);
 @end smallexample
 
 Each of the functions in this section tests for membership in a
 particular class of characters; each has a name starting with @samp{is}.
-Each of them takes one argument, which is a character to test, and
-returns an @code{int} which is treated as a boolean value.  The
-character argument is passed as an @code{int}, and it may be the
-constant value @code{EOF} instead of a real character.
+Each of them takes one argument, which is a character to test.  The
+character argument must be in the value range of @code{unsigned char} (0
+to 255 for @theglibc{}).  On a machine where the @code{char} type is
+signed, it may be necessary to cast the argument to @code{unsigned
+char}, or mask it with @samp{& 0xff}.  (On @code{unsigned char}
+machines, this step is harmless, so portable code should always perform
+it.)  The @samp{is} functions return an @code{int} which is treated as a
+boolean value.
+
+All @samp{is} functions accept the special value @code{EOF} and return
+zero.  (Note that @code{EOF} must not be cast to @code{unsigned char}
+for this to work.)
+
+As an extension, @theglibc{} accepts signed @code{char} values as
+@samp{is} functions arguments in the range -128 to -2, and returns the
+result for the corresponding unsigned character.  However, as there
+might be an actual character corresponding to the @code{EOF} integer
+constant, doing so may introduce bugs, and it is recommended to apply
+the conversion to the unsigned character range as appropriate.
 
 The attributes of any given character can vary between locales.
 @xref{Locales}, for more information on locales.
