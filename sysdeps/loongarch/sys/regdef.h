@@ -90,4 +90,22 @@
 #define fs6 $f30
 #define fs7 $f31
 
+#define vr0 $vr0
+#define vr1 $vr1
+#define vr2 $vr2
+#define vr3 $vr3
+#define vr4 $vr4
+#define vr5 $vr5
+#define vr6 $vr6
+#define vr7 $vr7
+
+#define xr0 $xr0
+#define xr1 $xr1
+#define xr2 $xr2
+#define xr3 $xr3
+#define xr4 $xr4
+#define xr5 $xr5
+#define xr6 $xr6
+#define xr7 $xr7
+
 #endif /* _SYS_REGDEF_H */

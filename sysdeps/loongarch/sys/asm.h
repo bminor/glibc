@@ -25,6 +25,8 @@
 /* Macros to handle different pointer/register sizes for 32/64-bit code.  */
 #define SZREG 8
 #define SZFREG 8
+#define SZVREG 16
+#define SZXREG 32
 #define REG_L ld.d
 #define REG_S st.d
 #define SRLI srli.d

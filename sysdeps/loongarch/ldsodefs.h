@@ -20,6 +20,7 @@
 #define _LOONGARCH_LDSODEFS_H 1
 
 #include <elf.h>
+#include <cpu-features.h>
 
 struct La_loongarch_regs;
 struct La_loongarch_retval;
