@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
+#include <fcntl.h>
 #include <locale.h>
 #include <mcheck.h>
 #include <stdio.h>
@@ -24,6 +25,7 @@
 #include <string.h>
 #include <wchar.h>
 #include <sys/resource.h>
+#include <support/check.h>
 #include <support/support.h>
 #include <support/xstdio.h>
 
@@ -48,11 +50,38 @@ do_bz17916 (void)
   if (fp != NULL)
     {
       printf ("unexpected success\n");
+      free (ccs);
+      fclose (fp);
       return 1;
     }
+
   free (ccs);
 
   return 0;
+}
+
+static int
+do_bz18906 (void)
+{
+  /* BZ #18906 -- check processing of ,ccs= as flags case.  */
+
+  const char *ccs = "r,ccs=+ISO-8859-1";
+  size_t retval;
+
+  FILE *fp = fopen (inputfile, ccs);
+  int flags;
+
+  TEST_VERIFY (fp != NULL);
+
+  if (fp != NULL)
+    {
+      flags = fcntl (fileno (fp), F_GETFL);
+      retval = (flags & O_RDWR) | (flags & O_WRONLY);
+      TEST_COMPARE (retval, false);
+      fclose (fp);
+    }
+
+  return EXIT_SUCCESS;
 }
 
 static int
@@ -78,7 +107,10 @@ do_test (void)
 
   xfclose (fp);
 
-  return do_bz17916 ();
+  TEST_COMPARE (do_bz17916 (), 0);
+  TEST_COMPARE (do_bz18906 (), 0);
+
+  return EXIT_SUCCESS;
 }
 
 #include <support/test-driver.c>

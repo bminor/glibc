@@ -247,6 +247,7 @@ _IO_new_file_fopen (FILE *fp, const char *filename, const char *mode,
       switch (*++mode)
 	{
 	case '\0':
+	case ',':
 	  break;
 	case '+':
 	  omode = O_RDWR;
