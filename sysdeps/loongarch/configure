@@ -101,3 +101,31 @@ fi
 $as_echo "$libc_cv_loongarch_cmodel_medium" >&6; }
 config_vars="$config_vars
 have-cmodel-medium = $libc_cv_loongarch_cmodel_medium"
+
+# Check if asm support vector instructions.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for vector support in assembler" >&5
+$as_echo_n "checking for vector support in assembler... " >&6; }
+if ${libc_cv_loongarch_vec_asm+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.s <<\EOF
+        vld  $vr0, $sp, 0
+EOF
+if { ac_try='${CC-cc} -c $CFLAGS conftest.s -o conftest 1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then
+  libc_cv_loongarch_vec_asm=yes
+else
+  libc_cv_loongarch_vec_asm=no
+fi
+rm -f conftest*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_loongarch_vec_asm" >&5
+$as_echo "$libc_cv_loongarch_vec_asm" >&6; }
+if test $libc_cv_loongarch_vec_asm = yes; then
+  $as_echo "#define HAVE_LOONGARCH_VEC_ASM 1" >>confdefs.h
+
+fi
