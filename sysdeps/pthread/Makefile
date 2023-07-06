@@ -335,6 +335,7 @@ tests += \
   tst-atfork3 \
   tst-atfork4 \
   tst-create1 \
+  tst-thread-dlopen-fork \
   tst-fini1 \
   tst-pt-tls4 \
   # tests
@@ -351,6 +352,7 @@ modules-names += \
   tst-atfork3mod \
   tst-atfork4mod \
   tst-create1mod \
+  tst-thread-dlopen-fork-mod \
   tst-fini1mod \
   tst-tls4moda \
   tst-tls4modb \
@@ -524,5 +526,12 @@ CFLAGS-tst-unwind-thread.c += -funwind-tables
 LDFLAGS-tst-create1 = -Wl,-export-dynamic
 $(objpfx)tst-create1: $(shared-thread-library)
 $(objpfx)tst-create1.out: $(objpfx)tst-create1mod.so
+
+# Create multiple shared objects to be used by the test.
+tst-thread-dlopen-fork.sos := \
+  $(patsubst %,$(objpfx)tst-thread-dlopen-fork-mod-%.so,$(shell seq 0 16))
+$(tst-thread-dlopen-fork.sos): $(objpfx)tst-thread-dlopen-fork-mod.so
+	cp -f $< $@
+$(objpfx)tst-thread-dlopen-fork.out: $(tst-thread-dlopen-fork.sos)
 
 endif
