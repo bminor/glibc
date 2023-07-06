@@ -40,6 +40,7 @@ ENTRY (__memset_chk)
 	cmpl	%eax, 16(%esp)
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
 END (__memset_chk)
+libc_hidden_builtin_def (__memset_chk)
 #endif
 ENTRY (memset)
 	PUSH    (%edi)

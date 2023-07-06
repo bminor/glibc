@@ -46,6 +46,7 @@ ENTRY (MEMCPY_CHK)
 	cmpl	%eax, 16(%esp)
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
 END (MEMCPY_CHK)
+libc_hidden_builtin_def (MEMCPY_CHK)
 #endif
 ENTRY (MEMCPY)
 	PUSH	(%esi)
