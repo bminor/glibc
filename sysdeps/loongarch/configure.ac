@@ -13,14 +13,14 @@ dnl satisfy the requirement, but a distro may backport static PIE support into
 dnl earlier GCC or Binutils releases as well.
 AC_CACHE_CHECK([if the toolchain is sufficient to build static PIE on LoongArch],
 libc_cv_static_pie_on_loongarch, [
-  cat > conftest1.S << EOF
+  cat > conftest1.S <<\EOF
 .global _start
 .type _start, @function
 _start:
-  li.w \$a7, 93
+  li.w $a7, 93
   /* This ensures the assembler supports explicit reloc.  */
-  pcalau12i \$a0, %pc_hi20(x)
-  ld.w \$a0, \$a0, %pc_lo12(x)
+  pcalau12i $a0, %pc_hi20(x)
+  ld.w $a0, $a0, %pc_lo12(x)
   syscall 0
 
 .data
@@ -29,13 +29,13 @@ x:
   /* This should produce an R_LARCH_RELATIVE in the static PIE.  */
   .dword _start
 EOF
-  cat > conftest2.S << EOF
+  cat > conftest2.S <<\EOF
 .global f
 .type f, @function
 f:
   /* The linker should be able to handle this and produce a PLT entry.  */
-  la.pcrel \$t0, \$t0, external_func
-  jirl \$zero, \$t0, 0
+  la.pcrel $t0, $t0, external_func
+  jirl $zero, $t0, 0
 EOF
 
   libc_cv_static_pie_on_loongarch=no
