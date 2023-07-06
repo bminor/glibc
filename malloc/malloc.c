@@ -3417,16 +3417,23 @@ __libc_realloc (void *oldmem, size_t bytes)
   if (__glibc_unlikely (mtag_enabled))
     *(volatile char*) oldmem;
 
-  /* Return the chunk as is whenever possible, i.e. there's enough usable space
-     but not so much that we end up fragmenting the block.  We use the trim
-     threshold as the heuristic to decide the latter.  */
-  size_t usable = musable (oldmem);
-  if (bytes <= usable
-      && (unsigned long) (usable - bytes) <= mp_.trim_threshold)
-    return oldmem;
-
   /* chunk corresponding to oldmem */
   const mchunkptr oldp = mem2chunk (oldmem);
+
+  /* Return the chunk as is if the request grows within usable bytes, typically
+     into the alignment padding.  We want to avoid reusing the block for
+     shrinkages because it ends up unnecessarily fragmenting the address space.
+     This is also why the heuristic misses alignment padding for THP for
+     now.  */
+  size_t usable = musable (oldmem);
+  if (bytes <= usable)
+    {
+      size_t difference = usable - bytes;
+      if ((unsigned long) difference < 2 * sizeof (INTERNAL_SIZE_T)
+	  || (chunk_is_mmapped (oldp) && difference <= GLRO (dl_pagesize)))
+	return oldmem;
+    }
+
   /* its size */
   const INTERNAL_SIZE_T oldsize = chunksize (oldp);
 
