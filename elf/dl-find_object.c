@@ -46,7 +46,7 @@ _dl_find_object_slow (void *pc, struct dl_find_object *result)
           struct dl_find_object_internal internal;
           _dl_find_object_from_map (l, &internal);
           _dl_find_object_to_external (&internal, result);
-          return 1;
+          return 0;
         }
 
   /* Object not found.  */

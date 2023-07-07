@@ -29,6 +29,7 @@ The following bugs are resolved with this release:
   [30163] posix: Fix system blocks SIGCHLD erroneously
   [30305] x86_64: Fix asm constraints in feraiseexcept
   [30477] libc: [RISCV]: time64 does not work on riscv32
+  [30515] _dl_find_object incorrectly returns 1 during early startup
 
 Version 2.37
 
