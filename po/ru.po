@@ -8,12 +8,12 @@
 # Dimitriy Ryazantcev <DJm00n@mail.ru>, 2009.
 # Pavel Maryanov <acid_jack@ukr.net>, 2009.
 # Dmitry V. Levin <ldv@altlinux.org>, 2012.
-# Yuri Kozlov <yuray@komyakino.ru>, 2009, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022.
+# Yuri Kozlov <yuray@komyakino.ru>, 2009, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.35.9000\n"
+"Project-Id-Version: libc 2.36.9000\n"
 "POT-Creation-Date: 2023-01-23 08:47-0500\n"
-"PO-Revision-Date: 2022-07-31 12:16+0300\n"
+"PO-Revision-Date: 2023-02-04 15:30+0300\n"
 "Last-Translator: Yuri Kozlov <yuray@komyakino.ru>\n"
 "Language-Team: Russian <gnu@d07.ru>\n"
 "Language: ru\n"
@@ -383,6 +383,10 @@ msgstr "неверный режим"
 #: dlfcn/dlopen.c:54
 msgid "invalid mode parameter"
 msgstr "неверный параметр режима"
+
+#: elf/cache.c:174
+msgid "unknown or unsupported flag"
+msgstr "неизвестный или неподдерживаемый флаг"
 
 #: elf/cache.c:270
 #, c-format
@@ -1383,6 +1387,11 @@ msgstr "невозможно открыть выходной файл"
 msgid "error while closing input `%s'"
 msgstr "ошибка при закрытии входного файла «%s»"
 
+#: iconv/iconv_charmap.c:443
+#, c-format
+msgid "illegal input sequence at position %zd"
+msgstr "недопустимая входная последовательность в позиции %zd"
+
 #: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:518
 #, c-format
 msgid "incomplete character or shift sequence at end of buffer"
@@ -1977,6 +1986,11 @@ msgstr "%s: веса должны использовать такой же си�
 msgid "%s: too many values"
 msgstr "%s: слишком много значений"
 
+#: locale/programs/ld-collate.c:1062 locale/programs/ld-collate.c:1237
+#, c-format
+msgid "order for `%.*s' already defined at %s:%zu"
+msgstr "порядок для «%.*s» уже определён в %s:%zu"
+
 #: locale/programs/ld-collate.c:1112
 #, c-format
 msgid "%s: the start and the end symbol of a range must stand for characters"
@@ -2006,6 +2020,11 @@ msgstr "%s: после эллипсиса символьного диапазо�
 #, c-format
 msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr "«%s» и «%.*s» не являются верными именами символьного диапазона"
+
+#: locale/programs/ld-collate.c:1380 locale/programs/ld-collate.c:3731
+#, c-format
+msgid "%s: order for `%.*s' already defined at %s:%zu"
+msgstr "%s: порядок для «%.*s» уже определён в %s:%zu"
 
 #: locale/programs/ld-collate.c:1389
 #, c-format
@@ -3374,13 +3393,41 @@ msgstr "Запись LOCAL для UID %d в каталоге %s не уника�
 msgid "UNKNOWN"
 msgstr "НЕИЗВЕСТНО"
 
+#: nis/nis_print.c:61
+msgid "BOGUS OBJECT"
+msgstr "НЕАДЕКВАТНЫЙ ОБЪЕКТ"
+
+#: nis/nis_print.c:63
+msgid "NO OBJECT"
+msgstr "НЕТ ОБЪЕКТА"
+
+#: nis/nis_print.c:65
+msgid "DIRECTORY"
+msgstr "КАТАЛОГ"
+
+#: nis/nis_print.c:67
+msgid "GROUP"
+msgstr "ГРУППА"
+
 #: nis/nis_print.c:69 nscd/nscd.c:117
 msgid "TABLE"
 msgstr "ТАБЛИЦА"
 
+#: nis/nis_print.c:71
+msgid "ENTRY"
+msgstr "ЗАПИСЬ"
+
+#: nis/nis_print.c:73
+msgid "LINK"
+msgstr "ССЫЛКА"
+
 #: nis/nis_print.c:75
 msgid "PRIVATE\n"
 msgstr "ПРИВАТНОЕ\n"
+
+#: nis/nis_print.c:77
+msgid "(Unknown object"
+msgstr "(Неизвестный объект"
 
 #: nis/nis_print.c:164
 #, c-format
@@ -4548,6 +4595,10 @@ msgstr "Используемая конфигурация службы"
 msgid "disable IDN encoding"
 msgstr "выключить кодирование IDN"
 
+#: nss/getent.c:62
+msgid "do not filter out unsupported IPv4/IPv6 addresses (with ahosts*)"
+msgstr "не фильтровать неподдерживаемые адреса IPv4/IPv6 (с ahosts*)"
+
 #: nss/getent.c:67
 msgid "Get entries from administrative database."
 msgstr "Получить записи из управляющей базы данных."
@@ -4673,6 +4724,11 @@ msgstr "не удалось отобразить файл базы данных"
 #, c-format
 msgid "file not a database file"
 msgstr "файл не является файлом базы данных"
+
+#: nss/makedb.c:882
+#, c-format
+msgid "cannot initialize SELinux context"
+msgstr "невозможно инициализировать контекст SELinux"
 
 #: nss/makedb.c:891
 #, c-format

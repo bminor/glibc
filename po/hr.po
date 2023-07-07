@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc-2.36.9000\n"
 "POT-Creation-Date: 2023-01-23 08:47-0500\n"
-"PO-Revision-Date: 2023-01-25 17:26-0800\n"
+"PO-Revision-Date: 2023-05-01 17:12-0700\n"
 "Last-Translator: Božidar Putanec <bozidarp@yahoo.com>\n"
 "Language-Team: Croatian <lokalizacija@linux.hr>\n"
 "Language: hr\n"
@@ -40,8 +40,8 @@ msgstr "Smeće u ARGP_HELP_FMT: %s"
 #: argp/argp-help.c:1350
 msgid "Mandatory or optional arguments to long options are also mandatory or optional for any corresponding short options."
 msgstr ""
-"Obvezni ili neobvezni argumenti za dugačke opcije\n"
-"također su obvezni ili neobvezni za korespondentne kratke opcije."
+"Obvezni ili neobvezni argumenti za duge opcije,\n"
+"obvezni su ili neobvezni i za korespondentne kratke opcije."
 
 #: argp/argp-help.c:1713
 msgid "Usage:"
@@ -340,7 +340,7 @@ msgstr ""
 "      --usage             kratke upute za uporabu\n"
 "   -V,--version           informacije o inačici ovog programa\n"
 "\n"
-"Obvezni argumenti za dugačke opcije također su obvezni\n"
+"Obvezni argumenti za duge opcije, obvezni su\n"
 "za sve korespondentne kratke opcije.\n"
 "\n"
 
@@ -467,7 +467,7 @@ msgstr "GREŠKA DINAMIČKOG LINKERA!!!"
 
 #: elf/dl-close.c:346 elf/dl-open.c:298
 msgid "cannot create scope list"
-msgstr "nije moguće stvoriti popis dosega (scope list)"
+msgstr "nije moguće stvoriti popis opsega (scope list)"
 
 #: elf/dl-close.c:775
 msgid "shared object not open"
@@ -739,7 +739,7 @@ msgstr "ne gradi predmemoriju (cache)"
 
 #: elf/ldconfig.c:127
 msgid "Don't update symbolic links"
-msgstr "ne ažurira simboličke veze"
+msgstr "ne ažurira simboličke poveznice"
 
 #: elf/ldconfig.c:128
 msgid "Change to and use ROOT as root directory"
@@ -1164,7 +1164,7 @@ msgid ""
 msgstr ""
 "Uporaba: sln IZVORNIK ODREDIŠTE\n"
 "    ili: sln POPIS_DATOTEKA\n"
-"Stvara simboličke veze. Za detalje pogledajte u „info sln“\n"
+"Stvara simboličke poveznice. Za detalje pogledajte u „info sln“\n"
 "\n"
 
 #: elf/sln.c:97
@@ -1230,7 +1230,7 @@ msgstr ""
 
 #: elf/sotruss.sh:46
 msgid "Mandatory arguments to long options are also mandatory for any corresponding\\nshort options.\\n"
-msgstr "Obvezni argumenti za dugačke opcije\\ntakođer su obvezni za za sve korespondentne kratke opcije.\\n"
+msgstr "Obvezni argumenti za duge opcije, obvezni su i za sve korespondentne kratke opcije.\\n"
 
 #: elf/sotruss.sh:55
 msgid "%s: option requires an argument -- '%s'\\n"
@@ -2710,7 +2710,7 @@ msgstr "stvori izlaz čak i nakon izdanih poruka upozorenja"
 
 #: locale/programs/localedef.c:127
 msgid "Do not create hard links between installed locales"
-msgstr "Ne stvarati tvrde veze između instaliranih lokalima"
+msgstr "Ne stvarati tvrde poveznice između instaliranih lokalima"
 
 #: locale/programs/localedef.c:128
 msgid "Optional output file prefix"
@@ -3148,8 +3148,8 @@ msgstr ""
 "   -x,--x-size=BROJ       širina grafikona u pikselima je BROJ\n"
 "   -y,--y-size=BROJ       visina grafikona u pikselima je BROJ\n"
 "\n"
-"Obvezni argumenti za dugačke opcije\n"
-"također su obvezni za sve korespondentne kratke opcije.\n"
+"Obvezni argumenti za duge opcije,\n"
+"obvezni su i za sve korespondentne kratke opcije.\n"
 
 #: malloc/memusage.sh:98
 msgid ""
@@ -5816,7 +5816,7 @@ msgstr "Numerički argument je izvan domene"
 #. TRANS not representable because of overflow or underflow.
 #: sysdeps/gnu/errlist.h:228
 msgid "Numerical result out of range"
-msgstr "Numerički rezultat je izvan granica"
+msgstr "Numerički rezultat je izvan raspona"
 
 #. TRANS The call might work if you try again
 #. TRANS later.  The macro @code{EWOULDBLOCK} is another name for @code{EAGAIN};
@@ -5878,7 +5878,7 @@ msgstr "Operacija za utičnicu primijenjena je na objekt koji nije utičnica"
 #. TRANS maximum size.
 #: sysdeps/gnu/errlist.h:290
 msgid "Message too long"
-msgstr "Poruka je predugačka"
+msgstr "Poruka je preduga"
 
 #. TRANS The socket type does not support the requested communications protocol.
 #: sysdeps/gnu/errlist.h:295
@@ -6024,7 +6024,7 @@ msgstr "Previše razina simboličkih poveznica"
 #. TRANS @code{sethostname}; @pxref{Host Identification}).
 #: sysdeps/gnu/errlist.h:435
 msgid "File name too long"
-msgstr "Ime datoteke je predugačko"
+msgstr "Ime datoteke je predugo"
 
 #. TRANS The remote host for a requested network connection is down.
 #: sysdeps/gnu/errlist.h:440
@@ -6159,7 +6159,7 @@ msgstr "Prekinuti poziv sustava bi se trebao ponovo pokrenuti"
 
 #: sysdeps/gnu/errlist.h:555
 msgid "Channel number out of range"
-msgstr "Broj kanala je izvan granice raspona"
+msgstr "Broj kanala je izvan raspona"
 
 #: sysdeps/gnu/errlist.h:558
 msgid "Level 2 not synchronized"
@@ -6616,15 +6616,15 @@ msgstr "%s: Nema dovoljno memorije: %s\n"
 
 #: timezone/zic.c:440
 msgid "size overflow"
-msgstr "preljev veličine"
+msgstr "prekoračenje veličine"
 
 #: timezone/zic.c:450
 msgid "alignment overflow"
-msgstr "prelijevanje poravnanja"
+msgstr "prekoračenje poravnanja"
 
 #: timezone/zic.c:498
 msgid "integer overflow"
-msgstr "prelijevanje pri operaciji s cijelim brojem"
+msgstr "prekoračenje pri operaciji s cijelim brojem"
 
 #: timezone/zic.c:532
 #, c-format
@@ -6769,7 +6769,7 @@ msgstr "ime datoteke „%s“ sadrži bajt „\\%o“"
 #: timezone/zic.c:992
 #, c-format
 msgid "%s: link from %s/%s failed: %s\n"
-msgstr "%s: napraviti vezu s %s/%s nije uspjelo: %s\n"
+msgstr "%s: napraviti poveznicu s %s/%s nije uspjelo: %s\n"
 
 #: timezone/zic.c:1002 timezone/zic.c:1992
 #, c-format
@@ -6821,7 +6821,7 @@ msgstr "%s: Nije moguće otvoriti %s: %s\n"
 
 #: timezone/zic.c:1207
 msgid "line too long"
-msgstr "redak je predugački"
+msgstr "redak je predugi"
 
 #: timezone/zic.c:1230
 msgid "input line of unknown type"
@@ -6842,7 +6842,7 @@ msgstr "inačice zic-a starije od 2018. godine ne podržavaju dijelove sekunde"
 
 #: timezone/zic.c:1316 timezone/zic.c:3282
 msgid "time overflow"
-msgstr "preljev vremena"
+msgstr "prekoračenje vremena"
 
 #: timezone/zic.c:1322
 msgid "values over 24 hours not handled by pre-2007 versions of zic"
@@ -6951,7 +6951,7 @@ msgstr "nevaljani broj polja u Expires retku"
 
 #: timezone/zic.c:1613
 msgid "multiple Expires lines"
-msgstr "višestruki Expires reci"
+msgstr "višestruki Expires redci"
 
 #: timezone/zic.c:1624
 msgid "wrong number of fields on Link line"
@@ -7043,7 +7043,7 @@ msgstr "Prijestupne sekunde su preblizu jedna drugoj"
 
 #: timezone/zic.c:3043
 msgid "\"#expires\" is obsolescent; use \"Expires\""
-msgstr "„#expires“ je zastarjel0 -- umjesto toga koristite „Expires“"
+msgstr "„#expires“ je zastarjelo -- umjesto toga koristite „Expires“"
 
 #: timezone/zic.c:3049
 msgid "last Leap time does not precede Expires time"
@@ -7096,7 +7096,7 @@ msgstr "kratica za vremensku zonu se razlikuje od POSIX standarda"
 
 #: timezone/zic.c:3433
 msgid "too many, or too long, time zone abbreviations"
-msgstr "kratice vremenskih zona su predugačke ili ih ima previše"
+msgstr "kratice vremenskih zona su preduge ili ih ima previše"
 
 #: timezone/zic.c:3479
 #, c-format

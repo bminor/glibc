@@ -3,22 +3,23 @@
 # This file is distributed under the same license as the glibc package.
 #
 # Marco d'Itri <md@linux.it>, 1999.
-# Sergio Zanchetta <primes2h@ubuntu.com>, 2010, 2011.
+# Sergio Zanchetta <primes2h@ubuntu.com>, 2010-2023.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc-2.14\n"
+"Project-Id-Version: libc-2.36.9000\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-23 08:47-0500\n"
-"PO-Revision-Date: 2011-10-17 14:21+0200\n"
+"PO-Revision-Date: 2023-05-03 15:28+0200\n"
 "Last-Translator: Sergio Zanchetta <primes2h@ubuntu.com>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural= (n != 1);\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
-"Plural-Forms: nplurals=2; plural= (n != 1)\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: argp/argp-help.c:229
 #, c-format
@@ -104,6 +105,15 @@ msgstr "%s: troppi argomenti\n"
 #: argp/argp-parse.c:766
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(ERRORE DEL PROGRAMMA) L'opzione avrebbe dovuto essere riconosciuta."
+
+#: assert/assert-perr.c:35
+#, c-format
+msgid ""
+"%s%s%s:%u: %s%sUnexpected error: %s.\n"
+"%n"
+msgstr ""
+"%s%s%s:%u: %s%serrore inatteso: %s.\n"
+"%n"
 
 #: assert/assert.c:101
 #, c-format
@@ -756,6 +766,10 @@ msgstr "Crea manualmente i collegamenti alle singole librerie."
 msgid "FORMAT"
 msgstr "FORMATO"
 
+#: elf/ldconfig.c:133
+msgid "Format to use: new (default), old, or compat"
+msgstr "Formato da usare: new (predefinito), old o compat"
+
 #: elf/ldconfig.c:134
 msgid "Ignore auxiliary cache file"
 msgstr "Ignora il file di cache ausiliario"
@@ -955,6 +969,16 @@ msgstr "uscito con codice d'uscita sconosciuto"
 #: elf/ldd.bash.in:183
 msgid "error: you do not have read permission for"
 msgstr "errore: permessi di lettura mancanti per"
+
+#: elf/pldd.c:61
+msgid "PID"
+msgstr "PID"
+
+# lf
+#: elf/pldd.c:102
+#, c-format
+msgid "invalid process ID '%s'"
+msgstr "ID processo \"%s\" non valido"
 
 # lf
 #: elf/readelflib.c:34
@@ -1207,6 +1231,12 @@ msgstr "impossibile aprire il file di output"
 msgid "error while closing input `%s'"
 msgstr "errore durante la chiusura dell'input \"%s\""
 
+# lf
+#: iconv/iconv_charmap.c:443
+#, c-format
+msgid "illegal input sequence at position %zd"
+msgstr "sequenza di input non consentita alla posizione %zd"
+
 #: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:518
 #, c-format
 msgid "incomplete character or shift sequence at end of buffer"
@@ -1258,6 +1288,13 @@ msgstr "Controllo dell'output:"
 #: iconv/iconv_prog.c:65
 msgid "omit invalid characters from output"
 msgstr "Omette caratteri non validi dall'output"
+
+#: iconv/iconv_prog.c:66 iconv/iconvconfig.c:128
+#: locale/programs/localedef.c:116 locale/programs/localedef.c:118
+#: locale/programs/localedef.c:120 locale/programs/localedef.c:149
+#: malloc/memusagestat.c:55
+msgid "FILE"
+msgstr "FILE"
 
 # lf
 #: iconv/iconv_prog.c:66
@@ -1845,6 +1882,11 @@ msgstr "%s: l'ellissi dell'intervallo simbolico non deve essere seguita direttam
 msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr "\"%s\" e \"%.*s\" non sono nomi validi per un intervallo simbolico"
 
+#: locale/programs/ld-collate.c:1380 locale/programs/ld-collate.c:3731
+#, c-format
+msgid "%s: order for `%.*s' already defined at %s:%zu"
+msgstr "%s: ordine per \"%.*s\" già definito su %s:%zu"
+
 #: locale/programs/ld-collate.c:1389
 #, c-format
 msgid "%s: `%s' must be a character"
@@ -1879,6 +1921,11 @@ msgstr "troppi errori; uscita"
 #, c-format
 msgid "%s: nested conditionals not supported"
 msgstr "%s: le condizioni nidificate non sono supportate"
+
+#: locale/programs/ld-collate.c:2545
+#, c-format
+msgid "%s: more than one 'else'"
+msgstr "%s: più di un \"else\""
 
 # lf
 #: locale/programs/ld-collate.c:2724
@@ -2200,6 +2247,21 @@ msgstr "nessuna cifra di output definita e nessun nome standard nella mappa cara
 msgid "%s: transliteration data from locale `%s' not available"
 msgstr "%s: dati di traslitterazione dalla localizzazione \"%s\" non disponibili"
 
+#: locale/programs/ld-ctype.c:3644
+#, c-format
+msgid "%s: table for class \"%s\": %lu bytes"
+msgstr "%s: tabella per la classe \"%s\": %lu byte"
+
+#: locale/programs/ld-ctype.c:3708
+#, c-format
+msgid "%s: table for map \"%s\": %lu bytes"
+msgstr "%s: tabella per la mappa \"%s\": %lu byte"
+
+#: locale/programs/ld-ctype.c:3832
+#, c-format
+msgid "%s: table for width: %lu bytes"
+msgstr "%s: tabella per la larghezza: %lu byte"
+
 #: locale/programs/ld-identification.c:172
 #, c-format
 msgid "%s: no identification for category `%s'"
@@ -2377,6 +2439,16 @@ msgid "unterminated symbolic name"
 msgstr "nome simbolico non terminato"
 
 # lf
+#: locale/programs/linereader.c:716
+#, c-format
+msgid "invalid UTF-8 sequence %s"
+msgstr "sequenza UTF-8 %s non valida"
+
+#: locale/programs/linereader.c:796
+msgid "illegal 8-bit character in untranslated string"
+msgstr "carattere a 8-bit non consentito nella stringa non tradotta"
+
+# lf
 #: locale/programs/linereader.c:804
 msgid "illegal escape sequence at end of string"
 msgstr "sequenza di escape non consentita alla fine della stringa"
@@ -2384,6 +2456,11 @@ msgstr "sequenza di escape non consentita alla fine della stringa"
 #: locale/programs/linereader.c:808 locale/programs/linereader.c:979
 msgid "unterminated string"
 msgstr "stringa non terminata"
+
+# lf
+#: locale/programs/linereader.c:841
+msgid "illegal 8-bit escape sequence"
+msgstr "sequenza di escape a 8-bit non consentita"
 
 #: locale/programs/linereader.c:940
 #, c-format
@@ -2567,6 +2644,11 @@ msgstr "dipendenze circolari nelle definizioni delle localizzazioni"
 #, c-format
 msgid "cannot add already read locale `%s' a second time"
 msgstr "impossibile aggiungere una seconda volta la localizzazione \"%s\" già letta"
+
+#: locale/programs/locarchive.c:132 locale/programs/locarchive.c:379
+#, c-format
+msgid "cannot create temporary file: %s"
+msgstr "impossibile creare il file temporaneo: %s"
 
 #: locale/programs/locarchive.c:166 locale/programs/locarchive.c:429
 #, c-format
@@ -2893,6 +2975,10 @@ msgstr "Nessun nome di programma fornito"
 msgid "Name output file"
 msgstr "Nome file di output"
 
+#: malloc/memusagestat.c:56
+msgid "STRING"
+msgstr "STRINGA"
+
 # lf
 #: malloc/memusagestat.c:56
 msgid "Title string used in output graphic"
@@ -2905,6 +2991,10 @@ msgstr "Genera un output lineare basato sul tempo (il predefinito è basato sul 
 #: malloc/memusagestat.c:61
 msgid "Also draw graph for total memory consumption"
 msgstr "Disegna anche un grafico dell'occupazione complessiva di memoria"
+
+#: malloc/memusagestat.c:62
+msgid "VALUE"
+msgstr "VALORE"
 
 #: malloc/memusagestat.c:63
 msgid "Make output graphic VALUE pixels wide"
@@ -3163,15 +3253,40 @@ msgstr "La voce LOCALE per l'UID %d nella directory %s non è univoca\n"
 msgid "UNKNOWN"
 msgstr "SCONOSCIUTO"
 
+#: nis/nis_print.c:63
+msgid "NO OBJECT"
+msgstr "NESSUN OGGETTO"
+
+#: nis/nis_print.c:65
+msgid "DIRECTORY"
+msgstr "DIRECTORY"
+
+#: nis/nis_print.c:67
+msgid "GROUP"
+msgstr "GRUPPO"
+
 # lf
 #: nis/nis_print.c:69 nscd/nscd.c:117
 msgid "TABLE"
 msgstr "TABELLA"
 
+#: nis/nis_print.c:71
+msgid "ENTRY"
+msgstr "VOCE"
+
+# lf
+#: nis/nis_print.c:73
+msgid "LINK"
+msgstr "COLLEGAMENTO"
+
 # lf
 #: nis/nis_print.c:75
 msgid "PRIVATE\n"
 msgstr "PRIVATO\n"
+
+#: nis/nis_print.c:77
+msgid "(Unknown object"
+msgstr "(Oggetto sconosciuto"
 
 #: nis/nis_print.c:164
 #, c-format
@@ -3244,7 +3359,7 @@ msgstr "\tTipo               : %s\n"
 
 #: nis/nis_print.c:237
 msgid "\tAccess rights: "
-msgstr "\tDiritti di accesso : "
+msgstr "\tDiritti di accesso: "
 
 #: nis/nis_print.c:251
 msgid "Group Flags :"
@@ -3293,7 +3408,7 @@ msgstr "\t\tAttributi          : "
 
 #: nis/nis_print.c:277
 msgid "\t\tAccess Rights : "
-msgstr "\t\tDiritti di Accesso : "
+msgstr "\t\tDiritti di accesso : "
 
 #: nis/nis_print.c:287
 msgid "Linked Object Type : "
@@ -3738,7 +3853,7 @@ msgstr "handle_request: ricevuta richiesta (versione = %d) dal PID %ld"
 #: nscd/connections.c:1697
 #, c-format
 msgid "handle_request: request received (Version = %d)"
-msgstr "handle_request: ricevuta richiesta (Version = %d)"
+msgstr "handle_request: ricevuta richiesta (versione = %d)"
 
 #: nscd/connections.c:2386
 msgid "could not initialize conditional variable"
@@ -4241,6 +4356,11 @@ msgstr ""
 "-o FILE-OUTPUT FILE-INPUT\n"
 "-u FILE-INPUT"
 
+#: nss/makedb.c:283
+#, c-format
+msgid "cannot create temporary file name"
+msgstr "impossibile creare il nome del file temporaneo"
+
 #: nss/makedb.c:289
 #, c-format
 msgid "cannot create temporary file"
@@ -4254,6 +4374,11 @@ msgstr "chiave duplicata"
 #, c-format
 msgid "problems while reading `%s'"
 msgstr "problemi nel leggere \"%s\""
+
+#: nss/makedb.c:805
+#, c-format
+msgid "failed to write new database file"
+msgstr "scrittura del nuovo file di database non riuscita"
 
 # lf
 #: posix/getconf.c:417
@@ -4307,6 +4432,31 @@ msgstr "non definito"
 msgid "Unrecognized variable `%s'"
 msgstr "Variabile \"%s\" non riconosciuta"
 
+#: posix/getopt.c:278
+#, c-format
+msgid "%s: option '%s%s' is ambiguous\n"
+msgstr "%s: l'opzione \"%s%s\" è ambigua\n"
+
+#: posix/getopt.c:284
+#, c-format
+msgid "%s: option '%s%s' is ambiguous; possibilities:"
+msgstr "%s: l'opzione \"%s%s\" è ambigua; alternative:"
+
+#: posix/getopt.c:319
+#, c-format
+msgid "%s: unrecognized option '%s%s'\n"
+msgstr "%s: opzione non riconosciuta \"%s%s\"\n"
+
+#: posix/getopt.c:345
+#, c-format
+msgid "%s: option '%s%s' doesn't allow an argument\n"
+msgstr "%s: l'opzione \"%s%s\" non ammette argomenti\n"
+
+#: posix/getopt.c:360
+#, c-format
+msgid "%s: option '%s%s' requires an argument\n"
+msgstr "%s: l'opzione \"%s%s\" richiede un argomento\n"
+
 #: posix/getopt.c:621
 #, c-format
 msgid "%s: invalid option -- '%c'\n"
@@ -4344,6 +4494,10 @@ msgstr "Carattere \"backslash\" alla fine della riga"
 #: posix/regcomp.c:153
 msgid "Invalid back reference"
 msgstr "Riferimento all'indietro non valido"
+
+#: posix/regcomp.c:156
+msgid "Unmatched [, [^, [:, [., or [="
+msgstr "[, [^, [:, [., oppure [= senza corrispondenza"
 
 #: posix/regcomp.c:159
 msgid "Unmatched ( or \\("
@@ -5594,6 +5748,15 @@ msgstr "Troppi utenti"
 msgid "Disk quota exceeded"
 msgstr "Quota disco superata"
 
+#. TRANS This indicates an internal confusion in the
+#. TRANS file system which is due to file system rearrangements on the server host
+#. TRANS for NFS file systems or corruption in other file systems.
+#. TRANS Repairing this condition usually requires unmounting, possibly repairing
+#. TRANS and remounting the file system.
+#: sysdeps/gnu/errlist.h:471
+msgid "Stale file handle"
+msgstr "Riferimento al file obsoleto"
+
 # lf
 #. TRANS An attempt was made to NFS-mount a remote file system with a file name that
 #. TRANS already specifies an NFS-mounted file.
@@ -6125,6 +6288,14 @@ msgstr "makecontext: non si sa come gestire più di 8 argomenti\n"
 msgid "%s is for unknown machine %d.\n"
 msgstr "%s è per la macchina sconosciuta %d.\n"
 
+#: timezone/zdump.c:334
+msgid "has fewer than 3 characters"
+msgstr "ha meno di 3 caratteri"
+
+#: timezone/zdump.c:336
+msgid "has more than 6 characters"
+msgstr "ha più di 6 caratteri"
+
 #: timezone/zdump.c:341
 #, c-format
 msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
@@ -6140,6 +6311,20 @@ msgstr "%s: argomento di -c errato %s\n"
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: memoria esaurita: %s\n"
 
+#: timezone/zic.c:498
+msgid "integer overflow"
+msgstr "overflow dell'intero"
+
+#: timezone/zic.c:532
+#, c-format
+msgid "\"%s\", line %<PRIdMAX>: "
+msgstr "\"%s\", riga %<PRIdMAX>: "
+
+#: timezone/zic.c:535
+#, c-format
+msgid " (rule from \"%s\", line %<PRIdMAX>)"
+msgstr " (regola da \"%s\", riga %<PRIdMAX>)"
+
 # lf
 #: timezone/zic.c:554
 #, c-format
@@ -6149,6 +6334,11 @@ msgstr "avviso: "
 #: timezone/zic.c:698
 msgid "wild compilation-time specification of zic_t"
 msgstr "specifica del tempo di compilazione di zic_t errata"
+
+#: timezone/zic.c:723
+#, c-format
+msgid "invalid option: -b '%s'"
+msgstr "opzione non valida: -b \"%s\""
 
 #: timezone/zic.c:730
 #, c-format
@@ -6165,6 +6355,11 @@ msgstr "%s: è stata specificata più di una opzione -l\n"
 msgid "%s: More than one -p option specified\n"
 msgstr "%s: è stata specificata più di una opzione -p\n"
 
+#: timezone/zic.c:758
+#, c-format
+msgid "%s: More than one -t option specified\n"
+msgstr "%s: è stata specificata più di una opzione -t\n"
+
 #: timezone/zic.c:771
 #, c-format
 msgid "%s: More than one -y option specified\n"
@@ -6175,9 +6370,39 @@ msgstr "%s: è stata specificata più di una opzione -y\n"
 msgid "%s: More than one -L option specified\n"
 msgstr "%s: è stata specificata più di una opzione -L\n"
 
+#: timezone/zic.c:792
+#, c-format
+msgid "%s: More than one -r option specified\n"
+msgstr "%s: è stata specificata più di una opzione -r\n"
+
 #: timezone/zic.c:848
 msgid "link to link"
 msgstr "collegamento a un collegamento"
+
+# lf
+#: timezone/zic.c:851 timezone/zic.c:855
+msgid "command line"
+msgstr "riga di comando"
+
+#: timezone/zic.c:874
+#, c-format
+msgid "file name '%s' begins with '/'"
+msgstr "il nome del file \"%s\" inizia con \"/\""
+
+#: timezone/zic.c:1002 timezone/zic.c:1992
+#, c-format
+msgid "%s: Can't remove %s/%s: %s\n"
+msgstr "%s: impossibile rimuovere %s/%s: %s\n"
+
+#: timezone/zic.c:1034
+#, c-format
+msgid "%s: Can't read %s/%s: %s\n"
+msgstr "%s: impossibile leggere %s/%s: %s\n"
+
+#: timezone/zic.c:1041 timezone/zic.c:2005
+#, c-format
+msgid "%s: Can't create %s/%s: %s\n"
+msgstr "%s: impossibile creare %s/%s: %s\n"
 
 # lf
 #: timezone/zic.c:1122 timezone/zic.c:1124
@@ -6236,6 +6461,12 @@ msgid "wrong number of fields on Rule line"
 msgstr "numero di campi errato nella riga \"Rule\""
 
 # lf
+#: timezone/zic.c:1360
+#, c-format
+msgid "Invalid rule name \"%s\""
+msgstr "Nome regola \"%s\" non valido"
+
+# lf
 #: timezone/zic.c:1382
 msgid "wrong number of fields on Zone line"
 msgstr "numero di campi errato nella riga \"Zone\""
@@ -6259,6 +6490,11 @@ msgstr "numero di campi errato nella continuazione di riga di \"Zone\""
 #: timezone/zic.c:1458
 msgid "invalid abbreviation format"
 msgstr "formato di abbreviazione non valido"
+
+#: timezone/zic.c:1467
+#, c-format
+msgid "format '%s' not handled by pre-2015 versions of zic"
+msgstr "formato \"%s\" non gestito dalle versioni di zic precedenti al 2015"
 
 #: timezone/zic.c:1494
 msgid "Zone continuation line end time is not after end time of previous line"
@@ -6362,6 +6598,14 @@ msgstr "Numero dispari di apici"
 msgid "use of 2/29 in non leap-year"
 msgstr "usato 29/2 in un anno non bisestile"
 
+#: timezone/zic.c:3423
+msgid "time zone abbreviation has fewer than 3 characters"
+msgstr "l'abbreviazione del fuso orario ha meno di 3 caratteri"
+
+#: timezone/zic.c:3425
+msgid "time zone abbreviation has too many characters"
+msgstr "l'abbreviazione del fuso orario ha troppi caratteri"
+
 #: timezone/zic.c:3427
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr "l'abbreviazione del fuso orario è diversa dagli standard POSIX"
@@ -6369,3 +6613,8 @@ msgstr "l'abbreviazione del fuso orario è diversa dagli standard POSIX"
 #: timezone/zic.c:3433
 msgid "too many, or too long, time zone abbreviations"
 msgstr "le abbreviazioni del fuso orario sono troppe o troppo lunghe"
+
+#: timezone/zic.c:3479
+#, c-format
+msgid "%s: Can't create directory %s: %s"
+msgstr "%s: impossibile creare la directory %s: %s"

@@ -1,14 +1,16 @@
 # Japanese Messages for GNU libc.
-# Copyright (C) 1996, 2000, 2004, 2010, 2011 Free Software Foundation, Inc.
+# Copyright (C) 1996, 2000, 2004, 2010, 2011, 2023 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
 # GOTO Masanori <gotom@debian.or.jp>, 2000-2004.
 # Yasuaki Taniguchi <yasuakit@gmail.com>, 2010, 2011.
+# Takeshi HAMASAKI <hmatrjp@users.sourceforge.jp>, 2023.
+#  with help of Carlos O'Donell, incorporated downstream translation from RHEL 6.0, 7.0
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.14\n"
+"Project-Id-Version: libc 2.36.9000\n"
 "POT-Creation-Date: 2023-01-23 08:47-0500\n"
-"PO-Revision-Date: 2011-10-08 23:43+0900\n"
-"Last-Translator: Yasuaki Taniguchi <yasuakit@gmail.com>\n"
+"PO-Revision-Date: 2023-05-09 08:02+0900\n"
+"Last-Translator: Takeshi Hamasaki <hmatrjp@users.sourceforge.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -16,6 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 2.4.2\n"
 
 #: argp/argp-help.c:229
 #, c-format
@@ -5189,6 +5192,15 @@ msgstr "ユーザが多すぎます"
 #: sysdeps/gnu/errlist.h:462
 msgid "Disk quota exceeded"
 msgstr "ディスク使用量制限を超過しました"
+
+#. TRANS This indicates an internal confusion in the
+#. TRANS file system which is due to file system rearrangements on the server host
+#. TRANS for NFS file systems or corruption in other file systems.
+#. TRANS Repairing this condition usually requires unmounting, possibly repairing
+#. TRANS and remounting the file system.
+#: sysdeps/gnu/errlist.h:471
+msgid "Stale file handle"
+msgstr "古いファイルハンドルです"
 
 #. TRANS An attempt was made to NFS-mount a remote file system with a file name that
 #. TRANS already specifies an NFS-mounted file.

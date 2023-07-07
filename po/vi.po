@@ -3,23 +3,22 @@
 # Copyright © 2015 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
 # Clytie Siddall <clytie@riverland.net.au>, 2008-2010.
-# Trần Ngọc Quân <vnwildman@gmail.com>, 2012-2018, 2022.
+# Trần Ngọc Quân <vnwildman@gmail.com>, 2012-2018, 2022-2023.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.34.9000\n"
+"Project-Id-Version: libc 2.36.9000\n"
 "Report-Msgid-Bugs-To: http://www.gnu.org/software/libc/bugs.html\n"
 "POT-Creation-Date: 2023-01-23 08:47-0500\n"
-"PO-Revision-Date: 2022-03-03 08:35+0700\n"
+"PO-Revision-Date: 2023-05-03 08:47+0700\n"
 "Last-Translator: Trần Ngọc Quân <vnwildman@gmail.com>\n"
 "Language-Team: Vietnamese <translation-team-vi@lists.sourceforge.net>\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
-"X-Language-Team-Website: <http://translationproject.org/team/vi.html>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: argp/argp-help.c:229
 #, c-format
@@ -50,7 +49,7 @@ msgstr "     hoặc: "
 
 #: argp/argp-help.c:1729
 msgid " [OPTION...]"
-msgstr " [TÙY_CHỌN…]"
+msgstr " [CÁC TÙY CHỌN…]"
 
 #: argp/argp-help.c:1756
 #, c-format
@@ -237,7 +236,7 @@ msgstr "số thứ tự thông điệp trùng"
 
 #: catgets/gencat.c:665
 msgid "duplicated message identifier"
-msgstr "đồ nhận diện thông điệp trùng"
+msgstr "định danh thông điệp bị trùng"
 
 #: catgets/gencat.c:722
 msgid "invalid character: message ignored"
@@ -383,6 +382,10 @@ msgstr "chế độ không hợp lệ"
 #: dlfcn/dlopen.c:54
 msgid "invalid mode parameter"
 msgstr "tham số chế độ không hợp lệ"
+
+#: elf/cache.c:174
+msgid "unknown or unsupported flag"
+msgstr "cờ không xác định hoặc không được hỗ trợ"
 
 #: elf/cache.c:270
 #, c-format
@@ -715,6 +718,10 @@ msgstr "lỗi tra cứu phiên bản"
 #: elf/dl-version.c:285
 msgid "cannot allocate version reference table"
 msgstr "không thể cấp phát bảng tham chiếu phiên bản"
+
+#: elf/dl-version.c:380
+msgid "DT_RELR without GLIBC_ABI_DT_RELR dependency"
+msgstr "DT_RELR không phụ thuộc GLIBC_ABI_DT_RELR"
 
 #: elf/ldconfig.c:124
 msgid "Print cache"
@@ -1377,6 +1384,11 @@ msgstr "không thể mở tập tin kết xuất"
 msgid "error while closing input `%s'"
 msgstr "gặp lỗi khi đóng dữ liệu đầu vào “%s”"
 
+#: iconv/iconv_charmap.c:443
+#, c-format
+msgid "illegal input sequence at position %zd"
+msgstr "dãy đầu vào không hợp lệ tại vị trí %zd"
+
 #: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:518
 #, c-format
 msgid "incomplete character or shift sequence at end of buffer"
@@ -1971,6 +1983,11 @@ msgstr "%s: độ đậm phải dùng cùng một ký hiệu dấu chấm lửng
 msgid "%s: too many values"
 msgstr "%s: quá nhiều giá trị"
 
+#: locale/programs/ld-collate.c:1062 locale/programs/ld-collate.c:1237
+#, c-format
+msgid "order for `%.*s' already defined at %s:%zu"
+msgstr "thứ tự “%.*s” đã được định nghĩa ở %s:%zu"
+
 #: locale/programs/ld-collate.c:1112
 #, c-format
 msgid "%s: the start and the end symbol of a range must stand for characters"
@@ -2000,6 +2017,11 @@ msgstr "%s: dấu chấm lửng phạm vi tượng trưng không thể nằm đ�
 #, c-format
 msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr "“%s” và “%.*s” không phải là tên hợp lệ cho phạm vi tượng trưng"
+
+#: locale/programs/ld-collate.c:1380 locale/programs/ld-collate.c:3731
+#, c-format
+msgid "%s: order for `%.*s' already defined at %s:%zu"
+msgstr "%s: thứ tự “%.*s” đã được định nghĩa ở %s:%zu"
 
 #: locale/programs/ld-collate.c:1389
 #, c-format
@@ -2412,6 +2434,11 @@ msgstr "%s: giá trị của trường “int_curr_symbol” có chiều dài kh
 msgid "%s: value of field `int_curr_symbol' does not correspond to a valid name in ISO 4217 [--no-warnings=intcurrsym]"
 msgstr "%s: giá trị của trường “int_curr_symbol” không tương ứng với tên hợp lệ theo ISO 4217 [--no-warnings=intcurrsym]"
 
+#: locale/programs/ld-monetary.c:348 locale/programs/ld-monetary.c:358
+#, c-format
+msgid "%s: field `%s' not defined, using defaults"
+msgstr "%s: chưa định nghĩa trường “%s”, đang sử dụng các mặc định"
+
 #: locale/programs/ld-monetary.c:396 locale/programs/ld-monetary.c:420
 #, c-format
 msgid "%s: value for field `%s' must be in range %d...%d"
@@ -2538,6 +2565,15 @@ msgstr "gặp rác ở kết thúc của đặc tả mã ký tự"
 msgid "unterminated symbolic name"
 msgstr "tên tượng trưng chưa chấm dứt"
 
+#: locale/programs/linereader.c:716
+#, c-format
+msgid "invalid UTF-8 sequence %s"
+msgstr "dây UTF-8 không hợp lệ %s"
+
+#: locale/programs/linereader.c:796
+msgid "illegal 8-bit character in untranslated string"
+msgstr "ký tự 8 bit không hợp lệ trong chuỗi chưa được dịch"
+
 #: locale/programs/linereader.c:804
 msgid "illegal escape sequence at end of string"
 msgstr "dãy thoát không hợp lệ ở kết thúc của chuỗi"
@@ -2545,6 +2581,10 @@ msgstr "dãy thoát không hợp lệ ở kết thúc của chuỗi"
 #: locale/programs/linereader.c:808 locale/programs/linereader.c:979
 msgid "unterminated string"
 msgstr "chuỗi chưa chấm dứt"
+
+#: locale/programs/linereader.c:841
+msgid "illegal 8-bit escape sequence"
+msgstr "dây thoát 8-bit không hợp lệ"
 
 #: locale/programs/linereader.c:940
 #, c-format
@@ -3352,13 +3392,41 @@ msgstr "Mục nhập LOCAL (cục bộ) cho UID %d trong thư mục %s không ph
 msgid "UNKNOWN"
 msgstr "KHÔNG RÕ"
 
+#: nis/nis_print.c:61
+msgid "BOGUS OBJECT"
+msgstr "ĐỐI TƯỢNG GIẢ"
+
+#: nis/nis_print.c:63
+msgid "NO OBJECT"
+msgstr "KHÔNG CÓ ĐỐI TƯỢNG"
+
+#: nis/nis_print.c:65
+msgid "DIRECTORY"
+msgstr "THƯ MỤC"
+
+#: nis/nis_print.c:67
+msgid "GROUP"
+msgstr "NHÓM"
+
 #: nis/nis_print.c:69 nscd/nscd.c:117
 msgid "TABLE"
 msgstr "BẢNG"
 
+#: nis/nis_print.c:71
+msgid "ENTRY"
+msgstr "MỤC TIN"
+
+#: nis/nis_print.c:73
+msgid "LINK"
+msgstr "LIÊN KẾT"
+
 #: nis/nis_print.c:75
 msgid "PRIVATE\n"
 msgstr "RIÊNG\n"
+
+#: nis/nis_print.c:77
+msgid "(Unknown object"
+msgstr "(Đối tượng không rõ"
 
 #: nis/nis_print.c:164
 #, c-format
@@ -4526,6 +4594,10 @@ msgstr "Cấu hình dịch vụ cần dùng"
 msgid "disable IDN encoding"
 msgstr "tắt mã hóa IDN"
 
+#: nss/getent.c:62
+msgid "do not filter out unsupported IPv4/IPv6 addresses (with ahosts*)"
+msgstr "đừng lọc ra các địa chỉ IPv4/IPv6 không được hỗ trợ (với ahosts*)"
+
 #: nss/getent.c:67
 msgid "Get entries from administrative database."
 msgstr "Lấy các mục nhập từ cơ sở dữ liệu quản trị."
@@ -4651,6 +4723,11 @@ msgstr "không thể ánh xạ tập tin cơ sở dữ liệu"
 #, c-format
 msgid "file not a database file"
 msgstr "tập tin không phải là cơ sở dữ liệu"
+
+#: nss/makedb.c:882
+#, c-format
+msgid "cannot initialize SELinux context"
+msgstr "không thể khởi tạo ngữ cảnh SELinux"
 
 #: nss/makedb.c:891
 #, c-format
@@ -5331,6 +5408,10 @@ msgstr "svc_unix.c — không thể getsockname (lấy tên ổ cắm) hoặc l�
 #: sysdeps/aarch64/dl-bti.c:72
 msgid "failed to turn on BTI protection"
 msgstr "gặp lỗi khi bật bảo vệ BTI"
+
+#: sysdeps/generic/dl-protected.h:55
+msgid "error due to GNU_PROPERTY_1_NEEDED_INDIRECT_EXTERN_ACCESS"
+msgstr "lỗi bởi vì to GNU_PROPERTY_1_NEEDED_INDIRECT_EXTERN_ACCESS"
 
 #: sysdeps/generic/siglist.h:29
 msgid "Hangup"

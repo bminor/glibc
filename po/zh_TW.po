@@ -15,9 +15,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.34.9000\n"
+"Project-Id-Version: libc 2.36.9000\n"
 "POT-Creation-Date: 2023-01-23 08:47-0500\n"
-"PO-Revision-Date: 2022-06-29 09:12+0800\n"
+"PO-Revision-Date: 2023-02-03 00:57+0800\n"
 "Last-Translator: Yi-Jyun Pan <pan93412@gmail.com>\n"
 "Language-Team: Chinese (traditional) <zh-l10n@lists.linux.org.tw>\n"
 "Language: zh_TW\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
-"X-Generator: Poedit 3.1\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: argp/argp-help.c:229
 #, c-format
@@ -316,11 +316,11 @@ msgstr "用法：xtrace [選項]… 程式 [PROGRAMOPTION]…\\n"
 #: debug/xtrace.sh:31 elf/sotruss.sh:56 elf/sotruss.sh:67 elf/sotruss.sh:135
 #: malloc/memusage.sh:25
 msgid "Try \\`%s --help' or \\`%s --usage' for more information.\\n"
-msgstr "請嘗試 \\『%s --help』或\\『%s --usage』以獲得更多資訊。\\n"
+msgstr "請嘗試「%s --help」或「%s --usage」以獲得更多資訊。\\n"
 
 #: debug/xtrace.sh:37
 msgid "%s: option '%s' requires an argument.\\n"
-msgstr "%s：選項『%s』需要一個引數.\\n"
+msgstr "%s：選項「%s」需要一個引數.\\n"
 
 #: debug/xtrace.sh:44
 msgid ""
@@ -386,6 +386,10 @@ msgstr "無效的模式"
 #: dlfcn/dlopen.c:54
 msgid "invalid mode parameter"
 msgstr "無效的模式參數"
+
+#: elf/cache.c:174
+msgid "unknown or unsupported flag"
+msgstr "未知或不支援的旗標"
 
 #: elf/cache.c:270
 #, c-format
@@ -718,6 +722,10 @@ msgstr "版本查找錯誤"
 #: elf/dl-version.c:285
 msgid "cannot allocate version reference table"
 msgstr "無法配置版本參照表"
+
+#: elf/dl-version.c:380
+msgid "DT_RELR without GLIBC_ABI_DT_RELR dependency"
+msgstr "DT_RELR 缺少 GLIBC_ABI_DT_RELR 依賴關係"
 
 #: elf/ldconfig.c:124
 msgid "Print cache"
@@ -1380,6 +1388,11 @@ msgstr "無法開啟輸出檔"
 msgid "error while closing input `%s'"
 msgstr "正在關閉輸入 `%s' 的時候發生錯誤"
 
+#: iconv/iconv_charmap.c:443
+#, c-format
+msgid "illegal input sequence at position %zd"
+msgstr "位置 %zd 有不合法的輸入序列"
+
 #: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:518
 #, c-format
 msgid "incomplete character or shift sequence at end of buffer"
@@ -1973,6 +1986,11 @@ msgstr "%s: 權重必須使用與名稱相同的省略符號"
 msgid "%s: too many values"
 msgstr "%s: 太多變數值"
 
+#: locale/programs/ld-collate.c:1062 locale/programs/ld-collate.c:1237
+#, c-format
+msgid "order for `%.*s' already defined at %s:%zu"
+msgstr "「%.*s」的順序已在 %s:%zu 裡面定義"
+
 #: locale/programs/ld-collate.c:1112
 #, c-format
 msgid "%s: the start and the end symbol of a range must stand for characters"
@@ -2002,6 +2020,11 @@ msgstr "%s: 符號範圍的省略不可以直接在 `order_end' 之前"
 #, c-format
 msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr "`%s' 和 `%.*s' 皆非符號範圍中適用的名稱"
+
+#: locale/programs/ld-collate.c:1380 locale/programs/ld-collate.c:3731
+#, c-format
+msgid "%s: order for `%.*s' already defined at %s:%zu"
+msgstr "%s: 「%.*s」的順序已在 %s:%zu 中定義"
 
 #: locale/programs/ld-collate.c:1389
 #, c-format
@@ -2414,6 +2437,11 @@ msgstr "%s: 欄位 `int_curr_symbol' 值的長度錯誤"
 msgid "%s: value of field `int_curr_symbol' does not correspond to a valid name in ISO 4217 [--no-warnings=intcurrsym]"
 msgstr "%s: 欄位「int_curr_symbol」的值並不是 ISO 4217 中合法的名稱 [--no-warnings=intcurrsym]"
 
+#: locale/programs/ld-monetary.c:348 locale/programs/ld-monetary.c:358
+#, c-format
+msgid "%s: field `%s' not defined, using defaults"
+msgstr "%s: 未定義欄位「%s」，使用預設值"
+
 #: locale/programs/ld-monetary.c:396 locale/programs/ld-monetary.c:420
 #, c-format
 msgid "%s: value for field `%s' must be in range %d...%d"
@@ -2540,6 +2568,15 @@ msgstr "字元編碼設定結束位置的無用資料"
 msgid "unterminated symbolic name"
 msgstr "沒有結尾的符號名稱"
 
+#: locale/programs/linereader.c:716
+#, c-format
+msgid "invalid UTF-8 sequence %s"
+msgstr "無效的 UTF-8 序列 %s"
+
+#: locale/programs/linereader.c:796
+msgid "illegal 8-bit character in untranslated string"
+msgstr "未轉譯字串中有無效的 8 位字元"
+
 #: locale/programs/linereader.c:804
 msgid "illegal escape sequence at end of string"
 msgstr "字串結尾有不合法的跳脫序列"
@@ -2547,6 +2584,10 @@ msgstr "字串結尾有不合法的跳脫序列"
 #: locale/programs/linereader.c:808 locale/programs/linereader.c:979
 msgid "unterminated string"
 msgstr "沒有結尾的字串"
+
+#: locale/programs/linereader.c:841
+msgid "illegal 8-bit escape sequence"
+msgstr "無效的 8 位跳脫序列"
 
 #: locale/programs/linereader.c:940
 #, c-format
@@ -3351,13 +3392,41 @@ msgstr "UID 為 %d 的項目在本地端中並不是唯一的 (在 %s 目錄裡�
 msgid "UNKNOWN"
 msgstr "不明"
 
+#: nis/nis_print.c:61
+msgid "BOGUS OBJECT"
+msgstr "假的物件"
+
+#: nis/nis_print.c:63
+msgid "NO OBJECT"
+msgstr "沒有物件"
+
+#: nis/nis_print.c:65
+msgid "DIRECTORY"
+msgstr "目錄"
+
+#: nis/nis_print.c:67
+msgid "GROUP"
+msgstr "群組"
+
 #: nis/nis_print.c:69 nscd/nscd.c:117
 msgid "TABLE"
 msgstr "表格"
 
+#: nis/nis_print.c:71
+msgid "ENTRY"
+msgstr "項目"
+
+#: nis/nis_print.c:73
+msgid "LINK"
+msgstr "連結"
+
 #: nis/nis_print.c:75
 msgid "PRIVATE\n"
 msgstr "私有的\n"
+
+#: nis/nis_print.c:77
+msgid "(Unknown object"
+msgstr "(未知的目的檔"
 
 #: nis/nis_print.c:164
 #, c-format
@@ -4525,6 +4594,10 @@ msgstr "將要使用的服務組態"
 msgid "disable IDN encoding"
 msgstr "停用 IDN 編碼"
 
+#: nss/getent.c:62
+msgid "do not filter out unsupported IPv4/IPv6 addresses (with ahosts*)"
+msgstr "不要篩掉不支援的 IPv4/IPv6 地址 (使用 ahosts*)"
+
 #: nss/getent.c:67
 msgid "Get entries from administrative database."
 msgstr "從管理資料庫取得條目。"
@@ -4650,6 +4723,11 @@ msgstr "無法映射資料庫檔案"
 #, c-format
 msgid "file not a database file"
 msgstr "檔案不是資料庫檔案"
+
+#: nss/makedb.c:882
+#, c-format
+msgid "cannot initialize SELinux context"
+msgstr "無法初始化 SELinux 情境"
 
 #: nss/makedb.c:891
 #, c-format
@@ -5330,6 +5408,10 @@ msgstr "svc_unix.c - 無法 getsockname 或 listen"
 #: sysdeps/aarch64/dl-bti.c:72
 msgid "failed to turn on BTI protection"
 msgstr "無法啟動 BTI 保護"
+
+#: sysdeps/generic/dl-protected.h:55
+msgid "error due to GNU_PROPERTY_1_NEEDED_INDIRECT_EXTERN_ACCESS"
+msgstr "因為 GNU_PROPERTY_1_NEEDED_INDIRECT_EXTERN_ACCESS 導致錯誤"
 
 #: sysdeps/generic/siglist.h:29
 msgid "Hangup"
@@ -6814,6 +6896,10 @@ msgstr "時間太大"
 msgid "invalid time of day"
 msgstr "無效的時間數字"
 
+#: timezone/zic.c:1577
+msgid "leap second precedes Epoch"
+msgstr "閏表比 Epoch 早"
+
 #: timezone/zic.c:1585
 msgid "wrong number of fields on Leap line"
 msgstr "閏時設定列的欄位數目錯誤"
@@ -6880,6 +6966,11 @@ msgstr "早於 2014 的客戶端可能會無法處理超過 1200 次的轉換次
 msgid "too many transition times"
 msgstr "轉換次數過多"
 
+#: timezone/zic.c:2297
+#, c-format
+msgid "%%z UT offset magnitude exceeds 99:59:59"
+msgstr "%%z UT 偏移量超出 99:59:59"
+
 #: timezone/zic.c:2673
 msgid "no POSIX environment variable for zone"
 msgstr "無 POSIX 環境變數用於區"
@@ -6888,6 +6979,10 @@ msgstr "無 POSIX 環境變數用於區"
 #, c-format
 msgid "%s: pre-%d clients may mishandle distant timestamps"
 msgstr "%s：早於 %d 的客戶端可能會無法處理過久的時間戳"
+
+#: timezone/zic.c:2818
+msgid "two rules for same instant"
+msgstr "同個瞬間有兩條規則"
 
 #: timezone/zic.c:2889
 msgid "can't determine time zone abbreviation to use just after until time"
@@ -6912,6 +7007,10 @@ msgstr "閏秒之間過於接近"
 #: timezone/zic.c:3043
 msgid "\"#expires\" is obsolescent; use \"Expires\""
 msgstr "「#expires」已經過時；請改用「Expires」"
+
+#: timezone/zic.c:3049
+msgid "last Leap time does not precede Expires time"
+msgstr "上個 Leap 時間沒有比 Expires 時間早"
 
 #: timezone/zic.c:3095
 msgid "Wild result from command execution"

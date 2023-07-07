@@ -1,22 +1,22 @@
 # glibc translation to Georgian
-# Copyright (C) 2022 Free Software Foundation, Inc.
+# Copyright (C) 2023 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
-# Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2022.
+# Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2023.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.35.9000\n"
+"Project-Id-Version: libc 2.36.9000\n"
 "POT-Creation-Date: 2023-01-23 08:47-0500\n"
-"PO-Revision-Date: 2022-10-15 15:58+0200\n"
+"PO-Revision-Date: 2023-02-05 14:40+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <(nothing)>\n"
 "Language: ka\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Bugs: Report translation errors to the Language-Team address.\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: argp/argp-help.c:229
 #, c-format
@@ -352,6 +352,10 @@ msgstr "არასწორი რეჟიმი"
 msgid "invalid mode parameter"
 msgstr "რეჟიმის არასწორი პარამეტრი"
 
+#: elf/cache.c:174
+msgid "unknown or unsupported flag"
+msgstr "უცნობი ან მხარდაუჭერელი ალამი"
+
 #: elf/cache.c:270
 #, c-format
 msgid "Cache file has wrong endianness.\n"
@@ -429,6 +433,10 @@ msgstr "გაზიარებული ბიბლიოთეკები�
 #: elf/dl-catch.c:118
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr "დინამიკური მიმბმელის შეცდომა!!!"
+
+#: elf/dl-close.c:346 elf/dl-open.c:298
+msgid "cannot create scope list"
+msgstr "დიაპაზონების სიის შექმნა შეუძლებელია"
 
 #: elf/dl-close.c:775
 msgid "shared object not open"
@@ -1463,6 +1471,16 @@ msgstr "%s: წონის ცარიელი სტრიქონი დ�
 msgid "%s: too many values"
 msgstr "%s: მეტისმეტად ბევრი მნიშვნელობა"
 
+#: locale/programs/ld-collate.c:1062 locale/programs/ld-collate.c:1237
+#, c-format
+msgid "order for `%.*s' already defined at %s:%zu"
+msgstr "`%.*s'-ის მიმდევრობა უკვე აღწერილია მისამართზე %s:%zu"
+
+#: locale/programs/ld-collate.c:1380 locale/programs/ld-collate.c:3731
+#, c-format
+msgid "%s: order for `%.*s' already defined at %s:%zu"
+msgstr "%s: `%.*s'-ის მიმდევრობა უკვე აღწერილია მისამართზე %s:%zu"
+
 #: locale/programs/ld-collate.c:1389
 #, c-format
 msgid "%s: `%s' must be a character"
@@ -1763,6 +1781,16 @@ msgstr "ლოკალიზაციის არქივში ჩამა�
 msgid "Adding %s\n"
 msgstr "%s-ის დამატება\n"
 
+#: locale/programs/locarchive.c:1369
+#, c-format
+msgid "\"%s\" is no directory; ignored"
+msgstr "\"%s\" საქაღალდე არაა. გამოტოვება"
+
+#: locale/programs/locarchive.c:1376
+#, c-format
+msgid "cannot open directory \"%s\": %s: ignored"
+msgstr "საქაღალდის გახსნის შეცდომა: %s: %s: გამოტოვებულია"
+
 #: locale/programs/locarchive.c:1578
 #, c-format
 msgid "locale \"%s\" not in archive"
@@ -1951,13 +1979,41 @@ msgstr "სერვერზე პროცესის შექმნის 
 msgid "UNKNOWN"
 msgstr "უცნობი"
 
+#: nis/nis_print.c:61
+msgid "BOGUS OBJECT"
+msgstr "საეჭვო ობიექტი"
+
+#: nis/nis_print.c:63
+msgid "NO OBJECT"
+msgstr "ობიექტების გარეშე"
+
+#: nis/nis_print.c:65
+msgid "DIRECTORY"
+msgstr "DIRECTORY"
+
+#: nis/nis_print.c:67
+msgid "GROUP"
+msgstr "GROUP"
+
 #: nis/nis_print.c:69 nscd/nscd.c:117
 msgid "TABLE"
 msgstr "ცხრილი"
 
+#: nis/nis_print.c:71
+msgid "ENTRY"
+msgstr "ერთეული"
+
+#: nis/nis_print.c:73
+msgid "LINK"
+msgstr "LINK"
+
 #: nis/nis_print.c:75
 msgid "PRIVATE\n"
 msgstr "პირადი\n"
+
+#: nis/nis_print.c:77
+msgid "(Unknown object"
+msgstr "(უცნობი ობიექტი"
 
 #: nis/nis_print.c:164
 #, c-format
@@ -2074,6 +2130,15 @@ msgstr "\t\tატრიბუტები    : "
 #: nis/nis_print.c:277
 msgid "\t\tAccess Rights : "
 msgstr "\t\tწვდომის უფლებები : "
+
+#: nis/nis_print.c:287
+msgid "Linked Object Type : "
+msgstr "მიბმული ობიექტის ტიპი : "
+
+#: nis/nis_print.c:289
+#, c-format
+msgid "Linked to : %s\n"
+msgstr "მიბმულია : %s\n"
 
 #: nis/nis_print.c:302
 #, c-format
@@ -2214,6 +2279,10 @@ msgstr "yp_update: სერვერის მისამართის მ�
 #: nscd/cache.c:152
 msgid " (first)"
 msgstr " (პირველი)"
+
+#: nscd/cachedumper.c:168
+msgid " - all data: "
+msgstr " - ყველა მონაცემი: "
 
 #: nscd/connections.c:527
 msgid "uninitialized header"
@@ -2415,6 +2484,18 @@ msgstr "AVC-ის ბლოკის შექმნის შეცდომ�
 msgid "Failed to start AVC"
 msgstr "AVC-ის გაშვების შეცდომა"
 
+#: nscd/selinux.c:403
+msgid "Error getting context of socket peer"
+msgstr "სოკეტის პარტნიორის კონტექსტის მიღების შეცდომა"
+
+#: nscd/selinux.c:408
+msgid "Error getting context of nscd"
+msgstr "NSCD-ის კონტექსტის მიღების შეცდომა"
+
+#: nscd/selinux.c:414
+msgid "Error getting sid from context"
+msgstr "კონტექსტიდან SID-ის მიღების შეცდომა"
+
 #: nss/getent.c:54
 msgid "database [key ...]"
 msgstr "ბაზა [გასაღები ...]"
@@ -2477,6 +2558,11 @@ msgstr "ბაზის ფაილის აღმოჩენის შეც
 #, c-format
 msgid "file not a database file"
 msgstr "ფაილი ბაზის ფაილი არაა"
+
+#: nss/makedb.c:882
+#, c-format
+msgid "cannot initialize SELinux context"
+msgstr "\"SELinux\"-ის კონტექსტის ინიციალიზაციის შეცდომა"
 
 #: posix/getconf.c:420
 #, c-format
@@ -3456,6 +3542,10 @@ msgstr "არასწორი სლოტი"
 msgid "Bad font file format"
 msgstr "ფონტის ფაილის არასწორი ფორმატი"
 
+#: sysdeps/gnu/errlist.h:606
+msgid "Package not installed"
+msgstr "პაკეტი დაყენებული არაა"
+
 #: sysdeps/gnu/errlist.h:612
 msgid "Srmount error"
 msgstr "Srmount -ის შეცდომა"
@@ -3658,6 +3748,14 @@ msgstr "პარამეტრის სტრიქონი არასწ�
 msgid "can't disable CET"
 msgstr "შეცდომა CET-ის გათიშვისას"
 
+#: timezone/zdump.c:334
+msgid "has fewer than 3 characters"
+msgstr "გააჩნია 3-ზე ნაკლები სიმბოლო"
+
+#: timezone/zdump.c:336
+msgid "has more than 6 characters"
+msgstr "გააჩნია 6-ზე მეტი სიმბოლო"
+
 #: timezone/zic.c:440
 msgid "size overflow"
 msgstr "ზომის გადავსება"
@@ -3830,3 +3928,8 @@ msgstr "შეყვანილია მხოლოდ ერთი თარ
 #: timezone/zic.c:1774
 msgid "invalid weekday name"
 msgstr "კვირის დღის არასწორი სახელი"
+
+#: timezone/zic.c:3479
+#, c-format
+msgid "%s: Can't create directory %s: %s"
+msgstr "%s: შეცდომა საქაღალდის შექმნისას %s: %s"
