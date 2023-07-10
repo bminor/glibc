@@ -176,8 +176,8 @@ rtld_hidden_def (_dl_audit_symbind_alt)
 
 void
 _dl_audit_symbind (struct link_map *l, struct reloc_result *reloc_result,
-		   const ElfW(Sym) *defsym, DL_FIXUP_VALUE_TYPE *value,
-		   lookup_t result)
+		   const void *reloc, const ElfW(Sym) *defsym,
+		   DL_FIXUP_VALUE_TYPE *value, lookup_t result, bool lazy)
 {
   bool for_jmp_slot = reloc_result == NULL;
 
@@ -259,7 +259,7 @@ _dl_audit_symbind (struct link_map *l, struct reloc_result *reloc_result,
     }
 
   if (flags & LA_SYMB_ALTVALUE)
-    DL_FIXUP_BINDNOW_RELOC (value, new_value, sym.st_value);
+    DL_FIXUP_BINDNOW_RELOC (l, reloc, value, new_value, sym.st_value, lazy);
 }
 
 void

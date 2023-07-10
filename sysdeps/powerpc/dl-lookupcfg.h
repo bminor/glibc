@@ -25,7 +25,7 @@
 /* We need to correctly set the audit modules value for bind-now.  */
 # define DL_FIXUP_BINDNOW_ADDR_VALUE(addr) \
  (((Elf64_FuncDesc *)(addr))->fd_func)
-# define DL_FIXUP_BINDNOW_RELOC(value, new_value, st_value)	\
+# define DL_FIXUP_BINDNOW_RELOC(l, reloc, value, new_value, st_value, lazy) \
  ({								\
     Elf64_FuncDesc *opd = (Elf64_FuncDesc *) (value);		\
     opd->fd_func = (st_value);					\
@@ -34,6 +34,6 @@
   })
 #else
 # define DL_FIXUP_BINDNOW_ADDR_VALUE(addr) (addr)
-# define DL_FIXUP_BINDNOW_RELOC(value, new_value, st_value)	\
+# define DL_FIXUP_BINDNOW_RELOC(l, reloc, value, new_value, st_value, lazy) \
   (*value) = st_value;
 #endif

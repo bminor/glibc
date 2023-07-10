@@ -154,7 +154,8 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
 		    = RESOLVE_MAP (map, scope, &sym, rversion,
 				   ELF_MACHINE_JMP_SLOT);
 		  if (sym != NULL)
-		    _dl_audit_symbind (map, NULL, sym, r_addr_arg, sym_map);
+		    _dl_audit_symbind (map, NULL, r, sym, r_addr_arg, sym_map,
+				       false);
 		}
 #endif
 	    }
@@ -200,7 +201,8 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
 				   (struct r_found_version *) NULL,
 				   ELF_MACHINE_JMP_SLOT);
 		  if (sym != NULL)
-		    _dl_audit_symbind (map, NULL , sym,r_addr_arg, sym_map);
+		    _dl_audit_symbind (map, NULL, r, sym,r_addr_arg, sym_map,
+				       false);
 		}
 # endif
 	    }

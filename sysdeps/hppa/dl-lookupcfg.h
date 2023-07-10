@@ -84,5 +84,5 @@ void attribute_hidden _dl_unmap (struct link_map *map);
 #define DL_FIXUP_ADDR_VALUE(addr) \
   (*(DL_FIXUP_VALUE_TYPE *) ((uintptr_t) (addr) & ~2))
 #define DL_FIXUP_BINDNOW_ADDR_VALUE(addr) (addr)
-#define DL_FIXUP_BINDNOW_RELOC(value, new_value, st_value)	\
+#define DL_FIXUP_BINDNOW_RELOC(l, reloc, value, new_value, st_value, lazy) \
   *(value) = *(DL_FIXUP_VALUE_TYPE *) ((uintptr_t) (new_value) & ~2)

@@ -1362,8 +1362,8 @@ void _dl_audit_preinit (struct link_map *l);
    the flags with LA_SYMB_NOPLTENTER | LA_SYMB_NOPLTEXIT prior calling
    la_symbind{32,64}.  */
 void _dl_audit_symbind (struct link_map *l, struct reloc_result *reloc_result,
-			const ElfW(Sym) *defsym, DL_FIXUP_VALUE_TYPE *value,
-			lookup_t result)
+			const void *reloc, const ElfW(Sym) *defsym,
+			DL_FIXUP_VALUE_TYPE *value, lookup_t result, bool lazy)
   attribute_hidden;
 /* Same as _dl_audit_symbind, but also sets LA_SYMB_DLSYM flag.  */
 void _dl_audit_symbind_alt (struct link_map *l, const ElfW(Sym) *ref,
