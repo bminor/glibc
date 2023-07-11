@@ -18,14 +18,12 @@
 
 /* Assembler veneer called from the PLT header code for lazy loading.
    The PLT header passes its own args in t0-t2.  */
-#ifndef __loongarch_soft_float
-# ifdef USE_LASX
-#  define FRAME_SIZE (-((-9 * SZREG - 8 * SZFREG - 8 * SZXREG) & ALMASK))
-# elif defined USE_LSX
-#  define FRAME_SIZE (-((-9 * SZREG - 8 * SZFREG - 8 * SZVREG) & ALMASK))
-# else
-#  define FRAME_SIZE (-((-9 * SZREG - 8 * SZFREG) & ALMASK))
-# endif
+#ifdef USE_LASX
+# define FRAME_SIZE (-((-9 * SZREG - 8 * SZFREG - 8 * SZXREG) & ALMASK))
+#elif defined USE_LSX
+# define FRAME_SIZE (-((-9 * SZREG - 8 * SZFREG - 8 * SZVREG) & ALMASK))
+#elif !defined __loongarch_soft_float
+# define FRAME_SIZE (-((-9 * SZREG - 8 * SZFREG) & ALMASK))
 #else
 # define FRAME_SIZE (-((-9 * SZREG) & ALMASK))
 #endif
