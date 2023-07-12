@@ -27,8 +27,8 @@
 ENTRY (__mempcpy_chk)
 	movl	12(%esp), %eax
 	cmpl	%eax, 16(%esp)
-	jb	__chk_fail
-	jmp	__mempcpy
+	jb	HIDDEN_JUMPTARGET (__chk_fail)
+	jmp	HIDDEN_JUMPTARGET (__mempcpy)
 END (__mempcpy_chk)
 libc_hidden_builtin_def (__mempcpy_chk)
 #endif
