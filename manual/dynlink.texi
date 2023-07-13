@@ -119,10 +119,10 @@ necessarily page-aligned.
 @item void *dlfo_map_end
 The end address of the mapping.
 
-@item struct link_map *dlf_link_map
+@item struct link_map *dlfo_link_map
 This member contains a pointer to the link map of the object.
 
-@item struct link_map *dlf_link_map
+@item void *dlfo_eh_frame
 This member contains a pointer to the exception handling data of the
 object.  See @code{DLFO_EH_SEGMENT_TYPE} below.
 
