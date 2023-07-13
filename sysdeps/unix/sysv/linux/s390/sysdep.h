@@ -79,4 +79,5 @@
 #define HAVE_GETTIMEOFDAY_VSYSCALL	"__kernel_gettimeofday"
 #define HAVE_GETCPU_VSYSCALL		"__kernel_getcpu"
 
+#define HAVE_CLONE3_WRAPPER		1
 #endif
