@@ -73,12 +73,19 @@ la_version (unsigned int current)
 
   /* Check _dl_find_object.  */
   struct dl_find_object dlfo;
-  TEST_COMPARE (_dl_find_object (__builtin_return_address (0), &dlfo), 0);
-  /* "ld.so" is seen with --enable-hardcoded-path-in-tests.  */
-  if (strcmp (basename (dlfo.dlfo_link_map->l_name), "ld.so") != 0)
-    TEST_COMPARE_STRING (basename (dlfo.dlfo_link_map->l_name), LD_SO);
-  TEST_COMPARE (_dl_find_object (dlsym (handle, "environ"), &dlfo), 0);
-  TEST_COMPARE_STRING (basename (dlfo.dlfo_link_map->l_name), LIBC_SO);
+  void *ret_addr = __builtin_extract_return_addr (__builtin_return_address (0));
+  int ret_dl_find_object =_dl_find_object (ret_addr, &dlfo);
+  TEST_COMPARE (ret_dl_find_object, 0);
+  if (ret_dl_find_object == 0)
+    {
+      /* "ld.so" is seen with --enable-hardcoded-path-in-tests.  */
+      if (strcmp (basename (dlfo.dlfo_link_map->l_name), "ld.so") != 0)
+	TEST_COMPARE_STRING (basename (dlfo.dlfo_link_map->l_name), LD_SO);
+    }
+  ret_dl_find_object = _dl_find_object (dlsym (handle, "environ"), &dlfo);
+  TEST_COMPARE (ret_dl_find_object, 0);
+  if (ret_dl_find_object == 0)
+    TEST_COMPARE_STRING (basename (dlfo.dlfo_link_map->l_name), LIBC_SO);
   TEST_COMPARE (_dl_find_object ((void *) 1, &dlfo), -1);
   TEST_COMPARE (_dl_find_object ((void *) -1, &dlfo), -1);
 
