@@ -516,7 +516,7 @@ release time, GCC 13.2 is the newest compiler verified to work to build
 
 For PowerPC 64-bits little-endian (powerpc64le), a GCC version with support
 for @option{-mno-gnu-attribute}, @option{-mabi=ieeelongdouble}, and
-@option{-mabi=ibmlondouble} is required.  Likewise, the compiler must also
+@option{-mabi=ibmlongdouble} is required.  Likewise, the compiler must also
 support passing @option{-mlong-double-128} with the preceding options.  As
 of release, this implies GCC 7.4 and newer (excepting GCC 7.5.0, see GCC
 PR94200).  These additional features are required for building the GNU C
