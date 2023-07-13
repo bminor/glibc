@@ -54,6 +54,7 @@
 #define HWCAP_SB		(1 << 29)
 #define HWCAP_PACA		(1 << 30)
 #define HWCAP_PACG		(1UL << 31)
+#define HWCAP_GCS		(1UL << 32)
 
 #define HWCAP2_DCPODP		(1 << 0)
 #define HWCAP2_SVE2		(1 << 1)
