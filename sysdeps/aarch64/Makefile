@@ -35,7 +35,9 @@ endif
 ifeq ($(subdir),elf)
 sysdep-rtld-routines += dl-start
 sysdep-dl-routines += tlsdesc dl-tlsdesc
-gen-as-const-headers += dl-link.sym
+gen-as-const-headers += \
+  dl-link.sym \
+  rtld-global-offsets.sym
 
 tests-internal += tst-ifunc-arg-1 tst-ifunc-arg-2
 
