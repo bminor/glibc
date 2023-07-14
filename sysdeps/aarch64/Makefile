@@ -9,7 +9,9 @@ LDFLAGS-rtld += -Wl,-z,force-bti,--fatal-warnings
 endif
 
 ifeq ($(subdir),elf)
-sysdep-dl-routines += dl-bti
+sysdep-dl-routines += \
+  dl-bti \
+  dl-gcs
 
 tests += tst-audit26 \
 	 tst-audit27
@@ -35,7 +37,9 @@ endif
 ifeq ($(subdir),elf)
 sysdep-rtld-routines += dl-start
 sysdep-dl-routines += tlsdesc dl-tlsdesc
-gen-as-const-headers += dl-link.sym
+gen-as-const-headers += \
+  dl-link.sym \
+  rtld-global-offsets.sym
 
 tests-internal += tst-ifunc-arg-1 tst-ifunc-arg-2
 

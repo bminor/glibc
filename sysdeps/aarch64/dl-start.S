@@ -18,6 +18,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <rtld-global-offsets.h>
 
 ENTRY (_start)
 	/* Create an initial frame with 0 LR and FP */
@@ -25,11 +26,33 @@ ENTRY (_start)
 	mov	x29, #0
 	mov	x30, #0
 
+	/* Load and relocate all library dependencies.  */
 	mov	x0, sp
 	PTR_ARG (0)
 	bl	_dl_start
 	/* Returns user entry point in x0.  */
 	mov	PTR_REG (21), PTR_REG (0)
+
+	/* Use GL(dl_aarch64_gcs) to set the shadow stack status.  */
+	adrp	x16, _rtld_local
+	add	PTR_REG (16), PTR_REG (16), :lo12:_rtld_local
+	ldr	x1, [x16, GL_DL_AARCH64_GCS_OFFSET]
+	cbz	x1, L(skip_gcs_enable)
+
+	/* Enable GCS before user code runs.  Note that IFUNC resolvers and
+	   LD_AUDIT hooks may run before, but should not create threads.  */
+#define PR_SET_SHADOW_STACK_STATUS  75
+#define PR_SHADOW_STACK_ENABLE      (1UL << 0)
+	mov	x0, PR_SET_SHADOW_STACK_STATUS
+	mov	x1, PR_SHADOW_STACK_ENABLE
+	mov	x2, 0
+	mov	x3, 0
+	mov	x4, 0
+	mov	x8, #SYS_ify(prctl)
+	svc	0x0
+	cbnz	w0, L(failed_gcs_enable)
+L(skip_gcs_enable):
+
 .globl _dl_start_user
 .type _dl_start_user, %function
 _dl_start_user:
@@ -40,14 +63,17 @@ _dl_start_user:
 	/* Compute envp.  */
 	add	PTR_REG (3), PTR_REG (2), PTR_REG (1), lsl PTR_LOG_SIZE
 	add	PTR_REG (3), PTR_REG (3), PTR_SIZE
-	adrp	x16, _rtld_local
-	add	PTR_REG (16), PTR_REG (16), :lo12:_rtld_local
+	/* Run the init functions of the loaded modules.  */
 	ldr	PTR_REG (0), [x16]
 	bl	_dl_init
 	/* Load the finalizer function.  */
 	adrp	x0, _dl_fini
 	add	PTR_REG (0), PTR_REG (0), :lo12:_dl_fini
 	/* Jump to the user's entry point.  */
-	mov     x16, x21
-	br      x16
+	mov	x16, x21
+	br	x16
+
+L(failed_gcs_enable):
+	b	_dl_gcs_enable_failed
+
 END (_start)
