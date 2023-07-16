@@ -24,7 +24,7 @@ SYSDEPS := lockfile
 
 LCLHDRS :=
 
-libpthread-routines := pt-attr pt-attr-destroy pt-attr-getdetachstate	    \
+libpthread-routines := pt-attr pt-attr-destroy                   	    \
 	pt-attr-getguardsize                     			    \
 	pt-attr-getscope	                                            \
 	pt-attr-getstack pt-attr-getstackaddr pt-attr-getstacksize	    \
@@ -166,7 +166,7 @@ distribute :=
 
 routines := forward libc_pthread_init alloca_cutoff htlfreeres pt-nthreads pt-pthread_self pt-self pt-equal \
 	pt-getschedparam pt-setschedparam pt-attr-getschedparam pt-attr-getinheritsched                     \
-	pt-attr-setinheritsched pt-attr-getschedpolicy pt-attr-setschedpolicy
+	pt-attr-setinheritsched pt-attr-getschedpolicy pt-attr-setschedpolicy pt-attr-getdetachstate
 shared-only-routines = forward
 
 extra-libs := libpthread
