@@ -126,7 +126,7 @@ libpthread {
     pthread_rwlockattr_init; pthread_rwlockattr_setpshared;
 
     pthread_setcancelstate; pthread_setcanceltype;
-    pthread_setconcurrency; pthread_setschedparam;
+    pthread_setconcurrency;
     pthread_setschedprio; pthread_setspecific;
 
     pthread_sigmask;
