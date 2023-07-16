@@ -69,7 +69,7 @@ libpthread {
     pthread_attr_destroy;
     pthread_attr_getguardsize;
     pthread_attr_getscope; pthread_attr_getstack; pthread_attr_getstackaddr;
-    pthread_attr_getstacksize; pthread_attr_init; pthread_attr_setdetachstate;
+    pthread_attr_getstacksize; pthread_attr_init;
     pthread_attr_setguardsize;
     pthread_attr_setschedparam;
     pthread_attr_setscope; pthread_attr_setstack; pthread_attr_setstackaddr;
