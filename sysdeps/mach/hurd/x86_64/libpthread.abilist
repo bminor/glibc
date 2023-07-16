@@ -50,7 +50,6 @@ GLIBC_2.38 pthread_attr_init F
 GLIBC_2.38 pthread_attr_setdetachstate F
 GLIBC_2.38 pthread_attr_setguardsize F
 GLIBC_2.38 pthread_attr_setschedparam F
-GLIBC_2.38 pthread_attr_setschedpolicy F
 GLIBC_2.38 pthread_attr_setscope F
 GLIBC_2.38 pthread_attr_setstack F
 GLIBC_2.38 pthread_attr_setstackaddr F

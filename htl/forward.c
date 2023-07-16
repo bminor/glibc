@@ -67,9 +67,6 @@ FORWARD (pthread_attr_setschedparam,
 	 (pthread_attr_t *attr, const struct sched_param *param),
 	 (attr, param), 0)
 
-FORWARD (pthread_attr_setschedpolicy, (pthread_attr_t *attr, int policy),
-	 (attr, policy), 0)
-
 FORWARD (pthread_attr_getscope,
 	 (const pthread_attr_t *attr, int *scope), (attr, scope), 0)
 FORWARD (pthread_attr_setscope, (pthread_attr_t *attr, int scope),

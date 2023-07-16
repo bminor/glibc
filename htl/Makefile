@@ -30,7 +30,7 @@ libpthread-routines := pt-attr pt-attr-destroy pt-attr-getdetachstate	    \
 	pt-attr-getstack pt-attr-getstackaddr pt-attr-getstacksize	    \
 	pt-attr-init pt-attr-setdetachstate pt-attr-setguardsize	    \
 	pt-attr-setschedparam			                            \
-	pt-attr-setschedpolicy pt-attr-setscope pt-attr-setstack	    \
+	pt-attr-setscope pt-attr-setstack	                            \
 	pt-attr-setstackaddr pt-attr-setstacksize			    \
 									    \
 	pt-barrier-destroy pt-barrier-init pt-barrier-wait		    \
@@ -166,7 +166,7 @@ distribute :=
 
 routines := forward libc_pthread_init alloca_cutoff htlfreeres pt-nthreads pt-pthread_self pt-self pt-equal \
 	pt-getschedparam pt-setschedparam pt-attr-getschedparam pt-attr-getinheritsched                     \
-	pt-attr-setinheritsched pt-attr-getschedpolicy
+	pt-attr-setinheritsched pt-attr-getschedpolicy pt-attr-setschedpolicy
 shared-only-routines = forward
 
 extra-libs := libpthread
