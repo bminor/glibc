@@ -33,7 +33,6 @@ static const struct pthread_functions pthread_functions = {
   .ptr_pthread_attr_setdetachstate = __pthread_attr_setdetachstate,
   .ptr_pthread_attr_getinheritsched = __pthread_attr_getinheritsched,
   .ptr_pthread_attr_setinheritsched = __pthread_attr_setinheritsched,
-  .ptr_pthread_attr_getschedparam = __pthread_attr_getschedparam,
   .ptr_pthread_attr_setschedparam = __pthread_attr_setschedparam,
   .ptr_pthread_attr_getschedpolicy = __pthread_attr_getschedpolicy,
   .ptr_pthread_attr_setschedpolicy = __pthread_attr_setschedpolicy,

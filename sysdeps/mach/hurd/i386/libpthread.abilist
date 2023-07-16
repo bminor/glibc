@@ -26,7 +26,6 @@ GLIBC_2.12 pthread_attr_destroy F
 GLIBC_2.12 pthread_attr_getdetachstate F
 GLIBC_2.12 pthread_attr_getguardsize F
 GLIBC_2.12 pthread_attr_getinheritsched F
-GLIBC_2.12 pthread_attr_getschedparam F
 GLIBC_2.12 pthread_attr_getschedpolicy F
 GLIBC_2.12 pthread_attr_getscope F
 GLIBC_2.12 pthread_attr_getstack F
