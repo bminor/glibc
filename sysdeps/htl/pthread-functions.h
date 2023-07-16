@@ -25,7 +25,6 @@ int __pthread_attr_destroy (pthread_attr_t *);
 int __pthread_attr_init (pthread_attr_t *);
 int __pthread_attr_getdetachstate (const pthread_attr_t *, int *);
 int __pthread_attr_setdetachstate (pthread_attr_t *, int);
-int __pthread_attr_setinheritsched (pthread_attr_t *, int);
 int __pthread_attr_setschedparam (pthread_attr_t *,
 				 const struct sched_param *);
 int __pthread_attr_getschedpolicy (const pthread_attr_t *, int *);
@@ -73,7 +72,6 @@ struct pthread_functions
   int (*ptr_pthread_attr_init) (pthread_attr_t *);
   int (*ptr_pthread_attr_getdetachstate) (const pthread_attr_t *, int *);
   int (*ptr_pthread_attr_setdetachstate) (pthread_attr_t *, int);
-  int (*ptr_pthread_attr_setinheritsched) (pthread_attr_t *, int);
   int (*ptr_pthread_attr_setschedparam) (pthread_attr_t *,
 					 const struct sched_param *);
   int (*ptr_pthread_attr_getschedpolicy) (const pthread_attr_t *, int *);
