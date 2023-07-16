@@ -63,8 +63,6 @@ FORWARD (pthread_attr_getdetachstate,
 FORWARD (pthread_attr_setdetachstate, (pthread_attr_t *attr, int detachstate),
 	 (attr, detachstate), 0)
 
-FORWARD (pthread_attr_getinheritsched,
-	 (const pthread_attr_t *attr, int *inherit), (attr, inherit), 0)
 FORWARD (pthread_attr_setinheritsched, (pthread_attr_t *attr, int inherit),
 	 (attr, inherit), 0)
 
