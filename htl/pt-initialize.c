@@ -32,7 +32,6 @@ static const struct pthread_functions pthread_functions = {
   .ptr_pthread_attr_getdetachstate = __pthread_attr_getdetachstate,
   .ptr_pthread_attr_setdetachstate = __pthread_attr_setdetachstate,
   .ptr_pthread_attr_setschedparam = __pthread_attr_setschedparam,
-  .ptr_pthread_attr_getschedpolicy = __pthread_attr_getschedpolicy,
   .ptr_pthread_attr_setschedpolicy = __pthread_attr_setschedpolicy,
   .ptr_pthread_attr_getscope = __pthread_attr_getscope,
   .ptr_pthread_attr_setscope = __pthread_attr_setscope,
