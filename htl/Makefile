@@ -46,7 +46,6 @@ libpthread-routines := pt-attr pt-attr-destroy pt-attr-getdetachstate	    \
 	pt-alloc							    \
 	pt-create							    \
 	pt-getattr							    \
-	pt-equal							    \
 	pt-dealloc							    \
 	pt-detach							    \
 	pt-exit								    \
@@ -165,7 +164,7 @@ headers :=				\
 
 distribute :=
 
-routines := forward libc_pthread_init alloca_cutoff htlfreeres pt-nthreads pt-pthread_self pt-self
+routines := forward libc_pthread_init alloca_cutoff htlfreeres pt-nthreads pt-pthread_self pt-self pt-equal
 shared-only-routines = forward
 
 extra-libs := libpthread

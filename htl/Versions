@@ -89,7 +89,7 @@ libpthread {
     pthread_condattr_getpshared; pthread_condattr_init;
     pthread_condattr_setclock; pthread_condattr_setpshared;
 
-    pthread_create; pthread_detach; pthread_equal; pthread_exit;
+    pthread_create; pthread_detach; pthread_exit;
 
     pthread_getattr_np;
 
