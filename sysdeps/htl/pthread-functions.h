@@ -46,7 +46,6 @@ int __pthread_cond_wait (pthread_cond_t *, pthread_mutex_t *);
 int __pthread_cond_timedwait (pthread_cond_t *, pthread_mutex_t *,
 			     const struct timespec *);
 void __pthread_exit (void *) __attribute__ ((__noreturn__));
-int __pthread_getschedparam (pthread_t, int *, struct sched_param *);
 int __pthread_setschedparam (pthread_t, int,
 			    const struct sched_param *);
 int _pthread_mutex_destroy (pthread_mutex_t *);
@@ -100,7 +99,6 @@ struct pthread_functions
   int (*ptr_pthread_cond_timedwait) (pthread_cond_t *, pthread_mutex_t *,
 				     const struct timespec *);
   void (*ptr___pthread_exit) (void *) __attribute__ ((__noreturn__));
-  int (*ptr_pthread_getschedparam) (pthread_t, int *, struct sched_param *);
   int (*ptr_pthread_setschedparam) (pthread_t, int,
 				    const struct sched_param *);
   int (*ptr_pthread_mutex_destroy) (pthread_mutex_t *);
