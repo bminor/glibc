@@ -1484,7 +1484,7 @@ Optional Features:
                           architectures
   --enable-memory-tagging enable memory tagging if supported by the
                           architecture [default=no]
-  --disable-crypt         do not build nor install the passphrase hashing
+  --enable-crypt          build and install the legacy passphrase hashing
                           library, libcrypt
   --enable-nss-crypt      enable libcrypt to use nss
   --enable-systemtap      enable systemtap static probe points [default=no]
@@ -4577,7 +4577,7 @@ if test ${enable_crypt+y}
 then :
   enableval=$enable_crypt; build_crypt=$enableval
 else $as_nop
-  build_crypt=yes
+  build_crypt=no
 fi
 
 

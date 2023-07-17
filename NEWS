@@ -56,6 +56,11 @@ Major new features:
 
 Deprecated and removed features, and other changes affecting compatibility:
 
+* libcrypt is no longer built by default, one may use the --enable-crypt
+  option to build libcrypt.  libcrypt is likely to be removed from the
+  GNU C Library in a future release, so it is recommended that
+  applications port away from it to an alternative such as libxcrypt.
+
 * In the Linux kernel for the hppa/parisc architecture some of the
   MADV_XXX constants were changed to have the same values as the other
   architectures.  New programs compiled with this glibc version and which

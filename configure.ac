@@ -316,10 +316,10 @@ fi
 AC_SUBST(memory_tagging)
 
 AC_ARG_ENABLE([crypt],
-              AS_HELP_STRING([--disable-crypt],
-                             [do not build nor install the passphrase hashing library, libcrypt]),
+              AS_HELP_STRING([--enable-crypt],
+                             [build and install the legacy passphrase hashing library, libcrypt]),
               [build_crypt=$enableval],
-              [build_crypt=yes])
+              [build_crypt=no])
 AC_SUBST(build_crypt)
 
 AC_ARG_ENABLE([nss-crypt],
