@@ -29,8 +29,12 @@
 
 #include <tls.h>
 
-/* In order to get __set_errno() definition in INLINE_SYSCALL.  */
 #ifndef __ASSEMBLER__
+/* Thread cleanup function.  */
+#define ARCH_THREAD_FREERES __libc_aarch64_thread_freeres
+void __libc_aarch64_thread_freeres (void) attribute_hidden;
+
+/* In order to get __set_errno() definition in INLINE_SYSCALL.  */
 #include <errno.h>
 #endif
 

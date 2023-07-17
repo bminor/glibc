@@ -29,6 +29,9 @@
 void
 __libc_thread_freeres (void)
 {
+#ifdef ARCH_THREAD_FREERES
+  call_function_static_weak (ARCH_THREAD_FREERES);
+#endif
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_32)
   __rpc_thread_destroy ();
 #endif

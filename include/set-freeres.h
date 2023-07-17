@@ -78,6 +78,10 @@ extern void __nss_database_freeres (void) attribute_hidden;
 extern int _IO_cleanup (void) attribute_hidden;;
 /* From dlfcn/dlerror.c */
 extern void __libc_dlerror_result_free (void) attribute_hidden;
+/* From libc.so, arch specific.  */
+#ifdef ARCH_THREAD_FREERES
+extern void ARCH_THREAD_FREERES (void) attribute_hidden;
+#endif
 
 /* From either libc.so or libpthread.so  */
 extern void __libpthread_freeres (void) attribute_hidden;

@@ -34,6 +34,9 @@
 	.text
 
 ENTRY (__setcontext)
+	/* If x10 is set then old GCS is freed.  */
+	mov	x10, 0
+__setcontext_internal:
 	PTR_ARG (0)
 	/* Save a copy of UCP.  */
 	mov	x9, x0
@@ -145,7 +148,8 @@ ENTRY (__setcontext)
 	ldr	x3, [x2, #oGCSPR]
 	MRS_GCSPR (x2)
 	mov	x4, x3
-	/* x2: GCSPR now.  x3, x4: target GCSPR.  x5, x6: tmp regs.  */
+	mov	x1, x2
+	/* x1, x2: GCSPR now.  x3, x4: target GCSPR.  x5, x6: tmp regs.  */
 L(gcs_scan):
 	cmp	x2, x4
 	b.eq	L(gcs_pop)
@@ -162,10 +166,18 @@ L(gcs_switch):
 	GCSSS2 (xzr)
 L(gcs_pop):
 	cmp	x2, x3
-	b.eq	L(gcs_done)
+	b.eq	L(gcs_free_old)
 	GCSPOPM (xzr)
 	add	x2, x2, 8
 	b	L(gcs_pop)
+L(gcs_free_old):
+	cbz	x10, L(gcs_done)
+	mov	x28, x0
+	mov	x0, x1
+	bl	__free_makecontext_gcs
+	mov	x0, x28
+	ldp	x28, x29, [x0, oX0 + 28 * SZREG]
+	ldr     x30,      [x0, oX0 + 30 * SZREG]
 L(gcs_done):
 
 2:
@@ -186,6 +198,7 @@ ENTRY (__startcontext)
 	cfi_undefined (x30)
 	blr	x20
 	mov	x0, x19
-	cbnz	x0, __setcontext
+	mov	x10, 1
+	cbnz	x0, __setcontext_internal
 1:	b       HIDDEN_JUMPTARGET (exit)
 END (__startcontext)
