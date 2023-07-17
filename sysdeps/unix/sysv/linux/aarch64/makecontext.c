@@ -20,13 +20,56 @@
 #include <sysdep.h>
 #include <stdarg.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <ucontext.h>
+#include <sys/mman.h>
 
 #define GCS_MAGIC 0x47435300
 
 static struct _aarch64_ctx *extension (void *p)
 {
   return p;
+}
+
+struct gcs_list {
+  struct gcs_list *next;
+  void *base;
+  size_t size;
+};
+
+static __thread struct gcs_list *gcs_list_head = NULL;
+
+static void
+record_gcs (void *base, size_t size)
+{
+  struct gcs_list *p = malloc (sizeof *p);
+  if (p == NULL)
+    abort ();
+  p->base = base;
+  p->size = size;
+  p->next = gcs_list_head;
+  gcs_list_head = p;
+}
+
+static void
+free_gcs_list (void)
+{
+  for (;;)
+    {
+      struct gcs_list *p = gcs_list_head;
+      if (p == NULL)
+	break;
+      gcs_list_head = p->next;
+      __munmap (p->base, p->size);
+      free (p);
+    }
+}
+
+/* Called during thread shutdown to free resources.  */
+void
+__libc_aarch64_thread_freeres (void)
+{
+  free_gcs_list ();
 }
 
 #ifndef __NR_map_shadow_stack
@@ -58,6 +101,9 @@ alloc_makecontext_gcs (size_t stack_size)
   if (base == (void *) -1)
     /* ENOSYS, bad size or OOM.  */
     abort ();
+
+  record_gcs (base, size);
+
   uint64_t *gcsp = (uint64_t *) ((char *) base + size);
   /* Skip end of GCS token.  */
   gcsp--;
@@ -67,6 +113,25 @@ alloc_makecontext_gcs (size_t stack_size)
     abort ();
   /* Return the target GCS pointer for context switch.  */
   return gcsp + 1;
+}
+
+void
+__free_makecontext_gcs (void *gcs)
+{
+  struct gcs_list *p = gcs_list_head;
+  struct gcs_list **q = &gcs_list_head;
+  for (;;)
+    {
+      if (p == NULL)
+	abort ();
+      if (gcs == p->base + p->size - 8)
+	break;
+      q = &p->next;
+      p = p->next;
+    }
+  *q = p->next;
+  __munmap (p->base, p->size);
+  free (p);
 }
 
 /* makecontext sets up a stack and the registers for the
