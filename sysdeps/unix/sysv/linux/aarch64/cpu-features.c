@@ -176,4 +176,8 @@ init_cpu_features (struct cpu_features *cpu_features)
 
   /* Check if MOPS is supported.  */
   cpu_features->mops = GLRO (dl_hwcap2) & HWCAP2_MOPS;
+
+  if (GLRO (dl_hwcap2) & HWCAP2_GCS)
+    /* GCS status may be updated later by binary compatibility checks.  */
+    GL (dl_aarch64_gcs) = TUNABLE_GET (glibc, cpu, aarch64_gcs, uint64_t, 0);
 }
