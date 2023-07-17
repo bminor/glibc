@@ -669,6 +669,49 @@ This tunable is specific to x86-64 and effective only when the lazy
 binding is disabled.
 @end deftp
 
+@deftp Tunable glibc.cpu.aarch64_gcs
+This tunable controls Guarded Control Stack (GCS) for the process.
+
+Accepted values are:
+
+0 = disabled: do not enable GCS.
+
+1 = enforced: check markings and fail if any binary is not marked.
+
+2 = optional: check markings but keep GCS off if any binary is unmarked.
+
+3 = override: enable GCS, markings are ignored.
+
+If unmarked binary is loaded via @code{dlopen} when GCS is enabled and
+markings are not ignored (@code{aarch64_gcs == 1} or @code{2}), then
+the process will be aborted.
+
+Default is @code{0}, so GCS is disabled by default.
+
+This tunable is specific to AArch64. On systems that do not support
+Guarded Control Stack this tunable has no effect.
+
+Before enabling GCS for the process the value of this tunable is checked
+and depending on it the following outcomes are possible.
+
+@code{aarch64_gcs == 0}: GCS will not be enabled and GCS markings will not be
+checked for any binaries.
+
+@code{aarch64_gcs == 1}: GCS markings will be checked for all binaries loaded
+at startup and, only if all binaries are GCS-marked, GCS will be enabled. If
+any of the binaries are not GCS-marked, the process will abort. Subsequent call
+to @code{dlopen} for an unmarked binary will also result in abort.
+
+@code{aarch64_gcs == 2}: GCS markings will be checked for all binaries loaded
+at startup and, if any of such binaries are not GCS-marked, GCS will not be
+enabled and there will be no more checks for GCS marking. If all binaries
+loaded at startup are GCS-marked, then GCS will be enabled, in which case a
+call to @code{dlopen} for an unmarked binary will also result in abort.
+
+@code{aarch64_gcs == 3}: GCS will be enabled and GCS markings will not be
+checked for any binaries.
+@end deftp
+
 @node Memory Related Tunables
 @section Memory Related Tunables
 @cindex memory related tunables

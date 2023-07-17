@@ -21,5 +21,11 @@ glibc {
     name {
       type: STRING
     }
+    aarch64_gcs {
+      type: UINT_64
+      minval: 0
+      maxval: 3
+      default: 0
+    }
   }
 }
