@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.2.3\n"
-"POT-Creation-Date: 2023-01-23 08:47-0500\n"
+"POT-Creation-Date: 2023-07-17 20:35+0200\n"
 "PO-Revision-Date: 2001-05-21 19:20:31+0000\n"
 "Last-Translator: Nikos Mavroyanopoulos <nmav@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -65,7 +65,7 @@ msgstr "Να δοθεί αυτή η λίστα βοήθειας"
 msgid "Give a short usage message"
 msgstr "Να δωθεί σύντομο μήνυμα χρήσης"
 
-#: argp/argp-parse.c:103 catgets/gencat.c:108 catgets/gencat.c:112
+#: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
 #: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:106 nscd/nscd.c:110
 #: nss/makedb.c:121
 msgid "NAME"
@@ -96,19 +96,19 @@ msgstr "%s: Πάρα πολλά ορίσματα\n"
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(ΣΦΑΛΜΑ ΠΡΟΓΡΑΜΜΑΤΟΣ) Η επιλογή θα έπρεπε να είχε αναγνωριστεί!;"
 
-#: catgets/gencat.c:109
+#: catgets/gencat.c:110
 msgid "Create C header file NAME containing symbol definitions"
 msgstr "Δημιουργία ΟΝΟΜΑΤΟΣ αρχείου κεφαλίδας C με ορισμούς συμβόλων"
 
-#: catgets/gencat.c:111
+#: catgets/gencat.c:112
 msgid "Do not use existing catalog, force new output file"
 msgstr "Να μη χρησιμοποιηθεί ο υπάρχον κατάλογος, προκάλεσε νέο αρχείο εξόδου"
 
-#: catgets/gencat.c:112 nss/makedb.c:121
+#: catgets/gencat.c:113 nss/makedb.c:121
 msgid "Write output to file NAME"
 msgstr "Εγγραφή εξόδου στο αρχείο ΟΝΟΜΑ"
 
-#: catgets/gencat.c:122
+#: catgets/gencat.c:123
 msgid ""
 "-o OUTPUT-FILE [INPUT-FILE]...\n"
 "[OUTPUT-FILE [INPUT-FILE]...]"
@@ -116,11 +116,11 @@ msgstr ""
 "-o ΑΡΧΕΙΟ-ΕΞΟΔΟΥ [ΑΡΧΕΙΟ-ΕΙΣΟΔΟΥ]...\n"
 "[ΑΡΧΕΙΟ-ΕΞΟΔΟΥ [ΑΡΧΕΙΟ-ΕΙΣΟΔΟΥ]...]"
 
-#: catgets/gencat.c:244 debug/pcprofiledump.c:224 debug/xtrace.sh:63
+#: catgets/gencat.c:245 debug/pcprofiledump.c:224 debug/xtrace.sh:63
 #: elf/ldconfig.c:232 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
 #: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
-#: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:580
+#: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
 #: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:386 posix/getconf.c:485
 #, c-format
 msgid ""
@@ -133,75 +133,75 @@ msgstr ""
 "ΔΕΝ υπάρχει εγγύηση ούτε ακόμη για ΛΕΙΤΟΥΡΓIΚΟΤΗΤΑΣ ή ΚΑΤΑΛΛΗΛΟΤΗΤΑ ΓΙΑ\n"
 "ΚΑΠΟΙΟ ΣΥΓΚΕΚΡΙΜΕΝΟ ΣΚΟΠΟ.\n"
 
-#: catgets/gencat.c:249 debug/pcprofiledump.c:229 debug/xtrace.sh:67
+#: catgets/gencat.c:250 debug/pcprofiledump.c:229 debug/xtrace.sh:67
 #: elf/ldconfig.c:237 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
-#: malloc/memusagestat.c:585 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:391
+#: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:391
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Εγγράφηκε από %s.\n"
 
-#: catgets/gencat.c:280
+#: catgets/gencat.c:281
 msgid "*standard input*"
 msgstr "*κανονική είσοδος*"
 
-#: catgets/gencat.c:286 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
+#: catgets/gencat.c:287 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
 #: nss/makedb.c:247
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "αδυναμία ανοίγματος αρχείου εισόδου `%s'"
 
-#: catgets/gencat.c:415 catgets/gencat.c:490
+#: catgets/gencat.c:416 catgets/gencat.c:491
 msgid "illegal set number"
 msgstr "μη έγκυρος αριθμός σετ"
 
-#: catgets/gencat.c:442
+#: catgets/gencat.c:443
 msgid "duplicate set definition"
 msgstr "διπλός ορισμός συνόλου"
 
-#: catgets/gencat.c:444 catgets/gencat.c:616 catgets/gencat.c:668
+#: catgets/gencat.c:445 catgets/gencat.c:617 catgets/gencat.c:669
 msgid "this is the first definition"
 msgstr "αυτός είναι ο πρώτος ορισμός"
 
-#: catgets/gencat.c:515
+#: catgets/gencat.c:516
 #, c-format
 msgid "unknown set `%s'"
 msgstr "άγνωστο σετ `%s'"
 
-#: catgets/gencat.c:569
+#: catgets/gencat.c:570
 #, c-format
 msgid "unknown directive `%s': line ignored"
 msgstr "άγνωστo λεκτικό `%s': γραμμή αγνοήθηκε"
 
-#: catgets/gencat.c:614
+#: catgets/gencat.c:615
 msgid "duplicated message number"
 msgstr "διπλός αριθμός μηνύματος"
 
-#: catgets/gencat.c:665
+#: catgets/gencat.c:666
 msgid "duplicated message identifier"
 msgstr "διπλός προσδιοριστής μηνύματος"
 
-#: catgets/gencat.c:819
+#: catgets/gencat.c:820
 msgid "malformed line ignored"
 msgstr "κακοδιαμορφωμένη γραμμή αγνοήθηκε"
 
-#: catgets/gencat.c:983 catgets/gencat.c:1024
+#: catgets/gencat.c:982 catgets/gencat.c:1023
 #, c-format
 msgid "cannot open output file `%s'"
 msgstr "αδυναμία ανοίγματος αρχείου εξόδου `%s'"
 
-#: catgets/gencat.c:1210
+#: catgets/gencat.c:1209
 msgid "unterminated message"
 msgstr "μη τερματιζόμενο μήνυμα"
 
-#: catgets/gencat.c:1234
+#: catgets/gencat.c:1233
 #, c-format
 msgid "while opening old catalog file"
 msgstr "κατά το άνοιγμα παλιού αρχείου καταλόγου"
 
-#: elf/dl-open.c:827
+#: elf/dl-open.c:829
 msgid "invalid mode for dlopen()"
 msgstr "μη έγκυρη κατάσταση για την dlopen()"
 
@@ -218,7 +218,7 @@ msgstr "το %s δεν είναι συμβολικός σύνδεσμος\n"
 msgid " (changed)\n"
 msgstr " (άλλαξε)\n"
 
-#: elf/ldconfig.c:1124 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1109 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
@@ -232,7 +232,7 @@ msgstr "η μνήμη εξαντλήθηκε"
 msgid "No such file or directory"
 msgstr "Δεν υπάρχει τέτοιο αρχείο ή κατάλογος"
 
-#: elf/ldd.bash.in:150 inet/rcmd.c:482
+#: elf/ldd.bash.in:150 inet/rcmd.c:483
 msgid "not regular file"
 msgstr "δεν είναι κανονικό αρχείο"
 
@@ -417,59 +417,59 @@ msgstr "εσωτερικό σφάλμα (ακατάλληλος περιγραφ
 msgid "unknown iconv() error %d"
 msgstr "άγνωστο σφάλμα iconv() %d"
 
-#: inet/rcmd.c:176
+#: inet/rcmd.c:177
 msgid "rcmd: socket: All ports in use\n"
 msgstr "rcmd: socket: Όλες οι θύρες σε χρήση\n"
 
-#: inet/rcmd.c:204
+#: inet/rcmd.c:205
 #, c-format
 msgid "connect to address %s: "
 msgstr "σύνδεση στη διεύθυνση %s: "
 
-#: inet/rcmd.c:217
+#: inet/rcmd.c:218
 #, c-format
 msgid "Trying %s...\n"
 msgstr "Δοκιμάζεται %s...\n"
 
-#: inet/rcmd.c:253
+#: inet/rcmd.c:254
 #, c-format
 msgid "rcmd: write (setting up stderr): %m\n"
 msgstr "rcmd: write (στήσιμο του stderr): %m\n"
 
-#: inet/rcmd.c:269
+#: inet/rcmd.c:270
 #, c-format
 msgid "rcmd: poll (setting up stderr): %m\n"
 msgstr "rcmd: poll (στήσιμο του stderr): %m\n"
 
-#: inet/rcmd.c:272
+#: inet/rcmd.c:273
 msgid "poll: protocol failure in circuit setup\n"
 msgstr "poll: αποτυχία πρωτοκόλου στο στήσιμο κυκλώματος\n"
 
-#: inet/rcmd.c:304
+#: inet/rcmd.c:305
 msgid "socket: protocol failure in circuit setup\n"
 msgstr "socket: αποτυχία πρωτοκόλου στο στήσιμο κυκλώματος\n"
 
-#: inet/rcmd.c:480
+#: inet/rcmd.c:481
 msgid "lstat failed"
 msgstr "το lstat απέτυχε"
 
-#: inet/rcmd.c:487
+#: inet/rcmd.c:488
 msgid "cannot open"
 msgstr "αδυναμία ανοίγματος"
 
-#: inet/rcmd.c:489
+#: inet/rcmd.c:490
 msgid "fstat failed"
 msgstr "το fstat απέτυχε"
 
-#: inet/rcmd.c:491
+#: inet/rcmd.c:492
 msgid "bad owner"
 msgstr "κακός ιδιοκτήτης"
 
-#: inet/rcmd.c:493
+#: inet/rcmd.c:494
 msgid "writeable by other than owner"
 msgstr "το αρχείο είναι εγγράψιμο και από άλλους εκτός του ιδιοκτήτη"
 
-#: inet/rcmd.c:495
+#: inet/rcmd.c:496
 msgid "hard linked somewhere"
 msgstr "σθεναρά συνδεδεμένο κάπου"
 
@@ -908,7 +908,7 @@ msgid "unable to free arguments"
 msgstr "αδύνατη η απελευθέρωση παραμέτρων"
 
 #: nis/nis_error.h:1 nis/ypclnt.c:832 nis/ypclnt.c:921 posix/regcomp.c:135
-#: sysdeps/gnu/errlist.h:1
+#: sysdeps/gnu/errlist.h:1 sysdeps/posix/gai_strerror-strs.h:1
 msgid "Success"
 msgstr "Επιτυχία"
 
@@ -2927,51 +2927,51 @@ msgstr "Το πρόγραμμα RPC δεν είναι διαθέσιμο"
 msgid "Error in unknown error system: "
 msgstr "Σφάλμα σε άγνωστο σύστημα σφαλμάτων: "
 
-#: sysdeps/posix/gai_strerror-strs.h:1
+#: sysdeps/posix/gai_strerror-strs.h:2
 msgid "Address family for hostname not supported"
 msgstr "Δεν υποστηρίζεται οικογένεια διευθύνσεων για σύστημα"
 
-#: sysdeps/posix/gai_strerror-strs.h:2
+#: sysdeps/posix/gai_strerror-strs.h:3
 msgid "Temporary failure in name resolution"
 msgstr "Προσωρινή αποτυχία κατά την ανάλυση ονόματος"
 
-#: sysdeps/posix/gai_strerror-strs.h:3
+#: sysdeps/posix/gai_strerror-strs.h:4
 msgid "Bad value for ai_flags"
 msgstr "Ακατάλληλη τιμή στο ai_flags"
 
-#: sysdeps/posix/gai_strerror-strs.h:4
+#: sysdeps/posix/gai_strerror-strs.h:5
 msgid "Non-recoverable failure in name resolution"
 msgstr "Μη-αποκαταστήσιμο σφάλμα κατά την ανάλυση ονόματος"
 
-#: sysdeps/posix/gai_strerror-strs.h:5
+#: sysdeps/posix/gai_strerror-strs.h:6
 msgid "ai_family not supported"
 msgstr "Το ai_family δεν υποστηρίζεται"
 
-#: sysdeps/posix/gai_strerror-strs.h:6
+#: sysdeps/posix/gai_strerror-strs.h:7
 msgid "Memory allocation failure"
 msgstr "Αποτυχία δέσμευσης μνήμης"
 
-#: sysdeps/posix/gai_strerror-strs.h:7
+#: sysdeps/posix/gai_strerror-strs.h:8
 msgid "No address associated with hostname"
 msgstr "Καμιά διεύθυνση δε συνδέεται με το όνομα συστήματος"
 
-#: sysdeps/posix/gai_strerror-strs.h:8
+#: sysdeps/posix/gai_strerror-strs.h:9
 msgid "Name or service not known"
 msgstr "Το όνομα ή η υπηρεσία δεν είναι γνωστά"
 
-#: sysdeps/posix/gai_strerror-strs.h:9
+#: sysdeps/posix/gai_strerror-strs.h:10
 msgid "Servname not supported for ai_socktype"
 msgstr "Το servname δεν υποστηρίζεται από το ai_socktype"
 
-#: sysdeps/posix/gai_strerror-strs.h:10
+#: sysdeps/posix/gai_strerror-strs.h:11
 msgid "ai_socktype not supported"
 msgstr "Το ai_socktype δεν υποστηρίζεται"
 
-#: sysdeps/posix/gai_strerror-strs.h:11
+#: sysdeps/posix/gai_strerror-strs.h:12
 msgid "System error"
 msgstr "Σφάλμα συστήματος"
 
-#: sysdeps/unix/sysv/linux/x86/readelflib.c:62
+#: sysdeps/x86/readelflib.c:62
 #, c-format
 msgid "%s is for unknown machine %d.\n"
 msgstr "το %s είναι για το άγνωστο σύστημά %d.\n"

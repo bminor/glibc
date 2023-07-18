@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.10.1\n"
-"POT-Creation-Date: 2023-01-23 08:47-0500\n"
+"POT-Creation-Date: 2023-07-17 20:35+0200\n"
 "PO-Revision-Date: 2009-08-04 02:23+0200\n"
 "Last-Translator: Gabor Kelemen <kelemeng@gnome.hu>\n"
 "Language-Team: Hungarian <translation-team-hu@lists.sourceforge.net>\n"
@@ -68,7 +68,7 @@ msgstr "Ezen súgó megjelenítése"
 msgid "Give a short usage message"
 msgstr "Rövid használati utasítás"
 
-#: argp/argp-parse.c:103 catgets/gencat.c:108 catgets/gencat.c:112
+#: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
 #: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:106 nscd/nscd.c:110
 #: nss/makedb.c:121
 msgid "NAME"
@@ -99,19 +99,19 @@ msgstr "%s: Túl sok argumentum\n"
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(PROGRAMHIBA) A kapcsolót ismerni kellene?"
 
-#: catgets/gencat.c:109
+#: catgets/gencat.c:110
 msgid "Create C header file NAME containing symbol definitions"
 msgstr "A szimbólumdefiníciókat tartalmazó NÉV nevű C fejlécfájl előállítása"
 
-#: catgets/gencat.c:111
+#: catgets/gencat.c:112
 msgid "Do not use existing catalog, force new output file"
 msgstr "Ne használja a meglévő katalógust, új kimeneti fájl kényszerítése"
 
-#: catgets/gencat.c:112 nss/makedb.c:121
+#: catgets/gencat.c:113 nss/makedb.c:121
 msgid "Write output to file NAME"
 msgstr "A kimenet írása a NÉV nevű fájlba"
 
-#: catgets/gencat.c:117
+#: catgets/gencat.c:118
 msgid ""
 "Generate message catalog.\vIf INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
 "is -, output is written to standard output.\n"
@@ -119,7 +119,7 @@ msgstr ""
 "Üzenetkatalógus előállítása\v Ha a BEMENETIFÁJL a -, akkor a szabványos bemenetet olvassa. Ha a \n"
 "KIMENETIFÁJL a -, akkor a szabványos kimenetre ír.\n"
 
-#: catgets/gencat.c:122
+#: catgets/gencat.c:123
 msgid ""
 "-o OUTPUT-FILE [INPUT-FILE]...\n"
 "[OUTPUT-FILE [INPUT-FILE]...]"
@@ -127,11 +127,11 @@ msgstr ""
 "-o KIMENETIFÁJL [BEMENETIFÁJL]...\n"
 "[KIMENETIFÁJL [BEMENETIFÁJL]...]"
 
-#: catgets/gencat.c:244 debug/pcprofiledump.c:224 debug/xtrace.sh:63
+#: catgets/gencat.c:245 debug/pcprofiledump.c:224 debug/xtrace.sh:63
 #: elf/ldconfig.c:232 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
 #: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
-#: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:580
+#: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
 #: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:386 posix/getconf.c:485
 #, c-format
 msgid ""
@@ -143,96 +143,96 @@ msgstr ""
 "Ez egy szabad szoftver, lásd a forrást a másolási feltételekért. NINCS\n"
 "garancia, még az ADOTT CÉLRE VALÓ ELADHATÓSÁGRA VAGY MEGFELELŐSÉGRE SEM.\n"
 
-#: catgets/gencat.c:249 debug/pcprofiledump.c:229 debug/xtrace.sh:67
+#: catgets/gencat.c:250 debug/pcprofiledump.c:229 debug/xtrace.sh:67
 #: elf/ldconfig.c:237 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
-#: malloc/memusagestat.c:585 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:391
+#: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:391
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Írta: %s.\n"
 
-#: catgets/gencat.c:280
+#: catgets/gencat.c:281
 msgid "*standard input*"
 msgstr "*szabványos bemenet*"
 
-#: catgets/gencat.c:286 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
+#: catgets/gencat.c:287 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
 #: nss/makedb.c:247
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "a bemeneti fájl („%s”) nem nyitható meg"
 
-#: catgets/gencat.c:415 catgets/gencat.c:490
+#: catgets/gencat.c:416 catgets/gencat.c:491
 msgid "illegal set number"
 msgstr "érvénytelen halmazszám"
 
-#: catgets/gencat.c:442
+#: catgets/gencat.c:443
 msgid "duplicate set definition"
 msgstr "többszörös halmazdefiníció"
 
-#: catgets/gencat.c:444 catgets/gencat.c:616 catgets/gencat.c:668
+#: catgets/gencat.c:445 catgets/gencat.c:617 catgets/gencat.c:669
 msgid "this is the first definition"
 msgstr "ez az első definíció"
 
-#: catgets/gencat.c:515
+#: catgets/gencat.c:516
 #, c-format
 msgid "unknown set `%s'"
 msgstr "ismeretlen halmaz: \"%s\""
 
-#: catgets/gencat.c:556
+#: catgets/gencat.c:557
 msgid "invalid quote character"
 msgstr "érvénytelen idézőjel-karakter"
 
-#: catgets/gencat.c:569
+#: catgets/gencat.c:570
 #, c-format
 msgid "unknown directive `%s': line ignored"
 msgstr "ismeretlen utasítás (\"%s2): a sor kihagyva"
 
-#: catgets/gencat.c:614
+#: catgets/gencat.c:615
 msgid "duplicated message number"
 msgstr "többszörös üzenetszám"
 
-#: catgets/gencat.c:665
+#: catgets/gencat.c:666
 msgid "duplicated message identifier"
 msgstr "többszörös üzenetazonosító"
 
-#: catgets/gencat.c:722
+#: catgets/gencat.c:723
 msgid "invalid character: message ignored"
 msgstr "érvénytelen karakter: az üzenet figyelmen kívül maradt"
 
-#: catgets/gencat.c:765
+#: catgets/gencat.c:766
 msgid "invalid line"
 msgstr "érvénytelen sor"
 
-#: catgets/gencat.c:819
+#: catgets/gencat.c:820
 msgid "malformed line ignored"
 msgstr "a rosszul formált sor figyelmen kívül maradt"
 
-#: catgets/gencat.c:983 catgets/gencat.c:1024
+#: catgets/gencat.c:982 catgets/gencat.c:1023
 #, c-format
 msgid "cannot open output file `%s'"
 msgstr "a kimeneti fájl (\"%s\") nem nyitható meg"
 
-#: catgets/gencat.c:1186 locale/programs/linereader.c:588
+#: catgets/gencat.c:1185 locale/programs/linereader.c:588
 msgid "invalid escape sequence"
 msgstr "érvénytelen escape-sorozat"
 
-#: catgets/gencat.c:1210
+#: catgets/gencat.c:1209
 msgid "unterminated message"
 msgstr "befejezetlen üzenet"
 
-#: catgets/gencat.c:1234
+#: catgets/gencat.c:1233
 #, c-format
 msgid "while opening old catalog file"
 msgstr "hiba a régi katalógusfájl megnyitásakor"
 
-#: catgets/gencat.c:1325
+#: catgets/gencat.c:1324
 #, c-format
 msgid "conversion modules not available"
 msgstr "az átalakítási modulok nem érhetők el"
 
-#: catgets/gencat.c:1351
+#: catgets/gencat.c:1350
 #, c-format
 msgid "cannot determine escape character"
 msgstr "az escape-karakter nem határozható meg"
@@ -328,43 +328,43 @@ msgstr "érvénytelen mód"
 msgid "invalid mode parameter"
 msgstr "érvénytelen módparaméter"
 
-#: elf/cache.c:293 elf/ldconfig.c:1238
+#: elf/cache.c:299 elf/ldconfig.c:1223
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Nem nyitható meg a gyorsítótárfájl (%s)\n"
 
-#: elf/cache.c:307
+#: elf/cache.c:313
 #, c-format
 msgid "mmap of cache file failed.\n"
 msgstr "a gyorsítótár mmap-olása meghiúsult.\n"
 
-#: elf/cache.c:311 elf/cache.c:325 elf/cache.c:336
+#: elf/cache.c:317 elf/cache.c:331 elf/cache.c:342
 #, c-format
 msgid "File is not a cache file.\n"
 msgstr "A fájl nem gyorsítótárfájl.\n"
 
-#: elf/cache.c:365 elf/cache.c:380
+#: elf/cache.c:371 elf/cache.c:386
 #, c-format
 msgid "%d libs found in cache `%s'\n"
 msgstr "%d programkönyvtár található a gyorsítótárban („%s”)\n"
 
-#: elf/cache.c:682
+#: elf/cache.c:688
 #, c-format
 msgid "Can't create temporary cache file %s"
 msgstr "Nem hozható létre az ideiglenes gyorsítótárfájl (%s)"
 
-#: elf/cache.c:690 elf/cache.c:700 elf/cache.c:704 elf/cache.c:709
-#: elf/cache.c:728
+#: elf/cache.c:696 elf/cache.c:706 elf/cache.c:710 elf/cache.c:715
+#: elf/cache.c:734
 #, c-format
 msgid "Writing of cache data failed"
 msgstr "A gyorsítótáradatok írása meghiúsult"
 
-#: elf/cache.c:723
+#: elf/cache.c:729
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr "%s hozzáférési jogainak módosítása meghiúsult erre: %#o"
 
-#: elf/cache.c:732
+#: elf/cache.c:738
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "%s átnevezése meghiúsult erre: %s"
@@ -434,103 +434,103 @@ msgstr "nem hozható létre RUNPATH/RPATH másolat"
 msgid "cannot create search path array"
 msgstr "nem hozható létre keresésiútvonal-tömb"
 
-#: elf/dl-load.c:970
+#: elf/dl-load.c:968
 msgid "cannot stat shared object"
 msgstr "nem érhető el a megosztott objektum"
 
-#: elf/dl-load.c:1069 elf/dl-load.c:2226
+#: elf/dl-load.c:1059 elf/dl-load.c:2219
 msgid "cannot create shared object descriptor"
 msgstr "nem hozható létre megosztott objektumleíró"
 
-#: elf/dl-load.c:1088 elf/dl-load.c:1661 elf/dl-load.c:1769
+#: elf/dl-load.c:1078 elf/dl-load.c:1655 elf/dl-load.c:1763
 msgid "cannot read file data"
 msgstr "nem olvashatók a fájladatok"
 
-#: elf/dl-load.c:1233
+#: elf/dl-load.c:1223
 msgid "object file has no loadable segments"
 msgstr "az objektumfájlnak nincsenek betölthető szakaszai"
 
-#: elf/dl-load.c:1250
+#: elf/dl-load.c:1240
 msgid "cannot dynamically load executable"
 msgstr "nem tölthető be dinamikusan a végrehajtható fájl"
 
-#: elf/dl-load.c:1257
+#: elf/dl-load.c:1247
 msgid "object file has no dynamic section"
 msgstr "az objektumfájlnak nincs dinamikus szakasza"
 
-#: elf/dl-load.c:1294
+#: elf/dl-load.c:1284
 msgid "shared object cannot be dlopen()ed"
 msgstr "megosztott objektumra nem hívható meg a dlopen()"
 
-#: elf/dl-load.c:1307
+#: elf/dl-load.c:1297
 msgid "cannot allocate memory for program header"
 msgstr "nem foglalható memória a program fejlécének"
 
-#: elf/dl-load.c:1340 elf/dl-load.h:131
+#: elf/dl-load.c:1330 elf/dl-load.h:131
 msgid "cannot change memory protections"
 msgstr "a memóriavédelem nem módosítható"
 
-#: elf/dl-load.c:1364
+#: elf/dl-load.c:1354
 msgid "cannot enable executable stack as shared object requires"
 msgstr "nem engedélyezhető a végrehajtható verem, mint ahogy a megosztott objektum megköveteli"
 
-#: elf/dl-load.c:1392
+#: elf/dl-load.c:1382
 msgid "cannot close file descriptor"
 msgstr "nem zárható le a fájlleíró"
 
-#: elf/dl-load.c:1661
+#: elf/dl-load.c:1655
 msgid "file too short"
 msgstr "a fájl túl rövid"
 
-#: elf/dl-load.c:1697
+#: elf/dl-load.c:1691
 msgid "invalid ELF header"
 msgstr "érvénytelen ELF fejléc"
 
-#: elf/dl-load.c:1712
+#: elf/dl-load.c:1706
 msgid "ELF file data encoding not big-endian"
 msgstr "az ELF fájladatok kódolása nem big endian"
 
-#: elf/dl-load.c:1714
+#: elf/dl-load.c:1708
 msgid "ELF file data encoding not little-endian"
 msgstr "az ELF fájladatok kódolása nem little endian"
 
-#: elf/dl-load.c:1718
+#: elf/dl-load.c:1712
 msgid "ELF file version ident does not match current one"
 msgstr "az ELF fájlverzió azonosítója nem felel meg az aktuálisnak"
 
-#: elf/dl-load.c:1722
+#: elf/dl-load.c:1716
 msgid "ELF file OS ABI invalid"
 msgstr "az ELF fájl OS ABI-ja érvénytelen"
 
-#: elf/dl-load.c:1725
+#: elf/dl-load.c:1719
 msgid "ELF file ABI version invalid"
 msgstr "az ELF fájl ABI verziója érvénytelen"
 
-#: elf/dl-load.c:1731
+#: elf/dl-load.c:1725
 msgid "internal error"
 msgstr "belső hiba"
 
-#: elf/dl-load.c:1738
+#: elf/dl-load.c:1732
 msgid "ELF file version does not match current one"
 msgstr "az ELF fájlverzió nem felel meg az aktuálisnak"
 
-#: elf/dl-load.c:1750
+#: elf/dl-load.c:1744
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "csak az ET_DYN és ET_EXEC tölthető be"
 
-#: elf/dl-load.c:1755
+#: elf/dl-load.c:1749
 msgid "ELF file's phentsize not the expected size"
 msgstr "az ELF fájl phentsize értéke nem a várt méretű"
 
-#: elf/dl-load.c:2245
+#: elf/dl-load.c:2238
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "hibás ELF osztály: ELFCLASS64"
 
-#: elf/dl-load.c:2246
+#: elf/dl-load.c:2239
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "hibás ELF osztály: ELFCLASS32"
 
-#: elf/dl-load.c:2249
+#: elf/dl-load.c:2242
 msgid "cannot open shared object file"
 msgstr "nem nyitható meg a megosztott objektumfájl"
 
@@ -542,7 +542,7 @@ msgstr "a szegmens leképezése meghiúsult a megosztott objektumból"
 msgid "cannot map zero-fill pages"
 msgstr "nem képezhetők le a nullával kitöltött lapok"
 
-#: elf/dl-lookup.c:797
+#: elf/dl-lookup.c:814
 msgid "symbol lookup error"
 msgstr "szimbólumkikeresési hiba"
 
@@ -550,7 +550,7 @@ msgstr "szimbólumkikeresési hiba"
 msgid "cannot extend global scope"
 msgstr "a globális hatáskör nem bővíthető"
 
-#: elf/ldconfig.c:1124 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1109 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
@@ -612,7 +612,7 @@ msgid "Unknown system error"
 msgstr "Ismeretlen rendszerhiba"
 
 #: nis/nis_error.h:1 nis/ypclnt.c:832 nis/ypclnt.c:921 posix/regcomp.c:135
-#: sysdeps/gnu/errlist.h:1
+#: sysdeps/gnu/errlist.h:1 sysdeps/posix/gai_strerror-strs.h:1
 msgid "Success"
 msgstr "Siker"
 
@@ -1787,71 +1787,71 @@ msgstr "Az RPC program nem érhető el"
 msgid "Error in unknown error system: "
 msgstr "Hiba az ismeretlen hibarendszerben: "
 
-#: sysdeps/posix/gai_strerror-strs.h:1
+#: sysdeps/posix/gai_strerror-strs.h:2
 msgid "Address family for hostname not supported"
 msgstr "A címcsalád a gépnévhez nem támogatott"
 
-#: sysdeps/posix/gai_strerror-strs.h:2
+#: sysdeps/posix/gai_strerror-strs.h:3
 msgid "Temporary failure in name resolution"
 msgstr "Átmeneti névfeloldási hiba"
 
-#: sysdeps/posix/gai_strerror-strs.h:3
+#: sysdeps/posix/gai_strerror-strs.h:4
 msgid "Bad value for ai_flags"
 msgstr "Az ai_flags értéke hibás"
 
-#: sysdeps/posix/gai_strerror-strs.h:4
+#: sysdeps/posix/gai_strerror-strs.h:5
 msgid "Non-recoverable failure in name resolution"
 msgstr "Helyreállíthatatlan névfeloldási hiba"
 
-#: sysdeps/posix/gai_strerror-strs.h:5
+#: sysdeps/posix/gai_strerror-strs.h:6
 msgid "ai_family not supported"
 msgstr "az ai_family nem támogatott"
 
-#: sysdeps/posix/gai_strerror-strs.h:6
+#: sysdeps/posix/gai_strerror-strs.h:7
 msgid "Memory allocation failure"
 msgstr "Memóriafoglalási hiba"
 
-#: sysdeps/posix/gai_strerror-strs.h:7
+#: sysdeps/posix/gai_strerror-strs.h:8
 msgid "No address associated with hostname"
 msgstr "Nincs cím társítva a gépnévhez"
 
-#: sysdeps/posix/gai_strerror-strs.h:8
+#: sysdeps/posix/gai_strerror-strs.h:9
 msgid "Name or service not known"
 msgstr "A név vagy a szolgáltatás nem ismert"
 
-#: sysdeps/posix/gai_strerror-strs.h:9
+#: sysdeps/posix/gai_strerror-strs.h:10
 msgid "Servname not supported for ai_socktype"
 msgstr "A Servname nem támogatott az ai_socktype-hoz"
 
-#: sysdeps/posix/gai_strerror-strs.h:10
+#: sysdeps/posix/gai_strerror-strs.h:11
 msgid "ai_socktype not supported"
 msgstr "az ai_socktype nem támogatott"
 
-#: sysdeps/posix/gai_strerror-strs.h:11
+#: sysdeps/posix/gai_strerror-strs.h:12
 msgid "System error"
 msgstr "Rendszerhiba"
 
-#: sysdeps/posix/gai_strerror-strs.h:12
+#: sysdeps/posix/gai_strerror-strs.h:13
 msgid "Processing request in progress"
 msgstr "Kérés feldolgozása folyamatban"
 
-#: sysdeps/posix/gai_strerror-strs.h:13
+#: sysdeps/posix/gai_strerror-strs.h:14
 msgid "Request canceled"
 msgstr "Kérés megszakítva"
 
-#: sysdeps/posix/gai_strerror-strs.h:14
+#: sysdeps/posix/gai_strerror-strs.h:15
 msgid "Request not canceled"
 msgstr "A kérés nem lett megszakítva"
 
-#: sysdeps/posix/gai_strerror-strs.h:15
+#: sysdeps/posix/gai_strerror-strs.h:16
 msgid "All requests done"
 msgstr "Minden kérés kész"
 
-#: sysdeps/posix/gai_strerror-strs.h:16
+#: sysdeps/posix/gai_strerror-strs.h:17
 msgid "Interrupted by a signal"
 msgstr "Egy szignál megszakította"
 
-#: sysdeps/posix/gai_strerror-strs.h:17
+#: sysdeps/posix/gai_strerror-strs.h:18
 msgid "Parameter string not correctly encoded"
 msgstr "A paraméter-karakterlánc kódolása nem megfelelő"
 
@@ -1860,7 +1860,7 @@ msgstr "A paraméter-karakterlánc kódolása nem megfelelő"
 msgid "makecontext: does not know how to handle more than 8 arguments\n"
 msgstr "makecontext: 8-nál több paraméter nem kezelhető\n"
 
-#: sysdeps/unix/sysv/linux/x86/readelflib.c:62
+#: sysdeps/x86/readelflib.c:62
 #, c-format
 msgid "%s is for unknown machine %d.\n"
 msgstr "%s az ismeretlen géphez tartozik: %d.\n"
