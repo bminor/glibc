@@ -872,12 +872,21 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
      provides proper LRU hints so that the maximum thrashing
      capped at 1/associativity. */
   unsigned long int non_temporal_threshold = shared / 4;
+
+  /* If the computed non_temporal_threshold <= 3/4 * per-thread L3, we most
+     likely have incorrect/incomplete cache info in which case, default to
+     3/4 * per-thread L3 to avoid regressions.  */
+  unsigned long int non_temporal_threshold_lowbound
+      = shared_per_thread * 3 / 4;
+  if (non_temporal_threshold < non_temporal_threshold_lowbound)
+    non_temporal_threshold = non_temporal_threshold_lowbound;
+
   /* If no ERMS, we use the per-thread L3 chunking. Normal cacheable stores run
      a higher risk of actually thrashing the cache as they don't have a HW LRU
      hint. As well, their performance in highly parallel situations is
      noticeably worse.  */
   if (!CPU_FEATURE_USABLE_P (cpu_features, ERMS))
-    non_temporal_threshold = shared_per_thread * 3 / 4;
+    non_temporal_threshold = non_temporal_threshold_lowbound;
 
 #if HAVE_TUNABLES
   /* NB: The REP MOVSB threshold must be greater than VEC_SIZE * 8.  */
