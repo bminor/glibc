@@ -745,8 +745,8 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
 
   /* The default setting for the non_temporal threshold is [1/8, 1/2] of size
      of the chip's cache (depending on `cachesize_non_temporal_divisor` which
-     is microarch specific. The default is 1/4). For most Intel and AMD
-     processors with an initial release date between 2017 and 2023, a thread's
+     is microarch specific. The default is 1/4). For most Intel processors
+     with an initial release date between 2017 and 2023, a thread's
      typical share of the cache is from 18-64MB. Using a reasonable size
      fraction of L3 is meant to estimate the point where non-temporal stores
      begin out-competing REP MOVSB. As well the point where the fact that
@@ -757,12 +757,21 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
      the maximum thrashing capped at 1/associativity. */
   unsigned long int non_temporal_threshold
       = shared / cachesize_non_temporal_divisor;
+
+  /* If the computed non_temporal_threshold <= 3/4 * per-thread L3, we most
+     likely have incorrect/incomplete cache info in which case, default to
+     3/4 * per-thread L3 to avoid regressions.  */
+  unsigned long int non_temporal_threshold_lowbound
+      = shared_per_thread * 3 / 4;
+  if (non_temporal_threshold < non_temporal_threshold_lowbound)
+    non_temporal_threshold = non_temporal_threshold_lowbound;
+
   /* If no ERMS, we use the per-thread L3 chunking. Normal cacheable stores run
      a higher risk of actually thrashing the cache as they don't have a HW LRU
      hint. As well, their performance in highly parallel situations is
      noticeably worse.  */
   if (!CPU_FEATURE_USABLE_P (cpu_features, ERMS))
-    non_temporal_threshold = shared_per_thread * 3 / 4;
+    non_temporal_threshold = non_temporal_threshold_lowbound;
   /* SIZE_MAX >> 4 because memmove-vec-unaligned-erms right-shifts the value of
      'x86_non_temporal_threshold' by `LOG_4X_MEMCPY_THRESH` (4) and it is best
      if that operation cannot overflow. Minimum of 0x4040 (16448) because the
