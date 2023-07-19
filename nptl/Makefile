@@ -636,6 +636,7 @@ $(objpfx)tst-cleanup4: $(objpfx)tst-cleanup4aux.o
 $(objpfx)tst-cleanupx4: $(objpfx)tst-cleanupx4aux.o
 
 LDFLAGS-tst-tls3 = -rdynamic
+LDFLAGS-tst-tls3mod.so = -Wl,-z,lazy
 $(objpfx)tst-tls3.out: $(objpfx)tst-tls3mod.so
 
 LDFLAGS-tst-tls3-malloc = -rdynamic
