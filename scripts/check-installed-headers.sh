@@ -29,6 +29,9 @@ cxx_modes="-std=c++98 -std=gnu++98 -std=c++11 -std=gnu++11"
 # These are probably the most commonly used three.
 lib_modes="-D_DEFAULT_SOURCE=1 -D_GNU_SOURCE=1 -D_XOPEN_SOURCE=700"
 
+# Also check for fortify modes, since it might be enabled as default.
+fortify_modes="1 2 3"
+
 if [ $# -lt 3 ]; then
     echo "usage: $0 c|c++ \"compile command\" header header header..." >&2
     exit 2
@@ -100,29 +103,36 @@ EOF
     echo :: "$header"
     for lang_mode in "" $lang_modes; do
         for lib_mode in "" $lib_modes; do
-            echo :::: $lang_mode $lib_mode
-            if [ -z "$lib_mode" ]; then
-                expanded_lib_mode='/* default library mode */'
-            else
-                expanded_lib_mode=$(echo : $lib_mode | \
-                    sed 's/^: -D/#define /; s/=/ /')
-            fi
-            cat >"$cih_test_c" <<EOF
+            for fortify_mode in "" $fortify_modes; do
+                echo :::: $lang_mode $lib_mode $fortify_mode
+                if [ -z "$lib_mode" ]; then
+                    expanded_lib_mode='/* default library mode */'
+                else
+                    expanded_lib_mode=$(echo : $lib_mode | \
+                        sed 's/^: -D/#define /; s/=/ /')
+                fi
+                if [ ! -z $fortify_mode ]; then
+                    fortify_mode="#define _FORTIFY_SOURCE $fortify_mode"
+                fi
+                cat >"$cih_test_c" <<EOF
 /* These macros may have been defined on the command line.  They are
    inappropriate for this test.  */
 #undef _LIBC
 #undef _GNU_SOURCE
+#undef _FORTIFY_SOURCE
+$fortify_mode
 /* The library mode is selected here rather than on the command line to
    ensure that this selection wins. */
 $expanded_lib_mode
 #include <$header>
 int avoid_empty_translation_unit;
 EOF
-            if $cc_cmd -finput-charset=ascii -fsyntax-only $lang_mode \
-		       "$cih_test_c" 2>&1
-            then :
-            else failed=1
-            fi
+                if $cc_cmd -finput-charset=ascii -fsyntax-only $lang_mode \
+		           "$cih_test_c" 2>&1
+                then :
+                else failed=1
+                fi
+            done
         done
     done
 done
