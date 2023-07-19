@@ -408,11 +408,11 @@ struct pthread
   /* rseq area registered with the kernel.  */
   struct rseq rseq_area;
 
-  /* This member must be last.  */
-  char end_padding[];
-
+  /* Amount of end padding, if any, in this structure.
+     This definition relies on rseq_area being last.  */
 #define PTHREAD_STRUCT_END_PADDING \
-  (sizeof (struct pthread) - offsetof (struct pthread, end_padding))
+  (sizeof (struct pthread) - offsetof (struct pthread, rseq_area) \
+   + sizeof (struct rseq))
 } __attribute ((aligned (TCB_ALIGNMENT)));
 
 static inline bool
