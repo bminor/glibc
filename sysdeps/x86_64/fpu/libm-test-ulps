@@ -77,7 +77,7 @@ double: 2
 
 Function: "acosh_vlen4":
 double: 2
-float: 1
+float: 2
 
 Function: "acosh_vlen4_avx2":
 double: 2
@@ -158,11 +158,11 @@ float128: 4
 ldouble: 5
 
 Function: "asinh_vlen2":
-double: 1
+double: 2
 
 Function: "asinh_vlen4":
 double: 1
-float: 1
+float: 2
 
 Function: "asinh_vlen4_avx2":
 double: 1
@@ -289,11 +289,11 @@ Function: "atanh_vlen16":
 float: 1
 
 Function: "atanh_vlen2":
-double: 1
+double: 2
 
 Function: "atanh_vlen4":
 double: 1
-float: 1
+float: 2
 
 Function: "atanh_vlen4_avx2":
 double: 1
@@ -664,7 +664,7 @@ Function: "cbrt_vlen16":
 float: 1
 
 Function: "cbrt_vlen2":
-double: 1
+double: 4
 
 Function: "cbrt_vlen4":
 double: 1
@@ -1363,11 +1363,11 @@ Function: "erfc_vlen16":
 float: 1
 
 Function: "erfc_vlen2":
-double: 1
+double: 5
 
 Function: "erfc_vlen4":
 double: 1
-float: 1
+float: 3
 
 Function: "erfc_vlen4_avx2":
 double: 1
@@ -1413,7 +1413,7 @@ Function: "exp10_vlen16":
 float: 3
 
 Function: "exp10_vlen2":
-double: 1
+double: 2
 
 Function: "exp10_vlen4":
 double: 1
@@ -1743,11 +1743,11 @@ Function: "log10_vlen16":
 float: 1
 
 Function: "log10_vlen2":
-double: 1
+double: 2
 
 Function: "log10_vlen4":
 double: 1
-float: 1
+float: 2
 
 Function: "log10_vlen4_avx2":
 double: 1
@@ -2046,7 +2046,7 @@ double: 2
 
 Function: "sinh_vlen4":
 double: 2
-float: 1
+float: 2
 
 Function: "sinh_vlen4_avx2":
 double: 2
@@ -2129,10 +2129,11 @@ Function: "tanh_vlen16":
 float: 1
 
 Function: "tanh_vlen2":
-double: 1
+double: 2
 
 Function: "tanh_vlen4":
 double: 1
+float: 2
 
 Function: "tanh_vlen4_avx2":
 double: 1
