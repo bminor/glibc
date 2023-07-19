@@ -27,6 +27,7 @@
 #include <nss.h>
 
 /* Get implementation for some internal functions.  */
+#include "../resolv/mapv4v6addr.h"
 #include "../resolv/res_hconf.h"
 
 
@@ -34,8 +35,8 @@
 #define DATABASE	"hosts"
 #define NEED_H_ERRNO
 
-#define EXTRA_ARGS	 , af
-#define EXTRA_ARGS_DECL	 , int af
+#define EXTRA_ARGS	 , af, flags
+#define EXTRA_ARGS_DECL	 , int af, int flags
 
 #define ENTDATA hostent_data
 struct hostent_data
@@ -60,8 +61,12 @@ LINE_PARSER
      af = af == AF_UNSPEC ? AF_INET : af;
    else
      {
-       if (af == AF_INET
-	   && __inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
+       if (af == AF_INET6 && (flags & AI_V4MAPPED) != 0
+	   && __inet_pton (AF_INET, addr, entdata->host_addr) > 0)
+	 map_v4v6_address ((char *) entdata->host_addr,
+			   (char *) entdata->host_addr);
+       else if (af == AF_INET
+		&& __inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
 	 {
 	   if (IN6_IS_ADDR_V4MAPPED (entdata->host_addr))
 	     memcpy (entdata->host_addr, entdata->host_addr + 12, INADDRSZ);
@@ -94,13 +99,14 @@ LINE_PARSER
    STRING_FIELD (result->h_name, isspace, 1);
  })
 
-#define EXTRA_ARGS_VALUE , AF_INET
+#define EXTRA_ARGS_VALUE , AF_INET, 0
 #include "files-XXX.c"
 #undef EXTRA_ARGS_VALUE
 
 /* We only need to consider IPv4 mapped addresses if the input to the
    gethostbyaddr() function is an IPv6 address.  */
-#define EXTRA_ARGS_VALUE , af
+#define EXTRA_ARGS_VALUE \
+  , af, (len == IN6ADDRSZ ? AI_V4MAPPED : 0)
 DB_LOOKUP (hostbyaddr, ,,,
 	   {
 	     if (result->h_length == (int) len
@@ -152,7 +158,7 @@ gethostbyname3_multi (FILE * stream, const char *name, int af,
   while (true)
     {
       status = internal_getent (stream, &tmp_result_buf, tmp_buffer.data,
-				tmp_buffer.length, errnop, herrnop, af);
+				tmp_buffer.length, errnop, herrnop, af, 0);
       /* Enlarge the buffer if necessary.  */
       if (status == NSS_STATUS_TRYAGAIN && *herrnop == NETDB_INTERNAL
 	  && *errnop == ERANGE)
@@ -337,7 +343,7 @@ _nss_files_gethostbyname3_r (const char *name, int af, struct hostent *result,
   if (status == NSS_STATUS_SUCCESS)
     {
       while ((status = internal_getent (stream, result, buffer, buflen, errnop,
-					herrnop, af))
+					herrnop, af, 0))
 	     == NSS_STATUS_SUCCESS)
 	{
 	  LOOKUP_NAME_CASE (h_name, h_aliases)
@@ -402,7 +408,7 @@ _nss_files_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
 
 	  struct hostent result;
 	  status = internal_getent (stream, &result, buffer, buflen, errnop,
-				    herrnop, AF_UNSPEC);
+				    herrnop, AF_UNSPEC, 0);
 	  if (status != NSS_STATUS_SUCCESS)
 	    break;
 
