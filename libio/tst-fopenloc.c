@@ -76,7 +76,8 @@ do_bz18906 (void)
   if (fp != NULL)
     {
       flags = fcntl (fileno (fp), F_GETFL);
-      retval = (flags & O_RDWR) | (flags & O_WRONLY);
+      retval = ((flags & O_ACCMODE) == O_RDWR);
+      retval |= ((flags & O_ACCMODE) == O_WRONLY);
       TEST_COMPARE (retval, false);
       fclose (fp);
     }
