@@ -168,6 +168,8 @@ extra-libs-others = $(extra-libs)
 
 libSegFault-routines = segfault
 libSegFault-inhibit-o = $(filter-out .os,$(object-suffixes))
+# libSegFault.so installs a signal handler in its ELF constructor.
+LDFLAGS-SegFault.so = -Wl,--enable-new-dtags,-z,nodelete
 
 libpcprofile-routines = pcprofile
 libpcprofile-inhibit-o = $(filter-out .os,$(object-suffixes))
