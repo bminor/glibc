@@ -29,11 +29,12 @@ cxx_modes="-std=c++98 -std=gnu++98 -std=c++11 -std=gnu++11"
 # These are probably the most commonly used three.
 lib_modes="-D_DEFAULT_SOURCE=1 -D_GNU_SOURCE=1 -D_XOPEN_SOURCE=700"
 
-# Also check for fortify modes, since it might be enabled as default.
-fortify_modes="1 2 3"
+# Also check for fortify modes, since it might be enabled as default.  The
+# maximum value to be checked is define by maximum_fortify argument.
+fortify_modes=""
 
 if [ $# -lt 3 ]; then
-    echo "usage: $0 c|c++ \"compile command\" header header header..." >&2
+    echo "usage: $0 c|c++ maximum_fortify \"compile command\" header header header..." >&2
     exit 2
 fi
 case "$1" in
@@ -49,6 +50,8 @@ case "$1" in
         echo "usage: $0 c|c++ \"compile command\" header header header..." >&2
         exit 2;;
 esac
+shift
+fortify_modes=$(seq -s' ' 1 $1)
 shift
 cc_cmd="$1"
 shift
@@ -104,7 +107,6 @@ EOF
     for lang_mode in "" $lang_modes; do
         for lib_mode in "" $lib_modes; do
             for fortify_mode in "" $fortify_modes; do
-                echo :::: $lang_mode $lib_mode $fortify_mode
                 if [ -z "$lib_mode" ]; then
                     expanded_lib_mode='/* default library mode */'
                 else
@@ -114,6 +116,7 @@ EOF
                 if [ ! -z $fortify_mode ]; then
                     fortify_mode="#define _FORTIFY_SOURCE $fortify_mode"
                 fi
+                echo :::: $lang_mode $lib_mode $fortify_mode
                 cat >"$cih_test_c" <<EOF
 /* These macros may have been defined on the command line.  They are
    inappropriate for this test.  */
