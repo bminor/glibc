@@ -8,9 +8,9 @@
 # Božidar Putanec <bozidarp@yahoo.com>, 2018, 2019, 2020, 2021, 2022, 2023.
 msgid ""
 msgstr ""
-"Project-Id-Version: libc-2.36.9000\n"
+"Project-Id-Version: libc-2.37.9000\n"
 "POT-Creation-Date: 2023-07-17 20:35+0200\n"
-"PO-Revision-Date: 2023-05-01 17:12-0700\n"
+"PO-Revision-Date: 2023-07-20 10:13+0200\n"
 "Last-Translator: Božidar Putanec <bozidarp@yahoo.com>\n"
 "Language-Team: Croatian <lokalizacija@linux.hr>\n"
 "Language: hr\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.3.2\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #: argp/argp-help.c:229
@@ -872,6 +872,11 @@ msgstr " (od %s:%d)\n"
 msgid "Can't open directory %s"
 msgstr "Nije moguće otvoriti direktorij %s"
 
+#: elf/ldconfig.c:727 elf/ldconfig.c:732
+#, c-format
+msgid "Could not form library path"
+msgstr "Nije bilo moguće formirati stazu biblioteke"
+
 #: elf/ldconfig.c:761 elf/ldconfig.c:799 elf/readlib.c:78
 #, c-format
 msgid "Input file %s not found.\n"
@@ -1581,6 +1586,21 @@ msgstr "pri umetanju u stablo pretraživanja"
 #, c-format
 msgid "cannot generate output file"
 msgstr "nije moguće generirati izlaznu datoteku"
+
+#: include/unistd_ext.h:38
+#, c-format
+msgid "write of %zu bytes failed after %td: %m"
+msgstr "nije uspjelo zapisati %zu bajtova nakon %td: %m"
+
+#: include/unistd_ext.h:43
+#, c-format
+msgid "write returned 0 after writing %td bytes of %zu"
+msgstr "operacija pisanja vratila je 0 nakon pisanja %td bajtova od %zu"
+
+#: include/unistd_ext.h:59
+#, c-format
+msgid "read of %zu bytes failed after %td: %m"
+msgstr "nije uspjelo pročitati %zu bajtova nakon %td: %m"
 
 #: inet/rcmd.c:160
 msgid "rcmd: Cannot allocate memory\n"
@@ -6525,6 +6545,10 @@ msgstr "Prekinuto signalom"
 #: sysdeps/posix/gai_strerror-strs.h:18
 msgid "Parameter string not correctly encoded"
 msgstr "String parametra nije ispravno kodiran"
+
+#: sysdeps/posix/gai_strerror-strs.h:19
+msgid "Result too large for supplied buffer"
+msgstr "Rezultat je prevelik za dani spremnik"
 
 #: sysdeps/unix/sysv/linux/ia64/makecontext.c:57
 #, c-format

@@ -5,12 +5,12 @@
 # Jan Djärv <jan.h.d@swipnet.se>, 1996, 1998, 2001, 2002, 2003, 2006, 2007, 2008, 2009, 2011, 2012, 2013, 2014, 2015.
 # Göran Uddeborg <goeran@uddeborg.se>, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
 #
-# $Revision: 1.35 $
+# $Revision: 1.37 $
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.36.9000\n"
+"Project-Id-Version: libc 2.37.9000\n"
 "POT-Creation-Date: 2023-07-17 20:35+0200\n"
-"PO-Revision-Date: 2023-01-30 23:12+0100\n"
+"PO-Revision-Date: 2023-07-20 10:01+0200\n"
 "Last-Translator: Göran Uddeborg <goeran@uddeborg.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -870,6 +870,11 @@ msgstr " (från %s:%d)\n"
 msgid "Can't open directory %s"
 msgstr "Kan inte öppna katalog %s"
 
+#: elf/ldconfig.c:727 elf/ldconfig.c:732
+#, c-format
+msgid "Could not form library path"
+msgstr "Kunde inte forma bibliotekssökvägen"
+
 #: elf/ldconfig.c:761 elf/ldconfig.c:799 elf/readlib.c:78
 #, c-format
 msgid "Input file %s not found.\n"
@@ -1570,6 +1575,21 @@ msgstr "vid insättning i sökträd"
 #, c-format
 msgid "cannot generate output file"
 msgstr "kan inte generera utfil"
+
+#: include/unistd_ext.h:38
+#, c-format
+msgid "write of %zu bytes failed after %td: %m"
+msgstr "skrivning av %zu byte misslyckades efter %td: %m"
+
+#: include/unistd_ext.h:43
+#, c-format
+msgid "write returned 0 after writing %td bytes of %zu"
+msgstr "skrivningen returnerade 0 efter att %td av %zu byte skrivits"
+
+#: include/unistd_ext.h:59
+#, c-format
+msgid "read of %zu bytes failed after %td: %m"
+msgstr "läsningen av %zu byte misslyckades efter %td: %m"
 
 #: inet/rcmd.c:160
 msgid "rcmd: Cannot allocate memory\n"
@@ -6466,6 +6486,10 @@ msgstr "Avbruten av en signal"
 #: sysdeps/posix/gai_strerror-strs.h:18
 msgid "Parameter string not correctly encoded"
 msgstr "Parametersträng felaktigt kodad"
+
+#: sysdeps/posix/gai_strerror-strs.h:19
+msgid "Result too large for supplied buffer"
+msgstr "Resultatet är för stort för den givna bufferten"
 
 #: sysdeps/unix/sysv/linux/ia64/makecontext.c:57
 #, c-format
