@@ -26,6 +26,14 @@
 #undef __USE_STRING_INLINES
 #endif
 
+#include <sys/cdefs.h>
+#include <libc-diag.h>
+
+/* Triggered by strncpy fortify wrapper when it is enabled.  */
+#if __GNUC_PREREQ (8, 0)
+DIAG_IGNORE_NEEDS_COMMENT (8, "-Wstringop-truncation");
+#endif
+
 #include <errno.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -33,7 +41,6 @@
 #include <string.h>
 #include <strings.h>
 #include <fcntl.h>
-#include <libc-diag.h>
 
 /* This file tests a range of corner cases of string functions,
    including cases where truncation occurs or where sizes specified
@@ -44,9 +51,6 @@ DIAG_IGNORE_NEEDS_COMMENT (5.0, "-Wmemset-transposed-args");
 #if __GNUC_PREREQ (7, 0)
 DIAG_IGNORE_NEEDS_COMMENT (9, "-Wrestrict");
 DIAG_IGNORE_NEEDS_COMMENT (7, "-Wstringop-overflow=");
-#endif
-#if __GNUC_PREREQ (8, 0)
-DIAG_IGNORE_NEEDS_COMMENT (8, "-Wstringop-truncation");
 #endif
 #if __GNUC_PREREQ (11, 0)
 DIAG_IGNORE_NEEDS_COMMENT (11, "-Wstringop-overread");
