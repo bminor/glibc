@@ -34,7 +34,6 @@
 #include <bits/types/res_state.h>
 #include <kernel-features.h>
 #include <tls-internal-struct.h>
-#include <sys/rseq.h>
 #include <internal-sigset.h>
 
 #ifndef TCB_ALIGNMENT
@@ -405,14 +404,25 @@ struct pthread
   /* Used on strsignal.  */
   struct tls_internal_t tls_state;
 
-  /* rseq area registered with the kernel.  */
-  struct rseq rseq_area;
+  /* rseq area registered with the kernel.  Use a custom definition
+     here to isolate from kernel struct rseq changes.  The
+     implementation of sched_getcpu needs acccess to the cpu_id field;
+     the other fields are unused and not included here.  */
+  union
+  {
+    struct
+    {
+      uint32_t cpu_id_start;
+      uint32_t cpu_id;
+    };
+    char pad[32];		/* Original rseq area size.  */
+  } rseq_area __attribute__ ((aligned (32)));
 
   /* Amount of end padding, if any, in this structure.
      This definition relies on rseq_area being last.  */
 #define PTHREAD_STRUCT_END_PADDING \
   (sizeof (struct pthread) - offsetof (struct pthread, rseq_area) \
-   + sizeof (struct rseq))
+   + sizeof ((struct pthread) {}.rseq_area))
 } __attribute ((aligned (TCB_ALIGNMENT)));
 
 static inline bool
