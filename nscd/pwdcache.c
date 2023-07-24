@@ -122,7 +122,7 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 
 	  /* If we have a transient error or cannot permanently store
 	     the result, so be it.  */
-	  if (errno == EAGAIN || __builtin_expect (db->negtimeout == 0, 0))
+	  if (errval == EAGAIN || __glibc_unlikely (db->negtimeout == 0))
 	    {
 	      /* Mark the old entry as obsolete.  */
 	      if (dh != NULL)
