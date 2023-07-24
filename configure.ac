@@ -277,16 +277,6 @@ else
   fi
 fi
 
-dnl For the development we sometimes want gcc to issue even more warnings.
-dnl This is not the default since many of the extra warnings are not
-dnl appropriate.
-AC_ARG_ENABLE([all-warnings],
-	      AS_HELP_STRING([--enable-all-warnings],
-			     [enable all useful warnings gcc can issue]),
-	      [all_warnings=$enableval],
-	      [])
-AC_SUBST(all_warnings)
-
 AC_ARG_ENABLE([werror],
 	      AS_HELP_STRING([--disable-werror],
 			     [do not build with -Werror]),
