@@ -27,13 +27,13 @@ extern __typeof (__strchrnul) __strchrnul_power8 attribute_hidden;
 
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
-libc_ifunc (__strchrnul,
-	    (hwcap2 & PPC_FEATURE2_ARCH_2_07
-	     && hwcap & PPC_FEATURE_HAS_ALTIVEC)
-	    ? __strchrnul_power8 :
-	    (hwcap & PPC_FEATURE_ARCH_2_06)
-            ? __strchrnul_power7
-            : __strchrnul_ppc);
+libc_ifunc_hidden (__strchrnul, __strchrnul,
+		   (hwcap2 & PPC_FEATURE2_ARCH_2_07
+		    && hwcap & PPC_FEATURE_HAS_ALTIVEC)
+		   ? __strchrnul_power8 :
+		   (hwcap & PPC_FEATURE_ARCH_2_06)
+		   ? __strchrnul_power7
+		   : __strchrnul_ppc);
 
 libc_hidden_def (__strchrnul)
 weak_alias (__strchrnul, strchrnul)
