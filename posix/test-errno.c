@@ -17,6 +17,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <sys/cdefs.h>
+#include <libc-diag.h>
+#if __GNUC_PREREQ (7, 0)
+/* Triggered by getgroup fortify wrapper.  */
+DIAG_IGNORE_NEEDS_COMMENT (7, "-Wstringop-overflow");
+#endif
+
 #include <errno.h>
 #include <limits.h>
 #include <grp.h>
@@ -34,7 +41,6 @@
 #include <sys/uio.h>
 #include <unistd.h>
 #include <netinet/in.h>
-#include <libc-diag.h>
 
 /* This is not an exhaustive test: only system calls that can be
    persuaded to fail with a consistent error code and no side effects
