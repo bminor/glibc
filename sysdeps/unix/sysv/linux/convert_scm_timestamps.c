@@ -23,6 +23,7 @@
 # include <string.h>
 # include <sys/socket.h>
 # include <socket-constants-time64.h>
+# include <libc-diag.h>
 
 /* It converts the first SO_TIMESTAMP or SO_TIMESTAMPNS with 32-bit time and
    appends it to the control buffer.  The 32-bit time field is kept as-is.
@@ -44,7 +45,15 @@ __convert_scm_timestamps (struct msghdr *msg, socklen_t msgsize)
      'struct __kernel_sock_timeval' while for SO_TIMESTAMPNS_NEW is a
      'struct __kernel_timespec'.  In either case it is two uint64_t
      members.  */
+
+  /* GCC 6 issues an warning that tvts[0]/tvts[1] maybe be used uninitialized,
+     however it would be used if type is set to a value different than 0
+     (done by either COMPAT_SO_TIMESTAMP_OLD or COMPAT_SO_TIMESTAMPNS_OLD)
+     which will fallthrough to 'common' label.  */
+  DIAG_PUSH_NEEDS_COMMENT;
+  DIAG_IGNORE_NEEDS_COMMENT (6, "-Wmaybe-uninitialized");
   int64_t tvts[2];
+  DIAG_POP_NEEDS_COMMENT;
   int32_t tmp[2];
 
   struct cmsghdr *cmsg, *last = NULL;
