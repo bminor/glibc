@@ -32,7 +32,8 @@ __printf (const char *format, ...)
   va_start (arg, format);
   done = __vfprintf_internal (stdout, format, arg, 0);
   va_end (arg);
-
+  fflush(stdout);
+   
   return done;
 }
 
