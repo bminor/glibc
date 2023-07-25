@@ -39,11 +39,11 @@ Major new features:
 
     - x86_64-gnu
 
-* Added libmvec vector math library support to AArch64.  It requires
-  GCC version >= 10.1.0.  It can be disabled via --disable-mathvec,
-  however that is not a supported configuration as it changes the ABI.
-  The symbol names follow the AArch64 vector ABI, they are declared
-  in math.h and have to be called manually at this point.
+* Vector math library libmvec support has been added to AArch64.  It
+  requires GCC version >= 10.1.0.  It can be disabled via
+  "--disable-mathvec", however that is not a supported configuration as
+  it changes the ABI. The symbol names follow the AArch64 vector ABI,
+  they are declared in math.h and have to be called manually at this point.
 
 * The strlcpy and strlcat functions have been added.  They are derived
   from OpenBSD, and are expected to be added to a future POSIX version.
@@ -56,7 +56,7 @@ Major new features:
 
 Deprecated and removed features, and other changes affecting compatibility:
 
-* libcrypt is no longer built by default, one may use the --enable-crypt
+* libcrypt is no longer built by default, one may use the "--enable-crypt"
   option to build libcrypt.  libcrypt is likely to be removed from the
   GNU C Library in a future release, so it is recommended that
   applications port away from it to an alternative such as libxcrypt.
@@ -68,11 +68,11 @@ Deprecated and removed features, and other changes affecting compatibility:
   alternatively stable kernels from versions 6.1.6, 5.15.87, 5.10.163,
   5.4.228, 4.19.270 or 4.14.303.
 
-* The --disable-experimental-malloc is no longer available.  The per-thread
-  cache can still be disable per-application using tunables
+* The "--disable-experimental-malloc" option is no longer available.  The
+  per-thread cache can still be disable per-application using tunables
   (glibc.malloc.tcache_count set to zero).
 
-* The configure option --enable-tunables has been removed.  The tunable
+* The configure option "--enable-tunables" has been removed.  The tunable
   feature is now always enabled.
 
 Changes to build and runtime requirements:
