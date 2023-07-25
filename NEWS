@@ -77,7 +77,7 @@ Deprecated and removed features, and other changes affecting compatibility:
 
 Changes to build and runtime requirements:
 
-  [Add changes to build and runtime requirements here]
+* Building libmvec on AArch64 requires at minimum GCC 10 for SVE ACLE.
 
 Security related changes:
 
