@@ -46,6 +46,5 @@ CFLAGS-s_fmaf-fma.c += -mavx -mfpmath=sse
 endif
 
 ifeq ($(subdir),debug)
-sysdep_routines += memcpy_chk-nonshared mempcpy_chk-nonshared \
-		   memmove_chk-nonshared memset_chk-nonshared
+sysdep_routines += memset_chk-nonshared
 endif
