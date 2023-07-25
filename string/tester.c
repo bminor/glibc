@@ -385,8 +385,17 @@ test_strncat (void)
 
   (void) strcpy (one, "gh");
   (void) strcpy (two, "ef");
+  /* When building with fortify enabled, GCC 6 issues an warning the fortify
+     wrapper might overflow the destination buffer.  However, GCC does not
+     provide a specific flag to disable the warning (the failure is tied to
+     -Werror).  So to avoid disable all errors, only enable the check for
+     GCC 7 or newer.  */
+#if __GNUC_PREREQ (7, 0)
   (void) strncat (one, two, 99);
   equal (one, "ghef", 5);			/* Basic test encore. */
+#else
+  equal (one, "gh", 2);
+#endif
   equal (two, "ef", 6);			/* Stomped on source? */
 
   (void) strcpy (one, "");
