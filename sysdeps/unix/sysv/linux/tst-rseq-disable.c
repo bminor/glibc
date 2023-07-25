@@ -22,6 +22,7 @@
 #include <support/xthread.h>
 #include <sysdep.h>
 #include <thread_pointer.h>
+#include <sys/rseq.h>
 #include <unistd.h>
 
 #ifdef RSEQ_SIG
