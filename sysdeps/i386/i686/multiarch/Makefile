@@ -44,7 +44,3 @@ libm-sysdep_routines += s_fma-fma s_fmaf-fma
 CFLAGS-s_fma-fma.c += -mavx -mfpmath=sse
 CFLAGS-s_fmaf-fma.c += -mavx -mfpmath=sse
 endif
-
-ifeq ($(subdir),debug)
-sysdep_routines += memset_chk-nonshared
-endif

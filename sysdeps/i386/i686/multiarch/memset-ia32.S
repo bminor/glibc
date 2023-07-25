@@ -18,16 +18,17 @@
 
 #if IS_IN (libc)
 # define memset __memset_ia32
-# define __memset_chk __memset_chk_ia32
 
 # ifdef SHARED
-#  undef libc_hidden_builtin_def
+#  define __memset_chk __memset_chk_ia32
+# endif
+
+# undef libc_hidden_builtin_def
 /* IFUNC doesn't work with the hidden functions in shared library since
    they will be called without setting up EBX needed for PLT which is
    used by IFUNC.  */
-#  define libc_hidden_builtin_def(name) \
+# define libc_hidden_builtin_def(name) \
 	.globl __GI_memset; __GI_memset = memset
-# endif
 #endif
 
 #include <sysdeps/i386/i686/memset.S>
