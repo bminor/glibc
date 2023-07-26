@@ -226,6 +226,10 @@ update_active (struct cpu_features *cpu_features)
 	  CPU_FEATURE_SET_ACTIVE (cpu_features, AMX_COMPLEX);
 	}
 
+      /* APX is usable only if the APX state is supported by kernel.  */
+      if ((xcrlow & bit_APX_state) != 0)
+	CPU_FEATURE_SET_ACTIVE (cpu_features, APX_F);
+
       /* These features are usable only when OSXSAVE is enabled.  */
       CPU_FEATURE_SET (cpu_features, XSAVE);
       CPU_FEATURE_SET_ACTIVE (cpu_features, XSAVEOPT);

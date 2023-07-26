@@ -312,6 +312,7 @@ enum
   x86_cpu_AVX_NE_CONVERT	= x86_cpu_index_7_ecx_1_edx + 5,
   x86_cpu_AMX_COMPLEX		= x86_cpu_index_7_ecx_1_edx + 8,
   x86_cpu_PREFETCHI		= x86_cpu_index_7_ecx_1_edx + 14,
+  x86_cpu_APX_F			= x86_cpu_index_7_ecx_1_edx + 21,
 
   x86_cpu_index_19_ebx
     = (CPUID_INDEX_19 * 8 * 4 * sizeof (unsigned int)

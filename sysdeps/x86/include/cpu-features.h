@@ -319,6 +319,7 @@ enum
 #define bit_cpu_AVX_NE_CONVERT	(1u << 5)
 #define bit_cpu_AMX_COMPLEX	(1u << 8)
 #define bit_cpu_PREFETCHI	(1u << 14)
+#define bit_cpu_APX_F		(1u << 21)
 
 /* CPUID_INDEX_19.  */
 
@@ -562,6 +563,7 @@ enum
 #define index_cpu_AVX_NE_CONVERT CPUID_INDEX_7_ECX_1
 #define index_cpu_AMX_COMPLEX	CPUID_INDEX_7_ECX_1
 #define index_cpu_PREFETCHI	CPUID_INDEX_7_ECX_1
+#define index_cpu_APX_F		CPUID_INDEX_7_ECX_1
 
 /* CPUID_INDEX_19.  */
 
@@ -807,6 +809,7 @@ enum
 #define reg_AVX_NE_CONVERT	edx
 #define reg_AMX_COMPLEX		edx
 #define reg_PREFETCHI		edx
+#define reg_APX_F		edx
 
 /* CPUID_INDEX_19.  */
 
@@ -845,6 +848,7 @@ enum
 #define bit_ZMM16_31_state	(1u << 7)
 #define bit_XTILECFG_state	(1u << 17)
 #define bit_XTILEDATA_state	(1u << 18)
+#define bit_APX_state		(1u << 19)
 
 enum cpu_features_kind
 {

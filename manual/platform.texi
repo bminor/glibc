@@ -210,6 +210,9 @@ The supported processor features are:
 @code{AMX_TILE} -- Tile architecture.
 
 @item
+@code{APX_F} -- The APX instruction extensions.
+
+@item
 @code{ARCH_CAPABILITIES} -- IA32_ARCH_CAPABILITIES MSR.
 
 @item
