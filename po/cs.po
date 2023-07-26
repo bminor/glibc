@@ -9,7 +9,7 @@
 # Petr Kolar <Petr.Kolar@vslib.cz>
 # Stanislav Brabec <utx@k332.feld.cvut.cz>, 1998.
 #
-# Description of some function:
+# Description of some functions:
 # error(status, errnum, "message") => "progname: message: error_message"
 # perror("message") => "message: error_message"
 #
@@ -24,9 +24,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.36.9000\n"
+"Project-Id-Version: libc 2.37.9000\n"
 "POT-Creation-Date: 2023-07-17 20:35+0200\n"
-"PO-Revision-Date: 2023-01-26 21:17+01:00\n"
+"PO-Revision-Date: 2023-07-23 21:54+02:00\n"
 "Last-Translator: Petr Pisar <petr.pisar@atlas.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "Language: cs\n"
@@ -888,6 +888,11 @@ msgstr " (z %s:%d)\n"
 msgid "Can't open directory %s"
 msgstr "Adresář %s nelze otevřít"
 
+#: elf/ldconfig.c:727 elf/ldconfig.c:732
+#, c-format
+msgid "Could not form library path"
+msgstr "Cestu ke knihovně nebylo možné vytvořit"
+
 #: elf/ldconfig.c:761 elf/ldconfig.c:799 elf/readlib.c:78
 #, c-format
 msgid "Input file %s not found.\n"
@@ -1590,6 +1595,24 @@ msgstr "během vkládání do vyhledávacího stromu"
 #, c-format
 msgid "cannot generate output file"
 msgstr "výstupní soubor nelze vytvořit"
+
+# TODO: Pluralize
+#: include/unistd_ext.h:38
+#, c-format
+msgid "write of %zu bytes failed after %td: %m"
+msgstr "zápis %zu bajtů selhal po %td: %m"
+
+# TODO: Pluralize
+#: include/unistd_ext.h:43
+#, c-format
+msgid "write returned 0 after writing %td bytes of %zu"
+msgstr "zápis vrátil 0 po zapsání %td bajtů z %zu"
+
+# TODO: Pluralize
+#: include/unistd_ext.h:59
+#, c-format
+msgid "read of %zu bytes failed after %td: %m"
+msgstr "čtení %zu bajtů selhalo po %td: %m"
 
 #: inet/rcmd.c:160
 msgid "rcmd: Cannot allocate memory\n"
@@ -6506,6 +6529,10 @@ msgstr "Přerušeno signálem"
 #: sysdeps/posix/gai_strerror-strs.h:18
 msgid "Parameter string not correctly encoded"
 msgstr "Řetězec parametru chybně zakódován"
+
+#: sysdeps/posix/gai_strerror-strs.h:19
+msgid "Result too large for supplied buffer"
+msgstr "Výsledek je pro dodanou oblast paměti příliš velký"
 
 #: sysdeps/unix/sysv/linux/ia64/makecontext.c:57
 #, c-format

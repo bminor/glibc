@@ -7,10 +7,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.36.9000\n"
+"Project-Id-Version: libc 2.37.9000\n"
 "Report-Msgid-Bugs-To: http://www.gnu.org/software/libc/bugs.html\n"
 "POT-Creation-Date: 2023-07-17 20:35+0200\n"
-"PO-Revision-Date: 2023-05-03 08:47+0700\n"
+"PO-Revision-Date: 2023-07-22 10:02+0700\n"
 "Last-Translator: Trần Ngọc Quân <vnwildman@gmail.com>\n"
 "Language-Team: Vietnamese <translation-team-vi@lists.sourceforge.net>\n"
 "Language: vi\n"
@@ -870,6 +870,11 @@ msgstr " (từ %s:%d)\n"
 msgid "Can't open directory %s"
 msgstr "Không thể mở thư mục %s"
 
+#: elf/ldconfig.c:727 elf/ldconfig.c:732
+#, c-format
+msgid "Could not form library path"
+msgstr "Không thể tạo đường dẫn thư viện"
+
 #: elf/ldconfig.c:761 elf/ldconfig.c:799 elf/readlib.c:78
 #, c-format
 msgid "Input file %s not found.\n"
@@ -1569,6 +1574,21 @@ msgstr "trong khi chèn vào cây tìm kiếm"
 #, c-format
 msgid "cannot generate output file"
 msgstr "không thể tạo tập tin kết xuất"
+
+#: include/unistd_ext.h:38
+#, c-format
+msgid "write of %zu bytes failed after %td: %m"
+msgstr "ghi %zu byte không thành công sau %td: %m"
+
+#: include/unistd_ext.h:43
+#, c-format
+msgid "write returned 0 after writing %td bytes of %zu"
+msgstr "ghi trả về 0 sau khi ghi %td byte của %zu"
+
+#: include/unistd_ext.h:59
+#, c-format
+msgid "read of %zu bytes failed after %td: %m"
+msgstr "đọc %zu byte không thành công sau %td: %m"
 
 #: inet/rcmd.c:160
 msgid "rcmd: Cannot allocate memory\n"
@@ -6467,6 +6487,10 @@ msgstr "Bị ngắt bởi tín hiệu"
 #: sysdeps/posix/gai_strerror-strs.h:18
 msgid "Parameter string not correctly encoded"
 msgstr "Chuỗi tham số không phải được mã  hóa đúng"
+
+#: sysdeps/posix/gai_strerror-strs.h:19
+msgid "Result too large for supplied buffer"
+msgstr "Kết quả quá lớn đối với bộ đệm được cung cấp"
 
 #: sysdeps/unix/sysv/linux/ia64/makecontext.c:57
 #, c-format

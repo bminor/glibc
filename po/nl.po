@@ -11,18 +11,18 @@
 # Benno Schulenberg <benno@vertaalt.nl>, 2020, 2021, 2022, 2023.
 msgid ""
 msgstr ""
-"Project-Id-Version: libc-2.36.9000\n"
+"Project-Id-Version: libc-2.37.9000\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-17 20:35+0200\n"
-"PO-Revision-Date: 2023-01-27 15:47+0100\n"
+"PO-Revision-Date: 2023-07-24 09:34+0200\n"
 "Last-Translator: Benno Schulenberg <vertaling@coevern.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Bugs: Report translation errors to the Language-Team address.\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
 
 #: argp/argp-help.c:229
 #, c-format
@@ -883,6 +883,11 @@ msgstr " (van %s:%d)\n"
 msgid "Can't open directory %s"
 msgstr "Kan map %s niet openen"
 
+#: elf/ldconfig.c:727 elf/ldconfig.c:732
+#, c-format
+msgid "Could not form library path"
+msgstr "Kan bibliotheekpad niet vormen"
+
 #: elf/ldconfig.c:761 elf/ldconfig.c:799 elf/readlib.c:78
 #, c-format
 msgid "Input file %s not found.\n"
@@ -1588,6 +1593,21 @@ msgstr "bij invoegen in zoekboom"
 #, c-format
 msgid "cannot generate output file"
 msgstr "kan geen uitvoerbestand genereren"
+
+#: include/unistd_ext.h:38
+#, c-format
+msgid "write of %zu bytes failed after %td: %m"
+msgstr "het schrijven van %zu bytes is mislukt na %td bytes: %m"
+
+#: include/unistd_ext.h:43
+#, c-format
+msgid "write returned 0 after writing %td bytes of %zu"
+msgstr "schrijffunctie zei OK na het schrijven van %td bytes uit %zu"
+
+#: include/unistd_ext.h:59
+#, c-format
+msgid "read of %zu bytes failed after %td: %m"
+msgstr "het lezen van %zu bytes is mislukt na %td bytes: %m"
 
 #: inet/rcmd.c:160
 msgid "rcmd: Cannot allocate memory\n"
@@ -4682,7 +4702,7 @@ msgstr "LETTER"
 # De msgid en de optienaam zelf zijn verbesserungsbedürftig.
 #: nss/makedb.c:127
 msgid "Generated line not part of iteration"
-msgstr "te negeren gegevensbank"
+msgstr "gegenereerde regel is geen deel van iteratie"
 
 #: nss/makedb.c:132
 msgid "Create simple database from textual input."
@@ -6509,6 +6529,10 @@ msgstr "Onderbroken door een signaal"
 #: sysdeps/posix/gai_strerror-strs.h:18
 msgid "Parameter string not correctly encoded"
 msgstr "Parametertekst is niet juist gecodeerd"
+
+#: sysdeps/posix/gai_strerror-strs.h:19
+msgid "Result too large for supplied buffer"
+msgstr "resultaat is te groot voor de gegeven buffer"
 
 #: sysdeps/unix/sysv/linux/ia64/makecontext.c:57
 #, c-format
