@@ -26,13 +26,13 @@ int
 ffsll (long long int x)
 {
   long long int cnt;
-  long long int tmp;
 
-  asm ("bsfq %2,%0\n"		/* Count low bits in X and store in %1.  */
-       "cmoveq %1,%0\n"		/* If number was zero, use -1 as result.  */
-       : "=&r" (cnt), "=r" (tmp) : "rm" (x), "1" (-1));
+  asm ("mov $-1,%k0\n"	/* Initialize cnt to -1.  */
+       "bsf %1,%0\n"	/* Count low bits in x and store in cnt.  */
+       "inc %k0\n"	/* Increment cnt by 1.  */
+       : "=&r" (cnt) : "r" (x));
 
-  return cnt + 1;
+  return cnt;
 }
 
 #ifndef __ILP32__
