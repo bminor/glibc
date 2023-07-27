@@ -1579,6 +1579,16 @@ LIBC_TRY_TEST_CC_COMMAND([support for trampolines],
 LIBC_CONFIG_VAR([have-test-cc-trampoline],
 		[$libc_cv_test_cc_trampolines])
 
+dnl Check if TEST_CC supports -Wno-restrict.
+LIBC_TRY_TEST_CC_OPTION([-Wno-restrict],
+  [-c -Werror -Wno-restrict],
+  libc_cv_test_cflags_wno_restrict,
+  [libc_cv_test_cflags_wno_restrict=-Wno-restrict],
+  [libc_cv_test_cflags_wno_restrict=]
+)
+LIBC_CONFIG_VAR([test-config-cflags-wno-restrict],
+		[$libc_cv_test_cflags_wno_restrict])
+
 dnl Check if TEST_CC supports -finput-charset=ascii.
 LIBC_TRY_TEST_CC_OPTION([-finput-charset=ascii],
   [-c -Werror -finput-charset=ascii],

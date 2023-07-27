@@ -250,8 +250,10 @@ CFLAGS-tst-bz24153.c += $(no-fortify-source)
 CFLAGS-tst_putwc.c += -DOBJPFX=\"$(objpfx)\"
 
 # These test cases intentionally use overlapping arguments
-CFLAGS-tst-sprintf-ub.c += -Wno-restrict $(no-fortify-source)
-CFLAGS-tst-sprintf-chk-ub.c += -Wno-restrict $(no-fortify-source)
+CFLAGS-tst-sprintf-ub.c += $(test-config-cflags-wno-restrict) \
+			   $(no-fortify-source)
+CFLAGS-tst-sprintf-chk-ub.c += $(test-config-cflags-wno-restrict) \
+			       $(no-fortify-source)
 
 LDFLAGS-tst-bz24228 = -Wl,--version-script=tst-bz24228.map
 
