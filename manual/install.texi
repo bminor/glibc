@@ -528,7 +528,7 @@ GCC 6.2 or newer
 GCC 6.2 or higher is required.  In general it is recommended to use
 the newest version of the compiler that is known to work for building
 @theglibc{}, as newer compilers usually produce better code.  As of
-release time, GCC 13.0 is the newest compiler verified to work to build
+release time, GCC 13.2 is the newest compiler verified to work to build
 @theglibc{}.
 
 For PowerPC 64-bits little-endian (powerpc64le), a GCC version with support
@@ -567,7 +567,7 @@ GNU @code{binutils} 2.25 or later
 
 You must use GNU @code{binutils} (as and ld) to build @theglibc{}.
 No other assembler or linker has the necessary functionality at the
-moment. As of release time, GNU @code{binutils} 2.39 is the newest
+moment. As of release time, GNU @code{binutils} 2.40 is the newest
 verified to work to build @theglibc{}.
 
 For PowerPC 64-bits little-endian (powerpc64le), @command{objcopy} is required
@@ -583,7 +583,7 @@ To correctly translate and install the Texinfo documentation you need
 this version of the @code{texinfo} package.  Earlier versions do not
 understand all the tags used in the document, and the installation
 mechanism for the info files is not present or works differently.
-As of release time, @code{texinfo} 7.0.2 is the newest verified to work
+As of release time, @code{texinfo} 7.0.3 is the newest verified to work
 to build @theglibc{}.
 
 @item
@@ -592,7 +592,7 @@ GNU @code{awk} 3.1.2, or higher
 @code{awk} is used in several places to generate files.
 Some @code{gawk} extensions are used, including the @code{asorti}
 function, which was introduced in version 3.1.2 of @code{gawk}.
-As of release time, @code{gawk} version 5.1.1 is the newest verified
+As of release time, @code{gawk} version 5.2.2 is the newest verified
 to work to build @theglibc{}.
 
 @item
@@ -607,7 +607,7 @@ Perl 5
 
 Perl is not required, but if present it is used in some tests and the
 @code{mtrace} program, to build the @glibcadj{} manual.  As of release
-time @code{perl} version 5.36.0 is the newest verified to work to
+time @code{perl} version 5.38.0 is the newest verified to work to
 build @theglibc{}.
 
 @item
@@ -615,7 +615,7 @@ GNU @code{sed} 3.02 or newer
 
 @code{Sed} is used in several places to generate files.  Most scripts work
 with any version of @code{sed}.  As of release time, @code{sed} version
-4.8 is the newest verified to work to build @theglibc{}.
+4.9 is the newest verified to work to build @theglibc{}.
 
 @item
 Python 3.4 or later
@@ -639,7 +639,7 @@ GDB itself needs to be configured with Python support in order to use
 the pretty printers.  Notice that your system having Python available
 doesn't imply that GDB supports it, nor that your system's Python and
 GDB's have the same version.  As of release time GNU @code{debugger}
-12.1 is the newest verified to work to test the pretty printers.
+13.2 is the newest verified to work to test the pretty printers.
 
 Unless Python, PExpect and GDB with Python support are present, the
 printer tests will report themselves as @code{UNSUPPORTED}.  Notice
