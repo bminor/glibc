@@ -199,6 +199,7 @@ tests := \
   tst-strfry \
   tst-strlcat \
   tst-strlcpy \
+  tst-strlcpy2 \
   tst-strlen \
   tst-strtok \
   tst-strtok_r \

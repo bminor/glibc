@@ -180,6 +180,7 @@ tests := \
   tst-wcrtomb \
   tst-wcslcat \
   tst-wcslcpy \
+  tst-wcslcpy2 \
   tst-wcsnlen \
   tst-wcstod-nan-locale \
   tst-wcstod-nan-sign \
