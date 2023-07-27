@@ -179,6 +179,7 @@ tests := \
   tst-wcpncpy \
   tst-wcrtomb \
   tst-wcslcat \
+  tst-wcslcat2 \
   tst-wcslcpy \
   tst-wcslcpy2 \
   tst-wcsnlen \
