@@ -20,6 +20,7 @@
 #include <libintl.h>
 #include <ldsodefs.h>
 #include <dl-cet.h>
+#include <sys/single_threaded.h>
 
 /* GNU_PROPERTY_X86_FEATURE_1_IBT and GNU_PROPERTY_X86_FEATURE_1_SHSTK
    are defined in <elf.h>, which are only available for C sources.
@@ -233,7 +234,10 @@ dl_cet_check_dlopen (struct link_map *m, struct dl_cet_info *info)
       && (info->feature_1_legacy
 	  & GNU_PROPERTY_X86_FEATURE_1_IBT) != 0)
     {
-      if (info->enable_ibt_type != cet_permissive)
+      /* Don't disable IBT if not single threaded since IBT may be still
+	 enabled in other threads.  */
+      if (info->enable_ibt_type != cet_permissive
+	  || !SINGLE_THREAD_P)
 	{
 	  legacy_obj = info->feature_1_legacy_ibt;
 	  msg = N_("rebuild shared object with IBT support enabled");
@@ -249,7 +253,10 @@ dl_cet_check_dlopen (struct link_map *m, struct dl_cet_info *info)
       && (info->feature_1_legacy
 	  & GNU_PROPERTY_X86_FEATURE_1_SHSTK) != 0)
     {
-      if (info->enable_shstk_type != cet_permissive)
+      /* Don't disable SHSTK if not single threaded since SHSTK may be
+         still enabled in other threads.  */
+      if (info->enable_shstk_type != cet_permissive
+	  || !SINGLE_THREAD_P)
 	{
 	  legacy_obj = info->feature_1_legacy_shstk;
 	  msg = N_("rebuild shared object with SHSTK support enabled");
