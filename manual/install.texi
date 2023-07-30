@@ -567,7 +567,7 @@ GNU @code{binutils} 2.25 or later
 
 You must use GNU @code{binutils} (as and ld) to build @theglibc{}.
 No other assembler or linker has the necessary functionality at the
-moment. As of release time, GNU @code{binutils} 2.40 is the newest
+moment. As of release time, GNU @code{binutils} 2.41 is the newest
 verified to work to build @theglibc{}.
 
 For PowerPC 64-bits little-endian (powerpc64le), @command{objcopy} is required
