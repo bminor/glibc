@@ -1130,6 +1130,8 @@ printf_positional (struct Xprintf_buffer * buf, const CHAR_T *format,
   union printf_arg *args_value;
   int *args_size;
   int *args_type;
+  void *args_pa_user;
+  size_t args_pa_user_offset;
   {
     /* Calculate total size needed to represent a single argument
        across all three argument-related arrays.  */
@@ -1146,6 +1148,7 @@ printf_positional (struct Xprintf_buffer * buf, const CHAR_T *format,
        now.  */
     args_size = &args_value[nargs].pa_int;
     args_type = &args_size[nargs];
+    args_pa_user = &args_type[nargs];
     memset (args_type, (mode_flags & PRINTF_FORTIFY) != 0 ? '\xff' : '\0',
 	    nargs * sizeof (*args_type));
   }
@@ -1235,7 +1238,25 @@ printf_positional (struct Xprintf_buffer * buf, const CHAR_T *format,
 	else if (__glibc_unlikely (__printf_va_arg_table != NULL)
 		 && __printf_va_arg_table[args_type[cnt] - PA_LAST] != NULL)
 	  {
-	    args_value[cnt].pa_user = alloca (args_size[cnt]);
+	    while (args_pa_user + args_size[cnt] >
+		argsbuf.data + argsbuf.length)
+	      {
+		args_pa_user_offset = args_pa_user - (void *) &args_type[nargs];
+	        if (!scratch_buffer_grow_preserve (&argsbuf))
+	          {
+	            Xprintf_buffer_mark_failed (buf);
+	            goto all_done;
+	          }
+                args_value = argsbuf.data;
+                /* Set up the remaining two arrays to each point past the end of
+                   the prior array, since space for all three has been allocated
+                   now.  */
+                args_size = &args_value[nargs].pa_int;
+                args_type = &args_size[nargs];
+                args_pa_user = (void *) &args_type[nargs] + args_pa_user_offset;
+	      }
+	    args_value[cnt].pa_user = args_pa_user;
+	    args_pa_user += args_size[cnt];
 	    (*__printf_va_arg_table[args_type[cnt] - PA_LAST])
 	      (args_value[cnt].pa_user, ap_savep);
 	  }
