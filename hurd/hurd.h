@@ -350,12 +350,12 @@ extern int hurd_check_cancel (void);
 
 extern io_t __getdport (int fd), getdport (int fd);
 
-
+#define __need___va_list
 #include <stdarg.h>
 
 /* Write formatted output to PORT, a Mach port supporting the i/o protocol,
    according to the format string FORMAT, using the argument list in ARG.  */
-int vpprintf (io_t port, const char *format, va_list arg);
+int vpprintf (io_t port, const char *format, __gnuc_va_list arg);
 
 
 #endif	/* hurd.h */
