@@ -24,6 +24,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h>
@@ -50,7 +51,11 @@ void dealloc (void *p)
 
 char* alloc (void)
 {
-  return (char *)malloc (8);
+#ifdef PATH_MAX
+  return (char *)malloc (PATH_MAX);
+#else
+  return (char *)malloc (4096);
+#endif
 }
 
 static int
