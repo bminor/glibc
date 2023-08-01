@@ -187,7 +187,7 @@ main (int argc, char *argv[])
 
       if (res != __GCONV_OK)
 	{
-	  if (errno == EINVAL)
+	  if (res == __GCONV_NOCONV || res == __GCONV_NODB)
 	    {
 	      /* Try to be nice with the user and tell her which of the
 		 two encoding names is wrong.  This is possible because
