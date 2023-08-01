@@ -19,6 +19,7 @@
 #include <unistd.h>
 #include <shlib-compat.h>
 #include <dl-procinfo.h>
+#include <cpu-features.c>
 
 tcbhead_t __tcb __attribute__ ((visibility ("hidden")));
 
@@ -62,6 +63,9 @@ __tcb_parse_hwcap_and_convert_at_platform (void)
        | PPC_FEATURE_POWER4;
   else if (h1 & PPC_FEATURE_POWER5)
     h1 |= PPC_FEATURE_POWER4;
+
+  uint64_t array_hwcaps[] = { h1, h2 };
+  init_cpu_features (&GLRO(dl_powerpc_cpu_features), array_hwcaps);
 
   /* Consolidate both HWCAP and HWCAP2 into a single doubleword so that
      we can read both in a single load later.  */

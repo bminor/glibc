@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <assert.h>
+#include <cpu-features.h>
 #include <string.h>
 #include <wchar.h>
 #include <ldsodefs.h>
@@ -27,9 +28,9 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			size_t max)
 {
   size_t i = max;
-
-  unsigned long int hwcap = GLRO(dl_hwcap);
-  unsigned long int hwcap2 = GLRO(dl_hwcap2);
+  const struct cpu_features *features = &GLRO(dl_powerpc_cpu_features);
+  unsigned long int hwcap = features->hwcap;
+  unsigned long int hwcap2 = features->hwcap2;
 #ifdef SHARED
   int cacheline_size = GLRO(dl_cache_line_size);
 #endif

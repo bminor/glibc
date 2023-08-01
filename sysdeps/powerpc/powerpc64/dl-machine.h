@@ -27,7 +27,6 @@
 #include <dl-tls.h>
 #include <sysdep.h>
 #include <hwcapinfo.h>
-#include <cpu-features.c>
 #include <dl-static-tls.h>
 #include <dl-funcdesc.h>
 #include <dl-machine-rel.h>
@@ -297,7 +296,6 @@ static inline void __attribute__ ((unused))
 dl_platform_init (void)
 {
   __tcb_parse_hwcap_and_convert_at_platform ();
-  init_cpu_features (&GLRO(dl_powerpc_cpu_features));
 }
 #endif
 
