@@ -24,18 +24,18 @@
 #include <unistd.h>
 #include <support/check.h>
 #include <support/temp_file.h>
+#include <support/test-driver.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
 #define BASENAME "tst-realpath-toolong."
 
-#ifndef PATH_MAX
-# define PATH_MAX 1024
-#endif
-
 int
 do_test (void)
 {
+#ifndef PATH_MAX
+  return EXIT_UNSUPPORTED;
+#else
   char *base = support_create_and_chdir_toolong_temp_directory (BASENAME);
 
   char buf[PATH_MAX + 1];
@@ -48,6 +48,7 @@ do_test (void)
 
   free (base);
   return 0;
+#endif
 }
 
 #include <support/test-driver.c>
