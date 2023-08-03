@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <errno.h>
 
 
 char *
@@ -30,7 +31,15 @@ __realpath_chk (const char *buf, char *resolved, size_t resolvedlen)
 
   return __realpath (buf, resolved);
 #else
-  long int pathmax =__pathconf (buf, _PC_PATH_MAX);
+  long int pathmax;
+
+  if (buf == NULL)
+    {
+      __set_errno (EINVAL);
+      return NULL;
+    }
+
+  pathmax = __pathconf (buf, _PC_PATH_MAX);
   if (pathmax != -1)
     {
       /* We do have a fixed limit.  */
