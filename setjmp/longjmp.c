@@ -19,6 +19,8 @@
 #include <setjmpP.h>
 #include <signal.h>
 
+#undef longjmp
+#undef siglongjmp
 
 /* Set the signal mask to the one specified in ENV, and jump
    to the position specified in ENV, causing the setjmp

@@ -214,6 +214,7 @@ libc_hidden_builtin_proto (__memmove_chk)
 libc_hidden_builtin_proto (__mempcpy_chk)
 libc_hidden_builtin_proto (__memset_chk)
 libc_hidden_builtin_proto (__stpcpy_chk)
+libc_hidden_builtin_proto (__strncpy_chk)
 
 #endif
 

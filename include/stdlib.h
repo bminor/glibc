@@ -59,6 +59,8 @@ libc_hidden_proto (__isoc23_strtoull_l)
    libc_hidden_proto.  */
 # undef strtol
 # define strtol __isoc23_strtol
+# undef atoi
+# define atoi(nptr) __isoc23_strtol(nptr, NULL, 10)
 # undef strtoul
 # define strtoul __isoc23_strtoul
 # undef strtoll
