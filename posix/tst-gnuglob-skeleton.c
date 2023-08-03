@@ -222,7 +222,7 @@ my_readdir (void *gdir)
 
   dir->d.d_type = filesystem[dir->idx].type;
 
-  strcpy (dir->d.d_name, filesystem[dir->idx].name);
+  __strcpy_chk (dir->d.d_name, filesystem[dir->idx].name, NAME_MAX);
 
   if (test_verbose > 0)
     printf ("info: my_readdir ({ level: %d, idx: %ld })"
