@@ -30,16 +30,19 @@ print_auxv (void)
   for (ElfW(auxv_t) *av = GLRO(dl_auxv); av->a_type != AT_NULL; ++av)
     {
       _dl_printf ("auxv[0x%x].a_type=0x%lx\n"
-                  "auxv[0x%x].a_val=",
+                  "auxv[0x%x].a_val",
                   index, (unsigned long int) av->a_type, index);
       if (av->a_type == AT_EXECFN
           || av->a_type == AT_PLATFORM
           || av->a_type == AT_BASE_PLATFORM)
-        /* The address of the strings is not useful at all, so print
-           the strings themselves.  */
-        _dl_diagnostics_print_string ((const char *) av->a_un.a_val);
+        {
+          /* The address of the strings is not useful at all, so print
+             the strings themselves.  */
+          _dl_printf ("_string=");
+          _dl_diagnostics_print_string ((const char *) av->a_un.a_val);
+        }
       else
-        _dl_printf ("0x%lx", (unsigned long int) av->a_un.a_val);
+        _dl_printf ("=0x%lx", (unsigned long int) av->a_un.a_val);
       _dl_printf ("\n");
       ++index;
     }
