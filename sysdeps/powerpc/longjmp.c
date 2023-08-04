@@ -22,6 +22,9 @@
 #include <setjmp.h>
 #include <signal.h>
 
+#undef longjmp
+#undef siglongjmp
+
 extern void __vmx__longjmp (__jmp_buf __env, int __val)
      __attribute__ ((noreturn));
 extern void __vmx__libc_longjmp (sigjmp_buf env, int val)
