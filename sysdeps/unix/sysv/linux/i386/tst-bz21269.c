@@ -52,7 +52,16 @@ xset_thread_area (struct user_desc *u_info)
 static void
 xmodify_ldt (int func, const void *ptr, unsigned long bytecount)
 {
-  TEST_VERIFY_EXIT (syscall (SYS_modify_ldt, func, ptr, bytecount) == 0);
+  long ret = syscall (SYS_modify_ldt, func, ptr, bytecount);
+
+  if (ret == -1)
+    {
+      if (errno == ENOSYS)
+	FAIL_UNSUPPORTED ("modify_ldt not supported");
+      FAIL_EXIT1 ("modify_ldt failed (errno=%d)", errno);
+    }
+
+  return 0;
 }
 
 static int
