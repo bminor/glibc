@@ -51,7 +51,8 @@ struct statvfs
 #endif
     unsigned long int f_flag;
     unsigned long int f_namemax;
-    int __f_spare[6];
+    unsigned int f_type;
+    int __f_spare[5];
   };
 
 #ifdef __USE_LARGEFILE64
@@ -71,7 +72,8 @@ struct statvfs64
 #endif
     unsigned long int f_flag;
     unsigned long int f_namemax;
-    int __f_spare[6];
+    unsigned int f_type;
+    int __f_spare[5];
   };
 #endif
 

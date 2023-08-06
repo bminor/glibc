@@ -57,6 +57,7 @@ __internal_statvfs (struct statvfs *buf, const struct statfs *fsbuf)
   buf->__f_unused = 0;
 #endif
   buf->f_namemax = fsbuf->f_namelen;
+  buf->f_type = fsbuf->f_type;
   memset (buf->__f_spare, '\0', sizeof (buf->__f_spare));
 
   /* What remains to do is to fill the fields f_favail and f_flag.  */
@@ -99,6 +100,7 @@ __internal_statvfs64 (struct statvfs64 *buf, const struct statfs64 *fsbuf)
   buf->__f_unused = 0;
 #endif
   buf->f_namemax = fsbuf->f_namelen;
+  buf->f_type = fsbuf->f_type;
   memset (buf->__f_spare, '\0', sizeof (buf->__f_spare));
 
   /* What remains to do is to fill the fields f_favail and f_flag.  */
