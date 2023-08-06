@@ -66,26 +66,32 @@ errno.texinfo = $(..)manual/errno.texi
 
 hurd = $(..)sysdeps/mach/hurd
 
-define mach-errno-h
-($(foreach h,mach/message.h \
+mach-errno-h = \
+	     mach/message.h \
 	     mach/kern_return.h \
 	     mach/mig_errors.h \
-	     device/device_types.h,\
- echo '#include <$h>';\
- ))
-endef
+	     device/device_types.h
 
 # We use the compiler to generate a list of absolute file names for
 # the headers we want to search for Mach error codes, listed above (and
 # incidentally, all other headers those include).
 -include $(common-objpfx)errnos.d
 $(common-objpfx)errnos.d: $(mach-errnos-deps)
-	$(mach-errno-h) | \
-	$(CC) $(CFLAGS) \
-	    $(subst -include $(common-objpfx)libc-modules.h,,$(CPPFLAGS)) \
-	    -M -x c - | \
-	sed $(sed-remove-objpfx) -e 's,- *:,mach-errnos-deps :=,' \
-	    -e 's, \.\./, $(..),g' > $@t
+	echo -n "mach-errnos-deps := " > $@t
+	for h in $(mach-errno-h) ; do \
+		echo "#include <$$h>" \
+		| $(CC) $(CFLAGS) \
+		    $(subst -include $(common-objpfx)libc-modules.h,,$(CPPFLAGS)) \
+		    -M -x c - \
+		| sed $(sed-remove-objpfx) \
+		    -e 's, \.\./, $(..),g' \
+		    -e 's,\\$$,,g' \
+		    -e 's, ,\n,g' \
+		| grep "$$h$$" \
+		| tr '\n' ' ' \
+		  >> $@t ; \
+	done
+	echo >> $@t
 	mv -f $@t $@
 
 $(hurd)/bits/errno.h: $(common-objpfx)stamp-errnos ;
