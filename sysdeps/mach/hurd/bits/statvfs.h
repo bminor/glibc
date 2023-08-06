@@ -29,7 +29,7 @@
 
 struct statvfs
   {
-    unsigned int __f_type;
+    unsigned int f_type;
     unsigned long int f_bsize;
 #ifndef __USE_FILE_OFFSET64
     __fsblkcnt_t f_blocks;
@@ -59,7 +59,7 @@ struct statvfs
 #ifdef __USE_LARGEFILE64
 struct statvfs64
   {
-    unsigned int __f_type;
+    unsigned int f_type;
     unsigned long int f_bsize;
     __fsblkcnt64_t f_blocks;
     __fsblkcnt64_t f_bfree;
