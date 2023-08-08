@@ -24,15 +24,7 @@
 pthread_t
 __pthread_self (void)
 {
-  struct __pthread *self;
-
-  if (___pthread_self == NULL)
-    /* We are not initialized yet, we are the first thread.  */
-    return 1;
-
-  self = _pthread_self ();
-  assert (self != NULL);
-
+  struct __pthread *self = _pthread_self ();
   return self->thread;
 }
 
