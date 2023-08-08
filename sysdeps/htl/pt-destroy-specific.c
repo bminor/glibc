@@ -29,7 +29,16 @@ __pthread_destroy_specific (struct __pthread *thread)
 
   /* Check if there is any thread specific data.  */
   if (thread->thread_specifics == NULL)
-    return;
+    {
+      for (i = 0; i < PTHREAD_STATIC_KEYS; i++)
+	{
+	  if (thread->static_thread_specifics[i] != NULL)
+	    break;
+	}
+
+      if (i == PTHREAD_STATIC_KEYS)
+	return;
+    }
 
   __pthread_key_lock_ready ();
 
@@ -40,18 +49,32 @@ __pthread_destroy_specific (struct __pthread *thread)
 
       __pthread_mutex_lock (&__pthread_key_lock);
 
-      for (i = 0; i < __pthread_key_count && i < thread->thread_specifics_size;
-	   i++)
+      for (i = 0; i < __pthread_key_count; i++)
 	{
 	  void *value;
 
 	  if (__pthread_key_destructors[i] == PTHREAD_KEY_INVALID)
 	    continue;
 
-	  value = thread->thread_specifics[i];
+	  if (thread->thread_specifics == NULL)
+	    {
+	      if (i >= PTHREAD_STATIC_KEYS)
+		break;
+	      value = thread->static_thread_specifics[i];
+	    }
+	  else
+	    {
+	      if (i >= thread->thread_specifics_size)
+		break;
+	      value = thread->thread_specifics[i];
+	    }
+
 	  if (value != NULL)
 	    {
-	      thread->thread_specifics[i] = 0;
+	      if (thread->thread_specifics == NULL)
+		thread->static_thread_specifics[i] = 0;
+	      else
+		thread->thread_specifics[i] = 0;
 
 	      if (__pthread_key_destructors[i])
 		{
@@ -74,4 +97,6 @@ __pthread_destroy_specific (struct __pthread *thread)
   free (thread->thread_specifics);
   thread->thread_specifics = 0;
   thread->thread_specifics_size = 0;
+  memset (&thread->static_thread_specifics, 0,
+	  sizeof (thread->static_thread_specifics));
 }

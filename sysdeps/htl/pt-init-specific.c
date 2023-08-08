@@ -26,5 +26,7 @@ __pthread_init_specific (struct __pthread *thread)
 {
   thread->thread_specifics = 0;
   thread->thread_specifics_size = 0;
+  memset (&thread->static_thread_specifics, 0,
+	  sizeof (thread->static_thread_specifics));
   return 0;
 }

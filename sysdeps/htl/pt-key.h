@@ -20,9 +20,14 @@
 #include <libc-lockP.h>
 #include <pthreadP.h>
 
+/* When using e.g. jemalloc, we need to be able to create and use keys before
+   being able to allocate.  */
+#define PTHREAD_STATIC_KEYS 4
+
 #define PTHREAD_KEY_MEMBERS \
   void **thread_specifics;		/* This is only resized by the thread, and always growing */ \
-  unsigned thread_specifics_size;	/* Number of entries in thread_specifics */
+  unsigned thread_specifics_size;	/* Number of entries in thread_specifics */ \
+  void *static_thread_specifics[PTHREAD_STATIC_KEYS];	/* Static storage for a few entries */
 
 #define PTHREAD_KEY_INVALID (void *) (-1)
 

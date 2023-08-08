@@ -28,12 +28,34 @@ __pthread_setspecific (pthread_key_t key, const void *value)
   if (key < 0 || key >= __pthread_key_count)
     return EINVAL;
 
+  if (self->thread_specifics == NULL)
+    {
+      if (key < PTHREAD_STATIC_KEYS)
+	{
+	  self->static_thread_specifics[key] = (void *) value;
+	  return 0;
+	}
+    }
+
   if (key >= self->thread_specifics_size)
     {
       /* Amortize reallocation cost.  */
       int newsize = 2 * key + 1;
-      void **new = realloc (self->thread_specifics,
-			    newsize * sizeof (new[0]));
+      void **new;
+
+      if (self->thread_specifics == NULL)
+	{
+	  self->thread_specifics_size = PTHREAD_STATIC_KEYS;
+	  new = malloc (newsize * sizeof (new[0]));
+	  if (new != NULL)
+	    memcpy (new, self->static_thread_specifics,
+		    PTHREAD_STATIC_KEYS * sizeof (new[0]));
+	}
+      else
+	{
+	  new = realloc (self->thread_specifics,
+			 newsize * sizeof (new[0]));
+	}
       if (new == NULL)
 	return ENOMEM;
 
