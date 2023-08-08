@@ -130,6 +130,16 @@ struct __ptrace_rseq_configuration
   __uint32_t pad;
 };
 
+/* Argument of PTRACE_SET_SYSCALL_USER_DISPATCH_CONFIG and
+   PTRACE_GET_SYSCALL_USER_DISPATCH_CONFIG.  */
+struct __ptrace_sud_config
+{
+  __uint64_t mode;
+  __uint64_t selector;
+  __uint64_t offset;
+  __uint64_t len;
+};
+
 /* Perform process tracing functions.  REQUEST is one of the values
    above, and determines the action to be taken.
    For all requests except PTRACE_TRACEME, PID specifies the process to be
