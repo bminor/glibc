@@ -64,6 +64,7 @@ struct sockaddr_ll
 #define	PACKET_ROLLOVER_STATS		21
 #define	PACKET_FANOUT_DATA		22
 #define	PACKET_IGNORE_OUTGOING		23
+#define	PACKET_VNET_HDR_SZ		24
 
 struct packet_mreq
   {
