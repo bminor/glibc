@@ -1,6 +1,7 @@
-/* Initialize CPU feature data.  LoongArch64 version.
+/* Multiple versions of strlen.
+   All versions must be listed in ifunc-impl-list.c.
+   Copyright (C) 2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Copyright (C) 2022 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -14,18 +15,23 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
-#ifndef _CPU_FEATURES_LOONGARCH64_H
-#define _CPU_FEATURES_LOONGARCH64_H
+/* Define multiple versions only for the definition in libc.  */
 
-#include <sys/auxv.h>
+#if IS_IN (libc)
+# define strlen __redirect_strlen
+# include <string.h>
+# undef strlen
 
-#define SUPPORT_UAL (GLRO (dl_hwcap) & HWCAP_LOONGARCH_UAL)
-#define SUPPORT_LSX (GLRO (dl_hwcap) & HWCAP_LOONGARCH_LSX)
-#define SUPPORT_LASX (GLRO (dl_hwcap) & HWCAP_LOONGARCH_LASX)
+# define SYMBOL_NAME strlen
+# include "ifunc-strlen.h"
 
-#define INIT_ARCH()
+libc_ifunc_redirected (__redirect_strlen, strlen, IFUNC_SELECTOR ());
 
-#endif /* _CPU_FEATURES_LOONGARCH64_H  */
+# ifdef SHARED
+__hidden_ver1 (strlen, __GI_strlen, __redirect_strlen)
+  __attribute__ ((visibility ("hidden"))) __attribute_copy__ (strlen);
+# endif
 
+#endif

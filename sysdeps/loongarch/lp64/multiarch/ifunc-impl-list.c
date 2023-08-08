@@ -1,6 +1,6 @@
-/* Initialize CPU feature data.  LoongArch64 version.
+/* Enumerate available IFUNC implementations of a function LoongArch64 version.
+   Copyright (C) 2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Copyright (C) 2022 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,16 +16,26 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _CPU_FEATURES_LOONGARCH64_H
-#define _CPU_FEATURES_LOONGARCH64_H
+#include <assert.h>
+#include <string.h>
+#include <wchar.h>
+#include <ldsodefs.h>
+#include <ifunc-impl-list.h>
+#include <stdio.h>
 
-#include <sys/auxv.h>
+size_t
+__libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
+			size_t max)
+{
 
-#define SUPPORT_UAL (GLRO (dl_hwcap) & HWCAP_LOONGARCH_UAL)
-#define SUPPORT_LSX (GLRO (dl_hwcap) & HWCAP_LOONGARCH_LSX)
-#define SUPPORT_LASX (GLRO (dl_hwcap) & HWCAP_LOONGARCH_LASX)
+  size_t i = max;
 
-#define INIT_ARCH()
-
-#endif /* _CPU_FEATURES_LOONGARCH64_H  */
-
+  IFUNC_IMPL (i, name, strlen,
+#if !defined __loongarch_soft_float
+	      IFUNC_IMPL_ADD (array, i, strlen, SUPPORT_LASX, __strlen_lasx)
+	      IFUNC_IMPL_ADD (array, i, strlen, SUPPORT_LSX, __strlen_lsx)
+#endif
+	      IFUNC_IMPL_ADD (array, i, strlen, 1, __strlen_aligned)
+	      )
+  return i;
+}

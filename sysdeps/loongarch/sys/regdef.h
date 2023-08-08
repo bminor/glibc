@@ -89,6 +89,14 @@
 #define fs5 $f29
 #define fs6 $f30
 #define fs7 $f31
+#define fcc0 $fcc0
+#define fcc1 $fcc1
+#define fcc2 $fcc2
+#define fcc3 $fcc3
+#define fcc4 $fcc4
+#define fcc5 $fcc5
+#define fcc6 $fcc6
+#define fcc7 $fcc7
 
 #define vr0 $vr0
 #define vr1 $vr1
@@ -98,6 +106,30 @@
 #define vr5 $vr5
 #define vr6 $vr6
 #define vr7 $vr7
+#define vr8 $vr8
+#define vr9 $vr9
+#define vr10 $vr10
+#define vr11 $vr11
+#define vr12 $vr12
+#define vr13 $vr13
+#define vr14 $vr14
+#define vr15 $vr15
+#define vr16 $vr16
+#define vr17 $vr17
+#define vr18 $vr18
+#define vr19 $vr19
+#define vr20 $vr20
+#define vr21 $vr21
+#define vr22 $vr22
+#define vr23 $vr23
+#define vr24 $vr24
+#define vr25 $vr25
+#define vr26 $vr26
+#define vr27 $vr27
+#define vr28 $vr28
+#define vr29 $vr29
+#define vr30 $vr30
+#define vr31 $vr31
 
 #define xr0 $xr0
 #define xr1 $xr1
@@ -107,5 +139,30 @@
 #define xr5 $xr5
 #define xr6 $xr6
 #define xr7 $xr7
+#define xr7 $xr7
+#define xr8 $xr8
+#define xr9 $xr9
+#define xr10 $xr10
+#define xr11 $xr11
+#define xr12 $xr12
+#define xr13 $xr13
+#define xr14 $xr14
+#define xr15 $xr15
+#define xr16 $xr16
+#define xr17 $xr17
+#define xr18 $xr18
+#define xr19 $xr19
+#define xr20 $xr20
+#define xr21 $xr21
+#define xr22 $xr22
+#define xr23 $xr23
+#define xr24 $xr24
+#define xr25 $xr25
+#define xr26 $xr26
+#define xr27 $xr27
+#define xr28 $xr28
+#define xr29 $xr29
+#define xr30 $xr30
+#define xr31 $xr31
 
 #endif /* _SYS_REGDEF_H */
