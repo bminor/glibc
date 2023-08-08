@@ -1,1 +1,1 @@
-/* Implemented in memcpy.S.  */
+/* Implemented in memmove.S.  */

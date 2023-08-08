@@ -32,6 +32,7 @@
 #include "isa-default-impl.h"
 
 libc_hidden_builtin_def (memset)
+libc_hidden_builtin_def (__memset_chk)
 
 #if IS_IN (libc)
 libc_hidden_def (__wmemset)
