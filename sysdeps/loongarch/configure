@@ -128,8 +128,7 @@ rm -f conftest*
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_loongarch_vec_asm" >&5
 printf "%s\n" "$libc_cv_loongarch_vec_asm" >&6; }
-if test $libc_cv_loongarch_vec_asm = yes; then
-  printf "%s\n" "#define HAVE_LOONGARCH_VEC_ASM 1" >>confdefs.h
-
+if test $libc_cv_loongarch_vec_asm = no; then
+  as_fn_error $? "binutils version is too old, use 2.41 or newer version" "$LINENO" 5
 fi
 

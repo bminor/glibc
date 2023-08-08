@@ -19,7 +19,7 @@
 #include <sysdep.h>
 #include <sys/asm.h>
 
-#if HAVE_LOONGARCH_VEC_ASM && !defined __loongarch_soft_float
+#if !defined __loongarch_soft_float
 #define USE_LASX
 #define _dl_runtime_resolve _dl_runtime_resolve_lasx
 #include "dl-trampoline.h"

@@ -270,7 +270,7 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
   /* If using PLTs, fill in the first two entries of .got.plt.  */
   if (l->l_info[DT_JMPREL])
     {
-#if HAVE_LOONGARCH_VEC_ASM && !defined __loongarch_soft_float
+#if !defined __loongarch_soft_float
       extern void _dl_runtime_resolve_lasx (void) attribute_hidden;
       extern void _dl_runtime_resolve_lsx (void) attribute_hidden;
 #endif
@@ -300,7 +300,7 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
 	  /* This function will get called to fix up the GOT entry
 	     indicated by the offset on the stack, and then jump to
 	     the resolved address.  */
-#if HAVE_LOONGARCH_VEC_ASM && !defined __loongarch_soft_float
+#if !defined __loongarch_soft_float
 	  if (SUPPORT_LASX)
 	    gotplt[0] = (ElfW(Addr)) &_dl_runtime_resolve_lasx;
 	  else if (SUPPORT_LSX)

@@ -74,6 +74,6 @@ else
   libc_cv_loongarch_vec_asm=no
 fi
 rm -f conftest*])
-if test $libc_cv_loongarch_vec_asm = yes; then
-  AC_DEFINE(HAVE_LOONGARCH_VEC_ASM)
+if test $libc_cv_loongarch_vec_asm = no; then
+  AC_MSG_ERROR([binutils version is too old, use 2.41 or newer version])
 fi

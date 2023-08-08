@@ -20,7 +20,8 @@ Deprecated and removed features, and other changes affecting compatibility:
 
 Changes to build and runtime requirements:
 
-  [Add changes to build and runtime requirements here]
+* Building on LoongArch requires at a minimum binutils 2.41 for vector
+  instructions.
 
 Security related changes:
 

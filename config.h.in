@@ -141,11 +141,6 @@
 /* LOONGARCH floating-point ABI for ld.so.  */
 #undef LOONGARCH_ABI_FRLEN
 
-/* Assembler support LoongArch LASX/LSX vector instructions.
-   This macro becomes obsolete when glibc increased the minimum
-   required version of GNU 'binutils' to 2.41 or later. */
-#define HAVE_LOONGARCH_VEC_ASM 0
-
 /* Linux specific: minimum supported kernel version.  */
 #undef	__LINUX_KERNEL_VERSION
 
