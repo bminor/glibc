@@ -27,7 +27,7 @@
 #define LEN	SRC+4
 
 	.text
-#if defined PIC && IS_IN (libc)
+#if defined SHARED && IS_IN (libc)
 ENTRY_CHK (__mempcpy_chk)
 	movl	12(%esp), %eax
 	cmpl	%eax, 16(%esp)
