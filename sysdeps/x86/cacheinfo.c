@@ -538,8 +538,8 @@ long int __x86_rep_stosb_threshold attribute_hidden = 2048;
 
 
 static void
-get_common_cache_info (long int *shared_ptr, unsigned int *threads_ptr,
-                long int core)
+get_common_cache_info (long int *shared_ptr, long int * shared_per_thread_ptr, unsigned int *threads_ptr,
+                 long int core)
 {
   unsigned int eax;
   unsigned int ebx;
@@ -557,6 +557,7 @@ get_common_cache_info (long int *shared_ptr, unsigned int *threads_ptr,
   unsigned int family = cpu_features->basic.family;
   unsigned int model = cpu_features->basic.model;
   long int shared = *shared_ptr;
+  long int shared_per_thread = *shared_per_thread_ptr;
   unsigned int threads = *threads_ptr;
   bool inclusive_cache = true;
   bool support_count_mask = true;
@@ -572,6 +573,7 @@ get_common_cache_info (long int *shared_ptr, unsigned int *threads_ptr,
       /* Try L2 otherwise.  */
       level  = 2;
       shared = core;
+      shared_per_thread = core;
       threads_l2 = 0;
       threads_l3 = -1;
     }
@@ -728,29 +730,30 @@ get_common_cache_info (long int *shared_ptr, unsigned int *threads_ptr,
         }
       else
         {
-intel_bug_no_cache_info:
-          /* Assume that all logical threads share the highest cache
-             level.  */
-          threads
-            = ((cpu_features->features[COMMON_CPUID_INDEX_1].cpuid.ebx
-                >> 16) & 0xff);
-        }
+	intel_bug_no_cache_info:
+	  /* Assume that all logical threads share the highest cache
+	     level.  */
+	  threads
+	      = ((cpu_features->features[COMMON_CPUID_INDEX_1].cpuid.ebx >> 16)
+		 & 0xff);
 
-        /* Cap usage of highest cache level to the number of supported
-           threads.  */
-        if (shared > 0 && threads > 0)
-          shared /= threads;
+	  /* Cap usage of highest cache level to the number of supported
+	     threads.  */
+	  if (shared_per_thread > 0 && threads > 0)
+	    shared_per_thread /= threads;
+	}
     }
 
   /* Account for non-inclusive L2 and L3 caches.  */
   if (!inclusive_cache)
     {
       if (threads_l2 > 0)
-        core /= threads_l2;
+	shared_per_thread += core / threads_l2;
       shared += core;
     }
 
   *shared_ptr = shared;
+  *shared_per_thread_ptr = shared_per_thread;
   *threads_ptr = threads;
 }
 
@@ -766,6 +769,7 @@ init_cacheinfo (void)
   int max_cpuid_ex;
   long int data = -1;
   long int shared = -1;
+  long int shared_per_thread = -1;
   long int core;
   unsigned int threads = 0;
   const struct cpu_features *cpu_features = __get_cpu_features ();
@@ -775,8 +779,8 @@ init_cacheinfo (void)
       data = handle_intel (_SC_LEVEL1_DCACHE_SIZE, cpu_features);
       core = handle_intel (_SC_LEVEL2_CACHE_SIZE, cpu_features);
       shared = handle_intel (_SC_LEVEL3_CACHE_SIZE, cpu_features);
-
-      get_common_cache_info (&shared, &threads, core);
+      shared_per_thread = shared;
+      get_common_cache_info (&shared, &shared_per_thread, &threads, core);
     }
   else if (cpu_features->basic.kind == arch_kind_zhaoxin)
     {
@@ -784,20 +788,25 @@ init_cacheinfo (void)
       core = handle_zhaoxin (_SC_LEVEL2_CACHE_SIZE);
       shared = handle_zhaoxin (_SC_LEVEL3_CACHE_SIZE);
 
-      get_common_cache_info (&shared, &threads, core);
+      shared_per_thread = shared;
+      get_common_cache_info (&shared, &shared_per_thread, &threads, core);
     }
   else if (cpu_features->basic.kind == arch_kind_amd)
     {
       data   = handle_amd (_SC_LEVEL1_DCACHE_SIZE);
       long int core = handle_amd (_SC_LEVEL2_CACHE_SIZE);
       shared = handle_amd (_SC_LEVEL3_CACHE_SIZE);
+      shared_per_thread = shared;
 
       /* Get maximum extended function. */
       __cpuid (0x80000000, max_cpuid_ex, ebx, ecx, edx);
 
       if (shared <= 0)
-	/* No shared L3 cache.  All we have is the L2 cache.  */
-	shared = core;
+	{
+	  /* No shared L3 cache.  All we have is the L2 cache.  */
+	  shared = core;
+	  shared_per_thread = core;
+	}
       else
 	{
 	  /* Figure out the number of logical threads that share L3.  */
@@ -821,7 +830,7 @@ init_cacheinfo (void)
 	  /* Cap usage of highest cache level to the number of
 	     supported threads.  */
 	  if (threads > 0)
-	    shared /= threads;
+	    shared_per_thread /= threads;
 
 	  /* Get shared cache per ccx for Zen architectures.  */
 	  if (cpu_features->basic.family >= 0x17)
@@ -832,12 +841,13 @@ init_cacheinfo (void)
 	      __cpuid_count (0x8000001D, 0x3, eax, ebx, ecx, edx);
 
 	      unsigned int threads_per_ccx = ((eax >> 14) & 0xfff) + 1;
-	      shared *= threads_per_ccx;
+	      shared_per_thread *= threads_per_ccx;
 	    }
 	  else
 	    {
 	      /* Account for exclusive L2 and L3 caches.  */
 	      shared += core;
+          shared_per_thread += core;
             }
 	}
     }
@@ -856,32 +866,42 @@ init_cacheinfo (void)
     }
 
   if (cpu_features->shared_cache_size != 0)
-    shared = cpu_features->shared_cache_size;
+    shared_per_thread = cpu_features->shared_cache_size;
 
-  if (shared > 0)
+  if (shared_per_thread > 0)
     {
-      __x86_raw_shared_cache_size_half = shared / 2;
-      __x86_raw_shared_cache_size = shared;
+      __x86_raw_shared_cache_size_half = shared_per_thread / 2;
+      __x86_raw_shared_cache_size = shared_per_thread;
       /* Round shared cache size to multiple of 256 bytes.  */
-      shared = shared & ~255L;
-      __x86_shared_cache_size_half = shared / 2;
-      __x86_shared_cache_size = shared;
+      shared_per_thread = shared_per_thread & ~255L;
+      __x86_shared_cache_size_half = shared_per_thread / 2;
+      __x86_shared_cache_size = shared_per_thread;
     }
 
-  /* The default setting for the non_temporal threshold is 3/4 of one
-     thread's share of the chip's cache. For most Intel and AMD processors
-     with an initial release date between 2017 and 2020, a thread's typical
-     share of the cache is from 500 KBytes to 2 MBytes. Using the 3/4
-     threshold leaves 125 KBytes to 500 KBytes of the thread's data
-     in cache after a maximum temporal copy, which will maintain
-     in cache a reasonable portion of the thread's stack and other
-     active data. If the threshold is set higher than one thread's
-     share of the cache, it has a substantial risk of negatively
-     impacting the performance of other threads running on the chip. */
+  /* The default setting for the non_temporal threshold is [1/8, 1/2] of size
+     of the chip's cache (depending on `cachesize_non_temporal_divisor` which
+     is microarch specific. The default is 1/4). For most Intel processors
+     with an initial release date between 2017 and 2023, a thread's
+     typical share of the cache is from 18-64MB. Using a reasonable size
+     fraction of L3 is meant to estimate the point where non-temporal stores
+     begin out-competing REP MOVSB. As well the point where the fact that
+     non-temporal stores are forced back to main memory would already occurred
+     to the majority of the lines in the copy. Note, concerns about the entire
+     L3 cache being evicted by the copy are mostly alleviated by the fact that
+     modern HW detects streaming patterns and provides proper LRU hints so that
+     the maximum thrashing capped at 1/associativity. */
+  unsigned long int non_temporal_threshold = shared / 4;
+  /* If no ERMS, we use the per-thread L3 chunking. Normal cacheable stores run
+     a higher risk of actually thrashing the cache as they don't have a HW LRU
+     hint. As well, their performance in highly parallel situations is
+     noticeably worse.  */
+  if (!CPU_FEATURE_USABLE_P (cpu_features, ERMS))
+    non_temporal_threshold = shared_per_thread * 3 / 4;
+
   __x86_shared_non_temporal_threshold
     = (cpu_features->non_temporal_threshold != 0
        ? cpu_features->non_temporal_threshold
-       : __x86_shared_cache_size * 3 / 4);
+       : non_temporal_threshold);
 
   /* NB: The REP MOVSB threshold must be greater than VEC_SIZE * 8.  */
   unsigned int minimum_rep_movsb_threshold;
