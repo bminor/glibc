@@ -201,6 +201,7 @@ tests += \
   tst-clone3 \
   tst-epoll \
   tst-fanotify \
+  tst-fdopendir-o_path \
   tst-getauxval \
   tst-gettid \
   tst-gettid-kill \

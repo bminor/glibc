@@ -37,10 +37,16 @@ __fdopendir (int fd)
       return NULL;
     }
 
-  /* Make sure the descriptor allows for reading.  */
   int flags = __fcntl64_nocancel (fd, F_GETFL);
   if (__glibc_unlikely (flags == -1))
     return NULL;
+  /* Fail early for descriptors opened with O_PATH.  */
+  if (__glibc_unlikely (flags & O_PATH))
+    {
+      __set_errno (EBADF);
+      return NULL;
+    }
+  /* Make sure the descriptor allows for reading.  */
   if (__glibc_unlikely ((flags & O_ACCMODE) == O_WRONLY))
     {
       __set_errno (EINVAL);
