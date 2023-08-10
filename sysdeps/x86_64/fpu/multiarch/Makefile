@@ -34,6 +34,7 @@ libm-sysdep_routines += \
   e_atan2-fma \
   e_exp-fma \
   e_log-fma \
+  e_log2-fma \
   e_pow-fma \
   s_atan-fma \
   s_sin-fma \
@@ -45,6 +46,7 @@ CFLAGS-e_asin-fma.c = -mfma -mavx2
 CFLAGS-e_atan2-fma.c = -mfma -mavx2
 CFLAGS-e_exp-fma.c = -mfma -mavx2
 CFLAGS-e_log-fma.c = -mfma -mavx2
+CFLAGS-e_log2-fma.c = -mfma -mavx2
 CFLAGS-e_pow-fma.c = -mfma -mavx2
 CFLAGS-s_atan-fma.c = -mfma -mavx2
 CFLAGS-s_sin-fma.c = -mfma -mavx2
