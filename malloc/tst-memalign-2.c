@@ -86,7 +86,8 @@ do_test (void)
       TEST_VERIFY (tcache_allocs[i].ptr1 == tcache_allocs[i].ptr2);
     }
 
-  /* Test for non-head tcache hits.  */
+  /* Test for non-head tcache hits.  This exercises the memalign
+     scanning code to find matching allocations.  */
   for (i = 0; i < array_length (ptr); ++ i)
     {
       if (i == 4)
@@ -113,7 +114,9 @@ do_test (void)
   free (p);
   TEST_VERIFY (count > 0);
 
-  /* Large bins test.  */
+  /* Large bins test.  This verifies that the over-allocated parts
+     that memalign releases for future allocations can be reused by
+     memalign itself at least in some cases.  */
 
   for (i = 0; i < LN; ++ i)
     {
