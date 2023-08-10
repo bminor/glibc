@@ -4488,12 +4488,6 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 {
   INTERNAL_SIZE_T size;        /* its size */
   mfastbinptr *fb;             /* associated fastbin */
-  mchunkptr nextchunk;         /* next contiguous chunk */
-  INTERNAL_SIZE_T nextsize;    /* its size */
-  int nextinuse;               /* true if nextchunk is used */
-  INTERNAL_SIZE_T prevsize;    /* size of previous contiguous chunk */
-  mchunkptr bck;               /* misc temp for linking */
-  mchunkptr fwd;               /* misc temp for linking */
 
   size = chunksize (p);
 
@@ -5032,42 +5026,6 @@ _int_realloc (mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
    ------------------------------ memalign ------------------------------
  */
 
-/* Returns 0 if the chunk is not and does not contain the requested
-   aligned sub-chunk, else returns the amount of "waste" from
-   trimming.  NB is the *chunk* byte size, not the user byte
-   size.  */
-static size_t
-chunk_ok_for_memalign (mchunkptr p, size_t alignment, size_t nb)
-{
-  void *m = chunk2mem (p);
-  INTERNAL_SIZE_T size = chunksize (p);
-  void *aligned_m = m;
-
-  if (__glibc_unlikely (misaligned_chunk (p)))
-    malloc_printerr ("_int_memalign(): unaligned chunk detected");
-
-  aligned_m = PTR_ALIGN_UP (m, alignment);
-
-  INTERNAL_SIZE_T front_extra = (intptr_t) aligned_m - (intptr_t) m;
-
-  /* We can't trim off the front as it's too small.  */
-  if (front_extra > 0 && front_extra < MINSIZE)
-    return 0;
-
-  /* If it's a perfect fit, it's an exception to the return value rule
-     (we would return zero waste, which looks like "not usable"), so
-     handle it here by returning a small non-zero value instead.  */
-  if (size == nb && front_extra == 0)
-    return 1;
-
-  /* If the block we need fits in the chunk, calculate total waste.  */
-  if (size > nb + front_extra)
-    return size - nb;
-
-  /* Can't use this chunk.  */
-  return 0;
-}
-
 /* BYTES is user requested bytes, not requested chunksize bytes.  */
 static void *
 _int_memalign (mstate av, size_t alignment, size_t bytes)
@@ -5082,7 +5040,6 @@ _int_memalign (mstate av, size_t alignment, size_t bytes)
   mchunkptr remainder;            /* spare room at end to split off */
   unsigned long remainder_size;   /* its size */
   INTERNAL_SIZE_T size;
-  mchunkptr victim;
 
   nb = checked_request2size (bytes);
   if (nb == 0)
@@ -5101,129 +5058,13 @@ _int_memalign (mstate av, size_t alignment, size_t bytes)
      we don't find anything in those bins, the common malloc code will
      scan starting at 2x.  */
 
-  /* This will be set if we found a candidate chunk.  */
-  victim = NULL;
+  /* Call malloc with worst case padding to hit alignment. */
+  m = (char *) (_int_malloc (av, nb + alignment + MINSIZE));
 
-  /* Fast bins are singly-linked, hard to remove a chunk from the middle
-     and unlikely to meet our alignment requirements.  We have not done
-     any experimentation with searching for aligned fastbins.  */
+  if (m == 0)
+    return 0;           /* propagate failure */
 
-  if (av != NULL)
-    {
-      int first_bin_index;
-      int first_largebin_index;
-      int last_bin_index;
-
-      if (in_smallbin_range (nb))
-	first_bin_index = smallbin_index (nb);
-      else
-	first_bin_index = largebin_index (nb);
-
-      if (in_smallbin_range (nb * 2))
-	last_bin_index = smallbin_index (nb * 2);
-      else
-	last_bin_index = largebin_index (nb * 2);
-
-      first_largebin_index = largebin_index (MIN_LARGE_SIZE);
-
-      int victim_index;                 /* its bin index */
-
-      for (victim_index = first_bin_index;
-	   victim_index < last_bin_index;
-	   victim_index ++)
-	{
-	  victim = NULL;
-
-	  if (victim_index < first_largebin_index)
-	    {
-	      /* Check small bins.  Small bin chunks are doubly-linked despite
-		 being the same size.  */
-
-	      mchunkptr fwd;                    /* misc temp for linking */
-	      mchunkptr bck;                    /* misc temp for linking */
-
-	      bck = bin_at (av, victim_index);
-	      fwd = bck->fd;
-	      while (fwd != bck)
-		{
-		  if (chunk_ok_for_memalign (fwd, alignment, nb) > 0)
-		    {
-		      victim = fwd;
-
-		      /* Unlink it */
-		      victim->fd->bk = victim->bk;
-		      victim->bk->fd = victim->fd;
-		      break;
-		    }
-
-		  fwd = fwd->fd;
-		}
-	    }
-	  else
-	    {
-	      /* Check large bins.  */
-	      mchunkptr fwd;                    /* misc temp for linking */
-	      mchunkptr bck;                    /* misc temp for linking */
-	      mchunkptr best = NULL;
-	      size_t best_size = 0;
-
-	      bck = bin_at (av, victim_index);
-	      fwd = bck->fd;
-
-	      while (fwd != bck)
-		{
-		  int extra;
-
-		  if (chunksize (fwd) < nb)
-		    break;
-		  extra = chunk_ok_for_memalign (fwd, alignment, nb);
-		  if (extra > 0
-		      && (extra <= best_size || best == NULL))
-		    {
-		      best = fwd;
-		      best_size = extra;
-		    }
-
-		  fwd = fwd->fd;
-		}
-	      victim = best;
-
-	      if (victim != NULL)
-		{
-		  unlink_chunk (av, victim);
-		  break;
-		}
-	    }
-
-	  if (victim != NULL)
-	    break;
-	}
-    }
-
-  /* Strategy: find a spot within that chunk that meets the alignment
-     request, and then possibly free the leading and trailing space.
-     This strategy is incredibly costly and can lead to external
-     fragmentation if header and footer chunks are unused.  */
-
-  if (victim != NULL)
-    {
-      p = victim;
-      m = chunk2mem (p);
-      set_inuse (p);
-      if (av != &main_arena)
-	set_non_main_arena (p);
-    }
-  else
-    {
-      /* Call malloc with worst case padding to hit alignment. */
-
-      m = (char *) (_int_malloc (av, nb + alignment + MINSIZE));
-
-      if (m == 0)
-	return 0;           /* propagate failure */
-
-      p = mem2chunk (m);
-    }
+  p = mem2chunk (m);
 
   if ((((unsigned long) (m)) % alignment) != 0)   /* misaligned */
     {
