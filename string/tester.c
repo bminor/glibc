@@ -34,6 +34,14 @@
 DIAG_IGNORE_NEEDS_COMMENT (8, "-Wstringop-truncation");
 #endif
 
+/* When building with fortify enabled, GCC < 12 issues a warning on the
+   fortify strncat wrapper might overflow the destination buffer (the
+   failure is tied to -Werror).
+   Triggered by strncat fortify wrapper when it is enabled.  */
+#if __GNUC_PREREQ (11, 0)
+DIAG_IGNORE_NEEDS_COMMENT (11, "-Wstringop-overread");
+#endif
+
 #include <errno.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -51,9 +59,6 @@ DIAG_IGNORE_NEEDS_COMMENT (5.0, "-Wmemset-transposed-args");
 #if __GNUC_PREREQ (7, 0)
 DIAG_IGNORE_NEEDS_COMMENT (9, "-Wrestrict");
 DIAG_IGNORE_NEEDS_COMMENT (7, "-Wstringop-overflow=");
-#endif
-#if __GNUC_PREREQ (11, 0)
-DIAG_IGNORE_NEEDS_COMMENT (11, "-Wstringop-overread");
 #endif
 
 
