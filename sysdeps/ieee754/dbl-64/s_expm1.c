@@ -130,6 +130,11 @@ static const double
 	  4.00821782732936239552e-06, /* 3ED0CFCA 86E65239 */
 	  -2.01099218183624371326e-07 }; /* BE8AFDB7 6E09C32D */
 
+#ifndef SECTION
+# define SECTION
+#endif
+
+SECTION
 double
 __expm1 (double x)
 {
@@ -258,4 +263,6 @@ __expm1 (double x)
     }
   return y;
 }
+#ifndef __expm1
 libm_alias_double (__expm1, expm1)
+#endif
