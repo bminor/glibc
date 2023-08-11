@@ -696,8 +696,8 @@ init_cacheinfo (void)
       /* Account for non-inclusive L2 and L3 caches.  */
       if (!inclusive_cache)
 	{
-      if (threads_l2 > 0)
-	shared_per_thread += core / threads_l2;
+      long int core_per_thread = threads_l2 > 0 ? (core / threads_l2) : core;
+      shared_per_thread += core_per_thread;
 	  shared += core;
 	}
     }
