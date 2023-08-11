@@ -679,18 +679,19 @@ init_cacheinfo (void)
 	    }
 	  else
 	    {
-	    intel_bug_no_cache_info:
+intel_bug_no_cache_info:
 	      /* Assume that all logical threads share the highest cache
 		 level.  */
 
-	      threads = ((cpu_features->cpuid[COMMON_CPUID_INDEX_1].ebx >> 16)
-			 & 0xff);
-
-	      /* Cap usage of highest cache level to the number of supported
-		 threads.  */
-	      if (shared_per_thread > 0 && threads > 0)
-		shared_per_thread /= threads;
+	      threads
+		= ((cpu_features->cpuid[COMMON_CPUID_INDEX_1].ebx
+		    >> 16) & 0xff);
 	    }
+
+	  /* Cap usage of highest cache level to the number of supported
+	     threads.  */
+	  if (shared_per_thread > 0 && threads > 0)
+	    shared_per_thread /= threads;
 	}
 
       /* Account for non-inclusive L2 and L3 caches.  */
