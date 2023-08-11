@@ -66,25 +66,10 @@ static struct cached_data *cache;
 __libc_lock_define_initialized (static, lock);
 
 
-#if IS_IN (nscd)
-static uint32_t nl_timestamp;
-
-uint32_t
-__bump_nl_timestamp (void)
-{
-  if (atomic_fetch_add_relaxed (&nl_timestamp, 1) + 1 == 0)
-    atomic_fetch_add_relaxed (&nl_timestamp, 1);
-
-  return nl_timestamp;
-}
-#endif
-
 static inline uint32_t
 get_nl_timestamp (void)
 {
-#if IS_IN (nscd)
-  return nl_timestamp;
-#elif defined USE_NSCD
+#if defined USE_NSCD
   return __nscd_get_nl_timestamp ();
 #else
   return 0;

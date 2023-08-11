@@ -256,6 +256,17 @@ int inotify_fd = -1;
 #ifdef HAVE_NETLINK
 /* Descriptor for netlink status updates.  */
 static int nl_status_fd = -1;
+
+static uint32_t
+__bump_nl_timestamp (void)
+{
+  static uint32_t nl_timestamp;
+
+  if (atomic_fetch_add_relaxed (&nl_timestamp, 1) + 1 == 0)
+    atomic_fetch_add_relaxed (&nl_timestamp, 1);
+
+  return nl_timestamp;
+}
 #endif
 
 /* Number of times clients had to wait.  */

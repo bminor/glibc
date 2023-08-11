@@ -60,12 +60,3 @@ __free_in6ai (struct in6addrinfo *in6ai)
 {
   /* Nothing to do.  */
 }
-
-
-#if IS_IN (nscd)
-uint32_t
-__bump_nl_timestamp (void)
-{
-  return 0;
-}
-#endif
