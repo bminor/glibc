@@ -605,11 +605,10 @@ get_common_cache_info (long int *shared_ptr, long int * shared_per_thread_ptr, u
 	     level.  */
 	  threads = ((cpu_features->features[CPUID_INDEX_1].cpuid.ebx >> 16)
 		     & 0xff);
-
-	  /* Get per-thread size of highest level cache.  */
-	  if (shared_per_thread > 0 && threads > 0)
-	    shared_per_thread /= threads;
 	}
+      /* Get per-thread size of highest level cache.  */
+      if (shared_per_thread > 0 && threads > 0)
+	shared_per_thread /= threads;
     }
 
   /* Account for non-inclusive L2 and L3 caches.  */
