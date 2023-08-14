@@ -1,11 +1,39 @@
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/s390/s390-64.
 
+# Bypass result of runtime configure check for known linker versions as
+# e.g. crt-files or libc.so might not be available in bootstrapping
+# environments.
+case $($LD --version) in
+  "GNU gold"*)
+    # As of 2023-08-07, gold does not support static PIE due to
+    # Bug 22221 - add --no-dynamic-linker option
+    # https://sourceware.org/bugzilla/show_bug.cgi?id=22221
+    libc_cv_s390x_staticpie_req_version=no
+    ;;
+  "LLD"*)
+    # As of 2023-08-07, there is no lld which supports s390x.
+    libc_cv_s390x_staticpie_req_version=no
+    ;;
+  *)
+    # The required binutils patches are available with bintuils 2.39
+    libc_cv_s390x_staticpie_req_version=yes
+    # Skip AC_CHECK_PROGS and just use the result from main configure.ac.
+    libc_cv_s390x_staticpie_req_LD=$LD
+    AC_CHECK_PROG_VER(libc_cv_s390x_staticpie_req_LD, $LD, --version,
+		      [GNU ld.* \([0-9][0-9]*\.[0-9.]*\)],
+		      [2.1[0-9][0-9]*|2.39*|2.[4-9][0-9]*|[3-9].*|[1-9][0-9]*],
+		      libc_cv_s390x_staticpie_req_version=no)
+    ;;
+esac
+AC_MSG_CHECKING([for s390-specific static PIE requirements (version check)])
+AC_MSG_RESULT($libc_cv_s390x_staticpie_req_version)
+
 # Minimal checking for static PIE support in ld.
 # Compare to ld testcase/bugzilla:
 # <binutils-source>/ld/testsuite/ld-elf/pr22263-1.rd
-AC_CACHE_CHECK([for s390-specific static PIE requirements], \
-[libc_cv_s390x_staticpie_req], [dnl
+AC_CACHE_CHECK([for s390-specific static PIE requirements (runtime check)], \
+[libc_cv_s390x_staticpie_req_runtime], [dnl
   cat > conftest1.c <<EOF
 __thread int * foo;
 
@@ -27,16 +55,18 @@ main ()
   return 0;
 }
 EOF
-  libc_cv_s390x_staticpie_req=no
+  libc_cv_s390x_staticpie_req_runtime=no
   if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -fPIE -c conftest1.c -o conftest1.o]) \
      && AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -fPIE -c conftest2.c -o conftest2.o]) \
      && AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -pie -o conftest conftest1.o conftest2.o]) \
      && AC_TRY_COMMAND([! LC_ALL=C $READELF -Wr conftest | grep R_390_TLS_TPOFF])
   then
-    libc_cv_s390x_staticpie_req=yes
+    libc_cv_s390x_staticpie_req_runtime=yes
   fi
   rm -rf conftest.*])
-if test $libc_cv_s390x_staticpie_req = yes; then
+
+if test $libc_cv_s390x_staticpie_req_runtime = yes \
+   || test $libc_cv_s390x_staticpie_req_version = yes; then
    # Static PIE is supported only on 64bit.
    # Ensure you also have those patches for:
    # - binutils (ld)
