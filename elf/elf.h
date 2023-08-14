@@ -4213,6 +4213,7 @@ enum
 #define R_LARCH_SUB6 106
 #define R_LARCH_ADD_ULEB128 107
 #define R_LARCH_SUB_ULEB128 108
+#define R_LARCH_64_PCREL 109
 
 /* ARC specific declarations.  */
 
