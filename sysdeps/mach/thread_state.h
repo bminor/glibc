@@ -59,7 +59,7 @@
 #include <string.h>		/* size_t, memcpy */
 #include <mach/mach_interface.h> /* __thread_get_state */
 
-static inline int
+static __inline int
 machine_get_state (thread_t thread, struct machine_thread_all_state *state,
 		   int flavor, void *stateptr, void *scpptr, size_t size)
 {
@@ -74,12 +74,12 @@ machine_get_state (thread_t thread, struct machine_thread_all_state *state,
       /* No one asked about this flavor of state before; fetch the state
 	 directly from the kernel into the sigcontext.  */
       mach_msg_type_number_t got = (size / sizeof (int));
-      return (! __thread_get_state (thread, flavor, scpptr, &got)
+      return (! __thread_get_state (thread, flavor, (thread_state_t) scpptr, &got)
 	      && got == (size / sizeof (int)));
     }
 }
 
-static inline int
+static __inline int
 machine_get_basic_state (thread_t thread,
 			 struct machine_thread_all_state *state)
 {
