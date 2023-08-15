@@ -9,5 +9,10 @@ sysdep_routines += \
   strchrnul-aligned \
   strchrnul-lsx \
   strchrnul-lasx \
+  memcpy-aligned \
+  memcpy-unaligned \
+  memmove-unaligned \
+  memmove-lsx \
+  memmove-lasx \
 # sysdep_routines
 endif
