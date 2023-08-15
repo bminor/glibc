@@ -16,7 +16,7 @@ do_test (int argc, char *argv[])
       struct statfs stf;
       TEST_COMPARE (statvfs (argv[i], &st), 0);
       TEST_COMPARE (statfs (argv[i], &stf), 0);
-      TEST_COMPARE (st.f_type, stf.f_type);
+      TEST_COMPARE (st.f_type, (unsigned int) stf.f_type);
       printf ("%s: free: %llu, mandatory: %s, tp=%x\n", argv[i],
               (unsigned long long int) st.f_bfree,
 #ifdef ST_MANDLOCK
