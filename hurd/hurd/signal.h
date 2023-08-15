@@ -28,6 +28,7 @@
 #include <mach/mach_types.h>
 #include <mach/port.h>
 #include <mach/message.h>
+#include <thread_state.h>
 #include <hurd/hurd_types.h>
 #include <signal.h>
 #include <errno.h>
@@ -183,6 +184,11 @@ _hurd_self_sigstate (void)
 }
 # endif
 #endif
+
+extern mach_port_t
+_hurdsig_abort_rpcs (struct hurd_sigstate *ss, int signo, int sigthread,
+		     struct machine_thread_all_state *state, int *state_change,
+		     void (*reply) (void));
 
 /* Thread listening on our message port; also called the "signal thread".  */
 
