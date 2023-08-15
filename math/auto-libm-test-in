@@ -7318,7 +7318,7 @@ pow 0x1.7ac7cp+5 23
 pow -0x1.7ac7cp+5 23
 
 sin 0
-sin -0
+sin -0 no-mathvec
 sin pi/6
 sin -pi/6
 sin pi/2

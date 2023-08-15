@@ -93,7 +93,8 @@ BEAUTIFY_MAP = {'minus_zero': '-0',
 
 # Flags in auto-libm-test-out that map directly to C flags.
 FLAGS_SIMPLE = {'ignore-zero-inf-sign': 'IGNORE_ZERO_INF_SIGN',
-                'xfail': 'XFAIL_TEST'}
+                'xfail': 'XFAIL_TEST',
+                'no-mathvec': 'NO_TEST_MATHVEC'}
 
 # Exceptions in auto-libm-test-out, and their corresponding C flags
 # for being required, OK or required to be absent.
