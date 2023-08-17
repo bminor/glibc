@@ -60,8 +60,6 @@ xmodify_ldt (int func, const void *ptr, unsigned long bytecount)
 	FAIL_UNSUPPORTED ("modify_ldt not supported");
       FAIL_EXIT1 ("modify_ldt failed (errno=%d)", errno);
     }
-
-  return 0;
 }
 
 static int
