@@ -99,6 +99,11 @@ static const double
 
 static const double zero = 0.0;
 
+#ifndef SECTION
+# define SECTION
+#endif
+
+SECTION
 double
 __log1p (double x)
 {
