@@ -77,8 +77,8 @@ L(Lnormal:)
 #else /* not mc68000 */
 	movel	R(s_size),R(d0)
 	asll	#2,R(d0)
-	addl	R(s_size),R(s_ptr)
-	addl	R(s_size),R(res_ptr)
+	addl	R(d0),R(s_ptr)
+	addl	R(d0),R(res_ptr)
 #endif
 	movel	MEM_PREDEC(s_ptr),R(d2)
 	movel	R(d2),R(d0)
