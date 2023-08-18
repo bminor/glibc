@@ -15,10 +15,6 @@
 # License along with the GNU C Library.  If not, see
 # <https://www.gnu.org/licenses/>.
 
-ifeq ($(subdir),db2)
-CPPFLAGS += -DHAVE_SPINLOCKS=1 -DHAVE_ASSEM_ALPHA=1
-endif
-
 ifeq ($(subdir),debug)
 # Consider making this GCC's default...
 CFLAGS-backtrace.c = -fasynchronous-unwind-tables
