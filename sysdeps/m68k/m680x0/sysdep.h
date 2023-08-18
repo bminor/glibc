@@ -37,3 +37,10 @@
   OP " " SRC "(" PC "), " DST
 
 #endif	/* __ASSEMBLER__ */
+
+# if defined __mc68020__ || defined __mc68030__ || defined __mc68040__	      \
+     || defined __mc68060__
+#  define M68K_SCALE_AVAILABLE 1
+# else
+#  define M68K_SCALE_AVAILABLE 0
+# endif
