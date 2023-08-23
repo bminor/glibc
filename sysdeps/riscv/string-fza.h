@@ -19,7 +19,7 @@
 #ifndef _RISCV_STRING_FZA_H
 #define _RISCV_STRING_FZA_H 1
 
-#ifdef __riscv_zbb
+#if defined __riscv_zbb || defined __riscv_xtheadbb
 /* With bitmap extension we can use orc.b to find all zero bytes.  */
 # include <string-misc.h>
 # include <string-optype.h>
@@ -32,8 +32,13 @@ static __always_inline find_t
 find_zero_all (op_t x)
 {
   find_t r;
+#ifdef __riscv_xtheadbb
+  asm ("th.tstnbz %0, %1" : "=r" (r) : "r" (x));
+  return r;
+#else
   asm ("orc.b %0, %1" : "=r" (r) : "r" (x));
   return ~r;
+#endif
 }
 
 /* This function returns 0xff for each byte that is equal between X1 and
