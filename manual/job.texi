@@ -1133,6 +1133,7 @@ following @code{errno} error conditions are defined for this function:
 @table @code
 @item ESRCH
 There is no process with the given process ID @var{pid}.
+@item EPERM
 The calling process and the process specified by @var{pid} are in
 different sessions, and the implementation doesn't allow to access the
 process group ID of the process with ID @var{pid} from the calling
