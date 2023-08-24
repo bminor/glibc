@@ -12,6 +12,8 @@ sysdep_routines += \
   strchrnul-aligned \
   strchrnul-lsx \
   strchrnul-lasx \
+  strcmp-aligned \
+  strcmp-lsx \
   memcpy-aligned \
   memcpy-unaligned \
   memmove-unaligned \
