@@ -28,3 +28,5 @@
 #endif
 #define HAVE_GETTIMEOFDAY_VSYSCALL      "__vdso_gettimeofday"
 #define HAVE_CLOCK_GETRES_VSYSCALL      "__vdso_clock_getres"
+
+#define HAVE_CLONE3_WRAPPER		1
