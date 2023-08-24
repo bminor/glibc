@@ -213,6 +213,7 @@ tests += \
   tst-ofdlocks \
   tst-personality \
   tst-pidfd \
+  tst-pidfd_getpid \
   tst-pkey \
   tst-ppoll \
   tst-prctl \
@@ -493,8 +494,10 @@ sysdep_headers += \
 sysdep_routines += \
   getcpu \
   oldglob \
+  pidfd_getpid \
   pidfd_spawn \
   pidfd_spawnp \
+  procutils \
   sched_getcpu \
   spawnattr_getcgroup_np \
   spawnattr_setcgroup_np \

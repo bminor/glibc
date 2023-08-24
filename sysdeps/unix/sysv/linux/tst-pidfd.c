@@ -18,6 +18,7 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <limits.h>
 #include <support/capture_subprocess.h>
 #include <support/check.h>
 #include <support/process_state.h>
@@ -27,6 +28,8 @@
 #include <support/xsocket.h>
 #include <sys/pidfd.h>
 #include <sys/wait.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 #define REMOTE_PATH "/dev/null"
 
@@ -102,6 +105,44 @@ do_test (void)
   ppid = getpid ();
   puid = getuid ();
 
+  /* Sanity check for invalid inputs.  */
+  TEST_COMPARE (pidfd_getpid (-1), -1);
+  TEST_COMPARE (errno, EBADF);
+
+  {
+    pid_t pid = pidfd_getpid (STDOUT_FILENO);
+    TEST_COMPARE (pid, -1);
+    TEST_COMPARE (errno, EBADF);
+  }
+
+  /* Check if pidfd_getpid returns ESRCH for exited subprocess.  */
+  {
+    pid_t pidfork = xfork ();
+    if (pidfork == 0)
+      _exit (EXIT_SUCCESS);
+    int pidfork_pidfd = pidfd_open (pidfork, 0);
+
+    /* The process might be still running or already in zombie state, in
+       either case the PID is still allocated to the process.  */
+    pid_t pid = pidfd_getpid (pidfork_pidfd);
+    TEST_COMPARE (pidfork, pid);
+    if (pid > 0)
+      support_process_state_wait (pid, support_process_state_zombie);
+
+    siginfo_t info;
+    TEST_COMPARE (waitid (P_PIDFD, pidfork_pidfd, &info, WEXITED), 0);
+    TEST_COMPARE (info.si_pid, pidfork);
+    TEST_COMPARE (info.si_status, 0);
+    TEST_COMPARE (info.si_code, CLD_EXITED);
+
+    /* Once the process is reaped the associated PID is not available.  */
+    pid = pidfd_getpid (pidfork_pidfd);
+    TEST_COMPARE (pid, -1);
+    TEST_COMPARE (errno, ESRCH);
+
+    xclose (pidfork_pidfd);
+  }
+
   TEST_COMPARE (socketpair (AF_UNIX, SOCK_STREAM, 0, sockets), 0);
 
   pid_t pid = xfork ();
@@ -117,6 +158,12 @@ do_test (void)
 
   int pidfd = pidfd_open (pid, 0);
   TEST_VERIFY (pidfd != -1);
+
+  TEST_COMPARE (pidfd_getpid (INT_MAX), -1);
+  {
+    pid_t querypid = pidfd_getpid (pidfd);
+    TEST_COMPARE (querypid, pid);
+  }
 
   /* Wait for first sigtimedwait.  */
   support_process_state_wait (pid, support_process_state_sleeping);

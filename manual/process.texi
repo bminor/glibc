@@ -33,6 +33,7 @@ primitive functions to do each step individually instead.
 * Process Creation Concepts::   An overview of the hard way to do it.
 * Process Identification::      How to get the process ID of a process.
 * Creating a Process::          How to fork a child process.
+* Querying a Process::          How to query a child process.
 * Executing a File::            How to make a process execute another program.
 * Process Completion::          How to tell when a child process has completed.
 * Process Completion Status::   How to interpret the status value
@@ -360,6 +361,43 @@ permits you to use @code{vfork} on all systems, but actually
 executes @code{fork} if @code{vfork} isn't available.  If you follow
 the proper precautions for using @code{vfork}, your program will still
 work even if the system uses @code{fork} instead.
+@end deftypefun
+
+@node Querying a Process
+@section Querying a Process
+
+The file descriptor returned by the @code{pidfd_fork} function can be used to
+query process extra information.
+
+@deftypefun pid_t pidfd_getpid (int @var{fd})
+@standards{GNU, sys/pidfd.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+
+The @code{pidfd_getpid} function retrieves the process ID associated with process
+file descriptor created with @code{pid_spawn}, @code{pidfd_fork}, or
+@code{pidfd_open}.
+
+If the operation fails, @code{pidfd_getpid} return @code{-1} and the following
+@code{errno} error conditionas are defined:
+
+@table @code
+@item EBADF
+The input file descriptor is invalid, does not have a pidfd associated, or an
+error has occurred parsing the kernel data.
+@item EREMOTE
+There is no process ID to denote the process in the current namespace.
+@item ESRCH
+The process for which the file descriptor refers to is terminated.
+@item ENOENT
+The procfs is not mounted.
+@item ENFILE.
+Too many open files in system (@code{pidfd_open} tries to open a procfs file and
+read its contents).
+@item ENOMEM
+Insufficient kernel memory was available.
+@end table
+
+This function is specific to Linux.
 @end deftypefun
 
 @node Executing a File

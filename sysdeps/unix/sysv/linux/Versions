@@ -322,6 +322,7 @@ libc {
 %endif
   }
   GLIBC_2.39 {
+    pidfd_getpid;
     pidfd_spawn;
     pidfd_spawnp;
     posix_spawnattr_getcgroup_np;

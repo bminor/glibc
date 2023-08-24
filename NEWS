@@ -27,6 +27,10 @@ Major new features:
   The pidfd functionality avoids the issue of PID reuse with the traditional
   posix_spawn interface.
 
+* On Linux, the pidfd_getpid function has been added.  It allows retrieving
+  the process ID associated with the process file descriptor created by
+  pid_spawn, fork_np, or pidfd_open.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
   [Add deprecations, removals and changes affecting compatibility here]
