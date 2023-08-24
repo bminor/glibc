@@ -38,6 +38,14 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strlen, 1, __strlen_aligned)
 	      )
 
+  IFUNC_IMPL (i, name, strnlen,
+#if !defined __loongarch_soft_float
+	      IFUNC_IMPL_ADD (array, i, strnlen, SUPPORT_LASX, __strnlen_lasx)
+	      IFUNC_IMPL_ADD (array, i, strnlen, SUPPORT_LSX, __strnlen_lsx)
+#endif
+	      IFUNC_IMPL_ADD (array, i, strnlen, 1, __strnlen_aligned)
+	      )
+
   IFUNC_IMPL (i, name, strchr,
 #if !defined __loongarch_soft_float
 	      IFUNC_IMPL_ADD (array, i, strchr, SUPPORT_LASX, __strchr_lasx)

@@ -3,6 +3,9 @@ sysdep_routines += \
   strlen-aligned \
   strlen-lsx \
   strlen-lasx \
+  strnlen-aligned \
+  strnlen-lsx \
+  strnlen-lasx \
   strchr-aligned \
   strchr-lsx \
   strchr-lasx \
