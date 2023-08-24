@@ -380,14 +380,19 @@ __spawnix (pid_t * pid, const char *file,
      need for CLONE_SETTLS.  Although parent and child share the same TLS
      namespace, there will be no concurrent access for TLS variables (errno
      for instance).  */
+  bool set_cgroup = attrp ? (attrp->__flags & POSIX_SPAWN_SETCGROUP) : false;
   struct clone_args clone_args =
     {
       /* Unsupported flags like CLONE_CLEAR_SIGHAND will be cleared up by
 	 __clone_internal_fallback.  */
-      .flags = CLONE_CLEAR_SIGHAND | CLONE_VM | CLONE_VFORK,
+      .flags = (set_cgroup ? CLONE_INTO_CGROUP : 0)
+	       | CLONE_CLEAR_SIGHAND
+	       | CLONE_VM
+	       | CLONE_VFORK,
       .exit_signal = SIGCHLD,
       .stack = (uintptr_t) stack,
       .stack_size = stack_size,
+      .cgroup = (set_cgroup ? attrp->__cgroup : 0)
     };
 #ifdef HAVE_CLONE3_WRAPPER
   args.use_clone3 = true;
@@ -398,8 +403,19 @@ __spawnix (pid_t * pid, const char *file,
 #endif
     {
       args.use_clone3 = false;
-      new_pid = __clone_internal_fallback (&clone_args, __spawni_child,
-					   &args);
+      if (!set_cgroup)
+	new_pid = __clone_internal_fallback (&clone_args, __spawni_child,
+					     &args);
+      else
+	{
+	  /* No fallback for POSIX_SPAWN_SETCGROUP if clone3 is not
+	     supported.  */
+	  new_pid = -1;
+#ifdef HAVE_CLONE3_WRAPPER
+	  if (errno == ENOSYS)
+#endif
+	    errno = ENOTSUP;
+	}
     }
 
   /* It needs to collect the case where the auxiliary process was created

@@ -2636,3 +2636,5 @@ GLIBC_2.38 strlcat F
 GLIBC_2.38 strlcpy F
 GLIBC_2.38 wcslcat F
 GLIBC_2.38 wcslcpy F
+GLIBC_2.39 posix_spawnattr_getcgroup_np F
+GLIBC_2.39 posix_spawnattr_setcgroup_np F

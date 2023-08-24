@@ -493,11 +493,14 @@ sysdep_routines += \
   getcpu \
   oldglob \
   sched_getcpu \
+  spawnattr_getcgroup_np \
+  spawnattr_setcgroup_np \
   # sysdep_routines
 
 tests += \
   tst-affinity \
   tst-affinity-pid \
+  tst-spawn-cgroup \
   # tests
 
 tests-static += \
@@ -511,6 +514,8 @@ tests += \
 CFLAGS-fork.c = $(libio-mtsafe)
 CFLAGS-getpid.o = -fomit-frame-pointer
 CFLAGS-getpid.os = -fomit-frame-pointer
+
+tst-spawn-cgroup-ARGS = -- $(host-test-program-cmd)
 endif
 
 ifeq ($(subdir),inet)

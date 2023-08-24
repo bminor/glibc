@@ -15,31 +15,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
 #include <spawn.h>
-#include <string.h>
 
-#define ALL_FLAGS (POSIX_SPAWN_RESETIDS					      \
-		   | POSIX_SPAWN_SETPGROUP				      \
-		   | POSIX_SPAWN_SETSIGDEF				      \
-		   | POSIX_SPAWN_SETSIGMASK				      \
-		   | POSIX_SPAWN_SETSCHEDPARAM				      \
-		   | POSIX_SPAWN_SETSCHEDULER				      \
-		   | POSIX_SPAWN_SETSID					      \
-		   | POSIX_SPAWN_USEVFORK				      \
-		   | POSIX_SPAWN_SETCGROUP)
-
-/* Store flags in the attribute structure.  */
+/* Store scheduling policy in the attribute structure.  */
 int
-__posix_spawnattr_setflags (posix_spawnattr_t *attr, short int flags)
+posix_spawnattr_setcgroup_np (posix_spawnattr_t *attr, int cgroup)
 {
-  /* Check no invalid bits are set.  */
-  if (flags & ~ALL_FLAGS)
-    return EINVAL;
-
-  /* Store the flag word.  */
-  attr->__flags = flags;
+  attr->__cgroup = cgroup;
 
   return 0;
 }
-weak_alias (__posix_spawnattr_setflags, posix_spawnattr_setflags)

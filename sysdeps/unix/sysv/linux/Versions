@@ -321,6 +321,10 @@ libc {
     __ppoll64_chk;
 %endif
   }
+  GLIBC_2.39 {
+    posix_spawnattr_getcgroup_np;
+    posix_spawnattr_setcgroup_np;
+  }
   GLIBC_PRIVATE {
     # functions used in other libraries
     __syscall_rt_sigqueueinfo;

@@ -14,6 +14,12 @@ Major new features:
   and under Linux a spare has been allocated: it was always zero
   in previous versions of glibc, and zero is not a valid result.
 
+* On Linux, the functions posix_spawnattr_getcgroup_np and
+  posix_spawnattr_setcgroup_np have been added, along with the
+  POSIX_SPAWN_SETCGROUP flag.  They allow posix_spawn and posix_spawnp
+  to set the cgroupv2 in the new process in a race-free manner.  These
+  functions are GNU extensions and require a kernel with clone3 support.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
   [Add deprecations, removals and changes affecting compatibility here]
