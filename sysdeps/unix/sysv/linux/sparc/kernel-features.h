@@ -87,3 +87,7 @@
    (INLINE_CLONE_SYSCALL).  */
 #undef __ASSUME_CLONE_DEFAULT
 #define __ASSUME_CLONE_BACKWARDS	1
+
+/* sparc does not provide clone3.  */
+#undef __ASSUME_CLONE3
+#define __ASSUME_CLONE3 0

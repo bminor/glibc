@@ -50,4 +50,8 @@
 /* Alpha requires old sysvipc even being a 64-bit architecture.  */
 #undef __ASSUME_SYSVIPC_DEFAULT_IPC_64
 
+/* Alpha does not provide clone3.  */
+#undef __ASSUME_CLONE3
+#define __ASSUME_CLONE3 0
+
 #endif /* _KERNEL_FEATURES_H */

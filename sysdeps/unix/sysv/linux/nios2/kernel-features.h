@@ -1,6 +1,6 @@
 /* Set flags signalling availability of kernel features based on given
-   kernel version number.
-   Copyright (C) 2010-2023 Free Software Foundation, Inc.
+   kernel version number.  NIOS2 version.
+   Copyright (C) 2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,25 +17,8 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _KERNEL_FEATURES_H
-#define _KERNEL_FEATURES_H 1
-
 #include_next <kernel-features.h>
 
-#define __ASSUME_RECV_SYSCALL   	1
-#define __ASSUME_SEND_SYSCALL		1
-#define __ASSUME_ACCEPT4_SYSCALL	1
-
-/* Support for statx was added in 5.1.  */
-#if __LINUX_KERNEL_VERSION < 0x050100
-# undef __ASSUME_STATX
-#endif
-
-#undef __ASSUME_CLONE_DEFAULT
-#define __ASSUME_CLONE2
-
-/* ia64 does not provide clone3.  */
+/* nios2 does not provide clone3.  */
 #undef __ASSUME_CLONE3
 #define __ASSUME_CLONE3 0
-
-#endif /* _KERNEL_FEATURES_H */

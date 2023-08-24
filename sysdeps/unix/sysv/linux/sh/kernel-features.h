@@ -55,4 +55,8 @@
 # undef __ASSUME_STATX
 #endif
 
+/* sh does not provide clone3.  */
+#undef __ASSUME_CLONE3
+#define __ASSUME_CLONE3 0
+
 #endif
