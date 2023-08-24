@@ -26,6 +26,7 @@
 #include <stdio.h>
 
 #include <support/check.h>
+#include <tst-spawn.h>
 
 int
 do_test (void)
@@ -35,9 +36,9 @@ do_test (void)
 
   const char *program = "/path/to/invalid/binary";
   char * const args[] = { 0 };
-  pid_t pid = -1;
+  PID_T_TYPE pid = -1;
 
-  int ret = posix_spawn (&pid, program, 0, 0, args, environ);
+  int ret = POSIX_SPAWN (&pid, program, 0, 0, args, environ);
   if (ret != ENOENT)
     {
       errno = ret;
@@ -51,14 +52,13 @@ do_test (void)
     FAIL_EXIT1 ("posix_spawn returned pid != -1 (%i)", (int) pid);
 
   /* Check if no child is actually created.  */
-  ret = waitpid (-1, NULL, 0);
-  if (ret != -1 || errno != ECHILD)
-    FAIL_EXIT1 ("waitpid: %m)");
+  TEST_COMPARE (WAITID (P_ALL, 0, NULL, WEXITED), -1);
+  TEST_COMPARE (errno, ECHILD);
 
   /* Same as before, but with posix_spawnp.  */
   char *args2[] = { (char*) program, 0 };
 
-  ret = posix_spawnp (&pid, args2[0], 0, 0, args2, environ);
+  ret = POSIX_SPAWNP (&pid, args2[0], 0, 0, args2, environ);
   if (ret != ENOENT)
     {
       errno = ret;
@@ -68,9 +68,8 @@ do_test (void)
   if (pid != -1)
     FAIL_EXIT1 ("posix_spawnp returned pid != -1 (%i)", (int) pid);
 
-  ret = waitpid (-1, NULL, 0);
-  if (ret != -1 || errno != ECHILD)
-    FAIL_EXIT1 ("waitpid: %m)");
+  TEST_COMPARE (WAITID (P_ALL, 0, NULL, WEXITED), -1);
+  TEST_COMPARE (errno, ECHILD);
 
   return 0;
 }

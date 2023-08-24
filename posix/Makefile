@@ -602,6 +602,7 @@ tst-spawn-static-ARGS = $(tst-spawn-ARGS)
 tst-spawn5-ARGS = -- $(host-test-program-cmd)
 tst-spawn6-ARGS = -- $(host-test-program-cmd)
 tst-spawn7-ARGS = -- $(host-test-program-cmd)
+tst-posix_spawn-setsid-ARGS = -- $(host-test-program-cmd)
 tst-dir-ARGS = `pwd` `cd $(common-objdir)/$(subdir); pwd` `cd $(common-objdir); pwd` $(objpfx)tst-dir
 tst-chmod-ARGS = $(objdir)
 tst-vfork3-ARGS = --test-dir=$(objpfx)

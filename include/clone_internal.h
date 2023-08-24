@@ -35,6 +35,10 @@ extern int __clone_internal_fallback (struct clone_args *__cl_args,
 				      void *__arg)
      attribute_hidden;
 
+/* Return whether the kernel supports pid file descriptor, including clone
+   with CLONE_PIDFD and waitid with P_PIDFD.  */
+extern bool __clone_pidfd_supported (void) attribute_hidden;
+
 #ifndef _ISOMAC
 libc_hidden_proto (__clone3)
 libc_hidden_proto (__clone_internal)

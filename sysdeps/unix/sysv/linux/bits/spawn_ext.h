@@ -35,6 +35,33 @@ extern int posix_spawnattr_setcgroup_np (posix_spawnattr_t *__attr,
 					 int __cgroup)
      __THROW __nonnull ((1));
 
+/* Spawn a new process executing PATH with the attributes describes in *ATTRP.
+   Before running the process perform the actions described in FACTS.  Return
+   a PID file descriptor in PIDFD if process creation was successful and the
+   argument is non-null.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern int pidfd_spawn (int *__restrict __pidfd,
+			const char *__restrict __path,
+			const posix_spawn_file_actions_t *__restrict __facts,
+			const posix_spawnattr_t *__restrict __attrp,
+			char *const __argv[__restrict_arr],
+			char *const __envp[__restrict_arr])
+    __nonnull ((2, 5));
+
+/* Similar to `pidfd_spawn' but search for FILE in the PATH.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern int pidfd_spawnp (int *__restrict __pidfd,
+			 const char *__restrict __file,
+			 const posix_spawn_file_actions_t *__restrict __facts,
+			 const posix_spawnattr_t *__restrict __attrp,
+			 char *const __argv[__restrict_arr],
+			 char *const __envp[__restrict_arr])
+    __nonnull ((1, 2, 5));
+
 #endif /* __USE_MISC */
 
 __END_DECLS

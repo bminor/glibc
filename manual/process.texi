@@ -136,13 +136,13 @@ creating a process and making it run another program.
 @cindex parent process
 @cindex subprocess
 A new processes is created when one of the functions
-@code{posix_spawn}, @code{fork}, @code{_Fork} or @code{vfork} is called.
-(The @code{system} and @code{popen} also create new processes internally.)
-Due to the name of the @code{fork} function, the act of creating a new
-process is sometimes called @dfn{forking} a process.  Each new process
-(the @dfn{child process} or @dfn{subprocess}) is allocated a process
-ID, distinct from the process ID of the parent process.  @xref{Process
-Identification}.
+@code{posix_spawn}, @code{fork}, @code{_Fork}, @code{vfork}, or
+@code{pidfd_spawn} is called.  (The @code{system} and @code{popen} also
+create new processes internally.)  Due to the name of the @code{fork}
+function, the act of creating a new process is sometimes called
+@dfn{forking} a process.  Each new process (the @dfn{child process} or
+@dfn{subprocess}) is allocated a process ID, distinct from the process
+ID of the parent process.  @xref{Process Identification}.
 
 After forking a child process, both the parent and child processes
 continue to execute normally.  If you want your program to wait for a

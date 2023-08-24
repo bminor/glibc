@@ -29,7 +29,9 @@
 #include <support/test-driver.h>
 #include <support/xstdio.h>
 #include <support/xunistd.h>
+#include <sys/wait.h>
 #include <unistd.h>
+#include <tst-spawn.h>
 
 /* Reads the file at PATH, which must consist of exactly one line.
    Removes the line terminator at the end of the file.  */
@@ -169,17 +171,18 @@ do_test (void)
 
           char *const argv[] = { (char *) "pwd", NULL };
           char *const envp[] = { NULL } ;
-          pid_t pid;
+          PID_T_TYPE pid;
           if (do_spawnp)
-            TEST_COMPARE (posix_spawnp (&pid, "pwd", &actions,
+            TEST_COMPARE (POSIX_SPAWNP (&pid, "pwd", &actions,
                                         NULL, argv, envp), 0);
           else
-            TEST_COMPARE (posix_spawn (&pid, "subdir/pwd-symlink", &actions,
+            TEST_COMPARE (POSIX_SPAWN (&pid, "subdir/pwd-symlink", &actions,
                                        NULL, argv, envp), 0);
           TEST_VERIFY (pid > 0);
-          int status;
-          xwaitpid (pid, &status, 0);
-          TEST_COMPARE (status, 0);
+          siginfo_t sinfo;
+          TEST_COMPARE (WAITID (P_ALL, 0, &sinfo, WEXITED), 0);
+          TEST_COMPARE (sinfo.si_code, CLD_EXITED);
+          TEST_COMPARE (sinfo.si_status, 0);
 
           /* Check that the current directory did not change.  */
           {

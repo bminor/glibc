@@ -20,6 +20,13 @@ Major new features:
   to set the cgroupv2 in the new process in a race-free manner.  These
   functions are GNU extensions and require a kernel with clone3 support.
 
+* On Linux, the pidfd_spawn and pidfd_spawp functions have been added.
+  They have a similar prototype and semantic as posix_spawn, but instead of
+  returning a process ID, they return a file descriptor that can be used
+  along other pidfd functions (like pidfd_send_signal, poll, or waitid).
+  The pidfd functionality avoids the issue of PID reuse with the traditional
+  posix_spawn interface.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
   [Add deprecations, removals and changes affecting compatibility here]

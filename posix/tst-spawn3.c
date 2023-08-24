@@ -27,9 +27,12 @@
 #include <sys/resource.h>
 #include <fcntl.h>
 #include <paths.h>
+#include <intprops.h>
 
 #include <support/check.h>
 #include <support/temp_file.h>
+#include <support/xunistd.h>
+#include <tst-spawn.h>
 
 static int
 do_test (void)
@@ -48,7 +51,6 @@ do_test (void)
 
   struct rlimit rl;
   int max_fd = 24;
-  int ret;
 
   /* Set maximum number of file descriptor to a low value to avoid open
      too many files in environments where RLIMIT_NOFILE is large and to
@@ -66,7 +68,7 @@ do_test (void)
   /* Exhauste the file descriptor limit with temporary files.  */
   int files[max_fd];
   int nfiles = 0;
-  for (;;)
+  for (; nfiles < max_fd; nfiles++)
     {
       int fd = create_temp_file ("tst-spawn3.", NULL);
       if (fd == -1)
@@ -75,75 +77,82 @@ do_test (void)
 	    FAIL_EXIT1 ("create_temp_file: %m");
 	  break;
 	}
-      files[nfiles++] = fd;
+      files[nfiles] = fd;
     }
+  TEST_VERIFY_EXIT (nfiles != 0);
 
   posix_spawn_file_actions_t a;
-  if (posix_spawn_file_actions_init (&a) != 0)
-    FAIL_EXIT1 ("posix_spawn_file_actions_init");
+  TEST_COMPARE (posix_spawn_file_actions_init (&a), 0);
 
   /* Executes a /bin/sh echo $$ 2>&1 > ${objpfx}tst-spawn3.pid .  */
   const char pidfile[] = OBJPFX "tst-spawn3.pid";
-  if (posix_spawn_file_actions_addopen (&a, STDOUT_FILENO, pidfile, O_WRONLY
-					| O_CREAT | O_TRUNC, 0644) != 0)
-    FAIL_EXIT1 ("posix_spawn_file_actions_addopen");
+  TEST_COMPARE (posix_spawn_file_actions_addopen (&a, STDOUT_FILENO, pidfile,
+						  O_WRONLY| O_CREAT | O_TRUNC,
+						  0644),
+		0);
 
-  if (posix_spawn_file_actions_adddup2 (&a, STDOUT_FILENO, STDERR_FILENO) != 0)
-    FAIL_EXIT1 ("posix_spawn_file_actions_adddup2");
+  TEST_COMPARE (posix_spawn_file_actions_adddup2 (&a, STDOUT_FILENO,
+						  STDERR_FILENO),
+		0);
 
   /* Since execve (called by posix_spawn) might require to open files to
      actually execute the shell script, setup to close the temporary file
      descriptors.  */
-  for (int i=0; i<nfiles; i++)
-    {
-      if (posix_spawn_file_actions_addclose (&a, files[i]))
-	FAIL_EXIT1 ("posix_spawn_file_actions_addclose");
-    }
+  int maxnfiles =
+#ifdef TST_SPAWN_PIDFD
+    /* The sparing file descriptor will be returned as the pid descriptor,
+       otherwise clone fail with EMFILE.  */
+    nfiles - 1;
+#else
+    nfiles;
+#endif
+
+  for (int i=0; i<maxnfiles; i++)
+    TEST_COMPARE (posix_spawn_file_actions_addclose (&a, files[i]), 0);
 
   char *spawn_argv[] = { (char *) _PATH_BSHELL, (char *) "-c",
 			 (char *) "echo $$", NULL };
-  pid_t pid;
-  if ((ret = posix_spawn (&pid, _PATH_BSHELL, &a, NULL, spawn_argv, NULL))
-       != 0)
-    {
-      errno = ret;
-      FAIL_EXIT1 ("posix_spawn: %m");
-    }
+  PID_T_TYPE pid;
 
-  int status;
-  int err = waitpid (pid, &status, 0);
-  if (err != pid)
-    FAIL_EXIT1 ("waitpid: %m");
+  {
+    int r = POSIX_SPAWN (&pid, _PATH_BSHELL, &a, NULL, spawn_argv, NULL);
+    if (r == ENOSYS)
+      FAIL_UNSUPPORTED ("kernel does not support CLONE_PIDFD clone flag");
+#ifdef TST_SPAWN_PIDFD
+    TEST_COMPARE (r, EMFILE);
+
+    /* Free up one file descriptor, so posix_spawn_pidfd_ex can return it.  */
+    xclose (files[nfiles-1]);
+    nfiles--;
+    r = POSIX_SPAWN (&pid, _PATH_BSHELL, &a, NULL, spawn_argv, NULL);
+#endif
+    TEST_COMPARE (r, 0);
+  }
+
+  siginfo_t sinfo;
+  TEST_COMPARE (WAITID (P_PID, pid, &sinfo, WEXITED), 0);
+  TEST_COMPARE (sinfo.si_code, CLD_EXITED);
+  TEST_COMPARE (sinfo.si_status, 0);
 
   /* Close the temporary files descriptor so it can check posix_spawn
      output.  */
   for (int i=0; i<nfiles; i++)
-    {
-      if (close (files[i]))
-	FAIL_EXIT1 ("close: %m");
-    }
+    xclose (files[i]);
 
-  int pidfd = open (pidfile, O_RDONLY);
-  if (pidfd == -1)
-    FAIL_EXIT1 ("open: %m");
+  int pidfd = xopen (pidfile, O_RDONLY, 0);
 
-  char buf[64];
-  ssize_t n;
-  if ((n = read (pidfd, buf, sizeof (buf))) < 0)
-    FAIL_EXIT1 ("read: %m");
+  char buf[INT_BUFSIZE_BOUND (pid_t)];
+  ssize_t n = read (pidfd, buf, sizeof (buf));
+  TEST_VERIFY (n < sizeof buf && n >= 0);
 
-  unlink (pidfile);
+  xunlink (pidfile);
 
   /* We only expect to read the PID.  */
   char *endp;
   long int rpid = strtol (buf, &endp, 10);
-  if (*endp != '\n')
-    FAIL_EXIT1 ("*endp != \'n\'");
-  if (endp == buf)
-    FAIL_EXIT1 ("read empty line");
+  TEST_VERIFY (*endp == '\n' && endp != buf);
 
-  if (rpid != pid)
-    FAIL_EXIT1 ("found \"%s\", expected pid %ld\n", buf, (long int) pid);
+  TEST_COMPARE (rpid, sinfo.si_pid);
 
   return 0;
 }

@@ -24,6 +24,7 @@
 #include <support/xunistd.h>
 #include <support/check.h>
 #include <support/temp_file.h>
+#include <tst-spawn.h>
 
 static int
 do_test (void)
@@ -38,15 +39,15 @@ do_test (void)
 
   TEST_VERIFY_EXIT (chmod (scriptname, 0x775) == 0);
 
-  pid_t pid;
+  PID_T_TYPE pid;
   int status;
 
   /* Check if scripts without shebang are correctly not executed.  */
-  status = posix_spawn (&pid, scriptname, NULL, NULL, (char *[]) { 0 },
+  status = POSIX_SPAWN (&pid, scriptname, NULL, NULL, (char *[]) { 0 },
                         (char *[]) { 0 });
   TEST_VERIFY_EXIT (status == ENOEXEC);
 
-  status = posix_spawnp (&pid, scriptname, NULL, NULL, (char *[]) { 0 },
+  status = POSIX_SPAWNP (&pid, scriptname, NULL, NULL, (char *[]) { 0 },
                          (char *[]) { 0 });
   TEST_VERIFY_EXIT (status == ENOEXEC);
 

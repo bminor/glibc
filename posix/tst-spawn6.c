@@ -32,6 +32,7 @@
 #include <sys/ioctl.h>
 #include <stdlib.h>
 #include <termios.h>
+#include <tst-spawn.h>
 
 #ifndef PATH_MAX
 # define PATH_MAX 1024
@@ -108,17 +109,15 @@ run_subprogram (int argc, char *argv[], const posix_spawnattr_t *attr,
   spargv[i] = NULL;
 
   pid_t pid;
-  TEST_COMPARE (posix_spawn (&pid, argv[1], actions, attr, spargv, environ),
+  TEST_COMPARE (POSIX_SPAWN (&pid, argv[1], actions, attr, spargv, environ),
 		exp_err);
   if (exp_err != 0)
     return;
 
-  int status;
-  TEST_COMPARE (xwaitpid (pid, &status, WUNTRACED), pid);
-  TEST_VERIFY (WIFEXITED (status));
-  TEST_VERIFY (!WIFSTOPPED (status));
-  TEST_VERIFY (!WIFSIGNALED (status));
-  TEST_COMPARE (WEXITSTATUS (status), 0);
+  siginfo_t sinfo;
+  TEST_COMPARE (WAITID (P_ALL, 0, &sinfo, WEXITED), 0);
+  TEST_COMPARE (sinfo.si_code, CLD_EXITED);
+  TEST_COMPARE (sinfo.si_status, 0);
 }
 
 static int

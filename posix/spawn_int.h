@@ -76,12 +76,13 @@ struct __spawn_action
 
 #define SPAWN_XFLAGS_USE_PATH	0x1
 #define SPAWN_XFLAGS_TRY_SHELL	0x2
+#define SPAWN_XFLAGS_RET_PIDFD  0x4
 
 extern int __posix_spawn_file_actions_realloc (posix_spawn_file_actions_t *
 					       file_actions)
      attribute_hidden;
 
-extern int __spawni (pid_t *pid, const char *path,
+extern int __spawni (int *pid, const char *path,
 		     const posix_spawn_file_actions_t *file_actions,
 		     const posix_spawnattr_t *attrp, char *const argv[],
 		     char *const envp[], int xflags) attribute_hidden;

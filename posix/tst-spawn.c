@@ -25,11 +25,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/param.h>
+#include <sys/wait.h>
 
 #include <support/check.h>
 #include <support/xunistd.h>
 #include <support/temp_file.h>
 #include <support/support.h>
+#include <tst-spawn.h>
 
 
 /* Nonzero if the program gets called via `exec'.  */
@@ -143,9 +145,9 @@ handle_restart (const char *fd1s, const char *fd2s, const char *fd3s,
 static int
 do_test (int argc, char *argv[])
 {
-  pid_t pid;
+  PID_T_TYPE pid;
   int fd4;
-  int status;
+  siginfo_t sinfo;
   posix_spawn_file_actions_t actions;
   char fd1name[18];
   char fd2name[18];
@@ -233,17 +235,16 @@ do_test (int argc, char *argv[])
   spargv[i++] = fd5name;
   spargv[i] = NULL;
 
-  TEST_COMPARE (posix_spawn (&pid, argv[1], &actions, NULL, spargv, environ),
+  TEST_COMPARE (POSIX_SPAWN (&pid, argv[1], &actions, NULL, spargv, environ),
 		0);
 
   /* Wait for the children.  */
-  TEST_COMPARE (xwaitpid (pid, &status, 0), pid);
-  TEST_VERIFY (WIFEXITED (status));
-  TEST_VERIFY (!WIFSIGNALED (status));
-  TEST_COMPARE (WEXITSTATUS (status), 0);
+  TEST_COMPARE (WAITID (P_PID, pid, &sinfo, WEXITED), 0);
+  TEST_COMPARE (sinfo.si_code, CLD_EXITED);
+  TEST_COMPARE (sinfo.si_status, 0);
 
   /* Same test but with a NULL pid argument.  */
-  TEST_COMPARE (posix_spawn (NULL, argv[1], &actions, NULL, spargv, environ),
+  TEST_COMPARE (POSIX_SPAWN (NULL, argv[1], &actions, NULL, spargv, environ),
 		0);
 
   /* Cleanup.  */
@@ -251,10 +252,9 @@ do_test (int argc, char *argv[])
   free (name3_copy);
 
   /* Wait for the children.  */
-  xwaitpid (-1, &status, 0);
-  TEST_VERIFY (WIFEXITED (status));
-  TEST_VERIFY (!WIFSIGNALED (status));
-  TEST_COMPARE (WEXITSTATUS (status), 0);
+  TEST_COMPARE (WAITID (P_ALL, 0, &sinfo, WEXITED), 0);
+  TEST_COMPARE (sinfo.si_code, CLD_EXITED);
+  TEST_COMPARE (sinfo.si_status, 0);
 
   return 0;
 }

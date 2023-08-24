@@ -68,6 +68,7 @@ struct posix_spawn_args
   int xflags;
   bool use_clone3;
   int err;
+  int pidfd;
 };
 
 /* Older version requires that shell script without shebang definition
@@ -309,7 +310,7 @@ fail:
 /* Spawn a new process executing PATH with the attributes describes in *ATTRP.
    Before running the process perform the actions described in FILE-ACTIONS. */
 static int
-__spawnix (pid_t * pid, const char *file,
+__spawnix (int *pid, const char *file,
 	   const posix_spawn_file_actions_t * file_actions,
 	   const posix_spawnattr_t * attrp, char *const argv[],
 	   char *const envp[], int xflags,
@@ -318,6 +319,17 @@ __spawnix (pid_t * pid, const char *file,
   pid_t new_pid;
   struct posix_spawn_args args;
   int ec;
+
+  bool use_pidfd = xflags & SPAWN_XFLAGS_RET_PIDFD;
+
+  /* For CLONE_PIDFD, older kernels might not fail with unsupported flags or
+     some versions might not support waitid (P_PIDFD).  So to avoid the need
+     to handle the error on the helper process, check for full pidfd
+     support.
+     ENOSYS is returned because without proper waitid support, pidfd_spawn
+     can not be used proporly independently of its arguments.  */
+  if (use_pidfd && !__clone_pidfd_supported ())
+    return ENOSYS;
 
   /* To avoid imposing hard limits on posix_spawn{p} the total number of
      arguments is first calculated to allocate a mmap to hold all possible
@@ -368,6 +380,7 @@ __spawnix (pid_t * pid, const char *file,
   args.argv = argv;
   args.argc = argc;
   args.envp = envp;
+  args.pidfd = 0;
   args.xflags = xflags;
 
   internal_signal_block_all (&args.oldmask);
@@ -386,13 +399,18 @@ __spawnix (pid_t * pid, const char *file,
       /* Unsupported flags like CLONE_CLEAR_SIGHAND will be cleared up by
 	 __clone_internal_fallback.  */
       .flags = (set_cgroup ? CLONE_INTO_CGROUP : 0)
+	       | (use_pidfd ? CLONE_PIDFD : 0)
 	       | CLONE_CLEAR_SIGHAND
 	       | CLONE_VM
 	       | CLONE_VFORK,
       .exit_signal = SIGCHLD,
       .stack = (uintptr_t) stack,
       .stack_size = stack_size,
-      .cgroup = (set_cgroup ? attrp->__cgroup : 0)
+      .cgroup = (set_cgroup ? attrp->__cgroup : 0),
+      .pidfd = use_pidfd ? (uintptr_t) &args.pidfd : 0,
+      /* This is require for clone fallback, where pidfd is returned
+	 on parent_tid.  */
+      .parent_tid = use_pidfd ? (uintptr_t) &args.pidfd : 0,
     };
 #ifdef HAVE_CLONE3_WRAPPER
   args.use_clone3 = true;
@@ -445,7 +463,7 @@ __spawnix (pid_t * pid, const char *file,
   __munmap (stack, stack_size);
 
   if ((ec == 0) && (pid != NULL))
-    *pid = new_pid;
+    *pid = use_pidfd ? args.pidfd : new_pid;
 
   internal_signal_restore_set (&args.oldmask);
 
