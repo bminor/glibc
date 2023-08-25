@@ -585,6 +585,13 @@ build the GNU C Library:
      in your system.  As of release time PExpect 4.8.0 is the newest
      verified to work to test the pretty printers.
 
+   • The Python ‘abnf’ module.
+
+     This module is optional and used to verify some ABNF grammars in
+     the manual.  Version 2.2.0 has been confirmed to work as expected.
+     A missing ‘abnf’ module does not reduce the test coverage of the
+     library itself.
+
    • GDB 7.8 or later with support for Python 2.7/3.4 or later
 
      GDB itself needs to be configured with Python support in order to

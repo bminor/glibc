@@ -1123,6 +1123,7 @@ tests-special += \
   $(objpfx)argv0test.out \
   $(objpfx)tst-pathopt.out \
   $(objpfx)tst-rtld-help.out \
+  $(objpfx)tst-rtld-list-diagnostics.out \
   $(objpfx)tst-rtld-load-self.out \
   $(objpfx)tst-rtld-preload.out \
   $(objpfx)tst-sprof-basic.out \
@@ -2798,6 +2799,14 @@ $(objpfx)tst-ro-dynamic-mod.so: $(objpfx)tst-ro-dynamic-mod.os \
 		$(dt-relr-ldflag) \
 		-Wl,--script=tst-ro-dynamic-mod.map \
 		$(objpfx)tst-ro-dynamic-mod.os
+
+$(objpfx)tst-rtld-list-diagnostics.out: tst-rtld-list-diagnostics.py \
+  $(..)manual/dynlink.texi $(objpfx)$(rtld-installed-name)
+	$(PYTHON) tst-rtld-list-diagnostics.py \
+	  --manual=$(..)manual/dynlink.texi \
+	  "$(test-wrapper-env) $(objpfx)$(rtld-installed-name) --list-diagnostics" \
+	  > $@; \
+	$(evaluate-test)
 
 $(objpfx)tst-rtld-run-static.out: $(objpfx)/ldconfig
 
