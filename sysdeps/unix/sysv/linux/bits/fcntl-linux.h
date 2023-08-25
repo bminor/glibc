@@ -286,6 +286,7 @@ struct f_owner_ex
 # define F_SEAL_WRITE	0x0008	/* Prevent writes.  */
 # define F_SEAL_FUTURE_WRITE	0x0010	/* Prevent future writes while
 					   mapped.  */
+# define F_SEAL_EXEC	0x0020	/* Prevent chmod modifying exec bits. */
 #endif
 
 #ifdef __USE_GNU
