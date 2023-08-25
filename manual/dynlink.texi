@@ -13,8 +13,215 @@ as plugins) later at run time.
 Dynamic linkers are sometimes called @dfn{dynamic loaders}.
 
 @menu
+* Dynamic Linker Invocation::   Explicit invocation of the dynamic linker.
 * Dynamic Linker Introspection::    Interfaces for querying mapping information.
 @end menu
+
+@node Dynamic Linker Invocation
+
+@cindex program interpreter
+When a dynamically linked program starts, the operating system
+automatically loads the dynamic linker along with the program.
+@Theglibc{} also supports invoking the dynamic linker explicitly to
+launch a program.  This command uses the implied dynamic linker
+(also sometimes called the @dfn{program interpreter}):
+
+@smallexample
+sh -c 'echo "Hello, world!"'
+@end smallexample
+
+This command specifies the dynamic linker explicitly:
+
+@smallexample
+ld.so /bin/sh -c 'echo "Hello, world!"'
+@end smallexample
+
+Note that @command{ld.so} does not search the @env{PATH} environment
+variable, so the full file name of the executable needs to be specified.
+
+The @command{ld.so} program supports various options.  Options start
+@samp{--} and need to come before the program that is being launched.
+Some of the supported options are listed below.
+
+@table @code
+@item --list-diagnostics
+Print system diagnostic information in a machine-readable format.
+@xref{Dynamic Linker Diagnostics}.
+@end table
+
+@menu
+* Dynamic Linker Diagnostics::   Obtaining system diagnostic information.
+@end menu
+
+@node Dynamic Linker Diagnostics
+@section Dynamic Linker Diagnostics
+@cindex diagnostics (dynamic linker)
+
+The @samp{ld.so --list-diagnostics} produces machine-readable
+diagnostics output.  This output contains system data that affects the
+behavior of @theglibc{}, and potentially application behavior as well.
+
+The exact set of diagnostic items can change between releases of
+@theglibc{}.  The output format itself is not expected to change
+radically.
+
+The following table shows some example lines that can be written by the
+diagnostics command.
+
+@table @code
+@item dl_pagesize=0x1000
+The system page size is 4096 bytes.
+
+@item env[0x14]="LANG=en_US.UTF-8"
+This item indicates that the 21st environment variable at process
+startup contains a setting for @code{LANG}.
+
+@item env_filtered[0x22]="DISPLAY"
+The 35th environment variable is @code{DISPLAY}.  Its value is not
+included in the output for privacy reasons because it is not recognized
+as harmless by the diagnostics code.
+
+@item path.prefix="/usr"
+This means that @theglibc{} was configured with @code{--prefix=/usr}.
+
+@item path.system_dirs[0x0]="/lib64/"
+@itemx path.system_dirs[0x1]="/usr/lib64/"
+The built-in dynamic linker search path contains two directories,
+@code{/lib64} and @code{/usr/lib64}.
+@end table
+
+@subsection Dynamic Linker Diagnostics Output Format
+
+As seen above, diagnostic lines assign values (integers or strings) to a
+sequence of labeled subscripts, separated by @samp{.}.  Some subscripts
+have integer indices associated with them.  The subscript indices are
+not necessarily contiguous or small, so an associative array should be
+used to store them.  Currently, all integers fit into the 64-bit
+unsigned integer range.  Every access path to a value has a fixed type
+(string or integer) independent of subscript index values.  Likewise,
+whether a subscript is indexed does not depend on previous indices (but
+may depend on previous subscript labels).
+
+A syntax description in ABNF (RFC 5234) follows.  Note that
+@code{%x30-39} denotes the range of decimal digits.  Diagnostic output
+lines are expected to match the @code{line} production.
+
+@c ABNF-START
+@smallexample
+HEXDIG = %x30-39 / %x61-6f ; lowercase a-f only
+ALPHA = %x41-5a / %x61-7a / %x7f ; letters and underscore
+ALPHA-NUMERIC = ALPHA / %x30-39 / "_"
+DQUOTE = %x22 ; "
+
+; Numbers are always hexadecimal and use a 0x prefix.
+hex-value-prefix = %x30 %x78
+hex-value = hex-value-prefix 1*HEXDIG
+
+; Strings use octal escape sequences and \\, \".
+string-char = %x20-21 / %x23-5c / %x5d-7e ; printable but not "\
+string-quoted-octal = %x30-33 2*2%x30-37
+string-quoted = "\" ("\" / DQUOTE / string-quoted-octal)
+string-value = DQUOTE *(string-char / string-quoted) DQUOTE
+
+value = hex-value / string-value
+
+label = ALPHA *ALPHA-NUMERIC
+index = "[" hex-value "]"
+subscript = label [index]
+
+line = subscript *("." subscript) "=" value
+@end smallexample
+
+@subsection Dynamic Linker Diagnostics Values
+
+As mentioned above, the set of diagnostics may change between
+@theglibc{} releases.  Nevertheless, the following table documents a few
+common diagnostic items.  All numbers are in hexadecimal, with a
+@samp{0x} prefix.
+
+@table @code
+@item dl_dst_lib=@var{string}
+The @code{$LIB} dynamic string token expands to @var{string}.
+
+@cindex HWCAP (diagnostics)
+@item dl_hwcap=@var{integer}
+@itemx dl_hwcap2=@var{integer}
+The HWCAP and HWCAP2 values, as returned for @code{getauxval}, and as
+used in other places depending on the architecture.
+
+@cindex page size (diagnostics)
+@item dl_pagesize=@var{integer}
+The system page size is @var{integer} bytes.
+
+@item dl_platform=@var{string}
+The @code{$PLATFORM} dynamic string token expands to @var{string}.
+
+@item dso.libc=@var{string}
+This is the soname of the shared @code{libc} object that is part of
+@theglibc{}.  On most architectures, this is @code{libc.so.6}.
+
+@item env[@var{index}]=@var{string}
+@itemx env_filtered[@var{index}]=@var{string}
+An environment variable from the process environment.  The integer
+@var{index} is the array index in the environment array.  Variables
+under @code{env} include the variable value after the @samp{=} (assuming
+that it was present), variables under @code{env_filtered} do not.
+
+@item path.prefix=@var{string}
+This indicates that @theglibc{} was configured using
+@samp{--prefix=@var{string}}.
+
+@item path.sysconfdir=@var{string}
+@Theglibc{} was configured (perhaps implicitly) with
+@samp{--sysconfdir=@var{string}} (typically @code{/etc}).
+
+@item path.system_dirs[@var{index}]=@var{string}
+These items list the elements of the built-in array that describes the
+default library search path.  The value @var{string} is a directory file
+name with a trailing @samp{/}.
+
+@item path.rtld=@var{string}
+This string indicates the application binary interface (ABI) file name
+of the run-time dynamic linker.
+
+@item version.release="stable"
+@itemx version.release="development"
+The value @code{"stable"} indicates that this build of @theglibc{} is
+from a release branch.  Releases labeled as @code{"development"} are
+unreleased development versions.
+
+@cindex version (diagnostics)
+@item version.version="@var{major}.@var{minor}"
+@itemx version.version="@var{major}.@var{minor}.9000"
+@Theglibc{} version.  Development releases end in @samp{.9000}.
+
+@cindex auxiliary vector (diagnostics)
+@item auxv[@var{index}].a_type=@var{type}
+@itemx auxv[@var{index}].a_val=@var{integer}
+@itemx auxv[@var{index}].a_val_string=@var{string}
+An entry in the auxiliary vector (specific to Linux).  The values
+@var{type} (an integer) and @var{integer} correspond to the members of
+@code{struct auxv}.  If the value is a string, @code{a_val_string} is
+used instead of @code{a_val}, so that values have consistent types.
+
+The @code{AT_HWCAP} and @code{AT_HWCAP2} values in this output do not
+reflect adjustment by @theglibc{}.
+
+@item uname.sysname=@var{string}
+@itemx uname.nodename=@var{string}
+@itemx uname.release=@var{string}
+@itemx uname.version=@var{string}
+@itemx uname.machine=@var{string}
+@itemx uname.domain=@var{string}
+These Linux-specific items show the values of @code{struct utsname}, as
+reported by the @code{uname} function.  @xref{Platform Type}.
+
+@cindex CPUID (diagnostics)
+@item x86.cpu_features.@dots{}
+These items are specific to the i386 and x86-64 architectures.  They
+reflect supported CPU features and information on cache geometry, mostly
+collected using the @code{CPUID} instruction.
+@end table
 
 @node Dynamic Linker Introspection
 @section Dynamic Linker Introspection
