@@ -60,20 +60,7 @@ ENTRY (ENTRY_POINT)
 	cfi_undefined (1)
 	or		a5, a0, zero /* rtld_fini */
 
-#if ENABLE_STATIC_PIE
-/* For static PIE, the GOT cannot be used in _start because the GOT entries are
-   offsets instead of real addresses before __libc_start_main.
-   __libc_start_main and/or main may be not local, so we rely on the linker to
-   produce PLT entries for them.  GNU ld >= 2.40 supports this.  */
-# define LA la.pcrel
-#else
-/* Old GNU ld (< 2.40) cannot handle PC relative address against a non-local
-   function correctly.  We deem these old linkers failing to support static PIE
-   and load the addresses from GOT.  */
-# define LA la.got
-#endif
-
-	LA		a0, t0, main
+	la.pcrel	a0, t0, main
 	REG_L		a1, sp, 0
 	ADDI		a2, sp, SZREG
 
@@ -84,9 +71,9 @@ ENTRY (ENTRY_POINT)
 	move		a4, zero /* used to be fini */
 	or		a6, sp, zero /* stack_end */
 
-	LA		ra, t0, __libc_start_main
+	la.pcrel	ra, t0, __libc_start_main
 	jirl		ra, ra, 0
 
-	LA		ra, t0, abort
+	la.pcrel	ra, t0, abort
 	jirl		ra, ra, 0
 END (ENTRY_POINT)
