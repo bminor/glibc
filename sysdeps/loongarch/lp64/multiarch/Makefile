@@ -30,5 +30,9 @@ sysdep_routines += \
   memrchr-generic \
   memrchr-lsx \
   memrchr-lasx \
+  memset-aligned \
+  memset-unaligned \
+  memset-lsx \
+  memset-lasx \
 # sysdep_routines
 endif
