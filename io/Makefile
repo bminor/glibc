@@ -59,6 +59,7 @@ routines :=								\
 	ftw64-time64							\
 	closefrom close_range
 
+
 others		:= pwd
 test-srcs	:= ftwtest ftwtest-time64
 tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
@@ -81,7 +82,8 @@ tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
 		   tst-closefrom \
 		   tst-close_range \
 		   tst-ftw-bz28126 \
-		   tst-fcntl-lock
+		   tst-fcntl-lock \
+		   tst-fcntl-lock-lfs
 
 tests-time64 := \
   tst-fcntl-time64 \

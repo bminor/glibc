@@ -131,6 +131,8 @@ The following bugs are resolved with this release:
     coincides with offset change
   [30039] stdio: __vsprintf_internal does not handle unspecified buffer
     length in fortify mode
+  [30804] F_GETLK, F_SETLK, and F_SETLKW value change for powerpc64 with
+    -D_FILE_OFFSET_BITS=64
 
 Version 2.36
 
