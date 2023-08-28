@@ -32,6 +32,7 @@
 #include <limits.h>
 #include <nl_types.h>
 #include <obstack.h>
+#include <scratch_buffer.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -854,6 +855,10 @@ write_out (struct catalog *catalog, const char *output_name,
   uint32_t *array1, *array2;
   size_t cnt;
   int fd;
+  struct scratch_buffer buf1;
+  scratch_buffer_init (&buf1);
+  struct scratch_buffer buf2;
+  scratch_buffer_init (&buf2);
 
   /* If not otherwise told try to read file with existing
      translations.  */
@@ -929,9 +934,19 @@ write_out (struct catalog *catalog, const char *output_name,
 
   uint32_t array_size = best_size * best_depth * sizeof (uint32_t) * 3;
   /* Allocate room for all needed arrays.  */
-  array1 = (uint32_t *) alloca (array_size);
+  if (!scratch_buffer_set_array_size (&buf1, best_size * best_depth * 3,
+			              sizeof (uint32_t)))
+    error (EXIT_FAILURE, ENOMEM, gettext ("cannot allocate memory"));
+  array1 = buf1.data;
   memset (array1, '\0', array_size);
-  array2 = (uint32_t *) alloca (array_size);
+
+  if (!scratch_buffer_set_array_size (&buf2, best_size * best_depth * 3,
+			              sizeof (uint32_t)))
+    {
+      scratch_buffer_free (&buf1);
+      error (EXIT_FAILURE, ENOMEM, gettext ("cannot allocate memory"));
+    }
+  array2 = buf2.data;
   obstack_init (&string_pool);
 
   set_run = catalog->all_sets;
@@ -979,8 +994,12 @@ write_out (struct catalog *catalog, const char *output_name,
     {
       fd = creat (output_name, 0666);
       if (fd < 0)
-	error (EXIT_FAILURE, errno, gettext ("cannot open output file `%s'"),
-	       output_name);
+	{
+	  scratch_buffer_free (&buf1);
+	  scratch_buffer_free (&buf2);
+	  error (EXIT_FAILURE, errno, gettext ("cannot open output file `%s'"),
+	         output_name);
+	}
     }
 
   /* Write out header.  */
@@ -1019,8 +1038,12 @@ write_out (struct catalog *catalog, const char *output_name,
 	{
 	  fp = fopen (header_name, "w");
 	  if (fp == NULL)
-	    error (EXIT_FAILURE, errno,
-		   gettext ("cannot open output file `%s'"), header_name);
+	    {
+	      scratch_buffer_free (&buf1);
+	      scratch_buffer_free (&buf2);
+	      error (EXIT_FAILURE, errno,
+		     gettext ("cannot open output file `%s'"), header_name);
+	    }
 	}
 
       /* Iterate over all sets and all messages.  */
@@ -1066,6 +1089,8 @@ write_out (struct catalog *catalog, const char *output_name,
       if (fp != stdout)
 	fclose (fp);
     }
+  scratch_buffer_free (&buf1);
+  scratch_buffer_free (&buf2);
 }
 
 
