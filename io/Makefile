@@ -192,6 +192,7 @@ tests := \
   tst-fchownat \
   tst-fcntl \
   tst-fcntl-lock \
+  tst-fcntl-lock-lfs \
   tst-fstatat \
   tst-fts \
   tst-fts-lfs \

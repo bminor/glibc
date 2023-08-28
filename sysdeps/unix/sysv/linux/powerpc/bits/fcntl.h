@@ -33,7 +33,7 @@
 # define __O_LARGEFILE	0200000
 #endif
 
-#if __WORDSIZE == 64
+#if __WORDSIZE == 64 && !defined __USE_FILE_OFFSET64
 # define F_GETLK	5
 # define F_SETLK	6
 # define F_SETLKW	7
