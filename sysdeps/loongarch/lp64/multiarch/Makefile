@@ -34,5 +34,8 @@ sysdep_routines += \
   memset-unaligned \
   memset-lsx \
   memset-lasx \
+  memcmp-aligned \
+  memcmp-lsx \
+  memcmp-lasx \
 # sysdep_routines
 endif
