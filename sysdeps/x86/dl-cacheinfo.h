@@ -187,7 +187,7 @@ intel_check_word (int name, unsigned int value, bool *has_level_2,
 	      ++round;
 	    }
 	  /* There is no other cache information anywhere else.  */
-	  break;
+	  return -1;
 	}
       else
 	{
@@ -257,28 +257,23 @@ handle_intel (int name, const struct cpu_features *cpu_features)
 
   /* OK, we can use the CPUID instruction to get all info about the
      caches.  */
-  unsigned int cnt = 0;
-  unsigned int max = 1;
   long int result = 0;
   bool no_level_2_or_3 = false;
   bool has_level_2 = false;
+  unsigned int eax;
+  unsigned int ebx;
+  unsigned int ecx;
+  unsigned int edx;
+  __cpuid (2, eax, ebx, ecx, edx);
 
-  while (cnt++ < max)
+  /* The low byte of EAX of CPUID leaf 2 should always return 1 and it
+     should be ignored.  If it isn't 1, use CPUID leaf 4 instead.  */
+  if ((eax & 0xff) != 1)
+    return intel_check_word (name, 0xff, &has_level_2, &no_level_2_or_3,
+			     cpu_features);
+  else
     {
-      unsigned int eax;
-      unsigned int ebx;
-      unsigned int ecx;
-      unsigned int edx;
-      __cpuid (2, eax, ebx, ecx, edx);
-
-      /* The low byte of EAX in the first round contain the number of
-	 rounds we have to make.  At least one, the one we are already
-	 doing.  */
-      if (cnt == 1)
-	{
-	  max = eax & 0xff;
-	  eax &= 0xffffff00;
-	}
+      eax &= 0xffffff00;
 
       /* Process the individual registers' value.  */
       result = intel_check_word (name, eax, &has_level_2,
