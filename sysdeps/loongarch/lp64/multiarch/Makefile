@@ -27,5 +27,8 @@ sysdep_routines += \
   memchr-aligned \
   memchr-lsx \
   memchr-lasx \
+  memrchr-generic \
+  memrchr-lsx \
+  memrchr-lasx \
 # sysdep_routines
 endif
