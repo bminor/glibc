@@ -21,21 +21,6 @@
 #include <config.h>
 #endif
 
-/* AIX requires this to be the first thing in the file.  */
-#ifndef __GNUC__
-# if HAVE_ALLOCA_H || defined _LIBC
-#  include <alloca.h>
-# else
-#  ifdef _AIX
-#pragma alloca
-#  else
-#   ifndef alloca /* predefined by HP cc +Olibcalls */
-char *alloca ();
-#   endif
-#  endif
-# endif
-#endif
-
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -884,6 +869,9 @@ __argp_parse (const struct argp *argp, int argc, char **argv, unsigned flags,
   error_t err;
   struct parser parser;
 
+  struct argp_child child[4];
+  struct argp top_argp;
+
   /* If true, then err == EBADKEY is a result of a non-option argument failing
      to be parsed (which in some cases isn't actually an error).  */
   int arg_ebadkey = 0;
@@ -891,24 +879,23 @@ __argp_parse (const struct argp *argp, int argc, char **argv, unsigned flags,
   if (! (flags & ARGP_NO_HELP))
     /* Add our own options.  */
     {
-      struct argp_child *child = alloca (4 * sizeof (struct argp_child));
-      struct argp *top_argp = alloca (sizeof (struct argp));
+      int child_index = 0;
 
       /* TOP_ARGP has no options, it just serves to group the user & default
 	 argps.  */
-      memset (top_argp, 0, sizeof (*top_argp));
-      top_argp->children = child;
+      memset (&top_argp, 0, sizeof (struct argp));
+      top_argp.children = child;
 
       memset (child, 0, 4 * sizeof (struct argp_child));
 
       if (argp)
-	(child++)->argp = argp;
-      (child++)->argp = &argp_default_argp;
+	child[child_index++].argp = argp;
+      child[child_index++].argp = &argp_default_argp;
       if (argp_program_version || argp_program_version_hook)
-	(child++)->argp = &argp_version_argp;
-      child->argp = 0;
+	child[child_index++].argp = &argp_version_argp;
+      child[child_index].argp = 0;
 
-      argp = top_argp;
+      argp = &top_argp;
     }
 
   /* Construct a parser for these arguments.  */
