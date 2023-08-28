@@ -1,4 +1,4 @@
-/* Optimized memmove implementation using Loongarch LSX instructions.
+/* Optimized memmove implementation using LoongArch LSX instructions.
    Copyright (C) 2023 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.

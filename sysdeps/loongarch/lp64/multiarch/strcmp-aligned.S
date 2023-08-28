@@ -1,4 +1,4 @@
-/* Optimized strcmp implementation using basic Loongarch instructions.
+/* Optimized strcmp implementation using basic LoongArch instructions.
    Copyright (C) 2023 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.

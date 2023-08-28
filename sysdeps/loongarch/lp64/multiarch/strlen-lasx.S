@@ -1,4 +1,4 @@
-/* Optimized strlen implementation using loongarch LASX SIMD instructions.
+/* Optimized strlen implementation using LoongArch LASX instructions.
    Copyright (C) 2023 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
