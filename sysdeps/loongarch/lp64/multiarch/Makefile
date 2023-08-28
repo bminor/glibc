@@ -24,5 +24,8 @@ sysdep_routines += \
   rawmemchr-aligned \
   rawmemchr-lsx \
   rawmemchr-lasx \
+  memchr-aligned \
+  memchr-lsx \
+  memchr-lasx \
 # sysdep_routines
 endif
