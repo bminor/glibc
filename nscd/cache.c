@@ -370,8 +370,11 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
 		       serv2str[runp->type], str, dh->timeout);
 	    }
 
-	  /* Check whether the entry timed out.  */
-	  if (dh->timeout < now)
+	  /* Check whether the entry timed out.  Timed out entries
+	     will be revalidated.  For unusable records, it is still
+	     necessary to record that the bucket needs to be scanned
+	     again below.  */
+	  if (dh->timeout < now || !dh->usable)
 	    {
 	      /* This hash bucket could contain entries which need to
 		 be looked at.  */
@@ -383,7 +386,7 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
 	      /* We only have to look at the data of the first entries
 		 since the count information is kept in the data part
 		 which is shared.  */
-	      if (runp->first)
+	      if (runp->first && dh->usable)
 		{
 
 		  /* At this point there are two choices: we reload the
@@ -399,9 +402,6 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
 		    {
 		      /* Remove the value.  */
 		      dh->usable = false;
-
-		      /* We definitely have some garbage entries now.  */
-		      any = true;
 		    }
 		  else
 		    {
@@ -413,18 +413,15 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
 
 		      time_t timeout = readdfcts[runp->type] (table, runp, dh);
 		      next_timeout = MIN (next_timeout, timeout);
-
-		      /* If the entry has been replaced, we might need
-			 cleanup.  */
-		      any |= !dh->usable;
 		    }
 		}
+
+	      /* If the entry has been replaced, we might need cleanup.  */
+	      any |= !dh->usable;
 	    }
 	  else
-	    {
-	      assert (dh->usable);
-	      next_timeout = MIN (next_timeout, dh->timeout);
-	    }
+	    /* Entry has not timed out and is usable.  */
+	    next_timeout = MIN (next_timeout, dh->timeout);
 
 	  run = runp->next;
 	}
