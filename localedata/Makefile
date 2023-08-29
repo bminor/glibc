@@ -1,4 +1,5 @@
 # Copyright (C) 1996-2023 Free Software Foundation, Inc.
+# Copyright The GNU Toolchain Authors.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -164,6 +165,7 @@ tests = \
   bug-usesetlocale \
   tst-c-utf8-consistency \
   tst-digits \
+  tst-iconv-emojis-trans \
   tst-iconv-math-trans \
   tst-leaks \
   tst-mbswcs1 \
@@ -319,6 +321,8 @@ LOCALES := \
 	$(NULL)
 
 include ../gen-locales.mk
+
+$(objpfx)tst-iconv-emojis-trans.out: $(gen-locales)
 
 $(objpfx)tst-iconv-math-trans.out: $(gen-locales)
 endif

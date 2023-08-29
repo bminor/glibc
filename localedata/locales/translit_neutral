@@ -17,6 +17,7 @@ translit_start
 include "translit_circle";""
 include "translit_cjk_compat";""
 include "translit_compat";""
+include "translit_emojis";""
 include "translit_font";""
 include "translit_fraction";""
 include "translit_narrow";""
