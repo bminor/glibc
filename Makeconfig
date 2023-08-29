@@ -936,6 +936,7 @@ ifeq ($(with-lld),yes)
 LDFLAGS.so += -fuse-ld=lld
 LDFLAGS-rtld += -fuse-ld=lld
 LDFLAGS += -fuse-ld=lld
+LDFLAGS += -Wl,--undefined-version
 endif
 
 endif	# with-clang == yes
