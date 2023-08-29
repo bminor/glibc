@@ -803,10 +803,10 @@ class Context(object):
         default_versions = {'binutils': 'vcs-2.41',
                             'gcc': 'vcs-13',
                             'glibc': 'vcs-mainline',
-                            'gmp': '6.2.1',
+                            'gmp': '6.3.0',
                             'linux': '6.4',
                             'mpc': '1.3.1',
-                            'mpfr': '4.2.0',
+                            'mpfr': '4.2.1',
                             'mig': 'vcs-mainline',
                             'gnumach': 'vcs-mainline',
                             'hurd': 'vcs-mainline'}
