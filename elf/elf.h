@@ -1809,6 +1809,7 @@ typedef struct
 #define SHT_MIPS_EH_REGION	0x70000027
 #define SHT_MIPS_XLATE_OLD	0x70000028
 #define SHT_MIPS_PDR_EXCEPTION	0x70000029
+#define SHT_MIPS_ABIFLAGS	0x7000002a
 #define SHT_MIPS_XHASH		0x7000002b
 
 /* Legal values for sh_flags field of Elf32_Shdr.  */
