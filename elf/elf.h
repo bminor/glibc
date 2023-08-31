@@ -1685,11 +1685,25 @@ typedef struct
 #define EF_MIPS_PIC		2     /* Contains PIC code.  */
 #define EF_MIPS_CPIC		4     /* Uses PIC calling sequence.  */
 #define EF_MIPS_XGOT		8
-#define EF_MIPS_64BIT_WHIRL	16
+#define EF_MIPS_UCODE		16
 #define EF_MIPS_ABI2		32
 #define EF_MIPS_ABI_ON32	64
+#define EF_MIPS_OPTIONS_FIRST	0x00000080 /* Process the .MIPS.options
+					      section first by ld.  */
+#define EF_MIPS_32BITMODE	0x00000100 /* Indicates code compiled for
+					      a 64-bit machine in 32-bit
+					      mode (regs are 32-bits
+					      wide).  */
 #define EF_MIPS_FP64		512  /* Uses FP64 (12 callee-saved).  */
 #define EF_MIPS_NAN2008	1024  /* Uses IEEE 754-2008 NaN encoding.  */
+#define EF_MIPS_ARCH_ASE	0x0f000000 /* Architectural Extensions
+					      used by this file.  */
+#define EF_MIPS_ARCH_ASE_MDMX	0x08000000 /* Use MDMX multimedia
+					      extensions.  */
+#define EF_MIPS_ARCH_ASE_M16	0x04000000 /* Use MIPS-16 ISA
+					      extensions.  */
+#define EF_MIPS_ARCH_ASE_MICROMIPS	0x02000000 /* Use MICROMIPS ISA
+						      extensions.  */
 #define EF_MIPS_ARCH		0xf0000000 /* MIPS architecture level.  */
 
 /* Legal values for MIPS architecture level.  */
@@ -1703,6 +1717,38 @@ typedef struct
 #define EF_MIPS_ARCH_64		0x60000000 /* MIPS64 code.  */
 #define EF_MIPS_ARCH_32R2	0x70000000 /* MIPS32r2 code.  */
 #define EF_MIPS_ARCH_64R2	0x80000000 /* MIPS64r2 code.  */
+#define EF_MIPS_ARCH_32R6	0x90000000 /* MIPS32r6 code.  */
+#define EF_MIPS_ARCH_64R6	0xa0000000 /* MIPS64r6 code.  */
+#define EF_MIPS_ABI		0x0000F000 /* The ABI of the file.  Also
+					      see EF_MIPS_ABI2 above.  */
+#define EF_MIPS_ABI_O32		0x00001000 /* The original o32 abi.  */
+#define EF_MIPS_ABI_O64		0x00002000 /* O32 extended to work on
+					      64 bit architectures.  */
+#define EF_MIPS_ABI_EABI32	0x00003000 /* EABI in 32 bit mode.  */
+#define EF_MIPS_ABI_EABI64	0x00004000 /* EABI in 64 bit mode.  */
+#define EF_MIPS_MACH		0x00FF0000
+#define EF_MIPS_MACH_3900	0x00810000
+#define EF_MIPS_MACH_4010	0x00820000
+#define EF_MIPS_MACH_4100	0x00830000
+#define EF_MIPS_MACH_ALLEGREX	0x00840000
+#define EF_MIPS_MACH_4650	0x00850000
+#define EF_MIPS_MACH_4120	0x00870000
+#define EF_MIPS_MACH_4111	0x00880000
+#define EF_MIPS_MACH_SB1	0x008a0000
+#define EF_MIPS_MACH_OCTEON	0x008b0000
+#define EF_MIPS_MACH_XLR	0x008c0000
+#define EF_MIPS_MACH_OCTEON2	0x008d0000
+#define EF_MIPS_MACH_OCTEON3	0x008e0000
+#define EF_MIPS_MACH_5400	0x00910000
+#define EF_MIPS_MACH_5900	0x00920000
+#define EF_MIPS_MACH_IAMR2	0x00930000
+#define EF_MIPS_MACH_5500	0x00980000
+#define EF_MIPS_MACH_9000	0x00990000
+#define EF_MIPS_MACH_LS2E	0x00A00000
+#define EF_MIPS_MACH_LS2F	0x00A10000
+#define EF_MIPS_MACH_GS464	0x00A20000
+#define EF_MIPS_MACH_GS464E	0x00A30000
+#define EF_MIPS_MACH_GS264E	0x00A40000
 
 /* The following are unofficial names and should not be used.  */
 
