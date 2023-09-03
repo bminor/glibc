@@ -60,12 +60,36 @@ _init_routine (void *stack)
 
   if (stack != NULL)
     {
-      /* We are getting initialized due to dlopening a library using libpthread
-         while the main program was not linked against libpthread.  */
+      /* We are given a stack, use it.  */
+
+      /* Get the stack area information */
+      vm_address_t addr = (vm_address_t) stack;
+      vm_size_t vm_size;
+      vm_prot_t prot, max_prot;
+      vm_inherit_t inherit;
+      boolean_t is_shared;
+      memory_object_name_t obj;
+      vm_offset_t offset;
+
+      if (vm_region (__mach_task_self (), &addr,
+		     &vm_size, &prot, &max_prot, &inherit, &is_shared,
+		     &obj, &offset) == KERN_SUCCESS)
+	__mach_port_deallocate (__mach_task_self (), obj);
+      else
+	{
+	  /* Uh.  Assume at least a page.  */
+	  vm_size = __vm_page_size;
+#if _STACK_GROWS_DOWN
+	  addr = (vm_address_t) stack - vm_size;
+#else
+	  addr = (vm_address_t) stack + vm_size;
+#endif
+	}
+
       /* Avoid allocating another stack */
       attrp = &attr;
       __pthread_attr_init (attrp);
-      __pthread_attr_setstack (attrp, stack, __vm_page_size);
+      __pthread_attr_setstack (attrp, (void *) addr, vm_size);
     }
 
   /* Create the pthread structure for the main thread (i.e. us).  */
