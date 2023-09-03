@@ -46,6 +46,12 @@ __pthread_exit (void *status)
        *handlers = (*handlers)->__next)
     (*handlers)->__handler ((*handlers)->__arg);
 
+  /* Call destructors for the thread_local TLS variables.  */
+#ifndef SHARED
+  if (&__call_tls_dtors != NULL)
+#endif
+    __call_tls_dtors ();
+
   __pthread_setcancelstate (oldstate, &oldstate);
 
   /* Decrease the number of threads.  We use an atomic operation to
