@@ -47,10 +47,7 @@ __pthread_exit (void *status)
     (*handlers)->__handler ((*handlers)->__arg);
 
   /* Call destructors for the thread_local TLS variables.  */
-#ifndef SHARED
-  if (&__call_tls_dtors != NULL)
-#endif
-    __call_tls_dtors ();
+  call_function_static_weak (__call_tls_dtors);
 
   __pthread_setcancelstate (oldstate, &oldstate);
 

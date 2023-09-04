@@ -37,11 +37,8 @@ __run_exit_handlers (int status, struct exit_function_list **listp,
 		     bool run_list_atexit, bool run_dtors)
 {
   /* First, call the TLS destructors.  */
-#ifndef SHARED
-  if (&__call_tls_dtors != NULL)
-#endif
-    if (run_dtors)
-      __call_tls_dtors ();
+  if (run_dtors)
+    call_function_static_weak (__call_tls_dtors);
 
   __libc_lock_lock (__exit_funcs_lock);
 

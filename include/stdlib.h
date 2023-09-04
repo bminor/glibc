@@ -159,11 +159,7 @@ libc_hidden_proto (__cxa_atexit);
 
 extern int __cxa_thread_atexit_impl (void (*func) (void *), void *arg,
 				     void *d);
-extern void __call_tls_dtors (void)
-#ifndef SHARED
-  __attribute__ ((weak))
-#endif
-  ;
+extern void __call_tls_dtors (void);
 libc_hidden_proto (__call_tls_dtors)
 
 extern void __cxa_finalize (void *d);
