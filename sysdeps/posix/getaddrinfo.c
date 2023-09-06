@@ -2404,22 +2404,17 @@ getaddrinfo (const char *name, const char *service,
       struct addrinfo *q;
       struct addrinfo *last = NULL;
       char *canonname = NULL;
-      bool malloc_results;
-      size_t alloc_size = nresults * (sizeof (*results) + sizeof (size_t));
+      struct scratch_buffer buf;
+      scratch_buffer_init (&buf);
 
-      malloc_results
-	= !__libc_use_alloca (alloc_size);
-      if (malloc_results)
+      if (!scratch_buffer_set_array_size (&buf, nresults,
+					  sizeof (*results) + sizeof (size_t)))
 	{
-	  results = malloc (alloc_size);
-	  if (results == NULL)
-	    {
-	      __free_in6ai (in6ai);
-	      return EAI_MEMORY;
-	    }
+	  __free_in6ai (in6ai);
+	  return EAI_MEMORY;
 	}
-      else
-	results = alloca (alloc_size);
+      results = buf.data;
+
       order = (size_t *) (results + nresults);
 
       /* Now we definitely need the interface information.  */
@@ -2590,8 +2585,7 @@ getaddrinfo (const char *name, const char *service,
       /* Fill in the canonical name into the new first entry.  */
       p->ai_canonname = canonname;
 
-      if (malloc_results)
-	free (results);
+      scratch_buffer_free (&buf);
     }
 
   __free_in6ai (in6ai);
