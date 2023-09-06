@@ -18,6 +18,7 @@ Dynamic linkers are sometimes called @dfn{dynamic loaders}.
 @end menu
 
 @node Dynamic Linker Invocation
+@section Dynamic Linker Invocation
 
 @cindex program interpreter
 When a dynamically linked program starts, the operating system
@@ -54,7 +55,7 @@ Print system diagnostic information in a machine-readable format.
 @end menu
 
 @node Dynamic Linker Diagnostics
-@section Dynamic Linker Diagnostics
+@subsection Dynamic Linker Diagnostics
 @cindex diagnostics (dynamic linker)
 
 The @samp{ld.so --list-diagnostics} produces machine-readable
@@ -90,7 +91,13 @@ The built-in dynamic linker search path contains two directories,
 @code{/lib64} and @code{/usr/lib64}.
 @end table
 
-@subsection Dynamic Linker Diagnostics Output Format
+@menu
+* Dynamic Linker Diagnostics Format::  Format of ld.so output.
+* Dynamic Linker Diagnostics Values::  Data contain in ld.so output.
+@end menu
+
+@node Dynamic Linker Diagnostics Format
+@subsubsection Dynamic Linker Diagnostics Format
 
 As seen above, diagnostic lines assign values (integers or strings) to a
 sequence of labeled subscripts, separated by @samp{.}.  Some subscripts
@@ -132,7 +139,8 @@ subscript = label [index]
 line = subscript *("." subscript) "=" value
 @end smallexample
 
-@subsection Dynamic Linker Diagnostics Values
+@node Dynamic Linker Diagnostics Values
+@subsubsection Dynamic Linker Diagnostics Values
 
 As mentioned above, the set of diagnostics may change between
 @theglibc{} releases.  Nevertheless, the following table documents a few
