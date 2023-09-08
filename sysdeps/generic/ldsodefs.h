@@ -1037,6 +1037,10 @@ extern int _dl_check_map_versions (struct link_map *map, int verbose,
 extern void _dl_init (struct link_map *main_map, int argc, char **argv,
 		      char **env) attribute_hidden;
 
+/* List of ELF objects in reverse order of their constructor
+   invocation.  */
+extern struct link_map *_dl_init_called_list attribute_hidden;
+
 /* Call the finalizer functions of all shared objects whose
    initializer functions have completed.  */
 extern void _dl_fini (void) attribute_hidden;

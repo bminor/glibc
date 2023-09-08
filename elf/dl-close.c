@@ -138,30 +138,31 @@ _dl_close_worker (struct link_map *map, bool force)
 
   bool any_tls = false;
   const unsigned int nloaded = ns->_ns_nloaded;
-  struct link_map *maps[nloaded];
 
-  /* Run over the list and assign indexes to the link maps and enter
-     them into the MAPS array.  */
+  /* Run over the list and assign indexes to the link maps.  */
   int idx = 0;
   for (struct link_map *l = ns->_ns_loaded; l != NULL; l = l->l_next)
     {
       l->l_map_used = 0;
       l->l_map_done = 0;
       l->l_idx = idx;
-      maps[idx] = l;
       ++idx;
     }
   assert (idx == nloaded);
 
-  /* Keep track of the lowest index link map we have covered already.  */
-  int done_index = -1;
-  while (++done_index < nloaded)
+  /* Keep marking link maps until no new link maps are found.  */
+  for (struct link_map *l = ns->_ns_loaded; l != NULL; )
     {
-      struct link_map *l = maps[done_index];
+      /* next is reset to earlier link maps for remarking.  */
+      struct link_map *next = l->l_next;
+      int next_idx = l->l_idx + 1; /* next->l_idx, but covers next == NULL.  */
 
       if (l->l_map_done)
-	/* Already handled.  */
-	continue;
+	{
+	  /* Already handled.  */
+	  l = next;
+	  continue;
+	}
 
       /* Check whether this object is still used.  */
       if (l->l_type == lt_loaded
@@ -171,7 +172,10 @@ _dl_close_worker (struct link_map *map, bool force)
 	     acquire is sufficient and correct.  */
 	  && atomic_load_acquire (&l->l_tls_dtor_count) == 0
 	  && !l->l_map_used)
-	continue;
+	{
+	  l = next;
+	  continue;
+	}
 
       /* We need this object and we handle it now.  */
       l->l_map_used = 1;
@@ -198,8 +202,11 @@ _dl_close_worker (struct link_map *map, bool force)
 			 already processed it, then we need to go back
 			 and process again from that point forward to
 			 ensure we keep all of its dependencies also.  */
-		      if ((*lp)->l_idx - 1 < done_index)
-			done_index = (*lp)->l_idx - 1;
+		      if ((*lp)->l_idx < next_idx)
+			{
+			  next = *lp;
+			  next_idx = next->l_idx;
+			}
 		    }
 		}
 
@@ -219,44 +226,65 @@ _dl_close_worker (struct link_map *map, bool force)
 		if (!jmap->l_map_used)
 		  {
 		    jmap->l_map_used = 1;
-		    if (jmap->l_idx - 1 < done_index)
-		      done_index = jmap->l_idx - 1;
+		    if (jmap->l_idx < next_idx)
+		      {
+			  next = jmap;
+			  next_idx = next->l_idx;
+		      }
 		  }
 	      }
 	  }
+
+      l = next;
     }
 
-  /* Sort the entries.  We can skip looking for the binary itself which is
-     at the front of the search list for the main namespace.  */
-  _dl_sort_maps (maps, nloaded, (nsid == LM_ID_BASE), true);
-
-  /* Call all termination functions at once.  */
-  bool unload_any = false;
-  bool scope_mem_left = false;
-  unsigned int unload_global = 0;
-  unsigned int first_loaded = ~0;
-  for (unsigned int i = 0; i < nloaded; ++i)
+  /* Call the destructors in reverse constructor order, and remove the
+     closed link maps from the list.  */
+  for (struct link_map **init_called_head = &_dl_init_called_list;
+       *init_called_head != NULL; )
     {
-      struct link_map *imap = maps[i];
+      struct link_map *imap = *init_called_head;
 
-      /* All elements must be in the same namespace.  */
-      assert (imap->l_ns == nsid);
-
-      if (!imap->l_map_used)
+      /* _dl_init_called_list is global, to produce a global odering.
+	 Ignore the other namespaces (and link maps that are still used).  */
+      if (imap->l_ns != nsid || imap->l_map_used)
+	init_called_head = &imap->l_init_called_next;
+      else
 	{
 	  assert (imap->l_type == lt_loaded && !imap->l_nodelete_active);
 
-	  /* Call its termination function.  Do not do it for
-	     half-cooked objects.  Temporarily disable exception
-	     handling, so that errors are fatal.  */
-	  if (imap->l_init_called)
+	  /* _dl_init_called_list is updated at the same time as
+	     l_init_called.  */
+	  assert (imap->l_init_called);
+
+	  if (imap->l_info[DT_FINI_ARRAY] != NULL
+	      || imap->l_info[DT_FINI] != NULL)
 	    _dl_catch_exception (NULL, _dl_call_fini, imap);
 
 #ifdef SHARED
 	  /* Auditing checkpoint: we remove an object.  */
 	  _dl_audit_objclose (imap);
 #endif
+	  /* Unlink this link map.  */
+	  *init_called_head = imap->l_init_called_next;
+	}
+    }
 
+
+  bool unload_any = false;
+  bool scope_mem_left = false;
+  unsigned int unload_global = 0;
+
+  /* For skipping un-unloadable link maps in the second loop.  */
+  struct link_map *first_loaded = ns->_ns_loaded;
+
+  /* Iterate over the namespace to find objects to unload.  Some
+     unloadable objects may not be on _dl_init_called_list due to
+     dlopen failure.  */
+  for (struct link_map *imap = first_loaded; imap != NULL; imap = imap->l_next)
+    {
+      if (!imap->l_map_used)
+	{
 	  /* This object must not be used anymore.  */
 	  imap->l_removed = 1;
 
@@ -267,8 +295,8 @@ _dl_close_worker (struct link_map *map, bool force)
 	    ++unload_global;
 
 	  /* Remember where the first dynamically loaded object is.  */
-	  if (i < first_loaded)
-	    first_loaded = i;
+	  if (first_loaded == NULL)
+	      first_loaded = imap;
 	}
       /* Else imap->l_map_used.  */
       else if (imap->l_type == lt_loaded)
@@ -404,8 +432,8 @@ _dl_close_worker (struct link_map *map, bool force)
 	    imap->l_loader = NULL;
 
 	  /* Remember where the first dynamically loaded object is.  */
-	  if (i < first_loaded)
-	    first_loaded = i;
+	  if (first_loaded == NULL)
+	      first_loaded = imap;
 	}
     }
 
@@ -476,10 +504,11 @@ _dl_close_worker (struct link_map *map, bool force)
 
   /* Check each element of the search list to see if all references to
      it are gone.  */
-  for (unsigned int i = first_loaded; i < nloaded; ++i)
+  for (struct link_map *imap = first_loaded; imap != NULL; )
     {
-      struct link_map *imap = maps[i];
-      if (!imap->l_map_used)
+      if (imap->l_map_used)
+	imap = imap->l_next;
+      else
 	{
 	  assert (imap->l_type == lt_loaded);
 
@@ -690,7 +719,9 @@ _dl_close_worker (struct link_map *map, bool force)
 	  if (imap == GL(dl_initfirst))
 	    GL(dl_initfirst) = NULL;
 
+	  struct link_map *next = imap->l_next;
 	  free (imap);
+	  imap = next;
 	}
     }
 
