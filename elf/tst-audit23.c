@@ -98,6 +98,8 @@ do_test (int argc, char *argv[])
     char *lname;
     uintptr_t laddr;
     Lmid_t lmid;
+    uintptr_t cookie;
+    uintptr_t namespace;
     bool closed;
   } objs[max_objs] = { [0 ... max_objs-1] = { .closed = false } };
   size_t nobjs = 0;
@@ -117,6 +119,9 @@ do_test (int argc, char *argv[])
   size_t buffer_length = 0;
   while (xgetline (&buffer, &buffer_length, out))
     {
+      *strchrnul (buffer, '\n') = '\0';
+      printf ("info: subprocess output: %s\n", buffer);
+
       if (startswith (buffer, "la_activity: "))
 	{
 	  uintptr_t cookie;
@@ -125,29 +130,26 @@ do_test (int argc, char *argv[])
 			  &cookie);
 	  TEST_COMPARE (r, 2);
 
-	  /* The cookie identifies the object at the head of the link map,
-	     so we only add a new namespace if it changes from the previous
-	     one.  This works since dlmopen is the last in the test body.  */
-	  if (cookie != last_act_cookie && last_act_cookie != -1)
-	    TEST_COMPARE (last_act, LA_ACT_CONSISTENT);
-
 	  if (this_act == LA_ACT_ADD && acts[nacts] != cookie)
 	    {
+	      /* The cookie identifies the object at the head of the
+		 link map, so we only add a new namespace if it
+		 changes from the previous one.  This works since
+		 dlmopen is the last in the test body.  */
+	      if (cookie != last_act_cookie && last_act_cookie != -1)
+		TEST_COMPARE (last_act, LA_ACT_CONSISTENT);
+
 	      acts[nacts++] = cookie;
 	      last_act_cookie = cookie;
 	    }
-	  /* The LA_ACT_DELETE is called in the reverse order of LA_ACT_ADD
-	     at program termination (if the tests adds a dlclose or a library
-	     with extra dependencies this will need to be adapted).  */
+	  /* LA_ACT_DELETE is called multiple times for each
+	     namespace, depending on destruction order.  */
 	  else if (this_act == LA_ACT_DELETE)
-	    {
-	      last_act_cookie = acts[--nacts];
-	      TEST_COMPARE (acts[nacts], cookie);
-	      acts[nacts] = 0;
-	    }
+	    last_act_cookie = cookie;
 	  else if (this_act == LA_ACT_CONSISTENT)
 	    {
 	      TEST_COMPARE (cookie, last_act_cookie);
+	      last_act_cookie = -1;
 
 	      /* LA_ACT_DELETE must always be followed by an la_objclose.  */
 	      if (last_act == LA_ACT_DELETE)
@@ -179,6 +181,8 @@ do_test (int argc, char *argv[])
 	  objs[nobjs].lname = lname;
 	  objs[nobjs].laddr = laddr;
 	  objs[nobjs].lmid = lmid;
+	  objs[nobjs].cookie = cookie;
+	  objs[nobjs].namespace = last_act_cookie;
 	  objs[nobjs].closed = false;
 	  nobjs++;
 
@@ -201,6 +205,12 @@ do_test (int argc, char *argv[])
 	      if (strcmp (lname, objs[i].lname) == 0 && lmid == objs[i].lmid)
 		{
 		  TEST_COMPARE (objs[i].closed, false);
+		  TEST_COMPARE (objs[i].cookie, cookie);
+		  if (objs[i].namespace == -1)
+		    /* No LA_ACT_ADD before the first la_objopen call.  */
+		    TEST_COMPARE (acts[0], last_act_cookie);
+		  else
+		    TEST_COMPARE (objs[i].namespace, last_act_cookie);
 		  objs[i].closed = true;
 		  break;
 		}
@@ -209,11 +219,7 @@ do_test (int argc, char *argv[])
 	  /* la_objclose should be called after la_activity(LA_ACT_DELETE) for
 	     the closed object's namespace.  */
 	  TEST_COMPARE (last_act, LA_ACT_DELETE);
-	  if (!seen_first_objclose)
-	    {
-	      TEST_COMPARE (last_act_cookie, cookie);
-	      seen_first_objclose = true;
-	    }
+	  seen_first_objclose = true;
 	}
     }
 
