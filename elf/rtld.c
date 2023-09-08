@@ -477,7 +477,6 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
   GL(dl_rtld_map).l_real = &GL(dl_rtld_map);
   GL(dl_rtld_map).l_map_start = (ElfW(Addr)) &__ehdr_start;
   GL(dl_rtld_map).l_map_end = (ElfW(Addr)) _end;
-  GL(dl_rtld_map).l_text_end = (ElfW(Addr)) _etext;
   /* Copy the TLS related data if necessary.  */
 #ifndef DONT_USE_BOOTSTRAP_MAP
 # if NO_TLS_OFFSET != 0
@@ -1119,7 +1118,6 @@ rtld_setup_main_map (struct link_map *main_map)
   bool has_interp = false;
 
   main_map->l_map_end = 0;
-  main_map->l_text_end = 0;
   /* Perhaps the executable has no PT_LOAD header entries at all.  */
   main_map->l_map_start = ~0;
   /* And it was opened directly.  */
@@ -1211,8 +1209,6 @@ rtld_setup_main_map (struct link_map *main_map)
 	  allocend = main_map->l_addr + ph->p_vaddr + ph->p_memsz;
 	  if (main_map->l_map_end < allocend)
 	    main_map->l_map_end = allocend;
-	  if ((ph->p_flags & PF_X) && allocend > main_map->l_text_end)
-	    main_map->l_text_end = allocend;
 
 	  /* The next expected address is the page following this load
 	     segment.  */
@@ -1272,8 +1268,6 @@ rtld_setup_main_map (struct link_map *main_map)
       = (char *) main_map->l_tls_initimage + main_map->l_addr;
   if (! main_map->l_map_end)
     main_map->l_map_end = ~0;
-  if (! main_map->l_text_end)
-    main_map->l_text_end = ~0;
   if (! GL(dl_rtld_map).l_libname && GL(dl_rtld_map).l_name)
     {
       /* We were invoked directly, so the program might not have a
