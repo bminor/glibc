@@ -20,10 +20,26 @@
 #error "Never include <bits/link.h> directly; use <link.h> instead."
 #endif
 
+#ifndef __loongarch_soft_float
+typedef float La_loongarch_vr
+    __attribute__ ((__vector_size__ (16), __aligned__ (16)));
+typedef float La_loongarch_xr
+    __attribute__ ((__vector_size__ (32), __aligned__ (16)));
+
+typedef union
+{
+  double fpreg[4];
+  La_loongarch_vr vr[2];
+  La_loongarch_xr xr[1];
+} La_loongarch_vector __attribute__ ((__aligned__ (16)));
+#endif
+
 typedef struct La_loongarch_regs
 {
   unsigned long int lr_reg[8]; /* a0 - a7 */
-  double lr_fpreg[8];	       /* fa0 - fa7 */
+#ifndef __loongarch_soft_float
+  La_loongarch_vector lr_vec[8]; /* fa0 - fa7 or vr0 - vr7 or xr0 - xr7*/
+#endif
   unsigned long int lr_ra;
   unsigned long int lr_sp;
 } La_loongarch_regs;
@@ -33,8 +49,10 @@ typedef struct La_loongarch_retval
 {
   unsigned long int lrv_a0;
   unsigned long int lrv_a1;
-  double lrv_fa0;
-  double lrv_fa1;
+#ifndef __loongarch_soft_float
+  La_loongarch_vector lrv_vec0;
+  La_loongarch_vector lrv_vec1;
+#endif
 } La_loongarch_retval;
 
 __BEGIN_DECLS

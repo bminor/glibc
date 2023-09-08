@@ -273,6 +273,8 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
 #if !defined __loongarch_soft_float
       extern void _dl_runtime_resolve_lasx (void) attribute_hidden;
       extern void _dl_runtime_resolve_lsx (void) attribute_hidden;
+      extern void _dl_runtime_profile_lasx (void) attribute_hidden;
+      extern void _dl_runtime_profile_lsx (void) attribute_hidden;
 #endif
       extern void _dl_runtime_resolve (void) attribute_hidden;
       extern void _dl_runtime_profile (void) attribute_hidden;
@@ -287,7 +289,14 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
 	 end in this function.  */
       if (profile != 0)
 	{
-	   gotplt[0] = (ElfW(Addr)) &_dl_runtime_profile;
+#if !defined __loongarch_soft_float
+	  if (SUPPORT_LASX)
+	    gotplt[0] = (ElfW(Addr)) &_dl_runtime_profile_lasx;
+	  else if (SUPPORT_LSX)
+	    gotplt[0] = (ElfW(Addr)) &_dl_runtime_profile_lsx;
+	  else
+#endif
+	    gotplt[0] = (ElfW(Addr)) &_dl_runtime_profile;
 
 	  if (GLRO(dl_profile) != NULL
 	      && _dl_name_match_p (GLRO(dl_profile), l))
