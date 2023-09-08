@@ -20,6 +20,7 @@
 #include <libioP.h>
 #include <stdio.h>
 #include <ldsodefs.h>
+#include <array_length.h>
 #include <pointer_guard.h>
 #include <libio-macros.h>
 
@@ -88,7 +89,7 @@
 # pragma weak __wprintf_buffer_as_file_xsputn
 #endif
 
-const struct _IO_jump_t __io_vtables[IO_VTABLES_LEN] attribute_relro =
+const struct _IO_jump_t __io_vtables[] attribute_relro =
 {
   /* _IO_str_jumps  */
   [IO_STR_JUMPS] =
@@ -485,6 +486,8 @@ const struct _IO_jump_t __io_vtables[IO_VTABLES_LEN] attribute_relro =
   },
 #endif
 };
+_Static_assert (array_length (__io_vtables) == IO_VTABLES_NUM,
+                "initializer count");
 
 #ifdef SHARED
 
