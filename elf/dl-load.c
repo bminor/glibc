@@ -1253,7 +1253,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 
     /* Now process the load commands and map segments into memory.
        This is responsible for filling in:
-       l_map_start, l_map_end, l_addr, l_contiguous, l_text_end, l_phdr
+       l_map_start, l_map_end, l_addr, l_contiguous, l_phdr
      */
     errstring = _dl_map_segments (l, fd, header, type, loadcmds, nloadcmds,
 				  maplength, has_holes, loader);

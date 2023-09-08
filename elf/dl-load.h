@@ -83,14 +83,11 @@ struct loadcmd
 
 /* This is a subroutine of _dl_map_segments.  It should be called for each
    load command, some time after L->l_addr has been set correctly.  It is
-   responsible for setting up the l_text_end and l_phdr fields.  */
+   responsible for setting the l_phdr fields  */
 static __always_inline void
 _dl_postprocess_loadcmd (struct link_map *l, const ElfW(Ehdr) *header,
                          const struct loadcmd *c)
 {
-  if (c->prot & PROT_EXEC)
-    l->l_text_end = l->l_addr + c->mapend;
-
   if (l->l_phdr == 0
       && c->mapoff <= header->e_phoff
       && ((size_t) (c->mapend - c->mapstart + c->mapoff)
@@ -103,7 +100,7 @@ _dl_postprocess_loadcmd (struct link_map *l, const ElfW(Ehdr) *header,
 
 /* This is a subroutine of _dl_map_object_from_fd.  It is responsible
    for filling in several fields in *L: l_map_start, l_map_end, l_addr,
-   l_contiguous, l_text_end, l_phdr.  On successful return, all the
+   l_contiguous, l_phdr.  On successful return, all the
    segments are mapped (or copied, or whatever) from the file into their
    final places in the address space, with the correct page permissions,
    and any bss-like regions already zeroed.  It returns a null pointer
