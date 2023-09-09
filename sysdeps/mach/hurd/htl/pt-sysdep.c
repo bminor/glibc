@@ -71,7 +71,7 @@ _init_routine (void *stack)
       memory_object_name_t obj;
       vm_offset_t offset;
 
-      if (vm_region (__mach_task_self (), &addr,
+      if (__vm_region (__mach_task_self (), &addr,
 		     &vm_size, &prot, &max_prot, &inherit, &is_shared,
 		     &obj, &offset) == KERN_SUCCESS)
 	__mach_port_deallocate (__mach_task_self (), obj);
