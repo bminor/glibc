@@ -45,21 +45,12 @@ writev_for_fatal (int fd, const struct iovec *iov, size_t niov, size_t total)
 }
 #endif
 
-struct str_list
-{
-  const char *str;
-  size_t len;
-  struct str_list *next;
-};
-
 /* Abort with an error message.  */
 void
-__libc_message (const char *fmt, ...)
+__libc_message_impl (const char *fmt, ...)
 {
   va_list ap;
   int fd = -1;
-
-  va_start (ap, fmt);
 
 #ifdef FATAL_PREPARE
   FATAL_PREPARE;
@@ -68,9 +59,11 @@ __libc_message (const char *fmt, ...)
   if (fd == -1)
     fd = STDERR_FILENO;
 
-  struct str_list *list = NULL;
-  int nlist = 0;
+  struct iovec iov[LIBC_MESSAGE_MAX_ARGS * 2 - 1];
+  int iovcnt = 0;
+  ssize_t total = 0;
 
+  va_start (ap, fmt);
   const char *cp = fmt;
   while (*cp != '\0')
     {
@@ -100,28 +93,16 @@ __libc_message (const char *fmt, ...)
 	  cp = next;
 	}
 
-      struct str_list *newp = alloca (sizeof (struct str_list));
-      newp->str = str;
-      newp->len = len;
-      newp->next = list;
-      list = newp;
-      ++nlist;
+      iov[iovcnt].iov_base = (char *) str;
+      iov[iovcnt].iov_len = len;
+      total += len;
+      iovcnt++;
     }
+  va_end (ap);
 
-  if (nlist > 0)
+  if (iovcnt > 0)
     {
-      struct iovec *iov = alloca (nlist * sizeof (struct iovec));
-      ssize_t total = 0;
-
-      for (int cnt = nlist - 1; cnt >= 0; --cnt)
-	{
-	  iov[cnt].iov_base = (char *) list->str;
-	  iov[cnt].iov_len = list->len;
-	  total += list->len;
-	  list = list->next;
-	}
-
-      WRITEV_FOR_FATAL (fd, iov, nlist, total);
+      WRITEV_FOR_FATAL (fd, iov, iovcnt, total);
 
       total = (total + 1 + GLRO(dl_pagesize) - 1) & ~(GLRO(dl_pagesize) - 1);
       struct abort_msg_s *buf = __mmap (NULL, total,
@@ -131,7 +112,7 @@ __libc_message (const char *fmt, ...)
 	{
 	  buf->size = total;
 	  char *wp = buf->msg;
-	  for (int cnt = 0; cnt < nlist; ++cnt)
+	  for (int cnt = 0; cnt < iovcnt; ++cnt)
 	    wp = mempcpy (wp, iov[cnt].iov_base, iov[cnt].iov_len);
 	  *wp = '\0';
 
@@ -143,8 +124,6 @@ __libc_message (const char *fmt, ...)
 	    __munmap (old, old->size);
 	}
     }
-
-  va_end (ap);
 
   /* Kill the application.  */
   abort ();

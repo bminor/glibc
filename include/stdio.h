@@ -172,9 +172,36 @@ extern int __gen_tempname (char *__tmpl, int __suffixlen, int __flags,
    and abort.  */
 extern void __libc_fatal (const char *__message)
      __attribute__ ((__noreturn__));
-_Noreturn void __libc_message (const char *__fnt, ...) attribute_hidden;
 extern void __fortify_fail (const char *msg) __attribute__ ((__noreturn__));
 libc_hidden_proto (__fortify_fail)
+
+/* The maximum number of varargs allowed in a __libc_message format string */
+#define LIBC_MESSAGE_MAX_ARGS 4
+
+_Noreturn void __libc_message_impl (const char *__fnt, ...) attribute_hidden
+     __attribute__ ((__format__ (__printf__, 1, 2)));
+
+#define __libc_message0(fmt) \
+   __libc_message_impl (fmt)
+#define __libc_message1(fmt, a1) \
+   __libc_message_impl (fmt, a1)
+#define __libc_message2(fmt, a1, a2) \
+   __libc_message_impl (fmt, a1, a2)
+#define __libc_message3(fmt, a1, a2, a3) \
+   __libc_message_impl (fmt, a1, a2, a3)
+#define __libc_message4(fmt, a1, a2, a3, a4) \
+   __libc_message_impl (fmt, a1, a2, a3, a4)
+
+#define __libc_message_concat_x(a,b)  a##b
+#define __libc_message_concat(a,b)    __libc_message_concat_x (a, b)
+
+#define __libc_message_nargs_x(a0,a1,a2,a3,a4,a5,a6,...) a6
+#define __libc_message_nargs(b, ...) \
+   __libc_message_nargs_x (__VA_ARGS__,6,5,4,3,2,1,0,)
+#define __libc_message_disp(b, ...) \
+   __libc_message_concat (b, __libc_message_nargs (__VA_ARGS__))(__VA_ARGS__)
+#define __libc_message(...) \
+   __libc_message_disp (__libc_message, __VA_ARGS__)
 
 /* Acquire ownership of STREAM.  */
 extern void __flockfile (FILE *__stream) attribute_hidden;
