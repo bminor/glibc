@@ -21,12 +21,10 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <string.h>
-#include <kernel_stat.h>
 #include <sysdep.h>
 #include <time.h>
-#include <kstat_cp.h>
-#include <stat_t64_cp.h>
 #include <sys/sysmacros.h>
+#include <internal-stat.h>
 
 #if __TIMESIZE == 64 \
      && (__WORDSIZE == 32 \
@@ -40,11 +38,7 @@ _Static_assert (sizeof (__blkcnt_t) == sizeof (__blkcnt64_t),
                 "__blkcnt_t and __blkcnt64_t must match");
 #endif
 
-#if (__WORDSIZE == 32 \
-     && (!defined __SYSCALL_WORDSIZE || __SYSCALL_WORDSIZE == 32)) \
-     || defined STAT_HAS_TIME32 \
-     || (!defined __NR_newfstatat && !defined __NR_fstatat64)
-# define FSTATAT_USE_STATX 1
+#if FSTATAT_USE_STATX
 
 static inline int
 fstatat64_time64_statx (int fd, const char *file, struct __stat64_t64 *buf,
@@ -79,8 +73,6 @@ fstatat64_time64_statx (int fd, const char *file, struct __stat64_t64 *buf,
 
   return r;
 }
-#else
-# define FSTATAT_USE_STATX 0
 #endif
 
 /* Only statx supports 64-bit timestamps for 32-bit architectures with
