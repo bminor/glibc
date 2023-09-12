@@ -38,6 +38,16 @@
 /* Pop diagnostic state.  */
 #define DIAG_POP_NEEDS_COMMENT _Pragma ("GCC diagnostic pop")
 
+/* These macros are used to push/pop diagnostic states for warnings only
+   supported by clang.  */
+#ifdef __clang__
+# define DIAG_PUSH_NEEDS_COMMENT_CLANG _Pragma ("clang diagnostic push")
+# define DIAG_POP_NEEDS_COMMENT_CLANG _Pragma ("clang diagnostic pop")
+#else
+# define DIAG_PUSH_NEEDS_COMMENT_CLANG
+# define DIAG_POP_NEEDS_COMMENT_CLANG
+#endif
+
 #define _DIAG_STR1(s) #s
 #define _DIAG_STR(s) _DIAG_STR1(s)
 
@@ -69,6 +79,18 @@
   _Pragma (_DIAG_STR (GCC diagnostic ignored option))
 #else
 # define DIAG_IGNORE_Os_NEEDS_COMMENT(version, option)
+#endif
+
+/* Similar to DIAG_IGNORE_NEEDS_COMMENT, these macros should be used
+   to suppress warning supported by the specific compiler.  */
+#ifndef __clang__
+# define DIAG_IGNORE_NEEDS_COMMENT_GCC(VERSION, WARNING) \
+  DIAG_IGNORE_NEEDS_COMMENT (VERSION, WARNING)
+# define DIAG_IGNORE_NEEDS_COMMENT_CLANG(version, option)
+#else
+# define DIAG_IGNORE_NEEDS_COMMENT_GCC(VERSION, WARNING)
+# define DIAG_IGNORE_NEEDS_COMMENT_CLANG(version, option) \
+  _Pragma (_DIAG_STR (clang diagnostic ignored option))
 #endif
 
 #endif /* libc-diag.h */
