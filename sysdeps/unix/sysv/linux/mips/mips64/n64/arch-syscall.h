@@ -14,6 +14,7 @@
 #define __NR_brk 5012
 #define __NR_cachectl 5198
 #define __NR_cacheflush 5197
+#define __NR_cachestat 5451
 #define __NR_capget 5123
 #define __NR_capset 5124
 #define __NR_chdir 5078

@@ -15,6 +15,7 @@
 #define __NR_bpf 387
 #define __NR_break 17
 #define __NR_brk 45
+#define __NR_cachestat 451
 #define __NR_capget 184
 #define __NR_capset 185
 #define __NR_chdir 12
