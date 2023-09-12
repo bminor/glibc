@@ -11,6 +11,7 @@
 #define __NR_bind 1073741873
 #define __NR_bpf 1073742145
 #define __NR_brk 1073741836
+#define __NR_cachestat 1073742275
 #define __NR_capget 1073741949
 #define __NR_capset 1073741950
 #define __NR_chdir 1073741904

@@ -13,6 +13,8 @@
 #define __NR_bind 22
 #define __NR_bpf 341
 #define __NR_brk 45
+#define __NR_cacheflush 356
+#define __NR_cachestat 451
 #define __NR_capget 106
 #define __NR_capset 107
 #define __NR_chdir 12
