@@ -21,14 +21,6 @@
 
 #include <assert.h>
 #include <setenv.h>
-
-/* Pacify GCC; see the commentary about VALLEN below.  This is needed
-   at least through GCC 4.9.2.  Pacify GCC for the entire file, as
-   there seems to be no way to pacify GCC selectively, only for the
-   place where it's needed.  Do not use DIAG_IGNORE_NEEDS_COMMENT
-   here, as it's not defined yet.  */
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-
 #include <errno.h>
 #if !_LIBC
 # if !defined errno && !defined HAVE_ERRNO_DECL
@@ -147,10 +139,8 @@ __add_to_environ (const char *name, const char *value, const char *combined,
 {
   /* Compute lengths before locking, so that the critical section is
      less of a performance bottleneck.  VALLEN is needed only if
-     COMBINED is null (unfortunately GCC is not smart enough to deduce
-     this; see the #pragma at the start of this file).  Testing
-     COMBINED instead of VALUE causes setenv (..., NULL, ...)  to dump
-     core now instead of corrupting memory later.  */
+     COMBINED is null.  Testing COMBINED instead of VALUE causes setenv
+     (..., NULL, ...) to dump core now instead of corrupting memory later.  */
   const size_t namelen = strlen (name);
   size_t vallen;
   if (combined == NULL)
