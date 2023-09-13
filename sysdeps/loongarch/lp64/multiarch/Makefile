@@ -9,6 +9,9 @@ sysdep_routines += \
   strchr-aligned \
   strchr-lsx \
   strchr-lasx \
+  strrchr-aligned \
+  strrchr-lsx \
+  strrchr-lasx \
   strchrnul-aligned \
   strchrnul-lsx \
   strchrnul-lasx \

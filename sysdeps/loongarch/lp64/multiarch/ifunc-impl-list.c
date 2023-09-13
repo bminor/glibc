@@ -94,6 +94,14 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, stpcpy, 1, __stpcpy_aligned)
 	      )
 
+  IFUNC_IMPL (i, name, strrchr,
+#if !defined __loongarch_soft_float
+	      IFUNC_IMPL_ADD (array, i, strrchr, SUPPORT_LASX, __strrchr_lasx)
+	      IFUNC_IMPL_ADD (array, i, strrchr, SUPPORT_LSX, __strrchr_lsx)
+#endif
+	      IFUNC_IMPL_ADD (array, i, strrchr, 1, __strrchr_aligned)
+	      )
+
   IFUNC_IMPL (i, name, memcpy,
 #if !defined __loongarch_soft_float
               IFUNC_IMPL_ADD (array, i, memcpy, SUPPORT_LASX, __memcpy_lasx)
