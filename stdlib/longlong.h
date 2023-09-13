@@ -57,6 +57,14 @@
 #define attribute_hidden
 #endif
 
+/* clang does not support output constraint as lvalue, while gcc uses it as a
+   simple type check.  */
+#ifdef __clang__
+# define __asm_output_check_type(__type, __arg) (__arg)
+#else
+# define __asm_output_check_type(__type, __arg) ((__type)(__arg))
+#endif
+
 extern const UQItype __clz_tab[256] attribute_hidden;
 
 /* Define auxiliary asm macros.
@@ -230,16 +238,16 @@ extern UDItype __udiv_qrnnd (UDItype *, UDItype, UDItype, UDItype);
  && W_TYPE_SIZE == 32
 #define add_ssaaaa(sh, sl, ah, al, bh, bl) \
   __asm__ ("adds	%1, %4, %5\n\tadc	%0, %2, %3"		\
-	   : "=r" ((USItype) (sh)),					\
-	     "=&r" ((USItype) (sl))					\
+	   : "=r" __asm_output_check_type (USItype, sh),		\
+	     "=&r" __asm_output_check_type (USItype, sl)		\
 	   : "%r" ((USItype) (ah)),					\
 	     "rI" ((USItype) (bh)),					\
 	     "%r" ((USItype) (al)),					\
 	     "rI" ((USItype) (bl)) __CLOBBER_CC)
 #define sub_ddmmss(sh, sl, ah, al, bh, bl) \
   __asm__ ("subs	%1, %4, %5\n\tsbc	%0, %2, %3"		\
-	   : "=r" ((USItype) (sh)),					\
-	     "=&r" ((USItype) (sl))					\
+	   : "=r" __asm_output_check_type (USItype, sh),		\
+	     "=&r" __asm_output_check_type (USItype, sl)		\
 	   : "r" ((USItype) (ah)),					\
 	     "rI" ((USItype) (bh)),					\
 	     "r" ((USItype) (al)),					\
@@ -456,30 +464,30 @@ extern UDItype __umulsidi3 (USItype, USItype);
 #if (defined (__i386__) || defined (__i486__)) && W_TYPE_SIZE == 32
 #define add_ssaaaa(sh, sl, ah, al, bh, bl) \
   __asm__ ("add{l} {%5,%1|%1,%5}\n\tadc{l} {%3,%0|%0,%3}"		\
-	   : "=r" ((USItype) (sh)),					\
-	     "=&r" ((USItype) (sl))					\
+	   : "=r" __asm_output_check_type (USItype, sh),		\
+	     "=&r" __asm_output_check_type(USItype, sl)			\
 	   : "%0" ((USItype) (ah)),					\
 	     "g" ((USItype) (bh)),					\
 	     "%1" ((USItype) (al)),					\
 	     "g" ((USItype) (bl)))
 #define sub_ddmmss(sh, sl, ah, al, bh, bl) \
   __asm__ ("sub{l} {%5,%1|%1,%5}\n\tsbb{l} {%3,%0|%0,%3}"		\
-	   : "=r" ((USItype) (sh)),					\
-	     "=&r" ((USItype) (sl))					\
+	   : "=r" __asm_output_check_type (USItype, sh),		\
+	     "=&r" __asm_output_check_type (USItype, sl)		\
 	   : "0" ((USItype) (ah)),					\
 	     "g" ((USItype) (bh)),					\
 	     "1" ((USItype) (al)),					\
 	     "g" ((USItype) (bl)))
 #define umul_ppmm(w1, w0, u, v) \
   __asm__ ("mul{l} %3"							\
-	   : "=a" ((USItype) (w0)),					\
-	     "=d" ((USItype) (w1))					\
+	   : "=a" __asm_output_check_type (USItype, w0),		\
+	     "=d" __asm_output_check_type (USItype, w1)			\
 	   : "%0" ((USItype) (u)),					\
 	     "rm" ((USItype) (v)))
 #define udiv_qrnnd(q, r, n1, n0, dv) \
   __asm__ ("div{l} %4"							\
-	   : "=a" ((USItype) (q)),					\
-	     "=d" ((USItype) (r))					\
+	   : "=a" __asm_output_check_type (USItype, q),			\
+	     "=d" __asm_output_check_type (USItype, r)			\
 	   : "0" ((USItype) (n0)),					\
 	     "1" ((USItype) (n1)),					\
 	     "rm" ((USItype) (dv)))
@@ -492,30 +500,30 @@ extern UDItype __umulsidi3 (USItype, USItype);
 #if defined (__x86_64__) && W_TYPE_SIZE == 64
 #define add_ssaaaa(sh, sl, ah, al, bh, bl) \
   __asm__ ("add{q} {%5,%1|%1,%5}\n\tadc{q} {%3,%0|%0,%3}"		\
-	   : "=r" ((UDItype) (sh)),					\
-	     "=&r" ((UDItype) (sl))					\
+	   : "=r" __asm_output_check_type (UDItype, sh),		\
+	     "=&r" __asm_output_check_type (UDItype, sl)		\
 	   : "%0" ((UDItype) (ah)),					\
 	     "rme" ((UDItype) (bh)),					\
 	     "%1" ((UDItype) (al)),					\
 	     "rme" ((UDItype) (bl)))
 #define sub_ddmmss(sh, sl, ah, al, bh, bl) \
   __asm__ ("sub{q} {%5,%1|%1,%5}\n\tsbb{q} {%3,%0|%0,%3}"		\
-	   : "=r" ((UDItype) (sh)),					\
-	     "=&r" ((UDItype) (sl))					\
+	   : "=r" __asm_output_check_type (UDItype, sh),		\
+	     "=&r" __asm_output_check_type (UDItype, sl)		\
 	   : "0" ((UDItype) (ah)),					\
 	     "rme" ((UDItype) (bh)),					\
 	     "1" ((UDItype) (al)),					\
 	     "rme" ((UDItype) (bl)))
 #define umul_ppmm(w1, w0, u, v) \
   __asm__ ("mul{q} %3"							\
-	   : "=a" ((UDItype) (w0)),					\
-	     "=d" ((UDItype) (w1))					\
+	   : "=a" __asm_output_check_type (UDItype, w0),		\
+	     "=d" __asm_output_check_type (UDItype, w1)			\
 	   : "%0" ((UDItype) (u)),					\
 	     "rm" ((UDItype) (v)))
 #define udiv_qrnnd(q, r, n1, n0, dv) \
   __asm__ ("div{q} %4"							\
-	   : "=a" ((UDItype) (q)),					\
-	     "=d" ((UDItype) (r))					\
+	   : "=a" __asm_output_check_type (UDItype, q),			\
+	     "=d" __asm_output_check_type (UDItype, r)			\
 	   : "0" ((UDItype) (n0)),					\
 	     "1" ((UDItype) (n1)),					\
 	     "rm" ((UDItype) (dv)))
