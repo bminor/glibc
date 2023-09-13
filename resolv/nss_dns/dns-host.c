@@ -427,7 +427,7 @@ _nss_dns_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
     {
       n = __res_context_search (ctx, name, C_IN, T_A,
 				dns_packet_buffer, sizeof (dns_packet_buffer),
-				NULL, NULL, NULL, NULL, NULL);
+				&alt_dns_packet_buffer, NULL, NULL, NULL, NULL);
       if (n >= 0)
 	status = gaih_getanswer_noaaaa (alt_dns_packet_buffer, n,
 					&abuf, pat, errnop, herrnop, ttlp);
