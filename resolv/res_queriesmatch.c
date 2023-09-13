@@ -83,6 +83,7 @@
  */
 
 #include <resolv.h>
+#include <resolv/resolv-internal.h>
 
 /* Author: paul vixie, 29may94.  */
 int
@@ -102,7 +103,7 @@ __libc_res_queriesmatch (const unsigned char *buf1, const unsigned char *eom1,
      order.  We can compare it with the second buffer's QDCOUNT
      value without doing this.  */
   int qdcount = ((HEADER *) buf1)->qdcount;
-  if (qdcount != ((HEADER *) buf2)->qdcount)
+  if (qdcount != ((UHEADER *) buf2)->qdcount)
     return 0;
 
   qdcount = htons (qdcount);
