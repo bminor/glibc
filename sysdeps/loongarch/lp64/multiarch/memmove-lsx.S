@@ -209,13 +209,10 @@ L(al_less_16):
     nop
 
 
-L(magic_num):
-    .dword          0x0706050403020100
-    .dword          0x0f0e0d0c0b0a0908
 L(unaligned):
-    pcaddi          t2, -4
+    pcalau12i       t2, %pc_hi20(L(INDEX))
     bstrins.d       a1, zero, 3, 0
-    vld             vr8, t2, 0
+    vld             vr8, t2, %pc_lo12(L(INDEX))
     vld             vr0, a1, 0
 
     vld             vr1, a1, 16
@@ -413,13 +410,10 @@ L(back_al_less_16):
     vst             vr1, a0, 0
     jr              ra
 
-L(magic_num_2):
-    .dword          0x0706050403020100
-    .dword          0x0f0e0d0c0b0a0908
 L(back_unaligned):
-    pcaddi          t2, -4
+    pcalau12i       t2, %pc_hi20(L(INDEX))
     bstrins.d       a4, zero, 3, 0
-    vld             vr8, t2, 0
+    vld             vr8, t2, %pc_lo12(L(INDEX))
     vld             vr0, a4, 0
 
     vld             vr1, a4, -16
@@ -528,6 +522,12 @@ L(back_un_less_16):
 
     jr              ra
 END(MEMMOVE_NAME)
+
+    .section        .rodata.cst16,"M",@progbits,16
+    .align          4
+L(INDEX):
+    .dword          0x0706050403020100
+    .dword          0x0f0e0d0c0b0a0908
 
 libc_hidden_builtin_def (MEMCPY_NAME)
 libc_hidden_builtin_def (MEMMOVE_NAME)
