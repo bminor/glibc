@@ -7,12 +7,21 @@ using `glibc' in the "product" field.
 
 Version 2.38.1
 
+Security related changes:
+
+  CVE-2023-4527: If the system is configured in no-aaaa mode via
+  /etc/resolv.conf, getaddrinfo is called for the AF_UNSPEC address
+  family, and a DNS response is received over TCP that is larger than
+  2048 bytes, getaddrinfo may potentially disclose stack contents via
+  the returned address data, or crash.
+
 The following bugs are resolved with this release:
 
   [30723] posix_memalign repeatedly scans long bin lists
   [30785] Always call destructors in reverse constructor order
   [30804] F_GETLK, F_SETLK, and F_SETLKW value change for powerpc64 with
     -D_FILE_OFFSET_BITS=64
+  [30842] Stack read overflow in getaddrinfo in no-aaaa mode (CVE-2023-4527)
 
 
 Version 2.38
