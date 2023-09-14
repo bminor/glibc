@@ -89,12 +89,12 @@ def extract_character_classes(filename):
                 'tolower',
                 'totitle']:
             match = re.match(r'^('
-                             +'(?:(?:class|map)\s+")'
+                             r'(?:(?:class|map)\s+")'
                              +re.escape(char_class)+
-                             '(?:";)\s+'
-                             +'|'
-                             +re.escape(char_class)+'\s+'
-                             +')', line)
+                             r'(?:";)\s+'
+                             r'|'
+                             +re.escape(char_class)+r'\s+'+
+                             r')', line)
             if match:
                 if char_class not in ctype_dict:
                     ctype_dict[char_class] = []
@@ -117,8 +117,8 @@ def process_chars(char_class_list, code_point_line):
             continue
         match = re.match(
             r'^<U(?P<codepoint1>[0-9A-F]{4,8})>'
-            +'\.\.'+
-            '<U(?P<codepoint2>[0-9A-F]{4,8})>$',
+            r'\.\.'
+            r'<U(?P<codepoint2>[0-9A-F]{4,8})>$',
             code_points)
         if match: # <Uxxxx>..<Uxxxx>
             for codepoint in range(
@@ -128,8 +128,8 @@ def process_chars(char_class_list, code_point_line):
             continue
         match = re.match(
             r'^<U(?P<codepoint1>[0-9A-F]{4,8})>'
-            +'\.\.\(2\)\.\.'+
-            '<U(?P<codepoint2>[0-9A-F]{4,8})>$',
+            r'\.\.\(2\)\.\.'
+            r'<U(?P<codepoint2>[0-9A-F]{4,8})>$',
             code_points)
         if match: # <Uxxxx>..(2)..<Uxxxx>
             for codepoint in range(
@@ -140,10 +140,10 @@ def process_chars(char_class_list, code_point_line):
             continue
         match = re.match(
             r'^\('
-            +'<U(?P<codepoint1>[0-9A-F]{4,8})>'
-            +','+
-            '<U(?P<codepoint2>[0-9A-F]{4,8})>'
-            +'\)$',
+            r'<U(?P<codepoint1>[0-9A-F]{4,8})>'
+            r','
+            r'<U(?P<codepoint2>[0-9A-F]{4,8})>'
+            r'\)$',
             code_points)
         if match: # (<Uxxxx>,<Uxxxx>)
             char_class_list.append((
