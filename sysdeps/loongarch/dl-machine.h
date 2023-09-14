@@ -90,7 +90,7 @@ static inline ElfW (Addr) elf_machine_dynamic (void)
 	or	$a0, $sp, $zero   \n\
 	bl	_dl_start   \n\
 	# Stash user entry point in s0.   \n\
-	or	$s0, $v0, $zero   \n\
+	or	$s0, $a0, $zero   \n\
 	# Load the original argument count.   \n\
 	ld.d	$a1, $sp, 0   \n\
 	# Call _dl_init (struct link_map *main_map, int argc, \
