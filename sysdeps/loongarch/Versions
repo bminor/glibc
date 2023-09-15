@@ -1,0 +1,5 @@
+ld {
+  GLIBC_PRIVATE {
+    _dl_larch_get_cpu_features;
+  }
+}
