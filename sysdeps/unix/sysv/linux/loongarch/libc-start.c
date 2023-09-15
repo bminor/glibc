@@ -1,5 +1,5 @@
-/* Symbol rediretion for loader/static initialization code.
-   Copyright (C) 2023-2024 Free Software Foundation, Inc.
+/* Override csu/libc-start.c on LoongArch64.
+   Copyright (C) 2024 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,14 +14,21 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <https://www.gnu.org/licenses/>.  */
-
-#ifndef _DL_IFUNC_GENERIC_H
-#define _DL_IFUNC_GENERIC_H
+   <http://www.gnu.org/licenses/>.  */
 
 #ifndef SHARED
-asm ("memset = __memset_aligned");
-asm ("memcmp = __memcmp_aligned");
+
+/* Mark symbols hidden in static PIE for early self relocation to work.  */
+#if BUILD_PIE_DEFAULT
+# pragma GCC visibility push (hidden)
 #endif
 
+#include <ldsodefs.h>
+#include <cpu-features.c>
+
+extern struct cpu_features _dl_larch_cpu_features;
+
+#define ARCH_INIT_CPU_FEATURES() init_cpu_features (&_dl_larch_cpu_features)
+
 #endif
+#include <csu/libc-start.c>

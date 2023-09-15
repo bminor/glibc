@@ -1,6 +1,5 @@
-/* Symbol rediretion for loader/static initialization code.
-   Copyright (C) 2023-2024 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
+/* Define _dl_larch_get_cpu_features.
+   Copyright (C) 2024 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,12 +15,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _DL_IFUNC_GENERIC_H
-#define _DL_IFUNC_GENERIC_H
 
-#ifndef SHARED
-asm ("memset = __memset_aligned");
-asm ("memcmp = __memcmp_aligned");
-#endif
+#include <ldsodefs.h>
 
-#endif
+const struct cpu_features *
+_dl_larch_get_cpu_features (void)
+{
+  return &GLRO(dl_larch_cpu_features);
+}

@@ -1,5 +1,5 @@
-/* Symbol rediretion for loader/static initialization code.
-   Copyright (C) 2023-2024 Free Software Foundation, Inc.
+/* Operating system support for run-time dynamic linker.  LoongArch version.
+   Copyright (C) 2024 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,14 +14,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <https://www.gnu.org/licenses/>.  */
+   <http://www.gnu.org/licenses/>.  */
 
-#ifndef _DL_IFUNC_GENERIC_H
-#define _DL_IFUNC_GENERIC_H
-
-#ifndef SHARED
-asm ("memset = __memset_aligned");
-asm ("memcmp = __memcmp_aligned");
-#endif
-
-#endif
+#include <config.h>
+#include <sysdeps/loongarch/cpu-tunables.c>
+#include <sysdeps/unix/sysv/linux/dl-sysdep.c>

@@ -1,6 +1,6 @@
-/* Symbol rediretion for loader/static initialization code.
-   Copyright (C) 2023-2024 Free Software Foundation, Inc.
+/* Initialize CPU feature data.  LoongArch64 version.
    This file is part of the GNU C Library.
+   Copyright (C) 2024 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -14,14 +14,17 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <https://www.gnu.org/licenses/>.  */
+   <http://www.gnu.org/licenses/>.  */
 
-#ifndef _DL_IFUNC_GENERIC_H
-#define _DL_IFUNC_GENERIC_H
+#include <cpu-features.h>
+#include <elf/dl-hwcaps.h>
+#include <elf/dl-tunables.h>
+extern void TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *) attribute_hidden;
 
-#ifndef SHARED
-asm ("memset = __memset_aligned");
-asm ("memcmp = __memcmp_aligned");
-#endif
-
-#endif
+static inline void
+init_cpu_features (struct cpu_features *cpu_features)
+{
+  GLRO(dl_larch_cpu_features).hwcap = GLRO(dl_hwcap);
+  TUNABLE_GET (glibc, cpu, hwcaps, tunable_val_t *,
+	       TUNABLE_CALLBACK (set_hwcaps));
+}

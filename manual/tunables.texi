@@ -525,7 +525,10 @@ a CPU arch-level like @code{z13} instead of single HWCAP and STFLE features.
 On powerpc, the supported HWCAP and HWCAP2 features can be found in
 @code{sysdeps/powerpc/dl-procinfo.c}.
 
-This tunable is specific to i386, x86-64, s390x and powerpc.
+On loongarch, the supported HWCAP features can be found in
+@code{sysdeps/loongarch/cpu-tunables.c}.
+
+This tunable is specific to i386, x86-64, s390x, powerpc and loongarch.
 @end deftp
 
 @deftp Tunable glibc.cpu.cached_memopt
