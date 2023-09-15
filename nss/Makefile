@@ -82,6 +82,7 @@ tests-container := \
   tst-nss-test3 \
   tst-reload1 \
   tst-reload2 \
+  tst-nss-gai-hv2-canonname \
 # tests-container
 
 # Tests which need libdl
@@ -145,7 +146,8 @@ libnss_compat-inhibit-o	= $(filter-out .os,$(object-suffixes))
 ifeq ($(build-static-nss),yes)
 tests-static		+= tst-nss-static
 endif
-extra-test-objs		+= nss_test1.os nss_test2.os nss_test_errno.os
+extra-test-objs		+= nss_test1.os nss_test2.os nss_test_errno.os \
+			   nss_test_gai_hv2_canonname.os
 
 include ../Rules
 
@@ -180,11 +182,15 @@ rtld-tests-LDFLAGS += -Wl,--dynamic-list=nss_test.ver
 libof-nss_test1 = extramodules
 libof-nss_test2 = extramodules
 libof-nss_test_errno = extramodules
+libof-nss_test_gai_hv2_canonname = extramodules
 $(objpfx)/libnss_test1.so: $(objpfx)nss_test1.os $(link-libc-deps)
 	$(build-module)
 $(objpfx)/libnss_test2.so: $(objpfx)nss_test2.os $(link-libc-deps)
 	$(build-module)
 $(objpfx)/libnss_test_errno.so: $(objpfx)nss_test_errno.os $(link-libc-deps)
+	$(build-module)
+$(objpfx)/libnss_test_gai_hv2_canonname.so: \
+  $(objpfx)nss_test_gai_hv2_canonname.os $(link-libc-deps)
 	$(build-module)
 $(objpfx)nss_test2.os : nss_test1.c
 # Use the nss_files suffix for these objects as well.
@@ -195,10 +201,14 @@ $(objpfx)/libnss_test2.so$(libnss_files.so-version): $(objpfx)/libnss_test2.so
 $(objpfx)/libnss_test_errno.so$(libnss_files.so-version): \
   $(objpfx)/libnss_test_errno.so
 	$(make-link)
+$(objpfx)/libnss_test_gai_hv2_canonname.so$(libnss_files.so-version): \
+  $(objpfx)/libnss_test_gai_hv2_canonname.so
+	$(make-link)
 $(patsubst %,$(objpfx)%.out,$(tests) $(tests-container)) : \
 	$(objpfx)/libnss_test1.so$(libnss_files.so-version) \
 	$(objpfx)/libnss_test2.so$(libnss_files.so-version) \
-	$(objpfx)/libnss_test_errno.so$(libnss_files.so-version)
+	$(objpfx)/libnss_test_errno.so$(libnss_files.so-version) \
+	$(objpfx)/libnss_test_gai_hv2_canonname.so$(libnss_files.so-version)
 
 ifeq (yes,$(have-thread-library))
 $(objpfx)tst-cancel-getpwuid_r: $(shared-thread-library)
@@ -215,3 +225,4 @@ LDFLAGS-tst-nss-test3 = -Wl,--disable-new-dtags
 LDFLAGS-tst-nss-test4 = -Wl,--disable-new-dtags
 LDFLAGS-tst-nss-test5 = -Wl,--disable-new-dtags
 LDFLAGS-tst-nss-test_errno = -Wl,--disable-new-dtags
+LDFLAGS-tst-nss-test_gai_hv2_canonname = -Wl,--disable-new-dtags
