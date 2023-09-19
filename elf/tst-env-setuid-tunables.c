@@ -50,6 +50,8 @@ const char *teststrings[] =
   "glibc.malloc.perturb=0x800:not_valid.malloc.check=2:glibc.malloc.mmap_threshold=4096",
   "glibc.not_valid.check=2:glibc.malloc.mmap_threshold=4096",
   "not_valid.malloc.check=2:glibc.malloc.mmap_threshold=4096",
+  "glibc.malloc.mmap_threshold=glibc.malloc.mmap_threshold=4096",
+  "glibc.malloc.check=2",
   "glibc.malloc.garbage=2:glibc.maoc.mmap_threshold=4096:glibc.malloc.check=2",
   "glibc.malloc.check=4:glibc.malloc.garbage=2:glibc.maoc.mmap_threshold=4096",
   ":glibc.malloc.garbage=2:glibc.malloc.check=1",
@@ -68,6 +70,8 @@ const char *resultstrings[] =
   "glibc.malloc.perturb=0x800:glibc.malloc.mmap_threshold=4096",
   "glibc.malloc.mmap_threshold=4096",
   "glibc.malloc.mmap_threshold=4096",
+  "glibc.malloc.mmap_threshold=glibc.malloc.mmap_threshold=4096",
+  "",
   "",
   "",
   "",
@@ -81,11 +85,18 @@ test_child (int off)
 {
   const char *val = getenv ("GLIBC_TUNABLES");
 
+  printf ("    [%d] GLIBC_TUNABLES is %s\n", off, val);
+  fflush (stdout);
   if (val != NULL && strcmp (val, resultstrings[off]) == 0)
     return 0;
 
   if (val != NULL)
-    printf ("[%d] Unexpected GLIBC_TUNABLES VALUE %s\n", off, val);
+    printf ("    [%d] Unexpected GLIBC_TUNABLES VALUE %s, expected %s\n",
+	    off, val, resultstrings[off]);
+  else
+    printf ("    [%d] GLIBC_TUNABLES environment variable absent\n", off);
+
+  fflush (stdout);
 
   return 1;
 }
@@ -106,21 +117,26 @@ do_test (int argc, char **argv)
       if (ret != 0)
 	exit (1);
 
-      exit (EXIT_SUCCESS);
+      /* Special return code to make sure that the child executed all the way
+	 through.  */
+      exit (42);
     }
   else
     {
-      int ret = 0;
-
       /* Spawn tests.  */
       for (int i = 0; i < array_length (teststrings); i++)
 	{
 	  char buf[INT_BUFSIZE_BOUND (int)];
 
-	  printf ("Spawned test for %s (%d)\n", teststrings[i], i);
+	  printf ("[%d] Spawned test for %s\n", i, teststrings[i]);
 	  snprintf (buf, sizeof (buf), "%d\n", i);
+	  fflush (stdout);
 	  if (setenv ("GLIBC_TUNABLES", teststrings[i], 1) != 0)
-	    exit (1);
+	    {
+	      printf ("    [%d] Failed to set GLIBC_TUNABLES: %m", i);
+	      support_record_failure ();
+	      continue;
+	    }
 
 	  int status = support_capture_subprogram_self_sgid (buf);
 
@@ -128,9 +144,14 @@ do_test (int argc, char **argv)
 	  if (WEXITSTATUS (status) == EXIT_UNSUPPORTED)
 	    return EXIT_UNSUPPORTED;
 
-	  ret |= status;
+	  if (WEXITSTATUS (status) != 42)
+	    {
+	      printf ("    [%d] child failed with status %d\n", i,
+		      WEXITSTATUS (status));
+	      support_record_failure ();
+	    }
 	}
-      return ret;
+      return 0;
     }
 }
 
