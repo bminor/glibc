@@ -31,6 +31,11 @@ Security related changes:
   an application calls getaddrinfo for AF_INET6 with AI_CANONNAME,
   AI_ALL and AI_V4MAPPED flags set.
 
+  CVE-2023-4911: If a tunable of the form NAME=NAME=VAL is passed in the
+  environment of a setuid program and NAME is valid, it may result in a
+  buffer overflow, which could be exploited to achieve escalated
+  privileges.  This flaw was introduced in glibc 2.34.
+
 The following bugs are resolved with this release:
 
   [20975] Deferred cancellation triggers in __check_pf and looses lock leading to deadlock

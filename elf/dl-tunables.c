@@ -187,11 +187,7 @@ parse_tunables (char *tunestr, char *valstring)
       /* If we reach the end of the string before getting a valid name-value
 	 pair, bail out.  */
       if (p[len] == '\0')
-	{
-	  if (__libc_enable_secure)
-	    tunestr[off] = '\0';
-	  return;
-	}
+	break;
 
       /* We did not find a valid name-value pair before encountering the
 	 colon.  */
@@ -251,9 +247,16 @@ parse_tunables (char *tunestr, char *valstring)
 	    }
 	}
 
-      if (p[len] != '\0')
-	p += len + 1;
+      /* We reached the end while processing the tunable string.  */
+      if (p[len] == '\0')
+	break;
+
+      p += len + 1;
     }
+
+  /* Terminate tunestr before we leave.  */
+  if (__libc_enable_secure)
+    tunestr[off] = '\0';
 }
 #endif
 
