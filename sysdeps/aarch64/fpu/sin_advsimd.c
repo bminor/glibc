@@ -56,7 +56,7 @@ float64x2_t VPCS_ATTR V_NAME_D1 (sin) (float64x2_t x)
 {
   const struct data *d = ptr_barrier (&data);
   float64x2_t n, r, r2, r3, r4, y, t1, t2, t3;
-  uint64x2_t odd, cmp, eqz;
+  uint64x2_t odd, cmp;
 
 #if WANT_SIMD_EXCEPT
   /* Detect |x| <= TinyBound or |x| >= RangeVal. If fenv exceptions are to be
@@ -70,7 +70,6 @@ float64x2_t VPCS_ATTR V_NAME_D1 (sin) (float64x2_t x)
   cmp = vcageq_f64 (d->range_val, x);
   cmp = vceqzq_u64 (cmp); /* cmp = ~cmp.  */
 #endif
-  eqz = vceqzq_f64 (x);
 
   /* n = rint(|x|/pi).  */
   n = vfmaq_f64 (d->shift, d->inv_pi, r);
@@ -95,10 +94,6 @@ float64x2_t VPCS_ATTR V_NAME_D1 (sin) (float64x2_t x)
   y = vfmaq_f64 (t2, y, r4);
   y = vfmaq_f64 (t3, y, r4);
   y = vfmaq_f64 (r, y, r3);
-
-  /* Sign of 0 is discarded by polynomial, so copy it back here.  */
-  if (__glibc_unlikely (v_any_u64 (eqz)))
-    y = vbslq_f64 (eqz, x, y);
 
   if (__glibc_unlikely (v_any_u64 (cmp)))
     return special_case (x, y, odd, cmp);
