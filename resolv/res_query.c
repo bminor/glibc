@@ -80,6 +80,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <shlib-compat.h>
+#include <scratch_buffer.h>
 
 #if PACKETSZ > 65536
 #define MAXPACKET	PACKETSZ
@@ -114,11 +115,14 @@ __res_context_query (struct resolv_context *ctx, const char *name,
 	struct __res_state *statp = ctx->resp;
 	UHEADER *hp = (UHEADER *) answer;
 	UHEADER *hp2;
-	int n, use_malloc = 0;
+	int n;
 
-	size_t bufsize = (type == T_QUERY_A_AND_AAAA ? 2 : 1) * QUERYSIZE;
-	u_char *buf = alloca (bufsize);
-	u_char *query1 = buf;
+	/* It requires 2 times QUERYSIZE for type == T_QUERY_A_AND_AAAA.  */
+	struct scratch_buffer buf;
+	scratch_buffer_init (&buf);
+	_Static_assert (2 * QUERYSIZE <= sizeof (buf.__space.__c),
+			"scratch_buffer too small");
+	u_char *query1 = buf.data;
 	int nquery1 = -1;
 	u_char *query2 = NULL;
 	int nquery2 = 0;
@@ -129,37 +133,28 @@ __res_context_query (struct resolv_context *ctx, const char *name,
 	if (type == T_QUERY_A_AND_AAAA)
 	  {
 	    n = __res_context_mkquery (ctx, QUERY, name, class, T_A, NULL,
-				       query1, bufsize);
+				       query1, buf.length);
 	    if (n > 0)
 	      {
 		if ((statp->options & (RES_USE_EDNS0|RES_USE_DNSSEC)) != 0)
 		  {
 		    /* Use RESOLV_EDNS_BUFFER_SIZE because the receive
 		       buffer can be reallocated.  */
-		    n = __res_nopt (ctx, n, query1, bufsize,
+		    n = __res_nopt (ctx, n, query1, buf.length,
 				    RESOLV_EDNS_BUFFER_SIZE);
 		    if (n < 0)
 		      goto unspec_nomem;
 		  }
 
 		nquery1 = n;
-		/* Align the buffer.  */
-		int npad = ((nquery1 + __alignof__ (HEADER) - 1)
-			    & ~(__alignof__ (HEADER) - 1)) - nquery1;
-		if (n > bufsize - npad)
-		  {
-		    n = -1;
-		    goto unspec_nomem;
-		  }
-		int nused = n + npad;
-		query2 = buf + nused;
+		query2 = buf.data + n;
 		n = __res_context_mkquery (ctx, QUERY, name, class, T_AAAA,
-					   NULL, query2, bufsize - nused);
+					   NULL, query2, buf.length - n);
 		if (n > 0
 		    && (statp->options & (RES_USE_EDNS0|RES_USE_DNSSEC)) != 0)
 		  /* Use RESOLV_EDNS_BUFFER_SIZE because the receive
 		     buffer can be reallocated.  */
-		  n = __res_nopt (ctx, n, query2, bufsize,
+		  n = __res_nopt (ctx, n, query2, buf.length,
 				  RESOLV_EDNS_BUFFER_SIZE);
 		nquery2 = n;
 	      }
@@ -169,7 +164,7 @@ __res_context_query (struct resolv_context *ctx, const char *name,
 	else
 	  {
 	    n = __res_context_mkquery (ctx, QUERY, name, class, type, NULL,
-				       query1, bufsize);
+				       query1, buf.length);
 
 	    if (n > 0
 		&& (statp->options & (RES_USE_EDNS0|RES_USE_DNSSEC)) != 0)
@@ -181,27 +176,25 @@ __res_context_query (struct resolv_context *ctx, const char *name,
 		  advertise = anslen;
 		else
 		  advertise = RESOLV_EDNS_BUFFER_SIZE;
-		n = __res_nopt (ctx, n, query1, bufsize, advertise);
+		n = __res_nopt (ctx, n, query1, buf.length, advertise);
 	      }
 
 	    nquery1 = n;
 	  }
 
-	if (__glibc_unlikely (n <= 0) && !use_malloc) {
+	if (__glibc_unlikely (n <= 0)) {
 		/* Retry just in case res_nmkquery failed because of too
 		   short buffer.  Shouldn't happen.  */
-		bufsize = (type == T_QUERY_A_AND_AAAA ? 2 : 1) * MAXPACKET;
-		buf = malloc (bufsize);
-		if (buf != NULL) {
-			query1 = buf;
-			use_malloc = 1;
+		if (scratch_buffer_set_array_size (&buf,
+						   T_QUERY_A_AND_AAAA ? 2 : 1,
+						   MAXPACKET)) {
+			query1 = buf.data;
 			goto again;
 		}
 	}
 	if (__glibc_unlikely (n <= 0))       {
 		RES_SET_H_ERRNO(statp, NO_RECOVERY);
-		if (use_malloc)
-			free (buf);
+		scratch_buffer_free (&buf);
 		return (n);
 	}
 
@@ -224,8 +217,7 @@ __res_context_query (struct resolv_context *ctx, const char *name,
 				    answerp2_malloced);
 	  }
 
-	if (use_malloc)
-		free (buf);
+	scratch_buffer_free (&buf);
 	if (n < 0) {
 		RES_SET_H_ERRNO(statp, TRY_AGAIN);
 		return (n);
