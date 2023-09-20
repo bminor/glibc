@@ -29,7 +29,7 @@
 
 enum
 {
-  CPUID_INDEX_MAX = CPUID_INDEX_14_ECX_0 + 1
+  CPUID_INDEX_MAX = CPUID_INDEX_24_ECX_0 + 1
 };
 
 enum
@@ -319,6 +319,7 @@ enum
 #define bit_cpu_AVX_NE_CONVERT	(1u << 5)
 #define bit_cpu_AMX_COMPLEX	(1u << 8)
 #define bit_cpu_PREFETCHI	(1u << 14)
+#define bit_cpu_AVX10		(1u << 19)
 #define bit_cpu_APX_F		(1u << 21)
 
 /* CPUID_INDEX_19.  */
@@ -331,6 +332,13 @@ enum
 
 /* EBX.  */
 #define bit_cpu_PTWRITE		(1u << 4)
+
+/* CPUID_INDEX_24_ECX_0.  */
+
+/* EBX.  */
+#define bit_cpu_AVX10_XMM		(1u << 16)
+#define bit_cpu_AVX10_YMM		(1u << 17)
+#define bit_cpu_AVX10_ZMM		(1u << 18)
 
 /* CPUID_INDEX_1.  */
 
@@ -563,6 +571,7 @@ enum
 #define index_cpu_AVX_NE_CONVERT CPUID_INDEX_7_ECX_1
 #define index_cpu_AMX_COMPLEX	CPUID_INDEX_7_ECX_1
 #define index_cpu_PREFETCHI	CPUID_INDEX_7_ECX_1
+#define index_cpu_AVX10		CPUID_INDEX_7_ECX_1
 #define index_cpu_APX_F		CPUID_INDEX_7_ECX_1
 
 /* CPUID_INDEX_19.  */
@@ -575,6 +584,13 @@ enum
 
 /* EBX.  */
 #define index_cpu_PTWRITE	CPUID_INDEX_14_ECX_0
+
+/* CPUID_INDEX_24_ECX_0.  */
+
+/* EBX.  */
+#define index_cpu_AVX10_XMM	CPUID_INDEX_24_ECX_0
+#define index_cpu_AVX10_YMM	CPUID_INDEX_24_ECX_0
+#define index_cpu_AVX10_ZMM	CPUID_INDEX_24_ECX_0
 
 /* CPUID_INDEX_1.  */
 
@@ -809,6 +825,7 @@ enum
 #define reg_AVX_NE_CONVERT	edx
 #define reg_AMX_COMPLEX		edx
 #define reg_PREFETCHI		edx
+#define reg_AVX10		edx
 #define reg_APX_F		edx
 
 /* CPUID_INDEX_19.  */
@@ -821,6 +838,14 @@ enum
 
 /* EBX.  */
 #define reg_PTWRITE		ebx
+
+/* CPUID_INDEX_24_ECX_0.  */
+
+/* EBX.  */
+#define reg_AVX10_XMM		ebx
+#define reg_AVX10_YMM		ebx
+#define reg_AVX10_ZMM		ebx
+
 
 /* PREFERRED_FEATURE_INDEX_1.  First define the bitindex values
    sequentially, then define the bit_arch* and index_arch_* lookup

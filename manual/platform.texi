@@ -223,6 +223,18 @@ Leaf (EAX = 23H).
 @code{AVX} -- The AVX instruction extensions.
 
 @item
+@code{AVX10} -- The AVX10 instruction extensions.
+
+@item
+@code{AVX10_XMM} -- Whether AVX10 includes xmm registers.
+
+@item
+@code{AVX10_YMM} -- Whether AVX10 includes ymm registers.
+
+@item
+@code{AVX10_ZMM} -- Whether AVX10 includes zmm registers.
+
+@item
 @code{AVX2} -- The AVX2 instruction extensions.
 
 @item
