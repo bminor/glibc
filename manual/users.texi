@@ -1731,8 +1731,8 @@ most systems, but on some systems a special network server gives access
 to it.
 
 Historically, this database included one-way hashes of user
-passphrases (@pxref{Passphrase Storage}) as well as public information
-about each user (such as their user ID and full name).  Many of the
+passphrases, as well as public information about each user
+(such as their user ID and full name).  Many of the names of
 functions and data structures associated with this database, and the
 filename @file{/etc/passwd} itself, reflect this history.  However,
 the information in this database is available to all users, and it is
