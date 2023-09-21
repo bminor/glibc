@@ -1,4 +1,4 @@
-/* Placeholder function, not used by any processor at the moment.
+/* Implementation for strrchr using evex256 and evex512.
    Copyright (C) 2022-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,8 +16,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* UNUSED. Exists purely as reference implementation.  */
-
 #include <isa-level.h>
 
 #if ISA_SHOULD_BUILD (4)
@@ -25,240 +23,351 @@
 # include <sysdep.h>
 
 # ifdef USE_AS_WCSRCHR
+#  if VEC_SIZE == 64
+#   define RCX_M	cx
+#   define KORTEST_M	kortestw
+#  else
+#   define RCX_M	cl
+#   define KORTEST_M	kortestb
+#  endif
+
+#  define SHIFT_REG	VRCX
 #  define CHAR_SIZE	4
-#  define VPBROADCAST   vpbroadcastd
-#  define VPCMPEQ	vpcmpeqd
-#  define VPMINU	vpminud
+#  define VPCMP		vpcmpd
+#  define VPMIN		vpminud
+#  define VPCOMPRESS	vpcompressd
 #  define VPTESTN	vptestnmd
+#  define VPTEST	vptestmd
+#  define VPBROADCAST	vpbroadcastd
+#  define VPCMPEQ	vpcmpeqd
+
 # else
+#  define SHIFT_REG	VRDI
 #  define CHAR_SIZE	1
-#  define VPBROADCAST   vpbroadcastb
-#  define VPCMPEQ	vpcmpeqb
-#  define VPMINU	vpminub
+#  define VPCMP		vpcmpb
+#  define VPMIN		vpminub
+#  define VPCOMPRESS	vpcompressb
 #  define VPTESTN	vptestnmb
+#  define VPTEST	vptestmb
+#  define VPBROADCAST	vpbroadcastb
+#  define VPCMPEQ	vpcmpeqb
+
+#  define RCX_M		VRCX
+#  define KORTEST_M	KORTEST
 # endif
 
-# define PAGE_SIZE	4096
+# define VMATCH		VMM(0)
 # define CHAR_PER_VEC	(VEC_SIZE / CHAR_SIZE)
+# define PAGE_SIZE	4096
 
 	.section SECTION(.text), "ax", @progbits
-/* Aligning entry point to 64 byte, provides better performance for
-   one vector length string.  */
-ENTRY_P2ALIGN (STRRCHR, 6)
-
-	/* Broadcast CHAR to VMM(0).  */
-	VPBROADCAST %esi, %VMM(0)
+	/* Aligning entry point to 64 byte, provides better performance for
+	   one vector length string.  */
+ENTRY_P2ALIGN(STRRCHR, 6)
 	movl	%edi, %eax
-	sall	$20, %eax
-	cmpl	$((PAGE_SIZE - VEC_SIZE) << 20), %eax
-	ja	L(page_cross)
+	/* Broadcast CHAR to VMATCH.  */
+	VPBROADCAST %esi, %VMATCH
 
-L(page_cross_continue):
-	/* Compare [w]char for null, mask bit will be set for match.  */
+	andl	$(PAGE_SIZE - 1), %eax
+	cmpl	$(PAGE_SIZE - VEC_SIZE), %eax
+	jg	L(cross_page_boundary)
+
 	VMOVU	(%rdi), %VMM(1)
-
-	VPTESTN	%VMM(1), %VMM(1), %k1
-	KMOV	%k1, %VRCX
-	test	%VRCX, %VRCX
-	jz	L(align_more)
-
-	VPCMPEQ	%VMM(1), %VMM(0), %k0
-	KMOV	%k0, %VRAX
-	BLSMSK	%VRCX, %VRCX
-	and	%VRCX, %VRAX
-	jz	L(ret)
-
-	BSR	%VRAX, %VRAX
+	/* k0 has a 1 for each zero CHAR in YMM1.  */
+	VPTESTN	%VMM(1), %VMM(1), %k0
+	KMOV	%k0, %VGPR(rsi)
+	test	%VGPR(rsi), %VGPR(rsi)
+	jz	L(aligned_more)
+	/* fallthrough: zero CHAR in first VEC.  */
+L(page_cross_return):
+	/* K1 has a 1 for each search CHAR match in VEC(1).  */
+	VPCMPEQ	%VMATCH, %VMM(1), %k1
+	KMOV	%k1, %VGPR(rax)
+	/* Build mask up until first zero CHAR (used to mask of
+	   potential search CHAR matches past the end of the string).  */
+	blsmsk	%VGPR(rsi), %VGPR(rsi)
+	/* Use `and` here to remove any out of bounds matches so we can
+	   do a reverse scan on `rax` to find the last match.  */
+	and	%VGPR(rsi), %VGPR(rax)
+	jz	L(ret0)
+	/* Get last match.  */
+	bsr	%VGPR(rax), %VGPR(rax)
 # ifdef USE_AS_WCSRCHR
 	leaq	(%rdi, %rax, CHAR_SIZE), %rax
 # else
-	add	%rdi, %rax
+	addq	%rdi, %rax
 # endif
-L(ret):
+L(ret0):
 	ret
 
-L(vector_x2_end):
-	VPCMPEQ	%VMM(2), %VMM(0), %k2
-	KMOV	%k2, %VRAX
-	BLSMSK	%VRCX, %VRCX
-	and	%VRCX, %VRAX
-	jz	L(vector_x1_ret)
+	/* Returns for first vec x1/x2/x3 have hard coded backward
+	   search path for earlier matches.  */
+	.p2align 4,, 6
+L(first_vec_x1):
+	VPCMPEQ	%VMATCH, %VMM(2), %k1
+	KMOV	%k1, %VGPR(rax)
+	blsmsk	%VGPR(rcx), %VGPR(rcx)
+	/* eax non-zero if search CHAR in range.  */
+	and	%VGPR(rcx), %VGPR(rax)
+	jnz	L(first_vec_x1_return)
 
-	BSR	%VRAX, %VRAX
-	leaq	(VEC_SIZE)(%rdi, %rax, CHAR_SIZE), %rax
-	ret
-
-	/* Check the first vector at very last to look for match.  */
-L(vector_x1_ret):
-	VPCMPEQ %VMM(1), %VMM(0), %k2
-	KMOV	%k2, %VRAX
-	test	%VRAX, %VRAX
-	jz	L(ret)
-
-	BSR	%VRAX, %VRAX
+	/* fallthrough: no match in YMM2 then need to check for earlier
+	   matches (in YMM1).  */
+	.p2align 4,, 4
+L(first_vec_x0_test):
+	VPCMPEQ	%VMATCH, %VMM(1), %k1
+	KMOV	%k1, %VGPR(rax)
+	test	%VGPR(rax), %VGPR(rax)
+	jz	L(ret1)
+	bsr	%VGPR(rax), %VGPR(rax)
 # ifdef USE_AS_WCSRCHR
 	leaq	(%rsi, %rax, CHAR_SIZE), %rax
 # else
-	add	%rsi, %rax
+	addq	%rsi, %rax
 # endif
+L(ret1):
 	ret
 
-L(align_more):
-	/* Zero r8 to store match result.  */
-	xorl	%r8d, %r8d
-	/* Save pointer of first vector, in case if no match found.  */
+	.p2align 4,, 10
+L(first_vec_x3):
+	VPCMPEQ	%VMATCH, %VMM(4), %k1
+	KMOV	%k1, %VGPR(rax)
+	blsmsk	%VGPR(rcx), %VGPR(rcx)
+	/* If no search CHAR match in range check YMM1/YMM2/YMM3.  */
+	and	%VGPR(rcx), %VGPR(rax)
+	jz	L(first_vec_x1_or_x2)
+	bsr	%VGPR(rax), %VGPR(rax)
+	leaq	(VEC_SIZE * 3)(%rdi, %rax, CHAR_SIZE), %rax
+	ret
+	.p2align 4,, 4
+
+L(first_vec_x2):
+	VPCMPEQ	%VMATCH, %VMM(3), %k1
+	KMOV	%k1, %VGPR(rax)
+	blsmsk	%VGPR(rcx), %VGPR(rcx)
+	/* Check YMM3 for last match first. If no match try YMM2/YMM1.  */
+	and	%VGPR(rcx), %VGPR(rax)
+	jz	L(first_vec_x0_x1_test)
+	bsr	%VGPR(rax), %VGPR(rax)
+	leaq	(VEC_SIZE * 2)(%r8, %rax, CHAR_SIZE), %rax
+	ret
+
+	.p2align 4,, 6
+L(first_vec_x0_x1_test):
+	VPCMPEQ	%VMATCH, %VMM(2), %k1
+	KMOV	%k1, %VGPR(rax)
+	/* Check YMM2 for last match first. If no match try YMM1.  */
+	test	%VGPR(rax), %VGPR(rax)
+	jz	L(first_vec_x0_test)
+	.p2align 4,, 4
+L(first_vec_x1_return):
+	bsr	%VGPR(rax), %VGPR(rax)
+	leaq	(VEC_SIZE)(%r8, %rax, CHAR_SIZE), %rax
+	ret
+
+	.p2align 4,, 12
+L(aligned_more):
+L(page_cross_continue):
+	/* Need to keep original pointer incase VEC(1) has last match.  */
 	movq	%rdi, %rsi
-	/* Align pointer to vector size.  */
 	andq	$-VEC_SIZE, %rdi
-	/* Loop unroll for 2 vector loop.  */
-	VMOVA	(VEC_SIZE)(%rdi), %VMM(2)
+
+	VMOVU	VEC_SIZE(%rdi), %VMM(2)
 	VPTESTN	%VMM(2), %VMM(2), %k0
 	KMOV	%k0, %VRCX
+	movq	%rdi, %r8
 	test	%VRCX, %VRCX
-	jnz	L(vector_x2_end)
+	jnz	L(first_vec_x1)
 
-	/* Save pointer of second vector, in case if no match
-	   found.  */
-	movq	%rdi, %r9
-	/* Align address to VEC_SIZE * 2 for loop.  */
-	andq	$-(VEC_SIZE * 2), %rdi
-
-	.p2align 4,,11
-L(loop):
-	/* 2 vector loop, as it provide better performance as compared
-	   to 4 vector loop.  */
-	VMOVA	(VEC_SIZE * 2)(%rdi), %VMM(3)
-	VMOVA	(VEC_SIZE * 3)(%rdi), %VMM(4)
-	VPCMPEQ	%VMM(3), %VMM(0), %k1
-	VPCMPEQ	%VMM(4), %VMM(0), %k2
-	VPMINU	%VMM(3), %VMM(4), %VMM(5)
-	VPTESTN	%VMM(5), %VMM(5), %k0
-	KOR	%k1, %k2, %k3
-	subq	$-(VEC_SIZE * 2), %rdi
-	/* If k0 and k3 zero, match and end of string not found.  */
-	KORTEST	%k0, %k3
-	jz	L(loop)
-
-	/* If k0 is non zero, end of string found.  */
-	KORTEST %k0, %k0
-	jnz	L(endloop)
-
-	lea	VEC_SIZE(%rdi), %r8
-	/* A match found, it need to be stored in r8 before loop
-	   continue.  */
-	/* Check second vector first.  */
-	KMOV	%k2, %VRDX
-	test	%VRDX, %VRDX
-	jnz	L(loop_vec_x2_match)
-
-	KMOV	%k1, %VRDX
-	/* Match is in first vector, rdi offset need to be subtracted
-	  by VEC_SIZE.  */
-	sub	$VEC_SIZE, %r8
-
-	/* If second vector doesn't have match, first vector must
-	   have match.  */
-L(loop_vec_x2_match):
-	BSR	%VRDX, %VRDX
-# ifdef USE_AS_WCSRCHR
-	sal	$2, %rdx
-# endif
-	add	%rdx, %r8
-	jmp	L(loop)
-
-L(endloop):
-	/* Check if string end in first loop vector.  */
+	VMOVU	(VEC_SIZE * 2)(%rdi), %VMM(3)
 	VPTESTN	%VMM(3), %VMM(3), %k0
 	KMOV	%k0, %VRCX
+
 	test	%VRCX, %VRCX
-	jnz	L(loop_vector_x1_end)
+	jnz	L(first_vec_x2)
 
-	/* Check if it has match in first loop vector.  */
-	KMOV	%k1, %VRAX
-	test	%VRAX, %VRAX
-	jz	L(loop_vector_x2_end)
-
-	BSR	%VRAX, %VRAX
-	leaq	(%rdi, %rax, CHAR_SIZE), %r8
-
-	/* String must end in second loop vector.  */
-L(loop_vector_x2_end):
+	VMOVU	(VEC_SIZE * 3)(%rdi), %VMM(4)
 	VPTESTN	%VMM(4), %VMM(4), %k0
 	KMOV	%k0, %VRCX
-	KMOV	%k2, %VRAX
-	BLSMSK	%VRCX, %VRCX
-	/* Check if it has match in second loop vector.  */
-	and	%VRCX, %VRAX
-	jz	L(check_last_match)
 
-	BSR	%VRAX, %VRAX
-	leaq	(VEC_SIZE)(%rdi, %rax, CHAR_SIZE), %rax
-	ret
+	/* Intentionally use 64-bit here.  EVEX256 version needs 1-byte
+	   padding for efficient nop before loop alignment.  */
+	test	%rcx, %rcx
+	jnz	L(first_vec_x3)
 
-	/* String end in first loop vector.  */
-L(loop_vector_x1_end):
-	KMOV	%k1, %VRAX
-	BLSMSK	%VRCX, %VRCX
-	/* Check if it has match in second loop vector.  */
-	and	%VRCX, %VRAX
-	jz	L(check_last_match)
+	andq	$-(VEC_SIZE * 2), %rdi
+	.p2align 4
+L(first_aligned_loop):
+	/* Preserve VEC(1), VEC(2), VEC(3), and VEC(4) until we can
+	   gurantee they don't store a match.  */
+	VMOVA	(VEC_SIZE * 4)(%rdi), %VMM(5)
+	VMOVA	(VEC_SIZE * 5)(%rdi), %VMM(6)
 
-	BSR	%VRAX, %VRAX
-	leaq	(%rdi, %rax, CHAR_SIZE), %rax
-	ret
+	VPCMP	$4, %VMM(5), %VMATCH, %k2
+	VPCMP	$4, %VMM(6), %VMATCH, %k3{%k2}
 
-	/* No match in first and second loop vector.  */
-L(check_last_match):
-	/* Check if any match recorded in r8.  */
-	test	%r8, %r8
-	jz	L(vector_x2_ret)
-	movq	%r8, %rax
-	ret
+	VPMIN	%VMM(5), %VMM(6), %VMM(7)
 
-	/* No match recorded in r8. Check the second saved vector
-	   in beginning.  */
-L(vector_x2_ret):
-	VPCMPEQ %VMM(2), %VMM(0), %k2
-	KMOV	%k2, %VRAX
+	VPTEST	%VMM(7), %VMM(7), %k1{%k3}
+	subq	$(VEC_SIZE * -2), %rdi
+	KORTEST_M %k1, %k1
+	jc	L(first_aligned_loop)
+
+	VPTESTN	%VMM(7), %VMM(7), %k1
+	KMOV	%k1, %VRDX
+	test	%VRDX, %VRDX
+	jz	L(second_aligned_loop_prep)
+
+	KORTEST_M %k3, %k3
+	jnc	L(return_first_aligned_loop)
+
+	.p2align 4,, 6
+L(first_vec_x1_or_x2_or_x3):
+	VPCMPEQ	%VMM(4), %VMATCH, %k4
+	KMOV	%k4, %VRAX
 	test	%VRAX, %VRAX
-	jz	L(vector_x1_ret)
-
-	/* Match found in the second saved vector.  */
-	BSR	%VRAX, %VRAX
-	leaq	(VEC_SIZE)(%r9, %rax, CHAR_SIZE), %rax
+	jz	L(first_vec_x1_or_x2)
+	bsr	%VRAX, %VRAX
+	leaq	(VEC_SIZE * 3)(%r8, %rax, CHAR_SIZE), %rax
 	ret
 
-L(page_cross):
-	mov	%rdi, %rax
-	movl	%edi, %ecx
-
-# ifdef USE_AS_WCSRCHR
-	/* Calculate number of compare result bits to be skipped for
-	   wide string alignment adjustment.  */
-	andl	$(VEC_SIZE - 1), %ecx
-	sarl	$2, %ecx
-# endif
-	/* ecx contains number of w[char] to be skipped as a result
-	   of address alignment.  */
-	andq    $-VEC_SIZE, %rax
-	VMOVA	(%rax), %VMM(1)
-	VPTESTN	%VMM(1), %VMM(1), %k1
-	KMOV	%k1, %VRAX
-	SHR     %cl, %VRAX
-	jz	L(page_cross_continue)
-	VPCMPEQ	%VMM(1), %VMM(0), %k0
-	KMOV	%k0, %VRDX
-	SHR     %cl, %VRDX
-	BLSMSK	%VRAX, %VRAX
+	.p2align 4,, 8
+L(return_first_aligned_loop):
+	VPTESTN	%VMM(5), %VMM(5), %k0
+	KMOV	%k0, %VRCX
+	blsmsk	%VRCX, %VRCX
+	jnc	L(return_first_new_match_first)
+	blsmsk	%VRDX, %VRDX
+	VPCMPEQ	%VMM(6), %VMATCH, %k0
+	KMOV	%k0, %VRAX
+	addq	$VEC_SIZE, %rdi
 	and	%VRDX, %VRAX
-	jz	L(ret)
-	BSR	%VRAX, %VRAX
+	jnz	L(return_first_new_match_ret)
+	subq	$VEC_SIZE, %rdi
+L(return_first_new_match_first):
+	KMOV	%k2, %VRAX
 # ifdef USE_AS_WCSRCHR
-	leaq	(%rdi, %rax, CHAR_SIZE), %rax
+	xorl	$((1 << CHAR_PER_VEC)- 1), %VRAX
+	and	%VRCX, %VRAX
 # else
-	add	%rdi, %rax
+	andn	%VRCX, %VRAX, %VRAX
+# endif
+	jz	L(first_vec_x1_or_x2_or_x3)
+L(return_first_new_match_ret):
+	bsr	%VRAX, %VRAX
+	leaq	(VEC_SIZE * 2)(%rdi, %rax, CHAR_SIZE), %rax
+	ret
+
+	.p2align 4,, 10
+L(first_vec_x1_or_x2):
+	VPCMPEQ	%VMM(3), %VMATCH, %k3
+	KMOV	%k3, %VRAX
+	test	%VRAX, %VRAX
+	jz	L(first_vec_x0_x1_test)
+	bsr	%VRAX, %VRAX
+	leaq	(VEC_SIZE * 2)(%r8, %rax, CHAR_SIZE), %rax
+	ret
+
+	.p2align 4
+	/* We can throw away the work done for the first 4x checks here
+	   as we have a later match. This is the 'fast' path persay.  */
+L(second_aligned_loop_prep):
+L(second_aligned_loop_set_furthest_match):
+	movq	%rdi, %rsi
+	VMOVA	%VMM(5), %VMM(7)
+	VMOVA	%VMM(6), %VMM(8)
+	.p2align 4
+L(second_aligned_loop):
+	VMOVU	(VEC_SIZE * 4)(%rdi), %VMM(5)
+	VMOVU	(VEC_SIZE * 5)(%rdi), %VMM(6)
+	VPCMP	$4, %VMM(5), %VMATCH, %k2
+	VPCMP	$4, %VMM(6), %VMATCH, %k3{%k2}
+
+	VPMIN	%VMM(5), %VMM(6), %VMM(4)
+
+	VPTEST	%VMM(4), %VMM(4), %k1{%k3}
+	subq	$(VEC_SIZE * -2), %rdi
+	KMOV	%k1, %VRCX
+	inc	%RCX_M
+	jz	L(second_aligned_loop)
+	VPTESTN	%VMM(4), %VMM(4), %k1
+	KMOV	%k1, %VRDX
+	test	%VRDX, %VRDX
+	jz	L(second_aligned_loop_set_furthest_match)
+
+	KORTEST_M %k3, %k3
+	jnc	L(return_new_match)
+	/* branch here because there is a significant advantage interms
+	   of output dependency chance in using edx.  */
+
+L(return_old_match):
+	VPCMPEQ	%VMM(8), %VMATCH, %k0
+	KMOV	%k0, %VRCX
+	bsr	%VRCX, %VRCX
+	jnz	L(return_old_match_ret)
+
+	VPCMPEQ	%VMM(7), %VMATCH, %k0
+	KMOV	%k0, %VRCX
+	bsr	%VRCX, %VRCX
+	subq	$VEC_SIZE, %rsi
+L(return_old_match_ret):
+	leaq	(VEC_SIZE * 3)(%rsi, %rcx, CHAR_SIZE), %rax
+	ret
+
+L(return_new_match):
+	VPTESTN	%VMM(5), %VMM(5), %k0
+	KMOV	%k0, %VRCX
+	blsmsk	%VRCX, %VRCX
+	jnc	L(return_new_match_first)
+	dec	%VRDX
+	VPCMPEQ	%VMM(6), %VMATCH, %k0
+	KMOV	%k0, %VRAX
+	addq	$VEC_SIZE, %rdi
+	and	%VRDX, %VRAX
+	jnz	L(return_new_match_ret)
+	subq	$VEC_SIZE, %rdi
+L(return_new_match_first):
+	KMOV	%k2, %VRAX
+# ifdef USE_AS_WCSRCHR
+	xorl	$((1 << CHAR_PER_VEC)- 1), %VRAX
+	and	%VRCX, %VRAX
+# else
+	andn	%VRCX, %VRAX, %VRAX
+# endif
+	jz	L(return_old_match)
+L(return_new_match_ret):
+	bsr	%VRAX, %VRAX
+	leaq	(VEC_SIZE * 2)(%rdi, %rax, CHAR_SIZE), %rax
+	ret
+
+	.p2align 4,, 4
+L(cross_page_boundary):
+	xorq	%rdi, %rax
+	mov	$-1, %VRDX
+	VMOVU	(PAGE_SIZE - VEC_SIZE)(%rax), %VMM(6)
+	VPTESTN	%VMM(6), %VMM(6), %k0
+	KMOV	%k0, %VRSI
+
+# ifdef USE_AS_WCSRCHR
+	movl	%edi, %ecx
+	and	$(VEC_SIZE - 1), %ecx
+	shrl	$2, %ecx
+# endif
+	shlx	%SHIFT_REG, %VRDX, %VRDX
+
+# ifdef USE_AS_WCSRCHR
+	kmovw	%edx, %k1
+# else
+	KMOV	%VRDX, %k1
 # endif
 
-	ret
-END (STRRCHR)
+	VPCOMPRESS %VMM(6), %VMM(1){%k1}{z}
+	/* We could technically just jmp back after the vpcompress but
+	   it doesn't save any 16-byte blocks.  */
+	shrx	%SHIFT_REG, %VRSI, %VRSI
+	test	%VRSI, %VRSI
+	jnz	L(page_cross_return)
+	jmp	L(page_cross_continue)
+	/* 1-byte from cache line.  */
+END(STRRCHR)
 #endif
