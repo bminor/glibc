@@ -56,6 +56,26 @@ import sys
 import time
 import urllib.request
 
+# This is a list of system utilities that are expected to be available
+# to this script, and, if a non-zero version is included, the minimum
+# version required to work with this sccript.
+def get_list_of_required_tools():
+    global REQUIRED_TOOLS
+    REQUIRED_TOOLS = {
+        'awk'      : (get_version_awk,   (0,0,0)),
+        'bison'    : (get_version,       (0,0)),
+        'flex'     : (get_version,       (0,0,0)),
+        'git'      : (get_version,       (1,8,3)),
+        'make'     : (get_version,       (4,0)),
+        'makeinfo' : (get_version,       (0,0)),
+        'patch'    : (get_version,       (0,0,0)),
+        'sed'      : (get_version,       (0,0)),
+        'tar'      : (get_version,       (0,0,0)),
+        'gzip'     : (get_version,       (0,0)),
+        'bzip2'    : (get_version_bzip2, (0,0,0)),
+        'xz'       : (get_version,       (0,0,0)),
+    }
+
 try:
     subprocess.run
 except:
@@ -1871,8 +1891,84 @@ def get_parser():
     return parser
 
 
+def get_version_common(progname,line,word,delchars,arg1):
+    try:
+        out = subprocess.run([progname, arg1],
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.DEVNULL,
+                             stdin=subprocess.DEVNULL,
+                             check=True, universal_newlines=True)
+        v = out.stdout.splitlines()[line].split()[word]
+        if delchars:
+            v = v.replace(delchars,'')
+        return [int(x) for x in v.split('.')]
+    except:
+        return 'missing';
+
+def get_version_common_stderr(progname,line,word,delchars,arg1):
+    try:
+        out = subprocess.run([progname, arg1],
+                             stdout=subprocess.DEVNULL,
+                             stderr=subprocess.PIPE,
+                             stdin=subprocess.DEVNULL,
+                             check=True, universal_newlines=True)
+        v = out.stderr.splitlines()[line].split()[word]
+        if delchars:
+            v = v.replace(delchars,'')
+        return [int(x) for x in v.split('.')]
+    except:
+        return 'missing';
+
+def get_version(progname):
+    return get_version_common (progname, 0, -1, None, '--version');
+
+def get_version_awk(progname):
+    return get_version_common (progname, 0, 2, ',', '--version');
+
+def get_version_bzip2(progname):
+    return get_version_common_stderr (progname, 0, 6, ',', '-h');
+
+def check_version(ver, req):
+    for v, r in zip(ver, req):
+        if v > r:
+            return True
+        if v < r:
+            return False
+    return True
+
+def version_str(ver):
+    return '.'.join([str (x) for x in ver])
+
+def check_for_required_tools():
+    get_list_of_required_tools()
+    count_old_tools = 0
+    count_missing_tools = 0
+    
+    for k, v in REQUIRED_TOOLS.items():
+        version = v[0](k)
+        if version == 'missing':
+            ok = 'missing'
+        else:
+            ok = 'ok' if check_version (version, v[1]) else 'old'
+        if ok == 'old':
+            if count_old_tools == 0:
+                print("One or more required tools are too old:")
+            count_old_tools = count_old_tools + 1
+            print('{:9}: {:3} (obtained=\"{}\" required=\"{}\")'.format(k, ok,
+                    version_str(version), version_str(v[1])))
+        if ok == 'missing':
+            if count_missing_tools == 0:
+                print("One or more required tools are missing:")
+            count_missing_tools = count_missing_tools + 1
+            print('{:9}: {:3} (required=\"{}\")'.format(k, ok,
+                    version_str(v[1])))
+    
+    if count_old_tools > 0 or count_missing_tools > 0:
+        exit (1);
+    
 def main(argv):
     """The main entry point."""
+    check_for_required_tools();
     parser = get_parser()
     opts = parser.parse_args(argv)
     topdir = os.path.abspath(opts.topdir)
