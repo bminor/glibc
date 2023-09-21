@@ -41,11 +41,11 @@
 
 #include <libc-mmap.h>
 #include <libc-pointer-arith.h>
-#include "../../crypt/md5.h"
 #include "../localeinfo.h"
 #include "../locarchive.h"
 #include "localedef.h"
 #include "locfile.h"
+#include "md5.h"
 
 /* Define the hash function.  We define the function as static inline.
    We must change the name so as not to conflict with simple-hash.h.  */
@@ -499,8 +499,8 @@ enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
 	    old_data[idx].addr
 	      = ((char *) ah->addr + GET (oldlocrec->record[idx].offset));
 
-	    __md5_buffer (old_data[idx].addr, old_data[idx].size,
-			  old_data[idx].sum);
+	    MD5_Buffer (old_data[idx].addr, old_data[idx].size,
+			old_data[idx].sum);
 	  }
 
       if (cnt > 0 && oldlocrecarray[cnt - 1].locrec == oldlocrec)
@@ -908,7 +908,7 @@ add_locale (struct locarhandle *ah,
 	memcpy (ptr, data[cnt].addr, data[cnt].size);
 	ptr += (data[cnt].size + 15) & -16;
       }
-  __md5_buffer (data[LC_ALL].addr, data[LC_ALL].size, data[LC_ALL].sum);
+  MD5_Buffer (data[LC_ALL].addr, data[LC_ALL].size, data[LC_ALL].sum);
 
   /* For each locale category data set determine whether the same data
      is already somewhere in the archive.  */
@@ -1501,7 +1501,7 @@ add_locales_to_archive (size_t nlist, char *list[], bool replace)
 	      }
 
 	    data[cnt].size = st.st_size;
-	    __md5_buffer (data[cnt].addr, st.st_size, data[cnt].sum);
+	    MD5_Buffer (data[cnt].addr, st.st_size, data[cnt].sum);
 
 	    /* We don't need the file descriptor anymore.  */
 	    close (fd);

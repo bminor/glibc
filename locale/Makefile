@@ -27,7 +27,7 @@ headers		= langinfo.h locale.h bits/locale.h \
 routines	= setlocale findlocale loadlocale loadarchive \
 		  localeconv nl_langinfo nl_langinfo_l mb_cur_max \
 		  newlocale duplocale freelocale uselocale
-tests		= tst-C-locale tst-locname tst-duplocale
+tests		= tst-C-locale tst-locname tst-duplocale tst-md5
 tests-container	= tst-localedef-path-norm
 categories	= ctype messages monetary numeric time paper name \
 		  address telephone measurement identification collate
@@ -38,27 +38,30 @@ others		= localedef locale
 install-bin	= localedef locale
 extra-objs	= $(localedef-modules:=.o) $(localedef-aux:=.o) \
 		  $(locale-modules:=.o) $(lib-modules:=.o)
-generated 	+= C-translit.h
+generated	+= C-translit.h
 before-compile	+= $(objpfx)C-translit.h
 
 extra-libs	= libBrokenLocale
 extra-libs-others = $(extra-libs)
 
+# This test requires multiple gigabytes of address space (not necessarily
+# committed RAM) and takes 90s to run on a workstation-grade x86-64 CPU
+# from 2018.
+xtests		= tst-md5-giant
+
 libBrokenLocale-routines = broken_cur_max
 
 subdir-dirs	= programs
-vpath %.c programs ../crypt
+vpath %.c programs
 vpath %.h programs
 vpath %.gperf programs
 
 localedef-modules	:= localedef $(categories:%=ld-%) \
 			   charmap linereader locfile \
-			   repertoire locarchive
-localedef-aux		:= md5
+			   repertoire locarchive md5
 locale-modules		:= locale locale-spec
 lib-modules		:= charmap-dir simple-hash xmalloc xstrdup \
 			   record-status xasprintf
-
 
 GPERF = gperf
 GPERFFLAGS = -acCgopt -k1,2,5,9,$$ -L ANSI-C
@@ -69,8 +72,6 @@ endif
 
 include ../Rules
 
-CFLAGS-md5.c += -I../crypt
-
 programs/%-kw.h: programs/%-kw.gperf
 	cd programs \
 	&& $(GPERF) $(GPERFFLAGS) -N $(@F:-kw.h=_hash) $(<F) > $(@F).new
@@ -80,6 +81,7 @@ $(objpfx)localedef: $(localedef-modules:%=$(objpfx)%.o)
 $(objpfx)localedef: $(localedef-aux:%=$(objpfx)%.o)
 $(objpfx)locale: $(locale-modules:%=$(objpfx)%.o)
 $(objpfx)localedef $(objpfx)locale: $(lib-modules:%=$(objpfx)%.o)
+$(objpfx)tst-md5 $(objpfx)tst-md5-giant: $(objpfx)md5.o
 
 $(objpfx)C-translit.h: C-translit.h.in gen-translit.py
 	$(make-target-directory)

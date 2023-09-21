@@ -30,11 +30,11 @@
 #include <assert.h>
 #include <wchar.h>
 
-#include "../../crypt/md5.h"
 #include "localedef.h"
 #include "localeinfo.h"
 #include "locfile.h"
 #include "simple-hash.h"
+#include "../md5.h"
 
 #include "locfile-kw.h"
 
@@ -738,8 +738,8 @@ write_locale_data (const char *output_path, int catidx, const char *category,
 	endp = mempcpy (endp, vec[cnt].iov_base, vec[cnt].iov_len);
 
       /* Compute the MD5 sum for the data.  */
-      __md5_buffer (to_archive[catidx].addr, to_archive[catidx].size,
-		    to_archive[catidx].sum);
+      MD5_Buffer (to_archive[catidx].addr, to_archive[catidx].size,
+		  to_archive[catidx].sum);
 
       return;
     }

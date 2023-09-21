@@ -21,15 +21,15 @@
 #include <string.h>
 #include <sys/mman.h>
 
+#include <support/test-driver.h>
 #include "md5.h"
 
-/* This test will not work with 32-bit size_t, so let it succeed
-   there.  */
+/* This test will not work with 32-bit size_t.  */
 #if SIZE_MAX <= UINT32_MAX
 static int
 do_test (void)
 {
-  return 0;
+  return EXIT_UNSUPPORTED;
 }
 #else
 
@@ -58,7 +58,7 @@ static const struct test_data_s
 };
 
 static int
-report (const char *id, const char *md5, size_t len, const char *ref)
+report (const char *id, const uint8_t *md5, size_t len, const char *ref)
 {
   if (memcmp (md5, ref, 16))
     {
@@ -68,38 +68,34 @@ report (const char *id, const char *md5, size_t len, const char *ref)
   return 0;
 }
 
-/* Test md5 in a single md5_process_bytes call.  */
+/* Test feeding the data to MD5_Update all at once.  */
 static int
 test_single (void *buf, size_t len, const char *ref)
 {
-  char sum[16];
-  struct md5_ctx ctx;
-
-  __md5_init_ctx (&ctx);
-  __md5_process_bytes (buf, len, &ctx);
-  __md5_finish_ctx (&ctx, sum);
+  uint8_t sum[16];
+  MD5_Buffer(buf, len, sum);
 
   return report ("single", sum, len, ref);
 }
 
-/* Test md5 with two md5_process_bytes calls to trigger a
-   different path in md5_process_block for sizes > 2 GB.  */
+/* Test feeding the data in two chunks, first the initial 2GB and
+   then the rest.  */
 static int
 test_double (void *buf, size_t len, const char *ref)
 {
-  char sum[16];
-  struct md5_ctx ctx;
+  uint8_t sum[16];
+  MD5_CTX ctx;
 
-  __md5_init_ctx (&ctx);
+  MD5_Init (&ctx);
   if (len >= CONST_2G)
     {
-      __md5_process_bytes (buf, CONST_2G, &ctx);
-      __md5_process_bytes (buf + CONST_2G, len - CONST_2G, &ctx);
+      MD5_Update (&ctx, buf, CONST_2G);
+      MD5_Update (&ctx, buf + CONST_2G, len - CONST_2G);
     }
   else
-    __md5_process_bytes (buf, len, &ctx);
+    MD5_Update (&ctx, buf, len);
 
-  __md5_finish_ctx (&ctx, sum);
+  MD5_Final (sum, &ctx);
 
   return report ("double", sum, len, ref);
 }
@@ -122,9 +118,9 @@ do_test (void)
   for (j = 0; j < sizeof (test_data) / sizeof (struct test_data_s); j++)
     {
       if (test_single (buf, test_data[j].len, test_data[j].ref))
-	result = 1;
+	return 1;
       if (test_double (buf, test_data[j].len, test_data[j].ref))
-	result = 1;
+	return 1;
     }
 
   return result;
@@ -133,5 +129,4 @@ do_test (void)
 
 /* This needs on a fast machine 90s.  */
 #define TIMEOUT 480
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

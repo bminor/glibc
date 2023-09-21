@@ -25,11 +25,11 @@ static const struct
   };
 
 
-int
-main (int argc, char *argv[])
+static int
+do_test(void)
 {
-  struct md5_ctx ctx;
-  char sum[16];
+  MD5_CTX ctx;
+  unsigned char sum[16];
   int result = 0;
   int cnt;
 
@@ -37,17 +37,19 @@ main (int argc, char *argv[])
     {
       int i;
 
-      __md5_init_ctx (&ctx);
-      __md5_process_bytes (tests[cnt].input, strlen (tests[cnt].input), &ctx);
-      __md5_finish_ctx (&ctx, sum);
+      MD5_Init (&ctx);
+      MD5_Update (&ctx, tests[cnt].input, strlen (tests[cnt].input));
+      MD5_Final (sum, &ctx);
       result |= memcmp (tests[cnt].result, sum, 16);
 
-      __md5_init_ctx (&ctx);
+      MD5_Init (&ctx);
       for (i = 0; tests[cnt].input[i] != '\0'; ++i)
-	__md5_process_bytes (&tests[cnt].input[i], 1, &ctx);
-      __md5_finish_ctx (&ctx, sum);
+	MD5_Update (&ctx, &tests[cnt].input[i], 1);
+      MD5_Final (sum, &ctx);
       result |= memcmp (tests[cnt].result, sum, 16);
     }
 
   return result;
 }
+
+#include <support/test-driver.c>

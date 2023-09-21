@@ -62,7 +62,7 @@ struct namehashent
 struct sumhashent
 {
   /* MD5 sum.  */
-  char sum[16];
+  unsigned char sum[16];
   /* Offset of the file in the archive.  */
   uint32_t file_offset;
 };
@@ -101,7 +101,7 @@ typedef struct locale_category_data
 {
   off64_t size;
   void *addr;
-  char sum[16];
+  unsigned char sum[16];
 } locale_data_t[__LC_LAST];
 
 #endif	/* locarchive.h */

@@ -42,11 +42,7 @@ LDLIBS-crypt.so = -lfreebl3
 else
 libcrypt-routines += md5 sha256 sha512
 
-tests += md5test sha256test sha512test
-
-# The test md5test-giant uses up to 400 MB of RSS and runs on a fast
-# machine over a minute.
-xtests = md5test-giant
+tests += sha256test sha512test
 endif
 
 include ../Rules
@@ -56,8 +52,6 @@ md5-routines := md5 $(filter md5%,$(libcrypt-sysdep_routines))
 sha256-routines := sha256 $(filter sha256%,$(libcrypt-sysdep_routines))
 sha512-routines := sha512 $(filter sha512%,$(libcrypt-sysdep_routines))
 
-$(objpfx)md5test: $(patsubst %, $(objpfx)%.o,$(md5-routines))
-$(objpfx)md5test-giant: $(patsubst %, $(objpfx)%.o,$(md5-routines))
 $(objpfx)sha256test: $(patsubst %, $(objpfx)%.o,$(sha256-routines))
 $(objpfx)sha512test: $(patsubst %, $(objpfx)%.o,$(sha512-routines))
 endif
