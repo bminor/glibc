@@ -74,7 +74,7 @@ libc {
   GLIBC_PRIVATE {
     # global variables
     _itoa_lower_digits;
-    # Used in libcrypt.
+    # Formerly used in libcrypt.
     __snprintf;
   }
 }

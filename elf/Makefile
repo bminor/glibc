@@ -1217,23 +1217,6 @@ $(objpfx)tst-_dl_addr_inside_object: $(objpfx)dl-addr-obj.os
 CFLAGS-tst-_dl_addr_inside_object.c += $(PIE-ccflag)
 endif
 
-# We can only test static libcrypt use if libcrypt has been built,
-# and either NSS crypto is not in use, or static NSS libraries are
-# available.
-ifeq ($(build-crypt),no)
-CFLAGS-tst-linkall-static.c += -DUSE_CRYPT=0
-else
-ifeq ($(nss-crypt),no)
-CFLAGS-tst-linkall-static.c += -DUSE_CRYPT=1
-else
-ifeq ($(static-nss-crypt),no)
-CFLAGS-tst-linkall-static.c += -DUSE_CRYPT=0
-else
-CFLAGS-tst-linkall-static.c += -DUSE_CRYPT=1
-endif
-endif
-endif
-
 include ../Rules
 
 ifeq (yes,$(build-shared))
@@ -1951,9 +1934,6 @@ endif
 ifeq ($(have-thread-library),yes)
 localplt-built-dso += $(filter-out %_nonshared.a, $(shared-thread-library))
 endif
-ifeq ($(build-crypt),yes)
-localplt-built-dso += $(addprefix $(common-objpfx), crypt/libcrypt.so)
-endif
 ifneq ($(pthread-in-libc),yes)
 localplt-built-dso += $(addprefix $(common-objpfx), rt/librt.so)
 endif
@@ -2437,24 +2417,6 @@ $(objpfx)tst-linkall-static: \
   $(common-objpfx)login/libutil.a \
   $(common-objpfx)rt/librt.a \
   $(static-thread-library)
-
-ifeq ($(build-crypt),yes)
-# If we are using NSS crypto and we have the ability to link statically
-# then we include libcrypt.a, otherwise we leave out libcrypt.a and
-# link as much as we can into the tst-linkall-static test.  This assumes
-# that linking with libcrypt.a does everything required to include the
-# static NSS crypto library.
-ifeq (yesyes,$(nss-crypt)$(static-nss-crypt))
-$(objpfx)tst-linkall-static: \
-  $(common-objpfx)crypt/libcrypt.a
-endif
-# If we are not using NSS crypto then we always have the ability to link
-# with libcrypt.a.
-ifeq (no,$(nss-crypt))
-$(objpfx)tst-linkall-static: \
-  $(common-objpfx)crypt/libcrypt.a
-endif
-endif
 
 LDFLAGS-nextmod3.so = -Wl,--version-script=nextmod3.map
 

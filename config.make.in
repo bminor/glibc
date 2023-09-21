@@ -80,16 +80,12 @@ mach-interface-list = @mach_interface_list@
 
 memory-tagging = @memory_tagging@
 
-nss-crypt = @libc_cv_nss_crypt@
-static-nss-crypt = @libc_cv_static_nss_crypt@
-
 # Configuration options.
 build-shared = @shared@
 build-profile = @profile@
 build-static-nss = @static_nss@
 cross-compiling = @cross_compiling@
 force-install = @force_install@
-build-crypt = @build_crypt@
 build-nscd = @build_nscd@
 use-nscd = @use_nscd@
 build-hardcoded-path-in-tests= @hardcoded_path_in_tests@

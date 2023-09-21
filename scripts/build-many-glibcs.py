@@ -431,9 +431,7 @@ class Context(object):
                                       {'variant': 'disable-multi-arch',
                                        'arch': 'sparcv9',
                                        'ccopts': '-m32 -mlong-double-128 -mcpu=v9',
-                                       'cfg': ['--disable-multi-arch']},
-                                      {'variant': 'enable-crypt',
-                                       'cfg': ['--enable-crypt']}])
+                                       'cfg': ['--disable-multi-arch']}])
         self.add_config(arch='x86_64',
                         os_name='linux-gnu',
                         gcc_cfg=['--with-multilib-list=m64,m32,mx32'],
@@ -447,7 +445,6 @@ class Context(object):
                                                '--disable-profile',
                                                '--disable-timezone-tools',
                                                '--disable-mathvec',
-                                               '--disable-crypt',
                                                '--disable-build-nscd',
                                                '--disable-nscd']},
                                       {'variant': 'no-pie',
@@ -468,9 +465,7 @@ class Context(object):
                                       {'arch': 'i586',
                                        'ccopts': '-m32 -march=i586'},
                                       {'variant': 'enable-fortify-source',
-                                       'cfg': ['--enable-fortify-source']},
-                                      {'variant': 'enable-crypt',
-                                       'cfg': ['--enable-crypt']}])
+                                       'cfg': ['--enable-fortify-source']}])
         self.add_config(arch='x86_64',
                         os_name='gnu',
                         gcc_cfg=['--disable-multilib'])

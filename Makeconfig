@@ -1357,11 +1357,6 @@ all-subdirs = csu assert ctype locale intl catgets math setjmp signal	    \
 	      localedata timezone rt conform debug mathvec support	    \
 	      dlfcn elf
 
-ifeq ($(build-crypt),yes)
-all-subdirs += crypt
-rpath-dirs += crypt
-endif
-
 ifndef avoid-generated
 # sysd-sorted itself will contain rules making the sysd-sorted target
 # depend on Depend files.  But if you just added a Depend file to an

@@ -18,9 +18,6 @@
 
 #include <math.h>
 #include <pthread.h>
-#if USE_CRYPT
-# include <crypt.h>
-#endif
 #include <resolv.h>
 #include <dlfcn.h>
 #include <utmp.h>
@@ -34,9 +31,6 @@ void *references[] =
   {
     &pow,                       /* libm */
     &pthread_create,            /* libpthread */
-#if USE_CRYPT
-    &crypt,                     /* libcrypt */
-#endif
     &res_send,                  /* libresolv */
     &dlopen,                    /* libdl */
     &login,                     /* libutil */
