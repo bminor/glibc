@@ -19,23 +19,13 @@
 #ifndef _CPU_FEATURES_LOONGARCH64_H
 #define _CPU_FEATURES_LOONGARCH64_H
 
-#include <stdint.h>
 #include <sys/auxv.h>
 
-struct cpu_features
- {
-    uint64_t hwcap;
- };
+#define SUPPORT_UAL (GLRO (dl_hwcap) & HWCAP_LOONGARCH_UAL)
+#define SUPPORT_LSX (GLRO (dl_hwcap) & HWCAP_LOONGARCH_LSX)
+#define SUPPORT_LASX (GLRO (dl_hwcap) & HWCAP_LOONGARCH_LASX)
 
-/* Get a pointer to the CPU features structure.  */
-extern const struct cpu_features *_dl_larch_get_cpu_features (void)
-     __attribute__ ((pure));
-
-#define SUPPORT_UAL (GLRO (dl_larch_cpu_features).hwcap & HWCAP_LOONGARCH_UAL)
-#define SUPPORT_LSX (GLRO (dl_larch_cpu_features).hwcap & HWCAP_LOONGARCH_LSX)
-#define SUPPORT_LASX (GLRO (dl_larch_cpu_features).hwcap & HWCAP_LOONGARCH_LASX)
-#define RTLD_SUPPORT_LSX (GLRO (dl_hwcap) & HWCAP_LOONGARCH_LSX)
-#define RTLD_SUPPORT_LASX (GLRO (dl_hwcap) & HWCAP_LOONGARCH_LASX)
 #define INIT_ARCH()
 
 #endif /* _CPU_FEATURES_LOONGARCH64_H  */
+
