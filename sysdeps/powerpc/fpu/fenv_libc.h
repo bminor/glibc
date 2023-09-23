@@ -68,6 +68,14 @@ extern const fenv_t *__fe_mask_env (void) attribute_hidden;
     __fr;								\
   })
 
+/* Starting with GCC 14 __builtin_set_fpscr_rn can be used to return the
+   FPSCR fields as a double.  This support is available
+   on Power9 when the __SET_FPSCR_RN_RETURNS_FPSCR__ macro is defined.
+   To retain backward compatibility with older GCC, we still retain the
+   old inline assembly implementation.*/
+#ifdef __SET_FPSCR_RN_RETURNS_FPSCR__
+#define __fe_mffscrn(rn)  __builtin_set_fpscr_rn (rn)
+#else
 #define __fe_mffscrn(rn)						\
   ({register fenv_union_t __fr;						\
     if (__builtin_constant_p (rn))					\
@@ -83,6 +91,7 @@ extern const fenv_t *__fe_mask_env (void) attribute_hidden;
     }									\
     __fr.fenv;								\
   })
+#endif
 
 /* Like fegetenv_control, but also sets the rounding mode.  */
 #ifdef _ARCH_PWR9
