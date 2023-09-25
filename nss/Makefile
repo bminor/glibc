@@ -149,6 +149,15 @@ endif
 extra-test-objs		+= nss_test1.os nss_test2.os nss_test_errno.os \
 			   nss_test_gai_hv2_canonname.os
 
+ifeq ($(run-built-tests),yes)
+ifneq (no,$(PERL))
+tests-special += $(objpfx)mtrace-tst-nss-gai-hv2-canonname.out
+endif
+endif
+
+generated += mtrace-tst-nss-gai-hv2-canonname.out \
+		tst-nss-gai-hv2-canonname.mtrace
+
 include ../Rules
 
 ifeq (yes,$(have-selinux))
@@ -216,6 +225,17 @@ endif
 
 $(objpfx)tst-nss-files-alias-leak.out: $(objpfx)/libnss_files.so
 $(objpfx)tst-nss-files-alias-truncated.out: $(objpfx)/libnss_files.so
+
+tst-nss-gai-hv2-canonname-ENV = \
+		MALLOC_TRACE=$(objpfx)tst-nss-gai-hv2-canonname.mtrace \
+		LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
+$(objpfx)mtrace-tst-nss-gai-hv2-canonname.out: \
+  $(objpfx)tst-nss-gai-hv2-canonname.out
+	{ test -r $(objpfx)tst-nss-gai-hv2-canonname.mtrace \
+	|| ( echo "tst-nss-gai-hv2-canonname.mtrace does not exist"; exit 77; ) \
+	&& $(common-objpfx)malloc/mtrace \
+	$(objpfx)tst-nss-gai-hv2-canonname.mtrace; } > $@; \
+	$(evaluate-test)
 
 # Disable DT_RUNPATH on NSS tests so that the glibc internal NSS
 # functions can load testing NSS modules via DT_RPATH.

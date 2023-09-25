@@ -21,6 +21,7 @@
 #include <netdb.h>
 #include <stdlib.h>
 #include <string.h>
+#include <mcheck.h>
 #include <support/check.h>
 #include <support/xstdio.h>
 #include "nss/tst-nss-gai-hv2-canonname.h"
@@ -41,6 +42,8 @@ static void do_prepare (int a, char **av)
 static int
 do_test (void)
 {
+  mtrace ();
+
   __nss_configure_lookup ("hosts", "test_gai_hv2_canonname");
 
   struct addrinfo hints = {};
