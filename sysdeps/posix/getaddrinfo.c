@@ -1196,9 +1196,7 @@ free_and_return:
   if (malloc_name)
     free ((char *) name);
   free (addrmem);
-  if (res.free_at)
-    free (res.at);
-  free (res.canon);
+  gaih_result_reset (&res);
 
   return result;
 }
