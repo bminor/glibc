@@ -15,6 +15,15 @@ Security related changes:
   2048 bytes, getaddrinfo may potentially disclose stack contents via
   the returned address data, or crash.
 
+  CVE-2023-4806: When an NSS plugin only implements the
+  _gethostbyname2_r and _getcanonname_r callbacks, getaddrinfo could use
+  memory that was freed during buffer resizing, potentially causing a
+  crash or read or write to arbitrary memory.
+
+  CVE-2023-5156: The fix for CVE-2023-4806 introduced a memory leak when
+  an application calls getaddrinfo for AF_INET6 with AI_CANONNAME,
+  AI_ALL and AI_V4MAPPED flags set.
+
 The following bugs are resolved with this release:
 
   [30723] posix_memalign repeatedly scans long bin lists
