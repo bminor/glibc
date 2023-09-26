@@ -1383,7 +1383,14 @@ void DL_ARCH_FIXUP_ATTRIBUTE _dl_audit_pltexit (struct link_map *l,
 						const void *inregs,
 						void *outregs)
   attribute_hidden;
-#endif /* SHARED */
+
+#else  /* !SHARED */
+static inline void
+_dl_audit_objclose (struct link_map *l)
+{
+  /* No audit implementation for !SHARED.  */
+}
+#endif /* !SHARED */
 
 #if PTHREAD_IN_LIBC && defined SHARED
 /* Recursive locking implementation for use within the dynamic loader.
