@@ -9,6 +9,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <syslog.h>
+#include <unistd.h>
 
 #include <libc-lock.h>
 __libc_lock_define_initialized(static, lock)
