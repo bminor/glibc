@@ -37,6 +37,7 @@
 #include <errno.h>
 #include <error.h>
 #include <libc-pointer-arith.h>
+#include <ftw.h>
 
 #ifdef __linux__
 #include <sys/mount.h>
@@ -405,32 +406,19 @@ file_exists (char *path)
   return 0;
 }
 
+static int
+unlink_cb (const char *fpath, const struct stat *sb, int typeflag,
+	   struct FTW *ftwbuf)
+{
+  return remove (fpath);
+}
+
 static void
 recursive_remove (char *path)
 {
-  pid_t child;
-  int status;
-
-  child = fork ();
-
-  switch (child) {
-  case -1:
-    perror("fork");
-    FAIL_EXIT1 ("Unable to fork");
-  case 0:
-    /* Child.  */
-    execlp ("rm", "rm", "-rf", path, NULL);
-    FAIL_EXIT1 ("exec rm: %m");
-  default:
-    /* Parent.  */
-    waitpid (child, &status, 0);
-    /* "rm" would have already printed a suitable error message.  */
-    if (! WIFEXITED (status)
-	|| WEXITSTATUS (status) != 0)
-      FAIL_EXIT1 ("exec child returned status: %d", status);
-
-    break;
-  }
+  int r = nftw (path, unlink_cb, 1000, FTW_DEPTH | FTW_PHYS);
+  if (r == -1)
+    FAIL_EXIT1 ("recursive_remove failed");
 }
 
 /* Used for both rsync and the mytest.script "cp" command.  */
