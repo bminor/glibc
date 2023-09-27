@@ -34,12 +34,13 @@
 #define PC rip
 #define SP ursp
 #define SYSRETURN rax
+#define MACHINE_THREAD_STATE_FIX_NEW(ts) do { \
+	asm ("mov %%cs, %w0" : "=q" ((ts)->cs)); \
+} while(0)
 #else
 #define PC eip
 #define SP uesp
 #define SYSRETURN eax
-#endif
-
 #define MACHINE_THREAD_STATE_FIX_NEW(ts) do { \
 	asm ("mov %%cs, %w0" : "=q" ((ts)->cs)); \
 	asm ("mov %%ds, %w0" : "=q" ((ts)->ds)); \
@@ -47,6 +48,7 @@
 	asm ("mov %%fs, %w0" : "=q" ((ts)->fs)); \
 	asm ("mov %%gs, %w0" : "=q" ((ts)->gs)); \
 } while(0)
+#endif
 
 struct machine_thread_all_state
   {

@@ -47,11 +47,7 @@ typedef greg_t gregset_t[__NGREG];
 /* Number of each register in the `gregset_t' array.  */
 enum
 {
-  REG_GSFS = 0,		/* Actually int gs, fs.  */
-# define REG_GSFS	REG_GSFS
-  REG_ESDS,		/* Actually int es, ds.  */
-# define REG_ESDS	REG_ESDS
-  REG_R8,
+  REG_R8 = 0,
 # define REG_R8		REG_R8
   REG_R9,
 # define REG_R9		REG_R9

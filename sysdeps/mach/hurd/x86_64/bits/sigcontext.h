@@ -59,13 +59,7 @@ struct sigcontext
        }
        trampoline.c knows this, so it must be changed if this changes.  */
 
-#define sc_i386_thread_state sc_gs /* Beginning of correspondence.  */
-    /* Segment registers.  */
-    int sc_gs;
-    int sc_fs;
-    int sc_es;
-    int sc_ds;
-
+#define sc_i386_thread_state sc_r8 /* Beginning of correspondence.  */
     long sc_r8;
     long sc_r9;
     long sc_r10;

@@ -79,8 +79,8 @@ static void fill_ucontext (ucontext_t *uc, const struct sigcontext *sc)
 
   /* Registers.  */
 #ifdef __x86_64__
-  memcpy (&uc->uc_mcontext.gregs[REG_GSFS], &sc->sc_gs,
-          (REG_ERR - REG_GSFS) * sizeof (long));
+  memcpy (&uc->uc_mcontext.gregs[REG_R8], &sc->sc_r8,
+          (REG_ERR - REG_R8) * sizeof (long));
 #else
   memcpy (&uc->uc_mcontext.gregs[REG_GS], &sc->sc_gs,
           (REG_TRAPNO - REG_GS) * sizeof (int));
