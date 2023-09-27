@@ -105,7 +105,9 @@ enum
 # define ST_NOATIME	ST_NOATIME
   ST_NODIRATIME = 2048,		/* Do not update directory access times.  */
 # define ST_NODIRATIME	ST_NODIRATIME
-  ST_RELATIME = 4096		/* Update atime relative to mtime/ctime.  */
+  ST_RELATIME = 4096,		/* Update atime relative to mtime/ctime.  */
 # define ST_RELATIME	ST_RELATIME
+  ST_NOSYMFOLLOW = 8192		/* Do not follow symlinks.  */
+# define ST_NOSYMFOLLOW	ST_NOSYMFOLLOW
 #endif	/* Use GNU.  */
 };
