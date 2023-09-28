@@ -31,6 +31,13 @@ Major new features:
   the process ID associated with the process file descriptor created by
   pid_spawn, fork_np, or pidfd_open.
 
+* scanf-family functions now support the wN format length modifiers for
+  arguments pointing to types intN_t, int_leastN_t, uintN_t or
+  uint_leastN_t (for example, %w32d to read int32_t or int_least32_t in
+  decimal, or %w32x to read uint32_t or uint_least32_t in hexadecimal)
+  and the wfN format length modifiers for arguments pointing to types
+  int_fastN_t or uint_fastN_t, as specified in draft ISO C2X.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
   [Add deprecations, removals and changes affecting compatibility here]

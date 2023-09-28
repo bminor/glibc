@@ -196,6 +196,7 @@ tests := \
   tst-wscanf-binary-c2x \
   tst-wscanf-binary-gnu11 \
   tst-wscanf-binary-gnu89 \
+  tst-wscanf-intn \
   tst-wscanf-to_inpunct \
   wcsatcliff \
   wcsmbs-tst1 \

@@ -381,6 +381,7 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
   while (*f != '\0')
     {
       unsigned int argpos;
+      bool is_fast;
       /* Extract the next argument, which is of type TYPE.
 	 For a %N$... spec, this is the Nth argument from the beginning;
 	 otherwise it is the next argument after the state now in ARG.  */
@@ -601,6 +602,53 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 	    flags |= LONGDBL;
 	  else if (sizeof (ptrdiff_t) > sizeof (int))
 	    flags |= LONG;
+	  break;
+	case L_('w'):
+	  {
+	    is_fast = false;
+	    if (*f == L_('f'))
+	      {
+		++f;
+		is_fast = true;
+	      }
+	    int bitwidth = 0;
+	    if (ISDIGIT (*f))
+	      bitwidth = read_int (&f);
+	    if (is_fast)
+	      switch (bitwidth)
+		{
+		case 8:
+		  bitwidth = INT_FAST8_WIDTH;
+		  break;
+		case 16:
+		  bitwidth = INT_FAST16_WIDTH;
+		  break;
+		case 32:
+		  bitwidth = INT_FAST32_WIDTH;
+		  break;
+		case 64:
+		  bitwidth = INT_FAST64_WIDTH;
+		  break;
+		}
+	    switch (bitwidth)
+	      {
+	      case 8:
+		flags |= CHAR;
+		break;
+	      case 16:
+		flags |= SHORT;
+		break;
+	      case 32:
+		break;
+	      case 64:
+		flags |= LONGDBL | LONG;
+		break;
+	      default:
+		/* ISO C requires this error to be detected.  */
+		__set_errno (EINVAL);
+		goto errout;
+	      }
+	  }
 	  break;
 	default:
 	  /* Not a recognized modifier.  Backup.  */

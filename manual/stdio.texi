@@ -3714,6 +3714,20 @@ Specifies that the argument is a @code{ptrdiff_t *}.
 
 This modifier was introduced in @w{ISO C99}.
 
+@item w@var{n}
+Specifies that the argument is an @code{int@var{n}_t *} or
+@code{int_least@var{n}_t *} (which are the same type), or
+@code{uint@var{n}_t *} or @code{uint_least@var{n}_t *} (which are the
+same type).
+
+This modifier was introduced in @w{ISO C2X}.
+
+@item wf@var{n}
+Specifies that the argument is an @code{int_fast@var{n}_t *} or
+@code{uint_fast@var{n}_t *}.
+
+This modifier was introduced in @w{ISO C2X}.
+
 @item z
 Specifies that the argument is a @code{size_t *}.
 

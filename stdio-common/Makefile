@@ -243,6 +243,7 @@ tests := \
   tst-scanf-binary-c2x \
   tst-scanf-binary-gnu11 \
   tst-scanf-binary-gnu89 \
+  tst-scanf-intn \
   tst-scanf-round \
   tst-scanf-to_inpunct \
   tst-setvbuf1 \
