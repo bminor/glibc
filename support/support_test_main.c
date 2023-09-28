@@ -195,16 +195,14 @@ run_test_function (int argc, char **argv, const struct test_config *config)
       char *gdb_script_name;
       int inside_container = 0;
 
-      mypid = getpid();
-      if (mypid < 3)
+      const char *outside_pid = getenv("PID_OUTSIDE_CONTAINER");
+      if (outside_pid)
 	{
-	  const char *outside_pid = getenv("PID_OUTSIDE_CONTAINER");
-	  if (outside_pid)
-	    {
-	      mypid = atoi (outside_pid);
-	      inside_container = 1;
-	    }
+	  mypid = atoi (outside_pid);
+	  inside_container = 1;
 	}
+      else
+	mypid = getpid();
 
       gdb_script_name = (char *) xmalloc (strlen (argv[0]) + strlen (".gdb") + 1);
       sprintf (gdb_script_name, "%s.gdb", argv[0]);
