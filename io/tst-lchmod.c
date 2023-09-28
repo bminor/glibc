@@ -219,9 +219,9 @@ test_1 (bool do_relative_path, int (*chmod_func) (int fd, const char *, mode_t, 
          /* The error code from the openat fallback leaks out.  */
          if (errno != ENFILE && errno != EMFILE)
            TEST_COMPARE (errno, EOPNOTSUPP);
+	 xstat (path_file, &st);
+	 TEST_COMPARE (st.st_mode & 0777, 3);
        }
-     xstat (path_file, &st);
-     TEST_COMPARE (st.st_mode & 0777, 3);
 
      /* Close the descriptors.  */
      for (int *pfd = fd_list_begin (&fd_list); pfd < fd_list_end (&fd_list);

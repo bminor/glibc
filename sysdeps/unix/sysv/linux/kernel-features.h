@@ -252,4 +252,12 @@
 # define __ASSUME_CLONE3 0
 #endif
 
+/* The fchmodat2 system call was introduced across all architectures
+   in Linux 6.6.  */
+#if __LINUX_KERNEL_VERSION >= 0x060600
+# define __ASSUME_FCHMODAT2 1
+#else
+# define __ASSUME_FCHMODAT2 0
+#endif
+
 #endif /* kernel-features.h */
