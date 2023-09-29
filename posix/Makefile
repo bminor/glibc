@@ -555,7 +555,7 @@ $(objpfx)config-name.h: $(..)scripts/config-uname.sh $(common-objpfx)config.make
 	   '$(config-machine)-$(config-vendor)' > $@.new
 	mv -f $@.new $@
 
-CFLAGS-getaddrinfo.c += -DRESOLVER -fexceptions
+CFLAGS-getaddrinfo.c += -fexceptions
 CFLAGS-pause.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pread.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pread64.c += -fexceptions -fasynchronous-unwind-tables $(config-cflags-wno-ignored-attributes)
