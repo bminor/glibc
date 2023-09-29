@@ -553,7 +553,7 @@ struct resolv_conf *
 __resolv_conf_load (struct __res_state *preinit,
                     struct file_change_detection *change)
 {
-  /* Ensure that /etc/hosts.conf has been loaded (once).  */
+  /* Ensure that /etc/host.conf has been loaded (once).  */
   _res_hconf_init ();
 
   FILE *fp = fopen (_PATH_RESCONF, "rce");
