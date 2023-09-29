@@ -1617,7 +1617,7 @@ ldouble: 5
 
 Function: "y0_towardzero":
 double: 4
-float: 8
+float: 9
 float128: 3
 ldouble: 8
 
