@@ -22,23 +22,50 @@ subdir	:= nss
 
 include ../Makeconfig
 
-headers			:= nss.h
+headers := \
+  nss.h \
+  # headers
 
 # This is the trivial part which goes into libc itself.
-routines		= nsswitch getnssent getnssent_r digits_dots \
-			  valid_field valid_list_field rewrite_field \
-			  $(addsuffix -lookup,$(databases)) \
-			  compat-lookup nss_hash nss_files_fopen \
-			  nss_readline nss_parse_line_result \
-			  nss_fgetent_r nss_module nss_action \
-			  nss_action_parse nss_database nss_files_data \
-			  nss_files_functions
+routines = \
+  $(addsuffix -lookup,$(databases)) \
+  compat-lookup \
+  digits_dots \
+  getnssent \
+  getnssent_r \
+  nss_action \
+  nss_action_parse \
+  nss_database \
+  nss_fgetent_r \
+  nss_files_data \
+  nss_files_fopen \
+  nss_files_functions \
+  nss_hash \
+  nss_module \
+  nss_parse_line_result \
+  nss_readline \
+  nsswitch \
+  rewrite_field \
+  valid_field \
+  valid_list_field \
+  # routines
 
 # These are the databases that go through nss dispatch.
 # Caution: if you add a database here, you must add its real name
 # in databases.def, too.
-databases		= proto service hosts network grp pwd ethers \
-			  spwd netgrp alias sgrp
+databases = \
+  alias \
+  ethers \
+  grp \
+  hosts \
+  netgrp \
+  network \
+  proto \
+  pwd \
+  service \
+  sgrp \
+  spwd \
+  # databases
 
 ifneq (,$(filter sunrpc,$(subdirs)))
 databases		+= key rpc
@@ -68,7 +95,7 @@ tests := \
   tst-nss-test4 \
   tst-nss-test5 \
   tst-nss-test_errno \
-# tests
+  # tests
 
 xtests = bug-erange
 
@@ -79,11 +106,11 @@ tests-container := \
   tst-nss-files-hosts-long \
   tst-nss-files-hosts-v4mapped \
   tst-nss-gai-actions \
+  tst-nss-gai-hv2-canonname \
   tst-nss-test3 \
   tst-reload1 \
   tst-reload2 \
-  tst-nss-gai-hv2-canonname \
-# tests-container
+  # tests-container
 
 # Tests which need libdl
 ifeq (yes,$(build-shared))
