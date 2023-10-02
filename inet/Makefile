@@ -22,41 +22,123 @@ subdir	:= inet
 
 include ../Makeconfig
 
-headers	:= netinet/ether.h netinet/in.h netinet/in_systm.h \
-	   netinet/if_ether.h netinet/igmp.h \
-	   netinet/tcp.h netinet/ip.h $(wildcard arpa/*.h protocols/*.h) \
-	   aliases.h ifaddrs.h netinet/ip6.h netinet/icmp6.h bits/in.h \
-	   rpc/netdb.h
+headers := \
+  $(wildcard arpa/*.h protocols/*.h) \
+  aliases.h \
+  bits/in.h \
+  ifaddrs.h \
+  netinet/ether.h \
+  netinet/icmp6.h \
+  netinet/if_ether.h \
+  netinet/igmp.h \
+  netinet/in.h \
+  netinet/in_systm.h \
+  netinet/ip.h \
+  netinet/ip6.h \
+  netinet/tcp.h \
+  rpc/netdb.h \
+  # headers
 
-routines := htonl htons		\
-	    inet_lnaof inet_mkadr	\
-	    inet_netof inet_ntoa inet_net herrno herrno-loc \
-	    gethstbyad gethstbyad_r gethstbynm gethstbynm2 gethstbynm2_r \
-	    gethstbynm_r gethstent gethstent_r \
-	    getnetbyad getnetbyad_r getnetbynm getnetent getnetent_r \
-	    getnetbynm_r \
-	    getproto getproto_r getprtent getprtent_r getprtname getprtname_r \
-	    getsrvbynm getsrvbynm_r getsrvbypt getsrvbypt_r getservent \
-	    getservent_r getrpcent getrpcbyname getrpcbynumber \
-	    getrpcent_r getrpcbyname_r getrpcbynumber_r \
-	    ether_aton ether_aton_r ether_hton ether_line \
-	    ether_ntoa ether_ntoa_r ether_ntoh \
-	    rcmd rexec ruserpass bindresvport \
-	    getnetgrent_r getnetgrent \
-	    getaliasent_r getaliasent getaliasname getaliasname_r \
-	    in6_addr getnameinfo if_index ifaddrs inet6_option \
-	    getipv4sourcefilter setipv4sourcefilter \
-	    getsourcefilter setsourcefilter inet6_opt inet6_rth \
-	    inet6_scopeid_pton deadline idna idna_name_classify
+routines := \
+  bindresvport \
+  deadline \
+  ether_aton \
+  ether_aton_r \
+  ether_hton \
+  ether_line \
+  ether_ntoa \
+  ether_ntoa_r \
+  ether_ntoh \
+  getaliasent \
+  getaliasent_r \
+  getaliasname \
+  getaliasname_r \
+  gethstbyad \
+  gethstbyad_r \
+  gethstbynm \
+  gethstbynm2 \
+  gethstbynm2_r \
+  gethstbynm_r \
+  gethstent \
+  gethstent_r \
+  getipv4sourcefilter \
+  getnameinfo \
+  getnetbyad \
+  getnetbyad_r \
+  getnetbynm \
+  getnetbynm_r \
+  getnetent \
+  getnetent_r \
+  getnetgrent \
+  getnetgrent_r \
+  getproto \
+  getproto_r \
+  getprtent \
+  getprtent_r \
+  getprtname \
+  getprtname_r \
+  getrpcbyname \
+  getrpcbyname_r \
+  getrpcbynumber \
+  getrpcbynumber_r \
+  getrpcent \
+  getrpcent_r \
+  getservent \
+  getservent_r \
+  getsourcefilter \
+  getsrvbynm \
+  getsrvbynm_r \
+  getsrvbypt \
+  getsrvbypt_r \
+  herrno \
+  herrno-loc \
+  htonl \
+  htons \
+  idna \
+  idna_name_classify \
+  if_index \
+  ifaddrs \
+  in6_addr \
+  inet6_opt \
+  inet6_option \
+  inet6_rth \
+  inet6_scopeid_pton \
+  inet_lnaof \
+  inet_mkadr \
+  inet_net \
+  inet_netof \
+  inet_ntoa \
+  rcmd \
+  rexec \
+  ruserpass \
+  setipv4sourcefilter \
+  setsourcefilter \
+  # routines
 
 install-others = $(inst_sysconfdir)/rpc
 
 aux := check_pf check_native ifreq
 
-tests := htontest test_ifindex tst-ntoa tst-ether_aton tst-network \
-	 tst-gethnm test-ifaddrs bug-if1 test-inet6_opt tst-ether_line \
-	 tst-getni1 tst-getni2 tst-inet6_rth tst-checks tst-checks-posix \
-	 tst-sockaddr test-hnto-types tst-if_index-long
+tests := \
+  bug-if1 \
+  htontest \
+  test-hnto-types \
+  test-ifaddrs \
+  test-inet6_opt \
+  test_ifindex \
+  tst-checks \
+  tst-checks-posix \
+  tst-ether_aton \
+  tst-ether_line \
+  tst-gethnm \
+  tst-getni1 \
+  tst-getni2 \
+  tst-if_index-long \
+  tst-inet6_rth \
+  tst-network \
+  tst-ntoa \
+  tst-sockaddr \
+  # tests
 
 # tst-deadline must be linked statically so that we can access
 # internal functions.
