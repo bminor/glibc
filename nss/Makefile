@@ -24,6 +24,7 @@ include ../Makeconfig
 
 headers := \
   grp.h \
+  gshadow.h \
   nss.h \
   # headers
 
@@ -79,6 +80,29 @@ CFLAGS-initgroups.c += -fexceptions
 CFLAGS-putgrent.c += -fexceptions $(libio-mtsafe)
 endif
 
+# gshadow routines:
+routines += \
+  fgetsgent \
+  fgetsgent_r \
+  getsgent \
+  getsgent_r \
+  getsgnam \
+  getsgnam_r \
+  putsgent \
+  sgetsgent \
+  sgetsgent_r \
+  # routines
+
+ifeq ($(have-thread-library),yes)
+CFLAGS-getsgent_r.c += -fexceptions
+CFLAGS-getsgent.c += -fexceptions
+CFLAGS-fgetsgent.c += -fexceptions
+CFLAGS-fgetsgent_r.c += -fexceptions $(libio-mtsafe)
+CFLAGS-putsgent.c += -fexceptions $(libio-mtsafe)
+CFLAGS-getsgnam.c += -fexceptions
+CFLAGS-getsgnam_r.c += -fexceptions
+endif
+
 # These are the databases that go through nss dispatch.
 # Caution: if you add a database here, you must add its real name
 # in databases.def, too.
@@ -118,6 +142,8 @@ tests := \
   test-digits-dots \
   test-netdb \
   testgrp \
+  tst-fgetsgent_r \
+  tst-gshadow \
   tst-nss-getpwent \
   tst-nss-hash \
   tst-nss-test1 \
@@ -126,6 +152,8 @@ tests := \
   tst-nss-test5 \
   tst-nss-test_errno \
   tst-putgrent \
+  tst-putsgent \
+  tst-sgetsgent \
   # tests
 
 xtests = bug-erange
