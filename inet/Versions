@@ -7,7 +7,7 @@ libc {
     rexecoptions;
 
     # e*
-    endaliasent; endhostent; endnetent; endnetgrent; endprotoent; endservent;
+    endaliasent; endhostent; endnetent; endprotoent; endservent;
 
     # e*
     ether_aton; ether_aton_r; ether_line; ether_ntoa;
@@ -15,7 +15,7 @@ libc {
 
     # g*
     getdomainname; getnetbyaddr; getnetbyaddr_r; getnetbyname;
-    getnetbyname_r; getnetent; getnetent_r; getnetgrent; getnetgrent_r;
+    getnetbyname_r; getnetent; getnetent_r;
     getprotobyname; getprotobyname_r; getprotobynumber;
     getprotobynumber_r; getprotoent; getprotoent_r;
     getservbyname; getservbyname_r; getservbyport;
@@ -36,7 +36,7 @@ libc {
     rcmd; rexec; rresvport; ruserok; ruserpass;
 
     # s*
-    setaliasent; setnetent; setnetgrent; setprotoent; setservent;
+    setaliasent; setnetent; setprotoent; setservent;
   }
   GLIBC_2.1 {
     # variables in normal name space
@@ -49,7 +49,7 @@ libc {
     # g*
     getaliasbyname_r; getaliasent_r; gethostbyaddr_r; gethostbyname2_r;
     gethostbyname_r; gethostent_r; getnetbyaddr_r; getnetbyname_r;
-    getnetent_r; getnetgrent_r; getprotobyname_r; getprotobynumber_r;
+    getnetent_r; getprotobyname_r; getprotobynumber_r;
     getprotoent_r; getservbyname_r;
     getservbyport_r;
     getservent_r;
@@ -81,10 +81,6 @@ libc {
     inet6_rth_segments; inet6_rth_getaddr;
   }
   GLIBC_PRIVATE {
-    # functions used in other libraries
-    __internal_endnetgrent; __internal_getnetgrent_r;
-    __internal_setnetgrent;
-
     # Used from nscd.
     __inet6_scopeid_pton;
     __idna_to_dns_encoding;

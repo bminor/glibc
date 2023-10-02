@@ -24,7 +24,7 @@
 #include <unistd.h>
 #include <sys/mman.h>
 
-#include "../inet/netgroup.h"
+#include "../nss/netgroup.h"
 #include "nscd.h"
 #include "dbg_log.h"
 

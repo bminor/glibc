@@ -1,1 +1,1 @@
-#include <inet/netgroup.h>
+#include <nss/netgroup.h>

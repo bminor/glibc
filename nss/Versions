@@ -8,6 +8,7 @@ libc {
 
     # e*
     endgrent;
+    endnetgrent;
     endpwent;
     endspent;
     ether_hostton; ether_ntohost;
@@ -23,6 +24,7 @@ libc {
     getgroups;
     gethostbyaddr; gethostbyaddr_r; gethostbyname; gethostbyname2;
     gethostbyname2_r; gethostbyname_r; gethostent; gethostent_r;
+    getnetgrent; getnetgrent_r;
     getpw; getpwent; getpwent_r; getpwnam; getpwnam_r; getpwuid; getpwuid_r;
     getspent; getspent_r; getspnam; getspnam_r;
 
@@ -38,6 +40,7 @@ libc {
 
     # s*
     setgrent;
+    setnetgrent;
     setpwent;
     setspent;
     sgetspent; sgetspent_r;
@@ -52,6 +55,7 @@ libc {
   GLIBC_2.1.2 {
     # g*
     getgrent_r; getgrgid_r; getgrnam_r;
+    getnetgrent_r;
     getpwent_r; getpwuid_r; getpwnam_r;
     getspent_r; getspnam_r;
   }
@@ -181,6 +185,9 @@ libc {
     _nss_files_init;
 
     __merge_grp; __copy_grp;
+
+    __internal_endnetgrent; __internal_getnetgrent_r;
+    __internal_setnetgrent;
   }
 }
 

@@ -148,6 +148,17 @@ CFLAGS-gethstent.c += -fexceptions
 CFLAGS-gethstent_r.c += -fexceptions
 endif
 
+# netgroup routines:
+routines += \
+  getnetgrent \
+  getnetgrent_r \
+  # routines
+
+ifeq ($(have-thread-library),yes)
+CFLAGS-getnetgrent.c += -fexceptions
+CFLAGS-getnetgrent_r.c += -fexceptions
+endif
+
 # pwd routines:
 routines += \
   fgetpwent \

@@ -211,7 +211,7 @@ libanl_hidden_proto (__gai_suspend_time64)
 
 #define AI_DEFAULT    (AI_V4MAPPED | AI_ADDRCONFIG)
 
-#include <inet/netgroup.h>
+#include <nss/netgroup.h>
 
 extern enum nss_status _nss_netgroup_parseline (char **cursor,
 						struct __netgrent *result,
