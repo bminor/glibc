@@ -10,8 +10,8 @@ libc {
     endaliasent; endhostent; endnetent; endnetgrent; endprotoent; endservent;
 
     # e*
-    ether_aton; ether_aton_r; ether_hostton; ether_line; ether_ntoa;
-    ether_ntoa_r; ether_ntohost;
+    ether_aton; ether_aton_r; ether_line; ether_ntoa;
+    ether_ntoa_r;
 
     # g*
     getdomainname; gethostbyaddr; gethostbyaddr_r; gethostbyname;

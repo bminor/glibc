@@ -68,6 +68,12 @@ CFLAGS-getaliasent_r.c += -fexceptions
 CFLAGS-getaliasent.c += -fexceptions
 endif
 
+# ethers routines:
+routines += \
+  ether_hton \
+  ether_ntoh \
+  # routines
+
 # grp routines:
 routines += \
   fgetgrent \

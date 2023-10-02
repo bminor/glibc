@@ -20,14 +20,15 @@
 #include <netinet/if_ether.h>
 #include <string.h>
 
-#include "../nss/nsswitch.h"
+#include <nsswitch.h>
+
 
 /* Type of the lookup function we need here.  */
-typedef int (*lookup_function) (const char *, struct etherent *, char *, int,
-				int *);
+typedef int (*lookup_function) (const struct ether_addr *, struct etherent *,
+				char *, size_t, int *);
 
 int
-ether_hostton (const char *hostname, struct ether_addr *addr)
+ether_ntohost (char *hostname, const struct ether_addr *addr)
 {
   nss_action_list nip;
   union
@@ -39,20 +40,22 @@ ether_hostton (const char *hostname, struct ether_addr *addr)
   enum nss_status status = NSS_STATUS_UNAVAIL;
   struct etherent etherent;
 
-  no_more = __nss_ethers_lookup2 (&nip, "gethostton_r", NULL, &fct.ptr);
+  no_more = __nss_ethers_lookup2 (&nip, "getntohost_r", NULL, &fct.ptr);
 
   while (no_more == 0)
     {
       char buffer[1024];
 
-      status = (*fct.f) (hostname, &etherent, buffer, sizeof buffer, &errno);
+      status = (*fct.f) (addr, &etherent, buffer, sizeof buffer, &errno);
 
-      no_more = __nss_next2 (&nip, "gethostton_r", NULL, &fct.ptr, status, 0);
+      no_more = __nss_next2 (&nip, "getntohost_r", NULL, &fct.ptr, status, 0);
     }
 
   if (status == NSS_STATUS_SUCCESS)
-    memcpy (addr, etherent.e_addr.ether_addr_octet,
-	    sizeof (struct ether_addr));
+    /* XXX This is a potential cause of trouble because the size of
+       the HOSTNAME buffer is not known but the interface does not
+       provide this information.  */
+    strcpy (hostname, etherent.e_name);
 
   return status == NSS_STATUS_SUCCESS ? 0 : -1;
 }

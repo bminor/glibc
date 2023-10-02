@@ -43,11 +43,9 @@ routines := \
   deadline \
   ether_aton \
   ether_aton_r \
-  ether_hton \
   ether_line \
   ether_ntoa \
   ether_ntoa_r \
-  ether_ntoh \
   gethstbyad \
   gethstbyad_r \
   gethstbynm \
