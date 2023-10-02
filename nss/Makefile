@@ -178,6 +178,21 @@ CFLAGS-getnetent.c += -fexceptions
 CFLAGS-getnetent_r.c += -fexceptions
 endif
 
+# protocols routines:
+routines += \
+  getproto \
+  getproto_r \
+  getprtent \
+  getprtent_r \
+  getprtname \
+  getprtname_r \
+  # routines
+
+ifeq ($(have-thread-library),yes)
+CFLAGS-getprtent_r.c += -fexceptions
+CFLAGS-getprtent.c += -fexceptions
+endif
+
 # pwd routines:
 routines += \
   fgetpwent \

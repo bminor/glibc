@@ -15,8 +15,6 @@ libc {
 
     # g*
     getdomainname;
-    getprotobyname; getprotobyname_r; getprotobynumber;
-    getprotobynumber_r; getprotoent; getprotoent_r;
     getservbyname; getservbyname_r; getservbyport;
     getservbyport_r; getservent; getservent_r;
 
@@ -48,8 +46,7 @@ libc {
     # g*
     getaliasbyname_r; getaliasent_r; gethostbyaddr_r; gethostbyname2_r;
     gethostbyname_r; gethostent_r; getnetbyaddr_r; getnetbyname_r;
-    getnetent_r; getprotobyname_r; getprotobynumber_r;
-    getprotoent_r; getservbyname_r;
+    getnetent_r; getservbyname_r;
     getservbyport_r;
     getservent_r;
   }

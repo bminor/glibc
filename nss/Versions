@@ -27,6 +27,8 @@ libc {
     getnetgrent; getnetgrent_r;
     getnetbyaddr; getnetbyaddr_r; getnetbyname; getnetbyname_r;
     getnetent; getnetent_r;
+    getprotobyname; getprotobyname_r; getprotobynumber;
+    getprotobynumber_r; getprotoent; getprotoent_r;
     getpw; getpwent; getpwent_r; getpwnam; getpwnam_r; getpwuid; getpwuid_r;
     getspent; getspent_r; getspnam; getspnam_r;
 
@@ -58,6 +60,7 @@ libc {
     # g*
     getgrent_r; getgrgid_r; getgrnam_r;
     getnetgrent_r;
+    getprotobyname_r; getprotobynumber_r; getprotoent_r;
     getpwent_r; getpwuid_r; getpwnam_r;
     getspent_r; getspnam_r;
   }

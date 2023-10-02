@@ -48,12 +48,6 @@ routines := \
   ether_ntoa_r \
   getipv4sourcefilter \
   getnameinfo \
-  getproto \
-  getproto_r \
-  getprtent \
-  getprtent_r \
-  getprtname \
-  getprtname_r \
   getrpcbyname \
   getrpcbyname_r \
   getrpcbynumber \
@@ -142,8 +136,6 @@ CFLAGS-getrpcent_r.c += -fexceptions
 CFLAGS-getrpcent.c += -fexceptions
 CFLAGS-getservent_r.c += -fexceptions
 CFLAGS-getservent.c += -fexceptions
-CFLAGS-getprtent_r.c += -fexceptions
-CFLAGS-getprtent.c += -fexceptions
 CFLAGS-either_ntoh.c += -fexceptions
 CFLAGS-either_hton.c += -fexceptions
 CFLAGS-in6_addr.c += $(config-cflags-wno-ignored-attributes)
