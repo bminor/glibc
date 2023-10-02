@@ -47,7 +47,6 @@ routines := \
   ether_ntoa \
   ether_ntoa_r \
   getipv4sourcefilter \
-  getnameinfo \
   getsourcefilter \
   herrno \
   herrno-loc \

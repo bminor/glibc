@@ -71,7 +71,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sys/utsname.h>
 #include <libc-lock.h>
 #include <scratch_buffer.h>
-#include <net-internal.h>
+#include <inet/net-internal.h>
 #include <set-freeres.h>
 
 #ifndef min

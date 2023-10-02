@@ -136,6 +136,7 @@ routines += \
   gethstbynm_r \
   gethstent \
   gethstent_r \
+  getnameinfo \
   # routines
 
 ifeq ($(have-thread-library),yes)
