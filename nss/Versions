@@ -21,6 +21,8 @@ libc {
     getaliasbyname; getaliasbyname_r; getaliasent; getaliasent_r;
     getgrent; getgrent_r; getgrgid; getgrgid_r; getgrnam; getgrnam_r;
     getgroups;
+    gethostbyaddr; gethostbyaddr_r; gethostbyname; gethostbyname2;
+    gethostbyname2_r; gethostbyname_r; gethostent; gethostent_r;
     getpw; getpwent; getpwent_r; getpwnam; getpwnam_r; getpwuid; getpwuid_r;
     getspent; getspent_r; getspnam; getspnam_r;
 

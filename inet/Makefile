@@ -46,14 +46,6 @@ routines := \
   ether_line \
   ether_ntoa \
   ether_ntoa_r \
-  gethstbyad \
-  gethstbyad_r \
-  gethstbynm \
-  gethstbynm2 \
-  gethstbynm2_r \
-  gethstbynm_r \
-  gethstent \
-  gethstent_r \
   getipv4sourcefilter \
   getnameinfo \
   getnetbyad \
@@ -123,7 +115,6 @@ tests := \
   tst-checks-posix \
   tst-ether_aton \
   tst-ether_line \
-  tst-gethnm \
   tst-getni1 \
   tst-getni2 \
   tst-if_index-long \
@@ -154,14 +145,6 @@ include ../gen-locales.mk
 
 ifeq ($(have-thread-library),yes)
 
-CFLAGS-gethstbyad_r.c += -fexceptions
-CFLAGS-gethstbyad.c += -fexceptions
-CFLAGS-gethstbynm_r.c += -fexceptions
-CFLAGS-gethstbynm.c += -fexceptions
-CFLAGS-gethstbynm2_r.c += -fexceptions
-CFLAGS-gethstbynm2.c += -fexceptions
-CFLAGS-gethstent_r.c += -fexceptions
-CFLAGS-gethstent.c += -fexceptions
 CFLAGS-rcmd.c += -fexceptions
 CFLAGS-getnetbynm_r.c += -fexceptions
 CFLAGS-getnetbynm.c += -fexceptions

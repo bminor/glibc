@@ -125,6 +125,29 @@ CFLAGS-getsgnam.c += -fexceptions
 CFLAGS-getsgnam_r.c += -fexceptions
 endif
 
+# hosts routines:
+routines += \
+  gethstbyad \
+  gethstbyad_r \
+  gethstbynm \
+  gethstbynm2 \
+  gethstbynm2_r \
+  gethstbynm_r \
+  gethstent \
+  gethstent_r \
+  # routines
+
+ifeq ($(have-thread-library),yes)
+CFLAGS-gethstbyad.c += -fexceptions
+CFLAGS-gethstbyad_r.c += -fexceptions
+CFLAGS-gethstbynm.c += -fexceptions
+CFLAGS-gethstbynm_r.c += -fexceptions
+CFLAGS-gethstbynm2.c += -fexceptions
+CFLAGS-gethstbynm2_r.c += -fexceptions
+CFLAGS-gethstent.c += -fexceptions
+CFLAGS-gethstent_r.c += -fexceptions
+endif
+
 # pwd routines:
 routines += \
   fgetpwent \
@@ -210,6 +233,7 @@ tests := \
   test-netdb \
   testgrp \
   tst-fgetsgent_r \
+  tst-gethnm \
   tst-getpw \
   tst-gshadow \
   tst-nss-getpwent \
