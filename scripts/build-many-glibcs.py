@@ -451,9 +451,7 @@ class Context(object):
                                       {'variant': 'disable-multi-arch',
                                        'arch': 'sparcv9',
                                        'ccopts': '-m32 -mlong-double-128 -mcpu=v9',
-                                       'cfg': ['--disable-multi-arch']},
-                                      {'variant': 'enable-crypt',
-                                       'cfg': ['--enable-crypt']}])
+                                       'cfg': ['--disable-multi-arch']}])
         self.add_config(arch='x86_64',
                         os_name='linux-gnu',
                         gcc_cfg=['--with-multilib-list=m64,m32,mx32'],
