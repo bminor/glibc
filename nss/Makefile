@@ -26,6 +26,7 @@ headers := \
   grp.h \
   gshadow.h \
   nss.h \
+  pwd.h \
   # headers
 
 # This is the trivial part which goes into libc itself.
@@ -103,6 +104,27 @@ CFLAGS-getsgnam.c += -fexceptions
 CFLAGS-getsgnam_r.c += -fexceptions
 endif
 
+# pwd routines:
+routines += \
+  fgetpwent \
+  fgetpwent_r \
+  getpw \
+  getpwent \
+  getpwent_r \
+  getpwnam \
+  getpwnam_r \
+  getpwuid \
+  getpwuid_r \
+  putpwent \
+  # routines
+
+ifeq ($(have-thread-library),yes)
+CFLAGS-fgetpwent_r.c += $(libio-mtsafe)
+CFLAGS-getpw.c += -fexceptions
+CFLAGS-getpwent.c += -fexceptions
+CFLAGS-getpwent_r.c += -fexceptions
+endif
+
 # These are the databases that go through nss dispatch.
 # Caution: if you add a database here, you must add its real name
 # in databases.def, too.
@@ -143,6 +165,7 @@ tests := \
   test-netdb \
   testgrp \
   tst-fgetsgent_r \
+  tst-getpw \
   tst-gshadow \
   tst-nss-getpwent \
   tst-nss-hash \
@@ -152,6 +175,7 @@ tests := \
   tst-nss-test5 \
   tst-nss-test_errno \
   tst-putgrent \
+  tst-putpwent \
   tst-putsgent \
   tst-sgetsgent \
   # tests

@@ -1,5 +1,5 @@
 #ifndef _PWD_H
-#include <pwd/pwd.h>
+#include <nss/pwd.h>
 
 #ifndef _ISOMAC
 /* Now define the internal interfaces.  */

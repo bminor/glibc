@@ -8,19 +8,26 @@ libc {
 
     # e*
     endgrent;
+    endpwent;
 
     # f*
     fgetgrent; fgetgrent_r;
+    fgetpwent; fgetpwent_r;
 
     # g*
     getgrent; getgrent_r; getgrgid; getgrgid_r; getgrnam; getgrnam_r;
     getgroups;
+    getpw; getpwent; getpwent_r; getpwnam; getpwnam_r; getpwuid; getpwuid_r;
 
     # i*
     initgroups;
 
+    # p*
+    putpwent;
+
     # s*
     setgrent;
+    setpwent;
   }
   GLIBC_2.1 {
     # p*
@@ -29,6 +36,7 @@ libc {
   GLIBC_2.1.2 {
     # g*
     getgrent_r; getgrgid_r; getgrnam_r;
+    getpwent_r; getpwuid_r; getpwnam_r;
   }
   GLIBC_2.2.2 {
     __nss_hostname_digits_dots;
