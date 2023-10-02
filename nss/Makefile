@@ -27,6 +27,7 @@ headers := \
   gshadow.h \
   nss.h \
   pwd.h \
+  shadow.h \
   # headers
 
 # This is the trivial part which goes into libc itself.
@@ -125,6 +126,30 @@ CFLAGS-getpwent.c += -fexceptions
 CFLAGS-getpwent_r.c += -fexceptions
 endif
 
+# shadow routines
+routines += \
+  fgetspent \
+  fgetspent_r \
+  getspent \
+  getspent_r \
+  getspnam \
+  getspnam_r \
+  lckpwdf \
+  putspent \
+  sgetspent \
+  sgetspent_r \
+  # routines
+
+ifeq ($(have-thread-library),yes)
+CFLAGS-getspent_r.c += -fexceptions
+CFLAGS-getspent.c += -fexceptions
+CFLAGS-fgetspent.c += -fexceptions
+CFLAGS-fgetspent_r.c += -fexceptions $(libio-mtsafe)
+CFLAGS-putspent.c += -fexceptions $(libio-mtsafe)
+CFLAGS-getspnam.c += -fexceptions
+CFLAGS-getspnam_r.c += -fexceptions
+endif
+
 # These are the databases that go through nss dispatch.
 # Caution: if you add a database here, you must add its real name
 # in databases.def, too.
@@ -177,7 +202,9 @@ tests := \
   tst-putgrent \
   tst-putpwent \
   tst-putsgent \
+  tst-putspent \
   tst-sgetsgent \
+  tst-shadow \
   # tests
 
 xtests = bug-erange

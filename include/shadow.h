@@ -1,5 +1,5 @@
 #ifndef _SHADOW_H
-#include <shadow/shadow.h>
+#include <nss/shadow.h>
 
 # ifndef _ISOMAC
 
