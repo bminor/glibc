@@ -30,6 +30,8 @@ libc {
     getprotobyname; getprotobyname_r; getprotobynumber;
     getprotobynumber_r; getprotoent; getprotoent_r;
     getpw; getpwent; getpwent_r; getpwnam; getpwnam_r; getpwuid; getpwuid_r;
+    getrpcbyname; getrpcbyname_r; getrpcbynumber; getrpcbynumber_r;
+    getrpcent; getrpcent_r;
     getspent; getspent_r; getspnam; getspnam_r;
 
     # i*

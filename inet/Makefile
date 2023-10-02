@@ -48,12 +48,6 @@ routines := \
   ether_ntoa_r \
   getipv4sourcefilter \
   getnameinfo \
-  getrpcbyname \
-  getrpcbyname_r \
-  getrpcbynumber \
-  getrpcbynumber_r \
-  getrpcent \
-  getrpcent_r \
   getservent \
   getservent_r \
   getsourcefilter \
@@ -132,8 +126,6 @@ include ../gen-locales.mk
 ifeq ($(have-thread-library),yes)
 
 CFLAGS-rcmd.c += -fexceptions
-CFLAGS-getrpcent_r.c += -fexceptions
-CFLAGS-getrpcent.c += -fexceptions
 CFLAGS-getservent_r.c += -fexceptions
 CFLAGS-getservent.c += -fexceptions
 CFLAGS-either_ntoh.c += -fexceptions

@@ -214,6 +214,21 @@ CFLAGS-getpwent.c += -fexceptions
 CFLAGS-getpwent_r.c += -fexceptions
 endif
 
+# rpc routines:
+routines += \
+  getrpcbyname \
+  getrpcbyname_r \
+  getrpcbynumber \
+  getrpcbynumber_r \
+  getrpcent \
+  getrpcent_r \
+  # routines
+
+ifeq ($(have-thread-library),yes)
+CFLAGS-getrpcent_r.c += -fexceptions
+CFLAGS-getrpcent.c += -fexceptions
+endif
+
 # shadow routines
 routines += \
   fgetspent \
@@ -276,6 +291,7 @@ tests := \
   bug17079 \
   test-digits-dots \
   test-netdb \
+  test-rpcent \
   testgrp \
   tst-fgetsgent_r \
   tst-gethnm \
