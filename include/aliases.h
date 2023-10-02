@@ -1,5 +1,5 @@
 #ifndef _ALIASES_H
-#include <inet/aliases.h>
+#include <nss/aliases.h>
 
 # ifndef _ISOMAC
 

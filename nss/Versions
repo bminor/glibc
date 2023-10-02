@@ -17,6 +17,7 @@ libc {
     fgetspent; fgetspent_r;
 
     # g*
+    getaliasbyname; getaliasbyname_r; getaliasent; getaliasent_r;
     getgrent; getgrent_r; getgrgid; getgrgid_r; getgrnam; getgrnam_r;
     getgroups;
     getpw; getpwent; getpwent_r; getpwnam; getpwnam_r; getpwuid; getpwuid_r;

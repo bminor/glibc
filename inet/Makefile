@@ -24,7 +24,6 @@ include ../Makeconfig
 
 headers := \
   $(wildcard arpa/*.h protocols/*.h) \
-  aliases.h \
   bits/in.h \
   ifaddrs.h \
   netinet/ether.h \
@@ -49,10 +48,6 @@ routines := \
   ether_ntoa \
   ether_ntoa_r \
   ether_ntoh \
-  getaliasent \
-  getaliasent_r \
-  getaliasname \
-  getaliasname_r \
   gethstbyad \
   gethstbyad_r \
   gethstbynm \
@@ -176,8 +171,6 @@ CFLAGS-getnetbyad_r.c += -fexceptions
 CFLAGS-getnetbyad.c += -fexceptions
 CFLAGS-getnetent_r.c += -fexceptions
 CFLAGS-getnetent.c += -fexceptions
-CFLAGS-getaliasent_r.c += -fexceptions
-CFLAGS-getaliasent.c += -fexceptions
 CFLAGS-getrpcent_r.c += -fexceptions
 CFLAGS-getrpcent.c += -fexceptions
 CFLAGS-getservent_r.c += -fexceptions

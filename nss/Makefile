@@ -23,6 +23,7 @@ subdir	:= nss
 include ../Makeconfig
 
 headers := \
+  aliases.h \
   grp.h \
   gshadow.h \
   nss.h \
@@ -53,6 +54,19 @@ routines = \
   valid_field \
   valid_list_field \
   # routines
+
+# alias routines:
+routines += \
+  getaliasent \
+  getaliasent_r \
+  getaliasname \
+  getaliasname_r \
+  # routines
+
+ifeq ($(have-thread-library),yes)
+CFLAGS-getaliasent_r.c += -fexceptions
+CFLAGS-getaliasent.c += -fexceptions
+endif
 
 # grp routines:
 routines += \
