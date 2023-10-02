@@ -44,6 +44,22 @@ Deprecated and removed features, and other changes affecting compatibility:
   ".tmp", to avoid examining temporary files created by the RPM and dpkg
   package managers.
 
+* libcrypt has been removed from the GNU C Library.  The configure
+  options "--enable-crypt" and "--enable-nss-crypt" are no longer
+  available.  <crypt.h>, libcrypt.a, and libcrypt.so.1 will not be
+  installed, and <unistd.h> will not declare the crypt function.
+
+  The replacement for libcrypt is libxcrypt, maintained separately from
+  GNU libc, but available under compatible licensing terms, and providing
+  binary backward compatibility with the former libcrypt.  It is currently
+  distributed from <https://github.com/besser82/libxcrypt/>.
+
+  As a consequence of this removal, GNU libc no longer makes any use of
+  the NSS cryptography library (Network Security Services; not to be
+  confused with Name Service Switch).  Distributors of binary packages
+  of GNU libc are advised to check whether their build processes can be
+  simplified.
+
 Changes to build and runtime requirements:
 
 * Building on LoongArch requires at a minimum binutils 2.41 for vector

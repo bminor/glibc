@@ -47,7 +47,7 @@ extra-libs-others = $(extra-libs)
 libBrokenLocale-routines = broken_cur_max
 
 subdir-dirs	= programs
-vpath %.c programs ../crypt
+vpath %.c programs
 vpath %.h programs
 vpath %.gperf programs
 
@@ -68,8 +68,6 @@ tests-special += $(objpfx)tst-locale-locpath.out
 endif
 
 include ../Rules
-
-CFLAGS-md5.c += -I../crypt
 
 programs/%-kw.h: programs/%-kw.gperf
 	cd programs \

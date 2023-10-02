@@ -10,5 +10,4 @@ libutil=1.1
 libresolv=2.1
 
 libnsl=1.1
-libcrypt=1.1
 libBrokenLocale=1.1

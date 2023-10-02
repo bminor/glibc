@@ -24,21 +24,6 @@ catgets/gencat.c:
 catgets/open_catalog.c:
     Contributed by Ulrich Drepper, <drepper@gnu.org>.
 
-crypt/md5-crypt.c:
-    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
-
-crypt/sha256-crypt.c:
-    Contributed by Ulrich Drepper <drepper@redhat.com>, 2007.
-
-crypt/sha256.c:
-    Written by Ulrich Drepper <drepper@redhat.com>, 2007.
-
-crypt/sha512-crypt.c:
-    Contributed by Ulrich Drepper <drepper@redhat.com>, 2007.
-
-crypt/sha512.c:
-    Written by Ulrich Drepper <drepper@redhat.com>, 2007.
-
 debug/backtrace.c:
     Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 

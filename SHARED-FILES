@@ -27,8 +27,6 @@ gnulib:
   argp/argp-pvh.c
   argp/argp-xinl.c
   argp/argp.h
-  crypt/md5.c
-  crypt/md5.h
   dirent/alphasort.c
   dirent/scandir.c
   # Merged from gnulib 2021-09-21

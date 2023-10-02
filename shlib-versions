@@ -50,9 +50,6 @@ libnss_db=2
 # Version for libnsl with YP and NIS+ functions.
 libnsl=1
 
-# This defines the shared library version numbers we will install.
-libcrypt=1
-
 # The gross patch for programs assuming broken locale implementations.
 libBrokenLocale=1
 

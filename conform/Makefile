@@ -212,11 +212,6 @@ linknamespace-libs-XOPEN2K8 = $(linknamespace-libs-xsi)
 linknamespace-libs = $(foreach std,$(conformtest-standards),\
 				   $(linknamespace-libs-$(std)))
 
-ifeq ($(build-crypt),yes)
-linknamespace-libs-xsi += $(common-objpfx)crypt/libcrypt.a
-linknamespace-libs-XPG4 += $(common-objpfx)crypt/libcrypt.a
-endif
-
 $(linknamespace-symlist-stdlibs-tests): $(objpfx)symlist-stdlibs-%: \
 					$(linknamespace-libs)
 	LC_ALL=C $(READELF) -W -s $(linknamespace-libs-$*) > $@; \

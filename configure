@@ -700,9 +700,6 @@ INSTALL_PROGRAM
 base_machine
 build_pt_chown
 build_nscd
-libc_cv_static_nss_crypt
-libc_cv_nss_crypt
-build_crypt
 memory_tagging
 enable_werror
 force_install
@@ -806,8 +803,6 @@ enable_kernel
 enable_werror
 enable_multi_arch
 enable_memory_tagging
-enable_crypt
-enable_nss_crypt
 enable_systemtap
 enable_build_nscd
 enable_nscd
@@ -1481,9 +1476,6 @@ Optional Features:
                           architectures
   --enable-memory-tagging enable memory tagging if supported by the
                           architecture [default=no]
-  --enable-crypt          build and install the legacy passphrase hashing
-                          library, libcrypt
-  --enable-nss-crypt      enable libcrypt to use nss
   --enable-systemtap      enable systemtap static probe points [default=no]
   --disable-build-nscd    disable building and installing the nscd daemon
   --disable-nscd          library functions will not contact the nscd daemon
@@ -4559,124 +4551,6 @@ if test "$memory_tagging" = yes; then
       ;;
   esac
 fi
-
-
-# Check whether --enable-crypt was given.
-if test ${enable_crypt+y}
-then :
-  enableval=$enable_crypt; build_crypt=$enableval
-else $as_nop
-  build_crypt=no
-fi
-
-
-
-# Check whether --enable-nss-crypt was given.
-if test ${enable_nss_crypt+y}
-then :
-  enableval=$enable_nss_crypt; nss_crypt=$enableval
-else $as_nop
-  nss_crypt=no
-fi
-
-if test x$build_libcrypt = xno && test x$nss_crypt = xyes; then
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: --enable-nss-crypt has no effect when libcrypt is disabled" >&5
-printf "%s\n" "$as_me: WARNING: --enable-nss-crypt has no effect when libcrypt is disabled" >&2;}
-  nss_crypt=no
-fi
-if test x$nss_crypt = xyes; then
-  nss_includes=-I$(nss-config --includedir 2>/dev/null)
-  if test $? -ne 0; then
-    as_fn_error $? "cannot find include directory with nss-config" "$LINENO" 5
-  fi
-  nspr_includes=-I$(nspr-config --includedir 2>/dev/null)
-  if test $? -ne 0; then
-    as_fn_error $? "cannot find include directory with nspr-config" "$LINENO" 5
-  fi
-  old_CFLAGS="$CFLAGS"
-  CFLAGS="$CFLAGS $nss_includes $nspr_includes"
-
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-typedef int PRBool;
-#include <hasht.h>
-#include <nsslowhash.h>
-void f (void) { NSSLOW_Init (); }
-int
-main (void)
-{
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"
-then :
-  libc_cv_nss_crypt=yes
-else $as_nop
-  as_fn_error $? "
-cannot find NSS headers with lowlevel hash function interfaces" "$LINENO" 5
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
-  old_LIBS="$LIBS"
-  old_LDFLAGS="$LDFLAGS"
-  LIBS="$LIBS -lfreebl3"
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-typedef int PRBool;
-#include <hasht.h>
-#include <nsslowhash.h>
-int
-main (void)
-{
-NSSLOW_Init();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"
-then :
-  libc_cv_nss_crypt=yes
-else $as_nop
-  as_fn_error $? "
-cannot link program using lowlevel NSS hash functions" "$LINENO" 5
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam \
-    conftest$ac_exeext conftest.$ac_ext
-  # Check to see if there is a static NSS cryptographic library.
-  # If there isn't then we can't link anything with libcrypt.a,
-  # and that might mean disabling some static tests.
-  LDFLAGS="$LDFLAGS -static"
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-typedef int PRBool;
-#include <hasht.h>
-#include <nsslowhash.h>
-int
-main (void)
-{
-NSSLOW_Init();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"
-then :
-  libc_cv_static_nss_crypt=yes
-else $as_nop
-  libc_cv_static_nss_crypt=no
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam \
-    conftest$ac_exeext conftest.$ac_ext
-  LDFLAGS="$old_LDFLAGS"
-  CFLAGS="$old_CFLAGS"
-  LIBS="$old_LIBS"
-else
-  libc_cv_nss_crypt=no
-  libc_cv_static_nss_crypt=no
-fi
-
-
 
 
 # Check whether --enable-systemtap was given.

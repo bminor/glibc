@@ -199,7 +199,7 @@ Romain Geissler for various fixes.
 
 @item
 Michael Glad for the passphrase-hashing function @code{crypt} and related
-functions.
+functions (no longer part of glibc, but we still appreciate his work).
 
 @item
 Wolfram Gloger for contributing the memory allocation functions

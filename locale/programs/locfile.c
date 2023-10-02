@@ -30,13 +30,13 @@
 #include <assert.h>
 #include <wchar.h>
 
-#include "../../crypt/md5.h"
 #include "localedef.h"
 #include "localeinfo.h"
 #include "locfile.h"
 #include "simple-hash.h"
 
 #include "locfile-kw.h"
+#include "md5.h"
 
 #define obstack_chunk_alloc xmalloc
 #define obstack_chunk_free free

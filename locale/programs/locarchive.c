@@ -41,7 +41,7 @@
 
 #include <libc-mmap.h>
 #include <libc-pointer-arith.h>
-#include "../../crypt/md5.h"
+#include "md5.h"
 #include "../localeinfo.h"
 #include "../locarchive.h"
 #include "localedef.h"

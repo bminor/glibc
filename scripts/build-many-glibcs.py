@@ -465,7 +465,6 @@ class Context(object):
                                                '--disable-profile',
                                                '--disable-timezone-tools',
                                                '--disable-mathvec',
-                                               '--disable-crypt',
                                                '--disable-build-nscd',
                                                '--disable-nscd']},
                                       {'variant': 'no-pie',
@@ -486,9 +485,7 @@ class Context(object):
                                       {'arch': 'i586',
                                        'ccopts': '-m32 -march=i586'},
                                       {'variant': 'enable-fortify-source',
-                                       'cfg': ['--enable-fortify-source']},
-                                      {'variant': 'enable-crypt',
-                                       'cfg': ['--enable-crypt']}])
+                                       'cfg': ['--enable-fortify-source']}])
         self.add_config(arch='x86_64',
                         os_name='gnu',
                         gcc_cfg=['--disable-multilib'])

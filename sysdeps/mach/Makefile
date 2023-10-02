@@ -50,9 +50,7 @@ mach-before-compile:
 before-compile += $(mach-before-compile)
 endif
 
-ifeq (crypt,$(subdir))
-  LDLIBS-crypt.so += $(objdir)/mach/libmachuser.so
-else ifeq (dlfcn,$(subdir))
+ifeq (dlfcn,$(subdir))
   LDLIBS-dl.so += $(objdir)/mach/libmachuser.so
 else ifeq (nis,$(subdir))
   LDLIBS-nsl.so += $(objdir)/mach/libmachuser.so

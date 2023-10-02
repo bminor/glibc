@@ -14,7 +14,7 @@ sed -e '/^__fpending$/d' -e '/^__flbf$/d' -e '/^__fbufsize$/d' |
 sed -e '/^alloca$/d' |
 sort -u > DOCUMENTED
 
-nm --extern --define $bindir/libc.so $bindir/math/libm.so $bindir/rt/librt.so $bindir/linuxthreads/libpthread.so $bindir/dlfcn/libdl.so $bindir/crypt/libcrypt.so $bindir/login/libutil.so |
+nm --extern --define $bindir/libc.so $bindir/math/libm.so $bindir/rt/librt.so $bindir/linuxthreads/libpthread.so $bindir/dlfcn/libdl.so $bindir/login/libutil.so |
 grep -E " [TW] ([[:alpha:]]|_[[:alpha:]])" |
 sed 's/\(@.*\)//' |
 cut -b 12- |

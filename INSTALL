@@ -228,19 +228,6 @@ if ‘CFLAGS’ is specified it must enable optimization.  For example:
      By default for x86_64, the GNU C Library is built with the vector
      math library.  Use this option to disable the vector math library.
 
-‘--enable-crypt’
-     Install the legacy passphrase-hashing library ‘libcrypt’ and the
-     header file ‘crypt.h’.  ‘unistd.h’ will declare the function
-     ‘crypt’ regardless of this option.  Using this option does not
-     change the set of programs that may need to be linked with
-     ‘-lcrypt’; it only means that the GNU C Library will provide that
-     library.
-
-     This option is for hackers and distributions who may not yet be
-     able to use libcrypt alternatives such as libxcrypt and need this
-     legacy implementation as a temporary workaround.  Note that
-     libcrypt may be removed in a future release.
-
 ‘--disable-scv’
      Disable using ‘scv’ instruction for syscalls.  All syscalls will
      use ‘sc’ instead, even if the kernel supports ‘scv’.  PowerPC only.
