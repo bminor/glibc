@@ -229,6 +229,21 @@ CFLAGS-getrpcent_r.c += -fexceptions
 CFLAGS-getrpcent.c += -fexceptions
 endif
 
+# services routines:
+routines += \
+  getservent \
+  getservent_r \
+  getsrvbynm \
+  getsrvbynm_r \
+  getsrvbypt \
+  getsrvbypt_r \
+  # routines
+
+ifeq ($(have-thread-library),yes)
+CFLAGS-getservent_r.c += -fexceptions
+CFLAGS-getservent.c += -fexceptions
+endif
+
 # shadow routines
 routines += \
   fgetspent \

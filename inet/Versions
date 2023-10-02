@@ -15,8 +15,6 @@ libc {
 
     # g*
     getdomainname;
-    getservbyname; getservbyname_r; getservbyport;
-    getservbyport_r; getservent; getservent_r;
 
     # h*
     htonl; htons;
@@ -46,9 +44,7 @@ libc {
     # g*
     getaliasbyname_r; getaliasent_r; gethostbyaddr_r; gethostbyname2_r;
     gethostbyname_r; gethostent_r; getnetbyaddr_r; getnetbyname_r;
-    getnetent_r; getservbyname_r;
-    getservbyport_r;
-    getservent_r;
+    getnetent_r;
   }
   GLIBC_2.2 {
     # i*

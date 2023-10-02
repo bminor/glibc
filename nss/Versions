@@ -32,6 +32,8 @@ libc {
     getpw; getpwent; getpwent_r; getpwnam; getpwnam_r; getpwuid; getpwuid_r;
     getrpcbyname; getrpcbyname_r; getrpcbynumber; getrpcbynumber_r;
     getrpcent; getrpcent_r;
+    getservbyname; getservbyname_r; getservbyport;
+    getservbyport_r; getservent; getservent_r;
     getspent; getspent_r; getspnam; getspnam_r;
 
     # i*
@@ -64,6 +66,7 @@ libc {
     getnetgrent_r;
     getprotobyname_r; getprotobynumber_r; getprotoent_r;
     getpwent_r; getpwuid_r; getpwnam_r;
+    getservbyname_r; getservbyport_r; getservent_r;
     getspent_r; getspnam_r;
   }
   GLIBC_2.2.2 {

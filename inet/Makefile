@@ -48,13 +48,7 @@ routines := \
   ether_ntoa_r \
   getipv4sourcefilter \
   getnameinfo \
-  getservent \
-  getservent_r \
   getsourcefilter \
-  getsrvbynm \
-  getsrvbynm_r \
-  getsrvbypt \
-  getsrvbypt_r \
   herrno \
   herrno-loc \
   htonl \
@@ -126,8 +120,6 @@ include ../gen-locales.mk
 ifeq ($(have-thread-library),yes)
 
 CFLAGS-rcmd.c += -fexceptions
-CFLAGS-getservent_r.c += -fexceptions
-CFLAGS-getservent.c += -fexceptions
 CFLAGS-either_ntoh.c += -fexceptions
 CFLAGS-either_hton.c += -fexceptions
 CFLAGS-in6_addr.c += $(config-cflags-wno-ignored-attributes)
