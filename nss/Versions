@@ -5,9 +5,37 @@ libc {
     # Functions exported as no-op compat symbols.
     __nss_passwd_lookup; __nss_group_lookup; __nss_hosts_lookup; __nss_next;
     __nss_database_lookup;
+
+    # e*
+    endgrent;
+
+    # f*
+    fgetgrent; fgetgrent_r;
+
+    # g*
+    getgrent; getgrent_r; getgrgid; getgrgid_r; getgrnam; getgrnam_r;
+    getgroups;
+
+    # i*
+    initgroups;
+
+    # s*
+    setgrent;
+  }
+  GLIBC_2.1 {
+    # p*
+    putgrent;
+  }
+  GLIBC_2.1.2 {
+    # g*
+    getgrent_r; getgrgid_r; getgrnam_r;
   }
   GLIBC_2.2.2 {
     __nss_hostname_digits_dots;
+  }
+  GLIBC_2.2.4 {
+    # g*
+    getgrouplist;
   }
   GLIBC_2.27 {
   }
@@ -107,6 +135,8 @@ libc {
     _nss_files_initgroups_dyn;
 
     _nss_files_init;
+
+    __merge_grp; __copy_grp;
   }
 }
 

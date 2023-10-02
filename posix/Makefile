@@ -137,6 +137,7 @@ routines := \
   sched_sets \
   sched_yield \
   setgid \
+  setgroups \
   setpgid \
   setpgrp \
   setresgid \

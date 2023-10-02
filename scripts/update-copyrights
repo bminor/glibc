@@ -65,7 +65,7 @@ for f in $files; do
 	"$update_script" "$f"
       fi
       ;;
-    grp/initgroups.c | misc/bits/stab.def | posix/regex.h \
+    nss/initgroups.c | misc/bits/stab.def | posix/regex.h \
       | sysdeps/wordsize-32/divdi3.c)
       # Pre-1991 gaps in copyright years, so cannot use a single range.
       UPDATE_COPYRIGHT_USE_INTERVALS=1 "$update_script" "$f"

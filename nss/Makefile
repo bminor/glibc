@@ -23,6 +23,7 @@ subdir	:= nss
 include ../Makeconfig
 
 headers := \
+  grp.h \
   nss.h \
   # headers
 
@@ -49,6 +50,34 @@ routines = \
   valid_field \
   valid_list_field \
   # routines
+
+# grp routines:
+routines += \
+  fgetgrent \
+  fgetgrent_r \
+  getgrent \
+  getgrent_r \
+  getgrgid \
+  getgrgid_r \
+  getgrnam \
+  getgrnam_r \
+  grp-merge \
+  initgroups \
+  putgrent \
+  # routines
+
+ifeq ($(have-thread-library),yes)
+CFLAGS-fgetgrent.c += -fexceptions
+CFLAGS-fgetgrent_r.c += -fexceptions $(libio-mtsafe)
+CFLAGS-getgrent.c += -fexceptions
+CFLAGS-getgrent_r.c += -fexceptions
+CFLAGS-getgrgid.c += -fexceptions
+CFLAGS-getgrgid_r.c += -fexceptions
+CFLAGS-getgrnam.c += -fexceptions
+CFLAGS-getgrnam_r.c += -fexceptions
+CFLAGS-initgroups.c += -fexceptions
+CFLAGS-putgrent.c += -fexceptions $(libio-mtsafe)
+endif
 
 # These are the databases that go through nss dispatch.
 # Caution: if you add a database here, you must add its real name
@@ -88,6 +117,7 @@ tests := \
   bug17079 \
   test-digits-dots \
   test-netdb \
+  testgrp \
   tst-nss-getpwent \
   tst-nss-hash \
   tst-nss-test1 \
@@ -95,11 +125,14 @@ tests := \
   tst-nss-test4 \
   tst-nss-test5 \
   tst-nss-test_errno \
+  tst-putgrent \
   # tests
 
 xtests = bug-erange
 
 tests-container := \
+  tst-initgroups1 \
+  tst-initgroups2 \
   tst-nss-compat1 \
   tst-nss-db-endgrent \
   tst-nss-db-endpwent \
@@ -112,13 +145,21 @@ tests-container := \
   tst-reload2 \
   # tests-container
 
-# Tests which need libdl
 ifeq (yes,$(build-shared))
+# Tests which need libdl
 tests += tst-nss-files-hosts-erange
 tests += tst-nss-files-hosts-multi
 tests += tst-nss-files-hosts-getent
 tests += tst-nss-files-alias-leak
 tests += tst-nss-files-alias-truncated
+# tst_fgetgrent currently only works with shared libraries
+test-srcs :=  tst_fgetgrent
+ifeq ($(run-built-tests),yes)
+tests-special += $(objpfx)tst_fgetgrent.out
+$(objpfx)tst_fgetgrent.out: tst_fgetgrent.sh $(objpfx)tst_fgetgrent
+	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'; \
+	$(evaluate-test)
+endif
 endif
 
 # If we have a thread library then we can test cancellation against

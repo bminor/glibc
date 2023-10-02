@@ -45,7 +45,7 @@ static const initgr_response_header notfound =
 };
 
 
-#include "../grp/compat-initgroups.c"
+#include "../nss/initgroups-fallback.c"
 
 
 static time_t

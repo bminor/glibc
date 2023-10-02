@@ -1,5 +1,5 @@
 #ifndef _GRP_H
-#include <grp/grp.h>
+#include <nss/grp.h>
 
 #ifndef _ISOMAC
 libc_hidden_proto (setgroups)

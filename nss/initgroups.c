@@ -39,7 +39,7 @@ typedef enum nss_status (*initgroups_dyn_function) (const char *, gid_t,
 static bool use_initgroups_entry;
 
 
-#include "compat-initgroups.c"
+#include "initgroups-fallback.c"
 
 
 static int
