@@ -14,8 +14,7 @@ libc {
     ether_ntoa_r;
 
     # g*
-    getdomainname; getnetbyaddr; getnetbyaddr_r; getnetbyname;
-    getnetbyname_r; getnetent; getnetent_r;
+    getdomainname;
     getprotobyname; getprotobyname_r; getprotobynumber;
     getprotobynumber_r; getprotoent; getprotoent_r;
     getservbyname; getservbyname_r; getservbyport;

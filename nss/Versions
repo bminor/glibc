@@ -25,6 +25,8 @@ libc {
     gethostbyaddr; gethostbyaddr_r; gethostbyname; gethostbyname2;
     gethostbyname2_r; gethostbyname_r; gethostent; gethostent_r;
     getnetgrent; getnetgrent_r;
+    getnetbyaddr; getnetbyaddr_r; getnetbyname; getnetbyname_r;
+    getnetent; getnetent_r;
     getpw; getpwent; getpwent_r; getpwnam; getpwnam_r; getpwuid; getpwuid_r;
     getspent; getspent_r; getspnam; getspnam_r;
 

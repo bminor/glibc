@@ -48,12 +48,6 @@ routines := \
   ether_ntoa_r \
   getipv4sourcefilter \
   getnameinfo \
-  getnetbyad \
-  getnetbyad_r \
-  getnetbynm \
-  getnetbynm_r \
-  getnetent \
-  getnetent_r \
   getproto \
   getproto_r \
   getprtent \
@@ -144,12 +138,6 @@ include ../gen-locales.mk
 ifeq ($(have-thread-library),yes)
 
 CFLAGS-rcmd.c += -fexceptions
-CFLAGS-getnetbynm_r.c += -fexceptions
-CFLAGS-getnetbynm.c += -fexceptions
-CFLAGS-getnetbyad_r.c += -fexceptions
-CFLAGS-getnetbyad.c += -fexceptions
-CFLAGS-getnetent_r.c += -fexceptions
-CFLAGS-getnetent.c += -fexceptions
 CFLAGS-getrpcent_r.c += -fexceptions
 CFLAGS-getrpcent.c += -fexceptions
 CFLAGS-getservent_r.c += -fexceptions

@@ -159,6 +159,25 @@ CFLAGS-getnetgrent.c += -fexceptions
 CFLAGS-getnetgrent_r.c += -fexceptions
 endif
 
+# networks routines:
+routines += \
+  getnetbyad \
+  getnetbyad_r \
+  getnetbynm \
+  getnetbynm_r \
+  getnetent \
+  getnetent_r \
+  # routines
+
+ifeq ($(have-thread-library),yes)
+CFLAGS-getnetbyad.c += -fexceptions
+CFLAGS-getnetbyad_r.c += -fexceptions
+CFLAGS-getnetbynm.c += -fexceptions
+CFLAGS-getnetbynm_r.c += -fexceptions
+CFLAGS-getnetent.c += -fexceptions
+CFLAGS-getnetent_r.c += -fexceptions
+endif
+
 # pwd routines:
 routines += \
   fgetpwent \
