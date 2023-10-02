@@ -88,7 +88,6 @@ routines := \
   fpathconf \
   gai_strerror \
   get_child_max \
-  getaddrinfo \
   getegid \
   geteuid \
   getgid \
@@ -287,9 +286,6 @@ tests := \
   tst-fnmatch7 \
   tst-fork \
   tst-gai_strerror \
-  tst-getaddrinfo \
-  tst-getaddrinfo2 \
-  tst-getaddrinfo3 \
   tst-getopt_long1 \
   tst-glob-tilde \
   tst-glob_symlinks \
@@ -351,9 +347,6 @@ tests-internal := \
   bug-regex5 \
   bug-regex20 \
   bug-regex33 \
-  tst-rfc3484 \
-  tst-rfc3484-2 \
-  tst-rfc3484-3 \
   # tests-internal
 
 tests-container := \
@@ -368,8 +361,6 @@ tests-time64 := \
   # tests-time64
 
 xtests	:= \
-  tst-getaddrinfo4 \
-  tst-getaddrinfo5 \
   tst-sched_rr_get_interval \
   # xtests
 
@@ -556,7 +547,6 @@ $(objpfx)config-name.h: $(..)scripts/config-uname.sh $(common-objpfx)config.make
 	   '$(config-machine)-$(config-vendor)' > $@.new
 	mv -f $@.new $@
 
-CFLAGS-getaddrinfo.c += -fexceptions
 CFLAGS-pause.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pread.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pread64.c += -fexceptions -fasynchronous-unwind-tables $(config-cflags-wno-ignored-attributes)

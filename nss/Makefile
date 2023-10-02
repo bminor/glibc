@@ -127,6 +127,7 @@ endif
 
 # hosts routines:
 routines += \
+  getaddrinfo \
   gethstbyad \
   gethstbyad_r \
   gethstbynm \
@@ -138,6 +139,7 @@ routines += \
   # routines
 
 ifeq ($(have-thread-library),yes)
+CFLAGS-getaddrinfo.c += -fexceptions
 CFLAGS-gethstbyad.c += -fexceptions
 CFLAGS-gethstbyad_r.c += -fexceptions
 CFLAGS-gethstbynm.c += -fexceptions
@@ -300,7 +302,13 @@ others-extras		= $(makedb-modules)
 extra-objs		+= $(makedb-modules:=.o)
 
 tests-static            = tst-field
-tests-internal		= tst-field
+
+tests-internal := \
+  tst-field \
+  tst-rfc3484 \
+  tst-rfc3484-2 \
+  tst-rfc3484-3 \
+  # tests-internal
 
 tests := \
   bug17079 \
@@ -309,6 +317,9 @@ tests := \
   test-rpcent \
   testgrp \
   tst-fgetsgent_r \
+  tst-getaddrinfo \
+  tst-getaddrinfo2 \
+  tst-getaddrinfo3 \
   tst-gethnm \
   tst-getpw \
   tst-gshadow \
@@ -327,7 +338,11 @@ tests := \
   tst-shadow \
   # tests
 
-xtests = bug-erange
+xtests := \
+  bug-erange \
+  tst-getaddrinfo4 \
+  tst-getaddrinfo5 \
+  # xtests
 
 tests-container := \
   tst-initgroups1 \

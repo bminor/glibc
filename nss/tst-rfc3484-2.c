@@ -57,7 +57,7 @@ _res_hconf_init (void)
 }
 
 #undef	USE_NSCD
-#include "../sysdeps/posix/getaddrinfo.c"
+#include "getaddrinfo.c"
 
 nss_action_list __nss_hosts_database attribute_hidden;
 

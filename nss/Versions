@@ -19,6 +19,7 @@ libc {
     fgetspent; fgetspent_r;
 
     # g*
+    getaddrinfo;
     getaliasbyname; getaliasbyname_r; getaliasent; getaliasent_r;
     getgrent; getgrent_r; getgrgid; getgrgid_r; getgrnam; getgrnam_r;
     getgroups;

@@ -34,7 +34,7 @@ libc {
     fnmatch; fork; fpathconf; freeaddrinfo;
 
     # g*
-    getaddrinfo; getdtablesize; getegid; geteuid; getgid; getopt; getopt_long;
+    getdtablesize; getegid; geteuid; getgid; getopt; getopt_long;
     getopt_long_only; getpgid; getpgrp; getpid; getppid; getsid; getuid; glob;
     glob_pattern_p; globfree; group_member;
 
