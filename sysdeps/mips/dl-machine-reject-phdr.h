@@ -161,7 +161,7 @@ elf_machine_reject_phdr_p (const ElfW(Phdr) *phdr, unsigned int phnum,
   Lmid_t nsid;
   int in_abi = -1;
   struct abi_req in_req;
-  Elf_MIPS_ABIFlags_v0 *mips_abiflags = NULL;
+  Elf_MIPS_ABIFlags_v0 mips_abiflags;
   bool perfect_match = false;
 #if _MIPS_SIM == _ABIO32
   unsigned int cur_mode = -1;
@@ -176,25 +176,19 @@ elf_machine_reject_phdr_p (const ElfW(Phdr) *phdr, unsigned int phnum,
   /* Read the attributes section.  */
   if (ph != NULL)
     {
-      ElfW(Addr) size = ph->p_filesz;
+      ElfW(Addr) size = sizeof (Elf_MIPS_ABIFlags_v0);
 
-      if (ph->p_offset + size <= len)
-	mips_abiflags = (Elf_MIPS_ABIFlags_v0 *) (buf + ph->p_offset);
-      else
-	{
-	  mips_abiflags = alloca (size);
-	  __lseek (fd, ph->p_offset, SEEK_SET);
-	  if (__libc_read (fd, (void *) mips_abiflags, size) != size)
-	    REJECT ("   unable to read PT_MIPS_ABIFLAGS\n");
-	}
-
-      if (size < sizeof (Elf_MIPS_ABIFlags_v0))
+      if (ph->p_filesz < size)
 	REJECT ("   contains malformed PT_MIPS_ABIFLAGS\n");
 
-      if (__glibc_unlikely (mips_abiflags->flags2 != 0))
-	REJECT ("   unknown MIPS.abiflags flags2: %u\n", mips_abiflags->flags2);
+      __lseek (fd, ph->p_offset, SEEK_SET);
+      if (__libc_read (fd, (void *) &mips_abiflags, size) != size)
+	REJECT ("   unable to read PT_MIPS_ABIFLAGS\n");
 
-      in_abi = mips_abiflags->fp_abi;
+      if (__glibc_unlikely (mips_abiflags.flags2 != 0))
+	REJECT ("   unknown MIPS.abiflags flags2: %u\n", mips_abiflags.flags2);
+
+      in_abi = mips_abiflags.fp_abi;
     }
 
   /* ANY is compatible with anything.  */
