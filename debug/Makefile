@@ -178,6 +178,7 @@ CFLAGS-tst-longjmp_chk3.c += -fexceptions -fasynchronous-unwind-tables
 CPPFLAGS-tst-longjmp_chk3.c += $(no-fortify-source),-D_FORTIFY_SOURCE=1
 CPPFLAGS-tst-realpath-chk.c += $(no-fortify-source),-D_FORTIFY_SOURCE=2
 CPPFLAGS-tst-chk-cancel.c += $(no-fortify-source),-D_FORTIFY_SOURCE=2
+CFLAGS-tst-sprintf-fortify-rdonly.c += $(no-fortify-source),-D_FORTIFY_SOURCE=2
 
 # _FORTIFY_SOURCE tests.
 # Auto-generate tests for _FORTIFY_SOURCE for different levels, compilers and
@@ -284,6 +285,7 @@ tests = \
   tst-longjmp_chk \
   tst-longjmp_chk2 \
   tst-realpath-chk \
+  tst-sprintf-fortify-rdonly \
   tst-sprintf-fortify-unchecked \
   # tests
 
