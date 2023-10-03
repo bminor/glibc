@@ -100,15 +100,28 @@ typedef struct
     char *hi;
   } stack_node;
 
-/* The next 4 #defines implement a very fast in-line stack abstraction. */
 /* The stack needs log (total_elements) entries (we could even subtract
    log(MAX_THRESH)).  Since total_elements has type size_t, we get as
    upper bound for log (total_elements):
    bits per byte (CHAR_BIT) * sizeof(size_t).  */
-#define STACK_SIZE	(CHAR_BIT * sizeof (size_t))
-#define PUSH(low, high)	((void) ((top->lo = (low)), (top->hi = (high)), ++top))
-#define	POP(low, high)	((void) (--top, (low = top->lo), (high = top->hi)))
-#define	STACK_NOT_EMPTY	(stack < top)
+enum { STACK_SIZE = CHAR_BIT * sizeof (size_t) };
+
+static inline stack_node *
+push (stack_node *top, char *lo, char *hi)
+{
+  top->lo = lo;
+  top->hi = hi;
+  return ++top;
+}
+
+static inline stack_node *
+pop (stack_node *top, char **lo, char **hi)
+{
+  --top;
+  *lo = top->lo;
+  *hi = top->hi;
+  return top;
+}
 
 
 static inline void
@@ -212,11 +225,9 @@ _quicksort (void *const pbase, size_t total_elems, size_t size,
       char *lo = base_ptr;
       char *hi = &lo[size * (total_elems - 1)];
       stack_node stack[STACK_SIZE];
-      stack_node *top = stack;
+      stack_node *top = stack + 1;
 
-      PUSH (NULL, NULL);
-
-      while (STACK_NOT_EMPTY)
+      while (stack < top)
         {
           char *left_ptr;
           char *right_ptr;
@@ -281,7 +292,7 @@ _quicksort (void *const pbase, size_t total_elems, size_t size,
             {
               if ((size_t) (hi - left_ptr) <= max_thresh)
 		/* Ignore both small partitions. */
-                POP (lo, hi);
+                top = pop (top, &lo, &hi);
               else
 		/* Ignore small left partition. */
                 lo = left_ptr;
@@ -292,13 +303,13 @@ _quicksort (void *const pbase, size_t total_elems, size_t size,
           else if ((right_ptr - lo) > (hi - left_ptr))
             {
 	      /* Push larger left partition indices. */
-              PUSH (lo, right_ptr);
+              top = push (top, lo, right_ptr);
               lo = left_ptr;
             }
           else
             {
 	      /* Push larger right partition indices. */
-              PUSH (left_ptr, hi);
+              top = push (top, left_ptr, hi);
               hi = right_ptr;
             }
         }
