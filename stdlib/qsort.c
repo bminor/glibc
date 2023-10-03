@@ -111,6 +111,58 @@ typedef struct
 #define	STACK_NOT_EMPTY	(stack < top)
 
 
+static inline void
+insertion_sort_qsort_partitions (void *const pbase, size_t total_elems,
+				 size_t size, enum swap_type_t swap_type,
+				 __compar_d_fn_t cmp, void *arg)
+{
+  char *base_ptr = (char *) pbase;
+  char *const end_ptr = &base_ptr[size * (total_elems - 1)];
+  char *tmp_ptr = base_ptr;
+#define min(x, y) ((x) < (y) ? (x) : (y))
+  const size_t max_thresh = MAX_THRESH * size;
+  char *thresh = min(end_ptr, base_ptr + max_thresh);
+  char *run_ptr;
+
+  /* Find smallest element in first threshold and place it at the
+     array's beginning.  This is the smallest array element,
+     and the operation speeds up insertion sort's inner loop. */
+
+  for (run_ptr = tmp_ptr + size; run_ptr <= thresh; run_ptr += size)
+    if (cmp (run_ptr, tmp_ptr, arg) < 0)
+      tmp_ptr = run_ptr;
+
+  if (tmp_ptr != base_ptr)
+    do_swap (tmp_ptr, base_ptr, size, swap_type);
+
+  /* Insertion sort, running from left-hand-side up to right-hand-side.  */
+
+  run_ptr = base_ptr + size;
+  while ((run_ptr += size) <= end_ptr)
+    {
+      tmp_ptr = run_ptr - size;
+      while (cmp (run_ptr, tmp_ptr, arg) < 0)
+        tmp_ptr -= size;
+
+      tmp_ptr += size;
+      if (tmp_ptr != run_ptr)
+        {
+          char *trav;
+
+          trav = run_ptr + size;
+          while (--trav >= run_ptr)
+            {
+              char c = *trav;
+              char *hi, *lo;
+
+              for (hi = lo = trav; (lo -= size) >= tmp_ptr; hi = lo)
+                *hi = *lo;
+              *hi = c;
+            }
+        }
+    }
+}
+
 /* Order size using quicksort.  This implementation incorporates
    four optimizations discussed in Sedgewick:
 
@@ -257,51 +309,6 @@ _quicksort (void *const pbase, size_t total_elems, size_t size,
      for partitions below MAX_THRESH size. BASE_PTR points to the beginning
      of the array to sort, and END_PTR points at the very last element in
      the array (*not* one beyond it!). */
-
-#define min(x, y) ((x) < (y) ? (x) : (y))
-
-  {
-    char *const end_ptr = &base_ptr[size * (total_elems - 1)];
-    char *tmp_ptr = base_ptr;
-    char *thresh = min(end_ptr, base_ptr + max_thresh);
-    char *run_ptr;
-
-    /* Find smallest element in first threshold and place it at the
-       array's beginning.  This is the smallest array element,
-       and the operation speeds up insertion sort's inner loop. */
-
-    for (run_ptr = tmp_ptr + size; run_ptr <= thresh; run_ptr += size)
-      if ((*cmp) ((void *) run_ptr, (void *) tmp_ptr, arg) < 0)
-        tmp_ptr = run_ptr;
-
-    if (tmp_ptr != base_ptr)
-      do_swap (tmp_ptr, base_ptr, size, swap_type);
-
-    /* Insertion sort, running from left-hand-side up to right-hand-side.  */
-
-    run_ptr = base_ptr + size;
-    while ((run_ptr += size) <= end_ptr)
-      {
-	tmp_ptr = run_ptr - size;
-	while ((*cmp) ((void *) run_ptr, (void *) tmp_ptr, arg) < 0)
-	  tmp_ptr -= size;
-
-	tmp_ptr += size;
-        if (tmp_ptr != run_ptr)
-          {
-            char *trav;
-
-	    trav = run_ptr + size;
-	    while (--trav >= run_ptr)
-              {
-                char c = *trav;
-                char *hi, *lo;
-
-                for (hi = lo = trav; (lo -= size) >= tmp_ptr; hi = lo)
-                  *hi = *lo;
-                *hi = c;
-              }
-          }
-      }
-  }
+  insertion_sort_qsort_partitions (pbase, total_elems, size, swap_type, cmp,
+				   arg);
 }
