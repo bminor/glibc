@@ -253,7 +253,7 @@ The symbols in this section are defined in the header file @file{locale.h}.
 @c    calculate_head_size ok
 @c    __munmap ok
 @c    compute_hashval ok
-@c    qsort dup @acucorrupt
+@c    qsort dup
 @c     rangecmp ok
 @c    malloc @ascuheap @acsmem
 @c    strdup @ascuheap @acsmem
@@ -275,7 +275,6 @@ The symbols in this section are defined in the header file @file{locale.h}.
 @c      realloc @ascuheap @acsmem
 @c     realloc @ascuheap @acsmem
 @c     fclose @ascuheap @asulock @acsmem @acsfd @aculock
-@c     qsort @ascuheap @acsmem
 @c      alias_compare dup
 @c    libc_lock_unlock @aculock
 @c   _nl_explode_name @ascuheap @acsmem

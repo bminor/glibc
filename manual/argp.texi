@@ -735,7 +735,7 @@ for options, bad phase of the moon, etc.
 @c  hol_set_group ok
 @c   hol_find_entry ok
 @c  hol_sort @mtslocale @acucorrupt
-@c   qsort dup @acucorrupt
+@c   qsort dup
 @c    hol_entry_qcmp @mtslocale
 @c     hol_entry_cmp @mtslocale
 @c      group_cmp ok

@@ -159,7 +159,7 @@ To sort an array using an arbitrary comparison function, use the
 
 @deftypefun void qsort (void *@var{array}, size_t @var{count}, size_t @var{size}, comparison_fn_t @var{compare})
 @standards{ISO, stdlib.h}
-@safety{@prelim{}@mtsafe{}@assafe{}@acunsafe{@acucorrupt{}}}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{qsort} function sorts the array @var{array}.  The array
 contains @var{count} elements, each of which is of size @var{size}.
 
@@ -199,9 +199,8 @@ Functions}):
 The @code{qsort} function derives its name from the fact that it was
 originally implemented using the ``quick sort'' algorithm.
 
-The implementation of @code{qsort} in this library might not be an
-in-place sort and might thereby use an extra amount of memory to store
-the array.
+The implementation of @code{qsort} in this library is an in-place sort
+and uses a constant extra space (allocated on the stack).
 @end deftypefun
 
 @node Search/Sort Example

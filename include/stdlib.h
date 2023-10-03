@@ -149,8 +149,6 @@ extern int __posix_openpt (int __oflag) attribute_hidden;
 extern int __add_to_environ (const char *name, const char *value,
 			     const char *combines, int replace)
      attribute_hidden;
-extern void _quicksort (void *const pbase, size_t total_elems,
-			size_t size, __compar_d_fn_t cmp, void *arg);
 
 extern int __on_exit (void (*__func) (int __status, void *__arg), void *__arg);
 

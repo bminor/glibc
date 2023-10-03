@@ -96,7 +96,6 @@ routines := \
   mbtowc \
   mrand48 \
   mrand48_r \
-  msort \
   nrand48 \
   nrand48_r \
   old_atexit  \
@@ -380,7 +379,6 @@ generated += \
   # generated
 
 CFLAGS-bsearch.c += $(uses-callbacks)
-CFLAGS-msort.c += $(uses-callbacks)
 CFLAGS-qsort.c += $(uses-callbacks)
 CFLAGS-system.c += -fexceptions
 CFLAGS-system.os = -fomit-frame-pointer
