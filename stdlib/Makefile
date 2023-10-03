@@ -214,6 +214,7 @@ tests := \
   tst-on_exit \
   tst-qsort \
   tst-qsort2 \
+  tst-qsort3 \
   tst-quick_exit \
   tst-rand48 \
   tst-rand48-2 \
