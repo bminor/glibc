@@ -98,6 +98,7 @@ typedef struct
   {
     char *lo;
     char *hi;
+    size_t depth;
   } stack_node;
 
 /* The stack needs log (total_elements) entries (we could even subtract
@@ -107,22 +108,85 @@ typedef struct
 enum { STACK_SIZE = CHAR_BIT * sizeof (size_t) };
 
 static inline stack_node *
-push (stack_node *top, char *lo, char *hi)
+push (stack_node *top, char *lo, char *hi, size_t depth)
 {
   top->lo = lo;
   top->hi = hi;
+  top->depth = depth;
   return ++top;
 }
 
 static inline stack_node *
-pop (stack_node *top, char **lo, char **hi)
+pop (stack_node *top, char **lo, char **hi, size_t *depth)
 {
   --top;
   *lo = top->lo;
   *hi = top->hi;
+  *depth = top->depth;
   return top;
 }
 
+/* NB: N is inclusive bound for BASE.  */
+static inline void
+siftdown (void *base, size_t size, size_t k, size_t n,
+	  enum swap_type_t swap_type, __compar_d_fn_t cmp, void *arg)
+{
+  while (k <= n / 2)
+    {
+      size_t j = 2 * k;
+      if (j < n && cmp (base + (j * size), base + ((j + 1) * size), arg) < 0)
+	j++;
+
+      if (cmp (base + (k * size), base + (j * size), arg) >= 0)
+	break;
+
+      do_swap (base + (size * j), base + (k * size), size, swap_type);
+      k = j;
+    }
+}
+
+static inline void
+heapify (void *base, size_t size, size_t n, enum swap_type_t swap_type,
+	 __compar_d_fn_t cmp, void *arg)
+{
+  size_t k = n / 2;
+  while (1)
+    {
+      siftdown (base, size, k, n, swap_type, cmp, arg);
+      if (k-- == 0)
+	break;
+    }
+}
+
+/* A non-recursive heapsort, used on introsort implementation as a fallback
+   routine with worst-case performance of O(nlog n) and worst-case space
+   complexity of O(1).  It sorts the array starting at BASE and ending at
+   END, with each element of SIZE bytes.  The SWAP_TYPE is the callback
+   function used to swap elements, and CMP is the function used to compare
+   elements.   */
+static void
+heapsort_r (void *base, void *end, size_t size, enum swap_type_t swap_type,
+	    __compar_d_fn_t cmp, void *arg)
+{
+  const size_t count = ((uintptr_t) end - (uintptr_t) base) / size;
+
+  if (count < 2)
+    return;
+
+  size_t n = count - 1;
+
+  /* Build the binary heap, largest value at the base[0].  */
+  heapify (base, size, n, swap_type, cmp, arg);
+
+  /* On each iteration base[0:n] is the binary heap, while base[n:count]
+     is sorted.  */
+  while (n > 0)
+    {
+      do_swap (base, base + (n * size), size, swap_type);
+      n--;
+      siftdown (base, size, 0, n, swap_type, cmp, arg);
+    }
+}
 
 static inline void
 insertion_sort_qsort_partitions (void *const pbase, size_t total_elems,
@@ -208,7 +272,7 @@ _quicksort (void *const pbase, size_t total_elems, size_t size,
 
   const size_t max_thresh = MAX_THRESH * size;
 
-  if (total_elems == 0)
+  if (total_elems <= 1)
     /* Avoid lossage with unsigned arithmetic below.  */
     return;
 
@@ -220,15 +284,26 @@ _quicksort (void *const pbase, size_t total_elems, size_t size,
   else
     swap_type = SWAP_BYTES;
 
+  /* Maximum depth before quicksort switches to heapsort.  */
+  size_t depth = 2 * (sizeof (size_t) * CHAR_BIT - 1
+		      - __builtin_clzl (total_elems));
+
   if (total_elems > MAX_THRESH)
     {
       char *lo = base_ptr;
       char *hi = &lo[size * (total_elems - 1)];
       stack_node stack[STACK_SIZE];
-      stack_node *top = stack + 1;
+      stack_node *top = push (stack, NULL, NULL, depth);
 
       while (stack < top)
         {
+          if (depth == 0)
+            {
+              heapsort_r (lo, hi, size, swap_type, cmp, arg);
+              top = pop (top, &lo, &hi, &depth);
+              continue;
+            }
+
           char *left_ptr;
           char *right_ptr;
 
@@ -292,7 +367,7 @@ _quicksort (void *const pbase, size_t total_elems, size_t size,
             {
               if ((size_t) (hi - left_ptr) <= max_thresh)
 		/* Ignore both small partitions. */
-                top = pop (top, &lo, &hi);
+                top = pop (top, &lo, &hi, &depth);
               else
 		/* Ignore small left partition. */
                 lo = left_ptr;
@@ -303,13 +378,13 @@ _quicksort (void *const pbase, size_t total_elems, size_t size,
           else if ((right_ptr - lo) > (hi - left_ptr))
             {
 	      /* Push larger left partition indices. */
-              top = push (top, lo, right_ptr);
+              top = push (top, lo, right_ptr, depth - 1);
               lo = left_ptr;
             }
           else
             {
 	      /* Push larger right partition indices. */
-              top = push (top, left_ptr, hi);
+              top = push (top, left_ptr, hi, depth - 1);
               hi = right_ptr;
             }
         }
