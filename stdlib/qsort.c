@@ -21,22 +21,73 @@
 
 #include <alloca.h>
 #include <limits.h>
+#include <memswap.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
-/* Byte-wise swap two items of size SIZE. */
-#define SWAP(a, b, size)						      \
-  do									      \
-    {									      \
-      size_t __size = (size);						      \
-      char *__a = (a), *__b = (b);					      \
-      do								      \
-	{								      \
-	  char __tmp = *__a;						      \
-	  *__a++ = *__b;						      \
-	  *__b++ = __tmp;						      \
-	} while (--__size > 0);						      \
-    } while (0)
+/* Swap SIZE bytes between addresses A and B.  These helpers are provided
+   along the generic one as an optimization.  */
+
+enum swap_type_t
+  {
+    SWAP_WORDS_64,
+    SWAP_WORDS_32,
+    SWAP_BYTES
+  };
+
+/* If this function returns true, elements can be safely copied using word
+   loads and stores.  Otherwise, it might not be safe.  BASE (as an integer)
+   must be a multiple of the word alignment.  SIZE must be a multiple of
+   WORDSIZE.  Since WORDSIZE must be a multiple of the word alignment, and
+   WORDSIZE is a power of two on all supported platforms, this function for
+   speed merely checks that BASE and SIZE are both multiples of the word
+   size.  */
+static inline bool
+is_aligned (const void *base, size_t size, size_t wordsize)
+{
+  return (((uintptr_t) base | size) & (wordsize - 1)) == 0;
+}
+
+static inline void
+swap_words_64 (void * restrict a, void * restrict b, size_t n)
+{
+  typedef uint64_t __attribute__ ((__may_alias__)) u64_alias_t;
+  do
+   {
+     n -= 8;
+     u64_alias_t t = *(u64_alias_t *)(a + n);
+     *(u64_alias_t *)(a + n) = *(u64_alias_t *)(b + n);
+     *(u64_alias_t *)(b + n) = t;
+   } while (n);
+}
+
+static inline void
+swap_words_32 (void * restrict a, void * restrict b, size_t n)
+{
+  typedef uint32_t __attribute__ ((__may_alias__)) u32_alias_t;
+  do
+   {
+     n -= 4;
+     u32_alias_t t = *(u32_alias_t *)(a + n);
+     *(u32_alias_t *)(a + n) = *(u32_alias_t *)(b + n);
+     *(u32_alias_t *)(b + n) = t;
+   } while (n);
+}
+
+/* Replace the indirect call with a serie of if statements.  It should help
+   the branch predictor.  */
+static void
+do_swap (void * restrict a, void * restrict b, size_t size,
+	 enum swap_type_t swap_type)
+{
+  if (swap_type == SWAP_WORDS_64)
+    swap_words_64 (a, b, size);
+  else if (swap_type == SWAP_WORDS_32)
+    swap_words_32 (a, b, size);
+  else
+    __memswap (a, b, size);
+}
 
 /* Discontinue quicksort algorithm when partition gets below this size.
    This particular magic number was chosen to work best on a Sun 4/260. */
@@ -96,6 +147,14 @@ _quicksort (void *const pbase, size_t total_elems, size_t size,
     /* Avoid lossage with unsigned arithmetic below.  */
     return;
 
+  enum swap_type_t swap_type;
+  if (is_aligned (pbase, size, 8))
+    swap_type = SWAP_WORDS_64;
+  else if (is_aligned (pbase, size, 4))
+    swap_type = SWAP_WORDS_32;
+  else
+    swap_type = SWAP_BYTES;
+
   if (total_elems > MAX_THRESH)
     {
       char *lo = base_ptr;
@@ -119,13 +178,13 @@ _quicksort (void *const pbase, size_t total_elems, size_t size,
 	  char *mid = lo + size * ((hi - lo) / size >> 1);
 
 	  if ((*cmp) ((void *) mid, (void *) lo, arg) < 0)
-	    SWAP (mid, lo, size);
+	    do_swap (mid, lo, size, swap_type);
 	  if ((*cmp) ((void *) hi, (void *) mid, arg) < 0)
-	    SWAP (mid, hi, size);
+	    do_swap (mid, hi, size, swap_type);
 	  else
 	    goto jump_over;
 	  if ((*cmp) ((void *) mid, (void *) lo, arg) < 0)
-	    SWAP (mid, lo, size);
+	    do_swap (mid, lo, size, swap_type);
 	jump_over:;
 
 	  left_ptr  = lo + size;
@@ -144,7 +203,7 @@ _quicksort (void *const pbase, size_t total_elems, size_t size,
 
 	      if (left_ptr < right_ptr)
 		{
-		  SWAP (left_ptr, right_ptr, size);
+		  do_swap (left_ptr, right_ptr, size, swap_type);
 		  if (mid == left_ptr)
 		    mid = right_ptr;
 		  else if (mid == right_ptr)
@@ -216,7 +275,7 @@ _quicksort (void *const pbase, size_t total_elems, size_t size,
         tmp_ptr = run_ptr;
 
     if (tmp_ptr != base_ptr)
-      SWAP (tmp_ptr, base_ptr, size);
+      do_swap (tmp_ptr, base_ptr, size, swap_type);
 
     /* Insertion sort, running from left-hand-side up to right-hand-side.  */
 
