@@ -37,9 +37,9 @@ static const struct data
 #define RangeVal 0x4160000000000000 /* asuint64 (0x1p23).  */
 
 static svfloat64_t NOINLINE
-special_case (svfloat64_t x, svfloat64_t y, svbool_t out_of_bounds)
+special_case (svfloat64_t x, svfloat64_t y, svbool_t oob)
 {
-  return sv_call_f64 (cos, x, y, out_of_bounds);
+  return sv_call_f64 (cos, x, y, oob);
 }
 
 /* A fast SVE implementation of cos based on trigonometric
@@ -51,42 +51,41 @@ svfloat64_t SV_NAME_D1 (cos) (svfloat64_t x, const svbool_t pg)
 {
   const struct data *d = ptr_barrier (&data);
 
-  svfloat64_t r = svabs_f64_x (pg, x);
-  svbool_t out_of_bounds
-      = svcmpge_n_u64 (pg, svreinterpret_u64_f64 (r), RangeVal);
+  svfloat64_t r = svabs_x (pg, x);
+  svbool_t oob = svcmpge (pg, svreinterpret_u64 (r), RangeVal);
 
   /* Load some constants in quad-word chunks to minimise memory access.  */
   svbool_t ptrue = svptrue_b64 ();
-  svfloat64_t invpio2_and_pio2_1 = svld1rq_f64 (ptrue, &d->inv_pio2);
-  svfloat64_t pio2_23 = svld1rq_f64 (ptrue, &d->pio2_2);
+  svfloat64_t invpio2_and_pio2_1 = svld1rq (ptrue, &d->inv_pio2);
+  svfloat64_t pio2_23 = svld1rq (ptrue, &d->pio2_2);
 
   /* n = rint(|x|/(pi/2)).  */
-  svfloat64_t q = svmla_lane_f64 (sv_f64 (d->shift), r, invpio2_and_pio2_1, 0);
-  svfloat64_t n = svsub_n_f64_x (pg, q, d->shift);
+  svfloat64_t q = svmla_lane (sv_f64 (d->shift), r, invpio2_and_pio2_1, 0);
+  svfloat64_t n = svsub_x (pg, q, d->shift);
 
   /* r = |x| - n*(pi/2)  (range reduction into -pi/4 .. pi/4).  */
-  r = svmls_lane_f64 (r, n, invpio2_and_pio2_1, 1);
-  r = svmls_lane_f64 (r, n, pio2_23, 0);
-  r = svmls_lane_f64 (r, n, pio2_23, 1);
+  r = svmls_lane (r, n, invpio2_and_pio2_1, 1);
+  r = svmls_lane (r, n, pio2_23, 0);
+  r = svmls_lane (r, n, pio2_23, 1);
 
   /* cos(r) poly approx.  */
-  svfloat64_t r2 = svtsmul_f64 (r, svreinterpret_u64_f64 (q));
+  svfloat64_t r2 = svtsmul (r, svreinterpret_u64 (q));
   svfloat64_t y = sv_f64 (0.0);
-  y = svtmad_f64 (y, r2, 7);
-  y = svtmad_f64 (y, r2, 6);
-  y = svtmad_f64 (y, r2, 5);
-  y = svtmad_f64 (y, r2, 4);
-  y = svtmad_f64 (y, r2, 3);
-  y = svtmad_f64 (y, r2, 2);
-  y = svtmad_f64 (y, r2, 1);
-  y = svtmad_f64 (y, r2, 0);
+  y = svtmad (y, r2, 7);
+  y = svtmad (y, r2, 6);
+  y = svtmad (y, r2, 5);
+  y = svtmad (y, r2, 4);
+  y = svtmad (y, r2, 3);
+  y = svtmad (y, r2, 2);
+  y = svtmad (y, r2, 1);
+  y = svtmad (y, r2, 0);
 
   /* Final multiplicative factor: 1.0 or x depending on bit #0 of q.  */
-  svfloat64_t f = svtssel_f64 (r, svreinterpret_u64_f64 (q));
-  /* Apply factor.  */
-  y = svmul_f64_x (pg, f, y);
+  svfloat64_t f = svtssel (r, svreinterpret_u64 (q));
 
-  if (__glibc_unlikely (svptest_any (pg, out_of_bounds)))
-    return special_case (x, y, out_of_bounds);
-  return y;
+  if (__glibc_unlikely (svptest_any (pg, oob)))
+    return special_case (x, svmul_x (svnot_z (pg, oob), y, f), oob);
+
+  /* Apply factor.  */
+  return svmul_x (pg, f, y);
 }
