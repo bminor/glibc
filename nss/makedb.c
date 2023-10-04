@@ -25,6 +25,7 @@
 #include <inttypes.h>
 #include <libintl.h>
 #include <locale.h>
+#include <scratch_buffer.h>
 #include <search.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -739,7 +740,15 @@ write_output (int fd)
   struct nss_db_header *header;
   uint64_t file_offset = (sizeof (struct nss_db_header)
 			  + (ndatabases * sizeof (header->dbs[0])));
-  header = alloca (file_offset);
+  struct scratch_buffer sbuf;
+  scratch_buffer_init (&sbuf);
+
+  if (!scratch_buffer_set_array_size (&sbuf, 1, file_offset))
+    {
+      error (0, errno, gettext ("failed to allocate memory"));
+      return EXIT_FAILURE;
+    }
+  header = sbuf.data;
 
   header->magic = NSS_DB_MAGIC;
   header->ndbs = ndatabases;
@@ -803,6 +812,7 @@ write_output (int fd)
   if (writev (fd, iov, iov_nelts) != keydataoffset)
     {
       error (0, errno, gettext ("failed to write new database file"));
+      scratch_buffer_free (&sbuf);
       return EXIT_FAILURE;
     }
 
@@ -810,6 +820,7 @@ write_output (int fd)
   DIAG_POP_NEEDS_COMMENT;
 #endif
 
+  scratch_buffer_free (&sbuf);
   return EXIT_SUCCESS;
 }
 
