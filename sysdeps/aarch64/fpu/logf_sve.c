@@ -55,33 +55,31 @@ svfloat32_t SV_NAME_F1 (log) (svfloat32_t x, const svbool_t pg)
 {
   const struct data *d = ptr_barrier (&data);
 
-  svuint32_t u = svreinterpret_u32_f32 (x);
-  svbool_t cmp = svcmpge_n_u32 (pg, svsub_n_u32_x (pg, u, Min), Thresh);
+  svuint32_t u = svreinterpret_u32 (x);
+  svbool_t cmp = svcmpge (pg, svsub_x (pg, u, Min), Thresh);
 
   /* x = 2^n * (1+r), where 2/3 < 1+r < 4/3.  */
-  u = svsub_n_u32_x (pg, u, Off);
-  svfloat32_t n
-      = svcvt_f32_s32_x (pg, svasr_n_s32_x (pg, svreinterpret_s32_u32 (u),
-					    23)); /* Sign-extend.  */
-  u = svand_n_u32_x (pg, u, Mask);
-  u = svadd_n_u32_x (pg, u, Off);
-  svfloat32_t r = svsub_n_f32_x (pg, svreinterpret_f32_u32 (u), 1.0f);
+  u = svsub_x (pg, u, Off);
+  svfloat32_t n = svcvt_f32_x (
+      pg, svasr_x (pg, svreinterpret_s32 (u), 23)); /* Sign-extend.  */
+  u = svand_x (pg, u, Mask);
+  u = svadd_x (pg, u, Off);
+  svfloat32_t r = svsub_x (pg, svreinterpret_f32 (u), 1.0f);
 
   /* y = log(1+r) + n*ln2.  */
-  svfloat32_t r2 = svmul_f32_x (pg, r, r);
+  svfloat32_t r2 = svmul_x (pg, r, r);
   /* n*ln2 + r + r2*(P6 + r*P5 + r2*(P4 + r*P3 + r2*(P2 + r*P1 + r2*P0))).  */
-  svfloat32_t p_0135 = svld1rq_f32 (svptrue_b32 (), &d->poly_0135[0]);
-  svfloat32_t p = svmla_lane_f32 (sv_f32 (d->poly_246[0]), r, p_0135, 1);
-  svfloat32_t q = svmla_lane_f32 (sv_f32 (d->poly_246[1]), r, p_0135, 2);
-  svfloat32_t y = svmla_lane_f32 (sv_f32 (d->poly_246[2]), r, p_0135, 3);
-  p = svmla_lane_f32 (p, r2, p_0135, 0);
+  svfloat32_t p_0135 = svld1rq (svptrue_b32 (), &d->poly_0135[0]);
+  svfloat32_t p = svmla_lane (sv_f32 (d->poly_246[0]), r, p_0135, 1);
+  svfloat32_t q = svmla_lane (sv_f32 (d->poly_246[1]), r, p_0135, 2);
+  svfloat32_t y = svmla_lane (sv_f32 (d->poly_246[2]), r, p_0135, 3);
+  p = svmla_lane (p, r2, p_0135, 0);
 
-  q = svmla_f32_x (pg, q, r2, p);
-  y = svmla_f32_x (pg, y, r2, q);
-  p = svmla_n_f32_x (pg, r, n, d->ln2);
-  y = svmla_f32_x (pg, p, r2, y);
+  q = svmla_x (pg, q, r2, p);
+  y = svmla_x (pg, y, r2, q);
+  p = svmla_x (pg, r, n, d->ln2);
 
   if (__glibc_unlikely (svptest_any (pg, cmp)))
-    return special_case (x, y, cmp);
-  return y;
+    return special_case (x, svmla_x (svnot_z (pg, cmp), p, r2, y), cmp);
+  return svmla_x (pg, p, r2, y);
 }

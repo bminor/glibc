@@ -21,9 +21,11 @@
 
 static const struct data
 {
+  uint32x4_t min_norm;
+  uint16x8_t special_bound;
   float32x4_t poly[7];
   float32x4_t ln2, tiny_bound;
-  uint32x4_t min_norm, special_bound, off, mantissa_mask;
+  uint32x4_t off, mantissa_mask;
 } data = {
   /* 3.34 ulp error.  */
   .poly = { V4 (-0x1.3e737cp-3f), V4 (0x1.5a9aa2p-3f), V4 (-0x1.4f9934p-3f),
@@ -32,28 +34,31 @@ static const struct data
   .ln2 = V4 (0x1.62e43p-1f),
   .tiny_bound = V4 (0x1p-126),
   .min_norm = V4 (0x00800000),
-  .special_bound = V4 (0x7f000000), /* asuint32(inf) - min_norm.  */
-  .off = V4 (0x3f2aaaab),	    /* 0.666667.  */
+  .special_bound = V8 (0x7f00), /* asuint32(inf) - min_norm.  */
+  .off = V4 (0x3f2aaaab),	/* 0.666667.  */
   .mantissa_mask = V4 (0x007fffff)
 };
 
 #define P(i) d->poly[7 - i]
 
 static float32x4_t VPCS_ATTR NOINLINE
-special_case (float32x4_t x, float32x4_t y, uint32x4_t cmp)
+special_case (float32x4_t x, float32x4_t y, float32x4_t r2, float32x4_t p,
+	      uint16x4_t cmp)
 {
   /* Fall back to scalar code.  */
-  return v_call_f32 (logf, x, y, cmp);
+  return v_call_f32 (logf, x, vfmaq_f32 (p, y, r2), vmovl_u16 (cmp));
 }
 
 float32x4_t VPCS_ATTR V_NAME_F1 (log) (float32x4_t x)
 {
   const struct data *d = ptr_barrier (&data);
   float32x4_t n, p, q, r, r2, y;
-  uint32x4_t u, cmp;
+  uint32x4_t u;
+  uint16x4_t cmp;
 
   u = vreinterpretq_u32_f32 (x);
-  cmp = vcgeq_u32 (vsubq_u32 (u, d->min_norm), d->special_bound);
+  cmp = vcge_u16 (vsubhn_u32 (u, d->min_norm),
+		  vget_low_u16 (d->special_bound));
 
   /* x = 2^n * (1+r), where 2/3 < 1+r < 4/3.  */
   u = vsubq_u32 (u, d->off);
@@ -73,9 +78,8 @@ float32x4_t VPCS_ATTR V_NAME_F1 (log) (float32x4_t x)
   q = vfmaq_f32 (q, p, r2);
   y = vfmaq_f32 (y, q, r2);
   p = vfmaq_f32 (r, d->ln2, n);
-  y = vfmaq_f32 (p, y, r2);
 
-  if (__glibc_unlikely (v_any_u32 (cmp)))
-    return special_case (x, y, cmp);
-  return y;
+  if (__glibc_unlikely (v_any_u16h (cmp)))
+    return special_case (x, y, r2, p, cmp);
+  return vfmaq_f32 (p, y, r2);
 }
