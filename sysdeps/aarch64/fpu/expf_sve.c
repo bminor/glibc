@@ -60,31 +60,30 @@ svfloat32_t SV_NAME_F1 (exp) (svfloat32_t x, const svbool_t pg)
 
   /* Load some constants in quad-word chunks to minimise memory access (last
      lane is wasted).  */
-  svfloat32_t invln2_and_ln2 = svld1rq_f32 (svptrue_b32 (), &d->inv_ln2);
+  svfloat32_t invln2_and_ln2 = svld1rq (svptrue_b32 (), &d->inv_ln2);
 
   /* n = round(x/(ln2/N)).  */
-  svfloat32_t z = svmla_lane_f32 (sv_f32 (d->shift), x, invln2_and_ln2, 0);
-  svfloat32_t n = svsub_n_f32_x (pg, z, d->shift);
+  svfloat32_t z = svmla_lane (sv_f32 (d->shift), x, invln2_and_ln2, 0);
+  svfloat32_t n = svsub_x (pg, z, d->shift);
 
   /* r = x - n*ln2/N.  */
-  svfloat32_t r = svmls_lane_f32 (x, n, invln2_and_ln2, 1);
-  r = svmls_lane_f32 (r, n, invln2_and_ln2, 2);
+  svfloat32_t r = svmls_lane (x, n, invln2_and_ln2, 1);
+  r = svmls_lane (r, n, invln2_and_ln2, 2);
 
-/* scale = 2^(n/N).  */
-  svbool_t is_special_case = svacgt_n_f32 (pg, x, d->thres);
-  svfloat32_t scale = svexpa_f32 (svreinterpret_u32_f32 (z));
+  /* scale = 2^(n/N).  */
+  svbool_t is_special_case = svacgt (pg, x, d->thres);
+  svfloat32_t scale = svexpa (svreinterpret_u32 (z));
 
   /* y = exp(r) - 1 ~= r + C0 r^2 + C1 r^3 + C2 r^4 + C3 r^5 + C4 r^6.  */
-  svfloat32_t p12 = svmla_f32_x (pg, C (1), C (2), r);
-  svfloat32_t p34 = svmla_f32_x (pg, C (3), C (4), r);
-  svfloat32_t r2 = svmul_f32_x (pg, r, r);
-  svfloat32_t p14 = svmla_f32_x (pg, p12, p34, r2);
-  svfloat32_t p0 = svmul_f32_x (pg, r, C (0));
-  svfloat32_t poly = svmla_f32_x (pg, p0, r2, p14);
+  svfloat32_t p12 = svmla_x (pg, C (1), C (2), r);
+  svfloat32_t p34 = svmla_x (pg, C (3), C (4), r);
+  svfloat32_t r2 = svmul_x (pg, r, r);
+  svfloat32_t p14 = svmla_x (pg, p12, p34, r2);
+  svfloat32_t p0 = svmul_x (pg, r, C (0));
+  svfloat32_t poly = svmla_x (pg, p0, r2, p14);
 
   if (__glibc_unlikely (svptest_any (pg, is_special_case)))
-    return special_case (x, svmla_f32_x (pg, scale, scale, poly),
-			 is_special_case);
+    return special_case (x, svmla_x (pg, scale, scale, poly), is_special_case);
 
-  return svmla_f32_x (pg, scale, scale, poly);
+  return svmla_x (pg, scale, scale, poly);
 }
