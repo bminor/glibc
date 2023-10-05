@@ -1,5 +1,6 @@
 libmvec-supported-funcs = cos \
                           exp \
+                          exp2 \
                           log \
                           sin \
                           tan

@@ -990,10 +990,18 @@ double: 1
 float: 1
 ldouble: 1
 
+Function: "exp2_advsimd":
+double: 1
+float: 1
+
 Function: "exp2_downward":
 double: 1
 float: 1
 ldouble: 1
+
+Function: "exp2_sve":
+double: 1
+float: 1
 
 Function: "exp2_towardzero":
 double: 1
