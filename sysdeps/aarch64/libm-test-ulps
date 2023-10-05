@@ -1220,10 +1220,18 @@ double: 1
 float: 1
 ldouble: 3
 
+Function: "log2_advsimd":
+double: 1
+float: 2
+
 Function: "log2_downward":
 double: 3
 float: 3
 ldouble: 3
+
+Function: "log2_sve":
+double: 1
+float: 2
 
 Function: "log2_towardzero":
 double: 2

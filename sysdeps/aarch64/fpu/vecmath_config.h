@@ -50,4 +50,16 @@ extern const struct v_log_data
 
 #define V_EXP_TABLE_BITS 7
 extern const uint64_t __v_exp_data[1 << V_EXP_TABLE_BITS] attribute_hidden;
+
+#define V_LOG2_TABLE_BITS 7
+extern const struct v_log2_data
+{
+  double poly[5];
+  double invln2;
+  struct
+  {
+    double invc, log2c;
+  } table[1 << V_LOG2_TABLE_BITS];
+} __v_log2_data attribute_hidden;
+
 #endif
