@@ -624,7 +624,7 @@ $(objpfx)testroot.pristine/install.stamp :
 ifeq ($(run-built-tests),yes)
 	# Copy these DSOs first so we can overwrite them with our own.
 	for dso in `$(test-wrapper-env) LD_TRACE_LOADED_OBJECTS=1  \
-		$(rtld-prefix) \
+		$(rtld-prefix) --inhibit-cache \
 		$(objpfx)testroot.pristine/bin/sh \
 	        | sed -n '/\//{s@.*=> /@/@;s/^[^/]*//;s/ .*//p;}'` ;\
 	  do \
@@ -633,7 +633,7 @@ ifeq ($(run-built-tests),yes)
 	    $(test-wrapper) cp $$dso $(objpfx)testroot.pristine$$dso ;\
 	  done
 	for dso in `$(test-wrapper-env) LD_TRACE_LOADED_OBJECTS=1  \
-		$(rtld-prefix) \
+		$(rtld-prefix) --inhibit-cache \
 		$(objpfx)support/$(LINKS_DSO_PROGRAM) \
 	        | sed -n '/\//{s@.*=> /@/@;s/^[^/]*//;s/ .*//p;}'` ;\
 	  do \
