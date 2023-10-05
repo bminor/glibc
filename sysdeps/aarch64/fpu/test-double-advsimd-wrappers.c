@@ -25,6 +25,7 @@
 
 VPCS_VECTOR_WRAPPER (cos_advsimd, _ZGVnN2v_cos)
 VPCS_VECTOR_WRAPPER (exp_advsimd, _ZGVnN2v_exp)
+VPCS_VECTOR_WRAPPER (exp10_advsimd, _ZGVnN2v_exp10)
 VPCS_VECTOR_WRAPPER (exp2_advsimd, _ZGVnN2v_exp2)
 VPCS_VECTOR_WRAPPER (log_advsimd, _ZGVnN2v_log)
 VPCS_VECTOR_WRAPPER (log10_advsimd, _ZGVnN2v_log10)

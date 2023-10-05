@@ -1,5 +1,6 @@
 libmvec-supported-funcs = cos \
                           exp \
+                          exp10 \
                           exp2 \
                           log \
                           log10 \

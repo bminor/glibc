@@ -34,6 +34,7 @@
 
 SVE_VECTOR_WRAPPER (cos_sve, _ZGVsMxv_cos)
 SVE_VECTOR_WRAPPER (exp_sve, _ZGVsMxv_exp)
+SVE_VECTOR_WRAPPER (exp10_sve, _ZGVsMxv_exp10)
 SVE_VECTOR_WRAPPER (exp2_sve, _ZGVsMxv_exp2)
 SVE_VECTOR_WRAPPER (log_sve, _ZGVsMxv_log)
 SVE_VECTOR_WRAPPER (log10_sve, _ZGVsMxv_log10)
