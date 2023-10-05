@@ -1,7 +1,8 @@
 libmvec-supported-funcs = cos \
                           exp \
                           log \
-                          sin
+                          sin \
+                          tan
 
 float-advsimd-funcs = $(libmvec-supported-funcs)
 double-advsimd-funcs = $(libmvec-supported-funcs)

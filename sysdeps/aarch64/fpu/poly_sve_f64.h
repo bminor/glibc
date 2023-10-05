@@ -1,4 +1,5 @@
-/* Scalar wrappers for single-precision Advanced SIMD vector math functions.
+/* Helpers for evaluating polynomials on double-precision SVE input, using
+   various schemes.
 
    Copyright (C) 2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
@@ -17,14 +18,21 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <arm_neon.h>
+#ifndef AARCH64_FPU_POLY_SVE_F64_H
+#define AARCH64_FPU_POLY_SVE_F64_H
 
-#include "test-float-advsimd.h"
+#include <arm_sve.h>
 
-#define VEC_TYPE float32x4_t
+/* Wrap SVE f64 helpers: evaluation of some scheme/order has form:
+   sv_[scheme]_[order]_f64_x.  */
+#define VTYPE svfloat64_t
+#define STYPE double
+#define VWRAP(f) sv_##f##_f64_x
+#define DUP svdup_n_f64
+#include "poly_sve_generic.h"
+#undef DUP
+#undef VWRAP
+#undef STYPE
+#undef VTYPE
 
-VPCS_VECTOR_WRAPPER (cosf_advsimd, _ZGVnN4v_cosf)
-VPCS_VECTOR_WRAPPER (expf_advsimd, _ZGVnN4v_expf)
-VPCS_VECTOR_WRAPPER (logf_advsimd, _ZGVnN4v_logf)
-VPCS_VECTOR_WRAPPER (sinf_advsimd, _ZGVnN4v_sinf)
-VPCS_VECTOR_WRAPPER (tanf_advsimd, _ZGVnN4v_tanf)
+#endif

@@ -53,11 +53,13 @@ __vpcs __f32x4_t _ZGVnN4v_cosf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_expf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_logf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_sinf (__f32x4_t);
+__vpcs __f32x4_t _ZGVnN4v_tanf (__f32x4_t);
 
 __vpcs __f64x2_t _ZGVnN2v_cos (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_exp (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_log (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_sin (__f64x2_t);
+__vpcs __f64x2_t _ZGVnN2v_tan (__f64x2_t);
 
 #  undef __ADVSIMD_VEC_MATH_SUPPORTED
 #endif /* __ADVSIMD_VEC_MATH_SUPPORTED */
@@ -68,11 +70,13 @@ __sv_f32_t _ZGVsMxv_cosf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_expf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_logf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_sinf (__sv_f32_t, __sv_bool_t);
+__sv_f32_t _ZGVsMxv_tanf (__sv_f32_t, __sv_bool_t);
 
 __sv_f64_t _ZGVsMxv_cos (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_exp (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_log (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_sin (__sv_f64_t, __sv_bool_t);
+__sv_f64_t _ZGVsMxv_tan (__sv_f64_t, __sv_bool_t);
 
 #  undef __SVE_VEC_MATH_SUPPORTED
 #endif /* __SVE_VEC_MATH_SUPPORTED */

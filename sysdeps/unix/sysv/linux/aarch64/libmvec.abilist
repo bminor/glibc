@@ -14,3 +14,7 @@ GLIBC_2.38 _ZGVsMxv_log F
 GLIBC_2.38 _ZGVsMxv_logf F
 GLIBC_2.38 _ZGVsMxv_sin F
 GLIBC_2.38 _ZGVsMxv_sinf F
+GLIBC_2.39 _ZGVnN2v_tan F
+GLIBC_2.39 _ZGVnN4v_tanf F
+GLIBC_2.39 _ZGVsMxv_tan F
+GLIBC_2.39 _ZGVsMxv_tanf F

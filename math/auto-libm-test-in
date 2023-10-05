@@ -7655,7 +7655,7 @@ sqrt min
 sqrt min_subnorm
 
 tan 0
-tan -0
+tan -0 no-mathvec
 tan pi/4
 tan pi/2
 tan -pi/2

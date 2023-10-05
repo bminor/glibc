@@ -17,4 +17,10 @@ libmvec {
     _ZGVsMxv_sin;
     _ZGVsMxv_sinf;
   }
+  GLIBC_2.39 {
+    _ZGVnN4v_tanf;
+    _ZGVnN2v_tan;
+    _ZGVsMxv_tanf;
+    _ZGVsMxv_tan;
+  }
 }
