@@ -23,7 +23,7 @@ static const struct data
 {
   float poly[4];
   /* Pi-related values to be loaded as one quad-word and used with
-     svmla_lane_f32.  */
+     svmla_lane.  */
   float negpi1, negpi2, negpi3, invpi;
   float shift;
 } data = {
@@ -57,40 +57,42 @@ svfloat32_t SV_NAME_F1 (sin) (svfloat32_t x, const svbool_t pg)
 {
   const struct data *d = ptr_barrier (&data);
 
-  svfloat32_t ax = svabs_f32_x (pg, x);
-  svuint32_t sign = sveor_u32_x (pg, svreinterpret_u32_f32 (x),
-				 svreinterpret_u32_f32 (ax));
-  svbool_t cmp = svcmpge_n_u32 (pg, svreinterpret_u32_f32 (ax), RangeVal);
+  svfloat32_t ax = svabs_x (pg, x);
+  svuint32_t sign
+      = sveor_x (pg, svreinterpret_u32 (x), svreinterpret_u32 (ax));
+  svbool_t cmp = svcmpge (pg, svreinterpret_u32 (ax), RangeVal);
 
   /* pi_vals are a quad-word of helper values - the first 3 elements contain
      -pi in extended precision, the last contains 1 / pi.  */
-  svfloat32_t pi_vals = svld1rq_f32 (svptrue_b32 (), &d->negpi1);
+  svfloat32_t pi_vals = svld1rq (svptrue_b32 (), &d->negpi1);
 
   /* n = rint(|x|/pi).  */
-  svfloat32_t n = svmla_lane_f32 (sv_f32 (d->shift), ax, pi_vals, 3);
-  svuint32_t odd = svlsl_n_u32_x (pg, svreinterpret_u32_f32 (n), 31);
-  n = svsub_n_f32_x (pg, n, d->shift);
+  svfloat32_t n = svmla_lane (sv_f32 (d->shift), ax, pi_vals, 3);
+  svuint32_t odd = svlsl_x (pg, svreinterpret_u32 (n), 31);
+  n = svsub_x (pg, n, d->shift);
 
   /* r = |x| - n*pi  (range reduction into -pi/2 .. pi/2).  */
   svfloat32_t r;
-  r = svmla_lane_f32 (ax, n, pi_vals, 0);
-  r = svmla_lane_f32 (r, n, pi_vals, 1);
-  r = svmla_lane_f32 (r, n, pi_vals, 2);
+  r = svmla_lane (ax, n, pi_vals, 0);
+  r = svmla_lane (r, n, pi_vals, 1);
+  r = svmla_lane (r, n, pi_vals, 2);
 
   /* sin(r) approx using a degree 9 polynomial from the Taylor series
      expansion. Note that only the odd terms of this are non-zero.  */
-  svfloat32_t r2 = svmul_f32_x (pg, r, r);
+  svfloat32_t r2 = svmul_x (pg, r, r);
   svfloat32_t y;
-  y = svmla_f32_x (pg, C (2), r2, C (3));
-  y = svmla_f32_x (pg, C (1), r2, y);
-  y = svmla_f32_x (pg, C (0), r2, y);
-  y = svmla_f32_x (pg, r, r, svmul_f32_x (pg, y, r2));
+  y = svmla_x (pg, C (2), r2, C (3));
+  y = svmla_x (pg, C (1), r2, y);
+  y = svmla_x (pg, C (0), r2, y);
+  y = svmla_x (pg, r, r, svmul_x (pg, y, r2));
 
   /* sign = y^sign^odd.  */
-  y = svreinterpret_f32_u32 (sveor_u32_x (pg, svreinterpret_u32_f32 (y),
-					  sveor_u32_x (pg, sign, odd)));
+  sign = sveor_x (pg, sign, odd);
 
   if (__glibc_unlikely (svptest_any (pg, cmp)))
-    return special_case (x, y, cmp);
-  return y;
+    return special_case (x,
+			 svreinterpret_f32 (sveor_x (
+			     svnot_z (pg, cmp), svreinterpret_u32 (y), sign)),
+			 cmp);
+  return svreinterpret_f32 (sveor_x (pg, svreinterpret_u32 (y), sign));
 }

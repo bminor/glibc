@@ -24,7 +24,6 @@ static const struct data
   float64x2_t poly[7];
   float64x2_t range_val, inv_pi, shift, pi_1, pi_2, pi_3;
 } data = {
-  /* Worst-case error is 2.8 ulp in [-pi/2, pi/2].  */
   .poly = { V2 (-0x1.555555555547bp-3), V2 (0x1.1111111108a4dp-7),
 	    V2 (-0x1.a01a019936f27p-13), V2 (0x1.71de37a97d93ep-19),
 	    V2 (-0x1.ae633919987c6p-26), V2 (0x1.60e277ae07cecp-33),
@@ -52,6 +51,15 @@ special_case (float64x2_t x, float64x2_t y, uint64x2_t odd, uint64x2_t cmp)
   return v_call_f64 (sin, x, y, cmp);
 }
 
+/* Vector (AdvSIMD) sin approximation.
+   Maximum observed error in [-pi/2, pi/2], where argument is not reduced,
+   is 2.87 ULP:
+   _ZGVnN2v_sin (0x1.921d5c6a07142p+0) got 0x1.fffffffa7dc02p-1
+				      want 0x1.fffffffa7dc05p-1
+   Maximum observed error in the entire non-special domain ([-2^23, 2^23])
+   is 3.22 ULP:
+   _ZGVnN2v_sin (0x1.5702447b6f17bp+22) got 0x1.ffdcd125c84fbp-3
+				       want 0x1.ffdcd125c84f8p-3.  */
 float64x2_t VPCS_ATTR V_NAME_D1 (sin) (float64x2_t x)
 {
   const struct data *d = ptr_barrier (&data);
