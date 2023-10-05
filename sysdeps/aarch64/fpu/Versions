@@ -22,6 +22,10 @@ libmvec {
     _ZGVnN2v_exp2;
     _ZGVsMxv_exp2f;
     _ZGVsMxv_exp2;
+    _ZGVnN4v_log10f;
+    _ZGVnN2v_log10;
+    _ZGVsMxv_log10f;
+    _ZGVsMxv_log10;
     _ZGVnN4v_log2f;
     _ZGVnN2v_log2;
     _ZGVsMxv_log2f;

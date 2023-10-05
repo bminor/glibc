@@ -62,4 +62,15 @@ extern const struct v_log2_data
   } table[1 << V_LOG2_TABLE_BITS];
 } __v_log2_data attribute_hidden;
 
+#define V_LOG10_TABLE_BITS 7
+extern const struct v_log10_data
+{
+  double poly[5];
+  double invln10, log10_2;
+  struct
+  {
+    double invc, log10c;
+  } table[1 << V_LOG10_TABLE_BITS];
+} __v_log10_data attribute_hidden;
+
 #endif

@@ -1180,10 +1180,18 @@ double: 2
 float: 2
 ldouble: 2
 
+Function: "log10_advsimd":
+double: 1
+float: 2
+
 Function: "log10_downward":
 double: 2
 float: 3
 ldouble: 1
+
+Function: "log10_sve":
+double: 1
+float: 2
 
 Function: "log10_towardzero":
 double: 2
