@@ -17,6 +17,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include "tmpdir.h"
 
 static char tmpnam_buffer[L_tmpnam];
 

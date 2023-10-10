@@ -156,11 +156,6 @@ extern FILE *__old_tmpfile (void);
 
 #  include <bits/types/wint_t.h>
 
-/* Generate a unique file name (and possibly open it).  */
-extern int __path_search (char *__tmpl, size_t __tmpl_len,
-			  const char *__dir, const char *__pfx,
-			  int __try_tempdir) attribute_hidden;
-
 extern int __gen_tempname (char *__tmpl, int __suffixlen, int __flags,
 			   int __kind) attribute_hidden;
 /* The __kind argument to __gen_tempname may be one of: */

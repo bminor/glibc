@@ -19,6 +19,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <unistd.h>
+#include "tmpdir.h"
 
 #include <iolibio.h>
 #define __fdopen _IO_fdopen

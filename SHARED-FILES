@@ -111,6 +111,9 @@ gnulib:
   string/strstr.c
   string/strtok_r.c
   string/strverscmp.c
+  # Merged from gnulib 2024-04-08 (gnulib commit 3238349628)
+  stdio-common/tmpdir.c
+  stdio-common/tmpdir.h
   sysdeps/generic/pty-private.h
   sysdeps/generic/siglist.h
   sysdeps/posix/euidaccess.c
@@ -118,7 +121,7 @@ gnulib:
   sysdeps/posix/getcwd.c
   sysdeps/posix/pwrite.c
   sysdeps/posix/spawni.c
-  # Merged from gnulib 2014-6-23
+  # Merged from gnulib 2024-04-08 (gnulib commit 3238349628)
   sysdeps/posix/tempname.c
   # Merged from gnulib 2014-6-27
   time/mktime.c

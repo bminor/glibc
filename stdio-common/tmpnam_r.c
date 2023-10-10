@@ -16,6 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <stdio.h>
+#include "tmpdir.h"
 
 /* Generate a unique filename in P_tmpdir.  If S is NULL return NULL.
    This makes this function thread safe.  */

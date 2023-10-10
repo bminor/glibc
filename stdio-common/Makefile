@@ -92,6 +92,7 @@ routines := \
   sscanf \
   tempnam \
   tempname \
+  tmpdir \
   tmpfile \
   tmpfile64 \
   tmpnam \
