@@ -14,10 +14,6 @@ libc_hidden_proto (__get_nprocs_conf)
 extern int __get_nprocs (void);
 libc_hidden_proto (__get_nprocs)
 
-/* Return the number of available processors which the process can
-   be scheduled.  */
-extern int __get_nprocs_sched (void) attribute_hidden;
-
 /* Return number of physical pages of memory in the system.  */
 extern long int __get_phys_pages (void);
 libc_hidden_proto (__get_phys_pages)
