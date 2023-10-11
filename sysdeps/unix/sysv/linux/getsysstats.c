@@ -29,7 +29,7 @@
 #include <sys/sysinfo.h>
 #include <sysdep.h>
 
-int
+static int
 __get_nprocs_sched (void)
 {
   enum
