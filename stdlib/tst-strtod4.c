@@ -13,7 +13,9 @@ static const struct
 } tests[] =
   {
     { "000"NNBSP"000"NNBSP"000", "", 0.0 },
-    { "1"NNBSP"000"NNBSP"000,5x", "x", 1000000.5 }
+    { "1"NNBSP"000"NNBSP"000,5x", "x", 1000000.5 },
+    /* Bug 30964 */
+    { "10"NNBSP NNBSP"200", NNBSP NNBSP"200", 10.0 }
   };
 #define NTESTS (sizeof (tests) / sizeof (tests[0]))
 
