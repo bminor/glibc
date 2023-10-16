@@ -368,6 +368,17 @@ struct file_handle
 # define MAX_HANDLE_SZ	128
 #endif
 
+#ifdef __USE_GNU
+/* Flags for name_to_handle_at.  See comment in fcntl.h about the use
+   of the same AT_* flag bits for different purposes in different
+   functions.  */
+# define AT_HANDLE_FID		AT_REMOVEDIR /* File handle is needed
+						to compare object
+						identity and may not
+						be usable to
+						open_by_handle_at.  */
+#endif
+
 __BEGIN_DECLS
 
 #ifdef __USE_GNU
