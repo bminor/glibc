@@ -367,6 +367,10 @@ enum
 #ifdef __USE_GNU
     , SCM_CREDENTIALS = 0x02	/* Credentials passing.  */
 # define SCM_CREDENTIALS SCM_CREDENTIALS
+    , SCM_SECURITY = 0x03	/* Security label.  */
+# define SCM_SECURITY SCM_SECURITY
+    , SCM_PIDFD = 0x04		/* Pidfd.  */
+# define SCM_PIDFD SCM_PIDFD
 #endif
   };
 
