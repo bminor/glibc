@@ -4081,6 +4081,7 @@ enum
 #define R_RISCV_TLS_DTPREL64	 9
 #define R_RISCV_TLS_TPREL32	10
 #define R_RISCV_TLS_TPREL64	11
+#define R_RISCV_TLSDESC		12
 #define R_RISCV_BRANCH		16
 #define R_RISCV_JAL		17
 #define R_RISCV_CALL		18
@@ -4106,16 +4107,10 @@ enum
 #define R_RISCV_SUB16		38
 #define R_RISCV_SUB32		39
 #define R_RISCV_SUB64		40
-#define R_RISCV_GNU_VTINHERIT	41
-#define R_RISCV_GNU_VTENTRY	42
+#define R_RISCV_GOT32_PCREL	41
 #define R_RISCV_ALIGN		43
 #define R_RISCV_RVC_BRANCH	44
 #define R_RISCV_RVC_JUMP	45
-#define R_RISCV_RVC_LUI		46
-#define R_RISCV_GPREL_I		47
-#define R_RISCV_GPREL_S		48
-#define R_RISCV_TPREL_I		49
-#define R_RISCV_TPREL_S		50
 #define R_RISCV_RELAX		51
 #define R_RISCV_SUB6		52
 #define R_RISCV_SET6		53
@@ -4127,8 +4122,12 @@ enum
 #define R_RISCV_PLT32		59
 #define R_RISCV_SET_ULEB128	60
 #define R_RISCV_SUB_ULEB128	61
+#define R_RISCV_TLSDESC_HI20	62
+#define R_RISCV_TLSDESC_LOAD_LO12 63
+#define R_RISCV_TLSDESC_ADD_LO12 64
+#define R_RISCV_TLSDESC_CALL	65
 
-#define R_RISCV_NUM		62
+#define R_RISCV_NUM		66
 
 /* RISC-V specific values for the st_other field.  */
 #define STO_RISCV_VARIANT_CC	0x80	/* Function uses variant calling
@@ -4137,7 +4136,7 @@ enum
 /* RISC-V specific values for the sh_type field.  */
 #define SHT_RISCV_ATTRIBUTES	(SHT_LOPROC + 3)
 
-/* RISC-V specific values for the p_type field.  */
+/* RISC-V specific values for the p_type field (deprecated).  */
 #define PT_RISCV_ATTRIBUTES	(PT_LOPROC + 3)
 
 /* RISC-V specific values for the d_tag field.  */
