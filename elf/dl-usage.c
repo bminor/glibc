@@ -99,7 +99,8 @@ print_search_path_for_help (struct dl_main_state *state)
   if (map != NULL)
     print_search_path_for_help_1 (map->l_runpath_dirs.dirs);
 
-  _dl_printf ("  (libraries located via %s)\n", LD_SO_CACHE);
+  if (!GLRO(dl_inhibit_cache))
+    _dl_printf ("  (libraries located via %s)\n", LD_SO_CACHE);
 
   print_search_path_for_help_1 (__rtld_search_dirs.dirs);
 }
