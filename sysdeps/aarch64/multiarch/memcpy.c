@@ -34,11 +34,15 @@ extern __typeof (__redirect_memcpy) __memcpy_thunderx2 attribute_hidden;
 extern __typeof (__redirect_memcpy) __memcpy_falkor attribute_hidden;
 extern __typeof (__redirect_memcpy) __memcpy_a64fx attribute_hidden;
 extern __typeof (__redirect_memcpy) __memcpy_sve attribute_hidden;
+extern __typeof (__redirect_memcpy) __memcpy_mops attribute_hidden;
 
 static inline __typeof (__redirect_memcpy) *
 select_memcpy_ifunc (void)
 {
   INIT_ARCH ();
+
+  if (mops)
+    return __memcpy_mops;
 
   if (sve && HAVE_AARCH64_SVE_ASM)
     {
