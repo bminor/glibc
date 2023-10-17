@@ -33,11 +33,15 @@ extern __typeof (__redirect_memset) __memset_emag attribute_hidden;
 extern __typeof (__redirect_memset) __memset_kunpeng attribute_hidden;
 extern __typeof (__redirect_memset) __memset_a64fx attribute_hidden;
 extern __typeof (__redirect_memset) __memset_generic attribute_hidden;
+extern __typeof (__redirect_memset) __memset_mops attribute_hidden;
 
 static inline __typeof (__redirect_memset) *
 select_memset_ifunc (void)
 {
   INIT_ARCH ();
+
+  if (mops)
+    return __memset_mops;
 
   if (sve && HAVE_AARCH64_SVE_ASM)
     {
