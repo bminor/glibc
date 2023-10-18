@@ -137,7 +137,7 @@ _dl_close_worker (struct link_map *map, bool force)
   dl_close_state = pending;
 
   bool any_tls = false;
-  const unsigned int nloaded __attribute_maybe_unused__ = ns->_ns_nloaded;
+  const unsigned int nloaded = ns->_ns_nloaded;
 
   /* Run over the list and assign indexes to the link maps.  */
   int idx = 0;
