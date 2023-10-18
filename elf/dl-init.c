@@ -21,7 +21,6 @@
 #include <ldsodefs.h>
 #include <elf-initfini.h>
 
-struct link_map *_dl_init_called_list;
 
 static void
 call_init (struct link_map *l, int argc, char **argv, char **env)
@@ -42,21 +41,6 @@ call_init (struct link_map *l, int argc, char **argv, char **env)
   /* Avoid handling this constructor again in case we have a circular
      dependency.  */
   l->l_init_called = 1;
-
-  /* Help an already-running dlclose: The just-loaded object must not
-     be removed during the current pass.  (No effect if no dlclose in
-     progress.)  */
-  l->l_map_used = 1;
-
-  /* Record execution before starting any initializers.  This way, if
-     the initializers themselves call dlopen, their ELF destructors
-     will eventually be run before this object is destructed, matching
-     that their ELF constructors have run before this object was
-     constructed.  _dl_fini uses this list for audit callbacks, so
-     register objects on the list even if they do not have a
-     constructor.  */
-  l->l_init_called_next = _dl_init_called_list;
-  _dl_init_called_list = l;
 
   /* Check for object which constructors we do not run here.  */
   if (__builtin_expect (l->l_name[0], 'a') == '\0'
