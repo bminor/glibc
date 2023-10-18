@@ -276,10 +276,6 @@ struct link_map
     /* List of object in order of the init and fini calls.  */
     struct link_map **l_initfini;
 
-    /* Linked list of objects in reverse ELF constructor execution
-       order.  Head of list is stored in _dl_init_called_list.  */
-    struct link_map *l_init_called_next;
-
     /* List of the dependencies introduced through symbol binding.  */
     struct link_map_reldeps
       {
