@@ -26,7 +26,8 @@ fedisableexcept (int excepts)
 
   _FPU_GETCW (temp);
   old_exc = (temp & FPC_EXCEPTION_MASK) >> FPC_EXCEPTION_MASK_SHIFT;
-  new_flags = (temp & (~((excepts & FE_ALL_EXCEPT) << FPC_EXCEPTION_MASK_SHIFT)));
+  new_flags = (temp & ~(((unsigned int) excepts & FE_ALL_EXCEPT)
+			<< FPC_EXCEPTION_MASK_SHIFT));
   _FPU_SETCW (new_flags);
 
   return old_exc;
