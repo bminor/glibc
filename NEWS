@@ -32,7 +32,6 @@ Security related changes:
 The following bugs are resolved with this release:
 
   [30723] posix_memalign repeatedly scans long bin lists
-  [30785] Always call destructors in reverse constructor order
   [30804] F_GETLK, F_SETLK, and F_SETLKW value change for powerpc64 with
     -D_FILE_OFFSET_BITS=64
   [30842] Stack read overflow in getaddrinfo in no-aaaa mode (CVE-2023-4527)
