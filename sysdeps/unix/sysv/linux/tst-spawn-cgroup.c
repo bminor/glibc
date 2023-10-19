@@ -136,9 +136,9 @@ create_new_cgroup (char **newcgroup)
     }
 
   if (!F_TYPE_EQUAL (fs.f_type, CGROUP2_SUPER_MAGIC))
-    FAIL_UNSUPPORTED ("%s is not a cgroupv2 (expected %jx, got %jd)",
-		      CGROUPFS, (intmax_t) fs.f_type,
-		      (intmax_t) CGROUP2_SUPER_MAGIC);
+    FAIL_UNSUPPORTED ("%s is not a cgroupv2 (expected %#jx, got %#jx)",
+		      CGROUPFS, (intmax_t) CGROUP2_SUPER_MAGIC,
+		      (intmax_t) fs.f_type);
 
   char *cgroup = get_cgroup ();
   TEST_VERIFY_EXIT (cgroup != NULL);
