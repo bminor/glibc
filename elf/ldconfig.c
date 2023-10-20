@@ -661,6 +661,31 @@ struct dlib_entry
   struct dlib_entry *next;
 };
 
+/* Skip some temporary DSO files.  These files may be partially written
+   and lead to ldconfig crashes when examined.  */
+static bool
+skip_dso_based_on_name (const char *name, size_t len)
+{
+  /* Skip temporary files created by the prelink program.  Files with
+     names like these are never really DSOs we want to look at.  */
+  if (len >= sizeof (".#prelink#") - 1)
+    {
+      if (strcmp (name + len - sizeof (".#prelink#") + 1,
+		  ".#prelink#") == 0)
+	return true;
+      if (len >= sizeof (".#prelink#.XXXXXX") - 1
+	  && memcmp (name + len - sizeof (".#prelink#.XXXXXX")
+		     + 1, ".#prelink#.", sizeof (".#prelink#.") - 1) == 0)
+	return true;
+    }
+  /* Skip temporary files created by RPM.  */
+  if (memchr (name, len, ';') != NULL)
+    return true;
+  /* Skip temporary files created by dpkg.  */
+  if (len > 4 && memcmp (name + len - 4, ".tmp", 4) == 0)
+    return true;
+  return false;
+}
 
 static void
 search_dir (const struct dir_entry *entry)
@@ -711,18 +736,8 @@ search_dir (const struct dir_entry *entry)
 	continue;
 
       size_t len = strlen (direntry->d_name);
-      /* Skip temporary files created by the prelink program.  Files with
-	 names like these are never really DSOs we want to look at.  */
-      if (len >= sizeof (".#prelink#") - 1)
-	{
-	  if (strcmp (direntry->d_name + len - sizeof (".#prelink#") + 1,
-		      ".#prelink#") == 0)
-	    continue;
-	  if (len >= sizeof (".#prelink#.XXXXXX") - 1
-	      && memcmp (direntry->d_name + len - sizeof (".#prelink#.XXXXXX")
-			 + 1, ".#prelink#.", sizeof (".#prelink#.") - 1) == 0)
-	    continue;
-	}
+      if (skip_dso_based_on_name (direntry->d_name, len))
+	continue;
       if (asprintf (&file_name, "%s/%s", entry->path, direntry->d_name) < 0)
 	error (EXIT_FAILURE, errno, _("Could not form library path"));
       if (opt_chroot != NULL)

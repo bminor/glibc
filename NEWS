@@ -40,7 +40,9 @@ Major new features:
 
 Deprecated and removed features, and other changes affecting compatibility:
 
-  [Add deprecations, removals and changes affecting compatibility here]
+* The ldconfig program now skips file names containing ';' or ending in
+  ".tmp", to avoid examining temporary files created by the RPM and dpkg
+  package managers.
 
 Changes to build and runtime requirements:
 
