@@ -661,6 +661,17 @@ struct dlib_entry
   struct dlib_entry *next;
 };
 
+/* Return true if the N bytes at NAME end with with the characters in
+   the string SUFFIX.  (NAME[N + 1] does not have to be a null byte.)
+   Expected to be called with a string literal for SUFFIX.  */
+static inline bool
+endswithn (const char *name, size_t n, const char *suffix)
+{
+  return (n >= strlen (suffix)
+	  && memcmp (name + n - strlen (suffix), suffix,
+		     strlen (suffix)) == 0);
+}
+
 /* Skip some temporary DSO files.  These files may be partially written
    and lead to ldconfig crashes when examined.  */
 static bool
@@ -670,8 +681,7 @@ skip_dso_based_on_name (const char *name, size_t len)
      names like these are never really DSOs we want to look at.  */
   if (len >= sizeof (".#prelink#") - 1)
     {
-      if (strcmp (name + len - sizeof (".#prelink#") + 1,
-		  ".#prelink#") == 0)
+      if (endswithn (name, len, ".#prelink#"))
 	return true;
       if (len >= sizeof (".#prelink#.XXXXXX") - 1
 	  && memcmp (name + len - sizeof (".#prelink#.XXXXXX")
@@ -679,10 +689,11 @@ skip_dso_based_on_name (const char *name, size_t len)
 	return true;
     }
   /* Skip temporary files created by RPM.  */
-  if (memchr (name, len, ';') != NULL)
+  if (memchr (name, ';', len) != NULL)
     return true;
   /* Skip temporary files created by dpkg.  */
-  if (len > 4 && memcmp (name + len - 4, ".tmp", 4) == 0)
+  if (endswithn (name, len, ".dpkg-new")
+      || endswithn (name, len, ".dpkg-tmp"))
     return true;
   return false;
 }
