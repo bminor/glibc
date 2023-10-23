@@ -35,3 +35,4 @@
 #define HWCAP_LOONGARCH_LBT_X86         (1 << 10)
 #define HWCAP_LOONGARCH_LBT_ARM         (1 << 11)
 #define HWCAP_LOONGARCH_LBT_MIPS        (1 << 12)
+#define HWCAP_LOONGARCH_PTW             (1 << 13)
