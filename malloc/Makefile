@@ -298,6 +298,8 @@ CPPFLAGS-malloc.c += -DUSE_TCACHE=1
 # Uncomment this for test releases.  For public releases it is too expensive.
 #CPPFLAGS-malloc.o += -DMALLOC_DEBUG=1
 
+CFLAGS-tst-tcfree3.c += -fno-builtin-malloc -fno-builtin-free
+
 sLIBdir := $(shell echo $(slibdir) | sed 's,lib\(\|64\)$$,\\\\$$LIB,')
 
 $(objpfx)mtrace: mtrace.pl

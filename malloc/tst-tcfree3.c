@@ -19,9 +19,6 @@
 #include <malloc.h>
 #include <string.h>
 
-/* Prevent GCC from optimizing away any malloc/free pairs.  */
-#pragma GCC optimize ("O0")
-
 static int
 do_test (void)
 {
