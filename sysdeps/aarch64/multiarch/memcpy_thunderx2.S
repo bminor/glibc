@@ -75,27 +75,12 @@
 #define I_v	v16
 #define J_v	v17
 
-#ifndef MEMMOVE
-# define MEMMOVE memmove
-#endif
-#ifndef MEMCPY
-# define MEMCPY memcpy
-#endif
-
-#if IS_IN (libc)
-
-#undef MEMCPY
-#define MEMCPY __memcpy_thunderx2
-#undef MEMMOVE
-#define MEMMOVE __memmove_thunderx2
-
-
 /* Overlapping large forward memmoves use a loop that copies backwards.
    Otherwise memcpy is used. Small moves branch to memcopy16 directly.
    The longer memcpy cases fall through to the memcpy head.
 */
 
-ENTRY_ALIGN (MEMMOVE, 6)
+ENTRY (__memmove_thunderx2)
 
 	PTR_ARG (0)
 	PTR_ARG (1)
@@ -109,8 +94,7 @@ ENTRY_ALIGN (MEMMOVE, 6)
 	ccmp	tmp1, count, 2, hi
 	b.lo	L(move_long)
 
-END (MEMMOVE)
-libc_hidden_builtin_def (MEMMOVE)
+END (__memmove_thunderx2)
 
 
 /* Copies are split into 3 main cases: small copies of up to 16 bytes,
@@ -124,8 +108,7 @@ libc_hidden_builtin_def (MEMMOVE)
 
 #define MEMCPY_PREFETCH_LDR 640
 
-	.p2align 4
-ENTRY (MEMCPY)
+ENTRY (__memcpy_thunderx2)
 
 	PTR_ARG (0)
 	PTR_ARG (1)
@@ -449,7 +432,7 @@ L(move_long):
 3:	ret
 
 
-END (MEMCPY)
+END (__memcpy_thunderx2)
 	.section	.rodata
 	.p2align	4
 
@@ -472,6 +455,3 @@ L(ext_table):
 	.word	L(ext_size_13) -.
 	.word	L(ext_size_14) -.
 	.word	L(ext_size_15) -.
-
-libc_hidden_builtin_def (MEMCPY)
-#endif

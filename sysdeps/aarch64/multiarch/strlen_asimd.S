@@ -203,4 +203,3 @@ L(page_cross):
 	ret
 
 END (__strlen_asimd)
-libc_hidden_builtin_def (__strlen_asimd)

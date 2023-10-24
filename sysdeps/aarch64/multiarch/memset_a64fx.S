@@ -33,8 +33,6 @@
 #define vector_length	x9
 
 #if HAVE_AARCH64_SVE_ASM
-# if IS_IN (libc)
-#  define MEMSET __memset_a64fx
 
 	.arch armv8.2-a+sve
 
@@ -49,7 +47,7 @@
 #undef BTI_C
 #define BTI_C
 
-ENTRY (MEMSET)
+ENTRY (__memset_a64fx)
 	PTR_ARG (0)
 	SIZE_ARG (2)
 
@@ -166,8 +164,6 @@ L(L2):
 	add	count, count, CACHE_LINE_SIZE
 	b	L(last)
 
-END (MEMSET)
-libc_hidden_builtin_def (MEMSET)
+END (__memset_a64fx)
 
-#endif /* IS_IN (libc) */
 #endif /* HAVE_AARCH64_SVE_ASM */

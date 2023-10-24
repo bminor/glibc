@@ -17,6 +17,6 @@ sysdep_routines += \
   memset_kunpeng \
   memset_mops \
   strlen_asimd \
-  strlen_mte \
+  strlen_generic \
 # sysdep_routines
 endif
