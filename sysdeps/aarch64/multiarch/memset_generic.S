@@ -21,9 +21,15 @@
 
 #if IS_IN (libc)
 # define MEMSET __memset_generic
+
+/* Do not hide the generic version of memset, we use it internally.  */
+# undef libc_hidden_builtin_def
+# define libc_hidden_builtin_def(name)
+
 /* Add a hidden definition for use within libc.so.  */
 # ifdef SHARED
 	.globl __GI_memset; __GI_memset = __memset_generic
 # endif
-# include <sysdeps/aarch64/memset.S>
 #endif
+
+#include <../memset.S>

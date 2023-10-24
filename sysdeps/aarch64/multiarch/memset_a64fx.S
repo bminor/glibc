@@ -37,8 +37,6 @@
 #define cl_remainder	x11	// CACHE_LINE_SIZE remainder
 
 #if HAVE_AARCH64_SVE_ASM
-# if IS_IN (libc)
-#  define MEMSET __memset_a64fx
 
 	.arch armv8.2-a+sve
 
@@ -109,7 +107,7 @@
 	ret
 	.endm
 
-ENTRY (MEMSET)
+ENTRY (__memset_a64fx)
 
 	PTR_ARG (0)
 	SIZE_ARG (2)
@@ -261,8 +259,6 @@ L(L2_dc_zva):
 	cbnz	rest, L(unroll8)
 	ret
 
-END (MEMSET)
-libc_hidden_builtin_def (MEMSET)
+END (__memset_a64fx)
 
-#endif /* IS_IN (libc) */
 #endif /* HAVE_AARCH64_SVE_ASM */

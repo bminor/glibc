@@ -41,9 +41,6 @@
 #define cl_remainder	x10	// CACHE_LINE_SIZE remainder
 
 #if HAVE_AARCH64_SVE_ASM
-# if IS_IN (libc)
-#  define MEMCPY __memcpy_a64fx
-#  define MEMMOVE __memmove_a64fx
 
 	.arch armv8.2-a+sve
 
@@ -176,7 +173,7 @@
 	ret
 	.endm
 
-ENTRY (MEMCPY)
+ENTRY (__memcpy_a64fx)
 
 	PTR_ARG (0)
 	PTR_ARG (1)
@@ -334,11 +331,10 @@ L(L2_dc_zva):
 	add	dest_ptr, dest_ptr, CACHE_LINE_SIZE * 2
 	b	L(unroll8)
 
-END (MEMCPY)
-libc_hidden_builtin_def (MEMCPY)
+END (__memcpy_a64fx)
 
 
-ENTRY (MEMMOVE)
+ENTRY_ALIGN (__memmove_a64fx, 4)
 
 	PTR_ARG (0)
 	PTR_ARG (1)
@@ -400,7 +396,5 @@ L(bwd_last):
 	mov	src_ptr, src
 	b	L(last)
 
-END (MEMMOVE)
-libc_hidden_builtin_def (MEMMOVE)
-# endif /* IS_IN (libc) */
+END (__memmove_a64fx)
 #endif /* HAVE_AARCH64_SVE_ASM */

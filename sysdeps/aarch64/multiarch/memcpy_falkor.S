@@ -71,7 +71,7 @@
    The non-temporal stores help optimize cache utilization.  */
 
 #if IS_IN (libc)
-ENTRY_ALIGN (__memcpy_falkor, 6)
+ENTRY (__memcpy_falkor)
 
 	PTR_ARG (0)
 	PTR_ARG (1)
@@ -198,7 +198,6 @@ L(loop64):
 	ret
 
 END (__memcpy_falkor)
-libc_hidden_builtin_def (__memcpy_falkor)
 
 
 /* RATIONALE:
@@ -216,7 +215,7 @@ libc_hidden_builtin_def (__memcpy_falkor)
 
    For small and medium cases memcpy is used.  */
 
-ENTRY_ALIGN (__memmove_falkor, 6)
+ENTRY (__memmove_falkor)
 
 	PTR_ARG (0)
 	PTR_ARG (1)
@@ -311,5 +310,4 @@ L(move_long):
 3:	ret
 
 END (__memmove_falkor)
-libc_hidden_builtin_def (__memmove_falkor)
 #endif

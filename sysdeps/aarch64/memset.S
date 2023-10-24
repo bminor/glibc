@@ -29,7 +29,7 @@
  *
  */
 
-ENTRY_ALIGN (MEMSET, 6)
+ENTRY (MEMSET)
 
 	PTR_ARG (0)
 	SIZE_ARG (2)

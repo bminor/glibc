@@ -19,8 +19,7 @@
 
 #include <sysdep.h>
 
-#if IS_IN (libc)
-# define MEMSET __memset_emag
+#define MEMSET __memset_emag
 
 /*
  * Using DC ZVA to zero memory does not produce better performance if
@@ -30,7 +29,6 @@
  * workloads.
  */
 
-# define DC_ZVA_THRESHOLD 0
+#define DC_ZVA_THRESHOLD 0
 
-# include "./memset_base64.S"
-#endif
+#include "./memset_base64.S"
