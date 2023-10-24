@@ -19,6 +19,7 @@
 #include <fenv.h>
 #include <stdio.h>
 #include <math-tests.h>
+#include <math-barriers.h>
 
 static int
 do_test (void)
@@ -41,12 +42,32 @@ do_test (void)
 
   /* Verify fesetexcept does not cause exception traps.  For architectures
      where setting the exception might result in traps the function should
-     return a nonzero value.  */
+     return a nonzero value.
+     Also check if the function does not alter the exception mask.  */
   ret = fesetexcept (FE_ALL_EXCEPT);
 
   _Static_assert (!(EXCEPTION_SET_FORCES_TRAP && !EXCEPTION_TESTS(float)),
 		  "EXCEPTION_SET_FORCES_TRAP only makes sense if the "
 		  "architecture suports exceptions");
+  {
+    int exc_before = fegetexcept ();
+    ret = fesetexcept (FE_ALL_EXCEPT);
+    int exc_after = fegetexcept ();
+    if (exc_before != exc_after)
+      {
+	puts ("fesetexcept (FE_ALL_EXCEPT) changed the exceptions mask");
+	return 1;
+      }
+  }
+
+  /* Execute some floating-point operations, since on some CPUs exceptions
+     triggers a trap only at the next floating-point instruction.  */
+  volatile double a = 1.0;
+  volatile double b = a + a;
+  math_force_eval (b);
+  volatile long double al = 1.0L;
+  volatile long double bl = al + al;
+  math_force_eval (bl);
 
   if (ret == 0)
     {
@@ -72,5 +93,4 @@ do_test (void)
   return result;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>
