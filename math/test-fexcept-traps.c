@@ -63,14 +63,16 @@ do_test (void)
       result = 1;
     }
 
-  if (EXCEPTION_SET_FORCES_TRAP)
-    {
-      puts ("setting exceptions traps, cannot test on this architecture");
-      return 77;
-    }
-  /* The test is that this does not cause exception traps.  */
+  /* The test is that this does not cause exception traps.  For architectures
+     where setting the exception might result in traps the function should
+     return a nonzero value.  */
   ret = fesetexceptflag (&saved, FE_ALL_EXCEPT);
-  if (ret != 0)
+
+  _Static_assert (!(EXCEPTION_SET_FORCES_TRAP && !EXCEPTION_TESTS(float)),
+		  "EXCEPTION_SET_FORCES_TRAP only makes sense if the "
+		  "architecture suports exceptions");
+
+  if (ret != 0 && !EXCEPTION_SET_FORCES_TRAP)
     {
       puts ("fesetexceptflag failed");
       result = 1;
