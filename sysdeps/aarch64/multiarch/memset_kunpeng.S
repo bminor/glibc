@@ -20,16 +20,13 @@
 #include <sysdep.h>
 #include <sysdeps/aarch64/memset-reg.h>
 
-#if IS_IN (libc)
-# define MEMSET __memset_kunpeng
-
 /* Assumptions:
  *
  * ARMv8-a, AArch64, unaligned accesses
  *
  */
 
-ENTRY_ALIGN (MEMSET, 6)
+ENTRY (__memset_kunpeng)
 
 	PTR_ARG (0)
 	SIZE_ARG (2)
@@ -108,6 +105,4 @@ L(set_long):
 	stp	q0, q0, [dstend, -32]
 	ret
 
-END (MEMSET)
-libc_hidden_builtin_def (MEMSET)
-#endif
+END (__memset_kunpeng)

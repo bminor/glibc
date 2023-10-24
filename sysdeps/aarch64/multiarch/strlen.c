@@ -28,10 +28,10 @@
 
 extern __typeof (__redirect_strlen) __strlen;
 
-extern __typeof (__redirect_strlen) __strlen_mte attribute_hidden;
+extern __typeof (__redirect_strlen) __strlen_generic attribute_hidden;
 extern __typeof (__redirect_strlen) __strlen_asimd attribute_hidden;
 
-libc_ifunc (__strlen, (mte ? __strlen_mte : __strlen_asimd));
+libc_ifunc (__strlen, (mte ? __strlen_generic : __strlen_asimd));
 
 # undef strlen
 strong_alias (__strlen, strlen);

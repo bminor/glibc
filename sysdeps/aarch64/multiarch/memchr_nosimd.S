@@ -26,10 +26,6 @@
  * Use base integer registers.
  */
 
-#ifndef MEMCHR
-# define MEMCHR __memchr_nosimd
-#endif
-
 /* Arguments and results.  */
 #define srcin		x0
 #define chrin		x1
@@ -62,7 +58,7 @@
 #define REP8_7f		0x7f7f7f7f7f7f7f7f
 
 
-ENTRY_ALIGN (MEMCHR, 6)
+ENTRY (__memchr_nosimd)
 
 	PTR_ARG (0)
 	SIZE_ARG (2)
@@ -219,5 +215,4 @@ L(none_chr):
 	mov	result, 0
 	ret
 
-END (MEMCHR)
-libc_hidden_builtin_def (MEMCHR)
+END (__memchr_nosimd)
