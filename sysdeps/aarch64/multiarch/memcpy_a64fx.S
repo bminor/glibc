@@ -39,9 +39,6 @@
 #define vlen8	x8
 
 #if HAVE_AARCH64_SVE_ASM
-# if IS_IN (libc)
-#  define MEMCPY __memcpy_a64fx
-#  define MEMMOVE __memmove_a64fx
 
 	.arch armv8.2-a+sve
 
@@ -97,7 +94,7 @@
 #undef BTI_C
 #define BTI_C
 
-ENTRY (MEMCPY)
+ENTRY (__memcpy_a64fx)
 
 	PTR_ARG (0)
 	PTR_ARG (1)
@@ -234,11 +231,10 @@ L(last_bytes):
 	st1b	z3.b, p0, [dstend, -1, mul vl]
 	ret
 
-END (MEMCPY)
-libc_hidden_builtin_def (MEMCPY)
+END (__memcpy_a64fx)
 
 
-ENTRY_ALIGN (MEMMOVE, 4)
+ENTRY_ALIGN (__memmove_a64fx, 4)
 
 	PTR_ARG (0)
 	PTR_ARG (1)
@@ -307,7 +303,5 @@ L(full_overlap):
 	mov	dst, dstin
 	b	L(last_bytes)
 
-END (MEMMOVE)
-libc_hidden_builtin_def (MEMMOVE)
-# endif /* IS_IN (libc) */
+END (__memmove_a64fx)
 #endif /* HAVE_AARCH64_SVE_ASM */
