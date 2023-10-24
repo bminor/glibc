@@ -17,42 +17,63 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <fenv.h>
-#include <math.h>
-#include <unistd.h>
 #include <ldsodefs.h>
-#include <dl-procinfo.h>
 
 int
 __fesetexceptflag (const fexcept_t *flagp, int excepts)
 {
+  /* The flags can be set in the 387 unit or in the SSE unit.  When we need to
+     clear a flag, we need to do so in both units, due to the way fetestexcept
+     is implemented.
+     When we need to set a flag, it is sufficient to do it in the SSE unit,
+     because that is guaranteed to not trap.  However, on i386 CPUs that have
+     only a 387 unit, set the flags in the 387, as long as this cannot trap.  */
+
   fenv_t temp;
 
-  /* Get the current environment.  We have to do this since we cannot
-     separately set the status word.  */
+  excepts &= FE_ALL_EXCEPT;
+
+  /* Get the current x87 FPU environment.  We have to do this since we
+     cannot separately set the status word.
+     Note: fnstenv masks all floating-point exceptions until the fldenv
+     or fldcw below.  */
   __asm__ ("fnstenv %0" : "=m" (*&temp));
 
-  temp.__status_word &= ~(excepts & FE_ALL_EXCEPT);
-  temp.__status_word |= *flagp & excepts & FE_ALL_EXCEPT;
-
-  /* Store the new status word (along with the rest of the environment.
-     Possibly new exceptions are set but they won't get executed unless
-     the next floating-point instruction.  */
-  __asm__ ("fldenv %0" : : "m" (*&temp));
-
-  /* If the CPU supports SSE, we set the MXCSR as well.  */
   if (CPU_FEATURE_USABLE (SSE))
     {
-      unsigned int xnew_exc;
+      unsigned int mxcsr;
 
-      /* Get the current MXCSR.  */
-      __asm__ ("stmxcsr %0" : "=m" (*&xnew_exc));
+      /* Clear relevant flags.  */
+      temp.__status_word &= ~(excepts & ~ *flagp);
 
-      /* Set the relevant bits.  */
-      xnew_exc &= ~(excepts & FE_ALL_EXCEPT);
-      xnew_exc |= *flagp & excepts & FE_ALL_EXCEPT;
+      /* Store the new status word (along with the rest of the environment).  */
+      __asm__ ("fldenv %0" : : "m" (*&temp));
+
+      /* And now similarly for SSE.  */
+      __asm__ ("stmxcsr %0" : "=m" (*&mxcsr));
+
+      /* Clear or set relevant flags.  */
+      mxcsr ^= (mxcsr ^ *flagp) & excepts;
 
       /* Put the new data in effect.  */
-      __asm__ ("ldmxcsr %0" : : "m" (*&xnew_exc));
+      __asm__ ("ldmxcsr %0" : : "m" (*&mxcsr));
+    }
+  else
+    {
+      /* Clear or set relevant flags.  */
+      temp.__status_word ^= (temp.__status_word ^ *flagp) & excepts;
+
+      if ((~temp.__control_word) & temp.__status_word & excepts)
+	{
+	  /* Setting the exception flags may trigger a trap (at the next
+	     floating-point instruction, but that does not matter).
+	     ISO C 23 § 7.6.4.5 does not allow it.  */
+	  __asm__ volatile ("fldcw %0" : : "m" (*&temp.__control_word));
+	  return -1;
+	}
+
+      /* Store the new status word (along with the rest of the environment).  */
+      __asm__ ("fldenv %0" : : "m" (*&temp));
     }
 
   /* Success.  */

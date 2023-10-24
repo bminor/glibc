@@ -22,30 +22,34 @@
 int
 fesetexceptflag (const fexcept_t *flagp, int excepts)
 {
+  /* The flags can be set in the 387 unit or in the SSE unit.
+     When we need to clear a flag, we need to do so in both units,
+     due to the way fetestexcept() is implemented.
+     When we need to set a flag, it is sufficient to do it in the SSE unit,
+     because that is guaranteed to not trap.  */
+
   fenv_t temp;
   unsigned int mxcsr;
 
-  /* XXX: Do we really need to set both the exception in both units?
-     Shouldn't it be enough to set only the SSE unit?  */
+  excepts &= FE_ALL_EXCEPT;
 
   /* Get the current x87 FPU environment.  We have to do this since we
      cannot separately set the status word.  */
   __asm__ ("fnstenv %0" : "=m" (*&temp));
 
-  temp.__status_word &= ~(excepts & FE_ALL_EXCEPT);
-  temp.__status_word |= *flagp & excepts & FE_ALL_EXCEPT;
+  /* Clear relevant flags.  */
+  temp.__status_word &= ~(excepts & ~ *flagp);
 
-  /* Store the new status word (along with the rest of the environment.
-     Possibly new exceptions are set but they won't get executed unless
-     the next floating-point instruction.  */
+  /* Store the new status word (along with the rest of the environment).  */
   __asm__ ("fldenv %0" : : "m" (*&temp));
 
-  /* And now the same for SSE.  */
+  /* And now similarly for SSE.  */
   __asm__ ("stmxcsr %0" : "=m" (*&mxcsr));
 
-  mxcsr &= ~(excepts & FE_ALL_EXCEPT);
-  mxcsr |= *flagp & excepts & FE_ALL_EXCEPT;
+  /* Clear or set relevant flags.  */
+  mxcsr ^= (mxcsr ^ *flagp) & excepts;
 
+  /* Put the new data in effect.  */
   __asm__ ("ldmxcsr %0" : : "m" (*&mxcsr));
 
   /* Success.  */
