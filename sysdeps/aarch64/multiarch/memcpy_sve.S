@@ -141,7 +141,6 @@ L(copy64_from_end):
 	ret
 
 END (__memcpy_sve)
-libc_hidden_builtin_def (__memcpy_sve)
 
 
 ENTRY (__memmove_sve)
@@ -208,5 +207,4 @@ L(return):
 	ret
 
 END (__memmove_sve)
-libc_hidden_builtin_def (__memmove_sve)
 #endif

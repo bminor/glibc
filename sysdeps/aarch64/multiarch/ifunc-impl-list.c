@@ -70,7 +70,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   IFUNC_IMPL (i, name, strlen,
 	      IFUNC_IMPL_ADD (array, i, strlen, !mte, __strlen_asimd)
-	      IFUNC_IMPL_ADD (array, i, strlen, 1, __strlen_mte))
+	      IFUNC_IMPL_ADD (array, i, strlen, 1, __strlen_generic))
 
   return 0;
 }
