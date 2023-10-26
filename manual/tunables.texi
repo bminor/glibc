@@ -529,7 +529,7 @@ This tunable is specific to powerpc, powerpc64 and powerpc64le.
 @deftp Tunable glibc.cpu.name
 The @code{glibc.cpu.name=xxx} tunable allows the user to tell @theglibc{} to
 assume that the CPU is @code{xxx} where xxx may have one of these values:
-@code{generic}, @code{falkor}, @code{thunderxt88}, @code{thunderx2t99},
+@code{generic}, @code{thunderxt88}, @code{thunderx2t99},
 @code{thunderx2t99p1}, @code{ares}, @code{emag}, @code{kunpeng},
 @code{a64fx}.
 
