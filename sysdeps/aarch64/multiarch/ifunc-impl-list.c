@@ -54,9 +54,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memmove, mops, __memmove_mops)
 	      IFUNC_IMPL_ADD (array, i, memmove, 1, __memmove_generic))
   IFUNC_IMPL (i, name, memset,
-	      /* Enable this on non-falkor processors too so that other cores
-		 can do a comparative analysis with __memset_generic.  */
-	      IFUNC_IMPL_ADD (array, i, memset, (zva_size == 64), __memset_falkor)
+	      IFUNC_IMPL_ADD (array, i, memset, (zva_size == 64), __memset_zva64)
 	      IFUNC_IMPL_ADD (array, i, memset, 1, __memset_emag)
 	      IFUNC_IMPL_ADD (array, i, memset, 1, __memset_kunpeng)
 #if HAVE_AARCH64_SVE_ASM
