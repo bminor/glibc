@@ -31,7 +31,6 @@ extern __typeof (__redirect_memcpy) __libc_memcpy;
 extern __typeof (__redirect_memcpy) __memcpy_generic attribute_hidden;
 extern __typeof (__redirect_memcpy) __memcpy_thunderx attribute_hidden;
 extern __typeof (__redirect_memcpy) __memcpy_thunderx2 attribute_hidden;
-extern __typeof (__redirect_memcpy) __memcpy_falkor attribute_hidden;
 extern __typeof (__redirect_memcpy) __memcpy_a64fx attribute_hidden;
 extern __typeof (__redirect_memcpy) __memcpy_sve attribute_hidden;
 extern __typeof (__redirect_memcpy) __memcpy_mops attribute_hidden;
@@ -56,9 +55,6 @@ select_memcpy_ifunc (void)
 
   if (IS_THUNDERX2 (midr) || IS_THUNDERX2PA (midr))
     return __memcpy_thunderx2;
-
-  if (IS_FALKOR (midr) || IS_PHECDA (midr))
-    return __memcpy_falkor;
 
   return __memcpy_generic;
 }
