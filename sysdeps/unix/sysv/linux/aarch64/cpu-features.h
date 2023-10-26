@@ -47,11 +47,6 @@
 #define IS_THUNDERX2(midr) (MIDR_IMPLEMENTOR(midr) == 'C'       \
 			   && MIDR_PARTNUM(midr) == 0xaf)
 
-#define IS_FALKOR(midr) (MIDR_IMPLEMENTOR(midr) == 'Q'			      \
-                        && MIDR_PARTNUM(midr) == 0xc00)
-
-#define IS_PHECDA(midr) (MIDR_IMPLEMENTOR(midr) == 'h'			      \
-                        && MIDR_PARTNUM(midr) == 0x000)
 #define IS_NEOVERSE_N1(midr) (MIDR_IMPLEMENTOR(midr) == 'A'		      \
 			      && MIDR_PARTNUM(midr) == 0xd0c)
 #define IS_NEOVERSE_N2(midr) (MIDR_IMPLEMENTOR(midr) == 'A'		      \
