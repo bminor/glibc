@@ -2942,7 +2942,7 @@ $(objpfx)tst-tls-allocation-failure-static-patched: \
 
 $(objpfx)tst-tls-allocation-failure-static-patched.out: \
   $(objpfx)tst-tls-allocation-failure-static-patched
-	$< > $@ 2>&1; echo "status: $$?" >> $@
+	$(test-wrapper) $< > $@ 2>&1; echo "status: $$?" >> $@
 	grep -q '^Fatal glibc error: Cannot allocate TLS block$$' $@ \
 	  && grep -q '^status: 127$$' $@; \
 	  $(evaluate-test)
