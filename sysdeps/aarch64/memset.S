@@ -101,19 +101,19 @@ L(tail64):
 	ret
 
 L(try_zva):
-#ifdef ZVA_MACRO
-	zva_macro
-#else
+#ifndef ZVA64_ONLY
 	.p2align 3
 	mrs	tmp1, dczid_el0
 	tbnz	tmp1w, 4, L(no_zva)
 	and	tmp1w, tmp1w, 15
 	cmp	tmp1w, 4	/* ZVA size is 64 bytes.  */
 	b.ne	 L(zva_128)
-
+	nop
+#endif
 	/* Write the first and last 64 byte aligned block using stp rather
 	   than using DC ZVA.  This is faster on some cores.
 	 */
+	.p2align 4
 L(zva_64):
 	str	q0, [dst, 16]
 	stp	q0, q0, [dst, 32]
@@ -123,7 +123,6 @@ L(zva_64):
 	sub	count, dstend, dst	/* Count is now 128 too large.	*/
 	sub	count, count, 128+64+64	/* Adjust count and bias for loop.  */
 	add	dst, dst, 128
-	nop
 1:	dc	zva, dst
 	add	dst, dst, 64
 	subs	count, count, 64
@@ -134,6 +133,7 @@ L(zva_64):
 	stp	q0, q0, [dstend, -32]
 	ret
 
+#ifndef ZVA64_ONLY
 	.p2align 3
 L(zva_128):
 	cmp	tmp1w, 5	/* ZVA size is 128 bytes.  */
