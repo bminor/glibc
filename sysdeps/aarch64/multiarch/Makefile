@@ -12,10 +12,10 @@ sysdep_routines += \
   memmove_mops \
   memset_a64fx \
   memset_emag \
-  memset_falkor \
   memset_generic \
   memset_kunpeng \
   memset_mops \
+  memset_zva64 \
   strlen_asimd \
   strlen_generic \
 # sysdep_routines
