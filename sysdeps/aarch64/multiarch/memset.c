@@ -56,7 +56,7 @@ select_memset_ifunc (void)
   if ((IS_FALKOR (midr) || IS_PHECDA (midr)) && zva_size == 64)
     return __memset_falkor;
 
-  if (IS_EMAG (midr) && zva_size == 64)
+  if (IS_EMAG (midr))
     return __memset_emag;
 
   return __memset_generic;
