@@ -1943,7 +1943,7 @@ def check_for_required_tools():
     get_list_of_required_tools()
     count_old_tools = 0
     count_missing_tools = 0
-    
+
     for k, v in REQUIRED_TOOLS.items():
         version = v[0](k)
         if version == 'missing':
@@ -1962,10 +1962,10 @@ def check_for_required_tools():
             count_missing_tools = count_missing_tools + 1
             print('{:9}: {:3} (required=\"{}\")'.format(k, ok,
                     version_str(v[1])))
-    
+
     if count_old_tools > 0 or count_missing_tools > 0:
         exit (1);
-    
+
 def main(argv):
     """The main entry point."""
     check_for_required_tools();
