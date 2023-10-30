@@ -1,4 +1,5 @@
 /* Copyright (C) 2001-2023 Free Software Foundation, Inc.
+   Copyright The GNU Toolchain Authors.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -442,7 +443,7 @@ __gai_freemem (void)
 {
   size_t row;
 
-  for (row = 0; row < pool_max_size; ++row)
+  for (row = 0; row < pool_size; ++row)
     free (pool[row]);
 
   free (pool);
