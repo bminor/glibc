@@ -59,6 +59,7 @@
 #define __NR_fchdir 81
 #define __NR_fchmod 91
 #define __NR_fchmodat 268
+#define __NR_fchmodat2 452
 #define __NR_fchown 93
 #define __NR_fchownat 260
 #define __NR_fcntl 72
@@ -153,6 +154,7 @@
 #define __NR_lsetxattr 189
 #define __NR_lstat 6
 #define __NR_madvise 28
+#define __NR_map_shadow_stack 453
 #define __NR_mbind 237
 #define __NR_membarrier 324
 #define __NR_memfd_create 319
