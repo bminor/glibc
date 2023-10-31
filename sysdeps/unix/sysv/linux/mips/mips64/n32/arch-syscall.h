@@ -64,6 +64,7 @@
 #define __NR_fchdir 6079
 #define __NR_fchmod 6089
 #define __NR_fchmodat 6262
+#define __NR_fchmodat2 6452
 #define __NR_fchown 6091
 #define __NR_fchownat 6254
 #define __NR_fcntl 6070
