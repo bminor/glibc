@@ -256,6 +256,8 @@ enum fsconfig_command
 # define FSCONFIG_CMD_CREATE FSCONFIG_CMD_CREATE
   FSCONFIG_CMD_RECONFIGURE = 7,   /* Invoke superblock reconfiguration */
 # define FSCONFIG_CMD_RECONFIGURE FSCONFIG_CMD_RECONFIGURE
+  FSCONFIG_CMD_CREATE_EXCL = 8,    /* Create new superblock, fail if reusing existing superblock */
+# define FSCONFIG_CMD_CREATE_EXCL FSCONFIG_CMD_CREATE_EXCL
 };
 #endif
 
