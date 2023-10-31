@@ -256,19 +256,6 @@ configure with @option{--disable-werror}.
 By default for x86_64, @theglibc{} is built with the vector math library.
 Use this option to disable the vector math library.
 
-@item --enable-crypt
-Install the legacy passphrase-hashing library @file{libcrypt} and the
-header file @file{crypt.h}.  @file{unistd.h} will declare the function
-@code{crypt} regardless of this option.  Using this option does not
-change the set of programs that may need to be linked with
-@option{-lcrypt}; it only means that @theglibc{} will provide that
-library.
-
-This option is for hackers and distributions who may not yet be able to
-use libcrypt alternatives such as libxcrypt and need this legacy
-implementation as a temporary workaround.  Note that libcrypt may be
-removed in a future release.
-
 @item --disable-scv
 Disable using @code{scv} instruction for syscalls. All syscalls will use
 @code{sc} instead, even if the kernel supports @code{scv}. PowerPC only.
