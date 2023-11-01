@@ -80,6 +80,7 @@ libsupport-routines = \
   support_select_modifies_timeout \
   support_select_normalizes_timeout \
   support_set_small_thread_stack_size \
+  support_set_vma_name_supported \
   support_shared_allocate \
   support_small_stack_thread_attribute \
   support_socket_so_timestamp_time64 \

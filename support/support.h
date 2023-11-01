@@ -235,6 +235,10 @@ void support_stack_free (struct support_stack *stack);
    The returned value is the lowest file descriptor number.  */
 int support_open_dev_null_range (int num, int flags, mode_t mode);
 
+
+/* Check if kernel supports set VMA range name.  */
+extern bool support_set_vma_name_supported (void);
+
 __END_DECLS
 
 #endif /* SUPPORT_H */
