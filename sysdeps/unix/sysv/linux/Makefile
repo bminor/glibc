@@ -97,6 +97,7 @@ sysdep_routines += \
   readahead \
   setfsgid \
   setfsuid \
+  setvmaname \
   signalfd \
   splice \
   sysctl \
