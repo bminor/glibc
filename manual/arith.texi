@@ -1176,6 +1176,12 @@ enabled, the status of the other exceptions is not changed.
 
 The function returns the previous enabled exceptions in case the
 operation was successful, @code{-1} otherwise.
+
+Note: Enabling traps for an exception for which the exception flag is
+currently already set (@pxref{Status bit operations}) has unspecified
+consequences: it may or may not trigger a trap immediately.
+@c It triggers a trap immediately on powerpc*, at the next floating-
+@c instruction on i386, and not at all on the other CPUs.
 @end deftypefun
 
 @deftypefun int fedisableexcept (int @var{excepts})
