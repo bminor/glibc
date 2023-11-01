@@ -303,6 +303,7 @@ tests := \
   tst-array4 \
   tst-array5 \
   tst-auxv \
+  tst-decorate-maps \
   tst-dl-hash \
   tst-leaks1 \
   tst-stringtable \
@@ -2980,3 +2981,5 @@ LDFLAGS-tst-dlclose-lazy-mod1.so = -Wl,-z,lazy,--no-as-needed
 $(objpfx)tst-dlclose-lazy-mod1.so: $(objpfx)tst-dlclose-lazy-mod2.so
 $(objpfx)tst-dlclose-lazy.out: \
   $(objpfx)tst-dlclose-lazy-mod1.so $(objpfx)tst-dlclose-lazy-mod2.so
+
+$(objpfx)tst-decorate-maps: $(shared-thread-library)

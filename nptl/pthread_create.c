@@ -369,6 +369,9 @@ start_thread (void *arg)
   /* Initialize pointers to locale data.  */
   __ctype_init ();
 
+  /* Name the thread stack if kernel supports it.  */
+  name_stack_maps (pd, true);
+
   /* Register rseq TLS to the kernel.  */
   {
     bool do_rseq = THREAD_GETMEM (pd, flags) & ATTR_FLAG_DO_RSEQ;
@@ -570,6 +573,9 @@ start_thread (void *arg)
   if (IS_DETACHED (pd))
     /* Free the TCB.  */
     __nptl_free_tcb (pd);
+
+  /* Remove the associated name from the thread stack.  */
+  name_stack_maps (pd, false);
 
 out:
   /* We cannot call '_exit' here.  '_exit' will terminate the process.

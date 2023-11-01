@@ -33,6 +33,8 @@
 #include <nptl-stack.h>
 #include <libc-lock.h>
 #include <tls-internal.h>
+#include <intprops.h>
+#include <setvmaname.h>
 
 /* Default alignment of stack.  */
 #ifndef STACK_ALIGN
@@ -576,4 +578,42 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
   *stack = pd->stackblock;
 
   return 0;
+}
+
+/* Maximum supported name from initial kernel support, not exported
+   by user API.  */
+#define ANON_VMA_NAME_MAX_LEN 80
+
+#define SET_STACK_NAME(__prefix, __stack, __stacksize, __tid)		\
+  ({									\
+     char __stack_name[sizeof (__prefix) +				\
+		       INT_BUFSIZE_BOUND (unsigned int)];		\
+     _Static_assert (sizeof __stack_name <= ANON_VMA_NAME_MAX_LEN,	\
+		     "VMA name size larger than maximum supported");	\
+     __snprintf (__stack_name, sizeof (__stack_name), __prefix "%u",	\
+		 (unsigned int) __tid);					\
+     __set_vma_name (__stack, __stacksize, __stack_name);		\
+   })
+
+/* Add or remove an associated name to the PD VMA stack.  */
+static void
+name_stack_maps (struct pthread *pd, bool set)
+{
+#if _STACK_GROWS_DOWN && !defined(NEED_SEPARATE_REGISTER_STACK)
+  void *stack = pd->stackblock + pd->guardsize;
+#else
+  void *stack = pd->stackblock;
+#endif
+  size_t stacksize = pd->stackblock_size - pd->guardsize;
+
+  if (!set)
+    __set_vma_name (stack, stacksize, NULL);
+  else
+    {
+      unsigned int tid = pd->tid;
+      if (pd->user_stack)
+	SET_STACK_NAME (" glibc: pthread user stack: ", stack, stacksize, tid);
+      else
+	SET_STACK_NAME (" glibc: pthread stack: ", stack, stacksize, tid);
+    }
 }
