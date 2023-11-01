@@ -31,6 +31,7 @@
 #include <sys/mman.h>
 #include <sys/uio.h>
 #include <not-cancel.h>
+#include <setvmaname.h>
 
 #ifdef FATAL_PREPARE_INCLUDE
 #include FATAL_PREPARE_INCLUDE
@@ -115,6 +116,8 @@ __libc_message_impl (const char *fmt, ...)
 	  for (int cnt = 0; cnt < iovcnt; ++cnt)
 	    wp = mempcpy (wp, iov[cnt].iov_base, iov[cnt].iov_len);
 	  *wp = '\0';
+
+	  __set_vma_name (buf, total, " glibc: fatal");
 
 	  /* We have to free the old buffer since the application might
 	     catch the SIGABRT signal.  */
