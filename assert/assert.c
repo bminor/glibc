@@ -24,6 +24,7 @@
 #include <sysdep.h>
 #include <unistd.h>
 #include <sys/mman.h>
+#include <setvmaname.h>
 
 
 extern const char *__progname;
@@ -71,6 +72,7 @@ __assert_fail_base (const char *fmt, const char *assertion, const char *file,
 	{
 	  buf->size = total;
 	  strcpy (buf->msg, str);
+	  __set_vma_name (buf, total, " glibc: assert");
 
 	  /* We have to free the old buffer since the application might
 	     catch the SIGABRT signal.  */
