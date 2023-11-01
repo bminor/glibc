@@ -17,6 +17,7 @@
    not, see <https://www.gnu.org/licenses/>.  */
 
 #include <stdbool.h>
+#include <setvmaname.h>
 
 #define TUNABLE_NAMESPACE malloc
 #include <elf/dl-tunables.h>
@@ -435,6 +436,9 @@ alloc_new_heap  (size_t size, size_t top_pad, size_t pagesize,
       __munmap (p2, max_size);
       return 0;
     }
+
+  /* Only considere the actual usable range.  */
+  __set_vma_name (p2, size, " glibc: malloc arena");
 
   madvise_thp (p2, size);
 

@@ -2983,3 +2983,7 @@ $(objpfx)tst-dlclose-lazy.out: \
   $(objpfx)tst-dlclose-lazy-mod1.so $(objpfx)tst-dlclose-lazy-mod2.so
 
 $(objpfx)tst-decorate-maps: $(shared-thread-library)
+
+tst-decorate-maps-ENV = \
+  GLIBC_TUNABLES=glibc.malloc.arena_max=8:glibc.malloc.mmap_threshold=1024
+tst-decorate-maps-ARGS = 8

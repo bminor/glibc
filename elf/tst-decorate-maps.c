@@ -32,14 +32,20 @@
 
 static pthread_barrier_t b;
 
+static int expected_n_arenas;
+
 static void *
 tf (void *closure)
 {
+  void *p = xmalloc (1024);
+
   /* Wait the thread startup, so thread stack is allocated.  */
   xpthread_barrier_wait (&b);
 
   /* Wait the test to read the process mapping.  */
   xpthread_barrier_wait (&b);
+
+  free (p);
 
   return NULL;
 }
@@ -48,6 +54,9 @@ struct proc_maps_t
 {
   int n_def_threads;
   int n_user_threads;
+  int n_arenas;
+  int n_malloc_mmap;
+  int n_loader_malloc_mmap;
 };
 
 static struct proc_maps_t
@@ -69,6 +78,12 @@ read_proc_maps (void)
 	r.n_def_threads++;
       else if (strstr (line, "[anon: glibc: pthread user stack:") != NULL)
 	r.n_user_threads++;
+      else if (strstr (line, "[anon: glibc: malloc arena]") != NULL)
+	r.n_arenas++;
+      else if (strstr (line, "[anon: glibc: malloc]") != NULL)
+	r.n_malloc_mmap++;
+      else if (strstr (line, "[anon: glibc: loader malloc]") != NULL)
+	r.n_loader_malloc_mmap++;
     }
   free (line);
   xfclose (f);
@@ -89,6 +104,9 @@ do_test_threads (bool set_guard)
     };
 
   xpthread_barrier_init (&b, NULL, num_threads + 1);
+
+  /* Issue a large malloc to trigger a mmap call.  */
+  void *p = xmalloc (256 * 1024);
 
   pthread_t thr[num_threads];
   {
@@ -128,6 +146,10 @@ do_test_threads (bool set_guard)
     struct proc_maps_t r = read_proc_maps ();
     TEST_COMPARE (r.n_def_threads, num_def_threads);
     TEST_COMPARE (r.n_user_threads, num_user_threads);
+    TEST_COMPARE (r.n_arenas, expected_n_arenas);
+    TEST_COMPARE (r.n_malloc_mmap, 1);
+    /* On some architectures the loader might use more than one page.  */
+    TEST_VERIFY (r.n_loader_malloc_mmap >= 1);
   }
 
   /* Let the threads finish.  */
@@ -140,8 +162,22 @@ do_test_threads (bool set_guard)
     struct proc_maps_t r = read_proc_maps ();
     TEST_COMPARE (r.n_def_threads, 0);
     TEST_COMPARE (r.n_user_threads, 0);
+    TEST_COMPARE (r.n_arenas, expected_n_arenas);
+    TEST_COMPARE (r.n_malloc_mmap, 1);
+    TEST_VERIFY (r.n_loader_malloc_mmap >= 1);
   }
+
+  free (p);
 }
+
+static void
+do_prepare (int argc, char *argv[])
+{
+  TEST_VERIFY_EXIT (argc == 2);
+  expected_n_arenas = strtol (argv[1], NULL, 10);
+  expected_n_arenas = expected_n_arenas - 1;
+}
+#define PREPARE do_prepare
 
 static int
 do_test (void)

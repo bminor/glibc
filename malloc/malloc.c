@@ -218,6 +218,7 @@
 #include <sys/sysinfo.h>
 
 #include <ldsodefs.h>
+#include <setvmaname.h>
 
 #include <unistd.h>
 #include <stdio.h>    /* needed for malloc_stats */
@@ -2428,6 +2429,8 @@ sysmalloc_mmap (INTERNAL_SIZE_T nb, size_t pagesize, int extra_flags, mstate av)
     madvise_thp (mm, size);
 #endif
 
+  __set_vma_name (mm, size, " glibc: malloc");
+
   /*
     The offset to the start of the mmapped region is stored in the prev_size
     field of the chunk.  This allows us to adjust returned start address to
@@ -2512,6 +2515,8 @@ sysmalloc_mmap_fallback (long int *s, INTERNAL_SIZE_T nb,
   if (!(extra_flags & MAP_HUGETLB))
     madvise_thp (mbrk, size);
 #endif
+
+  __set_vma_name (mbrk, size, " glibc: malloc");
 
   /* Record that we no longer have a contiguous sbrk region.  After the first
      time mmap is used as backup, we do not ever rely on contiguous space

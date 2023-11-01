@@ -699,6 +699,10 @@ tst-audit-threads-ENV = LD_AUDIT=$(objpfx)tst-audit-threads-mod1.so
 tst-setuid1-static-ENV = \
   LD_LIBRARY_PATH=$(ld-library-path):$(common-objpfx)elf:$(common-objpfx)nss
 
+tst-pthread-proc-maps-ENV = \
+  GLIBC_TUNABLES=glibc.malloc.arena_max=8:glibc.malloc.mmap_threshold=1024
+tst-pthread-proc-maps-ARGS = 8
+
 # The tests here better do not run in parallel.
 ifeq ($(run-built-tests),yes)
 ifneq ($(filter %tests,$(MAKECMDGOALS)),)
