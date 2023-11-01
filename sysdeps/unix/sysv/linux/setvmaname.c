@@ -20,6 +20,7 @@
 #include <setvmaname.h>
 #include <sys/prctl.h>
 #include <sysdep.h>
+#include <elf/dl-tunables.h>
 
 /* If PR_SET_VMA_ANON_NAME is not supported by the kernel, prctl returns
    EINVAL.  However, it also returns the same error for invalid argument.
@@ -34,11 +35,15 @@ __set_vma_name (void *start, size_t len, const char *name)
   if (atomic_load_relaxed (&prctl_supported) == 0)
     return;
 
-  int r = INTERNAL_SYSCALL_CALL (prctl, PR_SET_VMA, PR_SET_VMA_ANON_NAME,
-				 start, len, name);
-  if (r == 0 || r != -EINVAL)
-    return;
-
+  /* Set the prctl as not supported to avoid checking the tunable on every
+     call.  */
+  if (TUNABLE_GET (glibc, mem, decorate_maps, int32_t, NULL) != 0)
+    {
+      int r = INTERNAL_SYSCALL_CALL (prctl, PR_SET_VMA, PR_SET_VMA_ANON_NAME,
+				     start, len, name);
+      if (r == 0 || r != -EINVAL)
+	return;
+    }
   atomic_store_relaxed (&prctl_supported, 0);
   return;
 }

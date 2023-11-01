@@ -2985,5 +2985,5 @@ $(objpfx)tst-dlclose-lazy.out: \
 $(objpfx)tst-decorate-maps: $(shared-thread-library)
 
 tst-decorate-maps-ENV = \
-  GLIBC_TUNABLES=glibc.malloc.arena_max=8:glibc.malloc.mmap_threshold=1024
+  GLIBC_TUNABLES=glibc.malloc.arena_max=8:glibc.malloc.mmap_threshold=1024:glibc.mem.decorate_maps=1
 tst-decorate-maps-ARGS = 8

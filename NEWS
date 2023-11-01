@@ -38,6 +38,11 @@ Major new features:
   and the wfN format length modifiers for arguments pointing to types
   int_fastN_t or uint_fastN_t, as specified in draft ISO C2X.
 
+* A new tunable, glibc.mem.decorate_maps, can be used to add additional
+  information on underlying memory allocated by the glibc (for instance,
+  on thread stack created by pthread_create or memory allocated by
+  malloc).
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The ldconfig program now skips file names containing ';' or ending in

@@ -160,6 +160,11 @@ glibc {
       maxval: 255
       security_level: SXID_IGNORE
     }
+    decorate_maps {
+      type: INT_32
+      minval: 0
+      maxval: 1
+    }
   }
 
   rtld {
