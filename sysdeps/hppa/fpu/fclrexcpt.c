@@ -26,7 +26,7 @@ feclearexcept (int excepts)
   /* Get the current status word. */
   __asm__ ("fstd %%fr0,0(%1)" : "=m" (s.l) : "r" (&s.l) : "%r0");
   /* Clear all the relevant bits. */
-  s.sw[0] &= ~((excepts & FE_ALL_EXCEPT) << 27);
+  s.sw[0] &= ~(((unsigned int) excepts & FE_ALL_EXCEPT) << 27);
   __asm__ ("fldd 0(%0),%%fr0" : : "r" (&s.l), "m" (s.l) : "%r0");
 
   /* Success.  */
