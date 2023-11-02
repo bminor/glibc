@@ -27,7 +27,7 @@ __fesetexceptflag (const fexcept_t *flagp, int excepts)
   tmp = __ieee_get_fp_control ();
 
   /* Set all the bits that were called for.  */
-  tmp = (tmp & ~SWCR_STATUS_MASK) | (*flagp & excepts & SWCR_STATUS_MASK);
+  tmp ^= (tmp ^ *flagp) & excepts & SWCR_STATUS_MASK;
 
   /* And store it back.  */
   __ieee_set_fp_control (tmp);
