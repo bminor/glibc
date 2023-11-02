@@ -93,10 +93,7 @@ libc_fetestexcept_riscv (int ex)
 static __always_inline void
 libc_fesetenv_riscv (const fenv_t *envp)
 {
-  long int env = (long int) envp - (long int) FE_DFL_ENV;
-  if (env != 0)
-    env = *envp;
-
+  long int env = (envp != FE_DFL_ENV ? *envp : 0);
   _FPU_SETCW (env);
 }
 
@@ -123,7 +120,8 @@ libc_feupdateenv_test_riscv (const fenv_t *envp, int ex)
 static __always_inline void
 libc_feupdateenv_riscv (const fenv_t *envp)
 {
-  _FPU_SETCW (*envp | riscv_getflags ());
+  long int env = (envp != FE_DFL_ENV ? *envp : 0);
+  _FPU_SETCW (env | riscv_getflags ());
 }
 
 #define libc_feupdateenv  libc_feupdateenv_riscv

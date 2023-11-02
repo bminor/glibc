@@ -196,6 +196,30 @@ set_single_exc (const char *test_name, int fe_exc, fexcept_t exception)
   feclearexcept (exception);
   test_exceptions (str, ALL_EXC ^ fe_exc, 0);
 }
+
+static void
+update_single_exc (const char *test_name, const fenv_t *envp, int fe_exc,
+		   int fe_exc_clear, int exception)
+{
+  char str[200];
+  /* The standard allows the inexact exception to be set together with the
+     underflow and overflow exceptions.  So ignore the inexact flag if the
+     others are raised.  */
+  int ignore_inexact = (fe_exc & (UNDERFLOW_EXC | OVERFLOW_EXC)) != 0;
+
+  strcpy (str, test_name);
+  strcat (str, ": set flag, with rest not set");
+  feclearexcept (FE_ALL_EXCEPT);
+  feraiseexcept (exception);
+  feupdateenv (envp);
+  test_exceptions (str, fe_exc, ignore_inexact);
+
+  strcpy (str, test_name);
+  strcat (str, ": clear flag, rest also unset");
+  feclearexcept (exception);
+  feupdateenv (envp);
+  test_exceptions (str, fe_exc_clear, ignore_inexact);
+}
 #endif
 
 static void
@@ -233,22 +257,32 @@ fe_tests (void)
 }
 
 #if FE_ALL_EXCEPT
+static const char *
+funcname (int (*func)(const fenv_t *))
+{
+  if (func == fesetenv)
+    return "fesetenv";
+  else if (func == feupdateenv)
+    return "feupdateenv";
+  __builtin_unreachable ();
+}
+
 /* Test that program aborts with no masked interrupts */
 static void
-feenv_nomask_test (const char *flag_name, int fe_exc)
+feenv_nomask_test (const char *flag_name, int fe_exc, int (*func)(const fenv_t *))
 {
 # if defined FE_NOMASK_ENV
   int status;
   pid_t pid;
 
   if (!EXCEPTION_ENABLE_SUPPORTED (FE_ALL_EXCEPT)
-      && fesetenv (FE_NOMASK_ENV) != 0)
+      && func (FE_NOMASK_ENV) != 0)
     {
       printf ("Test: not testing FE_NOMASK_ENV, it isn't implemented.\n");
       return;
     }
 
-  printf ("Test: after fesetenv (FE_NOMASK_ENV) processes will abort\n");
+  printf ("Test: after %s (FE_NOMASK_ENV) processes will abort\n", funcname (func));
   printf ("      when feraiseexcept (%s) is called.\n", flag_name);
   pid = fork ();
   if (pid == 0)
@@ -295,12 +329,12 @@ feenv_nomask_test (const char *flag_name, int fe_exc)
 
 /* Test that program doesn't abort with default environment */
 static void
-feenv_mask_test (const char *flag_name, int fe_exc)
+feenv_mask_test (const char *flag_name, int fe_exc, int (*func)(const fenv_t *))
 {
   int status;
   pid_t pid;
 
-  printf ("Test: after fesetenv (FE_DFL_ENV) processes will not abort\n");
+  printf ("Test: after %s (FE_DFL_ENV) processes will not abort\n", funcname (func));
   printf ("      when feraiseexcept (%s) is called.\n", flag_name);
   pid = fork ();
   if (pid == 0)
@@ -313,7 +347,7 @@ feenv_mask_test (const char *flag_name, int fe_exc)
       setrlimit (RLIMIT_CORE, &core_limit);
 #endif
 
-      fesetenv (FE_DFL_ENV);
+      func (FE_DFL_ENV);
       feraiseexcept (fe_exc);
       exit (2);
     }
@@ -615,9 +649,17 @@ feenable_test (const char *flag_name, int fe_exc)
 static void
 fe_single_test (const char *flag_name, int fe_exc)
 {
-  feenv_nomask_test (flag_name, fe_exc);
-  feenv_mask_test (flag_name, fe_exc);
+  feenv_nomask_test (flag_name, fe_exc, fesetenv);
+  feenv_mask_test (flag_name, fe_exc, fesetenv);
   feenable_test (flag_name, fe_exc);
+}
+
+
+static void
+feupdate_single_test (const char *flag_name, int fe_exc)
+{
+  feenv_nomask_test (flag_name, fe_exc, feupdateenv);
+  feenv_mask_test (flag_name, fe_exc, feupdateenv);
 }
 #endif
 
@@ -644,6 +686,72 @@ feenv_tests (void)
   fe_single_test ("FE_OVERFLOW", FE_OVERFLOW);
 #endif
   fesetenv (FE_DFL_ENV);
+}
+
+#if FE_ALL_EXCEPT
+static void
+feupdateenv_single_test (const char *test_name, int fe_exc, int exception)
+{
+  char str[100];
+  fenv_t env;
+  int res;
+
+  snprintf (str, sizeof str, "feupdateenv %s and FL_DFL_ENV", test_name);
+  update_single_exc (str, FE_DFL_ENV, fe_exc, NO_EXC, exception);
+
+  feraiseexcept (FE_ALL_EXCEPT);
+  res = fegetenv (&env);
+  if (res != 0)
+    {
+      printf ("fegetenv failed: %d\n", res);
+      ++count_errors;
+      return;
+    }
+
+  snprintf (str, sizeof str, "feupdateenv %s and FE_ALL_EXCEPT", test_name);
+  update_single_exc (str, &env, ALL_EXC, ALL_EXC, exception);
+}
+#endif
+
+static void
+feupdateenv_tests (void)
+{
+  /* We might have some exceptions still set.  */
+  feclearexcept (FE_ALL_EXCEPT);
+
+#ifdef FE_DIVBYZERO
+  feupdate_single_test ("FE_DIVBYZERO", FE_DIVBYZERO);
+#endif
+#ifdef FE_INVALID
+  feupdate_single_test ("FE_INVALID", FE_INVALID);
+#endif
+#ifdef FE_INEXACT
+  feupdate_single_test ("FE_INEXACT", FE_INEXACT);
+#endif
+#ifdef FE_UNDERFLOW
+  feupdate_single_test ("FE_UNDERFLOW", FE_UNDERFLOW);
+#endif
+#ifdef FE_OVERFLOW
+  feupdate_single_test ("FE_OVERFLOW", FE_OVERFLOW);
+#endif
+
+#ifdef FE_DIVBYZERO
+  feupdateenv_single_test ("DIVBYZERO", DIVBYZERO_EXC, FE_DIVBYZERO);
+#endif
+#ifdef FE_INVALID
+  feupdateenv_single_test ("INVALID", INVALID_EXC, FE_INVALID);
+#endif
+#ifdef FE_INEXACT
+  feupdateenv_single_test ("INEXACT", INEXACT_EXC, FE_INEXACT);
+#endif
+#ifdef FE_UNDERFLOW
+  feupdateenv_single_test ("UNDERFLOW", UNDERFLOW_EXC, FE_UNDERFLOW);
+#endif
+#ifdef FE_OVERFLOW
+  feupdateenv_single_test ("OVERFLOW", OVERFLOW_EXC, FE_OVERFLOW);
+#endif
+
+  feupdateenv (FE_DFL_ENV);
 }
 
 
@@ -766,13 +874,14 @@ initial_tests (void)
 #endif
 }
 
-int
-main (void)
+static int
+do_test (void)
 {
   initial_tests ();
   fe_tests ();
   feenv_tests ();
   feholdexcept_tests ();
+  feupdateenv_tests ();
 
   if (count_errors)
     {
@@ -782,3 +891,5 @@ main (void)
   printf ("\n All tests passed successfully.\n");
   return 0;
 }
+
+#include <support/test-driver.c>
