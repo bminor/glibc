@@ -35,6 +35,17 @@
     __ptr;                                                                    \
   })
 
+static inline uint64_t
+asuint64 (double f)
+{
+  union
+  {
+    double f;
+    uint64_t i;
+  } u = { f };
+  return u.i;
+}
+
 #define V_LOG_POLY_ORDER 6
 #define V_LOG_TABLE_BITS 7
 extern const struct v_log_data

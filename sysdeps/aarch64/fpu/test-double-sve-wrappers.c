@@ -32,9 +32,20 @@
     return svlastb_f64 (svptrue_b64 (), mr);                                  \
   }
 
+#define SVE_VECTOR_WRAPPER_ff(scalar_func, vector_func)                       \
+  extern VEC_TYPE vector_func (VEC_TYPE, VEC_TYPE, svbool_t);                 \
+  FLOAT scalar_func (FLOAT x, FLOAT y)                                        \
+  {                                                                           \
+    VEC_TYPE mx = svdup_n_f64 (x);                                            \
+    VEC_TYPE my = svdup_n_f64 (y);                                            \
+    VEC_TYPE mr = vector_func (mx, my, svptrue_b64 ());                       \
+    return svlastb_f64 (svptrue_b64 (), mr);                                  \
+  }
+
 SVE_VECTOR_WRAPPER (acos_sve, _ZGVsMxv_acos)
 SVE_VECTOR_WRAPPER (asin_sve, _ZGVsMxv_asin)
 SVE_VECTOR_WRAPPER (atan_sve, _ZGVsMxv_atan)
+SVE_VECTOR_WRAPPER_ff (atan2_sve, _ZGVsMxvv_atan2)
 SVE_VECTOR_WRAPPER (cos_sve, _ZGVsMxv_cos)
 SVE_VECTOR_WRAPPER (exp_sve, _ZGVsMxv_exp)
 SVE_VECTOR_WRAPPER (exp10_sve, _ZGVsMxv_exp10)

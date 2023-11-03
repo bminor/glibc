@@ -29,3 +29,17 @@
     TEST_VEC_LOOP (mr, VEC_LEN);                                              \
     return ((FLOAT) mr[0]);                                                   \
   }
+
+#define VPCS_VECTOR_WRAPPER_ff(scalar_func, vector_func)                      \
+  extern __attribute__ ((aarch64_vector_pcs))                                 \
+  VEC_TYPE vector_func (VEC_TYPE, VEC_TYPE);                                  \
+  FLOAT scalar_func (FLOAT x, FLOAT y)                                        \
+  {                                                                           \
+    int i;                                                                    \
+    VEC_TYPE mx, my;                                                          \
+    INIT_VEC_LOOP (mx, x, VEC_LEN);                                           \
+    INIT_VEC_LOOP (my, y, VEC_LEN);                                           \
+    VEC_TYPE mr = vector_func (mx, my);                                       \
+    TEST_VEC_LOOP (mr, VEC_LEN);                                              \
+    return ((FLOAT) mr[0]);                                                   \
+  }
