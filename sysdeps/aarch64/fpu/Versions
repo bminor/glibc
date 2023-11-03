@@ -18,6 +18,10 @@ libmvec {
     _ZGVsMxv_sinf;
   }
   GLIBC_2.39 {
+    _ZGVnN4v_acosf;
+    _ZGVnN2v_acos;
+    _ZGVsMxv_acosf;
+    _ZGVsMxv_acos;
     _ZGVnN4v_asinf;
     _ZGVnN2v_asin;
     _ZGVsMxv_asinf;

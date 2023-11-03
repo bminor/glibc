@@ -23,6 +23,7 @@
 
 #define VEC_TYPE float64x2_t
 
+VPCS_VECTOR_WRAPPER (acos_advsimd, _ZGVnN2v_acos)
 VPCS_VECTOR_WRAPPER (asin_advsimd, _ZGVnN2v_asin)
 VPCS_VECTOR_WRAPPER (cos_advsimd, _ZGVnN2v_cos)
 VPCS_VECTOR_WRAPPER (exp_advsimd, _ZGVnN2v_exp)

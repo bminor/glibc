@@ -23,6 +23,7 @@
 
 #define VEC_TYPE float32x4_t
 
+VPCS_VECTOR_WRAPPER (acosf_advsimd, _ZGVnN4v_acosf)
 VPCS_VECTOR_WRAPPER (asinf_advsimd, _ZGVnN4v_asinf)
 VPCS_VECTOR_WRAPPER (cosf_advsimd, _ZGVnN4v_cosf)
 VPCS_VECTOR_WRAPPER (expf_advsimd, _ZGVnN4v_expf)
