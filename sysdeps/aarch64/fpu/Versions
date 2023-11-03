@@ -26,6 +26,10 @@ libmvec {
     _ZGVnN2v_asin;
     _ZGVsMxv_asinf;
     _ZGVsMxv_asin;
+    _ZGVnN4v_atanf;
+    _ZGVnN2v_atan;
+    _ZGVsMxv_atanf;
+    _ZGVsMxv_atan;
     _ZGVnN4v_exp10f;
     _ZGVnN2v_exp10;
     _ZGVsMxv_exp10f;

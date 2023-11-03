@@ -1,5 +1,6 @@
 libmvec-supported-funcs = acos \
                           asin \
+                          atan \
                           cos \
                           exp \
                           exp10 \

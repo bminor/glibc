@@ -121,10 +121,18 @@ double: 1
 float: 1
 ldouble: 2
 
+Function: "atan_advsimd":
+double: 1
+float: 1
+
 Function: "atan_downward":
 double: 1
 float: 2
 ldouble: 2
+
+Function: "atan_sve":
+double: 1
+float: 1
 
 Function: "atan_towardzero":
 double: 1
