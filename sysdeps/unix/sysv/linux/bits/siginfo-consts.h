@@ -134,8 +134,10 @@ enum
 #  define SEGV_ADIPERR	SEGV_ADIPERR
   SEGV_MTEAERR,			/* Asynchronous ARM MTE error.  */
 #  define SEGV_MTEAERR	SEGV_MTEAERR
-  SEGV_MTESERR			/* Synchronous ARM MTE exception.  */
+  SEGV_MTESERR,			/* Synchronous ARM MTE exception.  */
 #  define SEGV_MTESERR	SEGV_MTESERR
+  SEGV_CPERR			/* Control protection fault.  */
+#  define SEGV_CPERR	SEGV_CPERR
 };
 
 /* `si_code' values for SIGBUS signal.  */
