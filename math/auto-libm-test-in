@@ -6577,7 +6577,7 @@ log10 0xf.bf1b2p-4
 log10 0x1.6b5f7ap+96
 
 log1p 0
-log1p -0
+log1p -0 no-mathvec
 log1p e-1
 log1p -0.25
 log1p -0.875

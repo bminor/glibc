@@ -8,6 +8,7 @@ libmvec-supported-funcs = acos \
                           exp2 \
                           log \
                           log10 \
+                          log1p \
                           log2 \
                           sin \
                           tan

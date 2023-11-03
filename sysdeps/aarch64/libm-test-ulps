@@ -1248,10 +1248,18 @@ double: 1
 float: 1
 ldouble: 3
 
+Function: "log1p_advsimd":
+double: 1
+float: 1
+
 Function: "log1p_downward":
 double: 1
 float: 2
 ldouble: 3
+
+Function: "log1p_sve":
+double: 1
+float: 1
 
 Function: "log1p_towardzero":
 double: 2
