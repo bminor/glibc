@@ -32,6 +32,7 @@
     return svlastb_f64 (svptrue_b64 (), mr);                                  \
   }
 
+SVE_VECTOR_WRAPPER (asin_sve, _ZGVsMxv_asin)
 SVE_VECTOR_WRAPPER (cos_sve, _ZGVsMxv_cos)
 SVE_VECTOR_WRAPPER (exp_sve, _ZGVsMxv_exp)
 SVE_VECTOR_WRAPPER (exp10_sve, _ZGVsMxv_exp10)

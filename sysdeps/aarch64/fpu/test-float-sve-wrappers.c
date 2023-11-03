@@ -32,6 +32,7 @@
     return svlastb_f32 (svptrue_b32 (), mr);                                  \
   }
 
+SVE_VECTOR_WRAPPER (asinf_sve, _ZGVsMxv_asinf)
 SVE_VECTOR_WRAPPER (cosf_sve, _ZGVsMxv_cosf)
 SVE_VECTOR_WRAPPER (expf_sve, _ZGVsMxv_expf)
 SVE_VECTOR_WRAPPER (exp10f_sve, _ZGVsMxv_exp10f)

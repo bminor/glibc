@@ -1,4 +1,5 @@
-libmvec-supported-funcs = cos \
+libmvec-supported-funcs = asin \
+                          cos \
                           exp \
                           exp10 \
                           exp2 \

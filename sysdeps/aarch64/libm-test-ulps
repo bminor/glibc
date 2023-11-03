@@ -46,10 +46,18 @@ double: 1
 float: 1
 ldouble: 1
 
+Function: "asin_advsimd":
+double: 2
+float: 2
+
 Function: "asin_downward":
 double: 1
 float: 1
 ldouble: 2
+
+Function: "asin_sve":
+double: 2
+float: 2
 
 Function: "asin_towardzero":
 double: 1
