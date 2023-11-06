@@ -18,7 +18,14 @@
   "LD_SHOW_AUXV\0"							      \
   "LOCALDOMAIN\0"							      \
   "LOCPATH\0"								      \
+  "MALLOC_ARENA_MAX\0"							      \
+  "MALLOC_ARENA_TEST\0"							      \
+  "MALLOC_MMAP_MAX_\0"							      \
+  "MALLOC_MMAP_THRESHOLD_\0"						      \
+  "MALLOC_PERTURB_\0"							      \
+  "MALLOC_TOP_PAD_\0"							      \
   "MALLOC_TRACE\0"							      \
+  "MALLOC_TRIM_THRESHOLD_\0"						      \
   "NIS_PATH\0"								      \
   "NLSPATH\0"								      \
   "RESOLV_HOST_CONF\0"							      \

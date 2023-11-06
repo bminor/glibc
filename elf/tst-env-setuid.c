@@ -15,18 +15,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* Verify that tunables correctly filter out unsafe environment variables like
-   MALLOC_CHECK_ and MALLOC_MMAP_THRESHOLD_ but also retain
-   MALLOC_MMAP_THRESHOLD_ in an unprivileged child.  */
+/* Verify that correctly filter out unsafe environment variables defined
+   in unsecvars.h.  */
 
-#include <errno.h>
-#include <fcntl.h>
-#include <stdlib.h>
-#include <stdint.h>
+#include <array_length.h>
+#include <gnu/lib-names.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
-#include <sys/wait.h>
 #include <unistd.h>
 
 #include <support/check.h>
@@ -36,61 +32,72 @@
 
 static char SETGID_CHILD[] = "setgid-child";
 
-#ifndef test_child
+#define FILTERED_VALUE   "some-filtered-value"
+#define UNFILTERED_VALUE "some-unfiltered-value"
+
+struct envvar_t
+{
+  const char *env;
+  const char *value;
+};
+
+/* That is not an extensible list of all filtered out environment
+   variables.  */
+static const struct envvar_t filtered_envvars[] =
+{
+  { "GLIBC_TUNABLES",          FILTERED_VALUE },
+  { "LD_AUDIT",                FILTERED_VALUE },
+  { "LD_HWCAP_MASK",           FILTERED_VALUE },
+  { "LD_LIBRARY_PATH",         FILTERED_VALUE },
+  { "LD_PRELOAD",              FILTERED_VALUE },
+  { "LD_PROFILE",              FILTERED_VALUE },
+  { "MALLOC_ARENA_MAX",        FILTERED_VALUE },
+  { "MALLOC_PERTURB_",         FILTERED_VALUE },
+  { "MALLOC_TRACE",            FILTERED_VALUE },
+  { "MALLOC_TRIM_THRESHOLD_",  FILTERED_VALUE },
+  { "RES_OPTIONS",             FILTERED_VALUE },
+};
+
+static const struct envvar_t unfiltered_envvars[] =
+{
+  { "LD_BIND_NOW",             "0" },
+  { "LD_BIND_NOT",             "1" },
+  /* Non longer supported option.  */
+  { "LD_ASSUME_KERNEL",        UNFILTERED_VALUE },
+};
+
 static int
 test_child (void)
 {
-  if (getenv ("MALLOC_CHECK_") != NULL)
+  int ret = 0;
+
+  for (const struct envvar_t *e = filtered_envvars;
+       e != array_end (filtered_envvars);
+       e++)
     {
-      printf ("MALLOC_CHECK_ is still set\n");
-      return 1;
+      const char *env = getenv (e->env);
+      ret |= env != NULL;
     }
 
-  if (getenv ("MALLOC_MMAP_THRESHOLD_") == NULL)
+  for (const struct envvar_t *e = unfiltered_envvars;
+       e != array_end (unfiltered_envvars);
+       e++)
     {
-      printf ("MALLOC_MMAP_THRESHOLD_ lost\n");
-      return 1;
+      const char *env = getenv (e->env);
+      ret |= !(env != NULL && strcmp (env, e->value) == 0);
     }
 
-  if (getenv ("LD_HWCAP_MASK") != NULL)
-    {
-      printf ("LD_HWCAP_MASK still set\n");
-      return 1;
-    }
-
-  return 0;
+  return ret;
 }
-#endif
-
-#ifndef test_parent
-static int
-test_parent (void)
-{
-  if (getenv ("MALLOC_CHECK_") == NULL)
-    {
-      printf ("MALLOC_CHECK_ lost\n");
-      return 1;
-    }
-
-  if (getenv ("MALLOC_MMAP_THRESHOLD_") == NULL)
-    {
-      printf ("MALLOC_MMAP_THRESHOLD_ lost\n");
-      return 1;
-    }
-
-  if (getenv ("LD_HWCAP_MASK") == NULL)
-    {
-      printf ("LD_HWCAP_MASK lost\n");
-      return 1;
-    }
-
-  return 0;
-}
-#endif
 
 static int
 do_test (int argc, char **argv)
 {
+  /* For dynamic loader, the test requires --enable-hardcoded-path-in-tests so
+     the kernel sets the AT_SECURE on process initialization.  */
+  if (argc >= 2 && strstr (argv[1], LD_SO) != 0)
+    FAIL_UNSUPPORTED ("dynamic test requires --enable-hardcoded-path-in-tests");
+
   /* Setgid child process.  */
   if (argc == 2 && strcmp (argv[1], SETGID_CHILD) == 0)
     {
@@ -104,20 +111,33 @@ do_test (int argc, char **argv)
       if (ret != 0)
 	exit (1);
 
-      exit (EXIT_SUCCESS);
+      /* Special return code to make sure that the child executed all the way
+	 through.  */
+      exit (42);
     }
   else
     {
-      if (test_parent () != 0)
-	exit (1);
+      for (const struct envvar_t *e = filtered_envvars;
+	   e != array_end (filtered_envvars);
+	   e++)
+	setenv (e->env, e->value, 1);
+
+      for (const struct envvar_t *e = unfiltered_envvars;
+	   e != array_end (unfiltered_envvars);
+	   e++)
+	setenv (e->env, e->value, 1);
 
       int status = support_capture_subprogram_self_sgid (SETGID_CHILD);
 
       if (WEXITSTATUS (status) == EXIT_UNSUPPORTED)
-	return EXIT_UNSUPPORTED;
+	exit (EXIT_UNSUPPORTED);
 
-      if (!WIFEXITED (status))
-	FAIL_EXIT1 ("Unexpected exit status %d from child process\n", status);
+      if (WEXITSTATUS (status) != 42)
+	{
+	  printf ("    child failed with status %d\n",
+		  WEXITSTATUS (status));
+	  support_record_failure ();
+	}
 
       return 0;
     }

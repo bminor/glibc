@@ -262,7 +262,7 @@ tests-static-normal := \
   tst-array5-static \
   tst-dl-iter-static \
   tst-dst-static \
-  tst-env-setuid \
+  tst-env-setuid-static \
   tst-getauxval-static \
   tst-linkall-static \
   tst-single_threaded-pthread-static \
@@ -306,6 +306,7 @@ tests := \
   tst-auxv \
   tst-decorate-maps \
   tst-dl-hash \
+  tst-env-setuid \
   tst-leaks1 \
   tst-stringtable \
   tst-tls9 \
@@ -2433,9 +2434,6 @@ $(objpfx)tst-nodelete-dlclose: $(objpfx)tst-nodelete-dlclose-dso.so
 $(objpfx)tst-nodelete-dlclose.out: $(objpfx)tst-nodelete-dlclose-dso.so \
 				   $(objpfx)tst-nodelete-dlclose-plugin.so
 
-tst-env-setuid-ENV = MALLOC_CHECK_=2 MALLOC_MMAP_THRESHOLD_=4096 \
-		     LD_HWCAP_MASK=0x1
-
 $(objpfx)tst-debug1.out: $(objpfx)tst-debug1mod1.so
 
 $(objpfx)tst-debug1mod1.so: $(objpfx)testobj1.so
@@ -3002,3 +3000,5 @@ $(objpfx)tst-non-directory-path.out: tst-non-directory-path.sh \
 		    '$(test-wrapper-env)' '$(run_program_env)' \
 		    '$(rpath-link)' $(objpfx) > $@; \
 	$(evaluate-test)
+
+tst-env-setuid-ARGS = -- $(host-test-program-cmd)
