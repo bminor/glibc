@@ -154,17 +154,29 @@ __tunable_set_val (tunable_id_t id, tunable_val_t *valp, tunable_num_t *minp,
   do_tunable_update_val (cur, valp, minp, maxp);
 }
 
-/* Parse the tunable string VALSTRING.  VALSTRING is a duplicated value,
-   where delimiters ':' are replaced with '\0', so string tunables are null
-   terminated.  */
-static void
-parse_tunables (char *valstring)
+struct tunable_toset_t
+{
+  tunable_t *t;
+  const char *value;
+};
+
+enum { tunables_list_size = array_length (tunable_list) };
+
+/* Parse the tunable string VALSTRING and set TUNABLES with the found tunables
+   and their respective strings.  VALSTRING is a duplicated values,  where
+   delimiters ':' are replaced with '\0', so string tunables are null
+   terminated.
+   Return the number of tunables found (including 0 if the string is empty)
+   or -1 if for an ill-formatted definition.  */
+static int
+parse_tunables_string (char *valstring, struct tunable_toset_t *tunables)
 {
   if (valstring == NULL || *valstring == '\0')
-    return;
+    return 0;
 
   char *p = valstring;
   bool done = false;
+  int ntunables = 0;
 
   while (!done)
     {
@@ -177,7 +189,7 @@ parse_tunables (char *valstring)
       /* If we reach the end of the string before getting a valid name-value
 	 pair, bail out.  */
       if (*p == '\0')
-	break;
+	return -1;
 
       /* We did not find a valid name-value pair before encountering the
 	 colon.  */
@@ -190,30 +202,42 @@ parse_tunables (char *valstring)
       /* Skip the '='.  */
       p++;
 
-      const char *value = p;
+      char *value = p;
 
       while (*p != '=' && *p != ':' && *p != '\0')
 	p++;
 
       if (*p == '=')
-	break;
+	return -1;
       else if (*p == '\0')
 	done = true;
       else
 	*p++ = '\0';
 
       /* Add the tunable if it exists.  */
-      for (size_t i = 0; i < sizeof (tunable_list) / sizeof (tunable_t); i++)
+      for (size_t i = 0; i < tunables_list_size; i++)
 	{
 	  tunable_t *cur = &tunable_list[i];
 
 	  if (tunable_is_name (cur->name, name))
 	    {
-	      tunable_initialize (cur, value);
+	      tunables[ntunables++] = (struct tunable_toset_t) { cur, value };
 	      break;
 	    }
 	}
     }
+
+  return ntunables;
+}
+
+static void
+parse_tunables (char *valstring)
+{
+  struct tunable_toset_t tunables[tunables_list_size];
+  int ntunables = parse_tunables_string (valstring, tunables);
+
+  for (int i = 0; i < ntunables; i++)
+    tunable_initialize (tunables[i].t, tunables[i].value);
 }
 
 /* Initialize the tunables list from the environment.  For now we only use the
@@ -240,7 +264,7 @@ __tunables_init (char **envp)
 	  continue;
 	}
 
-      for (int i = 0; i < sizeof (tunable_list) / sizeof (tunable_t); i++)
+      for (int i = 0; i < tunables_list_size; i++)
 	{
 	  tunable_t *cur = &tunable_list[i];
 
