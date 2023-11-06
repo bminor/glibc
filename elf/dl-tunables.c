@@ -235,6 +235,12 @@ parse_tunables (char *valstring)
 {
   struct tunable_toset_t tunables[tunables_list_size];
   int ntunables = parse_tunables_string (valstring, tunables);
+  if (ntunables == -1)
+    {
+      _dl_error_printf (
+        "WARNING: ld.so: invalid GLIBC_TUNABLES `%s': ignored.\n", valstring);
+      return;
+    }
 
   for (int i = 0; i < ntunables; i++)
     tunable_initialize (tunables[i].t, tunables[i].value);
