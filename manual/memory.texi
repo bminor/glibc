@@ -1379,9 +1379,7 @@ There is one problem with @code{MALLOC_CHECK_}: in SUID or SGID binaries
 it could possibly be exploited since diverging from the normal programs
 behavior it now writes something to the standard error descriptor.
 Therefore the use of @code{MALLOC_CHECK_} is disabled by default for
-SUID and SGID binaries.  It can be enabled again by the system
-administrator by adding a file @file{/etc/suid-debug} (the content is
-not important it could be empty).
+SUID and SGID binaries.
 
 So, what's the difference between using @code{MALLOC_CHECK_} and linking
 with @samp{-lmcheck}?  @code{MALLOC_CHECK_} is orthogonal with respect to

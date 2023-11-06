@@ -2670,8 +2670,7 @@ process_envvars (struct dl_main_state *state)
 	}
       while (*nextp != '\0');
 
-      if (__access ("/etc/suid-debug", F_OK) != 0)
-	GLRO(dl_debug_mask) = 0;
+      GLRO(dl_debug_mask) = 0;
 
       if (state->mode != rtld_mode_normal)
 	_exit (5);

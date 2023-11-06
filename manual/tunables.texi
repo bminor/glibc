@@ -136,9 +136,7 @@ termination of the process.
 Like @env{MALLOC_CHECK_}, @code{glibc.malloc.check} has a problem in that it
 diverges from normal program behavior by writing to @code{stderr}, which could
 by exploited in SUID and SGID binaries.  Therefore, @code{glibc.malloc.check}
-is disabled by default for SUID and SGID binaries.  This can be enabled again
-by the system administrator by adding a file @file{/etc/suid-debug}; the
-content of the file could be anything or even empty.
+is disabled by default for SUID and SGID binaries.
 @end deftp
 
 @deftp Tunable glibc.malloc.top_pad

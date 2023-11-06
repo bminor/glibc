@@ -252,20 +252,6 @@ parse_tunables (char *tunestr, char *valstring)
     tunestr[off] = '\0';
 }
 
-/* Enable the glibc.malloc.check tunable in SETUID/SETGID programs only when
-   the system administrator has created the /etc/suid-debug file.  This is a
-   special case where we want to conditionally enable/disable a tunable even
-   for setuid binaries.  We use the special version of access() to avoid
-   setting ERRNO, which is a TLS variable since TLS has not yet been set
-   up.  */
-static __always_inline void
-maybe_enable_malloc_check (void)
-{
-  tunable_id_t id = TUNABLE_ENUM_NAME (glibc, malloc, check);
-  if (__libc_enable_secure && __access_noerrno ("/etc/suid-debug", F_OK) == 0)
-    tunable_list[id].security_level = TUNABLE_SECLEVEL_NONE;
-}
-
 /* Initialize the tunables list from the environment.  For now we only use the
    ENV_ALIAS to find values.  Later we will also use the tunable names to find
    values.  */
@@ -276,8 +262,6 @@ __tunables_init (char **envp)
   char *envval = NULL;
   size_t len = 0;
   char **prev_envp = envp;
-
-  maybe_enable_malloc_check ();
 
   while ((envp = get_next_env (envp, &envname, &len, &envval,
 			       &prev_envp)) != NULL)
