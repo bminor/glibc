@@ -2561,6 +2561,10 @@ process_envvars (struct dl_main_state *state)
 	      process_dl_debug (state, &envline[6]);
 	      break;
 	    }
+	  /* For __libc_enable_secure mode, audit pathnames containing slashes
+	     are ignored.  Also, shared audit objects are only loaded only from
+	     the standard search directories and only if they have set-user-ID
+	     mode bit enabled.  */
 	  if (memcmp (envline, "AUDIT", 5) == 0)
 	    audit_list_add_string (&state->audit_list, &envline[6]);
 	  break;
@@ -2573,7 +2577,10 @@ process_envvars (struct dl_main_state *state)
 	      break;
 	    }
 
-	  /* List of objects to be preloaded.  */
+	  /* For __libc_enable_secure mode, preload pathnames containing slashes
+	     are ignored.  Also, shared objects are only preloaded from the
+	     standard search directories and only if they have set-user-ID mode
+	     bit enabled.  */
 	  if (memcmp (envline, "PRELOAD", 7) == 0)
 	    {
 	      state->preloadlist = &envline[8];
