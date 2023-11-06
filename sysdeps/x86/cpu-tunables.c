@@ -24,24 +24,11 @@
 #include <string.h>
 #include <cpu-features.h>
 #include <ldsodefs.h>
-
-/* We can't use IFUNC memcmp nor strlen in init_cpu_features from libc.a
-   since IFUNC must be set up by init_cpu_features.  */
-#if defined USE_MULTIARCH && !defined SHARED
-# ifdef __x86_64__
-/* DEFAULT_MEMCMP by sysdeps/x86_64/memcmp-isa-default-impl.h.  */
-#  include <sysdeps/x86_64/memcmp-isa-default-impl.h>
-# else
-#  define DEFAULT_MEMCMP	__memcmp_ia32
-# endif
-extern __typeof (memcmp) DEFAULT_MEMCMP;
-#else
-# define DEFAULT_MEMCMP	memcmp
-#endif
+#include <dl-symbol-redir-ifunc.h>
 
 #define CHECK_GLIBC_IFUNC_CPU_OFF(f, cpu_features, name, len)		\
   _Static_assert (sizeof (#name) - 1 == len, #name " != " #len);	\
-  if (!DEFAULT_MEMCMP (f, #name, len))					\
+  if (memcmp (f, #name, len) == 0)					\
     {									\
       CPU_FEATURE_UNSET (cpu_features, name)				\
       break;								\
@@ -51,7 +38,7 @@ extern __typeof (memcmp) DEFAULT_MEMCMP;
    which isn't available.  */
 #define CHECK_GLIBC_IFUNC_PREFERRED_OFF(f, cpu_features, name, len)	\
   _Static_assert (sizeof (#name) - 1 == len, #name " != " #len);	\
-  if (!DEFAULT_MEMCMP (f, #name, len))					\
+  if (memcmp (f, #name, len) == 0)					\
     {									\
       cpu_features->preferred[index_arch_##name]			\
 	&= ~bit_arch_##name;						\
@@ -62,7 +49,7 @@ extern __typeof (memcmp) DEFAULT_MEMCMP;
 #define CHECK_GLIBC_IFUNC_PREFERRED_BOTH(f, cpu_features, name,	\
 					  disable, len)			\
   _Static_assert (sizeof (#name) - 1 == len, #name " != " #len);	\
-  if (!DEFAULT_MEMCMP (f, #name, len))					\
+  if (memcmp (f, #name, len) == 0)					\
     {									\
       if (disable)							\
 	cpu_features->preferred[index_arch_##name] &= ~bit_arch_##name;	\
@@ -76,7 +63,7 @@ extern __typeof (memcmp) DEFAULT_MEMCMP;
 #define CHECK_GLIBC_IFUNC_PREFERRED_NEED_BOTH(f, cpu_features, name,	\
 					       need, disable, len)	\
   _Static_assert (sizeof (#name) - 1 == len, #name " != " #len);	\
-  if (!DEFAULT_MEMCMP (f, #name, len))					\
+  if (memcmp (f, #name, len) == 0)					\
     {									\
       if (disable)							\
 	cpu_features->preferred[index_arch_##name] &= ~bit_arch_##name;	\
@@ -177,7 +164,7 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
 	      CHECK_GLIBC_IFUNC_CPU_OFF (n, cpu_features, POPCNT, 6);
 	      CHECK_GLIBC_IFUNC_CPU_OFF (n, cpu_features, SSE4_1, 6);
 	      CHECK_GLIBC_IFUNC_CPU_OFF (n, cpu_features, SSE4_2, 6);
-	      if (!DEFAULT_MEMCMP (n, "XSAVEC", 6))
+	      if (memcmp (n, "XSAVEC", 6) == 0)
 		{
 		  /* Update xsave_state_size to XSAVE state size.  */
 		  cpu_features->xsave_state_size
@@ -290,12 +277,11 @@ attribute_hidden
 void
 TUNABLE_CALLBACK (set_x86_ibt) (tunable_val_t *valp)
 {
-  if (DEFAULT_MEMCMP (valp->strval, "on", sizeof ("on")) == 0)
+  if (memcmp (valp->strval, "on", sizeof ("on")) == 0)
     GL(dl_x86_feature_control).ibt = cet_always_on;
-  else if (DEFAULT_MEMCMP (valp->strval, "off", sizeof ("off")) == 0)
+  else if (memcmp (valp->strval, "off", sizeof ("off")) == 0)
     GL(dl_x86_feature_control).ibt = cet_always_off;
-  else if (DEFAULT_MEMCMP (valp->strval, "permissive",
-			   sizeof ("permissive")) == 0)
+  else if (memcmp (valp->strval, "permissive", sizeof ("permissive")) == 0)
     GL(dl_x86_feature_control).ibt = cet_permissive;
 }
 
@@ -303,12 +289,11 @@ attribute_hidden
 void
 TUNABLE_CALLBACK (set_x86_shstk) (tunable_val_t *valp)
 {
-  if (DEFAULT_MEMCMP (valp->strval, "on", sizeof ("on")) == 0)
+  if (memcmp (valp->strval, "on", sizeof ("on")) == 0)
     GL(dl_x86_feature_control).shstk = cet_always_on;
-  else if (DEFAULT_MEMCMP (valp->strval, "off", sizeof ("off")) == 0)
+  else if (memcmp (valp->strval, "off", sizeof ("off")) == 0)
     GL(dl_x86_feature_control).shstk = cet_always_off;
-  else if (DEFAULT_MEMCMP (valp->strval, "permissive",
-			   sizeof ("permissive")) == 0)
+  else if (memcmp (valp->strval, "permissive", sizeof ("permissive")) == 0)
     GL(dl_x86_feature_control).shstk = cet_permissive;
 }
 #endif

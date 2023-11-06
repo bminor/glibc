@@ -19,6 +19,11 @@
 #ifndef _DL_IFUNC_GENERIC_H
 #define _DL_IFUNC_GENERIC_H
 
+#ifndef SHARED
+
 asm ("memset = __memset_ia32");
+asm ("memcmp = __memcmp_ia32");
+
+#endif /* SHARED */
 
 #endif
