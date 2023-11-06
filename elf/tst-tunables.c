@@ -161,24 +161,36 @@ static const struct test_t
     0,
     0,
   },
-  /* The ill-formatted tunable is also skipped.  */
+  /* If there is a ill-formatted key=value, everything after is also ignored.  */
   {
     "glibc.malloc.mmap_threshold=glibc.malloc.mmap_threshold=4096:glibc.malloc.check=2",
-    2,
+    0,
     0,
     0,
   },
-  /* For an integer tunable, parse will stop on non number character.  */
   {
     "glibc.malloc.check=2=2",
-    2,
+    0,
     0,
     0,
   },
   {
     "glibc.malloc.check=2=2:glibc.malloc.mmap_threshold=4096",
+    0,
+    0,
+    0,
+  },
+  {
+    "glibc.malloc.check=2=2:glibc.malloc.check=2",
+    0,
+    0,
+    0,
+  },
+  /* Valid tunables set before ill-formatted ones are set.  */
+  {
+    "glibc.malloc.check=2:glibc.malloc.mmap_threshold=4096=4096",
     2,
-    4096,
+    0,
     0,
   }
 };

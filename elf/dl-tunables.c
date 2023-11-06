@@ -192,10 +192,12 @@ parse_tunables (char *valstring)
 
       const char *value = p;
 
-      while (*p != ':' && *p != '\0')
+      while (*p != '=' && *p != ':' && *p != '\0')
 	p++;
 
-      if (*p == '\0')
+      if (*p == '=')
+	break;
+      else if (*p == '\0')
 	done = true;
       else
 	*p++ = '\0';
