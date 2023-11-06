@@ -300,7 +300,6 @@ dl_main_state_init (struct dl_main_state *state)
   state->glibc_hwcaps_prepend = NULL;
   state->glibc_hwcaps_mask = NULL;
   state->mode = rtld_mode_normal;
-  state->any_debug = false;
   state->version_info = false;
 }
 
@@ -2481,7 +2480,6 @@ process_dl_debug (struct dl_main_state *state, const char *dl_debug)
 		&& memcmp (dl_debug, debopts[cnt].name, len) == 0)
 	      {
 		GLRO(dl_debug_mask) |= debopts[cnt].mask;
-		state->any_debug = true;
 		break;
 	      }
 
@@ -2676,7 +2674,7 @@ process_envvars (struct dl_main_state *state)
   /* If we have to run the dynamic linker in debugging mode and the
      LD_DEBUG_OUTPUT environment variable is given, we write the debug
      messages to this file.  */
-  else if (state->any_debug && debug_output != NULL)
+  else if (GLRO(dl_debug_mask) != 0 && debug_output != NULL)
     {
       const int flags = O_WRONLY | O_APPEND | O_CREAT | O_NOFOLLOW;
       size_t name_len = strlen (debug_output);

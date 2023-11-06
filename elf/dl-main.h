@@ -97,9 +97,6 @@ struct dl_main_state
   /* True if program should be also printed for rtld_mode_trace.  */
   bool mode_trace_program;
 
-  /* True if any of the debugging options is enabled.  */
-  bool any_debug;
-
   /* True if information about versions has to be printed.  */
   bool version_info;
 };
