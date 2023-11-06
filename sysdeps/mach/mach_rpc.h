@@ -20,11 +20,8 @@
 
 /* Macro used by MIG to cleanly check the type.  */
 #define BAD_TYPECHECK(type, check) __glibc_unlikely (({	\
-  union { mach_msg_type_t t; uint32_t w; } _t, _c;	\
+  union { mach_msg_type_t t; uintptr_t w; } _t, _c;	\
   _t.t = *(type); _c.t = *(check);_t.w != _c.w; }))
 
-/* TODO: add this assertion for x86_64.  */
-#ifndef __x86_64__
-_Static_assert (sizeof (uint32_t) == sizeof (mach_msg_type_t),
-                "mach_msg_type_t needs to be the same size as uint32_t");
-#endif
+_Static_assert (sizeof (uintptr_t) == sizeof (mach_msg_type_t),
+                "mach_msg_type_t needs to be the same size as uintptr_t");
