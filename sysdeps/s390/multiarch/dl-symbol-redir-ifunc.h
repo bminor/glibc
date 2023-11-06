@@ -20,10 +20,12 @@
 #define _DL_IFUNC_GENERIC_H
 
 #include <ifunc-memset.h>
+#include <ifunc-memcmp.h>
 
 #define IFUNC_SYMBOL_STR1(s)	#s
 #define IFUNC_SYMBOL_STR(s)	IFUNC_SYMBOL_STR1(s)
 
 asm ("memset = " IFUNC_SYMBOL_STR(MEMSET_DEFAULT));
+asm ("memcmp = " IFUNC_SYMBOL_STR(MEMCMP_DEFAULT));
 
 #endif

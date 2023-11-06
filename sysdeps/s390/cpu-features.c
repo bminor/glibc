@@ -21,7 +21,7 @@
 #include <elf/dl-tunables.h>
 #include <ifunc-memcmp.h>
 #include <string.h>
-extern __typeof (memcmp) MEMCMP_DEFAULT;
+#include <dl-symbol-redir-ifunc.h>
 
 #define S390_COPY_CPU_FEATURES(SRC_PTR, DEST_PTR)	\
   (DEST_PTR)->hwcap = (SRC_PTR)->hwcap;			\
@@ -89,9 +89,9 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
       if ((*feature == 'z' || *feature == 'a'))
 	{
 	  if ((feature_len == 5 && *feature == 'z'
-	       && MEMCMP_DEFAULT (feature, "zEC12", 5) == 0)
+	       && memcmp (feature, "zEC12", 5) == 0)
 	      || (feature_len == 6 && *feature == 'a'
-		  && MEMCMP_DEFAULT (feature, "arch10", 6) == 0))
+		  && memcmp (feature, "arch10", 6) == 0))
 	    {
 	      reset_features = true;
 	      disable = true;
@@ -100,9 +100,9 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
 	      stfle_bits0_mask = S390_STFLE_MASK_ARCH13_MIE3;
 	    }
 	  else if ((feature_len == 3 && *feature == 'z'
-		    && MEMCMP_DEFAULT (feature, "z13", 3) == 0)
+		    && memcmp (feature, "z13", 3) == 0)
 		   || (feature_len == 6 && *feature == 'a'
-		       && MEMCMP_DEFAULT (feature, "arch11", 6) == 0))
+		       && memcmp (feature, "arch11", 6) == 0))
 	    {
 	      reset_features = true;
 	      disable = true;
@@ -110,9 +110,9 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
 	      stfle_bits0_mask = S390_STFLE_MASK_ARCH13_MIE3;
 	    }
 	  else if ((feature_len == 3 && *feature == 'z'
-		    && MEMCMP_DEFAULT (feature, "z14", 3) == 0)
+		    && memcmp (feature, "z14", 3) == 0)
 		   || (feature_len == 6 && *feature == 'a'
-		       && MEMCMP_DEFAULT (feature, "arch12", 6) == 0))
+		       && memcmp (feature, "arch12", 6) == 0))
 	    {
 	      reset_features = true;
 	      disable = true;
@@ -120,11 +120,11 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
 	      stfle_bits0_mask = S390_STFLE_MASK_ARCH13_MIE3;
 	    }
 	  else if ((feature_len == 3 && *feature == 'z'
-		    && (MEMCMP_DEFAULT (feature, "z15", 3) == 0
-			|| MEMCMP_DEFAULT (feature, "z16", 3) == 0))
+		    && (memcmp (feature, "z15", 3) == 0
+			|| memcmp (feature, "z16", 3) == 0))
 		   || (feature_len == 6
-		       && (MEMCMP_DEFAULT (feature, "arch13", 6) == 0
-			   || MEMCMP_DEFAULT (feature, "arch14", 6) == 0)))
+		       && (memcmp (feature, "arch13", 6) == 0
+			   || memcmp (feature, "arch14", 6) == 0)))
 	    {
 	      /* For z15 or newer we don't have to disable something,
 		 but we have to reset to the original values.  */
@@ -134,14 +134,14 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
       else if (*feature == 'H')
 	{
 	  if (feature_len == 15
-	      && MEMCMP_DEFAULT (feature, "HWCAP_S390_VXRS", 15) == 0)
+	      && memcmp (feature, "HWCAP_S390_VXRS", 15) == 0)
 	    {
 	      hwcap_mask = HWCAP_S390_VXRS;
 	      if (disable)
 		hwcap_mask |= HWCAP_S390_VXRS_EXT | HWCAP_S390_VXRS_EXT2;
 	    }
 	  else if (feature_len == 19
-		   && MEMCMP_DEFAULT (feature, "HWCAP_S390_VXRS_EXT", 19) == 0)
+		   && memcmp (feature, "HWCAP_S390_VXRS_EXT", 19) == 0)
 	    {
 	      hwcap_mask = HWCAP_S390_VXRS_EXT;
 	      if (disable)
@@ -150,7 +150,7 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
 		hwcap_mask |= HWCAP_S390_VXRS;
 	    }
 	  else if (feature_len == 20
-		   && MEMCMP_DEFAULT (feature, "HWCAP_S390_VXRS_EXT2", 20) == 0)
+		   && memcmp (feature, "HWCAP_S390_VXRS_EXT2", 20) == 0)
 	    {
 	      hwcap_mask = HWCAP_S390_VXRS_EXT2;
 	      if (!disable)
@@ -160,7 +160,7 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
       else if (*feature == 'S')
 	{
 	  if (feature_len == 10
-	      && MEMCMP_DEFAULT (feature, "STFLE_MIE3", 10) == 0)
+	      && memcmp (feature, "STFLE_MIE3", 10) == 0)
 	    {
 	      stfle_bits0_mask = S390_STFLE_MASK_ARCH13_MIE3;
 	    }
