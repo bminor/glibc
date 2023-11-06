@@ -124,16 +124,17 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
 	 to intercept the calls to collect information.  In this case we
 	 don't store the address in the GOT so that all future calls also
 	 end in this function.  */
+#ifdef SHARED
       if (__glibc_unlikely (profile))
 	{
-#if defined HAVE_S390_VX_ASM_SUPPORT
+# if defined HAVE_S390_VX_ASM_SUPPORT
 	  if (GLRO(dl_hwcap) & HWCAP_S390_VX)
 	    got[2] = (Elf32_Addr) &_dl_runtime_profile_vx;
 	  else
 	    got[2] = (Elf32_Addr) &_dl_runtime_profile;
-#else
+# else
 	  got[2] = (Elf32_Addr) &_dl_runtime_profile;
-#endif
+# endif
 
 	  if (GLRO(dl_profile) != NULL
 	      && _dl_name_match_p (GLRO(dl_profile), l))
@@ -142,6 +143,7 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
 	    GL(dl_profile_map) = l;
 	}
       else
+#endif
 	{
 	  /* This function will get called to fix up the GOT entry indicated by
 	     the offset on the stack, and then jump to the resolved address.  */

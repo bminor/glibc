@@ -136,7 +136,8 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
       Elf64_Addr res0_addr, res1_addr;
       unsigned int *plt = (void *) D_PTR (l, l_info[DT_PLTGOT]);
 
-      if (__builtin_expect(profile, 0))
+#ifdef SHARED
+      if (__glibc_unlikely (profile))
 	{
 	  res0_addr = (Elf64_Addr) &_dl_runtime_profile_0;
 	  res1_addr = (Elf64_Addr) &_dl_runtime_profile_1;
@@ -146,6 +147,7 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
 	    GL(dl_profile_map) = l;
 	}
       else
+#endif
 	{
 	  res0_addr = (Elf64_Addr) &_dl_runtime_resolve_0;
 	  res1_addr = (Elf64_Addr) &_dl_runtime_resolve_1;

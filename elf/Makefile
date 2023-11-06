@@ -37,12 +37,12 @@ routines = \
   dl-iteratephdr \
   dl-libc \
   dl-origin \
-  dl-profstub \
   dl-reloc-static-pie \
   dl-support \
   dl-sym \
   dl-sysdep \
   enbl-secure \
+  libc-dl-profstub  \
   libc-dl_find_object \
   libc_early_init \
   rtld_static_init \
@@ -72,7 +72,6 @@ dl-routines = \
   dl-open \
   dl-origin \
   dl-printf \
-  dl-profile \
   dl-reloc \
   dl-runtime \
   dl-scope \
@@ -117,7 +116,11 @@ elide-routines.os = \
   # elide-routines.os
 
 # These object files are only included in the dynamically-linked libc.
-shared-only-routines = libc-dl_find_object
+shared-only-routines = \
+  libc-dl-profile \
+  libc-dl-profstub \
+  libc-dl_find_object \
+  # shared-only-routines
 
 # ld.so uses those routines, plus some special stuff for being the program
 # interpreter and operating independent of libc.
@@ -135,6 +138,7 @@ rtld-routines = \
   dl-libc_freeres \
   dl-minimal \
   dl-mutex \
+  dl-profile \
   dl-sysdep \
   dl-usage \
   rtld \

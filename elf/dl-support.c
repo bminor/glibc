@@ -60,10 +60,6 @@ int _dl_dynamic_weak;
 /* If nonzero print warnings about problematic situations.  */
 int _dl_verbose;
 
-/* We never do profiling.  */
-const char *_dl_profile;
-const char *_dl_profile_output;
-
 /* Names of shared object for which the RUNPATHs and RPATHs should be
    ignored.  */
 const char *_dl_inhibit_rpath;
@@ -300,11 +296,6 @@ _dl_non_dynamic_init (void)
   _dl_bind_not = *(getenv ("LD_BIND_NOT") ?: "") != '\0';
 
   _dl_dynamic_weak = *(getenv ("LD_DYNAMIC_WEAK") ?: "") == '\0';
-
-  _dl_profile_output = getenv ("LD_PROFILE_OUTPUT");
-  if (_dl_profile_output == NULL || _dl_profile_output[0] == '\0')
-    _dl_profile_output
-      = &"/var/tmp\0/var/profile"[__libc_enable_secure ? 9 : 0];
 
   if (__libc_enable_secure)
     {

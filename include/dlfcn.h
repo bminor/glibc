@@ -135,5 +135,10 @@ extern int __dladdr1 (const void *address, Dl_info *info,
 extern int __dlinfo (void *handle, int request, void *arg);
 extern char *__dlerror (void);
 
+#ifndef SHARED
+# undef DL_CALL_FCT
+# define DL_CALL_FCT(fctp, args) ((fctp) args)
+#endif
+
 #endif
 #endif

@@ -226,7 +226,7 @@ __elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 	  Elf32_Word dlrr;
 	  Elf32_Word offset;
 
-#ifndef PROF
+#if !defined PROF && defined SHARED
 	  dlrr = (Elf32_Word) (profile
 			       ? _dl_prof_resolve
 			       : _dl_runtime_resolve);

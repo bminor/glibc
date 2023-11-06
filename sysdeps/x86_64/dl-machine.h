@@ -89,6 +89,7 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
 
       const struct cpu_features* cpu_features = __get_cpu_features ();
 
+#ifdef SHARED
       /* The got[2] entry contains the address of a function which gets
 	 called to get the address of a so far unresolved function and
 	 jump to it.  The profiling extension of the dynamic linker allows
@@ -111,6 +112,7 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
 	    GL(dl_profile_map) = l;
 	}
       else
+#endif
 	{
 	  /* This function will get called to fix up the GOT entry
 	     indicated by the offset on the stack, and then jump to

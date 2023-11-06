@@ -75,9 +75,7 @@ elf_machine_runtime_setup (struct link_map *map, struct r_scope_elem *scope[],
 			   int lazy, int profile)
 {
   extern char _dl_runtime_resolve_new[] attribute_hidden;
-  extern char _dl_runtime_profile_new[] attribute_hidden;
   extern char _dl_runtime_resolve_old[] attribute_hidden;
-  extern char _dl_runtime_profile_old[] attribute_hidden;
 
   struct pltgot {
     char *resolve;
@@ -109,6 +107,9 @@ elf_machine_runtime_setup (struct link_map *map, struct r_scope_elem *scope[],
   else
     resolve = _dl_runtime_resolve_old;
 
+#ifdef SHARED
+  extern char _dl_runtime_profile_new[] attribute_hidden;
+  extern char _dl_runtime_profile_old[] attribute_hidden;
   if (__builtin_expect (profile, 0))
     {
       if (secureplt)
@@ -123,6 +124,7 @@ elf_machine_runtime_setup (struct link_map *map, struct r_scope_elem *scope[],
 	  GL(dl_profile_map) = map;
 	}
     }
+#endif
 
   pg->resolve = resolve;
   pg->link = map;

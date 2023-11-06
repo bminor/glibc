@@ -101,6 +101,7 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
 	 to intercept the calls to collect information.	 In this case we
 	 don't store the address in the GOT so that all future calls also
 	 end in this function.	*/
+#ifdef SHARED
       if (profile)
 	{
 	  got[2] = (Elf32_Addr) &_dl_runtime_profile;
@@ -110,6 +111,7 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
 	    GL(dl_profile_map) = l;
 	}
       else
+#endif
 	/* This function will get called to fix up the GOT entry indicated by
 	   the offset on the stack, and then jump to the resolved address.  */
 	got[2] = (Elf32_Addr) &_dl_runtime_resolve;

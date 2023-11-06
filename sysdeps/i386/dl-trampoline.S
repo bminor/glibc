@@ -70,7 +70,7 @@ _dl_runtime_resolve_shstk:
 	cfi_endproc
 	.size _dl_runtime_resolve_shstk, .-_dl_runtime_resolve_shstk
 
-#ifndef PROF
+#if !defined PROF && defined SHARED
 # The SHSTK compatible version.
 	.globl _dl_runtime_profile_shstk
 	.type _dl_runtime_profile_shstk, @function

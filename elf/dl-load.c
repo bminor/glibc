@@ -1443,11 +1443,6 @@ cannot enable executable stack as shared object requires");
      name by which the DSO is actually known.  Add that as well.  */
   if (__glibc_unlikely (origname != NULL))
     add_name_to_object (l, origname);
-#else
-  /* Audit modules only exist when linking is dynamic so ORIGNAME
-     cannot be non-NULL.  */
-  assert (origname == NULL);
-#endif
 
   /* When we profile the SONAME might be needed for something else but
      loading.  Add it right away.  */
@@ -1455,6 +1450,11 @@ cannot enable executable stack as shared object requires");
       && l->l_info[DT_SONAME] != NULL)
     add_name_to_object (l, ((const char *) D_PTR (l, l_info[DT_STRTAB])
 			    + l->l_info[DT_SONAME]->d_un.d_val));
+#else
+  /* Audit modules only exist when linking is dynamic so ORIGNAME
+     cannot be non-NULL.  */
+  assert (origname == NULL);
+#endif
 
   /* If we have newly loaded libc.so, update the namespace
      description.  */

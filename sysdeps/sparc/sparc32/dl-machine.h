@@ -116,7 +116,8 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
 	 bits of %g1 with an offset into the .rela.plt section and jump to
 	 the beginning of the PLT.  */
       plt = (Elf32_Addr *) D_PTR (l, l_info[DT_PLTGOT]);
-      if (__builtin_expect(profile, 0))
+#ifdef SHARED
+      if (__glibc_unlikely (profile))
 	{
 	  rfunc = (Elf32_Addr) &_dl_runtime_profile;
 
@@ -125,6 +126,7 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
 	    GL(dl_profile_map) = l;
 	}
       else
+#endif
 	{
 	  rfunc = (Elf32_Addr) &_dl_runtime_resolve;
 	}

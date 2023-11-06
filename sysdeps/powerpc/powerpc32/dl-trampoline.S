@@ -70,7 +70,7 @@ _dl_runtime_resolve:
 	cfi_endproc
 	.size	 _dl_runtime_resolve,.-_dl_runtime_resolve
 
-#ifndef PROF
+#if !defined PROF && defined SHARED
 	.align 2
 	.globl _dl_prof_resolve
 	.type _dl_prof_resolve,@function

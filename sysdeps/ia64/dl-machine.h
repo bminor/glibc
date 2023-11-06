@@ -121,9 +121,8 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
       reserve[0] = (Elf64_Addr) l;
 
       /* This function will be called to perform the relocation.  */
-      if (!profile)
-	doit = (Elf64_Addr) ELF_PTR_TO_FDESC (&_dl_runtime_resolve)->ip;
-      else
+#ifdef SHARED
+      if (__glibc_unlikely (profile))
 	{
 	  if (GLRO(dl_profile) != NULL
 	      && _dl_name_match_p (GLRO(dl_profile), l))
@@ -133,6 +132,11 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
 	      GL(dl_profile_map) = l;
 	    }
 	  doit = (Elf64_Addr) ELF_PTR_TO_FDESC (&_dl_runtime_profile)->ip;
+	}
+      else
+#endif
+	{
+	  doit = (Elf64_Addr) ELF_PTR_TO_FDESC (&_dl_runtime_resolve)->ip;
 	}
 
       reserve[1] = doit;

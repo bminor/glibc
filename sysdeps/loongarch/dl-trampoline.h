@@ -126,6 +126,7 @@ ENTRY (_dl_runtime_resolve)
 	jirl	zero, t1, 0
 END (_dl_runtime_resolve)
 
+#ifdef SHARED
 #include "dl-link.h"
 
 ENTRY (_dl_runtime_profile)
@@ -367,3 +368,4 @@ ENTRY (_dl_runtime_profile)
 	jirl	zero, ra, 0
 
 END (_dl_runtime_profile)
+#endif /* SHARED */

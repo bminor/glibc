@@ -47,6 +47,7 @@ _dl_runtime_resolve:
 
 	.size	_dl_runtime_resolve, .-_dl_runtime_resolve
 
+#ifdef SHARED
 	/* For the profiling cases we pass in our stack frame
 	 * as the base of the La_sparc32_regs, so it looks
 	 * like:
@@ -185,3 +186,4 @@ _dl_runtime_profile:
 	cfi_endproc
 
 	.size	_dl_runtime_profile, .-_dl_runtime_profile
+#endif

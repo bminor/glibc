@@ -188,14 +188,18 @@ elf_machine_runtime_setup (struct link_map *map, struct r_scope_elem *scope[],
       extern void _dl_runtime_resolve (void);
       extern void _dl_prof_resolve (void);
 
-      if (__glibc_likely (!profile))
-	dlrr = _dl_runtime_resolve;
-      else
+#ifdef SHARED
+      if (__glibc_unlikely (profile))
 	{
 	  if (GLRO(dl_profile) != NULL
 	      &&_dl_name_match_p (GLRO(dl_profile), map))
 	    GL(dl_profile_map) = map;
 	  dlrr = _dl_prof_resolve;
+	}
+      else
+#endif
+	{
+	  dlrr = _dl_runtime_resolve;
 	}
       got = (Elf32_Addr *) map->l_info[DT_PPC(GOT)]->d_un.d_ptr;
       glink = got[1];

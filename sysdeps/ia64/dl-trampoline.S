@@ -188,7 +188,7 @@ END(_dl_runtime_resolve)
 #define PLTENTER_FRAME_SIZE (4*8 + 8*8 + 8*16 + 2*8 + 16)
 #define PLTEXIT_FRAME_SIZE (PLTENTER_FRAME_SIZE + 4*8 + 8*16)
 
-#ifndef PROF
+#if !defined PROF && defined SHARED
 ENTRY(_dl_runtime_profile)
 	{ .mii
 	  .prologue

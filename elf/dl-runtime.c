@@ -162,14 +162,14 @@ _dl_fixup (
   return elf_machine_fixup_plt (l, result, refsym, sym, reloc, rel_addr, value);
 }
 
-#ifndef PROF
+#if !defined PROF && defined SHARED
 DL_FIXUP_VALUE_TYPE
 __attribute ((noinline))
 DL_ARCH_FIXUP_ATTRIBUTE
 _dl_profile_fixup (
-#ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
+# ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
 		   ELF_MACHINE_RUNTIME_FIXUP_ARGS,
-#endif
+# endif
 		   struct link_map *l, ElfW(Word) reloc_arg,
 		   ElfW(Addr) retaddr, void *regs, long int *framesizep)
 {
@@ -309,14 +309,12 @@ _dl_profile_fixup (
       /* And now perhaps the relocation addend.  */
       value = elf_machine_plt_value (l, reloc, value);
 
-#ifdef SHARED
       /* Auditing checkpoint: we have a new binding.  Provide the
 	 auditing libraries the possibility to change the value and
 	 tell us whether further auditing is wanted.  */
       if (defsym != NULL && GLRO(dl_naudit) > 0)
 	_dl_audit_symbind (l, reloc_result, reloc, defsym, &value, result,
 			   true);
-#endif
 
       /* Store the result for later runs.  */
       if (__glibc_likely (! GLRO(dl_bind_not)))
@@ -335,11 +333,9 @@ _dl_profile_fixup (
   long int framesize = -1;
 
 
-#ifdef SHARED
   /* Auditing checkpoint: report the PLT entering and allow the
      auditors to change the value.  */
   _dl_audit_pltenter (l, reloc_result, &value, regs, &framesize);
-#endif
 
   /* Store the frame size information.  */
   *framesizep = framesize;
@@ -349,4 +345,4 @@ _dl_profile_fixup (
   return value;
 }
 
-#endif /* PROF */
+#endif /* !defined PROF && defined SHARED */

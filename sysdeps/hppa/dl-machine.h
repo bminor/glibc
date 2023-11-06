@@ -195,7 +195,6 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
   end_jmprel = jmprel + l->l_info[DT_PLTRELSZ]->d_un.d_val;
 
   extern void _dl_runtime_resolve (void);
-  extern void _dl_runtime_profile (void);
 
   /* Linking lazily */
   if (lazy)
@@ -235,22 +234,9 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
 	      got[1] = (Elf32_Addr) l;
 
 	      /* This function will be called to perform the relocation. */
-	      if (__builtin_expect (!profile, 1))
-		{
-		  /* If a static application called us, then _dl_runtime_resolve is not
-		     a function descriptor, but the *real* address of the function... */
-		  if((unsigned long) &_dl_runtime_resolve & 3)
-		    {
-		      got[-2] = (Elf32_Addr) ((struct fdesc *)
-				  ((unsigned long) &_dl_runtime_resolve & ~3))->ip;
-		    }
-		  else
-		    {
-		      /* Static executable! */
-		      got[-2] = (Elf32_Addr) &_dl_runtime_resolve;
-		    }
-		}
-	      else
+#ifdef SHARED
+	      extern void _dl_runtime_profile (void);
+	      if (__glibc_unlikely (profile))
 		{
 		  if (GLRO(dl_profile) != NULL
 		      && _dl_name_match_p (GLRO(dl_profile), l))
@@ -270,6 +256,22 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
 		    {
 		      /* Static executable */
 		      got[-2] = (Elf32_Addr) &_dl_runtime_profile;
+		    }
+		}
+	      else
+#endif
+		{
+		  /* If a static application called us, then _dl_runtime_resolve is not
+		     a function descriptor, but the *real* address of the function... */
+		  if((unsigned long) &_dl_runtime_resolve & 3)
+		    {
+		      got[-2] = (Elf32_Addr) ((struct fdesc *)
+				  ((unsigned long) &_dl_runtime_resolve & ~3))->ip;
+		    }
+		  else
+		    {
+		      /* Static executable! */
+		      got[-2] = (Elf32_Addr) &_dl_runtime_resolve;
 		    }
 		}
 	      /* Plunk in the gp of this function descriptor so we

@@ -150,7 +150,7 @@ _dl_runtime_resolve:
 #undef F4_OFF
 #undef F6_OFF
 
-#ifndef PROF
+#if !defined PROF && defined SHARED
 # define SIZEOF_STRUCT_LA_S390_64_REGS 200
 # define REGS_OFF -360
 # define R2_OFF -360

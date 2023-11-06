@@ -122,7 +122,7 @@ _dl_runtime_resolve:
 
 	cfi_endproc
 	.size _dl_runtime_resolve, .-_dl_runtime_resolve
-#ifndef PROF
+#if !defined PROF && defined SHARED
 	.globl _dl_runtime_profile
 	.type _dl_runtime_profile, #function
 	cfi_startproc

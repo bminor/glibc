@@ -362,13 +362,19 @@ elf_machine_runtime_setup (struct link_map *map, struct r_scope_elem *scope[],
 	  Elf64_Word offset;
 	  Elf64_Addr dlrr;
 
-	  dlrr = (Elf64_Addr) (profile ? _dl_profile_resolve
-				       : _dl_runtime_resolve);
-	  if (profile && GLRO(dl_profile) != NULL
-	      && _dl_name_match_p (GLRO(dl_profile), map))
-	    /* This is the object we are looking for.  Say that we really
-	       want profiling and the timers are started.  */
-	    GL(dl_profile_map) = map;
+#ifdef SHARED
+	  if (__glibc_unlikely (profile))
+	    {
+	      dlrr = (Elf64_Addr) _dl_profile_resolve;
+	      if (profile && GLRO(dl_profile) != NULL
+		  && _dl_name_match_p (GLRO(dl_profile), map))
+		/* This is the object we are looking for.  Say that we really
+		   want profiling and the timers are started.  */
+		GL(dl_profile_map) = map;
+	    }
+	  else
+#endif
+	    dlrr = (Elf64_Addr) _dl_runtime_resolve;
 
 #if _CALL_ELF != 2
 	  /* We need to stuff the address/TOC of _dl_runtime_resolve
