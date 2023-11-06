@@ -60,45 +60,21 @@ const char *teststrings[] =
   "glibc.not_valid.check=2",
 };
 
-const char *resultstrings[] =
-{
-  "glibc.malloc.mmap_threshold=4096",
-  "glibc.malloc.mmap_threshold=4096",
-  "glibc.malloc.mmap_threshold=4096",
-  "glibc.malloc.perturb=0x800",
-  "glibc.malloc.perturb=0x800:glibc.malloc.mmap_threshold=4096",
-  "glibc.malloc.perturb=0x800:glibc.malloc.mmap_threshold=4096",
-  "glibc.malloc.mmap_threshold=4096",
-  "glibc.malloc.mmap_threshold=4096",
-  "glibc.malloc.mmap_threshold=glibc.malloc.mmap_threshold=4096",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-};
-
 static int
 test_child (int off)
 {
   const char *val = getenv ("GLIBC_TUNABLES");
+  int ret = 1;
 
   printf ("    [%d] GLIBC_TUNABLES is %s\n", off, val);
   fflush (stdout);
-  if (val != NULL && strcmp (val, resultstrings[off]) == 0)
-    return 0;
-
   if (val != NULL)
-    printf ("    [%d] Unexpected GLIBC_TUNABLES VALUE %s, expected %s\n",
-	    off, val, resultstrings[off]);
+    printf ("    [%d] Unexpected GLIBC_TUNABLES VALUE %s\n", off, val);
   else
-    printf ("    [%d] GLIBC_TUNABLES environment variable absent\n", off);
-
+    ret = 0;
   fflush (stdout);
 
-  return 1;
+  return ret;
 }
 
 static int
