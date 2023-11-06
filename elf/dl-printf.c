@@ -17,6 +17,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <string.h>
+#if BUILD_PIE_DEFAULT
+# pragma GCC visibility push(hidden)
+#endif
 #include <_itoa.h>
 #include <assert.h>
 #include <dl-writev.h>
@@ -25,10 +29,18 @@
 #include <stdarg.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <string.h>
 #include <sys/uio.h>
 #include <unistd.h>
 #include <intprops.h>
+
+/* The function might be called before the process is self-relocated.  */
+static size_t
+_dl_debug_strlen (const char *s)
+{
+  const char *p = s;
+  for (; *s != '\0'; s++);
+  return s - p;
+}
 
 /* Bare-bones printf implementation.  This function only knows about
    the formats and flags needed and can handle only up to 64 stripes in
@@ -193,7 +205,7 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
 	    case 's':
 	      /* Get the string argument.  */
 	      iov[niov].iov_base = va_arg (arg, char *);
-	      iov[niov].iov_len = strlen (iov[niov].iov_base);
+	      iov[niov].iov_len = _dl_debug_strlen (iov[niov].iov_base);
 	      if (prec != -1)
 		iov[niov].iov_len = MIN ((size_t) prec, iov[niov].iov_len);
 	      ++niov;
