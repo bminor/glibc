@@ -154,50 +154,51 @@ __tunable_set_val (tunable_id_t id, tunable_val_t *valp, tunable_num_t *minp,
   do_tunable_update_val (cur, valp, minp, maxp);
 }
 
-/* Parse the tunable string TUNESTR and adjust it to drop any tunables that may
-   be unsafe for AT_SECURE processes so that it can be used as the new
-   environment variable value for GLIBC_TUNABLES.  VALSTRING is the original
-   environment variable string which we use to make NULL terminated values so
-   that we don't have to allocate memory again for it.  */
+/* Parse the tunable string VALSTRING.  VALSTRING is a duplicated value,
+   where delimiters ':' are replaced with '\0', so string tunables are null
+   terminated.  */
 static void
-parse_tunables (char *tunestr, char *valstring)
+parse_tunables (char *valstring)
 {
-  if (tunestr == NULL || *tunestr == '\0')
+  if (valstring == NULL || *valstring == '\0')
     return;
 
-  char *p = tunestr;
-  size_t off = 0;
+  char *p = valstring;
+  bool done = false;
 
-  while (true)
+  while (!done)
     {
       char *name = p;
-      size_t len = 0;
 
       /* First, find where the name ends.  */
-      while (p[len] != '=' && p[len] != ':' && p[len] != '\0')
-	len++;
+      while (*p != '=' && *p != ':' && *p != '\0')
+	p++;
 
       /* If we reach the end of the string before getting a valid name-value
 	 pair, bail out.  */
-      if (p[len] == '\0')
+      if (*p == '\0')
 	break;
 
       /* We did not find a valid name-value pair before encountering the
 	 colon.  */
-      if (p[len]== ':')
+      if (*p == ':')
 	{
-	  p += len + 1;
+	  p++;
 	  continue;
 	}
 
-      p += len + 1;
+      /* Skip the '='.  */
+      p++;
 
-      /* Take the value from the valstring since we need to NULL terminate it.  */
-      char *value = &valstring[p - tunestr];
-      len = 0;
+      const char *value = p;
 
-      while (p[len] != ':' && p[len] != '\0')
-	len++;
+      while (*p != ':' && *p != '\0')
+	p++;
+
+      if (*p == '\0')
+	done = true;
+      else
+	*p++ = '\0';
 
       /* Add the tunable if it exists.  */
       for (size_t i = 0; i < sizeof (tunable_list) / sizeof (tunable_t); i++)
@@ -206,50 +207,11 @@ parse_tunables (char *tunestr, char *valstring)
 
 	  if (tunable_is_name (cur->name, name))
 	    {
-	      /* If we are in a secure context (AT_SECURE) then ignore the
-		 tunable unless it is explicitly marked as secure.  Tunable
-		 values take precedence over their envvar aliases.  We write
-		 the tunables that are not SXID_ERASE back to TUNESTR, thus
-		 dropping all SXID_ERASE tunables and any invalid or
-		 unrecognized tunables.  */
-	      if (__libc_enable_secure)
-		{
-		  if (cur->security_level != TUNABLE_SECLEVEL_SXID_ERASE)
-		    {
-		      if (off > 0)
-			tunestr[off++] = ':';
-
-		      const char *n = cur->name;
-
-		      while (*n != '\0')
-			tunestr[off++] = *n++;
-
-		      tunestr[off++] = '=';
-
-		      for (size_t j = 0; j < len; j++)
-			tunestr[off++] = value[j];
-		    }
-
-		  if (cur->security_level != TUNABLE_SECLEVEL_NONE)
-		    break;
-		}
-
-	      value[len] = '\0';
 	      tunable_initialize (cur, value);
 	      break;
 	    }
 	}
-
-      /* We reached the end while processing the tunable string.  */
-      if (p[len] == '\0')
-	break;
-
-      p += len + 1;
     }
-
-  /* Terminate tunestr before we leave.  */
-  if (__libc_enable_secure)
-    tunestr[off] = '\0';
 }
 
 /* Initialize the tunables list from the environment.  For now we only use the
@@ -263,16 +225,16 @@ __tunables_init (char **envp)
   size_t len = 0;
   char **prev_envp = envp;
 
+  /* Ignore tunables for AT_SECURE programs.  */
+  if (__libc_enable_secure)
+    return;
+
   while ((envp = get_next_env (envp, &envname, &len, &envval,
 			       &prev_envp)) != NULL)
     {
       if (tunable_is_name ("GLIBC_TUNABLES", envname))
 	{
-	  char *new_env = tunables_strdup (envname);
-	  if (new_env != NULL)
-	    parse_tunables (new_env + len + 1, envval);
-	  /* Put in the updated envval.  */
-	  *prev_envp = new_env;
+	  parse_tunables (tunables_strdup (envval));
 	  continue;
 	}
 
@@ -290,39 +252,6 @@ __tunables_init (char **envp)
 	  /* We have a match.  Initialize and move on to the next line.  */
 	  if (tunable_is_name (name, envname))
 	    {
-	      /* For AT_SECURE binaries, we need to check the security settings of
-		 the tunable and decide whether we read the value and also whether
-		 we erase the value so that child processes don't inherit them in
-		 the environment.  */
-	      if (__libc_enable_secure)
-		{
-		  if (cur->security_level == TUNABLE_SECLEVEL_SXID_ERASE)
-		    {
-		      /* Erase the environment variable.  */
-		      char **ep = prev_envp;
-
-		      while (*ep != NULL)
-			{
-			  if (tunable_is_name (name, *ep))
-			    {
-			      char **dp = ep;
-
-			      do
-				dp[0] = dp[1];
-			      while (*dp++);
-			    }
-			  else
-			    ++ep;
-			}
-		      /* Reset the iterator so that we read the environment again
-			 from the point we erased.  */
-		      envp = prev_envp;
-		    }
-
-		  if (cur->security_level != TUNABLE_SECLEVEL_NONE)
-		    continue;
-		}
-
 	      tunable_initialize (cur, envval);
 	      break;
 	    }

@@ -61,9 +61,6 @@ $1 == "}" {
     if (!env_alias[top_ns,ns,tunable]) {
       env_alias[top_ns,ns,tunable] = "{0}"
     }
-    if (!security_level[top_ns,ns,tunable]) {
-      security_level[top_ns,ns,tunable] = "SXID_ERASE"
-    }
     len = length(top_ns"."ns"."tunable)
     if (len > max_name_len)
       max_name_len = len
@@ -118,17 +115,6 @@ $1 == "}" {
     if (len > max_alias_len)
       max_alias_len = len
   }
-  else if (attr == "security_level") {
-    if (val == "SXID_ERASE" || val == "SXID_IGNORE" || val == "NONE") {
-      security_level[top_ns,ns,tunable] = val
-    }
-    else {
-      printf("Line %d: Invalid value (%s) for security_level: %s, ", NR, val,
-	     $0)
-      print("Allowed values are 'SXID_ERASE', 'SXID_IGNORE', or 'NONE'")
-      exit 1
-    }
-  }
   else if (attr == "default") {
     if (types[top_ns,ns,tunable] == "STRING") {
       default_val[top_ns,ns,tunable] = sprintf(".strval = \"%s\"", val);
@@ -177,9 +163,9 @@ END {
     n = indices[2];
     m = indices[3];
     printf ("  {TUNABLE_NAME_S(%s, %s, %s)", t, n, m)
-    printf (", {TUNABLE_TYPE_%s, %s, %s}, {%s}, false, TUNABLE_SECLEVEL_%s, %s},\n",
+    printf (", {TUNABLE_TYPE_%s, %s, %s}, {%s}, false, %s},\n",
 	    types[t,n,m], minvals[t,n,m], maxvals[t,n,m],
-	    default_val[t,n,m], security_level[t,n,m], env_alias[t,n,m]);
+	    default_val[t,n,m], env_alias[t,n,m]);
   }
   print "};"
   print "#endif"

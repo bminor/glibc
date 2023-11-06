@@ -15,14 +15,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* Verify that tunables correctly filter out unsafe tunables like
-   glibc.malloc.check and glibc.malloc.mmap_threshold but also retain
-   glibc.malloc.mmap_threshold in an unprivileged child.  */
+/* Verify that GLIBC_TUNABLES is kept unchanged but no tunable is actually
+   enabled for AT_SECURE processes.  */
 
-#define _LIBC 1
-#include "config.h"
-#undef _LIBC
-
+#include <dl-tunables.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -40,7 +36,7 @@
 #include <support/test-driver.h>
 #include <support/capture_subprocess.h>
 
-const char *teststrings[] =
+static const char *teststrings[] =
 {
   "glibc.malloc.check=2:glibc.malloc.mmap_threshold=4096",
   "glibc.malloc.check=2:glibc.malloc.check=2:glibc.malloc.mmap_threshold=4096",
@@ -73,6 +69,23 @@ test_child (int off)
   else
     ret = 0;
   fflush (stdout);
+
+  /* Also check if the set tunables are effectively unchanged.  */
+  int32_t check = TUNABLE_GET_FULL (glibc, malloc, check, int32_t, NULL);
+  size_t mmap_threshold = TUNABLE_GET_FULL (glibc, malloc, mmap_threshold,
+					    size_t, NULL);
+  int32_t perturb = TUNABLE_GET_FULL (glibc, malloc, perturb, int32_t, NULL);
+
+  printf ("    [%d] glibc.malloc.check=%d\n", off, check);
+  fflush (stdout);
+  printf ("    [%d] glibc.malloc.mmap_threshold=%zu\n", off, mmap_threshold);
+  fflush (stdout);
+  printf ("    [%d] glibc.malloc.perturb=%d\n", off, perturb);
+  fflush (stdout);
+
+  ret |= check != 0;
+  ret |= mmap_threshold != 0;
+  ret |= perturb != 0;
 
   return ret;
 }

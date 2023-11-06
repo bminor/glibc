@@ -263,7 +263,6 @@ tests-static-normal := \
   tst-dl-iter-static \
   tst-dst-static \
   tst-env-setuid \
-  tst-env-setuid-tunables \
   tst-getauxval-static \
   tst-linkall-static \
   tst-single_threaded-pthread-static \
@@ -276,10 +275,12 @@ tests-static-normal := \
 tests-static-internal := \
   tst-dl-printf-static \
   tst-dl_find_object-static \
+  tst-env-setuid-tunables \
   tst-ptrguard1-static \
   tst-stackguard1-static \
   tst-tls1-static \
   tst-tls1-static-non-pie \
+  tst-tunables \
   # tests-static-internal
 
 CRT-tst-tls1-static-non-pie := $(csu-objpfx)crt1.o
@@ -2661,6 +2662,8 @@ $(objpfx)tst-glibc-hwcaps-mask.out: \
 # Generic dependency for sysdeps implementation of
 # tst-glibc-hwcaps-cache.
 $(objpfx)tst-glibc-hwcaps-cache.out: $(objpfx)tst-glibc-hwcaps
+
+tst-tunables-ARGS = -- $(host-test-program-cmd)
 
 $(objpfx)list-tunables.out: tst-rtld-list-tunables.sh $(objpfx)ld.so
 	$(SHELL) $< $(objpfx)ld.so '$(test-wrapper-env)' \

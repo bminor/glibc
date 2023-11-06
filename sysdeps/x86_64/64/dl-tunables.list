@@ -23,7 +23,6 @@ glibc {
       minval: 0
       maxval: 1
       env_alias: LD_PREFER_MAP_32BIT_EXEC
-      security_level: SXID_IGNORE
     }
   }
 }
