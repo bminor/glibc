@@ -3002,3 +3002,6 @@ $(objpfx)tst-non-directory-path.out: tst-non-directory-path.sh \
 	$(evaluate-test)
 
 tst-env-setuid-ARGS = -- $(host-test-program-cmd)
+
+# Reuse a module with a SONAME, to specific as the LD_PROFILE.
+$(objpfx)tst-env-setuid: $(objpfx)tst-sonamemove-runmod2.so

@@ -361,6 +361,7 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
     ._dl_fpu_control = _FPU_DEFAULT,
     ._dl_pagesize = EXEC_PAGESIZE,
     ._dl_inhibit_cache = 0,
+    ._dl_profile_output = "/var/tmp",
 
     /* Function pointers.  */
     ._dl_debug_printf = _dl_debug_printf,
@@ -2534,10 +2535,6 @@ process_envvars (struct dl_main_state *state)
   char *envline;
   char *debug_output = NULL;
 
-  /* This is the default place for profiling data file.  */
-  GLRO(dl_profile_output)
-    = &"/var/tmp\0/var/profile"[__libc_enable_secure ? 9 : 0];
-
   while ((envline = _dl_next_ld_env_entry (&runp)) != NULL)
     {
       size_t len = 0;
@@ -2586,7 +2583,8 @@ process_envvars (struct dl_main_state *state)
 	    }
 
 	  /* Which shared object shall be profiled.  */
-	  if (memcmp (envline, "PROFILE", 7) == 0 && envline[8] != '\0')
+	  if (!__libc_enable_secure
+	      && memcmp (envline, "PROFILE", 7) == 0 && envline[8] != '\0')
 	    GLRO(dl_profile) = &envline[8];
 	  break;
 

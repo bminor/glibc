@@ -34,6 +34,9 @@ static char SETGID_CHILD[] = "setgid-child";
 
 #define FILTERED_VALUE   "some-filtered-value"
 #define UNFILTERED_VALUE "some-unfiltered-value"
+/* It assumes no other programs is being profile with a library with same
+   SONAME using the default folder.  */
+#define PROFILE_LIB      "tst-sonamemove-runmod2.so"
 
 struct envvar_t
 {
@@ -50,7 +53,7 @@ static const struct envvar_t filtered_envvars[] =
   { "LD_HWCAP_MASK",           FILTERED_VALUE },
   { "LD_LIBRARY_PATH",         FILTERED_VALUE },
   { "LD_PRELOAD",              FILTERED_VALUE },
-  { "LD_PROFILE",              FILTERED_VALUE },
+  { "LD_PROFILE",              "tst-sonamemove-runmod2.so" },
   { "MALLOC_ARENA_MAX",        FILTERED_VALUE },
   { "MALLOC_PERTURB_",         FILTERED_VALUE },
   { "MALLOC_TRACE",            FILTERED_VALUE },
@@ -86,6 +89,13 @@ test_child (void)
       const char *env = getenv (e->env);
       ret |= !(env != NULL && strcmp (env, e->value) == 0);
     }
+
+  /* Also check if no profile file was created.  */
+  {
+    char *profilepath = xasprintf ("/var/tmp/%s.profile", PROFILE_LIB);
+    ret |= !access (profilepath, R_OK);
+    free (profilepath);
+  }
 
   return ret;
 }
