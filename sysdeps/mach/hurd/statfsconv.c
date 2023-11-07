@@ -34,6 +34,7 @@ statfs64_conv (struct statfs *buf, const struct statfs64 *buf64)
   DO (f_bfree);
   DO (f_bavail);
   DO (f_files);
+  DO (f_ffree);
   DO (f_fsid);
   DO (f_namelen);
   DO (f_favail);
