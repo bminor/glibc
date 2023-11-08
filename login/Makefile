@@ -23,29 +23,71 @@ subdir	:= login
 
 include ../Makeconfig
 
-headers	:= utmp.h bits/utmp.h lastlog.h pty.h
+headers := \
+  bits/utmp.h \
+  lastlog.h \
+  pty.h \
+  utmp.h \
+  # headers
 
-routines := getlogin getlogin_r setlogin getlogin_r_chk \
-	    getutent getutent_r getutid getutline getutid_r getutline_r \
-	    utmp_file utmpname updwtmp getpt grantpt unlockpt ptsname \
-	    ptsname_r_chk login login_tty logout logwtmp openpty forkpty
+routines := \
+  forkpty \
+  getlogin \
+  getlogin_r \
+  getlogin_r_chk \
+  getpt \
+  getutent \
+  getutent_r \
+  getutid \
+  getutid_r \
+  getutline \
+  getutline_r \
+  grantpt \
+  login \
+  login_tty \
+  logout \
+  logwtmp \
+  openpty \
+  ptsname \
+  ptsname_r_chk \
+  setlogin \
+  unlockpt \
+  updwtmp \
+  utmp_file \
+  utmpname \
+  # routines
 
 CFLAGS-grantpt.c += -DLIBEXECDIR='"$(libexecdir)"'
 
 others = utmpdump
 
 ifeq (yes,$(build-pt-chown))
-others += pt_chown
-others-pie = pt_chown
+others += \
+  pt_chown \
+  # others
+others-pie = \
+  pt_chown \
+  # others-pie
 install-others-programs = $(inst_libexecdir)/pt_chown
 endif
 
 subdir-dirs = programs
 vpath %.c programs
 
-tests := tst-utmp tst-utmpx tst-grantpt tst-ptsname tst-getlogin tst-updwtmpx \
-  tst-pututxline-lockfail tst-pututxline-cache tst-utmp-size tst-utmp-size-64 \
-  tst-utmp-unsigned tst-utmp-unsigned-64
+tests := \
+  tst-getlogin \
+  tst-grantpt \
+  tst-ptsname \
+  tst-pututxline-cache \
+  tst-pututxline-lockfail \
+  tst-updwtmpx \
+  tst-utmp \
+  tst-utmp-size \
+  tst-utmp-size-64 \
+  tst-utmp-unsigned \
+  tst-utmp-unsigned-64 \
+  tst-utmpx \
+  # tests
 
 CFLAGS-tst-utmp-size-64.c += -D_FILE_OFFSET_BITS=64 -D_TIME_BITS=64
 CFLAGS-tst-utmp-unsigned-64.c += -D_FILE_OFFSET_BITS=64 -D_TIME_BITS=64
