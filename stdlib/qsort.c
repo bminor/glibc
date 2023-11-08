@@ -136,7 +136,7 @@ siftdown (void *base, size_t size, size_t k, size_t n,
       if (j < n && cmp (base + (j * size), base + ((j + 1) * size), arg) < 0)
 	j++;
 
-      if (cmp (base + (k * size), base + (j * size), arg) >= 0)
+      if (j == k || cmp (base + (k * size), base + (j * size), arg) >= 0)
 	break;
 
       do_swap (base + (size * j), base + (k * size), size, swap_type);
@@ -332,10 +332,12 @@ __qsort_r (void *const pbase, size_t total_elems, size_t size,
 	     that this algorithm runs much faster than others. */
 	  do
 	    {
-	      while ((*cmp) ((void *) left_ptr, (void *) mid, arg) < 0)
+	      while (left_ptr != mid
+		     && (*cmp) ((void *) left_ptr, (void *) mid, arg) < 0)
 		left_ptr += size;
 
-	      while ((*cmp) ((void *) mid, (void *) right_ptr, arg) < 0)
+	      while (right_ptr != mid
+		     && (*cmp) ((void *) mid, (void *) right_ptr, arg) < 0)
 		right_ptr -= size;
 
 	      if (left_ptr < right_ptr)
