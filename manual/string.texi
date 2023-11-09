@@ -178,7 +178,7 @@ beginning with @samp{mem} and @samp{wmem} (such as @code{memcpy} and
 @code{wmemcpy}) and invariably take an argument which specifies the size
 (in bytes and wide characters respectively) of the block of memory to
 operate on.  The array arguments and return values for these functions
-have type @code{void *} or @code{wchar_t}.  As a matter of style, the
+have type @code{void *} or @code{wchar_t *}.  As a matter of style, the
 elements of the arrays used with the @samp{mem} functions are referred
 to as ``bytes''.  You can pass any kind of pointer to these functions,
 and the @code{sizeof} operator is useful in computing the value for the
