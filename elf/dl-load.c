@@ -1810,7 +1810,6 @@ open_path (const char *name, size_t namelen, int mode,
       size_t cnt;
       char *edp;
       int here_any = 0;
-      int err;
 
       /* If we are debugging the search for libraries print the path
 	 now if it hasn't happened now.  */
@@ -1911,8 +1910,12 @@ open_path (const char *name, size_t namelen, int mode,
 	      return -1;
 	    }
 	}
-      if (here_any && (err = errno) != ENOENT && err != EACCES)
-	/* The file exists and is readable, but something went wrong.  */
+
+      /* Continue the search if the file does not exist (ENOENT), if it can
+	 not be accessed (EACCES), or if the a component in the path is not a
+	 directory (for instance, if the component is a existing file meaning
+	 essentially that the pathname is invalid - ENOTDIR).  */
+      if (here_any && errno != ENOENT && errno != EACCES && errno != ENOTDIR)
 	return -1;
 
       /* Remember whether we found anything.  */

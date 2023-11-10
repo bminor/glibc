@@ -428,6 +428,7 @@ tests += \
   tst-nodelete-opened \
   tst-nodelete2 \
   tst-noload \
+  tst-non-directory-path \
   tst-null-argv \
   tst-p_align1 \
   tst-p_align2 \
@@ -856,6 +857,7 @@ modules-names += \
   tst-nodelete-dlclose-plugin \
   tst-nodelete-opened-lib \
   tst-nodelete2mod \
+  tst-non-directory-mod \
   tst-null-argv-lib \
   tst-p_alignmod-base \
   tst-p_alignmod3 \
@@ -1122,6 +1124,7 @@ ifeq (yes,$(build-shared))
 ifeq ($(run-built-tests),yes)
 tests-special += \
   $(objpfx)argv0test.out \
+  $(objpfx)tst-non-directory-path.out \
   $(objpfx)tst-pathopt.out \
   $(objpfx)tst-rtld-help.out \
   $(objpfx)tst-rtld-list-diagnostics.out \
@@ -2987,3 +2990,12 @@ $(objpfx)tst-decorate-maps: $(shared-thread-library)
 tst-decorate-maps-ENV = \
   GLIBC_TUNABLES=glibc.malloc.arena_max=8:glibc.malloc.mmap_threshold=1024:glibc.mem.decorate_maps=1
 tst-decorate-maps-ARGS = 8
+
+LDFLAGS-tst-non-directory-mod.so = -Wl,-soname,tst-non-directory-mod.so
+$(objpfx)tst-non-directory-path: $(objpfx)tst-non-directory-mod.so
+$(objpfx)tst-non-directory-path.out: tst-non-directory-path.sh \
+	$(objpfx)tst-non-directory-path
+	$(SHELL) tst-non-directory-path.sh $(objpfx)ld.so $(objpfx)tst-non-directory-path \
+		    '$(test-wrapper-env)' '$(run_program_env)' \
+		    '$(rpath-link)' $(objpfx) > $@; \
+	$(evaluate-test)
