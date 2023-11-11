@@ -251,7 +251,7 @@ extern int __REDIRECT_NTH (fstat64, (int __fd, struct stat64 *__buf),
      __nonnull ((2));
 #  else
 #   define stat64 __stat64_time64
-#   define fstat64 __fstat64_time
+#   define fstat64 __fstat64_time64
 #  endif
 # endif
 #endif
