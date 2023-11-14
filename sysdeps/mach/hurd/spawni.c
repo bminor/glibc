@@ -787,12 +787,18 @@ retry:
       /* Relative path */
       char *cwd = __getcwd (NULL, 0);
       if (cwd == NULL)
-	goto out;
+	{
+	  err = errno;
+	  goto out;
+	}
 
       res = __asprintf (&concat_name, "%s/%s", cwd, relpath);
       free (cwd);
       if (res == -1)
-	goto out;
+	{
+	  err = errno;
+	  goto out;
+	}
 
       abspath = concat_name;
     }
