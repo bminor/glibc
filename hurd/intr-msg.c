@@ -143,6 +143,12 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 	     XXX */
 	  goto retry_receive;
 	}
+      if (!(option & MACH_SEND_INTERRUPT))
+	{
+	  option = user_option;
+	  timeout = user_timeout;
+	  goto message;
+	}
       /* FALLTHROUGH */
 
       /* These are the other codes that mean a pseudo-receive modified
