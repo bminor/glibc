@@ -86,7 +86,7 @@ spawn_signal_test (const char *type, const posix_spawnattr_t *attr)
   PID_T_TYPE pid;
   siginfo_t sinfo;
 
-  TEST_COMPARE (posix_spawn (&pid, spargs[0], NULL, attr, spargs, environ), 0);
+  TEST_COMPARE (POSIX_SPAWN (&pid, spargs[0], NULL, attr, spargs, environ), 0);
   TEST_COMPARE (WAITID (P_ALL, 0, &sinfo, WEXITED), 0);
   TEST_COMPARE (sinfo.si_code, CLD_EXITED);
   TEST_COMPARE (sinfo.si_status, 0);
