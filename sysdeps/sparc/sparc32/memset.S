@@ -55,7 +55,7 @@ ENTRY(memset)
 
 	andcc		%o0, 3, %o2
 	bne		3f
-4:	 andcc		%o0, 4, %g0
+5:	 andcc		%o0, 4, %g0
 
 	be		2f
 	 mov		%g3, %g2
@@ -139,7 +139,7 @@ ENTRY(memset)
 	stb		%g3, [%o0 + 0x02]
 2:	sub		%o2, 4, %o2
 	add		%o1, %o2, %o1
-	b		4b
+	b		5b
 	 sub		%o0, %o2, %o0
 END(memset)
 libc_hidden_builtin_def (memset)
