@@ -1078,10 +1078,18 @@ double: 1
 float: 1
 ldouble: 2
 
+Function: "expm1_advsimd":
+double: 2
+float: 1
+
 Function: "expm1_downward":
 double: 1
 float: 1
 ldouble: 2
+
+Function: "expm1_sve":
+double: 2
+float: 1
 
 Function: "expm1_towardzero":
 double: 1

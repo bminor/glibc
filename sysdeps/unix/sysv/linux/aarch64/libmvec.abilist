@@ -19,6 +19,7 @@ GLIBC_2.39 _ZGVnN2v_asin F
 GLIBC_2.39 _ZGVnN2v_atan F
 GLIBC_2.39 _ZGVnN2v_exp10 F
 GLIBC_2.39 _ZGVnN2v_exp2 F
+GLIBC_2.39 _ZGVnN2v_expm1 F
 GLIBC_2.39 _ZGVnN2v_log10 F
 GLIBC_2.39 _ZGVnN2v_log1p F
 GLIBC_2.39 _ZGVnN2v_log2 F
@@ -29,6 +30,7 @@ GLIBC_2.39 _ZGVnN4v_asinf F
 GLIBC_2.39 _ZGVnN4v_atanf F
 GLIBC_2.39 _ZGVnN4v_exp10f F
 GLIBC_2.39 _ZGVnN4v_exp2f F
+GLIBC_2.39 _ZGVnN4v_expm1f F
 GLIBC_2.39 _ZGVnN4v_log10f F
 GLIBC_2.39 _ZGVnN4v_log1pf F
 GLIBC_2.39 _ZGVnN4v_log2f F
@@ -44,6 +46,8 @@ GLIBC_2.39 _ZGVsMxv_exp10 F
 GLIBC_2.39 _ZGVsMxv_exp10f F
 GLIBC_2.39 _ZGVsMxv_exp2 F
 GLIBC_2.39 _ZGVsMxv_exp2f F
+GLIBC_2.39 _ZGVsMxv_expm1 F
+GLIBC_2.39 _ZGVsMxv_expm1f F
 GLIBC_2.39 _ZGVsMxv_log10 F
 GLIBC_2.39 _ZGVsMxv_log10f F
 GLIBC_2.39 _ZGVsMxv_log1p F

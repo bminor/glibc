@@ -5354,7 +5354,7 @@ exp2 -0x4.8ce878p-4
 exp2 0xf.93d18bf7be8d272p-4
 
 expm1 0
-expm1 -0
+expm1 -0 no-mathvec
 expm1 1
 expm1 0.75
 expm1 2
@@ -5419,7 +5419,7 @@ expm1 -0x1p-100
 expm1 0x1p-600
 expm1 -0x1p-600
 expm1 0x1p-10000
-expm1 -0x1p-10000
+expm1 -0x1p-10000 no-mathvec
 expm1 0xe.4152ac57cd1ea7ap-60
 expm1 0x6.660247486aed8p-4
 expm1 0x6.289a78p-4
