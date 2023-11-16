@@ -37,7 +37,7 @@ END LC_IDENTIFICATION
 
 LC_ADDRESS
 postal_fmt "%d%N%f%N%d%N%b%N%s %h 5e %r%N%C%z %T%N%c%N"
-country_name "Fran<U00E7>a"
+country_name "França"
 country_post "F"
 country_ab2 "FR"
 country_ab3 "FRA"
@@ -64,7 +64,7 @@ END LC_COLLATE
 LC_MESSAGES
 yesexpr "^[+1oOsSyY]"
 noexpr  "^[-0nN]"
-yesstr  "<U00F2>c"
+yesstr  "òc"
 nostr   "non"
 END LC_MESSAGES
 
@@ -93,13 +93,13 @@ abday   "dg.";"dl.";"dm.";"dc.";"dj.";"dv.";"ds."
 day     "dimenge";/
         "diluns";/
         "dimars";/
-        "dim<U00E8>cres";/
-        "dij<U00F2>us";/
+        "dimècres";/
+        "dijòus";/
         "divendres";/
         "dissabte"
 abmon   "gen.";/
         "febr.";/
-        "mar<U00E7>";/
+        "març";/
         "abr.";/
         "mai";/
         "junh";/
@@ -109,28 +109,28 @@ abmon   "gen.";/
         "oct.";/
         "nov.";/
         "dec."
-alt_mon "geni<U00E8>r";/
-        "febri<U00E8>r";/
-        "mar<U00E7>";/
+alt_mon "genièr";/
+        "febrièr";/
+        "març";/
         "abril";/
         "mai";/
         "junh";/
         "julhet";/
         "agost";/
         "setembre";/
-        "oct<U00F2>bre";/
+        "octòbre";/
         "novembre";/
         "decembre"
-mon     "de geni<U00E8>r";/
-        "de febri<U00E8>r";/
-        "de mar<U00E7>";/
-        "d<U2019>abril";/
+mon     "de genièr";/
+        "de febrièr";/
+        "de març";/
+        "d’abril";/
         "de mai";/
         "de junh";/
         "de julhet";/
-        "d<U2019>agost";/
+        "d’agost";/
         "de setembre";/
-        "d<U2019>oct<U00F2>bre";/
+        "d’octòbre";/
         "de novembre";/
         "de decembre"
 d_t_fmt  "%a %-d %b %Y, %T"
