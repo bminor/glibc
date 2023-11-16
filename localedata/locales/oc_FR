@@ -18,8 +18,8 @@ tel ""
 fax ""
 language "Occitan"
 territory "France"
-revision "0.3"
-date "2018-04-12"
+revision "0.4"
+date "2022-01-16"
 
 category "i18n:2012";LC_IDENTIFICATION
 category "i18n:2012";LC_ADDRESS
@@ -64,6 +64,8 @@ END LC_COLLATE
 LC_MESSAGES
 yesexpr "^[+1oOsSyY]"
 noexpr  "^[-0nN]"
+yesstr  "<U00F2>c"
+nostr   "non"
 END LC_MESSAGES
 
 LC_MONETARY
@@ -131,8 +133,8 @@ mon     "de geni<U00E8>r";/
         "d<U2019>oct<U00F2>bre";/
         "de novembre";/
         "de decembre"
-d_t_fmt  "%a %d %b %Y %T"
-date_fmt "%a %d %b %Y %T %Z"
+d_t_fmt  "%a %-d %b %Y, %T"
+date_fmt "%A %-d %b de %Y, %T %Z"
 d_fmt   "%d//%m//%Y"
 t_fmt   "%T"
 am_pm   "";""
