@@ -255,13 +255,12 @@ _dl_sort_maps_dfs (struct link_map **maps, unsigned int nmaps,
 	     The below memcpy is not needed in the do_reldeps case here,
 	     since we wrote back to maps[] during DFS traversal.  */
 	  if (maps_head == maps)
-	    return;
+	    break;
 	}
       assert (maps_head == maps);
-      return;
     }
-
-  memcpy (maps, rpo, sizeof (struct link_map *) * nmaps);
+  else
+    memcpy (maps, rpo, sizeof (struct link_map *) * nmaps);
 
   /* Skipping the first object at maps[0] is not valid in general,
      since traversing along object dependency-links may "find" that

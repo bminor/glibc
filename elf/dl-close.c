@@ -153,6 +153,16 @@ _dl_close_worker (struct link_map *map, bool force)
     }
   assert (idx == nloaded);
 
+  /* Put the dlclose'd map first, so that its destructor runs first.
+     The map variable is NULL after a retry.  */
+  if (map != NULL)
+    {
+      maps[map->l_idx] = maps[0];
+      maps[map->l_idx]->l_idx = map->l_idx;
+      maps[0] = map;
+      maps[0]->l_idx = 0;
+    }
+
   /* Keep track of the lowest index link map we have covered already.  */
   int done_index = -1;
   while (++done_index < nloaded)
@@ -226,9 +236,10 @@ _dl_close_worker (struct link_map *map, bool force)
 	  }
     }
 
-  /* Sort the entries.  We can skip looking for the binary itself which is
-     at the front of the search list for the main namespace.  */
-  _dl_sort_maps (maps, nloaded, (nsid == LM_ID_BASE), true);
+  /* Sort the entries.  Unless retrying, the maps[0] object (the
+     original argument to dlclose) needs to remain first, so that its
+     destructor runs first.  */
+  _dl_sort_maps (maps, nloaded, /* force_first */ map != NULL, true);
 
   /* Call all termination functions at once.  */
   bool unload_any = false;
@@ -732,7 +743,11 @@ _dl_close_worker (struct link_map *map, bool force)
   /* Recheck if we need to retry, release the lock.  */
  out:
   if (dl_close_state == rerun)
-    goto retry;
+    {
+      /* The map may have been deallocated.  */
+      map = NULL;
+      goto retry;
+    }
 
   dl_close_state = not_pending;
 }
