@@ -186,12 +186,14 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 	      mach_msg_type_size_t size;
 	      mach_msg_type_number_t number;
 
-	      inline void clean_ports (mach_port_t *ports, int dealloc)
+	      inline void clean_ports_and_memory (char *data, const vm_size_t length,
+						int dealloc)
 		{
 		  mach_msg_type_number_t i;
 		  switch (name)
 		    {
 		    case MACH_MSG_TYPE_MOVE_SEND:
+		      mach_port_t *ports = (mach_port_t *) data;
 		      for (i = 0; i < number; i++)
 			__mach_port_deallocate (__mach_task_self (), *ports++);
 		      if (ty->msgtl_header.msgt_longform)
@@ -207,40 +209,38 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 			assert (! "unexpected port type in interruptible RPC");
 		    }
 		  if (dealloc)
-		    __vm_deallocate (__mach_task_self (),
-				     (vm_address_t) ports,
-				     number * sizeof (mach_port_t));
+		    __vm_deallocate (__mach_task_self (), (vm_address_t) data, length);
 		}
 
+	      char *data;
 	      if (ty->msgtl_header.msgt_longform)
 		{
 		  name = ty->msgtl_name;
 		  size = ty->msgtl_size;
 		  number = ty->msgtl_number;
-		  ty = (void *) ty + sizeof (mach_msg_type_long_t);
+		  data = (char *) ty + sizeof (mach_msg_type_long_t);
 		}
 	      else
 		{
 		  name = ty->msgtl_header.msgt_name;
 		  size = ty->msgtl_header.msgt_size;
 		  number = ty->msgtl_header.msgt_number;
-		  ty = (void *) ty + sizeof (mach_msg_type_t);
+		  data = (char *) ty + sizeof (mach_msg_type_t);
 		}
 
+	      const vm_size_t length = ((number * size) + 7) >> 3;
 	      if (ty->msgtl_header.msgt_inline)
 		{
 		  /* Calculate length of data in bytes.  */
-		  const vm_size_t length = ((number * size) + 7) >> 3;
-		  clean_ports ((void *) ty, 0);
+		  clean_ports_and_memory (data, length, 0);
 		  /* Move to the next argument.  */
-		  ty = (void *) PTR_ALIGN_UP ((char *) ty + length,
-		      __alignof__ (uintptr_t));
+		  ty = (void *) PTR_ALIGN_UP (data + length, __alignof__ (uintptr_t));
 		}
 	      else
 		{
-		  clean_ports (*(void **) ty,
+		  clean_ports_and_memory (*(void **) data, length,
 			       ty->msgtl_header.msgt_deallocate);
-		  ty = (void *) ty + sizeof (void *);
+		  ty = (void *) data + sizeof (void *);
 		}
 	    }
 #else  /* Untyped Mach IPC flavor. */
