@@ -66,10 +66,6 @@
 #include <stdlib.h>		/* For malloc and free.  */
 #include <assert.h>
 
-#ifdef NDR_CHAR_ASCII		/* OSF Mach flavors have different names.  */
-# define mig_reply_header_t	mig_reply_error_t
-#endif
-
 mach_msg_return_t
 __mach_msg_server_timeout (boolean_t (*demux) (mach_msg_header_t *request,
 					       mach_msg_header_t *reply),

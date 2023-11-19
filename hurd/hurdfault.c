@@ -115,10 +115,6 @@ _hurdsig_fault_catch_exception_raise_state_identity
 #endif
 
 
-#ifdef NDR_CHAR_ASCII		/* OSF Mach flavors have different names.  */
-# define mig_reply_header_t	mig_reply_error_t
-#endif
-
 static void
 faulted (void)
 {

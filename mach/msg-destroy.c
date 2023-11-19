@@ -71,69 +71,6 @@ __mach_msg_destroy (mach_msg_header_t *msg)
     mach_msg_destroy_port(msg->msgh_remote_port, MACH_MSGH_BITS_REMOTE(mbits));
 
     if (mbits & MACH_MSGH_BITS_COMPLEX) {
-#ifdef MACH_MSG_PORT_DESCRIPTOR
-	mach_msg_body_t		*body;
-	mach_msg_descriptor_t	*saddr, *eaddr;
-
-	body = (mach_msg_body_t *) (msg + 1);
-	saddr = (mach_msg_descriptor_t *)
-			((mach_msg_base_t *) msg + 1);
-	eaddr =  saddr + body->msgh_descriptor_count;
-
-	for  ( ; saddr < eaddr; saddr++) {
-	    switch (saddr->type.type) {
-
-	        case MACH_MSG_PORT_DESCRIPTOR: {
-		    mach_msg_port_descriptor_t *dsc;
-
-		    /*
-		     * Destroy port rights carried in the message
-		     */
-		    dsc = &saddr->port;
-		    mach_msg_destroy_port(dsc->name, dsc->disposition);
-		    break;
-	        }
-
-	        case MACH_MSG_OOL_DESCRIPTOR : {
-		    mach_msg_ool_descriptor_t *dsc;
-
-		    /*
-		     * Destroy memory carried in the message
-		     */
-		    dsc = &saddr->out_of_line;
-		    if (dsc->deallocate) {
-		        mach_msg_destroy_memory((vm_offset_t)dsc->address,
-						dsc->size);
-		    }
-		    break;
-	        }
-
-	        case MACH_MSG_OOL_PORTS_DESCRIPTOR : {
-		    mach_port_t             		*ports;
-		    mach_msg_ool_ports_descriptor_t	*dsc;
-		    mach_msg_type_number_t   		j;
-
-		    /*
-		     * Destroy port rights carried in the message
-		     */
-		    dsc = &saddr->ool_ports;
-		    ports = (mach_port_t *) dsc->address;
-		    for (j = 0; j < dsc->count; j++, ports++)  {
-		        mach_msg_destroy_port(*ports, dsc->disposition);
-		    }
-
-		    /*
-		     * Destroy memory carried in the message
-		     */
-		    if (dsc->deallocate) {
-		        mach_msg_destroy_memory((vm_offset_t)dsc->address,
-					dsc->count * sizeof(mach_port_t));
-		    }
-		    break;
-	        }
-	    }
-	}
-#else
 	vm_offset_t saddr;
 	vm_offset_t eaddr;
 
@@ -185,7 +122,6 @@ __mach_msg_destroy (mach_msg_header_t *msg)
 		saddr += sizeof(vm_offset_t);
 	    }
 	}
-#endif
     }
 }
 
