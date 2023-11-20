@@ -32,7 +32,10 @@ test-srcs := tst-gettext tst-translit tst-gettext2 tst-codeset tst-gettext3
 ifeq ($(have-thread-library),yes)
 test-srcs += $(multithread-test-srcs)
 endif
-tests = tst-ngettext
+tests = \
+  tst-gettext-c-utf8 \
+  tst-ngettext \
+  # tests
 
 before-compile += $(objpfx)msgs.h
 
@@ -117,6 +120,7 @@ $(objpfx)tst-gettext3.out: $(gen-locales)
 $(objpfx)tst-gettext4.out: $(gen-locales)
 $(objpfx)tst-gettext5.out: $(gen-locales)
 $(objpfx)tst-gettext6.out: $(gen-locales)
+$(objpfx)tst-gettext-c-utf8.out: $(gen-locales)
 $(objpfx)tst-translit.out: $(gen-locales)
 endif
 
