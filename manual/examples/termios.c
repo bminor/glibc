@@ -34,7 +34,6 @@ void
 set_input_mode (void)
 {
   struct termios tattr;
-  char *name;
 
   /* Make sure stdin is a terminal. */
   if (!isatty (STDIN_FILENO))
@@ -70,7 +69,7 @@ main (void)
       if (c == '\004')		/* @kbd{C-d} */
 	break;
       else
-	putchar (c);
+	write (STDOUT_FILENO, &c, 1);
     }
 
   return EXIT_SUCCESS;
