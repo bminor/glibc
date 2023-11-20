@@ -137,7 +137,12 @@ do_test (void)
 #endif
 
   /* Loading this module should force stacks to become executable.  */
-  void *h = dlopen ("tst-execstack-mod.so", RTLD_LAZY);
+#if USE_PTHREADS
+  const char *soname = "tst-execstack-threads-mod.so";
+#else
+  const char *soname = "tst-execstack-mod.so";
+#endif
+  void *h = dlopen (soname, RTLD_LAZY);
   if (h == NULL)
     {
       printf ("cannot load: %s\n", dlerror ());

@@ -466,7 +466,7 @@ tests-internal += \
   tst-tls5 \
   # tests-internal
 ifeq ($(have-z-execstack),yes)
-tests += tst-execstack
+tests += tst-execstack-threads
 endif
 endif
 
@@ -474,7 +474,7 @@ modules-names = \
   tst-audit-threads-mod1 \
   tst-audit-threads-mod2 \
   tst-compat-forwarder-mod \
-  tst-execstack-mod \
+  tst-execstack-threads-mod \
   tst-stack4mod \
   tst-tls3mod \
   tst-tls5mod \
@@ -669,9 +669,9 @@ endif
 
 tst-exec4-ARGS = $(host-test-program-cmd)
 
-$(objpfx)tst-execstack.out: $(objpfx)tst-execstack-mod.so
-LDFLAGS-tst-execstack = -Wl,-z,noexecstack
-CFLAGS-tst-execstack-mod.c += -Wno-trampolines
+$(objpfx)tst-execstack-threads.out: $(objpfx)tst-execstack-threads-mod.so
+LDFLAGS-tst-execstack-threads = -Wl,-z,noexecstack
+CFLAGS-tst-execstack-threads-mod.c += -Wno-trampolines
 
 tst-stackguard1-ARGS = --command "$(host-test-program-cmd) --child"
 tst-stackguard1-static-ARGS = --command "$(objpfx)tst-stackguard1-static --child"
