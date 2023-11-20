@@ -812,6 +812,18 @@ retry:
 
     inline error_t exec (file_t file)
       {
+	sigset_t old, new;
+
+	/* Avoid getting interrupted while exec(), notably not after the exec
+	   server has committed to the exec and started thrashing the task.
+
+	   Various issues otherwise show up when building e.g. ghc.
+
+	   TODO Rather add proper interrupt support to the exec server, that
+	   avoids interrupts in that period.  */
+	__sigfillset(&new);
+	__sigprocmask (SIG_SETMASK, &new, &old);
+
 	error_t err = __file_exec_paths
 	  (file, task,
 	   __sigismember (&_hurdsig_traced, SIGKILL) ? EXEC_SIGTRAP : 0,
@@ -824,7 +836,7 @@ retry:
 	/* Fallback for backwards compatibility.  This can just be removed
 	   when __file_exec goes away.  */
 	if (err == MIG_BAD_ID)
-	  return __file_exec (file, task,
+	  err = __file_exec (file, task,
 			      (__sigismember (&_hurdsig_traced, SIGKILL)
 			      ? EXEC_SIGTRAP : 0),
 			      args, argslen, env, envlen,
@@ -832,6 +844,8 @@ retry:
 			      ports, MACH_MSG_TYPE_COPY_SEND, _hurd_nports,
 			      ints, INIT_INT_MAX,
 			      NULL, 0, NULL, 0);
+
+	__sigprocmask (SIG_SETMASK, &old, NULL);
 
 	return err;
       }

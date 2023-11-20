@@ -362,6 +362,7 @@ retry:
   if (!err)
     {
       int flags;
+      sigset_t old, new;
 
       if (pdp)
 	{
@@ -420,6 +421,15 @@ retry:
       if (__sigismember (&_hurdsig_traced, SIGKILL))
 	flags |= EXEC_SIGTRAP;
 #endif
+
+     /* Avoid getting interrupted while exec(), notably not after the exec
+        server has committed to the exec and started thrashing us.
+
+        TODO Rather add proper interrupt support to the exec server, that
+        avoids interrupts in that period.  */
+      __sigfillset (&new);
+      __sigprocmask (SIG_SETMASK, &new, &old);
+
       err = __file_exec_paths (file, task, flags,
 			       path ? path : "",
 			       abspath ? abspath : "",
@@ -440,6 +450,8 @@ retry:
 			   ints, INIT_INT_MAX,
 			   please_dealloc, pdp - please_dealloc,
 			   portnames, nportnames);
+
+      __sigprocmask (SIG_SETMASK, &old, NULL);
     }
 
   /* Release references to the standard ports.  */
