@@ -289,6 +289,7 @@ reauth_dtable (void)
 {
   int i;
 
+retry:
   HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_dtable_lock);
 
@@ -296,6 +297,7 @@ reauth_dtable (void)
     {
       struct hurd_fd *const d = _hurd_dtable[i];
       mach_port_t new, newctty, ref;
+      error_t err = 0;
 
       if (d == NULL)
 	/* Nothing to do for an unused descriptor cell.  */
@@ -308,23 +310,23 @@ reauth_dtable (void)
 
       /* Reauthenticate the descriptor's port.  */
       if (d->port.port != MACH_PORT_NULL
-	  && ! __io_reauthenticate (d->port.port,
-				    ref, MACH_MSG_TYPE_MAKE_SEND)
-	  && ! __USEPORT (AUTH, __auth_user_authenticate
-			  (port,
-			   ref, MACH_MSG_TYPE_MAKE_SEND,
-			   &new)))
+	  && ! (err = __io_reauthenticate (d->port.port,
+					   ref, MACH_MSG_TYPE_MAKE_SEND))
+	  && ! (err = __USEPORT (AUTH, __auth_user_authenticate
+				 (port,
+				  ref, MACH_MSG_TYPE_MAKE_SEND,
+				  &new))))
 	{
 	  /* Replace the port in the descriptor cell
 	     with the newly reauthenticated port.  */
 
 	  if (d->ctty.port != MACH_PORT_NULL
-	      && ! __io_reauthenticate (d->ctty.port,
-					ref, MACH_MSG_TYPE_MAKE_SEND)
-	      && ! __USEPORT (AUTH, __auth_user_authenticate
-			      (port,
-			       ref, MACH_MSG_TYPE_MAKE_SEND,
-			       &newctty)))
+	      && ! (err = __io_reauthenticate (d->ctty.port,
+					       ref, MACH_MSG_TYPE_MAKE_SEND))
+	      && ! (err = __USEPORT (AUTH, __auth_user_authenticate
+				     (port,
+				      ref, MACH_MSG_TYPE_MAKE_SEND,
+				      &newctty))))
 	    _hurd_port_set (&d->ctty, newctty);
 
 	  _hurd_port_locked_set (&d->port, new);
@@ -334,6 +336,15 @@ reauth_dtable (void)
 	__spin_unlock (&d->port.lock);
 
       __mach_port_destroy (__mach_task_self (), ref);
+
+      if (err == EINTR)
+	{
+	  /* Got a signal while inside an RPC of the critical section,
+	     retry again */
+	  __mutex_unlock (&_hurd_dtable_lock);
+	  HURD_CRITICAL_UNLOCK;
+	  goto retry;
+	}
     }
 
   __mutex_unlock (&_hurd_dtable_lock);
