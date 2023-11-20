@@ -671,6 +671,7 @@ tst-exec4-ARGS = $(host-test-program-cmd)
 
 $(objpfx)tst-execstack-threads.out: $(objpfx)tst-execstack-threads-mod.so
 LDFLAGS-tst-execstack-threads = -Wl,-z,noexecstack
+LDFLAGS-tst-execstack-threads-mod.so = -Wl,-z,execstack
 CFLAGS-tst-execstack-threads-mod.c += -Wno-trampolines
 
 tst-stackguard1-ARGS = --command "$(host-test-program-cmd) --child"
