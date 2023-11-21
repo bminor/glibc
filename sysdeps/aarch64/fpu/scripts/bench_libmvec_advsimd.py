@@ -22,40 +22,49 @@ TEMPLATE = """
 #include <math.h>
 #include <arm_neon.h>
 
-#define STRIDE {stride}
+#define STRIDE {rowlen}
 
-#define CALL_BENCH_FUNC(v, i) (__extension__ ({{                         \\
-   {rtype} mx0 = {fname}(vld1q_f{prec_short} (variants[v].in[i].arg0));  \\
+#define CALL_BENCH_FUNC_1(v, i) (__extension__ ({{                                 \\
+   {rtype} mx0 = {fname}(vld1q_f{prec_short} (&variants[v].in->arg0[i * STRIDE])); \\
    mx0; }}))
 
-struct args
+#define CALL_BENCH_FUNC_2(v, i) (__extension__ ({{                                 \\
+   {rtype} mx0 = {fname}(vld1q_f{prec_short} (&variants[v].in->arg0[i * STRIDE]),  \\
+                         vld1q_f{prec_short} (&variants[v].in->arg1[i * STRIDE])); \\
+   mx0; }}))
+
+struct args_1
 {{
-  {stype} arg0[STRIDE];
-  double timing;
+  {stype} arg0[{nelems}];
+}};
+
+struct args_2
+{{
+  {stype} arg0[{nelems}];
+  {stype} arg1[{nelems}];
 }};
 
 struct _variants
 {{
   const char *name;
-  int count;
-  const struct args *in;
+  const struct args_{arity} *in;
 }};
 
-static const struct args in0[{rowcount}] = {{
+static const struct args_{arity} in0 = {{
 {in_data}
 }};
 
 static const struct _variants variants[1] = {{
-  {{"", {rowcount}, in0}},
+  {{"", &in0}},
 }};
 
 #define NUM_VARIANTS 1
-#define NUM_SAMPLES(i) (variants[i].count)
+#define NUM_SAMPLES(i) ({nelems} / STRIDE)
 #define VARIANT(i) (variants[i].name)
 
 static {rtype} volatile ret;
 
-#define BENCH_FUNC(i, j) ({{ ret = CALL_BENCH_FUNC(i, j); }})
+#define BENCH_FUNC(i, j) ({{ ret = CALL_BENCH_FUNC_{arity}(i, j); }})
 #define FUNCNAME "{fname}"
 #include <bench-libmvec-skeleton.c>
 """
@@ -63,27 +72,34 @@ static {rtype} volatile ret;
 def main(name):
     _, prec, _, func = name.split("-")
     scalar_to_advsimd_type = {"double": "float64x2_t", "float": "float32x4_t"}
-
-    stride = {"double": 2, "float": 4}[prec]
+    rowlen = {"double": 2, "float": 4}[prec]
     rtype = scalar_to_advsimd_type[prec]
     atype = scalar_to_advsimd_type[prec]
-    fname = f"_ZGVnN{stride}v_{func}{'f' if prec == 'float' else ''}"
     prec_short = {"double": 64, "float": 32}[prec]
+    input_filename = {"double": f"{func}-inputs", "float": f"{func}f-inputs"}[prec]
 
-    with open(f"../benchtests/libmvec/{func}-inputs") as f:
-        in_vals = [l.strip() for l in f.readlines() if l and not l.startswith("#")]
-    in_vals = [in_vals[i:i+stride] for i in range(0, len(in_vals), stride)]
-    rowcount= len(in_vals)
-    in_data = ",\n".join("{{" + ", ".join(row) + "}, 0}" for row in in_vals)
+    with open(f"../benchtests/libmvec/{input_filename}") as f:
+        input_file = f.readlines()
+    in_vals = (l.strip() for l in input_file if l and not l.startswith("#"))
+    # Split in case of multivariate signature
+    in_vals = (l.split(", ") for l in in_vals)
+    # Transpose
+    in_vals = list(zip(*in_vals))
+    in_data = ",\n".join("{" + (", ".join(val for val in col) + "}")
+                         for col in in_vals)
 
-    print(TEMPLATE.format(stride=stride,
+    arity = [l for l in input_file if l.startswith("## args: ")][0].count(prec)
+    fname = f"_ZGVnN{rowlen}{'v' * arity}_{func}{'f' if prec == 'float' else ''}"
+
+    print(TEMPLATE.format(rowlen=rowlen,
                           rtype=rtype,
                           atype=atype,
                           fname=fname,
                           prec_short=prec_short,
                           in_data=in_data,
-                          rowcount=rowcount,
-                          stype=prec))
+                          stype=prec,
+                          arity=arity,
+                          nelems=len(in_vals[0])))
 
 
 if __name__ == "__main__":

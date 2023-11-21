@@ -22,46 +22,55 @@ TEMPLATE = """
 #include <math.h>
 #include <arm_sve.h>
 
-#define MAX_STRIDE {max_stride}
 #define STRIDE {stride}
 #define PTRUE svptrue_b{prec_short}
 #define SV_LOAD svld1_f{prec_short}
 #define SV_STORE svst1_f{prec_short}
 #define REQUIRE_SVE
 
-#define CALL_BENCH_FUNC(v, i) (__extension__ ({{                              \\
-   {rtype} mx0 = {fname}(SV_LOAD (PTRUE(), variants[v].in[i].arg0), PTRUE()); \\
+#define CALL_BENCH_FUNC_1(v, i) (__extension__ ({{                                       \\
+   {rtype} mx0 = {fname}(SV_LOAD (PTRUE(), &variants[v].in->arg0[i * STRIDE]), PTRUE()); \\
    mx0; }}))
 
-struct args
+#define CALL_BENCH_FUNC_2(v, i) (__extension__ ({{                              \\
+   {rtype} mx0 = {fname}(SV_LOAD (PTRUE(), &variants[v].in->arg0[i * STRIDE]),  \\
+                         SV_LOAD (PTRUE(), &variants[v].in->arg1[i * STRIDE]),  \\
+                         PTRUE());                                              \\
+   mx0; }}))
+
+struct args_1
 {{
-  {stype} arg0[MAX_STRIDE];
-  double timing;
+  {stype} arg0[{nelems}];
+}};
+
+struct args_2
+{{
+  {stype} arg0[{nelems}];
+  {stype} arg1[{nelems}];
 }};
 
 struct _variants
 {{
   const char *name;
-  int count;
-  const struct args *in;
+  const struct args_{arity} *in;
 }};
 
-static const struct args in0[{rowcount}] = {{
+static const struct args_{arity} in0 = {{
 {in_data}
 }};
 
 static const struct _variants variants[1] = {{
-  {{"", {rowcount}, in0}},
+  {{"", &in0}},
 }};
 
 #define NUM_VARIANTS 1
-#define NUM_SAMPLES(i) (variants[i].count)
+#define NUM_SAMPLES(i) ({nelems} / STRIDE)
 #define VARIANT(i) (variants[i].name)
 
 // Cannot pass volatile pointer to svst1. This still does not appear to get optimised out.
-static {stype} /*volatile*/ ret[MAX_STRIDE];
+static {stype} /*volatile*/ ret[{rowlen}];
 
-#define BENCH_FUNC(i, j) ({{ SV_STORE(PTRUE(), ret, CALL_BENCH_FUNC(i, j)); }})
+#define BENCH_FUNC(i, j) ({{ SV_STORE(PTRUE(), ret, CALL_BENCH_FUNC_{arity}(i, j)); }})
 #define FUNCNAME "{fname}"
 #include <bench-libmvec-skeleton.c>
 """
@@ -69,23 +78,29 @@ static {stype} /*volatile*/ ret[MAX_STRIDE];
 def main(name):
     _, prec, _, func = name.split("-")
     scalar_to_sve_type = {"double": "svfloat64_t", "float": "svfloat32_t"}
-
     stride = {"double": "svcntd()", "float": "svcntw()"}[prec]
     rtype = scalar_to_sve_type[prec]
     atype = scalar_to_sve_type[prec]
-    fname = f"_ZGVsMxv_{func}{'f' if prec == 'float' else ''}"
     prec_short = {"double": 64, "float": 32}[prec]
     # Max SVE vector length is 2048 bits. To ensure benchmarks are
     # vector-length-agnostic, but still use as wide vectors as
     # possible on any given target, divide input data into 2048-bit
     # rows, then load/store as many elements as the target will allow.
-    max_stride = 2048 // prec_short
+    rowlen = {"double": 32, "float": 64}[prec]
+    input_filename = {"double": f"{func}-inputs", "float": f"{func}f-inputs"}[prec]
 
-    with open(f"../benchtests/libmvec/{func}-inputs") as f:
-        in_vals = [l.strip() for l in f.readlines() if l and not l.startswith("#")]
-    in_vals = [in_vals[i:i+max_stride] for i in range(0, len(in_vals), max_stride)]
-    rowcount= len(in_vals)
-    in_data = ",\n".join("{{" + ", ".join(row) + "}, 0}" for row in in_vals)
+    with open(f"../benchtests/libmvec/{input_filename}") as f:
+        input_file = f.readlines()
+    in_vals = (l.strip() for l in input_file if l and not l.startswith("#"))
+    # Split in case of multivariate signature
+    in_vals = (l.split(", ") for l in in_vals)
+    # Transpose
+    in_vals = list(zip(*in_vals))
+    in_data = ",\n".join("{" + (", ".join(val for val in col) + "}")
+                         for col in in_vals)
+
+    arity = [l for l in input_file if l.startswith("## args: ")][0].count(prec)
+    fname = f"_ZGVsMx{'v' * arity}_{func}{'f' if prec == 'float' else ''}"
 
     print(TEMPLATE.format(stride=stride,
                           rtype=rtype,
@@ -93,9 +108,10 @@ def main(name):
                           fname=fname,
                           prec_short=prec_short,
                           in_data=in_data,
-                          rowcount=rowcount,
                           stype=prec,
-                          max_stride=max_stride))
+                          rowlen=rowlen,
+                          arity=arity,
+                          nelems=len(in_vals[0])))
 
 
 if __name__ == "__main__":
