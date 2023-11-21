@@ -389,14 +389,23 @@ __qsort_r (void *const pbase, size_t total_elems, size_t size,
             {
               if ((size_t) (hi - left_ptr) <= max_thresh)
 		/* Ignore both small partitions. */
-                top = pop (top, &lo, &hi, &depth);
+		{
+		  top = pop (top, &lo, &hi, &depth);
+		  --depth;
+		}
               else
-		/* Ignore small left partition. */
-                lo = left_ptr;
+		{
+		  /* Ignore small left partition. */
+		  lo = left_ptr;
+		  --depth;
+		}
             }
           else if ((size_t) (hi - left_ptr) <= max_thresh)
 	    /* Ignore small right partition. */
-            hi = right_ptr;
+		{
+		  hi = right_ptr;
+		  --depth;
+		}
           else if ((right_ptr - lo) > (hi - left_ptr))
             {
 	      /* Push larger left partition indices. */
