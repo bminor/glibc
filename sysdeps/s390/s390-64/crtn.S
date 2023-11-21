@@ -37,13 +37,11 @@
    corresponding to the prologues in crti.S. */
 
 	.section .init
-	.align	4
 	lg	%r4,272(%r15)
 	lmg	%r6,%r15,208(%r15)
 	br	%r4
 
 	.section .fini
-	.align	4
 	lg	%r4,272(%r15)
 	lmg	%r6,%r15,208(%r15)
 	br	%r4

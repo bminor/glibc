@@ -85,7 +85,7 @@ _init:
 	.type	_fini,@function
 _fini:
 	stmg	%r6,%r15,48(%r15)
-	lgr	%r1,%r15
+	lg	%r1,120(%r15)
 	aghi	%r15,-160
 	stg	%r1,0(%r15)
 	larl	%r12,_GLOBAL_OFFSET_TABLE_
