@@ -125,29 +125,44 @@ pop (stack_node *top, char **lo, char **hi, size_t *depth)
   return top;
 }
 
-/* NB: N is inclusive bound for BASE.  */
+/* Establish the heap condition at index K, that is, the key at K will
+   not be less than either of its children, at 2 * K + 1 and 2 * K + 2
+   (if they exist).  N is the last valid index. */
 static inline void
 siftdown (void *base, size_t size, size_t k, size_t n,
 	  enum swap_type_t swap_type, __compar_d_fn_t cmp, void *arg)
 {
-  while (k <= n / 2)
+  /* There can only be a heap condition violation if there are
+     children.  */
+  while (2 * k + 1 <= n)
     {
-      size_t j = 2 * k;
+      /* Left child.  */
+      size_t j = 2 * k + 1;
+      /* If the right child is larger, use it.  */
       if (j < n && cmp (base + (j * size), base + ((j + 1) * size), arg) < 0)
 	j++;
 
+      /* If k is already >= to its children, we are done.  */
       if (j == k || cmp (base + (k * size), base + (j * size), arg) >= 0)
 	break;
 
+      /* Heal the violation.  */
       do_swap (base + (size * j), base + (k * size), size, swap_type);
+
+      /* Swapping with j may have introduced a violation at j.  Fix
+	 it in the next loop iteration.  */
       k = j;
     }
 }
 
+/* Establish the heap condition for the indices 0 to N (inclusive).  */
 static inline void
 heapify (void *base, size_t size, size_t n, enum swap_type_t swap_type,
 	 __compar_d_fn_t cmp, void *arg)
 {
+  /* If n is odd, k = n / 2 has a left child at n, so this is the
+     largest index that can have a heap condition violation regarding
+     its children.  */
   size_t k = n / 2;
   while (1)
     {
@@ -157,32 +172,38 @@ heapify (void *base, size_t size, size_t n, enum swap_type_t swap_type,
     }
 }
 
-/* A non-recursive heapsort, used on introsort implementation as a fallback
-   routine with worst-case performance of O(nlog n) and worst-case space
-   complexity of O(1).  It sorts the array starting at BASE and ending at
-   END, with each element of SIZE bytes.  The SWAP_TYPE is the callback
-   function used to swap elements, and CMP is the function used to compare
-   elements.   */
+/* A non-recursive heapsort, used on introsort implementation as a
+   fallback routine with worst-case performance of O(nlog n) and
+   worst-case space complexity of O(1).  It sorts the array starting
+   at BASE and ending at END (inclusive), with each element of SIZE
+   bytes.  The SWAP_TYPE is the callback function used to swap
+   elements, and CMP is the function used to compare elements.  */
 static void
 heapsort_r (void *base, void *end, size_t size, enum swap_type_t swap_type,
 	    __compar_d_fn_t cmp, void *arg)
 {
-  const size_t count = ((uintptr_t) end - (uintptr_t) base) / size;
-
-  if (count < 2)
+  size_t n = ((uintptr_t) end - (uintptr_t) base) / size;
+  if (n <= 1)
+    /* Handled by insertion sort.  */
     return;
-
-  size_t n = count - 1;
 
   /* Build the binary heap, largest value at the base[0].  */
   heapify (base, size, n, swap_type, cmp, arg);
 
-  /* On each iteration base[0:n] is the binary heap, while base[n:count]
-     is sorted.  */
-  while (n > 0)
+  while (true)
     {
+      /* Indices 0 .. n contain the binary heap.  Extract the largest
+	 element put it into the final position in the array.  */
       do_swap (base, base + (n * size), size, swap_type);
+
+      /* The heap is now one element shorter.  */
       n--;
+      if (n == 0)
+	break;
+
+      /* By swapping in elements 0 and the previous value of n (now at
+	 n + 1), we likely introduced a heap condition violation.  Fix
+	 it for the reduced heap.  */
       siftdown (base, size, 0, n, swap_type, cmp, arg);
     }
 }

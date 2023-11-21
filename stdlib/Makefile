@@ -261,6 +261,7 @@ tests := \
   # tests
 
 tests-internal := \
+  tst-qsort4 \
   tst-strtod1i \
   tst-strtod3 \
   tst-strtod4 \
