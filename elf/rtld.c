@@ -2533,7 +2533,67 @@ a filename can be specified using the LD_DEBUG_OUTPUT environment variable.\n");
 }
 
 static void
-process_envvars (struct dl_main_state *state)
+process_envvars_secure (struct dl_main_state *state)
+{
+  char **runp = _environ;
+  char *envline;
+
+  while ((envline = _dl_next_ld_env_entry (&runp)) != NULL)
+    {
+      size_t len = 0;
+
+      while (envline[len] != '\0' && envline[len] != '=')
+	++len;
+
+      if (envline[len] != '=')
+	/* This is a "LD_" variable at the end of the string without
+	   a '=' character.  Ignore it since otherwise we will access
+	   invalid memory below.  */
+	continue;
+
+      switch (len)
+	{
+	case 5:
+	  /* For __libc_enable_secure mode, audit pathnames containing slashes
+	     are ignored.  Also, shared audit objects are only loaded only from
+	     the standard search directories and only if they have set-user-ID
+	     mode bit enabled.  */
+	  if (memcmp (envline, "AUDIT", 5) == 0)
+	    audit_list_add_string (&state->audit_list, &envline[6]);
+	  break;
+
+	case 7:
+	  /* For __libc_enable_secure mode, preload pathnames containing slashes
+	     are ignored.  Also, shared objects are only preloaded from the
+	     standard search directories and only if they have set-user-ID mode
+	     bit enabled.  */
+	  if (memcmp (envline, "PRELOAD", 7) == 0)
+	    state->preloadlist = &envline[8];
+	  break;
+	}
+    }
+
+  /* Extra security for SUID binaries.  Remove all dangerous environment
+     variables.  */
+  const char *nextp = UNSECURE_ENVVARS;
+  do
+    {
+      unsetenv (nextp);
+      nextp = strchr (nextp, '\0') + 1;
+    }
+  while (*nextp != '\0');
+
+  if (GLRO(dl_debug_mask) != 0
+      || GLRO(dl_verbose) != 0
+      || GLRO(dl_lazy) != 1
+      || GLRO(dl_bind_not) != 0
+      || state->mode != rtld_mode_normal
+      || state->version_info)
+    _exit (5);
+}
+
+static void
+process_envvars_default (struct dl_main_state *state)
 {
   char **runp = _environ;
   char *envline;
@@ -2556,15 +2616,13 @@ process_envvars (struct dl_main_state *state)
 	{
 	case 4:
 	  /* Warning level, verbose or not.  */
-	  if (!__libc_enable_secure
-	      && memcmp (envline, "WARN", 4) == 0)
+	  if (memcmp (envline, "WARN", 4) == 0)
 	    GLRO(dl_verbose) = envline[5] != '\0';
 	  break;
 
 	case 5:
 	  /* Debugging of the dynamic linker?  */
-	  if (!__libc_enable_secure
-	      && memcmp (envline, "DEBUG", 5) == 0)
+	  if (memcmp (envline, "DEBUG", 5) == 0)
 	    {
 	      process_dl_debug (state, &envline[6]);
 	      break;
@@ -2579,8 +2637,7 @@ process_envvars (struct dl_main_state *state)
 
 	case 7:
 	  /* Print information about versions.  */
-	  if (!__libc_enable_secure
-	      && memcmp (envline, "VERBOSE", 7) == 0)
+	  if (memcmp (envline, "VERBOSE", 7) == 0)
 	    {
 	      state->version_info = envline[8] != '\0';
 	      break;
@@ -2597,43 +2654,37 @@ process_envvars (struct dl_main_state *state)
 	    }
 
 	  /* Which shared object shall be profiled.  */
-	  if (!__libc_enable_secure
-	      && memcmp (envline, "PROFILE", 7) == 0 && envline[8] != '\0')
+	  if (memcmp (envline, "PROFILE", 7) == 0 && envline[8] != '\0')
 	    GLRO(dl_profile) = &envline[8];
 	  break;
 
 	case 8:
 	  /* Do we bind early?  */
-	  if (!__libc_enable_secure
-	      && memcmp (envline, "BIND_NOW", 8) == 0)
+	  if (memcmp (envline, "BIND_NOW", 8) == 0)
 	    {
 	      GLRO(dl_lazy) = envline[9] == '\0';
 	      break;
 	    }
-	  if (! __libc_enable_secure
-	      && memcmp (envline, "BIND_NOT", 8) == 0)
+	  if (memcmp (envline, "BIND_NOT", 8) == 0)
 	    GLRO(dl_bind_not) = envline[9] != '\0';
 	  break;
 
 	case 9:
 	  /* Test whether we want to see the content of the auxiliary
 	     array passed up from the kernel.  */
-	  if (!__libc_enable_secure
-	      && memcmp (envline, "SHOW_AUXV", 9) == 0)
+	  if (memcmp (envline, "SHOW_AUXV", 9) == 0)
 	    _dl_show_auxv ();
 	  break;
 
 	case 11:
 	  /* Path where the binary is found.  */
-	  if (!__libc_enable_secure
-	      && memcmp (envline, "ORIGIN_PATH", 11) == 0)
+	  if (memcmp (envline, "ORIGIN_PATH", 11) == 0)
 	    GLRO(dl_origin_path) = &envline[12];
 	  break;
 
 	case 12:
 	  /* The library search path.  */
-	  if (!__libc_enable_secure
-	      && memcmp (envline, "LIBRARY_PATH", 12) == 0)
+	  if (memcmp (envline, "LIBRARY_PATH", 12) == 0)
 	    {
 	      state->library_path = &envline[13];
 	      state->library_path_source = "LD_LIBRARY_PATH";
@@ -2641,30 +2692,26 @@ process_envvars (struct dl_main_state *state)
 	    }
 
 	  /* Where to place the profiling data file.  */
-	  if (!__libc_enable_secure
-	      && memcmp (envline, "DEBUG_OUTPUT", 12) == 0)
+	  if (memcmp (envline, "DEBUG_OUTPUT", 12) == 0)
 	    {
 	      debug_output = &envline[13];
 	      break;
 	    }
 
-	  if (!__libc_enable_secure
-	      && memcmp (envline, "DYNAMIC_WEAK", 12) == 0)
+	  if (memcmp (envline, "DYNAMIC_WEAK", 12) == 0)
 	    GLRO(dl_dynamic_weak) = 1;
 	  break;
 
 	case 14:
 	  /* Where to place the profiling data file.  */
-	  if (!__libc_enable_secure
-	      && memcmp (envline, "PROFILE_OUTPUT", 14) == 0
+	  if (memcmp (envline, "PROFILE_OUTPUT", 14) == 0
 	      && envline[15] != '\0')
 	    GLRO(dl_profile_output) = &envline[15];
 	  break;
 
 	case 20:
 	  /* The mode of the dynamic linker can be set.  */
-	  if (!__libc_enable_secure
-	      && memcmp (envline, "TRACE_LOADED_OBJECTS", 20) == 0)
+	  if (memcmp (envline, "TRACE_LOADED_OBJECTS", 20) == 0)
 	    {
 	      state->mode = rtld_mode_trace;
 	      state->mode_trace_program
@@ -2674,30 +2721,10 @@ process_envvars (struct dl_main_state *state)
 	}
     }
 
-  /* Extra security for SUID binaries.  Remove all dangerous environment
-     variables.  */
-  if (__glibc_unlikely (__libc_enable_secure))
-    {
-      const char *nextp = UNSECURE_ENVVARS;
-      do
-	{
-	  unsetenv (nextp);
-	  nextp = strchr (nextp, '\0') + 1;
-	}
-      while (*nextp != '\0');
-
-      if (GLRO(dl_debug_mask) != 0
-	  || GLRO(dl_verbose) != 0
-	  || GLRO(dl_lazy) != 1
-	  || GLRO(dl_bind_not) != 0
-	  || state->mode != rtld_mode_normal
-	  || state->version_info)
-	_exit (5);
-    }
   /* If we have to run the dynamic linker in debugging mode and the
      LD_DEBUG_OUTPUT environment variable is given, we write the debug
      messages to this file.  */
-  else if (GLRO(dl_debug_mask) != 0 && debug_output != NULL)
+  if (GLRO(dl_debug_mask) != 0 && debug_output != NULL)
     {
       const int flags = O_WRONLY | O_APPEND | O_CREAT | O_NOFOLLOW;
       size_t name_len = strlen (debug_output);
@@ -2714,6 +2741,15 @@ process_envvars (struct dl_main_state *state)
 	/* We use standard output if opening the file failed.  */
 	GLRO(dl_debug_fd) = STDOUT_FILENO;
     }
+}
+
+static void
+process_envvars (struct dl_main_state *state)
+{
+  if (__glibc_unlikely (__libc_enable_secure))
+    process_envvars_secure (state);
+  else
+    process_envvars_default (state);
 }
 
 #if HP_TIMING_INLINE
