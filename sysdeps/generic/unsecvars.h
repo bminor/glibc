@@ -7,6 +7,8 @@
   "GLIBC_TUNABLES\0"							      \
   "HOSTALIASES\0"							      \
   "LD_AUDIT\0"								      \
+  "LD_BIND_NOT\0"							      \
+  "LD_BIND_NOW\0"							      \
   "LD_DEBUG\0"								      \
   "LD_DEBUG_OUTPUT\0"							      \
   "LD_DYNAMIC_WEAK\0"							      \

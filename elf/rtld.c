@@ -2604,12 +2604,14 @@ process_envvars (struct dl_main_state *state)
 
 	case 8:
 	  /* Do we bind early?  */
-	  if (memcmp (envline, "BIND_NOW", 8) == 0)
+	  if (!__libc_enable_secure
+	      && memcmp (envline, "BIND_NOW", 8) == 0)
 	    {
 	      GLRO(dl_lazy) = envline[9] == '\0';
 	      break;
 	    }
-	  if (memcmp (envline, "BIND_NOT", 8) == 0)
+	  if (! __libc_enable_secure
+	      && memcmp (envline, "BIND_NOT", 8) == 0)
 	    GLRO(dl_bind_not) = envline[9] != '\0';
 	  break;
 
@@ -2686,6 +2688,8 @@ process_envvars (struct dl_main_state *state)
 
       if (GLRO(dl_debug_mask) != 0
 	  || GLRO(dl_verbose) != 0
+	  || GLRO(dl_lazy) != 1
+	  || GLRO(dl_bind_not) != 0
 	  || state->mode != rtld_mode_normal
 	  || state->version_info)
 	_exit (5);
