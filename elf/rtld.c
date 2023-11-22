@@ -2556,13 +2556,15 @@ process_envvars (struct dl_main_state *state)
 	{
 	case 4:
 	  /* Warning level, verbose or not.  */
-	  if (memcmp (envline, "WARN", 4) == 0)
+	  if (!__libc_enable_secure
+	      && memcmp (envline, "WARN", 4) == 0)
 	    GLRO(dl_verbose) = envline[5] != '\0';
 	  break;
 
 	case 5:
 	  /* Debugging of the dynamic linker?  */
-	  if (memcmp (envline, "DEBUG", 5) == 0)
+	  if (!__libc_enable_secure
+	      && memcmp (envline, "DEBUG", 5) == 0)
 	    {
 	      process_dl_debug (state, &envline[6]);
 	      break;
@@ -2577,7 +2579,8 @@ process_envvars (struct dl_main_state *state)
 
 	case 7:
 	  /* Print information about versions.  */
-	  if (memcmp (envline, "VERBOSE", 7) == 0)
+	  if (!__libc_enable_secure
+	      && memcmp (envline, "VERBOSE", 7) == 0)
 	    {
 	      state->version_info = envline[8] != '\0';
 	      break;
@@ -2636,7 +2639,8 @@ process_envvars (struct dl_main_state *state)
 	    }
 
 	  /* Where to place the profiling data file.  */
-	  if (memcmp (envline, "DEBUG_OUTPUT", 12) == 0)
+	  if (!__libc_enable_secure
+	      && memcmp (envline, "DEBUG_OUTPUT", 12) == 0)
 	    {
 	      debug_output = &envline[13];
 	      break;
@@ -2657,7 +2661,8 @@ process_envvars (struct dl_main_state *state)
 
 	case 20:
 	  /* The mode of the dynamic linker can be set.  */
-	  if (memcmp (envline, "TRACE_LOADED_OBJECTS", 20) == 0)
+	  if (!__libc_enable_secure
+	      && memcmp (envline, "TRACE_LOADED_OBJECTS", 20) == 0)
 	    {
 	      state->mode = rtld_mode_trace;
 	      state->mode_trace_program
@@ -2679,9 +2684,10 @@ process_envvars (struct dl_main_state *state)
 	}
       while (*nextp != '\0');
 
-      GLRO(dl_debug_mask) = 0;
-
-      if (state->mode != rtld_mode_normal)
+      if (GLRO(dl_debug_mask) != 0
+	  || GLRO(dl_verbose) != 0
+	  || state->mode != rtld_mode_normal
+	  || state->version_info)
 	_exit (5);
     }
   /* If we have to run the dynamic linker in debugging mode and the

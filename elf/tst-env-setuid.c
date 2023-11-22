@@ -59,6 +59,10 @@ static const struct envvar_t filtered_envvars[] =
   { "MALLOC_TRACE",            FILTERED_VALUE },
   { "MALLOC_TRIM_THRESHOLD_",  FILTERED_VALUE },
   { "RES_OPTIONS",             FILTERED_VALUE },
+  { "LD_DEBUG",                "all" },
+  { "LD_DEBUG_OUTPUT",         "/tmp/some-file" },
+  { "LD_WARN",                 FILTERED_VALUE },
+  { "LD_VERBOSE",              FILTERED_VALUE },
 };
 
 static const struct envvar_t unfiltered_envvars[] =

@@ -16,6 +16,8 @@
   "LD_PRELOAD\0"							      \
   "LD_PROFILE\0"							      \
   "LD_SHOW_AUXV\0"							      \
+  "LD_VERBOSE\0"							      \
+  "LD_WARN\0"								      \
   "LOCALDOMAIN\0"							      \
   "LOCPATH\0"								      \
   "MALLOC_ARENA_MAX\0"							      \
