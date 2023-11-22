@@ -1150,6 +1150,19 @@ ssize_t copy_file_range (int __infd, __off64_t *__pinoff,
 extern int fdatasync (int __fildes);
 #endif /* Use POSIX199309 */
 
+#ifdef __USE_MISC
+/* One-way hash PHRASE, returning a string suitable for storage in the
+   user database.  SALT selects the one-way function to use, and
+   ensures that no two users' hashes are the same, even if they use
+   the same passphrase.  The return value points to static storage
+   which will be overwritten by the next call to crypt.
+
+   This declaration is deprecated; applications should include
+   <crypt.h> instead.  */
+extern char *crypt (const char *__key, const char *__salt)
+     __THROW __nonnull ((1, 2));
+#endif
+
 #ifdef	__USE_XOPEN
 /* Swab pairs bytes in the first N bytes of the area pointed to by
    FROM and copy the result to TO.  The value of TO must not be in the

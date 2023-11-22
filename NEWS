@@ -52,7 +52,10 @@ Deprecated and removed features, and other changes affecting compatibility:
 * libcrypt has been removed from the GNU C Library.  The configure
   options "--enable-crypt" and "--enable-nss-crypt" are no longer
   available.  <crypt.h>, libcrypt.a, and libcrypt.so.1 will not be
-  installed, and <unistd.h> will not declare the crypt function.
+  installed.  For now <unistd.h> continues to declare the crypt
+  function by default, to avoid introducing vulnerabilities into
+  existing applications due to a missing prototype.  This declaration
+  is deprecated and may be removed in a future glibc release.
 
   The replacement for libcrypt is libxcrypt, maintained separately from
   GNU libc, but available under compatible licensing terms, and providing
