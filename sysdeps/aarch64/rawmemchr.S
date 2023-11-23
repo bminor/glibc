@@ -31,7 +31,7 @@ ENTRY (__rawmemchr)
 
 L(do_strlen):
 	mov	x15, x30
-	cfi_return_column (x15)
+	cfi_register (x30, x15)
 	mov	x14, x0
 	bl	__strlen
 	add	x0, x14, x0
