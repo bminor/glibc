@@ -26,7 +26,6 @@ ld.so: __mmap
 ld.so: __fstat64
 ld.so: __stat64
 ld.so: __access
-ld.so: __access_noerrno
 ld.so: __getpid
 ld.so: __getcwd
 ld.so: _exit ?

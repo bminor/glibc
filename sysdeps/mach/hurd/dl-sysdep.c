@@ -542,21 +542,14 @@ __stat64 (const char *file, struct stat64 *buf)
 }
 libc_hidden_def (__stat64)
 
-/* This function is called by the dynamic linker (rtld.c) to check
-   whether debugging malloc is allowed even for SUID binaries.  This
-   stub will always fail, which means that malloc-debugging is always
-   disabled for SUID binaries.  */
+/* This function is called by the dynamic linker (rtld.c) to check for
+   existence of /etc/ld.so.preload.  This stub will always fail, which
+   means that /etc/ld.so.preload is unsupported.  */
 check_no_hidden(__access);
 int weak_function
 __access (const char *file, int type)
 {
   return __hurd_fail (ENOSYS);
-}
-check_no_hidden(__access_noerrno);
-int weak_function
-__access_noerrno (const char *file, int type)
-{
-  return -1;
 }
 
 int
