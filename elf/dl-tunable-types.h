@@ -61,6 +61,7 @@ struct _tunable
 {
   const char name[TUNABLE_NAME_MAX];	/* Internal name of the tunable.  */
   tunable_type_t type;			/* Data type of the tunable.  */
+  const tunable_val_t def;		/* The value.  */
   tunable_val_t val;			/* The value.  */
   bool initialized;			/* Flag to indicate that the tunable is
 					   initialized.  */

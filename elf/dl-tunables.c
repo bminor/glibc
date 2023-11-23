@@ -145,6 +145,13 @@ tunable_initialize (tunable_t *cur, const char *strval)
   do_tunable_update_val (cur, &val, NULL, NULL);
 }
 
+bool
+__tunable_is_initialized (tunable_id_t id)
+{
+  return tunable_list[id].initialized;
+}
+rtld_hidden_def (__tunable_is_initialized)
+
 void
 __tunable_set_val (tunable_id_t id, tunable_val_t *valp, tunable_num_t *minp,
 		   tunable_num_t *maxp)
@@ -332,6 +339,39 @@ __tunables_print (void)
 	}
     }
 }
+
+void
+__tunable_get_default (tunable_id_t id, void *valp)
+{
+  tunable_t *cur = &tunable_list[id];
+
+  switch (cur->type.type_code)
+    {
+    case TUNABLE_TYPE_UINT_64:
+	{
+	  *((uint64_t *) valp) = (uint64_t) cur->def.numval;
+	  break;
+	}
+    case TUNABLE_TYPE_INT_32:
+	{
+	  *((int32_t *) valp) = (int32_t) cur->def.numval;
+	  break;
+	}
+    case TUNABLE_TYPE_SIZE_T:
+	{
+	  *((size_t *) valp) = (size_t) cur->def.numval;
+	  break;
+	}
+    case TUNABLE_TYPE_STRING:
+	{
+	  *((const char **)valp) = cur->def.strval;
+	  break;
+	}
+    default:
+      __builtin_unreachable ();
+    }
+}
+rtld_hidden_def (__tunable_get_default)
 
 /* Set the tunable value.  This is called by the module that the tunable exists
    in. */

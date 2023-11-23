@@ -20,6 +20,7 @@
 # type: Defaults to STRING
 # minval: Optional minimum acceptable value
 # maxval: Optional maximum acceptable value
+# default: Optional default value (if not specified it will be 0 or "")
 # env_alias: An alias environment variable
 
 glibc {

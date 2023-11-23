@@ -163,8 +163,8 @@ END {
     n = indices[2];
     m = indices[3];
     printf ("  {TUNABLE_NAME_S(%s, %s, %s)", t, n, m)
-    printf (", {TUNABLE_TYPE_%s, %s, %s}, {%s}, false, %s},\n",
-	    types[t,n,m], minvals[t,n,m], maxvals[t,n,m],
+    printf (", {TUNABLE_TYPE_%s, %s, %s}, {%s}, {%s}, false, %s},\n",
+	    types[t,n,m], minvals[t,n,m], maxvals[t,n,m], default_val[t,n,m],
 	    default_val[t,n,m], env_alias[t,n,m]);
   }
   print "};"
