@@ -108,11 +108,17 @@ __mach_msg_destroy (mach_msg_header_t *msg)
 	    addr = is_inline ? saddr : * (vm_offset_t *) saddr;
 
 	    if (MACH_MSG_TYPE_PORT_ANY(name)) {
-		mach_port_t *ports = (mach_port_t *) addr;
 		mach_msg_type_number_t i;
 
-		for (i = 0; i < number; i++)
-		    mach_msg_destroy_port(*ports++, name);
+		if (is_inline) {
+		    mach_port_name_inlined_t *inlined_ports = (mach_port_name_inlined_t *)addr;
+		    for (i = 0; i < number; i++)
+			mach_msg_destroy_port(inlined_ports[i].name, name);
+		} else {
+		    mach_port_t *ports = (mach_port_t *) addr;
+		    for (i = 0; i < number; i++)
+			mach_msg_destroy_port(ports[i], name);
+		}
 	    }
 
 	    if (is_inline) {
