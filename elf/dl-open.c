@@ -708,6 +708,17 @@ dl_open_worker_begin (void *a)
      them.  However, such relocation dependencies in IFUNC resolvers
      are undefined anyway, so this is not a problem.  */
 
+  /* Ensure that libc is relocated first.  This helps with the
+     execution of IFUNC resolvers in libc, and matters only to newly
+     created dlmopen namespaces.  Do not do this for static dlopen
+     because libc has relocations against ld.so, which may not have
+     been relocated at this point.  */
+#ifdef SHARED
+  if (GL(dl_ns)[args->nsid].libc_map != NULL)
+    _dl_open_relocate_one_object (args, r, GL(dl_ns)[args->nsid].libc_map,
+				  reloc_mode, &relocation_in_progress);
+#endif
+
   for (unsigned int i = last; i-- > first; )
     _dl_open_relocate_one_object (args, r, new->l_initfini[i], reloc_mode,
 				  &relocation_in_progress);

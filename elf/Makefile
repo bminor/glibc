@@ -433,6 +433,8 @@ tests += \
   tst-nodelete-dlclose \
   tst-nodelete-opened \
   tst-nodelete2 \
+  tst-nodeps1 \
+  tst-nodeps2 \
   tst-noload \
   tst-non-directory-path \
   tst-null-argv \
@@ -863,6 +865,8 @@ modules-names += \
   tst-nodelete-dlclose-plugin \
   tst-nodelete-opened-lib \
   tst-nodelete2mod \
+  tst-nodeps1-mod \
+  tst-nodeps2-mod \
   tst-non-directory-mod \
   tst-null-argv-lib \
   tst-p_alignmod-base \
@@ -1030,6 +1034,8 @@ modules-names-nobuild += \
   tst-audit24bmod1 \
   tst-audit24bmod2 \
   tst-big-note-lib \
+  tst-nodeps1-mod \
+  tst-nodeps2-mod \
   tst-ro-dynamic-mod \
   # modules-names-nobuild
 
@@ -3009,3 +3015,18 @@ tst-env-setuid-ARGS = -- $(host-test-program-cmd)
 
 # Reuse a module with a SONAME, to specific as the LD_PROFILE.
 $(objpfx)tst-env-setuid: $(objpfx)tst-sonamemove-runmod2.so
+
+# The object tst-nodeps1-mod.so has no explicit dependencies on libc.so.
+$(objpfx)tst-nodeps1-mod.so: $(objpfx)tst-nodeps1-mod.os
+	$(LINK.o) -nostartfiles -nostdlib -shared -o $@ $^
+tst-nodeps1.so-no-z-defs = yes
+# Link libc.so before the test module with the IFUNC resolver reference.
+LDFLAGS-tst-nodeps1 = $(common-objpfx)libc.so $(objpfx)tst-nodeps1-mod.so
+$(objpfx)tst-nodeps1: $(objpfx)tst-nodeps1-mod.so
+# Reuse the tst-nodeps1 module.  Link libc.so before the test module
+# with the IFUNC resolver reference.
+$(objpfx)tst-nodeps2-mod.so: $(common-objpfx)libc.so \
+  $(objpfx)tst-nodeps1-mod.so $(objpfx)tst-nodeps2-mod.os
+	$(LINK.o) -Wl,--no-as-needed -nostartfiles -nostdlib -shared -o $@ $^
+$(objpfx)tst-nodeps2.out: \
+  $(objpfx)tst-nodeps1-mod.so $(objpfx)tst-nodeps2-mod.so

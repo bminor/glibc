@@ -2272,10 +2272,16 @@ dl_main (const ElfW(Phdr) *phdr,
      objects.  We do not re-relocate the dynamic linker itself in this
      loop because that could result in the GOT entries for functions we
      call being changed, and that would break us.  It is safe to relocate
-     the dynamic linker out of order because it has no copy relocs (we
-     know that because it is self-contained).  */
+     the dynamic linker out of order because it has no copy relocations.
+     Likewise for libc, which is relocated early to ensure that IFUNC
+     resolvers in libc work.  */
 
   int consider_profiling = GLRO(dl_profile) != NULL;
+
+  if (GL(dl_ns)[LM_ID_BASE].libc_map != NULL)
+    _dl_relocate_object (GL(dl_ns)[LM_ID_BASE].libc_map,
+			 GL(dl_ns)[LM_ID_BASE].libc_map->l_scope,
+			 GLRO(dl_lazy) ? RTLD_LAZY : 0, consider_profiling);
 
   /* If we are profiling we also must do lazy reloaction.  */
   GLRO(dl_lazy) |= consider_profiling;
