@@ -205,6 +205,9 @@ void
 _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 		     int reloc_mode, int consider_profiling)
 {
+  if (l->l_relocated)
+    return;
+
   struct textrels
   {
     caddr_t start;
@@ -241,9 +244,6 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 #else
 # define consider_symbind 0
 #endif
-
-  if (l->l_relocated)
-    return;
 
   /* If DT_BIND_NOW is set relocate all references in this object.  We
      do not do this if we are profiling, of course.  */
