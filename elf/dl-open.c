@@ -468,6 +468,50 @@ activate_nodelete (struct link_map *new)
       }
 }
 
+/* Relocate the object L.  *RELOCATION_IN_PROGRESS controls whether
+   the debugger is notified of the start of relocation processing.  */
+static void
+_dl_open_relocate_one_object (struct dl_open_args *args, struct r_debug *r,
+			      struct link_map *l, int reloc_mode,
+			      bool *relocation_in_progress)
+{
+  if (l->l_real->l_relocated)
+    return;
+
+  if (!*relocation_in_progress)
+    {
+      /* Notify the debugger that relocations are about to happen.  */
+      LIBC_PROBE (reloc_start, 2, args->nsid, r);
+      *relocation_in_progress = true;
+    }
+
+#ifdef SHARED
+  if (__glibc_unlikely (GLRO(dl_profile) != NULL))
+    {
+      /* If this here is the shared object which we want to profile
+	 make sure the profile is started.  We can find out whether
+	 this is necessary or not by observing the `_dl_profile_map'
+	 variable.  If it was NULL but is not NULL afterwards we must
+	 start the profiling.  */
+      struct link_map *old_profile_map = GL(dl_profile_map);
+
+      _dl_relocate_object (l, l->l_scope, reloc_mode | RTLD_LAZY, 1);
+
+      if (old_profile_map == NULL && GL(dl_profile_map) != NULL)
+	{
+	  /* We must prepare the profiling.  */
+	  _dl_start_profile ();
+
+	  /* Prevent unloading the object.  */
+	  GL(dl_profile_map)->l_nodelete_active = true;
+	}
+    }
+  else
+#endif
+    _dl_relocate_object (l, l->l_scope, reloc_mode, 0);
+}
+
+
 /* struct dl_init_args and call_dl_init are used to call _dl_init with
    exception handling disabled.  */
 struct dl_init_args
@@ -654,7 +698,7 @@ dl_open_worker_begin (void *a)
     }
   while (l != NULL);
 
-  int relocation_in_progress = 0;
+  bool relocation_in_progress = false;
 
   /* Perform relocation.  This can trigger lazy binding in IFUNC
      resolvers.  For NODELETE mappings, these dependencies are not
@@ -665,44 +709,8 @@ dl_open_worker_begin (void *a)
      are undefined anyway, so this is not a problem.  */
 
   for (unsigned int i = last; i-- > first; )
-    {
-      l = new->l_initfini[i];
-
-      if (l->l_real->l_relocated)
-	continue;
-
-      if (! relocation_in_progress)
-	{
-	  /* Notify the debugger that relocations are about to happen.  */
-	  LIBC_PROBE (reloc_start, 2, args->nsid, r);
-	  relocation_in_progress = 1;
-	}
-
-#ifdef SHARED
-      if (__glibc_unlikely (GLRO(dl_profile) != NULL))
-	{
-	  /* If this here is the shared object which we want to profile
-	     make sure the profile is started.  We can find out whether
-	     this is necessary or not by observing the `_dl_profile_map'
-	     variable.  If it was NULL but is not NULL afterwards we must
-	     start the profiling.  */
-	  struct link_map *old_profile_map = GL(dl_profile_map);
-
-	  _dl_relocate_object (l, l->l_scope, reloc_mode | RTLD_LAZY, 1);
-
-	  if (old_profile_map == NULL && GL(dl_profile_map) != NULL)
-	    {
-	      /* We must prepare the profiling.  */
-	      _dl_start_profile ();
-
-	      /* Prevent unloading the object.  */
-	      GL(dl_profile_map)->l_nodelete_active = true;
-	    }
-	}
-      else
-#endif
-	_dl_relocate_object (l, l->l_scope, reloc_mode, 0);
-    }
+    _dl_open_relocate_one_object (args, r, new->l_initfini[i], reloc_mode,
+				  &relocation_in_progress);
 
   /* This only performs the memory allocations.  The actual update of
      the scopes happens below, after failure is impossible.  */
