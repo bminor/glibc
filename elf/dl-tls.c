@@ -160,6 +160,7 @@ _dl_assign_tls_modid (struct link_map *l)
 	      {
 		/* Mark the entry as used, so any dependency see it.  */
 		atomic_store_relaxed (&runp->slotinfo[result - disp].map, l);
+		atomic_store_relaxed (&runp->slotinfo[result - disp].gen, 0);
 		break;
 	      }
 
