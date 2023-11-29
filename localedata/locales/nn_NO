@@ -87,13 +87,13 @@ abday       "su.";"m<U00E5>.";/
             "la."
 %
 % Full weekday names (%A)
-day         "sundag ";/
-            "m<U00E5>ndag ";/
-            "tysdag ";/
-            "onsdag ";/
-            "torsdag ";/
-            "fredag ";/
-            "laurdag "
+day         "sundag";/
+            "m<U00E5>ndag";/
+            "tysdag";/
+            "onsdag";/
+            "torsdag";/
+            "fredag";/
+            "laurdag"
 %
 % Abbreviated month names (%b)
 abmon       "jan.";"feb.";/
