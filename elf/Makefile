@@ -469,6 +469,7 @@ tests += \
   tst-tls21 \
   tst-tlsalign \
   tst-tlsalign-extern \
+  tst-tlsgap \
   tst-unique1 \
   tst-unique2 \
   tst-unwind-ctor \
@@ -896,6 +897,9 @@ modules-names += \
   tst-tls20mod-bad \
   tst-tls21mod \
   tst-tlsalign-lib \
+  tst-tlsgap-mod0 \
+  tst-tlsgap-mod1 \
+  tst-tlsgap-mod2 \
   tst-tlsmod1 \
   tst-tlsmod10 \
   tst-tlsmod11 \
@@ -3031,3 +3035,14 @@ $(objpfx)tst-nodeps2-mod.so: $(common-objpfx)libc.so \
 	$(LINK.o) -Wl,--no-as-needed -nostartfiles -nostdlib -shared -o $@ $^
 $(objpfx)tst-nodeps2.out: \
   $(objpfx)tst-nodeps1-mod.so $(objpfx)tst-nodeps2-mod.so
+
+$(objpfx)tst-tlsgap: $(shared-thread-library)
+$(objpfx)tst-tlsgap.out: \
+  $(objpfx)tst-tlsgap-mod0.so \
+  $(objpfx)tst-tlsgap-mod1.so \
+  $(objpfx)tst-tlsgap-mod2.so
+ifeq (yes,$(have-mtls-dialect-gnu2))
+CFLAGS-tst-tlsgap-mod0.c += -mtls-dialect=gnu2
+CFLAGS-tst-tlsgap-mod1.c += -mtls-dialect=gnu2
+CFLAGS-tst-tlsgap-mod2.c += -mtls-dialect=gnu2
+endif
