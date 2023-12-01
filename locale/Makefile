@@ -22,43 +22,111 @@ subdir	:= locale
 
 include ../Makeconfig
 
-headers		= langinfo.h locale.h bits/locale.h \
-		  bits/types/locale_t.h bits/types/__locale_t.h
-routines	= setlocale findlocale loadlocale loadarchive \
-		  localeconv nl_langinfo nl_langinfo_l mb_cur_max \
-		  newlocale duplocale freelocale uselocale
-tests		= tst-C-locale tst-locname tst-duplocale
-tests-container	= tst-localedef-path-norm
-categories	= ctype messages monetary numeric time paper name \
-		  address telephone measurement identification collate
-aux		= $(categories:%=lc-%) $(categories:%=C-%) SYS_libc C_name \
-		  xlocale localename global-locale coll-lookup
-others		= localedef locale
-#others-static	= localedef locale
-install-bin	= localedef locale
-extra-objs	= $(localedef-modules:=.o) $(localedef-aux:=.o) \
-		  $(locale-modules:=.o) $(lib-modules:=.o)
-generated 	+= C-translit.h
-before-compile	+= $(objpfx)C-translit.h
+headers = \
+  bits/locale.h \
+  bits/types/__locale_t.h \
+  bits/types/locale_t.h \
+  langinfo.h \
+  locale.h \
+  # headers
+routines = \
+  duplocale \
+  findlocale \
+  freelocale \
+  loadarchive \
+  loadlocale \
+  localeconv \
+  mb_cur_max \
+  newlocale \
+  nl_langinfo \
+  nl_langinfo_l \
+  setlocale \
+  uselocale
+  # routines
+tests = \
+  tst-C-locale \
+  tst-duplocale \
+  tst-locname \
+  # tests
+tests-container	= \
+  tst-localedef-path-norm \
+  # tests-container
+categories = \
+  address \
+  collate \
+  ctype \
+  identification \
+  measurement \
+  messages \
+  monetary \
+  name \
+  numeric \
+  paper \
+  telephone \
+  time \
+  # categories
+aux = \
+  $(categories:%=C-%) \
+  $(categories:%=lc-%) \
+  C_name \
+  SYS_libc \
+  coll-lookup \
+  global-locale \
+  localename \
+  xlocale \
+  # aux
+others = \
+  locale \
+  localedef \
+  # others
+#others-static = \
+# localedef \
+# locale \
+# # others-static
+install-bin = \
+  locale \
+  localedef \
+  # install-bin
+extra-objs = \
+  $(lib-modules:=.o) \
+  $(locale-modules:=.o) \
+  $(localedef-aux:=.o) \
+  $(localedef-modules:=.o) \
+  # extra-objs
+generated += C-translit.h
+before-compile += $(objpfx)C-translit.h
 
-extra-libs	= libBrokenLocale
+extra-libs = libBrokenLocale
 extra-libs-others = $(extra-libs)
 
 libBrokenLocale-routines = broken_cur_max
 
-subdir-dirs	= programs
+subdir-dirs = programs
 vpath %.c programs
 vpath %.h programs
 vpath %.gperf programs
 
-localedef-modules	:= localedef $(categories:%=ld-%) \
-			   charmap linereader locfile \
-			   repertoire locarchive
-localedef-aux		:= md5
-locale-modules		:= locale locale-spec
-lib-modules		:= charmap-dir simple-hash xmalloc xstrdup \
-			   record-status xasprintf
-
+localedef-modules := \
+  charmap \
+  linereader \
+  localedef $(categories:%=ld-%) \
+  locarchive \
+  locfile \
+  repertoire \
+  # localedef-modules
+localedef-aux := md5
+locale-modules := \
+  locale \
+  locale-spec \
+  # locale-modules
+lib-modules := \
+  charmap-dir \
+  record-status \
+  simple-hash \
+  xasprintf \
+  xmalloc \
+  xstrdup \
+  # lib-modules
 
 GPERF = gperf
 GPERFFLAGS = -acCgopt -k1,2,5,9,$$ -L ANSI-C
