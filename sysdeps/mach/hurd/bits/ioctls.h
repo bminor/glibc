@@ -25,6 +25,7 @@
 /* These macros are also defined in <bits/termios.h> (with numerically
    identical values) but this serves to shut up cpp's complaining. */
 
+#ifdef __USE_MISC
 #ifdef NL0
 # undef NL0
 #endif
@@ -81,6 +82,7 @@
 #endif
 #ifdef NOFLSH
 # undef NOFLSH
+#endif
 #endif
 
 /* Hurd ioctl request are made up of several fields:
