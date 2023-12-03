@@ -241,7 +241,7 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 	      const vm_size_t length = ((number * size) + 7) >> 3;
 	      if (ty->msgtl_header.msgt_inline)
 		{
-		  clean_inlined_ports (data);
+		  clean_inlined_ports ((mach_port_name_inlined_t *) data);
 		  /* Move to the next argument.  */
 		  ty = (void *) PTR_ALIGN_UP (data + length, __alignof__ (uintptr_t));
 		}
