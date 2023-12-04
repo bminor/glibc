@@ -238,7 +238,7 @@ insertion_sort_qsort_partitions (void *const pbase, size_t total_elems,
   while ((run_ptr += size) <= end_ptr)
     {
       tmp_ptr = run_ptr - size;
-      while (run_ptr != tmp_ptr && cmp (run_ptr, tmp_ptr, arg) < 0)
+      while (tmp_ptr != base_ptr && cmp (run_ptr, tmp_ptr, arg) < 0)
         tmp_ptr -= size;
 
       tmp_ptr += size;
