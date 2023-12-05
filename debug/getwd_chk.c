@@ -29,5 +29,5 @@ __getwd_chk (char *buf, size_t buflen)
   return res;
 }
 
-link_warning (getwd,
+link_warning (__getwd_chk,
 	      "the `getwd' function is dangerous and should not be used.")
