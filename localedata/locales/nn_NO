@@ -81,14 +81,14 @@ LC_TIME
 % for IBM Class for Unicode/Java
 %
 % Abbreviated weekday names (%a)
-abday       "su.";"m<U00E5>.";/
+abday       "su.";"må.";/
             "ty.";"on.";/
             "to.";"fr.";/
             "la."
 %
 % Full weekday names (%A)
 day         "sundag";/
-            "m<U00E5>ndag";/
+            "måndag";/
             "tysdag";/
             "onsdag";/
             "torsdag";/
