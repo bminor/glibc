@@ -1,9 +1,9 @@
-# The GNU C Library Security Process
+# The GNU C Library Security Policy
 
-This document describes the process followed by the GNU C Library maintainers
+This document describes the policy followed by the GNU C Library maintainers
 to handle bugs that may have a security impact.  This includes determining if a
 bug has a security impact, reporting such bugs to the community and handling
-such bugs all the way to resolution.  This process may evolve over time, so if
+such bugs all the way to resolution.  This policy may evolve over time, so if
 you're reading this from a release tarball, be sure to check the latest copy of
 the [SECURITY.md in the
 repository](https://sourceware.org/git/?p=glibc.git;a=blob;f=SECURITY.md),
@@ -117,40 +117,13 @@ security vulnerability in itself.  By their nature, these countermeasures are
 based on heuristics and will never offer complete protection, so the original
 vulnerability needs to be fixed anyway.
 
-## Reporting private security bugs
+## Reporting security bugs
 
-**IMPORTANT: All bugs reported in Bugzilla are public.**
-
-As a rule of thumb, security vulnerabilities which are exposed over the network
-or can be used for local privilege escalation (through existing applications,
-not synthetic test cases) should be reported privately.  We expect that such
-critical security bugs are rare, and that most security bugs can be reported in
-Bugzilla, thus making them public immediately.  If in doubt, you can file a
-private bug, as explained in the next paragraph.
-
-If you want to report a _private_ security bug that is not immediately
-public, please contact _one_ of our downstream distributions with security
-teams.  The follow teams have volunteered to handle such bugs:
-
-* Debian: security@debian.org
-* Red Hat: secalert@redhat.com
-* SUSE: security@suse.de
-
-Please report the bug to _just one_ of these teams.  It will be shared with
-other teams as necessary.
-
-The team you contacted will take care of details such as vulnerability rating
-and [CVE assignment](http://cve.mitre.org/about/).  It is likely that the team
-will ask to file a public bug because the issue is sufficiently minor and does
-not warrant an embargo.  An embargo is not a requirement for being credited
-with the discovery of a security vulnerability.
-
-## Reporting public security bugs
-
-We expect that critical security bugs are rare, and that most security bugs can
-be reported in Bugzilla, thus making them public immediately. When reporting
-public security bugs the reporter should provide rationale for their choice of
-public disclosure.
+The process to report security bugs is documented on the glibc [security
+page](https://sourceware.org/glibc/security.html).  In general, most security
+bugs may be reported publicly in the [glibc
+bugzilla](https://sourceware.org/glibc/bugs.html), but if in doubt, please feel
+free to report security issues privately first.
 
 ## Triaging security bugs
 
@@ -196,14 +169,8 @@ the bug, the fix, or the mailing list discussions.
 
 ## CVE assignment
 
-Security bugs flagged with `security+` should have [CVE identifiers](http://cve.mitre.org/about/).
-
-For bugs which are public (thus all bugs in Bugzilla), CVE assignment has to
-happen through the [oss-security mailing
-list](http://oss-security.openwall.org/wiki/mailing-lists/oss-security).
-(Downstreams will eventually request CVE assignment through their public
-Bugzilla monitoring processes.)
-
-For initially private security bugs, CVEs will be assigned as needed by the
-downstream security teams.  Once a public bug is filed, the name should be
-included in Bugzilla.
+Security bugs flagged with `security+` should have [CVE
+identifiers](http://cve.mitre.org/about/). Please reach out to the glibc
+security team using the documented [security
+process](https://sourceware.org/glibc/security.html) and they work on getting a
+CVE number.
