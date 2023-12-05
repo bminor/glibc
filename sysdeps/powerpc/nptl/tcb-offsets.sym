@@ -26,3 +26,4 @@ TCB_AT_PLATFORM			(offsetof (tcbhead_t, at_platform) - TLS_TCB_OFFSET - sizeof(t
 PADDING				(offsetof (tcbhead_t, padding) - TLS_TCB_OFFSET - sizeof(tcbhead_t))
 #endif
 TCB_HWCAP			(offsetof (tcbhead_t, hwcap) - TLS_TCB_OFFSET - sizeof (tcbhead_t))
+TCB_HWCAP_EXTN			(offsetof (tcbhead_t, hwcap_extn) - TLS_TCB_OFFSET - sizeof (tcbhead_t))

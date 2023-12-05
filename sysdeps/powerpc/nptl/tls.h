@@ -64,6 +64,9 @@
    are private.  */
 typedef struct
 {
+  /* Reservation for HWCAP3 and HWCAP4 data.  To be accessed by GCC in
+     __builtin_cpu_supports(), so it is a part of the public ABI.  */
+  uint64_t hwcap_extn;
   /* Reservation for HWCAP data.  To be accessed by GCC in
      __builtin_cpu_supports(), so it is a part of public ABI.  */
   uint64_t hwcap;
@@ -138,6 +141,7 @@ typedef struct
   ({ 									      \
     __thread_register = (void *) (tcbp) + TLS_TCB_OFFSET;		      \
     THREAD_SET_HWCAP (__tcb.hwcap);					      \
+    THREAD_SET_HWCAP_EXTN (__tcb.hwcap_extn);				      \
     THREAD_SET_AT_PLATFORM (__tcb.at_platform);				      \
     true;								      \
   })
@@ -147,6 +151,8 @@ typedef struct
     void *tp = (void *) (pd) + TLS_TCB_OFFSET + TLS_PRE_TCB_SIZE;	      \
     (((tcbhead_t *) ((char *) tp - TLS_TCB_OFFSET))[-1].hwcap) =	      \
       THREAD_GET_HWCAP ();						      \
+    (((tcbhead_t *) ((char *) tp - TLS_TCB_OFFSET))[-1].hwcap_extn) =	      \
+      THREAD_GET_HWCAP_EXTN ();						      \
     (((tcbhead_t *) ((char *) tp - TLS_TCB_OFFSET))[-1].at_platform) =	      \
       THREAD_GET_AT_PLATFORM ();
 
@@ -189,12 +195,17 @@ typedef struct
 		     + TLS_PRE_TCB_SIZE))[-1].pointer_guard		      \
      = THREAD_GET_POINTER_GUARD())
 
-/* hwcap field in TCB head.  */
+/* hwcap & hwcap_extn fields in TCB head.  */
 # define THREAD_GET_HWCAP() \
     (((tcbhead_t *) ((char *) __thread_register				      \
 		     - TLS_TCB_OFFSET))[-1].hwcap)
+# define THREAD_GET_HWCAP_EXTN() \
+    (((tcbhead_t *) ((char *) __thread_register				      \
+		     - TLS_TCB_OFFSET))[-1].hwcap_extn)
 # define THREAD_SET_HWCAP(value) \
     (THREAD_GET_HWCAP () = (value))
+# define THREAD_SET_HWCAP_EXTN(value) \
+    (THREAD_GET_HWCAP_EXTN () = (value))
 
 /* at_platform field in TCB head.  */
 # define THREAD_GET_AT_PLATFORM() \

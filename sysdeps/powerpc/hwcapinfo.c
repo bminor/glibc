@@ -70,11 +70,14 @@ __tcb_parse_hwcap_and_convert_at_platform (void)
   /* Consolidate both HWCAP and HWCAP2 into a single doubleword so that
      we can read both in a single load later.  */
   __tcb.hwcap = (h1 << 32) | (h2 & 0xffffffff);
+  __tcb.hwcap_extn = 0x0;
 
 }
 #if IS_IN (rtld)
 versioned_symbol (ld, __tcb_parse_hwcap_and_convert_at_platform, \
 		  __parse_hwcap_and_convert_at_platform, GLIBC_2_23);
+versioned_symbol (ld, __tcb_parse_hwcap_and_convert_at_platform, \
+		  __parse_hwcap_3_4_and_convert_at_platform, GLIBC_2_39);
 #endif
 
 /* Export __parse_hwcap_and_convert_at_platform in libc.a.  This is used by
@@ -83,4 +86,6 @@ versioned_symbol (ld, __tcb_parse_hwcap_and_convert_at_platform, \
 #ifndef SHARED
 weak_alias (__tcb_parse_hwcap_and_convert_at_platform, \
 	    __parse_hwcap_and_convert_at_platform);
+weak_alias (__tcb_parse_hwcap_and_convert_at_platform, \
+	    __parse_hwcap_3_4_and_convert_at_platform);
 #endif

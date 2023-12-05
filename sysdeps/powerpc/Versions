@@ -24,4 +24,9 @@ ld {
     # and AT_PLATFORM data should be stored into the TCB.
     __parse_hwcap_and_convert_at_platform;
   }
+  GLIBC_2.39 {
+    # Symbol used to version control when the ABI started to specify that
+    # HWCAP3 and HWCAP4 are stored in the TCB.
+    __parse_hwcap_3_4_and_convert_at_platform;
+  }
 }
