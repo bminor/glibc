@@ -17,6 +17,7 @@ tests += \
   tst-cpu-features-cpuinfo-static \
   tst-cpu-features-supports \
   tst-cpu-features-supports-static \
+  tst-hwcap-tunables \
 # tests
 tests-static += \
   tst-get-cpu-features-static \
@@ -80,6 +81,7 @@ $(objpfx)tst-isa-level-1.out: $(objpfx)tst-isa-level-mod-1-baseline.so \
 endif
 tst-ifunc-isa-2-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-SSE4_2,-AVX,-AVX2,-AVX512F
 tst-ifunc-isa-2-static-ENV = $(tst-ifunc-isa-2-ENV)
+tst-hwcap-tunables-ARGS = -- $(host-test-program-cmd)
 endif
 
 ifeq ($(subdir),math)

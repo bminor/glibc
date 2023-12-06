@@ -22,6 +22,7 @@
 #include <ifunc-memcmp.h>
 #include <string.h>
 #include <dl-symbol-redir-ifunc.h>
+#include <dl-tunables-parse.h>
 
 #define S390_COPY_CPU_FEATURES(SRC_PTR, DEST_PTR)	\
   (DEST_PTR)->hwcap = (SRC_PTR)->hwcap;			\
@@ -51,33 +52,14 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
   struct cpu_features cpu_features_curr;
   S390_COPY_CPU_FEATURES (cpu_features, &cpu_features_curr);
 
-  const char *token = valp->strval;
-  do
+  struct tunable_str_comma_state_t ts;
+  tunable_str_comma_init (&ts, valp);
+
+  struct tunable_str_comma_t t;
+  while (tunable_str_comma_next (&ts, &t))
     {
-      const char *token_end, *feature;
-      bool disable;
-      size_t token_len;
-      size_t feature_len;
-
-      /* Find token separator or end of string.  */
-      for (token_end = token; *token_end != ','; token_end++)
-	if (*token_end == '\0')
-	  break;
-
-      /* Determine feature.  */
-      token_len = token_end - token;
-      if (*token == '-')
-	{
-	  disable = true;
-	  feature = token + 1;
-	  feature_len = token_len - 1;
-	}
-      else
-	{
-	  disable = false;
-	  feature = token;
-	  feature_len = token_len;
-	}
+      if (t.len == 0)
+	continue;
 
       /* Handle only the features here which are really used in the
 	 IFUNC-resolvers.  All others are ignored as the values are only used
@@ -85,86 +67,64 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
       bool reset_features = false;
       unsigned long int hwcap_mask = 0UL;
       unsigned long long stfle_bits0_mask = 0ULL;
+      bool disable = t.disable;
 
-      if ((*feature == 'z' || *feature == 'a'))
+      if (tunable_str_comma_strcmp_cte (&t, "zEC12")
+	  || tunable_str_comma_strcmp_cte (&t, "arch10"))
 	{
-	  if ((feature_len == 5 && *feature == 'z'
-	       && memcmp (feature, "zEC12", 5) == 0)
-	      || (feature_len == 6 && *feature == 'a'
-		  && memcmp (feature, "arch10", 6) == 0))
-	    {
-	      reset_features = true;
-	      disable = true;
-	      hwcap_mask = HWCAP_S390_VXRS | HWCAP_S390_VXRS_EXT
-		| HWCAP_S390_VXRS_EXT2;
-	      stfle_bits0_mask = S390_STFLE_MASK_ARCH13_MIE3;
-	    }
-	  else if ((feature_len == 3 && *feature == 'z'
-		    && memcmp (feature, "z13", 3) == 0)
-		   || (feature_len == 6 && *feature == 'a'
-		       && memcmp (feature, "arch11", 6) == 0))
-	    {
-	      reset_features = true;
-	      disable = true;
-	      hwcap_mask = HWCAP_S390_VXRS_EXT | HWCAP_S390_VXRS_EXT2;
-	      stfle_bits0_mask = S390_STFLE_MASK_ARCH13_MIE3;
-	    }
-	  else if ((feature_len == 3 && *feature == 'z'
-		    && memcmp (feature, "z14", 3) == 0)
-		   || (feature_len == 6 && *feature == 'a'
-		       && memcmp (feature, "arch12", 6) == 0))
-	    {
-	      reset_features = true;
-	      disable = true;
-	      hwcap_mask = HWCAP_S390_VXRS_EXT2;
-	      stfle_bits0_mask = S390_STFLE_MASK_ARCH13_MIE3;
-	    }
-	  else if ((feature_len == 3 && *feature == 'z'
-		    && (memcmp (feature, "z15", 3) == 0
-			|| memcmp (feature, "z16", 3) == 0))
-		   || (feature_len == 6
-		       && (memcmp (feature, "arch13", 6) == 0
-			   || memcmp (feature, "arch14", 6) == 0)))
-	    {
-	      /* For z15 or newer we don't have to disable something,
-		 but we have to reset to the original values.  */
-	      reset_features = true;
-	    }
+	  reset_features = true;
+	  disable = true;
+	  hwcap_mask = HWCAP_S390_VXRS | HWCAP_S390_VXRS_EXT
+	    | HWCAP_S390_VXRS_EXT2;
+	  stfle_bits0_mask = S390_STFLE_MASK_ARCH13_MIE3;
 	}
-      else if (*feature == 'H')
+      else if (tunable_str_comma_strcmp_cte (&t, "z13")
+	       || tunable_str_comma_strcmp_cte (&t, "arch11"))
 	{
-	  if (feature_len == 15
-	      && memcmp (feature, "HWCAP_S390_VXRS", 15) == 0)
-	    {
-	      hwcap_mask = HWCAP_S390_VXRS;
-	      if (disable)
-		hwcap_mask |= HWCAP_S390_VXRS_EXT | HWCAP_S390_VXRS_EXT2;
-	    }
-	  else if (feature_len == 19
-		   && memcmp (feature, "HWCAP_S390_VXRS_EXT", 19) == 0)
-	    {
-	      hwcap_mask = HWCAP_S390_VXRS_EXT;
-	      if (disable)
-		hwcap_mask |= HWCAP_S390_VXRS_EXT2;
-	      else
-		hwcap_mask |= HWCAP_S390_VXRS;
-	    }
-	  else if (feature_len == 20
-		   && memcmp (feature, "HWCAP_S390_VXRS_EXT2", 20) == 0)
-	    {
-	      hwcap_mask = HWCAP_S390_VXRS_EXT2;
-	      if (!disable)
-		hwcap_mask |= HWCAP_S390_VXRS | HWCAP_S390_VXRS_EXT;
-	    }
+	  reset_features = true;
+	  disable = true;
+	  hwcap_mask = HWCAP_S390_VXRS_EXT | HWCAP_S390_VXRS_EXT2;
+	  stfle_bits0_mask = S390_STFLE_MASK_ARCH13_MIE3;
 	}
-      else if (*feature == 'S')
+      else if (tunable_str_comma_strcmp_cte (&t, "z14")
+	       || tunable_str_comma_strcmp_cte (&t, "arch12"))
 	{
-	  if (feature_len == 10
-	      && memcmp (feature, "STFLE_MIE3", 10) == 0)
-	    {
-	      stfle_bits0_mask = S390_STFLE_MASK_ARCH13_MIE3;
-	    }
+	  reset_features = true;
+	  disable = true;
+	  hwcap_mask = HWCAP_S390_VXRS_EXT2;
+	  stfle_bits0_mask = S390_STFLE_MASK_ARCH13_MIE3;
 	}
+      else if (tunable_str_comma_strcmp_cte (&t, "z15")
+	       || tunable_str_comma_strcmp_cte (&t, "z16")
+	       || tunable_str_comma_strcmp_cte (&t, "arch13")
+	       || tunable_str_comma_strcmp_cte (&t, "arch14"))
+	{
+	  /* For z15 or newer we don't have to disable something, but we have
+	     to reset to the original values.  */
+	  reset_features = true;
+	}
+      else if (tunable_str_comma_strcmp_cte (&t, "HWCAP_S390_VXRS"))
+	{
+	  hwcap_mask = HWCAP_S390_VXRS;
+	  if (t.disable)
+	    hwcap_mask |= HWCAP_S390_VXRS_EXT | HWCAP_S390_VXRS_EXT2;
+	}
+      else if (tunable_str_comma_strcmp_cte (&t, "HWCAP_S390_VXRS_EXT"))
+	{
+	  hwcap_mask = HWCAP_S390_VXRS_EXT;
+	  if (t.disable)
+	    hwcap_mask |= HWCAP_S390_VXRS_EXT2;
+	  else
+	    hwcap_mask |= HWCAP_S390_VXRS;
+	}
+      else if (tunable_str_comma_strcmp_cte (&t, "HWCAP_S390_VXRS_EXT2"))
+	{
+	  hwcap_mask = HWCAP_S390_VXRS_EXT2;
+	  if (!t.disable)
+	    hwcap_mask |= HWCAP_S390_VXRS | HWCAP_S390_VXRS_EXT;
+	}
+      else if (tunable_str_comma_strcmp_cte (&t, "STFLE_MIE3"))
+	stfle_bits0_mask = S390_STFLE_MASK_ARCH13_MIE3;
 
       /* Perform the actions determined above.  */
       if (reset_features)
@@ -187,14 +147,7 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
 	  else
 	    cpu_features_curr.stfle_bits[0] |= stfle_bits0_mask;
 	}
-
-      /* Jump over current token ... */
-      token += token_len;
-
-      /* ... and skip token separator for next round.  */
-      if (*token == ',') token++;
     }
-  while (*token != '\0');
 
   /* Copy back the features after checking that no unsupported features were
      enabled by user.  */

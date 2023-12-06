@@ -31,7 +31,8 @@ static int restart;
 
 static const struct test_t
 {
-  const char *env;
+  const char *name;
+  const char *value;
   int32_t expected_malloc_check;
   size_t expected_mmap_threshold;
   int32_t expected_perturb;
@@ -39,12 +40,14 @@ static const struct test_t
 {
   /* Expected tunable format.  */
   {
+    "GLIBC_TUNABLES",
     "glibc.malloc.check=2",
     2,
     0,
     0,
   },
   {
+    "GLIBC_TUNABLES",
     "glibc.malloc.check=2:glibc.malloc.mmap_threshold=4096",
     2,
     4096,
@@ -52,6 +55,7 @@ static const struct test_t
   },
   /* Empty tunable are ignored.  */
   {
+    "GLIBC_TUNABLES",
     "glibc.malloc.check=2::glibc.malloc.mmap_threshold=4096",
     2,
     4096,
@@ -59,6 +63,7 @@ static const struct test_t
   },
   /* As well empty values.  */
   {
+    "GLIBC_TUNABLES",
     "glibc.malloc.check=:glibc.malloc.mmap_threshold=4096",
     0,
     4096,
@@ -66,18 +71,21 @@ static const struct test_t
   },
   /* Tunable are processed from left to right, so last one is the one set.  */
   {
+    "GLIBC_TUNABLES",
     "glibc.malloc.check=1:glibc.malloc.check=2",
     2,
     0,
     0,
   },
   {
+    "GLIBC_TUNABLES",
     "glibc.malloc.check=1:glibc.malloc.check=2:glibc.malloc.mmap_threshold=4096",
     2,
     4096,
     0,
   },
   {
+    "GLIBC_TUNABLES",
     "glibc.malloc.check=2:glibc.malloc.mmap_threshold=4096:glibc.malloc.check=1",
     1,
     4096,
@@ -85,12 +93,14 @@ static const struct test_t
   },
   /* 0x800 is larger than tunable maxval (0xff), so the tunable is unchanged.  */
   {
+    "GLIBC_TUNABLES",
     "glibc.malloc.perturb=0x800",
     0,
     0,
     0,
   },
   {
+    "GLIBC_TUNABLES",
     "glibc.malloc.perturb=0x55",
     0,
     0,
@@ -98,6 +108,7 @@ static const struct test_t
   },
   /* Out of range values are just ignored.  */
   {
+    "GLIBC_TUNABLES",
     "glibc.malloc.perturb=0x800:glibc.malloc.mmap_threshold=4096",
     0,
     4096,
@@ -105,24 +116,28 @@ static const struct test_t
   },
   /* Invalid keys are ignored.  */
   {
+    "GLIBC_TUNABLES",
     ":glibc.malloc.garbage=2:glibc.malloc.check=1",
     1,
     0,
     0,
   },
   {
+    "GLIBC_TUNABLES",
     "glibc.malloc.perturb=0x800:not_valid.malloc.check=2:glibc.malloc.mmap_threshold=4096",
     0,
     4096,
     0,
   },
   {
+    "GLIBC_TUNABLES",
     "glibc.not_valid.check=2:glibc.malloc.mmap_threshold=4096",
     0,
     4096,
     0,
   },
   {
+    "GLIBC_TUNABLES",
     "not_valid.malloc.check=2:glibc.malloc.mmap_threshold=4096",
     0,
     4096,
@@ -130,24 +145,28 @@ static const struct test_t
   },
   /* Invalid subkeys are ignored.  */
   {
+    "GLIBC_TUNABLES",
     "glibc.malloc.garbage=2:glibc.maoc.mmap_threshold=4096:glibc.malloc.check=2",
     2,
     0,
     0,
   },
   {
+    "GLIBC_TUNABLES",
     "glibc.malloc.check=4:glibc.malloc.garbage=2:glibc.maoc.mmap_threshold=4096",
     0,
     0,
     0,
   },
   {
+    "GLIBC_TUNABLES",
     "not_valid.malloc.check=2",
     0,
     0,
     0,
   },
   {
+    "GLIBC_TUNABLES",
     "glibc.not_valid.check=2",
     0,
     0,
@@ -156,6 +175,7 @@ static const struct test_t
   /* An ill-formatted tunable in the for key=key=value will considere the
      value as 'key=value' (which can not be parsed as an integer).  */
   {
+    "GLIBC_TUNABLES",
     "glibc.malloc.mmap_threshold=glibc.malloc.mmap_threshold=4096",
     0,
     0,
@@ -163,37 +183,73 @@ static const struct test_t
   },
   /* Ill-formatted tunables string is not parsed.  */
   {
+    "GLIBC_TUNABLES",
     "glibc.malloc.mmap_threshold=glibc.malloc.mmap_threshold=4096:glibc.malloc.check=2",
     0,
     0,
     0,
   },
   {
+    "GLIBC_TUNABLES",
     "glibc.malloc.check=2=2",
     0,
     0,
     0,
   },
   {
+    "GLIBC_TUNABLES",
     "glibc.malloc.check=2=2:glibc.malloc.mmap_threshold=4096",
     0,
     0,
     0,
   },
   {
+    "GLIBC_TUNABLES",
     "glibc.malloc.check=2=2:glibc.malloc.check=2",
     0,
     0,
     0,
   },
   {
+    "GLIBC_TUNABLES",
     "glibc.malloc.check=2:glibc.malloc.mmap_threshold=4096=4096",
     0,
     0,
     0,
   },
   {
+    "GLIBC_TUNABLES",
     "glibc.malloc.check=2:glibc.malloc.mmap_threshold=4096=4096",
+    0,
+    0,
+    0,
+  },
+  /* Also check some tunable aliases.  */
+  {
+    "MALLOC_CHECK_",
+    "2",
+    2,
+    0,
+    0,
+  },
+  {
+    "MALLOC_MMAP_THRESHOLD_",
+    "4096",
+    0,
+    4096,
+    0,
+  },
+  {
+    "MALLOC_PERTURB_",
+    "0x55",
+    0,
+    0,
+    0x55,
+  },
+  /* 0x800 is larger than tunable maxval (0xff), so the tunable is unchanged.  */
+  {
+    "MALLOC_PERTURB_",
+    "0x800",
     0,
     0,
     0,
@@ -245,13 +301,17 @@ do_test (int argc, char *argv[])
     {
       snprintf (nteststr, sizeof nteststr, "%d", i);
 
-      printf ("[%d] Spawned test for %s\n", i, tests[i].env);
-      setenv ("GLIBC_TUNABLES", tests[i].env, 1);
+      printf ("[%d] Spawned test for %s=%s\n",
+	      i,
+	      tests[i].name,
+	      tests[i].value);
+      setenv (tests[i].name, tests[i].value, 1);
       struct support_capture_subprocess result
 	= support_capture_subprogram (spargv[0], spargv);
       support_capture_subprocess_check (&result, "tst-tunables", 0,
 					sc_allow_stderr);
       support_capture_subprocess_free (&result);
+      unsetenv (tests[i].name);
     }
 
   return 0;

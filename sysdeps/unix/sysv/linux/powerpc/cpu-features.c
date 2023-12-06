@@ -20,6 +20,7 @@
 #include <stdint.h>
 #include <cpu-features.h>
 #include <elf/dl-tunables.h>
+#include <dl-tunables-parse.h>
 #include <unistd.h>
 #include <string.h>
 
@@ -43,41 +44,26 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
   struct cpu_features *cpu_features = &GLRO(dl_powerpc_cpu_features);
   unsigned long int tcbv_hwcap = cpu_features->hwcap;
   unsigned long int tcbv_hwcap2 = cpu_features->hwcap2;
-  const char *token = valp->strval;
-  do
-    {
-      const char *token_end, *feature;
-      bool disable;
-      size_t token_len, i, feature_len, offset = 0;
-      /* Find token separator or end of string.  */
-      for (token_end = token; *token_end != ','; token_end++)
-	if (*token_end == '\0')
-	  break;
 
-      /* Determine feature.  */
-      token_len = token_end - token;
-      if (*token == '-')
-	{
-	  disable = true;
-	  feature = token + 1;
-	  feature_len = token_len - 1;
-	}
-      else
-	{
-	  disable = false;
-	  feature = token;
-	  feature_len = token_len;
-	}
-      for (i = 0; i < array_length (hwcap_tunables); ++i)
+  struct tunable_str_comma_state_t ts;
+  tunable_str_comma_init (&ts, valp);
+
+  struct tunable_str_comma_t t;
+  while (tunable_str_comma_next (&ts, &t))
+    {
+      if (t.len == 0)
+	continue;
+
+      size_t offset = 0;
+      for (int i = 0; i < array_length (hwcap_tunables); ++i)
 	{
 	  const char *hwcap_name = hwcap_names + offset;
 	  size_t hwcap_name_len = strlen (hwcap_name);
 	  /* Check the tunable name on the supported list.  */
-	  if (hwcap_name_len == feature_len
-	      && memcmp (feature, hwcap_name, feature_len) == 0)
+	  if (tunable_str_comma_strcmp (&t, hwcap_name, hwcap_name_len))
 	    {
 	      /* Update the hwcap and hwcap2 bits.  */
-	      if (disable)
+	      if (t.disable)
 		{
 		  /* Id is 1 for hwcap2 tunable.  */
 		  if (hwcap_tunables[i].id)
@@ -98,12 +84,7 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
 	    }
 	  offset += hwcap_name_len + 1;
 	}
-	token += token_len;
-	/* ... and skip token separator for next round.  */
-	if (*token == ',')
-	  token++;
     }
-  while (*token != '\0');
 }
 
 static inline void

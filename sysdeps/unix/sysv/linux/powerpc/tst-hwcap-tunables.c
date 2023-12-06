@@ -110,7 +110,11 @@ do_test (int argc, char *argv[])
 	run_test ("-arch_2_06", "__memcpy_power7");
       if (hwcap & PPC_FEATURE_ARCH_2_05)
 	run_test ("-arch_2_06,-arch_2_05","__memcpy_power6");
-      run_test ("-arch_2_06,-arch_2_05,-power5+,-power5,-power4", "__memcpy_power4");
+      run_test ("-arch_2_06,-arch_2_05,-power5+,-power5,-power4",
+		"__memcpy_power4");
+      /* Also run with valid, but empty settings.  */
+      run_test (",-,-arch_2_06,-arch_2_05,-power5+,-power5,,-power4,-",
+		"__memcpy_power4");
     }
   else
     {

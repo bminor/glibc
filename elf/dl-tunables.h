@@ -30,7 +30,11 @@ typedef intmax_t tunable_num_t;
 typedef union
 {
   tunable_num_t numval;
-  const char *strval;
+  struct tunable_str_t
+  {
+    const char *str;
+    size_t len;
+  } strval;
 } tunable_val_t;
 
 typedef void (*tunable_callback_t) (tunable_val_t *);
