@@ -174,6 +174,9 @@ _dl_strtoul (const char *nptr, char **endptr)
       return 0UL;
     }
 
+  uint64_t cutoff = (UINT64_MAX * 2UL + 1UL) / 10;
+  uint64_t cutlim = (UINT64_MAX * 2UL + 1UL) % 10;
+
   int base = 10;
   max_digit = 9;
   if (*nptr == '0')
@@ -182,11 +185,15 @@ _dl_strtoul (const char *nptr, char **endptr)
 	{
 	  base = 16;
 	  nptr += 2;
+	  cutoff = (UINT64_MAX * 2UL + 1UL) / 16;
+	  cutlim = (UINT64_MAX * 2UL + 1UL) % 16;
 	}
       else
 	{
 	  base = 8;
 	  max_digit = 7;
+	  cutoff = (UINT64_MAX * 2UL + 1UL) / 8;
+	  cutlim = (UINT64_MAX * 2UL + 1UL) % 8;
 	}
     }
 
@@ -207,7 +214,7 @@ _dl_strtoul (const char *nptr, char **endptr)
       else
         break;
 
-      if (result >= (UINT64_MAX - digval) / base)
+      if (result > cutoff || (result == cutoff && digval > cutlim))
 	{
 	  if (endptr != NULL)
 	    *endptr = (char *) nptr;

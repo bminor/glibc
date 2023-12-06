@@ -53,6 +53,13 @@ static const struct test_t
     4096,
     0,
   },
+  {
+    "GLIBC_TUNABLES",
+    "glibc.malloc.mmap_threshold=-1",
+    0,
+    SIZE_MAX,
+    0,
+  },
   /* Empty tunable are ignored.  */
   {
     "GLIBC_TUNABLES",
@@ -220,6 +227,29 @@ static const struct test_t
   {
     "GLIBC_TUNABLES",
     "glibc.malloc.check=2:glibc.malloc.mmap_threshold=4096=4096",
+    0,
+    0,
+    0,
+  },
+  /* Invalid numbers are ignored.  */
+  {
+    "GLIBC_TUNABLES",
+    "glibc.malloc.check=abc:glibc.malloc.mmap_threshold=4096",
+    0,
+    4096,
+    0,
+  },
+  {
+    "GLIBC_TUNABLES",
+    "glibc.malloc.check=2:glibc.malloc.mmap_threshold=abc",
+    2,
+    0,
+    0,
+  },
+  {
+    "GLIBC_TUNABLES",
+    /* SIZE_MAX + 1 */
+    "glibc.malloc.mmap_threshold=18446744073709551616",
     0,
     0,
     0,

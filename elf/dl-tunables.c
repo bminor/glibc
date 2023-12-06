@@ -69,16 +69,27 @@ do_tunable_update_val (tunable_t *cur, const tunable_val_t *valp,
 {
   tunable_num_t val, min, max;
 
-  if (cur->type.type_code == TUNABLE_TYPE_STRING)
+  switch (cur->type.type_code)
     {
+    case TUNABLE_TYPE_STRING:
       cur->val.strval = valp->strval;
       cur->initialized = true;
       return;
+    case TUNABLE_TYPE_INT_32:
+      val = (int32_t) valp->numval;
+      break;
+    case TUNABLE_TYPE_UINT_64:
+      val = (int64_t) valp->numval;
+      break;
+    case TUNABLE_TYPE_SIZE_T:
+      val = (size_t) valp->numval;
+      break;
+    default:
+      __builtin_unreachable ();
     }
 
   bool unsigned_cmp = unsigned_tunable_type (cur->type.type_code);
 
-  val = valp->numval;
   min = minp != NULL ? *minp : cur->type.min;
   max = maxp != NULL ? *maxp : cur->type.max;
 
@@ -109,16 +120,24 @@ do_tunable_update_val (tunable_t *cur, const tunable_val_t *valp,
 
 /* Validate range of the input value and initialize the tunable CUR if it looks
    good.  */
-static void
+static bool
 tunable_initialize (tunable_t *cur, const char *strval, size_t len)
 {
   tunable_val_t val = { 0 };
 
   if (cur->type.type_code != TUNABLE_TYPE_STRING)
-    val.numval = (tunable_num_t) _dl_strtoul (strval, NULL);
+    {
+      char *endptr = NULL;
+      uint64_t numval = _dl_strtoul (strval, &endptr);
+      if (endptr != strval + len)
+	return false;
+      val.numval = (tunable_num_t) numval;
+    }
   else
     val.strval = (struct tunable_str_t) { strval, len };
   do_tunable_update_val (cur, &val, NULL, NULL);
+
+  return true;
 }
 
 bool
@@ -225,7 +244,13 @@ parse_tunables (const char *valstring)
     }
 
   for (int i = 0; i < ntunables; i++)
-    tunable_initialize (tunables[i].t, tunables[i].value, tunables[i].len);
+    if (!tunable_initialize (tunables[i].t, tunables[i].value,
+			     tunables[i].len))
+      _dl_error_printf ("WARNING: ld.so: invalid GLIBC_TUNABLES value `%.*s' "
+		       "for option `%s': ignored.\n",
+		       (int) tunables[i].len,
+		       tunables[i].value,
+		       tunables[i].t->name);
 }
 
 /* Initialize the tunables list from the environment.  For now we only use the
