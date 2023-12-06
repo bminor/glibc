@@ -616,7 +616,14 @@ get_nss_addresses (const char *name, const struct addrinfo *req,
      function variant.  */
   res_ctx = __resolv_context_get ();
   if (res_ctx == NULL)
-    no_more = 1;
+    {
+      if (errno == ENOMEM)
+	{
+	  result = -EAI_MEMORY;
+	  goto out;
+	}
+      no_more = 1;
+    }
 
   while (!no_more)
     {
