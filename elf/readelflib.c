@@ -112,6 +112,7 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 	case PT_INTERP:
 	  program_interpreter = (char *) (file_contents + segment->p_offset);
 	  check_ptr (program_interpreter);
+	  break;
 
 	  /* Check if this is enough to classify the binary.  */
 	  for (j = 0; j < sizeof (interpreters) / sizeof (interpreters [0]);
