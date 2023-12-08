@@ -2278,13 +2278,13 @@ dl_main (const ElfW(Phdr) *phdr,
 
   int consider_profiling = GLRO(dl_profile) != NULL;
 
+  /* If we are profiling we also must do lazy reloaction.  */
+  GLRO(dl_lazy) |= consider_profiling;
+
   if (GL(dl_ns)[LM_ID_BASE].libc_map != NULL)
     _dl_relocate_object (GL(dl_ns)[LM_ID_BASE].libc_map,
 			 GL(dl_ns)[LM_ID_BASE].libc_map->l_scope,
 			 GLRO(dl_lazy) ? RTLD_LAZY : 0, consider_profiling);
-
-  /* If we are profiling we also must do lazy reloaction.  */
-  GLRO(dl_lazy) |= consider_profiling;
 
   RTLD_TIMING_VAR (start);
   rtld_timer_start (&start);
