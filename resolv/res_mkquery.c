@@ -100,7 +100,7 @@ __res_context_mkquery (struct resolv_context *ctx, int op, const char *dname,
                        int class, int type, const unsigned char *data,
                        unsigned char *buf, int buflen)
 {
-  HEADER *hp;
+  UHEADER *hp;
   unsigned char *cp;
   int n;
   unsigned char *dnptrs[20], **dpp, **lastdnptr;
@@ -112,7 +112,7 @@ __res_context_mkquery (struct resolv_context *ctx, int op, const char *dname,
   if ((buf == NULL) || (buflen < HFIXEDSZ))
     return -1;
   memset (buf, 0, HFIXEDSZ);
-  hp = (HEADER *) buf;
+  hp = (UHEADER *) buf;
   /* We randomize the IDs every time.  The old code just incremented
      by one after the initial randomization which still predictable if
      the application does multiple requests.  */
@@ -250,7 +250,7 @@ __res_nopt (struct resolv_context *ctx,
             int n0, unsigned char *buf, int buflen, int anslen)
 {
   uint16_t flags = 0;
-  HEADER *hp = (HEADER *) buf;
+  UHEADER *hp = (UHEADER *) buf;
   unsigned char *cp = buf + n0;
   unsigned char *ep = buf + buflen;
 
