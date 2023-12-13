@@ -3015,6 +3015,7 @@ tst-env-setuid-ARGS = -- $(host-test-program-cmd)
 
 # Reuse a module with a SONAME, to specific as the LD_PROFILE.
 $(objpfx)tst-env-setuid: $(objpfx)tst-sonamemove-runmod2.so
+$(objpfx)tst-env-setuid-static.out: $(objpfx)tst-sonamemove-runmod1.so
 
 # The object tst-nodeps1-mod.so has no explicit dependencies on libc.so.
 $(objpfx)tst-nodeps1-mod.so: $(objpfx)tst-nodeps1-mod.os

@@ -36,7 +36,9 @@ static char SETGID_CHILD[] = "setgid-child";
 #define UNFILTERED_VALUE "some-unfiltered-value"
 /* It assumes no other programs is being profile with a library with same
    SONAME using the default folder.  */
-#define PROFILE_LIB      "tst-sonamemove-runmod2.so"
+#ifndef PROFILE_LIB
+# define PROFILE_LIB      "tst-sonamemove-runmod2.so"
+#endif
 
 struct envvar_t
 {
@@ -53,7 +55,7 @@ static const struct envvar_t filtered_envvars[] =
   { "LD_HWCAP_MASK",           FILTERED_VALUE },
   { "LD_LIBRARY_PATH",         FILTERED_VALUE },
   { "LD_PRELOAD",              FILTERED_VALUE },
-  { "LD_PROFILE",              "tst-sonamemove-runmod2.so" },
+  { "LD_PROFILE",              PROFILE_LIB },
   { "MALLOC_ARENA_MAX",        FILTERED_VALUE },
   { "MALLOC_PERTURB_",         FILTERED_VALUE },
   { "MALLOC_TRACE",            FILTERED_VALUE },
@@ -83,7 +85,12 @@ test_child (void)
        e++)
     {
       const char *env = getenv (e->env);
-      ret |= env != NULL;
+      if (env != NULL)
+	{
+	  printf ("FAIL: filtered environment variable is not NULL: %s=%s\n",
+		  e->env, env);
+	  ret = 1;
+	}
     }
 
   for (const struct envvar_t *e = unfiltered_envvars;
@@ -91,13 +98,30 @@ test_child (void)
        e++)
     {
       const char *env = getenv (e->env);
-      ret |= !(env != NULL && strcmp (env, e->value) == 0);
+      if (!(env != NULL && strcmp (env, e->value) == 0))
+	{
+	  if (env == NULL)
+	    printf ("FAIL: unfiltered environment variable %s is NULL\n",
+		    e->env);
+	  else
+	    printf ("FAIL: unfiltered environment variable %s=%s != %s\n",
+		    e->env, env, e->value);
+
+	  ret = 1;
+	}
     }
 
-  /* Also check if no profile file was created.  */
+  /* Also check if no profile file was created.
+     The parent sets LD_DEBUG_OUTPUT="/tmp/some-file"
+     which should be filtered.  Then it falls back to "/var/tmp".
+     Note: LD_PROFILE is not supported for static binaries.  */
   {
     char *profilepath = xasprintf ("/var/tmp/%s.profile", PROFILE_LIB);
-    ret |= !access (profilepath, R_OK);
+    if (!access (profilepath, R_OK))
+      {
+	printf ("FAIL: LD_PROFILE file at %s was created!\n", profilepath);
+	ret = 1;
+      }
     free (profilepath);
   }
 
@@ -140,6 +164,16 @@ do_test (int argc, char **argv)
 	   e != array_end (unfiltered_envvars);
 	   e++)
 	setenv (e->env, e->value, 1);
+
+      /* Ensure that the profile output does not exist from a previous run
+	 (e.g. if test_dir, which defaults to /tmp, is mounted nosuid.)
+	 Note: support_capture_subprogram_self_sgid creates the SGID binary
+	 in test_dir.  */
+      {
+	char *profilepath = xasprintf ("/var/tmp/%s.profile", PROFILE_LIB);
+	unlink (profilepath);
+	free (profilepath);
+      }
 
       int status = support_capture_subprogram_self_sgid (SETGID_CHILD);
 
