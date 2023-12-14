@@ -140,15 +140,15 @@ mon     "<U0399><U03B1><U03BD><U03BF><U03C5><U03B1><U03C1><U03AF><U03BF><U03C5>"
         "<U039F><U03BA><U03C4><U03C9><U03B2><U03C1><U03AF><U03BF><U03C5>";/
         "<U039D><U03BF><U03B5><U03BC><U03B2><U03C1><U03AF><U03BF><U03C5>";/
         "<U0394><U03B5><U03BA><U03B5><U03BC><U03B2><U03C1><U03AF><U03BF><U03C5>"
-% Greece uses 12h time: http://publications.eu.int/code/el/el-4100800el.htm
+% Greece now uses 24h time: http://publications.europa.eu/code/el/el-4100800el.htm#1082
 % Appropriate date and time representation (%c)
-d_t_fmt "%a %d %b %Y %r %Z"
+d_t_fmt "%a %d %b %Y %T %Z"
 %
 % Appropriate date representation (%x)
 d_fmt   "%d//%m//%Y"
 %
 % Appropriate time representation (%X)
-t_fmt   "%r"
+t_fmt   "%T"
 %
 % Strings for AM/PM
 %
@@ -158,7 +158,7 @@ am_pm   "<U03c0><U03bc>";"<U03bc><U03bc>"
 t_fmt_ampm "%I:%M:%S %p"
 %
 % Appropriate date representation (date(1))
-date_fmt "%a %d %b %Y %r %Z"
+date_fmt "%a %d %b %Y %T %Z"
 week 7;19971130;4
 first_weekday 2
 END LC_TIME
