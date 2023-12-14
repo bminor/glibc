@@ -199,6 +199,28 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 		    __vm_deallocate (__mach_task_self (), (vm_address_t) data, length);
 		}
 
+	      inline void clean_inlined_ports (mach_port_name_inlined_t *ports)
+		{
+		  mach_msg_type_number_t i;
+		  switch (name)
+		    {
+		    case MACH_MSG_TYPE_MOVE_SEND:
+		      for (i = 0; i < number; i++)
+			__mach_port_deallocate (__mach_task_self (), ports[i].name);
+		      if (ty->msgtl_header.msgt_longform)
+			ty->msgtl_name = MACH_MSG_TYPE_COPY_SEND;
+		      else
+			ty->msgtl_header.msgt_name = MACH_MSG_TYPE_COPY_SEND;
+		      break;
+		    case MACH_MSG_TYPE_COPY_SEND:
+		    case MACH_MSG_TYPE_MOVE_RECEIVE:
+		      break;
+		    default:
+		      if (MACH_MSG_TYPE_PORT_ANY (name))
+			assert (! "unexpected port type in interruptible RPC");
+		    }
+		}
+
 	      char *data;
 	      if (ty->msgtl_header.msgt_longform)
 		{
@@ -215,11 +237,11 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 		  data = (char *) ty + sizeof (mach_msg_type_t);
 		}
 
+	      /* Calculate length of data in bytes.  */
 	      const vm_size_t length = ((number * size) + 7) >> 3;
 	      if (ty->msgtl_header.msgt_inline)
 		{
-		  /* Calculate length of data in bytes.  */
-		  clean_ports_and_memory (data, length, 0);
+		  clean_inlined_ports ((mach_port_name_inlined_t *) data);
 		  /* Move to the next argument.  */
 		  ty = (void *) PTR_ALIGN_UP (data + length, __alignof__ (uintptr_t));
 		}
