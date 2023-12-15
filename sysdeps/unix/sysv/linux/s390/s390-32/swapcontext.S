@@ -66,6 +66,12 @@ ENTRY(__swapcontext)
 	/* Store general purpose registers.  */
 	stm     %r0,%r15,SC_GPRS(%r1)
 
+	/* Store psw mask to 0x0 and addr to return address.  Then the address
+	   can be retrieved from the ucontext structure in the same way as if it
+	   is created by kernel and passed to a signal-handler.  */
+	st	%r2,SC_PSW+0(%r1)
+	st	%r14,SC_PSW+4(%r1)
+
 	/* rt_sigprocmask (SIG_SETMASK, &ucp->uc_sigmask, &oucp->uc_sigmask,
 	   sigsetsize).  */
 	la      %r2,SIG_SETMASK

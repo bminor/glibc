@@ -60,6 +60,11 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
 
   /* Set the return address to trampoline.  */
   ucp->uc_mcontext.gregs[14] = (long int) __makecontext_ret;
+  /* Store psw mask to 0x0 and addr to trampoline.  Then the address
+     can be retrieved from the ucontext structure in the same way as if it
+     is created by kernel and passed to a signal-handler.  */
+  ucp->uc_mcontext.psw.addr = (long int) __makecontext_ret;
+  ucp->uc_mcontext.psw.mask = 0;
 
   /* Set register parameters.  */
   va_start (ap, argc);
