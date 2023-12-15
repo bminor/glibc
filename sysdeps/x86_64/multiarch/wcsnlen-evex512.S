@@ -1,5 +1,8 @@
-#define STRLEN __wcsnlen_evex512
-#define USE_AS_WCSLEN 1
-#define USE_AS_STRNLEN 1
+#ifndef WCSNLEN
+# define WCSNLEN	__wcsnlen_evex512
+#endif
 
-#include "strlen-evex512.S"
+#define STRNLEN	WCSNLEN
+#define USE_AS_WCSLEN 1
+
+#include "strnlen-evex512.S"
