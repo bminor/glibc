@@ -209,7 +209,6 @@ CFLAGS-tst-cet-legacy-mod-6a.c += -fcf-protection=branch
 CFLAGS-tst-cet-legacy-mod-6b.c += -fcf-protection
 CFLAGS-tst-cet-legacy-mod-6c.c += -fcf-protection
 CFLAGS-tst-cet-legacy-7.c += -fcf-protection=none
-CFLAGS-tst-cet-legacy-8.c += -mshstk
 CFLAGS-tst-cet-legacy-10.c += -mshstk
 CFLAGS-tst-cet-legacy-10-static.c += -mshstk
 
