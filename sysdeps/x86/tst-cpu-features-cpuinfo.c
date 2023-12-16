@@ -246,7 +246,7 @@ do_test (int argc, char **argv)
   fails += CHECK_PROC (sgx, SGX);
   fails += CHECK_PROC (sgx_lc, SGX_LC);
   fails += CHECK_PROC (sha_ni, SHA);
-  fails += CHECK_PROC (shstk, SHSTK);
+  fails += CHECK_PROC (user_shstk, SHSTK);
   fails += CHECK_PROC (smap, SMAP);
   fails += CHECK_PROC (smep, SMEP);
   fails += CHECK_PROC (smx, SMX);
