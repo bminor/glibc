@@ -18,7 +18,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <x86intrin.h>
+#include <sys/platform/x86.h>
 #include <sys/mman.h>
 #include <support/test-driver.h>
 #include <support/xsignal.h>
@@ -29,11 +29,6 @@
 static int
 do_test (void)
 {
-  /* NB: This test should trigger SIGSEGV on CET platforms.  If SHSTK
-     is disabled, assuming IBT is also disabled.  */
-  if (_get_ssp () == 0)
-    return EXIT_UNSUPPORTED;
-
   void (*funcp) (void);
   funcp = xmmap (NULL, 0x1000, PROT_EXEC | PROT_READ | PROT_WRITE,
 		 MAP_ANONYMOUS | MAP_PRIVATE, -1);
@@ -41,8 +36,14 @@ do_test (void)
   /* Write RET instruction.  */
   *(char *) funcp = 0xc3;
   funcp ();
+
+  /* NB: This test should trigger SIGSEGV when IBT is active.  We should
+     reach here if IBT isn't active.  */
+  if (!CPU_FEATURE_ACTIVE (IBT))
+    return EXIT_UNSUPPORTED;
+
   return EXIT_FAILURE;
 }
 
-#define EXPECTED_SIGNAL (_get_ssp () == 0 ? 0 : SIGSEGV)
+#define EXPECTED_SIGNAL (CPU_FEATURE_ACTIVE (IBT) ? SIGSEGV : 0)
 #include <support/test-driver.c>
