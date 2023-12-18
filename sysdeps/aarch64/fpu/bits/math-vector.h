@@ -25,6 +25,72 @@
 /* Get default empty definitions for simd declarations.  */
 #include <bits/libm-simd-decl-stubs.h>
 
+#if defined __aarch64__ && defined __FAST_MATH__ && __GNUC_PREREQ (6, 0)
+/* Requires GCC >= 6 for __attribute__ ((__simd__)).  */
+# define __DECL_SIMD_aarch64 __attribute__ ((__simd__ ("notinbranch"), const))
+
+# undef __DECL_SIMD_acos
+# define __DECL_SIMD_acos __DECL_SIMD_aarch64
+# undef __DECL_SIMD_acosf
+# define __DECL_SIMD_acosf __DECL_SIMD_aarch64
+# undef __DECL_SIMD_asin
+# define __DECL_SIMD_asin __DECL_SIMD_aarch64
+# undef __DECL_SIMD_asinf
+# define __DECL_SIMD_asinf __DECL_SIMD_aarch64
+# undef __DECL_SIMD_atan
+# define __DECL_SIMD_atan __DECL_SIMD_aarch64
+# undef __DECL_SIMD_atanf
+# define __DECL_SIMD_atanf __DECL_SIMD_aarch64
+# undef __DECL_SIMD_atan2
+# define __DECL_SIMD_atan2 __DECL_SIMD_aarch64
+# undef __DECL_SIMD_atan2f
+# define __DECL_SIMD_atan2f __DECL_SIMD_aarch64
+# undef __DECL_SIMD_cos
+# define __DECL_SIMD_cos __DECL_SIMD_aarch64
+# undef __DECL_SIMD_cosf
+# define __DECL_SIMD_cosf __DECL_SIMD_aarch64
+# undef __DECL_SIMD_exp
+# define __DECL_SIMD_exp __DECL_SIMD_aarch64
+# undef __DECL_SIMD_expf
+# define __DECL_SIMD_expf __DECL_SIMD_aarch64
+# undef __DECL_SIMD_exp10
+# define __DECL_SIMD_exp10 __DECL_SIMD_aarch64
+# undef __DECL_SIMD_exp10f
+# define __DECL_SIMD_exp10f __DECL_SIMD_aarch64
+# undef __DECL_SIMD_exp2
+# define __DECL_SIMD_exp2 __DECL_SIMD_aarch64
+# undef __DECL_SIMD_exp2f
+# define __DECL_SIMD_exp2f __DECL_SIMD_aarch64
+# undef __DECL_SIMD_expm1
+# define __DECL_SIMD_expm1 __DECL_SIMD_aarch64
+# undef __DECL_SIMD_expm1f
+# define __DECL_SIMD_expm1f __DECL_SIMD_aarch64
+# undef __DECL_SIMD_log
+# define __DECL_SIMD_log __DECL_SIMD_aarch64
+# undef __DECL_SIMD_logf
+# define __DECL_SIMD_logf __DECL_SIMD_aarch64
+# undef __DECL_SIMD_log10
+# define __DECL_SIMD_log10 __DECL_SIMD_aarch64
+# undef __DECL_SIMD_log10f
+# define __DECL_SIMD_log10f __DECL_SIMD_aarch64
+# undef __DECL_SIMD_log1p
+# define __DECL_SIMD_log1p __DECL_SIMD_aarch64
+# undef __DECL_SIMD_log1pf
+# define __DECL_SIMD_log1pf __DECL_SIMD_aarch64
+# undef __DECL_SIMD_log2
+# define __DECL_SIMD_log2 __DECL_SIMD_aarch64
+# undef __DECL_SIMD_log2f
+# define __DECL_SIMD_log2f __DECL_SIMD_aarch64
+# undef __DECL_SIMD_sin
+# define __DECL_SIMD_sin __DECL_SIMD_aarch64
+# undef __DECL_SIMD_sinf
+# define __DECL_SIMD_sinf __DECL_SIMD_aarch64
+# undef __DECL_SIMD_tan
+# define __DECL_SIMD_tan __DECL_SIMD_aarch64
+# undef __DECL_SIMD_tanf
+# define __DECL_SIMD_tanf __DECL_SIMD_aarch64
+#endif
+
 #if __GNUC_PREREQ(9, 0)
 #  define __ADVSIMD_VEC_MATH_SUPPORTED
 typedef __Float32x4_t __f32x4_t;
