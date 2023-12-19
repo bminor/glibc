@@ -16,6 +16,15 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+/* When _FORTIFY_SOURCE is defined to 2, ____longjmp_chk is called,
+   instead of longjmp.  ____longjmp_chk compares the relative stack
+   values to decide if it is called from a stack frame which called
+   setjmp.  If not, ____longjmp_chk assumes that an alternate signal
+   stack is used.  Since comparing the relative stack values isn't
+   reliable with user context, when there is no signal, ____longjmp_chk
+   will fail.  Undefine _FORTIFY_SOURCE to avoid ____longjmp_chk.  */
+#undef _FORTIFY_SOURCE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <setjmp.h>
