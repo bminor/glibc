@@ -170,53 +170,53 @@ END LC_TELEPHONE
 
 LC_TIME
 % Àìkú, Ajé, Ìsẹ́gun, Ọjọ́rú, Ọjọ́bọ, Ẹtì, Àbámẹ́ta
-abday       "<U00C0><U00EC>k<U00FA>";/
-            "Aj<U00E9>";/
-            "<U00CC>s<U1EB9><U0301>gun";/
-            "<U1ECC>j<U1ECD><U0301>r<U00FA>";/
-            "<U1ECC>j<U1ECD><U0301>b<U1ECD>";/
-            "<U1EB8>t<U00EC>";/
-            "<U00C0>b<U00E1>m<U1EB9><U0301>ta"
+abday       "Àìkú";/
+            "Ajé";/
+            "Ìsẹ́gun";/
+            "Ọjọ́rú";/
+            "Ọjọ́bọ";/
+            "Ẹtì";/
+            "Àbámẹ́ta"
 % Ọjọ́ Àìkú, Ọjọ́ Ajé, Ọjọ́ Ìsẹ́gun, Ọjọ́rú, Ọjọ́bọ, Ọjọ́ Ẹtì, Ọjọ́ Àbámẹ́ta
-day         "<U1ECC>j<U1ECD><U0301> <U00C0><U00EC>k<U00FA>";/
-            "<U1ECC>j<U1ECD><U0301> Aj<U00E9>";/
-            "<U1ECC>j<U1ECD><U0301> <U00CC>s<U1EB9><U0301>gun";/
-            "<U1ECC>j<U1ECD><U0301>r<U00FA>";/
-            "<U1ECC>j<U1ECD><U0301>b<U1ECD>";/
-            "<U1ECC>j<U1ECD><U0301> <U1EB8>t<U00EC>";/
-            "<U1ECC>j<U1ECD><U0301> <U00C0>b<U00E1>m<U1EB9><U0301>ta"
+day         "Ọjọ́ Àìkú";/
+            "Ọjọ́ Ajé";/
+            "Ọjọ́ Ìsẹ́gun";/
+            "Ọjọ́rú";/
+            "Ọjọ́bọ";/
+            "Ọjọ́ Ẹtì";/
+            "Ọjọ́ Àbámẹ́ta"
 % Ṣẹ́rẹ́, Èrèlè, Ẹrẹ̀nà, Ìgbé, Ẹ̀bibi, Òkúdu,
 % Agẹmọ, Ògún, Owewe, Ọ̀wàrà, Bélú, Ọ̀pẹ̀
-abmon       "<U1E62><U1EB9><U0301>r<U1EB9><U0301>";/
-            "<U00C8>r<U00E8>l<U00E8>";/
-            "<U1EB8>r<U1EB9><U0300>n<U00E0>";/
-            "<U00CC>gb<U00E9>";/
-            "<U1EB8><U0300>bibi";/
-            "<U00D2>k<U00FA>du";/
-            "Ag<U1EB9>m<U1ECD>";/
-            "<U00D2>g<U00FA>n";/
+abmon       "Ṣẹ́rẹ́";/
+            "Èrèlè";/
+            "Ẹrẹ̀nà";/
+            "Ìgbé";/
+            "Ẹ̀bibi";/
+            "Òkúdu";/
+            "Agẹmọ";/
+            "Ògún";/
             "Owewe";/
-            "<U1ECC><U0300>w<U00E0>r<U00E0>";/
-            "B<U00E9>l<U00FA>";/
-            "<U1ECC><U0300>p<U1EB9><U0300>"
+            "Ọ̀wàrà";/
+            "Bélú";/
+            "Ọ̀pẹ̀"
 % Oṣù Ṣẹ́rẹ́, Oṣù Èrèlè, Oṣù Ẹrẹ̀nà, Oṣù Ìgbé, Oṣù Ẹ̀bibi, Oṣù Òkúdu,
 % Oṣù Agẹmọ, Oṣù Ògún, Oṣù Owewe, Oṣù Ọ̀wàrà, Oṣù Bélú, Oṣù Ọ̀pẹ̀
-mon         "O<U1E63><U00F9> <U1E62><U1EB9><U0301>r<U1EB9><U0301>";/
-            "O<U1E63><U00F9> <U00C8>r<U00E8>l<U00E8>";/
-            "O<U1E63><U00F9> <U1EB8>r<U1EB9><U0300>n<U00E0>";/
-            "O<U1E63><U00F9> <U00CC>gb<U00E9>";/
-            "O<U1E63><U00F9> <U1EB8><U0300>bibi";/
-            "O<U1E63><U00F9> <U00D2>k<U00FA>du";/
-            "O<U1E63><U00F9> Ag<U1EB9>m<U1ECD>";/
-            "O<U1E63><U00F9> <U00D2>g<U00FA>n";/
-            "O<U1E63><U00F9> Owewe";/
-            "O<U1E63><U00F9> <U1ECC><U0300>w<U00E0>r<U00E0>";/
-            "O<U1E63><U00F9> B<U00E9>l<U00FA>";/
-            "O<U1E63><U00F9> <U1ECC><U0300>p<U1EB9><U0300>"
+mon         "Oṣù Ṣẹ́rẹ́";/
+            "Oṣù Èrèlè";/
+            "Oṣù Ẹrẹ̀nà";/
+            "Oṣù Ìgbé";/
+            "Oṣù Ẹ̀bibi";/
+            "Oṣù Òkúdu";/
+            "Oṣù Agẹmọ";/
+            "Oṣù Ògún";/
+            "Oṣù Owewe";/
+            "Oṣù Ọ̀wàrà";/
+            "Oṣù Bélú";/
+            "Oṣù Ọ̀pẹ̀"
 % ọjọ́ %a, %d oṣù %b ọdún %Y %T
-d_t_fmt     "<U1ECD>j<U1ECD><U0301> %a, %d o<U1E63><U00F9> %b <U1ECD>d<U00FA>n %Y %T"
+d_t_fmt     "ọjọ́ %a, %d oṣù %b ọdún %Y %T"
 % ọjọ́ %a, %d oṣù %b ọdún %Y %T %Z
-date_fmt    "<U1ECD>j<U1ECD><U0301> %a, %d o<U1E63><U00F9> %b <U1ECD>d<U00FA>n %Y %T %Z"
+date_fmt    "ọjọ́ %a, %d oṣù %b ọdún %Y %T %Z"
 d_fmt       "%d//%m//%y"
 t_fmt       "%r"
 am_pm       "AM";"PM"
@@ -228,8 +228,8 @@ END LC_TIME
 LC_MESSAGES
 yesexpr "^[+1EeyYNn]"
 noexpr  "^[-0rROoKk]"
-yesstr  "B<U1EB9><U0301><U1EB9><U0300>ni"
-nostr   "B<U1EB9><U0301><U1EB9><U0300>k<U1ECD><U0301>"
+yesstr  "Bẹ́ẹ̀ni"
+nostr   "Bẹ́ẹ̀kọ́"
 END LC_MESSAGES
 
 LC_PAPER
@@ -274,10 +274,10 @@ LC_ADDRESS
 % "end of line
 postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
 % https://yo.wikipedia.org/wiki/N%C3%A0%C3%ACj%C3%ADr%C3%AD%C3%A0 and CLDR: Orilẹ̀-èdè Nàìjíríà
-country_name "Oril<U1EB9><U0300><U002D><U00E8>d<U00E8> N<U00E0><U00EC>j<U00ED>r<U00ED><U00E0>"
+country_name "Orilẹ̀-èdè Nàìjíríà"
 
-% Language name in Yoruba - "Yorùbá"
-lang_name     "<U00C8>d<U00E8> Yor<U00F9>b<U00E1>"
+% Language name in Yoruba:
+lang_name     "Èdè Yorùbá"
 
 % CEPT MAILCODES are suggested
 % Alternatively use the code found on your countries postal item tracking number
