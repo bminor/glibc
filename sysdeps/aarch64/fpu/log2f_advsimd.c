@@ -53,7 +53,7 @@ special_case (float32x4_t x, float32x4_t n, float32x4_t p, float32x4_t r,
    Maximum error: 2.48 ULPs
    _ZGVnN4v_log2f(0x1.558174p+0) got 0x1.a9be84p-2
 				want 0x1.a9be8p-2.  */
-float32x4_t VPCS_ATTR V_NAME_F1 (log2) (float32x4_t x)
+float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (log2) (float32x4_t x)
 {
   const struct data *d = ptr_barrier (&data);
   uint32x4_t u = vreinterpretq_u32_f32 (x);
@@ -75,3 +75,5 @@ float32x4_t VPCS_ATTR V_NAME_F1 (log2) (float32x4_t x)
     return special_case (x, n, p, r, special);
   return vfmaq_f32 (n, p, r);
 }
+libmvec_hidden_def (V_NAME_F1 (log2))
+HALF_WIDTH_ALIAS_F1 (log2)

@@ -53,7 +53,7 @@ special_case (float32x4_t x, float32x4_t y, uint32x4_t special)
    atan(x) ~ shift + z + z^3 * P(z^2) with reduction to [0,1]
    using z=-1/x and shift = pi/2. Maximum observed error is 2.9ulps:
    _ZGVnN4v_atanf (0x1.0468f6p+0) got 0x1.967f06p-1 want 0x1.967fp-1.  */
-float32x4_t VPCS_ATTR V_NAME_F1 (atan) (float32x4_t x)
+float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (atan) (float32x4_t x)
 {
   const struct data *d = ptr_barrier (&data);
 
@@ -107,3 +107,5 @@ float32x4_t VPCS_ATTR V_NAME_F1 (atan) (float32x4_t x)
 
   return y;
 }
+libmvec_hidden_def (V_NAME_F1 (atan))
+HALF_WIDTH_ALIAS_F1 (atan)

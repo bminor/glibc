@@ -126,3 +126,5 @@ VPCS_ATTR float32x4_t V_NAME_F1 (log1p) (float32x4_t x)
     return special_case (special_arg, y, special_cases);
   return y;
 }
+libmvec_hidden_def (V_NAME_F1 (log1p))
+HALF_WIDTH_ALIAS_F1 (log1p)

@@ -55,7 +55,7 @@ special_case (float32x4_t x, float32x4_t y, float32x4_t p, float32x4_t r2,
    Maximum error: 3.305ulps (nearest rounding.)
    _ZGVnN4v_log10f(0x1.555c16p+0) got 0x1.ffe2fap-4
 				 want 0x1.ffe2f4p-4.  */
-float32x4_t VPCS_ATTR V_NAME_F1 (log10) (float32x4_t x)
+float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (log10) (float32x4_t x)
 {
   const struct data *d = ptr_barrier (&data);
   uint32x4_t u = vreinterpretq_u32_f32 (x);
@@ -80,3 +80,5 @@ float32x4_t VPCS_ATTR V_NAME_F1 (log10) (float32x4_t x)
     return special_case (x, y, poly, r2, special);
   return vfmaq_f32 (y, poly, r2);
 }
+libmvec_hidden_def (V_NAME_F1 (log10))
+HALF_WIDTH_ALIAS_F1 (log10)

@@ -82,7 +82,7 @@ special_case (float32x4_t poly, float32x4_t n, uint32x4_t e, uint32x4_t cmp1,
 
 #endif
 
-float32x4_t VPCS_ATTR V_NAME_F1 (exp) (float32x4_t x)
+float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (exp) (float32x4_t x)
 {
   const struct data *d = ptr_barrier (&data);
   float32x4_t n, r, r2, scale, p, q, poly, z;
@@ -131,3 +131,5 @@ float32x4_t VPCS_ATTR V_NAME_F1 (exp) (float32x4_t x)
 
   return vfmaq_f32 (scale, poly, scale);
 }
+libmvec_hidden_def (V_NAME_F1 (exp))
+HALF_WIDTH_ALIAS_F1 (exp)

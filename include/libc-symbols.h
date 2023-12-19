@@ -600,8 +600,10 @@ for linking")
 #endif
 
 #if IS_IN (libmvec)
+# define libmvec_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define libmvec_hidden_def(name) hidden_def (name)
 #else
+# define libmvec_hidden_proto(name, attrs...)
 # define libmvec_hidden_def(name)
 #endif
 

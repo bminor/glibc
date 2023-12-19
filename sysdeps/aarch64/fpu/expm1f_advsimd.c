@@ -64,7 +64,7 @@ special_case (float32x4_t x, float32x4_t y, uint32x4_t special)
    The maximum error is 1.51 ULP:
    _ZGVnN4v_expm1f (0x1.8baa96p-2) got 0x1.e2fb9p-2
 				  want 0x1.e2fb94p-2.  */
-float32x4_t VPCS_ATTR V_NAME_F1 (expm1) (float32x4_t x)
+float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (expm1) (float32x4_t x)
 {
   const struct data *d = ptr_barrier (&data);
   uint32x4_t ix = vreinterpretq_u32_f32 (x);
@@ -115,3 +115,5 @@ float32x4_t VPCS_ATTR V_NAME_F1 (expm1) (float32x4_t x)
   /* expm1(x) ~= p * t + (t - 1).  */
   return vfmaq_f32 (vsubq_f32 (t, v_f32 (1.0f)), p, t);
 }
+libmvec_hidden_def (V_NAME_F1 (expm1))
+HALF_WIDTH_ALIAS_F1 (expm1)
