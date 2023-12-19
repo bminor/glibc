@@ -17,6 +17,7 @@
 
 ifeq ($(subdir),gnulib)
 sysdep_routines = dotmul umul $(divrem) alloca
+shared-only-routines += umul $(divrem)
 endif	# gnulib
 
 divrem := sdiv udiv rem urem
