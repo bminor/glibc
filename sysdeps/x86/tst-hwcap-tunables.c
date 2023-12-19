@@ -58,17 +58,17 @@ static const struct test_t
 {
   {
     /* Disable everything.  */
-    "-Prefer_ERMS,-Prefer_FSRM,-AVX,-AVX2,-AVX_Usable,-AVX2_Usable,"
-    "-AVX512F_Usable,-SSE4_1,-SSE4_2,-SSSE3,-Fast_Unaligned_Load,-ERMS,"
+    "-Prefer_ERMS,-Prefer_FSRM,-AVX,-AVX2,-AVX512F,-AVX512VL,"
+    "-SSE4_1,-SSE4_2,-SSSE3,-Fast_Unaligned_Load,-ERMS,"
     "-AVX_Fast_Unaligned_Load",
     test_1,
     array_length (test_1)
   },
   {
     /* Same as before, but with some empty suboptions.  */
-    ",-,-Prefer_ERMS,-Prefer_FSRM,-AVX,-AVX2,-AVX_Usable,-AVX2_Usable,"
-    "-AVX512F_Usable,-SSE4_1,-SSE4_2,,-SSSE3,-Fast_Unaligned_Load,,-,-ERMS,"
-    "-AVX_Fast_Unaligned_Load,-,",
+    ",-,-Prefer_ERMS,-Prefer_FSRM,-AVX,-AVX2,-AVX512F,-AVX512VL,"
+    "-SSE4_1,-SSE4_2,-SSSE3,-Fast_Unaligned_Load,,-,"
+    "-ERMS,-AVX_Fast_Unaligned_Load,-,",
     test_1,
     array_length (test_1)
   }
