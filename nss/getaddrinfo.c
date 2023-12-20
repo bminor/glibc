@@ -514,7 +514,6 @@ get_nscd_addresses (const char *name, const struct addrinfo *req,
   int result = 0;
   char *addrs = air->addrs;
 
-  struct gaih_addrtuple *addrfree = calloc (air->naddrs, sizeof (*addrfree));
   struct gaih_addrtuple *at = calloc (air->naddrs, sizeof (*at));
   if (at == NULL)
     {
