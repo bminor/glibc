@@ -39,7 +39,7 @@
    which isn't available.  */
 #define CHECK_GLIBC_IFUNC_PREFERRED_OFF(f, cpu_features, name, len)	\
   _Static_assert (sizeof (#name) - 1 == len, #name " != " #len);	\
-  if (tunable_str_comma_strcmp_cte (&f, #name) == 0)			\
+  if (tunable_str_comma_strcmp_cte (&f, #name))				\
     {									\
       cpu_features->preferred[index_arch_##name]			\
 	&= ~bit_arch_##name;						\
