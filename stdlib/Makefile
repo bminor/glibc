@@ -256,6 +256,7 @@ tests := \
   tst-strtol-locale \
   tst-strtoll \
   tst-swapcontext1 \
+  tst-swapcontext2 \
   tst-thread-quick_exit \
   tst-tininess \
   tst-unsetenv1 \
