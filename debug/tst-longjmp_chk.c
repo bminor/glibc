@@ -10,11 +10,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-
-static int do_test(void);
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
-
+#include <support/support.h>
 
 static jmp_buf b;
 
@@ -76,3 +72,5 @@ do_test (void)
   puts ("second longjmp returned");
   return 1;
 }
+
+#include <support/test-driver.c>

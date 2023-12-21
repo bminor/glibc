@@ -23,6 +23,7 @@
 
 #include <assert.h>
 #include <fcntl.h>
+#include <limits.h>
 #include <locale.h>
 #include <obstack.h>
 #include <setjmp.h>
@@ -36,6 +37,10 @@
 #include <sys/select.h>
 #include <sys/socket.h>
 #include <sys/un.h>
+#include <paths.h>
+
+#include <support/temp_file.h>
+#include <support/support.h>
 
 #ifndef _GNU_SOURCE
 # define MEMPCPY memcpy
@@ -52,15 +57,10 @@
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
 
-char *temp_filename;
-static void do_prepare (void);
-static int do_test (void);
-#define PREPARE(argc, argv) do_prepare ()
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+static char *temp_filename;
 
 static void
-do_prepare (void)
+do_prepare (int argc, char *argv[])
 {
   int temp_fd = create_temp_file ("tst-chk1.", &temp_filename);
   if (temp_fd == -1)
@@ -77,10 +77,11 @@ do_prepare (void)
       exit (1);
     }
 }
+#define PREPARE do_prepare
 
-volatile int chk_fail_ok;
-volatile int ret;
-jmp_buf chk_fail_buf;
+static volatile int chk_fail_ok;
+static volatile int ret;
+static jmp_buf chk_fail_buf;
 
 static void
 handler (int sig)
@@ -102,22 +103,22 @@ wchar_t wbuf[10];
 #define buf_size sizeof (buf)
 #endif
 
-volatile size_t l0;
-volatile char *p;
-volatile wchar_t *wp;
-const char *str1 = "JIHGFEDCBA";
-const char *str2 = "F";
-const char *str3 = "%s%n%s%n";
-const char *str4 = "Hello, ";
-const char *str5 = "World!\n";
-const wchar_t *wstr1 = L"JIHGFEDCBA";
-const wchar_t *wstr2 = L"F";
-const wchar_t *wstr3 = L"%s%n%s%n";
-const wchar_t *wstr4 = L"Hello, ";
-const wchar_t *wstr5 = L"World!\n";
-char buf2[10] = "%s";
-int num1 = 67;
-int num2 = 987654;
+static volatile size_t l0;
+static volatile char *p;
+static volatile wchar_t *wp;
+static const char *str1 = "JIHGFEDCBA";
+static const char *str2 = "F";
+static const char *str3 = "%s%n%s%n";
+static const char *str4 = "Hello, ";
+static const char *str5 = "World!\n";
+static const wchar_t *wstr1 = L"JIHGFEDCBA";
+static const wchar_t *wstr2 = L"F";
+static const wchar_t *wstr3 = L"%s%n%s%n";
+static const wchar_t *wstr4 = L"Hello, ";
+static const wchar_t *wstr5 = L"World!\n";
+static char buf2[10] = "%s";
+static int num1 = 67;
+static int num2 = 987654;
 
 #define FAIL() \
   do { printf ("Failure on line %d\n", __LINE__); ret = 1; } while (0)
@@ -1815,3 +1816,5 @@ do_test (void)
 
   return ret;
 }
+
+#include <support/test-driver.c>
