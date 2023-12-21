@@ -130,7 +130,7 @@ static int num2 = 987654;
       chk_fail_ok = 0;				\
       FAIL ();					\
     }
-#if __USE_FORTIFY_LEVEL >= 2 && (!defined __cplusplus || defined __va_arg_pack)
+#if __USE_FORTIFY_LEVEL >= 2
 # define CHK_FAIL2_START CHK_FAIL_START
 # define CHK_FAIL2_END CHK_FAIL_END
 #else
@@ -419,7 +419,6 @@ do_test (void)
   stpncpy (buf + 6, "cd", l0 + 5);
   CHK_FAIL_END
 
-# if !defined __cplusplus || defined __va_arg_pack
   CHK_FAIL_START
   sprintf (buf + 8, "%d", num1);
   CHK_FAIL_END
@@ -439,7 +438,6 @@ do_test (void)
   CHK_FAIL_START
   swprintf (wbuf + 8, l0 + 3, L"%d", num1);
   CHK_FAIL_END
-# endif
 
   memcpy (buf, str1 + 2, 9);
   CHK_FAIL_START
@@ -550,7 +548,6 @@ do_test (void)
       FAIL ();
   }
 
-# if !defined __cplusplus || defined __va_arg_pack
   CHK_FAIL_START
   sprintf (a.buf1 + (O + 7), "%d", num1);
   CHK_FAIL_END
@@ -562,7 +559,6 @@ do_test (void)
   CHK_FAIL_START
   snprintf (a.buf1 + (O + 7), l0 + 3, "%d", num2);
   CHK_FAIL_END
-# endif
 
   memcpy (a.buf1, str1 + (3 - O), 8 + O);
   CHK_FAIL_START
