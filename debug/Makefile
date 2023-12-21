@@ -180,6 +180,7 @@ CPPFLAGS-tst-realpath-chk.c += $(no-fortify-source),-D_FORTIFY_SOURCE=2
 CPPFLAGS-tst-chk-cancel.c += $(no-fortify-source),-D_FORTIFY_SOURCE=2
 CFLAGS-tst-sprintf-fortify-rdonly.c += $(no-fortify-source),-D_FORTIFY_SOURCE=2
 CFLAGS-tst-fortify-syslog.c += $(no-fortify-source),-D_FORTIFY_SOURCE=2
+CFLAGS-tst-fortify-wide.c += $(no-fortify-source),-D_FORTIFY_SOURCE=2
 
 # _FORTIFY_SOURCE tests.
 # Auto-generate tests for _FORTIFY_SOURCE for different levels, compilers and
@@ -283,6 +284,7 @@ tests = \
   tst-backtrace4 \
   tst-backtrace5 \
   tst-backtrace6 \
+  tst-fortify-wide \
   tst-longjmp_chk \
   tst-longjmp_chk2 \
   tst-realpath-chk \
