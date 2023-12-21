@@ -54,6 +54,19 @@ PROCINFO_CLASS struct cpu_features _dl_aarch64_cpu_features
 # else
 ,
 # endif
+# if !defined PROCINFO_DECL && defined SHARED
+  ._dl_aarch64_gcs_policy
+# else
+PROCINFO_CLASS uint64_t _dl_aarch64_gcs_policy
+# endif
+# ifndef PROCINFO_DECL
+= 0
+# endif
+# if !defined SHARED || defined PROCINFO_DECL
+;
+# else
+,
+# endif
 #endif
 
 /* Number of HWCAP bits set.  */

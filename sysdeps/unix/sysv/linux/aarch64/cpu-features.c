@@ -178,6 +178,11 @@ init_cpu_features (struct cpu_features *cpu_features)
   cpu_features->mops = GLRO (dl_hwcap2) & HWCAP2_MOPS;
 
   if (GLRO (dl_hwcap) & HWCAP_GCS)
-    /* GCS status may be updated later by binary compatibility checks.  */
-    GL (dl_aarch64_gcs) = TUNABLE_GET (glibc, cpu, aarch64_gcs, uint64_t, 0);
+    {
+      /* GCS status may be updated later by binary compatibility checks.  */
+      GL (dl_aarch64_gcs) = TUNABLE_GET (glibc, cpu, aarch64_gcs, uint64_t, 0);
+      /* Fixed GCS policy.  */
+      GLRO (dl_aarch64_gcs_policy) =
+	TUNABLE_GET (glibc, cpu, aarch64_gcs_policy, uint64_t, 0);
+    }
 }
