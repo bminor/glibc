@@ -10,9 +10,7 @@
 #include <sys/resource.h>
 #include <unistd.h>
 
-static int do_test (void);
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/support.h>
 
 static jmp_buf mainloop;
 static sigset_t mainsigset;
@@ -126,3 +124,5 @@ do_test (void)
 
   return 0;
 }
+
+#include <support/test-driver.c>

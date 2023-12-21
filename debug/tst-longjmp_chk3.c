@@ -20,10 +20,6 @@
 #include <signal.h>
 #include <string.h>
 
-static int do_test (void);
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
-
 static char buf[SIGSTKSZ * 4];
 static jmp_buf jb;
 
@@ -83,3 +79,5 @@ do_test (void)
   puts ("longjmp returned and shouldn't");
   return 1;
 }
+
+#include <support/test-driver.c>
