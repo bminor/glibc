@@ -179,6 +179,7 @@ CPPFLAGS-tst-longjmp_chk3.c += $(no-fortify-source),-D_FORTIFY_SOURCE=1
 CPPFLAGS-tst-realpath-chk.c += $(no-fortify-source),-D_FORTIFY_SOURCE=2
 CPPFLAGS-tst-chk-cancel.c += $(no-fortify-source),-D_FORTIFY_SOURCE=2
 CFLAGS-tst-sprintf-fortify-rdonly.c += $(no-fortify-source),-D_FORTIFY_SOURCE=2
+CFLAGS-tst-fortify-syslog.c += $(no-fortify-source),-D_FORTIFY_SOURCE=2
 
 # _FORTIFY_SOURCE tests.
 # Auto-generate tests for _FORTIFY_SOURCE for different levels, compilers and
@@ -292,6 +293,10 @@ tests = \
 tests-time64 += \
   $(tests-all-time64-chk) \
   # tests-time64
+
+tests-container += \
+  tst-fortify-syslog \
+  # tests-container
 
 ifeq ($(have-ssp),yes)
 tests += tst-ssp-1
