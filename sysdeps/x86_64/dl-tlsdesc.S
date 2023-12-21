@@ -102,7 +102,7 @@ _dl_tlsdesc_dynamic:
 	/* Preserve call-clobbered registers that we modify.
 	   We need two scratch regs anyway.  */
 	movq	%rsi, -16(%rsp)
-	movq	%fs:DTV_OFFSET, %rsi
+	mov	%fs:DTV_OFFSET, %RSI_LP
 	movq	%rdi, -8(%rsp)
 	movq	TLSDESC_ARG(%rax), %rdi
 	movq	(%rsi), %rax

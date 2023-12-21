@@ -84,6 +84,7 @@ The following bugs are resolved with this release:
   [30515] _dl_find_object incorrectly returns 1 during early startup
   [30804] F_GETLK, F_SETLK, and F_SETLKW value change for powerpc64 with
     -D_FILE_OFFSET_BITS=64
+  [31184] FAIL: elf/tst-tlsgap
 
 Security related changes:
 
