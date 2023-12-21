@@ -26,5 +26,10 @@ glibc {
       minval: 0
       default: 0
     }
+    aarch64_gcs_policy {
+      type: UINT_64
+      minval: 0
+      default: 0
+    }
   }
 }
