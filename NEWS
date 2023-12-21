@@ -37,6 +37,7 @@ The following bugs are resolved with this release:
   [30804] F_GETLK, F_SETLK, and F_SETLKW value change for powerpc64 with
     -D_FILE_OFFSET_BITS=64
   [30842] Stack read overflow in getaddrinfo in no-aaaa mode (CVE-2023-4527)
+  [31184] FAIL: elf/tst-tlsgap
 
 
 Version 2.38
