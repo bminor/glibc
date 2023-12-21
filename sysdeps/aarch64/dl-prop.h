@@ -24,16 +24,21 @@ extern void _dl_bti_protect (struct link_map *, int) attribute_hidden;
 extern void _dl_bti_check (struct link_map *, const char *)
     attribute_hidden;
 
+extern void _dl_gcs_check (struct link_map *, const char *)
+    attribute_hidden;
+
 static inline void __attribute__ ((always_inline))
 _rtld_main_check (struct link_map *m, const char *program)
 {
   _dl_bti_check (m, program);
+  _dl_gcs_check (m, program);
 }
 
 static inline void __attribute__ ((always_inline))
 _dl_open_check (struct link_map *m)
 {
   _dl_bti_check (m, NULL);
+  _dl_gcs_check (m, NULL);
 }
 
 static inline void __attribute__ ((always_inline))
@@ -45,10 +50,6 @@ static inline int
 _dl_process_gnu_property (struct link_map *l, int fd, uint32_t type,
 			  uint32_t datasz, void *data)
 {
-  if (!GLRO(dl_aarch64_cpu_features).bti)
-    /* Skip note processing.  */
-    return 0;
-
   if (type == GNU_PROPERTY_AARCH64_FEATURE_1_AND)
     {
       /* Stop if the property note is ill-formed.  */
@@ -57,7 +58,11 @@ _dl_process_gnu_property (struct link_map *l, int fd, uint32_t type,
 
       unsigned int feature_1 = *(unsigned int *) data;
       if (feature_1 & GNU_PROPERTY_AARCH64_FEATURE_1_BTI)
-	_dl_bti_protect (l, fd);
+	if (GLRO(dl_aarch64_cpu_features).bti)
+	  _dl_bti_protect (l, fd);
+
+      if (feature_1 & GNU_PROPERTY_AARCH64_FEATURE_1_GCS)
+	l->l_mach.gcs = 1;
 
       /* Stop if we processed the property note.  */
       return 0;
