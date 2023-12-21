@@ -59,6 +59,8 @@
 
 static char *temp_filename;
 
+static int temp_fd_dprintf;
+
 static void
 do_prepare (int argc, char *argv[])
 {
@@ -74,6 +76,13 @@ do_prepare (int argc, char *argv[])
     {
       puts ("could not write test strings into file");
       unlink (temp_filename);
+      exit (1);
+    }
+
+  temp_fd_dprintf = create_temp_file ("tst-chk2.", NULL);
+  if (temp_fd_dprintf == -1)
+    {
+      printf ("cannot create temporary file: %m\n");
       exit (1);
     }
 }
@@ -901,6 +910,10 @@ do_test (void)
       || n1 != 1 || n2 != 2)
     FAIL ();
 
+  if (dprintf (temp_fd_dprintf, "%s%n%s%n", str2, &n1, str2, &n2) != 2
+      || n1 != 1 || n2 != 2)
+    FAIL ();
+
   strcpy (buf2 + 2, "%n%s%n");
   /* When the format string is writable and contains %n,
      with -D_FORTIFY_SOURCE=2 it causes __chk_fail.  */
@@ -911,6 +924,11 @@ do_test (void)
 
   CHK_FAIL2_START
   if (snprintf (buf, 3, buf2, str2, &n1, str2, &n1) != 2)
+    FAIL ();
+  CHK_FAIL2_END
+
+  CHK_FAIL2_START
+  if (dprintf (temp_fd_dprintf, buf2, str2, &n1, str2, &n1) != 2)
     FAIL ();
   CHK_FAIL2_END
 
@@ -1261,6 +1279,10 @@ do_test (void)
 
   CHK_FAIL2_START
   snprintf (buf, buf_size, "%3$d\n", 1, 2, 3, 4);
+  CHK_FAIL2_END
+
+  CHK_FAIL2_START
+  dprintf (temp_fd_dprintf, "%3$d\n", 1, 2, 3, 4);
   CHK_FAIL2_END
 
   int sp[2];
