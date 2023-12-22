@@ -1391,6 +1391,7 @@ typedef struct
 
 #define GNU_PROPERTY_AARCH64_FEATURE_1_BTI	(1U << 0)
 #define GNU_PROPERTY_AARCH64_FEATURE_1_PAC	(1U << 1)
+#define GNU_PROPERTY_AARCH64_FEATURE_1_GCS	(1U << 2)
 
 /* The x86 instruction sets indicated by the corresponding bits are
    used in program.  Their support in the hardware is optional.  */
