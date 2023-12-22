@@ -85,6 +85,7 @@ strip_pac (void *p)
 #define FEATURE_1_AND 0xc0000000
 #define FEATURE_1_BTI 1
 #define FEATURE_1_PAC 2
+#define FEATURE_1_GCS 4
 
 /* Add a NT_GNU_PROPERTY_TYPE_0 note.  */
 #define GNU_PROPERTY(type, value)	\
@@ -103,9 +104,9 @@ strip_pac (void *p)
 /* Add GNU property note with the supported features to all asm code
    where sysdep.h is included.  */
 #if HAVE_AARCH64_BTI && HAVE_AARCH64_PAC_RET
-GNU_PROPERTY (FEATURE_1_AND, FEATURE_1_BTI|FEATURE_1_PAC)
+GNU_PROPERTY (FEATURE_1_AND, FEATURE_1_BTI|FEATURE_1_PAC|FEATURE_1_GCS)
 #elif HAVE_AARCH64_BTI
-GNU_PROPERTY (FEATURE_1_AND, FEATURE_1_BTI)
+GNU_PROPERTY (FEATURE_1_AND, FEATURE_1_BTI|FEATURE_1_GCS)
 #endif
 
 /* Define an entry point visible from C.  */
