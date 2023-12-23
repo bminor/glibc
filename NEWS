@@ -40,6 +40,7 @@ The following bugs are resolved with this release:
 
   [20975] Deferred cancellation triggers in __check_pf and looses lock leading to deadlock
   [27576] gmon: improve mcount overflow handling
+  [29039] Corrupt DTV after reuse of a TLS module ID following dlclose with unused TLS
   [29444] gmon: Fix allocated buffer overflow (bug 29444)
   [30053] time: strftime %s returns -1 after 2038 on 32 bits systems
   [30101] gmon: fix memory corruption issues
@@ -51,7 +52,9 @@ The following bugs are resolved with this release:
   [30428] AMD cache size computation does not work for some CPUs, hypervisors
   [30477] libc: [RISCV]: time64 does not work on riscv32
   [30515] _dl_find_object incorrectly returns 1 during early startup
+  [30745] Slight bug in cache info codes for x86
   [30842] Stack read overflow in getaddrinfo in no-aaaa mode (CVE-2023-4527)
+  [30843] potential use-after-free in getcanonname (CVE-2023-4806)
   [31184] FAIL: elf/tst-tlsgap
   [31185] Incorrect thread point access in _dl_tlsdesc_undefweak and _dl_tlsdesc_dynamic
 
