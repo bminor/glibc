@@ -182,7 +182,7 @@ msgstr ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
 "Este é um software livre; leia os fontes para condições de cópia. NÃO HÁ\n"
 "QUALQUER GARANTIA; nem para COMERCIALIZAÇÃO ou ADEQUAÇÃO A QUALQUER\n"
-"PROPÓSITO EME PARTICULAR.\n"
+"PROPÓSITO EM PARTICULAR.\n"
 
 #: catgets/gencat.c:250 debug/pcprofiledump.c:229 debug/xtrace.sh:67
 #: elf/ldconfig.c:237 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
