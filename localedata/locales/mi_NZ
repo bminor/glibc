@@ -92,33 +92,33 @@ END LC_NUMERIC
 
 LC_TIME
 abday    "Ta";"Ma";/
-         "T<U016B>";"We";/
-         "T<U0101>i";"Pa";/
-         "H<U0101>"
-day      "R<U0101>tapu";/
+         "Tū";"We";/
+         "Tāi";"Pa";/
+         "Hā"
+day      "Rātapu";/
          "Mane";/
-         "T<U016B>rei";/
+         "Tūrei";/
          "Wenerei";/
-         "T<U0101>ite";/
+         "Tāite";/
          "Paraire";/
-         "H<U0101>tarei"
+         "Hātarei"
 abmon    "Kohi";"Hui";/
          "Pou";"Pae";/
          "Hara";"Pipi";/
-         "H<U014D>ngoi";"Here";/
+         "Hōngoi";"Here";/
          "Mahu";"Whi-nu";/
          "Whi-ra";"Haki"
-mon      "Kohi-t<U0101>tea";/
+mon      "Kohi-tātea";/
          "Hui-tanguru";/
-         "Pout<U016B>-te-rangi";/
-         "Paenga-wh<U0101>wh<U0101>";/
+         "Poutū-te-rangi";/
+         "Paenga-whāwhā";/
          "Haratua";/
          "Pipiri";/
-         "H<U014D>ngoingoi";/
-         "Here-turi-k<U014D>k<U0101>";/
+         "Hōngoingoi";/
+         "Here-turi-kōkā";/
          "Mahuru";/
-         "Whiringa-<U0101>-nuku";/
-         "Whiringa-<U0101>-rangi";/
+         "Whiringa-ā-nuku";/
+         "Whiringa-ā-rangi";/
          "Hakihea"
 d_t_fmt     "Te %A, te %d o %B, %Y %T"
 date_fmt    "Te %A, te %d o %B, %Y %T %Z"
@@ -131,10 +131,10 @@ first_weekday 2
 END LC_TIME
 
 LC_MESSAGES
-yesexpr "^[+1yY<U0101><U0100><U00E4><U00C4>aA]"
+yesexpr "^[+1yYāĀäÄaA]"
 noexpr  "^[-0nNkK]"
-yesstr  "<U0101>e"
-nostr   "k<U0101>ore"
+yesstr  "āe"
+nostr   "kāore"
 END LC_MESSAGES
 
 LC_PAPER
@@ -159,7 +159,7 @@ country_ab2   "NZ"
 country_ab3   "NZL"
 country_num   554
 country_car   "NZ"
-lang_name    "M<U0101>ori"
+lang_name    "Māori"
 lang_ab      "mi"
 lang_term    "mri"
 lang_lib    "mao"
