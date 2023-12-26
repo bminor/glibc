@@ -169,7 +169,6 @@ copy "en_NG"
 END LC_TELEPHONE
 
 LC_TIME
-% Àìkú, Ajé, Ìsẹ́gun, Ọjọ́rú, Ọjọ́bọ, Ẹtì, Àbámẹ́ta
 abday       "Àìkú";/
             "Ajé";/
             "Ìsẹ́gun";/
@@ -177,7 +176,6 @@ abday       "Àìkú";/
             "Ọjọ́bọ";/
             "Ẹtì";/
             "Àbámẹ́ta"
-% Ọjọ́ Àìkú, Ọjọ́ Ajé, Ọjọ́ Ìsẹ́gun, Ọjọ́rú, Ọjọ́bọ, Ọjọ́ Ẹtì, Ọjọ́ Àbámẹ́ta
 day         "Ọjọ́ Àìkú";/
             "Ọjọ́ Ajé";/
             "Ọjọ́ Ìsẹ́gun";/
@@ -185,8 +183,6 @@ day         "Ọjọ́ Àìkú";/
             "Ọjọ́bọ";/
             "Ọjọ́ Ẹtì";/
             "Ọjọ́ Àbámẹ́ta"
-% Ṣẹ́rẹ́, Èrèlè, Ẹrẹ̀nà, Ìgbé, Ẹ̀bibi, Òkúdu,
-% Agẹmọ, Ògún, Owewe, Ọ̀wàrà, Bélú, Ọ̀pẹ̀
 abmon       "Ṣẹ́rẹ́";/
             "Èrèlè";/
             "Ẹrẹ̀nà";/
@@ -199,8 +195,6 @@ abmon       "Ṣẹ́rẹ́";/
             "Ọ̀wàrà";/
             "Bélú";/
             "Ọ̀pẹ̀"
-% Oṣù Ṣẹ́rẹ́, Oṣù Èrèlè, Oṣù Ẹrẹ̀nà, Oṣù Ìgbé, Oṣù Ẹ̀bibi, Oṣù Òkúdu,
-% Oṣù Agẹmọ, Oṣù Ògún, Oṣù Owewe, Oṣù Ọ̀wàrà, Oṣù Bélú, Oṣù Ọ̀pẹ̀
 mon         "Oṣù Ṣẹ́rẹ́";/
             "Oṣù Èrèlè";/
             "Oṣù Ẹrẹ̀nà";/
@@ -213,9 +207,7 @@ mon         "Oṣù Ṣẹ́rẹ́";/
             "Oṣù Ọ̀wàrà";/
             "Oṣù Bélú";/
             "Oṣù Ọ̀pẹ̀"
-% ọjọ́ %a, %d oṣù %b ọdún %Y %T
 d_t_fmt     "ọjọ́ %a, %d oṣù %b ọdún %Y %T"
-% ọjọ́ %a, %d oṣù %b ọdún %Y %T %Z
 date_fmt    "ọjọ́ %a, %d oṣù %b ọdún %Y %T %Z"
 d_fmt       "%d//%m//%y"
 t_fmt       "%r"
