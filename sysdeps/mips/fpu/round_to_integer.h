@@ -25,6 +25,7 @@
 enum round_mode
 {
   CEIL,
+  FLOOR,
 };
 
 static inline double
@@ -41,6 +42,9 @@ round_to_integer_double (enum round_mode mode, double x)
   {
   case CEIL:
     asm ("ceil.l.d %0, %0" : "+f" (r));
+    break;
+  case FLOOR:
+    asm ("floor.l.d %0, %0" : "+f" (r));
     break;
   }
   libc_fesetenv (&fe);
