@@ -241,7 +241,7 @@ tests = test-matherr-3 test-fenv basic-test \
 	test-fenv-tls test-fenv-preserve test-fenv-return \
 	test-nearbyint-except test-fenv-clear \
 	test-nearbyint-except-2 test-signgam-uchar test-signgam-uchar-init \
-	test-ceil-except-2 \
+	test-ceil-except-2 test-floor-except-2 \
 	test-signgam-uint test-signgam-uint-init test-signgam-ullong \
 	test-signgam-ullong-init test-nan-overflow test-nan-payload \
 	test-fexcept test-fexcept-traps test-fesetexcept \
@@ -465,6 +465,7 @@ CFLAGS-test-fe-snans-always-signal.c += $(config-cflags-signaling-nans)
 CFLAGS-test-nan-const.c += -fno-builtin
 
 CFLAGS-test-ceil-except-2.c += -fno-builtin
+CFLAGS-test-floor-except-2.c += -fno-builtin
 
 include ../Rules
 
