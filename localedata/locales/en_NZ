@@ -82,40 +82,7 @@ grouping                3;3
 END LC_NUMERIC
 
 LC_TIME
-abday       "Sun";"Mon";"Tue";"Wed";"Thu";"Fri";"Sat"
-day         "Sunday";/
-            "Monday";/
-            "Tuesday";/
-            "Wednesday";/
-            "Thursday";/
-            "Friday";/
-            "Saturday"
-abmon       "Jan";"Feb";/
-            "Mar";"Apr";/
-            "May";"Jun";/
-            "Jul";"Aug";/
-            "Sep";"Oct";/
-            "Nov";"Dec"
-mon         "January";/
-            "February";/
-            "March";/
-            "April";/
-            "May";/
-            "June";/
-            "July";/
-            "August";/
-            "September";/
-            "October";/
-            "November";/
-            "December"
-d_t_fmt     "%a %d %b %Y %T"
-date_fmt    "%a %d %b %Y %T %Z"
-d_fmt       "%d//%m//%y"
-t_fmt       "%T"
-am_pm       "AM";"PM"
-t_fmt_ampm  "%I:%M:%S %p"
-week 7;19971130;1
-first_weekday 2
+copy "en_AU"
 END LC_TIME
 
 LC_MESSAGES
