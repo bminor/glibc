@@ -26,6 +26,7 @@
 enum round_mode
 {
   CEIL,
+  FLOOR,
 };
 
 static inline float
@@ -42,6 +43,9 @@ round_to_integer_float (enum round_mode mode, float x)
   {
   case CEIL:
     asm ("ceil.l.s %0, %0" : "+f" (r));
+    break;
+  case FLOOR:
+    asm ("floor.l.s %0, %0" : "+f" (r));
     break;
   }
   libc_fesetenvf (&fe);
