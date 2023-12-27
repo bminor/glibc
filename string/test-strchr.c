@@ -111,7 +111,7 @@ check_result (impl_t *impl, const CHAR *s, int c, const CHAR *exp_res)
   CHAR *res = CALL (impl, s, c);
   if (res != exp_res)
     {
-      error (0, 0, "Wrong result in function %s %#x %p %p", impl->name,
+      error (0, 0, "Wrong result in function %s(%p) %#x %p %p", impl->name, s,
 	     c, res, exp_res);
       ret = 1;
       return -1;
@@ -119,11 +119,10 @@ check_result (impl_t *impl, const CHAR *s, int c, const CHAR *exp_res)
   return 0;
 }
 
-static void
+static int
 do_one_test (impl_t *impl, const CHAR *s, int c, const CHAR *exp_res)
 {
-  if (check_result (impl, s, c, exp_res) < 0)
-    return;
+  return check_result (impl, s, c, exp_res);
 }
 
 static void
@@ -160,7 +159,15 @@ do_test (size_t align, size_t pos, size_t len, int seek_char, int max_char)
     result = NULLRET (buf + align + len);
 
   FOR_EACH_IMPL (impl, 0)
-    do_one_test (impl, buf + align, seek_char, result);
+    {
+      if (do_one_test (impl, buf + align, seek_char, result) != 0)
+	{
+	  error (0, 0,
+		 "\tAlign=%zu, Pos=%zu, Len=%zu, seek=%d, max_char=%d, "
+		 "Buf=%p, Res=%p",
+		 align, pos, len, seek_char, max_char, buf, result);
+	}
+    }
 }
 
 static void
