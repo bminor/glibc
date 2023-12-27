@@ -33,8 +33,14 @@ ENTRY (__vfork)
 
 	cmn	x0, #4095
 	b.cs    .Lsyscall_error
+	cbz	x0, L(child)
 	RET
-
+L(child):
+	/* Return with indirect branch in the child to support GCS.
+	   Clear x30 to crash early if the child tries to ret.  */
+	mov	x1, x30
+	mov	x30, 0
+	br	x1
 PSEUDO_END (__vfork)
 libc_hidden_def (__vfork)
 
