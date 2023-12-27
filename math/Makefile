@@ -160,6 +160,10 @@ gen-calls = s_ldexpF
 generated += $(foreach s,.c .S,$(call type-foreach, $(calls:s_%=m_%$(s))))
 routines = $(call type-foreach, $(calls))
 
+ifeq ($(enable-float128),yes)
+math-CPPFLAGS += -DWANT_FLOAT128=1
+endif
+
 ifeq ($(build-mathvec),yes)
 # We need to install libm.so and libm.a as linker scripts
 # for transparent use of vector math library.
