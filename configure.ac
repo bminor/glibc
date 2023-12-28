@@ -1091,14 +1091,8 @@ if test -n "$CXX"; then
   if test "$with_clang" != no; then
   find_cxx_header () {
     echo "#include <$1>" | $CXX -M -MP -x c++ - 2>/dev/null \
-	 | sed -n "\,^[o.-]*[ :] /.*/$1 [\]$,{s,^[o.-]*[ :] /,/,;s/ [\]$//;p}"
-  }
-  else
-  find_cxx_header () {
-    echo "#include <$1>" | $CXX -M -MP -x c++ - 2>/dev/null \
 	 | sed -n "\,$1:,{s/:\$//;p}"
   }
-  fi
   CXX_CSTDLIB_HEADER="$(find_cxx_header cstdlib)"
   CXX_CMATH_HEADER="$(find_cxx_header cmath)"
   CXX_BITS_STD_ABS_H="$(find_cxx_header bits/std_abs.h)"
