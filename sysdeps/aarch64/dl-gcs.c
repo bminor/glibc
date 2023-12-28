@@ -55,5 +55,5 @@ _dl_gcs_check (struct link_map *l, const char *program)
 
   check_gcs (l, program);
   for (unsigned int i = 0; i < l->l_searchlist.r_nlist; i++)
-    check_gcs (l->l_initfini[i], program);
+    check_gcs (l->l_searchlist.r_list[i], program);
 }
