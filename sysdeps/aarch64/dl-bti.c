@@ -84,10 +84,9 @@ _dl_bti_check (struct link_map *l, const char *program)
   if (l->l_mach.bti_fail)
     bti_failed (l, program);
 
-  unsigned int i = l->l_searchlist.r_nlist;
-  while (i-- > 0)
+  for (unsigned int i = 0; i < l->l_searchlist.r_nlist; i++)
     {
-      struct link_map *dep = l->l_initfini[i];
+      struct link_map *dep = l->l_searchlist.r_list[i];
       if (dep->l_mach.bti_fail)
 	bti_failed (dep, program);
     }
