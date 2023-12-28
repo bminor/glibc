@@ -34,6 +34,12 @@ CFLAGS-s_modff-power5+.c = -mcpu=power5+
 CFLAGS-s_logbl-power7.c = -mcpu=power7
 CFLAGS-s_logb-power7.c = -mcpu=power7
 CFLAGS-s_logbf-power7.c = -mcpu=power7
+CFLAGS-s_round-power5+.c += -mcpu=power5+
+CFLAGS-s_roundf-power5+.c += -mcpu=power5+
+CFLAGS-s_floor-power5+.c += -mcpu=power5+
+CFLAGS-s_floorf-power5+.c += -mcpu=power5+
+CFLAGS-s_trunc-power5+.c += -mcpu=power5+
+CFLAGS-s_truncf-power5+.c += -mcpu=power5+
 
 # These files quiet sNaNs in a way that is optimized away without
 # -fsignaling-nans.
