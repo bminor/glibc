@@ -33,7 +33,7 @@
 #if (defined __x86_64__							\
      ? __GNUC_PREREQ (4, 3)						\
      : (defined __GNU__ ? __GNUC_PREREQ (4, 5) : __GNUC_PREREQ (4, 4))) \
-    || (defined __clang__ && defined WANT_FLOAT128 && WANT_FLOAT128 == 1)
+    || defined __clang__
 # define __HAVE_FLOAT128 1
 #else
 # define __HAVE_FLOAT128 0

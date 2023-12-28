@@ -252,10 +252,6 @@ mostlyclean: parent-mostlyclean
 tests-clean:
 	@$(MAKE) subdir_testclean no_deps=t
 
-ifeq ($(enable-float128),yes)
-CPPFLAGS += -DWANT_FLOAT128=1
-endif
-
 ifneq (,$(CXX))
 vpath c++-types.data $(+sysdep_dirs)
 
