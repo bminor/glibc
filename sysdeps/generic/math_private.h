@@ -227,7 +227,7 @@ do {								\
 #if __HAVE_DISTINCT_FLOAT128
 
 /* __builtin_isinf_sign is broken in GCC < 7 for float128.  */
-# if ! __GNUC_PREREQ (7, 0)
+# if ! __GNUC_PREREQ (7, 0) || defined(__clang__)
 #  include <ieee754_float128.h>
 extern inline int
 __isinff128 (_Float128 x)
