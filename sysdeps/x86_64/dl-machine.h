@@ -29,6 +29,11 @@
 #include <dl-static-tls.h>
 #include <dl-machine-rel.h>
 #include <isa-level.h>
+#ifdef __CET__
+# include <dl-cet.h>
+#else
+# define RTLD_START_ENABLE_X86_FEATURES
+#endif
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int __attribute__ ((unused))
@@ -144,13 +149,16 @@ _start:\n\
 _dl_start_user:\n\
 	# Save the user entry point address in %r12.\n\
 	movq %rax, %r12\n\
+	# Save %rsp value in %r13.\n\
+	movq %rsp, %r13\n\
+"\
+	RTLD_START_ENABLE_X86_FEATURES \
+"\
 	# Read the original argument count.\n\
 	movq (%rsp), %rdx\n\
 	# Call _dl_init (struct link_map *main_map, int argc, char **argv, char **env)\n\
 	# argc -> rsi\n\
 	movq %rdx, %rsi\n\
-	# Save %rsp value in %r13.\n\
-	movq %rsp, %r13\n\
 	# And align stack for the _dl_init call. \n\
 	andq $-16, %rsp\n\
 	# _dl_loaded -> rdi\n\

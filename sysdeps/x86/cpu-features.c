@@ -1081,57 +1081,6 @@ no_cpuid:
 	       TUNABLE_CALLBACK (set_x86_ibt));
   TUNABLE_GET (x86_shstk, tunable_val_t *,
 	       TUNABLE_CALLBACK (set_x86_shstk));
-
-  /* Check CET status.  */
-  unsigned int cet_status = get_cet_status ();
-
-  if ((cet_status & GNU_PROPERTY_X86_FEATURE_1_IBT) == 0)
-    CPU_FEATURE_UNSET (cpu_features, IBT)
-  if ((cet_status & GNU_PROPERTY_X86_FEATURE_1_SHSTK) == 0)
-    CPU_FEATURE_UNSET (cpu_features, SHSTK)
-
-  if (cet_status)
-    {
-      GL(dl_x86_feature_1) = cet_status;
-
-# ifndef SHARED
-      /* Check if IBT and SHSTK are enabled by kernel.  */
-      if ((cet_status
-	   & (GNU_PROPERTY_X86_FEATURE_1_IBT
-	      | GNU_PROPERTY_X86_FEATURE_1_SHSTK)))
-	{
-	  /* Disable IBT and/or SHSTK if they are enabled by kernel, but
-	     disabled by environment variable:
-
-	     GLIBC_TUNABLES=glibc.cpu.hwcaps=-IBT,-SHSTK
-	   */
-	  unsigned int cet_feature = 0;
-	  if (!CPU_FEATURE_USABLE (IBT))
-	    cet_feature |= (cet_status
-			    & GNU_PROPERTY_X86_FEATURE_1_IBT);
-	  if (!CPU_FEATURE_USABLE (SHSTK))
-	    cet_feature |= (cet_status
-			    & GNU_PROPERTY_X86_FEATURE_1_SHSTK);
-
-	  if (cet_feature)
-	    {
-	      int res = dl_cet_disable_cet (cet_feature);
-
-	      /* Clear the disabled bits in dl_x86_feature_1.  */
-	      if (res == 0)
-		GL(dl_x86_feature_1) &= ~cet_feature;
-	    }
-
-	  /* Lock CET if IBT or SHSTK is enabled in executable.  Don't
-	     lock CET if IBT or SHSTK is enabled permissively.  */
-	  if (GL(dl_x86_feature_control).ibt != cet_permissive
-	      && GL(dl_x86_feature_control).shstk != cet_permissive)
-	    dl_cet_lock_cet (GL(dl_x86_feature_1)
-			     & (GNU_PROPERTY_X86_FEATURE_1_IBT
-				| GNU_PROPERTY_X86_FEATURE_1_SHSTK));
-	}
-# endif
-    }
 #endif
 
 #ifndef SHARED
