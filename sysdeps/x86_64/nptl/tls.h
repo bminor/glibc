@@ -60,7 +60,7 @@ typedef struct
   void *__private_tm[4];
   /* GCC split stack support.  */
   void *__private_ss;
-  /* The lowest address of shadow stack,  */
+  /* The marker for the current shadow stack.  */
   unsigned long long int ssp_base;
   /* Must be kept even if it is no longer used by glibc since programs,
      like AddressSanitizer, depend on the size of tcbhead_t.  */

@@ -202,7 +202,7 @@ dl_cet_check_startup (struct link_map *m, struct dl_cet_info *info)
 	feature_1_lock |= GNU_PROPERTY_X86_FEATURE_1_SHSTK;
 
       if (feature_1_lock != 0
-	  && dl_cet_lock_cet () != 0)
+	  && dl_cet_lock_cet (feature_1_lock) != 0)
 	_dl_fatal_printf ("%s: can't lock CET\n", info->program);
     }
 

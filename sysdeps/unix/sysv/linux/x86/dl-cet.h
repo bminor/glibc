@@ -21,12 +21,20 @@
 static inline int __attribute__ ((always_inline))
 dl_cet_disable_cet (unsigned int cet_feature)
 {
-  return (int) INTERNAL_SYSCALL_CALL (arch_prctl, ARCH_CET_DISABLE,
-				      cet_feature);
+  if (cet_feature != GNU_PROPERTY_X86_FEATURE_1_SHSTK)
+    return -1;
+  long long int kernel_feature = ARCH_SHSTK_SHSTK;
+  return (int) INTERNAL_SYSCALL_CALL (arch_prctl, ARCH_SHSTK_DISABLE,
+				      kernel_feature);
 }
 
 static inline int __attribute__ ((always_inline))
-dl_cet_lock_cet (void)
+dl_cet_lock_cet (unsigned int cet_feature)
 {
-  return (int) INTERNAL_SYSCALL_CALL (arch_prctl, ARCH_CET_LOCK, 0);
+  if (cet_feature != GNU_PROPERTY_X86_FEATURE_1_SHSTK)
+    return -1;
+  /* Lock all SHSTK features.  */
+  long long int kernel_feature = -1;
+  return (int) INTERNAL_SYSCALL_CALL (arch_prctl, ARCH_SHSTK_LOCK,
+				      kernel_feature);
 }
