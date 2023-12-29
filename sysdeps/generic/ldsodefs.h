@@ -1172,10 +1172,6 @@ void __libc_setup_tls (void);
 # if ENABLE_STATIC_PIE
 /* Relocate static executable with PIE.  */
 extern void _dl_relocate_static_pie (void) attribute_hidden;
-
-/* Get a pointer to _dl_main_map.  */
-extern struct link_map * _dl_get_dl_main_map (void)
-  __attribute__ ((visibility ("hidden")));
 # else
 #  define _dl_relocate_static_pie()
 # endif
@@ -1216,6 +1212,9 @@ extern void _dl_deallocate_tls (void *tcb, bool dealloc_tcb);
 rtld_hidden_proto (_dl_deallocate_tls)
 
 extern void _dl_nothread_init_static_tls (struct link_map *) attribute_hidden;
+
+/* Get a pointer to _dl_main_map.  */
+extern struct link_map * _dl_get_dl_main_map (void) attribute_hidden;
 
 /* Find origin of the executable.  */
 extern const char *_dl_get_origin (void) attribute_hidden;
