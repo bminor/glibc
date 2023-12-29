@@ -15,8 +15,17 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-
+#include <assert.h>
+#include <tcb-offsets.h>
 #include <ldsodefs.h>
+
+#ifdef __x86_64__
+# ifdef __LP64__
+_Static_assert (FEATURE_1_OFFSET == 72, "FEATURE_1_OFFSET != 72");
+# else
+_Static_assert (FEATURE_1_OFFSET == 40, "FEATURE_1_OFFSET != 40");
+# endif
+#endif
 
 const struct cpuid_feature *
 __x86_get_cpuid_feature_leaf (unsigned int leaf)
