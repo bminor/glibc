@@ -20,6 +20,7 @@
 
 common_objpfx=$1; shift
 
+GLIBC_TUNABLES=glibc.cpu.hwcaps=SHSTK \
 ${common_objpfx}elf/tst-shstk-legacy-1e-static
 # The exit status should only be unsupported (77) or segfault (139).
 status=$?
