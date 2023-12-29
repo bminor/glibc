@@ -18,7 +18,7 @@
 #include <sys/prctl.h>
 #include <asm/prctl.h>
 
-static inline int __attribute__ ((always_inline))
+static __always_inline int
 dl_cet_disable_cet (unsigned int cet_feature)
 {
   if (cet_feature != GNU_PROPERTY_X86_FEATURE_1_SHSTK)
@@ -28,7 +28,7 @@ dl_cet_disable_cet (unsigned int cet_feature)
 				      kernel_feature);
 }
 
-static inline int __attribute__ ((always_inline))
+static __always_inline int
 dl_cet_lock_cet (unsigned int cet_feature)
 {
   if (cet_feature != GNU_PROPERTY_X86_FEATURE_1_SHSTK)
@@ -38,3 +38,26 @@ dl_cet_lock_cet (unsigned int cet_feature)
   return (int) INTERNAL_SYSCALL_CALL (arch_prctl, ARCH_SHSTK_LOCK,
 				      kernel_feature);
 }
+
+static __always_inline unsigned int
+dl_cet_get_cet_status (void)
+{
+  unsigned long long kernel_feature;
+  unsigned int status = 0;
+  if (INTERNAL_SYSCALL_CALL (arch_prctl, ARCH_SHSTK_STATUS,
+			     &kernel_feature) == 0)
+    {
+      if ((kernel_feature & ARCH_SHSTK_SHSTK) != 0)
+	status = GNU_PROPERTY_X86_FEATURE_1_SHSTK;
+    }
+  return status;
+}
+
+/* Enable shadow stack with a macro to avoid shadow stack underflow.  */
+#define ENABLE_X86_CET(cet_feature)				\
+  if ((cet_feature & GNU_PROPERTY_X86_FEATURE_1_SHSTK))		\
+    {								\
+      long long int kernel_feature = ARCH_SHSTK_SHSTK;		\
+      INTERNAL_SYSCALL_CALL (arch_prctl, ARCH_SHSTK_ENABLE,	\
+			     kernel_feature);			\
+    }

@@ -173,40 +173,11 @@ dl_cet_check_startup (struct link_map *m, struct dl_cet_info *info)
     = info->enable_feature_1 ^ info->feature_1_enabled;
   if (disable_feature_1 != 0)
     {
-      /* Disable features in the kernel because of legacy objects or
-	 cet_always_off.  */
-      if (dl_cet_disable_cet (disable_feature_1) != 0)
-	_dl_fatal_printf ("%s: can't disable x86 Features\n",
-			  info->program);
-
       /* Clear the disabled bits.  Sync dl_x86_feature_1 and
          info->feature_1_enabled with info->enable_feature_1.  */
       info->feature_1_enabled = info->enable_feature_1;
       GL(dl_x86_feature_1) = info->enable_feature_1;
     }
-
-  if (HAS_CPU_FEATURE (IBT) || HAS_CPU_FEATURE (SHSTK))
-    {
-      /* Lock CET features only if IBT or SHSTK are enabled and are not
-         enabled permissively.  */
-      unsigned int feature_1_lock = 0;
-
-      if (((info->feature_1_enabled & GNU_PROPERTY_X86_FEATURE_1_IBT)
-	   != 0)
-	  && info->enable_ibt_type != cet_permissive)
-	feature_1_lock |= GNU_PROPERTY_X86_FEATURE_1_IBT;
-
-      if (((info->feature_1_enabled & GNU_PROPERTY_X86_FEATURE_1_SHSTK)
-	   != 0)
-	  && info->enable_shstk_type != cet_permissive)
-	feature_1_lock |= GNU_PROPERTY_X86_FEATURE_1_SHSTK;
-
-      if (feature_1_lock != 0
-	  && dl_cet_lock_cet (feature_1_lock) != 0)
-	_dl_fatal_printf ("%s: can't lock CET\n", info->program);
-    }
-
-  THREAD_SETMEM (THREAD_SELF, header.feature_1, GL(dl_x86_feature_1));
 }
 #endif
 
@@ -298,6 +269,15 @@ dl_cet_check (struct link_map *m, const char *program)
 {
   struct dl_cet_info info;
 
+  /* CET is enabled only if RTLD_START_ENABLE_X86_FEATURES is defined.  */
+#if defined SHARED && defined RTLD_START_ENABLE_X86_FEATURES
+  /* Set dl_x86_feature_1 to features enabled in the executable.  */
+  if (program != NULL)
+    GL(dl_x86_feature_1) = (m->l_x86_feature_1_and
+			    & (X86_FEATURE_1_IBT
+			       | X86_FEATURE_1_SHSTK));
+#endif
+
   /* Check how IBT and SHSTK should be enabled. */
   info.enable_ibt_type = GL(dl_x86_feature_control).ibt;
   info.enable_shstk_type = GL(dl_x86_feature_control).shstk;
@@ -307,17 +287,9 @@ dl_cet_check (struct link_map *m, const char *program)
   /* No legacy object check if IBT and SHSTK are always on.  */
   if (info.enable_ibt_type == cet_always_on
       && info.enable_shstk_type == cet_always_on)
-    {
-#ifdef SHARED
-      /* Set it only during startup.  */
-      if (program != NULL)
-	THREAD_SETMEM (THREAD_SELF, header.feature_1,
-		       info.feature_1_enabled);
-#endif
-      return;
-    }
+    return;
 
-  /* Check if IBT and SHSTK were enabled by kernel.  */
+  /* Check if IBT and SHSTK were enabled.  */
   if (info.feature_1_enabled == 0)
     return;
 
@@ -349,6 +321,32 @@ void
 _dl_cet_open_check (struct link_map *l)
 {
   dl_cet_check (l, NULL);
+}
+
+/* Set GL(dl_x86_feature_1) to the enabled features and clear the
+   active bits of the disabled features.  */
+
+attribute_hidden void
+_dl_cet_setup_features (unsigned int cet_feature)
+{
+  /* NB: cet_feature == GL(dl_x86_feature_1) which is set to features
+     enabled from executable, not necessarily supported by kernel.  */
+  if (cet_feature != 0)
+    {
+      cet_feature = dl_cet_get_cet_status ();
+      if (cet_feature != 0)
+	{
+	  THREAD_SETMEM (THREAD_SELF, header.feature_1, cet_feature);
+
+	  /* Lock CET if IBT or SHSTK is enabled in executable.  Don't
+	     lock CET if IBT or SHSTK is enabled permissively.  */
+	  if (GL(dl_x86_feature_control).ibt != cet_permissive
+	      && (GL(dl_x86_feature_control).shstk != cet_permissive))
+	    dl_cet_lock_cet (cet_feature);
+	}
+      /* Sync GL(dl_x86_feature_1) with kernel.  */
+      GL(dl_x86_feature_1) = cet_feature;
+    }
 }
 
 #ifdef SHARED
