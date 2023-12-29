@@ -327,3 +327,11 @@ enum
 
   x86_cpu_PTWRITE		= x86_cpu_index_14_ecx_0_ebx + 4
 };
+
+/* Bits in the feature_1 field in TCB.  */
+
+enum
+{
+  x86_feature_1_ibt		= 1U << 0,
+  x86_feature_1_shstk		= 1U << 1
+};
