@@ -247,6 +247,13 @@ CFLAGS-tst-cet-legacy-10-static.c += -mshstk
 CFLAGS-tst-cet-legacy-10a.c += -fcf-protection=none
 CFLAGS-tst-cet-legacy-10a-static.c += -fcf-protection=none
 
+tst-cet-legacy-4-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=SHSTK
+tst-cet-legacy-6-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=SHSTK
+tst-cet-legacy-10-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=SHSTK
+tst-cet-legacy-10-static-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=SHSTK
+tst-cet-legacy-10a-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=SHSTK
+tst-cet-legacy-10a-static-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=SHSTK
+
 CFLAGS-tst-shstk-legacy-1a.c += -fcf-protection=none
 CFLAGS-tst-shstk-legacy-1a-static.c += -fcf-protection=none
 CFLAGS-tst-shstk-legacy-1d.c += -fcf-protection=none
@@ -286,14 +293,20 @@ tst-cet-legacy-6b-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-IBT,-SHSTK
 tst-cet-legacy-9-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-IBT,-SHSTK
 tst-cet-legacy-9-static-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-IBT,-SHSTK
 
+tst-shstk-legacy-1a-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=SHSTK
+tst-shstk-legacy-1a-static-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=SHSTK
 $(objpfx)tst-shstk-legacy-1a: $(objpfx)tst-shstk-legacy-1-extra.o
 $(objpfx)tst-shstk-legacy-1a-static: $(objpfx)tst-shstk-legacy-1-extra.o
+tst-shstk-legacy-1b-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=SHSTK
+tst-shstk-legacy-1b-static-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=SHSTK
 $(objpfx)tst-shstk-legacy-1b: $(objpfx)tst-shstk-legacy-1-extra.o
 $(objpfx)tst-shstk-legacy-1b-static: $(objpfx)tst-shstk-legacy-1-extra.o
 tst-shstk-legacy-1c-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-SHSTK
 tst-shstk-legacy-1c-static-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-SHSTK
 $(objpfx)tst-shstk-legacy-1c: $(objpfx)tst-shstk-legacy-1-extra.o
 $(objpfx)tst-shstk-legacy-1c-static: $(objpfx)tst-shstk-legacy-1-extra.o
+tst-shstk-legacy-1d-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=SHSTK
+tst-shstk-legacy-1d-static-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=SHSTK
 $(objpfx)tst-shstk-legacy-1d: $(objpfx)tst-shstk-legacy-1-extra.o
 $(objpfx)tst-shstk-legacy-1d-static: $(objpfx)tst-shstk-legacy-1-extra.o
 $(objpfx)tst-shstk-legacy-1e: $(objpfx)tst-shstk-legacy-1-extra.o
@@ -307,6 +320,7 @@ $(objpfx)tst-shstk-legacy-1e-static.out: \
   $(objpfx)tst-shstk-legacy-1e-static
 	$(SHELL) $< $(common-objpfx) 2> $@; \
 	$(evaluate-test)
+tst-shstk-legacy-1f-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=SHSTK
 $(objpfx)tst-shstk-legacy-1f: $(objpfx)tst-shstk-legacy-mod-1.so
 $(objpfx)tst-shstk-legacy-mod-1.so: \
   $(objpfx)tst-shstk-legacy-mod-1.os \
