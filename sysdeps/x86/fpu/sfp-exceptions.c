@@ -18,7 +18,7 @@
 
 #include <fenv.h>
 #include <float.h>
-#include <math-barriers.h>
+#include <math_private.h>
 #include <soft-fp.h>
 
 void
