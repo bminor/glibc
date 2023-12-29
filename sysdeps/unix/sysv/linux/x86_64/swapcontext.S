@@ -109,25 +109,11 @@ ENTRY(__swapcontext)
 	cmpq	%fs:SSP_BASE_OFFSET, %rax
 	jnz	L(shadow_stack_bound_recorded)
 
-	/* Get the base address and size of the default shadow stack
-	   which must be the current shadow stack since nothing has
-	   been recorded yet.  */
-	sub	$24, %RSP_LP
-	mov	%RSP_LP, %RSI_LP
-	movl	$ARCH_CET_STATUS, %edi
-	movl	$__NR_arch_prctl, %eax
-	syscall
-	testq	%rax, %rax
-	jz	L(continue_no_err)
-
-	/* This should never happen.  */
-	hlt
-
-L(continue_no_err):
-	/* Record the base of the current shadow stack.  */
-	movq	8(%rsp), %rax
+	/* When the shadow stack base is unset, the default shadow
+	   stack is in use.  Use the current shadow stack pointer
+	   as the marker for the default shadow stack.  */
+	rdsspq	%rax
 	movq	%rax, %fs:SSP_BASE_OFFSET
-	add	$24, %RSP_LP
 
 L(shadow_stack_bound_recorded):
         /* If we unwind the stack, we can't undo stack unwinding.  Just

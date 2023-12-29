@@ -23,10 +23,15 @@
 static inline int __attribute__ ((always_inline))
 get_cet_status (void)
 {
-  unsigned long long cet_status[3];
-  if (INTERNAL_SYSCALL_CALL (arch_prctl, ARCH_CET_STATUS, cet_status) == 0)
-    return cet_status[0];
-  return 0;
+  unsigned long long kernel_feature;
+  unsigned int status = 0;
+  if (INTERNAL_SYSCALL_CALL (arch_prctl, ARCH_SHSTK_STATUS,
+			     &kernel_feature) == 0)
+    {
+      if ((kernel_feature & ARCH_SHSTK_SHSTK) != 0)
+	status = GNU_PROPERTY_X86_FEATURE_1_SHSTK;
+    }
+  return status;
 }
 
 # ifndef SHARED

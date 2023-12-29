@@ -1,5 +1,5 @@
-/* Definitions for POSIX memory map interface.  Linux/x86_64 version.
-   Copyright (C) 2001-2023 Free Software Foundation, Inc.
+/* Helper function to allocate shadow stack.
+   Copyright (C) 2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,22 +16,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _SYS_MMAN_H
-# error "Never use <bits/mman.h> directly; include <sys/mman.h> instead."
-#endif
+#include <ucontext.h>
 
-/* The following definitions basically come from the kernel headers.
-   But the kernel header is not namespace clean.  */
+typedef __typeof (((ucontext_t *) 0)->__ssp[0]) shadow_stack_size_t;
 
-/* Other flags.  */
-#define MAP_32BIT	0x40		/* Only give out 32-bit addresses.  */
-
-#ifdef __USE_MISC
-/* Set up a restore token in the newly allocated shadow stack */
-# define SHADOW_STACK_SET_TOKEN 0x1
-#endif
-
-#include <bits/mman-map-flags-generic.h>
-
-/* Include generic Linux declarations.  */
-#include <bits/mman-linux.h>
+extern long int __allocate_shadow_stack (size_t, shadow_stack_size_t *)
+  attribute_hidden;

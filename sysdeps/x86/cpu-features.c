@@ -1096,8 +1096,9 @@ no_cpuid:
 
 # ifndef SHARED
       /* Check if IBT and SHSTK are enabled by kernel.  */
-      if ((cet_status & GNU_PROPERTY_X86_FEATURE_1_IBT)
-	  || (cet_status & GNU_PROPERTY_X86_FEATURE_1_SHSTK))
+      if ((cet_status
+	   & (GNU_PROPERTY_X86_FEATURE_1_IBT
+	      | GNU_PROPERTY_X86_FEATURE_1_SHSTK)))
 	{
 	  /* Disable IBT and/or SHSTK if they are enabled by kernel, but
 	     disabled by environment variable:
@@ -1106,9 +1107,11 @@ no_cpuid:
 	   */
 	  unsigned int cet_feature = 0;
 	  if (!CPU_FEATURE_USABLE (IBT))
-	    cet_feature |= GNU_PROPERTY_X86_FEATURE_1_IBT;
+	    cet_feature |= (cet_status
+			    & GNU_PROPERTY_X86_FEATURE_1_IBT);
 	  if (!CPU_FEATURE_USABLE (SHSTK))
-	    cet_feature |= GNU_PROPERTY_X86_FEATURE_1_SHSTK;
+	    cet_feature |= (cet_status
+			    & GNU_PROPERTY_X86_FEATURE_1_SHSTK);
 
 	  if (cet_feature)
 	    {
@@ -1123,7 +1126,9 @@ no_cpuid:
 	     lock CET if IBT or SHSTK is enabled permissively.  */
 	  if (GL(dl_x86_feature_control).ibt != cet_permissive
 	      && GL(dl_x86_feature_control).shstk != cet_permissive)
-	    dl_cet_lock_cet ();
+	    dl_cet_lock_cet (GL(dl_x86_feature_1)
+			     & (GNU_PROPERTY_X86_FEATURE_1_IBT
+				| GNU_PROPERTY_X86_FEATURE_1_SHSTK));
 	}
 # endif
     }

@@ -24,20 +24,14 @@
 /* Use CALL to push __start_context onto the new stack as well as the new
    shadow stack.  RDI points to ucontext:
    Incoming:
-     __ssp[0]: The original caller's shadow stack pointer.
-     __ssp[1]: The size of the new shadow stack.
-     __ssp[2]: The size of the new shadow stack.
-   Outgoing:
      __ssp[0]: The new shadow stack pointer.
      __ssp[1]: The base address of the new shadow stack.
      __ssp[2]: The size of the new shadow stack.
  */
 
 ENTRY(__push___start_context)
-	/* Save the pointer to ucontext.  */
-	movq	%rdi, %r9
 	/* Get the original shadow stack pointer.  */
-	rdsspq	%r8
+	rdsspq	%rcx
 	/* Save the original stack pointer.  */
 	movq	%rsp, %rdx
 	/* Load the top of the new stack into RSI.  */
@@ -45,24 +39,12 @@ ENTRY(__push___start_context)
 	/* Add 8 bytes to RSI since CALL will push the 8-byte return
 	   address onto stack.  */
 	leaq	8(%rsi), %rsp
-	/* Allocate the new shadow stack.  The size of the new shadow
-	   stack is passed in __ssp[1].  */
-	lea	(oSSP + 8)(%rdi), %RSI_LP
-	movl	$ARCH_CET_ALLOC_SHSTK, %edi
-	movl	$__NR_arch_prctl, %eax
-	/* The new shadow stack base is returned in __ssp[1].  */
-	syscall
-	testq	%rax, %rax
-	jne	L(hlt)		/* This should never happen.  */
-
-	/* Get the size of the new shadow stack.  */
-	movq	8(%rsi), %rdi
-
-	/* Get the base address of the new shadow stack.  */
-	movq	(%rsi), %rsi
-
+	/* The size of the new shadow stack is stored in __ssp[2].  */
+	mov	(oSSP + 16)(%rdi), %RSI_LP
+	/* The new shadow stack base is stored in __ssp[1].  */
+	mov	(oSSP + 8)(%rdi), %RAX_LP
 	/* Use the restore stoken to restore the new shadow stack.  */
-	rstorssp -8(%rsi, %rdi)
+	rstorssp -8(%rax, %rsi)
 
 	/* Save the restore token on the original shadow stack.  */
 	saveprevssp
@@ -73,17 +55,11 @@ ENTRY(__push___start_context)
 	jmp	__start_context
 1:
 
-	/* Get the new shadow stack pointer.  */
-	rdsspq	%rdi
-
 	/* Use the restore stoken to restore the original shadow stack.  */
-	rstorssp -8(%r8)
+	rstorssp -8(%rcx)
 
 	/* Save the restore token on the new shadow stack.  */
 	saveprevssp
-
-	/* Store the new shadow stack pointer in __ssp[0].  */
-	movq	%rdi, oSSP(%r9)
 
 	/* Restore the original stack.  */
 	mov	%rdx, %rsp

@@ -24,6 +24,7 @@
 # include <pthread.h>
 # include <libc-pointer-arith.h>
 # include <sys/prctl.h>
+# include <allocate-shadow-stack.h>
 #endif
 
 #include "ucontext_i.h"
@@ -88,23 +89,24 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
   if ((feature_1 & X86_FEATURE_1_SHSTK) != 0)
     {
       /* Shadow stack is enabled.  We need to allocate a new shadow
-         stack.  */
-      unsigned long ssp_size = (((uintptr_t) sp
-				 - (uintptr_t) ucp->uc_stack.ss_sp)
-				>> STACK_SIZE_TO_SHADOW_STACK_SIZE_SHIFT);
-      /* Align shadow stack to 8 bytes.  */
-      ssp_size = ALIGN_UP (ssp_size, 8);
-
-      ucp->__ssp[1] = ssp_size;
-      ucp->__ssp[2] = ssp_size;
-
-      /* Call __push___start_context to allocate a new shadow stack,
-	 push __start_context onto the new stack as well as the new
-	 shadow stack.  NB: After __push___start_context returns,
+         stack.  NB:
 	   ucp->__ssp[0]: The new shadow stack pointer.
 	   ucp->__ssp[1]: The base address of the new shadow stack.
 	   ucp->__ssp[2]: The size of the new shadow stack.
        */
+      long int ret
+	= __allocate_shadow_stack (((uintptr_t) sp
+				    - (uintptr_t) ucp->uc_stack.ss_sp),
+				   &ucp->__ssp[1]);
+      if (ret != 0)
+	{
+	  /* FIXME: What should we do?  */
+	  abort ();
+	}
+
+      ucp->__ssp[0] = ucp->__ssp[1] + ucp->__ssp[2] - 8;
+      /* Call __push___start_context to push __start_context onto the new
+	 stack as well as the new shadow stack.  */
       __push___start_context (ucp);
     }
   else

@@ -58,35 +58,15 @@ ENTRY(__getcontext)
 	testl	$X86_FEATURE_1_SHSTK, %fs:FEATURE_1_OFFSET
 	jz	L(no_shstk)
 
-	/* Save RDI in RDX which won't be clobbered by syscall.  */
-	movq	%rdi, %rdx
-
 	xorl	%eax, %eax
 	cmpq	%fs:SSP_BASE_OFFSET, %rax
 	jnz	L(shadow_stack_bound_recorded)
 
-	/* Get the base address and size of the default shadow stack
-	   which must be the current shadow stack since nothing has
-	   been recorded yet.  */
-	sub	$24, %RSP_LP
-	mov	%RSP_LP, %RSI_LP
-	movl	$ARCH_CET_STATUS, %edi
-	movl	$__NR_arch_prctl, %eax
-	syscall
-	testq	%rax, %rax
-	jz	L(continue_no_err)
-
-	/* This should never happen.  */
-	hlt
-
-L(continue_no_err):
-	/* Record the base of the current shadow stack.  */
-	movq	8(%rsp), %rax
+	/* When the shadow stack base is unset, the default shadow
+	   stack is in use.  Use the current shadow stack pointer
+	   as the marker for the default shadow stack.  */
+	rdsspq	%rax
 	movq	%rax, %fs:SSP_BASE_OFFSET
-	add	$24, %RSP_LP
-
-	/* Restore RDI.  */
-	movq	%rdx, %rdi
 
 L(shadow_stack_bound_recorded):
 	/* Get the current shadow stack pointer.  */
@@ -94,7 +74,7 @@ L(shadow_stack_bound_recorded):
 	/* NB: Save the caller's shadow stack so that we can jump back
 	   to the caller directly.  */
 	addq	$8, %rax
-	movq	%rax, oSSP(%rdx)
+	movq	%rax, oSSP(%rdi)
 
 	/* Save the current shadow stack base in ucontext.  */
 	movq	%fs:SSP_BASE_OFFSET, %rax
