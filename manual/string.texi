@@ -1039,7 +1039,7 @@ The behavior of @code{strncat} is undefined if the strings overlap.
 
 As a companion to @code{strncpy}, @code{strncat} was designed for
 now-rarely-used arrays consisting of non-null bytes followed by zero
-or more null bytes.  As noted below, this function is generally a poor
+or more null bytes.  However, As noted below, this function is generally a poor
 choice for processing strings.  Also, this function has significant
 performance issues.  @xref{Concatenating Strings}.
 @end deftypefun
