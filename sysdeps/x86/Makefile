@@ -215,12 +215,12 @@ modules-names += \
   tst-cet-legacy-mod-6c \
 # modules-names
 
-CFLAGS-tst-cet-legacy-2.c += -fcf-protection=branch
+CFLAGS-tst-cet-legacy-2.c += -fcf-protection=none -fcf-protection=branch
 CFLAGS-tst-cet-legacy-2a.c += -fcf-protection
 CFLAGS-tst-cet-legacy-mod-1.c += -fcf-protection=none
 CFLAGS-tst-cet-legacy-mod-2.c += -fcf-protection=none
 CFLAGS-tst-cet-legacy-3.c += -fcf-protection=none
-CFLAGS-tst-cet-legacy-4.c += -fcf-protection=branch
+CFLAGS-tst-cet-legacy-4.c += -fcf-protection=none -fcf-protection=branch
 CPPFLAGS-tst-cet-legacy-4a.c += -DCET_IS_PERMISSIVE=1
 CFLAGS-tst-cet-legacy-4a.c += -fcf-protection
 CFLAGS-tst-cet-legacy-4b.c += -fcf-protection
@@ -231,7 +231,7 @@ CPPFLAGS-tst-cet-legacy-5a.c += -DCET_IS_PERMISSIVE=1
 endif
 CFLAGS-tst-cet-legacy-5b.c += -fcf-protection -mshstk
 CPPFLAGS-tst-cet-legacy-5b.c += -DCET_DISABLED_BY_ENV=1
-CFLAGS-tst-cet-legacy-mod-5a.c += -fcf-protection=branch
+CFLAGS-tst-cet-legacy-mod-5a.c += -fcf-protection=none -fcf-protection=branch
 CFLAGS-tst-cet-legacy-mod-5b.c += -fcf-protection
 CFLAGS-tst-cet-legacy-mod-5c.c += -fcf-protection
 CFLAGS-tst-cet-legacy-6a.c += -fcf-protection -mshstk
@@ -240,7 +240,7 @@ CPPFLAGS-tst-cet-legacy-6a.c += -DCET_IS_PERMISSIVE=1
 endif
 CFLAGS-tst-cet-legacy-6b.c += -fcf-protection -mshstk
 CPPFLAGS-tst-cet-legacy-6b.c += -DCET_DISABLED_BY_ENV=1
-CFLAGS-tst-cet-legacy-mod-6a.c += -fcf-protection=branch
+CFLAGS-tst-cet-legacy-mod-6a.c += -fcf-protection=none -fcf-protection=branch
 CFLAGS-tst-cet-legacy-mod-6b.c += -fcf-protection
 CFLAGS-tst-cet-legacy-mod-6c.c += -fcf-protection
 CFLAGS-tst-cet-legacy-7.c += -fcf-protection=none
