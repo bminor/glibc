@@ -43,6 +43,7 @@ The following bugs are resolved with this release:
     -D_FILE_OFFSET_BITS=64
   [30842] Stack read overflow in getaddrinfo in no-aaaa mode (CVE-2023-4527)
   [30843] potential use-after-free in getcanonname (CVE-2023-4806)
+  [31183] Wide stream buffer size reduced MB_LEN_MAX bytes after bug 17522 fix
   [31184] FAIL: elf/tst-tlsgap
   [31185] Incorrect thread point access in _dl_tlsdesc_undefweak and _dl_tlsdesc_dynamic
 

@@ -55,7 +55,7 @@ _IO_wdo_write (FILE *fp, const wchar_t *data, size_t to_do)
 	  char mb_buf[MB_LEN_MAX];
 	  char *write_base, *write_ptr, *buf_end;
 
-	  if (fp->_IO_write_ptr - fp->_IO_write_base < sizeof (mb_buf))
+	  if (fp->_IO_buf_end - fp->_IO_write_ptr < sizeof (mb_buf))
 	    {
 	      /* Make sure we have room for at least one multibyte
 		 character.  */
