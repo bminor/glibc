@@ -16,5 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+/* Don't restore shadow stack register for __longjmp_cancel.  */
+#define DO_NOT_RESTORE_SHADOW_STACK
+
 #define __longjmp __longjmp_cancel
 #include <__longjmp.S>

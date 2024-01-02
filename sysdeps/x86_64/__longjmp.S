@@ -22,12 +22,13 @@
 #include <asm-syntax.h>
 #include <stap-probe.h>
 
-/* Don't restore shadow stack register if
-   1. Shadow stack isn't enabled.  Or
-   2. __longjmp is defined for __longjmp_cancel.
- */
-#if !SHSTK_ENABLED || defined __longjmp
+/* Don't restore shadow stack register if shadow stack isn't enabled.  */
+#if !SHSTK_ENABLED || defined DO_NOT_RESTORE_SHADOW_STACK
 # undef SHADOW_STACK_POINTER_OFFSET
+#endif
+
+#ifndef CHECK_INVALID_LONGJMP
+# define CHECK_INVALID_LONGJMP
 #endif
 
 /* Jump to the position specified by ENV, causing the
@@ -52,6 +53,9 @@ ENTRY(__longjmp)
 	orq %rax, %r9
 # endif
 #endif
+
+	CHECK_INVALID_LONGJMP
+
 #ifdef SHADOW_STACK_POINTER_OFFSET
 # if IS_IN (libc) && defined SHARED && defined FEATURE_1_OFFSET
 	/* Check if Shadow Stack is enabled.  */
@@ -63,9 +67,40 @@ ENTRY(__longjmp)
 	/* Check and adjust the Shadow-Stack-Pointer.  */
 	/* Get the current ssp.  */
 	rdsspq %rax
+	/* Save the current ssp.  */
+	movq %rax, %r10
 	/* And compare it with the saved ssp value.  */
-	subq SHADOW_STACK_POINTER_OFFSET(%rdi), %rax
+	movq SHADOW_STACK_POINTER_OFFSET(%rdi), %rcx
+	subq %rcx, %rax
 	je L(skip_ssp)
+
+	/* Save the target ssp.  */
+	movq %rcx, %r11
+
+L(find_restore_token_loop):
+	/* Look for a restore token.  */
+	movq -8(%rcx), %rbx
+	andq $-8, %rbx
+	cmpq %rcx, %rbx
+	/* Find the restore token.  */
+	je L(restore_shadow_stack)
+
+	/* Try the next slot.  */
+	subq $8, %rcx
+	/* Stop if the current ssp is found.  */
+	cmpq %rcx, %r10
+	jne L(find_restore_token_loop)
+	jmp L(no_shadow_stack_token)
+
+L(restore_shadow_stack):
+	/* Restore the target shadow stack.  */
+	rstorssp -8(%rcx)
+	/* Save the restore token on the old shadow stack.  */
+	saveprevssp
+	rdsspq %rax
+	subq %r11, %rax
+
+L(no_shadow_stack_token):
 	/* Count the number of frames to adjust and adjust it
 	   with incssp instruction.  The instruction can adjust
 	   the ssp by [0..255] value only thus use a loop if
