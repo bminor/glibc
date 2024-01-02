@@ -30,8 +30,11 @@ __fstat64_time64 (int fd, struct __stat64_t64 *buf)
 {
 #if !FSTATAT_USE_STATX
 # if XSTAT_IS_XSTAT64
-#  ifdef __NR_fstat
-  /* 64-bit kABI, e.g. aarch64, powerpc64*, s390x, riscv64, and
+  /* The __NR_stat macro is defined for all ABIs that also define 
+     XSTAT_IS_STAT64, so to correctly identify alpha and sparc check
+     __NR_newfstatat (similar to what fstatat64 does).  */
+#  ifdef __NR_newfstatat
+  /* 64-bit kABI, e.g. aarch64, ia64, powerpc64*, s390x, riscv64, and
      x86_64.  */
   return INLINE_SYSCALL_CALL (fstat, fd, buf);
 #  elif defined __NR_fstat64
