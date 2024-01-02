@@ -26,7 +26,7 @@ escape_char /
 LC_IDENTIFICATION
 title      "Spanish locale for Spain"
 source     "RAP"
-address    "Sankt J<U00F8>rgens Alle 8, DK-1615 K<U00F8>benhavn V, Danmark"
+address    "Sankt Jørgens Alle 8, DK-1615 København V, Danmark"
 contact    ""
 email      "bug-glibc-locales@gnu.org"
 tel        ""
@@ -119,7 +119,7 @@ END LC_MESSAGES
 
 LC_MONETARY
 int_curr_symbol      "EUR "
-currency_symbol      "<U20AC>"
+currency_symbol      "€"
 mon_decimal_point    ","
 mon_thousands_sep    "."
 mon_grouping         3;3
@@ -143,16 +143,16 @@ END LC_NUMERIC
 
 LC_TIME
 abday   "dom";"lun";/
-	"mar";"mi<U00E9>";/
+	"mar";"mié";/
 	"jue";"vie";/
-	"s<U00E1>b"
+	"sáb"
 day     "domingo";/
 	"lunes";/
 	"martes";/
-	"mi<U00E9>rcoles";/
+	"miércoles";/
 	"jueves";/
 	"viernes";/
-	"s<U00E1>bado"
+	"sábado"
 abmon   "ene";"feb";/
 	"mar";"abr";/
 	"may";"jun";/
@@ -175,7 +175,7 @@ d_t_fmt  "%a %d %b %Y %T"
 date_fmt "%a %d %b %Y %T %Z"
 d_fmt   "%d//%m//%y"
 t_fmt   "%T"
-am_pm   "a.<U202F>m.";"p.<U202F>m."
+am_pm   "a. m.";"p. m."
 t_fmt_ampm ""
 week 7;19971130;4
 first_weekday   2
@@ -201,13 +201,13 @@ END LC_NAME
 
 LC_ADDRESS
 postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
-country_name "Espa<U00F1>a"
+country_name "España"
 country_ab2   "ES"
 country_ab3   "ESP"
 country_num   724
 country_car   "E"
 % español
-lang_name     "espa<U00F1>ol"
+lang_name     "español"
 lang_ab      "es"
 lang_term    "spa"
 lang_lib    "spa"
