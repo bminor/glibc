@@ -248,7 +248,7 @@ END LC_COLLATE
 
 LC_MONETARY
 int_curr_symbol         "UZS "
-currency_symbol         "so<U02BB>m"
+currency_symbol         "soʻm"
 mon_decimal_point       "."
 mon_thousands_sep       ","
 mon_grouping            3;3
@@ -313,10 +313,10 @@ END LC_TIME
 LC_MESSAGES
 % Note: "No" is "yo‘q" which conflicts with English "yes".
 % This is why "jo‘q" & "jJ" is also accepted as "no".
-yesexpr "^[+1hH<U04B2><U04B3>]"
-noexpr  "^[-0nNyYjJ<U0419><U0439>]"
+yesexpr "^[+1hHҲҳ]"
+noexpr  "^[-0nNyYjJЙй]"
 yesstr  "ha"
-nostr   "yo<U2018>q"
+nostr   "yo‘q"
 END LC_MESSAGES
 
 LC_PAPER
@@ -350,7 +350,7 @@ LC_ADDRESS
 % but %S seems not recognized yet ? so %C%N%T%N%s %h%N%f%N%b%N%d%N%e %r%N%a%N%z
 % is used.
 postal_fmt    "%C%N%T%N%s %h%N%f%N%b%N%d%N%e %r%N%a%N%z"
-country_name "O<U02BB>zbekiston"
+country_name "Oʻzbekiston"
 country_post "UZ" % ??
 country_ab2  "UZ"
 country_ab3  "UZB"
@@ -358,7 +358,7 @@ country_num  860
 % FIXME: ISBN number?
 %country_isbn ""
 country_car   "UZ"
-lang_name   "o<U2018>zbek"
+lang_name   "o‘zbek"
 lang_ab      "uz"
 lang_term    "uzb"
 lang_lib     "uzb"
