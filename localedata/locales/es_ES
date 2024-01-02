@@ -175,7 +175,7 @@ d_t_fmt  "%a %d %b %Y %T"
 date_fmt "%a %d %b %Y %T %Z"
 d_fmt   "%d//%m//%y"
 t_fmt   "%T"
-am_pm   "";""
+am_pm   "a.<U202F>m.";"p.<U202F>m."
 t_fmt_ampm ""
 week 7;19971130;4
 first_weekday   2
