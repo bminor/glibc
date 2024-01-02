@@ -48,7 +48,7 @@ main (int argc, char **argv)
 
   memset (&runtime, 0, sizeof (runtime));
 
-  unsigned long iters = 1000;
+  unsigned long iters = 2000;
 
 #ifdef BENCH_INIT
   BENCH_INIT ();

@@ -29,7 +29,7 @@
 #include <bench-libmvec-arch.h>
 
 #include <bench-util.c>
-#define D_ITERS 10000
+#define D_ITERS 200000
 
 int
 main (int argc, char **argv)
