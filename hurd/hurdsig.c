@@ -416,9 +416,9 @@ _hurdsig_abort_rpcs (struct hurd_sigstate *ss, int signo, int sigthread,
 		     struct machine_thread_all_state *state, int *state_change,
 		     void (*reply) (void))
 {
-  extern const void _hurd_intr_rpc_msg_about_to;
-  extern const void _hurd_intr_rpc_msg_setup_done;
-  extern const void _hurd_intr_rpc_msg_in_trap;
+  extern const void _hurd_intr_rpc_msg_about_to attribute_hidden;
+  extern const void _hurd_intr_rpc_msg_setup_done attribute_hidden;
+  extern const void _hurd_intr_rpc_msg_in_trap attribute_hidden;
   mach_port_t rcv_port = MACH_PORT_NULL;
   mach_port_t intr_port;
 
