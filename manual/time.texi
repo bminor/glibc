@@ -1,4 +1,4 @@
-@node Date and Time, Resource Usage And Limitation, Arithmetic, Top
+@node Date and Time, Resource Usage And Limitation, Bit Manipulation, Top
 @c %MENU% Functions for getting the date and time and formatting them nicely
 @chapter Date and Time
 

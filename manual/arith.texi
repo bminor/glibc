@@ -1,4 +1,4 @@
-@node Arithmetic, Date and Time, Mathematics, Top
+@node Arithmetic, Bit Manipulation, Mathematics, Top
 @c %MENU% Low level arithmetic functions
 @chapter Arithmetic Functions
 
