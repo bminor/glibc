@@ -1,4 +1,4 @@
-/* Initialization code run first thing by the ELF startup code.  For x86/Hurd.
+/* Initialization code run first thing by the ELF startup code.  For Hurd.
    Copyright (C) 1995-2024 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -155,7 +155,7 @@ first_init (void)
 
 #ifndef SHARED
   /* In the static case, we need to set up TLS early so that the stack
-     protection guard can be read at gs:0x14 by the gcc-generated snippets.  */
+     protection guard can be read at from TLS by the GCC-generated snippets.  */
   _hurd_tls_init (&__init1_tcbhead, 0);
 #endif
 
