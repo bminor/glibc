@@ -20,9 +20,7 @@ escape_char /
 % Application: general
 % Users: general
 %
-% This file is under the
-% GNU General Public License.
-% Based in the an_ES Locale
+% Based on the an_ES Locale
 
 LC_IDENTIFICATION
 title      "Asturian locale for Spain"
