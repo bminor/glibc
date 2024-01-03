@@ -7,6 +7,9 @@ using `glibc' in the "product" field.
 
 Version 2.38.1
 
+* Sync with Linux kernel 6.6 shadow stack interface.  Since only x86-64
+  is supported, --enable-cet is ignored for i386.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * __rseq_size now denotes the size of the active rseq area (20 bytes

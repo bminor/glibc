@@ -29,6 +29,76 @@ if test x"$build_mathvec" = xnotset; then
   build_mathvec=yes
 fi
 
+if test $enable_cet != no; then
+  # Check if CET can be enabled.
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether CET can be enabled" >&5
+printf %s "checking whether CET can be enabled... " >&6; }
+if test ${libc_cv_x86_cet_available+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  cat > conftest.c <<EOF
+#if !defined __CET__ || __CET__ != 3
+# error CET isn't available.
+#endif
+EOF
+		 if { ac_try='${CC-cc} -c $CFLAGS -fcf-protection -include cet.h conftest.c 1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then
+		   libc_cv_x86_cet_available=yes
+		 else
+		   libc_cv_x86_cet_available=no
+		 fi
+		 rm -rf conftest*
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_x86_cet_available" >&5
+printf "%s\n" "$libc_cv_x86_cet_available" >&6; }
+  if test $libc_cv_x86_cet_available != yes; then
+    as_fn_error $? "$CC doesn't support CET" "$LINENO" 5
+  fi
+fi
+if test $enable_cet != no; then
+  # Check if assembler supports CET.
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether assembler supports CET" >&5
+printf %s "checking whether assembler supports CET... " >&6; }
+if test ${libc_cv_x86_cet_as+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  cat > conftest.s <<EOF
+	incsspd %ecx
+EOF
+		 if { ac_try='${CC-cc} -c $CFLAGS conftest.s -o conftest.o 1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then
+		   libc_cv_x86_cet_as=yes
+		 else
+		   libc_cv_x86_cet_as=no
+		 fi
+		 rm -rf conftest*
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_x86_cet_as" >&5
+printf "%s\n" "$libc_cv_x86_cet_as" >&6; }
+  if test $libc_cv_x86_cet_as = no; then
+    as_fn_error $? "$AS doesn't support CET" "$LINENO" 5
+  fi
+fi
+if test $enable_cet = yes; then
+  printf "%s\n" "#define DEFAULT_DL_X86_CET_CONTROL cet_elf_property" >>confdefs.h
+
+elif test $enable_cet = permissive; then
+  printf "%s\n" "#define DEFAULT_DL_X86_CET_CONTROL cet_permissive" >>confdefs.h
+
+fi
+config_vars="$config_vars
+enable-cet = $enable_cet"
+
 test -n "$critic_missing" && as_fn_error $? "
 *** $critic_missing" "$LINENO" 5
 
