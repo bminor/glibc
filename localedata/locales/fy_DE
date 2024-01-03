@@ -9,7 +9,7 @@ escape_char /
 % otherwise be governed by that license.
 
 LC_IDENTIFICATION
-title "Sater Frisian and North Frisian Locale for Germany"
+title "Western Frisian locale for Germany"
 source "information from Kenneth Christiansen"
 address ""
 contact "Kenneth Christiansen, Pablo Saratxaga"
@@ -18,8 +18,8 @@ tel ""
 % Fax
 language "Western Frisian"
 territory "Germany"
-revision "0.1"
-date "2003-11-30"
+revision "0.2"
+date "2024-01-03"
 
 category "i18n:2012";LC_IDENTIFICATION
 category "i18n:2012";LC_COLLATE
@@ -44,7 +44,7 @@ country_car   "D"
 country_num 276
 country_isbn "3"
 country_name "Dútslân"
-lang_name    "Frysk"
+lang_name    "West-Frysk"
 lang_ab      "fy"
 lang_term    "fry"
 lang_lib    "fry"
@@ -90,32 +90,38 @@ copy "de_DE"
 END LC_NUMERIC
 
 LC_TIME
-abday   "Sdg";"Mdg";"Dsg";"Mwk";"Ddg";"Fdg";"Swd"
-day     "Sinndag";/
-        "Mondag";/
-        "Dingsdag";/
-        "Meddwäakj";/
-        "Donnadag";/
-        "Friedag";/
-        "Sinnowend"
-abmon   "Jan";"Feb";/
-        "Moz";"Apr";/
-        "Mai";"Jun";/
-        "Jul";"Aug";/
-        "Sep";"Okt";/
-        "Now";"Dez"
-mon     "Jaunuwoa";/
-        "Februwoa";/
-        "Moaz";/
-        "Aprell";/
+abday   "Sn";"Mo";"Ti";"Wo";"To";"Fr";"Sn"
+day     "Snein";/
+        "Moandei";/
+        "Tiisdei";/
+        "Woansdei";/
+        "Tongersdei";/
+        "Freed";/
+        "Sneon"
+abmon   "Jan";/
+        "Feb";/
+        "Mrt";/
+        "Apr";/
         "Mai";/
-        "Juni";/
-        "Juli";/
-        "August";/
-        "Septamba";/
-        "Oktoba";/
-        "Nowamba";/
-        "Dezamba"
+        "Jun";/
+        "Jul";/
+        "Aug";/
+        "Sep";/
+        "Okt";/
+        "Nov";/
+        "Des"
+mon     "Jannewaris";/
+        "Febrewaris";/
+        "Maart";/
+        "April";/
+        "Maaie";/
+        "Juny";/
+        "July";/
+        "Augustus";/
+        "Septimber";/
+        "Oktober";/
+        "Novimber";/
+        "Desimber"
 d_t_fmt  "%a %d. %b %Y %T"
 date_fmt "%a %d. %b %Y %T %Z"
 d_fmt   "%d.%m.%Y"
