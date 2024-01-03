@@ -19,7 +19,10 @@
 	.text
 	.globl _start
 _start:
+	pushl %esp
 	call _hurd_stack_setup
+	/* No need to "addl %4, %esp", since _hurd_stack_setup
+	 * returns with an already adjusted stack pointer.  */
 	xorl %edx, %edx
 	jmp _start1
 

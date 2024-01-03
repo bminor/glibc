@@ -197,7 +197,7 @@ strong_alias (posixland_init, __libc_init_first);
    which should not exist at all.  */
 void
 inhibit_stack_protector
-_hurd_stack_setup (void)
+_hurd_stack_setup (void **argptr)
 {
   /* This is the very first C code that runs in a statically linked
      executable -- calling this function is the first thing that _start in
@@ -206,14 +206,12 @@ _hurd_stack_setup (void)
 
      _start1 expects the arguments, environment, and a Hurd data block to be
      located at the top of the stack.  The data may already be located there,
-     or we may need to receive it from the exec server.  */
-  void *caller = __builtin_extract_return_addr (__builtin_return_address (0));
-  /* If the arguments and environment are already located on the stack, this is
-     where they are, just above our call frame.  Note that this may not be a
-     valid pointer in case we're supposed to receive the arguments from the exec
-     server, so we can not dereference it yet.  */
-  void **p = (void **) __builtin_frame_address (0) + 2;
+     or we may need to receive it from the exec server.  If the data is located
+     on the stack (just above our call frame), argptr points to it.  Note that
+     this may not be a valid pointer in case we're supposed to receive the
+     arguments from the exec server, so we can not dereference it yet.  */
 
+  void *caller = __builtin_extract_return_addr (__builtin_return_address (0));
   /* Init the essential things.  */
   first_init ();
 
@@ -245,7 +243,7 @@ _hurd_stack_setup (void)
      the stack pointer to the data (which is somewhere on the current stack
      anyway).  This way, _start1 find the data on the top of the stack, just as
      it expects to.  */
-  _hurd_startup (p, &doinit);
+  _hurd_startup (argptr, &doinit);
   __builtin_unreachable ();
 }
 #endif

@@ -25,6 +25,7 @@ _start:
 	leaq __strlen_sse2(%rip), %rax
 	movq %rax, strlen@GOTPCREL(%rip)
 
+	movq %rsp, %rdi
 	call _hurd_stack_setup
 	xorq %rdx, %rdx
 	jmp _start1
