@@ -1088,7 +1088,6 @@ changequote(,)dnl
 if test -n "$CXX"; then
   # In theory the clang and gcc regexes can be merged, but the
   # result is incomprehensible.
-  if test "$with_clang" != no; then
   find_cxx_header () {
     echo "#include <$1>" | $CXX -M -MP -x c++ - 2>/dev/null \
 	 | sed -n "\,$1:,{s/:\$//;p}"
