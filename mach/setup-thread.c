@@ -19,7 +19,6 @@
 #include <mach/setup-thread.h>
 #include <thread_state.h>
 #include <string.h>
-#include <mach/machine/vm_param.h>
 #include <ldsodefs.h>
 #include "sysdep.h"		/* Defines stack direction.  */
 
