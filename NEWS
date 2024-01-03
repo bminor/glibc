@@ -55,6 +55,13 @@ Major new features:
   unsigned char, unsigned short, unsigned int, unsigned long int and
   unsigned long long int, and a type-generic macro.
 
+* On AArch64 new symbols were added to libmvec and now math.h has
+  annotations to allow GCC 9 or newer to auto-vectorize calls to the
+  following scalar math functions when -ffast-math is specified:
+  acos, acosf, asin, asinf, atan, atanf, atan2, atan2f, cos, cosf,
+  exp, expf, exp10, exp10f, exp2, exp2f, expm1, expm1f, log, logf,
+  log10, log10f, log1p, log1pf, log2, log2f, sin, sinf, tan, tanf.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The ldconfig program now skips file names containing ';' or ending in
