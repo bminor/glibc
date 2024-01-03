@@ -79,15 +79,15 @@ day     "Sonntag";/
 	"Donnerstag";/
 	"Freitag";/
 	"Samstag"
-abmon   "J<U00E4>n";"Feb";/
-	"M<U00E4>r";"Apr";/
+abmon   "Jän";"Feb";/
+	"Mär";"Apr";/
 	"Mai";"Jun";/
 	"Jul";"Aug";/
 	"Sep";"Okt";/
 	"Nov";"Dez"
-mon     "J<U00E4>nner";/
+mon     "Jänner";/
 	"Februar";/
-	"M<U00E4>rz";/
+	"März";/
 	"April";/
 	"Mai";/
 	"Juni";/

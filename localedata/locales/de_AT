@@ -63,9 +63,9 @@ END LC_MESSAGES
 
 LC_MONETARY
 int_curr_symbol           "EUR "
-currency_symbol           "<U20AC>"
+currency_symbol           "€"
 mon_decimal_point         ","
-mon_thousands_sep         "<U202F>"
+mon_thousands_sep         " "
 mon_grouping              3;3
 positive_sign             ""
 negative_sign             "-"
@@ -96,15 +96,15 @@ day     "Sonntag";/
 	"Donnerstag";/
 	"Freitag";/
 	"Samstag"
-abmon   "J<U00E4>n";"Feb";/
-	"M<U00E4>r";"Apr";/
+abmon   "Jän";"Feb";/
+	"Mär";"Apr";/
 	"Mai";"Jun";/
 	"Jul";"Aug";/
 	"Sep";"Okt";/
 	"Nov";"Dez"
-mon     "J<U00E4>nner";/
+mon     "Jänner";/
 	"Februar";/
-	"M<U00E4>rz";/
+	"März";/
 	"April";/
 	"Mai";/
 	"Juni";/
@@ -145,7 +145,7 @@ END LC_NAME
 
 LC_ADDRESS
 postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
-country_name "<U00D6>sterreich"
+country_name "Österreich"
 country_ab2 "AT"
 country_ab3 "AUT"
 country_num 040
