@@ -38,7 +38,16 @@ extern int __libc_argc attribute_hidden;
 extern char **__libc_argv attribute_hidden;
 extern char **_dl_argv;
 
-#ifndef SHARED
+#if !defined (SHARED) && (defined (THREAD_SET_STACK_GUARD) || defined (THREAD_SET_POINTER_GUARD))
+/* In the static case, we need to set up TLS early so that the stack
+   protection guard can be read at from TLS by the GCC-generated snippets,
+   on architectures that store the guard in TLS and not globally.  */
+# define USE_INIT1_TCBHEAD 1
+#else
+# define USE_INIT1_TCBHEAD 0
+#endif
+
+#if USE_INIT1_TCBHEAD
 static tcbhead_t __init1_tcbhead;
 #endif
 
@@ -153,9 +162,7 @@ first_init (void)
   /* Initialize data structures so we can do RPCs.  */
   __mach_init ();
 
-#ifndef SHARED
-  /* In the static case, we need to set up TLS early so that the stack
-     protection guard can be read at from TLS by the GCC-generated snippets.  */
+#if USE_INIT1_TCBHEAD
   _hurd_tls_init (&__init1_tcbhead, 0);
 #endif
 
