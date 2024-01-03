@@ -169,17 +169,14 @@ Enable Intel Control-flow Enforcement Technology (CET) support.  When
 is protected with indirect branch tracking (IBT) and shadow stack
 (SHSTK)@.  When CET is enabled, @theglibc{} is compatible with all
 existing executables and shared libraries.  This feature is currently
-supported on i386, x86_64 and x32 with GCC 8 and binutils 2.29 or later.
-Note that when CET is enabled, @theglibc{} requires CPUs capable of
-multi-byte NOPs, like x86-64 processors as well as Intel Pentium Pro or
-newer.  With @option{--enable-cet}, it is an error to dlopen a non CET
+supported on x86_64 and x32 with GCC 8 and binutils 2.29 or later.
+With @option{--enable-cet}, it is an error to dlopen a non CET
 enabled shared library in CET enabled application.  With
 @option{--enable-cet=permissive}, CET is disabled when dlopening a
 non CET enabled shared library in CET enabled application.
 
-NOTE: @option{--enable-cet} has been tested for i686, x86_64 and x32
-on non-CET processors.  @option{--enable-cet} has been tested for
-i686, x86_64 and x32 on CET processors.
+NOTE: @option{--enable-cet} has been tested for x86_64 and x32
+on non-CET and CET processors.
 
 @item --enable-memory-tagging
 Enable memory tagging support if the architecture supports it.  When

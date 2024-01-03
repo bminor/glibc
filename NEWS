@@ -9,6 +9,9 @@ Version 2.39
 
 Major new features:
 
+* Sync with Linux kernel 6.6 shadow stack interface.  Since only x86-64
+  is supported, --enable-cet is ignored for i386.
+
 * struct statvfs now has an f_type member, equal to the f_type statfs member;
   on the Hurd this was always available under a reserved name,
   and under Linux a spare has been allocated: it was always zero
