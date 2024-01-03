@@ -162,6 +162,10 @@ first_init (void)
   /* Initialize data structures so we can do RPCs.  */
   __mach_init ();
 
+#ifndef SHARED
+  GLRO(dl_pagesize) = __vm_page_size;
+#endif
+
 #if USE_INIT1_TCBHEAD
   _hurd_tls_init (&__init1_tcbhead, 0);
 #endif
