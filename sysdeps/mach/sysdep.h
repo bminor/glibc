@@ -56,13 +56,6 @@
 /* This is not used on all machines.  */
 #endif
 
-/* Set variables ARGC, ARGV, and ENVP for the arguments
-   left on the stack by the microkernel.  */
-#ifndef SNARF_ARGS
-#define SNARF_ARGS(argc, argv, envp)
-#error SNARF_ARGS not defined by sysdeps/mach/MACHINE/sysdep.h
-#endif
-
 /* LOSE can be defined as the `halt' instruction or something
    similar which will cause the process to die in a characteristic
    way suggesting a bug.  */
