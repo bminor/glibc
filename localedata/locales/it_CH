@@ -53,7 +53,7 @@ END LC_COLLATE
 LC_MESSAGES
 yesexpr "^[+1sSjJoOyY]"
 noexpr  "^[-0nN]"
-yesstr  "s<U00EC>"
+yesstr  "sì"
 nostr   "no"
 END LC_MESSAGES
 
@@ -71,11 +71,11 @@ abday   "dom";"lun";/
 	"gio";"ven";/
 	"sab"
 day     "domenica";/
-	"luned<U00EC>";/
-	"marted<U00EC>";/
-	"mercoled<U00EC>";/
-	"gioved<U00EC>";/
-	"venerd<U00EC>";/
+	"lunedì";/
+	"martedì";/
+	"mercoledì";/
+	"giovedì";/
+	"venerdì";/
 	"sabato"
 abmon   "gen";"feb";/
 	"mar";"apr";/

@@ -130,9 +130,9 @@ END LC_CTYPE
 
 LC_MONETARY
 int_curr_symbol   "EUR "
-currency_symbol   "<U20AC>"
+currency_symbol   "€"
 mon_decimal_point ","
-mon_thousands_sep "<U202F>"
+mon_thousands_sep " "
 mon_grouping      3;3
 positive_sign     ""
 negative_sign     "-"
@@ -148,35 +148,35 @@ END LC_MONETARY
 
 LC_NUMERIC
 decimal_point     ","
-thousands_sep     "<U202F>"
+thousands_sep     " "
 grouping          3;3
 END LC_NUMERIC
 
 LC_TIME
-abday    "Sv";"P<U00A0>";/
-         "O<U00A0>";"T<U00A0>";/
-         "C<U00A0>";"Pk";/
-         "S<U00A0>"
-day      "sv<U0113>tdiena";/
+abday    "Sv";"P ";/
+         "O ";"T ";/
+         "C ";"Pk";/
+         "S "
+day      "svētdiena";/
          "pirmdiena";/
          "otrdiena";/
-         "tre<U0161>diena";/
+         "trešdiena";/
          "ceturtdiena";/
          "piektdiena";/
          "sestdiena"
 abmon    "jan";"feb";/
          "mar";"apr";/
-         "mai";"j<U016B>n";/
-         "j<U016B>l";"aug";/
+         "mai";"jūn";/
+         "jūl";"aug";/
          "sep";"okt";/
          "nov";"dec"
-mon      "janv<U0101>ris";/
-         "febru<U0101>ris";/
+mon      "janvāris";/
+         "februāris";/
          "marts";/
-         "apr<U012B>lis";/
+         "aprīlis";/
          "maijs";/
-         "j<U016B>nijs";/
-         "j<U016B>lijs";/
+         "jūnijs";/
+         "jūlijs";/
          "augusts";/
          "septembris";/
          "oktobris";/
@@ -195,8 +195,8 @@ END LC_TIME
 LC_MESSAGES
 yesexpr "^[+1JjYy]"
 noexpr  "^[-0Nn]"
-yesstr  "j<U0101>"
-nostr   "n<U0113>"
+yesstr  "jā"
+nostr   "nē"
 END LC_MESSAGES
 
 LC_PAPER
@@ -225,7 +225,7 @@ country_ab3 "LVA"
 country_num 428
 country_car "LV"
 % latviešu valoda
-lang_name    "latvie<U0161>u"
+lang_name    "latviešu"
 lang_ab      "lv"
 lang_term    "lav"
 lang_lib    "lav"
