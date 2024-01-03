@@ -15,6 +15,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <assert.h>
 #include <mach.h>
 #include <mach/mig_support.h>
 #include <tls.h>

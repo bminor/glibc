@@ -19,6 +19,7 @@
 #ifndef _MACH_LOWLEVELLOCK_H
 #define _MACH_LOWLEVELLOCK_H   1
 
+#include <mach.h>
 #include <mach/gnumach.h>
 #include <atomic.h>
 

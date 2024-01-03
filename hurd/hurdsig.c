@@ -15,6 +15,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -260,7 +261,6 @@ _hurd_sigstate_actions (struct hurd_sigstate *ss)
 #include <hurd/msg_server.h>
 #include <hurd/msg_reply.h>	/* For __msg_sig_post_reply.  */
 #include <hurd/interrupt.h>
-#include <assert.h>
 #include <unistd.h>
 
 
