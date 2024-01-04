@@ -42,7 +42,8 @@
 __BEGIN_DECLS
 
 /* Use __pacify_uint16 (N) instead of (uint16_t) (N) when the cast is helpful
-   only to pacify older GCC (e.g., GCC 10 -Wconversion) or non-GCC.  */
+   only to pacify older GCC (e.g., GCC 10 -Wconversion) or non-GCC (e.g
+   clang -Wimplicit-int-conversion).  */
 #if __GNUC_PREREQ (11, 0)
 # define __pacify_uint8(n)  (n)
 # define __pacify_uint16(n) (n)
@@ -170,8 +171,8 @@ extern unsigned int stdc_trailing_zeros_ull (unsigned long long int __x)
 #define stdc_trailing_zeros(x)				\
   (sizeof (x) == 8 ? stdc_trailing_zeros_ull (x)	\
    : sizeof (x) == 4 ? stdc_trailing_zeros_ui (x)	\
-   : sizeof (x) == 2 ? stdc_trailing_zeros_us (x)	\
-   : stdc_trailing_zeros_uc (x))
+   : sizeof (x) == 2 ? stdc_trailing_zeros_us (__pacify_uint16 (x))	\
+   : stdc_trailing_zeros_uc (__pacify_uint8 (x)))
 
 #if __GNUC_PREREQ (3, 4) || __glibc_has_builtin (__builtin_ctzll)
 static __always_inline unsigned int
@@ -274,8 +275,8 @@ extern unsigned int stdc_first_leading_zero_ull (unsigned long long int __x)
 #define stdc_first_leading_zero(x)			\
   (sizeof (x) == 8 ? stdc_first_leading_zero_ull (x)	\
    : sizeof (x) == 4 ? stdc_first_leading_zero_ui (x)	\
-   : sizeof (x) == 2 ? stdc_first_leading_zero_us (x)	\
-   : stdc_first_leading_zero_uc (x))
+   : sizeof (x) == 2 ? stdc_first_leading_zero_us (__pacify_uint16 (x))	\
+   : stdc_first_leading_zero_uc (__pacify_uint8 (x)))
 
 #if __GNUC_PREREQ (3, 4) || __glibc_has_builtin (__builtin_clzll)
 static __always_inline unsigned int
@@ -328,8 +329,8 @@ extern unsigned int stdc_first_leading_one_ull (unsigned long long int __x)
 #define stdc_first_leading_one(x)			\
   (sizeof (x) == 8 ? stdc_first_leading_one_ull (x)	\
    : sizeof (x) == 4 ? stdc_first_leading_one_ui (x)	\
-   : sizeof (x) == 2 ? stdc_first_leading_one_us (x)	\
-   : stdc_first_leading_one_uc (x))
+   : sizeof (x) == 2 ? stdc_first_leading_one_us (__pacify_uint16 (x))	\
+   : stdc_first_leading_one_uc (__pacify_uint8 (x)))
 
 #if __GNUC_PREREQ (3, 4) || __glibc_has_builtin (__builtin_clzll)
 static __always_inline unsigned int
@@ -382,8 +383,8 @@ extern unsigned int stdc_first_trailing_zero_ull (unsigned long long int __x)
 #define stdc_first_trailing_zero(x)			\
   (sizeof (x) == 8 ? stdc_first_trailing_zero_ull (x)	\
    : sizeof (x) == 4 ? stdc_first_trailing_zero_ui (x)	\
-   : sizeof (x) == 2 ? stdc_first_trailing_zero_us (x)	\
-   : stdc_first_trailing_zero_uc (x))
+   : sizeof (x) == 2 ? stdc_first_trailing_zero_us (__pacify_uint16 (x)) \
+   : stdc_first_trailing_zero_uc (__pacify_uint8 (x)))
 
 #if __GNUC_PREREQ (3, 4) || __glibc_has_builtin (__builtin_ctzll)
 static __always_inline unsigned int
@@ -436,8 +437,8 @@ extern unsigned int stdc_first_trailing_one_ull (unsigned long long int __x)
 #define stdc_first_trailing_one(x)			\
   (sizeof (x) == 8 ? stdc_first_trailing_one_ull (x)	\
    : sizeof (x) == 4 ? stdc_first_trailing_one_ui (x)	\
-   : sizeof (x) == 2 ? stdc_first_trailing_one_us (x)	\
-   : stdc_first_trailing_one_uc (x))
+   : sizeof (x) == 2 ? stdc_first_trailing_one_us (__pacify_uint16 (x))	\
+   : stdc_first_trailing_one_uc (__pacify_uint8 (x)))
 
 #if __GNUC_PREREQ (3, 4) || __glibc_has_builtin (__builtin_ctzll)
 static __always_inline unsigned int
