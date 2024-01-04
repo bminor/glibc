@@ -54,12 +54,12 @@ LC_TIME
 mon "siakwa kati";/
     "kuswa kati";/
     "kakamuk kati";/
-    "l<U00EE> wainhka kati";/
+    "lî wainhka kati";/
     "lih mairin kati";/
-    "l<U00EE> kati";/
+    "lî kati";/
     "pastara kati";/
     "sikla kati";/
-    "w<U00EE>s kati";/
+    "wîs kati";/
     "waupasa kati";/
     "yahbra kati";/
     "trisu kati"
@@ -69,12 +69,12 @@ mon "siakwa kati";/
 abmon "siakwa kati";/
       "kuswa kati";/
       "kakamuk kati";/
-      "l<U00EE> wainhka kati";/
+      "lî wainhka kati";/
       "lih mairin kati";/
-      "l<U00EE> kati";/
+      "lî kati";/
       "pastara kati";/
       "sikla kati";/
-      "w<U00EE>s kati";/
+      "wîs kati";/
       "waupasa kati";/
       "yahbra kati";/
       "trisu kati"
@@ -169,7 +169,7 @@ country_ab2  "NI"
 country_ab3  "NIC"
 country_num   558
 country_car   "NIC"
-lang_name     "M<U00ED>skitu"
+lang_name     "Mískitu"
 lang_term     "miq"
 lang_lib      "miq"
 END LC_ADDRESS
