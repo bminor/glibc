@@ -26,7 +26,7 @@ escape_char /
 LC_IDENTIFICATION
 title      "Spanish locale for Honduras"
 source     "RAP"
-address    "Sankt J<U00F8>rgens Alle 8, DK-1615 K<U00F8>benhavn V, Danmark"
+address    "Sankt Jørgens Alle 8, DK-1615 København V, Danmark"
 contact    ""
 email      "bug-glibc-locales@gnu.org"
 tel        ""
@@ -88,16 +88,16 @@ END LC_NUMERIC
 
 LC_TIME
 abday   "dom";"lun";/
-	"mar";"mi<U00E9>";/
+	"mar";"mié";/
 	"jue";"vie";/
-	"s<U00E1>b"
+	"sáb"
 day     "domingo";/
 	"lunes";/
 	"martes";/
-	"mi<U00E9>rcoles";/
+	"miércoles";/
 	"jueves";/
 	"viernes";/
-	"s<U00E1>bado"
+	"sábado"
 abmon   "ene";"feb";/
 	"mar";"abr";/
 	"may";"jun";/
@@ -152,7 +152,7 @@ country_num   340
 country_car "HN"
 lang_ab      "es"
 % español
-lang_name     "espa<U00F1>ol"
+lang_name     "español"
 lang_term    "spa"
 lang_lib    "spa"
 END LC_ADDRESS

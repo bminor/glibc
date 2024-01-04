@@ -80,16 +80,16 @@ END LC_NUMERIC
 
 LC_TIME
 abday   "dom";"lun";/
-	"mar";"mi<U00E9>";/
+	"mar";"mié";/
 	"jue";"vie";/
-	"s<U00E1>b"
+	"sáb"
 day     "domingo";/
 	"lunes";/
 	"martes";/
-	"mi<U00E9>rcoles";/
+	"miércoles";/
 	"jueves";/
 	"viernes";/
-	"s<U00E1>bado"
+	"sábado"
 abmon   "ene";"feb";/
 	"mar";"abr";/
 	"may";"jun";/
@@ -143,7 +143,7 @@ country_ab3   "NIC"
 country_num   558
 country_car   "NIC"
 % español
-lang_name     "espa<U00F1>ol"
+lang_name     "español"
 lang_ab      "es"
 lang_term    "spa"
 lang_lib    "spa"

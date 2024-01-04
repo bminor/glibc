@@ -56,10 +56,10 @@ END LC_MESSAGES
 
 LC_MONETARY
 int_curr_symbol      "CRC "
-currency_symbol      "<U20A1>"
+currency_symbol      "₡"
 % Decreto Ejecutivo 29660
 mon_decimal_point    ","
-mon_thousands_sep    "<U202F>"
+mon_thousands_sep    " "
 mon_grouping         3;3
 positive_sign        ""
 negative_sign        "-"
@@ -76,22 +76,22 @@ END LC_MONETARY
 LC_NUMERIC
 % Decreto Ejecutivo 29660
 decimal_point        ","
-thousands_sep        "<U202F>"
+thousands_sep        " "
 grouping             3;3
 END LC_NUMERIC
 
 LC_TIME
 abday   "dom";"lun";/
-	"mar";"mi<U00E9>";/
+	"mar";"mié";/
 	"jue";"vie";/
-	"s<U00E1>b"
+	"sáb"
 day     "domingo";/
 	"lunes";/
 	"martes";/
-	"mi<U00E9>rcoles";/
+	"miércoles";/
 	"jueves";/
 	"viernes";/
-	"s<U00E1>bado"
+	"sábado"
 abmon   "ene";"feb";/
 	"mar";"abr";/
 	"may";"jun";/
@@ -154,7 +154,7 @@ country_ab2   "CR"
 country_ab3   "CRI"
 country_num   188
 % español
-lang_name     "espa<U00F1>ol"
+lang_name     "español"
 lang_ab      "es"
 lang_term    "spa"
 lang_lib    "spa"

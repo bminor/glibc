@@ -26,7 +26,7 @@ escape_char /
 LC_IDENTIFICATION
 title      "Spanish locale for Peru"
 source     "RAP"
-address    "Sankt J<U00F8>rgens Alle 8, DK-1615 K<U00F8>benhavn V, Danmark"
+address    "Sankt Jørgens Alle 8, DK-1615 København V, Danmark"
 contact    ""
 email      "bug-glibc-locales@gnu.org"
 tel        ""
@@ -86,16 +86,16 @@ END LC_NUMERIC
 
 LC_TIME
 abday   "dom";"lun";/
-	"mar";"mi<U00E9>";/
+	"mar";"mié";/
 	"jue";"vie";/
-	"s<U00E1>b"
+	"sáb"
 day     "domingo";/
 	"lunes";/
 	"martes";/
-	"mi<U00E9>rcoles";/
+	"miércoles";/
 	"jueves";/
 	"viernes";/
-	"s<U00E1>bado"
+	"sábado"
 abmon   "ene";"feb";/
 	"mar";"abr";/
 	"may";"jun";/
@@ -143,13 +143,13 @@ END LC_NAME
 
 LC_ADDRESS
 postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
-country_name "Per<U00FA>"
+country_name "Perú"
 country_ab2   "PE"
 country_ab3   "PER"
 country_num   604
 country_car   "PE"
 % español
-lang_name     "espa<U00F1>ol"
+lang_name     "español"
 lang_ab      "es"
 lang_term    "spa"
 lang_lib    "spa"
