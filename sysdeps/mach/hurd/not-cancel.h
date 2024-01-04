@@ -76,8 +76,10 @@ __typeof (__fcntl) __fcntl_nocancel;
 #define __fcntl64_nocancel(...) \
   __fcntl_nocancel (__VA_ARGS__)
 
+/* Non cancellable getrandom syscall that does not also set errno in case of
+   failure.  */
 static inline ssize_t
-__getrandom_nocancel (void *buf, size_t buflen, unsigned int flags)
+__getrandom_nocancel_nostatus (void *buf, size_t buflen, unsigned int flags)
 {
   int save_errno = errno;
   ssize_t r = __getrandom (buf, buflen, flags);
@@ -85,6 +87,9 @@ __getrandom_nocancel (void *buf, size_t buflen, unsigned int flags)
   __set_errno (save_errno);
   return r;
 }
+
+#define __getrandom_nocancel(buf, size, flags) \
+  __getrandom (buf, size, flags)
 
 #define __poll_infinity_nocancel(fds, nfds) \
   __poll (fds, nfds, -1)
