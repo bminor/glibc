@@ -41,6 +41,16 @@
 
 __BEGIN_DECLS
 
+/* Use __pacify_uint16 (N) instead of (uint16_t) (N) when the cast is helpful
+   only to pacify older GCC (e.g., GCC 10 -Wconversion) or non-GCC.  */
+#if __GNUC_PREREQ (11, 0)
+# define __pacify_uint8(n)  (n)
+# define __pacify_uint16(n) (n)
+#else
+# define __pacify_uint8(n)  ((uint8_t) (n))
+# define __pacify_uint16(n) ((uint16_t) (n))
+#endif
+
 /* Count leading zeros.  */
 extern unsigned int stdc_leading_zeros_uc (unsigned char __x)
      __THROW __attribute_const__;
@@ -125,13 +135,13 @@ __clo32_inline (uint32_t __x)
 static __always_inline unsigned int
 __clo16_inline (uint16_t __x)
 {
-  return __clz16_inline (~__x);
+  return __clz16_inline (__pacify_uint16 (~__x));
 }
 
 static __always_inline unsigned int
 __clo8_inline (uint8_t __x)
 {
-  return __clz8_inline (~__x);
+  return __clz8_inline (__pacify_uint8 (~__x));
 }
 
 # define stdc_leading_ones_uc(x) (__clo8_inline (x))
@@ -229,13 +239,13 @@ __cto32_inline (uint32_t __x)
 static __always_inline unsigned int
 __cto16_inline (uint16_t __x)
 {
-  return __ctz16_inline (~__x);
+  return __ctz16_inline (__pacify_uint16 (~__x));
 }
 
 static __always_inline unsigned int
 __cto8_inline (uint8_t __x)
 {
-  return __ctz8_inline (~__x);
+  return __ctz8_inline (__pacify_uint8 (~__x));
 }
 
 # define stdc_trailing_ones_uc(x) (__cto8_inline (x))
@@ -698,13 +708,15 @@ __bf32_inline (uint32_t __x)
 static __always_inline uint16_t
 __bf16_inline (uint16_t __x)
 {
-  return __x == 0 ? 0 : ((uint16_t) 1) << (__bw16_inline (__x) - 1);
+  return __pacify_uint16 (__x == 0
+			  ? 0 : ((uint16_t) 1) << (__bw16_inline (__x) - 1));
 }
 
 static __always_inline uint8_t
 __bf8_inline (uint8_t __x)
 {
-  return __x == 0 ? 0 : ((uint8_t) 1) << (__bw8_inline (__x) - 1);
+  return __pacify_uint8 (__x == 0
+			 ? 0 : ((uint8_t) 1) << (__bw8_inline (__x) - 1));
 }
 
 # define stdc_bit_floor_uc(x) ((unsigned char) __bf8_inline (x))
@@ -748,13 +760,19 @@ __bc32_inline (uint32_t __x)
 static __always_inline uint16_t
 __bc16_inline (uint16_t __x)
 {
-  return __x <= 1 ? 1 : ((uint16_t) 2) << (__bw16_inline (__x - 1) - 1);
+  return __pacify_uint16 (__x <= 1
+			  ? 1
+			  : ((uint16_t) 2)
+			    << (__bw16_inline ((uint16_t) (__x - 1)) - 1));
 }
 
 static __always_inline uint8_t
 __bc8_inline (uint8_t __x)
 {
-  return __x <= 1 ? 1 : ((uint8_t) 2) << (__bw8_inline (__x - 1) - 1);
+  return __pacify_uint8 (__x <= 1
+			 ? 1
+			 : ((uint8_t) 2)
+			   << (__bw8_inline ((uint8_t) (__x - 1)) - 1));
 }
 
 # define stdc_bit_ceil_uc(x) ((unsigned char) __bc8_inline (x))
