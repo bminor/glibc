@@ -57,8 +57,8 @@ longjmp_msg:
 	cfi_def_cfa_offset(16);						\
 	LOAD_MSG;							\
 	call	HIDDEN_JUMPTARGET(__fortify_fail);			\
-	nop;								\
 	cfi_restore_state;						\
+	.p2align 3, 5;								\
 .Lok2:									\
 	movq	%r10, %rdi;						\
 	cfi_restore (%rdi);						\
