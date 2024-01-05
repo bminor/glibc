@@ -26,7 +26,6 @@
 	.align 16
 _dl_runtime_resolve:
 	cfi_adjust_cfa_offset (8)
-	_CET_ENDBR
 	pushl %eax		# Preserve registers otherwise clobbered.
 	cfi_adjust_cfa_offset (4)
 	pushl %ecx
@@ -53,7 +52,6 @@ _dl_runtime_resolve:
 	.align 16
 _dl_runtime_resolve_shstk:
 	cfi_adjust_cfa_offset (8)
-	_CET_ENDBR
 	pushl %eax		# Preserve registers otherwise clobbered.
 	cfi_adjust_cfa_offset (4)
 	pushl %edx
@@ -78,7 +76,6 @@ _dl_runtime_resolve_shstk:
 	.align 16
 _dl_runtime_profile_shstk:
 	cfi_adjust_cfa_offset (8)
-	_CET_ENDBR
 	pushl %esp
 	cfi_adjust_cfa_offset (4)
 	addl $8, (%esp)		# Account for the pushed PLT data
@@ -123,7 +120,6 @@ _dl_runtime_profile_shstk:
 	.align 16
 _dl_runtime_profile:
 	cfi_adjust_cfa_offset (8)
-	_CET_ENDBR
 	pushl %esp
 	cfi_adjust_cfa_offset (4)
 	addl $8, (%esp)		# Account for the pushed PLT data

@@ -58,7 +58,7 @@
 	absolute	address.  */	\
 	addl	(%ebx,INDEX,SCALE), %ebx;	\
 /* We loaded the jump table and adjusted EDX/ESI. Go.  */	\
-	_CET_NOTRACK jmp *%ebx
+	jmp *%ebx
 # else
 #  define JMPTBL(I, B)	I
 
@@ -66,7 +66,7 @@
 	jump	table with relative offsets.  INDEX is a register contains the
 	index	into the jump table.   SCALE is the scale of INDEX. */
 #  define BRANCH_TO_JMPTBL_ENTRY(TABLE, INDEX, SCALE)	\
-	_CET_NOTRACK jmp *TABLE(,INDEX,SCALE)
+	jmp *TABLE(,INDEX,SCALE)
 # endif
 
 
