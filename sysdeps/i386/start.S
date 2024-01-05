@@ -132,7 +132,6 @@ ENTRY (_start)
 
 #if defined PIC && !defined SHARED
 __wrap_main:
-	_CET_ENDBR
 	jmp	main@PLT
 #endif
 END (_start)
