@@ -22,7 +22,7 @@ escape_char /
 %
 % TODO: check LC_COLLATE
 %
-% needed extra chars: <U04D9>, <U04E9>, <U0497>, <U04BB>, <U04A3>
+% needed extra chars: ә, ө, җ, һ, ң
 %
 % Note: Tatarstan adopted latin alphabet in 2000, it should gradually
 % replace cyrillic alphabet
@@ -163,17 +163,17 @@ reorder-end
 END LC_COLLATE
 
 LC_MESSAGES
-yesexpr "^[+1yY<U04D9><U04D8>]"
-noexpr  "^[-0nN<U044E><U042E>]"
-yesstr  "<U04D9><U0439><U0435>"
-nostr   "<U044E><U043A>"
+yesexpr "^[+1yYәӘ]"
+noexpr  "^[-0nNюЮ]"
+yesstr  "әйе"
+nostr   "юк"
 END LC_MESSAGES
 
 LC_MONETARY
 int_curr_symbol           "RUB "
-currency_symbol           "<U20BD>"
+currency_symbol           "₽"
 mon_decimal_point         "."
-mon_thousands_sep         "<U202F>"
+mon_thousands_sep         " "
 mon_grouping              3;3
 positive_sign             ""
 negative_sign             "-"
@@ -192,44 +192,44 @@ copy "ru_RU"
 END LC_NUMERIC
 
 LC_TIME
-day     "<U044F><U043A><U0448><U04D9><U043C><U0431><U0435>";/
-        "<U0434><U04AF><U0448><U04D9><U043C><U0431><U0435>";/
-        "<U0441><U0438><U0448><U04D9><U043C><U0431><U0435>";/
-        "<U0447><U04D9><U0440><U0448><U04D9><U043C><U0431><U0435>";/
-        "<U043F><U04D9><U043D><U0497><U0435><U0448><U04D9><U043C><U0431><U0435>";/
-        "<U0497><U043E><U043C><U0433><U0430>";/
-        "<U0448><U0438><U043C><U0431><U04D9>"
-abday   "<U044F><U043A><U0448>";/
-        "<U0434><U04AF><U0448>";/
-        "<U0441><U0438><U0448>";/
-        "<U0447><U04D9><U0440>";/
-        "<U043F><U04D9><U043D><U0497>";/
-        "<U0497><U043E><U043C>";/
-        "<U0448><U0438><U043C>"
-mon     "<U0433><U044B><U0439><U043D><U0432><U0430><U0440>";/
-        "<U0444><U0435><U0432><U0440><U0430><U043B><U044C>";/
-        "<U043C><U0430><U0440><U0442>";/
-        "<U0430><U043F><U0440><U0435><U043B><U044C>";/
-        "<U043C><U0430><U0439>";/
-        "<U0438><U044E><U043D><U044C>";/
-        "<U0438><U044E><U043B><U044C>";/
-        "<U0430><U0432><U0433><U0443><U0441><U0442>";/
-        "<U0441><U0435><U043D><U0442><U044F><U0431><U0440><U044C>";/
-        "<U043E><U043A><U0442><U044F><U0431><U0440><U044C>";/
-        "<U043D><U043E><U044F><U0431><U0440><U044C>";/
-        "<U0434><U0435><U043A><U0430><U0431><U0440><U044C>"
-abmon   "<U0433><U044B><U0439><U043D>";/
-        "<U0444><U0435><U0432>";/
-        "<U043C><U0430><U0440>";/
-        "<U0430><U043F><U0440>";/
-        "<U043C><U0430><U0439>";/
-        "<U0438><U044E><U043D><U044C>";/
-        "<U0438><U044E><U043B><U044C>";/
-        "<U0430><U0432><U0433>";/
-        "<U0441><U0435><U043D><U0442>";/
-        "<U043E><U043A><U0442>";/
-        "<U043D><U043E><U044F><U0431>";/
-        "<U0434><U0435><U043A>"
+day     "якшәмбе";/
+        "дүшәмбе";/
+        "сишәмбе";/
+        "чәршәмбе";/
+        "пәнҗешәмбе";/
+        "җомга";/
+        "шимбә"
+abday   "якш";/
+        "дүш";/
+        "сиш";/
+        "чәр";/
+        "пәнҗ";/
+        "җом";/
+        "шим"
+mon     "гыйнвар";/
+        "февраль";/
+        "март";/
+        "апрель";/
+        "май";/
+        "июнь";/
+        "июль";/
+        "август";/
+        "сентябрь";/
+        "октябрь";/
+        "ноябрь";/
+        "декабрь"
+abmon   "гыйн";/
+        "фев";/
+        "мар";/
+        "апр";/
+        "май";/
+        "июнь";/
+        "июль";/
+        "авг";/
+        "сент";/
+        "окт";/
+        "нояб";/
+        "дек"
 d_t_fmt   "%a %d %b %Y %T"
 date_fmt  "%a %d %b %Y %T %Z"
 d_fmt     "%d.%m.%Y"
@@ -257,12 +257,12 @@ LC_ADDRESS
 % FIXME
 postal_fmt "???"
 % https://tt.wikipedia.org/wiki/%D0%A0%D1%83%D1%81%D0%B8%D1%8F : Русия
-country_name "<U0420><U0443><U0441><U0438><U044F>"
+country_name "Русия"
 country_ab2 "RU"
 country_ab3 "RUS"
 country_num 643
 country_car    "RUS"
-lang_name    "<U0442><U0430><U0442><U0430><U0440>"
+lang_name    "татар"
 lang_ab      "tt"
 lang_term    "tat"
 lang_lib    "tat"

@@ -115,10 +115,10 @@ LC_MONETARY
 int_curr_symbol           "RUB "
 
 % "t." - short for tenke(, Chuvash name for rouble
-currency_symbol "<U20BD>"
+currency_symbol "₽"
 
 mon_decimal_point         "."
-mon_thousands_sep         "<U202F>"
+mon_thousands_sep         " "
 mon_grouping              3;3
 positive_sign             ""
 negative_sign             "-"
@@ -151,17 +151,17 @@ day 	"vyrsarnikun";/
 	"tuntikun";/
 	"ytlarikun";/
 	"junkun";/
-	"k<U0115><U015F>nernikun";/
+	"kĕşnernikun";/
 	"ernekun";/
-	"<U0161><U0103>matkun"
+	"šămatkun"
 
 abday   "vr";/
 	"tn";/
 	"yt";/
 	"jn";/
-	"k<U015F>";/
+	"kş";/
 	"er";/
-	"<U0161>m"
+	"šm"
 
 % Month names:
 % ka(rlac (January) - short KA(R
@@ -177,30 +177,30 @@ abday   "vr";/
 % cu:k (November) CU:K
 % ras<tav (December) RAS<
 
-mon     "k<U0103>rlac";/
-	"nar<U0103>s";/
-	"pu<U0161>";/
+mon     "kărlac";/
+	"narăs";/
+	"puš";/
 	"aka";/
-	"<U015F>u";/
-	"<U015F><U0115>rtme";/
-	"ut<U0103>";/
-	"<U015F>urla";/
-	"av<U0103>n";/
+	"şu";/
+	"şĕrtme";/
+	"ută";/
+	"şurla";/
+	"avăn";/
 	"jupa";/
-	"c<U00FC>k";/
-	"ra<U0161>tav"
-abmon   "K<U0102>R";/
+	"cük";/
+	"raštav"
+abmon   "KĂR";/
 	"NAR";/
-	"PU<U0160>";/
+	"PUŠ";/
 	"AKA";/
-	"<U015E>U";/
-	"<U015E><U0114>R";/
-	"UT<U0102>";/
-	"<U015E>UR";/
-	"AV<U0102>";/
+	"ŞU";/
+	"ŞĔR";/
+	"UTĂ";/
+	"ŞUR";/
+	"AVĂ";/
 	"JUP";/
-	"C<U00DC>K";/
-	"RA<U0160>"
+	"CÜK";/
+	"RAŠ"
 d_t_fmt   "%a %d %b %Y %T"
 date_fmt  "%a %d %b %Y %T %Z"
 d_fmt     "%d.%m.%Y"
@@ -234,7 +234,7 @@ country_ab3 "RUS"
 country_num 643
 country_car    "RUS"
 % Чӑвашла
-lang_name    "<U0427><U04D1><U0432><U0430><U0448><U043B><U0430>"
+lang_name    "Чӑвашла"
 lang_ab      "cv"
 lang_term    "chv"
 lang_lib     "chv"
