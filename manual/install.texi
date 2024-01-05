@@ -175,8 +175,7 @@ enabled shared library in CET enabled application.  With
 @option{--enable-cet=permissive}, CET is disabled when dlopening a
 non CET enabled shared library in CET enabled application.
 
-NOTE: @option{--enable-cet} has been tested for x86_64 and x32
-on non-CET and CET processors.
+NOTE: @option{--enable-cet} is only supported on x86_64 and x32.
 
 @item --enable-memory-tagging
 Enable memory tagging support if the architecture supports it.  When

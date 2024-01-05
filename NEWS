@@ -7,8 +7,8 @@ using `glibc' in the "product" field.
 
 Version 2.38.1
 
-* Sync with Linux kernel 6.6 shadow stack interface.  Since only x86-64
-  is supported, --enable-cet is ignored for i386.
+* Sync with Linux kernel 6.6 shadow stack interface.  The --enable-cet
+  configure option in only supported on x86-64.
 
 Deprecated and removed features, and other changes affecting compatibility:
 
