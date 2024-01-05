@@ -177,6 +177,10 @@ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
       }									      \
   } while (0);
 
+# ifndef ELF_DYNAMIC_AFTER_RELOC
+#  define ELF_DYNAMIC_AFTER_RELOC(map, lazy)
+# endif
+
 /* This can't just be an inline function because GCC is too dumb
    to inline functions containing inlines themselves.  */
 # ifdef RTLD_BOOTSTRAP
@@ -192,6 +196,7 @@ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
       ELF_DYNAMIC_DO_RELR (map);					      \
     ELF_DYNAMIC_DO_REL ((map), (scope), edr_lazy, skip_ifunc);		      \
     ELF_DYNAMIC_DO_RELA ((map), (scope), edr_lazy, skip_ifunc);		      \
+    ELF_DYNAMIC_AFTER_RELOC ((map), (edr_lazy));			      \
   } while (0)
 
 #endif

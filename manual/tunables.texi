@@ -57,6 +57,7 @@ glibc.pthread.stack_cache_size: 0x2800000 (min: 0x0, max: 0xffffffffffffffff)
 glibc.cpu.hwcap_mask: 0x6 (min: 0x0, max: 0xffffffffffffffff)
 glibc.malloc.mmap_max: 0 (min: 0, max: 2147483647)
 glibc.elision.skip_trylock_internal_abort: 3 (min: 0, max: 2147483647)
+glibc.cpu.plt_rewrite: 0 (min: 0, max: 2)
 glibc.malloc.tcache_unsorted_limit: 0x0 (min: 0x0, max: 0xffffffffffffffff)
 glibc.cpu.x86_ibt:
 glibc.cpu.hwcaps:
@@ -612,6 +613,16 @@ Note that the @env{LD_PREFER_MAP_32BIT_EXEC} environment is an alias of
 this tunable.
 
 This tunable is specific to 64-bit x86-64.
+@end deftp
+
+@deftp Tunable glibc.cpu.plt_rewrite
+When this tunable is set to @code{1}, the dynamic linker will rewrite
+the PLT section with 32-bit direct jump.  When it is set to @code{2},
+the dynamic linker will rewrite the PLT section with 32-bit direct
+jump and on APX processors with 64-bit absolute jump.
+
+This tunable is specific to x86-64 and effective only when the lazy
+binding is disabled.
 @end deftp
 
 @node Memory Related Tunables

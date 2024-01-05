@@ -67,6 +67,7 @@ PROCINFO_CLASS struct dl_x86_feature_control _dl_x86_feature_control
 = {
     .ibt = DEFAULT_DL_X86_CET_CONTROL,
     .shstk = DEFAULT_DL_X86_CET_CONTROL,
+    .plt_rewrite = plt_rewrite_none,
   }
 # endif
 # if !defined SHARED || defined PROCINFO_DECL

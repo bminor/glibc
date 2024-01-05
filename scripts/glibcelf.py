@@ -439,6 +439,8 @@ class DtRISCV(Dt):
     """Supplemental DT_* constants for EM_RISCV."""
 class DtSPARC(Dt):
     """Supplemental DT_* constants for EM_SPARC."""
+class DtX86_64(Dt):
+    """Supplemental DT_* constants for EM_X86_64."""
 _dt_skip = '''
 DT_ENCODING DT_PROCNUM
 DT_ADDRRNGLO DT_ADDRRNGHI DT_ADDRNUM
@@ -451,6 +453,7 @@ DT_MIPS_NUM
 DT_PPC_NUM
 DT_PPC64_NUM
 DT_SPARC_NUM
+DT_X86_64_NUM
 '''.strip().split()
 _register_elf_h(DtAARCH64, prefix='DT_AARCH64_', skip=_dt_skip, parent=Dt)
 _register_elf_h(DtALPHA, prefix='DT_ALPHA_', skip=_dt_skip, parent=Dt)
@@ -461,6 +464,7 @@ _register_elf_h(DtPPC, prefix='DT_PPC_', skip=_dt_skip, parent=Dt)
 _register_elf_h(DtPPC64, prefix='DT_PPC64_', skip=_dt_skip, parent=Dt)
 _register_elf_h(DtRISCV, prefix='DT_RISCV_', skip=_dt_skip, parent=Dt)
 _register_elf_h(DtSPARC, prefix='DT_SPARC_', skip=_dt_skip, parent=Dt)
+_register_elf_h(DtX86_64, prefix='DT_X86_64_', skip=_dt_skip, parent=Dt)
 _register_elf_h(Dt, skip=_dt_skip, ranges=True)
 del _dt_skip
 

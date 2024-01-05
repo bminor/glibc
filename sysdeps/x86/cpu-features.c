@@ -27,6 +27,22 @@
 extern void TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *)
   attribute_hidden;
 
+#ifdef SHARED
+static void
+TUNABLE_CALLBACK (set_plt_rewrite) (tunable_val_t *valp)
+{
+  if (valp->numval != 0)
+    {
+      /* Use JMPABS only on APX processors.  */
+      const struct cpu_features *cpu_features = __get_cpu_features ();
+      GL (dl_x86_feature_control).plt_rewrite
+	  = ((valp->numval > 1 && CPU_FEATURE_PRESENT_P (cpu_features, APX_F))
+		 ? plt_rewrite_jmpabs
+		 : plt_rewrite_jmp);
+    }
+}
+#endif
+
 #ifdef __LP64__
 static void
 TUNABLE_CALLBACK (set_prefer_map_32bit_exec) (tunable_val_t *valp)
@@ -1108,7 +1124,10 @@ no_cpuid:
 	       TUNABLE_CALLBACK (set_x86_shstk));
 #endif
 
-#ifndef SHARED
+#ifdef SHARED
+  TUNABLE_GET (plt_rewrite, tunable_val_t *,
+	       TUNABLE_CALLBACK (set_plt_rewrite));
+#else
   /* NB: In libc.a, call init_cacheinfo.  */
   init_cacheinfo ();
 #endif

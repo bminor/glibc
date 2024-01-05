@@ -66,5 +66,10 @@ glibc {
     x86_shared_cache_size {
       type: SIZE_T
     }
+    plt_rewrite {
+      type: INT_32
+      minval: 0
+      maxval: 2
+    }
   }
 }

@@ -1,6 +1,14 @@
 # The i387 `long double' is a distinct type we support.
 long-double-fcts = yes
 
+ifeq (yes,$(have-z-mark-plt))
+# Always generate DT_X86_64_PLT* tags.
+sysdep-LDFLAGS += -Wl,-z,mark-plt
+# Never generate DT_X86_64_PLT* tags on ld.so to avoid changing its own
+# PLT.
+LDFLAGS-rtld += -Wl,-z,nomark-plt
+endif
+
 ifeq ($(subdir),csu)
 gen-as-const-headers += link-defines.sym
 endif
@@ -173,6 +181,25 @@ ifeq (no,$(build-hardcoded-path-in-tests))
 # This is an ld.so.cache test, and RPATH/RUNPATH in the executable
 # interferes with its test objectives.
 tests-container += tst-glibc-hwcaps-cache
+endif
+
+ifeq (yes,$(have-z-mark-plt))
+tests += \
+  tst-plt-rewrite1 \
+# tests
+modules-names += \
+  tst-plt-rewritemod1 \
+# modules-names
+
+tst-plt-rewrite1-no-pie = yes
+LDFLAGS-tst-plt-rewrite1 = -Wl,-z,now
+LDFLAGS-tst-plt-rewritemod1.so = -Wl,-z,now
+tst-plt-rewrite1-ENV = GLIBC_TUNABLES=glibc.cpu.plt_rewrite=1 LD_DEBUG=files:bindings
+$(objpfx)tst-plt-rewrite1: $(objpfx)tst-plt-rewritemod1.so
+$(objpfx)tst-plt-rewrite1.out: /dev/null $(objpfx)tst-plt-rewrite1
+	$(tst-plt-rewrite1-ENV) $(make-test-out) > $@ 2>&1; \
+	grep -q -E "changing 'bar' PLT entry in .*/elf/tst-plt-rewritemod1.so' to direct branch" $@; \
+	$(evaluate-test)
 endif
 
 endif # $(subdir) == elf

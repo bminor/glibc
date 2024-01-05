@@ -32,10 +32,22 @@ enum dl_x86_cet_control
   cet_permissive
 };
 
+/* PLT rewrite control.  */
+enum dl_plt_rewrite_control
+{
+  /* No PLT rewrite.  */
+  plt_rewrite_none,
+  /* Rewrite PLT with JMP at run-time.  */
+  plt_rewrite_jmp,
+  /* Rewrite PLT with JMP and JMPABS at run-time.  */
+  plt_rewrite_jmpabs
+};
+
 struct dl_x86_feature_control
 {
   enum dl_x86_cet_control ibt : 2;
   enum dl_x86_cet_control shstk : 2;
+  enum dl_plt_rewrite_control plt_rewrite : 2;
 };
 
 #endif /* cet-control.h */
