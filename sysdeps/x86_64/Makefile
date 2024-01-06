@@ -186,9 +186,11 @@ endif
 ifeq (yes,$(have-z-mark-plt))
 tests += \
   tst-plt-rewrite1 \
+  tst-plt-rewrite2 \
 # tests
 modules-names += \
   tst-plt-rewritemod1 \
+  tst-plt-rewritemod2 \
 # modules-names
 
 tst-plt-rewrite1-no-pie = yes
@@ -200,6 +202,12 @@ $(objpfx)tst-plt-rewrite1.out: /dev/null $(objpfx)tst-plt-rewrite1
 	$(tst-plt-rewrite1-ENV) $(make-test-out) > $@ 2>&1; \
 	grep -q -E "changing 'bar' PLT entry in .*/elf/tst-plt-rewritemod1.so' to direct branch" $@; \
 	$(evaluate-test)
+
+tst-plt-rewrite2-no-pie = yes
+LDFLAGS-tst-plt-rewrite2 = -Wl,-z,now
+LDFLAGS-tst-plt-rewritemod2.so = -Wl,-z,now,-z,undefs
+tst-plt-rewrite2-ENV = GLIBC_TUNABLES=glibc.cpu.plt_rewrite=2
+$(objpfx)tst-plt-rewrite2: $(objpfx)tst-plt-rewritemod2.so
 endif
 
 endif # $(subdir) == elf

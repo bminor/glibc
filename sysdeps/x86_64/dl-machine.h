@@ -607,8 +607,9 @@ x86_64_rewrite_plt (struct link_map *map, ElfW(Addr) plt_rewrite)
 	/* Skip ENDBR64 if IBT isn't enabled.  */
 	if (!ibt_enabled_p)
 	  branch_start = ALIGN_DOWN (branch_start, pltent);
-	/* Get the displacement from the branch target.  */
-	ElfW(Addr) disp = value - branch_start - JMP32_INSN_SIZE;
+	/* Get the displacement from the branch target.  NB: We must use
+	   64-bit integer on x32 to avoid overflow.  */
+	uint64_t disp = (uint64_t) value - branch_start - JMP32_INSN_SIZE;
 	ElfW(Addr) plt_end;
 	ElfW(Addr) pad;
 
