@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.17-pre1\n"
-"POT-Creation-Date: 2023-07-17 20:35+0200\n"
+"POT-Creation-Date: 2024-01-01 21:05+0100\n"
 "PO-Revision-Date: 2013-04-26 04:10+0400\n"
 "Last-Translator: Nik Kalach <nik.kalach@inbox.ru>\n"
 "Language-Team: Interlingua <translation-team-ia@lists.sourceforge.net>\n"
@@ -58,46 +58,46 @@ msgstr "Tenta `%s --help' o `%s --usage' pro plus de information.\n"
 msgid "Report bugs to %s.\n"
 msgstr "Reportar errores a %s.\n"
 
-#: argp/argp-parse.c:101
+#: argp/argp-parse.c:86
 msgid "Give this help list"
 msgstr "Monstrar iste lista de adjuta"
 
-#: argp/argp-parse.c:102
+#: argp/argp-parse.c:87
 msgid "Give a short usage message"
 msgstr "Monstrar un breve message de usage"
 
-#: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
+#: argp/argp-parse.c:88 catgets/gencat.c:110 catgets/gencat.c:114
 #: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:106 nscd/nscd.c:110
-#: nss/makedb.c:121
+#: nss/makedb.c:122
 msgid "NAME"
 msgstr "NOMINE"
 
-#: argp/argp-parse.c:104
+#: argp/argp-parse.c:89
 msgid "Set the program name"
 msgstr "Assignar le nomine del programma"
 
-#: argp/argp-parse.c:106
+#: argp/argp-parse.c:91
 msgid "Hang for SECS seconds (default 3600)"
 msgstr "Pender durante SECS secundas (3600 per predefinition)"
 
-#: argp/argp-parse.c:167
+#: argp/argp-parse.c:152
 msgid "Print program version"
 msgstr "Monstrar le version del programma"
 
-#: argp/argp-parse.c:183
+#: argp/argp-parse.c:168
 msgid "(PROGRAM ERROR) No version known!?"
 msgstr "(ERROR DEL PROGRAMMA) Version incognite!?"
 
-#: argp/argp-parse.c:623
+#: argp/argp-parse.c:608
 #, c-format
 msgid "%s: Too many arguments\n"
 msgstr "%s: Tro de argumentos\n"
 
-#: argp/argp-parse.c:766
+#: argp/argp-parse.c:751
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(ERROR DEL PROGRAMMA) Le option se deberea haber recognoscite!?"
 
-#: assert/assert.c:101
+#: assert/assert.c:103
 #, c-format
 msgid ""
 "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
@@ -106,19 +106,19 @@ msgstr ""
 "%s%s%s:%u: %s%sInsuccesso del assertion `%s'.\n"
 "%n"
 
-#: catgets/gencat.c:110
+#: catgets/gencat.c:111
 msgid "Create C header file NAME containing symbol definitions"
 msgstr "Crear un file de titulos C, NOMINE, que contine le definitiones de symbolos"
 
-#: catgets/gencat.c:112
+#: catgets/gencat.c:113
 msgid "Do not use existing catalog, force new output file"
 msgstr "Non utilisar le catalogo existente, fortiar le generation de un nove file de output"
 
-#: catgets/gencat.c:113 nss/makedb.c:121
+#: catgets/gencat.c:114 nss/makedb.c:122
 msgid "Write output to file NAME"
 msgstr "Mitter le output in le file NOMINE"
 
-#: catgets/gencat.c:118
+#: catgets/gencat.c:119
 msgid ""
 "Generate message catalog.\vIf INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
 "is -, output is written to standard output.\n"
@@ -126,7 +126,7 @@ msgstr ""
 "Generar un catalogo de messages.\vSi FILE-INPUT es -, le entrata se lege del input standard.\n"
 "Si FILE-OUTPUT es -, le resultato se scribe al output standard.\n"
 
-#: catgets/gencat.c:123
+#: catgets/gencat.c:124
 msgid ""
 "-o OUTPUT-FILE [INPUT-FILE]...\n"
 "[OUTPUT-FILE [INPUT-FILE]...]"
@@ -134,11 +134,11 @@ msgstr ""
 "-o FILE-OUTPUT [FILE-INPUT]...\n"
 "[FILE-OUTPUT [FILE-INPUT]...]"
 
-#: catgets/gencat.c:229 debug/pcprofiledump.c:208 elf/ldconfig.c:216
+#: catgets/gencat.c:230 debug/pcprofiledump.c:208 elf/ldconfig.c:216
 #: elf/pldd.c:246 elf/sln.c:77 elf/sprof.c:371 iconv/iconv_prog.c:387
 #: iconv/iconvconfig.c:380 locale/programs/locale.c:275
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:88
-#: malloc/memusagestat.c:564 nss/getent.c:961 nss/makedb.c:370
+#: malloc/memusagestat.c:564 nss/getent.c:961 nss/makedb.c:371
 #: posix/getconf.c:503
 #, c-format
 msgid ""
@@ -148,12 +148,12 @@ msgstr ""
 "Pro le instructiones a reportar errores, consulta:\n"
 "%s.\n"
 
-#: catgets/gencat.c:245 debug/pcprofiledump.c:224 debug/xtrace.sh:63
+#: catgets/gencat.c:246 debug/pcprofiledump.c:224 debug/xtrace.sh:63
 #: elf/ldconfig.c:232 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
 #: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
-#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:386 posix/getconf.c:485
+#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:485
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -164,96 +164,96 @@ msgstr ""
 "Isto es software libere; vide le fontes pro le conditiones de reproduction.\n"
 "NULLE garantia; atque pro MERCABILETATE o APTITUDE PRO UN PROPOSITO PARTICULAR.\n"
 
-#: catgets/gencat.c:250 debug/pcprofiledump.c:229 debug/xtrace.sh:67
+#: catgets/gencat.c:251 debug/pcprofiledump.c:229 debug/xtrace.sh:67
 #: elf/ldconfig.c:237 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
-#: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:391
+#: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Scribite per %s.\n"
 
-#: catgets/gencat.c:281
+#: catgets/gencat.c:282
 msgid "*standard input*"
 msgstr "*input standard*"
 
-#: catgets/gencat.c:287 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
-#: nss/makedb.c:247
+#: catgets/gencat.c:288 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
+#: nss/makedb.c:248
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "impossibile de aperir le file de entrata `%s'"
 
-#: catgets/gencat.c:416 catgets/gencat.c:491
+#: catgets/gencat.c:417 catgets/gencat.c:492
 msgid "illegal set number"
 msgstr "numero de collection impermissibile"
 
-#: catgets/gencat.c:443
+#: catgets/gencat.c:444
 msgid "duplicate set definition"
 msgstr "duple definition de collection"
 
-#: catgets/gencat.c:445 catgets/gencat.c:617 catgets/gencat.c:669
+#: catgets/gencat.c:446 catgets/gencat.c:618 catgets/gencat.c:670
 msgid "this is the first definition"
 msgstr "isto es le prime definition"
 
-#: catgets/gencat.c:516
+#: catgets/gencat.c:517
 #, c-format
 msgid "unknown set `%s'"
 msgstr "collection `%s' incognite"
 
-#: catgets/gencat.c:557
+#: catgets/gencat.c:558
 msgid "invalid quote character"
 msgstr "character de citation incorrecte"
 
-#: catgets/gencat.c:570
+#: catgets/gencat.c:571
 #, c-format
 msgid "unknown directive `%s': line ignored"
 msgstr "directiva `%s' incognite: linea ignorate"
 
-#: catgets/gencat.c:615
+#: catgets/gencat.c:616
 msgid "duplicated message number"
 msgstr "numero de message duplicate"
 
-#: catgets/gencat.c:666
+#: catgets/gencat.c:667
 msgid "duplicated message identifier"
 msgstr "identificator de message duplicate"
 
-#: catgets/gencat.c:723
+#: catgets/gencat.c:724
 msgid "invalid character: message ignored"
 msgstr "character incorrecte: message ignorate"
 
-#: catgets/gencat.c:766
+#: catgets/gencat.c:767
 msgid "invalid line"
 msgstr "linea incorrecte"
 
-#: catgets/gencat.c:820
+#: catgets/gencat.c:821
 msgid "malformed line ignored"
 msgstr "linea malformate ignorate"
 
-#: catgets/gencat.c:982 catgets/gencat.c:1023
+#: catgets/gencat.c:1000 catgets/gencat.c:1045
 #, c-format
 msgid "cannot open output file `%s'"
 msgstr "impossibile de aperir le file de output `%s'"
 
-#: catgets/gencat.c:1185 locale/programs/linereader.c:588
+#: catgets/gencat.c:1210 locale/programs/linereader.c:588
 msgid "invalid escape sequence"
 msgstr "sequentia de escappamento incorrecte"
 
-#: catgets/gencat.c:1209
+#: catgets/gencat.c:1234
 msgid "unterminated message"
 msgstr "message non terminate"
 
-#: catgets/gencat.c:1233
+#: catgets/gencat.c:1258
 #, c-format
 msgid "while opening old catalog file"
 msgstr "durante del apertura del vetule file de catalogo"
 
-#: catgets/gencat.c:1324
+#: catgets/gencat.c:1349
 #, c-format
 msgid "conversion modules not available"
 msgstr "modulos de conversion indisponibile"
 
-#: catgets/gencat.c:1350
+#: catgets/gencat.c:1375
 #, c-format
 msgid "cannot determine escape character"
 msgstr "impossibile de determinar le character de escappamento"
@@ -363,7 +363,7 @@ msgstr "modo invalide"
 msgid "invalid mode parameter"
 msgstr "parametro de modo incorrecte"
 
-#: elf/cache.c:299 elf/ldconfig.c:1223
+#: elf/cache.c:299 elf/ldconfig.c:1249
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Impossibile de aperir le file de cache %s\n"
@@ -412,11 +412,11 @@ msgstr "error durante le cargamento del bibliothecas condivise"
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr "PROBLEMA CON LE EDITOR DE LIGAMINES DYNAMIC!!!"
 
-#: elf/dl-close.c:346 elf/dl-open.c:298
+#: elf/dl-close.c:357 elf/dl-open.c:298
 msgid "cannot create scope list"
 msgstr "impossibile de crear un lista de ambito"
 
-#: elf/dl-close.c:775
+#: elf/dl-close.c:790
 msgid "shared object not open"
 msgstr "objecto condivise non aperte"
 
@@ -477,7 +477,7 @@ msgstr "impossibile de crear un array del percurso de cerca"
 msgid "cannot stat shared object"
 msgstr "impossibile de effectuar stat sur le objecto condivise"
 
-#: elf/dl-load.c:1059 elf/dl-load.c:2219
+#: elf/dl-load.c:1059 elf/dl-load.c:2222
 msgid "cannot create shared object descriptor"
 msgstr "impossibile de crear un descriptor de objecto condivise"
 
@@ -505,7 +505,7 @@ msgstr "le objecto condivise non pote esser aperite via dlopen()"
 msgid "cannot allocate memory for program header"
 msgstr "impossibile de allocar le memoria pro un testa de programma"
 
-#: elf/dl-load.c:1330 elf/dl-load.h:131
+#: elf/dl-load.c:1330 elf/dl-load.h:128
 msgid "cannot change memory protections"
 msgstr "impossibile de modificar le protection de memoria"
 
@@ -565,27 +565,27 @@ msgstr "solo ET_DYN e ET_EXEC pote esser cargate"
 msgid "ELF file's phentsize not the expected size"
 msgstr "Le valor `phentsize' del file ELF non concorda con le expectation"
 
-#: elf/dl-load.c:2238
+#: elf/dl-load.c:2241
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "classe ELF incorrecte: ELFCLASS64"
 
-#: elf/dl-load.c:2239
+#: elf/dl-load.c:2242
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "classe ELF incorrecte: ELFCLASS32"
 
-#: elf/dl-load.c:2242
+#: elf/dl-load.c:2245
 msgid "cannot open shared object file"
 msgstr "impossibile de aperir un file de objecto condivise"
 
-#: elf/dl-load.h:129
+#: elf/dl-load.h:126
 msgid "failed to map segment from shared object"
 msgstr "insuccesso de mmap sur un objecto condivise"
 
-#: elf/dl-load.h:133
+#: elf/dl-load.h:130
 msgid "cannot map zero-fill pages"
 msgstr "impossibile de mmap paginas del dispositivo de impletion con zeros"
 
-#: elf/dl-lookup.c:814
+#: elf/dl-lookup.c:813
 msgid "symbol lookup error"
 msgstr "error de cerca de symbolo"
 
@@ -597,15 +597,15 @@ msgstr "impossibile de extender le ambito global"
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "Le contator de generation TLS ha permitite! Reporta iste problema."
 
-#: elf/dl-open.c:829
+#: elf/dl-open.c:848
 msgid "invalid mode for dlopen()"
 msgstr "modo invalide pro dlopen()"
 
-#: elf/dl-open.c:846
+#: elf/dl-open.c:865
 msgid "no more namespaces available for dlmopen()"
 msgstr "necun altere spatios de nomines disponibile pro dlmopen()"
 
-#: elf/dl-open.c:871
+#: elf/dl-open.c:890
 msgid "invalid target namespace in dlmopen()"
 msgstr "spatio de nomines de destination invalide in dlmopen()"
 
@@ -634,7 +634,7 @@ msgstr "impossibile de applicar le protection de memoria additional post le relo
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT usate in le codice non cargate dynamicamente"
 
-#: elf/dl-tls.c:1044
+#: elf/dl-tls.c:1052
 msgid "cannot create TLS data structures"
 msgstr "impossibile de crear structuras de datos TLS"
 
@@ -745,7 +745,7 @@ msgstr " (OMITTITE)\n"
 msgid "Can't find %s"
 msgstr "Impossibile de trovar %s"
 
-#: elf/ldconfig.c:600 elf/ldconfig.c:744 elf/ldconfig.c:811
+#: elf/ldconfig.c:600 elf/ldconfig.c:770 elf/ldconfig.c:837
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "Impossibile de effectuar lstat sur %s"
@@ -760,64 +760,64 @@ msgstr "Le file %s es ignorate proque illo non es un file regular."
 msgid "No link created since soname could not be found for %s"
 msgstr "Ligamine non create proque il non esseva possibile trovar le so-nomine pro %s"
 
-#: elf/ldconfig.c:690
+#: elf/ldconfig.c:726
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Impossibile de aperir le directorio %s"
 
-#: elf/ldconfig.c:761 elf/ldconfig.c:799 elf/readlib.c:78
+#: elf/ldconfig.c:787 elf/ldconfig.c:825 elf/readlib.c:78
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Le file de entrata %s non trovate.\n"
 
-#: elf/ldconfig.c:768
+#: elf/ldconfig.c:794
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Impossibile de effectuar stat sur %s"
 
-#: elf/ldconfig.c:887
+#: elf/ldconfig.c:913
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "bibliotheca libc6 %s es in un directorio incorrecte"
 
-#: elf/ldconfig.c:906
+#: elf/ldconfig.c:932
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "Le bibliothecas %s e %s es in le directorio %s ha le mesme so-nomine, ma lor typo es differente."
 
-#: elf/ldconfig.c:1035
+#: elf/ldconfig.c:1061
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr "Advertimento: ignorar le file de configuration que non pote esser aperite: %s"
 
-#: elf/ldconfig.c:1102
+#: elf/ldconfig.c:1128
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "il es necessari usar le nomine absolute pro le file de configuration quando on utilisa -r"
 
-#: elf/ldconfig.c:1109 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1135 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "memoria exhaurite"
 
-#: elf/ldconfig.c:1142
+#: elf/ldconfig.c:1168
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: impossibile de leger le directorio %s"
 
-#: elf/ldconfig.c:1180
+#: elf/ldconfig.c:1206
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "percurso relative `%s' usate pro construer le cache"
 
-#: elf/ldconfig.c:1202
+#: elf/ldconfig.c:1228
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Impossibile de effectuar chdir a /"
 
-#: elf/ldconfig.c:1243
+#: elf/ldconfig.c:1269
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Impossibile de aperir le directorio de files de cache %s\n"

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.3.2\n"
-"POT-Creation-Date: 2023-07-17 20:35+0200\n"
+"POT-Creation-Date: 2024-01-01 21:05+0100\n"
 "PO-Revision-Date: 2003-03-03 20:13+0100\n"
 "Last-Translator: Jacobo Tarrio <jtarrio@trasno.net>\n"
 "Language-Team: Galician <gpul-traduccion@ceu.fi.udc.es>\n"
@@ -56,58 +56,58 @@ msgstr "Escriba `%s --help' ou `%s --usage' para obter máis información.\n"
 msgid "Report bugs to %s.\n"
 msgstr "Informe dos erros a %s.\n"
 
-#: argp/argp-parse.c:101
+#: argp/argp-parse.c:86
 msgid "Give this help list"
 msgstr "Devolver esta lista de axuda"
 
-#: argp/argp-parse.c:102
+#: argp/argp-parse.c:87
 msgid "Give a short usage message"
 msgstr "Devolver unha mensaxe curta sobre o uso"
 
-#: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
+#: argp/argp-parse.c:88 catgets/gencat.c:110 catgets/gencat.c:114
 #: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:106 nscd/nscd.c:110
-#: nss/makedb.c:121
+#: nss/makedb.c:122
 msgid "NAME"
 msgstr "NOME"
 
-#: argp/argp-parse.c:104
+#: argp/argp-parse.c:89
 msgid "Set the program name"
 msgstr "Establece-lo nome do programa"
 
-#: argp/argp-parse.c:106
+#: argp/argp-parse.c:91
 msgid "Hang for SECS seconds (default 3600)"
 msgstr "Agardar SEGS segundos (por omisión, 3600)"
 
-#: argp/argp-parse.c:167
+#: argp/argp-parse.c:152
 msgid "Print program version"
 msgstr "Visualiza-la versión do programa"
 
-#: argp/argp-parse.c:183
+#: argp/argp-parse.c:168
 msgid "(PROGRAM ERROR) No version known!?"
 msgstr "(ERRO DE PROGRAMA) ¿¡Non se coñece a versión!?"
 
-#: argp/argp-parse.c:623
+#: argp/argp-parse.c:608
 #, c-format
 msgid "%s: Too many arguments\n"
 msgstr "%s: Demasiados parámetros\n"
 
-#: argp/argp-parse.c:766
+#: argp/argp-parse.c:751
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(ERRO DE PROGRAMA) ¿¡Deberíase coñece-la opción!?"
 
-#: catgets/gencat.c:110
+#: catgets/gencat.c:111
 msgid "Create C header file NAME containing symbol definitions"
 msgstr "Crea-lo ficheiro de cabeceira C NOME que contén as definicións de símbolos"
 
-#: catgets/gencat.c:112
+#: catgets/gencat.c:113
 msgid "Do not use existing catalog, force new output file"
 msgstr "Non usa-lo catálogo existente, forzar un ficheiro de saída novo"
 
-#: catgets/gencat.c:113 nss/makedb.c:121
+#: catgets/gencat.c:114 nss/makedb.c:122
 msgid "Write output to file NAME"
 msgstr "Escribi-la saída no ficheiro NOME"
 
-#: catgets/gencat.c:118
+#: catgets/gencat.c:119
 msgid ""
 "Generate message catalog.\vIf INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
 "is -, output is written to standard output.\n"
@@ -116,7 +116,7 @@ msgstr ""
 "Se o FICHEIRO-ENTRADA é -, a entrada lese da entrada estándar. Se o\n"
 "FICHEIRO-SAÍDA é -, a saída escríbese na saída estándar.\n"
 
-#: catgets/gencat.c:123
+#: catgets/gencat.c:124
 msgid ""
 "-o OUTPUT-FILE [INPUT-FILE]...\n"
 "[OUTPUT-FILE [INPUT-FILE]...]"
@@ -124,12 +124,12 @@ msgstr ""
 "-o FICHEIRO-SAÍDA [FICHEIRO-ENTRADA]...\n"
 "[FICHEIRO-SAÍDA [FICHEIRO-ENTRADA]...]"
 
-#: catgets/gencat.c:245 debug/pcprofiledump.c:224 debug/xtrace.sh:63
+#: catgets/gencat.c:246 debug/pcprofiledump.c:224 debug/xtrace.sh:63
 #: elf/ldconfig.c:232 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
 #: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
-#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:386 posix/getconf.c:485
+#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:485
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -140,96 +140,96 @@ msgstr ""
 "Isto é software libre; vexa o código fonte polas condicións de copia. NON hai\n"
 "garantía; nin sequera de COMERCIABILIDADE ou APTITUDE PARA UN FIN DETERMINADO.\n"
 
-#: catgets/gencat.c:250 debug/pcprofiledump.c:229 debug/xtrace.sh:67
+#: catgets/gencat.c:251 debug/pcprofiledump.c:229 debug/xtrace.sh:67
 #: elf/ldconfig.c:237 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
-#: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:391
+#: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Escrito por %s.\n"
 
-#: catgets/gencat.c:281
+#: catgets/gencat.c:282
 msgid "*standard input*"
 msgstr "*entrada estándar*"
 
-#: catgets/gencat.c:287 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
-#: nss/makedb.c:247
+#: catgets/gencat.c:288 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
+#: nss/makedb.c:248
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "non se pode abri-lo ficheiro de entrada `%s'"
 
-#: catgets/gencat.c:416 catgets/gencat.c:491
+#: catgets/gencat.c:417 catgets/gencat.c:492
 msgid "illegal set number"
 msgstr "número de conxunto ilegal"
 
-#: catgets/gencat.c:443
+#: catgets/gencat.c:444
 msgid "duplicate set definition"
 msgstr "definición de conxunto duplicada"
 
-#: catgets/gencat.c:445 catgets/gencat.c:617 catgets/gencat.c:669
+#: catgets/gencat.c:446 catgets/gencat.c:618 catgets/gencat.c:670
 msgid "this is the first definition"
 msgstr "esta é a primeira definición"
 
-#: catgets/gencat.c:516
+#: catgets/gencat.c:517
 #, c-format
 msgid "unknown set `%s'"
 msgstr "conxunto `%s' descoñecido"
 
-#: catgets/gencat.c:557
+#: catgets/gencat.c:558
 msgid "invalid quote character"
 msgstr "carácter de cita non válido"
 
-#: catgets/gencat.c:570
+#: catgets/gencat.c:571
 #, c-format
 msgid "unknown directive `%s': line ignored"
 msgstr "directiva `%s' descoñecida: liña ignorada"
 
-#: catgets/gencat.c:615
+#: catgets/gencat.c:616
 msgid "duplicated message number"
 msgstr "número de mensaxe duplicado"
 
-#: catgets/gencat.c:666
+#: catgets/gencat.c:667
 msgid "duplicated message identifier"
 msgstr "identificador de mensaxes duplicado"
 
-#: catgets/gencat.c:723
+#: catgets/gencat.c:724
 msgid "invalid character: message ignored"
 msgstr "carácter non válido: mensaxe ignorada"
 
-#: catgets/gencat.c:766
+#: catgets/gencat.c:767
 msgid "invalid line"
 msgstr "liña non válida"
 
-#: catgets/gencat.c:820
+#: catgets/gencat.c:821
 msgid "malformed line ignored"
 msgstr "ignórase unha liña mal formada"
 
-#: catgets/gencat.c:982 catgets/gencat.c:1023
+#: catgets/gencat.c:1000 catgets/gencat.c:1045
 #, c-format
 msgid "cannot open output file `%s'"
 msgstr "non se pode abri-lo ficheiro de saída `%s'"
 
-#: catgets/gencat.c:1185 locale/programs/linereader.c:588
+#: catgets/gencat.c:1210 locale/programs/linereader.c:588
 msgid "invalid escape sequence"
 msgstr "secuencia de escape non válida"
 
-#: catgets/gencat.c:1209
+#: catgets/gencat.c:1234
 msgid "unterminated message"
 msgstr "mensaxe non rematada"
 
-#: catgets/gencat.c:1233
+#: catgets/gencat.c:1258
 #, c-format
 msgid "while opening old catalog file"
 msgstr "ao abrir un antigo ficheiro de catálogo"
 
-#: catgets/gencat.c:1324
+#: catgets/gencat.c:1349
 #, c-format
 msgid "conversion modules not available"
 msgstr "os módulos de conversión non están dispoñibles"
 
-#: catgets/gencat.c:1350
+#: catgets/gencat.c:1375
 #, c-format
 msgid "cannot determine escape character"
 msgstr "non se pode determina-lo carácter de escape"
@@ -261,7 +261,7 @@ msgstr "non se pode le-la cabeceira"
 msgid "invalid pointer size"
 msgstr "tamaño de punteiro non válido"
 
-#: elf/cache.c:299 elf/ldconfig.c:1223
+#: elf/cache.c:299 elf/ldconfig.c:1249
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Non se puido abri-lo ficheiro de caché %s\n"
@@ -310,11 +310,11 @@ msgstr "erro ao carga-las bibliotecas compartidas"
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr "¡¡¡ERRO NO LIGADOR DINÁMICO!!!"
 
-#: elf/dl-close.c:346 elf/dl-open.c:298
+#: elf/dl-close.c:357 elf/dl-open.c:298
 msgid "cannot create scope list"
 msgstr "non se pode crea-la lista de alcance"
 
-#: elf/dl-close.c:775
+#: elf/dl-close.c:790
 msgid "shared object not open"
 msgstr "o obxecto compartido non está aberto"
 
@@ -363,7 +363,7 @@ msgstr "non se pode crea-lo vector de rutas de busca"
 msgid "cannot stat shared object"
 msgstr "non se puido facer stat sobre o obxecto compartido"
 
-#: elf/dl-load.c:1059 elf/dl-load.c:2219
+#: elf/dl-load.c:1059 elf/dl-load.c:2222
 msgid "cannot create shared object descriptor"
 msgstr "non se pode crear un descriptor de obxecto compartido"
 
@@ -387,7 +387,7 @@ msgstr "non se pode facer dlopen() sobre o obxecto compartido"
 msgid "cannot allocate memory for program header"
 msgstr "Non se pode reservar memoria para a cabeceira do programa"
 
-#: elf/dl-load.c:1330 elf/dl-load.h:131
+#: elf/dl-load.c:1330 elf/dl-load.h:128
 msgid "cannot change memory protections"
 msgstr "non se poden cambia-las proteccións de memoria"
 
@@ -435,15 +435,15 @@ msgstr "só se pode cargar ET_DYN e ET_EXEC"
 msgid "ELF file's phentsize not the expected size"
 msgstr "O phentsize do ficheiro ELF non é o tamaño esperado"
 
-#: elf/dl-load.c:2242
+#: elf/dl-load.c:2245
 msgid "cannot open shared object file"
 msgstr "non se pode abrir un ficheiro de obxecto compartido"
 
-#: elf/dl-load.h:129
+#: elf/dl-load.h:126
 msgid "failed to map segment from shared object"
 msgstr "non se puido mapear un segmento dun obxecto compartido"
 
-#: elf/dl-load.h:133
+#: elf/dl-load.h:130
 msgid "cannot map zero-fill pages"
 msgstr "non se poden mapear páxinas de recheo de ceros"
 
@@ -451,7 +451,7 @@ msgstr "non se poden mapear páxinas de recheo de ceros"
 msgid "cannot extend global scope"
 msgstr "non se pode extende-lo alcance global"
 
-#: elf/dl-open.c:829
+#: elf/dl-open.c:848
 msgid "invalid mode for dlopen()"
 msgstr "modo incorrecto para dlopen()"
 
@@ -467,7 +467,7 @@ msgstr "non se pode restaura-la protección do segmento despois de movelo"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "Úsase RTLD_NEXT en código non cargado dinamicamente"
 
-#: elf/dl-tls.c:1044
+#: elf/dl-tls.c:1052
 msgid "cannot create TLS data structures"
 msgstr "non se poden crea-las estructuras de datos TLS"
 
@@ -554,7 +554,7 @@ msgstr " (OMITIDO)\n"
 msgid "Can't find %s"
 msgstr "Non se pode atopar %s"
 
-#: elf/ldconfig.c:600 elf/ldconfig.c:744 elf/ldconfig.c:811
+#: elf/ldconfig.c:600 elf/ldconfig.c:770 elf/ldconfig.c:837
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "Non se pode facer lstat sobre %s"
@@ -569,44 +569,44 @@ msgstr "Ignorouse o ficheiro %s porque non é un ficheiro normal"
 msgid "No link created since soname could not be found for %s"
 msgstr "Non se creou unha ligazón porque non se atopou o soname para %s"
 
-#: elf/ldconfig.c:690
+#: elf/ldconfig.c:726
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Non se puido abri-lo directorio %s"
 
-#: elf/ldconfig.c:761 elf/ldconfig.c:799 elf/readlib.c:78
+#: elf/ldconfig.c:787 elf/ldconfig.c:825 elf/readlib.c:78
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Non se atopou o ficheiro de entrada %s.\n"
 
-#: elf/ldconfig.c:768
+#: elf/ldconfig.c:794
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Non se pode executar `stat' sobre %s"
 
-#: elf/ldconfig.c:887
+#: elf/ldconfig.c:913
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "biblioteca libc6 %s nun directorio incorrecto"
 
-#: elf/ldconfig.c:906
+#: elf/ldconfig.c:932
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "as bibliotecas %s e %s do directorio %s teñen o mesmo soname pero diferente tipo."
 
-#: elf/ldconfig.c:1109 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1135 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "memoria esgotada"
 
-#: elf/ldconfig.c:1202
+#: elf/ldconfig.c:1228
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Non se pode cambiar ao directorio /"
 
-#: elf/ldconfig.c:1243
+#: elf/ldconfig.c:1269
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Non se puido abri-lo directorio de ficheiros caché %s\n"
@@ -2756,58 +2756,58 @@ msgstr "yp_update: non se pode obte-lo enderezo do servidor\n"
 msgid "Haven't found \"%s\" in hosts cache!"
 msgstr "¡Non atopei \"%s\" na caché de servidores!"
 
-#: nscd/connections.c:784
+#: nscd/connections.c:795
 #, c-format
 msgid "cannot open socket: %s"
 msgstr "non se pode abrir un socket: %s"
 
-#: nscd/connections.c:803
+#: nscd/connections.c:814
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
 msgstr "non se pode facer que o socket acepte conexións: %s"
 
-#: nscd/connections.c:1050
+#: nscd/connections.c:1061
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr "non se pode manexa-la antiga petición versión %d; a versión actual é %d"
 
-#: nscd/connections.c:1121 nscd/connections.c:1147
+#: nscd/connections.c:1132 nscd/connections.c:1158
 #, c-format
 msgid "cannot write result: %s"
 msgstr "non se pode escribi-lo resultado: %s"
 
-#: nscd/connections.c:1636
+#: nscd/connections.c:1647
 #, c-format
 msgid "short read while reading request: %s"
 msgstr "lectura demasiado curta ao le-la petición: %s"
 
-#: nscd/connections.c:1669
+#: nscd/connections.c:1680
 #, c-format
 msgid "key length in request too long: %d"
 msgstr "lonxitude da clave da petición demasiado grande: %d"
 
-#: nscd/connections.c:1682
+#: nscd/connections.c:1693
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr "lectura demasiado curta ao le-la clave de petición: %s"
 
-#: nscd/connections.c:1697
+#: nscd/connections.c:1708
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request: petición recibida (Version = %d)"
 
-#: nscd/connections.c:2463 nscd/connections.c:2465 nscd/connections.c:2481
-#: nscd/connections.c:2491 nscd/connections.c:2509 nscd/connections.c:2520
-#: nscd/connections.c:2530
+#: nscd/connections.c:2474 nscd/connections.c:2476 nscd/connections.c:2492
+#: nscd/connections.c:2502 nscd/connections.c:2520 nscd/connections.c:2531
+#: nscd/connections.c:2541
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr "Non se puido executar nscd coma o usuario '%s'"
 
-#: nscd/connections.c:2492
+#: nscd/connections.c:2503
 msgid "getgrouplist failed"
 msgstr "fallou a chamada a getgrouplist"
 
-#: nscd/connections.c:2510
+#: nscd/connections.c:2521
 msgid "setgroups failed"
 msgstr "fallou a chamada a setgroups"
 
@@ -2863,7 +2863,7 @@ msgstr "Usar unha caché separada para cada usuario"
 msgid "Name Service Cache Daemon."
 msgstr "Demo de Cache de Servicio de Nomes."
 
-#: nscd/nscd.c:158 nss/getent.c:995 nss/makedb.c:207
+#: nscd/nscd.c:158 nss/getent.c:995 nss/makedb.c:208
 #, c-format
 msgid "wrong number of arguments"
 msgstr "número de parámetros incorrecto"
@@ -2947,19 +2947,19 @@ msgstr "A enumeración non está soportada en %s\n"
 msgid "Unknown database: %s\n"
 msgstr "Base de datos descoñecida: %s\n"
 
-#: nss/makedb.c:120
+#: nss/makedb.c:121
 msgid "Convert key to lower case"
 msgstr "Converti-la clave a minúsculas"
 
-#: nss/makedb.c:123
+#: nss/makedb.c:124
 msgid "Do not print messages while building database"
 msgstr "Non visualizar mensaxes ao construi-la base de datos"
 
-#: nss/makedb.c:125
+#: nss/makedb.c:126
 msgid "Print content of database file, one entry a line"
 msgstr "Visualiza-lo contido do ficheiro de base de datos, unha entrada por liña"
 
-#: nss/makedb.c:135
+#: nss/makedb.c:136
 msgid ""
 "INPUT-FILE OUTPUT-FILE\n"
 "-o OUTPUT-FILE INPUT-FILE\n"
@@ -2969,16 +2969,16 @@ msgstr ""
 "-o FICHEIRO-SAÍDA FICHEIRO-ENTRADA\n"
 "-u FICHEIRO-ENTRADA"
 
-#: nss/makedb.c:289
+#: nss/makedb.c:290
 #, c-format
 msgid "cannot create temporary file"
 msgstr "non se pode crea-lo ficheiro temporal"
 
-#: nss/makedb.c:557
+#: nss/makedb.c:558
 msgid "duplicate key"
 msgstr "clave duplicada"
 
-#: nss/makedb.c:569
+#: nss/makedb.c:570
 #, c-format
 msgid "problems while reading `%s'"
 msgstr "problemas ao ler `%s'"

@@ -2,13 +2,13 @@
 # Copyright (C) 2013 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
 #
-# Yuri Chornoivan <yurchor@ukr.net>, 2013-2020, 2021, 2022, 2023.
+# Yuri Chornoivan <yurchor@ukr.net>, 2013-2020, 2021, 2022, 2023, 2024.
 # Volodymyr M. Lisivka <lvm@mystery.lviv.net>, 2013.
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.37.9000\n"
-"POT-Creation-Date: 2023-07-17 20:35+0200\n"
-"PO-Revision-Date: 2023-07-18 17:43+0300\n"
+"Project-Id-Version: libc 2.38.9000\n"
+"POT-Creation-Date: 2024-01-01 21:05+0100\n"
+"PO-Revision-Date: 2024-01-03 14:23+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 20.12.0\n"
+"X-Generator: Lokalize 23.04.1\n"
 
 #: argp/argp-help.c:229
 #, c-format
@@ -60,46 +60,46 @@ msgstr "Виконайте команду «%s --help» або «%s --usage», �
 msgid "Report bugs to %s.\n"
 msgstr "Повідомляйте про вади на адресу %s.\n"
 
-#: argp/argp-parse.c:101
+#: argp/argp-parse.c:86
 msgid "Give this help list"
 msgstr "Показати ці довідкові дані"
 
-#: argp/argp-parse.c:102
+#: argp/argp-parse.c:87
 msgid "Give a short usage message"
 msgstr "Отримати коротке повідомлення щодо використання"
 
-#: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
+#: argp/argp-parse.c:88 catgets/gencat.c:110 catgets/gencat.c:114
 #: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:106 nscd/nscd.c:110
-#: nss/makedb.c:121
+#: nss/makedb.c:122
 msgid "NAME"
 msgstr "НАЗВА"
 
-#: argp/argp-parse.c:104
+#: argp/argp-parse.c:89
 msgid "Set the program name"
 msgstr "Встановити назву програми"
 
-#: argp/argp-parse.c:105
+#: argp/argp-parse.c:90
 msgid "SECS"
 msgstr "СЕКУНДИ"
 
-#: argp/argp-parse.c:106
+#: argp/argp-parse.c:91
 msgid "Hang for SECS seconds (default 3600)"
 msgstr "Затриматися на СЕК секунд (типово, на 3600)"
 
-#: argp/argp-parse.c:167
+#: argp/argp-parse.c:152
 msgid "Print program version"
 msgstr "Вивести дані щодо версії програми"
 
-#: argp/argp-parse.c:183
+#: argp/argp-parse.c:168
 msgid "(PROGRAM ERROR) No version known!?"
 msgstr "(ПОМИЛКА ПРОГРАМИ) Невідома версія!?"
 
-#: argp/argp-parse.c:623
+#: argp/argp-parse.c:608
 #, c-format
 msgid "%s: Too many arguments\n"
 msgstr "%s: занадто багато аргументів\n"
 
-#: argp/argp-parse.c:766
+#: argp/argp-parse.c:751
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(ПОМИЛКА ПРОГРАМИ) Параметр має розпізнаватися!?"
 
@@ -112,7 +112,7 @@ msgstr ""
 "%s%s%s:%u: %s%sНеочікувана помилка: %s.\n"
 "%n"
 
-#: assert/assert.c:101
+#: assert/assert.c:103
 #, c-format
 msgid ""
 "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
@@ -121,19 +121,19 @@ msgstr ""
 "%s%s%s:%u: %s%sНе пройдено перевірку «%s».\n"
 "%n"
 
-#: catgets/gencat.c:110
+#: catgets/gencat.c:111
 msgid "Create C header file NAME containing symbol definitions"
 msgstr "Створити файл заголовків C з назвою НАЗВА, де будуть міститися визначення символів."
 
-#: catgets/gencat.c:112
+#: catgets/gencat.c:113
 msgid "Do not use existing catalog, force new output file"
 msgstr "Не використовувати наявний каталог, примусово вивести дані до нового файла"
 
-#: catgets/gencat.c:113 nss/makedb.c:121
+#: catgets/gencat.c:114 nss/makedb.c:122
 msgid "Write output to file NAME"
 msgstr "Вивести дані до файла з назвою НАЗВА."
 
-#: catgets/gencat.c:118
+#: catgets/gencat.c:119
 msgid ""
 "Generate message catalog.\vIf INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
 "is -, output is written to standard output.\n"
@@ -141,7 +141,7 @@ msgstr ""
 "Створити каталог повідомлень.\vЯкщо як файл ВХІДНИЙ-ФАЙЛ\n"
 "вказано -, вивід відбуватиметься у стандартний вивід.\n"
 
-#: catgets/gencat.c:123
+#: catgets/gencat.c:124
 msgid ""
 "-o OUTPUT-FILE [INPUT-FILE]...\n"
 "[OUTPUT-FILE [INPUT-FILE]...]"
@@ -149,11 +149,11 @@ msgstr ""
 "-o ФАЙЛ-ВИВЕДЕННЯ [ФАЙЛ-ВХІДНИХ-ДАНИХ]...\n"
 "[ФАЙЛ-ВИВЕДЕННЯ [ФАЙЛ-ВХІДНИХ-ДАНИХ]...]"
 
-#: catgets/gencat.c:229 debug/pcprofiledump.c:208 elf/ldconfig.c:216
+#: catgets/gencat.c:230 debug/pcprofiledump.c:208 elf/ldconfig.c:216
 #: elf/pldd.c:246 elf/sln.c:77 elf/sprof.c:371 iconv/iconv_prog.c:387
 #: iconv/iconvconfig.c:380 locale/programs/locale.c:275
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:88
-#: malloc/memusagestat.c:564 nss/getent.c:961 nss/makedb.c:370
+#: malloc/memusagestat.c:564 nss/getent.c:961 nss/makedb.c:371
 #: posix/getconf.c:503
 #, c-format
 msgid ""
@@ -163,12 +163,12 @@ msgstr ""
 "Настанови щодо звітування про вади можна знайти тут:\n"
 "%s.\n"
 
-#: catgets/gencat.c:245 debug/pcprofiledump.c:224 debug/xtrace.sh:63
+#: catgets/gencat.c:246 debug/pcprofiledump.c:224 debug/xtrace.sh:63
 #: elf/ldconfig.c:232 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
 #: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
-#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:386 posix/getconf.c:485
+#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:485
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -178,96 +178,101 @@ msgstr ""
 "© Free Software Foundation, Inc., %s\n"
 "Це програмне забезпечення є вільним, умови копіювання викладено у його початкових кодах. Умовами ліцензування програми НЕ передбачено жодних гарантій, зокрема гарантій працездатності або придатності для певної мети.\n"
 
-#: catgets/gencat.c:250 debug/pcprofiledump.c:229 debug/xtrace.sh:67
+#: catgets/gencat.c:251 debug/pcprofiledump.c:229 debug/xtrace.sh:67
 #: elf/ldconfig.c:237 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
-#: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:391
+#: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Автор — %s.\n"
 
-#: catgets/gencat.c:281
+#: catgets/gencat.c:282
 msgid "*standard input*"
 msgstr "*стандартний ввід*"
 
-#: catgets/gencat.c:287 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
-#: nss/makedb.c:247
+#: catgets/gencat.c:288 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
+#: nss/makedb.c:248
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "не вдається відкрити вхідний файл «%s»"
 
-#: catgets/gencat.c:416 catgets/gencat.c:491
+#: catgets/gencat.c:417 catgets/gencat.c:492
 msgid "illegal set number"
 msgstr "некоректний номер набору"
 
-#: catgets/gencat.c:443
+#: catgets/gencat.c:444
 msgid "duplicate set definition"
 msgstr "дублювання визначення набору"
 
-#: catgets/gencat.c:445 catgets/gencat.c:617 catgets/gencat.c:669
+#: catgets/gencat.c:446 catgets/gencat.c:618 catgets/gencat.c:670
 msgid "this is the first definition"
 msgstr "це перше визначення"
 
-#: catgets/gencat.c:516
+#: catgets/gencat.c:517
 #, c-format
 msgid "unknown set `%s'"
 msgstr "невідомий набір «%s»"
 
-#: catgets/gencat.c:557
+#: catgets/gencat.c:558
 msgid "invalid quote character"
 msgstr "некоректний символ лапок"
 
-#: catgets/gencat.c:570
+#: catgets/gencat.c:571
 #, c-format
 msgid "unknown directive `%s': line ignored"
 msgstr "невідома інструкція «%s»: рядок проігноровано"
 
-#: catgets/gencat.c:615
+#: catgets/gencat.c:616
 msgid "duplicated message number"
 msgstr "дублювання номеру повідомлення"
 
-#: catgets/gencat.c:666
+#: catgets/gencat.c:667
 msgid "duplicated message identifier"
 msgstr "дублювання ідентифікатора повідомлення"
 
-#: catgets/gencat.c:723
+#: catgets/gencat.c:724
 msgid "invalid character: message ignored"
 msgstr "некоректний символ: повідомлення проігноровано"
 
-#: catgets/gencat.c:766
+#: catgets/gencat.c:767
 msgid "invalid line"
 msgstr "некоректний рядок"
 
-#: catgets/gencat.c:820
+#: catgets/gencat.c:821
 msgid "malformed line ignored"
 msgstr "рядок з помилковим форматування проігноровано"
 
-#: catgets/gencat.c:982 catgets/gencat.c:1023
+#: catgets/gencat.c:939 catgets/gencat.c:947
+#, c-format
+msgid "cannot allocate memory"
+msgstr "не вдалося розподілити пам’ять"
+
+#: catgets/gencat.c:1000 catgets/gencat.c:1045
 #, c-format
 msgid "cannot open output file `%s'"
 msgstr "не вдалося відкрити файл «%s» для виведення даних"
 
-#: catgets/gencat.c:1185 locale/programs/linereader.c:588
+#: catgets/gencat.c:1210 locale/programs/linereader.c:588
 msgid "invalid escape sequence"
 msgstr "некоректна екранована послідовність символів"
 
-#: catgets/gencat.c:1209
+#: catgets/gencat.c:1234
 msgid "unterminated message"
 msgstr "незавершене повідомлення"
 
-#: catgets/gencat.c:1233
+#: catgets/gencat.c:1258
 #, c-format
 msgid "while opening old catalog file"
 msgstr "під час спроби відкрити старий файл каталогу"
 
-#: catgets/gencat.c:1324
+#: catgets/gencat.c:1349
 #, c-format
 msgid "conversion modules not available"
 msgstr "модулі перетворення недоступні"
 
-#: catgets/gencat.c:1350
+#: catgets/gencat.c:1375
 #, c-format
 msgid "cannot determine escape character"
 msgstr "не вдалося визначити символ екранування"
@@ -390,7 +395,7 @@ msgstr "Порядок байтів у файлі кешу є помилкови
 msgid "Cache generated by: "
 msgstr "Засіб створення кешу:"
 
-#: elf/cache.c:299 elf/ldconfig.c:1223
+#: elf/cache.c:299 elf/ldconfig.c:1249
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Не вдалося відкрити файл кешу %s\n"
@@ -459,11 +464,11 @@ msgstr "помилка під час спроби завантажити біб�
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr "ВАДА ДИНАМІЧНОГО КОМПОНУВАЛЬНИКА!!!"
 
-#: elf/dl-close.c:346 elf/dl-open.c:298
+#: elf/dl-close.c:357 elf/dl-open.c:298
 msgid "cannot create scope list"
 msgstr "не вдалося створити список областей дії"
 
-#: elf/dl-close.c:775
+#: elf/dl-close.c:790
 msgid "shared object not open"
 msgstr "об’єкт спільного використання не відкрито"
 
@@ -532,7 +537,7 @@ msgstr "не вдалося створити масив шляхів пошук�
 msgid "cannot stat shared object"
 msgstr "не вдалося виконати статистичну обробку об’єкта спільного використання"
 
-#: elf/dl-load.c:1059 elf/dl-load.c:2219
+#: elf/dl-load.c:1059 elf/dl-load.c:2222
 msgid "cannot create shared object descriptor"
 msgstr "не вдалося створити дескриптор об’єкта спільного використання"
 
@@ -568,7 +573,7 @@ msgstr "об’єкт спільного використання не може 
 msgid "cannot allocate memory for program header"
 msgstr "не вдалося отримати пам’ять для заголовка програми"
 
-#: elf/dl-load.c:1330 elf/dl-load.h:131
+#: elf/dl-load.c:1330 elf/dl-load.h:128
 msgid "cannot change memory protections"
 msgstr "зміна захисту області пам’яті неможлива"
 
@@ -628,27 +633,27 @@ msgstr "можна завантажити лише ET_DYN і ET_EXEC"
 msgid "ELF file's phentsize not the expected size"
 msgstr "phentsize файла ELF не є очікуваним"
 
-#: elf/dl-load.c:2238
+#: elf/dl-load.c:2241
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "помилковий клас ELF: ELFCLASS64"
 
-#: elf/dl-load.c:2239
+#: elf/dl-load.c:2242
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "помилковий клас ELF: ELFCLASS32"
 
-#: elf/dl-load.c:2242
+#: elf/dl-load.c:2245
 msgid "cannot open shared object file"
 msgstr "не вдалося відкрити файл об’єктів спільного використання"
 
-#: elf/dl-load.h:129
+#: elf/dl-load.h:126
 msgid "failed to map segment from shared object"
 msgstr "не вдалося відобразити сегмент з об’єкта спільного використання"
 
-#: elf/dl-load.h:133
+#: elf/dl-load.h:130
 msgid "cannot map zero-fill pages"
 msgstr "не вдалося відобразити сторінки заповнення нулями"
 
-#: elf/dl-lookup.c:814
+#: elf/dl-lookup.c:813
 msgid "symbol lookup error"
 msgstr "помилка під час пошуку символів"
 
@@ -660,19 +665,19 @@ msgstr "не вдалося розширити загальну область"
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "Переповнено лічильник створення TLS! Будь ласка, повідомте про цю помилку розробникам."
 
-#: elf/dl-open.c:739
+#: elf/dl-open.c:758
 msgid "cannot allocate address lookup data"
 msgstr "не вдалося розмістити дані пошуку адреси"
 
-#: elf/dl-open.c:829
+#: elf/dl-open.c:848
 msgid "invalid mode for dlopen()"
 msgstr "некоректний режим для dlopen()"
 
-#: elf/dl-open.c:846
+#: elf/dl-open.c:865
 msgid "no more namespaces available for dlmopen()"
 msgstr "більше немає просторів назв для dlmopen()"
 
-#: elf/dl-open.c:871
+#: elf/dl-open.c:890
 msgid "invalid target namespace in dlmopen()"
 msgstr "некоректний простір назв призначення у dlmopen()"
 
@@ -701,7 +706,7 @@ msgstr "не вдалося застосувати додатковий захи
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "Використаний у коді символ RTLD_NEXT не завантажується динамічно"
 
-#: elf/dl-tls.c:1044
+#: elf/dl-tls.c:1052
 msgid "cannot create TLS data structures"
 msgstr "не вдалося створити структури даних TLS"
 
@@ -839,7 +844,7 @@ msgstr " (ПРОПУЩЕНО)\n"
 msgid "Can't find %s"
 msgstr "Не вдалося знайти %s"
 
-#: elf/ldconfig.c:600 elf/ldconfig.c:744 elf/ldconfig.c:811
+#: elf/ldconfig.c:600 elf/ldconfig.c:770 elf/ldconfig.c:837
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "Не вдалося обробити lstat %s"
@@ -854,79 +859,79 @@ msgstr "Файл %s проігноровано, оскільки він не є 
 msgid "No link created since soname could not be found for %s"
 msgstr "Зв’язку не створено, оскільки не вдалося знайти бібліотеку so для %s"
 
-#: elf/ldconfig.c:675
+#: elf/ldconfig.c:711
 #, c-format
 msgid " (from %s:%d)\n"
 msgstr " (від %s:%d)\n"
 
-#: elf/ldconfig.c:690
+#: elf/ldconfig.c:726
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Не вдалося відкрити каталог %s"
 
-#: elf/ldconfig.c:727 elf/ldconfig.c:732
+#: elf/ldconfig.c:753 elf/ldconfig.c:758
 #, c-format
 msgid "Could not form library path"
 msgstr "Не вдалося сформувати шлях до бібліотеки"
 
-#: elf/ldconfig.c:761 elf/ldconfig.c:799 elf/readlib.c:78
+#: elf/ldconfig.c:787 elf/ldconfig.c:825 elf/readlib.c:78
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Файл вхідних даних %s не знайдено.\n"
 
-#: elf/ldconfig.c:768
+#: elf/ldconfig.c:794
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Не вдалося отримати статистичні дані щодо %s"
 
-#: elf/ldconfig.c:887
+#: elf/ldconfig.c:913
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "Бібліотека libc6 %s зберігається у помилковому каталозі"
 
-#: elf/ldconfig.c:906
+#: elf/ldconfig.c:932
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "бібліотеки %s і %s у каталозі %s мають однакові назви so, але належать до різних типів."
 
-#: elf/ldconfig.c:1035
+#: elf/ldconfig.c:1061
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr "Попередження: ігноруємо файл налаштувань, який не вдалося відкрити: %s"
 
-#: elf/ldconfig.c:1083
+#: elf/ldconfig.c:1109
 #, c-format
 msgid "%s:%u: hwcap directive ignored"
 msgstr "%s:%u: інструкцію hwcap проігноровано"
 
-#: elf/ldconfig.c:1102
+#: elf/ldconfig.c:1128
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "якщо використано -r, слід вказати абсолютну назву файла для файла налаштувань"
 
-#: elf/ldconfig.c:1109 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1135 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "пам’ять вичерпано"
 
-#: elf/ldconfig.c:1142
+#: elf/ldconfig.c:1168
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: не вдалося прочитати каталог %s"
 
-#: elf/ldconfig.c:1180
+#: elf/ldconfig.c:1206
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "відносний шлях «%s» використано для збирання кешу"
 
-#: elf/ldconfig.c:1202
+#: elf/ldconfig.c:1228
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Не вдалося змінити каталог на /"
 
-#: elf/ldconfig.c:1243
+#: elf/ldconfig.c:1269
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Не вдалося відкрити каталог файлів кешу %s\n"
@@ -3844,259 +3849,259 @@ msgstr " - усі дані: "
 msgid " - remaining data %p: "
 msgstr " - залишок даних %p: "
 
-#: nscd/connections.c:519
+#: nscd/connections.c:530
 #, c-format
 msgid "invalid persistent database file \"%s\": %s"
 msgstr "некоректний файл постійної бази даних «%s»: %s"
 
-#: nscd/connections.c:527
+#: nscd/connections.c:538
 msgid "uninitialized header"
 msgstr "неініціалізований заголовок"
 
-#: nscd/connections.c:532
+#: nscd/connections.c:543
 msgid "header size does not match"
 msgstr "розмір заголовка є невідповідним"
 
-#: nscd/connections.c:542
+#: nscd/connections.c:553
 msgid "file size does not match"
 msgstr "розмір файла є невідповідним"
 
-#: nscd/connections.c:559
+#: nscd/connections.c:570
 msgid "verification failed"
 msgstr "спроба перевірки зазнала невдачі"
 
-#: nscd/connections.c:573
+#: nscd/connections.c:584
 #, c-format
 msgid "suggested size of table for database %s larger than the persistent database's table"
 msgstr "пропонований розмір таблиці для бази даних %s є більшим за таблицю сталої бази даних"
 
-#: nscd/connections.c:584 nscd/connections.c:668
+#: nscd/connections.c:595 nscd/connections.c:679
 #, c-format
 msgid "cannot create read-only descriptor for \"%s\"; no mmap"
 msgstr "не вдалося створити придатний лише для читання дескриптор для «%s»; немає mmap"
 
-#: nscd/connections.c:600
+#: nscd/connections.c:611
 #, c-format
 msgid "cannot access '%s'"
 msgstr "не вдалося отримати доступ до «%s»"
 
-#: nscd/connections.c:648
+#: nscd/connections.c:659
 #, c-format
 msgid "database for %s corrupted or simultaneously used; remove %s manually if necessary and restart"
 msgstr "базу даних для %s пошкоджено або ця база використовується спільно з іншою програмою; вилучіть %s вручну, якщо потрібно, і перезапустіть програму"
 
-#: nscd/connections.c:654
+#: nscd/connections.c:665
 #, c-format
 msgid "cannot create %s; no persistent database used"
 msgstr "не вдалося створити %s; не використано жодної постійної бази даних"
 
-#: nscd/connections.c:657
+#: nscd/connections.c:668
 #, c-format
 msgid "cannot create %s; no sharing possible"
 msgstr "не вдалося створити %s; спільне використання неможливе"
 
-#: nscd/connections.c:728
+#: nscd/connections.c:739
 #, c-format
 msgid "cannot write to database file %s: %s"
 msgstr "не вдалося виконати запис до файла бази даних %s: %s"
 
-#: nscd/connections.c:784
+#: nscd/connections.c:795
 #, c-format
 msgid "cannot open socket: %s"
 msgstr "не вдалося відкрити сокет: %s"
 
-#: nscd/connections.c:803
+#: nscd/connections.c:814
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
 msgstr "не вдалося увімкнути сокет для прийняття з’єднань: %s"
 
-#: nscd/connections.c:860
+#: nscd/connections.c:871
 #, c-format
 msgid "disabled inotify-based monitoring for file `%s': %s"
 msgstr "вимкнено стеження на основі inotify за файлом «%s»: %s"
 
-#: nscd/connections.c:864
+#: nscd/connections.c:875
 #, c-format
 msgid "monitoring file `%s` (%d)"
 msgstr "спостерігаємо за файлом «%s» (%d)"
 
-#: nscd/connections.c:877
+#: nscd/connections.c:888
 #, c-format
 msgid "disabled inotify-based monitoring for directory `%s': %s"
 msgstr "вимкнено спостереження на основі inotify за каталогом «%s»: %s"
 
-#: nscd/connections.c:881
+#: nscd/connections.c:892
 #, c-format
 msgid "monitoring directory `%s` (%d)"
 msgstr "ведемо спостереження за каталогом «%s» (%d)"
 
-#: nscd/connections.c:909
+#: nscd/connections.c:920
 #, c-format
 msgid "monitoring file %s for database %s"
 msgstr "ведемо спостереження за файлом %s щодо бази даних %s"
 
-#: nscd/connections.c:919
+#: nscd/connections.c:930
 #, c-format
 msgid "stat failed for file `%s'; will try again later: %s"
 msgstr "не вдалося отримати статистичні дані щодо файла «%s»; спробуємо пізніше: %s"
 
-#: nscd/connections.c:1038
+#: nscd/connections.c:1049
 #, c-format
 msgid "provide access to FD %d, for %s"
 msgstr "надати доступ до файлового дескриптора %d для %s"
 
-#: nscd/connections.c:1050
+#: nscd/connections.c:1061
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr "обробка застарілої версії запиту %d неможлива; поточною версією є %d"
 
-#: nscd/connections.c:1073
+#: nscd/connections.c:1084
 #, c-format
 msgid "request from %ld not handled due to missing permission"
 msgstr "запит від %ld не оброблено через недостатні права доступу"
 
-#: nscd/connections.c:1078
+#: nscd/connections.c:1089
 #, c-format
 msgid "request from '%s' [%ld] not handled due to missing permission"
 msgstr "запит від «%s» [%ld] не оброблено через недостатні права доступу"
 
-#: nscd/connections.c:1083
+#: nscd/connections.c:1094
 msgid "request not handled due to missing permission"
 msgstr "запит не оброблено через недостатні права доступу"
 
-#: nscd/connections.c:1121 nscd/connections.c:1147
+#: nscd/connections.c:1132 nscd/connections.c:1158
 #, c-format
 msgid "cannot write result: %s"
 msgstr "не вдалося записати результат: %s"
 
-#: nscd/connections.c:1238
+#: nscd/connections.c:1249
 #, c-format
 msgid "error getting caller's id: %s"
 msgstr "помилка під час спроби отримати ідентифікатор виклику: %s"
 
-#: nscd/connections.c:1348
+#: nscd/connections.c:1359
 #, c-format
 msgid "cannot open /proc/self/cmdline: %m; disabling paranoia mode"
 msgstr "не вдалося відкрити /proc/self/cmdline: %m; вимикаємо параноїдальний режим"
 
-#: nscd/connections.c:1371
+#: nscd/connections.c:1382
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
 msgstr "не вдалося змінити старий UID: %s; вимикаємо параноїдальний режим"
 
-#: nscd/connections.c:1382
+#: nscd/connections.c:1393
 #, c-format
 msgid "cannot change to old GID: %s; disabling paranoia mode"
 msgstr "не вдалося змінити старий GID: %s; вимикаємо параноїдальний режим"
 
-#: nscd/connections.c:1396
+#: nscd/connections.c:1407
 #, c-format
 msgid "cannot change to old working directory: %s; disabling paranoia mode"
 msgstr "не вдалося змінити старий робочий каталог: %s; вимикаємо параноїдальний режим"
 
-#: nscd/connections.c:1443
+#: nscd/connections.c:1454
 #, c-format
 msgid "re-exec failed: %s; disabling paranoia mode"
 msgstr "не вдалося повторно виконати %s; вимикаємо параноїдальний режим"
 
-#: nscd/connections.c:1452
+#: nscd/connections.c:1463
 #, c-format
 msgid "cannot change current working directory to \"/\": %s"
 msgstr "не вдалося змінити поточний робочий каталог на «/»: %s"
 
-#: nscd/connections.c:1636
+#: nscd/connections.c:1647
 #, c-format
 msgid "short read while reading request: %s"
 msgstr "неповний зчитаний блок під час читання запиту: %s"
 
-#: nscd/connections.c:1669
+#: nscd/connections.c:1680
 #, c-format
 msgid "key length in request too long: %d"
 msgstr "надто довгий ключ у запиті: %d"
 
-#: nscd/connections.c:1682
+#: nscd/connections.c:1693
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr "неповний зчитаний блок під час читання ключа запиту: %s"
 
-#: nscd/connections.c:1692
+#: nscd/connections.c:1703
 #, c-format
 msgid "handle_request: request received (Version = %d) from PID %ld"
 msgstr "handle_request: отримано запит (версія = %d) від PID %ld"
 
-#: nscd/connections.c:1697
+#: nscd/connections.c:1708
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request: отримано запит (версія = %d)"
 
-#: nscd/connections.c:1837
+#: nscd/connections.c:1848
 #, c-format
 msgid "ignored inotify event for `%s` (file exists)"
 msgstr "проігноровано подію inotify щодо «%s» (файл вже існує)"
 
-#: nscd/connections.c:1842
+#: nscd/connections.c:1853
 #, c-format
 msgid "monitored file `%s` was %s, removing watch"
 msgstr "файл, за яким ведеться спостереження, «%s» було %s, знімаємо спостереження"
 
-#: nscd/connections.c:1850 nscd/connections.c:1892
+#: nscd/connections.c:1861 nscd/connections.c:1903
 #, c-format
 msgid "failed to remove file watch `%s`: %s"
 msgstr "не вдалося зняти спостереження за файлом «%s»: %s"
 
-#: nscd/connections.c:1865
+#: nscd/connections.c:1876
 #, c-format
 msgid "monitored file `%s` was written to"
 msgstr "файл, за яким ведеться спостереження, %s», було записано до"
 
-#: nscd/connections.c:1889
+#: nscd/connections.c:1900
 #, c-format
 msgid "monitored parent directory `%s` was %s, removing watch on `%s`"
 msgstr "батьківський каталог, за яким ведеться спостереження, «%s» було %s, вилучаємо спостереження за «%s»"
 
-#: nscd/connections.c:1915
+#: nscd/connections.c:1926
 #, c-format
 msgid "monitored file `%s` was %s, adding watch"
 msgstr "файл, за яким ведеться спостереження, «%s» було %s, додаємо спостереження"
 
-#: nscd/connections.c:1927
+#: nscd/connections.c:1938
 #, c-format
 msgid "failed to add file watch `%s`: %s"
 msgstr "не вдалося додати спостереження за файлом «%s»: %s"
 
-#: nscd/connections.c:2105 nscd/connections.c:2270
+#: nscd/connections.c:2116 nscd/connections.c:2281
 #, c-format
 msgid "disabled inotify-based monitoring after read error %d"
 msgstr "спостереження за файлом на основі inotify вимкнено після помилки читання %d"
 
-#: nscd/connections.c:2386
+#: nscd/connections.c:2397
 msgid "could not initialize conditional variable"
 msgstr "не вдалося ініціалізувати змінну умови"
 
-#: nscd/connections.c:2394
+#: nscd/connections.c:2405
 msgid "could not start clean-up thread; terminating"
 msgstr "не вдалося розпочати нитку спорожнення; перериваємо обробку"
 
-#: nscd/connections.c:2408
+#: nscd/connections.c:2419
 msgid "could not start any worker thread; terminating"
 msgstr "не вдалося запустити будь-яку нитку обробки; перериваємо обробку"
 
-#: nscd/connections.c:2463 nscd/connections.c:2465 nscd/connections.c:2481
-#: nscd/connections.c:2491 nscd/connections.c:2509 nscd/connections.c:2520
-#: nscd/connections.c:2530
+#: nscd/connections.c:2474 nscd/connections.c:2476 nscd/connections.c:2492
+#: nscd/connections.c:2502 nscd/connections.c:2520 nscd/connections.c:2531
+#: nscd/connections.c:2541
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr "Не вдалося запустити nscd від імені користувача «%s»"
 
-#: nscd/connections.c:2483
+#: nscd/connections.c:2494
 msgid "initial getgrouplist failed"
 msgstr "помилка початкового getgrouplist"
 
-#: nscd/connections.c:2492
+#: nscd/connections.c:2503
 msgid "getgrouplist failed"
 msgstr "помилка getgrouplist"
 
-#: nscd/connections.c:2510
+#: nscd/connections.c:2521
 msgid "setgroups failed"
 msgstr "помилка setgroups"
 
@@ -4199,7 +4204,7 @@ msgstr "Використовувати окремий кеш для кожног
 msgid "Name Service Cache Daemon."
 msgstr "Фонова служба кешування служби назв."
 
-#: nscd/nscd.c:158 nss/getent.c:995 nss/makedb.c:207
+#: nscd/nscd.c:158 nss/getent.c:995 nss/makedb.c:208
 #, c-format
 msgid "wrong number of arguments"
 msgstr "помилкова кількість параметрів"
@@ -4637,31 +4642,31 @@ msgstr "Підтримувані бази даних:\n"
 msgid "Unknown database: %s\n"
 msgstr "Невідома база даних: %s\n"
 
-#: nss/makedb.c:120
+#: nss/makedb.c:121
 msgid "Convert key to lower case"
 msgstr "Перетворити символи ключа до нижнього регістру"
 
-#: nss/makedb.c:123
+#: nss/makedb.c:124
 msgid "Do not print messages while building database"
 msgstr "Не виводити повідомлення під час побудови бази даних"
 
-#: nss/makedb.c:125
+#: nss/makedb.c:126
 msgid "Print content of database file, one entry a line"
 msgstr "Вивести вміст файла бази даних, один запис на рядок"
 
-#: nss/makedb.c:126
+#: nss/makedb.c:127
 msgid "CHAR"
 msgstr "СИМВОЛ"
 
-#: nss/makedb.c:127
+#: nss/makedb.c:128
 msgid "Generated line not part of iteration"
 msgstr "Створений рядок не є частиною ітерації"
 
-#: nss/makedb.c:132
+#: nss/makedb.c:133
 msgid "Create simple database from textual input."
 msgstr "Створити просту базу даних на основі текстових вхідних даних."
 
-#: nss/makedb.c:135
+#: nss/makedb.c:136
 msgid ""
 "INPUT-FILE OUTPUT-FILE\n"
 "-o OUTPUT-FILE INPUT-FILE\n"
@@ -4671,76 +4676,81 @@ msgstr ""
 "-o ВИХІДНИЙ-ФАЙЛ ВХІДНИЙ-ФАЙЛ\n"
 "-u ВХІДНИЙ-ФАЙЛ"
 
-#: nss/makedb.c:228
+#: nss/makedb.c:229
 #, c-format
 msgid "cannot open database file `%s'"
 msgstr "не вдалося відкрити файл бази даних «%s»"
 
-#: nss/makedb.c:273
+#: nss/makedb.c:274
 #, c-format
 msgid "no entries to be processed"
 msgstr "немає записів для обробки"
 
-#: nss/makedb.c:283
+#: nss/makedb.c:284
 #, c-format
 msgid "cannot create temporary file name"
 msgstr "не вдалося створити назву тимчасового файла"
 
-#: nss/makedb.c:289
+#: nss/makedb.c:290
 #, c-format
 msgid "cannot create temporary file"
 msgstr "не вдалося створити тимчасовий файл"
 
-#: nss/makedb.c:305
+#: nss/makedb.c:306
 #, c-format
 msgid "cannot stat newly created file"
 msgstr "не вдалося отримати статистичні дані щодо щойно створеного файла"
 
-#: nss/makedb.c:316
+#: nss/makedb.c:317
 #, c-format
 msgid "cannot rename temporary file"
 msgstr "не вдалося перейменувати тимчасовий файл"
 
-#: nss/makedb.c:528 nss/makedb.c:551
+#: nss/makedb.c:529 nss/makedb.c:552
 #, c-format
 msgid "cannot create search tree"
 msgstr "не вдалося створити дерево пошуку"
 
-#: nss/makedb.c:557
+#: nss/makedb.c:558
 msgid "duplicate key"
 msgstr "дублювання ключа"
 
-#: nss/makedb.c:569
+#: nss/makedb.c:570
 #, c-format
 msgid "problems while reading `%s'"
 msgstr "проблеми під час читання «%s»"
 
-#: nss/makedb.c:805
+#: nss/makedb.c:748
+#, c-format
+msgid "failed to allocate memory"
+msgstr "не вдалося отримати пам'ять"
+
+#: nss/makedb.c:814
 #, c-format
 msgid "failed to write new database file"
 msgstr "не вдалося записати новий файл бази даних"
 
-#: nss/makedb.c:822
+#: nss/makedb.c:833
 #, c-format
 msgid "cannot stat database file"
 msgstr "не вдалося виконати статистичну обробку файла бази даних"
 
-#: nss/makedb.c:827
+#: nss/makedb.c:838
 #, c-format
 msgid "cannot map database file"
 msgstr "не вдалося прив’язати файл бази даних"
 
-#: nss/makedb.c:830
+#: nss/makedb.c:841
 #, c-format
 msgid "file not a database file"
 msgstr "файл не є файлом бази даних"
 
-#: nss/makedb.c:882
+#: nss/makedb.c:893
 #, c-format
 msgid "cannot initialize SELinux context"
 msgstr "не вдалося ініціалізувати контекст SELinux"
 
-#: nss/makedb.c:891
+#: nss/makedb.c:902
 #, c-format
 msgid "cannot set file creation context for `%s'"
 msgstr "не вдалося встановити контекст створення файла для «%s»"
@@ -6488,17 +6498,21 @@ msgstr "Результат є надто великим для наданого 
 msgid "makecontext: does not know how to handle more than 8 arguments\n"
 msgstr "makecontext: спосіб обробки понад 8 аргументів невідомий\n"
 
-#: sysdeps/x86/dl-cet.c:154
+#: sysdeps/x86/dl-cet.c:214
 msgid "rebuild shared object with IBT support enabled"
 msgstr "перезбирання об'єкта спільного використання із увімкненою підтримкою IBT"
 
-#: sysdeps/x86/dl-cet.c:165
+#: sysdeps/x86/dl-cet.c:233
 msgid "rebuild shared object with SHSTK support enabled"
 msgstr "перезбирання об'єкта спільного використання із увімкненою підтримкою SHSTK"
 
-#: sysdeps/x86/dl-cet.c:194
-msgid "can't disable CET"
-msgstr "не вдалося вимкнути CET"
+#: sysdeps/x86/dl-cet.c:251
+msgid "can't disable IBT"
+msgstr "не вдалося вимкнути IBT"
+
+#: sysdeps/x86/dl-cet.c:253
+msgid "can't disable SHSTK"
+msgstr "не вдалося вимкнути SHSTK"
 
 #: sysdeps/x86/dl-prop.h:61
 msgid "CPU ISA level is lower than required"

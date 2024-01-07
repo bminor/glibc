@@ -4,6 +4,7 @@
 # Vladimir Michl <Vladimir.Michl@seznam.cz>, 1997.
 # Petr Pisar <petr.pisar@atlas.cz>, 2007, 2009, 2011, 2012, 2013, 2014, 2015.
 # Petr Pisar <petr.pisar@atlas.cz>, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
+# Petr Pisar <petr.pisar@atlas.cz>, 2024.
 #
 # Thanks to:
 # Petr Kolar <Petr.Kolar@vslib.cz>
@@ -24,9 +25,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.37.9000\n"
-"POT-Creation-Date: 2023-07-17 20:35+0200\n"
-"PO-Revision-Date: 2023-07-23 21:54+02:00\n"
+"Project-Id-Version: libc 2.38.9000\n"
+"POT-Creation-Date: 2024-01-01 21:05+0100\n"
+"PO-Revision-Date: 2024-01-03 21:29+01:00\n"
 "Last-Translator: Petr Pisar <petr.pisar@atlas.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "Language: cs\n"
@@ -79,46 +80,46 @@ msgstr ""
 "připomínky k překladu zasílejte na adresu\n"
 "<translation-team-cs@lists.sourceforge.net> (česky).\n"
 
-#: argp/argp-parse.c:101
+#: argp/argp-parse.c:86
 msgid "Give this help list"
 msgstr "Vypíše tuto nápovědu"
 
-#: argp/argp-parse.c:102
+#: argp/argp-parse.c:87
 msgid "Give a short usage message"
 msgstr "Vypíše krátký návod na použití"
 
-#: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
+#: argp/argp-parse.c:88 catgets/gencat.c:110 catgets/gencat.c:114
 #: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:106 nscd/nscd.c:110
-#: nss/makedb.c:121
+#: nss/makedb.c:122
 msgid "NAME"
 msgstr "NÁZEV"
 
-#: argp/argp-parse.c:104
+#: argp/argp-parse.c:89
 msgid "Set the program name"
 msgstr "Nastaví název programu"
 
-#: argp/argp-parse.c:105
+#: argp/argp-parse.c:90
 msgid "SECS"
 msgstr "SEK"
 
-#: argp/argp-parse.c:106
+#: argp/argp-parse.c:91
 msgid "Hang for SECS seconds (default 3600)"
 msgstr "Počkání SEK sekund (výchozí 3600)"
 
-#: argp/argp-parse.c:167
+#: argp/argp-parse.c:152
 msgid "Print program version"
 msgstr "Vypíše označení verze programu"
 
-#: argp/argp-parse.c:183
+#: argp/argp-parse.c:168
 msgid "(PROGRAM ERROR) No version known!?"
 msgstr "(CHYBA PROGRAMU) Neznámá verze!?"
 
-#: argp/argp-parse.c:623
+#: argp/argp-parse.c:608
 #, c-format
 msgid "%s: Too many arguments\n"
 msgstr "%s: Příliš mnoho argumentů\n"
 
-#: argp/argp-parse.c:766
+#: argp/argp-parse.c:751
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(CHYBA PROGRAMU) Přepínač měl být rozpoznán!?"
 
@@ -131,7 +132,7 @@ msgstr ""
 "%s%s%s:%u: %s%sNeočekávaná chyba: %s.\n"
 "%n"
 
-#: assert/assert.c:101
+#: assert/assert.c:103
 #, c-format
 msgid ""
 "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
@@ -142,19 +143,19 @@ msgstr ""
 
 # See "gencat --help" output for better understadning why leading space is
 # needed.
-#: catgets/gencat.c:110
+#: catgets/gencat.c:111
 msgid "Create C header file NAME containing symbol definitions"
 msgstr " Vytvoří hlavičkový soubor NÁZEV pro jazyk C obsahující definice symbolů"
 
-#: catgets/gencat.c:112
+#: catgets/gencat.c:113
 msgid "Do not use existing catalog, force new output file"
 msgstr " Nepoužívá existující katalog, vytvoří nový výstupní soubor"
 
-#: catgets/gencat.c:113 nss/makedb.c:121
+#: catgets/gencat.c:114 nss/makedb.c:122
 msgid "Write output to file NAME"
 msgstr "Zapsání výstup do souboru SOUBOR"
 
-#: catgets/gencat.c:118
+#: catgets/gencat.c:119
 msgid ""
 "Generate message catalog.\vIf INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
 "is -, output is written to standard output.\n"
@@ -162,7 +163,7 @@ msgstr ""
 "Generuje katalog zpráv.\vJe-li VSTUPNÍ_SOUBOR -, vstup bude načten ze standardního vstupu.\n"
 "Je-li VÝSTUPNÍ_SOUBOR -, výstup bude zapsán na standardní výstup.\n"
 
-#: catgets/gencat.c:123
+#: catgets/gencat.c:124
 msgid ""
 "-o OUTPUT-FILE [INPUT-FILE]...\n"
 "[OUTPUT-FILE [INPUT-FILE]...]"
@@ -170,11 +171,11 @@ msgstr ""
 "-o VÝSTUPNÍ_SOUBOR [VSTUPNÍ_SOUBOR]…\n"
 "[ VÝSTUPNÍ_SOUBOR [VSTUPNÍ_SOUBOR]…]"
 
-#: catgets/gencat.c:229 debug/pcprofiledump.c:208 elf/ldconfig.c:216
+#: catgets/gencat.c:230 debug/pcprofiledump.c:208 elf/ldconfig.c:216
 #: elf/pldd.c:246 elf/sln.c:77 elf/sprof.c:371 iconv/iconv_prog.c:387
 #: iconv/iconvconfig.c:380 locale/programs/locale.c:275
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:88
-#: malloc/memusagestat.c:564 nss/getent.c:961 nss/makedb.c:370
+#: malloc/memusagestat.c:564 nss/getent.c:961 nss/makedb.c:371
 #: posix/getconf.c:503
 #, c-format
 msgid ""
@@ -184,12 +185,12 @@ msgstr ""
 "Rady, jak nahlásit chybu, naleznete na:\n"
 "%s.\n"
 
-#: catgets/gencat.c:245 debug/pcprofiledump.c:224 debug/xtrace.sh:63
+#: catgets/gencat.c:246 debug/pcprofiledump.c:224 debug/xtrace.sh:63
 #: elf/ldconfig.c:232 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
 #: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
-#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:386 posix/getconf.c:485
+#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:485
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -201,96 +202,101 @@ msgstr ""
 "naleznete ve zdrojových textech. Toto programové vybavení je zcela BEZ ZÁRUKY,\n"
 "a to i bez záruky PRODEJNOSTI nebo VHODNOSTI PRO NĚJAKÝ KONKRÉTNÍ ÚČEL.\n"
 
-#: catgets/gencat.c:250 debug/pcprofiledump.c:229 debug/xtrace.sh:67
+#: catgets/gencat.c:251 debug/pcprofiledump.c:229 debug/xtrace.sh:67
 #: elf/ldconfig.c:237 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
-#: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:391
+#: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Autor: %s.\n"
 
-#: catgets/gencat.c:281
+#: catgets/gencat.c:282
 msgid "*standard input*"
 msgstr "*standardní vstup*"
 
-#: catgets/gencat.c:287 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
-#: nss/makedb.c:247
+#: catgets/gencat.c:288 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
+#: nss/makedb.c:248
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "vstupní soubor „%s“ nelze otevřít"
 
-#: catgets/gencat.c:416 catgets/gencat.c:491
+#: catgets/gencat.c:417 catgets/gencat.c:492
 msgid "illegal set number"
 msgstr "nepovolené číslo sady"
 
-#: catgets/gencat.c:443
+#: catgets/gencat.c:444
 msgid "duplicate set definition"
 msgstr "duplicitní definice sady"
 
-#: catgets/gencat.c:445 catgets/gencat.c:617 catgets/gencat.c:669
+#: catgets/gencat.c:446 catgets/gencat.c:618 catgets/gencat.c:670
 msgid "this is the first definition"
 msgstr "toto je první definice"
 
-#: catgets/gencat.c:516
+#: catgets/gencat.c:517
 #, c-format
 msgid "unknown set `%s'"
 msgstr "neznámá sada „%s“"
 
-#: catgets/gencat.c:557
+#: catgets/gencat.c:558
 msgid "invalid quote character"
 msgstr "chybný znak s uvozovkami"
 
-#: catgets/gencat.c:570
+#: catgets/gencat.c:571
 #, c-format
 msgid "unknown directive `%s': line ignored"
 msgstr "neznámá direktiva „%s“: řádek ignorován"
 
-#: catgets/gencat.c:615
+#: catgets/gencat.c:616
 msgid "duplicated message number"
 msgstr "duplicitní číslo zprávy"
 
-#: catgets/gencat.c:666
+#: catgets/gencat.c:667
 msgid "duplicated message identifier"
 msgstr "duplicitní identifikátor zprávy"
 
-#: catgets/gencat.c:723
+#: catgets/gencat.c:724
 msgid "invalid character: message ignored"
 msgstr "chybný znak: zpráva ignorována"
 
-#: catgets/gencat.c:766
+#: catgets/gencat.c:767
 msgid "invalid line"
 msgstr "chybný řádek"
 
-#: catgets/gencat.c:820
+#: catgets/gencat.c:821
 msgid "malformed line ignored"
 msgstr "deformovaný řádek bude ignorován"
 
-#: catgets/gencat.c:982 catgets/gencat.c:1023
+#: catgets/gencat.c:939 catgets/gencat.c:947
+#, c-format
+msgid "cannot allocate memory"
+msgstr "nelze alokovat paměť"
+
+#: catgets/gencat.c:1000 catgets/gencat.c:1045
 #, c-format
 msgid "cannot open output file `%s'"
 msgstr "výstupní soubor „%s“ nelze otevřít"
 
-#: catgets/gencat.c:1185 locale/programs/linereader.c:588
+#: catgets/gencat.c:1210 locale/programs/linereader.c:588
 msgid "invalid escape sequence"
 msgstr "chybná escape sekvence"
 
-#: catgets/gencat.c:1209
+#: catgets/gencat.c:1234
 msgid "unterminated message"
 msgstr "neukončená zpráva"
 
-#: catgets/gencat.c:1233
+#: catgets/gencat.c:1258
 #, c-format
 msgid "while opening old catalog file"
 msgstr "během otvírání starého katalogu"
 
-#: catgets/gencat.c:1324
+#: catgets/gencat.c:1349
 #, c-format
 msgid "conversion modules not available"
 msgstr "převodní modul není dostupný"
 
-#: catgets/gencat.c:1350
+#: catgets/gencat.c:1375
 #, c-format
 msgid "cannot determine escape character"
 msgstr "nelze určit escapovací znak"
@@ -414,7 +420,7 @@ msgstr "Soubor s keší má nesprávnou endianitu.\n"
 msgid "Cache generated by: "
 msgstr "Keš vytvořil: "
 
-#: elf/cache.c:299 elf/ldconfig.c:1223
+#: elf/cache.c:299 elf/ldconfig.c:1249
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Soubor s keší %s nelze otevřít\n"
@@ -483,11 +489,11 @@ msgstr "chyba během načítání sdílených knihoven"
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr "CHYBA DYNAMICKÉHO LINKERU!!!"
 
-#: elf/dl-close.c:346 elf/dl-open.c:298
+#: elf/dl-close.c:357 elf/dl-open.c:298
 msgid "cannot create scope list"
 msgstr "seznam rozsahů nelze vytvořit"
 
-#: elf/dl-close.c:775
+#: elf/dl-close.c:790
 msgid "shared object not open"
 msgstr "sdílený objekt není otevřen"
 
@@ -556,7 +562,7 @@ msgstr "nelze vytvořit pole vyhledávacích cest"
 msgid "cannot stat shared object"
 msgstr "nelze získat informace o sdíleném objektu"
 
-#: elf/dl-load.c:1059 elf/dl-load.c:2219
+#: elf/dl-load.c:1059 elf/dl-load.c:2222
 msgid "cannot create shared object descriptor"
 msgstr "deskriptor sdíleného objektu nelze vytvořit"
 
@@ -592,7 +598,7 @@ msgstr "sdílený objekt nebylo možné načíst funkcí dlopen()"
 msgid "cannot allocate memory for program header"
 msgstr "nelze alokovat paměť pro hlavičku programu"
 
-#: elf/dl-load.c:1330 elf/dl-load.h:131
+#: elf/dl-load.c:1330 elf/dl-load.h:128
 msgid "cannot change memory protections"
 msgstr "ochrany paměti nelze změnit"
 
@@ -652,27 +658,27 @@ msgstr "jen ET_DYN a ET_EXEC mohou být nahráni"
 msgid "ELF file's phentsize not the expected size"
 msgstr "phentsize souboru ELF má neočekávanou velikost"
 
-#: elf/dl-load.c:2238
+#: elf/dl-load.c:2241
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "chybná třída ELF: ELFCLASS64"
 
-#: elf/dl-load.c:2239
+#: elf/dl-load.c:2242
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "chybná třída ELF: ELFCLASS32"
 
-#: elf/dl-load.c:2242
+#: elf/dl-load.c:2245
 msgid "cannot open shared object file"
 msgstr "sdílený objektový soubor nelze otevřít"
 
-#: elf/dl-load.h:129
+#: elf/dl-load.h:126
 msgid "failed to map segment from shared object"
 msgstr "namapování segmentu ze sdíleného objektu se nepodařilo"
 
-#: elf/dl-load.h:133
+#: elf/dl-load.h:130
 msgid "cannot map zero-fill pages"
 msgstr "nulami vyplněné stránky nelze mapovat"
 
-#: elf/dl-lookup.c:814
+#: elf/dl-lookup.c:813
 msgid "symbol lookup error"
 msgstr "chyba při vyhledávání symbolu"
 
@@ -684,19 +690,19 @@ msgstr "globální rozsah nelze rozšířit"
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "Čítač generátoru TLS oříznut! Prosím, tuto skutečnost nahlaste."
 
-#: elf/dl-open.c:739
+#: elf/dl-open.c:758
 msgid "cannot allocate address lookup data"
 msgstr "data pro vyhledávání adres nelze alokovat"
 
-#: elf/dl-open.c:829
+#: elf/dl-open.c:848
 msgid "invalid mode for dlopen()"
 msgstr "neplatný mód pro dlopen()"
 
-#: elf/dl-open.c:846
+#: elf/dl-open.c:865
 msgid "no more namespaces available for dlmopen()"
 msgstr "pro dlmopen() již není dostupný žádný další jmenný prostor"
 
-#: elf/dl-open.c:871
+#: elf/dl-open.c:890
 msgid "invalid target namespace in dlmopen()"
 msgstr "neplatný cílový jmenný prostor v dlmopen()"
 
@@ -725,7 +731,7 @@ msgstr "po přemístění nelze nelze uplatnit dodatečnou ochranu paměti"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT je použito pro kód, který není dynamicky zaveden"
 
-#: elf/dl-tls.c:1044
+#: elf/dl-tls.c:1052
 msgid "cannot create TLS data structures"
 msgstr "datové struktury TLS nelze vytvořit"
 
@@ -863,7 +869,7 @@ msgstr " (PŘESKOČENO)\n"
 msgid "Can't find %s"
 msgstr "%s nezle nalézt"
 
-#: elf/ldconfig.c:600 elf/ldconfig.c:744 elf/ldconfig.c:811
+#: elf/ldconfig.c:600 elf/ldconfig.c:770 elf/ldconfig.c:837
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "Informace o symbolickém odkazu %s nelze získat"
@@ -878,79 +884,79 @@ msgstr "Soubor %s ignorován, neb se nejedná o obyčejný soubor."
 msgid "No link created since soname could not be found for %s"
 msgstr "Protože nebyl nalezen název sdílené knihovny (soname) %s, žádný odkaz nebyl vytvořeni."
 
-#: elf/ldconfig.c:675
+#: elf/ldconfig.c:711
 #, c-format
 msgid " (from %s:%d)\n"
 msgstr " (z %s:%d)\n"
 
-#: elf/ldconfig.c:690
+#: elf/ldconfig.c:726
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Adresář %s nelze otevřít"
 
-#: elf/ldconfig.c:727 elf/ldconfig.c:732
+#: elf/ldconfig.c:753 elf/ldconfig.c:758
 #, c-format
 msgid "Could not form library path"
 msgstr "Cestu ke knihovně nebylo možné vytvořit"
 
-#: elf/ldconfig.c:761 elf/ldconfig.c:799 elf/readlib.c:78
+#: elf/ldconfig.c:787 elf/ldconfig.c:825 elf/readlib.c:78
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Vstupní soubor %s nebyl nalezen.\n"
 
-#: elf/ldconfig.c:768
+#: elf/ldconfig.c:794
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Informace o %s nelze získat"
 
-#: elf/ldconfig.c:887
+#: elf/ldconfig.c:913
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "libc6 knihovna %s je ve špatném adresáři"
 
-#: elf/ldconfig.c:906
+#: elf/ldconfig.c:932
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "knihovny %s a %s z adresáře %s mají stejný název (soname), ale rozdílný typ."
 
-#: elf/ldconfig.c:1035
+#: elf/ldconfig.c:1061
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr "Pozor: soubor, který nelze otevřít, bude ignorován: %s"
 
-#: elf/ldconfig.c:1083
+#: elf/ldconfig.c:1109
 #, c-format
 msgid "%s:%u: hwcap directive ignored"
 msgstr "%s:%u: direktiva hwcap ignorována"
 
-#: elf/ldconfig.c:1102
+#: elf/ldconfig.c:1128
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "Při použití -r je třeba zadat absolutní jméno konfiguračního souboru"
 
-#: elf/ldconfig.c:1109 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1135 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "paměť vyčerpána"
 
-#: elf/ldconfig.c:1142
+#: elf/ldconfig.c:1168
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: adresář %s nelze načíst"
 
-#: elf/ldconfig.c:1180
+#: elf/ldconfig.c:1206
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "pro vybudování keše byla použita relativní cesta „%s“"
 
-#: elf/ldconfig.c:1202
+#: elf/ldconfig.c:1228
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Nelze se přepnout do adresáře /"
 
-#: elf/ldconfig.c:1243
+#: elf/ldconfig.c:1269
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Adresář %s se soubory keší nelze otevřít\n"
@@ -3882,259 +3888,259 @@ msgstr " – všechny údaje: "
 msgid " - remaining data %p: "
 msgstr " – zbývající údaje %p: "
 
-#: nscd/connections.c:519
+#: nscd/connections.c:530
 #, c-format
 msgid "invalid persistent database file \"%s\": %s"
 msgstr "chybný soubor „%s“ s trvalou databází: %s"
 
-#: nscd/connections.c:527
+#: nscd/connections.c:538
 msgid "uninitialized header"
 msgstr "neinicializovaná hlavička"
 
-#: nscd/connections.c:532
+#: nscd/connections.c:543
 msgid "header size does not match"
 msgstr "velikost hlavičky nesouhlasí"
 
-#: nscd/connections.c:542
+#: nscd/connections.c:553
 msgid "file size does not match"
 msgstr "velikost souboru nesouhlasí"
 
-#: nscd/connections.c:559
+#: nscd/connections.c:570
 msgid "verification failed"
 msgstr "ověření selhalo"
 
-#: nscd/connections.c:573
+#: nscd/connections.c:584
 #, c-format
 msgid "suggested size of table for database %s larger than the persistent database's table"
 msgstr "navrhovaná velikost tabulky pro databázi %s je větší než tabulka trvalých databází"
 
-#: nscd/connections.c:584 nscd/connections.c:668
+#: nscd/connections.c:595 nscd/connections.c:679
 #, c-format
 msgid "cannot create read-only descriptor for \"%s\"; no mmap"
 msgstr "deskriptor jen-pro-čtení „%s“ nelze vytvořit: žádný mmap"
 
-#: nscd/connections.c:600
+#: nscd/connections.c:611
 #, c-format
 msgid "cannot access '%s'"
 msgstr "k „%s“ nelze přistoupit"
 
-#: nscd/connections.c:648
+#: nscd/connections.c:659
 #, c-format
 msgid "database for %s corrupted or simultaneously used; remove %s manually if necessary and restart"
 msgstr "Databáze pro %s je poškozena nebo vícenásobně používána. Je-li třeba, ručně odstraňte %s a restartuje."
 
-#: nscd/connections.c:654
+#: nscd/connections.c:665
 #, c-format
 msgid "cannot create %s; no persistent database used"
 msgstr "%s nelze vytvořit, žádná trvalá databáze nebude použita"
 
-#: nscd/connections.c:657
+#: nscd/connections.c:668
 #, c-format
 msgid "cannot create %s; no sharing possible"
 msgstr "%s nelze vytvořit, sdílení není možno"
 
-#: nscd/connections.c:728
+#: nscd/connections.c:739
 #, c-format
 msgid "cannot write to database file %s: %s"
 msgstr "do databázového soubor %s nelze zapsat: %s"
 
-#: nscd/connections.c:784
+#: nscd/connections.c:795
 #, c-format
 msgid "cannot open socket: %s"
 msgstr "soket nelze otevřít: %s"
 
-#: nscd/connections.c:803
+#: nscd/connections.c:814
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
 msgstr "soket nemůže přijímat spojení: %s"
 
-#: nscd/connections.c:860
+#: nscd/connections.c:871
 #, c-format
 msgid "disabled inotify-based monitoring for file `%s': %s"
 msgstr "sledování souboru „%s“ pomocí inotify zakázáno: %s"
 
-#: nscd/connections.c:864
+#: nscd/connections.c:875
 #, c-format
 msgid "monitoring file `%s` (%d)"
 msgstr "sleduje se soubor „%s“ (%d)"
 
-#: nscd/connections.c:877
+#: nscd/connections.c:888
 #, c-format
 msgid "disabled inotify-based monitoring for directory `%s': %s"
 msgstr "sledování adresáře „%s“ pomocí inotify zakázáno: %s"
 
-#: nscd/connections.c:881
+#: nscd/connections.c:892
 #, c-format
 msgid "monitoring directory `%s` (%d)"
 msgstr "sleduje se adresář „%s“ (%d)"
 
-#: nscd/connections.c:909
+#: nscd/connections.c:920
 #, c-format
 msgid "monitoring file %s for database %s"
 msgstr "sleduje se soubor %s pro databázi %s"
 
-#: nscd/connections.c:919
+#: nscd/connections.c:930
 #, c-format
 msgid "stat failed for file `%s'; will try again later: %s"
 msgstr "volání stat nad souborem „%s“ selhalo, zkusí se později: %s"
 
-#: nscd/connections.c:1038
+#: nscd/connections.c:1049
 #, c-format
 msgid "provide access to FD %d, for %s"
 msgstr "poskytnout přístup na deskriptor souboru %d pro %s"
 
-#: nscd/connections.c:1050
+#: nscd/connections.c:1061
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr "žádost staré verze (%d) nelze zpracovat; aktuální verze je %d"
 
-#: nscd/connections.c:1073
+#: nscd/connections.c:1084
 #, c-format
 msgid "request from %ld not handled due to missing permission"
 msgstr "požadavek z %ld neobsloužen kvůli chybějícím právům"
 
-#: nscd/connections.c:1078
+#: nscd/connections.c:1089
 #, c-format
 msgid "request from '%s' [%ld] not handled due to missing permission"
 msgstr "požadavek z „%s“ [%ld] neobsloužen kvůli chybějícím právům"
 
-#: nscd/connections.c:1083
+#: nscd/connections.c:1094
 msgid "request not handled due to missing permission"
 msgstr "požadavek neobsloužen kvůli chybějícím právům"
 
-#: nscd/connections.c:1121 nscd/connections.c:1147
+#: nscd/connections.c:1132 nscd/connections.c:1158
 #, c-format
 msgid "cannot write result: %s"
 msgstr "výsledek nelze zapsat: %s"
 
-#: nscd/connections.c:1238
+#: nscd/connections.c:1249
 #, c-format
 msgid "error getting caller's id: %s"
 msgstr "chyba při zjišťování id volajícího: %s"
 
-#: nscd/connections.c:1348
+#: nscd/connections.c:1359
 #, c-format
 msgid "cannot open /proc/self/cmdline: %m; disabling paranoia mode"
 msgstr "/proc/self/cmdline nelze otevřít: %m, paranoidní režim se vypíná"
 
-#: nscd/connections.c:1371
+#: nscd/connections.c:1382
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
 msgstr "nelze se přepnout do starého UID: %s, paranoidní režim se vypíná"
 
-#: nscd/connections.c:1382
+#: nscd/connections.c:1393
 #, c-format
 msgid "cannot change to old GID: %s; disabling paranoia mode"
 msgstr "nelze se přepnout do starého GID: %s, paranoidní režim se vypíná"
 
-#: nscd/connections.c:1396
+#: nscd/connections.c:1407
 #, c-format
 msgid "cannot change to old working directory: %s; disabling paranoia mode"
 msgstr "nelze se přepnout do starého pracovního adresáře: %s, paranoidní režim se vypíná"
 
-#: nscd/connections.c:1443
+#: nscd/connections.c:1454
 #, c-format
 msgid "re-exec failed: %s; disabling paranoia mode"
 msgstr "znovuspuštění selhalo: %s, paranoidní režim se vypíná"
 
-#: nscd/connections.c:1452
+#: nscd/connections.c:1463
 #, c-format
 msgid "cannot change current working directory to \"/\": %s"
 msgstr "současný pracovní adresář nelze změnit na „/“: %s"
 
-#: nscd/connections.c:1636
+#: nscd/connections.c:1647
 #, c-format
 msgid "short read while reading request: %s"
 msgstr "neúplné čtení žádosti: „%s“"
 
-#: nscd/connections.c:1669
+#: nscd/connections.c:1680
 #, c-format
 msgid "key length in request too long: %d"
 msgstr "délka klíče v žádosti je příliš dlouhá: %d"
 
-#: nscd/connections.c:1682
+#: nscd/connections.c:1693
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr "neúplné čtení klíče žádosti: %s"
 
-#: nscd/connections.c:1692
+#: nscd/connections.c:1703
 #, c-format
 msgid "handle_request: request received (Version = %d) from PID %ld"
 msgstr "handle_request: žádost přijata (verze = %d) od PID %ld"
 
-#: nscd/connections.c:1697
+#: nscd/connections.c:1708
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request: žádost přijata (verze = %d)"
 
-#: nscd/connections.c:1837
+#: nscd/connections.c:1848
 #, c-format
 msgid "ignored inotify event for `%s` (file exists)"
 msgstr "událost inotify pro „%s“ ignorována (soubor existuje)"
 
-#: nscd/connections.c:1842
+#: nscd/connections.c:1853
 #, c-format
 msgid "monitored file `%s` was %s, removing watch"
 msgstr "sledovaný soubor „%s“ byl %s, hlídání se ruší"
 
-#: nscd/connections.c:1850 nscd/connections.c:1892
+#: nscd/connections.c:1861 nscd/connections.c:1903
 #, c-format
 msgid "failed to remove file watch `%s`: %s"
 msgstr "zrušení hlídání souboru „%s“ selhalo: %s"
 
-#: nscd/connections.c:1865
+#: nscd/connections.c:1876
 #, c-format
 msgid "monitored file `%s` was written to"
 msgstr "do sledovaného souboru „%s“ bylo zapsáno"
 
-#: nscd/connections.c:1889
+#: nscd/connections.c:1900
 #, c-format
 msgid "monitored parent directory `%s` was %s, removing watch on `%s`"
 msgstr "sledovaný rodičovský adresář „%s“ byl %s, ruší se hlídání „%s“"
 
-#: nscd/connections.c:1915
+#: nscd/connections.c:1926
 #, c-format
 msgid "monitored file `%s` was %s, adding watch"
 msgstr "sledovaný soubor „%s“ byl %s, začíná se hlídat"
 
-#: nscd/connections.c:1927
+#: nscd/connections.c:1938
 #, c-format
 msgid "failed to add file watch `%s`: %s"
 msgstr "hlídání souboru „%s“ se nepodařilo zahájit: %s"
 
-#: nscd/connections.c:2105 nscd/connections.c:2270
+#: nscd/connections.c:2116 nscd/connections.c:2281
 #, c-format
 msgid "disabled inotify-based monitoring after read error %d"
 msgstr "po chybě v čtení %d bylo zakázáno sledování pomocí inotify"
 
-#: nscd/connections.c:2386
+#: nscd/connections.c:2397
 msgid "could not initialize conditional variable"
 msgstr "proměnnou podmínky nebylo možné inicializovat"
 
-#: nscd/connections.c:2394
+#: nscd/connections.c:2405
 msgid "could not start clean-up thread; terminating"
 msgstr "nebylo možné spustit úklidové vlákno, končím"
 
-#: nscd/connections.c:2408
+#: nscd/connections.c:2419
 msgid "could not start any worker thread; terminating"
 msgstr "nebylo možné spustit jakékoliv výkonné vlákno, končím"
 
-#: nscd/connections.c:2463 nscd/connections.c:2465 nscd/connections.c:2481
-#: nscd/connections.c:2491 nscd/connections.c:2509 nscd/connections.c:2520
-#: nscd/connections.c:2530
+#: nscd/connections.c:2474 nscd/connections.c:2476 nscd/connections.c:2492
+#: nscd/connections.c:2502 nscd/connections.c:2520 nscd/connections.c:2531
+#: nscd/connections.c:2541
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr "Spuštění nscd pod uživatelem „%s“ selhalo"
 
-#: nscd/connections.c:2483
+#: nscd/connections.c:2494
 msgid "initial getgrouplist failed"
 msgstr "prvotní získání seznamu skupin (getgrouplist) selhalo"
 
-#: nscd/connections.c:2492
+#: nscd/connections.c:2503
 msgid "getgrouplist failed"
 msgstr "getgrouplist (získej seznam skupin) selhalo"
 
-#: nscd/connections.c:2510
+#: nscd/connections.c:2521
 msgid "setgroups failed"
 msgstr "funkce setgroups() selhala"
 
@@ -4237,7 +4243,7 @@ msgstr "Použije oddělenou cache pro každého uživatele"
 msgid "Name Service Cache Daemon."
 msgstr "NSC (Name Service Cache) démon [pro kešování jmenných služeb]."
 
-#: nscd/nscd.c:158 nss/getent.c:995 nss/makedb.c:207
+#: nscd/nscd.c:158 nss/getent.c:995 nss/makedb.c:208
 #, c-format
 msgid "wrong number of arguments"
 msgstr "chybný počet argumentů"
@@ -4677,31 +4683,31 @@ msgstr "Podporované databáze:\n"
 msgid "Unknown database: %s\n"
 msgstr "Neznámá databáze: %s\n"
 
-#: nss/makedb.c:120
+#: nss/makedb.c:121
 msgid "Convert key to lower case"
 msgstr "Převádí klíče na malá písmena"
 
-#: nss/makedb.c:123
+#: nss/makedb.c:124
 msgid "Do not print messages while building database"
 msgstr "Během tvorby databáze nevypisuje zprávy"
 
-#: nss/makedb.c:125
+#: nss/makedb.c:126
 msgid "Print content of database file, one entry a line"
 msgstr "Vypíše obsah databázového souboru, jeden záznam na řádek"
 
-#: nss/makedb.c:126
+#: nss/makedb.c:127
 msgid "CHAR"
 msgstr "ZNAK"
 
-#: nss/makedb.c:127
+#: nss/makedb.c:128
 msgid "Generated line not part of iteration"
 msgstr "Vytvořený řádek není součástí iterace"
 
-#: nss/makedb.c:132
+#: nss/makedb.c:133
 msgid "Create simple database from textual input."
 msgstr "Vytváří jednoduché databáze z textového vstupu."
 
-#: nss/makedb.c:135
+#: nss/makedb.c:136
 msgid ""
 "INPUT-FILE OUTPUT-FILE\n"
 "-o OUTPUT-FILE INPUT-FILE\n"
@@ -4711,76 +4717,81 @@ msgstr ""
 "-o VÝSTUPNÍ_SOUBOR VSTUPNÍ_SOUBOR\n"
 "-u VSTUPNÍ_SOUBOR"
 
-#: nss/makedb.c:228
+#: nss/makedb.c:229
 #, c-format
 msgid "cannot open database file `%s'"
 msgstr "databázový soubor „%s“ nelze otevřít"
 
-#: nss/makedb.c:273
+#: nss/makedb.c:274
 #, c-format
 msgid "no entries to be processed"
 msgstr "nebyly zpracovány žádné záznamy"
 
-#: nss/makedb.c:283
+#: nss/makedb.c:284
 #, c-format
 msgid "cannot create temporary file name"
 msgstr "název dočasného souboru nelze vytvořit"
 
-#: nss/makedb.c:289
+#: nss/makedb.c:290
 #, c-format
 msgid "cannot create temporary file"
 msgstr "dočasný soubor nelze vytvořit"
 
-#: nss/makedb.c:305
+#: nss/makedb.c:306
 #, c-format
 msgid "cannot stat newly created file"
 msgstr "nad nově vytvořeným souborem nelze zavolat stat()"
 
-#: nss/makedb.c:316
+#: nss/makedb.c:317
 #, c-format
 msgid "cannot rename temporary file"
 msgstr "dočasný soubor nelze přejmenovat"
 
-#: nss/makedb.c:528 nss/makedb.c:551
+#: nss/makedb.c:529 nss/makedb.c:552
 #, c-format
 msgid "cannot create search tree"
 msgstr "vyhledávací strom nelze vytvořit"
 
-#: nss/makedb.c:557
+#: nss/makedb.c:558
 msgid "duplicate key"
 msgstr "duplicitní klíč"
 
-#: nss/makedb.c:569
+#: nss/makedb.c:570
 #, c-format
 msgid "problems while reading `%s'"
 msgstr "problémy během čtení „%s“"
 
-#: nss/makedb.c:805
+#: nss/makedb.c:748
+#, c-format
+msgid "failed to allocate memory"
+msgstr "alokace paměti selhala"
+
+#: nss/makedb.c:814
 #, c-format
 msgid "failed to write new database file"
 msgstr "nový databázový soubor se nezdařilo zapsat"
 
-#: nss/makedb.c:822
+#: nss/makedb.c:833
 #, c-format
 msgid "cannot stat database file"
 msgstr "nad databázovým souborem nelze zavolat stat()"
 
-#: nss/makedb.c:827
+#: nss/makedb.c:838
 #, c-format
 msgid "cannot map database file"
 msgstr "databázový soubor nelze otevřít"
 
-#: nss/makedb.c:830
+#: nss/makedb.c:841
 #, c-format
 msgid "file not a database file"
 msgstr "soubor není databází"
 
-#: nss/makedb.c:882
+#: nss/makedb.c:893
 #, c-format
 msgid "cannot initialize SELinux context"
 msgstr "kontext SELinuxu nelze inicializovat"
 
-#: nss/makedb.c:891
+#: nss/makedb.c:902
 #, c-format
 msgid "cannot set file creation context for `%s'"
 msgstr "kontext vzniku souboru „%s“ nelze nastavit"
@@ -6539,17 +6550,21 @@ msgstr "Výsledek je pro dodanou oblast paměti příliš velký"
 msgid "makecontext: does not know how to handle more than 8 arguments\n"
 msgstr "makecontext: nevím, jak zpracovat více jak 8 argumentů\n"
 
-#: sysdeps/x86/dl-cet.c:154
+#: sysdeps/x86/dl-cet.c:214
 msgid "rebuild shared object with IBT support enabled"
 msgstr "přeložte sdílený objekt se zapnutou podporou IBT"
 
-#: sysdeps/x86/dl-cet.c:165
+#: sysdeps/x86/dl-cet.c:233
 msgid "rebuild shared object with SHSTK support enabled"
 msgstr "přeložte sdílený objekt se zapnutou podporou SHSTK"
 
-#: sysdeps/x86/dl-cet.c:194
-msgid "can't disable CET"
-msgstr "CET nelze vypnout"
+#: sysdeps/x86/dl-cet.c:251
+msgid "can't disable IBT"
+msgstr "IBT nelze vypnout"
+
+#: sysdeps/x86/dl-cet.c:253
+msgid "can't disable SHSTK"
+msgstr "SHSTK nelze vypnout"
 
 #: sysdeps/x86/dl-prop.h:61
 msgid "CPU ISA level is lower than required"

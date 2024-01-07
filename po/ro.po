@@ -1,5 +1,5 @@
 # Mesajele în limba română pentru pachetul glibc.
-# Copyright © 2023 Free Software Foundation, Inc.
+# Copyright © 2023, 2024 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
 #
 # Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>, 2023.
@@ -7,13 +7,15 @@
 # Cronologia traducerii fișierului „libc”:
 # Traducerea inițială, făcută de R-GC, pentru versiunea libc 2.36.9000.
 # Actualizare a traducerii pentru versiunea 2.37.9000, făcută de R-GC, iul-2023.
+# Corectare un „typo” (Aargument) + reformularea unui mesaj de „seek” pentru versiunea 2.37.9000, făcută de R-GC, oct-2023.
+# Actualizare a traducerii pentru versiunea 2.38.9000, făcută de R-GC, ian-2024.
 # Actualizare a traducerii pentru versiunea Y, făcută de X, Z(luna-anul).
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.37.9000\n"
-"POT-Creation-Date: 2023-07-17 20:35+0200\n"
-"PO-Revision-Date: 2023-07-18 18:49+0200\n"
+"Project-Id-Version: libc 2.38.9000\n"
+"POT-Creation-Date: 2024-01-01 21:05+0100\n"
+"PO-Revision-Date: 2024-01-03 12:47+0100\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
 "Language: ro\n"
@@ -65,46 +67,46 @@ msgstr "Încercați «%s --help» sau «%s --usage» pentru mai multe informați
 msgid "Report bugs to %s.\n"
 msgstr "Raportați erorile la %s.\n"
 
-#: argp/argp-parse.c:101
+#: argp/argp-parse.c:86
 msgid "Give this help list"
 msgstr "Oferă această listă de ajutor"
 
-#: argp/argp-parse.c:102
+#: argp/argp-parse.c:87
 msgid "Give a short usage message"
 msgstr "Oferă un mesaj scurt de utilizare"
 
-#: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
+#: argp/argp-parse.c:88 catgets/gencat.c:110 catgets/gencat.c:114
 #: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:106 nscd/nscd.c:110
-#: nss/makedb.c:121
+#: nss/makedb.c:122
 msgid "NAME"
 msgstr "NUME"
 
-#: argp/argp-parse.c:104
+#: argp/argp-parse.c:89
 msgid "Set the program name"
 msgstr "Stabilește numele programului"
 
-#: argp/argp-parse.c:105
+#: argp/argp-parse.c:90
 msgid "SECS"
 msgstr "SEC"
 
-#: argp/argp-parse.c:106
+#: argp/argp-parse.c:91
 msgid "Hang for SECS seconds (default 3600)"
 msgstr "Suspendare pentru SEC secunde (implicit 3600)"
 
-#: argp/argp-parse.c:167
+#: argp/argp-parse.c:152
 msgid "Print program version"
 msgstr "Afișează versiunea programului"
 
-#: argp/argp-parse.c:183
+#: argp/argp-parse.c:168
 msgid "(PROGRAM ERROR) No version known!?"
 msgstr "(EROARE DE PROGRAM) Nu se cunoaște versiunea!?"
 
-#: argp/argp-parse.c:623
+#: argp/argp-parse.c:608
 #, c-format
 msgid "%s: Too many arguments\n"
 msgstr "%s: Prea multe argumente\n"
 
-#: argp/argp-parse.c:766
+#: argp/argp-parse.c:751
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(EROARE DE PROGRAM) Opțiunea ar fi trebuit să fie recunoscută!?"
 
@@ -117,7 +119,7 @@ msgstr ""
 "%s%s%s:%u: %s%sEroare neașteptată: %s.\n"
 "%n"
 
-#: assert/assert.c:101
+#: assert/assert.c:103
 #, c-format
 msgid ""
 "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
@@ -126,19 +128,19 @@ msgstr ""
 "%s%s%s:%u: %s%sAserțiunea „%s” a eșuat.\n"
 "%n"
 
-#: catgets/gencat.c:110
+#: catgets/gencat.c:111
 msgid "Create C header file NAME containing symbol definitions"
 msgstr "Creează fișierul antet C NUME care conține definiții de simbol"
 
-#: catgets/gencat.c:112
+#: catgets/gencat.c:113
 msgid "Do not use existing catalog, force new output file"
 msgstr "Nu utilizează catalogul existent, forțează generarea unui fișie nou"
 
-#: catgets/gencat.c:113 nss/makedb.c:121
+#: catgets/gencat.c:114 nss/makedb.c:122
 msgid "Write output to file NAME"
 msgstr "Scrie ieșirea în fișierul NUME"
 
-#: catgets/gencat.c:118
+#: catgets/gencat.c:119
 msgid ""
 "Generate message catalog.\vIf INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
 "is -, output is written to standard output.\n"
@@ -146,7 +148,7 @@ msgstr ""
 "Generează catalogul de mesaje.\vDacă FIȘIER-INTRARE este -, intrarea este citită de la intrarea standard.\n"
 "Dacă FIȘIER-IEȘIRE este -, ieșirea este scrisă la ieșirea standard.\n"
 
-#: catgets/gencat.c:123
+#: catgets/gencat.c:124
 msgid ""
 "-o OUTPUT-FILE [INPUT-FILE]...\n"
 "[OUTPUT-FILE [INPUT-FILE]...]"
@@ -154,11 +156,11 @@ msgstr ""
 "-o FIȘIER-IEȘIRE [FIȘIER-INTRARE]...\n"
 "[FIȘIER-IEȘIRE [FIȘIER-INTRARE]...]"
 
-#: catgets/gencat.c:229 debug/pcprofiledump.c:208 elf/ldconfig.c:216
+#: catgets/gencat.c:230 debug/pcprofiledump.c:208 elf/ldconfig.c:216
 #: elf/pldd.c:246 elf/sln.c:77 elf/sprof.c:371 iconv/iconv_prog.c:387
 #: iconv/iconvconfig.c:380 locale/programs/locale.c:275
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:88
-#: malloc/memusagestat.c:564 nss/getent.c:961 nss/makedb.c:370
+#: malloc/memusagestat.c:564 nss/getent.c:961 nss/makedb.c:371
 #: posix/getconf.c:503
 #, c-format
 msgid ""
@@ -168,12 +170,12 @@ msgstr ""
 "Pentru instrucțiuni de raportare a erorilor, consultați:\n"
 "%s.\n"
 
-#: catgets/gencat.c:245 debug/pcprofiledump.c:224 debug/xtrace.sh:63
+#: catgets/gencat.c:246 debug/pcprofiledump.c:224 debug/xtrace.sh:63
 #: elf/ldconfig.c:232 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
 #: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
-#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:386 posix/getconf.c:485
+#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:485
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -184,73 +186,78 @@ msgstr ""
 "Acesta este software liber; consultați sursa pentru condițiile de copiere. NU există\n"
 "garanție; nici măcar pentru COMERCIALIZARE sau POTRIVIRE PENTRU UN ANUMIT SCOP.\n"
 
-#: catgets/gencat.c:250 debug/pcprofiledump.c:229 debug/xtrace.sh:67
+#: catgets/gencat.c:251 debug/pcprofiledump.c:229 debug/xtrace.sh:67
 #: elf/ldconfig.c:237 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
-#: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:391
+#: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Scris de %s.\n"
 
-#: catgets/gencat.c:281
+#: catgets/gencat.c:282
 msgid "*standard input*"
 msgstr "*intrare standard*"
 
-#: catgets/gencat.c:287 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
-#: nss/makedb.c:247
+#: catgets/gencat.c:288 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
+#: nss/makedb.c:248
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "nu se poate deschide fișierul de intrare „%s”"
 
-#: catgets/gencat.c:416 catgets/gencat.c:491
+#: catgets/gencat.c:417 catgets/gencat.c:492
 msgid "illegal set number"
 msgstr "număr de set ilegal"
 
-#: catgets/gencat.c:443
+#: catgets/gencat.c:444
 msgid "duplicate set definition"
 msgstr "definiție de set duplicată"
 
-#: catgets/gencat.c:445 catgets/gencat.c:617 catgets/gencat.c:669
+#: catgets/gencat.c:446 catgets/gencat.c:618 catgets/gencat.c:670
 msgid "this is the first definition"
 msgstr "aceasta este prima definiție"
 
-#: catgets/gencat.c:516
+#: catgets/gencat.c:517
 #, c-format
 msgid "unknown set `%s'"
 msgstr "set necunoscut „%s”"
 
-#: catgets/gencat.c:557
+#: catgets/gencat.c:558
 msgid "invalid quote character"
 msgstr "caracter de citat nevalid"
 
-#: catgets/gencat.c:570
+#: catgets/gencat.c:571
 #, c-format
 msgid "unknown directive `%s': line ignored"
 msgstr "directivă necunoscută „%s ”: linia este ignorată"
 
-#: catgets/gencat.c:615
+#: catgets/gencat.c:616
 msgid "duplicated message number"
 msgstr "număr de mesaj duplicat"
 
-#: catgets/gencat.c:666
+#: catgets/gencat.c:667
 msgid "duplicated message identifier"
 msgstr "identificator de mesaj duplicat"
 
-#: catgets/gencat.c:723
+#: catgets/gencat.c:724
 msgid "invalid character: message ignored"
 msgstr "caracter nevalid: mesaj ignorat"
 
-#: catgets/gencat.c:766
+#: catgets/gencat.c:767
 msgid "invalid line"
 msgstr "linie nevalidă"
 
-#: catgets/gencat.c:820
+#: catgets/gencat.c:821
 msgid "malformed line ignored"
 msgstr "linie incorectă ignorată"
 
-#: catgets/gencat.c:982 catgets/gencat.c:1023
+#: catgets/gencat.c:939 catgets/gencat.c:947
+#, c-format
+msgid "cannot allocate memory"
+msgstr "nu se poate aloca memorie"
+
+#: catgets/gencat.c:1000 catgets/gencat.c:1045
 #, c-format
 msgid "cannot open output file `%s'"
 msgstr "nu se poate deschide fișierul de ieșire „%s”"
@@ -262,25 +269,25 @@ msgstr "nu se poate deschide fișierul de ieșire „%s”"
 # 10% înseamnă „code de control”
 # **************************************
 # a se vedea „escape” în Wikipedia
-#: catgets/gencat.c:1185 locale/programs/linereader.c:588
+#: catgets/gencat.c:1210 locale/programs/linereader.c:588
 msgid "invalid escape sequence"
 msgstr "secvență de cod de control nevalidă"
 
-#: catgets/gencat.c:1209
+#: catgets/gencat.c:1234
 msgid "unterminated message"
 msgstr "mesaj neterminat"
 
-#: catgets/gencat.c:1233
+#: catgets/gencat.c:1258
 #, c-format
 msgid "while opening old catalog file"
 msgstr "în timp ce se deschidea fișierul de catalog vechi"
 
-#: catgets/gencat.c:1324
+#: catgets/gencat.c:1349
 #, c-format
 msgid "conversion modules not available"
 msgstr "modulele de conversie nu sunt disponibile"
 
-#: catgets/gencat.c:1350
+#: catgets/gencat.c:1375
 #, c-format
 msgid "cannot determine escape character"
 msgstr "nu se poate determina caracterul de cod de control"
@@ -403,7 +410,7 @@ msgstr "Fișierul zonei de prestocare(cache) are tipul de „endianness” greș
 msgid "Cache generated by: "
 msgstr "Zonă de prestocare(cache) generată de către: "
 
-#: elf/cache.c:299 elf/ldconfig.c:1223
+#: elf/cache.c:299 elf/ldconfig.c:1249
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Nu se poate deschide fișierul zonei de prestocare(cache) %s\n"
@@ -472,11 +479,11 @@ msgstr "eroare la încărcarea bibliotecilor partajate"
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr "EROARE ÎN EDITORUL/VINCULATORUL DE LEGĂTURI DINAMICE!!!"
 
-#: elf/dl-close.c:346 elf/dl-open.c:298
+#: elf/dl-close.c:357 elf/dl-open.c:298
 msgid "cannot create scope list"
 msgstr "nu s-a putut crea lista de domenii"
 
-#: elf/dl-close.c:775
+#: elf/dl-close.c:790
 msgid "shared object not open"
 msgstr "obiectul partajat nu este deschis"
 
@@ -547,7 +554,7 @@ msgstr "nu se poate crea matricea de rute de căutare"
 msgid "cannot stat shared object"
 msgstr "nu s-a putut obține starea obiectului partajat"
 
-#: elf/dl-load.c:1059 elf/dl-load.c:2219
+#: elf/dl-load.c:1059 elf/dl-load.c:2222
 msgid "cannot create shared object descriptor"
 msgstr "nu se poate crea un descriptor de obiect partajat"
 
@@ -583,7 +590,7 @@ msgstr "obiectul partajat nu poate fi deschis cu dlopen()"
 msgid "cannot allocate memory for program header"
 msgstr "nu se poate aloca memorie pentru antetul programului"
 
-#: elf/dl-load.c:1330 elf/dl-load.h:131
+#: elf/dl-load.c:1330 elf/dl-load.h:128
 msgid "cannot change memory protections"
 msgstr "nu se pot modifica protecțiile memoriei"
 
@@ -643,27 +650,27 @@ msgstr "numai ET_DYN și ET_EXEC pot fi încărcate"
 msgid "ELF file's phentsize not the expected size"
 msgstr "„phentsize” a fișierului ELF nu are dimensiunea așteptată"
 
-#: elf/dl-load.c:2238
+#: elf/dl-load.c:2241
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "clasă ELF greșită: ELFCLASS64"
 
-#: elf/dl-load.c:2239
+#: elf/dl-load.c:2242
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "clasă ELF greșită: ELFCLASS32"
 
-#: elf/dl-load.c:2242
+#: elf/dl-load.c:2245
 msgid "cannot open shared object file"
 msgstr "nu se poate deschide fișierul obiect partajat"
 
-#: elf/dl-load.h:129
+#: elf/dl-load.h:126
 msgid "failed to map segment from shared object"
 msgstr "a eșuat memorarea segmentului din obiectul partajat"
 
-#: elf/dl-load.h:133
+#: elf/dl-load.h:130
 msgid "cannot map zero-fill pages"
 msgstr "nu se pot memora pagini umplute cu zerouri"
 
-#: elf/dl-lookup.c:814
+#: elf/dl-lookup.c:813
 msgid "symbol lookup error"
 msgstr "eroare de căutare a simbolului"
 
@@ -675,19 +682,19 @@ msgstr "nu se poate extinde domeniul global"
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "Contorul de generare TLS a intrat în buclă! Raportați acest lucru!"
 
-#: elf/dl-open.c:739
+#: elf/dl-open.c:758
 msgid "cannot allocate address lookup data"
 msgstr "nu s-au putut aloca datele de căutare a adresei"
 
-#: elf/dl-open.c:829
+#: elf/dl-open.c:848
 msgid "invalid mode for dlopen()"
 msgstr "mod nevalid pentru dlopen()"
 
-#: elf/dl-open.c:846
+#: elf/dl-open.c:865
 msgid "no more namespaces available for dlmopen()"
 msgstr "nu mai sunt spații de nume disponibile pentru dlmopen()"
 
-#: elf/dl-open.c:871
+#: elf/dl-open.c:890
 msgid "invalid target namespace in dlmopen()"
 msgstr "spațiu de nume țintă nevalid în dlmopen()"
 
@@ -716,7 +723,7 @@ msgstr "nu se poate aplica protecția suplimentară de memorie după realocare"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT utilizat în cod nu s-a încărcat dinamic"
 
-#: elf/dl-tls.c:1044
+#: elf/dl-tls.c:1052
 msgid "cannot create TLS data structures"
 msgstr "nu se pot crea structurile de date TLS"
 
@@ -854,7 +861,7 @@ msgstr " (OMIS)\n"
 msgid "Can't find %s"
 msgstr "Nu se poate găsi %s"
 
-#: elf/ldconfig.c:600 elf/ldconfig.c:744 elf/ldconfig.c:811
+#: elf/ldconfig.c:600 elf/ldconfig.c:770 elf/ldconfig.c:837
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "Nu se poate obține starea legăturii %s"
@@ -869,79 +876,79 @@ msgstr "S-a ignorat fișierul %s, deoarece nu este un fișier obișnuit."
 msgid "No link created since soname could not be found for %s"
 msgstr "Nu s-a creat nicio legătură, deoarece „soname” (biblioteca obiectului partajat) nu a fost găsită pentru %s"
 
-#: elf/ldconfig.c:675
+#: elf/ldconfig.c:711
 #, c-format
 msgid " (from %s:%d)\n"
 msgstr " (de la %s:%d)\n"
 
-#: elf/ldconfig.c:690
+#: elf/ldconfig.c:726
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Nu se poate deschide directorul %s"
 
-#: elf/ldconfig.c:727 elf/ldconfig.c:732
+#: elf/ldconfig.c:753 elf/ldconfig.c:758
 #, c-format
 msgid "Could not form library path"
 msgstr "Nu s-a putut forma ruta bibliotecii"
 
-#: elf/ldconfig.c:761 elf/ldconfig.c:799 elf/readlib.c:78
+#: elf/ldconfig.c:787 elf/ldconfig.c:825 elf/readlib.c:78
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Fișierul de intrare %s nu a fost găsit.\n"
 
-#: elf/ldconfig.c:768
+#: elf/ldconfig.c:794
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Nu se poate obține starea %s"
 
-#: elf/ldconfig.c:887
+#: elf/ldconfig.c:913
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "biblioteca libc6 %s este într-un director greșit"
 
-#: elf/ldconfig.c:906
+#: elf/ldconfig.c:932
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "bibliotecile %s și %s din directorul %s au același „soname”, dar tip diferit."
 
-#: elf/ldconfig.c:1035
+#: elf/ldconfig.c:1061
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr "Avertisment: se ignoră fișierul de configurare care nu poate fi deschis: %s"
 
-#: elf/ldconfig.c:1083
+#: elf/ldconfig.c:1109
 #, c-format
 msgid "%s:%u: hwcap directive ignored"
 msgstr "%s:%u: directiva hwcap a fost ignorată"
 
-#: elf/ldconfig.c:1102
+#: elf/ldconfig.c:1128
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "este nevoie de numele absolut de fișier pentru fișierul de configurare atunci când se utilizează opțiunea „-r”"
 
-#: elf/ldconfig.c:1109 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1135 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "memorie epuizată"
 
-#: elf/ldconfig.c:1142
+#: elf/ldconfig.c:1168
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: nu se poate citi directorul %s"
 
-#: elf/ldconfig.c:1180
+#: elf/ldconfig.c:1206
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "ruta relativă „%s” este folosită pentru a construi zona de prestocare(cache)"
 
-#: elf/ldconfig.c:1202
+#: elf/ldconfig.c:1228
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Nu se poate executa «chdir» la /"
 
-#: elf/ldconfig.c:1243
+#: elf/ldconfig.c:1269
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Nu se poate deschide directorul de fișiere de zonă de prestocare(cache) %s\n"
@@ -1271,7 +1278,7 @@ msgstr "Selectarea ieșirii:"
 
 #: elf/sprof.c:78
 msgid "print list of count paths and their number of use"
-msgstr "afișează o listă de contoare de rute și numărul lor de utilizare"
+msgstr "afișează o listă de rute numerotate și numărul lor de utilizare"
 
 #: elf/sprof.c:80
 msgid "generate flat profile with counts and ticks"
@@ -3864,259 +3871,259 @@ msgstr " - toate datele: "
 msgid " - remaining data %p: "
 msgstr " - date rămase %p: "
 
-#: nscd/connections.c:519
+#: nscd/connections.c:530
 #, c-format
 msgid "invalid persistent database file \"%s\": %s"
 msgstr "fișier de bază de date persistentă nevalid „%s”: %s"
 
-#: nscd/connections.c:527
+#: nscd/connections.c:538
 msgid "uninitialized header"
 msgstr "antet neinițializat"
 
-#: nscd/connections.c:532
+#: nscd/connections.c:543
 msgid "header size does not match"
 msgstr "dimensiunea antetului nu se potrivește"
 
-#: nscd/connections.c:542
+#: nscd/connections.c:553
 msgid "file size does not match"
 msgstr "dimensiunea fișierului nu se potrivește"
 
-#: nscd/connections.c:559
+#: nscd/connections.c:570
 msgid "verification failed"
 msgstr "verificarea a eșuat"
 
-#: nscd/connections.c:573
+#: nscd/connections.c:584
 #, c-format
 msgid "suggested size of table for database %s larger than the persistent database's table"
 msgstr "dimensiunea sugerată a tabelului pentru baza de date %s mai mare decât tabelul bazei de date persistente"
 
-#: nscd/connections.c:584 nscd/connections.c:668
+#: nscd/connections.c:595 nscd/connections.c:679
 #, c-format
 msgid "cannot create read-only descriptor for \"%s\"; no mmap"
 msgstr "nu se poate crea un descriptor de doar-citire pentru „%s”; fără «mmap»"
 
-#: nscd/connections.c:600
+#: nscd/connections.c:611
 #, c-format
 msgid "cannot access '%s'"
 msgstr "nu se poate accesa „%s”"
 
-#: nscd/connections.c:648
+#: nscd/connections.c:659
 #, c-format
 msgid "database for %s corrupted or simultaneously used; remove %s manually if necessary and restart"
 msgstr "baza de date pentru %s coruptă sau utilizată simultan; eliminați manual %s dacă este necesar și reporniți"
 
-#: nscd/connections.c:654
+#: nscd/connections.c:665
 #, c-format
 msgid "cannot create %s; no persistent database used"
 msgstr "nu se poate crea %s; nu este utilizată o bază de date persistentă"
 
-#: nscd/connections.c:657
+#: nscd/connections.c:668
 #, c-format
 msgid "cannot create %s; no sharing possible"
 msgstr "nu se poate crea %s; nu este posibilă partajarea"
 
-#: nscd/connections.c:728
+#: nscd/connections.c:739
 #, c-format
 msgid "cannot write to database file %s: %s"
 msgstr "nu se poate scrie în fișierul bazei de date %s: %s"
 
-#: nscd/connections.c:784
+#: nscd/connections.c:795
 #, c-format
 msgid "cannot open socket: %s"
 msgstr "nu se poate deschide soclul: %s"
 
-#: nscd/connections.c:803
+#: nscd/connections.c:814
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
 msgstr "nu se poate activa soclul pentru a accepta conexiuni: %s"
 
-#: nscd/connections.c:860
+#: nscd/connections.c:871
 #, c-format
 msgid "disabled inotify-based monitoring for file `%s': %s"
 msgstr "s-a dezactivat monitorizarea bazată pe «inotify» pentru fișierul „%s”: %s"
 
-#: nscd/connections.c:864
+#: nscd/connections.c:875
 #, c-format
 msgid "monitoring file `%s` (%d)"
 msgstr "se monitorizează fișierul „%s” (%d)"
 
-#: nscd/connections.c:877
+#: nscd/connections.c:888
 #, c-format
 msgid "disabled inotify-based monitoring for directory `%s': %s"
 msgstr "s-a dezactivat monitorizarea bazată pe «inotify» pentru directorul „%s”: %s"
 
-#: nscd/connections.c:881
+#: nscd/connections.c:892
 #, c-format
 msgid "monitoring directory `%s` (%d)"
 msgstr "se monitorizează directorul „%s” (%d)"
 
-#: nscd/connections.c:909
+#: nscd/connections.c:920
 #, c-format
 msgid "monitoring file %s for database %s"
 msgstr "se monitorizează fișierul „%s” pentru baza de date %s"
 
-#: nscd/connections.c:919
+#: nscd/connections.c:930
 #, c-format
 msgid "stat failed for file `%s'; will try again later: %s"
 msgstr "nu s-a putut obține starea fișierului „%s”; se va încerca din nou mai târziu: %s"
 
-#: nscd/connections.c:1038
+#: nscd/connections.c:1049
 #, c-format
 msgid "provide access to FD %d, for %s"
 msgstr "furnizează accesul la descriptorul de fișier %d, pentru %s"
 
-#: nscd/connections.c:1050
+#: nscd/connections.c:1061
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr "nu se poate gestiona versiunea veche a cererii %d; versiunea curentă este %d"
 
-#: nscd/connections.c:1073
+#: nscd/connections.c:1084
 #, c-format
 msgid "request from %ld not handled due to missing permission"
 msgstr "cererea de la %ld nu a fost gestionată din cauza lipsei permisiunii"
 
-#: nscd/connections.c:1078
+#: nscd/connections.c:1089
 #, c-format
 msgid "request from '%s' [%ld] not handled due to missing permission"
 msgstr "cererea de la „%s” [%ld] nu a fost gestionată din cauza lipsei permisiunii"
 
-#: nscd/connections.c:1083
+#: nscd/connections.c:1094
 msgid "request not handled due to missing permission"
 msgstr "cererea nu a fost gestionată din cauza lipsei permisiunii"
 
-#: nscd/connections.c:1121 nscd/connections.c:1147
+#: nscd/connections.c:1132 nscd/connections.c:1158
 #, c-format
 msgid "cannot write result: %s"
 msgstr "nu se poate scrie rezultatul: %s"
 
-#: nscd/connections.c:1238
+#: nscd/connections.c:1249
 #, c-format
 msgid "error getting caller's id: %s"
 msgstr "eroare la obținerea ID-ului apelantului: %s"
 
-#: nscd/connections.c:1348
+#: nscd/connections.c:1359
 #, c-format
 msgid "cannot open /proc/self/cmdline: %m; disabling paranoia mode"
 msgstr "nu se poate deschide „/proc/self/cmdline”: %m; se dezactivează modul paranoia"
 
-#: nscd/connections.c:1371
+#: nscd/connections.c:1382
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
 msgstr "nu se poate schimba la vechiul UID: %s; se dezactivează modul paranoia"
 
-#: nscd/connections.c:1382
+#: nscd/connections.c:1393
 #, c-format
 msgid "cannot change to old GID: %s; disabling paranoia mode"
 msgstr "nu se poate schimba la vechiul GID: %s; se dezactivează modul paranoia"
 
-#: nscd/connections.c:1396
+#: nscd/connections.c:1407
 #, c-format
 msgid "cannot change to old working directory: %s; disabling paranoia mode"
 msgstr "nu se poate schimba în vechiul director de lucru: %s; se dezactivează modul paranoia"
 
-#: nscd/connections.c:1443
+#: nscd/connections.c:1454
 #, c-format
 msgid "re-exec failed: %s; disabling paranoia mode"
 msgstr "reexecutarea a eșuat: %s; se dezactivează modul paranoia"
 
-#: nscd/connections.c:1452
+#: nscd/connections.c:1463
 #, c-format
 msgid "cannot change current working directory to \"/\": %s"
 msgstr "nu se poate schimba directorul de lucru curent la „/”: %s"
 
-#: nscd/connections.c:1636
+#: nscd/connections.c:1647
 #, c-format
 msgid "short read while reading request: %s"
 msgstr "citire insuficientă în timpul citirii cererii: %s"
 
-#: nscd/connections.c:1669
+#: nscd/connections.c:1680
 #, c-format
 msgid "key length in request too long: %d"
 msgstr "lungimea cheii din cerere este prea lungă: %d"
 
-#: nscd/connections.c:1682
+#: nscd/connections.c:1693
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr "citire insuficientă în timpul citirii cheii de solicitare: %s"
 
-#: nscd/connections.c:1692
+#: nscd/connections.c:1703
 #, c-format
 msgid "handle_request: request received (Version = %d) from PID %ld"
 msgstr "handle_request: cerere primită (Versiunea = %d) de la PID %ld"
 
-#: nscd/connections.c:1697
+#: nscd/connections.c:1708
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request: cerere primită (Versiunea = %d)"
 
-#: nscd/connections.c:1837
+#: nscd/connections.c:1848
 #, c-format
 msgid "ignored inotify event for `%s` (file exists)"
 msgstr "eveniment ignorat de «inotify» pentru „%s” (fișierul există)"
 
-#: nscd/connections.c:1842
+#: nscd/connections.c:1853
 #, c-format
 msgid "monitored file `%s` was %s, removing watch"
 msgstr "fișierul monitorizat „%s” a fost %s, se elimină supravegherea"
 
-#: nscd/connections.c:1850 nscd/connections.c:1892
+#: nscd/connections.c:1861 nscd/connections.c:1903
 #, c-format
 msgid "failed to remove file watch `%s`: %s"
 msgstr "nu s-a putut elimina fișierul de urmărire „%s”: %s"
 
-#: nscd/connections.c:1865
+#: nscd/connections.c:1876
 #, c-format
 msgid "monitored file `%s` was written to"
 msgstr "fișierul monitorizat „%s” a fost scris în"
 
-#: nscd/connections.c:1889
+#: nscd/connections.c:1900
 #, c-format
 msgid "monitored parent directory `%s` was %s, removing watch on `%s`"
 msgstr "directorul părinte monitorizat „%s” a fost %s, se elimină supravegherea pentru „%s”"
 
-#: nscd/connections.c:1915
+#: nscd/connections.c:1926
 #, c-format
 msgid "monitored file `%s` was %s, adding watch"
 msgstr "fișierul monitorizat „%s” a fost %s, se adaugă supravegherea"
 
-#: nscd/connections.c:1927
+#: nscd/connections.c:1938
 #, c-format
 msgid "failed to add file watch `%s`: %s"
 msgstr "nu s-a putut adăuga fișierul de urmărire „%s”: %s"
 
-#: nscd/connections.c:2105 nscd/connections.c:2270
+#: nscd/connections.c:2116 nscd/connections.c:2281
 #, c-format
 msgid "disabled inotify-based monitoring after read error %d"
 msgstr "s-a dezactivat monitorizarea bazată pe «inotify» după eroarea de citire %d"
 
-#: nscd/connections.c:2386
+#: nscd/connections.c:2397
 msgid "could not initialize conditional variable"
 msgstr "nu s-a putut inițializa variabila condițională"
 
-#: nscd/connections.c:2394
+#: nscd/connections.c:2405
 msgid "could not start clean-up thread; terminating"
 msgstr "nu s-a putut porni firul de curățare; terminând"
 
-#: nscd/connections.c:2408
+#: nscd/connections.c:2419
 msgid "could not start any worker thread; terminating"
 msgstr "nu s-a putut începe niciun fir de lucru; terminând"
 
-#: nscd/connections.c:2463 nscd/connections.c:2465 nscd/connections.c:2481
-#: nscd/connections.c:2491 nscd/connections.c:2509 nscd/connections.c:2520
-#: nscd/connections.c:2530
+#: nscd/connections.c:2474 nscd/connections.c:2476 nscd/connections.c:2492
+#: nscd/connections.c:2502 nscd/connections.c:2520 nscd/connections.c:2531
+#: nscd/connections.c:2541
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr "Nu s-a putut rula «nscd» ca utilizator „%s”"
 
-#: nscd/connections.c:2483
+#: nscd/connections.c:2494
 msgid "initial getgrouplist failed"
 msgstr "getgrouplist() inițial a eșuat"
 
-#: nscd/connections.c:2492
+#: nscd/connections.c:2503
 msgid "getgrouplist failed"
 msgstr "getgrouplist() a eșuat"
 
-#: nscd/connections.c:2510
+#: nscd/connections.c:2521
 msgid "setgroups failed"
 msgstr "setgroups() a eșuat"
 
@@ -4219,7 +4226,7 @@ msgstr "Utilizează o zonă de prestocare a memoriei(cache) separată pentru fie
 msgid "Name Service Cache Daemon."
 msgstr "Demonul zonei de prestocare a memoriei(cache) al serviciului de nume."
 
-#: nscd/nscd.c:158 nss/getent.c:995 nss/makedb.c:207
+#: nscd/nscd.c:158 nss/getent.c:995 nss/makedb.c:208
 #, c-format
 msgid "wrong number of arguments"
 msgstr "număr greșit de argumente"
@@ -4657,31 +4664,31 @@ msgstr "Baze de date acceptate:\n"
 msgid "Unknown database: %s\n"
 msgstr "Bază de date necunoscută: %s\n"
 
-#: nss/makedb.c:120
+#: nss/makedb.c:121
 msgid "Convert key to lower case"
 msgstr "Convertește cheia în minuscule"
 
-#: nss/makedb.c:123
+#: nss/makedb.c:124
 msgid "Do not print messages while building database"
 msgstr "Nu afișează mesaje în timpul construirii bazei de date"
 
-#: nss/makedb.c:125
+#: nss/makedb.c:126
 msgid "Print content of database file, one entry a line"
 msgstr "Afișează conținutul fișierului bazei de date, o intrare pe linie"
 
-#: nss/makedb.c:126
+#: nss/makedb.c:127
 msgid "CHAR"
 msgstr "CARACTER"
 
-#: nss/makedb.c:127
+#: nss/makedb.c:128
 msgid "Generated line not part of iteration"
 msgstr "Linia generată nu face parte din iterație"
 
-#: nss/makedb.c:132
+#: nss/makedb.c:133
 msgid "Create simple database from textual input."
 msgstr "Creează o bază de date simplă din intrarea textuală."
 
-#: nss/makedb.c:135
+#: nss/makedb.c:136
 msgid ""
 "INPUT-FILE OUTPUT-FILE\n"
 "-o OUTPUT-FILE INPUT-FILE\n"
@@ -4691,76 +4698,81 @@ msgstr ""
 "-o FIȘIER-IEȘIRE FIȘIER-INTRARE\n"
 "-u FIȘIER-INTRARE"
 
-#: nss/makedb.c:228
+#: nss/makedb.c:229
 #, c-format
 msgid "cannot open database file `%s'"
 msgstr "nu se poate deschide fișierul de bază de date „%s”"
 
-#: nss/makedb.c:273
+#: nss/makedb.c:274
 #, c-format
 msgid "no entries to be processed"
 msgstr "nu sunt intrări pentru a fi procesate"
 
-#: nss/makedb.c:283
+#: nss/makedb.c:284
 #, c-format
 msgid "cannot create temporary file name"
 msgstr "nu se poate crea un nume de fișier temporar"
 
-#: nss/makedb.c:289
+#: nss/makedb.c:290
 #, c-format
 msgid "cannot create temporary file"
 msgstr "nu se poate crea fișierul temporar"
 
-#: nss/makedb.c:305
+#: nss/makedb.c:306
 #, c-format
 msgid "cannot stat newly created file"
 msgstr "nu se poate obține starea fișierului nou creat"
 
-#: nss/makedb.c:316
+#: nss/makedb.c:317
 #, c-format
 msgid "cannot rename temporary file"
 msgstr "nu se poate redenumi fișierul temporar"
 
-#: nss/makedb.c:528 nss/makedb.c:551
+#: nss/makedb.c:529 nss/makedb.c:552
 #, c-format
 msgid "cannot create search tree"
 msgstr "nu se poate crea arborele de căutare"
 
-#: nss/makedb.c:557
+#: nss/makedb.c:558
 msgid "duplicate key"
 msgstr "cheie duplicată"
 
-#: nss/makedb.c:569
+#: nss/makedb.c:570
 #, c-format
 msgid "problems while reading `%s'"
 msgstr "probleme la citirea „%s”"
 
-#: nss/makedb.c:805
+#: nss/makedb.c:748
+#, c-format
+msgid "failed to allocate memory"
+msgstr "nu s-a reușit alocarea de memorie"
+
+#: nss/makedb.c:814
 #, c-format
 msgid "failed to write new database file"
 msgstr "nu s-a putut scrie un nou fișier de bază de date"
 
-#: nss/makedb.c:822
+#: nss/makedb.c:833
 #, c-format
 msgid "cannot stat database file"
 msgstr "nu se poate stabili starea fișierului bazei de date"
 
-#: nss/makedb.c:827
+#: nss/makedb.c:838
 #, c-format
 msgid "cannot map database file"
 msgstr "nu se poate plasa în memorie fișierul complet, al bazei de date"
 
-#: nss/makedb.c:830
+#: nss/makedb.c:841
 #, c-format
 msgid "file not a database file"
 msgstr "fișierul nu este un fișier de bază de date"
 
-#: nss/makedb.c:882
+#: nss/makedb.c:893
 #, c-format
 msgid "cannot initialize SELinux context"
 msgstr "nu se poate inițializa contextul SELinux"
 
-#: nss/makedb.c:891
+#: nss/makedb.c:902
 #, c-format
 msgid "cannot set file creation context for `%s'"
 msgstr "nu se poate stabilii contextul de creare a fișierului pentru „%s”"
@@ -5725,7 +5737,7 @@ msgstr "Este un director"
 #. TRANS with passing the wrong argument to a library function.
 #: sysdeps/gnu/errlist.h:146
 msgid "Invalid argument"
-msgstr "Aargument nevalid"
+msgstr "Argument nevalid"
 
 #. TRANS The current process has too many files open and can't open any more.
 #. TRANS Duplicate descriptors do count toward this limit.
@@ -5774,7 +5786,7 @@ msgstr "Nu a mai rămas spațiu liber pe dispozitiv"
 #. TRANS Invalid seek operation (such as on a pipe).
 #: sysdeps/gnu/errlist.h:195
 msgid "Illegal seek"
-msgstr "Comandă «seek» (deplasare la poziția X) ilegală"
+msgstr "Operație «seek» (de căutare/explorare) ilegală"
 
 #. TRANS An attempt was made to modify something on a read-only file system.
 #: sysdeps/gnu/errlist.h:200
@@ -6524,17 +6536,21 @@ msgstr "Rezultatul este prea mare pentru memoria tampon furnizată"
 msgid "makecontext: does not know how to handle more than 8 arguments\n"
 msgstr "makecontext: nu se cunoaște cum să se gestioneze mai mult de 8 argumente\n"
 
-#: sysdeps/x86/dl-cet.c:154
+#: sysdeps/x86/dl-cet.c:214
 msgid "rebuild shared object with IBT support enabled"
 msgstr "reconstruiți obiectul partajat cu suportul IBT activat"
 
-#: sysdeps/x86/dl-cet.c:165
+#: sysdeps/x86/dl-cet.c:233
 msgid "rebuild shared object with SHSTK support enabled"
 msgstr "reconstruiți obiectul partajat cu suportul SHSTK activat"
 
-#: sysdeps/x86/dl-cet.c:194
-msgid "can't disable CET"
-msgstr "nu se poate dezactiva CET"
+#: sysdeps/x86/dl-cet.c:251
+msgid "can't disable IBT"
+msgstr "nu se poate dezactiva IBT"
+
+#: sysdeps/x86/dl-cet.c:253
+msgid "can't disable SHSTK"
+msgstr "nu se poate dezactiva SHSTK"
 
 #: sysdeps/x86/dl-prop.h:61
 msgid "CPU ISA level is lower than required"

@@ -47,9 +47,9 @@
 # <https://www.softcatala.org/recursos/quality/gnutools.html>.
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.36.9000\n"
-"POT-Creation-Date: 2023-07-17 20:35+0200\n"
-"PO-Revision-Date: 2023-01-28 14:22+0100\n"
+"Project-Id-Version: libc 2.37.9000\n"
+"POT-Creation-Date: 2024-01-01 21:05+0100\n"
+"PO-Revision-Date: 2023-08-21 18:12+0200\n"
 "Last-Translator: Ivan Vilata i Balaguer <ivan@selidor.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
 "Language: ca\n"
@@ -100,48 +100,48 @@ msgid "Report bugs to %s.\n"
 msgstr "Informeu dels errors a %s.\n"
 
 # Més ajudes.  ivb
-#: argp/argp-parse.c:101
+#: argp/argp-parse.c:86
 msgid "Give this help list"
 msgstr "Mostra aquest llistat d’ajuda."
 
-#: argp/argp-parse.c:102
+#: argp/argp-parse.c:87
 msgid "Give a short usage message"
 msgstr "Mostra un missatge breu amb la forma d’ús."
 
-#: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
+#: argp/argp-parse.c:88 catgets/gencat.c:110 catgets/gencat.c:114
 #: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:106 nscd/nscd.c:110
-#: nss/makedb.c:121
+#: nss/makedb.c:122
 msgid "NAME"
 msgstr "NOM"
 
-#: argp/argp-parse.c:104
+#: argp/argp-parse.c:89
 msgid "Set the program name"
 msgstr "Estableix el nom del programa."
 
-#: argp/argp-parse.c:105
+#: argp/argp-parse.c:90
 msgid "SECS"
 msgstr "SEGONS"
 
 # ivb (2002/10/21)
 # ivb  La cadena «SECS» no està traduïda en l'estructura d'opcions.
-#: argp/argp-parse.c:106
+#: argp/argp-parse.c:91
 msgid "Hang for SECS seconds (default 3600)"
 msgstr "Espera durant un nombre de segons (3600 per defecte)."
 
-#: argp/argp-parse.c:167
+#: argp/argp-parse.c:152
 msgid "Print program version"
 msgstr "Mostra la versió del programa."
 
-#: argp/argp-parse.c:183
+#: argp/argp-parse.c:168
 msgid "(PROGRAM ERROR) No version known!?"
 msgstr "(ERROR DEL PROGRAMA) No es coneix cap versió!?"
 
-#: argp/argp-parse.c:623
+#: argp/argp-parse.c:608
 #, c-format
 msgid "%s: Too many arguments\n"
 msgstr "%s: Sobren arguments\n"
 
-#: argp/argp-parse.c:766
+#: argp/argp-parse.c:751
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(ERROR DEL PROGRAMA) L’opció hauria d’haver estat reconeguda!?"
 
@@ -154,7 +154,7 @@ msgstr ""
 "%s%s%s:%u: %s%sError inesperat: %s.\n"
 "%n"
 
-#: assert/assert.c:101
+#: assert/assert.c:103
 #, c-format
 msgid ""
 "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
@@ -164,20 +164,20 @@ msgstr ""
 "%n"
 
 # Més ajudes.  ivb
-#: catgets/gencat.c:110
+#: catgets/gencat.c:111
 msgid "Create C header file NAME containing symbol definitions"
 msgstr "Crea el fitxer de capçalera C NOM que contindrà les definicions de símbols."
 
-#: catgets/gencat.c:112
+#: catgets/gencat.c:113
 msgid "Do not use existing catalog, force new output file"
 msgstr "No empra el catàleg existent, i crea un nou fitxer d’eixida."
 
-#: catgets/gencat.c:113 nss/makedb.c:121
+#: catgets/gencat.c:114 nss/makedb.c:122
 msgid "Write output to file NAME"
 msgstr "Escriu l’eixida al fitxer NOM."
 
 # FIXME: Don't use \v.
-#: catgets/gencat.c:118
+#: catgets/gencat.c:119
 msgid ""
 "Generate message catalog.\vIf INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
 "is -, output is written to standard output.\n"
@@ -187,7 +187,7 @@ msgstr ""
 "Si FITXER_ENTRADA és «-», l’entrada es llegirà de l’entrada estàndard.\n"
 "Si FITXER_EIXIDA és «-», l’eixida s’escriurà a l’eixida estàndard.\n"
 
-#: catgets/gencat.c:123
+#: catgets/gencat.c:124
 msgid ""
 "-o OUTPUT-FILE [INPUT-FILE]...\n"
 "[OUTPUT-FILE [INPUT-FILE]...]"
@@ -196,11 +196,11 @@ msgstr ""
 "[FITXER_EIXIDA [FITXER_ENTRADA]…]"
 
 # L’adreça es veu millor així.  ivb
-#: catgets/gencat.c:229 debug/pcprofiledump.c:208 elf/ldconfig.c:216
+#: catgets/gencat.c:230 debug/pcprofiledump.c:208 elf/ldconfig.c:216
 #: elf/pldd.c:246 elf/sln.c:77 elf/sprof.c:371 iconv/iconv_prog.c:387
 #: iconv/iconvconfig.c:380 locale/programs/locale.c:275
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:88
-#: malloc/memusagestat.c:564 nss/getent.c:961 nss/makedb.c:370
+#: malloc/memusagestat.c:564 nss/getent.c:961 nss/makedb.c:371
 #: posix/getconf.c:503
 #, c-format
 msgid ""
@@ -210,12 +210,12 @@ msgstr ""
 "Per a obtenir instruccions sobre com informar d’un error, vegeu\n"
 "<%s>.\n"
 
-#: catgets/gencat.c:245 debug/pcprofiledump.c:224 debug/xtrace.sh:63
+#: catgets/gencat.c:246 debug/pcprofiledump.c:224 debug/xtrace.sh:63
 #: elf/ldconfig.c:232 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
 #: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
-#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:386 posix/getconf.c:485
+#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:485
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -227,96 +227,96 @@ msgstr ""
 "de còpia.  No hi ha CAP garantia; ni tan sols de COMERCIABILITAT o\n"
 "ADEQUACIÓ PER A UN PROPÒSIT PARTICULAR.\n"
 
-#: catgets/gencat.c:250 debug/pcprofiledump.c:229 debug/xtrace.sh:67
+#: catgets/gencat.c:251 debug/pcprofiledump.c:229 debug/xtrace.sh:67
 #: elf/ldconfig.c:237 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
-#: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:391
+#: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Escrit per %s.\n"
 
-#: catgets/gencat.c:281
+#: catgets/gencat.c:282
 msgid "*standard input*"
 msgstr "*entrada estàndard*"
 
-#: catgets/gencat.c:287 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
-#: nss/makedb.c:247
+#: catgets/gencat.c:288 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
+#: nss/makedb.c:248
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "no s’ha pogut obrir el fitxer d’entrada «%s»"
 
-#: catgets/gencat.c:416 catgets/gencat.c:491
+#: catgets/gencat.c:417 catgets/gencat.c:492
 msgid "illegal set number"
 msgstr "el número de joc de missatges no és vàlid"
 
-#: catgets/gencat.c:443
+#: catgets/gencat.c:444
 msgid "duplicate set definition"
 msgstr "la definició del joc de missatges és duplicada"
 
-#: catgets/gencat.c:445 catgets/gencat.c:617 catgets/gencat.c:669
+#: catgets/gencat.c:446 catgets/gencat.c:618 catgets/gencat.c:670
 msgid "this is the first definition"
 msgstr "aquesta és la primera definició"
 
-#: catgets/gencat.c:516
+#: catgets/gencat.c:517
 #, c-format
 msgid "unknown set `%s'"
 msgstr "el joc de missatges «%s» no és conegut"
 
-#: catgets/gencat.c:557
+#: catgets/gencat.c:558
 msgid "invalid quote character"
 msgstr "el caràcter de citació no és vàlid"
 
-#: catgets/gencat.c:570
+#: catgets/gencat.c:571
 #, c-format
 msgid "unknown directive `%s': line ignored"
 msgstr "la directiva «%s» no és coneguda: es descarta la línia"
 
-#: catgets/gencat.c:615
+#: catgets/gencat.c:616
 msgid "duplicated message number"
 msgstr "el número de missatge és duplicat"
 
-#: catgets/gencat.c:666
+#: catgets/gencat.c:667
 msgid "duplicated message identifier"
 msgstr "l’identificador de missatge és duplicat"
 
-#: catgets/gencat.c:723
+#: catgets/gencat.c:724
 msgid "invalid character: message ignored"
 msgstr "el caràcter no és vàlid: es descarta el missatge"
 
-#: catgets/gencat.c:766
+#: catgets/gencat.c:767
 msgid "invalid line"
 msgstr "la línia no és vàlida"
 
-#: catgets/gencat.c:820
+#: catgets/gencat.c:821
 msgid "malformed line ignored"
 msgstr "es descarta la línia en mal estat"
 
-#: catgets/gencat.c:982 catgets/gencat.c:1023
+#: catgets/gencat.c:1000 catgets/gencat.c:1045
 #, c-format
 msgid "cannot open output file `%s'"
 msgstr "no s’ha pogut obrir el fitxer d’eixida «%s»"
 
-#: catgets/gencat.c:1185 locale/programs/linereader.c:588
+#: catgets/gencat.c:1210 locale/programs/linereader.c:588
 msgid "invalid escape sequence"
 msgstr "la seqüència d’escapada no és vàlida"
 
-#: catgets/gencat.c:1209
+#: catgets/gencat.c:1234
 msgid "unterminated message"
 msgstr "el missatge no està acabat"
 
-#: catgets/gencat.c:1233
+#: catgets/gencat.c:1258
 #, c-format
 msgid "while opening old catalog file"
 msgstr "en obrir el fitxer antic de catàleg"
 
-#: catgets/gencat.c:1324
+#: catgets/gencat.c:1349
 #, c-format
 msgid "conversion modules not available"
 msgstr "els mòduls de conversió no es troben disponibles"
 
-#: catgets/gencat.c:1350
+#: catgets/gencat.c:1375
 #, c-format
 msgid "cannot determine escape character"
 msgstr "no s’ha pogut determinar el caràcter d’escapada"
@@ -451,7 +451,7 @@ msgstr "l’ordenació d’octets de la memòria cau no és correcta\n"
 msgid "Cache generated by: "
 msgstr "Memòria cau generada per: "
 
-#: elf/cache.c:299 elf/ldconfig.c:1223
+#: elf/cache.c:299 elf/ldconfig.c:1249
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "no s’ha pogut obrir el fitxer «%s» de memòria cau\n"
@@ -522,11 +522,11 @@ msgstr "error en carregar les biblioteques dinàmiques"
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr "ERROR A L’ENLLAÇADOR DINÀMIC!!!"
 
-#: elf/dl-close.c:346 elf/dl-open.c:298
+#: elf/dl-close.c:357 elf/dl-open.c:298
 msgid "cannot create scope list"
 msgstr "no s’ha pogut crear la llista d’àmbits"
 
-#: elf/dl-close.c:775
+#: elf/dl-close.c:790
 msgid "shared object not open"
 msgstr "l’objecte compartit no és obert"
 
@@ -599,7 +599,7 @@ msgstr "no s’ha pogut crear el vector de camins de cerca"
 msgid "cannot stat shared object"
 msgstr "ha fallat stat() sobre l’objecte compartit"
 
-#: elf/dl-load.c:1059 elf/dl-load.c:2219
+#: elf/dl-load.c:1059 elf/dl-load.c:2222
 msgid "cannot create shared object descriptor"
 msgstr "no s’ha pogut crear el descriptor d’objecte compartit"
 
@@ -635,7 +635,7 @@ msgstr "ha fallat dlopen() sobre l’objecte compartit"
 msgid "cannot allocate memory for program header"
 msgstr "no s’ha pogut reservar memòria per a la capçalera del programa"
 
-#: elf/dl-load.c:1330 elf/dl-load.h:131
+#: elf/dl-load.c:1330 elf/dl-load.h:128
 msgid "cannot change memory protections"
 msgstr "no s’han pogut canviar les proteccions de memòria"
 
@@ -700,27 +700,27 @@ msgstr "només es poden carregar els tipus ET_DYN i ET_EXEC"
 msgid "ELF file's phentsize not the expected size"
 msgstr "el valor de «phentsize» del fitxer ELF no és l’esperat"
 
-#: elf/dl-load.c:2238
+#: elf/dl-load.c:2241
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "la classe ELF no és vàlida: ELFCLASS64"
 
-#: elf/dl-load.c:2239
+#: elf/dl-load.c:2242
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "la classe ELF no és vàlida: ELFCLASS32"
 
-#: elf/dl-load.c:2242
+#: elf/dl-load.c:2245
 msgid "cannot open shared object file"
 msgstr "no s’ha pogut obrir el fitxer d’objecte compartit"
 
-#: elf/dl-load.h:129
+#: elf/dl-load.h:126
 msgid "failed to map segment from shared object"
 msgstr "no s’ha pogut mapar un segment de l’objecte compartit"
 
-#: elf/dl-load.h:133
+#: elf/dl-load.h:130
 msgid "cannot map zero-fill pages"
 msgstr "no s’han pogut mapar les pàgines plenes de zeros"
 
-#: elf/dl-lookup.c:814
+#: elf/dl-lookup.c:813
 msgid "symbol lookup error"
 msgstr "error en cercar el símbol"
 
@@ -734,19 +734,19 @@ msgstr "no s’ha pogut estendre l’àmbit global"
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "El comptador de generació de TLS s’ha esgotat!  Per favor, informeu d’açò."
 
-#: elf/dl-open.c:739
+#: elf/dl-open.c:758
 msgid "cannot allocate address lookup data"
 msgstr "no s’han pogut reservar les dades de cerca d’adreces"
 
-#: elf/dl-open.c:829
+#: elf/dl-open.c:848
 msgid "invalid mode for dlopen()"
 msgstr "el mode de dlopen() no és vàlid"
 
-#: elf/dl-open.c:846
+#: elf/dl-open.c:865
 msgid "no more namespaces available for dlmopen()"
 msgstr "no resten espais de noms disponibles per a dlmopen()"
 
-#: elf/dl-open.c:871
+#: elf/dl-open.c:890
 msgid "invalid target namespace in dlmopen()"
 msgstr "l’espai de noms destí de dlmopen() no és vàlid"
 
@@ -775,7 +775,7 @@ msgstr "no s’ha pogut protegir la memòria després de reubicar"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "s’ha emprat RTLD_NEXT en un codi no carregat dinàmicament"
 
-#: elf/dl-tls.c:1044
+#: elf/dl-tls.c:1052
 msgid "cannot create TLS data structures"
 msgstr "no s’han pogut crear les estructures de dades TLS"
 
@@ -922,7 +922,7 @@ msgstr " (SALTAT)\n"
 msgid "Can't find %s"
 msgstr "no s’ha pogut trobar «%s»"
 
-#: elf/ldconfig.c:600 elf/ldconfig.c:744 elf/ldconfig.c:811
+#: elf/ldconfig.c:600 elf/ldconfig.c:770 elf/ldconfig.c:837
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "ha fallat lstat() sobre «%s»"
@@ -939,74 +939,80 @@ msgstr "no s’ha creat l’enllaç perquè no s’ha trobat el nom d’objecte 
 
 # Continua un missatge de diagnòstic anterior; NOM_DE_FITXER:LÍNIA.  ivb
 # No usa quote().  ivb
-#: elf/ldconfig.c:675
+#: elf/ldconfig.c:711
 #, c-format
 msgid " (from %s:%d)\n"
 msgstr " (a «%s»:%d)\n"
 
-#: elf/ldconfig.c:690
+#: elf/ldconfig.c:726
 #, c-format
 msgid "Can't open directory %s"
 msgstr "no s’ha pogut obrir el directori «%s»"
 
-#: elf/ldconfig.c:761 elf/ldconfig.c:799 elf/readlib.c:78
+# Es refereix a la cadena de caràcters.  ivb
+#: elf/ldconfig.c:753 elf/ldconfig.c:758
+#, c-format
+msgid "Could not form library path"
+msgstr "no s’ha pogut formar el camí de biblioteques"
+
+#: elf/ldconfig.c:787 elf/ldconfig.c:825 elf/readlib.c:78
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "no s’ha trobat el fitxer d’entrada «%s»\n"
 
-#: elf/ldconfig.c:768
+#: elf/ldconfig.c:794
 #, c-format
 msgid "Cannot stat %s"
 msgstr "ha fallat stat() sobre «%s»"
 
-#: elf/ldconfig.c:887
+#: elf/ldconfig.c:913
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "la biblioteca «%s» per a libc6 es troba en un directori incorrecte"
 
-#: elf/ldconfig.c:906
+#: elf/ldconfig.c:932
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "les biblioteques «%s» i «%s» del directori «%s» tenen el mateix nom d’objecte compartit però diferent tipus."
 
-#: elf/ldconfig.c:1035
+#: elf/ldconfig.c:1061
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr "avís: es descarta el fitxer de configuració que no s’ha pogut obrir: %s"
 
-#: elf/ldconfig.c:1083
+#: elf/ldconfig.c:1109
 #, c-format
 msgid "%s:%u: hwcap directive ignored"
 msgstr "%s:%u: es descarta la directiva «hwcap»"
 
-#: elf/ldconfig.c:1102
+#: elf/ldconfig.c:1128
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "cal indicar el camí absolut del fitxer de configuració en emprar «-r»"
 
-#: elf/ldconfig.c:1109 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1135 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "la memòria s’ha exhaurit"
 
-#: elf/ldconfig.c:1142
+#: elf/ldconfig.c:1168
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: no s’ha pogut llegir el directori «%s»"
 
-#: elf/ldconfig.c:1180
+#: elf/ldconfig.c:1206
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "s’ha indicat el camí relatiu «%s» per a construir la memòria cau"
 
-#: elf/ldconfig.c:1202
+#: elf/ldconfig.c:1228
 #, c-format
 msgid "Can't chdir to /"
 msgstr "no s’ha pogut canviar al directori arrel"
 
-#: elf/ldconfig.c:1243
+#: elf/ldconfig.c:1269
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "no s’ha pogut obrir el directori «%s» de fitxers de memòria cau\n"
@@ -1669,6 +1675,21 @@ msgstr "en inserir a l’arbre de cerca"
 #, c-format
 msgid "cannot generate output file"
 msgstr "no s’ha pogut generar el fitxer d’eixida"
+
+#: include/unistd_ext.h:38
+#, c-format
+msgid "write of %zu bytes failed after %td: %m"
+msgstr "ha fallat l’escriptura de %zu octets després de %td: %m"
+
+#: include/unistd_ext.h:43
+#, c-format
+msgid "write returned 0 after writing %td bytes of %zu"
+msgstr "write() ha retornat 0 després d’escriure %td octets de %zu"
+
+#: include/unistd_ext.h:59
+#, c-format
+msgid "read of %zu bytes failed after %td: %m"
+msgstr "ha fallat la lectura de %zu octets després de %td: %m"
 
 #: inet/rcmd.c:160
 msgid "rcmd: Cannot allocate memory\n"
@@ -3991,135 +4012,135 @@ msgstr " - totes les dades: "
 msgid " - remaining data %p: "
 msgstr " - dades restants a %p: "
 
-#: nscd/connections.c:519
+#: nscd/connections.c:530
 #, c-format
 msgid "invalid persistent database file \"%s\": %s"
 msgstr "el fitxer de base de dades persistent «%s» no és vàlid: %s"
 
-#: nscd/connections.c:527
+#: nscd/connections.c:538
 msgid "uninitialized header"
 msgstr "la capçalera no es troba iniciada"
 
-#: nscd/connections.c:532
+#: nscd/connections.c:543
 msgid "header size does not match"
 msgstr "la mida de la capçalera no concorda"
 
-#: nscd/connections.c:542
+#: nscd/connections.c:553
 msgid "file size does not match"
 msgstr "la mida del fitxer no concorda"
 
-#: nscd/connections.c:559
+#: nscd/connections.c:570
 msgid "verification failed"
 msgstr "la verificació ha fallat"
 
-#: nscd/connections.c:573
+#: nscd/connections.c:584
 #, c-format
 msgid "suggested size of table for database %s larger than the persistent database's table"
 msgstr "la mida de taula suggerida per a la base de dades «%s» és major que la de la base de dades persistent"
 
-#: nscd/connections.c:584 nscd/connections.c:668
+#: nscd/connections.c:595 nscd/connections.c:679
 #, c-format
 msgid "cannot create read-only descriptor for \"%s\"; no mmap"
 msgstr "no s’ha pogut crear un descriptor de només lectura per a «%s»; no s’emprarà mmap()"
 
-#: nscd/connections.c:600
+#: nscd/connections.c:611
 #, c-format
 msgid "cannot access '%s'"
 msgstr "no s’ha pogut accedir a «%s»"
 
-#: nscd/connections.c:648
+#: nscd/connections.c:659
 #, c-format
 msgid "database for %s corrupted or simultaneously used; remove %s manually if necessary and restart"
 msgstr "la base de dades de «%s» està corrupta o sent emprada concurrentment; elimineu «%s» manualment si cal i reinicieu"
 
-#: nscd/connections.c:654
+#: nscd/connections.c:665
 #, c-format
 msgid "cannot create %s; no persistent database used"
 msgstr "no s’ha pogut crear «%s»; no s’emprarà una base de dades persistent"
 
-#: nscd/connections.c:657
+#: nscd/connections.c:668
 #, c-format
 msgid "cannot create %s; no sharing possible"
 msgstr "no s’ha pogut crear «%s»; no es podrà compartir"
 
-#: nscd/connections.c:728
+#: nscd/connections.c:739
 #, c-format
 msgid "cannot write to database file %s: %s"
 msgstr "no s’ha pogut escriure al fitxer de base de dades «%s»: %s"
 
-#: nscd/connections.c:784
+#: nscd/connections.c:795
 #, c-format
 msgid "cannot open socket: %s"
 msgstr "no s’ha pogut obrir el connector: %s"
 
-#: nscd/connections.c:803
+#: nscd/connections.c:814
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
 msgstr "no s’ha pogut habilitar el connector per a acceptar connexions: %s"
 
 # Cap de les 2 usa quote().  ivb
-#: nscd/connections.c:860
+#: nscd/connections.c:871
 #, c-format
 msgid "disabled inotify-based monitoring for file `%s': %s"
 msgstr "s’inhabilita la vigilància «inotify» per al fitxer «%s»: %s"
 
 # No usa quote().  ivb
-#: nscd/connections.c:864
+#: nscd/connections.c:875
 #, c-format
 msgid "monitoring file `%s` (%d)"
 msgstr "s’està vigilant el fitxer «%s» (%d)"
 
 # Cap de les 2 usa quote().  ivb
-#: nscd/connections.c:877
+#: nscd/connections.c:888
 #, c-format
 msgid "disabled inotify-based monitoring for directory `%s': %s"
 msgstr "s’inhabilita la vigilància «inotify» per al directori «%s»: %s"
 
 # Missatge de depuració.  ivb
 # No usa quote().  ivb
-#: nscd/connections.c:881
+#: nscd/connections.c:892
 #, c-format
 msgid "monitoring directory `%s` (%d)"
 msgstr "s’està vigilant el directori «%s» (%d)"
 
 # Cap usa quote().  ivb
 # Missatge de depuració.  ivb
-#: nscd/connections.c:909
+#: nscd/connections.c:920
 #, c-format
 msgid "monitoring file %s for database %s"
 msgstr "s’està vigilant el fitxer «%s» per a la base de dades «%s»"
 
 # Cap usa quote().  ivb
-#: nscd/connections.c:919
+#: nscd/connections.c:930
 #, c-format
 msgid "stat failed for file `%s'; will try again later: %s"
 msgstr "ha fallat stat() sobre el fitxer «%s», es tornarà a provar: %s"
 
-#: nscd/connections.c:1038
+#: nscd/connections.c:1049
 #, c-format
 msgid "provide access to FD %d, for %s"
 msgstr "es proporciona accés al descriptor de fitxer %d, per a «%s»"
 
-#: nscd/connections.c:1050
+#: nscd/connections.c:1061
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr "no s’ha pogut atendre la petició amb versió antiga %d; la versió actual és %d"
 
-#: nscd/connections.c:1073
+#: nscd/connections.c:1084
 #, c-format
 msgid "request from %ld not handled due to missing permission"
 msgstr "no s’atén la petició de %ld per manca de permisos"
 
-#: nscd/connections.c:1078
+#: nscd/connections.c:1089
 #, c-format
 msgid "request from '%s' [%ld] not handled due to missing permission"
 msgstr "no s’atén la petició de «%s» (%ld) per manca de permisos"
 
-#: nscd/connections.c:1083
+#: nscd/connections.c:1094
 msgid "request not handled due to missing permission"
 msgstr "no s’atén la petició per manca de permisos"
 
-#: nscd/connections.c:1121 nscd/connections.c:1147
+#: nscd/connections.c:1132 nscd/connections.c:1158
 #, c-format
 msgid "cannot write result: %s"
 msgstr "no s’ha pogut escriure el resultat: %s"
@@ -4129,144 +4150,144 @@ msgstr "no s’ha pogut escriure el resultat: %s"
 # ivb  dimoni «nscd» per consultar la memòria cau o invalidar-la.  Per
 # ivb  això faig servir «programa de control» (com «ndc» amb «named» o
 # ivb  «chronyc» amb «chronyd»).
-#: nscd/connections.c:1238
+#: nscd/connections.c:1249
 #, c-format
 msgid "error getting caller's id: %s"
 msgstr "error en obtenir l’identificador del programa de control: %s"
 
-#: nscd/connections.c:1348
+#: nscd/connections.c:1359
 #, c-format
 msgid "cannot open /proc/self/cmdline: %m; disabling paranoia mode"
 msgstr "no s’ha pogut obrir «/proc/self/cmdline»: %m; s’inhabilita el mode paranoic"
 
-#: nscd/connections.c:1371
+#: nscd/connections.c:1382
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
 msgstr "no s’ha pogut tornar a l’UID vell: %s; s’inhabilita el mode paranoic"
 
-#: nscd/connections.c:1382
+#: nscd/connections.c:1393
 #, c-format
 msgid "cannot change to old GID: %s; disabling paranoia mode"
 msgstr "no s’ha pogut tornar al GID vell: %s; s’inhabilita el mode paranoic"
 
-#: nscd/connections.c:1396
+#: nscd/connections.c:1407
 #, c-format
 msgid "cannot change to old working directory: %s; disabling paranoia mode"
 msgstr "no s’ha pogut tornar al directori vell de treball: %s; s’inhabilita el mode paranoic"
 
-#: nscd/connections.c:1443
+#: nscd/connections.c:1454
 #, c-format
 msgid "re-exec failed: %s; disabling paranoia mode"
 msgstr "ha fallat la reexecució: %s; s’inhabilita el mode paranoic"
 
-#: nscd/connections.c:1452
+#: nscd/connections.c:1463
 #, c-format
 msgid "cannot change current working directory to \"/\": %s"
 msgstr "no s’ha pogut canviar el directori de treball a «/»: %s"
 
-#: nscd/connections.c:1636
+#: nscd/connections.c:1647
 #, c-format
 msgid "short read while reading request: %s"
 msgstr "lectura incompleta en llegir la petició: %s"
 
-#: nscd/connections.c:1669
+#: nscd/connections.c:1680
 #, c-format
 msgid "key length in request too long: %d"
 msgstr "la longitud de la clau de la petició és massa gran: %d"
 
-#: nscd/connections.c:1682
+#: nscd/connections.c:1693
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr "lectura incompleta en llegir la clau de la petició: %s"
 
-#: nscd/connections.c:1692
+#: nscd/connections.c:1703
 #, c-format
 msgid "handle_request: request received (Version = %d) from PID %ld"
 msgstr "handle_request: s’ha rebut una petició (amb versió %d) del PID %ld"
 
-#: nscd/connections.c:1697
+#: nscd/connections.c:1708
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request: s’ha rebut una petició (amb versió %d)"
 
 # No usa quote().  ivb
-#: nscd/connections.c:1837
+#: nscd/connections.c:1848
 #, c-format
 msgid "ignored inotify event for `%s` (file exists)"
 msgstr "s’ha descartat l’esdeveniment d’«inotify» per a «%s» (el fitxer existeix)"
 
 # No usa quote(), el segon és «moved» o «deleted».  ivb
 # FIXME: Inner verb cannot be translated!  ivb
-#: nscd/connections.c:1842
+#: nscd/connections.c:1853
 #, c-format
 msgid "monitored file `%s` was %s, removing watch"
 msgstr "el fitxer vigilat «%s» ha estat %s, se n’elimina el monitor"
 
 # Cap usa quote().  ivb
-#: nscd/connections.c:1850 nscd/connections.c:1892
+#: nscd/connections.c:1861 nscd/connections.c:1903
 #, c-format
 msgid "failed to remove file watch `%s`: %s"
 msgstr "no s’ha pogut eliminar el monitor del fitxer «%s»: %s"
 
 # No usa quote().  ivb
-#: nscd/connections.c:1865
+#: nscd/connections.c:1876
 #, c-format
 msgid "monitored file `%s` was written to"
 msgstr "el fitxer vigilat «%s» ha rebut una escriptura"
 
 # No usa quote(), el segon és «moved» o «deleted».  ivb
 # FIXME: Inner verb cannot be translated!  ivb
-#: nscd/connections.c:1889
+#: nscd/connections.c:1900
 #, c-format
 msgid "monitored parent directory `%s` was %s, removing watch on `%s`"
 msgstr "el directori pare vigilat «%s» ha estat %s, s’elimina el monitor per a «%s»"
 
 # No usa quote(), el segon és «created» o «moved into place».  ivb
 # FIXME: Inner verb cannot be translated!  ivb
-#: nscd/connections.c:1915
+#: nscd/connections.c:1926
 #, c-format
 msgid "monitored file `%s` was %s, adding watch"
 msgstr "el fitxer vigilat «%s» ha estat %s, se n’afegeix el monitor"
 
 # Cap dels 2 usa quote().  ivb
-#: nscd/connections.c:1927
+#: nscd/connections.c:1938
 #, c-format
 msgid "failed to add file watch `%s`: %s"
 msgstr "no s’ha pogut afegir un monitor per al fitxer «%s»: %s"
 
-#: nscd/connections.c:2105 nscd/connections.c:2270
+#: nscd/connections.c:2116 nscd/connections.c:2281
 #, c-format
 msgid "disabled inotify-based monitoring after read error %d"
 msgstr "s’inhabilita la vigilància «inotify» per l’error de lectura amb codi %d"
 
-#: nscd/connections.c:2386
+#: nscd/connections.c:2397
 msgid "could not initialize conditional variable"
 msgstr "no s’ha pogut iniciar la variable condicional"
 
-#: nscd/connections.c:2394
+#: nscd/connections.c:2405
 msgid "could not start clean-up thread; terminating"
 msgstr "no s’ha pogut iniciar el fil d’execució de neteja; s’està finalitzant"
 
-#: nscd/connections.c:2408
+#: nscd/connections.c:2419
 msgid "could not start any worker thread; terminating"
 msgstr "no s’ha pogut iniciar cap fil d’execució treballador; s’està finalitzant"
 
-#: nscd/connections.c:2463 nscd/connections.c:2465 nscd/connections.c:2481
-#: nscd/connections.c:2491 nscd/connections.c:2509 nscd/connections.c:2520
-#: nscd/connections.c:2530
+#: nscd/connections.c:2474 nscd/connections.c:2476 nscd/connections.c:2492
+#: nscd/connections.c:2502 nscd/connections.c:2520 nscd/connections.c:2531
+#: nscd/connections.c:2541
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr "no s’ha pogut executar «nscd» com a l’usuari «%s»"
 
-#: nscd/connections.c:2483
+#: nscd/connections.c:2494
 msgid "initial getgrouplist failed"
 msgstr "ha fallat getgrouplist() inicial"
 
-#: nscd/connections.c:2492
+#: nscd/connections.c:2503
 msgid "getgrouplist failed"
 msgstr "ha fallat getgrouplist()"
 
-#: nscd/connections.c:2510
+#: nscd/connections.c:2521
 msgid "setgroups failed"
 msgstr "ha fallat setgroups()"
 
@@ -4378,7 +4399,7 @@ msgstr "Empra una memòria cau diferent per a cada usuari."
 msgid "Name Service Cache Daemon."
 msgstr "Dimoni de memòria cau del servei de noms."
 
-#: nscd/nscd.c:158 nss/getent.c:995 nss/makedb.c:207
+#: nscd/nscd.c:158 nss/getent.c:995 nss/makedb.c:208
 #, c-format
 msgid "wrong number of arguments"
 msgstr "el nombre d’arguments és incorrecte"
@@ -4824,32 +4845,32 @@ msgstr "Bases de dades acceptades:\n"
 msgid "Unknown database: %s\n"
 msgstr "la base de dades no és coneguda: %s\n"
 
-#: nss/makedb.c:120
+#: nss/makedb.c:121
 msgid "Convert key to lower case"
 msgstr "Converteix la clau a minúscules."
 
-#: nss/makedb.c:123
+#: nss/makedb.c:124
 msgid "Do not print messages while building database"
 msgstr "No mostra cap missatge mentre es crea la base de dades."
 
-#: nss/makedb.c:125
+#: nss/makedb.c:126
 msgid "Print content of database file, one entry a line"
 msgstr "Mostra el contingut del fitxer de base de dades, a entrada per línia."
 
-#: nss/makedb.c:126
+#: nss/makedb.c:127
 msgid "CHAR"
 msgstr "CARÀCTER"
 
 # No tinc massa clar el significat.  ivb
-#: nss/makedb.c:127
+#: nss/makedb.c:128
 msgid "Generated line not part of iteration"
 msgstr "Línia generada a excloure de la iteració."
 
-#: nss/makedb.c:132
+#: nss/makedb.c:133
 msgid "Create simple database from textual input."
 msgstr "Crea una base de dades simple partint de l’entrada textual."
 
-#: nss/makedb.c:135
+#: nss/makedb.c:136
 msgid ""
 "INPUT-FILE OUTPUT-FILE\n"
 "-o OUTPUT-FILE INPUT-FILE\n"
@@ -4859,76 +4880,76 @@ msgstr ""
 "-o FITXER_EIXIDA FITXER_ENTRADA\n"
 "-u FITXER_ENTRADA"
 
-#: nss/makedb.c:228
+#: nss/makedb.c:229
 #, c-format
 msgid "cannot open database file `%s'"
 msgstr "no s’ha pogut obrir el fitxer de base de dades «%s»"
 
-#: nss/makedb.c:273
+#: nss/makedb.c:274
 #, c-format
 msgid "no entries to be processed"
 msgstr "no hi ha cap entrada a processar"
 
-#: nss/makedb.c:283
+#: nss/makedb.c:284
 #, c-format
 msgid "cannot create temporary file name"
 msgstr "no s’ha pogut crear un nom de fitxer temporal"
 
-#: nss/makedb.c:289
+#: nss/makedb.c:290
 #, c-format
 msgid "cannot create temporary file"
 msgstr "no s’ha pogut crear un fitxer temporal"
 
-#: nss/makedb.c:305
+#: nss/makedb.c:306
 #, c-format
 msgid "cannot stat newly created file"
 msgstr "ha fallat stat() sobre el nou fitxer temporal"
 
-#: nss/makedb.c:316
+#: nss/makedb.c:317
 #, c-format
 msgid "cannot rename temporary file"
 msgstr "no s’ha pogut reanomenar el fitxer temporal"
 
-#: nss/makedb.c:528 nss/makedb.c:551
+#: nss/makedb.c:529 nss/makedb.c:552
 #, c-format
 msgid "cannot create search tree"
 msgstr "no s’ha pogut crear l’arbre de cerca"
 
-#: nss/makedb.c:557
+#: nss/makedb.c:558
 msgid "duplicate key"
 msgstr "la clau és duplicada"
 
-#: nss/makedb.c:569
+#: nss/makedb.c:570
 #, c-format
 msgid "problems while reading `%s'"
 msgstr "problemes en llegir «%s»"
 
-#: nss/makedb.c:805
+#: nss/makedb.c:814
 #, c-format
 msgid "failed to write new database file"
 msgstr "no s’ha pogut escriure el nou fitxer de base de dades"
 
-#: nss/makedb.c:822
+#: nss/makedb.c:833
 #, c-format
 msgid "cannot stat database file"
 msgstr "ha fallat stat() sobre el fitxer de base de dades"
 
-#: nss/makedb.c:827
+#: nss/makedb.c:838
 #, c-format
 msgid "cannot map database file"
 msgstr "no s’ha pogut mapar el fitxer de base de dades"
 
-#: nss/makedb.c:830
+#: nss/makedb.c:841
 #, c-format
 msgid "file not a database file"
 msgstr "el fitxer no és un fitxer de base dades"
 
-#: nss/makedb.c:882
+#: nss/makedb.c:893
 #, c-format
 msgid "cannot initialize SELinux context"
 msgstr "no s’ha pogut iniciar el context de SELinux"
 
-#: nss/makedb.c:891
+#: nss/makedb.c:902
 #, c-format
 msgid "cannot set file creation context for `%s'"
 msgstr "no s’ha pogut establir el context de creació per a «%s»"
@@ -6700,25 +6721,24 @@ msgstr "Interromput per un senyal"
 msgid "Parameter string not correctly encoded"
 msgstr "La cadena paràmetre no té una codificació vàlida"
 
+#: sysdeps/posix/gai_strerror-strs.h:19
+msgid "Result too large for supplied buffer"
+msgstr "El resultat és massa gran per a la memòria intermèdia proporcionada"
+
 #: sysdeps/unix/sysv/linux/ia64/makecontext.c:57
 #, c-format
 msgid "makecontext: does not know how to handle more than 8 arguments\n"
 msgstr "makecontext: no es poden tractar més de 8 arguments\n"
 
 # Indicació per a l’usuari.  ivb
-#: sysdeps/x86/dl-cet.c:154
+#: sysdeps/x86/dl-cet.c:214
 msgid "rebuild shared object with IBT support enabled"
 msgstr "recompileu l’objecte compartit activant la compatibilitat amb IBT"
 
 # Indicació per a l’usuari.  ivb
-#: sysdeps/x86/dl-cet.c:165
+#: sysdeps/x86/dl-cet.c:233
 msgid "rebuild shared object with SHSTK support enabled"
 msgstr "recompileu l’objecte compartit activant la compatibilitat amb SHSTK"
-
-# CET = Control-Flow Enforcement Technology.  ivb
-#: sysdeps/x86/dl-cet.c:194
-msgid "can't disable CET"
-msgstr "no es pot inhabilitar CET"
 
 #: sysdeps/x86/dl-prop.h:61
 msgid "CPU ISA level is lower than required"
