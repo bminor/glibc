@@ -59,91 +59,91 @@ copy "zh_CN"
 END LC_NUMERIC
 
 LC_TIME
-abday   "<U0F49><U0F72><U0F0B>";/
-        "<U0F5F><U0FB3><U0F0B>";/
-        "<U0F58><U0F72><U0F62><U0F0B>";/
-        "<U0F63><U0FB7><U0F42><U0F0B>";/
-        "<U0F55><U0F74><U0F62><U0F0B>";/
-        "<U0F66><U0F44><U0F66><U0F0B>";/
-        "<U0F66><U0FA4><U0F7A><U0F53><U0F0B>"
+abday   "ཉི་";/
+        "ཟླ་";/
+        "མིར་";/
+        "ལྷག་";/
+        "ཕུར་";/
+        "སངས་";/
+        "སྤེན་"
 
-day     "<U0F42><U0F5F><U0F60><U0F0B><U0F49><U0F72><U0F0B><U0F58><U0F0B>";/
-        "<U0F42><U0F5F><U0F60><U0F0B><U0F5F><U0FB3><U0F0B><U0F56><U0F0B>";/
-        "<U0F42><U0F5F><U0F60><U0F0B><U0F58><U0F72><U0F42><U0F0B><U0F51><U0F58><U0F62><U0F0B>";/
-        "<U0F42><U0F5F><U0F60><U0F0B><U0F63><U0FB7><U0F42><U0F0B><U0F54><U0F0B>";/
-        "<U0F42><U0F5F><U0F60><U0F0B><U0F55><U0F74><U0F62><U0F0B><U0F56><U0F74><U0F0B>";/
-        "<U0F42><U0F5F><U0F60><U0F0B><U0F54><U0F0B><U0F66><U0F44><U0F66><U0F0B>";/
-        "<U0F42><U0F5F><U0F60><U0F0B><U0F66><U0FA4><U0F7A><U0F53><U0F0B><U0F54><U0F0B>"
+day     "གཟའ་ཉི་མ་";/
+        "གཟའ་ཟླ་བ་";/
+        "གཟའ་མིག་དམར་";/
+        "གཟའ་ལྷག་པ་";/
+        "གཟའ་ཕུར་བུ་";/
+        "གཟའ་པ་སངས་";/
+        "གཟའ་སྤེན་པ་"
 
-abmon   "<U0F5F><U0FB3><U0F0B><U0F21>";/
-	"<U0F5F><U0FB3><U0F0B><U0F22>";/
-	"<U0F5F><U0FB3><U0F0B><U0F23>";/
-	"<U0F5F><U0FB3><U0F0B><U0F24>";/
-	"<U0F5F><U0FB3><U0F0B><U0F25>";/
-	"<U0F5F><U0FB3><U0F0B><U0F26>";/
-	"<U0F5F><U0FB3><U0F0B><U0F27>";/
-	"<U0F5F><U0FB3><U0F0B><U0F28>";/
-	"<U0F5F><U0FB3><U0F0B><U0F29>";/
-	"<U0F5F><U0FB3><U0F0B><U0F21><U0F20>";/
-	"<U0F5F><U0FB3><U0F0B><U0F21><U0F21>";/
-	"<U0F5F><U0FB3><U0F0B><U0F21><U0F22>"
+abmon   "ཟླ་༡";/
+	"ཟླ་༢";/
+	"ཟླ་༣";/
+	"ཟླ་༤";/
+	"ཟླ་༥";/
+	"ཟླ་༦";/
+	"ཟླ་༧";/
+	"ཟླ་༨";/
+	"ཟླ་༩";/
+	"ཟླ་༡༠";/
+	"ཟླ་༡༡";/
+	"ཟླ་༡༢"
 
-mon      "<U0F5F><U0FB3><U0F0B><U0F56><U0F0B><U0F51><U0F44><U0F0B><U0F54><U0F7C><U0F0B>";/
-         "<U0F5F><U0FB3><U0F0B><U0F56><U0F0B><U0F42><U0F49><U0F72><U0F66><U0F0B><U0F54><U0F0B>";/
-         "<U0F5F><U0FB3><U0F0B><U0F56><U0F0B><U0F42><U0F66><U0F74><U0F58><U0F0B><U0F54><U0F0B>";/
-         "<U0F5F><U0FB3><U0F0B><U0F56><U0F0B><U0F56><U0F5E><U0F72><U0F0B><U0F54><U0F0B>";/
-         "<U0F5F><U0FB3><U0F0B><U0F56><U0F0B><U0F63><U0F94><U0F0B><U0F54><U0F0B>";/
-         "<U0F5F><U0FB3><U0F0B><U0F56><U0F0B><U0F51><U0FB2><U0F74><U0F42><U0F0B><U0F54><U0F0B>";/
-         "<U0F5F><U0FB3><U0F0B><U0F56><U0F0B><U0F56><U0F51><U0F74><U0F53><U0F54><U0F0B>";/
-    "<U0F5F><U0FB3><U0F0B><U0F56><U0F0B><U0F56><U0F62><U0F92><U0FB1><U0F51><U0F0B><U0F54><U0F0B>";/
-         "<U0F5F><U0FB3><U0F0B><U0F56><U0F0B><U0F51><U0F42><U0F74><U0F0B><U0F54><U0F0B>";/
-         "<U0F5F><U0FB3><U0F0B><U0F56><U0F0B><U0F56><U0F45><U0F74><U0F0B><U0F54><U0F0B>";/
-"<U0F5F><U0FB3><U0F0B><U0F56><U0F0B><U0F56><U0F45><U0F74><U0F0B><U0F42><U0F45><U0F72><U0F42><U0F0B><U0F54><U0F0B>";/
-"<U0F5F><U0FB3><U0F0B><U0F56><U0F0B><U0F56><U0F45><U0F74><U0F0B><U0F42><U0F49><U0F72><U0F66><U0F0B><U0F54><U0F0B>"
+mon      "ཟླ་བ་དང་པོ་";/
+         "ཟླ་བ་གཉིས་པ་";/
+         "ཟླ་བ་གསུམ་པ་";/
+         "ཟླ་བ་བཞི་པ་";/
+         "ཟླ་བ་ལྔ་པ་";/
+         "ཟླ་བ་དྲུག་པ་";/
+         "ཟླ་བ་བདུནཔ་";/
+    "ཟླ་བ་བརྒྱད་པ་";/
+         "ཟླ་བ་དགུ་པ་";/
+         "ཟླ་བ་བཅུ་པ་";/
+"ཟླ་བ་བཅུ་གཅིག་པ་";/
+"ཟླ་བ་བཅུ་གཉིས་པ་"
 
 
 
 
 % Appropriate date & time representation
-d_t_fmt      "<U0F66><U0FA4><U0FB1><U0F72><U0F0B><U0F63><U0F7C>%y/
-<U0F5F><U0FB3>%m<U0F5A><U0F7A><U0F66>%d/
-<U0F46><U0F74><U0F0B><U0F5A><U0F7C><U0F51>%H/
-<U0F66><U0F90><U0F62><U0F0B><U0F58>%M/
-<U0F66><U0F90><U0F62><U0F0B><U0F46>%S"
+d_t_fmt      "སྤྱི་ལོ%y/
+ཟླ%mཚེས%d/
+ཆུ་ཚོད%H/
+སྐར་མ%M/
+སྐར་ཆ%S"
 
 % Appropriate date & time representation for date(1)
-date_fmt      "<U0F66><U0FA4><U0FB1><U0F72><U0F0B><U0F63><U0F7C>%y/
-<U0F5F><U0FB3>%m<U0F5A><U0F7A><U0F66>%d/
-<U0F46><U0F74><U0F0B><U0F5A><U0F7C><U0F51>%H/
-<U0F66><U0F90><U0F62><U0F0B><U0F58>%M/
-<U0F66><U0F90><U0F62><U0F0B><U0F46>%S"
+date_fmt      "སྤྱི་ལོ%y/
+ཟླ%mཚེས%d/
+ཆུ་ཚོད%H/
+སྐར་མ%M/
+སྐར་ཆ%S"
 
 % Appropriate date representation
-d_fmt        "<U0F66><U0FA4><U0FB1><U0F72><U0F0B><U0F63><U0F7C>%y/
-<U0F5F><U0FB3>%m<U0F5A><U0F7A><U0F66>%d"
+d_fmt        "སྤྱི་ལོ%y/
+ཟླ%mཚེས%d"
 
 % Appropriate time representation  "%H:%M:%S"
-t_fmt        "<U0F46><U0F74><U0F0B><U0F5A><U0F7C><U0F51>%H/
-<U0F66><U0F90><U0F62><U0F0B><U0F58>%M/
-<U0F66><U0F90><U0F62><U0F0B><U0F46>%S"
+t_fmt        "ཆུ་ཚོད%H/
+སྐར་མ%M/
+སྐར་ཆ%S"
 
 % AM/PM signs
-am_pm   "<U0F66><U0F94><U0F0B><U0F46>";"<U0F55><U0FB1><U0F72><U0F0B><U0F46>"
+am_pm   "སྔ་ཆ";"ཕྱི་ཆ"
 
 % Appropriate 12-hour clock representation  "%I:%M:%S %p"
-t_fmt_ampm        "<U0F46><U0F74><U0F0B><U0F5A><U0F7C><U0F51>%I/
-<U0F66><U0F90><U0F62><U0F0B><U0F58>%M/
-<U0F66><U0F90><U0F62><U0F0B><U0F46>%S %p"
+t_fmt_ampm        "ཆུ་ཚོད%I/
+སྐར་མ%M/
+སྐར་ཆ%S %p"
 
 week 7;19971130;1
 first_weekday 2
 END LC_TIME
 
 LC_MESSAGES
-yesexpr "^[+1yY<U0F61>]"
-noexpr  "^[-0nN<U0F58>]"
-yesstr  "<U0F61><U0F72><U0F53><U0F0D>"
-nostr   "<U0F58><U0F72><U0F53><U0F0D>"
+yesexpr "^[+1yYཡ]"
+noexpr  "^[-0nNམ]"
+yesstr  "ཡིན།"
+nostr   "མིན།"
 END LC_MESSAGES
 
 LC_TELEPHONE
@@ -173,13 +173,13 @@ LC_ADDRESS
 % FIXME
 
 postal_fmt   "%c%N%T%N%s %h %e %r%N%b%N%d%N%f%N%a%N"
-country_name "<U0F62><U0F92><U0FB1><U0F0B><U0F53><U0F42>"
+country_name "རྒྱ་ནག"
 country_ab2	"CN"
 country_ab3	"CHN"
 country_num	156
 country_car "CHN"
 country_isbn	7
-lang_name     "<U0F56><U0F7C><U0F51><U0F0B><U0F66><U0F90><U0F51><U0F0B>"
+lang_name     "བོད་སྐད་"
 lang_ab       "bo"
 lang_term     "bod"
 lang_lib      "tib"
