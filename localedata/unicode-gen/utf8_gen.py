@@ -204,7 +204,7 @@ def write_header_width(outfile, unicode_version):
                   + '{:s}.\n'.format(unicode_version))
     outfile.write('% - Default width is 1.\n')
     outfile.write('% - Double-width characters have width 2; generated from\n')
-    outfile.write('%        "grep \'^[^;]*;[WF]\' EastAsianWidth.txt"\n')
+    outfile.write('%        "grep \'^[^;]*;\\s*[WF]\' EastAsianWidth.txt"\n')
     outfile.write('% - Non-spacing characters have width 0; '
                   + 'generated from PropList.txt or\n')
     outfile.write('%   "grep \'^[^;]*;[^;]*;[^;]*;[^;]*;NSM;\' '
@@ -339,8 +339,8 @@ if __name__ == "__main__":
     with open(ARGS.east_asian_with_file, mode='r') as EAST_ASIAN_WIDTH_FILE:
         EAST_ASIAN_WIDTH_LINES = []
         for LINE in EAST_ASIAN_WIDTH_FILE:
-            # If characters from EastAasianWidth.txt which are from
-            # from reserved ranges (i.e. not yet assigned code points)
+            # If characters from EastAsianWidth.txt which are from
+            # reserved ranges (i.e. not yet assigned code points)
             # are added to the WIDTH section of the UTF-8 file, then
             # “make check” produces “Unknown Character” errors for
             # these code points because such unassigned code points
@@ -350,7 +350,7 @@ if __name__ == "__main__":
             # the EastAsianWidth.txt file.
             if re.match(r'.*<reserved-.+>\.\.<reserved-.+>.*', LINE):
                 continue
-            if re.match(r'^[^;]*;\s*[WF]\s*', LINE):
+            if re.match(r'^[^;]*;\s*[WF]', LINE):
                 EAST_ASIAN_WIDTH_LINES.append(LINE.strip())
     with open(ARGS.prop_list_file, mode='r') as PROP_LIST_FILE:
         PROP_LIST_LINES = []

@@ -49858,7 +49858,7 @@ END CHARMAP
 % Character width according to Unicode 15.1.0.
 % - Default width is 1.
 % - Double-width characters have width 2; generated from
-%        "grep '^[^;]*;[WF]' EastAsianWidth.txt"
+%        "grep '^[^;]*;\s*[WF]' EastAsianWidth.txt"
 % - Non-spacing characters have width 0; generated from PropList.txt or
 %   "grep '^[^;]*;[^;]*;[^;]*;[^;]*;NSM;' UnicodeData.txt"
 % - Format control characters have width 0; generated from
