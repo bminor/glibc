@@ -80,6 +80,8 @@ Deprecated and removed features, and other changes affecting compatibility:
   of GNU libc are advised to check whether their build processes can be
   simplified.
 
+* The ia64*-*-linux-gnu configurations are no longer supported.
+
 Changes to build and runtime requirements:
 
 * Building on LoongArch requires at a minimum binutils 2.41 for vector

@@ -78,13 +78,6 @@ do_test (void)
   pid_t ctid = CTID_INIT_VAL;
   pid_t tid;
 
-#ifdef __ia64__
-  extern int __clone2 (int (*__fn) (void *__arg), void *__child_stack_base,
-		       size_t __child_stack_size, int __flags,
-		       void *__arg, ...);
-  tid = __clone2 (f, st, sizeof (st), clone_flags, NULL, /* ptid */ NULL,
-		  /* tls */ NULL, &ctid);
-#else
 #if _STACK_GROWS_DOWN
   tid = clone (f, st + sizeof (st), clone_flags, NULL, /* ptid */ NULL,
 	       /* tls */ NULL, &ctid);
@@ -93,7 +86,6 @@ do_test (void)
 	       &ctid);
 #else
 #error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
-#endif
 #endif
   if (tid == -1)
     FAIL_EXIT1 ("clone failed: %m");

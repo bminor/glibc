@@ -41,24 +41,11 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 	/* X32 libraries are always libc.so.6+.  */
 	file_flag = FLAG_X8664_LIBX32|FLAG_ELF_LIBC6;
       break;
-#ifndef __x86_64__
-    case EM_IA_64:
-      if (elf_header->e_ident[EI_CLASS] == ELFCLASS64)
-	{
-	  /* IA64 64bit libraries are always libc.so.6+.  */
-	  file_flag = FLAG_IA64_LIB64|FLAG_ELF_LIBC6;
-	  break;
-	}
-      goto failed;
-#endif
     case EM_386:
       if (elf_header->e_ident[EI_CLASS] == ELFCLASS32)
 	break;
       /* Fall through.  */
     default:
-#ifndef __x86_64__
-failed:
-#endif
       error (0, 0, _("%s is for unknown machine %d.\n"),
 	     file_name, elf_header->e_machine);
       return 1;

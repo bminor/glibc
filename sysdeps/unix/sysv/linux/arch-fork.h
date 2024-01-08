@@ -46,8 +46,6 @@ arch_fork (void *ctid)
   ret = INLINE_SYSCALL_CALL (clone, 0, flags, NULL, ctid, 0);
 #elif defined(__ASSUME_CLONE_BACKWARDS3)
   ret = INLINE_SYSCALL_CALL (clone, flags, 0, 0, NULL, ctid, 0);
-#elif defined(__ASSUME_CLONE2)
-  ret = INLINE_SYSCALL_CALL (clone2, flags, 0, 0, NULL, ctid, 0);
 #elif defined(__ASSUME_CLONE_DEFAULT)
   ret = INLINE_SYSCALL_CALL (clone, flags, 0, NULL, ctid, 0);
 #else

@@ -45,7 +45,7 @@ ___lxstat64 (int vers, const char *name, struct stat64 *buf)
       return r ?: __xstat32_conv (vers, &st64, (struct stat *) buf);
     }
 # elif defined __NR_lstat
-  /* Old 64-bit kABI, e.g. ia64, powerpc64*, s390x, and x86_64.  */
+  /* Old 64-bit kABI, e.g. powerpc64*, s390x, and x86_64.  */
   if (vers == _STAT_VER_KERNEL || vers == _STAT_VER_LINUX)
     return INLINE_SYSCALL_CALL (lstat, name, buf);
 # elif defined __NR_newfstatat

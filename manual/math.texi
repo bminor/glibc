@@ -69,7 +69,7 @@ Support for @code{_Float@var{N}} or @code{_Float@var{N}x} types is
 provided for @code{_Float32}, @code{_Float64} and @code{_Float32x} on
 all platforms.
 It is also provided for @code{_Float128} and @code{_Float64x} on
-powerpc64le (PowerPC 64-bits little-endian), x86_64, x86, ia64,
+powerpc64le (PowerPC 64-bits little-endian), x86_64, x86,
 aarch64, alpha, loongarch, mips64, riscv, s390 and sparc.
 
 @menu

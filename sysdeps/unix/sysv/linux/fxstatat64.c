@@ -35,7 +35,7 @@ __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
 {
 #if XSTAT_IS_XSTAT64
 # ifdef __NR_newfstatat
-  /* 64-bit kABI, e.g. aarch64, ia64, powerpc64*, s390x, riscv64, and
+  /* 64-bit kABI, e.g. aarch64, powerpc64*, s390x, riscv64, and
      x86_64.  */
   if (vers == _STAT_VER_KERNEL || vers == _STAT_VER_LINUX)
     return INLINE_SYSCALL_CALL (newfstatat, fd, file, st, flag);

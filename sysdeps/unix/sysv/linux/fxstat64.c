@@ -45,7 +45,7 @@ ___fxstat64 (int vers, int fd, struct stat64 *buf)
       return r ?: __xstat32_conv (vers, &st64, (struct stat *) buf);
     }
 # elif defined __NR_fstat
-  /* 64-bit kABI, e.g. aarch64, ia64, powerpc64*, s390x, riscv64,
+  /* 64-bit kABI, e.g. aarch64, powerpc64*, s390x, riscv64,
      and x86_64.  */
   if (vers == _STAT_VER_KERNEL || vers == _STAT_VER_LINUX)
     return INLINE_SYSCALL_CALL (fstat, fd, buf);

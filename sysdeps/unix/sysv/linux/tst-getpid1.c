@@ -41,13 +41,6 @@ do_test (void)
       return 1;
     }
 
-#ifdef __ia64__
-  extern int __clone2 (int (*__fn) (void *__arg), void *__child_stack_base,
-		       size_t __child_stack_size, int __flags,
-		       void *__arg, ...);
-  char st[256 * 1024] __attribute__ ((aligned));
-  pid_t p = __clone2 (f, st, sizeof (st), TEST_CLONE_FLAGS, 0);
-#else
   char st[128 * 1024] __attribute__ ((aligned));
 # if _STACK_GROWS_DOWN
   pid_t p = clone (f, st + sizeof (st), TEST_CLONE_FLAGS, 0);
@@ -56,7 +49,6 @@ do_test (void)
 # else
 #  error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
 # endif
-#endif
   if (p == -1)
     {
       printf("clone failed: %m\n");

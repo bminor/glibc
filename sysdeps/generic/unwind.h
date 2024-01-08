@@ -33,11 +33,7 @@ extern "C" {
    inefficient for 32-bit and smaller machines.  */
 typedef unsigned _Unwind_Word __attribute__((__mode__(__unwind_word__)));
 typedef signed _Unwind_Sword __attribute__((__mode__(__unwind_word__)));
-#if defined(__ia64__) && defined(__hpux__)
-typedef unsigned _Unwind_Ptr __attribute__((__mode__(__word__)));
-#else
 typedef unsigned _Unwind_Ptr __attribute__((__mode__(__pointer__)));
-#endif
 typedef unsigned _Unwind_Internal_Ptr __attribute__((__mode__(__pointer__)));
 
 /* @@@ The IA-64 ABI uses a 64-bit word to identify the producer and
@@ -190,29 +186,8 @@ extern void _Unwind_SjLj_Resume (struct _Unwind_Exception *);
    and data-relative addressing in the LDSA.  In order to stay link
    compatible with the standard ABI for IA-64, we inline these.  */
 
-#ifdef __ia64__
-#include <stdlib.h>
-
-static inline _Unwind_Ptr
-_Unwind_GetDataRelBase (struct _Unwind_Context *_C)
-{
-  /* The GP is stored in R1.  */
-  return _Unwind_GetGR (_C, 1);
-}
-
-static inline _Unwind_Ptr
-_Unwind_GetTextRelBase (struct _Unwind_Context *_C)
-{
-  abort ();
-  return 0;
-}
-
-/* @@@ Retrieve the Backing Store Pointer of the given context.  */
-extern _Unwind_Word _Unwind_GetBSP (struct _Unwind_Context *);
-#else
 extern _Unwind_Ptr _Unwind_GetDataRelBase (struct _Unwind_Context *);
 extern _Unwind_Ptr _Unwind_GetTextRelBase (struct _Unwind_Context *);
-#endif
 
 /* @@@ Given an address, return the entry point of the function that
    contains it.  */

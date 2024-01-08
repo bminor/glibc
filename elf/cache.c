@@ -179,9 +179,6 @@ print_entry (const char *lib, int flag, uint64_t hwcap,
     case FLAG_SPARC_LIB64:
       fputs (",64bit", stdout);
       break;
-    case FLAG_IA64_LIB64:
-      fputs (",IA-64", stdout);
-      break;
     case FLAG_X8664_LIB64:
       fputs (",x86-64", stdout);
       break;

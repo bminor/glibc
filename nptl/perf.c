@@ -708,8 +708,6 @@ clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
   ({ unsigned int _hi, _lo; \
      asm volatile ("rdtsc" : "=a" (_lo), "=d" (_hi)); \
      (Var) = ((unsigned long long int) _hi << 32) | _lo; })
-#elif defined __ia64__
-#define HP_TIMING_NOW(Var)	__asm__ __volatile__ ("mov %0=ar.itc" : "=r" (Var) : : "memory")
 #else
 #error "HP_TIMING_NOW missing"
 #endif

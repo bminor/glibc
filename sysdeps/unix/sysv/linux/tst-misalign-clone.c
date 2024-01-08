@@ -50,29 +50,18 @@ do_test (void)
   if (TEST_STACK_ALIGN ())
     FAIL_EXIT1 ("stack isn't aligned\n");
 
-#ifdef __ia64__
-# define STACK_SIZE (256 * 1024)
-#else
 # define STACK_SIZE (128 * 1024)
-#endif
 
   char st[STACK_SIZE + 1];
   /* NB: Align child stack to 1 byte.  */
   char *stack = PTR_ALIGN_UP (&st[0], 2) + 1;
 
-#ifdef __ia64__
-  extern int __clone2 (int (*__fn) (void *__arg), void *__child_stack_base,
-		       size_t __child_stack_size, int __flags,
-		       void *__arg, ...);
-  pid_t p = __clone2 (check_stack_alignment, stack, STACK_SIZE, 0, 0);
-#else
-# if _STACK_GROWS_DOWN
+#if _STACK_GROWS_DOWN
   pid_t p = clone (check_stack_alignment, stack + STACK_SIZE, 0, 0);
-# elif _STACK_GROWS_UP
+#elif _STACK_GROWS_UP
   pid_t p = clone (check_stack_alignment, stack, 0, 0);
-# else
-#  error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
-# endif
+#else
+# error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
 #endif
 
   /* Clone must not fail.  */

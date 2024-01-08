@@ -70,11 +70,7 @@ do_test (void)
   if (pipe2 (pipefd, O_CLOEXEC))
     FAIL_EXIT1 ("pipe failed: %m");
 
-#ifdef __ia64__
-# define STACK_SIZE 256 * 1024
-#else
-# define STACK_SIZE 128 * 1024
-#endif
+#define STACK_SIZE 128 * 1024
   char st[STACK_SIZE] __attribute__ ((aligned));
   struct clone_args clone_args =
     {

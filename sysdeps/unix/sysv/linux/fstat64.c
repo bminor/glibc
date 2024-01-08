@@ -31,7 +31,7 @@ __fstat64_time64 (int fd, struct __stat64_t64 *buf)
 #if !FSTATAT_USE_STATX
 # if XSTAT_IS_XSTAT64
 #  ifdef __NR_fstat
-  /* 64-bit kABI, e.g. aarch64, ia64, powerpc64*, s390x, riscv64, and
+  /* 64-bit kABI, e.g. aarch64, powerpc64*, s390x, riscv64, and
      x86_64.  */
   return INLINE_SYSCALL_CALL (fstat, fd, buf);
 #  elif defined __NR_fstat64

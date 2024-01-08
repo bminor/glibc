@@ -71,13 +71,6 @@ do_test (void)
     FAIL_EXIT1 ("pipe failed: %m");
 
   int clone_flags = 0;
-#ifdef __ia64__
-  extern int __clone2 (int (*__fn) (void *__arg), void *__child_stack_base,
-		       size_t __child_stack_size, int __flags,
-		       void *__arg, ...);
-  char st[256 * 1024] __attribute__ ((aligned));
-  pid_t p = __clone2 (f, st, sizeof (st), clone_flags, 0);
-#else
   char st[128 * 1024] __attribute__ ((aligned));
 #if _STACK_GROWS_DOWN
   pid_t p = clone (f, st + sizeof (st), clone_flags, 0);
@@ -85,7 +78,6 @@ do_test (void)
   pid_t p = clone (f, st, clone_flags, 0);
 #else
 #error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
-#endif
 #endif
 
   close (pipefd[1]);
