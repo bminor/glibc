@@ -635,4 +635,8 @@ libm {
     # No SVID compatible error handling.
     fmod; fmodf;
   }
+  GLIBC_2.39 {
+    # No SVID compatible error handling.
+    exp10;
+  }
 }

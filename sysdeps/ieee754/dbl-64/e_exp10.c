@@ -18,9 +18,9 @@
 #include <math.h>
 #include <math-barriers.h>
 #include <math-narrow-eval.h>
-#include <math_private.h>
-#include <float.h>
+#include <math-svid-compat.h>
 #include <libm-alias-finite.h>
+#include <libm-alias-double.h>
 #include "math_config.h"
 
 #define N (1 << EXP_TABLE_BITS)
@@ -75,7 +75,7 @@ special_case (uint64_t sbits, double_t tmp, uint64_t ki)
 
 /* Double-precision 10^x approximation. Largest observed error is ~0.513 ULP.  */
 double
-__ieee754_exp10 (double x)
+__exp10 (double x)
 {
   uint64_t ix = asuint64 (x);
   uint32_t abstop = (ix >> 52) & 0x7ff;
@@ -144,4 +144,11 @@ __ieee754_exp10 (double x)
   return s * y + s;
 }
 
+strong_alias (__exp10, __ieee754_exp10)
 libm_alias_finite (__ieee754_exp10, __exp10)
+#if LIBM_SVID_COMPAT
+versioned_symbol (libm, __exp10, exp10, GLIBC_2_39);
+libm_alias_double_other (__exp10, exp10)
+#else
+libm_alias_double (__exp10, exp10)
+#endif

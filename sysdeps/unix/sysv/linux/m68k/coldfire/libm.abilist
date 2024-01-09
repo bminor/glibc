@@ -535,6 +535,7 @@ GLIBC_2.35 hypot F
 GLIBC_2.35 hypotf F
 GLIBC_2.38 fmod F
 GLIBC_2.38 fmodf F
+GLIBC_2.39 exp10 F
 GLIBC_2.4 _LIB_VERSION D 0x4
 GLIBC_2.4 __clog10 F
 GLIBC_2.4 __clog10f F
