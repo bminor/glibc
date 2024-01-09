@@ -659,6 +659,7 @@ static void
 feupdate_single_test (const char *flag_name, int fe_exc)
 {
   feenv_nomask_test (flag_name, fe_exc, feupdateenv);
+  fesetenv (FE_DFL_ENV);
   feenv_mask_test (flag_name, fe_exc, feupdateenv);
 }
 #endif
