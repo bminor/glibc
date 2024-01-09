@@ -1,0 +1,164 @@
+comment_char %
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
+LC_IDENTIFICATION
+title      "Komi locale for Russia"
+source     ""
+address    ""
+contact    "Kirill Izmestev"
+email      "felixz@altlinux.org"
+tel        ""
+language   "Komi"
+territory  "Russia"
+revision   "1.0"
+date       "2023-05-20"
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
+END LC_IDENTIFICATION
+
+LC_COLLATE
+copy "iso14651_t1" % Additional Komi letters already fine sorted in this iso standart
+END LC_COLLATE
+
+LC_CTYPE
+copy "i18n"
+
+translit_start
+include  "translit_combining";""
+translit_end
+END LC_CTYPE
+
+LC_MESSAGES
+yesexpr "^[+1yY<U0414><U0435><U0440><U0442>]"
+noexpr  "^[-0nN<U041E><U0433>]"
+END LC_MESSAGES
+
+LC_MONETARY
+int_curr_symbol           "RUB "
+currency_symbol           "<U20BD>"
+mon_decimal_point         "."
+mon_thousands_sep         "<U202F>"
+mon_grouping              3;3
+positive_sign             ""
+negative_sign             "-"
+int_frac_digits           2
+frac_digits               2
+p_cs_precedes             0
+p_sep_by_space            1
+n_cs_precedes             0
+n_sep_by_space            1
+p_sign_posn               1
+n_sign_posn               1
+END LC_MONETARY
+
+LC_NUMERIC
+copy "ru_RU"
+END LC_NUMERIC
+
+LC_TIME
+day     "<U0412><U0435><U0436><U0430><U043B><U0443><U043D>";/
+	"<U0412><U044B><U043B><U044C><U043B><U0443><U043D>";/
+	"<U0412><U043E><U0442><U043E><U0440><U043D><U0438><U043A>";/
+	"<U0428><U04E7><U0440><U043B><U0443><U043D>";/
+	"<U0427><U0435><U0442><U0432><U0435><U0440><U0433>";/
+	"<U041F><U0435><U043A><U043D><U0438><U0447><U0430>";/
+	"<U0421><U0443><U0431><U04E7><U0442><U0430>"
+abday   "<U0412><U0416>";/
+	"<U0412><U041B>";/
+	"<U0412><U0422>";/
+	"<U0428><U0420>";/
+	"<U0427><U0422>";/
+	"<U041F><U041A>";/
+	"<U0421><U0411>"
+alt_mon     "<U0422><U04E7><U0432><U0448><U04E7><U0440>";/
+	"<U0423><U0440><U0430><U0441><U044C><U04E7><U043C>";/
+	"<U0420><U0430><U043A><U0430><U0020><U0442><U002E>";/
+	"<U041A><U043E><U0441><U043C><U0443>";/
+	"<U041E><U0434><U0430><U002D><U043A><U043E><U0440><U0430>";/
+	"<U041B><U04E7><U0434><U0434><U0437><U0430><U002D><U043D><U002E>";/
+	"<U0421><U043E><U0440><U0430><U0020><U0442><U002E>";/
+	"<U041C><U043E><U0437><U0020><U0442><U002E>";/
+	"<U041A><U04E7><U0447><U0020><U0442><U002E>";/
+	"<U0419><U0438><U0440><U044B><U043C>";/
+	"<U0412><U04E7><U043B><U044C><U0433><U044B><U043C>";/
+	"<U04E6><U0448><U044B><U043C>"
+mon     "<U0442><U04E7><U0432><U0448><U04E7><U0440>";/
+	"<U0443><U0440><U0430><U0441><U044C><U04E7><U043C>";/
+	"<U0440><U0430><U043A><U0430><U0020><U0442><U002E>";/
+	"<U043A><U043E><U0441><U043C><U0443>";/
+	"<U043E><U0434><U0430><U002D><U043A><U043E><U0440><U0430>";/
+	"<U043B><U04E7><U0434><U0434><U0437><U0430><U002D><U043D><U002E>";/
+	"<U0441><U043E><U0440><U0430><U0020><U0442><U002E>";/
+	"<U043C><U043E><U0437><U0020><U0442><U002E>";/
+	"<U043A><U04E7><U0447><U0020><U0442><U002E>";/
+	"<U0439><U0438><U0440><U044B><U043C>";/
+	"<U0432><U04E7><U043B><U044C><U0433><U044B><U043C>";/
+	"<U04E7><U0448><U044B><U043C>"
+abmon   "<U0422><U0412><U0428>";/
+	"<U0423><U0420><U0421>";/
+	"<U0420><U041A><U0422>";/
+	"<U041A><U0421><U041C>";/
+	"<U041E><U0414><U041A>";/
+	"<U041B><U0414><U041D>";/
+	"<U0421><U0420><U0422>";/
+	"<U041C><U0417><U0422>";/
+	"<U041A><U0427><U0422>";/
+	"<U0419><U0420><U041C>";/
+	"<U0412><U041B><U0413>";/
+	"<U04E6><U0428><U041C>"
+d_t_fmt "%A, %Yʼ %B %-dʼ <U043B><U0443><U043D> %T"
+d_fmt     "%Y-%m-%d"
+t_fmt     "%T"
+am_pm     "";""
+t_fmt_ampm ""
+date_fmt       "%A, %Yʼ %B %-dʼ <U043B><U0443><U043D> %H:%M:%S %Z"
+week 7;19971130;1
+first_weekday 2
+END LC_TIME
+
+LC_PAPER
+copy "ru_RU"
+END LC_PAPER
+
+LC_TELEPHONE
+copy "ru_RU"
+END LC_TELEPHONE
+
+LC_MEASUREMENT
+copy "ru_RU"
+END LC_MEASUREMENT
+
+LC_NAME
+name_fmt    "%d%t%g%t%m%t%f"
+END LC_NAME
+
+LC_ADDRESS
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
+country_ab2 "RU"
+country_ab3 "RUS"
+country_num 643
+country_car    "RUS"
+% коми кыв
+lang_name    "<U043A><U043E><U043C><U0438><U0020><U043A><U044B><U0432>"
+lang_ab      "kv"
+lang_term    "kom"
+lang_lib     "kom"
+END LC_ADDRESS
