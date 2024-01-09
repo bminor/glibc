@@ -65,9 +65,6 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
   extern void _dl_runtime_profile (Elf32_Word) attribute_hidden;
   extern void _dl_runtime_resolve_shstk (Elf32_Word) attribute_hidden;
   extern void _dl_runtime_profile_shstk (Elf32_Word) attribute_hidden;
-  /* Check if SHSTK is enabled by kernel.  */
-  bool shstk_enabled
-    = (GL(dl_x86_feature_1) & GNU_PROPERTY_X86_FEATURE_1_SHSTK) != 0;
 
   if (l->l_info[DT_JMPREL] && lazy)
     {
@@ -94,9 +91,7 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
 	 end in this function.  */
       if (__glibc_unlikely (profile))
 	{
-	  got[2] = (shstk_enabled
-		    ? (Elf32_Addr) &_dl_runtime_profile_shstk
-		    : (Elf32_Addr) &_dl_runtime_profile);
+	  got[2] = (Elf32_Addr) &_dl_runtime_profile;
 
 	  if (GLRO(dl_profile) != NULL
 	      && _dl_name_match_p (GLRO(dl_profile), l))
@@ -107,9 +102,7 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
       else
 	/* This function will get called to fix up the GOT entry indicated by
 	   the offset on the stack, and then jump to the resolved address.  */
-	got[2] = (shstk_enabled
-		  ? (Elf32_Addr) &_dl_runtime_resolve_shstk
-		  : (Elf32_Addr) &_dl_runtime_resolve);
+	got[2] = (Elf32_Addr) &_dl_runtime_resolve;
     }
 
   return lazy;

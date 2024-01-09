@@ -19,6 +19,7 @@
 #include <config.h>
 #include <sysdep.h>
 #include <cpu-features-offsets.h>
+#include <features-offsets.h>
 #include <link-defines.h>
 #include <isa-level.h>
 

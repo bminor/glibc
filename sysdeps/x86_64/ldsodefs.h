@@ -1,6 +1,7 @@
-/* x86 CET tuning.
+/* Run-time dynamic linker data structures for loaded ELF shared objects.
+   x86-64 version.
+   Copyright (C) 2024 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Copyright (C) 2018-2023 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,26 +17,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _CET_CONTROL_H
-#define _CET_CONTROL_H
+#ifndef	_X86_64_LDSODEFS_H
+#define	_X86_64_LDSODEFS_H	1
 
-/* For each CET feature, IBT and SHSTK, valid control values.  */
-enum dl_x86_cet_control
-{
-  /* Enable CET features based on ELF property note.  */
-  cet_elf_property = 0,
-  /* Always enable CET features.  */
-  cet_always_on,
-  /* Always disable CET features.  */
-  cet_always_off,
-  /* Enable CET features permissively.  */
-  cet_permissive
-};
+#include <feature-control.h>
+#include_next <ldsodefs.h>
 
-struct dl_x86_feature_control
-{
-  enum dl_x86_cet_control ibt : 2;
-  enum dl_x86_cet_control shstk : 2;
-};
-
-#endif /* cet-control.h */
+#endif

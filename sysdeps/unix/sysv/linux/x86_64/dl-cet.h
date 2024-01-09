@@ -17,7 +17,7 @@
 
 #include <sys/prctl.h>
 #include <asm/prctl.h>
-#include <cpu-features-offsets.h>
+#include <features-offsets.h>
 
 static __always_inline int
 dl_cet_disable_cet (unsigned int cet_feature)
