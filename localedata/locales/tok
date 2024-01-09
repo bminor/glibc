@@ -119,8 +119,8 @@ week 7;19971130;1
 END LC_TIME
 
 LC_MESSAGES
-yesexpr "^[+1wW]"
-noexpr  "^[-0aA]"
+yesexpr "^[+1yYwW]"
+noexpr  "^[-0nNaA]"
 yesstr  "wile"
 nostr   "ala"
 END LC_MESSAGES
