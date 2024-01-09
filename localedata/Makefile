@@ -28,103 +28,110 @@ charmaps := $(wildcard charmaps/[A-I]*) $(wildcard charmaps/[J-Z]*)
 # List with all available character set descriptions.
 locales := $(wildcard locales/*)
 
-
 subdir-dirs = tests-mbwc
 vpath %.c tests-mbwc
 vpath %.h tests-mbwc
 
-
-test-srcs := collate-test xfrm-test tst-fmon tst-rpmatch tst-trans \
-	     tst-ctype tst-langinfo-newlocale tst-langinfo-setlocale \
-	     tst-langinfo-newlocale-static tst-langinfo-setlocale-static \
-	     tst-numeric
+test-srcs := \
+  collate-test \
+  tst-ctype \
+  tst-fmon \
+  tst-langinfo-newlocale \
+  tst-langinfo-newlocale-static \
+  tst-langinfo-setlocale \
+  tst-langinfo-setlocale-static \
+  tst-numeric \
+  tst-rpmatch \
+  tst-trans \
+  xfrm-test \
+  # test-srcs
 # List of test input files (list sorted alphabetically):
 test-input := \
-	am_ET.UTF-8 \
-	az_AZ.UTF-8 \
-	be_BY.UTF-8 \
-	ber_DZ.UTF-8 \
-	ber_MA.UTF-8 \
-	bg_BG.UTF-8 \
-	br_FR.UTF-8 \
-	bs_BA.UTF-8 \
-	C.UTF-8 \
-	ckb_IQ.UTF-8 \
-	cmn_TW.UTF-8 \
-	crh_UA.UTF-8 \
-	cs_CZ.UTF-8 \
-	csb_PL.UTF-8 \
-	cv_RU.UTF-8 \
-	cy_GB.UTF-8 \
-	da_DK.ISO-8859-1 \
-	de_DE.ISO-8859-1 \
-	dsb_DE.UTF-8 \
-	dz_BT.UTF-8 \
-	en_US.ISO-8859-1 \
-	en_US.UTF-8 \
-	eo.UTF-8 \
-	es_ES.UTF-8 \
-	et_EE.UTF-8 \
-	fa_IR.UTF-8 \
-	fi_FI.UTF-8 \
-	fil_PH.UTF-8 \
-	fr_CA.UTF-8 \
-	fr_FR.UTF-8 \
-	fur_IT.UTF-8 \
-	gez_ER.UTF-8@abegede \
-	ha_NG.UTF-8 \
-	hr_HR.ISO-8859-2 \
-	hr_HR.UTF-8 \
-	hsb_DE.UTF-8 \
-	hu_HU.UTF-8 \
-	ig_NG.UTF-8 \
-	ik_CA.UTF-8 \
-	is_IS.UTF-8 \
-	kk_KZ.UTF-8 \
-	ku_TR.UTF-8 \
-	ky_KG.UTF-8 \
-	ln_CD.UTF-8 \
-	lt_LT.UTF-8 \
-	lv_LV.UTF-8 \
-	mi_NZ.UTF-8 \
-	ml_IN.UTF-8 \
-	mn_MN.UTF-8 \
-	mr_IN.UTF-8 \
-	mt_MT.UTF-8 \
-	nan_TW.UTF-8@latin \
-	nb_NO.UTF-8 \
-	om_KE.UTF-8 \
-	or_IN.UTF-8 \
-	os_RU.UTF-8 \
-	pl_PL.UTF-8 \
-	ps_AF.UTF-8 \
-	rif_MA.UTF-8 \
-	ro_RO.UTF-8 \
-	ru_RU.UTF-8 \
-	sah_RU.UTF-8 \
-	sc_IT.UTF-8 \
-	se_NO.UTF-8 \
-	si_LK.UTF-8 \
-	sq_AL.UTF-8 \
-	sr_RS.UTF-8 \
-	sv_SE.ISO-8859-1 \
-	sv_SE.UTF-8 \
-	syr.UTF-8 \
-	szl_PL.UTF-8 \
-	tg_TJ.UTF-8 \
-	th_TH.UTF-8 \
-	tk_TM.UTF-8 \
-	tr_TR.UTF-8 \
-	tt_RU.UTF-8 \
-	tt_RU.UTF-8@iqtelif \
-	ug_CN.UTF-8 \
-	uk_UA.UTF-8 \
-	uz_UZ.UTF-8 \
-	vi_VN.UTF-8 \
-	yi_US.UTF-8 \
-	yo_NG.UTF-8 \
-	zh_CN.UTF-8 \
-	$(NULL)
+  C.UTF-8 \
+  am_ET.UTF-8 \
+  az_AZ.UTF-8 \
+  be_BY.UTF-8 \
+  ber_DZ.UTF-8 \
+  ber_MA.UTF-8 \
+  bg_BG.UTF-8 \
+  br_FR.UTF-8 \
+  bs_BA.UTF-8 \
+  ckb_IQ.UTF-8 \
+  cmn_TW.UTF-8 \
+  crh_UA.UTF-8 \
+  cs_CZ.UTF-8 \
+  csb_PL.UTF-8 \
+  cv_RU.UTF-8 \
+  cy_GB.UTF-8 \
+  da_DK.ISO-8859-1 \
+  de_DE.ISO-8859-1 \
+  dsb_DE.UTF-8 \
+  dz_BT.UTF-8 \
+  en_US.ISO-8859-1 \
+  en_US.UTF-8 \
+  eo.UTF-8 \
+  es_ES.UTF-8 \
+  et_EE.UTF-8 \
+  fa_IR.UTF-8 \
+  fi_FI.UTF-8 \
+  fil_PH.UTF-8 \
+  fr_CA.UTF-8 \
+  fr_FR.UTF-8 \
+  fur_IT.UTF-8 \
+  gez_ER.UTF-8@abegede \
+  ha_NG.UTF-8 \
+  hr_HR.ISO-8859-2 \
+  hr_HR.UTF-8 \
+  hsb_DE.UTF-8 \
+  hu_HU.UTF-8 \
+  ig_NG.UTF-8 \
+  ik_CA.UTF-8 \
+  is_IS.UTF-8 \
+  kk_KZ.UTF-8 \
+  ku_TR.UTF-8 \
+  ky_KG.UTF-8 \
+  ln_CD.UTF-8 \
+  lt_LT.UTF-8 \
+  lv_LV.UTF-8 \
+  mi_NZ.UTF-8 \
+  ml_IN.UTF-8 \
+  mn_MN.UTF-8 \
+  mr_IN.UTF-8 \
+  mt_MT.UTF-8 \
+  nan_TW.UTF-8@latin \
+  nb_NO.UTF-8 \
+  om_KE.UTF-8 \
+  or_IN.UTF-8 \
+  os_RU.UTF-8 \
+  pl_PL.UTF-8 \
+  ps_AF.UTF-8 \
+  rif_MA.UTF-8 \
+  ro_RO.UTF-8 \
+  ru_RU.UTF-8 \
+  sah_RU.UTF-8 \
+  sc_IT.UTF-8 \
+  se_NO.UTF-8 \
+  si_LK.UTF-8 \
+  sq_AL.UTF-8 \
+  sr_RS.UTF-8 \
+  sv_SE.ISO-8859-1 \
+  sv_SE.UTF-8 \
+  syr.UTF-8 \
+  szl_PL.UTF-8 \
+  tg_TJ.UTF-8 \
+  th_TH.UTF-8 \
+  tk_TM.UTF-8 \
+  tr_TR.UTF-8 \
+  tt_RU.UTF-8 \
+  tt_RU.UTF-8@iqtelif \
+  ug_CN.UTF-8 \
+  uk_UA.UTF-8 \
+  uz_UZ.UTF-8 \
+  vi_VN.UTF-8 \
+  yi_US.UTF-8 \
+  yo_NG.UTF-8 \
+  zh_CN.UTF-8 \
+  # test-input
 
 test-input-data = $(addsuffix .in, $(test-input))
 test-output := $(foreach s, .out .xout, \
@@ -135,29 +142,92 @@ ld-test-srcs := $(addprefix tests/,$(addsuffix .cm,$(ld-test-names)) \
 				   $(addsuffix .ds,test5 test6) \
 				   test6.c trans.def)
 
-fmon-tests = n01y12 n02n40 n10y31 n11y41 n12y11 n20n32 n30y20 n41n00 \
-	     y01y10 y02n22 y22n42 y30y21 y32n31 y40y00 y42n21
+fmon-tests = \
+  n01y12 \
+  n02n40 \
+  n10y31 \
+  n11y41 \
+  n12y11 \
+  n20n32 \
+  n30y20 \
+  n41n00 \
+  y01y10 \
+  y02n22 \
+  y22n42 \
+  y30y21 \
+  y32n31 \
+  y40y00 \
+  y42n21 \
+  # fmon-tests
 
-generated += $(test-input) $(test-output) sort-test.out tst-locale.out \
-	     tst-leaks.mtrace mtrace-tst-leaks.out
-generated-dirs += $(ld-test-names) tt_TT de_DE.437			\
-		  $(addprefix tstfmon_,$(fmon-tests))			\
+generated += \
+  $(test-input) \
+  $(test-output) \
+  mtrace-tst-leaks.out \
+  sort-test.out \
+  tst-leaks.mtrace \
+  tst-locale.out \
+  # generated
+generated-dirs += \
+  $(addprefix tstfmon_,$(fmon-tests)) \
+  $(ld-test-names) \
+  de_DE.437 \
+  tt_TT \
+  # generated-dirs
 
 ifeq ($(run-built-tests),yes)
-locale_test_suite := tst_iswalnum tst_iswalpha tst_iswcntrl            \
-		     tst_iswctype tst_iswdigit tst_iswgraph            \
-		     tst_iswlower tst_iswprint tst_iswpunct            \
-		     tst_iswspace tst_iswupper tst_iswxdigit tst_mblen \
-		     tst_mbrlen tst_mbrtowc tst_mbsrtowcs tst_mbstowcs \
-		     tst_mbtowc tst_strcoll tst_strfmon tst_strxfrm    \
-		     tst_swscanf tst_towctrans tst_towlower            \
-		     tst_towupper tst_wcrtomb tst_wcscat tst_wcschr    \
-		     tst_wcscmp tst_wcscoll tst_wcscpy tst_wcscspn     \
-		     tst_wcslen tst_wcsncat tst_wcsncmp tst_wcsncpy    \
-		     tst_wcspbrk tst_wcsrtombs tst_wcsspn tst_wcsstr   \
-		     tst_wcstod tst_wcstok tst_wcstombs tst_wcswidth   \
-		     tst_wcsxfrm tst_wctob tst_wctomb tst_wctrans      \
-		     tst_wctype tst_wcwidth
+locale_test_suite := \
+  tst_iswalnum \
+  tst_iswalpha \
+  tst_iswcntrl \
+  tst_iswctype \
+  tst_iswdigit \
+  tst_iswgraph \
+  tst_iswlower \
+  tst_iswprint \
+  tst_iswpunct \
+  tst_iswspace \
+  tst_iswupper \
+  tst_iswxdigit \
+  tst_mblen \
+  tst_mbrlen \
+  tst_mbrtowc \
+  tst_mbsrtowcs \
+  tst_mbstowcs \
+  tst_mbtowc \
+  tst_strcoll \
+  tst_strfmon \
+  tst_strxfrm \
+  tst_swscanf \
+  tst_towctrans \
+  tst_towlower \
+  tst_towupper \
+  tst_wcrtomb \
+  tst_wcscat \
+  tst_wcschr \
+  tst_wcscmp \
+  tst_wcscoll \
+  tst_wcscpy \
+  tst_wcscspn \
+  tst_wcslen \
+  tst_wcsncat \
+  tst_wcsncmp \
+  tst_wcsncpy \
+  tst_wcspbrk \
+  tst_wcsrtombs \
+  tst_wcsspn \
+  tst_wcsstr \
+  tst_wcstod \
+  tst_wcstok \
+  tst_wcstombs \
+  tst_wcswidth \
+  tst_wcsxfrm \
+  tst_wctob \
+  tst_wctomb \
+  tst_wctrans \
+  tst_wctype \
+  tst_wcwidth \
+  # locale_test_suite
 
 tests = \
   $(locale_test_suite) \
@@ -194,7 +264,8 @@ endif
 endif
 endif
 tests-container = \
-			tst-localedef-hardlinks
+  tst-localedef-hardlinks \
+  # tests-container
 
 # Files to install.
 ifeq ($(INSTALL_UNCOMPRESSED),yes)
@@ -211,116 +282,124 @@ endif
 
 tests: $(objdir)/iconvdata/gconv-modules
 
-tests-static += tst-langinfo-newlocale-static tst-langinfo-setlocale-static
+tests-static += \
+  tst-langinfo-newlocale-static \
+  tst-langinfo-setlocale-static \
+  # tests-static
 
 ifeq ($(run-built-tests),yes)
-tests-special += $(objpfx)sort-test.out $(objpfx)tst-fmon.out \
-		 $(objpfx)tst-locale.out $(objpfx)tst-rpmatch.out \
-		 $(objpfx)tst-trans.out $(objpfx)tst-ctype.out \
-		 $(objpfx)tst-langinfo-newlocale.out \
-		 $(objpfx)tst-langinfo-setlocale.out \
-		 $(objpfx)tst-langinfo-newlocale-static.out \
-		 $(objpfx)tst-langinfo-setlocale-static.out \
-		 $(objpfx)tst-numeric.out
+tests-special += \
+  $(objpfx)sort-test.out \
+  $(objpfx)tst-ctype.out \
+  $(objpfx)tst-fmon.out \
+  $(objpfx)tst-langinfo-newlocale-static.out \
+  $(objpfx)tst-langinfo-newlocale.out \
+  $(objpfx)tst-langinfo-setlocale-static.out \
+  $(objpfx)tst-langinfo-setlocale.out \
+  $(objpfx)tst-locale.out \
+  $(objpfx)tst-numeric.out \
+  $(objpfx)tst-rpmatch.out \
+  $(objpfx)tst-trans.out \
+  # tests-special
 # We have to generate locales (list sorted alphabetically)
 LOCALES := \
-	am_ET.UTF-8 \
-	az_AZ.UTF-8 \
-	be_BY.UTF-8 \
-	ber_DZ.UTF-8 \
-	ber_MA.UTF-8 \
-	bg_BG.UTF-8 \
-	br_FR.UTF-8 \
-	bs_BA.UTF-8 \
-	C.UTF-8 \
-	ckb_IQ.UTF-8 \
-	cmn_TW.UTF-8 \
-	crh_UA.UTF-8 \
-	cs_CZ.UTF-8 \
-	csb_PL.UTF-8 \
-	cv_RU.UTF-8 \
-	cy_GB.UTF-8 \
-	da_DK.ISO-8859-1 \
-	de_DE.ISO-8859-1 \
-	de_DE.UTF-8 \
-	dsb_DE.UTF-8 \
-	dz_BT.UTF-8 \
-	en_GB.UTF-8 \
-	en_US.ANSI_X3.4-1968 \
-	en_US.ISO-8859-1\
-	en_US.UTF-8 \
-	eo.UTF-8 \
-	es_ES.UTF-8 \
-	et_EE.UTF-8 \
-	fa_IR.UTF-8 \
-	fi_FI.UTF-8 \
-	fil_PH.UTF-8 \
-	fr_CA.UTF-8 \
-	fr_FR.ISO-8859-1 \
-	fr_FR.UTF-8 \
-	fur_IT.UTF-8 \
-	gez_ER.UTF-8@abegede \
-	ha_NG.UTF-8 \
-	hr_HR.ISO-8859-2 \
-	hr_HR.UTF-8 \
-	hsb_DE.UTF-8 \
-	hu_HU.UTF-8 \
-	ig_NG.UTF-8 \
-	ik_CA.UTF-8 \
-	is_IS.UTF-8 \
-	ja_JP.EUC-JP \
-	ja_JP.SJIS \
-	ja_JP.UTF-8 \
-	kk_KZ.UTF-8 \
-	ku_TR.UTF-8 \
-	ky_KG.UTF-8 \
-	ln_CD.UTF-8 \
-	lt_LT.UTF-8 \
-	lv_LV.UTF-8 \
-	mi_NZ.UTF-8 \
-	ml_IN.UTF-8 \
-	mn_MN.UTF-8 \
-	mr_IN.UTF-8 \
-	mt_MT.UTF-8 \
-	nan_TW.UTF-8@latin \
-	nb_NO.ISO-8859-1 \
-	nb_NO.UTF-8 \
-	nl_NL.UTF-8 \
-	nn_NO.ISO-8859-1 \
-	om_KE.UTF-8 \
-	or_IN.UTF-8 \
-	os_RU.UTF-8 \
-	pl_PL.UTF-8 \
-	ps_AF.UTF-8 \
-	rif_MA.UTF-8 \
-	ro_RO.UTF-8 \
-	ru_RU.UTF-8 \
-	sah_RU.UTF-8 \
-	sc_IT.UTF-8 \
-	se_NO.UTF-8 \
-	si_LK.UTF-8 \
-	sq_AL.UTF-8 \
-	sr_RS.UTF-8 \
-	sv_SE.ISO-8859-1 \
-	sv_SE.UTF-8 \
-	syr.UTF-8 \
-	szl_PL.UTF-8 \
-	tg_TJ.UTF-8 \
-	th_TH.UTF-8 \
-	tk_TM.UTF-8 \
-	tr_TR.ISO-8859-9 \
-	tr_TR.UTF-8 \
-	tt_RU.UTF-8 \
-	tt_RU.UTF-8@iqtelif \
-	ug_CN.UTF-8 \
-	uk_UA.UTF-8 \
-	uz_UZ.UTF-8 \
-	vi_VN.UTF-8 \
-	yi_US.UTF-8 \
-	yo_NG.UTF-8 \
-	zh_CN.UTF-8 \
-	zh_TW.EUC-TW \
-	$(NULL)
+  C.UTF-8 \
+  am_ET.UTF-8 \
+  az_AZ.UTF-8 \
+  be_BY.UTF-8 \
+  ber_DZ.UTF-8 \
+  ber_MA.UTF-8 \
+  bg_BG.UTF-8 \
+  br_FR.UTF-8 \
+  bs_BA.UTF-8 \
+  ckb_IQ.UTF-8 \
+  cmn_TW.UTF-8 \
+  crh_UA.UTF-8 \
+  cs_CZ.UTF-8 \
+  csb_PL.UTF-8 \
+  cv_RU.UTF-8 \
+  cy_GB.UTF-8 \
+  da_DK.ISO-8859-1 \
+  de_DE.ISO-8859-1 \
+  de_DE.UTF-8 \
+  dsb_DE.UTF-8 \
+  dz_BT.UTF-8 \
+  en_GB.UTF-8 \
+  en_US.ANSI_X3.4-1968 \
+  en_US.ISO-8859-1\
+  en_US.UTF-8 \
+  eo.UTF-8 \
+  es_ES.UTF-8 \
+  et_EE.UTF-8 \
+  fa_IR.UTF-8 \
+  fi_FI.UTF-8 \
+  fil_PH.UTF-8 \
+  fr_CA.UTF-8 \
+  fr_FR.ISO-8859-1 \
+  fr_FR.UTF-8 \
+  fur_IT.UTF-8 \
+  gez_ER.UTF-8@abegede \
+  ha_NG.UTF-8 \
+  hr_HR.ISO-8859-2 \
+  hr_HR.UTF-8 \
+  hsb_DE.UTF-8 \
+  hu_HU.UTF-8 \
+  ig_NG.UTF-8 \
+  ik_CA.UTF-8 \
+  is_IS.UTF-8 \
+  ja_JP.EUC-JP \
+  ja_JP.SJIS \
+  ja_JP.UTF-8 \
+  kk_KZ.UTF-8 \
+  ku_TR.UTF-8 \
+  ky_KG.UTF-8 \
+  ln_CD.UTF-8 \
+  lt_LT.UTF-8 \
+  lv_LV.UTF-8 \
+  mi_NZ.UTF-8 \
+  ml_IN.UTF-8 \
+  mn_MN.UTF-8 \
+  mr_IN.UTF-8 \
+  mt_MT.UTF-8 \
+  nan_TW.UTF-8@latin \
+  nb_NO.ISO-8859-1 \
+  nb_NO.UTF-8 \
+  nl_NL.UTF-8 \
+  nn_NO.ISO-8859-1 \
+  om_KE.UTF-8 \
+  or_IN.UTF-8 \
+  os_RU.UTF-8 \
+  pl_PL.UTF-8 \
+  ps_AF.UTF-8 \
+  rif_MA.UTF-8 \
+  ro_RO.UTF-8 \
+  ru_RU.UTF-8 \
+  sah_RU.UTF-8 \
+  sc_IT.UTF-8 \
+  se_NO.UTF-8 \
+  si_LK.UTF-8 \
+  sq_AL.UTF-8 \
+  sr_RS.UTF-8 \
+  sv_SE.ISO-8859-1 \
+  sv_SE.UTF-8 \
+  syr.UTF-8 \
+  szl_PL.UTF-8 \
+  tg_TJ.UTF-8 \
+  th_TH.UTF-8 \
+  tk_TM.UTF-8 \
+  tr_TR.ISO-8859-9 \
+  tr_TR.UTF-8 \
+  tt_RU.UTF-8 \
+  tt_RU.UTF-8@iqtelif \
+  ug_CN.UTF-8 \
+  uk_UA.UTF-8 \
+  uz_UZ.UTF-8 \
+  vi_VN.UTF-8 \
+  yi_US.UTF-8 \
+  yo_NG.UTF-8 \
+  zh_CN.UTF-8 \
+  zh_TW.EUC-TW \
+  # LOCALES
 
 include ../gen-locales.mk
 
