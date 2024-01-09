@@ -1122,8 +1122,6 @@ $(inst_includedir)/%.h: $(common-objpfx)%.h $(+force)
 	$(do-install)
 $(inst_includedir)/%.h: %.h $(+force)
 	$(do-install)
-$(inst_includedir)/%.h: $(..)include/%.h $(+force)
-	$(do-install)
 headers-nonh := $(filter-out %.h,$(headers))
 ifdef headers-nonh
 $(addprefix $(inst_includedir)/,$(headers-nonh)): $(inst_includedir)/%: \
