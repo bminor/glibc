@@ -442,7 +442,7 @@ $(cet-built-dso:=.note): %.note: %
 	mv -f $@T $@
 common-generated += $(cet-built-dso:$(common-objpfx)%=%.note)
 
-$(objpfx)check-cet.out: $(..)sysdeps/x86/check-cet.awk \
+$(objpfx)check-cet.out: $(..)sysdeps/x86_64/check-cet.awk \
 			$(cet-built-dso:=.note)
 	LC_ALL=C $(AWK) -f $^ > $@; \
 	$(evaluate-test)
