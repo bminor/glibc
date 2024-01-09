@@ -2,6 +2,4 @@
 
 #include <ldsodefs.h>
 
-RTLD_GLOBAL_RO_DL_X86_CPU_FEATURES_OFFSET offsetof (struct rtld_global_ro, _dl_x86_cpu_features)
 XSAVE_STATE_SIZE_OFFSET	offsetof (struct cpu_features, xsave_state_size)
-RTLD_GLOBAL_DL_X86_FEATURE_1_OFFSET offsetof (struct rtld_global, _dl_x86_feature_1)

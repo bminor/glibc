@@ -1,4 +1,4 @@
-/* x86 CET tuning.
+/* x86-64 feature tuning.
    This file is part of the GNU C Library.
    Copyright (C) 2018-2024 Free Software Foundation, Inc.
 
@@ -16,8 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _CET_CONTROL_H
-#define _CET_CONTROL_H
+#ifndef _X86_64_FEATURE_CONTROL_H
+#define _X86_64_FEATURE_CONTROL_H
 
 /* For each CET feature, IBT and SHSTK, valid control values.  */
 enum dl_x86_cet_control
@@ -50,4 +50,4 @@ struct dl_x86_feature_control
   enum dl_plt_rewrite_control plt_rewrite : 2;
 };
 
-#endif /* cet-control.h */
+#endif /* feature-control.h */

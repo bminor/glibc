@@ -27,7 +27,7 @@
 extern void TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *)
   attribute_hidden;
 
-#ifdef SHARED
+#if defined SHARED && defined __x86_64__
 static void
 TUNABLE_CALLBACK (set_plt_rewrite) (tunable_val_t *valp)
 {
@@ -1125,8 +1125,10 @@ no_cpuid:
 #endif
 
 #ifdef SHARED
+# ifdef __x86_64__
   TUNABLE_GET (plt_rewrite, tunable_val_t *,
 	       TUNABLE_CALLBACK (set_plt_rewrite));
+# endif
 #else
   /* NB: In libc.a, call init_cacheinfo.  */
   init_cacheinfo ();

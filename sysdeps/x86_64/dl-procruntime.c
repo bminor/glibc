@@ -1,4 +1,4 @@
-/* Data for processor runtime information.  x86 version.
+/* Data for processor runtime information.  x86-64 version.
    Copyright (C) 2018-2024 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
