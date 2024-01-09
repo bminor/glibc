@@ -1,4 +1,4 @@
-/* X86 definitions for libc main startup.
+/* x86-64 definitions for libc main startup.
    Copyright (C) 2018-2024 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
