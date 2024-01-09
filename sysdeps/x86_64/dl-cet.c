@@ -1,4 +1,4 @@
-/* x86 CET initializers function.
+/* x86-64 CET initializers function.
    Copyright (C) 2018-2024 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
