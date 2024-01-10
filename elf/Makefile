@@ -3022,6 +3022,8 @@ $(objpfx)tst-env-setuid: $(objpfx)tst-sonamemove-runmod2.so
 $(objpfx)tst-env-setuid-static.out: $(objpfx)tst-sonamemove-runmod1.so
 
 # The object tst-nodeps1-mod.so has no explicit dependencies on libc.so.
+# We do not use $(link-test-modules-rpath-link) since the object has no
+# DT_NEEDED.
 $(objpfx)tst-nodeps1-mod.so: $(objpfx)tst-nodeps1-mod.os
 	$(LINK.o) -nostartfiles -nostdlib -shared -o $@ $^
 tst-nodeps1.so-no-z-defs = yes
@@ -3032,7 +3034,8 @@ $(objpfx)tst-nodeps1: $(objpfx)tst-nodeps1-mod.so
 # with the IFUNC resolver reference.
 $(objpfx)tst-nodeps2-mod.so: $(common-objpfx)libc.so \
   $(objpfx)tst-nodeps1-mod.so $(objpfx)tst-nodeps2-mod.os
-	$(LINK.o) -Wl,--no-as-needed -nostartfiles -nostdlib -shared -o $@ $^
+	$(LINK.o) -Wl,--no-as-needed -nostartfiles -nostdlib -shared -o $@ $^ \
+	$(link-test-modules-rpath-link)
 $(objpfx)tst-nodeps2.out: \
   $(objpfx)tst-nodeps1-mod.so $(objpfx)tst-nodeps2-mod.so
 
