@@ -170,7 +170,7 @@ class Context(object):
             if l.startswith(starttext):
                 l = l[len(starttext):]
                 l = l.rstrip('"\n')
-                m = re.fullmatch('([0-9]+)\.([0-9]+)[.0-9]*', l)
+                m = re.fullmatch(r'([0-9]+)\.([0-9]+)[.0-9]*', l)
                 return '%s.%s' % m.group(1, 2)
         print('error: could not determine glibc version')
         exit(1)
