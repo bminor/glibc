@@ -54,6 +54,14 @@ dl_cet_get_cet_status (void)
   return status;
 }
 
+static __always_inline bool
+dl_cet_ibt_enabled (void)
+{
+  unsigned int feature_1 = THREAD_GETMEM (THREAD_SELF,
+					  header.feature_1);
+  return (feature_1 & GNU_PROPERTY_X86_FEATURE_1_IBT) != 0;
+}
+
 /* Enable shadow stack with a macro to avoid shadow stack underflow.  */
 #define ENABLE_X86_CET(cet_feature)				\
   if ((cet_feature & GNU_PROPERTY_X86_FEATURE_1_SHSTK))		\

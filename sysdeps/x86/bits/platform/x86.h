@@ -337,11 +337,3 @@ enum
   x86_cpu_AVX10_YMM = x86_cpu_index_24_ecx_0_ebx + 17,
   x86_cpu_AVX10_ZMM = x86_cpu_index_24_ecx_0_ebx + 18,
 };
-
-/* Bits in the feature_1 field in TCB.  */
-
-enum
-{
-  x86_feature_1_ibt		= 1U << 0,
-  x86_feature_1_shstk		= 1U << 1
-};

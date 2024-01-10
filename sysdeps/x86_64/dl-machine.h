@@ -587,10 +587,11 @@ x86_64_rewrite_plt (struct link_map *map, ElfW(Addr) plt_rewrite)
   const ElfW(Rela) *reloc = (const void *) start;
   const ElfW(Rela) *reloc_end = (const void *) (start + size);
 
-  unsigned int feature_1 = THREAD_GETMEM (THREAD_SELF,
-					  header.feature_1);
-  bool ibt_enabled_p
-    = (feature_1 & GNU_PROPERTY_X86_FEATURE_1_IBT) != 0;
+# ifdef __CET__
+  bool ibt_enabled_p = dl_cet_ibt_enabled ();
+# else
+  bool ibt_enabled_p = false;
+# endif
 
   if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_FILES))
     _dl_debug_printf ("\nchanging PLT in '%s' to direct branch\n",
