@@ -32,6 +32,11 @@ fail (struct link_map *l, const char *program)
 static void
 check_gcs (struct link_map *l, const char *program)
 {
+#ifdef SHARED
+  /* Ignore GCS marking on ld.so: its properties are not processed.  */
+  if (l->l_real == &GL(dl_rtld_map))
+    return;
+#endif
   if (!l->l_mach.gcs)
     {
       if (GLRO(dl_aarch64_gcs_policy) == 2 || !program)
