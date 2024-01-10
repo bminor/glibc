@@ -22,6 +22,7 @@
 #include <features.h>
 #include <stdbool.h>
 #include <bits/platform/x86.h>
+#include <bits/platform/features.h>
 
 __BEGIN_DECLS
 
@@ -46,22 +47,8 @@ static __inline__ _Bool
 x86_cpu_active (unsigned int __index)
 {
   if (__index == x86_cpu_IBT || __index == x86_cpu_SHSTK)
-    {
-#ifdef __x86_64__
-      unsigned int __feature_1;
-# ifdef __LP64__
-      __asm__ ("mov %%fs:72, %0" : "=r" (__feature_1));
-# else
-      __asm__ ("mov %%fs:40, %0" : "=r" (__feature_1));
-# endif
-      if (__index == x86_cpu_IBT)
-	return __feature_1 & x86_feature_1_ibt;
-      else
-	return __feature_1 & x86_feature_1_shstk;
-#else
-      return false;
-#endif
-    }
+    return x86_cpu_cet_active (__index);
+
   const struct cpuid_feature *__ptr = __x86_get_cpuid_feature_leaf
     (__index / (8 * sizeof (unsigned int) * 4));
   unsigned int __reg

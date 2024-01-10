@@ -1,5 +1,6 @@
-/* Get CPUID feature leaf.
-   Copyright (C) 2021-2023 Free Software Foundation, Inc.
+/* Inline functions for x86 CPU features.
+   This file is part of the GNU C Library.
+   Copyright (C) 2024 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -15,17 +16,12 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <assert.h>
-#include <tcb-offsets.h>
-#include <ldsodefs.h>
+#ifndef _SYS_PLATFORM_X86_H
+# error "Never include <bits/platform/features.h> directly; use <sys/platform/x86.h> instead."
+#endif
 
-const struct cpuid_feature *
-__x86_get_cpuid_feature_leaf (unsigned int leaf)
+static __inline__ _Bool
+x86_cpu_cet_active (unsigned int __index)
 {
-  static const struct cpuid_feature feature = {};
-  if (leaf < CPUID_INDEX_MAX)
-    return ((const struct cpuid_feature *)
-	    &GLRO(dl_x86_cpu_features).features[leaf]);
-  else
-    return &feature;
+  return false;
 }

@@ -1,5 +1,5 @@
-/* Get CPUID feature leaf.
-   Copyright (C) 2021-2023 Free Software Foundation, Inc.
+/* Get CPUID feature leaf.  Linux/x86-64 version.
+   Copyright (C) 2024 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -15,17 +15,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <assert.h>
-#include <tcb-offsets.h>
-#include <ldsodefs.h>
+#include <sysdeps/x86/get-cpuid-feature-leaf.c>
 
-const struct cpuid_feature *
-__x86_get_cpuid_feature_leaf (unsigned int leaf)
-{
-  static const struct cpuid_feature feature = {};
-  if (leaf < CPUID_INDEX_MAX)
-    return ((const struct cpuid_feature *)
-	    &GLRO(dl_x86_cpu_features).features[leaf]);
-  else
-    return &feature;
-}
+#ifdef __LP64__
+_Static_assert (FEATURE_1_OFFSET == 72, "FEATURE_1_OFFSET != 72");
+#else
+_Static_assert (FEATURE_1_OFFSET == 40, "FEATURE_1_OFFSET != 40");
+#endif
