@@ -563,7 +563,7 @@ class Context(object):
                 print(config.name, config.compiler.name)
             return
         self.clear_last_build_state(action)
-        build_time = datetime.datetime.utcnow()
+        build_time = datetime.datetime.now(datetime.timezone.utc)
         if action == 'host-libraries':
             build_components = ('gmp', 'mpfr', 'mpc')
             old_components = ()
