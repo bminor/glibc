@@ -53,6 +53,11 @@ unsupported (void)
 static bool
 check_gcs (struct link_map *l, const char *program, bool enforced)
 {
+#ifdef SHARED
+  /* Ignore GCS marking on ld.so: its properties are not processed.  */
+  if (is_rtld_link_map (l->l_real))
+    return true;
+#endif
   /* Binary is marked, all good.  */
   if (l->l_mach.gcs)
     return true;
