@@ -892,7 +892,6 @@ translit_end
 %
 END LC_CTYPE
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %  Ethiopia Specifc and Shared Data:
@@ -900,29 +899,53 @@ END LC_CTYPE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 LC_MEASUREMENT
-copy "ti_ET"
+copy "i18n"
 END LC_MEASUREMENT
 
-
 LC_MONETARY
-copy "ti_ET"
+%
+int_curr_symbol       "ETB "
+currency_symbol       "Br"
+mon_decimal_point     "."
+mon_thousands_sep     ","
+mon_grouping          3;3
+positive_sign         ""
+negative_sign         "-"
+int_frac_digits       2
+frac_digits           2
+p_cs_precedes         1
+p_sep_by_space        0
+n_cs_precedes         1
+n_sep_by_space        0
+p_sign_posn           1
+n_sign_posn           1
+%
 END LC_MONETARY
 
-
 LC_NUMERIC
-copy "ti_ET"
+%
+% This is the POSIX Locale definition for the LC_NUMERIC category.
+%
+decimal_point          "."
+thousands_sep          ","
+grouping               3;3
+%
 END LC_NUMERIC
 
-
 LC_PAPER
-copy "ti_ET"
+copy "i18n"
 END LC_PAPER
 
-
 LC_TELEPHONE
-copy "ti_ET"
+%
+% This is the ISO_IEC TR14652 Locale definition for the LC_TELEPHONE category.
+%
+tel_dom_fmt    "%a-%l"
+tel_int_fmt    "%c-%a-%l"
+int_prefix     "251"
+int_select     "00"
+%
 END LC_TELEPHONE
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %

@@ -42,7 +42,7 @@ END LC_IDENTIFICATION
 
 
 LC_CTYPE
-copy "en_GB"
+copy "en_US"
 END LC_CTYPE
 
 LC_COLLATE
@@ -146,7 +146,7 @@ END LC_MESSAGES
 
 
 LC_PAPER
-copy "tl_PH"
+copy "en_US"
 END LC_PAPER
 
 
@@ -191,5 +191,5 @@ END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-copy "tl_PH"
+copy "i18n"
 END LC_MEASUREMENT

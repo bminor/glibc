@@ -45,7 +45,7 @@ category "i18n:2012";LC_MONETARY
 END LC_IDENTIFICATION
 
 LC_CTYPE
-copy "tl_PH"
+copy "en_US"
 END LC_CTYPE
 
 LC_COLLATE
@@ -109,7 +109,7 @@ n_sign_posn             1
 END LC_MONETARY
 
 LC_NUMERIC
-copy "tl_PH"
+copy "en_US"
 END LC_NUMERIC
 
 LC_TIME
@@ -160,11 +160,11 @@ nostr	"hindi"
 END LC_MESSAGES
 
 LC_PAPER
-copy "tl_PH"
+copy "en_US"
 END LC_PAPER
 
 LC_MEASUREMENT
-copy "tl_PH"
+copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME

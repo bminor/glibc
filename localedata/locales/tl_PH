@@ -45,7 +45,7 @@ category "i18n:2012";LC_MONETARY
 END LC_IDENTIFICATION
 
 LC_CTYPE
-copy "en_DK"
+copy "en_US"
 END LC_CTYPE
 
 LC_COLLATE
