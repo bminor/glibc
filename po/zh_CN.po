@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.38.9000\n"
 "POT-Creation-Date: 2024-01-01 21:05+0100\n"
-"PO-Revision-Date: 2024-01-05 21:57+0800\n"
+"PO-Revision-Date: 2024-01-10 20:36+0800\n"
 "Last-Translator: Wenbin Lv <wenbin816@gmail.com>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -40,7 +40,7 @@ msgstr "%.*s: 未知的 ARGP_HELP_FMT 参数"
 #: argp/argp-help.c:252
 #, c-format
 msgid "Garbage in ARGP_HELP_FMT: %s"
-msgstr "ARGP_HELP_FMT 中有垃圾：%s"
+msgstr "ARGP_HELP_FMT 中有无用字符：%s"
 
 #: argp/argp-help.c:1350
 msgid "Mandatory or optional arguments to long options are also mandatory or optional for any corresponding short options."
@@ -1274,7 +1274,7 @@ msgstr "打印调用路径的列表和它们的使用次数"
 
 #: elf/sprof.c:80
 msgid "generate flat profile with counts and ticks"
-msgstr "生成一组无趣的性能数据，包括计数和时间"
+msgstr "生成一组无趣的性能分析数据，包括计数和时间"
 
 #: elf/sprof.c:81
 msgid "generate call graph"
@@ -1282,7 +1282,7 @@ msgstr "生成调用图"
 
 #: elf/sprof.c:88
 msgid "Read and display shared object profiling data."
-msgstr "读取和显示共享目标的性能数据。"
+msgstr "读取和显示共享目标的性能分析数据。"
 
 #: elf/sprof.c:93
 msgid "SHOBJ [PROFDATA]"
@@ -1341,32 +1341,32 @@ msgstr "载入符号数据失败"
 #: elf/sprof.c:779
 #, c-format
 msgid "cannot load profiling data"
-msgstr "无法加载性能数据"
+msgstr "无法加载性能分析数据"
 
 #: elf/sprof.c:788
 #, c-format
 msgid "while stat'ing profiling data file"
-msgstr "对性能数据文件执行 stat 操作时"
+msgstr "对性能分析数据文件执行 stat 操作时"
 
 #: elf/sprof.c:796
 #, c-format
 msgid "profiling data file `%s' does not match shared object `%s'"
-msgstr "性能数据文件 \"%s\" 与共享目标 \"%s\" 不匹配"
+msgstr "性能分析数据文件 \"%s\" 与共享目标 \"%s\" 不匹配"
 
 #: elf/sprof.c:807
 #, c-format
 msgid "failed to mmap the profiling data file"
-msgstr "对性能数据文件进行 mmap 操作失败"
+msgstr "对性能分析数据文件进行 mmap 操作失败"
 
 #: elf/sprof.c:815
 #, c-format
 msgid "error while closing the profiling data file"
-msgstr "关闭性能数据文件时出错"
+msgstr "关闭性能分析数据文件时出错"
 
 #: elf/sprof.c:898
 #, c-format
 msgid "`%s' is no correct profile data file for `%s'"
-msgstr "\"%s\" 不是适用于 \"%s\" 的正确的性能数据文件"
+msgstr "\"%s\" 不是适用于 \"%s\" 的正确的性能分析数据文件"
 
 #: elf/sprof.c:1079 elf/sprof.c:1137
 #, c-format
@@ -2436,58 +2436,58 @@ msgstr "%s: 重复的类别版本定义"
 #: locale/programs/ld-measurement.c:110
 #, c-format
 msgid "%s: invalid value for field `%s'"
-msgstr "%s：域 \"%s\" 中的值无效"
+msgstr "%s: 字段 \"%s\" 中的值无效"
 
 #: locale/programs/ld-messages.c:112 locale/programs/ld-messages.c:145
 #, c-format
 msgid "%s: field `%s' undefined"
-msgstr "%s：解除域 \"%s\" 的定义"
+msgstr "%s: 字段 \"%s\" 未定义"
 
 #: locale/programs/ld-messages.c:118 locale/programs/ld-messages.c:151
 #: locale/programs/ld-numeric.c:116
 #, c-format
 msgid "%s: value for field `%s' must not be an empty string"
-msgstr "%s：域 \"%s\" 的值不能是空字符串"
+msgstr "%s: 字段 \"%s\" 的值不能是空字符串"
 
 #: locale/programs/ld-messages.c:134 locale/programs/ld-messages.c:167
 #, c-format
 msgid "%s: no correct regular expression for field `%s': %s"
-msgstr "%s：域 \"%s\" 中没有正确的常规表达式：%s"
+msgstr "%s: 字段 \"%s\" 中没有正确的正则表达式：%s"
 
 #: locale/programs/ld-monetary.c:310
 #, c-format
 msgid "%s: value of field `int_curr_symbol' has wrong length"
-msgstr "%s：域 \"int_curr_symbol\" 的值的长度错误"
+msgstr "%s: 字段 \"int_curr_symbol\" 的值的长度有误"
 
 #: locale/programs/ld-monetary.c:327
 #, c-format
 msgid "%s: value of field `int_curr_symbol' does not correspond to a valid name in ISO 4217 [--no-warnings=intcurrsym]"
-msgstr "%s：域  \"int_curr_symbol\"  的值与 ISO 4217 中有效的名称不对应 [--no-warnings=intcurrsym]"
+msgstr "%s: 字段 \"int_curr_symbol\" 的值没有与 ISO 4217 中的任一有效名称对应 [--no-warnings=intcurrsym]"
 
 #: locale/programs/ld-monetary.c:348 locale/programs/ld-monetary.c:358
 #, c-format
 msgid "%s: field `%s' not defined, using defaults"
-msgstr "%s：域 \"%s\" 未定义，使用默认"
+msgstr "%s: 字段 \"%s\" 未定义，使用默认"
 
 #: locale/programs/ld-monetary.c:396 locale/programs/ld-monetary.c:420
 #, c-format
 msgid "%s: value for field `%s' must be in range %d...%d"
-msgstr "%s： \"%s\" 域的值必须在 %d...%d 的范围内"
+msgstr "%s: \"%s\" 字段的值必须在 %d...%d 的范围内"
 
 #: locale/programs/ld-monetary.c:656 locale/programs/ld-numeric.c:227
 #, c-format
 msgid "%s: value for field `%s' must be a single character"
-msgstr "%s： \"%s\" 域的值必须是单个字符"
+msgstr "%s: \"%s\" 字段的值必须是单个字符"
 
 #: locale/programs/ld-monetary.c:753 locale/programs/ld-numeric.c:271
 #, c-format
 msgid "%s: `-1' must be last entry in `%s' field"
-msgstr "%s： \"-1\" 必须是 \"%s\" 域中的最后一个条目"
+msgstr "%s: \"-1\" 必须是 \"%s\" 字段中的最后一个条目"
 
 #: locale/programs/ld-monetary.c:775 locale/programs/ld-numeric.c:288
 #, c-format
 msgid "%s: values for field `%s' must be smaller than 127"
-msgstr "%s：域 \"%s\" 的值必须小于 127"
+msgstr "%s: 字段 \"%s\" 的值必须小于 127"
 
 #: locale/programs/ld-monetary.c:821
 msgid "conversion rate value cannot be zero"
@@ -2497,91 +2497,91 @@ msgstr "转换率的值不能为 0"
 #: locale/programs/ld-telephone.c:146
 #, c-format
 msgid "%s: invalid escape sequence in field `%s'"
-msgstr "%s：域 \"%s\" 中含有无效转义序列"
+msgstr "%s: 字段 \"%s\" 中含有无效的转义序列"
 
 #: locale/programs/ld-time.c:250
 #, c-format
 msgid "%s: direction flag in string %Zd in `era' field is not '+' nor '-'"
-msgstr "%s: 在 `era' 字段的字串 %Zd 中，方向旗标既不是 '+' 也不是 '-'"
+msgstr "%s: 在 \"era\" 字段的字符串 %Zd 中，方向旗标既不是 '+' 也不是 '-'"
 
 #: locale/programs/ld-time.c:260
 #, c-format
 msgid "%s: direction flag in string %Zd in `era' field is not a single character"
-msgstr "%s: 在 `era' 字段的字串 %Zd 中，方向旗标不是一个单一字符"
+msgstr "%s: 在 \"era\" 字段的字符串 %Zd 中，方向旗标不是单个字符"
 
 #: locale/programs/ld-time.c:272
 #, c-format
 msgid "%s: invalid number for offset in string %Zd in `era' field"
-msgstr "%s: 在 `era' 字段、字串 %Zd 中的位移数字不适用"
+msgstr "%s: 在 \"era\" 字段，字符串 %Zd 中的偏移量不是有效的数字"
 
 #: locale/programs/ld-time.c:279
 #, c-format
 msgid "%s: garbage at end of offset value in string %Zd in `era' field"
-msgstr "%s: 无用的数据，在 `era' 字段、字串 %Zd 中末尾的位移值"
+msgstr "%s: 在 \"era\" 字段，字符串 %Zd 中的偏移量的末尾有无用字符"
 
 #: locale/programs/ld-time.c:329
 #, c-format
 msgid "%s: invalid starting date in string %Zd in `era' field"
-msgstr "%s: 在 `era' 字段、字串 %Zd 中的起始日期不适用"
+msgstr "%s: 在 \"era\" 字段，字符串 %Zd 中的起始日期无效"
 
 #: locale/programs/ld-time.c:337
 #, c-format
 msgid "%s: garbage at end of starting date in string %Zd in `era' field "
-msgstr "%s：在  \"era\"  域中字串 %Zd 中末尾的起始日期的数据无效 "
+msgstr "%s: 在 \"era\" 字段，字符串 %Zd 中的起始日期的末尾有无用字符"
 
 #: locale/programs/ld-time.c:355
 #, c-format
 msgid "%s: starting date is invalid in string %Zd in `era' field"
-msgstr "%s: 在 `era' 区域的字串 %Zd 中的启始日期是不适用的"
+msgstr "%s: 在 \"era\" 字段，字符串 %Zd 中的起始日期无效"
 
 #: locale/programs/ld-time.c:403 locale/programs/ld-time.c:429
 #, c-format
 msgid "%s: invalid stopping date in string %Zd in `era' field"
-msgstr "%s: 在 `era' 字段、字串 %Zd 中的结束日期不适用"
+msgstr "%s: 在 \"era\" 字段，字符串 %Zd 中的结束日期无效"
 
 #: locale/programs/ld-time.c:411
 #, c-format
 msgid "%s: garbage at end of stopping date in string %Zd in `era' field"
-msgstr "%s: 无用的数据，在 `era' 区域、字串 %Zd 中末尾的结束日期"
+msgstr "%s: 在 \"era\" 字段，字符串 %Zd 中的结束日期的末尾有无用字符"
 
 #: locale/programs/ld-time.c:437
 #, c-format
 msgid "%s: missing era name in string %Zd in `era' field"
-msgstr "%s: 缺少 era 名称，在 `era' 字段、字串 %Zd 中"
+msgstr "%s: 在 \"era\" 字段，字符串 %Zd 中，缺少 era 名称"
 
 #: locale/programs/ld-time.c:448
 #, c-format
 msgid "%s: missing era format in string %Zd in `era' field"
-msgstr "%s: 缺少 era 格式，在 `era' 字段、字串 %Zd 中"
+msgstr "%s: 在 \"era\" 字段，字符串 %Zd 中，缺少 era 格式"
 
 #: locale/programs/ld-time.c:493
 #, c-format
 msgid "%s: third operand for value of field `%s' must not be larger than %d"
-msgstr "%s: 字段 `%s' 值的第三个算符不可以比 %d 大"
+msgstr "%s: 字段 \"%s\" 的值的第三个操作数不能大于 %d"
 
 #: locale/programs/ld-time.c:501 locale/programs/ld-time.c:509
 #: locale/programs/ld-time.c:517
 #, c-format
 msgid "%s: values for field `%s' must not be larger than %d"
-msgstr "%s：域 \"%s\" 的值不能大于 %d"
+msgstr "%s: 字段 \"%s\" 的值不能大于 %d"
 
 #: locale/programs/ld-time.c:739
 #, c-format
 msgid "%s: too few values for field `%s'"
-msgstr "%s：域 \"%s\" 的值过少"
+msgstr "%s: 字段 \"%s\" 的值过少"
 
 #: locale/programs/ld-time.c:784
 msgid "extra trailing semicolon"
-msgstr "多余的终止分号"
+msgstr "尾部有多余分号"
 
 #: locale/programs/ld-time.c:787
 #, c-format
 msgid "%s: too many values for field `%s'"
-msgstr "%s：域 \"%s\" 的值过多"
+msgstr "%s: 字段 \"%s\" 的值过多"
 
 #: locale/programs/linereader.c:130
 msgid "trailing garbage at end of line"
-msgstr "行尾出现无用字符"
+msgstr "行尾有无用字符"
 
 #: locale/programs/linereader.c:298
 msgid "garbage at end of number"
@@ -2589,11 +2589,11 @@ msgstr "数字末尾有无用字符"
 
 #: locale/programs/linereader.c:423
 msgid "garbage at end of character code specification"
-msgstr "字符编码设置结束位置的无用数据"
+msgstr "字符代码说明符的末尾有无用字符"
 
 #: locale/programs/linereader.c:531
 msgid "unterminated symbolic name"
-msgstr "未终止的符号名"
+msgstr "未终止的符号名称"
 
 #: locale/programs/linereader.c:716
 #, c-format
@@ -2602,11 +2602,11 @@ msgstr "无效的 UTF-8 序列 %s"
 
 #: locale/programs/linereader.c:796
 msgid "illegal 8-bit character in untranslated string"
-msgstr "为翻译字符串中的非法 8 比特字符"
+msgstr "未翻译字符串中有非法的 8 比特字符"
 
 #: locale/programs/linereader.c:804
 msgid "illegal escape sequence at end of string"
-msgstr "字符串末尾的非法转义序列"
+msgstr "字符串末尾有非法转义序列"
 
 #: locale/programs/linereader.c:808 locale/programs/linereader.c:979
 msgid "unterminated string"
@@ -2614,17 +2614,17 @@ msgstr "未终止的字符串"
 
 #: locale/programs/linereader.c:841
 msgid "illegal 8-bit escape sequence"
-msgstr "非法 8 比特转义序列"
+msgstr "非法的 8 比特转义序列"
 
 #: locale/programs/linereader.c:940
 #, c-format
 msgid "symbol `%.*s' not in charmap"
-msgstr "符号 `%.*s' 并不在字集对照表中"
+msgstr "符号 \"%.*s\" 不在字符映射表中"
 
 #: locale/programs/linereader.c:961
 #, c-format
 msgid "symbol `%.*s' not in repertoire map"
-msgstr "符号 `%.*s' 并不在编码映射表中"
+msgstr "符号 \"%.*s\" 不在字汇 (repertoire) 映射表中"
 
 #: locale/programs/locale-spec.c:129
 #, c-format
@@ -2637,11 +2637,11 @@ msgstr "系统信息："
 
 #: locale/programs/locale.c:71
 msgid "Write names of available locales"
-msgstr "写出可用区域的名称"
+msgstr "写出可用的区域设置的名称"
 
 #: locale/programs/locale.c:73
 msgid "Write names of available charmaps"
-msgstr "写出可用字符映射的名称"
+msgstr "写出可用的字符映射表的名称"
 
 #: locale/programs/locale.c:74
 msgid "Modify output format:"
@@ -2649,11 +2649,11 @@ msgstr "修改输出格式："
 
 #: locale/programs/locale.c:75
 msgid "Write names of selected categories"
-msgstr "写出选中范畴的名称"
+msgstr "写出所选的类别的名称"
 
 #: locale/programs/locale.c:76
 msgid "Write names of selected keywords"
-msgstr "写出选中关键字的名称"
+msgstr "写出所选的关键字的名称"
 
 #: locale/programs/locale.c:77
 msgid "Print more information"
@@ -2661,7 +2661,7 @@ msgstr "打印更多信息"
 
 #: locale/programs/locale.c:82
 msgid "Get locale-specific information."
-msgstr "给出区域特定的信息。"
+msgstr "获得关于区域设置的信息。"
 
 #: locale/programs/locale.c:85
 msgid ""
@@ -2679,12 +2679,12 @@ msgstr "准备输出时"
 #: locale/programs/locale.c:999
 #, c-format
 msgid "Cannot set %s to default locale"
-msgstr "无法将 %s 设置为默认的语区"
+msgstr "无法将 %s 设置为默认的区域设置"
 
 #: locale/programs/locale.c:1097
 #, c-format
 msgid "warning: The LOCPATH variable is set to \"%s\"\n"
-msgstr "警告：变量 LOCPATH 设置为  \"%s\"  \n"
+msgstr "警告：变量 LOCPATH 设置为 \"%s\" \n"
 
 #: locale/programs/localedef.c:115
 msgid "Input Files:"
@@ -2692,15 +2692,15 @@ msgstr "输入文件："
 
 #: locale/programs/localedef.c:117
 msgid "Symbolic character names defined in FILE"
-msgstr "符号字符的名称定义在文件 FILE 中"
+msgstr "在 <文件> 中定义符号化的字符名称"
 
 #: locale/programs/localedef.c:119
 msgid "Source definitions are found in FILE"
-msgstr "在 FILE 中找到源定义"
+msgstr "在 <文件> 中寻找源定义"
 
 #: locale/programs/localedef.c:121
 msgid "FILE contains mapping from symbolic names to UCS4 values"
-msgstr "文件 FILE 内含符号名与 UCS4 编码之间的映射"
+msgstr "<文件> 含有符号化名称到 UCS4 编码的映射"
 
 #: locale/programs/localedef.c:125
 msgid "Create output even if warning messages were issued"
@@ -2708,7 +2708,7 @@ msgstr "即使出现警告消息也创建输出"
 
 #: locale/programs/localedef.c:127
 msgid "Do not create hard links between installed locales"
-msgstr "不要在已安装的语区之间创建硬链接"
+msgstr "不要在已安装的区域设置之间创建硬链接"
 
 #: locale/programs/localedef.c:128
 msgid "Optional output file prefix"
@@ -2748,7 +2748,7 @@ msgstr "不要将新数据添加到归档文件中"
 
 #: locale/programs/localedef.c:144
 msgid "Add locales named by parameters to archive"
-msgstr "将由参数命名的区域添加到归档文件中"
+msgstr "将参数中指定的区域设置添加到归档文件中"
 
 #: locale/programs/localedef.c:145
 msgid "Replace existing archive content"
@@ -2756,7 +2756,7 @@ msgstr "替换现有的归档文件内容"
 
 #: locale/programs/localedef.c:147
 msgid "Remove locales named by parameters from archive"
-msgstr "从归档文件中删除由参数命名的区域"
+msgstr "从归档文件中删除参数中指定的区域"
 
 #: locale/programs/localedef.c:148
 msgid "List content of archive"
@@ -2764,7 +2764,7 @@ msgstr "列出归档文件的内容"
 
 #: locale/programs/localedef.c:150
 msgid "locale.alias file to consult when making archive"
-msgstr "在制作归档文件时参考 locale.alias 文件"
+msgstr "在制作归档文件时要参考的 locale.alias 文件"
 
 #: locale/programs/localedef.c:152
 msgid "Generate little-endian output"
@@ -2776,7 +2776,7 @@ msgstr "生成大端序输出"
 
 #: locale/programs/localedef.c:159
 msgid "Compile locale specification"
-msgstr "编译区域规范"
+msgstr "编译区域规约"
 
 #: locale/programs/localedef.c:162
 msgid ""
@@ -2795,18 +2795,18 @@ msgstr "无法为输出文件创建目录"
 
 #: locale/programs/localedef.c:249
 msgid "FATAL: system does not define `_POSIX2_LOCALEDEF'"
-msgstr "致命错误：系统未定义 \"_POSIX2_LOCALEDEF\" "
+msgstr "致命错误：系统未定义 \"_POSIX2_LOCALEDEF\""
 
 #: locale/programs/localedef.c:263 locale/programs/localedef.c:279
 #: locale/programs/localedef.c:677 locale/programs/localedef.c:697
 #, c-format
 msgid "cannot open locale definition file `%s'"
-msgstr "无法打开区域定义文件 \"%s\" "
+msgstr "无法打开区域设置定义文件 \"%s\""
 
 #: locale/programs/localedef.c:303
 #, c-format
 msgid "cannot write output files to `%s'"
-msgstr "无法将输出文件写入 \"%s\" "
+msgstr "无法将输出文件写入 \"%s\""
 
 #: locale/programs/localedef.c:309
 msgid "no output file produced because errors were issued"
@@ -2820,15 +2820,15 @@ msgid ""
 "\t\t       locale path    : %s\n"
 "%s"
 msgstr ""
-"系统的字符对应目录：%s\n"
-"\t\t      编码对应：%s\n"
-"\t\t      语区路径   ：%s\n"
+"系统的字符映射表目录：%s\n"
+"      字汇映射表目录：%s\n"
+"        区域设置目录：%s\n"
 "%s"
 
 #: locale/programs/localedef.c:545
 #, c-format
 msgid "cannot create output path '%s': %s"
-msgstr "无法创建输出路径 \"%s\" ：%s"
+msgstr "无法创建输出路径 \"%s\"：%s"
 
 #: locale/programs/localedef.c:553
 #, c-format
@@ -2837,17 +2837,17 @@ msgstr "没有输出路径 \"%s\" 的写权限：%s"
 
 #: locale/programs/localedef.c:645
 msgid "circular dependencies between locale definitions"
-msgstr "区域定义中的循环依赖"
+msgstr "区域设置定义之间存在依赖关系循环"
 
 #: locale/programs/localedef.c:651
 #, c-format
 msgid "cannot add already read locale `%s' a second time"
-msgstr "无法再次添加已经读入的 \"%s\" "
+msgstr "无法再次添加已经读入的 \"%s\""
 
 #: locale/programs/locarchive.c:132 locale/programs/locarchive.c:379
 #, c-format
 msgid "cannot create temporary file: %s"
-msgstr "无法产生暂时档：%s"
+msgstr "无法创建临时文件：%s"
 
 #: locale/programs/locarchive.c:166 locale/programs/locarchive.c:429
 #, c-format
@@ -2868,21 +2868,21 @@ msgstr "无法映射归档文件头"
 #: locale/programs/locarchive.c:210
 #, c-format
 msgid "failed to create new locale archive"
-msgstr "无法创建新区域归档文件"
+msgstr "无法创建新区域设置归档文件"
 
 #: locale/programs/locarchive.c:222
 #, c-format
 msgid "cannot change mode of new locale archive"
-msgstr "无法改变新归档文件的模式"
+msgstr "无法改变新区域设置归档文件的模式"
 
 #: locale/programs/locarchive.c:323
 msgid "cannot read data from locale archive"
-msgstr "无法从语区归档读取数据"
+msgstr "无法从区域设置归档文件中读取数据"
 
 #: locale/programs/locarchive.c:354
 #, c-format
 msgid "cannot map locale archive file"
-msgstr "无法映射区域归档文件"
+msgstr "无法映射区域设置归档文件"
 
 #: locale/programs/locarchive.c:459
 #, c-format
@@ -2892,32 +2892,32 @@ msgstr "无法锁定新归档文件"
 #: locale/programs/locarchive.c:528
 #, c-format
 msgid "cannot extend locale archive file"
-msgstr "无法扩展区域归档文件"
+msgstr "无法扩展区域设置归档文件"
 
 #: locale/programs/locarchive.c:537
 #, c-format
 msgid "cannot change mode of resized locale archive"
-msgstr "无法改变过大小的区域归档文件的模式"
+msgstr "无法变更已改变大小的区域设置归档文件的模式"
 
 #: locale/programs/locarchive.c:545
 #, c-format
 msgid "cannot rename new archive"
-msgstr "无法改变新归档文件的名称"
+msgstr "无法重命名新归档文件"
 
 #: locale/programs/locarchive.c:607
 #, c-format
 msgid "cannot open locale archive \"%s\""
-msgstr "无法打开区域归档文件 \"%s\" "
+msgstr "无法打开区域设置归档文件 \"%s\""
 
 #: locale/programs/locarchive.c:612
 #, c-format
 msgid "cannot stat locale archive \"%s\""
-msgstr "无法对区域归档文件 \"%s\" 进行 stat() 操作"
+msgstr "无法对区域设置归档文件 \"%s\" 进行 stat 操作"
 
 #: locale/programs/locarchive.c:631
 #, c-format
 msgid "cannot lock locale archive \"%s\""
-msgstr "无法锁定区域归档文件 \"%s\" "
+msgstr "无法锁定区域设置归档文件 \"%s\""
 
 #: locale/programs/locarchive.c:654
 #, c-format
@@ -2927,24 +2927,24 @@ msgstr "无法读入归档文件头"
 #: locale/programs/locarchive.c:661
 #, c-format
 msgid "bad magic value in archive header"
-msgstr "归档文件头中的无效魔数"
+msgstr "归档文件头中的魔数无效"
 
 #: locale/programs/locarchive.c:734
 #, c-format
 msgid "locale '%s' already exists"
-msgstr "区域 \"%s\" 已存在"
+msgstr "区域设置 \"%s\" 已存在"
 
 #: locale/programs/locarchive.c:1009 locale/programs/locarchive.c:1024
 #: locale/programs/locarchive.c:1036 locale/programs/locarchive.c:1048
 #: locale/programs/locfile.c:349
 #, c-format
 msgid "cannot add to locale archive"
-msgstr "无法添加到区域归档文件"
+msgstr "无法添加到区域设置归档文件"
 
 #: locale/programs/locarchive.c:1217
 #, c-format
 msgid "locale alias file `%s' not found"
-msgstr "找不到区域别名文件 \"%s\" "
+msgstr "找不到区域设置别名文件 \"%s\""
 
 #: locale/programs/locarchive.c:1365
 #, c-format
@@ -2954,64 +2954,64 @@ msgstr "正在添加 %s\n"
 #: locale/programs/locarchive.c:1371
 #, c-format
 msgid "stat of \"%s\" failed: %s: ignored"
-msgstr "无法对 \"%s\" 运行 stat：%s：忽略"
+msgstr "无法对 \"%s\" 进行 stat 操作：%s：已忽略"
 
 #: locale/programs/locarchive.c:1377
 #, c-format
 msgid "\"%s\" is no directory; ignored"
-msgstr " \"%s\" 不是目录；忽略"
+msgstr "\"%s\" 不是目录；已忽略"
 
 #: locale/programs/locarchive.c:1384
 #, c-format
 msgid "cannot open directory \"%s\": %s: ignored"
-msgstr "无法打开目录 \"%s\" ：%s：忽略"
+msgstr "无法打开目录 \"%s\"：%s：已忽略"
 
 #: locale/programs/locarchive.c:1452
 #, c-format
 msgid "incomplete set of locale files in \"%s\""
-msgstr " \"%s\" 中的区域文件不完整"
+msgstr "\"%s\" 中的区域设置文件集不完整"
 
 #: locale/programs/locarchive.c:1516
 #, c-format
 msgid "cannot read all files in \"%s\": ignored"
-msgstr "无法读入 \"%s\" 中的所有文件：忽略"
+msgstr "无法读入 \"%s\" 中的所有文件：已忽略"
 
 #: locale/programs/locarchive.c:1586
 #, c-format
 msgid "locale \"%s\" not in archive"
-msgstr "区域 \"%s\" 在归档文件中"
+msgstr "区域设置 \"%s\" 不在归档文件中"
 
 #: locale/programs/locfile.c:136
 #, c-format
 msgid "argument to `%s' must be a single character"
-msgstr " \"%s\" 的参数必须是单个字符"
+msgstr "\"%s\" 的参数必须是单个字符"
 
 #: locale/programs/locfile.c:256
 msgid "syntax error: not inside a locale definition section"
-msgstr "语法错误：不在区域定义节之中"
+msgstr "语法错误：不在区域设置定义节之中"
 
 #: locale/programs/locfile.c:798
 #, c-format
 msgid "cannot open output file `%s' for category `%s'"
-msgstr "无法为范畴 \"%2$s\" 打开输出文件 \"%1$s\" "
+msgstr "无法为类别 \"%2$s\" 打开输出文件 \"%1$s\""
 
 #: locale/programs/locfile.c:821
 #, c-format
 msgid "failure while writing data for category `%s'"
-msgstr "为范畴 \"%s\" 写入数据失败"
+msgstr "为类别 \"%s\" 写入数据失败"
 
 #: locale/programs/locfile.c:929
 #, c-format
 msgid "cannot create output file `%s' for category `%s'"
-msgstr "无法为范畴 \"%2$s\" 创建输出文件 \"%1$s\" "
+msgstr "无法为类别 \"%2$s\" 创建输出文件 \"%1$s\""
 
 #: locale/programs/locfile.c:965
 msgid "expecting string argument for `copy'"
-msgstr "`copy' 的参数应该是字串才对"
+msgstr "“copy” 的参数应当是字符串"
 
 #: locale/programs/locfile.c:969
 msgid "locale name should consist only of portable characters"
-msgstr "区域名称应该仅由可移植的字符组成"
+msgstr "区域设置名称应该仅由可移植的字符组成"
 
 #: locale/programs/locfile.c:988
 msgid "no other keyword shall be specified when `copy' is used"
@@ -3026,7 +3026,7 @@ msgstr "对 \"%1$s\" 的定义没有以 \"END %1$s\" 结束"
 #: locale/programs/repertoire.c:293
 #, c-format
 msgid "syntax error in repertoire map definition: %s"
-msgstr "编码映射表中的定义有语法错误: %s"
+msgstr "字汇 (repertoire) 映射表的定义有语法错误：%s"
 
 #: locale/programs/repertoire.c:269
 msgid "no <Uxxxx> or <Uxxxxxxxx> value given"
@@ -3034,17 +3034,17 @@ msgstr "既未给出 <Uxxxx> 也未给出 <Uxxxxxxxx> 的值"
 
 #: locale/programs/repertoire.c:329
 msgid "cannot save new repertoire map"
-msgstr "无法保存新的指令表"
+msgstr "无法保存新的字汇 (repertoire) 映射表"
 
 #: locale/programs/repertoire.c:340
 #, c-format
 msgid "repertoire map file `%s' not found"
-msgstr "找不到编码映射表 `%s'"
+msgstr "找不到字汇 (repertoire) 映射表 \"%s\""
 
 #: login/programs/pt_chown.c:78
 #, c-format
 msgid "Set the owner, group and access permission of the slave pseudo terminal corresponding to the master pseudo terminal passed on file descriptor `%d'.  This is the helper program for the `grantpt' function.  It is not intended to be run directly from the command line.\n"
-msgstr "设置与以文件描述符 %d 指定的主伪终端对应的从属伪终端的所有者、组和权限 。 此辅助程序用于  \"grantpt\"  函数，并未用于直接从命令行运行。\n"
+msgstr "设置与以文件描述符 \"%d\" 指定的主伪终端对应的从伪终端的所有者、组和权限 。这是 \"grantpt\" 函数使用的辅助程序，不应当直接从命令行运行。\n"
 
 #: login/programs/pt_chown.c:92
 #, c-format
@@ -3053,31 +3053,31 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"拥有者设置为目前用户，群组设置为  \"%s\"  ，而权限设置为  \"%o\"  。\n"
+"所有者设置为目前用户，组设置为 \"%s\"，权限设置为 \"%o\"。\n"
 "\n"
 "%s"
 
 #: login/programs/pt_chown.c:203
 #, c-format
 msgid "too many arguments"
-msgstr "选项过多"
+msgstr "参数过多"
 
 #: login/programs/pt_chown.c:211
 #, c-format
 msgid "needs to be installed setuid `root'"
-msgstr "需要是已安装的 setuid  \"root\" "
+msgstr "需要安装为 setuid \"root\" 权限"
 
 #: malloc/mcheck-impl.c:354
 msgid "memory is consistent, library is buggy\n"
-msgstr "内存不一致，库有错误\n"
+msgstr "内存一致，库有错误\n"
 
 #: malloc/mcheck-impl.c:357
 msgid "memory clobbered before allocated block\n"
-msgstr "内存在分配之前就被覆写了\n"
+msgstr "已分配的块之前的内存数据有误\n"
 
 #: malloc/mcheck-impl.c:360
 msgid "memory clobbered past end of allocated block\n"
-msgstr "内存覆写超过了经过的已分配的区块尾部\n"
+msgstr "已分配的块之后的内存数据有误\n"
 
 #: malloc/mcheck-impl.c:363
 msgid "block freed twice\n"
@@ -3085,11 +3085,11 @@ msgstr "块释放了两次\n"
 
 #: malloc/mcheck-impl.c:366
 msgid "bogus mcheck_status, library is buggy\n"
-msgstr "内存检查状态 (mcheck_ststus) 有误，您所用的函数库有问题\n"
+msgstr "内存检查状态 (mcheck_ststus) 有误，库有错误\n"
 
 #: malloc/memusage.sh:31
 msgid "%s: option '%s' requires an argument\\n"
-msgstr "%s：选项  \"%s\"  需要一个参数\\n"
+msgstr "%s: 选项 \\\"%s\\\" 需要一个参数\\n"
 
 #: malloc/memusage.sh:37
 msgid ""
@@ -3119,29 +3119,29 @@ msgid ""
 "short options.\n"
 "\n"
 msgstr ""
-"用法：memusage [选项]… 程序 [PROGRAMOPTION]…\n"
-"剖析程序的内存用量情况。\n"
+"用法：memusage [选项]... 程序 [程序选项]...\n"
+"对 <程序> 的内存使用情况进行性能分析。\n"
 "\n"
-"   -n,--progname=名称     要被分析的的程序文件名称\n"
-"   -p,--png=文件          产生 PNG 图形并存为文件\n"
-"   -d,--data=文件         产生二进制数据并存为文件\n"
-"   -u,--unbuffered       不要将输出缓冲\n"
-"   -b,--buffer=大小       收集<大小>条项目后再输出\n"
-"      --no-timer          不通过计时器收集附加信息\n"
-"   -m,--mmap              同时追踪 mmap 和相关者\n"
+"   -n,--progname=名称     要进行性能分析的程序文件名称\n"
+"   -p,--png=文件          生成 PNG 图像并保存到 <文件>\n"
+"   -d,--data=文件         生成二进制数据并保存到 <文件>\n"
+"   -u,--unbuffered        不要缓冲输出\n"
+"   -b,--buffer=大小       收集 <大小> 个条目后再输出\n"
+"      --no-timer          不通过计时器收集额外信息\n"
+"   -m,--mmap              同时追踪 mmap 和相关函数\n"
 "\n"
-"   -?,--help              打印这个说明然后离开\n"
-"      --usage             给出简短用法消息\n"
-"   -V,--version           打印版本信息然后离开\n"
+"   -?,--help              打印此帮助并退出\n"
+"      --usage             给出简短用法信息\n"
+"   -V,--version           打印版本信息并退出\n"
 "\n"
-"下列的选项只在产生图形输出时有效：\n"
+" 下列的选项只在产生图像输出时有效：\n"
 "   -t,--time-based        使图像在时间上是线性的\n"
-"   -T,--total             同时绘制总计内存使用量图形\n"
-"      --title=字串        使用字串作为图形的标题\n"
-"   -x,--x-size=大小       定制图形大小像素宽度\n"
-"   -y,--y-size=大小       定制图形大小像素高度\n"
+"   -T,--total             同时绘制总内存使用量的图像\n"
+"      --title=字符串      使用 <字符串> 作为图像的标题\n"
+"   -x,--x-size=大小       使图像的宽度为 <大小> 像素\n"
+"   -y,--y-size=大小       使图像的高度为 <大小> 像素\n"
 "\n"
-"长选项的必要参数同样也是相对应短选项的必要参数。\n"
+"长选项的强制参数对于对应的短选项也是强制的。\n"
 "\n"
 
 #: malloc/memusage.sh:98
@@ -3153,16 +3153,16 @@ msgid ""
 msgstr ""
 "语法：memusage [--data=文件] [--progname=名称] [--png=文件] [--unbuffered]\n"
 "\t   [--buffer=大小] [--no-timer] [--time-based] [--total]\n"
-"\t   [--title=字串] [--x-size=大小] [--y-size=大小]\n"
-"\t   程序 [PROGRAMOPTION]…"
+"\t   [--title=字符串] [--x-size=大小] [--y-size=大小]\n"
+"\t   程序 [程序选项]..."
 
 #: malloc/memusage.sh:190
 msgid "memusage: option \\`${1##*=}' is ambiguous"
-msgstr "memusage：选项 \"${1##*=}\" 具有二义性"
+msgstr "memusage: 选项 \\\"${1##*=}\\\" 有歧义"
 
 #: malloc/memusage.sh:199
 msgid "memusage: unrecognized option \\`$1'"
-msgstr "memusage：无法识别的选项 \"$1\" "
+msgstr "memusage: 无法识别的选项 \"$1\""
 
 #: malloc/memusage.sh:212
 msgid "No program name given"
@@ -3170,39 +3170,39 @@ msgstr "未指定程序名"
 
 #: malloc/memusagestat.c:56
 msgid "Name output file"
-msgstr "名输出文件"
+msgstr "指定输出文件的名称"
 
 #: malloc/memusagestat.c:57
 msgid "STRING"
-msgstr "字串"
+msgstr "字符串"
 
 #: malloc/memusagestat.c:57
 msgid "Title string used in output graphic"
-msgstr "用于输出图形的标题字符串"
+msgstr "用作输出图像的标题的字符串"
 
 #: malloc/memusagestat.c:58
 msgid "Generate output linear to time (default is linear to number of function calls)"
-msgstr "产生输出与时间呈线性关系 (缺省是与函数调用数目呈线性关系)"
+msgstr "使生成的输出和时间呈线性关系（默认与函数调用次数呈线性关系）"
 
 #: malloc/memusagestat.c:62
 msgid "Also draw graph for total memory consumption"
-msgstr "同时对总内存用量作图"
+msgstr "同时绘制总内存使用量的图像"
 
 #: malloc/memusagestat.c:63
 msgid "VALUE"
-msgstr "像素值"
+msgstr "值"
 
 #: malloc/memusagestat.c:64
 msgid "Make output graphic VALUE pixels wide"
-msgstr "定制输出图形的宽度像素值"
+msgstr "使图像的宽度为 <值> 像素"
 
 #: malloc/memusagestat.c:65
 msgid "Make output graphic VALUE pixels high"
-msgstr "定制输出图形的高度像素值"
+msgstr "使图像的高度为 <值> 像素"
 
 #: malloc/memusagestat.c:70
 msgid "Generate graphic from memory profiling data"
-msgstr "从内存性能测试数据产生图像"
+msgstr "从内存性能分析数据产生图像"
 
 #: malloc/memusagestat.c:73
 msgid "DATAFILE [OUTFILE]"
@@ -3227,15 +3227,15 @@ msgstr "可能成功"
 
 #: nis/nis_error.h:3
 msgid "Not found"
-msgstr "找不到"
+msgstr "未找到"
 
 #: nis/nis_error.h:4
 msgid "Probably not found"
-msgstr "可能找不到"
+msgstr "可能未找到"
 
 #: nis/nis_error.h:5
 msgid "Cache expired"
-msgstr "缓冲器过期"
+msgstr "缓存过期"
 
 #: nis/nis_error.h:6
 msgid "NIS+ servers unreachable"
@@ -3247,7 +3247,7 @@ msgstr "未知的对象"
 
 #: nis/nis_error.h:8
 msgid "Server busy, try again"
-msgstr "服务器忙，重试"
+msgstr "服务器忙，请重试"
 
 #: nis/nis_error.h:9
 msgid "Generic system error"
@@ -3255,7 +3255,7 @@ msgstr "一般系统错误"
 
 #: nis/nis_error.h:10
 msgid "First/next chain broken"
-msgstr "第一个/下一个链坏掉了"
+msgstr "第一个/下一个链损坏"
 
 #. TRANS The file permissions do not allow the attempted operation.
 #: nis/nis_error.h:11 nis/ypclnt.c:877 sysdeps/gnu/errlist.h:90
@@ -3284,23 +3284,23 @@ msgstr "该域没有主服务器"
 
 #: nis/nis_error.h:17
 msgid "Invalid object for operation"
-msgstr "操作无效的对象"
+msgstr "操作的对象无效"
 
 #: nis/nis_error.h:18
 msgid "Malformed name, or illegal name"
-msgstr "奇怪的名字，或不合法的名字"
+msgstr "格式有误的名称，或不合法的名称"
 
 #: nis/nis_error.h:19
 msgid "Unable to create callback"
-msgstr "无法创建回调函数"
+msgstr "无法创建回调"
 
 #: nis/nis_error.h:20
 msgid "Results sent to callback proc"
-msgstr "结果发送给返回进程"
+msgstr "结果已发送到回调进程"
 
 #: nis/nis_error.h:21
 msgid "Not found, no such name"
-msgstr "找不到，没有那个名字"
+msgstr "未找到，没有那个名称"
 
 #: nis/nis_error.h:22
 msgid "Name/entry isn't unique"
@@ -3332,11 +3332,11 @@ msgstr "属性过多"
 
 #: nis/nis_error.h:29
 msgid "Error in RPC subsystem"
-msgstr "RPC 子系统中出错"
+msgstr "RPC 子系统出错"
 
 #: nis/nis_error.h:30
 msgid "Missing or malformed attribute"
-msgstr "遗漏或畸形的属性"
+msgstr "缺少属性或属性格式有误"
 
 #: nis/nis_error.h:31
 msgid "Named object is not searchable"
@@ -3344,19 +3344,19 @@ msgstr "不能搜索命名对象"
 
 #: nis/nis_error.h:32
 msgid "Error while talking to callback proc"
-msgstr "与回调函数交互时出错"
+msgstr "与回调进程交互时出错"
 
 #: nis/nis_error.h:33
 msgid "Non NIS+ namespace encountered"
-msgstr "遭遇违反 NIS+ 命名规则的名称"
+msgstr "遇到违反 NIS+ 命名空间规则的名称"
 
 #: nis/nis_error.h:34
 msgid "Illegal object type for operation"
-msgstr "操作的非法对象类型"
+msgstr "操作的对象类型非法"
 
 #: nis/nis_error.h:35
 msgid "Passed object is not the same object on server"
-msgstr "经过的对象与服务器上的并不相同"
+msgstr "传入的对象与服务器上的不同"
 
 #: nis/nis_error.h:36
 msgid "Modify operation failed"
@@ -3364,7 +3364,7 @@ msgstr "修改操作失败"
 
 #: nis/nis_error.h:37
 msgid "Query illegal for named table"
-msgstr "对命名表来说查询非法"
+msgstr "对于命名表而言查询非法"
 
 #: nis/nis_error.h:38
 msgid "Attempt to remove a non-empty table"
@@ -3384,11 +3384,11 @@ msgstr "NIS+ 操作失败"
 
 #: nis/nis_error.h:42
 msgid "NIS+ service is unavailable or not installed"
-msgstr "NIS+ 服务器不可用或未安装"
+msgstr "NIS+ 服务不可用或未安装"
 
 #: nis/nis_error.h:43
 msgid "Yes, 42 is the meaning of life"
-msgstr "是的，42 就是存在的意义"
+msgstr "是的，42 就是生命的意义"
 
 #: nis/nis_error.h:44
 msgid "Unable to authenticate NIS+ server"
@@ -3408,12 +3408,12 @@ msgstr "无法在服务器上创建进程"
 
 #: nis/nis_error.h:48
 msgid "Master server busy, full dump rescheduled."
-msgstr "主要服务器忙中，完整数据转储已被重调度。"
+msgstr "主服务器忙，完整转储已被重调度。"
 
 #: nis/nis_local_names.c:122
 #, c-format
 msgid "LOCAL entry for UID %d in directory %s not unique\n"
-msgstr "%2$s 目录中 UID 为 %1$d 的项目在 LOCAL 中不是唯一的\n"
+msgstr "%2$s 目录中 UID 为 %1$d 的 LOCAL 条目不唯一\n"
 
 #: nis/nis_print.c:51
 msgid "UNKNOWN"
@@ -3437,7 +3437,7 @@ msgstr "组"
 
 #: nis/nis_print.c:69 nscd/nscd.c:117
 msgid "TABLE"
-msgstr "表格"
+msgstr "表"
 
 #: nis/nis_print.c:71
 msgid "ENTRY"
@@ -3458,7 +3458,7 @@ msgstr "（未知的对象"
 #: nis/nis_print.c:164
 #, c-format
 msgid "Name : `%s'\n"
-msgstr "名称： \"%s\" \n"
+msgstr "名称：\"%s\"\n"
 
 #: nis/nis_print.c:165
 #, c-format
@@ -3471,7 +3471,7 @@ msgstr "主服务器：\n"
 
 #: nis/nis_print.c:172
 msgid "Replicate :\n"
-msgstr "复制：\n"
+msgstr "副本：\n"
 
 #: nis/nis_print.c:173
 #, c-format
@@ -3508,11 +3508,11 @@ msgstr "未知（类型 = %d，位数 = %d）\n"
 #: nis/nis_print.c:203
 #, c-format
 msgid "\tUniversal addresses (%u)\n"
-msgstr "\t绝对地址（%u）\n"
+msgstr "\t通用地址（%u）\n"
 
 #: nis/nis_print.c:225
 msgid "Time to live : "
-msgstr "存留时间   ： "
+msgstr "存活时间："
 
 #: nis/nis_print.c:227
 msgid "Default Access rights :\n"
@@ -3521,15 +3521,15 @@ msgstr "默认访问权限：\n"
 #: nis/nis_print.c:236
 #, c-format
 msgid "\tType         : %s\n"
-msgstr "\t类型       ：%s\n"
+msgstr "\t类型         ：%s\n"
 
 #: nis/nis_print.c:237
 msgid "\tAccess rights: "
-msgstr "\t访问权限   ："
+msgstr "\t访问权限     ："
 
 #: nis/nis_print.c:251
 msgid "Group Flags :"
-msgstr "组标志     ："
+msgstr "组标志："
 
 #: nis/nis_print.c:254
 msgid ""
@@ -3537,12 +3537,12 @@ msgid ""
 "Group Members :\n"
 msgstr ""
 "\n"
-"组成员     ：\n"
+"组成员：\n"
 
 #: nis/nis_print.c:266
 #, c-format
 msgid "Table Type          : %s\n"
-msgstr "表格类型            ：%s\n"
+msgstr "表类型              ：%s\n"
 
 #: nis/nis_print.c:267
 #, c-format
@@ -3570,25 +3570,25 @@ msgstr "\t[%d]\t名称         ：%s\n"
 
 #: nis/nis_print.c:275
 msgid "\t\tAttributes    : "
-msgstr "\t\t属性     ："
+msgstr "\t\t属性          ："
 
 #: nis/nis_print.c:277
 msgid "\t\tAccess Rights : "
-msgstr "\t\t访问权限 ："
+msgstr "\t\t访问权限      ："
 
 #: nis/nis_print.c:287
 msgid "Linked Object Type : "
-msgstr "链接到对象类型 ："
+msgstr "链接到对象类型："
 
 #: nis/nis_print.c:289
 #, c-format
 msgid "Linked to : %s\n"
-msgstr "链接到 ：%s\n"
+msgstr "链接到：%s\n"
 
 #: nis/nis_print.c:299
 #, c-format
 msgid "\tEntry data of type %s\n"
-msgstr "\t型别为 %s 的项目数据\n"
+msgstr "\t类型为 %s 的条目数据\n"
 
 #: nis/nis_print.c:302
 #, c-format
@@ -3606,26 +3606,26 @@ msgstr "二进制数据\n"
 #: nis/nis_print.c:323
 #, c-format
 msgid "Object Name   : %s\n"
-msgstr "对象名称  ：%s\n"
+msgstr "对象名称      ：%s\n"
 
 #: nis/nis_print.c:324
 #, c-format
 msgid "Directory     : %s\n"
-msgstr "目录      ：%s\n"
+msgstr "目录          ：%s\n"
 
 #: nis/nis_print.c:325
 #, c-format
 msgid "Owner         : %s\n"
-msgstr "所有者    ：%s\n"
+msgstr "所有者        ：%s\n"
 
 #: nis/nis_print.c:326
 #, c-format
 msgid "Group         : %s\n"
-msgstr "组        ：%s\n"
+msgstr "组            ：%s\n"
 
 #: nis/nis_print.c:327
 msgid "Access Rights : "
-msgstr "访问权限："
+msgstr "访问权限      ："
 
 #: nis/nis_print.c:329
 #, c-format
@@ -3634,21 +3634,21 @@ msgid ""
 "Time to Live  : "
 msgstr ""
 "\n"
-"存留时间   ："
+"存活时间      ："
 
 #: nis/nis_print.c:332
 #, c-format
 msgid "Creation Time : %s"
-msgstr "创建时间   ：%s"
+msgstr "创建时间      ：%s"
 
 #: nis/nis_print.c:334
 #, c-format
 msgid "Mod. Time     : %s"
-msgstr "修改时间   ：%s"
+msgstr "修改时间      ：%s"
 
 #: nis/nis_print.c:335
 msgid "Object Type   : "
-msgstr "对象类型   ："
+msgstr "对象类型      ："
 
 #: nis/nis_print.c:355
 #, c-format
@@ -3658,12 +3658,12 @@ msgstr "    数据长度 = %u\n"
 #: nis/nis_print.c:369
 #, c-format
 msgid "Status            : %s\n"
-msgstr "状态     ：%s\n"
+msgstr "状态              ：%s\n"
 
 #: nis/nis_print.c:370
 #, c-format
 msgid "Number of objects : %u\n"
-msgstr "对象的数量 ：%u\n"
+msgstr "对象的数量        ：%u\n"
 
 #: nis/nis_print.c:374
 #, c-format
@@ -3673,7 +3673,7 @@ msgstr "对象 #%d：\n"
 #: nis/nis_print_group_entry.c:116
 #, c-format
 msgid "Group entry for \"%s.%s\" group:\n"
-msgstr "群组 \"%s.%s\" 群组项目:\n"
+msgstr "组 \"%s.%s\" 的组条目：\n"
 
 #: nis/nis_print_group_entry.c:124
 msgid "    Explicit members:\n"
@@ -3681,15 +3681,15 @@ msgstr "    显式成员：\n"
 
 #: nis/nis_print_group_entry.c:129
 msgid "    No explicit members\n"
-msgstr "    无显式成员\n"
+msgstr "    没有显式成员\n"
 
 #: nis/nis_print_group_entry.c:132
 msgid "    Implicit members:\n"
-msgstr "    隐含成员：\n"
+msgstr "    隐式成员：\n"
 
 #: nis/nis_print_group_entry.c:137
 msgid "    No implicit members\n"
-msgstr "    无隐含成员\n"
+msgstr "    没有隐式成员\n"
 
 #: nis/nis_print_group_entry.c:140
 msgid "    Recursive members:\n"
@@ -3697,23 +3697,23 @@ msgstr "    递归成员：\n"
 
 #: nis/nis_print_group_entry.c:145
 msgid "    No recursive members\n"
-msgstr "    无递归成员\n"
+msgstr "    没有递归成员\n"
 
 #: nis/nis_print_group_entry.c:148
 msgid "    Explicit nonmembers:\n"
-msgstr "    明确的非成员:\n"
+msgstr "    显式非成员：\n"
 
 #: nis/nis_print_group_entry.c:153
 msgid "    No explicit nonmembers\n"
-msgstr "    没有明确的非成员\n"
+msgstr "    没有显式非成员\n"
 
 #: nis/nis_print_group_entry.c:156
 msgid "    Implicit nonmembers:\n"
-msgstr "    不明确的非成员:\n"
+msgstr "    隐式非成员：\n"
 
 #: nis/nis_print_group_entry.c:161
 msgid "    No implicit nonmembers\n"
-msgstr "    没有不明确的非成员\n"
+msgstr "    没有隐式非成员\n"
 
 #: nis/nis_print_group_entry.c:164
 msgid "    Recursive nonmembers:\n"
@@ -3721,7 +3721,7 @@ msgstr "    递归非成员：\n"
 
 #: nis/nis_print_group_entry.c:169
 msgid "    No recursive nonmembers\n"
-msgstr "    没有递归的非成员\n"
+msgstr "    没有递归非成员\n"
 
 #: nis/ypclnt.c:835
 msgid "Request arguments bad"
@@ -3729,19 +3729,19 @@ msgstr "请求参数错误"
 
 #: nis/ypclnt.c:838
 msgid "RPC failure on NIS operation"
-msgstr "NIS 运作 RPC 失败"
+msgstr "NIS 操作出现 RPC 失败"
 
 #: nis/ypclnt.c:841
 msgid "Can't bind to server which serves this domain"
-msgstr "无法于为此域服务的服务器绑定"
+msgstr "无法与为此域服务的服务器绑定"
 
 #: nis/ypclnt.c:844
 msgid "No such map in server's domain"
-msgstr "在服务器的领域数据中找不到此一映射表"
+msgstr "在服务器的域中没有那个映射表"
 
 #: nis/ypclnt.c:847
 msgid "No such key in map"
-msgstr "在映射表中没有此一键值"
+msgstr "在映射表中没有那个键值"
 
 #: nis/ypclnt.c:850
 msgid "Internal NIS error"
@@ -3753,7 +3753,7 @@ msgstr "本地资源分配失败"
 
 #: nis/ypclnt.c:856
 msgid "No more records in map database"
-msgstr "在映射表数据库中没有其他纪录了"
+msgstr "在映射表数据库中没有更多记录了"
 
 #: nis/ypclnt.c:859
 msgid "Can't communicate with portmapper"
@@ -3773,11 +3773,11 @@ msgstr "未设置本地域名"
 
 #: nis/ypclnt.c:871
 msgid "NIS map database is bad"
-msgstr "NIS 映射数据库错误"
+msgstr "NIS 映射表数据库错误"
 
 #: nis/ypclnt.c:874
 msgid "NIS client/server version mismatch - can't supply service"
-msgstr "NIS 客户端/服务器版本不匹配 - 无法支持服务"
+msgstr "NIS 客户端/服务器版本不匹配 - 无法提供服务"
 
 #: nis/ypclnt.c:880
 msgid "Database is busy"
@@ -3805,40 +3805,40 @@ msgstr "未知的 ypbind 错误"
 
 #: nis/ypclnt.c:974
 msgid "yp_update: cannot convert host to netname\n"
-msgstr "yp_update：无法将主机名转换为网名\n"
+msgstr "yp_update: 无法将主机名转换为网络名\n"
 
 #: nis/ypclnt.c:992
 msgid "yp_update: cannot get server address\n"
-msgstr "yp_update：无法获取服务器地址\n"
+msgstr "yp_update: 无法获取服务器地址\n"
 
 #: nscd/aicache.c:68 nscd/hstcache.c:451
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
-msgstr "无法在主机缓存中找到 \"%s\" ！"
+msgstr "无法在 hosts 缓存中找到 \"%s\"！"
 
 #: nscd/aicache.c:70 nscd/hstcache.c:453
 #, c-format
 msgid "Reloading \"%s\" in hosts cache!"
-msgstr "在主机缓存中重新加载 \"%s\" ！"
+msgstr "在 hosts 缓存中重新加载 \"%s\"！"
 
 #: nscd/cache.c:150
 #, c-format
 msgid "add new entry \"%s\" of type %s for %s to cache%s"
-msgstr "加入新的项目  \"%s\"  的型态 %s 用于 %s 到 cache%s"
+msgstr "在缓存中加入新的条目 \"%s\" 类型 %s 用于 %s%s"
 
 #: nscd/cache.c:152
 msgid " (first)"
-msgstr " (首先)"
+msgstr "（首次）"
 
 #: nscd/cache.c:287
 #, c-format
 msgid "checking for monitored file `%s': %s"
-msgstr "检查监视的文件 '%s': %s"
+msgstr "检查监视的文件 \"%s\"：%s"
 
 #: nscd/cache.c:297
 #, c-format
 msgid "monitored file `%s` changed (mtime)"
-msgstr "监视的文件 '%s' 变了 (mtime)"
+msgstr "监视的文件 \"%s\" 改变了 (mtime)"
 
 #: nscd/cache.c:340
 #, c-format
@@ -3848,29 +3848,29 @@ msgstr "pruning %s 缓存；时间 %ld"
 #: nscd/cache.c:369
 #, c-format
 msgid "considering %s entry \"%s\", timeout %<PRIu64>"
-msgstr "考虑 %s 项目 \"%s\" ，超时 %<PRIu64>"
+msgstr "考虑 %s 条目 \"%s\"，超时 %<PRIu64>"
 
 #: nscd/cachedumper.c:168
 msgid " - all data: "
-msgstr " - 所有数据: "
+msgstr " - 所有数据： "
 
 #: nscd/cachedumper.c:362
 #, c-format
 msgid " - remaining data %p: "
-msgstr " - 剩余数据 %p: "
+msgstr " - 剩余数据 %p： "
 
 #: nscd/connections.c:530
 #, c-format
 msgid "invalid persistent database file \"%s\": %s"
-msgstr "无效的永久性的数据库文件  \"%s\"  ：%s"
+msgstr "无效的持久化数据库文件 \"%s\"：%s"
 
 #: nscd/connections.c:538
 msgid "uninitialized header"
-msgstr "未起始的标头"
+msgstr "头部未初始化"
 
 #: nscd/connections.c:543
 msgid "header size does not match"
-msgstr "标头大小不吻合"
+msgstr "头部大小不匹配"
 
 #: nscd/connections.c:553
 msgid "file size does not match"
@@ -3883,7 +3883,7 @@ msgstr "验证失败"
 #: nscd/connections.c:584
 #, c-format
 msgid "suggested size of table for database %s larger than the persistent database's table"
-msgstr "用于数据库 %s 的建议表格大小大于永久性的数据库表格"
+msgstr "用于数据库 %s 的建议表大小大于持久化数据库的表"
 
 #: nscd/connections.c:595 nscd/connections.c:679
 #, c-format
@@ -3893,27 +3893,27 @@ msgstr "无法为 \"%s\" 创建只读描述符；没有 mmap"
 #: nscd/connections.c:611
 #, c-format
 msgid "cannot access '%s'"
-msgstr "无法访问  \"%s\" "
+msgstr "无法访问 \"%s\""
 
 #: nscd/connections.c:659
 #, c-format
 msgid "database for %s corrupted or simultaneously used; remove %s manually if necessary and restart"
-msgstr "数据库用于 %s 已损坏或被同步地使用；若必要，手动移除 %s 并重启"
+msgstr "%s 的数据库已损坏或已同时使用；若有必要，手动移除 %s 并重启"
 
 #: nscd/connections.c:665
 #, c-format
 msgid "cannot create %s; no persistent database used"
-msgstr "无法创建 %s; 不使用持久数据库"
+msgstr "无法创建 %s；不使用持久化数据库"
 
 #: nscd/connections.c:668
 #, c-format
 msgid "cannot create %s; no sharing possible"
-msgstr "无法创建 %s; 无法共享"
+msgstr "无法创建 %s；无法共享"
 
 #: nscd/connections.c:739
 #, c-format
 msgid "cannot write to database file %s: %s"
-msgstr "无法写入数据库文件 %s: %s"
+msgstr "无法写入数据库文件 %s：%s"
 
 #: nscd/connections.c:795
 #, c-format
@@ -3928,37 +3928,37 @@ msgstr "无法启用套接字以接受连接：%s"
 #: nscd/connections.c:871
 #, c-format
 msgid "disabled inotify-based monitoring for file `%s': %s"
-msgstr "为 `%s' 禁用基于 inotify 的监控: %s"
+msgstr "已为文件 \"%s\" 禁用基于 inotify 的监视：%s"
 
 #: nscd/connections.c:875
 #, c-format
 msgid "monitoring file `%s` (%d)"
-msgstr "监控文件 `%s' (%d)"
+msgstr "正在监视文件 \"%s\" (%d)"
 
 #: nscd/connections.c:888
 #, c-format
 msgid "disabled inotify-based monitoring for directory `%s': %s"
-msgstr "为目录 `%s' 禁用基于 inotify 的监控: %s"
+msgstr "已为目录 \"%s\" 禁用基于 inotify 的监视：%s"
 
 #: nscd/connections.c:892
 #, c-format
 msgid "monitoring directory `%s` (%d)"
-msgstr "监视目录 `%s` (%d)"
+msgstr "正在监视目录 \"%s\" (%d)"
 
 #: nscd/connections.c:920
 #, c-format
 msgid "monitoring file %s for database %s"
-msgstr "监视文件 %s, 用于数据库 %s"
+msgstr "监视文件 %s，用于数据库 %s"
 
 #: nscd/connections.c:930
 #, c-format
 msgid "stat failed for file `%s'; will try again later: %s"
-msgstr "stat 文件 `%s' 失败；将稍后再试: %s"
+msgstr "对文件 \"%s\" 进行 stat 操作失败；将稍后再试：%s"
 
 #: nscd/connections.c:1049
 #, c-format
 msgid "provide access to FD %d, for %s"
-msgstr "提供访问到 FD %d, 用于 %s"
+msgstr "提供到 FD %d 的访问，用于 %s"
 
 #: nscd/connections.c:1061
 #, c-format
@@ -3968,26 +3968,26 @@ msgstr "无法处理旧请求版本 %d；当前版本为 %d"
 #: nscd/connections.c:1084
 #, c-format
 msgid "request from %ld not handled due to missing permission"
-msgstr "由于缺少权限而无法处理来自 %ld 的要求"
+msgstr "由于缺少权限而无法处理来自 %ld 的请求"
 
 #: nscd/connections.c:1089
 #, c-format
 msgid "request from '%s' [%ld] not handled due to missing permission"
-msgstr "由于缺少权限而无法处理来自 '%s' [%ld] 的要求"
+msgstr "由于缺少权限而无法处理来自 \"%s\" [%ld] 的请求"
 
 #: nscd/connections.c:1094
 msgid "request not handled due to missing permission"
-msgstr "要求无法控柄的由于缺少权限"
+msgstr "由于缺少权限而无法处理请求"
 
 #: nscd/connections.c:1132 nscd/connections.c:1158
 #, c-format
 msgid "cannot write result: %s"
-msgstr "无法写入结果： \"%s\" "
+msgstr "无法写入结果：%s"
 
 #: nscd/connections.c:1249
 #, c-format
 msgid "error getting caller's id: %s"
-msgstr "取得调用程序识别码时发生错误: %s"
+msgstr "取得调用者 id 时发生错误：%s"
 
 #: nscd/connections.c:1359
 #, c-format
@@ -3997,92 +3997,92 @@ msgstr "无法打开 /proc/self/cmdline：%m；停用偏执模式"
 #: nscd/connections.c:1382
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
-msgstr "无法变更为旧的 UID：%s; 停用偏执模式"
+msgstr "无法变更为旧的 UID：%s；停用偏执模式"
 
 #: nscd/connections.c:1393
 #, c-format
 msgid "cannot change to old GID: %s; disabling paranoia mode"
-msgstr "无法变更为旧的 GID：%s; 停用偏执模式"
+msgstr "无法变更为旧的 GID：%s；停用偏执模式"
 
 #: nscd/connections.c:1407
 #, c-format
 msgid "cannot change to old working directory: %s; disabling paranoia mode"
-msgstr "无法变更为旧的工作目录：%s; 停用偏执模式"
+msgstr "无法变更为旧的工作目录：%s；停用偏执模式"
 
 #: nscd/connections.c:1454
 #, c-format
 msgid "re-exec failed: %s; disabling paranoia mode"
-msgstr "re-exec 失败：%s; 停用偏执模式"
+msgstr "重新执行失败：%s；停用偏执模式"
 
 #: nscd/connections.c:1463
 #, c-format
 msgid "cannot change current working directory to \"/\": %s"
-msgstr "无法变更目前的工作目录到  \"/\"  ：%s"
+msgstr "无法变更当前工作目录到 \"/\"：%s"
 
 #: nscd/connections.c:1647
 #, c-format
 msgid "short read while reading request: %s"
-msgstr "读取请求时没有读入足够的数据：%s"
+msgstr "读取请求时过早结束：%s"
 
 #: nscd/connections.c:1680
 #, c-format
 msgid "key length in request too long: %d"
-msgstr "请求中的键过长：%d"
+msgstr "请求中的键长度过长：%d"
 
 #: nscd/connections.c:1693
 #, c-format
 msgid "short read while reading request key: %s"
-msgstr "读入请求键的时候没有读入足够的数据：%s"
+msgstr "读入请求键时过早结束：%s"
 
 #: nscd/connections.c:1703
 #, c-format
 msgid "handle_request: request received (Version = %d) from PID %ld"
-msgstr "处理请求：已从进程ID %2$ld 收到请求 (版本 = %1$d)"
+msgstr "处理请求：已从 PID %2$ld 收到请求（版本 = %1$d）"
 
 #: nscd/connections.c:1708
 #, c-format
 msgid "handle_request: request received (Version = %d)"
-msgstr "处理请求：已收到请求 (版本 = %d)"
+msgstr "处理请求：已收到请求（版本 = %d）"
 
 #: nscd/connections.c:1848
 #, c-format
 msgid "ignored inotify event for `%s` (file exists)"
-msgstr "为 `%s` 忽略 inotify 事件（文件存在）"
+msgstr "已为 \"%s\" 忽略 inotify 事件（文件已存在）"
 
 #: nscd/connections.c:1853
 #, c-format
 msgid "monitored file `%s` was %s, removing watch"
-msgstr "监视文件 `%s' 原为 %s，移除监视"
+msgstr "监视的文件 \"%s\" 原为 %s，移除监视"
 
 #: nscd/connections.c:1861 nscd/connections.c:1903
 #, c-format
 msgid "failed to remove file watch `%s`: %s"
-msgstr "移除文件监视 `%s' 失败: %s"
+msgstr "移除文件监视 \"%s\" 失败：%s"
 
 #: nscd/connections.c:1876
 #, c-format
 msgid "monitored file `%s` was written to"
-msgstr "监视的文件 '%s' 被写入"
+msgstr "监视的文件 \"%s\" 被写入"
 
 #: nscd/connections.c:1900
 #, c-format
 msgid "monitored parent directory `%s` was %s, removing watch on `%s`"
-msgstr "监视父目录 `%s' 原为 %s，移除 `%s' 上的监视"
+msgstr "监视的父目录 \"%s\" 原为 %s，移除 \"%s\" 上的监视"
 
 #: nscd/connections.c:1926
 #, c-format
 msgid "monitored file `%s` was %s, adding watch"
-msgstr "监视文件 `%s' 原为 %s，添加监视"
+msgstr "监视的文件 \"%s\" 原为 %s，添加监视"
 
 #: nscd/connections.c:1938
 #, c-format
 msgid "failed to add file watch `%s`: %s"
-msgstr "添加文件监视 `%s' 失败: %s"
+msgstr "添加文件监视 \"%s\" 失败：%s"
 
 #: nscd/connections.c:2116 nscd/connections.c:2281
 #, c-format
 msgid "disabled inotify-based monitoring after read error %d"
-msgstr "停用基于 inotify 的监控，在读取错误 %d 发生后"
+msgstr "发生读取错误 %d，停用基于 inotify 的监视"
 
 #: nscd/connections.c:2397
 msgid "could not initialize conditional variable"
@@ -4094,18 +4094,18 @@ msgstr "无法开始清理线程；终止中"
 
 #: nscd/connections.c:2419
 msgid "could not start any worker thread; terminating"
-msgstr "无法开始任何背景工作线程；终止中"
+msgstr "无法开始任何工作线程；终止中"
 
 #: nscd/connections.c:2474 nscd/connections.c:2476 nscd/connections.c:2492
 #: nscd/connections.c:2502 nscd/connections.c:2520 nscd/connections.c:2531
 #: nscd/connections.c:2541
 #, c-format
 msgid "Failed to run nscd as user '%s'"
-msgstr "以用户 '%s' 的身分运行 nscd 失败"
+msgstr "以用户 \"%s\" 的身份运行 nscd 失败"
 
 #: nscd/connections.c:2494
 msgid "initial getgrouplist failed"
-msgstr "初始化 getgrouplist 失败"
+msgstr "首次 getgrouplist 失败"
 
 #: nscd/connections.c:2503
 msgid "getgrouplist failed"
@@ -4119,27 +4119,27 @@ msgstr "setgroups 失败"
 #: nscd/pwdcache.c:362 nscd/servicescache.c:309
 #, c-format
 msgid "short write in %s: %s"
-msgstr "写入 %s 的数据过短: %s"
+msgstr "在 %s 的写入过早结束：%s"
 
 #: nscd/grpcache.c:429 nscd/initgrcache.c:74
 #, c-format
 msgid "Haven't found \"%s\" in group cache!"
-msgstr "无法在组缓存中找到 \"%s\" ！"
+msgstr "无法在组缓存中找到 \"%s\"！"
 
 #: nscd/grpcache.c:431 nscd/initgrcache.c:76
 #, c-format
 msgid "Reloading \"%s\" in group cache!"
-msgstr "在组缓存中重新加载 \"%s\" ！"
+msgstr "在组缓存中重新加载 \"%s\"！"
 
 #: nscd/grpcache.c:491
 #, c-format
 msgid "Invalid numeric gid \"%s\"!"
-msgstr "无效的 gid 数值 \"%s\"!"
+msgstr "无效的 gid 数值 \"%s\"！"
 
 #: nscd/mem.c:420
 #, c-format
 msgid "freed %zu bytes in %s cache"
-msgstr "在 %2$s 缓存中 %1$zu 字节可用"
+msgstr "在 %2$s 缓存中释放了 %1$zu 字节"
 
 #: nscd/mem.c:563
 #, c-format
@@ -4149,30 +4149,30 @@ msgstr "无更多内存可用于数据库 \"%s\""
 #: nscd/netgroupcache.c:121
 #, c-format
 msgid "Haven't found \"%s\" in netgroup cache!"
-msgstr "尚未在网络群组缓存中找到  \"%s\"  ！"
+msgstr "无法在 netgroup 缓存中找到 \"%s\"！"
 
 #: nscd/netgroupcache.c:123
 #, c-format
 msgid "Reloading \"%s\" in netgroup cache!"
-msgstr "重新在网络群组缓存中加载  \"%s\"  ！"
+msgstr "重新在 netgroup 缓存中加载 \"%s\"！"
 
 #: nscd/netgroupcache.c:469
 #, c-format
 msgid "Haven't found \"%s (%s,%s,%s)\" in netgroup cache!"
-msgstr "尚未在网络群组缓存中找到  \"%s (%s,%s,%s)\"  ！"
+msgstr "无法在 netgroup 缓存中找到 \"%s (%s,%s,%s)\"！"
 
 #: nscd/netgroupcache.c:472
 #, c-format
 msgid "Reloading \"%s (%s,%s,%s)\" in netgroup cache!"
-msgstr "重新在网络群组缓存中加载  \"%s (%s,%s,%s)\"  ！"
+msgstr "重新在 netgroup 缓存中加载 \"%s (%s,%s,%s)\"！"
 
 #: nscd/nscd.c:107
 msgid "Read configuration data from NAME"
-msgstr "从 NAME 中读取配置数据"
+msgstr "从 <名称> 中读取配置数据"
 
 #: nscd/nscd.c:109
 msgid "Do not fork and display messages on the current tty"
-msgstr "不在目前的 tty 产生子进程 (fork) 以及显示消息"
+msgstr "不进行 fork，并且在当前 tty 显示消息"
 
 #: nscd/nscd.c:111
 msgid "Print contents of the offline cache file NAME"
@@ -4180,15 +4180,15 @@ msgstr "打印离线缓存文件 <名称> 的内容"
 
 #: nscd/nscd.c:113
 msgid "Do not fork, but otherwise behave like a daemon"
-msgstr "不衍生，但是否则 behave 如同守护程序"
+msgstr "不进行 fork，但是在其他方面的行为如同守护进程"
 
 #: nscd/nscd.c:114
 msgid "NUMBER"
-msgstr "号码"
+msgstr "数字"
 
 #: nscd/nscd.c:114
 msgid "Start NUMBER threads"
-msgstr "启动 NUMBER 个线程"
+msgstr "启动 <数字> 个线程"
 
 #: nscd/nscd.c:115
 msgid "Shut the server down"
@@ -4196,19 +4196,19 @@ msgstr "关闭服务器"
 
 #: nscd/nscd.c:116
 msgid "Print current configuration statistics"
-msgstr "印出目前组态统计"
+msgstr "打印当前配置的统计信息"
 
 #: nscd/nscd.c:118
 msgid "Invalidate the specified cache"
-msgstr "使选定的缓存无效"
+msgstr "使指定的缓存无效"
 
 #: nscd/nscd.c:119
 msgid "TABLE,yes"
-msgstr "要制作表格"
+msgstr "表,yes"
 
 #: nscd/nscd.c:120
 msgid "Use separate cache for each user"
-msgstr "为每个用户使用分离的缓存"
+msgstr "为每个用户使用单独的缓存"
 
 #: nscd/nscd.c:125
 msgid "Name Service Cache Daemon."
@@ -4232,7 +4232,7 @@ msgstr "已经在运行"
 #: nscd/nscd.c:202
 #, c-format
 msgid "cannot create a pipe to talk to the child"
-msgstr "无法为同子进程交流创建管道"
+msgstr "无法为与子进程交互创建管道"
 
 #: nscd/nscd.c:206
 #, c-format
@@ -4241,7 +4241,7 @@ msgstr "无法 fork"
 
 #: nscd/nscd.c:276
 msgid "cannot change current working directory to \"/\""
-msgstr "无法变更目前的工作目录到  \"/\" "
+msgstr "无法变更当前工作目录到 \"/\""
 
 #: nscd/nscd.c:284
 msgid "Could not create log file"
@@ -4255,7 +4255,7 @@ msgstr "写入不完整"
 #: nscd/nscd.c:374
 #, c-format
 msgid "cannot read invalidate ACK"
-msgstr "无法读入 invalidate ACK"
+msgstr "无法读入无效化 ACK"
 
 #: nscd/nscd.c:380
 #, c-format
@@ -4265,17 +4265,17 @@ msgstr "无效化失败"
 #: nscd/nscd.c:429 nscd/nscd.c:454 nscd/nscd_stat.c:189
 #, c-format
 msgid "Only root is allowed to use this option!"
-msgstr "只有根用户允许使用本选项！"
+msgstr "只有 root 允许使用本选项！"
 
 #: nscd/nscd.c:449
 #, c-format
 msgid "'%s' is not a known database"
-msgstr " \"%s\"  并非已知数据库"
+msgstr "\"%s\" 不是已知的数据库"
 
 #: nscd/nscd.c:464
 #, c-format
 msgid "secure services not implemented anymore"
-msgstr "安全服务不再实现"
+msgstr "安全服务已不再实现"
 
 #: nscd/nscd.c:497
 #, c-format
@@ -4289,13 +4289,13 @@ msgstr ""
 "支持的表：\n"
 "%s\n"
 "\n"
-"要获得 bug 报告指示，请见：\n"
+"要了解报告错误的步骤，请参看：\n"
 "%s。\n"
 
 #: nscd/nscd.c:647
 #, c-format
 msgid "'wait' failed\n"
-msgstr "'wait' 失败\n"
+msgstr "\"wait\" 失败\n"
 
 #: nscd/nscd.c:654
 #, c-format
@@ -4310,22 +4310,22 @@ msgstr "子进程被信号 %d 中断\n"
 #: nscd/nscd_conf.c:53
 #, c-format
 msgid "database %s is not supported"
-msgstr "不支持数据库 \"%s\" "
+msgstr "不支持数据库 \"%s\""
 
 #: nscd/nscd_conf.c:104
 #, c-format
 msgid "Parse error: %s"
-msgstr "解析错误：%s"
+msgstr "语法分析错误：%s"
 
 #: nscd/nscd_conf.c:190
 #, c-format
 msgid "Must specify user name for server-user option"
-msgstr "必须为服务器用户选项指定用户名"
+msgstr "必须为 server-user 选项指定用户名"
 
 #: nscd/nscd_conf.c:200
 #, c-format
 msgid "Must specify user name for stat-user option"
-msgstr "必须为 stat 用户选项指定用户名"
+msgstr "必须为 stat-user 选项指定用户名"
 
 #: nscd/nscd_conf.c:258
 #, c-format
@@ -4340,17 +4340,17 @@ msgstr "未知的选项：%s %s %s"
 #: nscd/nscd_conf.c:285
 #, c-format
 msgid "cannot get current working directory: %s; disabling paranoia mode"
-msgstr "无法取得目前的工作目录：%s; 停用偏执模式"
+msgstr "无法获得当前工作目录：%s；停用偏执模式"
 
 #: nscd/nscd_conf.c:305
 #, c-format
 msgid "maximum file size for %s database too small"
-msgstr "最大值文件大小用于 %s 数据库太小"
+msgstr "%s 数据库的最大文件大小太小"
 
 #: nscd/nscd_stat.c:158
 #, c-format
 msgid "cannot write statistics: %s"
-msgstr "无法写入统计：%s"
+msgstr "无法写入统计数据：%s"
 
 #: nscd/nscd_stat.c:173
 msgid "yes"
@@ -4358,12 +4358,12 @@ msgstr "是"
 
 #: nscd/nscd_stat.c:174
 msgid "no"
-msgstr "无"
+msgstr "否"
 
 #: nscd/nscd_stat.c:185
 #, c-format
 msgid "Only root or %s is allowed to use this option!"
-msgstr "只有根用户或 %s 允许使用本选项！"
+msgstr "只有 root 或 %s 允许使用本选项！"
 
 #: nscd/nscd_stat.c:196
 #, c-format
@@ -4373,7 +4373,7 @@ msgstr "nscd 未运行！\n"
 #: nscd/nscd_stat.c:220
 #, c-format
 msgid "cannot read statistics data"
-msgstr "无法读入统计数据"
+msgstr "无法读取统计数据"
 
 #: nscd/nscd_stat.c:223
 #, c-format
@@ -4389,22 +4389,22 @@ msgstr ""
 #: nscd/nscd_stat.c:247
 #, c-format
 msgid "%3ud %2uh %2um %2lus  server runtime\n"
-msgstr "%3ud %2uh %2um %2lus  服务器 运行时长\n"
+msgstr "%3ud %2uh %2um %2lus  服务器运行时长\n"
 
 #: nscd/nscd_stat.c:250
 #, c-format
 msgid "    %2uh %2um %2lus  server runtime\n"
-msgstr "    %2uh %2um %2lus  服务器 运行时长\n"
+msgstr "    %2uh %2um %2lus  服务器运行时长\n"
 
 #: nscd/nscd_stat.c:252
 #, c-format
 msgid "        %2um %2lus  server runtime\n"
-msgstr "        %2um %2lus  服务器 运行时长\n"
+msgstr "        %2um %2lus  服务器运行时长\n"
 
 #: nscd/nscd_stat.c:254
 #, c-format
 msgid "            %2lus  server runtime\n"
-msgstr "            %2lus  服务器 运行时长\n"
+msgstr "            %2lus  服务器运行时长\n"
 
 #: nscd/nscd_stat.c:256
 #, c-format
@@ -4419,7 +4419,7 @@ msgstr ""
 "%15d  目前线程数量\n"
 "%15d  最大线程数量\n"
 "%15lu  客户端必须等待的次数\n"
-"%15s 偏执模式已启用\n"
+"%15s  偏执模式已启用\n"
 "%15lu  内部重新启动\n"
 "%15u  重新加载计数\n"
 
@@ -4454,49 +4454,49 @@ msgstr ""
 "%s 缓存：\n"
 "\n"
 "%15s  缓存已启用\n"
-"%15s  缓存为持续的\n"
+"%15s  缓存为持久化的\n"
 "%15s  缓存为共享\n"
 "%15zu  建议的大小\n"
 "%15zu  总计数据保存池大小\n"
 "%15zu  使用的数据保存池大小\n"
-"%15lu  正项目的存在时间(秒)\n"
-"%15lu  负项目的存在时间(秒)\n"
-"%15<PRIuMAX> 正项目中找到缓存数\n"
-"%15<PRIuMAX> 负项目中找到缓存数\n"
-"%15<PRIuMAX> 正项目中遗漏的缓存数\n"
-"%15<PRIuMAX> 负项目中遗漏的缓存数\n"
-"%15lu%% 缓存找到的比例\n"
-"%15zu  目前缓存的数量值\n"
-"%15zu  最大值缓存数量值\n"
-"%15zu  已搜索最大值链接长度\n"
+"%15lu  正条目的存活时间（秒）\n"
+"%15lu  负条目的存活时间（秒）\n"
+"%15<PRIuMAX> 正条目中缓存命中数\n"
+"%15<PRIuMAX> 负条目中缓存命中数\n"
+"%15<PRIuMAX> 正条目中缓存缺失数\n"
+"%15<PRIuMAX> 负条目中缓存缺失数\n"
+"%15lu%% 缓存命中率\n"
+"%15zu  目前缓存的值的数目\n"
+"%15zu  缓存的值的最大数目\n"
+"%15zu  已搜索的最大链长度\n"
 "%15<PRIuMAX> rdlock 延迟数量\n"
 "%15<PRIuMAX> wrlock 延迟数量\n"
-"%15<PRIuMAX> 内存配置失败\n"
+"%15<PRIuMAX> 内存分配失败\n"
 "%15s  检查 /etc/%s 的变更\n"
 
 #: nscd/pwdcache.c:406
 #, c-format
 msgid "Haven't found \"%s\" in user database cache!"
-msgstr "无法在用户数据库缓存中找到 \"%s\" ！"
+msgstr "无法在用户数据库缓存中找到 \"%s\"！"
 
 #: nscd/pwdcache.c:408
 #, c-format
 msgid "Reloading \"%s\" in user database cache!"
-msgstr "在用户数据库缓存中重新加载 \"%s\" ！"
+msgstr "正在用户数据库缓存中重新加载 \"%s\"！"
 
 #: nscd/pwdcache.c:470
 #, c-format
 msgid "Invalid numeric uid \"%s\"!"
-msgstr "无效的 uid 数值 \"%s\"!"
+msgstr "无效的 uid 数值 \"%s\"！"
 
 #: nscd/selinux.c:154
 #, c-format
 msgid "Failed opening connection to the audit subsystem: %m"
-msgstr "失败的打开连接到审核子系统：%m"
+msgstr "打开连接到审计子系统失败：%m"
 
 #: nscd/selinux.c:175
 msgid "Failed to set keep-capabilities"
-msgstr "设置功能保持时失败"
+msgstr "设置 keep-capabilities 时失败"
 
 #: nscd/selinux.c:176 nscd/selinux.c:239
 msgid "prctl(KEEPCAPS) failed"
@@ -4520,15 +4520,15 @@ msgstr "cap_set_proc 失败"
 
 #: nscd/selinux.c:238
 msgid "Failed to unset keep-capabilities"
-msgstr "解除设置功能保持时失败"
+msgstr "取消设置 keep-capabilities 时失败"
 
 #: nscd/selinux.c:254
 msgid "Failed to determine if kernel supports SELinux"
-msgstr "决定如果内核支持 SELinux 时失败"
+msgstr "确定内核是否支持 SELinux 时失败"
 
 #: nscd/selinux.c:269
 msgid "Failed to start AVC thread"
-msgstr "开始 AVC 线程时失败"
+msgstr "启动 AVC 线程时失败"
 
 #: nscd/selinux.c:291
 msgid "Failed to create AVC lock"
@@ -4540,28 +4540,28 @@ msgstr "无法启动 AVC"
 
 #: nscd/selinux.c:339
 msgid "Access Vector Cache (AVC) started"
-msgstr "访问矢量缓存 (AVC) 开始"
+msgstr "访问矢量缓存 (AVC) 已启动"
 
 #: nscd/selinux.c:381
 msgid "Error querying policy for undefined object classes or permissions."
-msgstr "为未定义的对象类型或权限请求策略时出错。"
+msgstr "为未定义的对象类或权限查询策略时出错。"
 
 #: nscd/selinux.c:388
 msgid "Error getting security class for nscd."
-msgstr "取得 nscd 的安全类时发生错误。"
+msgstr "取得 nscd 的安全类时出错。"
 
 #: nscd/selinux.c:393
 #, c-format
 msgid "Error translating permission name \"%s\" to access vector bit."
-msgstr "将权限名 \"%s\" 翻译到访问矢量位时出错。"
+msgstr "将权限名 \"%s\" 翻译为访问矢量位时出错。"
 
 #: nscd/selinux.c:403
 msgid "Error getting context of socket peer"
-msgstr "取得对等通信端的状态组合时发生错误"
+msgstr "取得套接字对等端的上下文时出错"
 
 #: nscd/selinux.c:408
 msgid "Error getting context of nscd"
-msgstr "取得 nscd 的状态组合时发生错误"
+msgstr "取得 nscd 的上下文时出错"
 
 #: nscd/selinux.c:414
 msgid "Error getting sid from context"
@@ -4585,24 +4585,24 @@ msgstr ""
 "\n"
 "SELinux AVC 统计：\n"
 "\n"
-"%15u  项目查找\n"
-"%15u  项目符合项目\n"
-"%15u  项目缺少\n"
-"%15u  项目舍弃\n"
+"%15u  条目查找\n"
+"%15u  条目命中\n"
+"%15u  条目缺失\n"
+"%15u  条目舍弃\n"
 "%15u  CAV 查找\n"
-"%15u  CAV 符合项目\n"
-"%15u  CAV 探查\n"
-"%15u  CAV 缺少\n"
+"%15u  CAV 命中\n"
+"%15u  CAV 探测\n"
+"%15u  CAV 缺失\n"
 
 #: nscd/servicescache.c:357
 #, c-format
 msgid "Haven't found \"%s\" in services cache!"
-msgstr "无法在服务缓存中找到 \"%s\" ！"
+msgstr "无法在服务缓存中找到 \"%s\"！"
 
 #: nscd/servicescache.c:359
 #, c-format
 msgid "Reloading \"%s\" in services cache!"
-msgstr "在服务缓存中重新加载 \"%s\" ！"
+msgstr "正在服务缓存中重新加载 \"%s\"！"
 
 #: nss/getent.c:54
 msgid "database [key ...]"
@@ -4654,15 +4654,15 @@ msgstr "未知的数据库：%s\n"
 
 #: nss/makedb.c:121
 msgid "Convert key to lower case"
-msgstr "转换键转换为小写"
+msgstr "将键转换为小写"
 
 #: nss/makedb.c:124
 msgid "Do not print messages while building database"
-msgstr "不印出消息当创建数据库"
+msgstr "创建数据库时不打印消息"
 
 #: nss/makedb.c:126
 msgid "Print content of database file, one entry a line"
-msgstr "印出内容的数据库文件，每项一行"
+msgstr "打印数据库文件的内容，每个条目一行"
 
 #: nss/makedb.c:127
 msgid "CHAR"
@@ -4670,7 +4670,7 @@ msgstr "字符"
 
 #: nss/makedb.c:128
 msgid "Generated line not part of iteration"
-msgstr "产生的行不是迭代的一部分"
+msgstr "生成的行不是迭代的一部分"
 
 #: nss/makedb.c:133
 msgid "Create simple database from textual input."
@@ -4689,7 +4689,7 @@ msgstr ""
 #: nss/makedb.c:229
 #, c-format
 msgid "cannot open database file `%s'"
-msgstr "无法打开数据库文件 %s"
+msgstr "无法打开数据库文件 \"%s\""
 
 #: nss/makedb.c:274
 #, c-format
@@ -4699,7 +4699,7 @@ msgstr "没有条目可供处理"
 #: nss/makedb.c:284
 #, c-format
 msgid "cannot create temporary file name"
-msgstr "无法创建暂存文件名称"
+msgstr "无法创建临时文件名"
 
 #: nss/makedb.c:290
 #, c-format
@@ -4709,12 +4709,12 @@ msgstr "无法创建临时文件"
 #: nss/makedb.c:306
 #, c-format
 msgid "cannot stat newly created file"
-msgstr "无法取得新创建文件的状态"
+msgstr "无法对新创建文件执行 stat 操作"
 
 #: nss/makedb.c:317
 #, c-format
 msgid "cannot rename temporary file"
-msgstr "无法重命名暂存文件"
+msgstr "无法重命名临时文件"
 
 #: nss/makedb.c:529 nss/makedb.c:552
 #, c-format
@@ -4723,7 +4723,7 @@ msgstr "无法创建搜索树"
 
 #: nss/makedb.c:558
 msgid "duplicate key"
-msgstr "重复键值"
+msgstr "重复的键"
 
 #: nss/makedb.c:570
 #, c-format
@@ -4743,7 +4743,7 @@ msgstr "写入新数据库文件时失败"
 #: nss/makedb.c:833
 #, c-format
 msgid "cannot stat database file"
-msgstr "无法取得数据库文件的状态"
+msgstr "无法对数据库文件执行 stat 操作"
 
 #: nss/makedb.c:838
 #, c-format
@@ -4763,7 +4763,7 @@ msgstr "无法初始化 SELinux 上下文"
 #: nss/makedb.c:902
 #, c-format
 msgid "cannot set file creation context for `%s'"
-msgstr "无法为 %s 设置文件创建语境"
+msgstr "无法为 \"%s\" 设置文件创建上下文"
 
 #: posix/getconf.c:417
 #, c-format
@@ -4773,7 +4773,7 @@ msgstr "用法：%s [-v 规范] 变量名 [路径名]\n"
 #: posix/getconf.c:420
 #, c-format
 msgid "       %s -a [pathname]\n"
-msgstr "       %s -a [路径名称]\n"
+msgstr "       %s -a [路径名]\n"
 
 #: posix/getconf.c:496
 #, c-format
@@ -4786,18 +4786,18 @@ msgid ""
 "environment SPEC.\n"
 "\n"
 msgstr ""
-"用法：getconf [-v SPEC] VAR\n"
-" 或： getconf [-v SPEC] PATH_VAR 路径\n"
+"用法：getconf [-v 规范] 变量\n"
+" 或： getconf [-v 规范] 路径_变量 路径\n"
 "\n"
-"取得变量 VAR 的组态值，或是变量 PATH_VAR\n"
-"用于路径 PATH。 如果已提供 SPEC，就给出用于编译的\n"
-"环境 SPEC 值。\n"
+"取得 <变量> 的配置值，或是 <路径> 中的变量 <路径_变量>\n"
+"的配置值。如果给定了 <规范>，则给出用于编译\n"
+"环境 <规范> 的配置值。\n"
 "\n"
 
 #: posix/getconf.c:572
 #, c-format
 msgid "unknown specification \"%s\""
-msgstr "未知的规范 \"%s\" "
+msgstr "未知的规范 \"%s\""
 
 #: posix/getconf.c:624
 #, c-format
@@ -4811,42 +4811,42 @@ msgstr "未定义"
 #: posix/getconf.c:707
 #, c-format
 msgid "Unrecognized variable `%s'"
-msgstr "不可识别的变量 \"%s\" "
+msgstr "不可识别的变量 \"%s\""
 
 #: posix/getopt.c:278
 #, c-format
 msgid "%s: option '%s%s' is ambiguous\n"
-msgstr "%s： 选项  \"%s%s\"  含义不清\n"
+msgstr "%s: 选项 \"%s%s\" 有歧义\n"
 
 #: posix/getopt.c:284
 #, c-format
 msgid "%s: option '%s%s' is ambiguous; possibilities:"
-msgstr "%s： 选项  \"%s%s\"  含义不清；可能为："
+msgstr "%s: 选项 \"%s%s\" 有歧义；可能为："
 
 #: posix/getopt.c:319
 #, c-format
 msgid "%s: unrecognized option '%s%s'\n"
-msgstr "%s：未识别的选项  \"%s%s\" \n"
+msgstr "%s: 未识别的选项 \"%s%s\"\n"
 
 #: posix/getopt.c:345
 #, c-format
 msgid "%s: option '%s%s' doesn't allow an argument\n"
-msgstr "%s：选项  \"%s%s\"  不允许有参数\n"
+msgstr "%s: 选项 \"%s%s\" 不允许有参数\n"
 
 #: posix/getopt.c:360
 #, c-format
 msgid "%s: option '%s%s' requires an argument\n"
-msgstr "%s：选项  \"%s%s\"  需要一个参数\n"
+msgstr "%s: 选项 \"%s%s\" 需要一个参数\n"
 
 #: posix/getopt.c:621
 #, c-format
 msgid "%s: invalid option -- '%c'\n"
-msgstr "%s: 不适用的选项 -- %c\n"
+msgstr "%s: 无效的选项 -- %c\n"
 
 #: posix/getopt.c:636 posix/getopt.c:682
 #, c-format
 msgid "%s: option requires an argument -- '%c'\n"
-msgstr "%s: 选项需要一个参数 -- %c\n"
+msgstr "%s: 选项需要一个参数 -- \"%c\"\n"
 
 #: posix/regcomp.c:138
 msgid "No match"
@@ -4854,11 +4854,11 @@ msgstr "没有匹配"
 
 #: posix/regcomp.c:141
 msgid "Invalid regular expression"
-msgstr "无效的常规表达式"
+msgstr "无效的正则表达式"
 
 #: posix/regcomp.c:144
 msgid "Invalid collation character"
-msgstr "不适用的对照字符"
+msgstr "无效的定序字符"
 
 #: posix/regcomp.c:147
 msgid "Invalid character class name"
@@ -4866,15 +4866,15 @@ msgstr "无效的字符类名"
 
 #: posix/regcomp.c:150
 msgid "Trailing backslash"
-msgstr "尾端的反斜线"
+msgstr "末尾有反斜杠"
 
 #: posix/regcomp.c:153
 msgid "Invalid back reference"
-msgstr "无效的向后引用"
+msgstr "无效的后向引用"
 
 #: posix/regcomp.c:156
 msgid "Unmatched [, [^, [:, [., or [="
-msgstr "不匹配的 [、[^、[:、[.、或 [="
+msgstr "未匹配的 [、[^、[:、[. 或 [="
 
 #: posix/regcomp.c:159
 msgid "Unmatched ( or \\("
@@ -4890,7 +4890,7 @@ msgstr "无效的 \\{\\} 的内容"
 
 #: posix/regcomp.c:168
 msgid "Invalid range end"
-msgstr "不适用的范围结束"
+msgstr "无效的范围端点"
 
 #: posix/regcomp.c:171
 msgid "Memory exhausted"
@@ -4898,11 +4898,11 @@ msgstr "内存耗尽"
 
 #: posix/regcomp.c:174
 msgid "Invalid preceding regular expression"
-msgstr "无效的前导常规表达式"
+msgstr "前面的正则表达式无效"
 
 #: posix/regcomp.c:177
 msgid "Premature end of regular expression"
-msgstr "常规表达式非正常结束"
+msgstr "正则表达式过早结束"
 
 #: posix/regcomp.c:180
 msgid "Regular expression too big"
@@ -4914,15 +4914,15 @@ msgstr "不匹配的 ) 或 \\)"
 
 #: posix/regcomp.c:676
 msgid "No previous regular expression"
-msgstr "没有前一个常规表达式"
+msgstr "缺少前一个正则表达式"
 
 #: posix/wordexp.c:1794
 msgid "parameter null or not set"
-msgstr "参数为 null 或未设置"
+msgstr "参数为空或未设置"
 
 #: resolv/herror.c:63
 msgid "Resolver Error 0 (no error)"
-msgstr "解析器错误 0 (无错误)"
+msgstr "解析器错误 0（无错误）"
 
 #: resolv/herror.c:64
 msgid "Unknown host"
@@ -4930,7 +4930,7 @@ msgstr "未知的主机"
 
 #: resolv/herror.c:65
 msgid "Host name lookup failure"
-msgstr "主机名搜索失败"
+msgstr "查找主机名失败"
 
 #: resolv/herror.c:66
 msgid "Unknown server error"
@@ -4951,35 +4951,35 @@ msgstr "未知的解析器错误"
 #: resolv/res_hconf.c:118
 #, c-format
 msgid "%s: line %d: cannot specify more than %d trim domains"
-msgstr "%s：行 %d：无法指定多于 %d 个规整域"
+msgstr "%s: 行 %d: 无法指定多于 %d 个规整域"
 
 #: resolv/res_hconf.c:139
 #, c-format
 msgid "%s: line %d: list delimiter not followed by domain"
-msgstr "%s：行 %d：列表分隔符没有出现在域之后"
+msgstr "%s: 行 %d: 列表分隔符后面没有跟着域"
 
 #: resolv/res_hconf.c:176
 #, c-format
 msgid "%s: line %d: expected `on' or `off', found `%s'\n"
-msgstr "%s：行 %d：应为 \"on\" 或 \"off\" ，得到 \"%s\" \n"
+msgstr "%s: 行 %d: 应为 \"on\" 或 \"off\"，但找到 \"%s\" \n"
 
 #: resolv/res_hconf.c:219
 #, c-format
 msgid "%s: line %d: bad command `%s'\n"
-msgstr "%s：行 %d：错误命令 \"%s\" \n"
+msgstr "%s: 行 %d: 错误命令 \"%s\" \n"
 
 #: resolv/res_hconf.c:252
 #, c-format
 msgid "%s: line %d: ignoring trailing garbage `%s'\n"
-msgstr "%s: 行 %d: 正在忽略尾端的无用数据 `%s'\n"
+msgstr "%s: 行 %d: 正在忽略尾部的无用数据 \"%s\"\n"
 
 #: stdio-common/psiginfo-data.h:2
 msgid "Illegal opcode"
-msgstr "不合法的 opcode"
+msgstr "不合法的操作码"
 
 #: stdio-common/psiginfo-data.h:3
 msgid "Illegal operand"
-msgstr "不合法的算符"
+msgstr "不合法的操作数"
 
 #: stdio-common/psiginfo-data.h:4
 msgid "Illegal addressing mode"
@@ -4991,19 +4991,19 @@ msgstr "不合法的陷阱"
 
 #: stdio-common/psiginfo-data.h:6
 msgid "Privileged opcode"
-msgstr "需要权限的 opcode"
+msgstr "操作码需要特权"
 
 #: stdio-common/psiginfo-data.h:7
 msgid "Privileged register"
-msgstr "需要权限的暂存器"
+msgstr "寄存器需要特权"
 
 #: stdio-common/psiginfo-data.h:8
 msgid "Coprocessor error"
-msgstr "辅助处理器错误"
+msgstr "协处理器错误"
 
 #: stdio-common/psiginfo-data.h:9
 msgid "Internal stack error"
-msgstr "内部堆栈错误"
+msgstr "内部栈错误"
 
 #: stdio-common/psiginfo-data.h:12
 msgid "Integer divide by zero"
@@ -5023,7 +5023,7 @@ msgstr "浮点数溢出"
 
 #: stdio-common/psiginfo-data.h:16
 msgid "Floating-point underflow"
-msgstr "浮点数下限溢出"
+msgstr "浮点数下溢"
 
 #: stdio-common/psiginfo-data.h:17
 msgid "Floating-poing inexact result"
@@ -5035,7 +5035,7 @@ msgstr "无效的浮点数操作"
 
 #: stdio-common/psiginfo-data.h:19
 msgid "Subscript out of range"
-msgstr "注标超出范围"
+msgstr "下标超出范围"
 
 #: stdio-common/psiginfo-data.h:22
 msgid "Address not mapped to object"
@@ -5043,7 +5043,7 @@ msgstr "地址没有映射到对象"
 
 #: stdio-common/psiginfo-data.h:23
 msgid "Invalid permissions for mapped object"
-msgstr "对于映射对象的权限无效"
+msgstr "已映射对象的权限无效"
 
 #: stdio-common/psiginfo-data.h:26
 msgid "Invalid address alignment"
@@ -5051,7 +5051,7 @@ msgstr "无效的地址对齐"
 
 #: stdio-common/psiginfo-data.h:27
 msgid "Nonexisting physical address"
-msgstr "不存在的实体地址"
+msgstr "不存在的物理地址"
 
 #: stdio-common/psiginfo-data.h:28
 msgid "Object-specific hardware error"
@@ -5059,7 +5059,7 @@ msgstr "对象特定的硬件错误"
 
 #: stdio-common/psiginfo-data.h:31
 msgid "Process breakpoint"
-msgstr "进程中断点"
+msgstr "进程断点"
 
 #: stdio-common/psiginfo-data.h:32
 msgid "Process trace trap"
@@ -5071,15 +5071,15 @@ msgstr "子进程已结束"
 
 #: stdio-common/psiginfo-data.h:36
 msgid "Child has terminated abnormally and did not create a core file"
-msgstr "子进程已异常终止且未创建内存文件"
+msgstr "子进程已异常终止且未创建核心转储文件"
 
 #: stdio-common/psiginfo-data.h:37
 msgid "Child has terminated abnormally and created a core file"
-msgstr "子进程异常终止，创建了内存转储文件"
+msgstr "子进程已异常终止且创建了核心转储文件"
 
 #: stdio-common/psiginfo-data.h:38
 msgid "Traced child has trapped"
-msgstr "追踪的子进程已落入陷阱"
+msgstr "追踪的子进程已被陷阱捕获"
 
 #: stdio-common/psiginfo-data.h:39
 msgid "Child has stopped"
@@ -5107,52 +5107,52 @@ msgstr "I/O 错误"
 
 #: stdio-common/psiginfo-data.h:47
 msgid "High priority input available"
-msgstr "高优先权输入可用"
+msgstr "高优先级输入可用"
 
 #: stdio-common/psiginfo-data.h:48
 msgid "Device disconnected"
-msgstr "设备已经结束连接"
+msgstr "设备已断开连接"
 
 #: stdio-common/psiginfo.c:140
 msgid "Signal sent by kill()"
-msgstr "kill() 已发送信号"
+msgstr "kill() 发送的信号"
 
 #: stdio-common/psiginfo.c:143
 msgid "Signal sent by sigqueue()"
-msgstr "sigqueue() 已发送信号"
+msgstr "sigqueue() 发送的信号"
 
 #: stdio-common/psiginfo.c:146
 msgid "Signal generated by the expiration of a timer"
-msgstr "计时器的逾期已产生信号"
+msgstr "计时器过期产生的信号"
 
 #: stdio-common/psiginfo.c:149
 msgid "Signal generated by the completion of an asynchronous I/O request"
-msgstr "异步 I/O 要求的完成已产生信号"
+msgstr "异步 I/O 请求的完成产生的信号"
 
 #: stdio-common/psiginfo.c:153
 msgid "Signal generated by the arrival of a message on an empty message queue"
-msgstr "空消息队列中到达的消息已产生信号"
+msgstr "空消息队列中到达的消息产生的信号"
 
 #: stdio-common/psiginfo.c:158
 msgid "Signal sent by tkill()"
-msgstr "tkill() 已发送信号"
+msgstr "tkill() 发送的信号"
 
 #: stdio-common/psiginfo.c:163
 msgid "Signal generated by the completion of an asynchronous name lookup request"
-msgstr "异步名称查找要求的完成已产生信号"
+msgstr "异步名称查找请求的完成产生的信号"
 
 #: stdio-common/psiginfo.c:169
 msgid "Signal generated by the completion of an I/O request"
-msgstr "I/O 要求的完成已产生信号"
+msgstr "I/O 请求的完成产生的信号"
 
 #: stdio-common/psiginfo.c:175
 msgid "Signal sent by the kernel"
-msgstr "内核已发送信号"
+msgstr "内核发送的信号"
 
 #: stdio-common/psiginfo.c:199
 #, c-format
 msgid "Unknown signal %d\n"
-msgstr "不明信号 %d\n"
+msgstr "未知信号 %d\n"
 
 #: stdio-common/psignal.c:43
 #, c-format
@@ -5165,7 +5165,7 @@ msgstr "未知信号"
 
 #: string/_strerror.c:30 sysdeps/mach/_strerror.c:55
 msgid "Unknown error "
-msgstr "未知的错误 "
+msgstr "未知错误 "
 
 #: string/strsignal.c:39
 #, c-format
@@ -5187,98 +5187,98 @@ msgstr "内存不足\n"
 
 #: sunrpc/auth_unix.c:350
 msgid "auth_unix.c: Fatal marshalling problem"
-msgstr "auth_unix.c: 严重的编组问题"
+msgstr "auth_unix.c: 致命的编组问题"
 
 #: sunrpc/clnt_perr.c:92 sunrpc/clnt_perr.c:108
 #, c-format
 msgid "%s: %s; low version = %lu, high version = %lu"
-msgstr "%s: %s; 低版本 = %lu，高版本 = %lu"
+msgstr "%s：%s；低版本 = %lu，高版本 = %lu"
 
 #: sunrpc/clnt_perr.c:99
 #, c-format
 msgid "%s: %s; why = %s\n"
-msgstr "%s: %s; 原因 = %s\n"
+msgstr "%s：%s；原因 = %s\n"
 
 #: sunrpc/clnt_perr.c:101
 #, c-format
 msgid "%s: %s; why = (unknown authentication error - %d)\n"
-msgstr "%s: %s; 原因 = (不明的认证错误 - %d)\n"
+msgstr "%s：%s；原因 =（未知的认证错误 - %d）\n"
 
 #: sunrpc/clnt_perr.c:150
 msgid "RPC: Success"
-msgstr "RPC：成功"
+msgstr "RPC: 成功"
 
 #: sunrpc/clnt_perr.c:153
 msgid "RPC: Can't encode arguments"
-msgstr "RPC：无法对参数进行编码"
+msgstr "RPC: 无法对参数进行编码"
 
 #: sunrpc/clnt_perr.c:157
 msgid "RPC: Can't decode result"
-msgstr "RPC：无法对结果进行解码"
+msgstr "RPC: 无法对结果进行解码"
 
 #: sunrpc/clnt_perr.c:161
 msgid "RPC: Unable to send"
-msgstr "RPC：无法发送"
+msgstr "RPC: 无法发送"
 
 #: sunrpc/clnt_perr.c:165
 msgid "RPC: Unable to receive"
-msgstr "RPC：无法接收"
+msgstr "RPC: 无法接收"
 
 #: sunrpc/clnt_perr.c:169
 msgid "RPC: Timed out"
-msgstr "RPC：超时"
+msgstr "RPC: 超时"
 
 #: sunrpc/clnt_perr.c:173
 msgid "RPC: Incompatible versions of RPC"
-msgstr "RPC：RPC 版本不兼容"
+msgstr "RPC: RPC 版本不兼容"
 
 #: sunrpc/clnt_perr.c:177
 msgid "RPC: Authentication error"
-msgstr "RPC：认证错误"
+msgstr "RPC: 认证错误"
 
 #: sunrpc/clnt_perr.c:181
 msgid "RPC: Program unavailable"
-msgstr "RPC：程序不可用"
+msgstr "RPC: 程序不可用"
 
 #: sunrpc/clnt_perr.c:185
 msgid "RPC: Program/version mismatch"
-msgstr "RPC：程序/版本不匹配"
+msgstr "RPC: 程序/版本不匹配"
 
 #: sunrpc/clnt_perr.c:189
 msgid "RPC: Procedure unavailable"
-msgstr "RPC: 无法取得进程"
+msgstr "RPC: 过程不可用"
 
 #: sunrpc/clnt_perr.c:193
 msgid "RPC: Server can't decode arguments"
-msgstr "RPC：服务器无法对参数进行解码"
+msgstr "RPC: 服务器无法对参数进行解码"
 
 #: sunrpc/clnt_perr.c:197
 msgid "RPC: Remote system error"
-msgstr "RPC：远程系统错误"
+msgstr "RPC: 远程系统错误"
 
 #: sunrpc/clnt_perr.c:201
 msgid "RPC: Unknown host"
-msgstr "RPC：未知主机"
+msgstr "RPC: 未知的主机"
 
 #: sunrpc/clnt_perr.c:205
 msgid "RPC: Unknown protocol"
-msgstr "RPC：未知协议"
+msgstr "RPC: 未知的协议"
 
 #: sunrpc/clnt_perr.c:209
 msgid "RPC: Port mapper failure"
-msgstr "RPC: 通信阜映射错误"
+msgstr "RPC: 端口映射失败"
 
 #: sunrpc/clnt_perr.c:213
 msgid "RPC: Program not registered"
-msgstr "RPC：程序未注册"
+msgstr "RPC: 程序未注册"
 
 #: sunrpc/clnt_perr.c:217
 msgid "RPC: Failed (unspecified error)"
-msgstr "RPC：失败 (未指明的错误)"
+msgstr "RPC: 失败（未指明的错误）"
 
 #: sunrpc/clnt_perr.c:258
 msgid "RPC: (unknown error code)"
-msgstr "RPC：(未知的错误码)"
+msgstr "RPC:（未知的错误码）"
 
 #: sunrpc/clnt_perr.c:334
 msgid "Authentication OK"
@@ -5286,7 +5286,7 @@ msgstr "认证成功"
 
 #: sunrpc/clnt_perr.c:337
 msgid "Invalid client credential"
-msgstr "无效的客户证书"
+msgstr "无效的客户端证书"
 
 #: sunrpc/clnt_perr.c:341
 msgid "Server rejected credential"
@@ -5294,7 +5294,7 @@ msgstr "服务器拒绝证书"
 
 #: sunrpc/clnt_perr.c:345
 msgid "Invalid client verifier"
-msgstr "无效的客户校验"
+msgstr "无效的客户端校验"
 
 #: sunrpc/clnt_perr.c:349
 msgid "Server rejected verifier"
@@ -5302,7 +5302,7 @@ msgstr "服务器拒绝校验"
 
 #: sunrpc/clnt_perr.c:353
 msgid "Client credential too weak"
-msgstr "客户证书太弱"
+msgstr "客户端证书太弱"
 
 #: sunrpc/clnt_perr.c:357
 msgid "Invalid server verifier"
@@ -5310,15 +5310,15 @@ msgstr "无效的服务器校验"
 
 #: sunrpc/clnt_perr.c:361
 msgid "Failed (unspecified error)"
-msgstr "失败 (未指明的错误)"
+msgstr "失败（未指明的错误）"
 
 #: sunrpc/clnt_raw.c:112
 msgid "clnt_raw.c: fatal header serialization error"
-msgstr "clnt_raw.c：致命的头编序错误"
+msgstr "clnt_raw.c: 致命的头部序列化错误"
 
 #: sunrpc/pm_getmaps.c:78
 msgid "pmap_getmaps.c: rpc problem"
-msgstr "pmap_getmaps.c: 远程进程调用问题"
+msgstr "pmap_getmaps.c: rpc 问题"
 
 #: sunrpc/pmap_clnt.c:128
 msgid "Cannot register service"
@@ -5338,7 +5338,7 @@ msgstr "无法发送广播包"
 
 #: sunrpc/pmap_rmt.c:328
 msgid "Broadcast poll problem"
-msgstr "Broadcast 调查有问题"
+msgstr "广播轮询有问题"
 
 #: sunrpc/pmap_rmt.c:341
 msgid "Cannot receive reply to broadcast"
@@ -5346,7 +5346,7 @@ msgstr "无法接收对广播的应答"
 
 #: sunrpc/svc_run.c:72
 msgid "svc_run: - out of memory"
-msgstr "svc_run： - 内存不足"
+msgstr "svc_run: - 内存不足"
 
 #: sunrpc/svc_run.c:92
 msgid "svc_run: - poll failed"
@@ -5355,7 +5355,7 @@ msgstr "svc_run: - poll 失败"
 #: sunrpc/svc_simple.c:72
 #, c-format
 msgid "can't reassign procedure number %ld\n"
-msgstr "无法重新指定进程编号 %ld\n"
+msgstr "无法重新指定过程编号 %ld\n"
 
 #: sunrpc/svc_simple.c:82
 msgid "couldn't create an rpc server\n"
@@ -5368,7 +5368,7 @@ msgstr "无法注册程序 %ld 版本 %ld\n"
 
 #: sunrpc/svc_simple.c:98
 msgid "registerrpc: out of memory\n"
-msgstr "registerrpc：内存不足\n"
+msgstr "registerrpc: 内存不足\n"
 
 #: sunrpc/svc_simple.c:161
 #, c-format
@@ -5398,35 +5398,35 @@ msgstr "svcudp_create - 无法调用 getsockname"
 
 #: sunrpc/svc_udp.c:182
 msgid "svcudp_create: xp_pad is too small for IP_PKTINFO\n"
-msgstr "svcudp_create：xp_pad 对 IP_PKTINFO 来说太小\n"
+msgstr "svcudp_create: xp_pad 对 IP_PKTINFO 来说太小\n"
 
 #: sunrpc/svc_udp.c:481
 msgid "enablecache: cache already enabled"
-msgstr "enablecache：缓存已经启用"
+msgstr "enablecache: 缓存已经启用"
 
 #: sunrpc/svc_udp.c:487
 msgid "enablecache: could not allocate cache"
-msgstr "enablecache：无法分配缓存"
+msgstr "enablecache: 无法分配缓存"
 
 #: sunrpc/svc_udp.c:496
 msgid "enablecache: could not allocate cache data"
-msgstr "enablecache：无法分配缓存数据"
+msgstr "enablecache: 无法分配缓存数据"
 
 #: sunrpc/svc_udp.c:504
 msgid "enablecache: could not allocate cache fifo"
-msgstr "enablecache: 无法配置缓存 fifo 管线"
+msgstr "enablecache: 无法分配缓存 fifo"
 
 #: sunrpc/svc_udp.c:540
 msgid "cache_set: victim not found"
-msgstr "cache_set：找不到 victim"
+msgstr "cache_set: 找不到 victim"
 
 #: sunrpc/svc_udp.c:551
 msgid "cache_set: victim alloc failed"
-msgstr "cache_set：分配 victim 失败"
+msgstr "cache_set: 分配 victim 失败"
 
 #: sunrpc/svc_udp.c:558
 msgid "cache_set: could not allocate new rpc_buffer"
-msgstr "cache_set：无法分配新的 rpc_buffer"
+msgstr "cache_set: 无法分配新的 rpc_buffer"
 
 #: sunrpc/svc_unix.c:166
 msgid "svc_unix.c - AF_UNIX socket creation problem"
@@ -5446,7 +5446,7 @@ msgstr "由 GNU_PROPERTY_1_NEEDED_INDIRECT_EXTERN_ACCESS 导致的错误"
 
 #: sysdeps/generic/siglist.h:29
 msgid "Hangup"
-msgstr "挂起"
+msgstr "挂断"
 
 #: sysdeps/generic/siglist.h:30
 msgid "Interrupt"
@@ -5462,15 +5462,15 @@ msgstr "非法指令"
 
 #: sysdeps/generic/siglist.h:33
 msgid "Trace/breakpoint trap"
-msgstr "追踪与中断点陷阱"
+msgstr "追踪或断点陷阱"
 
 #: sysdeps/generic/siglist.h:34
 msgid "Aborted"
-msgstr "已放弃"
+msgstr "已中止"
 
 #: sysdeps/generic/siglist.h:35
 msgid "Floating point exception"
-msgstr "浮点数例外"
+msgstr "浮点异常"
 
 #: sysdeps/generic/siglist.h:36
 msgid "Killed"
@@ -5507,19 +5507,19 @@ msgstr "已终止"
 
 #: sysdeps/generic/siglist.h:43
 msgid "Urgent I/O condition"
-msgstr "紧急的输出入状态"
+msgstr "紧急 I/O 事件"
 
 #: sysdeps/generic/siglist.h:44
 msgid "Stopped (signal)"
-msgstr "停止 (信号)"
+msgstr "已停止（信号）"
 
 #: sysdeps/generic/siglist.h:45
 msgid "Stopped"
-msgstr "停止"
+msgstr "已停止"
 
 #: sysdeps/generic/siglist.h:46
 msgid "Continued"
-msgstr "继续"
+msgstr "已继续"
 
 #: sysdeps/generic/siglist.h:47
 msgid "Child exited"
@@ -5527,19 +5527,19 @@ msgstr "子进程已退出"
 
 #: sysdeps/generic/siglist.h:48
 msgid "Stopped (tty input)"
-msgstr "停止 (tty 输入)"
+msgstr "已停止（tty 输入）"
 
 #: sysdeps/generic/siglist.h:49
 msgid "Stopped (tty output)"
-msgstr "停止 (tty 输出)"
+msgstr "已停止（tty 输出）"
 
 #: sysdeps/generic/siglist.h:50
 msgid "I/O possible"
-msgstr "I/O 可行"
+msgstr "可能需要 I/O"
 
 #: sysdeps/generic/siglist.h:51
 msgid "CPU time limit exceeded"
-msgstr "超出 CPU 时限"
+msgstr "CPU 时间超出限制"
 
 #: sysdeps/generic/siglist.h:52
 msgid "File size limit exceeded"
@@ -5547,23 +5547,23 @@ msgstr "文件大小超出限制"
 
 #: sysdeps/generic/siglist.h:53
 msgid "Virtual timer expired"
-msgstr "虚拟计时器超时"
+msgstr "虚拟定时器过期"
 
 #: sysdeps/generic/siglist.h:54
 msgid "Profiling timer expired"
-msgstr "测速评估用的计时器已过时取消了"
+msgstr "性能分析定时器过期"
 
 #: sysdeps/generic/siglist.h:55
 msgid "User defined signal 1"
-msgstr "用户定义信号 1"
+msgstr "用户自定义信号 1"
 
 #: sysdeps/generic/siglist.h:56
 msgid "User defined signal 2"
-msgstr "用户定义信号 2"
+msgstr "用户自定义信号 2"
 
 #: sysdeps/generic/siglist.h:57
 msgid "Window changed"
-msgstr "范围改变了"
+msgstr "窗口已改变"
 
 #: sysdeps/generic/siglist.h:61
 msgid "EMT trap"
@@ -5571,11 +5571,11 @@ msgstr "EMT 陷阱"
 
 #: sysdeps/generic/siglist.h:64
 msgid "Stack fault"
-msgstr "栈失效"
+msgstr "栈错误"
 
 #: sysdeps/generic/siglist.h:67
 msgid "Power failure"
-msgstr "电源失效"
+msgstr "电源故障"
 
 #: sysdeps/generic/siglist.h:70
 msgid "Information request"
@@ -5784,13 +5784,13 @@ msgstr "过多的链接"
 #. TRANS not fall into the domain over which the function is defined.
 #: sysdeps/gnu/errlist.h:222
 msgid "Numerical argument out of domain"
-msgstr "数值参数超出域"
+msgstr "数值参数超出定义域"
 
 #. TRANS Used by mathematical functions when the result value is
 #. TRANS not representable because of overflow or underflow.
 #: sysdeps/gnu/errlist.h:228
 msgid "Numerical result out of range"
-msgstr "数值结果超出范围"
+msgstr "数值结果超出值域"
 
 #. TRANS The call might work if you try again
 #. TRANS later.  The macro @code{EWOULDBLOCK} is another name for @code{EAGAIN};
@@ -5857,7 +5857,7 @@ msgstr "消息过长"
 #. TRANS The socket type does not support the requested communications protocol.
 #: sysdeps/gnu/errlist.h:295
 msgid "Protocol wrong type for socket"
-msgstr "错误的 socket 协议类型"
+msgstr "用于套接字的协议类型错误"
 
 #. TRANS You specified a socket option that doesn't make sense for the
 #. TRANS particular protocol being used by the socket.  @xref{Socket Options}.
@@ -5908,7 +5908,7 @@ msgstr "地址已在使用"
 #. TRANS @xref{Socket Addresses}.
 #: sysdeps/gnu/errlist.h:346
 msgid "Cannot assign requested address"
-msgstr "无法指定被请求的地址"
+msgstr "无法分配被请求的地址"
 
 #. TRANS A socket operation failed because the network was down.
 #: sysdeps/gnu/errlist.h:351
@@ -5924,19 +5924,19 @@ msgstr "网络不可达"
 #. TRANS A network connection was reset because the remote host crashed.
 #: sysdeps/gnu/errlist.h:362
 msgid "Network dropped connection on reset"
-msgstr "重置时断开网络连接"
+msgstr "网络连接在重置时断开"
 
 #. TRANS A network connection was aborted locally.
 #: sysdeps/gnu/errlist.h:367
 msgid "Software caused connection abort"
-msgstr "由软件导致的连接断开"
+msgstr "由软件导致的连接中止"
 
 #. TRANS A network connection was closed for reasons outside the control of the
 #. TRANS local host, such as by the remote machine rebooting or an unrecoverable
 #. TRANS protocol violation.
 #: sysdeps/gnu/errlist.h:374
 msgid "Connection reset by peer"
-msgstr "连接被对方重设"
+msgstr "连接被对方重置"
 
 #. TRANS The kernel's buffers for I/O operations are all in use.  In GNU, this
 #. TRANS error is always synonymous with @code{ENOMEM}; you may get one or the
@@ -5985,13 +5985,13 @@ msgstr "连接超时"
 #. TRANS it is not running the requested service).
 #: sysdeps/gnu/errlist.h:422
 msgid "Connection refused"
-msgstr "拒绝连接"
+msgstr "连接被拒绝"
 
 #. TRANS Too many levels of symbolic links were encountered in looking up a file name.
 #. TRANS This often indicates a cycle of symbolic links.
 #: sysdeps/gnu/errlist.h:428
 msgid "Too many levels of symbolic links"
-msgstr "符号连接的层数过多"
+msgstr "符号链接的层数过多"
 
 #. TRANS Filename too long (longer than @code{PATH_MAX}; @pxref{Limits for
 #. TRANS Files}) or host name too long (in @code{gethostname} or
@@ -6003,7 +6003,7 @@ msgstr "文件名过长"
 #. TRANS The remote host for a requested network connection is down.
 #: sysdeps/gnu/errlist.h:440
 msgid "Host is down"
-msgstr "主机关闭"
+msgstr "主机已关闭"
 
 #: sysdeps/gnu/errlist.h:445
 msgid "No route to host"
@@ -6024,7 +6024,7 @@ msgstr "用户过多"
 #. TRANS The user's disk quota was exceeded.
 #: sysdeps/gnu/errlist.h:462
 msgid "Disk quota exceeded"
-msgstr "超出磁盘限额"
+msgstr "超出磁盘配额"
 
 #. TRANS This indicates an internal confusion in the
 #. TRANS file system which is due to file system rearrangements on the server host
@@ -6033,7 +6033,7 @@ msgstr "超出磁盘限额"
 #. TRANS and remounting the file system.
 #: sysdeps/gnu/errlist.h:471
 msgid "Stale file handle"
-msgstr "过旧的文件控柄"
+msgstr "过旧的文件句柄"
 
 #. TRANS An attempt was made to NFS-mount a remote file system with a file name that
 #. TRANS already specifies an NFS-mounted file.
@@ -6076,7 +6076,7 @@ msgstr "标识符已删除"
 
 #: sysdeps/gnu/errlist.h:511
 msgid "Multihop attempted"
-msgstr "尝试 Multihop"
+msgstr "试图多跳"
 
 #: sysdeps/gnu/errlist.h:514
 msgid "No data available"
@@ -6084,11 +6084,11 @@ msgstr "没有可用的数据"
 
 #: sysdeps/gnu/errlist.h:517
 msgid "Link has been severed"
-msgstr "链接已有服务"
+msgstr "链接已被切断"
 
 #: sysdeps/gnu/errlist.h:520
 msgid "No message of desired type"
-msgstr "没有符合需求格式的消息"
+msgstr "没有所需类型的消息"
 
 #: sysdeps/gnu/errlist.h:523
 msgid "Out of streams resources"
@@ -6108,7 +6108,7 @@ msgstr "协议错误"
 
 #: sysdeps/gnu/errlist.h:535
 msgid "Timer expired"
-msgstr "计时器超时"
+msgstr "计时器过期"
 
 #. TRANS An asynchronous operation was canceled before it
 #. TRANS completed.  @xref{Asynchronous I/O}.  When you call @code{aio_cancel},
@@ -6120,15 +6120,15 @@ msgstr "操作已取消"
 
 #: sysdeps/gnu/errlist.h:546
 msgid "Owner died"
-msgstr "拥有者已消逝"
+msgstr "拥有者已结束"
 
 #: sysdeps/gnu/errlist.h:549
 msgid "State not recoverable"
-msgstr "状态无法回复"
+msgstr "状态无法恢复"
 
 #: sysdeps/gnu/errlist.h:552
 msgid "Interrupted system call should be restarted"
-msgstr "被中断的系统调用应该重新启动"
+msgstr "被中断的系统调用应当重新启动"
 
 #: sysdeps/gnu/errlist.h:555
 msgid "Channel number out of range"
@@ -6184,7 +6184,7 @@ msgstr "无效的请求码"
 
 #: sysdeps/gnu/errlist.h:594
 msgid "Invalid slot"
-msgstr "不适用的 slot"
+msgstr "无效的 slot"
 
 #: sysdeps/gnu/errlist.h:597
 msgid "File locking deadlock error"
@@ -6232,11 +6232,11 @@ msgstr "远程地址已改变"
 
 #: sysdeps/gnu/errlist.h:630
 msgid "Can not access a needed shared library"
-msgstr "无法访问必须的共享库"
+msgstr "无法访问必需的共享库"
 
 #: sysdeps/gnu/errlist.h:633
 msgid "Accessing a corrupted shared library"
-msgstr "正在访问一个已毁坏的共享库"
+msgstr "访问已损坏的共享库"
 
 #: sysdeps/gnu/errlist.h:636
 msgid ".lib section in a.out corrupted"
@@ -6260,7 +6260,7 @@ msgstr "结构需要清理"
 
 #: sysdeps/gnu/errlist.h:651
 msgid "Not a XENIX named type file"
-msgstr "不是 XENIX 命名的类型文件"
+msgstr "不是 XENIX 命名类型文件"
 
 #: sysdeps/gnu/errlist.h:654
 msgid "No XENIX semaphores available"
@@ -6268,7 +6268,7 @@ msgstr "没有可用的 XENIX 信号量"
 
 #: sysdeps/gnu/errlist.h:657
 msgid "Is a named type file"
-msgstr "是一个有名类型文件"
+msgstr "是一个命名类型文件"
 
 #: sysdeps/gnu/errlist.h:660
 msgid "Remote I/O error"
@@ -6284,19 +6284,19 @@ msgstr "错误的介质类型"
 
 #: sysdeps/gnu/errlist.h:669
 msgid "Required key not available"
-msgstr "需要的关键字不存在"
+msgstr "需要的密钥不存在"
 
 #: sysdeps/gnu/errlist.h:672
 msgid "Key has expired"
-msgstr "关键字已过期"
+msgstr "密钥已过期"
 
 #: sysdeps/gnu/errlist.h:675
 msgid "Key has been revoked"
-msgstr "键值已取消"
+msgstr "密钥已被撤销"
 
 #: sysdeps/gnu/errlist.h:678
 msgid "Key was rejected by service"
-msgstr "键值被服务所拒绝"
+msgstr "密钥被服务拒绝"
 
 #: sysdeps/gnu/errlist.h:681
 msgid "Operation not possible due to RF-kill"
@@ -6304,7 +6304,7 @@ msgstr "由于 RF-kill 而无法操作"
 
 #: sysdeps/gnu/errlist.h:684
 msgid "Memory page has hardware error"
-msgstr "内存分页有硬件错误"
+msgstr "内存页有硬件错误"
 
 #: sysdeps/gnu/errlist.h:687
 msgid "RPC struct is bad"
@@ -6321,7 +6321,7 @@ msgstr "不适当的文件类型或格式"
 
 #: sysdeps/gnu/errlist.h:699
 msgid "RPC bad procedure for program"
-msgstr "程序的 RPC 进程错误"
+msgstr "RPC 程序中的过程错误"
 
 #: sysdeps/gnu/errlist.h:702
 msgid "Authentication error"
@@ -6332,7 +6332,7 @@ msgstr "认证错误"
 #. TRANS up, before it has connected to the file.
 #: sysdeps/gnu/errlist.h:709
 msgid "Translator died"
-msgstr "中介程序已经结束"
+msgstr "翻译器已结束"
 
 #: sysdeps/gnu/errlist.h:712
 msgid "RPC version wrong"
@@ -6433,7 +6433,7 @@ msgstr "对后台进程的不适当操作"
 #. TRANS @c an idiomatic funny way of saying that the computer died.
 #: sysdeps/gnu/errlist.h:776
 msgid "Computer bought the farm"
-msgstr "这台电脑买了一块地啰"
+msgstr "电脑挂了"
 
 #. TRANS In @theglibc{}, this is another name for @code{EAGAIN} (above).
 #. TRANS The values are always the same, on every operating system.
@@ -6465,23 +6465,23 @@ msgstr "未知的错误系统中出错："
 
 #: sysdeps/posix/gai_strerror-strs.h:2
 msgid "Address family for hostname not supported"
-msgstr "不支持的主机名地址族"
+msgstr "不支持主机名的地址族"
 
 #: sysdeps/posix/gai_strerror-strs.h:3
 msgid "Temporary failure in name resolution"
-msgstr "域名解析暂时失败"
+msgstr "域名解析出现暂时性错误"
 
 #: sysdeps/posix/gai_strerror-strs.h:4
 msgid "Bad value for ai_flags"
-msgstr "错误的 ai_flags 的值"
+msgstr "错误的 ai_flags 值"
 
 #: sysdeps/posix/gai_strerror-strs.h:5
 msgid "Non-recoverable failure in name resolution"
-msgstr "域名解析中出现不可修复的失败"
+msgstr "域名解析出现无法恢复的错误"
 
 #: sysdeps/posix/gai_strerror-strs.h:6
 msgid "ai_family not supported"
-msgstr "不支持 ai_family"
+msgstr "不支持的 ai_family"
 
 #: sysdeps/posix/gai_strerror-strs.h:7
 msgid "Memory allocation failure"
@@ -6493,11 +6493,11 @@ msgstr "没有与主机名关联的地址"
 
 #: sysdeps/posix/gai_strerror-strs.h:9
 msgid "Name or service not known"
-msgstr "未知的名称或服务"
+msgstr "名称或服务未知"
 
 #: sysdeps/posix/gai_strerror-strs.h:10
 msgid "Servname not supported for ai_socktype"
-msgstr "不支持 ai_socktype 的服务名称"
+msgstr "ai_socktype 不支持 servname"
 
 #: sysdeps/posix/gai_strerror-strs.h:11
 msgid "ai_socktype not supported"
@@ -6509,7 +6509,7 @@ msgstr "系统错误"
 
 #: sysdeps/posix/gai_strerror-strs.h:13
 msgid "Processing request in progress"
-msgstr "此项请求已经在处理当中"
+msgstr "正在处理请求"
 
 #: sysdeps/posix/gai_strerror-strs.h:14
 msgid "Request canceled"
@@ -6521,7 +6521,7 @@ msgstr "请求未取消"
 
 #: sysdeps/posix/gai_strerror-strs.h:16
 msgid "All requests done"
-msgstr "已完成所有请求"
+msgstr "全部请求已完成"
 
 #: sysdeps/posix/gai_strerror-strs.h:17
 msgid "Interrupted by a signal"
@@ -6529,7 +6529,7 @@ msgstr "被信号中断"
 
 #: sysdeps/posix/gai_strerror-strs.h:18
 msgid "Parameter string not correctly encoded"
-msgstr "参数字符串未正确编码"
+msgstr "参数字符串编码不正确"
 
 #: sysdeps/posix/gai_strerror-strs.h:19
 msgid "Result too large for supplied buffer"
@@ -6538,15 +6538,15 @@ msgstr "结果太大，超出所提供的缓冲区"
 #: sysdeps/unix/sysv/linux/ia64/makecontext.c:57
 #, c-format
 msgid "makecontext: does not know how to handle more than 8 arguments\n"
-msgstr "makecontext：不知道该如何处理多于 8 个参数的情况\n"
+msgstr "makecontext: 不知道该如何处理多于 8 个参数的情况\n"
 
 #: sysdeps/x86/dl-cet.c:214
 msgid "rebuild shared object with IBT support enabled"
-msgstr "启用 IBT 支持重新构建共享对象"
+msgstr "启用 IBT 支持重新构建共享目标"
 
 #: sysdeps/x86/dl-cet.c:233
 msgid "rebuild shared object with SHSTK support enabled"
-msgstr "启用 SHSTK 支持重新构建共享对象"
+msgstr "启用 SHSTK 支持重新构建共享目标"
 
 #: sysdeps/x86/dl-cet.c:251
 msgid "can't disable IBT"
@@ -6567,7 +6567,7 @@ msgstr "%s 用于未知的机器 %d。\n"
 
 #: timezone/zdump.c:332
 msgid "has characters other than ASCII alphanumerics, '-' or '+'"
-msgstr "含有 ASCII 数字、字母、 \"-\" 、 \"+\" 之外的字符"
+msgstr "含有 ASCII 数字、字母、\"-\"、\"+\" 之外的字符"
 
 #: timezone/zdump.c:334
 msgid "has fewer than 3 characters"
@@ -6580,7 +6580,7 @@ msgstr "超过 6 个字符"
 #: timezone/zdump.c:341
 #, c-format
 msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
-msgstr "%s: 警告：区域  \"%s\"  缩写  \"%s\"  %s\n"
+msgstr "%s: 警告：区域 \"%s\" 缩写 \"%s\" %s\n"
 
 #: timezone/zdump.c:387
 #, c-format
@@ -6597,32 +6597,32 @@ msgid ""
 "\n"
 "Report bugs to %s.\n"
 msgstr ""
-"%s：用法： %s 选项 时区 ...\n"
+"%s: 用法： %s 选项 时区 ...\n"
 "选项包括：\n"
-"  -c [低,]高  从低年开始（默认 -500）, 在高年前结束（默认 2500）\n"
-"  -t [低,]高  从低时间开始, 在高时间前结束（以 1970 年以来的秒数计）\n"
-"  -i          简略地列出过渡（实验性格式）\n"
-"  -v          啰嗦地列出过渡\n"
-"  -V          不那么啰嗦地列出过渡\n"
-"  --help      显示这个帮助\n"
-"  --version   输出版本信息\n"
+"  -c [L,]U   从 L 年开始（默认 -500）, 在 U 年前结束（默认 2500）\n"
+"  -t [L,]U   从 L 时间开始, 在 U 时间前结束（以 1970 年以来的秒数计）\n"
+"  -i         简略地列出变迁（实验性格式）\n"
+"  -v         详细地列出变迁\n"
+"  -V         不那么详细地列出变迁\n"
+"  --help     输出此帮助\n"
+"  --version  输出版本信息\n"
 "\n"
-"向 %s 报告错误.\n"
+"请向 %s 报告错误。\n"
 
 #: timezone/zdump.c:473
 #, c-format
 msgid "%s: wild -c argument %s\n"
-msgstr "%s：怪异的 -c 选项 %s\n"
+msgstr "%s: 怪异的 -c 参数 %s\n"
 
 #: timezone/zdump.c:506
 #, c-format
 msgid "%s: wild -t argument %s\n"
-msgstr "%s：怪异的 -t 选项 %s\n"
+msgstr "%s: 怪异的 -t 参数 %s\n"
 
 #: timezone/zic.c:432
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
-msgstr "%s：内存耗尽：%s\n"
+msgstr "%s: 内存耗尽：%s\n"
 
 #: timezone/zic.c:440
 msgid "size overflow"
@@ -6639,17 +6639,17 @@ msgstr "整数溢出"
 #: timezone/zic.c:532
 #, c-format
 msgid "\"%s\", line %<PRIdMAX>: "
-msgstr "\"%s\", 第 %<PRIdMAX>行： "
+msgstr "\"%s\"，第 %<PRIdMAX>行："
 
 #: timezone/zic.c:535
 #, c-format
 msgid " (rule from \"%s\", line %<PRIdMAX>)"
-msgstr " （规则来自 \"%s\"，第 %<PRIdMAX> 行）"
+msgstr "（规则来自 \"%s\"，第 %<PRIdMAX> 行）"
 
 #: timezone/zic.c:554
 #, c-format
 msgid "warning: "
-msgstr "警告： "
+msgstr "警告："
 
 #: timezone/zic.c:579
 #, c-format
@@ -6661,21 +6661,21 @@ msgid ""
 "\n"
 "Report bugs to %s.\n"
 msgstr ""
-"%s：用法为 %s [ --version ] [ --help ] [ -v ]\\\n"
+"%s: 用法为 %s [ --version ] [ --help ] [ -v ] \\\n"
 "\t[ -b {slim|fat} ] [ -d 目录 ] [ -l 本地时间 ] [ -L 闰秒 ] \\\n"
-"\t[ -p posixrules ] [ -r '[@lo][/@hi]' ] [ -t localtime-link ] \\\n"
+"\t[ -p posix规则 ] [ -r '[@低][/@高]' ] [ -t 本地时间链接 ] \\\n"
 "\t[ 文件名 ... ]\n"
 "\n"
-"请将程序错误报告至 %s。\n"
+"请向 %s 报告错误。\n"
 
 #: timezone/zic.c:604
 #, c-format
 msgid "%s: Can't chdir to %s: %s\n"
-msgstr "%s：无法改变目录到 %s：%s\n"
+msgstr "%s: 无法改变目录到 %s：%s\n"
 
 #: timezone/zic.c:698
 msgid "wild compilation-time specification of zic_t"
-msgstr "zic_t 的万用编译时间规格"
+msgstr "zic_t 在编译时使用了错误的说明符"
 
 #: timezone/zic.c:716 timezone/zic.c:720
 msgid "incompatible -b options"
@@ -6684,27 +6684,27 @@ msgstr "不兼容的 -b 选项"
 #: timezone/zic.c:723
 #, c-format
 msgid "invalid option: -b '%s'"
-msgstr "无效选项：-b '%s'"
+msgstr "无效的选项：-b '%s'"
 
 #: timezone/zic.c:730
 #, c-format
 msgid "%s: More than one -d option specified\n"
-msgstr "%s：给出了多个 -d 选项\n"
+msgstr "%s: 指定了多个 -d 选项\n"
 
 #: timezone/zic.c:740
 #, c-format
 msgid "%s: More than one -l option specified\n"
-msgstr "%s：给出了多个 -l 选项\n"
+msgstr "%s: 指定了多个 -l 选项\n"
 
 #: timezone/zic.c:750
 #, c-format
 msgid "%s: More than one -p option specified\n"
-msgstr "%s：给出了多个 -p 选项\n"
+msgstr "%s: 指定了多个 -p 选项\n"
 
 #: timezone/zic.c:758
 #, c-format
 msgid "%s: More than one -t option specified\n"
-msgstr "%s：给出了多个 -t 选项\n"
+msgstr "%s: 指定了多个 -t 选项\n"
 
 #: timezone/zic.c:767
 msgid "-y is obsolescent"
@@ -6713,22 +6713,22 @@ msgstr "-y 是过时的"
 #: timezone/zic.c:771
 #, c-format
 msgid "%s: More than one -y option specified\n"
-msgstr "%s：给出了多个 -y 选项\n"
+msgstr "%s: 指定了多个 -y 选项\n"
 
 #: timezone/zic.c:781
 #, c-format
 msgid "%s: More than one -L option specified\n"
-msgstr "%s：给出了多个 -L 选项\n"
+msgstr "%s: 指定了多个 -L 选项\n"
 
 #: timezone/zic.c:792
 #, c-format
 msgid "%s: More than one -r option specified\n"
-msgstr "%s：给出了多个 -r 选项\n"
+msgstr "%s: 指定了多个 -r 选项\n"
 
 #: timezone/zic.c:798
 #, c-format
 msgid "%s: invalid time range: %s\n"
-msgstr "%s：无效的时间范围：%s\n"
+msgstr "%s: 无效的时间范围：%s\n"
 
 #: timezone/zic.c:805
 msgid "-s ignored"
@@ -6761,7 +6761,6 @@ msgstr "文件名 \"%s\" 包含 \"%.*s\" 部分"
 msgid "file name '%s' component contains leading '-'"
 msgstr "文件名 \"%s\" 部分以 \"-\" 开头"
 
-# component_len_max < component_len
 #: timezone/zic.c:893
 #, c-format
 msgid "file name '%s' contains overlength component '%.*s...'"
@@ -6770,22 +6769,22 @@ msgstr "文件名 \"%s\" 中的 \"%.*s\" 部分过长"
 #: timezone/zic.c:921
 #, c-format
 msgid "file name '%s' contains byte '%c'"
-msgstr "文件名 \"%s\" 包含字节 \"%c\" "
+msgstr "文件名 \"%s\" 包含字节 \"%c\""
 
 #: timezone/zic.c:922
 #, c-format
 msgid "file name '%s' contains byte '\\%o'"
-msgstr "文件名 \"%s\" 包含字节 \"\\%o\" "
+msgstr "文件名 \"%s\" 包含字节 \"\\%o\""
 
 #: timezone/zic.c:992
 #, c-format
 msgid "%s: link from %s/%s failed: %s\n"
-msgstr "%s：从 %s/%s 链接失败：%s\n"
+msgstr "%s: 从 %s/%s 链接失败：%s\n"
 
 #: timezone/zic.c:1002 timezone/zic.c:1992
 #, c-format
 msgid "%s: Can't remove %s/%s: %s\n"
-msgstr "%s：无法删除 %s/%s：%s\n"
+msgstr "%s: 无法删除 %s/%s：%s\n"
 
 #: timezone/zic.c:1026
 #, c-format
@@ -6795,12 +6794,12 @@ msgstr "硬链接失败，已使用符号链接：%s"
 #: timezone/zic.c:1034
 #, c-format
 msgid "%s: Can't read %s/%s: %s\n"
-msgstr "%s：无法读取 %s/%s：%s\n"
+msgstr "%s: 无法读取 %s/%s：%s\n"
 
 #: timezone/zic.c:1041 timezone/zic.c:2005
 #, c-format
 msgid "%s: Can't create %s/%s: %s\n"
-msgstr "%s：无法创建 %s/%s：%s\n"
+msgstr "%s: 无法创建 %s/%s：%s\n"
 
 #: timezone/zic.c:1050
 #, c-format
@@ -6814,7 +6813,7 @@ msgstr "符号链接失败，已复制文件：%s"
 
 #: timezone/zic.c:1122 timezone/zic.c:1124
 msgid "same rule name in multiple files"
-msgstr "多个文件中的相同规则名"
+msgstr "多个文件中有相同的规则名"
 
 #: timezone/zic.c:1171
 #, c-format
@@ -6828,7 +6827,7 @@ msgstr "标准输入"
 #: timezone/zic.c:1196
 #, c-format
 msgid "%s: Can't open %s: %s\n"
-msgstr "%s：无法打开 %s：%s\n"
+msgstr "%s: 无法打开 %s：%s\n"
 
 #: timezone/zic.c:1207
 msgid "line too long"
@@ -6841,11 +6840,11 @@ msgstr "未知类型的输入行"
 #: timezone/zic.c:1253 timezone/zic.c:1699 timezone/zic.c:1721
 #, c-format
 msgid "%s: panic: Invalid l_value %d\n"
-msgstr "%s: 严重错误: 错误的 l_value %d\n"
+msgstr "%s: 严重错误：错误的 l_value %d\n"
 
 #: timezone/zic.c:1262
 msgid "expected continuation line not found"
-msgstr "找不到应该出现的续行"
+msgstr "找不到预期的续行"
 
 #: timezone/zic.c:1298
 msgid "fractional seconds rejected by pre-2018 versions of zic"
@@ -6857,16 +6856,15 @@ msgstr "时间溢出"
 
 #: timezone/zic.c:1322
 msgid "values over 24 hours not handled by pre-2007 versions of zic"
-msgstr "24 小时以上的值无法由早于 2007 的 zic 版本所处理"
+msgstr "24 小时以上的值无法被 2007 年之前的 zic 版本处理"
 
-# 	zic_t		r_stdoff;	/* offset from standard time */
 #: timezone/zic.c:1340
 msgid "invalid saved time"
 msgstr "无效的已保存时间"
 
 #: timezone/zic.c:1351
 msgid "wrong number of fields on Rule line"
-msgstr "规则行中域的个数错误"
+msgstr "Rule 行中字段的个数错误"
 
 #: timezone/zic.c:1360
 #, c-format
@@ -6875,7 +6873,7 @@ msgstr "无效的规则名称 \"%s\""
 
 #: timezone/zic.c:1382
 msgid "wrong number of fields on Zone line"
-msgstr "区域行中域的个数错误"
+msgstr "Zone 行中字段的个数错误"
 
 #: timezone/zic.c:1387
 #, c-format
@@ -6890,11 +6888,11 @@ msgstr "\"Zone %s\" 行和 -p 选项是互斥的"
 #: timezone/zic.c:1400
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %<PRIdMAX>)"
-msgstr "重复的区域名称 %s （文件 \"%s\" ，行 %<PRIdMAX>）"
+msgstr "重复的区域名称 %s（文件 \"%s\"，行 %<PRIdMAX>）"
 
 #: timezone/zic.c:1414
 msgid "wrong number of fields on Zone continuation line"
-msgstr "时区接续行的字段数目不对"
+msgstr "Zone 续行中字段的个数错误"
 
 #: timezone/zic.c:1454
 msgid "invalid UT offset"
@@ -6907,11 +6905,11 @@ msgstr "无效的缩略格式"
 #: timezone/zic.c:1467
 #, c-format
 msgid "format '%s' not handled by pre-2015 versions of zic"
-msgstr " \"%s\" 格式无法由早于 2015 年的 zic 版本所处理"
+msgstr "\"%s\" 格式无法被 2015 年之前的 zic 版本处理"
 
 #: timezone/zic.c:1494
 msgid "Zone continuation line end time is not after end time of previous line"
-msgstr "时区接续行的结束时间不在上一行的结束时间之后"
+msgstr "Zone 续行的结束时间不在上一行的结束时间之后"
 
 #: timezone/zic.c:1526
 msgid "invalid leaping year"
@@ -6919,7 +6917,7 @@ msgstr "无效的闰年"
 
 #: timezone/zic.c:1548 timezone/zic.c:1653
 msgid "invalid month name"
-msgstr "无效的月名称"
+msgstr "无效的月份名称"
 
 #: timezone/zic.c:1561 timezone/zic.c:1769 timezone/zic.c:1783
 msgid "invalid day of month"
@@ -6931,7 +6929,7 @@ msgstr "时间太小"
 
 #: timezone/zic.c:1570
 msgid "time too large"
-msgstr "时间过大"
+msgstr "时间太大"
 
 #: timezone/zic.c:1574 timezone/zic.c:1682
 msgid "invalid time of day"
@@ -6939,11 +6937,11 @@ msgstr "无效的时间"
 
 #: timezone/zic.c:1577
 msgid "leap second precedes Epoch"
-msgstr "闰秒出现在创世之前"
+msgstr "闰秒出现在 Epoch 之前"
 
 #: timezone/zic.c:1585
 msgid "wrong number of fields on Leap line"
-msgstr "Leap 行的字段个数错误"
+msgstr "Leap 行中字段的个数错误"
 
 #: timezone/zic.c:1591
 msgid "invalid Rolling/Stationary field on Leap line"
@@ -6951,11 +6949,11 @@ msgstr "Leap 行中有无效的 Rolling/Stationary 字段"
 
 #: timezone/zic.c:1599
 msgid "invalid CORRECTION field on Leap line"
-msgstr "在 Leap 行中有无效的 CORRECTION 字段"
+msgstr "Leap 行中有无效的 CORRECTION 字段"
 
 #: timezone/zic.c:1611
 msgid "wrong number of fields on Expires line"
-msgstr "Expires 行的字段个数错误"
+msgstr "Expires 行中字段的个数错误"
 
 #: timezone/zic.c:1613
 msgid "multiple Expires lines"
@@ -6963,7 +6961,7 @@ msgstr "有多个 Expires 行"
 
 #: timezone/zic.c:1624
 msgid "wrong number of fields on Link line"
-msgstr "Link 行的字段个数错误"
+msgstr "Link 行中字段的个数错误"
 
 #: timezone/zic.c:1628
 msgid "blank FROM field on Link line"
@@ -6983,12 +6981,12 @@ msgstr "起始年份大于终止年份"
 
 #: timezone/zic.c:1736
 msgid "typed single year"
-msgstr "输入的年分是同一年"
+msgstr "输入的年份是同一年"
 
 #: timezone/zic.c:1739
 #, c-format
 msgid "year type \"%s\" is obsolete; use \"-\" instead"
-msgstr "年类型  \"%s\"  过时；使用 \" - \" 替代"
+msgstr "年类型 \"%s\" 过时；使用 \"-\" 替代"
 
 #: timezone/zic.c:1774
 msgid "invalid weekday name"
@@ -6997,15 +6995,15 @@ msgstr "无效的星期名"
 #: timezone/zic.c:1935
 #, c-format
 msgid "reference clients mishandle more than %d transition times"
-msgstr "参考客户端会错误处理超过 %d 次的改变次数"
+msgstr "参考客户端会错误处理超过 %d 次的变迁次数"
 
 #: timezone/zic.c:1939
 msgid "pre-2014 clients may mishandle more than 1200 transition times"
-msgstr "2014 之前的客户端可能会错误处理超过 1200 次的改变次数"
+msgstr "2014 年之前的客户端可能会错误处理超过 1200 次的变迁次数"
 
 #: timezone/zic.c:2058
 msgid "too many transition times"
-msgstr "过多的改变次数"
+msgstr "过多的变迁次数"
 
 #: timezone/zic.c:2297
 #, c-format
@@ -7014,12 +7012,12 @@ msgstr "%%z UT 偏移量超过了 99:59:59"
 
 #: timezone/zic.c:2673
 msgid "no POSIX environment variable for zone"
-msgstr "无 POSIX 环境变量用于区"
+msgstr "此区域无 POSIX 环境变量"
 
 #: timezone/zic.c:2679
 #, c-format
 msgid "%s: pre-%d clients may mishandle distant timestamps"
-msgstr "%s: %d 之前的客户端可能会错误处理久远的时间戳"
+msgstr "%s: %d 年之前的客户端可能会错误处理久远的时间戳"
 
 #: timezone/zic.c:2818
 msgid "two rules for same instant"
@@ -7027,11 +7025,11 @@ msgstr "为同一时间点制订了两种规则"
 
 #: timezone/zic.c:2889
 msgid "can't determine time zone abbreviation to use just after until time"
-msgstr "无法决定在结束时间以后该使用的时区简写"
+msgstr "无法决定在结束时间以后应该使用的时区简写"
 
 #: timezone/zic.c:2964
 msgid "UT offset out of range"
-msgstr "UTC 偏移超出范围"
+msgstr "UT 偏移量超出范围"
 
 #: timezone/zic.c:2987
 msgid "too many local time types"
@@ -7039,7 +7037,7 @@ msgstr "过多的本地时间类型"
 
 #: timezone/zic.c:3005
 msgid "too many leap seconds"
-msgstr "太多闰秒"
+msgstr "过多的闰秒"
 
 #: timezone/zic.c:3032
 msgid "Leap seconds too close together"
@@ -7047,7 +7045,7 @@ msgstr "闰秒距离太近"
 
 #: timezone/zic.c:3043
 msgid "\"#expires\" is obsolescent; use \"Expires\""
-msgstr " \"#expires\" 已过时；使用 \"Expires\" "
+msgstr "\"#expires\" 已过时；使用 \"Expires\""
 
 #: timezone/zic.c:3049
 msgid "last Leap time does not precede Expires time"
@@ -7060,17 +7058,17 @@ msgstr "命令运行导致奇怪的结果"
 #: timezone/zic.c:3096
 #, c-format
 msgid "%s: command was '%s', result was %d\n"
-msgstr "%s：命令为 \"%s\" ，结果为 %d\n"
+msgstr "%s: 命令为 \"%s\"，结果为 %d\n"
 
 #: timezone/zic.c:3202
 #, c-format
 msgid "\"%s\" is undocumented; use \"last%s\" instead"
-msgstr " \"%s\"  未被列入文档；使用 \"last%s\" 代替"
+msgstr "\"%s\" 未被列入文档；使用 \"last%s\" 代替"
 
 #: timezone/zic.c:3233
 #, c-format
 msgid "\"%s\" is ambiguous in pre-2017c zic"
-msgstr " \"%s\"  在2017年前的 zic 中模糊不清"
+msgstr "\"%s\" 在 2017 年之前的 zic 中有歧义"
 
 #: timezone/zic.c:3267
 msgid "Odd number of quotation marks"
@@ -7082,7 +7080,7 @@ msgstr "在非闰年时用到 2/29 日"
 
 #: timezone/zic.c:3396
 msgid "rule goes past start/end of month; will not work with pre-2004 versions of zic"
-msgstr "规则超过开始/结束月份；将无法用于 2004 年之前的 zic 版本"
+msgstr "规则越过月份的开始或结束；将无法用于 2004 年之前的 zic 版本"
 
 #: timezone/zic.c:3423
 msgid "time zone abbreviation has fewer than 3 characters"
@@ -7103,4 +7101,4 @@ msgstr "过多或过长的时区缩写"
 #: timezone/zic.c:3479
 #, c-format
 msgid "%s: Can't create directory %s: %s"
-msgstr "%s：无法创建目录 %s：%s"
+msgstr "%s: 无法创建目录 %s：%s"
