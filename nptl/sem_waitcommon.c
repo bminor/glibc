@@ -110,10 +110,10 @@ do_futex_wait (struct new_sem *sem, const struct timespec *abstime)
 #if __HAVE_64B_ATOMICS
   err = futex_abstimed_wait_cancelable (
       (unsigned int *) &sem->data + SEM_VALUE_OFFSET, 0, abstime,
-      sem->private);
+      FUTEX_CLOCK_REALTIME, sem->private);
 #else
   err = futex_abstimed_wait_cancelable (&sem->value, SEM_NWAITERS_MASK,
-					abstime, sem->private);
+					abstime, FUTEX_CLOCK_REALTIME, sem->private);
 #endif
 
   return err;

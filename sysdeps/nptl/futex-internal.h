@@ -169,7 +169,7 @@ futex_abstimed_wait (unsigned int* futex_word, unsigned int expected,
 static __always_inline int
 futex_abstimed_wait_cancelable (unsigned int* futex_word,
 				unsigned int expected,
-			        const struct timespec* abstime, int private);
+			        const struct timespec* abstime, int clockbit, int private);
 
 /* Atomically wrt other futex operations on the same futex, this unblocks the
    specified number of processes, or all processes blocked on this futex if

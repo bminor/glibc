@@ -194,7 +194,7 @@ futex_abstimed_wait (unsigned int *futex_word, unsigned int expected,
 static __always_inline int
 futex_abstimed_wait_cancelable (unsigned int *futex_word,
 				unsigned int expected,
-			        const struct timespec *abstime, int private)
+			        const struct timespec *abstime, int clockbit, int private)
 {
   /* Work around the fact that the kernel rejects negative timeout values
      despite them being valid.  */
@@ -203,7 +203,7 @@ futex_abstimed_wait_cancelable (unsigned int *futex_word,
   int oldtype;
   oldtype = __pthread_enable_asynccancel ();
   int err = lll_futex_timed_wait_bitset (futex_word, expected, abstime,
-					 FUTEX_CLOCK_REALTIME, private);
+					 clockbit, private);
   __pthread_disable_asynccancel (oldtype);
   switch (err)
     {

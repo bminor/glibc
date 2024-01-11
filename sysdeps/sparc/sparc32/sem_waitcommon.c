@@ -52,7 +52,7 @@ do_futex_wait (struct new_sem *sem, const struct timespec *abstime)
   int err;
 
   err = futex_abstimed_wait_cancelable (&sem->value, SEM_NWAITERS_MASK,
-					abstime, sem->private);
+					abstime, FUTEX_CLOCK_REALTIME, sem->private);
 
   return err;
 }
