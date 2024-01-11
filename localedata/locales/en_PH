@@ -59,7 +59,7 @@ LC_MONETARY
 % for IBM Class for Unicode.
 %
 int_curr_symbol       "PHP "
-currency_symbol       "<U20B1>"
+currency_symbol       "₱"
 mon_decimal_point     "."
 mon_thousands_sep     ","
 mon_grouping          3

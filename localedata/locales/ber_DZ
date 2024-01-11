@@ -71,7 +71,7 @@ LC_MONETARY
 % for IBM Class for Unicode/Java
 %
 int_curr_symbol       "DZD "
-currency_symbol       "<U062F>.<U062C>."
+currency_symbol       "د.ج."
 mon_decimal_point     "."
 mon_thousands_sep     ","
 mon_grouping          3
@@ -100,19 +100,19 @@ END LC_NUMERIC
 
 % FIXME
 LC_TIME
-day     "bazar g<U00FC>n<U00FC>";/
-        "birinci g<U00FC>n";/
-        "ikinci g<U00FC>n";/
-        "<U00FC><U00E7><U00FC>nc<U00FC> g<U00FC>n";/
-        "d<U00F6>rd<U00FC>nc<U00FC> g<U00FC>n";/
-        "be<U015F>inci g<U00FC>n";/
-        "alt<U0131>nc<U0131> g<U00FC>n"
+day     "bazar günü";/
+        "birinci gün";/
+        "ikinci gün";/
+        "üçüncü gün";/
+        "dördüncü gün";/
+        "beşinci gün";/
+        "altıncı gün"
 abday   "baz";/
         "bir";/
         "iki";/
-        "<U00FC><U00E7><U00FC>";/
-        "d<U00F6>r";/
-        "be<U015F>";/
+        "üçü";/
+        "dör";/
+        "beş";/
         "alt"
 mon     "yanvar";/
         "fevral";/
@@ -131,8 +131,8 @@ abmon   "Yan";/
         "Mar";/
         "Apr";/
         "May";/
-        "<U0130>yn";/
-        "<U0130>yl";/
+        "İyn";/
+        "İyl";/
         "Avq";/
         "Sen";/
         "Okt";/
@@ -183,7 +183,7 @@ country_num 012
 %country_isbn ""
 country_car  "DZ"
 % Tamaziɣt
-lang_name "Tamazi<U0263>t"
+lang_name "Tamaziɣt"
 %lang_ab
 lang_term "ber"
 lang_lib "ber"

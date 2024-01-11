@@ -127,25 +127,25 @@ END LC_COLLATE
 
 LC_TIME
 mon "Yennayer";/
-    "Fu<U1E5B>ar";/
-    "Me<U0263>res";/
+    "Fuṛar";/
+    "Meɣres";/
     "Yebrir";/
     "Mayyu";/
     "Yunyu";/
     "Yulyu";/
-    "<U0263>uct";/
-    "Ctembe<U1E5B>";/
-    "Tube<U1E5B>";/
-    "Wambe<U1E5B>";/
-    "Dujembe<U1E5B>"
+    "ɣuct";/
+    "Ctembeṛ";/
+    "Tubeṛ";/
+    "Wambeṛ";/
+    "Dujembeṛ"
 abmon "Yen";/
       "Fur";/
-      "Me<U0263>";/
+      "Meɣ";/
       "Yeb";/
       "May";/
       "Yun";/
       "Yul";/
-      "<U0263>uc";/
+      "ɣuc";/
       "Cte";/
       "Tub";/
       "Wam";/
