@@ -87,56 +87,56 @@ LC_TIME
 % for IBM Class for Unicode/Java
 %
 % Abbreviated weekday names (%a)
-abday       "<U0A10><U0A24>";/
-            "<U0A38><U0A4B><U0A2E>";/
-            "<U0A2E><U0A70><U0A17><U0A32>";/
-            "<U0A2C><U0A41><U0A71><U0A27>";/
-            "<U0A35><U0A40><U0A30>";/
-            "<U0A36><U0A41><U0A71><U0A15><U0A30>";/
-            "<U0A36><U0A28><U0A3F><U0A71><U0A1A><U0A30>"
+abday       "ਐਤ";/
+            "ਸੋਮ";/
+            "ਮੰਗਲ";/
+            "ਬੁੱਧ";/
+            "ਵੀਰ";/
+            "ਸ਼ੁੱਕਰ";/
+            "ਸ਼ਨਿੱਚਰ"
 %
 % Full weekday names (%A)
-day         "<U0A10><U0A24><U0A35><U0A3E><U0A30>";/
-            "<U0A38><U0A4B><U0A2E><U0A35><U0A3E><U0A30>";/
-            "<U0A2E><U0A70><U0A17><U0A32><U0A35><U0A3E><U0A30>";/
-            "<U0A2C><U0A41><U0A71><U0A27><U0A35><U0A3E><U0A30>";/
-            "<U0A35><U0A40><U0A30><U0A35><U0A3E><U0A30>";/
-            "<U0A36><U0A41><U0A71><U0A15><U0A30><U0A35><U0A3E><U0A30>";/
-            "<U0A36><U0A28><U0A3F><U0A71><U0A1A><U0A30><U0A35><U0A3E><U0A30>"
+day         "ਐਤਵਾਰ";/
+            "ਸੋਮਵਾਰ";/
+            "ਮੰਗਲਵਾਰ";/
+            "ਬੁੱਧਵਾਰ";/
+            "ਵੀਰਵਾਰ";/
+            "ਸ਼ੁੱਕਰਵਾਰ";/
+            "ਸ਼ਨਿੱਚਰਵਾਰ"
 
 
 % Abbreviated month names (%b)
-abmon       "<U0A1C><U0A28>";/
-            "<U0A2B><U0A3C><U0A30>";/
-            "<U0A2E><U0A3E><U0A30><U0A1A>";/
-            "<U0A05><U0A2A><U0A4D><U0A30><U0A48>";/
-            "<U0A2E><U0A08>";/
-	    "<U0A1C><U0A42><U0A28>";/
-            "<U0A1C><U0A41><U0A32><U0A3E>";/
-            "<U0A05><U0A17>";/
-            "<U0A38><U0A24><U0A70>";/
-            "<U0A05><U0A15><U0A24><U0A42>";/
-            "<U0A28><U0A35><U0A70>";/
-            "<U0A26><U0A38><U0A70>"
+abmon       "ਜਨ";/
+            "ਫ਼ਰ";/
+            "ਮਾਰਚ";/
+            "ਅਪ੍ਰੈ";/
+            "ਮਈ";/
+	    "ਜੂਨ";/
+            "ਜੁਲਾ";/
+            "ਅਗ";/
+            "ਸਤੰ";/
+            "ਅਕਤੂ";/
+            "ਨਵੰ";/
+            "ਦਸੰ"
 %
 % Full month names (%B)
-mon         "<U0A1C><U0A28><U0A35><U0A30><U0A40>";/
-            "<U0A2B><U0A3C><U0A30><U0A35><U0A30><U0A40>";/
-            "<U0A2E><U0A3E><U0A30><U0A1A>";/
-            "<U0A05><U0A2A><U0A4D><U0A30><U0A48><U0A32>";/
-            "<U0A2E><U0A08>";/
-	    "<U0A1C><U0A42><U0A28>";/
-            "<U0A1C><U0A41><U0A32><U0A3E><U0A08>";/
-            "<U0A05><U0A17><U0A38><U0A24>";/
-            "<U0A38><U0A24><U0A70><U0A2C><U0A30>";/
-            "<U0A05><U0A15><U0A24><U0A42><U0A2C><U0A30>";/
-            "<U0A28><U0A35><U0A70><U0A2C><U0A30>";/
-            "<U0A26><U0A38><U0A70><U0A2C><U0A30>"
+mon         "ਜਨਵਰੀ";/
+            "ਫ਼ਰਵਰੀ";/
+            "ਮਾਰਚ";/
+            "ਅਪ੍ਰੈਲ";/
+            "ਮਈ";/
+	    "ਜੂਨ";/
+            "ਜੁਲਾਈ";/
+            "ਅਗਸਤ";/
+            "ਸਤੰਬਰ";/
+            "ਅਕਤੂਬਰ";/
+            "ਨਵੰਬਰ";/
+            "ਦਸੰਬਰ"
 
 %
 % Equivalent of AM PM
-am_pm       "<U0A38><U0A35><U0A47><U0A30><U0A47>";/
-            "<U0A36><U0A3E><U0A2E>"
+am_pm       "ਸਵੇਰੇ";/
+            "ਸ਼ਾਮ"
 
 %
 % Appropriate date and time representation
@@ -158,10 +158,10 @@ END LC_TIME
 
 
 LC_MESSAGES
-yesexpr "^[+1yY<U0A39>]"
-noexpr  "^[-0nN<U0A28>]"
-yesstr  "<U0A39><U0A3E><U0A02>"
-nostr   "<U0A28><U0A39><U0A40><U0A02>"
+yesexpr "^[+1yYਹ]"
+noexpr  "^[-0nNਨ]"
+yesstr  "ਹਾਂ"
+nostr   "ਨਹੀਂ"
 END LC_MESSAGES
 
 
@@ -188,13 +188,13 @@ LC_ADDRESS
 % This is the ISO_IEC TR14652 Locale definition for the
 % LC_ADDRESS
 postal_fmt  "%z%c%T%s%b%e%r"
-country_name "<U0A2D><U0A3E><U0A30><U0A24>"
+country_name "ਭਾਰਤ"
 country_ab2 "IN"
 country_ab3 "IND"
 country_num 356
 country_car    "IND"
 % ਪੰਜਾਬੀ
-lang_name    "<U0A2A><U0A70><U0A1C><U0A3E><U0A2C><U0A40>"
+lang_name    "ਪੰਜਾਬੀ"
 lang_ab      "pa"
 lang_term    "pan"
 lang_lib    "pan"

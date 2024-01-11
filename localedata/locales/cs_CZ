@@ -235,9 +235,9 @@ END LC_MESSAGES
 LC_MONETARY
 
 int_curr_symbol		"CZK "
-currency_symbol		"K<U010D>"
+currency_symbol		"Kč"
 mon_decimal_point	","
-mon_thousands_sep	"<U202F>"
+mon_thousands_sep	" "
 mon_grouping      	3;3
 positive_sign		""
 negative_sign		"-"
@@ -258,7 +258,7 @@ END LC_MONETARY
 LC_NUMERIC
 
 decimal_point		","
-thousands_sep		"<U202F>"
+thousands_sep		" "
 grouping		3;3
 
 END LC_NUMERIC
@@ -269,45 +269,45 @@ LC_TIME
 
 abday		"Ne";/
 		"Po";/
-		"<U00DA>t";/
+		"Út";/
 		"St";/
-		"<U010C>t";/
-		"P<U00E1>";/
+		"Čt";/
+		"Pá";/
 		"So"
 
-day		"Ned<U011B>le";/
-		"Pond<U011B>l<U00ED>";/
-		"<U00DA>ter<U00FD>";/
-		"St<U0159>eda";/
-		"<U010C>tvrtek";/
-		"P<U00E1>tek";/
+day		"Neděle";/
+		"Pondělí";/
+		"Úterý";/
+		"Středa";/
+		"Čtvrtek";/
+		"Pátek";/
 		"Sobota"
 
 alt_mon		"leden";/
-		"<U00FA>nor";/
-		"b<U0159>ezen";/
+		"únor";/
+		"březen";/
 		"duben";/
-		"kv<U011B>ten";/
-		"<U010D>erven";/
-		"<U010D>ervenec";/
+		"květen";/
+		"červen";/
+		"červenec";/
 		"srpen";/
-		"z<U00E1><U0159><U00ED>";/
-		"<U0159><U00ED>jen";/
+		"září";/
+		"říjen";/
 		"listopad";/
 		"prosinec"
 
 % Obávám se, že čeština žádné zkratky pro měsíce nezná :-)
 % Zkratky vytvořené podle pravidel zkracování, docela neobvyklé
 %abmon		"len";/
-%		"<U00FA>or";/
+%		"úor";/
 %		"ben";/
 %		"den";/
 %		"ken";/
-%		"<U010D>en";/
-%		"<U010D>ec";/
+%		"čen";/
+%		"čec";/
 %		"sen";/
-%		"z<U0159><U00ED>";/
-%		"<U0159>en";/
+%		"zří";/
+%		"řen";/
 %		"lad";/
 %		"pec"
 
@@ -316,15 +316,15 @@ alt_mon		"leden";/
 % se vezmou první dvě písmena a poslední (nebo také první písmeno
 % a dvě koncová).
 abmon		"led";/
-		"<U00FA>no";/
-		"b<U0159>e";/
+		"úno";/
+		"bře";/
 		"dub";/
-		"kv<U011B>";/
-		"<U010D>en";/
-		"<U010D>ec";/
+		"kvě";/
+		"čen";/
+		"čec";/
 		"srp";/
-		"z<U00E1><U0159>";/
-		"<U0159><U00ED>j";/
+		"zář";/
+		"říj";/
 		"lis";/
 		"pro"
 
@@ -346,23 +346,23 @@ abmon		"led";/
 %		"Dec"
 
 mon		"ledna";/
-		"<U00FA>nora";/
-		"b<U0159>ezna";/
+		"února";/
+		"března";/
 		"dubna";/
-		"kv<U011B>tna";/
-		"<U010D>ervna";/
-		"<U010D>ervence";/
+		"května";/
+		"června";/
+		"července";/
 		"srpna";/
-		"z<U00E1><U0159><U00ED>";/
-		"<U0159><U00ED>jna";/
+		"září";/
+		"října";/
 		"listopadu";/
 		"prosince"
 
 week		7;19971130;4
 first_weekday	2
 
-d_t_fmt		"%a<U00A0>%-d.<U00A0>%B<U00A0>%Y,<U00A0>%H:%M:%S"
-date_fmt	"%a<U00A0>%-d.<U00A0>%B<U00A0>%Y,<U00A0>%H:%M:%S<U00A0>%Z"
+d_t_fmt		"%a %-d. %B %Y, %H:%M:%S"
+date_fmt	"%a %-d. %B %Y, %H:%M:%S %Z"
 
 d_fmt 		"%-d.%-m.%Y"
 
@@ -392,22 +392,22 @@ END LC_MEASUREMENT
 
 LC_NAME
 name_fmt    "%d%t%g%t%m%t%f"
-name_miss   "Sle<U010D>na"
+name_miss   "Slečna"
 name_mr     "Pan"
-name_mrs    "Pan<U00ED>"
-name_ms     "Pan<U00ED>"
+name_mrs    "Paní"
+name_ms     "Paní"
 END LC_NAME
 
 LC_ADDRESS
 postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
-country_name  "<U010C>esk<U00E1> republika"
+country_name  "Česká republika"
 country_post  "CZ"
 country_ab2   "CZ"
 country_ab3   "CZE"
 country_num   203
 country_car   "CZ"
 %country_isbn  ???
-lang_name     "<U010D>e<U0161>tina"
+lang_name     "čeština"
 lang_ab       "cs"
 lang_term     "ces"
 lang_lib      "cze"

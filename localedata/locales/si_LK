@@ -99,7 +99,7 @@ LC_MONETARY
 % This is the POSIX Locale definition the LC_MONETARY category
 %
 int_curr_symbol       "LKR "
-currency_symbol       "<U0DBB><U0DD4>"
+currency_symbol       "රු"
 mon_decimal_point     "."
 mon_thousands_sep     ","
 mon_grouping          3
@@ -131,50 +131,50 @@ LC_TIME
 % This is the POSIX Locale definition for the LC_TIME  category.
 %
 % Abbreviated weekday names (%a)
-abday       "<U0D89>";"<U0DC3>";/
-	    "<U0D85>";"<U0DB6>";/
-	    "<U0DB6><U0DCA><U200D><U0DBB>";"<U0DC3><U0DD2>";/
-	    "<U0DC3><U0DD9>"
+abday       "ඉ";"ස";/
+	    "අ";"බ";/
+	    "බ්‍ර";"සි";/
+	    "සෙ"
 %
 % Full weekday names (%A)
-day         "<U0D89><U0DBB><U0DD2><U0DAF><U0DCF>";/
-	    "<U0DC3><U0DB3><U0DD4><U0DAF><U0DCF>";/
-	    "<U0D85><U0D9F><U0DC4><U0DBB><U0DD4><U0DC0><U0DCF><U0DAF><U0DCF>";/
-	    "<U0DB6><U0DAF><U0DCF><U0DAF><U0DCF>";/
-	    "<U0DB6><U0DCA><U200D><U0DBB><U0DC4><U0DC3><U0DCA><U0DB4><U0DAD><U0DD2><U0DB1><U0DCA><U0DAF><U0DCF>";/
-	    "<U0DC3><U0DD2><U0D9A><U0DD4><U0DBB><U0DCF><U0DAF><U0DCF>";/
-	    "<U0DC3><U0DD9><U0DB1><U0DC3><U0DD4><U0DBB><U0DCF><U0DAF><U0DCF>"
+day         "ඉරිදා";/
+	    "සඳුදා";/
+	    "අඟහරුවාදා";/
+	    "බදාදා";/
+	    "බ්‍රහස්පතින්දා";/
+	    "සිකුරාදා";/
+	    "සෙනසුරාදා"
 %
 % Abbreviated month names (%b)
-abmon       "<U0DA2><U0DB1>";/
-	    "<U0DB4><U0DD9><U0DB6>";/
-	    "<U0DB8><U0DCF><U0DBB><U0DCA>";/
-	    "<U0D85><U0DB4><U0DCA><U200D><U0DBB><U0DD2>";/
-	    "<U0DB8><U0DD0><U0DBA><U0DD2>";/
-	    "<U0DA2><U0DD6><U0DB1><U0DD2>";/
-	    "<U0DA2><U0DD6><U0DBD><U0DD2>";/
-	    "<U0D85><U0D9C><U0DDD>";/
-	    "<U0DC3><U0DD0><U0DB4><U0DCA>";/
-	    "<U0D94><U0D9A><U0DCA>";/
-	    "<U0DB1><U0DD9><U0DC0><U0DD0>";/
-	    "<U0DAF><U0DD9><U0DC3><U0DD0>"
+abmon       "ජන";/
+	    "පෙබ";/
+	    "මාර්";/
+	    "අප්‍රි";/
+	    "මැයි";/
+	    "ජූනි";/
+	    "ජූලි";/
+	    "අගෝ";/
+	    "සැප්";/
+	    "ඔක්";/
+	    "නෙවැ";/
+	    "දෙසැ"
 %
 % Full month names (%B)
-mon         "<U0DA2><U0DB1><U0DC0><U0DCF><U0DBB><U0DD2>";/
-	    "<U0DB4><U0DD9><U0DB6><U0DBB><U0DC0><U0DCF><U0DBB><U0DD2>";/
-	    "<U0DB8><U0DCF><U0DBB><U0DCA><U0DAD><U0DD4>";/
-	    "<U0D85><U0DB4><U0DCA><U200D><U0DBB><U0DDA><U0DBD><U0DCA>";/
-	    "<U0DB8><U0DD0><U0DBA><U0DD2>";/
-	    "<U0DA2><U0DD6><U0DB1><U0DD2>";/
-	    "<U0DA2><U0DD6><U0DBD><U0DD2>";/
-	    "<U0D85><U0D9C><U0DDD><U0DC3><U0DCA><U0DAD><U0DD4>";/
-	    "<U0DC3><U0DD0><U0DB4><U0DCA><U0DAD><U0DD0><U0DB8><U0DCA><U0DB6><U0DBB><U0DCA>";/
-	    "<U0D94><U0D9A><U0DCA><U0DAD><U0DDD><U0DB6><U0DBB><U0DCA>";/
-	    "<U0DB1><U0DDC><U0DC0><U0DD0><U0DB8><U0DCA><U0DB6><U0DBB><U0DCA>";/
-	    "<U0DAF><U0DD9><U0DC3><U0DD0><U0DB8><U0DCA><U0DB6><U0DBB><U0DCA>"
+mon         "ජනවාරි";/
+	    "පෙබරවාරි";/
+	    "මාර්තු";/
+	    "අප්‍රේල්";/
+	    "මැයි";/
+	    "ජූනි";/
+	    "ජූලි";/
+	    "අගෝස්තු";/
+	    "සැප්තැම්බර්";/
+	    "ඔක්තෝබර්";/
+	    "නොවැම්බර්";/
+	    "දෙසැම්බර්"
 %
 % Equivalent of AM PM
-am_pm       "<U0DB4><U0DD9>.<U0DC0>.";"<U0DB4>.<U0DC0>."
+am_pm       "පෙ.ව.";"ප.ව."
 %
 % Appropriate date and time representation (use the same as ISO)
 d_t_fmt     "%Y-%m-%d %H:%M:%S %z"
@@ -189,7 +189,7 @@ t_fmt       "%H:%M:%S"
 t_fmt_ampm  "%p %I:%M:%S"
 %
 % Appropriate date and time (date(1))
-date_fmt     "%Y %B %e <U0DC0><U0DD0><U0DB1><U0DD2> %A %H:%M:%S %z"
+date_fmt     "%Y %B %e වැනි %A %H:%M:%S %z"
 %
 week 7;19971130;1
 first_weekday 2
@@ -197,10 +197,10 @@ END LC_TIME
 
 
 LC_MESSAGES
-yesexpr "^[+1yY<U0D94>]"
-noexpr  "^[-0nN<U0DB1>]"
-yesstr  "<U0D94><U0DC0><U0DCA>"
-nostr   "<U0DB1><U0DD0><U0DAD>"
+yesexpr "^[+1yYඔ]"
+noexpr  "^[-0nNන]"
+yesstr  "ඔව්"
+nostr   "නැත"
 END LC_MESSAGES
 
 
@@ -214,10 +214,10 @@ LC_NAME
 %
 name_fmt    "%g%t%m%t%f%t%s"
 name_gen    ""
-name_mr     "<U0DB8><U0DBA><U0DCF>"
-name_mrs    "<U0DB8><U0DD2><U0DBA>"
-name_miss   "<U0DB8><U0DD2><U0DBA>"
-name_ms     "<U0DB8><U0DD2><U0DBA>"
+name_mr     "මයා"
+name_mrs    "මිය"
+name_miss   "මිය"
+name_ms     "මිය"
 
 END LC_NAME
 
@@ -225,13 +225,13 @@ END LC_NAME
 LC_ADDRESS
 
 postal_fmt  "%z%c%T%s%b%e%r"
-country_name "<U0DC1><U0DCA><U200D><U0DBB><U0DD3> <U0DBD><U0D82><U0D9A><U0DCF><U0DC0>"
+country_name "ශ්‍රී ලංකාව"
 country_ab2 "LK"
 country_ab3 "LKA"
 country_num 144
 country_car  "CL"
 % සිංහල
-lang_name    "<U0DC3><U0DD2><U0D82><U0DC4><U0DBD>"
+lang_name    "සිංහල"
 lang_ab      "si"
 lang_term    "sin"
 lang_lib    "sin"

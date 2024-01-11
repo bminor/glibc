@@ -12,7 +12,7 @@ LC_IDENTIFICATION
 title      "Aragonese locale for Spain"
 source     "Softaragones"
 address    ""
-contact    "Jordi Mallach P<U00E9>rez, Juan Pablo Mart<U00ED>nez"
+contact    "Jordi Mallach Pérez, Juan Pablo Martínez"
 email      "bug-glibc-locales@gnu.org, softaragones@softaragones.org"
 tel        ""
 fax        ""
@@ -47,7 +47,7 @@ LC_MESSAGES
 yesexpr "^[+1sSyY]"
 noexpr  "^[-0nN]"
 % sí
-yesstr  "s<U00ED>"
+yesstr  "sí"
 nostr   "no"
 END LC_MESSAGES
 
@@ -128,5 +128,5 @@ lang_term     "arg"
 lang_lib      "arg"
 country_car   "E"
 % aragonés
-lang_name    "aragon<U00E9>s"
+lang_name    "aragonés"
 END LC_ADDRESS

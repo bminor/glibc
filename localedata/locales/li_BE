@@ -38,7 +38,7 @@ END LC_IDENTIFICATION
 LC_ADDRESS
 postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
 % https://li.wiktionary.org/wiki/B%C3%A8lsj "Bèlsj"
-country_name  "B<U00E8>lsj"
+country_name  "Bèlsj"
 country_post  "B"
 country_ab2   "BE"
 country_ab3   "BEL"
@@ -46,7 +46,7 @@ country_car   "B"
 country_num 056
 %FIXME country_isbn "2"
 % Lèmbörgs
-lang_name    "L<U00E8>mb<U00F6>rgs"
+lang_name    "Lèmbörgs"
 lang_ab "li"
 lang_term "lim"
 lang_lib "lim"

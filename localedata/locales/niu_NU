@@ -142,7 +142,7 @@ copy "en_NZ"
 END LC_MEASUREMENT
 
 LC_MESSAGES
-yesexpr "^[+1yY<U0113><U0112>]"
+yesexpr "^[+1yYēĒ]"
 noexpr  "^[-0nN]"
 yesstr  "Talia"
 nostr   "Nakai"
@@ -154,12 +154,12 @@ END LC_NAME
 
 LC_ADDRESS
 postal_fmt   "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
-country_name "Niu<U0113>"
+country_name "Niuē"
 country_post "NU"
 country_ab2  "NU"
 country_ab3  "NIU"
 country_num  570
-lang_name    "ko e vagahau Niu<U0113>"
+lang_name    "ko e vagahau Niuē"
 lang_term    "niu"
 lang_lib    "niu"
 END LC_ADDRESS

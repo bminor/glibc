@@ -88,57 +88,57 @@ LC_TIME
 % for IBM Class for Unicode/Java
 %
 % Abbreviated weekday names (%a)
-abday		"<U0AB0><U0AB5><U0ABF>";/
-		"<U0AB8><U0ACB><U0AAE>";/
-		"<U0AAE><U0A82><U0A97><U0AB3>";/
-		"<U0AAC><U0AC1><U0AA7>";/
-		"<U0A97><U0AC1><U0AB0><U0AC1>";/
-		"<U0AB6><U0AC1><U0A95><U0ACD><U0AB0>";/
-		"<U0AB6><U0AA8><U0ABF>"
+abday		"રવિ";/
+		"સોમ";/
+		"મંગળ";/
+		"બુધ";/
+		"ગુરુ";/
+		"શુક્ર";/
+		"શનિ"
 
 %
 % Full weekday names (%A)
-day		"<U0AB0><U0AB5><U0ABF><U0AB5><U0ABE><U0AB0>";/
-		"<U0AB8><U0ACB><U0AAE><U0AB5><U0ABE><U0AB0>";/
-		"<U0AAE><U0A82><U0A97><U0AB3><U0AB5><U0ABE><U0AB0>";/
-		"<U0AAC><U0AC1><U0AA7><U0AB5><U0ABE><U0AB0>";/
-		"<U0A97><U0AC1><U0AB0><U0AC1><U0AB5><U0ABE><U0AB0>";/
-		"<U0AB6><U0AC1><U0A95><U0ACD><U0AB0><U0AB5><U0ABE><U0AB0>";/
-		"<U0AB6><U0AA8><U0ABF><U0AB5><U0ABE><U0AB0>"
+day		"રવિવાર";/
+		"સોમવાર";/
+		"મંગળવાર";/
+		"બુધવાર";/
+		"ગુરુવાર";/
+		"શુક્રવાર";/
+		"શનિવાર"
 
 % Abbreviated month names (%b)
-abmon 		"<U0A9C><U0ABE><U0AA8><U0ACD><U0AAF><U0AC1>";/
-		"<U0AAB><U0AC7><U0AAC><U0ACD><U0AB0><U0AC1>";/
-		"<U0AAE><U0ABE><U0AB0><U0ACD><U0A9A>";/
-		"<U0A8F><U0AAA><U0ACD><U0AB0><U0ABF><U0AB2>";/
-		"<U0AAE><U0AC7>";/
-		"<U0A9C><U0AC2><U0AA8>";/
-		"<U0A9C><U0AC1><U0AB2><U0ABE><U0A88>";/
-		"<U0A91><U0A97><U0AB8><U0ACD><U0A9F>";/
-		"<U0AB8><U0AAA><U0ACD><U0A9F><U0AC7>";/
-		"<U0A91><U0A95><U0ACD><U0A9F><U0ACB>";/
-		"<U0AA8><U0AB5><U0AC7>";/
-		"<U0AA1><U0ABF><U0AB8><U0AC7>"
+abmon 		"જાન્યુ";/
+		"ફેબ્રુ";/
+		"માર્ચ";/
+		"એપ્રિલ";/
+		"મે";/
+		"જૂન";/
+		"જુલાઈ";/
+		"ઑગસ્ટ";/
+		"સપ્ટે";/
+		"ઑક્ટો";/
+		"નવે";/
+		"ડિસે"
 
 %
 % Full month names (%B)
-mon	"<U0A9C><U0ABE><U0AA8><U0ACD><U0AAF><U0AC1><U0A86><U0AB0><U0AC0>";/
-	"<U0AAB><U0AC7><U0AAC><U0ACD><U0AB0><U0AC1><U0A86><U0AB0><U0AC0>";/
-	"<U0AAE><U0ABE><U0AB0><U0ACD><U0A9A>";/
-	"<U0A8F><U0AAA><U0ACD><U0AB0><U0ABF><U0AB2>";/
-	"<U0AAE><U0AC7>";/
-	"<U0A9C><U0AC2><U0AA8>";/
-	"<U0A9C><U0AC1><U0AB2><U0ABE><U0A88>";/
-	"<U0A91><U0A97><U0AB8><U0ACD><U0A9F>";/
-	"<U0AB8><U0AAA><U0ACD><U0A9F><U0AC7><U0AAE><U0ACD><U0AAC><U0AB0>";/
-	"<U0A91><U0A95><U0ACD><U0A9F><U0ACB><U0AAC><U0AB0>";/
-	"<U0AA8><U0AB5><U0AC7><U0AAE><U0ACD><U0AAC><U0AB0>";/
-	"<U0AA1><U0ABF><U0AB8><U0AC7><U0AAE><U0ACD><U0AAC><U0AB0>"
+mon	"જાન્યુઆરી";/
+	"ફેબ્રુઆરી";/
+	"માર્ચ";/
+	"એપ્રિલ";/
+	"મે";/
+	"જૂન";/
+	"જુલાઈ";/
+	"ઑગસ્ટ";/
+	"સપ્ટેમ્બર";/
+	"ઑક્ટોબર";/
+	"નવેમ્બર";/
+	"ડિસેમ્બર"
 
 %
 % Equivalent of AM PM
-am_pm		"<U0AB8><U0AB5><U0ABE><U0AB0><U0AC7>";/
-		"<U0AB8><U0ABE><U0A82><U0A9C><U0AC7>"
+am_pm		"સવારે";/
+		"સાંજે"
 
 % *** There aren't any Devanagari characters below, so for time being
 % *** maintain same for Gujarati also,  Karunakar
@@ -162,10 +162,10 @@ week 7;19971130;1
 END LC_TIME
 
 LC_MESSAGES
-yesexpr "^[+1yY<U0AB9>]"
-noexpr  "^[-0nN<U0AA8>]"
-yesstr  "<U0AB9><U0ABE>"
-nostr   "<U0AA8><U0AB9><U0AC0><U0A82>"
+yesexpr "^[+1yYહ]"
+noexpr  "^[-0nNન]"
+yesstr  "હા"
+nostr   "નહીં"
 END LC_MESSAGES
 
 
@@ -179,11 +179,11 @@ LC_NAME
 % LC_NAME category.
 %
 name_fmt    "%p%t%f%t%g"
-name_gen    "<U0A9C><U0ABE><U0AA4><U0ABF>"
-name_mr     "<U0AB6><U0ACD><U0AB0><U0AC0><U0AAE><U0ABE><U0AA8>"
-name_mrs    "<U0AB6><U0ACD><U0AB0><U0AC0><U0AAE><U0AA4><U0ABF>"
-name_miss   "<U0A95><U0AC1><U0AAE><U0ABE><U0AB0><U0AC0>"
-name_ms     "<U0AB8><U0AB6><U0ACD><U0AB0><U0AC0>"
+name_gen    "જાતિ"
+name_mr     "શ્રીમાન"
+name_mrs    "શ્રીમતિ"
+name_miss   "કુમારી"
+name_ms     "સશ્રી"
 
 END LC_NAME
 
@@ -192,13 +192,13 @@ LC_ADDRESS
 % This is the ISO_IEC TR14652 Locale definition for the
 % LC_ADDRESS
 postal_fmt  "%z%c%T%s%b%e%r"
-country_name "<U0AAD><U0ABE><U0AB0><U0AA4>"
+country_name "ભારત"
 country_ab2 "IN"
 country_ab3 "IND"
 country_num 356
 country_car "IND"
 % ગુજરાતી
-lang_name    "<U0A97><U0AC1><U0A9C><U0AB0><U0ABE><U0AA4><U0AC0>"
+lang_name    "ગુજરાતી"
 lang_ab      "gu"
 lang_term    "guj"
 lang_lib    "guj"

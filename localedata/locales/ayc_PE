@@ -59,7 +59,7 @@ END LC_COLLATE
 
 LC_TIME
 % inïru, phiwriru, marsu, awrila, mayu, junyu, julyu, awustu, sitimri, uktuwri, nuwimri, risimri
-mon  "in<U00EF>ru";/
+mon  "inïru";/
      "phiwriru";/
      "marsu";/
      "awrila";/
@@ -91,7 +91,7 @@ day    "tuminku";/
        "mirkulisa";/
        "juywisa";/
        "wirnisa";/
-       "saw<U00E4>ru"
+       "sawäru"
 % tum, lun, mar, mir, juy, wir, saw
 abday  "tum";/
        "lun";/

@@ -108,35 +108,35 @@ copy "tr_TR"
 END LC_NUMERIC
 
 LC_TIME
-abday       "y<U00EA>k";"dus";/
-            "s<U00EA>s";"<U00E7>ar";/
-            "p<U00EA>n";"<U00EE>n<U00EE>";/
+abday       "yêk";"dus";/
+            "sês";"çar";/
+            "pên";"înî";/
             "sep"
-day         "y<U00EA>ks<U00EA>m";/
-            "dus<U00EA>m";/
-            "s<U00EA>s<U00EA>m";/
-            "<U00E7>ars<U00EA>m";/
-            "p<U00EA>ncs<U00EA>m";/
-            "<U00EE>n<U00EE>";/
+day         "yêksêm";/
+            "dusêm";/
+            "sêsêm";/
+            "çarsêm";/
+            "pêncsêm";/
+            "înî";/
             "sept"
-abmon       "<U00C7>il";"Sib";/
-            "Ada";"N<U00EE>s";/
+abmon       "Çil";"Sib";/
+            "Ada";"Nîs";/
             "Gul";"Hez";/
-            "T<U00EE>r";"Teb";/
-            "<U00CE>lo";"Cot";/
+            "Tîr";"Teb";/
+            "Îlo";"Cot";/
             "Mij";"Kan"
-mon         "<U00C7>ile";/
+mon         "Çile";/
             "Sibat";/
             "Adar";/
-            "N<U00EE>san";/
+            "Nîsan";/
             "Gulan";/
-            "Hez<U00EE>ran";/
-            "T<U00EE>rmeh";/
+            "Hezîran";/
+            "Tîrmeh";/
             "Tebax";/
-            "<U00CE>lon";/
+            "Îlon";/
             "Cotmeh";/
             "Mijdar";/
-            "Kan<U00FB>n"
+            "Kanûn"
 d_t_fmt  "%A %d %B %Y %T %Z"
 d_fmt   "%d//%m//%Y"
 t_fmt       "%T"
@@ -151,8 +151,8 @@ END LC_TIME
 LC_MESSAGES
 yesexpr "^[+1eEdDyY]"
 noexpr  "^[-0nN]"
-yesstr  "er<U00EA>"
-nostr   "n<U00E2>"
+yesstr  "erê"
+nostr   "nâ"
 END LC_MESSAGES
 
 LC_PAPER
@@ -171,12 +171,12 @@ LC_NAME
 name_fmt    "%d%t%g%t%m%t%f"
 % TODO
 % Sayın
-name_gen    "Say<U0131>n"
+name_gen    "Sayın"
 name_mr     "M."
 name_mrs    "Jne"
 name_ms     "Jne"
 % "Kc,k"
-name_miss   "K<U00E7>k"
+name_miss   "Kçk"
 END LC_NAME
 
 LC_ADDRESS
@@ -189,7 +189,7 @@ country_ab3  "TUR"
 country_num  792
 country_isbn 975
 country_car    "TR"
-lang_name   "kurd<U00EE>"
+lang_name   "kurdî"
 lang_ab      "ku"
 lang_term    "kur"
 lang_lib     "kur"

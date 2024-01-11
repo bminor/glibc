@@ -92,56 +92,56 @@ LC_TIME
 % for IBM Class for Unicode/Java
 %
 % Abbreviated weekday names (%a)
-abday       "<U0CB0>";/
-            "<U0CB8><U0CCB>";/
-            "<U0CAE><U0C82>";/
-            "<U0CAC><U0CC1>";/
-            "<U0C97><U0CC1>";/
-            "<U0CB6><U0CC1>";/
-            "<U0CB6>"
+abday       "ರ";/
+            "ಸೋ";/
+            "ಮಂ";/
+            "ಬು";/
+            "ಗು";/
+            "ಶು";/
+            "ಶ"
 %
 % Full weekday names (%A)
-day      "<U0CB0><U0CB5><U0CBF><U0CB5><U0CBE><U0CB0>";/
-            "<U0CB8><U0CCB><U0CAE><U0CB5><U0CBE><U0CB0>";/
-            "<U0CAE><U0C82><U0C97><U0CB3><U0CB5><U0CBE><U0CB0>";/
-            "<U0CAC><U0CC1><U0CA7><U0CB5><U0CBE><U0CB0>";/
-            "<U0C97><U0CC1><U0CB0><U0CC1><U0CB5><U0CBE><U0CB0>";/
-            "<U0CB6><U0CC1><U0C95><U0CCD><U0CB0><U0CB5><U0CBE><U0CB0>";/
-            "<U0CB6><U0CA8><U0CBF><U0CB5><U0CBE><U0CB0>"
+day      "ರವಿವಾರ";/
+            "ಸೋಮವಾರ";/
+            "ಮಂಗಳವಾರ";/
+            "ಬುಧವಾರ";/
+            "ಗುರುವಾರ";/
+            "ಶುಕ್ರವಾರ";/
+            "ಶನಿವಾರ"
 
 %
 % Abbreviated month names (%b)
-abmon       	"<U0C9C><U0CA8>";/
-	"<U0CAB><U0CC6><U0CAC><U0CCD><U0CB0>";/
-	"<U0CAE><U0CBE><U0CB0><U0CCD><U0C9A><U0CCD>";/
-	"<U0C8F><U0CAA><U0CCD><U0CB0><U0CBF>";/
-	"<U0CAE><U0CC7>";/
-	"<U0C9C><U0CC2><U0CA8><U0CCD>";/
-	"<U0C9C><U0CC1><U0CB2><U0CC8>";/
-	"<U0C86>";/
-	"<U0CB8><U0CC6><U0CAA><U0CCD><U0C9F><U0CC6><U0C82>";/
-	"<U0C85><U0C95><U0CCD><U0C9F><U0CCB>";/
-	"<U0CA8><U0CB5><U0CC6><U0C82>";/
-	"<U0CA1><U0CBF><U0CB8><U0CC6><U0C82>"
+abmon       	"ಜನ";/
+	"ಫೆಬ್ರ";/
+	"ಮಾರ್ಚ್";/
+	"ಏಪ್ರಿ";/
+	"ಮೇ";/
+	"ಜೂನ್";/
+	"ಜುಲೈ";/
+	"ಆ";/
+	"ಸೆಪ್ಟೆಂ";/
+	"ಅಕ್ಟೋ";/
+	"ನವೆಂ";/
+	"ಡಿಸೆಂ"
 
 %
 % Full month names (%B)
-mon      	"<U0C9C><U0CA8><U0CB5><U0CB0><U0CBF>";/
-	"<U0CAB><U0CC6><U0CAC><U0CCD><U0CB0><U0CB5><U0CB0><U0CBF>";/
-	"<U0CAE><U0CBE><U0CB0><U0CCD><U0C9A><U0CCD>";/
-	"<U0C8F><U0CAA><U0CCD><U0CB0><U0CBF><U0CB2><U0CCD>";/
-	"<U0CAE><U0CC7>";/
-	"<U0C9C><U0CC2><U0CA8><U0CCD>";/
-	"<U0C9C><U0CC1><U0CB2><U0CC8>";/
-	"<U0C86><U0C97><U0CB8><U0CCD><U0C9F><U0CCD>";/
-	"<U0CB8><U0CC6><U0CAA><U0CCD><U0C9F><U0CC6><U0C82><U0CAC><U0CB0><U0CCD>";/
-	"<U0C85><U0C95><U0CCD><U0C9F><U0CCB><U0CAC><U0CB0><U0CCD>";/
-	"<U0CA8><U0CB5><U0CC6><U0C82><U0CAC><U0CB0><U0CCD>";/
-	"<U0CA1><U0CBF><U0CB8><U0CC6><U0C82><U0CAC><U0CB0><U0CCD>"
+mon      	"ಜನವರಿ";/
+	"ಫೆಬ್ರವರಿ";/
+	"ಮಾರ್ಚ್";/
+	"ಏಪ್ರಿಲ್";/
+	"ಮೇ";/
+	"ಜೂನ್";/
+	"ಜುಲೈ";/
+	"ಆಗಸ್ಟ್";/
+	"ಸೆಪ್ಟೆಂಬರ್";/
+	"ಅಕ್ಟೋಬರ್";/
+	"ನವೆಂಬರ್";/
+	"ಡಿಸೆಂಬರ್"
 %
 % Equivalent of AM PM
-am_pm       	"<U0CAA><U0CC2><U0CB0><U0CCD><U0CB5><U0CBE><U0CB9><U0CCD><U0CA8>";/
-            	"<U0C85><U0CAA><U0CB0><U0CBE><U0CB9><U0CCD><U0CA8>"
+am_pm       	"ಪೂರ್ವಾಹ್ನ";/
+            	"ಅಪರಾಹ್ನ"
 
 % *** There arent any Devanagari characters below, so for time being
 % *** maintain same for Kannada also,  Karunakar
@@ -166,10 +166,10 @@ END LC_TIME
 
 
 LC_MESSAGES
-yesexpr "^[+1yY<U0CB9>]"
-noexpr  "^[-0nN<U0C87>]"
-yesstr  "<U0CB9><U0CCC><U0CA6><U0CC1>"
-nostr   "<U0C87><U0CB2><U0CCD><U0CB2>"
+yesexpr "^[+1yYಹ]"
+noexpr  "^[-0nNಇ]"
+yesstr  "ಹೌದು"
+nostr   "ಇಲ್ಲ"
 END LC_MESSAGES
 
 
@@ -196,13 +196,13 @@ LC_ADDRESS
 % This is the ISO_IEC TR14652 Locale definition for the
 % LC_ADDRESS
 postal_fmt  "%z%c%T%s%b%e%r"
-country_name "<U0CAD><U0CBE><U0CB0><U0CA4>"
+country_name "ಭಾರತ"
 country_ab2 "IN"
 country_ab3 "IND"
 country_num 356
 country_car    "IND"
 % ಕನ್ನಡ
-lang_name    "<U0C95><U0CA8><U0CCD><U0CA8><U0CA1>"
+lang_name    "ಕನ್ನಡ"
 lang_ab      "kn"
 lang_term    "kan"
 lang_lib    "kan"

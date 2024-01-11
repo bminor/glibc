@@ -37,7 +37,7 @@ END LC_IDENTIFICATION
 
 LC_ADDRESS
 postal_fmt "%d%N%f%N%d%N%b%N%s %h 5e %r%N%C%z %T%N%c%N"
-country_name "<U10E1><U10D0><U10E5><U10D0><U10E0><U10D7><U10D5><U10D4><U10DA><U10DD>"
+country_name "საქართველო"
 % country_post "GE" for Georgia ?
 country_ab2 "GE"
 country_ab3 "GEO"
@@ -45,7 +45,7 @@ country_num 268
 country_car "GE"
 country_isbn "99928"
 % ქართული
-lang_name    "<U10E5><U10D0><U10E0><U10D7><U10E3><U10DA><U10D8>"
+lang_name    "ქართული"
 lang_ab      "ka"
 lang_term    "kat"
 lang_lib     "geo"
@@ -61,7 +61,7 @@ END LC_CTYPE
 
 LC_MONETARY
 int_curr_symbol      "GEL "
-currency_symbol      "<U20BE>"
+currency_symbol      "₾"
 mon_decimal_point    ","
 mon_thousands_sep    "."
 mon_grouping         3;3
@@ -85,51 +85,51 @@ END LC_NUMERIC
 
 LC_TIME
 abday	/
-"<U10D9><U10D5><U10D8>";/
-"<U10DD><U10E0><U10E8>";/
-"<U10E1><U10D0><U10DB>";/
-"<U10DD><U10D7><U10EE>";/
-"<U10EE><U10E3><U10D7>";/
-"<U10DE><U10D0><U10E0>";/
-"<U10E8><U10D0><U10D1>"
+"კვი";/
+"ორშ";/
+"სამ";/
+"ოთხ";/
+"ხუთ";/
+"პარ";/
+"შაბ"
 day	/
-"<U10D9><U10D5><U10D8><U10E0><U10D0>";/
-"<U10DD><U10E0><U10E8><U10D0><U10D1><U10D0><U10D7><U10D8>";/
-"<U10E1><U10D0><U10DB><U10E8><U10D0><U10D1><U10D0><U10D7><U10D8>";/
-"<U10DD><U10D7><U10EE><U10E8><U10D0><U10D1><U10D0><U10D7><U10D8>";/
-"<U10EE><U10E3><U10D7><U10E8><U10D0><U10D1><U10D0><U10D7><U10D8>";/
-"<U10DE><U10D0><U10E0><U10D0><U10E1><U10D9><U10D4><U10D5><U10D8>";/
-"<U10E8><U10D0><U10D1><U10D0><U10D7><U10D8>"
+"კვირა";/
+"ორშაბათი";/
+"სამშაბათი";/
+"ოთხშაბათი";/
+"ხუთშაბათი";/
+"პარასკევი";/
+"შაბათი"
 abmon	/
-"<U10D8><U10D0><U10DC>";/
-"<U10D7><U10D4><U10D1>";/
-"<U10DB><U10D0><U10E0>";/
-"<U10D0><U10DE><U10E0>";/
-"<U10DB><U10D0><U10D8>";/
-"<U10D8><U10D5><U10DC>";/
-"<U10D8><U10D5><U10DA>";/
-"<U10D0><U10D2><U10D5>";/
-"<U10E1><U10D4><U10E5>";/
-"<U10DD><U10E5><U10E2>";/
-"<U10DC><U10DD><U10D4>";/
-"<U10D3><U10D4><U10D9>"
+"იან";/
+"თებ";/
+"მარ";/
+"აპრ";/
+"მაი";/
+"ივნ";/
+"ივლ";/
+"აგვ";/
+"სექ";/
+"ოქტ";/
+"ნოე";/
+"დეკ"
 mon	/
-"<U10D8><U10D0><U10DC><U10D5><U10D0><U10E0><U10D8>";/
-"<U10D7><U10D4><U10D1><U10D4><U10E0><U10D5><U10D0><U10DA><U10D8>";/
-"<U10DB><U10D0><U10E0><U10E2><U10D8>";/
-"<U10D0><U10DE><U10E0><U10D8><U10DA><U10D8>";/
-"<U10DB><U10D0><U10D8><U10E1><U10D8>";/
-"<U10D8><U10D5><U10DC><U10D8><U10E1><U10D8>";/
-"<U10D8><U10D5><U10DA><U10D8><U10E1><U10D8>";/
-"<U10D0><U10D2><U10D5><U10D8><U10E1><U10E2><U10DD>";/
-"<U10E1><U10D4><U10E5><U10E2><U10D4><U10DB><U10D1><U10D4><U10E0><U10D8>";/
-"<U10DD><U10E5><U10E2><U10DD><U10DB><U10D1><U10D4><U10E0><U10D8>";/
-"<U10DC><U10DD><U10D4><U10DB><U10D1><U10D4><U10E0><U10D8>";/
-"<U10D3><U10D4><U10D9><U10D4><U10DB><U10D1><U10D4><U10E0><U10D8>"
+"იანვარი";/
+"თებერვალი";/
+"მარტი";/
+"აპრილი";/
+"მაისი";/
+"ივნისი";/
+"ივლისი";/
+"აგვისტო";/
+"სექტემბერი";/
+"ოქტომბერი";/
+"ნოემბერი";/
+"დეკემბერი"
 
 %"%Y ÜÊÈÑ %d %B"
-d_t_fmt  "%Y <U10EC><U10DA><U10D8><U10E1> %d %B, %T"
-date_fmt "%Y <U10EC><U10DA><U10D8><U10E1> %d %B, %T %Z"
+d_t_fmt  "%Y წლის %d %B, %T"
+date_fmt "%Y წლის %d %B, %T %Z"
 d_fmt    "%m//%d//%Y"
 t_fmt    "%T"
 am_pm    "";""
@@ -139,10 +139,10 @@ first_weekday 2
 END LC_TIME
 
 LC_MESSAGES
-yesexpr "^[+1yYkKxX<U10D9>]"
-noexpr  "^[-0nNaA<U10D0>]"
-yesstr  "<U10D9><U10D8>"
-nostr   "<U10D0><U10E0><U10D0>"
+yesexpr "^[+1yYkKxXკ]"
+noexpr  "^[-0nNaAა]"
+yesstr  "კი"
+nostr   "არა"
 END LC_MESSAGES
 
 LC_MEASUREMENT

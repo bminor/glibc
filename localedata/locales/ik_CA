@@ -151,31 +151,31 @@ abday       "Min";"Sav";/
             "Ila";"Qit";/
             "Sis";"Tal";/
             "Maq"
-day         "Min<U0121>uiqsioiq";/
-            "Sava<U0142><U0142>iq";/
+day         "Minġuiqsioiq";/
+            "Savałłiq";/
             "Ilaqtchiioiq";/
             "Qitchiioiq";/
             "Sisamiioiq";/
             "Tallimmiioiq";/
-            "Maqin<U0121>uoiq"
-abmon       "S<U00F1>t";"S<U00F1>s";/
+            "Maqinġuoiq"
+abmon       "Sñt";"Sñs";/
             "Pan";"Qil";/
-            "Sup";"I<U0121><U00F1>";/
-            "Itc";"Ti<U00F1>";/
+            "Sup";"Iġñ";/
+            "Itc";"Tiñ";/
             "Ami";"Sik";/
             "Nip";"Siq"
-mon         "Siqi<U00F1><U00F1>aatchiaq";/
-            "Siqi<U00F1><U00F1>aasrugruk";/
+mon         "Siqiññaatchiaq";/
+            "Siqiññaasrugruk";/
             "Paniqsiqsiivik";/
-            "Qil<U0121>ich Tatqiat";/
+            "Qilġich Tatqiat";/
             "Suppivik";/
-            "I<U0121><U00F1>ivik";/
+            "Iġñivik";/
             "Itchavik";/
-            "Ti<U00F1><U00F1>ivik";/
-            "Ami<U0121>aiqsivik";/
+            "Tiññivik";/
+            "Amiġaiqsivik";/
             "Sikkuvik";/
             "Nippivik";/
-            "Siqi<U00F1><U0121>i<U1E37>aq"
+            "Siqiñġiḷaq"
 d_t_fmt     "%a %d %b %Y %r"
 date_fmt    "%a %d %b %Y %r %Z"
 d_fmt       "%d//%m//%y"
@@ -189,7 +189,7 @@ LC_MESSAGES
 yesexpr "^[+1yYiIaA]"
 noexpr  "^[-0nNqQ]"
 yesstr  "aa"
-nostr   "qa<U00F1>aa"
+nostr   "qañaa"
 END LC_MESSAGES
 
 LC_PAPER
@@ -215,7 +215,7 @@ country_ab3 "CAN"
 country_num 124
 country_car    "CDN"
 % Iñupiatun
-lang_name    "I<U00F1>upiatun"
+lang_name    "Iñupiatun"
 lang_ab      "ik"
 lang_term    "ipk"
 lang_lib    "ipk"

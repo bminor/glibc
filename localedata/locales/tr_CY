@@ -86,14 +86,14 @@ END LC_NAME
 
 LC_ADDRESS
 postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
-country_name "K<U0131>br<U0131>s"
+country_name "Kıbrıs"
 country_post	"TR"
 country_car "CY"
 country_isbn	975
 country_num 196
 country_ab2 "CY"
 country_ab3 "CYP"
-lang_name	"T<U00FC>rk<U00E7>e"
+lang_name	"Türkçe"
 lang_term	"tur"
 lang_lib	"tur"
 lang_ab		"tr"

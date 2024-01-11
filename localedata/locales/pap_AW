@@ -68,16 +68,16 @@ END LC_COLLATE
 LC_MESSAGES
 yesexpr "^[+1sSyY]"
 noexpr  "^[-0nN]"
-yesstr  "s<U00ED>"
-nostr   "n<U00F2>"
+yesstr  "sí"
+nostr   "nò"
 END LC_MESSAGES
 
 
 LC_MONETARY
 int_curr_symbol           "AWG "
-currency_symbol           "<U0192>"
+currency_symbol           "ƒ"
 mon_decimal_point         ","
-mon_thousands_sep         "<U202F>"
+mon_thousands_sep         " "
 mon_grouping              3;3
 positive_sign             ""
 negative_sign             "-"
@@ -104,22 +104,22 @@ day     "Djadomingo";/
         "Djasabra"
 abmon   "Yan";"Feb";/
         "Mar";"Apr";/
-        "Mei";"Y<U00FC>n";/
-        "Y<U00FC>l";"Oug";/
-        "S<U00E8>p";"Okt";/
+        "Mei";"Yün";/
+        "Yül";"Oug";/
+        "Sèp";"Okt";/
         "Nov";"Des"
-mon     "Yan<U00FC>ari";/
-        "Febr<U00FC>ari";/
+mon     "Yanüari";/
+        "Febrüari";/
         "Mart";/
         "Aprel";/
         "Mei";/
-        "Y<U00FC>ni";/
-        "Y<U00FC>li";/
-        "Oug<U00F9>st<U00F9>s";/
-        "S<U00E8>pt<U00E8>mber";/
+        "Yüni";/
+        "Yüli";/
+        "Ougùstùs";/
+        "Sèptèmber";/
         "Oktober";/
-        "Nov<U00E8>mber";/
-        "Des<U00E8>mber"
+        "Novèmber";/
+        "Desèmber"
 d_t_fmt  "%a %d %b %Y %T"
 date_fmt "%a %d %b %Y %T %Z"
 d_fmt   "%d-%m-%y"

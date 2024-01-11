@@ -178,34 +178,34 @@ grouping                3;3
 END LC_NUMERIC
 
 LC_TIME
-abday "sun";"m<U00E1>n";/
-      "<U00FE>ri";"mi<U00F0>";/
-      "fim";"f<U00F6>s";/
+abday "sun";"mán";/
+      "þri";"mið";/
+      "fim";"fös";/
       "lau"
 day   "sunnudagur";/
-      "m<U00E1>nudagur";/
-      "<U00FE>ri<U00F0>judagur";/
-      "mi<U00F0>vikudagur";/
+      "mánudagur";/
+      "þriðjudagur";/
+      "miðvikudagur";/
       "fimmtudagur";/
-      "f<U00F6>studagur";/
+      "föstudagur";/
       "laugardagur"
 abmon "jan";"feb";/
       "mar";"apr";/
-      "ma<U00ED>";"j<U00FA>n";/
-      "j<U00FA>l";"<U00E1>g<U00FA>";/
+      "maí";"jún";/
+      "júl";"ágú";/
       "sep";"okt";/
-      "n<U00F3>v";"des"
-mon   "jan<U00FA>ar";/
-      "febr<U00FA>ar";/
+      "nóv";"des"
+mon   "janúar";/
+      "febrúar";/
       "mars";/
-      "apr<U00ED>l";/
-      "ma<U00ED>";/
-      "j<U00FA>n<U00ED>";/
-      "j<U00FA>l<U00ED>";/
-      "<U00E1>g<U00FA>st";/
+      "apríl";/
+      "maí";/
+      "júní";/
+      "júlí";/
+      "ágúst";/
       "september";/
-      "okt<U00F3>ber";/
-      "n<U00F3>vember";/
+      "október";/
+      "nóvember";/
       "desember"
 d_t_fmt  "%a %e.%b %Y, %T"
 date_fmt "%a %e.%b %Y, %T %Z"
@@ -220,7 +220,7 @@ END LC_TIME
 LC_MESSAGES
 yesexpr "^[+1jJyY]"
 noexpr  "^[-0nN]"
-yesstr  "j<U00E1>"
+yesstr  "já"
 nostr   "nei"
 END LC_MESSAGES
 
@@ -244,13 +244,13 @@ END LC_NAME
 
 LC_ADDRESS
 postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
-country_name "<U00CD>sland"
+country_name "Ísland"
 country_ab2 "IS"
 country_ab3 "ISL"
 country_num 352
 country_car    "IS"
 % íslenska
-lang_name    "<U00ED>slenska"
+lang_name    "íslenska"
 lang_ab      "is"
 lang_term    "isl"
 lang_lib    "ice"

@@ -73,23 +73,23 @@ grouping                3;3
 END LC_NUMERIC
 
 LC_TIME
-abday       "s<U00F6>n";"m<U00F6>n";/
+abday       "sön";"mön";/
             "sin";"mit";/
             "soi";"nen";/
             "sab"
-day         "s<U00F6>nda";/
-            "m<U00F6>nda";/
+day         "sönda";/
+            "mönda";/
             "sinda";/
-            "mitiw<U00F6>";/
+            "mitiwö";/
             "sogipbono";/
             "nenggo";/
-            "s<U00F6>ndanggie"
+            "söndanggie"
 abmon       "jen";"feb";/
             "mas";"epr";/
             "mei";"jun";/
-            "jul";"<U00F6>gu";/
-            "sep";"<U00F6>kt";/
-            "n<U00F6>w";"dis"
+            "jul";"ögu";/
+            "sep";"ökt";/
+            "nöw";"dis"
 mon         "jenuari";/
             "febuari";/
             "mas";/
@@ -97,10 +97,10 @@ mon         "jenuari";/
             "mei";/
             "jun";/
             "julai";/
-            "<U00F6>gus";/
+            "ögus";/
             "septemba";/
-            "<U00F6>ktoba";/
-            "n<U00F6>wemba";/
+            "öktoba";/
+            "nöwemba";/
             "diksemba"
 d_t_fmt     "%a %d %b %Y %T"
 date_fmt    "%a %d %b %Y %T %Z"
@@ -112,9 +112,9 @@ week 7;19971130;1
 END LC_TIME
 
 LC_MESSAGES
-yesexpr "^[+1yY<U00F6><U00D6>]"
+yesexpr "^[+1yYöÖ]"
 noexpr "^[-0nNmM]"
-yesstr "<U00F6><U00F6>"
+yesstr "öö"
 nostr "muuno"
 END LC_MESSAGES
 

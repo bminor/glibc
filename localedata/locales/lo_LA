@@ -613,7 +613,7 @@ LC_MONETARY
 int_curr_symbol      "LAK "
 
 % monetary unit: Kip
-currency_symbol      "<U20AD>"
+currency_symbol      "₭"
 mon_decimal_point    "."
 mon_thousands_sep    ","
 mon_grouping         3;3
@@ -640,40 +640,40 @@ END LC_NUMERIC
 
 LC_TIME
 
-abday   "<U0EAD><U0EB2>.";"<U0E88>.";"<U0E84>.";/
-        "<U0E9E>.";"<U0E9E><U0EAB>.";"<U0EAA>.";/
-        "<U0EAA>."
-day     "<U0EAD><U0EB2><U0E97><U0EB4><U0E94>";/
-        "<U0E88><U0EB1><U0E99>";/
-        "<U0EAD><U0EB1><U0E87><U0E84><U0EB2><U0E99>";/
-        "<U0E9E><U0EB8><U0E94>";/
-        "<U0E9E><U0EB0><U0EAB><U0EB1><U0E94>";/
-        "<U0EAA><U0EB8><U0E81>";/
-        "<U0EC0><U0EAA><U0EBB><U0EB2>"
-abmon   "<U0EA1>.<U0E81>.";/
-        "<U0E81>.<U0E9E>.";/
-        "<U0EA1>.<U0E99>.";/
-        "<U0EA1>.<U0EAA>.";/
-        "<U0E9E>.<U0E9E>.";/
-        "<U0EA1><U0EB4>.<U0E96>.";/
-        "<U0E81>.<U0EA5>.";/
-        "<U0EAA>.<U0EAB>.";/
-        "<U0E81>.<U0E8D>.";/
-        "<U0E95>.<U0EA5>.";/
-        "<U0E9E>.<U0E88>.";/
-        "<U0E97>.<U0EA7>."
-mon     "<U0EA1><U0EB1><U0E87><U0E81><U0EAD><U0E99>";/
-        "<U0E81><U0EB8><U0EA1><U0E9E><U0EB2>";/
-        "<U0EA1><U0EB5><U0E99><U0EB2>";/
-        "<U0EC0><U0EA1><U0EAA><U0EB2>";/
-        "<U0E9E><U0EB6><U0E94><U0EAA><U0EB0><U0E9E><U0EB2>";/
-        "<U0EA1><U0EB4><U0E96><U0EB8><U0E99><U0EB2>";/
-        "<U0E81><U0ECD><U0EA5><U0EB0><U0E81><U0EBB><U0E94>";/
-        "<U0EAA><U0EB4><U0E87><U0EAB><U0EB2>";/
-        "<U0E81><U0EB1><U0E99><U0E8D><U0EB2>";/
-        "<U0E95><U0EB8><U0EA5><U0EB2>";/
-        "<U0E9E><U0EB0><U0E88><U0EB4><U0E81>";/
-        "<U0E97><U0EB1><U0E99><U0EA7><U0EB2>"
+abday   "ອາ.";"ຈ.";"ຄ.";/
+        "ພ.";"ພຫ.";"ສ.";/
+        "ສ."
+day     "ອາທິດ";/
+        "ຈັນ";/
+        "ອັງຄານ";/
+        "ພຸດ";/
+        "ພະຫັດ";/
+        "ສຸກ";/
+        "ເສົາ"
+abmon   "ມ.ກ.";/
+        "ກ.ພ.";/
+        "ມ.ນ.";/
+        "ມ.ສ.";/
+        "ພ.ພ.";/
+        "ມິ.ຖ.";/
+        "ກ.ລ.";/
+        "ສ.ຫ.";/
+        "ກ.ຍ.";/
+        "ຕ.ລ.";/
+        "ພ.ຈ.";/
+        "ທ.ວ."
+mon     "ມັງກອນ";/
+        "ກຸມພາ";/
+        "ມີນາ";/
+        "ເມສາ";/
+        "ພຶດສະພາ";/
+        "ມິຖຸນາ";/
+        "ກໍລະກົດ";/
+        "ສິງຫາ";/
+        "ກັນຍາ";/
+        "ຕຸລາ";/
+        "ພະຈິກ";/
+        "ທັນວາ"
 % Appropriate date & time representation
 d_t_fmt "%a %e %b %Ey, %H:%M:%S"
 % Appropriate date representation
@@ -685,10 +685,10 @@ am_pm   "AM";"PM"
 % Appropriate 12-hour clock representation
 t_fmt_ampm  "%I:%M:%S %p"
 % Era : Buddhist Era
-era     "+:1:-543//01//01:+*:<U0E9E>.<U0EAA>.:%EC %Ey"
+era     "+:1:-543//01//01:+*:ພ.ສ.:%EC %Ey"
 era_d_fmt       "%e %b %Ey"
-era_t_fmt       "%H.%M.%S <U0E99>."
-era_d_t_fmt     "<U0EA7><U0EB1><U0E99>%A<U0E97><U0EB5><U0EC8> %e %B %EC %Ey, %H.%M.%S <U0E99>."
+era_t_fmt       "%H.%M.%S ນ."
+era_d_t_fmt     "ວັນ%Aທີ່ %e %B %EC %Ey, %H.%M.%S ນ."
 % Appropriate date representation (date(1))
 date_fmt       "%a %e %b %Ey %H:%M:%S %Z"
 week 7;19971130;1
@@ -701,10 +701,10 @@ LC_MESSAGES
 % yesstr = "men" = Sala ae + Mo + MAI EK + No
 % nostr = "Bo Men" = Letter Bo +salo Or+ MAI EK + mo+ Ma Ek+ No
 
-yesexpr "^[+1yY<U0EA1>]"
-noexpr  "^[-0nN<U0E9A>]"
-yesstr  "<U0EC1><U0EA1><U0EC8><U0E99>"
-nostr   "<U0E9A><U0ECD><U0EC8><U0EC1><U0EA1><U0EC8><U0E99>"
+yesexpr "^[+1yYມ]"
+noexpr  "^[-0nNບ]"
+yesstr  "ແມ່ນ"
+nostr   "ບໍ່ແມ່ນ"
 
 END LC_MESSAGES
 
@@ -726,13 +726,13 @@ END LC_MEASUREMENT
 LC_NAME
 name_fmt    "%d%t%g%t%m%t%f"
 
-name_mr     "<U0E97>."
-name_mrs    "<U0E99>."
+name_mr     "ທ."
+name_mrs    "ນ."
 END LC_NAME
 
 LC_ADDRESS
 postal_fmt    "%f%N%a%N%d%N%r%t%e%t%b%N%h%t%s%N%T%N%S%N%z%c%N"
-country_name  "<U0EA5><U0EB2><U0EA7>"
+country_name  "ລາວ"
 %FIXME
 %country_post  ""
 country_ab2   "LA"
@@ -741,7 +741,7 @@ country_num   418
 country_car   "LAO"
 %FIXME
 %country_isbn  ""
-lang_name     "<U0EA5><U0EB2><U0EA7>"
+lang_name     "ລາວ"
 lang_ab       "lo"
 lang_term     "lao"
 lang_lib      "lao"

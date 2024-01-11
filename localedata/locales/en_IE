@@ -25,7 +25,7 @@ escape_char /
 LC_IDENTIFICATION
 title      "English locale for Ireland"
 source     "RAP"
-address    "Sankt J<U00F8>rgens Alle 8, DK-1615 K<U00F8>benhavn V, Danmark"
+address    "Sankt Jørgens Alle 8, DK-1615 København V, Danmark"
 contact    ""
 email      "bug-glibc-locales@gnu.org"
 tel        ""
@@ -59,7 +59,7 @@ END LC_COLLATE
 
 LC_MONETARY
 int_curr_symbol         "EUR "
-currency_symbol         "<U20AC>"
+currency_symbol         "€"
 mon_decimal_point       "."
 mon_thousands_sep       ","
 mon_grouping            3;3

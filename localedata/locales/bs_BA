@@ -75,7 +75,7 @@ LC_MONETARY
 int_curr_symbol           "BAM "
 currency_symbol           "KM"
 mon_decimal_point         ","
-mon_thousands_sep         "<U202F>"
+mon_thousands_sep         " "
 mon_grouping              3;3
 positive_sign             ""
 negative_sign             "-"
@@ -97,12 +97,12 @@ END LC_NUMERIC
 
 LC_TIME
 
-abday   "Ned";"Pon";"Uto";"Sri";"<U010C>et";"Pet";"Sub"
+abday   "Ned";"Pon";"Uto";"Sri";"Čet";"Pet";"Sub"
 day     "Nedjelja";/
         "Ponedjeljak";/
         "Utorak";/
         "Srijeda";/
-        "<U010C>etvrtak";/
+        "Četvrtak";/
         "Petak";/
         "Subota"
 abmon   "Jan";"Feb";/

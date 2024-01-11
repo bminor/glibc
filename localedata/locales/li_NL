@@ -46,7 +46,7 @@ country_car   "NL"
 country_num 528
 %FIXME country_isbn "2"
 % Lèmbörgs
-lang_name    "L<U00E8>mb<U00F6>rgs"
+lang_name    "Lèmbörgs"
 lang_ab "li"
 lang_term "lim"
 lang_lib "lim"
@@ -91,15 +91,15 @@ END LC_NUMERIC
 
 LC_TIME
 
-abday   "z<U00F3>n";"mao";/
+abday   "zón";"mao";/
 	"dae";"goo";/
-        "d<U00F3>n";"vri";/
+        "dón";"vri";/
         "zao"
-day     "z<U00F3>ndig";/
+day     "zóndig";/
 	"maondig";/
 	"daensdig";/
 	"goonsdig";/
-	"d<U00F3>nderdig";/
+	"dónderdig";/
 	"vriedig";/
 	"zaoterdig"
 abmon   "jan";"fib";/
@@ -111,7 +111,7 @@ abmon   "jan";"fib";/
 mon     "jannewarie";/
 	"fibberwarie";/
 	"miert";/
-	"epr<U00E8>l";/
+	"eprèl";/
 	"meij";/
 	"junie";/
 	"julie";/

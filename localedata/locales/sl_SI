@@ -2132,7 +2132,7 @@ END LC_MESSAGES
 
 LC_MONETARY
 int_curr_symbol           "EUR "
-currency_symbol           "<U20AC>"
+currency_symbol           "€"
 mon_decimal_point         ","
 mon_thousands_sep         "."
 mon_grouping              3;3
@@ -2157,13 +2157,13 @@ END LC_NUMERIC
 LC_TIME
 abday   "ned";"pon";/
         "tor";"sre";/
-        "<U010D>et";"pet";/
+        "čet";"pet";/
         "sob"
 day     "nedelja";/
         "ponedeljek";/
         "torek";/
         "sreda";/
-        "<U010D>etrtek";/
+        "četrtek";/
         "petek";/
         "sobota"
 abmon   "jan";"feb";/
@@ -2220,7 +2220,7 @@ country_ab3 "SVN"
 country_num 705
 country_car "SLO"
 % slovenščina
-lang_name    "sloven<U0161><U010D>ina"
+lang_name    "slovenščina"
 lang_ab      "sl"
 lang_term    "slv"
 lang_lib    "slv"

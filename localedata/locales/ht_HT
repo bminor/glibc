@@ -64,10 +64,10 @@ mon           "janvye";/
      "avril";/
      "me";/
      "jen";/
-     "jiy<U00E8>";/
+     "jiyè";/
      "out";/
      "septanm";/
-     "okt<U00F2>b";/
+     "oktòb";/
      "novanm";/
      "desanm"
 % jan, fev, mas, avr, me, jen, jiy, out, sep, okt, nov, des
@@ -87,7 +87,7 @@ abmon         "jan";/
 day           "dimanch";/
      "lendi";/
      "madi";/
-     "m<U00E8>kredi";/
+     "mèkredi";/
      "jedi";/
      "vandredi";/
      "samdi"
@@ -95,7 +95,7 @@ day           "dimanch";/
 abday         "dim";/
        "len";/
        "mad";/
-       "m<U00E8>k";/
+       "mèk";/
        "jed";/
        "van";/
        "sam"
@@ -111,7 +111,7 @@ END LC_TIME
 
 LC_NUMERIC
 decimal_point ","
-thousands_sep "<U202F>"
+thousands_sep " "
 grouping      3
 END LC_NUMERIC
 
@@ -119,7 +119,7 @@ LC_MONETARY
 int_curr_symbol           "HTG "
 currency_symbol           "g"
 mon_decimal_point         ","
-mon_thousands_sep         "<U202F>"
+mon_thousands_sep         " "
 mon_grouping              3
 positive_sign             ""
 negative_sign             "-"
@@ -163,7 +163,7 @@ country_isbn 99935
 country_car  "RH"
 %
 % Kreyòl ayisyen
-lang_name    "Krey<U00F2>l ayisyen"
+lang_name    "Kreyòl ayisyen"
 lang_ab      "ht"
 lang_term    "hat"
 lang_lib    "hat"

@@ -66,56 +66,56 @@ LC_TIME
 % This is the POSIX Locale definition for the LC_TIME category.
 % These are generated based on XML base Locale difintion file
 % for IBM Class for Unicode/Java
-abday       "<U65E5>";"<U4E00>";/
-            "<U4E8C>";"<U4E09>";/
-            "<U56DB>";"<U4E94>";/
-            "<U516D>"
+abday       "日";"一";/
+            "二";"三";/
+            "四";"五";/
+            "六"
 %
 % Full weekday names (%A)
-day         "<U661F><U671F><U65E5>";"<U661F><U671F><U4E00>";/
-            "<U661F><U671F><U4E8C>";"<U661F><U671F><U4E09>";/
-            "<U661F><U671F><U56DB>";"<U661F><U671F><U4E94>";/
-            "<U661F><U671F><U516D>"
+day         "星期日";"星期一";/
+            "星期二";"星期三";/
+            "星期四";"星期五";/
+            "星期六"
 %
 % Abbreviated month names (%b)
-abmon       "1<U6708>";"2<U6708>";/
-            "3<U6708>";"4<U6708>";/
-            "5<U6708>";"6<U6708>";/
-            "7<U6708>";"8<U6708>";/
-            "9<U6708>";"10<U6708>";/
-            "11<U6708>";"12<U6708>"
+abmon       "1月";"2月";/
+            "3月";"4月";/
+            "5月";"6月";/
+            "7月";"8月";/
+            "9月";"10月";/
+            "11月";"12月"
 %
 % Full month names (%B)
-mon         "1<U6708>";"2<U6708>";/
-            "3<U6708>";"4<U6708>";/
-            "5<U6708>";"6<U6708>";/
-            "7<U6708>";"8<U6708>";/
-            "9<U6708>";"10<U6708>";/
-            "11<U6708>";"12<U6708>"
+mon         "1月";"2月";/
+            "3月";"4月";/
+            "5月";"6月";/
+            "7月";"8月";/
+            "9月";"10月";/
+            "11月";"12月"
 %
 % Equivalent of AM PM
 % 上午;下午
-am_pm       "<U4E0A><U5348>";"<U4E0B><U5348>"
+am_pm       "上午";"下午"
 %
 % Appropriate date and time representation
 % %Y年%m月%d日 %A %H點%M分%S秒
-d_t_fmt     "%Y<U5E74>%m<U6708>%d<U65E5> %A %H<U9EDE>%M<U5206>%S<U79D2>"
+d_t_fmt     "%Y年%m月%d日 %A %H點%M分%S秒"
 %
 % Appropriate date representation
 % %Y年%m月%d日 %A
-d_fmt       "%Y<U5E74>%m<U6708>%d<U65E5> %A"
+d_fmt       "%Y年%m月%d日 %A"
 %
 % Appropriate time representation
 % %H點%M分%S秒
-t_fmt       "%H<U9EDE>%M<U5206>%S<U79D2>"
+t_fmt       "%H點%M分%S秒"
 %
 % Appropriate 12 h time representation
 % %p%I點%M分%S秒
-t_fmt_ampm  "%p%I<U9EDE>%M<U5206>%S<U79D2>"
+t_fmt_ampm  "%p%I點%M分%S秒"
 %
 % Appropriate date representation (date(1))
 % %Y年 %b %e日 %A %H:%M:%S %Z
-date_fmt       "%Y<U5E74> %b %e<U65E5> %A %H:%M:%S %Z"
+date_fmt       "%Y年 %b %e日 %A %H:%M:%S %Z"
 %  FIXME: found in CLDR
 week 7;19971130;1
 END LC_TIME
@@ -124,8 +124,8 @@ END LC_TIME
 LC_MESSAGES
 yesexpr "^[+1yY]"
 noexpr  "^[-0nN]"
-yesstr  "<U4FC2>"
-nostr   "<U5514><U4FC2>"
+yesstr  "係"
+nostr   "唔係"
 END LC_MESSAGES
 
 
@@ -144,13 +144,13 @@ LC_ADDRESS
 % LC_ADDRESS
 % postal_fmt: "%c%T%s%h%N%b%e%r%N%f%N%d%N%a"
 postal_fmt  "%c%T%s%h%N%b%e%r%N%f%N%d%N%a"
-country_name "<U4E2D><U83EF><U4EBA><U6C11><U5171><U548C><U570B><U9999><U6E2F><U7279><U5225><U884C><U653F><U5340>"
+country_name "中華人民共和國香港特別行政區"
 country_ab2 "HK"
 country_ab3 "HKG"
 country_num 344
 country_car "HK"
 country_isbn 962
-lang_name "<U7CB5><U8A9E>"
+lang_name "粵語"
 lang_term    "yue"
 lang_lib    "yue"
 END LC_ADDRESS

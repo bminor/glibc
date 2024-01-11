@@ -89,7 +89,7 @@ END LC_COLLATE
 
 LC_MONETARY
 int_curr_symbol       "IQD "
-currency_symbol       "<U062F><U002E><U0639>"
+currency_symbol       "د.ع"
 mon_decimal_point     "."
 mon_thousands_sep     ","
 mon_grouping	      3
@@ -113,53 +113,53 @@ END LC_NUMERIC
 
 LC_TIME
 % Abbreviated weekday names
-abday "<U0634><U06D5><U0645>";/
-      "<U06CC><U06D5><U06A9><U0634>";/
-      "<U062F><U0648><U0648><U0634>";/
-      "<U0633><U06CE><U0634>";/
-      "<U0686><U0648><U0627><U0634>";/
-      "<U067E><U06CE><U0646><U0634>";/
-      "<U0647><U06D5><U06CC><U0646>"
+abday "شەم";/
+      "یەکش";/
+      "دووش";/
+      "سێش";/
+      "چواش";/
+      "پێنش";/
+      "هەین"
 %
 % Full weekday names
-day "<U06CC><U06D5><U0643><U0634><U06D5><U0645><U0645><U06D5>";/
-    "<U062F><U0648><U0648><U0634><U06D5><U0645><U0645><U06D5>";/
-    "<U0633><U06CE><U0634><U06D5><U0645><U0645><U06D5>";/
-    "<U0686><U0648><U0627><U0631><U0634><U06D5><U0645><U0645><U06D5>";/
-    "<U067E><U06CE><U0646><U062C><U0634><U06D5><U0645><U0645><U06D5>";/
-    "<U0647><U06D5><U06CC><U0646><U06CC>";/
-    "<U0634><U06D5><U0645><U0645><U06D5>"
+day "یەكشەممە";/
+    "دووشەممە";/
+    "سێشەممە";/
+    "چوارشەممە";/
+    "پێنجشەممە";/
+    "هەینی";/
+    "شەممە"
 %
 % Abbreviated month names
-abmon "<U06A9><U0627><U0662>";/
-      "<U0634><U0648><U0628>";/
-      "<U0626><U0627><U0632>";/
-      "<U0646><U06CC><U0633>";/
-      "<U0626><U0627><U06CC>";/
-      "<U062D><U0648><U0632>";/
-      "<U062A><U06D5><U0645>";/
-      "<U0626><U0627><U0628>";/
-      "<U0626><U06D5><U06CC>";/
-      "<U062A><U0634><U0661>";/
-      "<U062A><U0634><U0662>";/
-      "<U06A9><U0627><U0661>"
+abmon "کا٢";/
+      "شوب";/
+      "ئاز";/
+      "نیس";/
+      "ئای";/
+      "حوز";/
+      "تەم";/
+      "ئاب";/
+      "ئەی";/
+      "تش١";/
+      "تش٢";/
+      "کا١"
 %
 % Full month names
-mon "<U06A9><U0627><U0646><U0648><U0646><U06CC><U0020><U062F><U0648><U0648><U06D5><U0645>";/
-    "<U0634><U0648><U0628><U0627><U062A>";/
-    "<U0626><U0627><U0632><U0627><U0631>";/
-    "<U0646><U06CC><U0633><U0627><U0646>";/
-    "<U0626><U0627><U06CC><U0627><U0631>";/
-    "<U062D><U0648><U0632><U06D5><U06CC><U0631><U0627><U0646>";/
-    "<U062A><U06D5><U0645><U0648><U0632>";/
-    "<U0626><U0627><U0628>";/
-    "<U0626><U06D5><U06CC><U0644><U0648><U0648><U0644>";/
-    "<U062A><U0634><U0631><U06CC><U0646><U06CC><U0020><U06CC><U06D5><U06A9><U06D5><U0645>";/
-    "<U062A><U0634><U0631><U06CC><U0646><U06CC><U0020><U062F><U0648><U0648><U06D5><U0645>";/
-    "<U06A9><U0627><U0646><U0648><U0646><U06CC><U0020><U06CC><U06D5><U06A9><U06D5><U0645>"
+mon "کانونی دووەم";/
+    "شوبات";/
+    "ئازار";/
+    "نیسان";/
+    "ئایار";/
+    "حوزەیران";/
+    "تەموز";/
+    "ئاب";/
+    "ئەیلوول";/
+    "تشرینی یەکەم";/
+    "تشرینی دووەم";/
+    "کانونی یەکەم"
 %
 % Equivalent of AM PM
-am_pm	    "<U067E><U0646>";"<U062F><U0646>"
+am_pm	    "پن";"دن"
 %
 % Appropriate date and time representation
 d_t_fmt     "%A %d %b %Y, %I:%M:%S %p"
@@ -183,10 +183,10 @@ cal_direction	3
 END LC_TIME
 
 LC_MESSAGES
-yesexpr  "^[+1yY<U0628>]"
-noexpr   "^[-0nN<U0646>]"
-yesstr   "<U0628><U06D5><U06B5><U06CE>"
-nostr    "<U0646><U06D5><U062E><U06CE><U0631>"
+yesexpr  "^[+1yYب]"
+noexpr   "^[-0nNن]"
+yesstr   "بەڵێ"
+nostr    "نەخێر"
 END LC_MESSAGES
 
 LC_PAPER
@@ -195,22 +195,22 @@ END LC_PAPER
 
 LC_NAME
 name_fmt    "%d%t%g%t%m%t%f"
-name_gen    "<U0628><U06D5><U0695><U06CE><U0632>"
-name_miss   "<U062E><U0627><U062A><U0648>"
-name_ms     "<U062E><U0627><U062A><U0648>"
-name_mrs    "<U062E><U0627><U062A><U0648>"
-name_mr     "<U0643><U0627><U0643>"
+name_gen    "بەڕێز"
+name_miss   "خاتو"
+name_ms     "خاتو"
+name_mrs    "خاتو"
+name_mr     "كاك"
 END LC_NAME
 %
 LC_ADDRESS
 postal_fmt  "%z%c%T%s%b%e%r"
-country_name "<U0639><U06CE><U0631><U0627><U0642>"
+country_name "عێراق"
 country_ab2 "IQ"
 country_ab3 "IRQ"
 country_post "IRQ"
 country_num 368
 country_car "IQ"
-lang_name   "<U06A9><U0648><U0631><U062F><U06CC><U06CC> <U0646><U0627><U0648><U06D5><U0646><U062F><U06CC>"
+lang_name   "کوردیی ناوەندی"
 lang_term   "ckb"
 lang_lib    "ckb"
 %

@@ -25,7 +25,7 @@ escape_char /
 LC_IDENTIFICATION
 title      "Swedish locale for Finland"
 source     "RAP"
-address    "Sankt J<U00F8>rgens Alle 8, DK-1615 K<U00F8>benhavn V, Danmark"
+address    "Sankt Jørgens Alle 8, DK-1615 København V, Danmark"
 contact    ""
 email      "bug-glibc-locales@gnu.org"
 tel        ""
@@ -71,17 +71,17 @@ END LC_NUMERIC
 
 LC_TIME
 % copy "sv_SE"
-abday     "s<U00F6>n";"m<U00E5>n";/
+abday     "sön";"mån";/
 	  "tis";"ons";/
 	  "tor";"fre";/
-	  "l<U00F6>r"
-day       "s<U00F6>ndag";/
-	  "m<U00E5>ndag";/
+	  "lör"
+day       "söndag";/
+	  "måndag";/
 	  "tisdag";/
 	  "onsdag";/
 	  "torsdag";/
 	  "fredag";/
-	  "l<U00F6>rdag"
+	  "lördag"
 abmon     "jan";"feb";/
 	  "mar";"apr";/
 	  "maj";"jun";/

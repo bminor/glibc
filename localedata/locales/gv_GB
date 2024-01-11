@@ -27,7 +27,7 @@ escape_char /
 LC_IDENTIFICATION
 title      "Manx Gaelic locale for Britain"
 source     "Alastair McKinstry"
-address    "Cro<U00ED> L<U00E1>r, Ballinahalla, Maigh Cuilinn,, Co. Gaillimh, Ireland"
+address    "Croí Lár, Ballinahalla, Maigh Cuilinn,, Co. Gaillimh, Ireland"
 contact    ""
 email      "bug-glibc-locales@gnu.org"
 tel        ""
@@ -65,7 +65,7 @@ END LC_COLLATE
 
 LC_MONETARY
 int_curr_symbol         "GBP "
-currency_symbol         "<U00A3>"
+currency_symbol         "£"
 mon_decimal_point       "."
 mon_thousands_sep       ","
 mon_grouping            3;3

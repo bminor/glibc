@@ -11,8 +11,8 @@ escape_char /
 % English language locale for Canada
 % sorting according to CAN/CSA-Z243.4.1-1992
 % Source: RAP
-% Address: Sankt J<U00F8>rgens Alle 8
-%    DK-1615 K<U00F8>benhavn V, Danmark
+% Address: Sankt Jørgens Alle 8
+%    DK-1615 København V, Danmark
 % Contact: Keld Simonsen
 % Email: Keld.Simonsen@dkuug.dk
 % Tel: +45 - 31226543
@@ -27,7 +27,7 @@ escape_char /
 LC_IDENTIFICATION
 title      "English locale for Canada"
 source     "RAP"
-address    "Sankt J<U00F8>rgens Alle 8, DK-1615 K<U00F8>benhavn V, Danmark"
+address    "Sankt Jørgens Alle 8, DK-1615 København V, Danmark"
 contact    ""
 email      "bug-glibc-locales@gnu.org"
 tel        ""

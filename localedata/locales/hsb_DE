@@ -141,7 +141,7 @@ LC_MESSAGES
 yesexpr "^[+1hHyY]"
 noexpr  "^[-0nN]"
 yesstr  "haj"
-nostr   "n<U011B>"
+nostr   "ně"
 END LC_MESSAGES
 
 LC_MONETARY
@@ -153,26 +153,26 @@ copy "de_DE"
 END LC_NUMERIC
 
 LC_TIME
-abday   "Nj";"P<U00F3>";/
+abday   "Nj";"Pó";/
 	"Wu";"Sr";/
-	"<U0160>t";"Pj";/
+	"Št";"Pj";/
 	"So"
-day     "Njed<U017A>ela";/
-	"P<U00F3>nd<U017A>ela";/
+day     "Njedźela";/
+	"Póndźela";/
 	"Wutora";/
 	"Srjeda";/
-	"<U0160>tv<U00F3>rtk";/
+	"Štvórtk";/
 	"Pjatk";/
 	"Sobota"
 abmon	"Jan";"Feb";/
-	"M<U011B>r";"Apr";/
+	"Měr";"Apr";/
 	"Mej";"Jun";/
 	"Jul";"Awg";/
 	"Sep";"Okt";/
 	"Now";"Dec"
 alt_mon	"Januar";/
 	"Februar";/
-	"M<U011B>rc";/
+	"Měrc";/
 	"Apryl";/
 	"Meja";/
 	"Junij";/
@@ -184,7 +184,7 @@ alt_mon	"Januar";/
 	"December"
 mon	"januara";/
 	"februara";/
-	"m<U011B>rca";/
+	"měrca";/
 	"apryla";/
 	"meje";/
 	"junija";/
@@ -219,7 +219,7 @@ END LC_MEASUREMENT
 
 LC_NAME
 name_fmt    "%d%t%g%t%m%t%f"
-name_miss   "knje<U017E>na"
+name_miss   "knježna"
 name_mr     "knjez"
 name_mrs    "knjeni"
 %name_ms     ""
@@ -227,14 +227,14 @@ END LC_NAME
 
 LC_ADDRESS
 postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
-country_name  "N<U011B>mska"
+country_name  "Němska"
 country_post  "D"
 country_ab2   "DE"
 country_ab3   "DEU"
 country_num   276
 country_car   "D"
 country_isbn  3
-lang_name     "hornjoserb<U0161><U0107>ina"
+lang_name     "hornjoserbšćina"
 lang_ab      ""
 lang_term    "hsb"
 lang_lib     "hsb"

@@ -247,18 +247,18 @@ LC_TIME
 % for IBM Class for Unicode/Java
 %
 % Abbreviated weekday names (%a)
-abday       "Die";"H<U00EB>n";/
-	    "Mar";"M<U00EB>r";/
+abday       "Die";"Hën";/
+	    "Mar";"Mër";/
 	    "Enj";"Pre";"Sht"
 %
 % Full weekday names (%A)
 day         "e diel";/
-	    "e h<U00EB>n<U00EB>";/
-	    "e mart<U00EB>";/
-	    "e m<U00EB>rkur<U00EB>";/
+	    "e hënë";/
+	    "e martë";/
+	    "e mërkurë";/
 	    "e enjte";/
 	    "e premte";/
-	    "e shtun<U00EB>"
+	    "e shtunë"
 %
 % Abbreviated month names (%b)
 abmon       "Jan";"Shk";/
@@ -266,7 +266,7 @@ abmon       "Jan";"Shk";/
 	    "Maj";"Qer";/
 	    "Kor";"Gsh";/
 	    "Sht";"Tet";/
-	    "N<U00EB>n";"Dhj"
+	    "Nën";"Dhj"
 %
 % Full month names (%B)
 mon         "janar";/
@@ -279,7 +279,7 @@ mon         "janar";/
 	    "gusht";/
 	    "shtator";/
 	    "tetor";/
-	    "n<U00EB>ntor";/
+	    "nëntor";/
 	    "dhjetor"
 %
 % Equivalent of AM PM
@@ -335,7 +335,7 @@ LC_ADDRESS
 % This is the ISO_IEC TR14652 Locale definition for the
 % LC_ADDRESS
 postal_fmt  "%z%c%T%s%b%e%r"
-country_name "Shqip<U00EB>ri"
+country_name "Shqipëri"
 country_ab2 "AL"
 country_ab3 "ALB"
 country_num 008

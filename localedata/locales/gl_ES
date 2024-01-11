@@ -26,7 +26,7 @@ escape_char /
 LC_IDENTIFICATION
 title      "Galician locale for Spain"
 source     "GPUL"
-address    "Facultade de Inform<U00E1>tica, Campus de Elvi<U00F1>a, s//n, 15071 A Coru<U00F1>a, Spain"
+address    "Facultade de Informática, Campus de Elviña, s//n, 15071 A Coruña, Spain"
 contact    ""
 email      "bug-glibc-locales@gnu.org"
 tel        ""
@@ -67,7 +67,7 @@ END LC_MESSAGES
 
 LC_MONETARY
 int_curr_symbol      "EUR "
-currency_symbol      "<U20AC>"
+currency_symbol      "€"
 mon_decimal_point    ","
 mon_thousands_sep    "."
 mon_grouping         3;3
@@ -91,19 +91,19 @@ END LC_NUMERIC
 
 LC_TIME
 abday   "Dom";"Lun";/
-        "Mar";"M<U00E9>r";/
+        "Mar";"Mér";/
         "Xov";"Ven";/
-        "S<U00E1>b"
+        "Sáb"
 day     "Domingo";/
         "Luns";/
         "Martes";/
-        "M<U00E9>rcores";/
+        "Mércores";/
         "Xoves";/
         "Venres";/
-        "S<U00E1>bado"
+        "Sábado"
 abmon   "Xan";"Feb";/
         "Mar";"Abr";/
-        "Mai";"Xu<U00F1>";/
+        "Mai";"Xuñ";/
         "Xul";"Ago";/
         "Set";"Out";/
         "Nov";"Dec"
@@ -112,7 +112,7 @@ mon     "Xaneiro";/
         "Marzo";/
         "Abril";/
         "Maio";/
-        "Xu<U00F1>o";/
+        "Xuño";/
         "Xullo";/
         "Agosto";/
         "Setembro";/
@@ -149,7 +149,7 @@ END LC_NAME
 
 LC_ADDRESS
 postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
-country_name "Espa<U00F1>a"
+country_name "España"
 country_ab2 "ES"
 country_ab3 "ESP"
 country_num 724

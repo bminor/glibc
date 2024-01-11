@@ -52,7 +52,7 @@ LC_TIME
 mon  "siilo";/
      "colte";/
      "mbooy";/
-     "see<U0257>to";/
+     "seeɗto";/
      "duujal";/
      "korse";/
      "morso";/
@@ -74,14 +74,14 @@ abmon  "sii";/
        "jol";/
        "bow"
 day  "dewo";/
-     "aa<U0253>nde";/
+     "aaɓnde";/
      "mawbaare";/
      "njeslaare";/
      "naasaande";/
      "mawnde";/
      "hoore-biir"
 abday  "dew";/
-       "aa<U0253>";/
+       "aaɓ";/
        "maw";/
        "nje";/
        "naa";/
@@ -93,7 +93,7 @@ d_t_fmt  "%a %d %b %Y %R"
 date_fmt "%a %d %b %Y %R %Z"
 d_fmt    "%d//%m//%Y"
 t_fmt    "%R"
-am_pm    "subaka";"kikii<U0257>e"
+am_pm    "subaka";"kikiiɗe"
 END LC_TIME
 
 LC_NUMERIC

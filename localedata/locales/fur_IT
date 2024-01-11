@@ -67,7 +67,7 @@ END LC_COLLATE
 LC_MESSAGES
 yesexpr "^[+1sSjJoOyY]"
 noexpr  "^[-0nN]"
-yesstr  "s<U00EC>"
+yesstr  "sì"
 nostr   "no"
 END LC_MESSAGES
 
@@ -94,10 +94,10 @@ abmon   "Zen";"Fev";/
         "Lui";"Avo";/
         "Set";"Otu";/
         "Nov";"Dic"
-mon     "Zen<U00E2>r";/
-        "Fevr<U00E2>r";/
-        "Mar<U00E7>";/
-        "Avr<U00EE>l";/
+mon     "Zenâr";/
+        "Fevrâr";/
+        "Març";/
+        "Avrîl";/
         "Mai";/
         "Jugn";/
         "Lui";/

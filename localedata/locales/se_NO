@@ -23,7 +23,7 @@ LC_IDENTIFICATION
 title "Northern Saami language locale for Norway"
 source "http:////www.hum.uit.no//a//trond//loc.html"
 address ""
-contact "B<U00F8>rre Gaup"
+contact "Børre Gaup"
 email "boerre.gaup@pc.nu"
 tel ""
 fax ""
@@ -251,34 +251,34 @@ END LC_NUMERIC
 
 LC_TIME
 abday       "sotn";"vuos";/
-	    "ma<U014B>";"gask";/
+	    "maŋ";"gask";/
 	    "duor";"bear";/
-	    "l<U00E1>v"
+	    "láv"
 day         "sotnabeaivi";/
-            "vuoss<U00E1>rga";/
-            "ma<U014B><U014B>ebarga";/
+            "vuossárga";/
+            "maŋŋebarga";/
             "gaskavahkku";/
             "duorasdat";/
             "bearjadat";/
-            "l<U00E1>vvardat"
-abmon       "o<U0111><U0111>j";"guov";/
-            "njuk";"cuo<U014B>";/
+            "lávvardat"
+abmon       "ođđj";"guov";/
+            "njuk";"cuoŋ";/
             "mies";"geas";/
             "suoi";"borg";/
-            "<U010D>ak<U010D>";"golg";/
-            "sk<U00E1>b";"juov"
-mon         "o<U0111><U0111>ajagem<U00E1>nnu";/
-	    "guovvam<U00E1>nnu";/
-            "njuk<U010D>am<U00E1>nnu";/
-	    "cuo<U014B>om<U00E1>nnu";/
-            "miessem<U00E1>nnu";/
-	    "geassem<U00E1>nnu";/
-            "suoidnem<U00E1>nnu";/
-            "borgem<U00E1>nnu";/
-            "<U010D>ak<U010D>am<U00E1>nnu";/
-	    "golggotm<U00E1>nnu";/
-            "sk<U00E1>bmam<U00E1>nnu";/
-            "juovlam<U00E1>nnu"
+            "čakč";"golg";/
+            "skáb";"juov"
+mon         "ođđajagemánnu";/
+	    "guovvamánnu";/
+            "njukčamánnu";/
+	    "cuoŋománnu";/
+            "miessemánnu";/
+	    "geassemánnu";/
+            "suoidnemánnu";/
+            "borgemánnu";/
+            "čakčamánnu";/
+	    "golggotmánnu";/
+            "skábmamánnu";/
+            "juovlamánnu"
 % usual date representation
 % Linjen nedenfor er: %a, %b %e b. %Y %T %Z
 % f.eks. bear, geas 14. b. 2001 21:15:11 CEST
@@ -291,7 +291,7 @@ am_pm       "";""
 t_fmt_ampm  ""
 
 % Denne linjen vil gi f.eks.:
-% duorasdat, borgem<U00E1>nu 23. b. 2001 00:47:57 CEST
+% duorasdat, borgemánu 23. b. 2001 00:47:57 CEST
 date_fmt       "%A, %B %d. b. %Y %H:%M:%S %Z"
 
 % %a %b-%e %H:%M:%S %Z %Y søn jan-31 21:15:11 CET 2001
@@ -334,7 +334,7 @@ country_ab3 "NOR"
 country_num 578
 country_car "N"
 % davvisámegiella
-lang_name    "davvis<U00E1>megiella"
+lang_name    "davvisámegiella"
 lang_ab      "se"
 lang_term    "sme"
 lang_lib    "sme"

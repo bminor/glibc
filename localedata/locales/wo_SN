@@ -67,14 +67,14 @@ LC_MESSAGES
 yesexpr "^[+1wWyY]"
 noexpr  "^[-0dDnN]"
 yesstr  "waaw"
-nostr   "d<U00E9>edet"
+nostr   "déedet"
 END LC_MESSAGES
 
 LC_MONETARY
 int_curr_symbol           "XOF "
 currency_symbol           "CFA"
 mon_decimal_point         ","
-mon_thousands_sep         "<U202F>"
+mon_thousands_sep         " "
 mon_grouping              3;3
 positive_sign             ""
 negative_sign             "-"

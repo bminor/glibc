@@ -519,29 +519,29 @@ END LC_NUMERIC
 
 LC_TIME
 abday   "v";"h";"k";"sze";"cs";"p";"szo"
-day     "vas<U00E1>rnap";/
-        "h<U00E9>tf<U0151>";/
+day     "vasárnap";/
+        "hétfő";/
         "kedd";/
         "szerda";/
-        "cs<U00FC>t<U00F6>rt<U00F6>k";/
-        "p<U00E9>ntek";/
+        "csütörtök";/
+        "péntek";/
         "szombat"
 abmon   "jan";"febr";/
-        "m<U00E1>rc";"<U00E1>pr";/
-        "m<U00E1>j";"j<U00FA>n";/
-        "j<U00FA>l";"aug";/
+        "márc";"ápr";/
+        "máj";"jún";/
+        "júl";"aug";/
         "szept";"okt";/
         "nov";"dec"
-mon     "janu<U00E1>r";/
-        "febru<U00E1>r";/
-        "m<U00E1>rcius";/
-        "<U00E1>prilis";/
-        "m<U00E1>jus";/
-        "j<U00FA>nius";/
-        "j<U00FA>lius";/
+mon     "január";/
+        "február";/
+        "március";/
+        "április";/
+        "május";/
+        "június";/
+        "július";/
         "augusztus";/
         "szeptember";/
-        "okt<U00F3>ber";/
+        "október";/
         "november";/
         "december"
 d_t_fmt "%Y. %b. %-e., %A, %H:%M:%S %Z"
@@ -574,7 +574,7 @@ END LC_NAME
 
 LC_ADDRESS
 postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
-country_name "Magyarorsz<U00E1>g"
+country_name "Magyarország"
 country_ab2 "HU"
 country_ab3 "HUN"
 country_num 348

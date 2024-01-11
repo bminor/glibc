@@ -63,13 +63,13 @@ END LC_CTYPE
 LC_MESSAGES
 yesexpr "^[+1sSyY]"
 noexpr  "^[-0nN]"
-yesstr  "s<U00ED>"
+yesstr  "sí"
 nostr   "no"
 END LC_MESSAGES
 
 LC_MONETARY
 int_curr_symbol      "EUR "
-currency_symbol      "<U20AC>"
+currency_symbol      "€"
 mon_decimal_point    ","
 mon_thousands_sep    "."
 mon_grouping         3;3
@@ -102,7 +102,7 @@ day        "diumenge";/
            "dissabte"
 ab_alt_mon "gen.";/
            "febr.";/
-           "mar<U00E7>";/
+           "març";/
            "abr.";/
            "maig";/
            "juny";/
@@ -114,19 +114,19 @@ ab_alt_mon "gen.";/
            "des."
 abmon      "de gen.";/
            "de febr.";/
-           "de mar<U00E7>";/
-           "d<U2019>abr.";/
+           "de març";/
+           "d’abr.";/
            "de maig";/
            "de juny";/
            "de jul.";/
-           "d<U2019>ag.";/
+           "d’ag.";/
            "de set.";/
-           "d<U2019>oct.";/
+           "d’oct.";/
            "de nov.";/
            "de des."
 alt_mon    "gener";/
            "febrer";/
-           "mar<U00E7>";/
+           "març";/
            "abril";/
            "maig";/
            "juny";/
@@ -138,14 +138,14 @@ alt_mon    "gener";/
            "desembre"
 mon        "de gener";/
            "de febrer";/
-           "de mar<U00E7>";/
-           "d<U2019>abril";/
+           "de març";/
+           "d’abril";/
            "de maig";/
            "de juny";/
            "de juliol";/
-           "d<U2019>agost";/
+           "d’agost";/
            "de setembre";/
-           "d<U2019>octubre";/
+           "d’octubre";/
            "de novembre";/
            "de desembre"
 d_t_fmt    "%A, %-d %B de %Y, %T"
@@ -185,7 +185,7 @@ country_ab3  "ESP"
 country_num  724
 country_car  "E"
 % català
-lang_name    "catal<U00E0>"
+lang_name    "català"
 lang_ab      "ca"
 lang_term    "cat"
 lang_lib     "cat"

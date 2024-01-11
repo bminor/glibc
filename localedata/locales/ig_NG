@@ -229,37 +229,37 @@ END LC_TELEPHONE
 
 LC_TIME
 % sọn, mọn, tuz, wen, tọs, fra, sat
-abday       "s<U1ECD>n";"m<U1ECD>n";/
+abday       "sọn";"mọn";/
             "tuz";"wen";/
-            "t<U1ECD>s";"fra";/
+            "tọs";"fra";/
             "sat"
 % sọnde, mọnde, tuzde, wenzde, tọsde, fraịde, satọde
-day         "s<U1ECD>nde";/
-            "m<U1ECD>nde";/
+day         "sọnde";/
+            "mọnde";/
             "tuzde";/
             "wenzde";/
-            "t<U1ECD>sde";/
-            "fra<U1ECB>de";/
-            "sat<U1ECD>de"
+            "tọsde";/
+            "fraịde";/
+            "satọde"
 % Jen, Feb, Maa, Epr, Mee, Juu, Jul, Ọgọ, Sep, Ọkt, Nov, Dis
 abmon       "Jen";"Feb";/
             "Maa";"Epr";/
             "Mee";"Juu";/
-            "Jul";"<U1ECC>g<U1ECD>";/
-            "Sep";"<U1ECC>kt";/
+            "Jul";"Ọgọ";/
+            "Sep";"Ọkt";/
             "Nov";"Dis"
 % Jenụwarị, Febrụwarị, Maachị, Eprel, Mee, Juun,
 % Julaị, Ọgọọst, Septemba, Ọktoba, Novemba, Disemba
-mon         "Jen<U1EE5>war<U1ECB>";/
-            "Febr<U1EE5>war<U1ECB>";/
-            "Maach<U1ECB>";/
+mon         "Jenụwarị";/
+            "Febrụwarị";/
+            "Maachị";/
             "Eprel";/
             "Mee";/
             "Juun";/
-            "Jula<U1ECB>";/
-            "<U1ECC>g<U1ECD><U1ECD>st";/
+            "Julaị";/
+            "Ọgọọst";/
             "Septemba";/
-            "<U1ECC>ktoba";/
+            "Ọktoba";/
             "Novemba";/
             "Disemba"
 % FIXME
@@ -323,10 +323,10 @@ LC_ADDRESS
 postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
 
 % Country name in Igbo - "Naịjịrịa"
-country_name  "Na<U1ECB>j<U1ECB>r<U1ECB>a"
+country_name  "Naịjịrịa"
 
 % Language name in Igbo - "Asụsụ Igbo"
-lang_name     "As<U1EE5>s<U1EE5> Igbo"
+lang_name     "Asụsụ Igbo"
 
 % CEPT MAILCODES are suggested
 % Alternatively use the code found on your countries postal item tracking number

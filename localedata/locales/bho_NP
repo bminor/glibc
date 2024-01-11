@@ -72,13 +72,13 @@ END LC_NAME
 
 LC_ADDRESS
 postal_fmt  "%f%N%h%s%N%T"
-country_name "<U0928><U0947><U092A><U093E><U0932>"
+country_name "नेपाल"
 country_ab2 "NP"
 country_ab3 "NPL"
 country_num 524
 % NEP
 country_car  "NEP"
-lang_name    "<U092D><U094B><U091C><U092A><U0941><U0930><U0940>"
+lang_name    "भोजपुरी"
 lang_term    "bho"
 lang_lib     "bho"
 END LC_ADDRESS

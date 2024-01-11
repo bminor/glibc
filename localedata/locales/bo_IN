@@ -89,12 +89,12 @@ LC_ADDRESS
 % FIXME
 
 postal_fmt "%z%c%T%s%b%e%r"
-country_name "<U0F62><U0F92><U0FB1><U0F0B><U0F42><U0F62><U0F0B>"
+country_name "རྒྱ་གར་"
 country_ab2 "IN"
 country_ab3 "IND"
 country_num 356
 country_car    "IND"
-lang_name     "<U0F56><U0F7C><U0F51><U0F0B><U0F66><U0F90><U0F51><U0F0B>"
+lang_name     "བོད་སྐད་"
 lang_ab       "bo"
 lang_term     "bod"
 lang_lib      "tib"

@@ -271,18 +271,18 @@ LC_TIME
 % Saturday  => Şenbe
 % Sunday    => Ýekşenbe
 
-day     "Du<U015F>enbe";/
-        "Si<U015F>enbe";/
-        "<U00C7>ar<U015F>enbe";/
-        "Pen<U015F>enbe";/
+day     "Duşenbe";/
+        "Sişenbe";/
+        "Çarşenbe";/
+        "Penşenbe";/
         "Anna";/
-        "<U015E>enbe";/
-        "<U00DD>ek<U015F>enbe"
+        "Şenbe";/
+        "Ýekşenbe"
 
-abday   "Du<U015F>";"Si<U015F>";/
-        "<U00C7>ar";"Pen";/
-        "Ann";"<U015E>en";/
-        "<U00DD>ek"
+abday   "Duş";"Siş";/
+        "Çar";"Pen";/
+        "Ann";"Şen";/
+        "Ýek"
 
 % Turkmen monthes are
 % January   => Ýanwar
@@ -298,25 +298,25 @@ abday   "Du<U015F>";"Si<U015F>";/
 % November  => Noýabr
 % December  => Dekabr
 
-mon     "<U00DD>anwar";/
+mon     "Ýanwar";/
         "Fewral";/
         "Mart";/
         "Aprel";/
-        "Ma<U00FD>";/
-        "I<U00FD>un";/
-        "I<U00FD>ul";/
+        "Maý";/
+        "Iýun";/
+        "Iýul";/
         "Awgust";/
-        "Sent<U00FD>abr";/
-        "Okt<U00FD>abr";/
-        "No<U00FD>abr";/
+        "Sentýabr";/
+        "Oktýabr";/
+        "Noýabr";/
         "Dekabr"
 
-abmon   "<U00DD>an";"Few";/
+abmon   "Ýan";"Few";/
         "Mar";"Apr";/
-        "Ma<U00FD>";"I<U00FD>n";/
-        "I<U00FD>l";"Awg";/
+        "Maý";"Iýn";/
+        "Iýl";"Awg";/
         "Sen";"Okt";/
-        "No<U00FD>";"Dek"
+        "Noý";"Dek"
 
 %
 % Turkmen date and time format
@@ -369,9 +369,9 @@ LC_MESSAGES
 %  ý actually)
 %%%%%%%%
 yesexpr "^[+1hH]"
-noexpr  "^[-0nN<U00FD><U00DD>]"
+noexpr  "^[-0nNýÝ]"
 yesstr  "hawa"
-nostr   "<U00FD>ok"
+nostr   "ýok"
 END LC_MESSAGES
 
 LC_PAPER
@@ -393,14 +393,14 @@ LC_ADDRESS
 
 postal_fmt   "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
 % Türkmenistan
-country_name "T<U00FC>rkmenistan"
+country_name "Türkmenistan"
 country_post "TM"
 country_car  "TM"
 country_num  795
 country_ab2 "TM"
 country_ab3 "TKM"
 % Türkmençe
-lang_name   "t<U00FC>rkmen dili"
+lang_name   "türkmen dili"
 lang_term   "tuk"
 lang_lib    "tuk"
 lang_ab     "tk"
@@ -411,5 +411,5 @@ LC_TELEPHONE
 tel_int_fmt "+%c %a %l"
 int_prefix "993"
 % dial "8 pause 10" (after dialing 8 pause for a new dial tone,then dial 10
-int_select "8<U00A0>10"
+int_select "8 10"
 END LC_TELEPHONE

@@ -889,7 +889,7 @@ END LC_COLLATE
 LC_MONETARY
 int_curr_symbol      "KHR "
 % monetary unit: Riel
-currency_symbol      "<U17DB>"
+currency_symbol      "៛"
 mon_decimal_point    "."
 mon_thousands_sep    ","
 mon_grouping         3;3
@@ -919,57 +919,57 @@ END LC_NUMERIC
 
 LC_TIME
 
-abday   "<U17A2><U17B6>";/
-        "<U1785>";/
-        "<U17A2>";/
-        "<U1796><U17BB>";/
-        "<U1796><U17D2><U179A>";/
-        "<U179F><U17BB>";/
-        "<U179F>"
+abday   "អា";/
+        "ច";/
+        "អ";/
+        "ពុ";/
+        "ព្រ";/
+        "សុ";/
+        "ស"
 
-day     "<U1790><U17D2><U1784><U17C3><U200B><U17A2><U17B6><U1791><U17B7><U178F><U17D2><U1799>";/
-        "<U1790><U17D2><U1784><U17C3><U200B><U1785><U17D0><U1793><U17D2><U1791>";/
-        "<U1790><U17D2><U1784><U17C3><U200B><U17A2><U1784><U17D2><U1782><U17B6><U179A>";/
-        "<U1790><U17D2><U1784><U17C3><U200B><U1796><U17BB><U1792>";/
-        "<U1790><U17D2><U1784><U17C3><U200B><U1796><U17D2><U179A><U17A0><U179F><U17D2><U1794><U178F><U17B7><U17CD>";/
-        "<U1790><U17D2><U1784><U17C3><U200B><U179F><U17BB><U1780><U17D2><U179A>";/
-        "<U1790><U17D2><U1784><U17C3><U200B><U179F><U17C5><U179A><U17CD>"
+day     "ថ្ងៃ​អាទិត្យ";/
+        "ថ្ងៃ​ច័ន្ទ";/
+        "ថ្ងៃ​អង្គារ";/
+        "ថ្ងៃ​ពុធ";/
+        "ថ្ងៃ​ព្រហស្បតិ៍";/
+        "ថ្ងៃ​សុក្រ";/
+        "ថ្ងៃ​សៅរ៍"
 
-abmon   "<U17E1>";/
-        "<U17E2>";/
-        "<U17E3>";/
-        "<U17E4>";/
-        "<U17E5>";/
-        "<U17E6>";/
-        "<U17E7>";/
-        "<U17E8>";/
-        "<U17E9>";/
-        "<U17E1><U17E0>";/
-        "<U17E1><U17E1>";/
-        "<U17E1><U17E2>"
+abmon   "១";/
+        "២";/
+        "៣";/
+        "៤";/
+        "៥";/
+        "៦";/
+        "៧";/
+        "៨";/
+        "៩";/
+        "១០";/
+        "១១";/
+        "១២"
 
-mon     "<U1798><U1780><U179A><U17B6>";/
-        "<U1780><U17BB><U1798><U17D2><U1797><U17C8>";/
-        "<U1798><U17B8><U1793><U17B6>";/
-        "<U1798><U17C1><U179F><U17B6>";/
-        "<U17A7><U179F><U1797><U17B6>";/
-        "<U1798><U17B7><U1790><U17BB><U1793><U17B6>";/
-        "<U1780><U1780><U17D2><U1780><U178A><U17B6>";/
-        "<U179F><U17B8><U17A0><U17B6>";/
-        "<U1780><U1789><U17D2><U1789><U17B6>";/
-        "<U178F><U17BB><U179B><U17B6>";/
-        "<U179C><U17B7><U1785><U17D2><U1786><U17B7><U1780><U17B6>";/
-        "<U1792><U17D2><U1793><U17BC>"
+mon     "មករា";/
+        "កុម្ភៈ";/
+        "មីនា";/
+        "មេសា";/
+        "ឧសភា";/
+        "មិថុនា";/
+        "កក្កដា";/
+        "សីហា";/
+        "កញ្ញា";/
+        "តុលា";/
+        "វិច្ឆិកា";/
+        "ធ្នូ"
 
-d_t_fmt  "%A <U1790><U17D2><U1784><U17C3> %e <U1781><U17C2> %B <U1786><U17D2><U1793><U17B6><U17C6> %Y, %H <U1798><U17C9><U17C4><U1784> %M <U1793><U17B6><U1791><U17B8> %S <U179C><U17B7><U1793><U17B6><U1791><U17B8><U200B>"
+d_t_fmt  "%A ថ្ងៃ %e ខែ %B ឆ្នាំ %Y, %H ម៉ោង %M នាទី %S វិនាទី​"
 
-date_fmt "%A <U1790><U17D2><U1784><U17C3> %e <U1781><U17C2> %B <U1786><U17D2><U1793><U17B6><U17C6> %Y, %H <U1798><U17C9><U17C4><U1784> %M <U1793><U17B6><U1791><U17B8> %S <U179C><U17B7><U1793><U17B6><U1791><U17B8><U200B>"
+date_fmt "%A ថ្ងៃ %e ខែ %B ឆ្នាំ %Y, %H ម៉ោង %M នាទី %S វិនាទី​"
 
 d_fmt    "%e %B %Y"
 
 t_fmt    "%H:%M:%S"
 
-am_pm    "<U1796><U17D2><U179A><U17B9><U1780>";"<U179B><U17D2><U1784><U17B6><U1785>"
+am_pm    "ព្រឹក";"ល្ងាច"
 
 % Appropriate 12-hour clock representation  "%I:%M:%S %p"
 %t_fmt_ampm  "%I:%M:%S %p"
@@ -979,10 +979,10 @@ first_weekday 1
 END LC_TIME
 
 LC_MESSAGES
-yesexpr "^[+1yY<U1794>]"
-noexpr  "^[-0nN<U1791>]"
-yesstr  "<U1794><U17B6><U1791><U002F><U1785><U17B6><U179F>"
-nostr   "<U1791><U17C1>"
+yesexpr "^[+1yYប]"
+noexpr  "^[-0nNទ]"
+yesstr  "បាទ//ចាស"
+nostr   "ទេ"
 END LC_MESSAGES
 
 LC_PAPER
@@ -1008,7 +1008,7 @@ LC_ADDRESS
 %    "%f%N%a%N%d%N%r%t%e%t%b%N%h%t%s%N%T%N%S%N%z%c%N"
 postal_fmt    "%f%N%a%N%d%N%r%t%e%t%b%N%h%t%s%N%T%N%S%N%z%c%N"
 % កម្ពុជា (Kampuchea)
-country_name "<U1780><U1798><U17D2><U1796><U17BB><U1787><U17B6>"
+country_name "កម្ពុជា"
 %FIXME
 %country_post  ""
 country_ab2 "KH"
@@ -1017,7 +1017,7 @@ country_num 116
 country_car "KH"
 %country_isbn  "978-9924"
 % ភាសាខ្មែរ (Khmer)
-lang_name     "<U1781><U17D2><U1798><U17C2><U179A>"
+lang_name     "ខ្មែរ"
 lang_ab       "km"
 lang_term     "khm"
 lang_lib      "khm"

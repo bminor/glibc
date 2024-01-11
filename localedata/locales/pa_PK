@@ -76,53 +76,53 @@ END LC_NUMERIC
 % full names of the days
 % Using only the first letters of the day would have caused a conflict here
 % as both "Jumairat(Thurs)" and "Juma(Friday)" have the same starting letter
-% Jeem <U062C>
+% Jeem ج
 LC_TIME
 
-abday   "<U0627><U062A><U0648><U0627><U0631>";/
-	"<U067E><U064A><U0631>";/
-	"<U0645><U0646><U06AF><U0644>";/
-	"<U0628><U062F><U06BE>";/
-	"<U062C><U0645><U0639><U0631><U0627><U062A>";/
-	"<U062C><U0645><U0639><U0647>";/
-	"<U0647><U0641><U062A><U0647>"
-day	"<U0627><U062A><U0648><U0627><U0631>";/
-	"<U067E><U064A><U0631>";/
-	"<U0645><U0646><U06AF><U0644>";/
-	"<U0628><U062F><U06BE>";/
-	"<U062C><U0645><U0639><U0631><U0627><U062A>";/
-	"<U062C><U0645><U0639><U0647>";/
-	"<U0647><U0641><U062A><U0647>"
-abmon	"<U062C><U0646><U0648><U0631><U064A>";/
-	"<U0641><U0631><U0648><U0631><U064A>";/
-	"<U0645><U0627><U0631><U0686>";/
-	"<U0627><U067E><U0631><U064A><U0644>";/
-	"<U0645><U0653><U06CC>";/
-	"<U062C><U0648><U0646>";/
-	"<U062C><U0648><U0644><U0627><U064A>";/
-	"<U0627><U06AF><U0633><U062A>";/
-	"<U0633><U062A><U0645><U0628><U0631>";/
-	"<U0627><U0643><U062A><U0648><U0628><U0631>";/
-	"<U0646><U0648><U0645><U0628><U0631>";/
-	"<U062F><U0633><U0645><U0628><U0631>"
-mon	"<U062C><U0646><U0648><U0631><U064A>";/
-	"<U0641><U0631><U0648><U0631><U064A>";/
-	"<U0645><U0627><U0631><U0686>";/
-	"<U0627><U067E><U0631><U064A><U0644>";/
-	"<U0645><U0653><U06CC>";/
-	"<U062C><U0648><U0646>";/
-	"<U062C><U0648><U0644><U0627><U064A>";/
-	"<U0627><U06AF><U0633><U062A>";/
-	"<U0633><U062A><U0645><U0628><U0631>";/
-	"<U0627><U0643><U062A><U0648><U0628><U0631>";/
-	"<U0646><U0648><U0645><U0628><U0631>";/
-	"<U062F><U0633><U0645><U0628><U0631>"
+abday   "اتوار";/
+	"پير";/
+	"منگل";/
+	"بدھ";/
+	"جمعرات";/
+	"جمعه";/
+	"هفته"
+day	"اتوار";/
+	"پير";/
+	"منگل";/
+	"بدھ";/
+	"جمعرات";/
+	"جمعه";/
+	"هفته"
+abmon	"جنوري";/
+	"فروري";/
+	"مارچ";/
+	"اپريل";/
+	"مٓی";/
+	"جون";/
+	"جولاي";/
+	"اگست";/
+	"ستمبر";/
+	"اكتوبر";/
+	"نومبر";/
+	"دسمبر"
+mon	"جنوري";/
+	"فروري";/
+	"مارچ";/
+	"اپريل";/
+	"مٓی";/
+	"جون";/
+	"جولاي";/
+	"اگست";/
+	"ستمبر";/
+	"اكتوبر";/
+	"نومبر";/
+	"دسمبر"
 
 % Date Time Format
-d_t_fmt  "<U0648> %H:%M:%S <U062A> %d %B %Y"
+d_t_fmt  "و %H:%M:%S ت %d %B %Y"
 
 % Date Time Format for date(1)
-date_fmt "<U0648> %H:%M:%S %Z <U062A> %d %B %Y"
+date_fmt "و %H:%M:%S %Z ت %d %B %Y"
 
 % date Format. I have put this in reverse order to try to get the date
 % in R->L order
@@ -131,9 +131,9 @@ d_fmt "%d//%m//%Y"
 % time format
 t_fmt "%H:%M:%S"
 
-%<U0635> stands for <U0635><U0628><U062D>
-%<U0634> stands for <U0634><U0627><U0645>
-am_pm "<U0635>";"<U0634>"
+%ص stands for صبح
+%ش stands for شام
+am_pm "ص";"ش"
 
 %time format in 12 hour clock
 t_fmt_ampm "%P %I:%M:%S"
@@ -148,14 +148,14 @@ LC_MESSAGES
 % locale based messages
 % Can we put in the values for a cancel exression here?? I found a term that
 % would define cancel appropriately
-% <U0647> = <U0647><U0627><U06BA> , the last tag is for noon-ghunna!
-% <U0628> = <U0628><U0644><U0643><U0644>
+% ه = هاں , the last tag is for noon-ghunna!
+% ب = بلكل
 % again f and o are place holders
-% <U0646> = <U0646><U0647><U064A><U06BA>
-yesexpr "^[+1yY<U0647><U0628>f]"
-noexpr  "^[-0nN<U0646>o]"
-yesstr  "<U0628><U0644><U0643><U0644>"
-nostr   "<U0646><U0647><U064A><U06BA>"
+% ن = نهيں
+yesexpr "^[+1yYهبf]"
+noexpr  "^[-0nNنo]"
+yesstr  "بلكل"
+nostr   "نهيں"
 END LC_MESSAGES
 
 %Draft Finished: 17:00 09/07/2000
@@ -176,12 +176,12 @@ END LC_NAME
 LC_ADDRESS
 % FIXME
 postal_fmt    "%a%N%f%N%d%N%b%N%h %s %e %r%N%T %z%N%c%N"
-country_name "<U067E><U06A9><U0633><U062A><U0627><U0646>"
+country_name "پکستان"
 country_ab2 "PK"
 country_ab3 "PAK"
 country_num 586
 country_car "PK"
-lang_name    "<U067E><U0646><U062C><U0627><U0628><U06CC>"
+lang_name    "پنجابی"
 lang_ab      "pa"
 lang_term    "pan"
 lang_lib    "pan"

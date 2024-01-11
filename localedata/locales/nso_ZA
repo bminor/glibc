@@ -78,7 +78,7 @@ LC_TIME
 % abday - The abbreviations for the week days:
 % - Son, Mos^, Bed, Rar, Ne, Hla, Mok
 abday       "Son";/
-            "Mo<U0161>";/
+            "Moš";/
             "Bed";/
             "Rar";/
             "Ne";/
@@ -88,7 +88,7 @@ abday       "Son";/
 % day - The full names of the week days:
 % - LaMorena, Mos^upologo, Labobedi, Laboraro, Labone, Labohlano, Mokibelo
 day         "LaMorena";/
-            "Mo<U0161>upologo";/
+            "Mošupologo";/
             "Labobedi";/
             "Laboraro";/
             "Labone";/
@@ -108,7 +108,7 @@ abmon       "Jan";"Feb";/
 %   Julae, Agostose, Setemere, Oktobere, Nofemere, Disemere
 mon         "Janaware";/
             "Febereware";/
-            "Mat<U0161>he";/
+            "Matšhe";/
             "Aprele";/
             "Mei";/
             "June";/

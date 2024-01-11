@@ -197,23 +197,23 @@ grouping                  3;3
 END LC_NUMERIC
 
 LC_TIME
-abday   "ned";"pon";"uto";"sri";"<U010D>et";"pet";"sub"
+abday   "ned";"pon";"uto";"sri";"čet";"pet";"sub"
 day     "nedjelja";/
         "ponedjeljak";/
         "utorak";/
         "srijeda";/
-        "<U010D>etvrtak";/
+        "četvrtak";/
         "petak";/
         "subota"
 abmon   "sij";"velj";/
-        "o<U017E>u";"tra";/
+        "ožu";"tra";/
         "svi";"lip";/
         "srp";"kol";/
         "ruj";"lis";/
         "stu";"pro"
-alt_mon "sije<U010D>anj";/
-        "velja<U010D>a";/
-        "o<U017E>ujak";/
+alt_mon "siječanj";/
+        "veljača";/
+        "ožujak";/
         "travanj";/
         "svibanj";/
         "lipanj";/
@@ -223,9 +223,9 @@ alt_mon "sije<U010D>anj";/
         "listopad";/
         "studeni";/
         "prosinac"
-mon     "sije<U010D>nja";/
-        "velja<U010D>e";/
-        "o<U017E>ujka";/
+mon     "siječnja";/
+        "veljače";/
+        "ožujka";/
         "travnja";/
         "svibnja";/
         "lipnja";/
@@ -279,8 +279,8 @@ END LC_MEASUREMENT
 LC_NAME
 name_fmt    "%d%t%g%t%m%t%f"
 name_mr     "gosp."
-name_mrs    "g<U0111>a"
-name_miss   "g<U0111>ica"
+name_mrs    "gđa"
+name_miss   "gđica"
 END LC_NAME
 
 LC_ADDRESS

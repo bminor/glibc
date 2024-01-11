@@ -56,31 +56,31 @@ END LC_COLLATE
 
 LC_TIME
 % Sanda-Ɔpɛpɔn, Kwakwar-Ɔgyefuo, Ebɔw-Ɔbenem, Ebɔbira-Oforisuo, Esusow Aketseaba-Kɔtɔnimba, Obirade-Ayɛwohomumu, Ayɛwoho-Kitawonsa, Difuu-Ɔsandaa, Fankwa-Ɛbɔ, Ɔbɛsɛ-Ahinime, Ɔberɛfɛw-Obubuo, Mumu-Ɔpɛnimba
-mon  "Sanda-<U0186>p<U025B>p<U0254>n";/
-     "Kwakwar-<U0186>gyefuo";/
-     "Eb<U0254>w-<U0186>benem";/
-     "Eb<U0254>bira-Oforisuo";/
-     "Esusow Aketseaba-K<U0254>t<U0254>nimba";/
-     "Obirade-Ay<U025B>wohomumu";/
-     "Ay<U025B>woho-Kitawonsa";/
-     "Difuu-<U0186>sandaa";/
-     "Fankwa-<U0190>b<U0254>";/
-     "<U0186>b<U025B>s<U025B>-Ahinime";/
-     "<U0186>ber<U025B>f<U025B>w-Obubuo";/
-     "Mumu-<U0186>p<U025B>nimba"
+mon  "Sanda-Ɔpɛpɔn";/
+     "Kwakwar-Ɔgyefuo";/
+     "Ebɔw-Ɔbenem";/
+     "Ebɔbira-Oforisuo";/
+     "Esusow Aketseaba-Kɔtɔnimba";/
+     "Obirade-Ayɛwohomumu";/
+     "Ayɛwoho-Kitawonsa";/
+     "Difuu-Ɔsandaa";/
+     "Fankwa-Ɛbɔ";/
+     "Ɔbɛsɛ-Ahinime";/
+     "Ɔberɛfɛw-Obubuo";/
+     "Mumu-Ɔpɛnimba"
 % S-Ɔ, K-Ɔ, E-Ɔ, E-O, E-K, O-A, A-K, D-Ɔ, F-Ɛ, Ɔ-A, Ɔ-O, M-Ɔ
-abmon  "S-<U0186>";/
-       "K-<U0186>";/
-       "E-<U0186>";/
+abmon  "S-Ɔ";/
+       "K-Ɔ";/
+       "E-Ɔ";/
        "E-O";/
        "E-K";/
        "O-A";/
        "A-K";/
-       "D-<U0186>";/
-       "F-<U0190>";/
-       "<U0186>-A";/
-       "<U0186>-O";/
-       "M-<U0186>"
+       "D-Ɔ";/
+       "F-Ɛ";/
+       "Ɔ-A";/
+       "Ɔ-O";/
+       "M-Ɔ"
 day  "Kwesida";/
      "Dwowda";/
      "Benada";/
@@ -109,7 +109,7 @@ END LC_NUMERIC
 LC_MONETARY
 int_curr_symbol           "GHS "
 % GH₵
-currency_symbol           "GH<U20B5>"
+currency_symbol           "GH₵"
 mon_decimal_point         "."
 mon_thousands_sep         ","
 mon_grouping              3

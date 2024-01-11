@@ -83,13 +83,13 @@ END LC_NUMERIC
 LC_TIME
 abday   "ned";"pon";/
         "uto";"sre";/
-        "<U010D>et";"pet";/
+        "čet";"pet";/
         "sub"
 day     "nedelja";/
         "ponedeljak";/
         "utorak";/
         "sreda";/
-        "<U010D>etvrtak";/
+        "četvrtak";/
         "petak";/
         "subota"
 abmon   "jan";"feb";/
@@ -136,9 +136,9 @@ LC_NAME
 name_fmt    "%d%t%g%t%m%t%f"
 name_gen    ""
 name_mr     "g-din"
-name_mrs    "g-<U0111>a"
-name_miss   "g-<U0111>ica"
-name_ms     "g-<U0111>a"
+name_mrs    "g-đa"
+name_miss   "g-đica"
+name_ms     "g-đa"
 END LC_NAME
 
 LC_ADDRESS

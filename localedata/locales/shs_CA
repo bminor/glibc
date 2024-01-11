@@ -89,37 +89,37 @@ abday      "Sxe";/
            "Sme";/
            "Sts";/
            "Stq"
-day        "Sxetspesq<U0313>t";/
-           "Spetkesq<U0313>t";/
-           "Selesq<U0313>t";/
-           "Skellesq<U0313>t";/
-           "Smesesq<U0313>t";/
-           "Stselkstesq<U0313>t";/
-           "Stqmekstesq<U0313>t"
+day        "Sxetspesq̓t";/
+           "Spetkesq̓t";/
+           "Selesq̓t";/
+           "Skellesq̓t";/
+           "Smesesq̓t";/
+           "Stselkstesq̓t";/
+           "Stqmekstesq̓t"
 abmon      "Kwe";/
            "Tsi";/
            "Sqe";/
-           "<U00C9>wt";/
+           "Éwt";/
            "Ell";/
            "Tsp";/
            "Tqw";/
-           "Ct<U0313><U00E9>";/
+           "Ct̓é";/
            "Qel";/
-           "W<U00E9>l";/
+           "Wél";/
            "U7l";/
            "Tet"
-mon        "Pellkwet<U0313>min";/
-       "Pelctsipwen<U0313>ten";/
-       "Pellsq<U00E9>pts";/
-       "Pesll<U00E9>wten";/
-       "Pell7ell7<U00E9>7llqten";/
-       "Pelltsp<U00E9>ntsk";/
-       "Pelltqwelq<U0313>w<U00E9>l<U0313>t";/
-       "Pellct<U0313><U00E9>xel<U0313>cten";/
-       "Pesqelql<U00E9>lten";/
-       "Pesllw<U00E9>lsten";/
-       "Pellc7ell7<U00E9>7llcwten<U0313>";/
-       "Pelltet<U00E9>tq<U0313>em"
+mon        "Pellkwet̓min";/
+       "Pelctsipwen̓ten";/
+       "Pellsqépts";/
+       "Peslléwten";/
+       "Pell7ell7é7llqten";/
+       "Pelltspéntsk";/
+       "Pelltqwelq̓wél̓t";/
+       "Pellct̓éxel̓cten";/
+       "Pesqelqlélten";/
+       "Pesllwélsten";/
+       "Pellc7ell7é7llcwten̓";/
+       "Pelltetétq̓em"
 d_t_fmt    "%a %d %b %Y %r"
 date_fmt   "%a %d %b %Y %r %Z"
 d_fmt      "%d//%m//%y"
@@ -156,7 +156,7 @@ country_ab2 "CA"
 country_ab3 "CAN"
 country_num 124
 country_car    "CDN"
-lang_name "Secwepemcts<U00ED>n"
+lang_name "Secwepemctsín"
 lang_term "shs"
 lang_lib "shs"
 END LC_ADDRESS

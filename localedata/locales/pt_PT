@@ -25,7 +25,7 @@ escape_char /
 LC_IDENTIFICATION
 title      "Portuguese locale for Portugal"
 source     "RAP"
-address    "Sankt J<U00F8>rgens Alle 8, DK-1615 K<U00F8>benhavn V, Danmark"
+address    "Sankt Jørgens Alle 8, DK-1615 København V, Danmark"
 contact    ""
 email      "bug-glibc-locales@gnu.org"
 tel        ""
@@ -65,12 +65,12 @@ LC_MESSAGES
 yesexpr "^[+1SsyY]"
 noexpr  "^[-0nN]"
 yesstr  "sim"
-nostr   "n<U00E3>o"
+nostr   "não"
 END LC_MESSAGES
 
 LC_MONETARY
 int_curr_symbol           "EUR "
-currency_symbol           "<U20AC>"
+currency_symbol           "€"
 mon_decimal_point         ","
 mon_thousands_sep         "."
 mon_grouping              3;3
@@ -96,14 +96,14 @@ LC_TIME
 abday   "dom";"seg";/
         "ter";"qua";/
         "qui";"sex";/
-        "s<U00E1>b"
+        "sáb"
 day     "domingo";/
         "segunda";/
-        "ter<U00E7>a";/
+        "terça";/
         "quarta";/
         "quinta";/
         "sexta";/
-        "s<U00E1>bado"
+        "sábado"
 abmon   "jan";"fev";/
         "mar";"abr";/
         "mai";"jun";/
@@ -112,7 +112,7 @@ abmon   "jan";"fev";/
         "nov";"dez"
 mon     "janeiro";/
         "fevereiro";/
-        "mar<U00E7>o";/
+        "março";/
         "abril";/
         "maio";/
         "junho";/
@@ -159,7 +159,7 @@ country_ab3 "PRT"
 country_num 620
 country_car "P"
 % português
-lang_name    "portugu<U00EA>s"
+lang_name    "português"
 lang_ab      "pt"
 lang_term    "por"
 lang_lib    "por"

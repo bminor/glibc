@@ -153,7 +153,7 @@ END LC_COLLATE
 
 LC_MONETARY
 int_curr_symbol       "VND "
-currency_symbol       "<U20AB>"
+currency_symbol       "₫"
 mon_decimal_point     ","
 mon_thousands_sep     "."
 mon_grouping          3;3
@@ -177,13 +177,13 @@ END LC_NUMERIC
 
 LC_TIME
 abday    "CN";"T2";"T3";"T4";"T5";"T6";"T7"
-day      "Ch<U1EE7> nh<U1EAD>t";/
-         "Th<U1EE9> hai";/
-         "Th<U1EE9> ba";/
-         "Th<U1EE9> t<U01B0>";/
-         "Th<U1EE9> n<U0103>m";/
-         "Th<U1EE9> s<U00E1>u";/
-         "Th<U1EE9> b<U1EA3>y"
+day      "Chủ nhật";/
+         "Thứ hai";/
+         "Thứ ba";/
+         "Thứ tư";/
+         "Thứ năm";/
+         "Thứ sáu";/
+         "Thứ bảy"
 abmon    "Thg 1";/
          "Thg 2";/
          "Thg 3";/
@@ -196,24 +196,24 @@ abmon    "Thg 1";/
          "Thg 10";/
          "Thg 11";/
          "Thg 12"
-mon      "Th<U00E1>ng 1";/
-         "Th<U00E1>ng 2";/
-         "Th<U00E1>ng 3";/
-         "Th<U00E1>ng 4";/
-         "Th<U00E1>ng 5";/
-         "Th<U00E1>ng 6";/
-         "Th<U00E1>ng 7";/
-         "Th<U00E1>ng 8";/
-         "Th<U00E1>ng 9";/
-         "Th<U00E1>ng 10";/
-         "Th<U00E1>ng 11";/
-         "Th<U00E1>ng 12"
-d_t_fmt  "%A, %d %B N<U0103>m %Y %T %Z"
+mon      "Tháng 1";/
+         "Tháng 2";/
+         "Tháng 3";/
+         "Tháng 4";/
+         "Tháng 5";/
+         "Tháng 6";/
+         "Tháng 7";/
+         "Tháng 8";/
+         "Tháng 9";/
+         "Tháng 10";/
+         "Tháng 11";/
+         "Tháng 12"
+d_t_fmt  "%A, %d %B Năm %Y %T %Z"
 d_fmt    "%d//%m//%Y"
 t_fmt    "%T"
 am_pm    "AM";"PM"
 t_fmt_ampm  "%I:%M %p"
-date_fmt  "%A, %d %B n<U0103>m %Y %T %Z"
+date_fmt  "%A, %d %B năm %Y %T %Z"
 week 7;19971130;1
 first_weekday 2
 END LC_TIME
@@ -221,8 +221,8 @@ END LC_TIME
 LC_MESSAGES
 yesexpr "^[+1yYcC]"
 noexpr  "^[-0nNkK]"
-yesstr  "C<U00F3>"
-nostr   "Kh<U00F4>ng"
+yesstr  "Có"
+nostr   "Không"
 END LC_MESSAGES
 
 LC_PAPER
@@ -235,7 +235,7 @@ LC_NAME
 %
 name_fmt    "%p%t%f%t%m%t%g"
 name_gen    ""
-name_mr     "<U00D4>."
+name_mr     "Ô."
 name_mrs    "B."
 name_miss   "C."
 name_ms     ""
@@ -247,8 +247,8 @@ LC_ADDRESS
 % This is the ISO_IEC TR14652 Locale definition for the
 % LC_ADDRESS
 postal_fmt  "%z%c%T%s%b%e%r"
-country_name "Vi<U1EC7>t Nam"
-lang_name "Ti<U1EBF>ng Vi<U1EC7>t"
+country_name "Việt Nam"
+lang_name "Tiếng Việt"
 
 country_ab2 "VN"
 country_ab3 "VNM"

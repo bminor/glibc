@@ -110,7 +110,7 @@ mon     "Ιανουαρίου";/
 d_t_fmt "%a %d %b %Y %r %Z"
 d_fmt   "%d//%m//%Y"
 t_fmt   "%r"
-am_pm   "<U03c0><U03bc>";"<U03bc><U03bc>"
+am_pm   "πμ";"μμ"
 t_fmt_ampm "%I:%M:%S %p"
 date_fmt "%a %d %b %Y %r %Z"
 week 7;19971130;1

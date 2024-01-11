@@ -64,27 +64,27 @@ copy "ta_IN"
 END LC_NUMERIC
 
 LC_TIME
-abday       "<U0B9E><U0BBE>";"<U0BA4><U0BBF>";/
-            "<U0B9A><U0BC6>";"<U0BAA><U0BC1>";/
-            "<U0BB5><U0BBF>";"<U0BB5><U0BC6>";/
-            "<U0B9A>"
-day         "<U0B9E><U0BBE><U0BAF><U0BBF><U0BB1><U0BC1>";"<U0BA4><U0BBF><U0B99><U0BCD><U0B95><U0BB3><U0BCD>";/
-            "<U0B9A><U0BC6><U0BB5><U0BCD><U0BB5><U0BBE><U0BAF><U0BCD>";"<U0BAA><U0BC1><U0BA4><U0BA9><U0BCD>";/
-            "<U0BB5><U0BBF><U0BAF><U0BBE><U0BB4><U0BA9><U0BCD>";"<U0BB5><U0BC6><U0BB3><U0BCD><U0BB3><U0BBF>";/
-            "<U0B9A><U0BA9><U0BBF>"
-abmon       "<U0B9C><U0BA9>";"<U0BAA><U0BBF><U0BAA><U0BCD>";/
-            "<U0BAE><U0BBE><U0BB0><U0BCD>";"<U0B8F><U0BAA><U0BCD>";/
-            "<U0BAE><U0BC7>";"<U0B9C><U0BC2><U0BA9><U0BCD>";/
-            "<U0B9C><U0BC2><U0BB2><U0BC8>";"<U0B86><U0B95>";/
-            "<U0B9A><U0BC6><U0BAA><U0BCD>";"<U0B85><U0B95><U0BCD>";/
-            "<U0BA8><U0BB5>";"<U0B9F><U0BBF><U0B9A>"
-mon         "<U0B9C><U0BA9><U0BB5><U0BB0><U0BBF>";"<U0BAA><U0BBF><U0BAA><U0BCD><U0BB0><U0BB5><U0BB0><U0BBF>";/
-            "<U0BAE><U0BBE><U0BB0><U0BCD><U0B9A><U0BCD>";"<U0B8F><U0BAA><U0BCD><U0BB0><U0BB2><U0BCD>";/
-            "<U0BAE><U0BC7>";"<U0B9C><U0BC2><U0BA9><U0BCD>";/
-            "<U0B9C><U0BC2><U0BB2><U0BC8>";"<U0B86><U0B95><U0BB8><U0BCD><U0B9F><U0BCD>";/
-            "<U0B9A><U0BC6><U0BAA><U0BCD><U0B9F><U0BAE><U0BCD><U0BAA><U0BB0><U0BCD>";"<U0B85><U0B95><U0BCD><U0B9F><U0BCB><U0BAA><U0BB0><U0BCD>";/
-            "<U0BA8><U0BB5><U0BAE><U0BCD><U0BAA><U0BB0><U0BCD>";"<U0B9F><U0BBF><U0B9A><U0BAE><U0BCD><U0BAA><U0BB0><U0BCD>"
-am_pm       "<U0B95><U0BBE><U0BB2><U0BC8>";"<U0BAE><U0BBE><U0BB2><U0BC8>"
+abday       "ஞா";"தி";/
+            "செ";"பு";/
+            "வி";"வெ";/
+            "ச"
+day         "ஞாயிறு";"திங்கள்";/
+            "செவ்வாய்";"புதன்";/
+            "வியாழன்";"வெள்ளி";/
+            "சனி"
+abmon       "ஜன";"பிப்";/
+            "மார்";"ஏப்";/
+            "மே";"ஜூன்";/
+            "ஜூலை";"ஆக";/
+            "செப்";"அக்";/
+            "நவ";"டிச"
+mon         "ஜனவரி";"பிப்ரவரி";/
+            "மார்ச்";"ஏப்ரல்";/
+            "மே";"ஜூன்";/
+            "ஜூலை";"ஆகஸ்ட்";/
+            "செப்டம்பர்";"அக்டோபர்";/
+            "நவம்பர்";"டிசம்பர்"
+am_pm       "காலை";"மாலை"
 d_t_fmt     "%A %d %B %Y %H:%M:%S"
 date_fmt    "%A %d %B %Y %H:%M:%S %Z"
 d_fmt       "%-d//%-m//%y"
@@ -114,12 +114,12 @@ END LC_NAME
 LC_ADDRESS
 
 postal_fmt  "%z%c%T%s%b%e%r"
-country_name "<U0B87><U0BB2><U0B99><U0BCD><U0B95><U0BC8>"
+country_name "இலங்கை"
 country_ab2 "LK"
 country_ab3 "LKA"
 country_num 144
 country_car "CL"
-lang_name   "<U0BA4><U0BAE><U0BBF><U0BB4><U0BCD>"
+lang_name   "தமிழ்"
 lang_ab      "ta"
 lang_term    "tam"
 lang_lib    "tam"

@@ -150,15 +150,15 @@ LC_MESSAGES
 % should for Azeri.
 yesexpr "^[+1bBhH]"
 noexpr  "^[-0YyNn]"
-yesstr  "h<U0259>"
+yesstr  "hə"
 nostr   "yox"
 END LC_MESSAGES
 
 LC_MONETARY
 int_curr_symbol           "AZN "
-currency_symbol           "<U20BC>"
+currency_symbol           "₼"
 mon_decimal_point         "."
-mon_thousands_sep         "<U202F>"
+mon_thousands_sep         " "
 mon_grouping              3;3
 positive_sign             ""
 negative_sign             "-"
@@ -179,20 +179,20 @@ grouping                  3;3
 END LC_NUMERIC
 
 LC_TIME
-day     "bazar g<U00FC>n<U00FC>";/
-        "bazar ert<U0259>si";/
-        "<U00E7><U0259>r<U015F><U0259>nb<U0259> ax<U015F>am<U0131>";/
-        "<U00E7><U0259>r<U015F><U0259>nb<U0259>";/
-        "c<U00FC>m<U0259> ax<U015F>am<U0131>";/
-        "c<U00FC>m<U0259>";/
-        "<U015F><U0259>nb<U0259>"
+day     "bazar günü";/
+        "bazar ertəsi";/
+        "çərşənbə axşamı";/
+        "çərşənbə";/
+        "cümə axşamı";/
+        "cümə";/
+        "şənbə"
 abday   "baz";/
         "ber";/
-        "<U00E7>ax";/
-        "<U00E7><U0259>r";/
+        "çax";/
+        "çər";/
         "cax";/
-        "c<U00FC>m";/
-        "<U015F>nb"
+        "cüm";/
+        "şnb"
 mon     "yanvar";/
         "fevral";/
         "mart";/
@@ -210,8 +210,8 @@ abmon   "Yan";/
         "Mar";/
         "Apr";/
         "May";/
-        "<U0130>yn";/
-        "<U0130>yl";/
+        "İyn";/
+        "İyl";/
         "Avq";/
         "Sen";/
         "Okt";/
@@ -238,13 +238,13 @@ END LC_MEASUREMENT
 LC_ADDRESS
 % FIXME
 postal_fmt "???"
-country_name "Az<U0259>rbaycan"
+country_name "Azərbaycan"
 country_ab2 "AZ"
 country_ab3 "AZE"
 country_num 031
 country_car    "AZ"
 % Azərbaycanca
-lang_name    "az<U0259>rbaycan"
+lang_name    "azərbaycan"
 lang_ab      "az"
 lang_term    "aze"
 lang_lib    "aze"

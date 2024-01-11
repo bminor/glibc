@@ -38,7 +38,7 @@ escape_char /
 LC_IDENTIFICATION
 title      "Slovak locale for Slovak"
 source     ""
-address    "Narcisov<U00E1> 56, SK-821 01 Bratislava, Slovak Republic"
+address    "Narcisová 56, SK-821 01 Bratislava, Slovak Republic"
 contact    ""
 email      "bug-glibc-locales@gnu.org"
 tel        ""
@@ -77,9 +77,9 @@ copy "cs_CZ"
 END LC_COLLATE
 
 LC_MESSAGES
-yesexpr "^[+1aA<U00E1><U00C1>yY]"
+yesexpr "^[+1aAáÁyY]"
 noexpr  "^[-0nN]"
-yesstr  "<U00E1>no"
+yesstr  "áno"
 nostr   "nie"
 END LC_MESSAGES
 
@@ -89,9 +89,9 @@ END LC_MESSAGES
 LC_MONETARY
 
 int_curr_symbol		"EUR "
-currency_symbol		"<U20AC>"
+currency_symbol		"€"
 mon_decimal_point	","
-mon_thousands_sep	"<U202F>"
+mon_thousands_sep	" "
 mon_grouping      	3;3
 positive_sign		""
 negative_sign		"-"
@@ -112,7 +112,7 @@ END LC_MONETARY
 LC_NUMERIC
 
 decimal_point		","
-thousands_sep		"<U202F>"
+thousands_sep		" "
 grouping		3;3
 
 END LC_NUMERIC
@@ -126,28 +126,28 @@ abday		"Ne";/
 		"Po";/
 		"Ut";/
 		"St";/
-		"<U0160>t";/
+		"Št";/
 		"Pi";/
 		"So"
 
-day		"Nede<U013E>a";/
+day		"Nedeľa";/
 		"Pondelok";/
 		"Utorok";/
 		"Streda";/
-		"<U0160>tvrtok";/
+		"Štvrtok";/
 		"Piatok";/
 		"Sobota"
 
-mon		"janu<U00E1>r";/
-		"febru<U00E1>r";/
+mon		"január";/
+		"február";/
 		"marec";/
-		"apr<U00ED>l";/
-		"m<U00E1>j";/
-		"j<U00FA>n";/
-		"j<U00FA>l";/
+		"apríl";/
+		"máj";/
+		"jún";/
+		"júl";/
 		"august";/
 		"september";/
-		"okt<U00F3>ber";/
+		"október";/
 		"november";/
 		"december"
 
@@ -157,17 +157,17 @@ abmon		"jan";/
 		"feb";/
 		"mar";/
 		"apr";/
-		"m<U00E1>j";/
-		"j<U00FA>n";/
-		"j<U00FA>l";/
+		"máj";/
+		"jún";/
+		"júl";/
 		"aug";/
 		"sep";/
 		"okt";/
 		"nov";/
 		"dec"
 
-d_t_fmt		"%a<U00A0>%e.<U00A0>%B<U00A0>%Y,<U00A0>%H:%M:%S"
-date_fmt		"%a<U00A0>%e.<U00A0>%B<U00A0>%Y,<U00A0>%H:%M:%S<U00A0>%Z"
+d_t_fmt		"%a %e. %B %Y, %H:%M:%S"
+date_fmt		"%a %e. %B %Y, %H:%M:%S %Z"
 
 d_fmt 		"%d.%m.%Y"
 
@@ -210,7 +210,7 @@ country_ab2 "SK"
 country_ab3 "SVK"
 country_num 703
 country_car    "SK"
-lang_name   "sloven<U010D>ina"
+lang_name   "slovenčina"
 lang_ab      "sk"
 lang_term    "slk"
 lang_lib    "slo"

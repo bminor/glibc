@@ -173,7 +173,7 @@ END LC_MONETARY
 
 LC_NUMERIC
 decimal_point           ","
-thousands_sep           "<U202F>"
+thousands_sep           " "
 grouping                3;3
 END LC_NUMERIC
 

@@ -536,7 +536,7 @@ LC_MESSAGES
 
 % A regular expression that describes possible yes-responses
 % "y", "Y", "+", "ta" or "tak" in Cyrillic
-yesexpr "^([+1Yy]|[<U0422><U0442>][<U0410><U0430>][<U041A><U043A>]?)$"
+yesexpr "^([+1Yy]|[Тт][Аа][Кк]?)$"
 
 % WARNING: symbols "N" and "Cyrillic_T" are placed at one key in Ukrainian
 % keyboard layout although the meaning is semantically opposite ("N" stands for
@@ -547,13 +547,13 @@ yesexpr "^([+1Yy]|[<U0422><U0442>][<U0410><U0430>][<U041A><U043A>]?)$"
 
 % A regular expression that describes possible no-responses.
 % "n", "N", "-" or word "ni" in Cyrillic
-noexpr  "^([-0Nn]|[<U041D><U043D>][<U0406><U0456>])$"
+noexpr  "^([-0Nn]|[Нн][Іі])$"
 
 % Output string for ``yes'' ("tak").
-yesstr "<U0442><U0430><U043A>"
+yesstr "так"
 
 % Output string for ``no'' ("ni").
-nostr "<U043D><U0456>"
+nostr "ні"
 
 END LC_MESSAGES
 
@@ -592,7 +592,7 @@ LC_MONETARY
 % 200 hrv. - 200 hryven (money)
 
 % the local currency symbol
-currency_symbol           "<U0433><U0440><U043D>." % hr (hryvnya)
+currency_symbol           "грн." % hr (hryvnya)
 
 % This must be a 4-character string containing the international currency
 % symbol as defined by the ISO 4217 standard (three characters) followed
@@ -600,7 +600,7 @@ currency_symbol           "<U0433><U0440><U043D>." % hr (hryvnya)
 %
 % DSTU ISO 3166
 % Code   Name    Name in English language
-% UAH    <U0433><U0440><U0438><U0432><U043D><U044F>  hryvnya
+% UAH    гривня  hryvnya
 int_curr_symbol           "UAH "
 
 % This string is used as the decimal delimiter when formatting monetary
@@ -611,7 +611,7 @@ mon_decimal_point         ","
 % This string is used as a thousands separator when formatting monetary
 % quantities.
 % see LC_NUMERIC:thousands separator
-mon_thousands_sep         "<U202F>" % <NNBSP> (0X202F)
+mon_thousands_sep         " " % <NNBSP> (0X202F)
 
 % Define  the  size of each group of digits in formatted monetary
 % quantities.  The operand is a sequence of integers separated by
@@ -741,7 +741,7 @@ decimal_point             "," % see LC_MONETARY:mon_decimal_pint
 % The string that will be used as a group separator when formatting
 % numeric quantities.
 % see LC_MONETARY:mon_thousands_sep
-thousands_sep             "<U202F>" % <NNBSP> (0X202F)
+thousands_sep             " " % <NNBSP> (0X202F)
 
 % A string that describes the formatting of numeric quantities.
 %
@@ -794,68 +794,68 @@ week 7;19971130;1
 % SEReda (day name) and
 % SERpen` (month name).
 abday /
-        "<U043D><U0434>"; %nd  /
-        "<U043F><U043D>"; %pn  /
-        "<U0432><U0442>"; %vt  /
-        "<U0441><U0440>"; %sr  /
-        "<U0447><U0442>"; %cht /
-        "<U043F><U0442>"; %pt  /
-        "<U0441><U0431>"  %sb
+        "нд"; %nd  /
+        "пн"; %pn  /
+        "вт"; %vt  /
+        "ср"; %sr  /
+        "чт"; %cht /
+        "пт"; %pt  /
+        "сб"  %sb
 
 % A list of weekday names starting with first day of week as defined by <week> keyword. (%A)
 day /
-        "<U043D><U0435><U0434><U0456><U043B><U044F>";    %nedilya   /
-	"<U043F><U043E><U043D><U0435><U0434><U0456><U043B><U043E><U043A>"; %ponedilok /
-        "<U0432><U0456><U0432><U0442><U043E><U0440><U043E><U043A>";  %vivtorok  /
-	"<U0441><U0435><U0440><U0435><U0434><U0430>";    %sereda    /
-        "<U0447><U0435><U0442><U0432><U0435><U0440>";    %chetver   /
-        "<U043F>'<U044F><U0442><U043D><U0438><U0446><U044F>";  %pjatnycya /
-        "<U0441><U0443><U0431><U043E><U0442><U0430>"     %subota
+        "неділя";    %nedilya   /
+	"понеділок"; %ponedilok /
+        "вівторок";  %vivtorok  /
+	"середа";    %sereda    /
+        "четвер";    %chetver   /
+        "п'ятниця";  %pjatnycya /
+        "субота"     %subota
 
 % A list of abbreviated month names. (%b)
 abmon /
-        "<U0441><U0456><U0447>"; %sich /
-        "<U043B><U044E><U0442>"; %lyut /
-        "<U0431><U0435><U0440>"; %ber  /
-        "<U043A><U0432><U0456>"; %kvi  /
-        "<U0442><U0440><U0430>"; %tra  /
-        "<U0447><U0435><U0440>"; %cher /
-        "<U043B><U0438><U043F>"; %lyp  /
-        "<U0441><U0435><U0440>"; %ser  /
-        "<U0432><U0435><U0440>"; %ver  /
-        "<U0436><U043E><U0432>"; %zhov /
-        "<U043B><U0438><U0441>"; %lys  /
-        "<U0433><U0440><U0443>"  %hru
+        "січ"; %sich /
+        "лют"; %lyut /
+        "бер"; %ber  /
+        "кві"; %kvi  /
+        "тра"; %tra  /
+        "чер"; %cher /
+        "лип"; %lyp  /
+        "сер"; %ser  /
+        "вер"; %ver  /
+        "жов"; %zhov /
+        "лис"; %lys  /
+        "гру"  %hru
 
 % A list of month names in proper form for calendar (%OB).  See also mon.
 alt_mon /
-        "<U0441><U0456><U0447><U0435><U043D><U044C>";   %sichen`  /
-        "<U043B><U044E><U0442><U0438><U0439>";    %lyutyj   /
-        "<U0431><U0435><U0440><U0435><U0437><U0435><U043D><U044C>"; %berezen` /
-        "<U043A><U0432><U0456><U0442><U0435><U043D><U044C>";  %kviten`  /
-        "<U0442><U0440><U0430><U0432><U0435><U043D><U044C>";  %traven`  /
-        "<U0447><U0435><U0440><U0432><U0435><U043D><U044C>";  %cherven` /
-        "<U043B><U0438><U043F><U0435><U043D><U044C>";   %lypen`   /
-        "<U0441><U0435><U0440><U043F><U0435><U043D><U044C>";  %serpen`  /
-        "<U0432><U0435><U0440><U0435><U0441><U0435><U043D><U044C>"; %veresen` /
-        "<U0436><U043E><U0432><U0442><U0435><U043D><U044C>";  %zhovten` /
-        "<U043B><U0438><U0441><U0442><U043E><U043F><U0430><U0434>"; %lystopad /
-        "<U0433><U0440><U0443><U0434><U0435><U043D><U044C>"   %hruden`
+        "січень";   %sichen`  /
+        "лютий";    %lyutyj   /
+        "березень"; %berezen` /
+        "квітень";  %kviten`  /
+        "травень";  %traven`  /
+        "червень";  %cherven` /
+        "липень";   %lypen`   /
+        "серпень";  %serpen`  /
+        "вересень"; %veresen` /
+        "жовтень";  %zhovten` /
+        "листопад"; %lystopad /
+        "грудень"   %hruden`
 
 % A list of month names in genitive form, for full date format, with day (%B).
 mon /
-        "<U0441><U0456><U0447><U043D><U044F>";     % sichnya   /
-        "<U043B><U044E><U0442><U043E><U0433><U043E>";    % lyutoho   /
-        "<U0431><U0435><U0440><U0435><U0437><U043D><U044F>";   % bereznya  /
-        "<U043A><U0432><U0456><U0442><U043D><U044F>";    % kvitnya   /
-        "<U0442><U0440><U0430><U0432><U043D><U044F>";    % travnya   /
-        "<U0447><U0435><U0440><U0432><U043D><U044F>";    % chervnya  /
-        "<U043B><U0438><U043F><U043D><U044F>";     % lypnya    /
-        "<U0441><U0435><U0440><U043F><U043D><U044F>";    % serpnya   /
-        "<U0432><U0435><U0440><U0435><U0441><U043D><U044F>";   % veresnya  /
-        "<U0436><U043E><U0432><U0442><U043D><U044F>";    % zhovtnya  /
-        "<U043B><U0438><U0441><U0442><U043E><U043F><U0430><U0434><U0430>"; % lystopada /
-        "<U0433><U0440><U0443><U0434><U043D><U044F>"     % hrudnya
+        "січня";     % sichnya   /
+        "лютого";    % lyutoho   /
+        "березня";   % bereznya  /
+        "квітня";    % kvitnya   /
+        "травня";    % travnya   /
+        "червня";    % chervnya  /
+        "липня";     % lypnya    /
+        "серпня";    % serpnya   /
+        "вересня";   % veresnya  /
+        "жовтня";    % zhovtnya  /
+        "листопада"; % lystopada /
+        "грудня"     % hrudnya
 
 % Appropriate date representation for date(1).
 date_fmt       "%A, %-d %B %Y %X %z"
@@ -874,7 +874,7 @@ t_fmt     "%T"
 t_fmt_ampm ""
 
 %The appropriate representation of the am and pm strings. (%p)
-%am_pm     "<U0434><U043E>";"<U043F><U043E>"   % "do" ; "po" - do obidu/po obidi
+%am_pm     "до";"по"   % "do" ; "po" - do obidu/po obidi
 % Empty strings are used to force 24h time format.
 am_pm     "";""
 
@@ -1008,19 +1008,19 @@ LC_NAME
 name_fmt    "%d%t%g%t%m%t%f" % pan Volodymyr Mykolayovych Lisivka
 
 % A salutation valid for all persons
-name_gen    "<U0448><U0430><U043D><U043E><U0432><U043D><U0438><U0439>(-<U043D><U0430>)" % shanovnyj(-na)
+name_gen    "шановний(-на)" % shanovnyj(-na)
 
 % A salutation valid for males
-name_mr     "<U043F><U0430><U043D>" % pane
+name_mr     "пан" % pane
 
 % A salutation valid for all females
-name_ms     "<U043F><U0430><U043D><U0456>" % pani
+name_ms     "пані" % pani
 
 % A salutation valid for married females
-name_mrs    "<U043F><U0430><U043D><U0456>" % pani
+name_mrs    "пані" % pani
 
 % A salutation valid for unmarried females
-name_miss   "<U043F><U0430><U043D><U043D><U0430>" % panna
+name_miss   "панна" % panna
 
 END LC_NAME
 
@@ -1115,10 +1115,10 @@ postal_fmt "%a%t%f%t%d%N%s%t%h%t, %b%t%e%t%r%N%T%t%S%N%z%N%c"
 % Country
 
 % Country name in the language of the current document.
-country_name  "<U0423><U043A><U0440><U0430><U0457><U043D><U0430>" % Ukrayina
+country_name  "Україна" % Ukrayina
 
 % Language name in the language of the current document.
-lang_name     "<U0443><U043A><U0440><U0430><U0457><U043D><U0441><U044C><U043A><U0430>" % ukrayins`ka [mova]
+lang_name     "українська" % ukrayins`ka [mova]
 
 % Abbreviation of the country, see CERT-MAILCODES. (%c)
 country_post  "UA"

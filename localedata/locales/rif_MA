@@ -50,19 +50,19 @@ copy "iso14651_t1"
 END LC_COLLATE
 
 LC_TIME
-abday           "L<U1E25>e";/
+abday           "Lḥe";/
                 "Let";/
                 "Ttl";/
                 "Lar";/
                 "Lex";/
                 "Jje";/
                 "Sbt"
-day             "L<U1E25>ed";/
+day             "Lḥed";/
                 "Letnayen";/
                 "Ttlat";/
-                "Larbe<U025B>";/
+                "Larbeɛ";/
                 "Lexmiss";/
-                "Jjem<U025B>a";/
+                "Jjemɛa";/
                 "Ssebt"
 abmon           "Yen";/
                 "Feb";/
@@ -71,9 +71,9 @@ abmon           "Yen";/
                 "May";/
                 "Yun";/
                 "Yul";/
-                "<U0194>uc";/
+                "Ɣuc";/
                 "Cut";/
-                "K<U1E6D>u";/
+                "Kṭu";/
                 "Nuv";/
                 "Duj"
 mon             "Yennayer";/
@@ -83,15 +83,15 @@ mon             "Yennayer";/
                 "Mayyu";/
                 "Yunyu";/
                 "Yulyuz";/
-                "<U0194>uct";/
+                "Ɣuct";/
                 "Cutenber";/
-                "K<U1E6D>uber";/
+                "Kṭuber";/
                 "Nuvember";/
                 "Dujember"
 d_t_fmt         "%a %d %b %Y %T %Z"
 d_fmt           "%d//%m//%y"
 t_fmt           "%T"
-am_pm           "sb";"a<U025B>"
+am_pm           "sb";"aɛ"
 t_fmt_ampm      ""
 date_fmt        "%a %e %b %Y %H:%M:%S %Z"
 week            7;19971130;4

@@ -210,7 +210,7 @@ LC_MESSAGES
 yesexpr "^[+1TtiIYy]"
 noexpr  "^[-0bBaAnN]"
 yesstr  "i"
-nostr   "a<U02BC>a"
+nostr   "aʼa"
 END LC_MESSAGES
 
 LC_PAPER

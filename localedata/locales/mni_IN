@@ -62,54 +62,54 @@ LC_TIME
 % for IBM Class for Unicode.
 %
 % Abbreviated weekday names (%a)
-abday       "<U09A8><U09CB><U0982>";"<U09A8><U09BF><U0982>";/
-            "<U09B2><U09C8><U09AC><U09BE><U0995>";"<U09DF><U09C1><U09AE>";/
-            "<U09B6><U0997><U09CB><U09B2>";/
-            "<U0987><U09B0><U09BE>";"<U09A5><U09BE><U0982>"
+abday       "নোং";"নিং";/
+            "লৈবাক";"য়ুম";/
+            "শগোল";/
+            "ইরা";"থাং"
 %
 
 % Full weekday names (%A)
-day         "<U09A8><U09CB><U0982><U09AE><U09BE><U0987><U099C><U09BF><U0982>";/
-            "<U09A8><U09BF><U0982><U09A5><U09CC><U0995><U09BE><U09AC><U09BE>";/
-            "<U09B2><U09C8><U09AC><U09BE><U0995><U09AA><U09CB><U0995><U09AA><U09BE>";/
-            "<U09DF><U09C1><U09AE><U09B6><U0995><U09C8><U09B6><U09BE>";/
-            "<U09B6><U0997><U09CB><U09B2><U09B6><U09C7><U09A8>";/
-            "<U0987><U09B0><U09BE><U0987>";/
-            "<U09A5><U09BE><U0982><U099C>"
+day         "নোংমাইজিং";/
+            "নিংথৌকাবা";/
+            "লৈবাকপোকপা";/
+            "য়ুমশকৈশা";/
+            "শগোলশেন";/
+            "ইরাই";/
+            "থাংজ"
 %
 % Abbreviated month names (%b)
-abmon         "<U099C><U09BE><U09A8>";/
-            "<U09AB><U09C7><U09AC>";/
-            "<U09AE><U09BE><U09B0>";/
-            "<U098F><U09AA><U09CD><U09B0><U09BF>";/
-            "<U09AE><U09C7>";/
-            "<U099C><U09C1><U09A8>";/
-            "<U099C><U09C1><U09B2>";/
-            "<U0986><U0997>";/
-            "<U09B8><U09C7><U09AA>";/
-            "<U0993><U0995><U09CD><U09A4>";/
-            "<U09A8><U09AC><U09C7>";/
-            "<U09A1><U09BF><U09B8>"
+abmon         "জান";/
+            "ফেব";/
+            "মার";/
+            "এপ্রি";/
+            "মে";/
+            "জুন";/
+            "জুল";/
+            "আগ";/
+            "সেপ";/
+            "ওক্ত";/
+            "নবে";/
+            "ডিস"
 %
 
 % Full month names (%B)
-mon         "<U099C><U09BE><U09A8><U09C1><U09F1><U09BE><U09B0><U09BF>";/
-            "<U09AB><U09C7><U09AC><U09CD><U09B0><U09C1><U09F1><U09BE><U09B0><U09BF>";/
-            "<U09AE><U09BE><U09B0><U09CD><U099A>";/
-            "<U098F><U09AA><U09CD><U09B0><U09BF><U09B2>";/
-            "<U09AE><U09C7>";/
-            "<U099C><U09C1><U09A8>";/
-            "<U099C><U09C1><U09B2><U09BE><U0987>";/
-            "<U0986><U0997><U09B7><U09CD><U099F>";/
-            "<U09B8><U09C7><U09AA><U09CD><U09A4><U09C7><U09AE><U09CD><U09AC><U09B0>";/
-            "<U0993><U0995><U09CD><U09A4><U09CB><U09AC><U09B0>";/
-            "<U09A8><U09AC><U09C7><U09AE><U09CD><U09AC><U09B0>";/
-            "<U09A1><U09BF><U09B8><U09C7><U09AE><U09CD><U09AC><U09B0>"
+mon         "জানুৱারি";/
+            "ফেব্রুৱারি";/
+            "মার্চ";/
+            "এপ্রিল";/
+            "মে";/
+            "জুন";/
+            "জুলাই";/
+            "আগষ্ট";/
+            "সেপ্তেম্বর";/
+            "ওক্তোবর";/
+            "নবেম্বর";/
+            "ডিসেম্বর"
 %
 % Equivalent of AM PM
 
-am_pm       "<U098F>.<U09AE>.";/
-            "<U09AA>.<U09AE>."
+am_pm       "এ.ম.";/
+            "প.ম."
 %
 % Appropriate date and time representation
 d_t_fmt     "%A %d %b %Y %I:%M:%S %p"
@@ -146,10 +146,10 @@ LC_NAME
 %
 name_fmt    "%p%t%f%t%g"
 name_gen    ""
-name_mr     "<U09B6><U09CD><U09B0><U09C0>"
-name_mrs    "<U09B6><U09CD><U09B0><U09C0><U09AE><U09A4><U09BF>"
-name_miss   "<U0995><U09C1><U09AE><U09BE><U09B0><U09C0>"
-name_ms     "<U0995><U09C1><U09AE><U09BE><U09B0>"
+name_mr     "শ্রী"
+name_mrs    "শ্রীমতি"
+name_miss   "কুমারী"
+name_ms     "কুমার"
 
 END LC_NAME
 
@@ -158,13 +158,13 @@ LC_ADDRESS
 
 postal_fmt  "%z%c%T%s%b%e%r"
 % http://www.iitg.ernet.in/rcilts/phaseI/manipuridesign.pdf
-country_name "<U09AD><U09BE><U09B0><U09A4>"
+country_name "ভারত"
 country_ab2 "IN"
 country_ab3 "IND"
 country_num 356
 country_car "IND"
 % মৈতৈলোন্
-lang_name    "<U09AE><U09C8><U09A4><U09C8><U09B2><U09CB><U09A8><U09CD>"
+lang_name    "মৈতৈলোন্"
 lang_term    "mni"
 lang_lib    "mni"
 END LC_ADDRESS

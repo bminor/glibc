@@ -60,7 +60,7 @@ END LC_COLLATE
 LC_MONETARY
 int_curr_symbol         "NGN "
 % "₦"
-currency_symbol         "<U20A6>"
+currency_symbol         "₦"
 mon_decimal_point       "."
 mon_thousands_sep       ","
 mon_grouping            3;3

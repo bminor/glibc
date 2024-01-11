@@ -69,16 +69,16 @@ copy "da_DK"
 END LC_NUMERIC
 
 LC_TIME
-abday   "sun";"m<U00E1>n";/
-        "t<U00FD>s";"mik";/
-        "h<U00F3>s";"fr<U00ED>";/
+abday   "sun";"mán";/
+        "týs";"mik";/
+        "hós";"frí";/
         "ley"
 day     "sunnudagur";/
-        "m<U00E1>nadagur";/
-        "t<U00FD>sdagur";/
+        "mánadagur";/
+        "týsdagur";/
         "mikudagur";/
-        "h<U00F3>sdagur";/
-        "fr<U00ED>ggjadagur";/
+        "hósdagur";/
+        "fríggjadagur";/
         "leygardagur"
 abmon   "jan";"feb";/
         "mar";"apr";/
@@ -89,7 +89,7 @@ abmon   "jan";"feb";/
 mon     "januar";/
         "februar";/
         "mars";/
-        "apr<U00ED>l";/
+        "apríl";/
         "mai";/
         "juni";/
         "juli";/
@@ -111,7 +111,7 @@ END LC_TIME
 LC_MESSAGES
 yesexpr "^[+1JjYy]"
 noexpr  "^[-0Nn]"
-yesstr  "j<U00E1>"
+yesstr  "já"
 nostr   "nei"
 END LC_MESSAGES
 
@@ -135,13 +135,13 @@ END LC_NAME
 
 LC_ADDRESS
 postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
-country_name "F<U00F8>royar"
+country_name "Føroyar"
 country_ab2 "FO"
 country_ab3 "FRO"
 country_num 234
 country_car  "FO"
 % føroyskt
-lang_name    "f<U00F8>royskt"
+lang_name    "føroyskt"
 lang_ab      "fo"
 lang_term    "fao"
 END LC_ADDRESS

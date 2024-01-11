@@ -58,7 +58,7 @@ LC_MONETARY
 % for IBM Class for Unicode/Java
 %
 int_curr_symbol       "EGP "
-currency_symbol       "<U062C>.<U0645>."
+currency_symbol       "ج.م."
 mon_decimal_point     "."
 mon_thousands_sep     ","
 mon_grouping          3
@@ -92,44 +92,44 @@ LC_TIME
 % for IBM Class for Unicode/Java
 %
 % Abbreviated weekday names (%a)
-abday       "<U062D>";"<U0646>";/
-            "<U062B>";"<U0631>";/
-            "<U062E>";"<U062C>";/
-            "<U0633>"
+abday       "ح";"ن";/
+            "ث";"ر";/
+            "خ";"ج";/
+            "س"
 %
 % Full weekday names (%A)
-day         "<U0627><U0644><U0623><U062D><U062F>";/
-            "<U0627><U0644><U0627><U062B><U0646><U064A><U0646>";/
-            "<U0627><U0644><U062B><U0644><U0627><U062B><U0627><U0621>";/
-            "<U0627><U0644><U0623><U0631><U0628><U0639><U0627><U0621>";/
-            "<U0627><U0644><U062E><U0645><U064A><U0633>";/
-            "<U0627><U0644><U062C><U0645><U0639><U0629>";/
-            "<U0627><U0644><U0633><U0628><U062A>"
+day         "الأحد";/
+            "الاثنين";/
+            "الثلاثاء";/
+            "الأربعاء";/
+            "الخميس";/
+            "الجمعة";/
+            "السبت"
 %
 % Abbreviated month names (%b)
-abmon       "<U064A><U0646><U0627>";"<U0641><U0628><U0631>";/
-            "<U0645><U0627><U0631>";"<U0623><U0628><U0631>";/
-            "<U0645><U0627><U064A>";"<U064A><U0648><U0646>";/
-            "<U064A><U0648><U0644>";"<U0623><U063A><U0633>";/
-            "<U0633><U0628><U062A>";"<U0623><U0643><U062A>";/
-            "<U0646><U0648><U0641>";"<U062F><U064A><U0633>"
+abmon       "ينا";"فبر";/
+            "مار";"أبر";/
+            "ماي";"يون";/
+            "يول";"أغس";/
+            "سبت";"أكت";/
+            "نوف";"ديس"
 %
 % Full month names (%B)
-mon         "<U064A><U0646><U0627><U064A><U0631>";/
-            "<U0641><U0628><U0631><U0627><U064A><U0631>";/
-            "<U0645><U0627><U0631><U0633>";/
-            "<U0623><U0628><U0631><U064A><U0644>";/
-            "<U0645><U0627><U064A><U0648>";/
-            "<U064A><U0648><U0646><U064A><U0648>";/
-            "<U064A><U0648><U0644><U064A><U0648>";/
-            "<U0623><U063A><U0633><U0637><U0633>";/
-            "<U0633><U0628><U062A><U0645><U0628><U0631>";/
-            "<U0623><U0643><U062A><U0648><U0628><U0631>";/
-            "<U0646><U0648><U0641><U0645><U0628><U0631>";/
-            "<U062F><U064A><U0633><U0645><U0628><U0631>"
+mon         "يناير";/
+            "فبراير";/
+            "مارس";/
+            "أبريل";/
+            "مايو";/
+            "يونيو";/
+            "يوليو";/
+            "أغسطس";/
+            "سبتمبر";/
+            "أكتوبر";/
+            "نوفمبر";/
+            "ديسمبر"
 %
 % Equivalent of AM PM
-am_pm       "<U0635>";"<U0645>"
+am_pm       "ص";"م"
 %
 % Appropriate date and time representation
 d_t_fmt     "%d %b, %Y %I:%M:%S %p"
@@ -152,10 +152,10 @@ END LC_TIME
 
 
 LC_MESSAGES
-yesexpr "^[+1<U0646>yY]"
-noexpr  "^[-0<U0644>nN]"
-yesstr  "<U0646><U0639><U0645>"
-nostr   "<U0644><U0627>"
+yesexpr "^[+1نyY]"
+noexpr  "^[-0لnN]"
+yesstr  "نعم"
+nostr   "لا"
 END LC_MESSAGES
 
 
@@ -182,12 +182,12 @@ LC_ADDRESS
 % This is the ISO_IEC TR14652 Locale definition for the
 % LC_ADDRESS
 postal_fmt  "%z%c%T%s%b%e%r"
-country_name "<U0645><U0635><U0631>"
+country_name "مصر"
 country_ab2 "EG"
 country_ab3 "EGY"
 country_num 818
 country_car  "ET"
-lang_name    "<U0627><U0644><U0639><U0631><U0628><U064A><U0629>"
+lang_name    "العربية"
 lang_ab      "ar"
 lang_term    "ara"
 lang_lib    "ara"

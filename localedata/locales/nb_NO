@@ -24,14 +24,14 @@ escape_char /
 % Users: general
 
 LC_IDENTIFICATION
-title      "Norwegian (Bokm<U00E5>l) locale for Norway"
+title      "Norwegian (Bokmål) locale for Norway"
 source     "Norsk Standardiseringsforbund"
 address    "University Library, Drammensveien 41, N-9242 Oslo, Norge"
 contact    ""
 email      "bug-glibc-locales@gnu.org"
 tel        ""
 fax        ""
-language   "Norwegian Bokm<U00E5>l"
+language   "Norwegian Bokmål"
 territory  "Norway"
 revision   "1.0"
 date       "2000-06-29"
@@ -173,7 +173,7 @@ LC_MONETARY
 int_curr_symbol         "NOK "
 currency_symbol         "kr"
 mon_decimal_point       ","
-mon_thousands_sep       "<U202F>"
+mon_thousands_sep       " "
 mon_grouping            3;3
 positive_sign           ""
 negative_sign           "-"
@@ -189,19 +189,19 @@ END LC_MONETARY
 
 LC_NUMERIC
 decimal_point           ","
-thousands_sep           "<U202F>"
+thousands_sep           " "
 grouping                3;3
 END LC_NUMERIC
 
 LC_TIME
-abday       "s<U00F8>.";"ma.";"ti.";"on.";"to.";"fr.";"l<U00F8>."
-day         "s<U00F8>ndag";/
+abday       "sø.";"ma.";"ti.";"on.";"to.";"fr.";"lø."
+day         "søndag";/
             "mandag";/
             "tirsdag";/
             "onsdag";/
             "torsdag";/
             "fredag";/
-            "l<U00F8>rdag"
+            "lørdag"
 abmon       "jan.";"feb.";/
             "mars";"april";/
             "mai";"juni";/
@@ -266,7 +266,7 @@ country_ab3 "NOR"
 country_num 578
 country_car  "N"
 % Bokmål
-lang_name    "norsk bokm<U00E5>l"
+lang_name    "norsk bokmål"
 lang_ab      "nb"
 lang_term    "nob"
 lang_lib    "nob"

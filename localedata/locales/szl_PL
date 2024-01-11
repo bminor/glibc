@@ -131,35 +131,35 @@ copy "pl_PL"
 END LC_NUMERIC
 
 LC_TIME
-abday   "niy";"py<U0144>";/
+abday   "niy";"pyń";/
         "wto";"str";/
-        "szt";"pi<U014D>";/
+        "szt";"piō";/
         "sob"
 day     "niydziela";/
-        "py<U0144>dzia<U0142>ek";/
+        "pyńdziałek";/
         "wtorek";/
         "strzoda";/
         "sztwortek";/
-        "pi<U014D>ntek";/
+        "piōntek";/
         "sobota"
 abmon   "sty";"lut";/
         "mar";"kwi";/
         "moj";"czy";/
         "lip";"sie";/
-        "wrz";"pa<U017A>";/
+        "wrz";"paź";/
         "lis";"gru"
-alt_mon "styczy<U0144>";/
+alt_mon "styczyń";/
         "luty";/
         "marzec";/
-        "kwieciy<U0144>";/
+        "kwieciyń";/
         "moj";/
         "czyrwiec";/
         "lipiec";/
-        "sierpiy<U0144>";/
-        "wrzesiy<U0144>";/
-        "pa<U017A>dziernik";/
+        "sierpiyń";/
+        "wrzesiyń";/
+        "październik";/
         "listopad";/
-        "grudziy<U0144>"
+        "grudziyń"
 mon     "stycznia";/
         "lutego";/
         "marca";/
@@ -168,8 +168,8 @@ mon     "stycznia";/
         "czyrwca";/
         "lipca";/
         "sierpnia";/
-        "wrze<U015B>nia";/
-        "pa<U017A>dziernika";/
+        "września";/
+        "października";/
         "listopada";/
         "grudnia"
 d_t_fmt "%a, %-d %b %Y, %T"
@@ -206,7 +206,7 @@ country_ab3 "POL"
 country_num 616
 country_car    "PL"
 % ślōnskŏ gŏdka
-lang_name    "<U015B>l<U014D>nsk<U014F> g<U014F>dka"
+lang_name    "ślōnskŏ gŏdka"
 lang_term    "szl"
 lang_lib    "szl"
 END LC_ADDRESS

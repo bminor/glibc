@@ -74,23 +74,23 @@ LC_TIME
 %
 % Abbreviated weekday names (%a)
 % ravih,somah,mangalah,budhah,brhaspatih,shukra,shanih
-abday       "<U0930><U0935><U093F><U0903>";/
-            "<U0938><U094B><U092E>:";/
-            "<U092E><U0902><U0917><U0932>:";/
-            "<U092C><U0941><U0927>:";/
-            "<U092C><U0943><U0939><U0938><U094D><U092A><U0924><U093F><U0903>";/
-            "<U0936><U0941><U0915><U094D><U0930>";/
-            "<U0936><U0928><U093F>:"
+abday       "रविः";/
+            "सोम:";/
+            "मंगल:";/
+            "बुध:";/
+            "बृहस्पतिः";/
+            "शुक्र";/
+            "शनि:"
 %
 % Full weekday names (%A)
 % ravivasarah, somavasarah, mangalavasarah, budhavasarah, brhaspativasarah, shukravasarah, shanivasarah
-day         "<U0930><U0935><U093F><U0935><U093E><U0938><U0930>:";/
-            "<U0938><U094B><U092E><U0935><U093E><U0938><U0930>:";/
-            "<U092E><U0902><U0917><U0932><U0935><U093E><U0938><U0930>:";/
-            "<U092C><U0941><U0927><U0935><U093E><U0938><U0930>:";/
-            "<U092C><U0943><U0939><U0938><U094D><U092A><U0924><U093F><U0935><U093E><U0938><U0930><U0903>";/
-            "<U0936><U0941><U0915><U094D><U0930><U0935><U093E><U0938><U0930>";/
-            "<U0936><U0928><U093F><U0935><U093E><U0938><U0930>:"
+day         "रविवासर:";/
+            "सोमवासर:";/
+            "मंगलवासर:";/
+            "बुधवासर:";/
+            "बृहस्पतिवासरः";/
+            "शुक्रवासर";/
+            "शनिवासर:"
 %
 % Abbreviated month names (%b)
 % Below comes from hi_IN.
@@ -98,18 +98,18 @@ day         "<U0930><U0935><U093F><U0935><U093E><U0938><U0930>:";/
 % are needed, the names are the same names than those used
 % by Hindi
 % names for gregorian month names:
-abmon       "<U091C><U0928><U0935><U0930><U0940>";/
-            "<U092B><U093C><U0930><U0935><U0930><U0940>";/
-            "<U092E><U093E><U0930><U094D><U091A>";/
-            "<U0905><U092A><U094D><U0930><U0947><U0932>";/
-            "<U092E><U0908>";/
-            "<U091C><U0942><U0928>";/
-            "<U091C><U0941><U0932><U093E><U0908>";/
-            "<U0905><U0917><U0938><U094D><U0924>";/
-            "<U0938><U093F><U0924><U092E><U094D><U092C><U0930>";/
-            "<U0905><U0915><U094D><U091F><U0942><U092C><U0930>";/
-            "<U0928><U0935><U092E><U094D><U092C><U0930>";/
-            "<U0926><U093F><U0938><U092E><U094D><U092C><U0930>"
+abmon       "जनवरी";/
+            "फ़रवरी";/
+            "मार्च";/
+            "अप्रेल";/
+            "मई";/
+            "जून";/
+            "जुलाई";/
+            "अगस्त";/
+            "सितम्बर";/
+            "अक्टूबर";/
+            "नवम्बर";/
+            "दिसम्बर"
 %
 % Full month names (%B)
 % Sanskrit uses a lunar calendar. When gregorian month names
@@ -129,22 +129,22 @@ abmon       "<U091C><U0928><U0935><U0930><U0940>";/
 % maghah             January 29
 % phalgunah          February 20
 % names for gregorian month names:
-mon         "<U091C><U0928><U0935><U0930><U0940>";/
-            "<U092B><U093C><U0930><U0935><U0930><U0940>";/
-            "<U092E><U093E><U0930><U094D><U091A>";/
-            "<U0905><U092A><U094D><U0930><U0947><U0932>";/
-            "<U092E><U0908>";/
-            "<U091C><U0942><U0928>";/
-            "<U091C><U0941><U0932><U093E><U0908>";/
-            "<U0905><U0917><U0938><U094D><U0924>";/
-            "<U0938><U093F><U0924><U092E><U094D><U092C><U0930>";/
-            "<U0905><U0915><U094D><U091F><U0942><U092C><U0930>";/
-            "<U0928><U0935><U092E><U094D><U092C><U0930>";/
-            "<U0926><U093F><U0938><U092E><U094D><U092C><U0930>"
+mon         "जनवरी";/
+            "फ़रवरी";/
+            "मार्च";/
+            "अप्रेल";/
+            "मई";/
+            "जून";/
+            "जुलाई";/
+            "अगस्त";/
+            "सितम्बर";/
+            "अक्टूबर";/
+            "नवम्बर";/
+            "दिसम्बर"
 %
 % Equivalent of AM PM
-am_pm       "<U092A><U0942><U0930><U094D><U0935><U093E><U0939><U094D><U0928>";/
-            "<U0905><U092A><U0930><U093E><U0939><U094D><U0928>"
+am_pm       "पूर्वाह्न";/
+            "अपराह्न"
 %
 % Appropriate date and time representation
 d_t_fmt     "%A %d %b %Y %I:%M:%S %p"
@@ -165,10 +165,10 @@ END LC_TIME
 
 
 LC_MESSAGES
-yesexpr "^[+1aAyY<U0906>]"
-noexpr  "^[-0nN<U0928>]"
-yesstr  "<U0906><U092E><U094D>"
-nostr	"<U0928>"
+yesexpr "^[+1aAyYआ]"
+noexpr  "^[-0nNन]"
+yesstr  "आम्"
+nostr	"न"
 END LC_MESSAGES
 
 
@@ -185,17 +185,17 @@ name_fmt    "%p%t%f%t%g"
 name_gen    ""
 %
 % shri
-name_mr     "<U0936><U094D><U0930><U0940>"
+name_mr     "श्री"
 % For boys under 18, this is "kumar"
 % but locales are sexist and do not even imagine
 % that some language may have different forms for MEN too
-% name_mr     "<U0915><U0941><U092E><U093E><U0930>"
+% name_mr     "कुमार"
 % shrimati
-name_mrs    "<U0936><U094D><U0930><U0940><U092E><U0924><U0940>"
+name_mrs    "श्रीमती"
 % kumari
-name_miss   "<U0915><U0941><U092E><U093E><U0930><U0940>"
+name_miss   "कुमारी"
 % shrimati
-name_ms     "<U0936><U094D><U0930><U0940><U092E><U0924><U0940>"
+name_ms     "श्रीमती"
 
 END LC_NAME
 
@@ -205,13 +205,13 @@ LC_ADDRESS
 % LC_ADDRESS
 postal_fmt  "%z%c%T%s%b%e%r"
 % https://sa.wikipedia.org/wiki/%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%E0%A4%AE%E0%A5%8D : "भारतम्"
-country_name "<U092D><U093E><U0930><U0924><U092E><U094D>"
+country_name "भारतम्"
 country_ab2 "IN"
 country_ab3 "IND"
 country_num 356
 country_car    "IND"
 % संस्कृतम्
-lang_name    "<U0938><U0902><U0938><U094D><U0915><U0943><U0924><U092E><U094D>"
+lang_name    "संस्कृतम्"
 lang_ab      "sa"
 lang_term    "san"
 lang_lib    "san"

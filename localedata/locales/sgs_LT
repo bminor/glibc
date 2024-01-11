@@ -31,7 +31,7 @@ LC_IDENTIFICATION
 title      "Samogitian language locale for Lithuania"
 source     ""
 address    ""
-contact    "Arnas Udovi<U010D>ius"
+contact    "Arnas Udovičius"
 email      "bug-glibc-locales@gnu.org"
 tel        ""
 fax        ""
@@ -75,33 +75,33 @@ END LC_NUMERIC
 
 LC_TIME
 abday   "Nd";"Pn";"Ot";/
-        "Sr";"<U010C>t";"Pt";/
+        "Sr";"Čt";"Pt";/
         "Sb"
-day     "nediel<U0117>s d<U00EB>na";/
+day     "nedielės dëna";/
         "panedielis";/
         "oterninks";/
         "sereda";/
-        "<U010D>etvergs";/
-        "petn<U012B><U010D><U0117>";/
+        "četvergs";/
+        "petnīčė";/
         "sobata"
 abmon   "Sau";"Vas";/
         "Kuo";"Bal";/
-        "Geg";"B<U0117>r";/
-        "L<U00EB>p";"Rgp";/
+        "Geg";"Bėr";/
+        "Lëp";"Rgp";/
         "Sie";"Spa";/
         "Lap";"Grd"
-mon     "saus<U0117>";/
-        "vasar<U0117>";/
+mon     "sausė";/
+        "vasarė";/
         "kuova";/
-        "balond<U0117>";/
-        "gego<U017E><U0117>s";/
-        "b<U0117>r<U017E>el<U0117>";/
-        "l<U00EB>pas";/
-        "rogpj<U016B>t<U0117>";/
-        "siej<U0117>s";/
-        "spal<U0117>";/
-        "lapkr<U0117>st<U0117>";/
-        "gr<U016F>d<U0117>"
+        "balondė";/
+        "gegožės";/
+        "bėrželė";/
+        "lëpas";/
+        "rogpjūtė";/
+        "siejės";/
+        "spalė";/
+        "lapkrėstė";/
+        "grůdė"
 d_t_fmt  "%Y m. %B %d d. %T"
 date_fmt "%Y m. %B %d d. %T %Z"
 d_fmt   "%Y.%m.%d"
@@ -115,8 +115,8 @@ END LC_TIME
 LC_MESSAGES
 yesexpr "^[+1TtYy]"
 noexpr  "^[-0Nn]"
-yesstr  "t<U01E1>p"
-nostr   "n<U0113>"
+yesstr  "tǡp"
+nostr   "nē"
 END LC_MESSAGES
 
 LC_PAPER
@@ -143,7 +143,7 @@ country_ab2  "LT"
 country_ab3  "LTU"
 country_num  440
 country_car  "LT"
-lang_name    "<U017D>emait<U0117><U0161>k<U0101>"
+lang_name    "Žemaitėškā"
 lang_term    "sgs"
 lang_lib     "sgs"
 END LC_ADDRESS

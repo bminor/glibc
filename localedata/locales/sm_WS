@@ -161,7 +161,7 @@ END LC_NAME
 
 LC_ADDRESS
 postal_fmt    "%a%N%f%N%d%N%b%N%h %s %e %r%N%T, %S %z%N%c%N"
-country_name "S<U0101>moa"
+country_name "Sāmoa"
 country_post "%a %N   %f %N   %d %N   %b %N   %h %s %e %/
 r %N   %T, %c  %N"
 % http://laendercode.net/en/2-letter-list.html
@@ -172,7 +172,7 @@ country_ab3  "WSM"
 country_num 882
 % http://www.nationsonline.org/oneworld/international-calling-codes.htm
 % Gagana faʻa Sāmoa
-lang_name    "Gagana fa<U02BB>a S<U0101>moa"
+lang_name    "Gagana faʻa Sāmoa"
 % https://en.wikipedia.org/wiki/Samoan_language
 % ISO 639-1 sm, ISO 639-2 smo, ISO 639-3 smo
 lang_ab      "sm"

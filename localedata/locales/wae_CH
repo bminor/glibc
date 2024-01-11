@@ -55,7 +55,7 @@ LC_TIME
 % abday - The abbreviations for the week days:
 % - Sun, Män, Zis, Mit, Fro, Fri, Sam
 abday	"Sun";/
-	"M<U00E4>n";/
+	"Män";/
 	"Zis";/
 	"Mit";/
 	"Fro";/
@@ -65,7 +65,7 @@ abday	"Sun";/
 % day - The full names of the week days:
 % - Suntag, Mäntag, Zischtag, Mittwuch, Frontag, Fritag, Samschtag
 day         "Suntag";/
-            "M<U00E4>ntag";/
+            "Mäntag";/
             "Zischtag";/
             "Mittwuch";/
             "Frontag";/
@@ -76,14 +76,14 @@ day         "Suntag";/
 % - Jen, Hor, Mär, Abr, Mei, Brá, Hei, Öig, Her, Wím, Win, Chr
 abmon       	"Jen";/
 		"Hor";/
-		"M<U00E4>r";/
+		"Mär";/
 		"Abr";/
 		"Mei";/
-		"Br<U00E1>";/
+		"Brá";/
 		"Hei";/
-		"<U00D6>ig";/
+		"Öig";/
 		"Her";/
-		"W<U00ED>m";/
+		"Wím";/
 		"Win";/
 		"Chr"
 
@@ -92,16 +92,16 @@ abmon       	"Jen";/
 %    Öigšte, Herbštmánet, Wímánet, Wintermánet, Chrištmánet
 mon         	"Jenner";/
 		"Hornig";/
-		"M<U00E4>rze";/
+		"Märze";/
 		"Abrille";/
 		"Meije";/
-		"Br<U00E1><U010D>et";/
+		"Bráčet";/
 		"Heiwet";/
-		"<U00D6>ig<U0161>te";/
-		"Herb<U0161>tm<U00E1>net";/
-		"W<U00ED>m<U00E1>net";/
-		"Winterm<U00E1>net";/
-		"Chri<U0161>tm<U00E1>net"
+		"Öigšte";/
+		"Herbštmánet";/
+		"Wímánet";/
+		"Wintermánet";/
+		"Chrištmánet"
 
 % Abreviated date and time representation to be referenced by the "%c" field descriptor -
 d_t_fmt "%a %d. %b %Y %T %Z"
@@ -184,16 +184,16 @@ name_fmt    "%d%t%g%t%m%t%f"
 % "Empty string, or <Space>",
 % "Clan names"
 %
-name_miss   "Fr<U00F6>lein"
+name_miss   "Frölein"
 % Salutation for unmarried females - "Frölein"
 %
 name_mr     "Herr"
 % Salutation for males - "Herr"
 %
-name_mrs    "Fr<U00F6>iw"
+name_mrs    "Fröiw"
 % Salutation for married females - "Fröiw"
 %
-name_ms     "Fr<U00F6>iw"
+name_ms     "Fröiw"
 % Salutation valid for all females - "Fröiw"
 END LC_NAME
 

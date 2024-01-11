@@ -56,48 +56,48 @@ LC_TIME
 % Am Faoilleach, An Gearran, Am Màrt, An Giblean, An Cèitean, An t-Ògmhios, An t-Iuchar, An Lùnastal, An t-Sultain, An Dàmhair, An t-Samhain, An Dùbhlachd
 alt_mon       "Am Faoilleach";/
      "An Gearran";/
-     "Am M<U00E0>rt";/
+     "Am Màrt";/
      "An Giblean";/
-     "An C<U00E8>itean";/
-     "An t-<U00D2>gmhios";/
+     "An Cèitean";/
+     "An t-Ògmhios";/
      "An t-Iuchar";/
-     "An L<U00F9>nastal";/
+     "An Lùnastal";/
      "An t-Sultain";/
-     "An D<U00E0>mhair";/
+     "An Dàmhair";/
      "An t-Samhain";/
-     "An D<U00F9>bhlachd"
+     "An Dùbhlachd"
 % dhen Fhaoilleach, dhen Ghearran, dhen Mhàrt, dhen Ghiblean, dhen Chèitean,
 % dhen Ògmhios, dhen Iuchar, dhen Lùnastal, dhen t-Sultain, dhen Dàmhair,
 % dhen t-Samhain, dhen Dùbhlachd
 mon  "dhen Fhaoilleach";/
      "dhen Ghearran";/
-     "dhen Mh<U00E0>rt";/
+     "dhen Mhàrt";/
      "dhen Ghiblean";/
-     "dhen Ch<U00E8>itean";/
-     "dhen <U00D2>gmhios";/
+     "dhen Chèitean";/
+     "dhen Ògmhios";/
      "dhen Iuchar";/
-     "dhen L<U00F9>nastal";/
+     "dhen Lùnastal";/
      "dhen t-Sultain";/
-     "dhen D<U00E0>mhair";/
+     "dhen Dàmhair";/
      "dhen t-Samhain";/
-     "dhen D<U00F9>bhlachd"
+     "dhen Dùbhlachd"
 % Faoi, Gearr, Màrt, Gibl, Cèit, Ògmh, Iuch, Lùna, Sult, Dàmh, Samh, Dùbh
 abmon         "Faoi";/
        "Gearr";/
-       "M<U00E0>rt";/
+       "Màrt";/
        "Gibl";/
-       "C<U00E8>it";/
-       "<U00D2>gmh";/
+       "Cèit";/
+       "Ògmh";/
        "Iuch";/
-       "L<U00F9>na";/
+       "Lùna";/
        "Sult";/
-       "D<U00E0>mh";/
+       "Dàmh";/
        "Samh";/
-       "D<U00F9>bh"
+       "Dùbh"
 % DiDòmhnaich, DiLuain, DiMàirt, DiCiadain, DiarDaoin, DihAoine, DiSathairne
-day           "DiD<U00F2>mhnaich";/
+day           "DiDòmhnaich";/
      "DiLuain";/
-     "DiM<U00E0>irt";/
+     "DiMàirt";/
      "DiCiadain";/
      "DiarDaoin";/
      "DihAoine";/
@@ -142,14 +142,14 @@ END LC_NAME
 
 LC_ADDRESS
 postal_fmt   "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%S%N%c%N"
-country_name "An R<U00EC>oghachd Aonaichte"
+country_name "An Rìoghachd Aonaichte"
 country_ab2  "GB"
 country_ab3  "GBR"
 country_num  826
 country_car  "GB"
 country_isbn 0
 % Gàidhlig
-lang_name    "G<U00E0>idhlig"
+lang_name    "Gàidhlig"
 lang_ab      "gd"
 lang_term    "gla"
 lang_lib     "gla"

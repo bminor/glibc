@@ -99,14 +99,14 @@ LC_ADDRESS
 % This is the ISO_IEC TR14652 Locale definition for the LC_ADDRESS category.
 %
 postal_fmt    "%z%c%T%s%b%e%r"
-country_name  "<U12A2><U1275><U12EE><U1335><U12EB>"
+country_name  "ኢትዮጵያ"
 country_post  "ETH"
 country_ab2   "ET"
 country_ab3   "ETH"
 country_num   231   % 210 found in at least one ISO 3166 doc
 country_car    "ETH"
 % country_isbn  unknown, Need ISO 2108
-lang_name     "<U12C8><U120B><U12ED><U1273><U1271>"
+lang_name     "ወላይታቱ"
 lang_term     "wal"
 lang_lib      "wal"
 END LC_ADDRESS
@@ -123,10 +123,10 @@ LC_NAME
 %
 name_fmt    "%d%t%g%t%m%t%f"
 name_gen    ""
-name_mr     "<U121A><U1232><U12EB>"
-name_mrs    "<U12AC><U1273><U12CB>"
-name_miss   "<U12AC><U1273><U12E9>"
-name_ms     "<U12AC><U1273><U12E9>"
+name_mr     "ሚሲያ"
+name_mrs    "ኬታዋ"
+name_miss   "ኬታዩ"
+name_ms     "ኬታዩ"
 %
 END LC_NAME
 
@@ -135,65 +135,65 @@ LC_TIME
 %
 % Abbreviated weekday names (%a)
 %
-abday   "<U12C8><U130B> ";/
-	"<U1233><U12ED><U1296>";/
-	"<U121B><U1246><U1233>";/
-	"<U12A0><U1229><U12CB>";/
-	"<U1203><U1219><U1233>";/
-	"<U12A0><U122D><U1263>";/
-	"<U1244><U122B> "
+abday   "ወጋ ";/
+	"ሳይኖ";/
+	"ማቆሳ";/
+	"አሩዋ";/
+	"ሃሙሳ";/
+	"አርባ";/
+	"ቄራ "
 %
 % Full weekday names (%A)
 %
-% mon  also <U1230><U129E>
-% tues also <U121B><U1230><U12A8><U129E>
-% wed  also <U122E><U12CB>
-% thru also <U1210><U1219><U1233>
+% mon  also ሰኞ
+% tues also ማሰከኞ
+% wed  also ሮዋ
+% thru also ሐሙሳ
 %
-day     "<U12C8><U130B>";/
-	"<U1233><U12ED><U1296>";/
-	"<U121B><U1246><U1233><U129B>";/
-	"<U12A0><U1229><U12CB>";/
-	"<U1203><U1219><U1233>";/
-	"<U12A0><U122D><U1263>";/
-	"<U1244><U122B>"
+day     "ወጋ";/
+	"ሳይኖ";/
+	"ማቆሳኛ";/
+	"አሩዋ";/
+	"ሃሙሳ";/
+	"አርባ";/
+	"ቄራ"
 %
 % Abbreviated month names (%b)
 %
-abmon    "<U1303><U1295><U12E9>";/
-	 "<U134C><U1265><U1229>";/
-	 "<U121B><U122D><U127D>";/
-	 "<U12A4><U1355><U1228>";/
-	 "<U121C><U12ED> ";/
-	 "<U1301><U1295> ";/
-	 "<U1301><U120B><U12ED>";/
-	 "<U12A6><U1308><U1235>";/
-	 "<U1234><U1355><U1274>";/
-	 "<U12A6><U12AD><U1270>";/
-	 "<U1296><U126C><U121D>";/
-	 "<U12F2><U1234><U121D>"
+abmon    "ጃንዩ";/
+	 "ፌብሩ";/
+	 "ማርች";/
+	 "ኤፕረ";/
+	 "ሜይ ";/
+	 "ጁን ";/
+	 "ጁላይ";/
+	 "ኦገስ";/
+	 "ሴፕቴ";/
+	 "ኦክተ";/
+	 "ኖቬም";/
+	 "ዲሴም"
 %
 % Full month names (%B)
 %
-mon      "<U1303><U1295><U12E9><U12C8><U122A>";/
-	 "<U134C><U1265><U1229><U12C8><U122A>";/
-	 "<U121B><U122D><U127D>";/
-	 "<U12A4><U1355><U1228><U120D>";/
-	 "<U121C><U12ED>";/
-	 "<U1301><U1295>";/
-	 "<U1301><U120B><U12ED>";/
-	 "<U12A6><U1308><U1235><U1275>";/
-	 "<U1234><U1355><U1274><U121D><U1260><U122D>";/
-	 "<U12A6><U12AD><U1270><U12CD><U1260><U122D>";/
-	 "<U1296><U126C><U121D><U1260><U122D>";/
-	 "<U12F2><U1234><U121D><U1260><U122D>"
+mon      "ጃንዩወሪ";/
+	 "ፌብሩወሪ";/
+	 "ማርች";/
+	 "ኤፕረል";/
+	 "ሜይ";/
+	 "ጁን";/
+	 "ጁላይ";/
+	 "ኦገስት";/
+	 "ሴፕቴምበር";/
+	 "ኦክተውበር";/
+	 "ኖቬምበር";/
+	 "ዲሴምበር"
 %
 % Equivalent of AM PM
 %
-% also <U130B><U120B><U1233>
-% also <U12A1><U1218><U122D><U1232>
+% also ጋላሳ
+% also ኡመርሲ
 %
-am_pm    "<U121B><U1208><U12F6>";"<U1243><U121B>"
+am_pm    "ማለዶ";"ቃማ"
 %
 % Appropriate date representation (%x)
 %
@@ -210,11 +210,11 @@ t_fmt_ampm "%l:%M:%S %p"
 % Appropriate date and time representation (%c)
 %	"%A፣ %B %e ጋላሳ  %Y %r %Z
 %
-d_t_fmt    "%A<U1363> %B %e <U130B><U120B><U1233> %Y %r %Z"
+d_t_fmt    "%A፣ %B %e ጋላሳ %Y %r %Z"
 %
 % Appropriate date representation (date(1))
 %	"%A፣ %B %e ጋላሳ %r %Z %Y ግ/ላ
 %
-date_fmt    "%A<U1363> %B %e <U130B><U120B><U1233> %r %Z %Y <U130D>//<U120B>"
+date_fmt    "%A፣ %B %e ጋላሳ %r %Z %Y ግ//ላ"
 week 7;19971130;1
 END LC_TIME

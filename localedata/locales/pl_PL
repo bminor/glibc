@@ -142,9 +142,9 @@ END LC_MESSAGES
 
 LC_MONETARY
 int_curr_symbol           "PLN "
-currency_symbol           "z<U0142>"
+currency_symbol           "zł"
 mon_decimal_point         ","
-mon_thousands_sep         "<U202F>"
+mon_thousands_sep         " "
 mon_grouping              3
 positive_sign             ""
 negative_sign             "-"
@@ -160,7 +160,7 @@ END LC_MONETARY
 
 LC_NUMERIC
 decimal_point             ","
-thousands_sep             "<U202F>"
+thousands_sep             " "
 grouping                  3
 END LC_NUMERIC
 
@@ -173,34 +173,34 @@ LC_TIME
 %   https://bugzilla.redhat.com/show_bug.cgi?id=242296
 %
 abday   "nie";"pon";/
-        "wto";"<U015B>ro";/
-        "czw";"pi<U0105>";/
+        "wto";"śro";/
+        "czw";"pią";/
         "sob"
 day     "niedziela";/
-        "poniedzia<U0142>ek";/
+        "poniedziałek";/
         "wtorek";/
-        "<U015B>roda";/
+        "środa";/
         "czwartek";/
-        "pi<U0105>tek";/
+        "piątek";/
         "sobota"
 abmon   "sty";"lut";/
         "mar";"kwi";/
         "maj";"cze";/
         "lip";"sie";/
-        "wrz";"pa<U017A>";/
+        "wrz";"paź";/
         "lis";"gru"
-alt_mon "stycze<U0144>";/
+alt_mon "styczeń";/
         "luty";/
         "marzec";/
-        "kwiecie<U0144>";/
+        "kwiecień";/
         "maj";/
         "czerwiec";/
         "lipiec";/
-        "sierpie<U0144>";/
-        "wrzesie<U0144>";/
-        "pa<U017A>dziernik";/
+        "sierpień";/
+        "wrzesień";/
+        "październik";/
         "listopad";/
-        "grudzie<U0144>"
+        "grudzień"
 mon     "stycznia";/
         "lutego";/
         "marca";/
@@ -209,8 +209,8 @@ mon     "stycznia";/
         "czerwca";/
         "lipca";/
         "sierpnia";/
-        "wrze<U015B>nia";/
-        "pa<U017A>dziernika";/
+        "września";/
+        "października";/
         "listopada";/
         "grudnia"
 d_t_fmt "%a, %-d %b %Y, %T"

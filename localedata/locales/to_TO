@@ -46,47 +46,47 @@ LC_TIME
 % http://www.weltec.ac.nz/Portals/0/pasifika/A4card_tonga_2014%20(3).pdf
 % http://scriptsource.org/cms/scripts/page.php?item_id=entry_detail&uid=ux3sxwufev
 % Full month names (%B)
-mon  "S<U0101>nuali";/
-     "F<U0113>pueli";/
-     "Ma<U02BB>asi";/
-     "<U02BB>Epeleli";/
-     "M<U0113>";/
+mon  "Sānuali";/
+     "Fēpueli";/
+     "Maʻasi";/
+     "ʻEpeleli";/
+     "Mē";/
      "Sune";/
      "Siulai";/
-     "<U02BB>Aokosi";/
+     "ʻAokosi";/
      "Sepitema";/
-     "<U02BB>Okatopa";/
-     "N<U014D>vema";/
-     "T<U012B>sema"
+     "ʻOkatopa";/
+     "Nōvema";/
+     "Tīsema"
 % Abbreviated month names (%b)
-abmon  "S<U0101>n";/
-       "F<U0113>p";/
-       "Ma<U02BB>a";/
-       "<U02BB>Epe";/
-       "M<U0113>";/
+abmon  "Sān";/
+       "Fēp";/
+       "Maʻa";/
+       "ʻEpe";/
+       "Mē";/
        "Sun";/
        "Siu";/
-       "<U02BB>Aok";/
+       "ʻAok";/
        "Sep";/
-       "<U02BB>Oka";/
-       "N<U014D>v";/
-       "T<U012B>s"
+       "ʻOka";/
+       "Nōv";/
+       "Tīs"
 % http://www.weltec.ac.nz/Portals/0/pasifika/A4card_tonga_2014%20(3).pdf
 % http://scriptsource.org/cms/scripts/page.php?item_id=entry_detail&uid=ux3sxwufev
 % Full weekday names (%A)
-day  "S<U0101>pate";/
-     "M<U014D>nite";/
-     "T<U016B>site";/
+day  "Sāpate";/
+     "Mōnite";/
+     "Tūsite";/
      "Pulelulu";/
-     "Tu<U02BB>apulelulu";/
+     "Tuʻapulelulu";/
      "Falaite";/
      "Tokonaki"
 % Abbreviated weekday names (%a)
-abday  "S<U0101>p";/
-       "M<U014D>n";/
-       "T<U016B>s";/
+abday  "Sāp";/
+       "Mōn";/
+       "Tūs";/
        "Pul";/
-       "Tu<U02BB>a";/
+       "Tuʻa";/
        "Fal";/
        "Tok"
 % Equivalent of AM PM
@@ -147,8 +147,8 @@ LC_MESSAGES
 % https://www.tripadvisor.com/Travel-g294141-s604/Tonga:Important.Phrases.html
 yesexpr "^[+1yY]"
 noexpr  "^[-0nN]"
-yesstr  "<U02BB>Io"
-nostr   "<U02BB>Ikai"
+yesstr  "ʻIo"
+nostr   "ʻIkai"
 END LC_MESSAGES
 
 

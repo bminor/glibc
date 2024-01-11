@@ -9,8 +9,8 @@ escape_char /
 % otherwise be governed by that license.
 
 % Crimean Tatar (Crimean Turkish) Language Locale for Ukraine (latin)
-% Source:	Re<U015F>at SABIQ
-% Contact:	Re<U015F>at SABIQ
+% Source:	Reşat SABIQ
+% Contact:	Reşat SABIQ
 % Email:	<tilde.birlik@gmail.com>
 % Language:	crh
 % Territory:	UA
@@ -23,7 +23,7 @@ LC_IDENTIFICATION
 title		"Crimean Tatar (Crimean Turkish) language locale for Ukraine"
 source		""
 address		""
-contact		"Re<U015F>at SABIQ"
+contact		"Reşat SABIQ"
 email		"tilde.birlik@gmail.com"
 tel		""
 fax		""
@@ -109,14 +109,14 @@ LC_MESSAGES
 yesexpr "^[+1yYeE]"
 noexpr  "^[-0nNhH]"
 yesstr  "ebet"
-nostr   "hay<U0131>r"
+nostr   "hayır"
 END LC_MESSAGES
 
 LC_MONETARY
 int_curr_symbol           "UAH "
-currency_symbol           "<U20B4>"
+currency_symbol           "₴"
 mon_decimal_point         "."
-mon_thousands_sep         "<U202F>"
+mon_thousands_sep         " "
 mon_grouping              3;3
 positive_sign             ""
 negative_sign             "-"
@@ -139,15 +139,15 @@ END LC_NUMERIC
 LC_TIME
 day     "Bazar";/
         "Bazarertesi";/
-        "Sal<U0131>";/
-        "<U00C7>ar<U015F>embe";/
-        "Cumaaq<U015F>am<U0131>";/
+        "Salı";/
+        "Çarşembe";/
+        "Cumaaqşamı";/
         "Cuma";/
         "Cumaertesi"
 abday   "Baz";/
         "Ber";/
         "Sal";/
-        "<U00C7>ar";/
+        "Çar";/
         "Caq";/
         "Cum";/
         "Cer"
@@ -155,12 +155,12 @@ mon     "Yanvar";/
         "Fevral";/
         "Mart";/
         "Aprel";/
-        "May<U0131>s";/
-        "<U0130>yun";/
-        "<U0130>yul";/
+        "Mayıs";/
+        "İyun";/
+        "İyul";/
         "Avgust";/
-        "Sent<U00E2>br";/
-        "Okt<U00E2>br";/
+        "Sentâbr";/
+        "Oktâbr";/
         "Noyabr";/
         "Dekabr"
 abmon   "Yan";/
@@ -168,8 +168,8 @@ abmon   "Yan";/
         "Mar";/
         "Apr";/
         "May";/
-        "<U0130>yn";/
-        "<U0130>yl";/
+        "İyn";/
+        "İyl";/
         "Avg";/
         "Sen";/
         "Okt";/
@@ -179,7 +179,7 @@ d_t_fmt   "%a %d %b %Y %T"
 date_fmt  "%a %d %b %Y %T %Z"
 d_fmt     "%d.%m.%Y"
 t_fmt     "%T"
-am_pm     "<U00DC>E";"<U00DC>S"
+am_pm     "ÜE";"ÜS"
 t_fmt_ampm "%I:%M:%S %p"
 week 7;19971130;1
 first_weekday 2
@@ -200,7 +200,7 @@ country_ab3 "UKR"
 country_num 804
 country_car  "UA"
 % qırımtatar tili
-lang_name    "q<U0131>r<U0131>mtatar tili"
+lang_name    "qırımtatar tili"
 lang_term    "crh"
 lang_lib    "crh"
 END LC_ADDRESS

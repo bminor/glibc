@@ -61,16 +61,16 @@ END LC_MESSAGES
 LC_TIME
 abday   "Nia";/
         "Pan";/
-        "A<U016D>t";/
+        "Aŭt";/
         "Sie";/
-        "<U010C>a<U0107>";/
+        "Čać";/
         "Pia";/
         "Sub"
 day     "Niadziela";/
-        "Paniadzie<U0142>ak";/
-        "A<U016D>torak";/
+        "Paniadziełak";/
+        "Aŭtorak";/
         "Sierada";/
-        "<U010C>a<U0107>vier";/
+        "Čaćvier";/
         "Piatnica";/
         "Subota"
 abmon   "Stu";/
@@ -78,37 +78,37 @@ abmon   "Stu";/
         "Sak";/
         "Kra";/
         "Maj";/
-        "<U010C>er";/
+        "Čer";/
         "Lip";/
-        "<U017D>ni";/
+        "Žni";/
         "Vie";/
         "Kas";/
         "Lis";/
-        "<U015A>ni"
-alt_mon	"Studzie<U0144>";/
+        "Śni"
+alt_mon	"Studzień";/
 	"Luty";/
 	"Sakavik";/
 	"Krasavik";/
 	"Maj";/
-	"<U010C>ervie<U0144>";/
-	"Lipie<U0144>";/
-	"<U017D>nivie<U0144>";/
-	"Vierasie<U0144>";/
-	"Kastry<U010D>nik";/
+	"Červień";/
+	"Lipień";/
+	"Žnivień";/
+	"Vierasień";/
+	"Kastryčnik";/
 	"Listapad";/
-	"<U015A>nie<U017E>a<U0144>"
+	"Śniežań"
 mon	"studzienia";/
 	"lutaha";/
 	"sakavika";/
 	"krasavika";/
 	"maja";/
-	"<U010D>ervienia";/
+	"červienia";/
 	"lipienia";/
-	"<U017E>ni<U016D>nia";/
-	"viera<U015B>nia";/
-	"kastry<U010D>nika";/
+	"žniŭnia";/
+	"vieraśnia";/
+	"kastryčnika";/
 	"listapada";/
-	"<U015B>nie<U017E>nia"
+	"śniežnia"
 am_pm     "";""
 d_t_fmt   "%a %d %b %Y %T"
 date_fmt  "%a %d %b %Y %T %Z"
@@ -127,7 +127,7 @@ LC_MONETARY
 int_curr_symbol           "BYR "
 currency_symbol           "Rub"
 mon_decimal_point         "."
-mon_thousands_sep         "<U202F>"
+mon_thousands_sep         " "
 mon_grouping              3;3
 positive_sign             ""
 negative_sign             "-"
@@ -152,12 +152,12 @@ END LC_NAME
 LC_ADDRESS
 postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
 % https://en.wikipedia.org/wiki/Belarus: "Belarusian: Беларусь, Belaruś or Bełaruś"
-country_name "Bie<U0142>aru<U015B>"
+country_name "Biełaruś"
 country_ab2 "BY"
 country_ab3 "BLR"
 country_num 112
 country_car    "BY"
-lang_name    "bie<U0142>aruskaja"
+lang_name    "biełaruskaja"
 lang_ab      "be"
 lang_term    "bel"
 lang_lib    "bel"

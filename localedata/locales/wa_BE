@@ -105,33 +105,33 @@ END LC_TELEPHONE
 
 LC_TIME
 abday   "dim";"lon";/
-        "m<U00E5>r";"mie";/
-        "dju";"v<U00E9>n";/
+        "mår";"mie";/
+        "dju";"vén";/
         "sem"
 day     "dimegne";/
         "londi";/
-        "m<U00E5>rdi";/
+        "mårdi";/
         "mierkidi";/
         "djudi";/
-        "v<U00E9>nrdi";/
+        "vénrdi";/
         "semdi"
 abmon   "dja";"fev";/
-        "m<U00E5>s";"avr";/
+        "mås";"avr";/
         "may";"djn";/
         "djl";"awo";/
         "set";"oct";/
-        "n<U00F4>v";"dec"
-alt_mon "djanv<U00EE>";/
-        "fevr<U00EE>";/
-        "m<U00E5>ss";/
+        "nôv";"dec"
+alt_mon "djanvî";/
+        "fevrî";/
+        "måss";/
         "avri";/
         "may";/
         "djun";/
         "djulete";/
         "awousse";/
         "setimbe";/
-        "oct<U00F4>be";/
-        "n<U00F4>vimbe";/
+        "octôbe";/
+        "nôvimbe";/
         "decimbe"
 % Pol cogne des dates (li longue cogne), c' est on pô målåjhey, ca i fåt
 % stitchî on "di" ou on "d'" pa dvant li no do moes. Donk:
@@ -147,17 +147,17 @@ alt_mon "djanv<U00EE>";/
 % d' octôbe
 % di nôvimbe
 % di decimbe
-mon     "di djanv<U00EE>";/
-        "di fevr<U00EE>";/
-        "di m<U00E5>ss";/
-        "d<U2019><U00A0>avri";/
+mon     "di djanvî";/
+        "di fevrî";/
+        "di måss";/
+        "d’ avri";/
         "di may";/
         "di djun";/
         "di djulete";/
-        "d<U2019><U00A0>awousse";/
+        "d’ awousse";/
         "di setimbe";/
-        "d<U2019><U00A0>oct<U00F4>be";/
-        "di n<U00F4>vimbe";/
+        "d’ octôbe";/
+        "di nôvimbe";/
         "di decimbe"
 
 d_t_fmt  "Li %A %d %B %Y %T"

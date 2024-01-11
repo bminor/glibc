@@ -117,14 +117,14 @@ LC_ADDRESS
 % This is the ISO_IEC TR14652 Locale definition for the LC_ADDRESS category.
 %
 postal_fmt    "%z%c%T%s%b%e%r"
-country_name  "<U12A4><U122D><U1275><U122B>"
+country_name  "ኤርትራ"
 country_post  "ERI"
 country_ab2   "ER"
 country_ab3   "ERI"
 country_num   232
 country_car  "ER"
 % country_isbn  unknown, Need ISO 2108
-lang_name     "<U1275><U130D><U1228>"
+lang_name     "ትግረ"
 lang_ab       ""
 lang_term     "tig"
 lang_lib      "tig"
@@ -136,59 +136,59 @@ LC_TIME
 %
 % Abbreviated weekday names (%a)
 %
-abday    "<U1230>//<U12D3>";/
-         "<U1230><U1296> ";/
-         "<U1273><U120B><U1238>";/
-         "<U12A3><U1228><U122D>";/
-         "<U12A8><U121A><U123D>";/
-         "<U1305><U121D><U12D3>";/
-         "<U1230>//<U1295>"
+abday    "ሰ//ዓ";/
+         "ሰኖ ";/
+         "ታላሸ";/
+         "ኣረር";/
+         "ከሚሽ";/
+         "ጅምዓ";/
+         "ሰ//ን"
 %
 % Full weekday names (%A)
 %
-day      "<U1230><U1295><U1260><U1275> <U12D3><U1263><U12ED>";/
-         "<U1230><U1296>";/
-         "<U1273><U120B><U1238><U1296>";/
-         "<U12A3><U1228><U122D><U1263><U12D3>";/
-         "<U12A8><U121A><U123D>";/
-         "<U1305><U121D><U12D3><U1275>";/
-         "<U1230><U1295><U1260><U1275> <U1295><U12A2><U123D>"
+day      "ሰንበት ዓባይ";/
+         "ሰኖ";/
+         "ታላሸኖ";/
+         "ኣረርባዓ";/
+         "ከሚሽ";/
+         "ጅምዓት";/
+         "ሰንበት ንኢሽ"
 %
 % Abbreviated month names (%b)
 %
-abmon    "<U1325><U122A> ";/
-         "<U1208><U12AB><U1272>";/
-         "<U1218><U130B><U1262>";/
-         "<U121A><U12EB><U12DD>";/
-         "<U130D><U1295><U1266>";/
-         "<U1230><U1290> ";/
-         "<U1213><U121D><U1208>";/
-         "<U1290><U1213><U1230>";/
-         "<U1218><U1235><U12A8>";/
-         "<U1325><U1245><U121D>";/
-         "<U1215><U12F3><U122D>";/
-         "<U1273><U1215><U1233>"
+abmon    "ጥሪ ";/
+         "ለካቲ";/
+         "መጋቢ";/
+         "ሚያዝ";/
+         "ግንቦ";/
+         "ሰነ ";/
+         "ሓምለ";/
+         "ነሓሰ";/
+         "መስከ";/
+         "ጥቅም";/
+         "ሕዳር";/
+         "ታሕሳ"
 %
 % Full month names (%B)
 %
-mon      "<U1325><U122A>";/
-         "<U1208><U12AB><U1272><U1275>";/
-         "<U1218><U130B><U1262><U1275>";/
-         "<U121A><U12EB><U12DD><U12EB>";/
-         "<U130D><U1295><U1266><U1275>";/
-         "<U1230><U1290>";/
-         "<U1213><U121D><U1208>";/
-         "<U1290><U1213><U1230>";/
-         "<U1218><U1235><U12A8><U1228><U121D>";/
-         "<U1325><U1245><U121D><U1272>";/
-         "<U1215><U12F3><U122D>";/
-         "<U1273><U1215><U1233><U1235>"
+mon      "ጥሪ";/
+         "ለካቲት";/
+         "መጋቢት";/
+         "ሚያዝያ";/
+         "ግንቦት";/
+         "ሰነ";/
+         "ሓምለ";/
+         "ነሓሰ";/
+         "መስከረም";/
+         "ጥቅምቲ";/
+         "ሕዳር";/
+         "ታሕሳስ"
 %
 %
 % Equivalent of AM PM
 %
-am_pm    "<U1240><U12F0><U121D> <U1230><U122D> <U121D><U12D5><U120D>";/
-         "<U1213><U1246> <U1230><U122D> <U121D><U12D5><U120D>"
+am_pm    "ቀደም ሰር ምዕል";/
+         "ሓቆ ሰር ምዕል"
 %
 % Appropriate date representation (%x)
 %
@@ -205,12 +205,12 @@ t_fmt_ampm "%l:%M:%S %p"
 % Appropriate date and time representation (%c)
 %	"%A፡ %B %e ዮም %Y %r %Z
 %
-d_t_fmt    "%A<U1361> %B %e <U12EE><U121D> %Y %r %Z"
+d_t_fmt    "%A፡ %B %e ዮም %Y %r %Z"
 %
 % Appropriate date representation (date(1))
 %	"%A፡ %B %e ዮም %r %Z %Y ዓ/ም
 %
-date_fmt    "%A<U1361> %B %e <U12EE><U121D> %r %Z %Y <U12D3>//<U121D>"
+date_fmt    "%A፡ %B %e ዮም %r %Z %Y ዓ//ም"
 %
 week 7;19971130;1
 first_weekday 2

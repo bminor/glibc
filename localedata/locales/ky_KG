@@ -9,7 +9,7 @@ escape_char /
 % otherwise be governed by that license.
 
 %
-% needed extra chars: <U04A2>, <U04A3>, <U04E8>, <U04E9>, <U04AE>, <U04AF>
+% needed extra chars: Ң, ң, Ө, ө, Ү, ү
 %
 LC_IDENTIFICATION
 title "Kyrgyz Language Locale for Kyrgyzstan"
@@ -86,18 +86,18 @@ translit_end
 END LC_CTYPE
 
 LC_MESSAGES
-yesexpr "^[+1yY<U041E><U043E>]"
-noexpr  "^[-0nN<U0416><U0436>]"
-yesstr  "<U043E><U043E><U0431><U0430>"
-nostr   "<U0436><U043E><U043A>"
+yesexpr "^[+1yYОо]"
+noexpr  "^[-0nNЖж]"
+yesstr  "ооба"
+nostr   "жок"
 END LC_MESSAGES
 
 LC_MONETARY
 % FIXED AND CHECKED by Timur 2004/10/14
 int_curr_symbol           "KGS "
-currency_symbol           "<U0441><U043E><U043C>"
+currency_symbol           "сом"
 mon_decimal_point         "."
-mon_thousands_sep         "<U202F>"
+mon_thousands_sep         " "
 mon_grouping              3;3
 positive_sign             ""
 negative_sign             "-"
@@ -113,50 +113,50 @@ END LC_MONETARY
 
 LC_NUMERIC
 decimal_point             ","
-thousands_sep             "<U202F>"
+thousands_sep             " "
 grouping                  3;3
 END LC_NUMERIC
 
 LC_TIME
-day     "<U0436><U0435><U043A><U0448><U0435><U043C><U0431><U0438>";/
-        "<U0434><U04AF><U0439><U0448><U04E9><U043C><U0431><U04AF>";/
-        "<U0448><U0435><U0439><U0448><U0435><U043C><U0431><U0438>";/
-        "<U0448><U0430><U0440><U0448><U0435><U043C><U0431><U0438>";/
-        "<U0431><U0435><U0439><U0448><U0435><U043C><U0431><U0438>";/
-        "<U0436><U0443><U043C><U0430>";/
-        "<U0438><U0448><U0435><U043C><U0431><U0438>"
+day     "жекшемби";/
+        "дүйшөмбү";/
+        "шейшемби";/
+        "шаршемби";/
+        "бейшемби";/
+        "жума";/
+        "ишемби"
 % FIXED by Timur 2004/10/12
-abday   "<U0436><U043A>";/
-        "<U0434><U0448>";/
-        "<U0448><U0435>";/
-        "<U0448><U0430>";/
-        "<U0431><U0448>";/
-        "<U0436><U043C>";/
-        "<U0438><U0448>"
-mon     "<U044F><U043D><U0432><U0430><U0440><U044C>";/
-        "<U0444><U0435><U0432><U0440><U0430><U043B><U044C>";/
-        "<U043C><U0430><U0440><U0442>";/
-        "<U0430><U043F><U0440><U0435><U043B><U044C>";/
-        "<U043C><U0430><U0439>";/
-        "<U0438><U044E><U043D><U044C>";/
-        "<U0438><U044E><U043B><U044C>";/
-        "<U0430><U0432><U0433><U0443><U0441><U0442>";/
-        "<U0441><U0435><U043D><U0442><U044F><U0431><U0440><U044C>";/
-        "<U043E><U043A><U0442><U044F><U0431><U0440><U044C>";/
-        "<U043D><U043E><U044F><U0431><U0440><U044C>";/
-        "<U0434><U0435><U043A><U0430><U0431><U0440><U044C>"
-abmon   "<U044F><U043D><U0432>";/
-        "<U0444><U0435><U0432>";/
-        "<U043C><U0430><U0440>";/
-        "<U0430><U043F><U0440>";/
-        "<U043C><U0430><U0439>";/
-        "<U0438><U044E><U043D>";/
-        "<U0438><U044E><U043B>";/
-        "<U0430><U0432><U0433>";/
-        "<U0441><U0435><U043D>";/
-        "<U043E><U043A><U0442>";/
-        "<U043D><U043E><U044F>";/
-        "<U0434><U0435><U043A>"
+abday   "жк";/
+        "дш";/
+        "ше";/
+        "ша";/
+        "бш";/
+        "жм";/
+        "иш"
+mon     "январь";/
+        "февраль";/
+        "март";/
+        "апрель";/
+        "май";/
+        "июнь";/
+        "июль";/
+        "август";/
+        "сентябрь";/
+        "октябрь";/
+        "ноябрь";/
+        "декабрь"
+abmon   "янв";/
+        "фев";/
+        "мар";/
+        "апр";/
+        "май";/
+        "июн";/
+        "июл";/
+        "авг";/
+        "сен";/
+        "окт";/
+        "ноя";/
+        "дек"
 % CHECKED AND FIXED by Timur
 d_t_fmt "%a %d %b %Y %T"
 % %d.%m.%Y FIXED by Timur 2004.10.11
@@ -164,9 +164,9 @@ d_fmt     "%d.%m.%Y"
 t_fmt     "%T"
 am_pm     "";""
 t_fmt_ampm ""
-% %d-%B, %Y-<U0436>, %A
-%date_fmt       "%d-%B, %Y%-<U0436>, %A"
-date_fmt       "%a, %e-%b %Y <U0436>, %H:%M:%S %Z"
+% %d-%B, %Y-ж, %A
+%date_fmt       "%d-%B, %Y%-ж, %A"
+date_fmt       "%a, %e-%b %Y ж, %H:%M:%S %Z"
 week 7;19971130;1
 first_weekday 2
 END LC_TIME
@@ -191,13 +191,13 @@ END LC_NAME
 
 LC_ADDRESS
 postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
-country_name "<U041A><U044B><U0440><U0433><U044B><U0437><U0441><U0442><U0430><U043D>"
+country_name "Кыргызстан"
 country_ab2 "KG"
 country_ab3 "KGZ"
 country_num 417
 country_car    "KS"
 % Кыргызча
-lang_name    "<U043A><U044B><U0440><U0433><U044B><U0437><U0447><U0430>"
+lang_name    "кыргызча"
 lang_ab      "ky"
 lang_term    "kir"
 lang_lib    "kir"

@@ -152,7 +152,7 @@ LC_MESSAGES
 yesexpr "^[+1jJhHyY]"
 noexpr  "^[-0nN]"
 yesstr  "jo"
-nostr   "n<U011B>"
+nostr   "ně"
 END LC_MESSAGES
 
 LC_MONETARY
@@ -164,26 +164,26 @@ copy "de_DE"
 END LC_NUMERIC
 
 LC_TIME
-abday   "Nj";"P<U00F3>";/
+abday   "Nj";"Pó";/
         "Wa";"Sr";/
-        "St";"P<U011B>";/
+        "St";"Pě";/
         "So"
-day     "Nje<U017A>ela";/
-        "P<U00F3>nje<U017A>ele";/
-        "Wa<U0142>tora";/
+day     "Njeźela";/
+        "Pónjeźele";/
+        "Wałtora";/
         "Srjoda";/
-        "Stw<U00F3>rtk";/
-        "P<U011B>tk";/
+        "Stwórtk";/
+        "Pětk";/
         "Sobota"
 abmon   "Jan";"Feb";/
-        "M<U011B>r";"Apr";/
+        "Měr";"Apr";/
         "Maj";"Jun";/
         "Jul";"Awg";/
         "Sep";"Okt";/
         "Now";"Dec"
 alt_mon "Januar";/
         "Februar";/
-        "M<U011B>rc";/
+        "Měrc";/
         "Apryl";/
         "Maj";/
         "Junij";/
@@ -195,7 +195,7 @@ alt_mon "Januar";/
         "December"
 mon     "januara";/
         "februara";/
-        "m<U011B>rca";/
+        "měrca";/
         "apryla";/
         "maja";/
         "junija";/
@@ -230,10 +230,10 @@ END LC_MEASUREMENT
 
 LC_NAME
 name_fmt    "%d%t%g%t%m%t%f"
-name_miss   "kn<U011B><U017E>na"
-name_mr     "kn<U011B>z"
-name_mrs    "kn<U011B>ni"
-name_ms     "kn<U011B>ni"
+name_miss   "kněžna"
+name_mr     "kněz"
+name_mrs    "kněni"
+name_ms     "kněni"
 END LC_NAME
 
 LC_ADDRESS
@@ -245,7 +245,7 @@ country_ab3  "DEU"
 country_num  276
 country_car  "D"
 country_isbn 3
-lang_name    "dolnoserb<U0161><U0107>ina"
+lang_name    "dolnoserbšćina"
 lang_ab      ""
 lang_term    "dsb"
 lang_lib     "dsb"

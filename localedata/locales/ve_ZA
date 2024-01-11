@@ -90,18 +90,18 @@ abday       "Swo";/
             "Mus";/
             "Vhi";/
             "Rar";/
-            "<U1E4B>a";/
-            "<U1E70>an";/
+            "ṋa";/
+            "Ṱan";/
             "Mug"
 
 % day - The full names of the week days:
 % - Swondaha, Musumbuluwo, L^avhuvhili, L^avhuraru, L^avhun^a, L^avhut^anu, Mugivhela
 day         "Swondaha";/
             "Musumbuluwo";/
-            "<U1E3C>avhuvhili";/
-            "<U1E3C>avhuraru";/
-            "<U1E3C>avhu<U1E4B>a";/
-            "<U1E3C>avhu<U1E71>anu";/
+            "Ḽavhuvhili";/
+            "Ḽavhuraru";/
+            "Ḽavhuṋa";/
+            "Ḽavhuṱanu";/
             "Mugivhela"
 
 % abmon - The abbreviations for the months
@@ -111,22 +111,22 @@ abmon       "Pha";"Luh";/
             "Shu";"Lwi";/
             "Lwa";"Ngu";/
             "Khu";"Tsh";/
-            "<U1E3C>ar";"Nye"
+            "Ḽar";"Nye"
 
 % mon - The full names of the months -
 % - Phando, Luhuhi, T^hafamuhwe, Lambamai, Shundunthule, Fulwi
 %   Fulwana, T^hangule, Khubvumedzi, Tshimedzi, L^ara, Nyendavhusiku
 mon         "Phando";/
             "Luhuhi";/
-            "<U1E70>hafamuhwe";/
+            "Ṱhafamuhwe";/
             "Lambamai";/
             "Shundunthule";/
             "Fulwi";/
             "Fulwana";/
-            "<U1E70>hangule";/
+            "Ṱhangule";/
             "Khubvumedzi";/
             "Tshimedzi";/
-            "<U1E3C>ara";/
+            "Ḽara";/
             "Nyendavhusiku"
 
 % Abbreviated date and time representation to be referenced by the "%c" field descriptor -
@@ -221,7 +221,7 @@ country_car   "ZA"
 % country_isbn ""
 
 % Language name in Venda - "Tshivend^a"
-lang_name "Tshiven<U1E13>a"
+lang_name "Tshivenḓa"
 
 % ISO 639 two and three letter language names
 % see http://www.loc.gov/standards/iso639-2/englangn.html

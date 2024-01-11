@@ -123,7 +123,7 @@ END LC_MEASUREMENT
 LC_MESSAGES
 yesexpr "^[+1aAsSyY]"
 noexpr  "^[-0mMnN]"
-yesstr  "Ar<U00ED>"
+yesstr  "Arí"
 nostr   "Manan"
 END LC_MESSAGES
 

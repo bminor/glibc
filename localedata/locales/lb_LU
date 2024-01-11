@@ -96,26 +96,26 @@ copy "de_DE"
 END LC_NUMERIC
 
 LC_TIME
-abday   "So";"M<U00E9>";/
-        "D<U00EB>";"M<U00EB>";/
+abday   "So";"Mé";/
+        "Dë";"Më";/
         "Do";"Fr";"Sa"
 day     "Sonndeg";/
-        "M<U00E9>indeg";/
-        "D<U00EB>nschdeg";/
-        "M<U00EB>ttwoch";/
+        "Méindeg";/
+        "Dënschdeg";/
+        "Mëttwoch";/
         "Donneschdeg";/
         "Freideg";/
         "Samschdeg"
 abmon   "Jan";"Feb";/
-        "M<U00E4>e";"Abr";/
+        "Mäe";"Abr";/
         "Mee";"Jun";/
         "Jul";"Aug";/
         "Sep";"Okt";/
         "Nov";"Dez"
 mon     "Januar";/
         "Februar";/
-        "M<U00E4>erz";/
-        "Abr<U00EB>ll";/
+        "Mäerz";/
+        "Abrëll";/
         "Mee";/
         "Juni";/
         "Juli";/
@@ -155,21 +155,21 @@ END LC_PAPER
 LC_NAME
 name_fmt  "%d%t%g%t%m%t%f"
 name_miss "Joffer"
-name_mr   "H<U00E4>r"
+name_mr   "Här"
 name_mrs  "Madame"
 name_ms   "Madame"
 END LC_NAME
 
 LC_ADDRESS
 postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
-country_name  "L<U00EB>tzebuerg"
+country_name  "Lëtzebuerg"
 country_post  "L"
 country_ab2   "LU"
 country_ab3   "LUX"
 country_num   442
 country_car   "L"
 country_isbn  2
-lang_name     "L<U00EB>tzebuergesch"
+lang_name     "Lëtzebuergesch"
 lang_ab       "lb"
 lang_term     "ltz"
 lang_lib      "ltz"

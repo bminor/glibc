@@ -129,7 +129,7 @@ LC_MONETARY
 % for IBM Class for Unicode.
 %
 int_curr_symbol       "EUR "
-currency_symbol       "<U20AC>"
+currency_symbol       "€"
 mon_decimal_point     "."
 mon_thousands_sep     ","
 mon_grouping          3
@@ -167,27 +167,27 @@ LC_TIME
 % for IBM Class for Unicode.
 %
 % Abbreviated weekday names (%a)
-abday       "<U0126>ad";"Tne";/
+abday       "Ħad";"Tne";/
             "Tli";"Erb";/
-            "<U0126>am";"<U0120>im";/
+            "Ħam";"Ġim";/
             "Sib"
 %
 % Full weekday names (%A)
-day         "il-<U0126>add";/
+day         "il-Ħadd";/
             "it-Tnejn";/
             "it-Tlieta";/
-            "l-Erbg<U0127>a";/
-            "il-<U0126>amis";/
-            "il-<U0120>img<U0127>a";/
+            "l-Erbgħa";/
+            "il-Ħamis";/
+            "il-Ġimgħa";/
             "is-Sibt"
 %
 % Abbreviated month names (%b)
 abmon       "Jan";"Fra";/
             "Mar";"Apr";/
-            "Mej";"<U0120>un";/
+            "Mej";"Ġun";/
             "Lul";"Aww";/
             "Set";"Ott";/
-            "Nov";"Di<U010B>"
+            "Nov";"Diċ"
 %
 % Full month names (%B)
 mon         "Jannar";/
@@ -195,13 +195,13 @@ mon         "Jannar";/
             "Marzu";/
             "April";/
             "Mejju";/
-            "<U0120>unju";/
+            "Ġunju";/
             "Lulju";/
             "Awwissu";/
             "Settembru";/
             "Ottubru";/
             "Novembru";/
-            "Di<U010B>embru"
+            "Diċembru"
 %
 % Equivalent of AM PM
 am_pm       "";""
