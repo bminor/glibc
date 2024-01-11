@@ -154,8 +154,8 @@ test_function (const char *fname,
         }
     }
 
-  TEST_VERIFY (func (-1, buf, sizeof (buf) == -1));
-  TEST_VERIFY (func (65536, buf, sizeof (buf) == -1));
+  TEST_VERIFY (func (-1, buf, sizeof (buf)) == -1);
+  TEST_VERIFY (func (65536, buf, sizeof (buf)) == -1);
 }
 
 static int

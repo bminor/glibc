@@ -81,6 +81,7 @@
 #include <string.h>
 #include <shlib-compat.h>
 #include <scratch_buffer.h>
+#include <stdbool.h>
 
 #if PACKETSZ > 65536
 #define MAXPACKET	PACKETSZ
@@ -116,6 +117,7 @@ __res_context_query (struct resolv_context *ctx, const char *name,
 	UHEADER *hp = (UHEADER *) answer;
 	UHEADER *hp2;
 	int n;
+	bool retried = false;
 
 	/* It requires 2 times QUERYSIZE for type == T_QUERY_A_AND_AAAA.  */
 	struct scratch_buffer buf;
@@ -182,13 +184,15 @@ __res_context_query (struct resolv_context *ctx, const char *name,
 	    nquery1 = n;
 	  }
 
-	if (__glibc_unlikely (n <= 0)) {
+	if (__glibc_unlikely (n <= 0) && !retried) {
 		/* Retry just in case res_nmkquery failed because of too
 		   short buffer.  Shouldn't happen.  */
 		if (scratch_buffer_set_array_size (&buf,
-						   T_QUERY_A_AND_AAAA ? 2 : 1,
+						   (type == T_QUERY_A_AND_AAAA)
+						   ? 2 : 1,
 						   MAXPACKET)) {
 			query1 = buf.data;
+			retried = true;
 			goto again;
 		}
 	}
