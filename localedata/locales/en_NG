@@ -59,7 +59,6 @@ END LC_COLLATE
 % FIXME
 LC_MONETARY
 int_curr_symbol         "NGN "
-% "₦"
 currency_symbol         "₦"
 mon_decimal_point       "."
 mon_thousands_sep       ","

@@ -392,14 +392,12 @@ LC_ADDRESS
 % TODO: fix me
 
 postal_fmt   "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
-% Türkmenistan
 country_name "Türkmenistan"
 country_post "TM"
 country_car  "TM"
 country_num  795
 country_ab2 "TM"
 country_ab3 "TKM"
-% Türkmençe
 lang_name   "türkmen dili"
 lang_term   "tuk"
 lang_lib    "tuk"

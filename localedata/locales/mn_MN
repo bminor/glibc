@@ -243,7 +243,6 @@ country_ab3   "MNG"
 country_num   496
 country_car   "MGL"
 country_isbn  99929
-% Монгол хэл
 lang_name    "монгол"
 lang_ab       "mn"
 lang_term     "mon"

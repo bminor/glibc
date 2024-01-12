@@ -14980,7 +14980,6 @@ era_d_fmt	"%EY%m月%d日"
 
 era_d_t_fmt	"%EY%m月%d日 %H時%M分%S秒"
 
-% "%Y<NEN> %b %e<NICHI> %A %H:%M:%S %Z"
 date_fmt	"%Y年 %b %e日 %A %H:%M:%S %Z"
 
 alt_digits	"〇";"一";"二";"三";"四";"五";/
@@ -15060,7 +15059,6 @@ country_ab2 "JP"
 country_ab3 "JPN"
 country_num 392
 country_car "J"
-% 日本語
 lang_name    "日本語"
 lang_ab      "ja"
 lang_term    "jpn"

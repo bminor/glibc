@@ -57,7 +57,6 @@ copy "iso14651_t1"
 END LC_COLLATE
 
 LC_TIME
-% janvye, fevriye, mas, avril, me, jen, jiyè, out, septanm, oktòb, novanm, desanm
 mon           "janvye";/
      "fevriye";/
      "mas";/
@@ -70,7 +69,6 @@ mon           "janvye";/
      "oktòb";/
      "novanm";/
      "desanm"
-% jan, fev, mas, avr, me, jen, jiy, out, sep, okt, nov, des
 abmon         "jan";/
        "fev";/
        "mas";/
@@ -83,7 +81,6 @@ abmon         "jan";/
        "okt";/
        "nov";/
        "des"
-% dimanch, lendi, madi, mèkredi, jedi, vandredi, samdi
 day           "dimanch";/
      "lendi";/
      "madi";/
@@ -91,7 +88,6 @@ day           "dimanch";/
      "jedi";/
      "vandredi";/
      "samdi"
-% dim, len, mad, mèk, jed, van, sam
 abday         "dim";/
        "len";/
        "mad";/
@@ -161,8 +157,6 @@ country_ab3  "HTI"
 country_num  332
 country_isbn 99935
 country_car  "RH"
-%
-% Kreyòl ayisyen
 lang_name    "Kreyòl ayisyen"
 lang_ab      "ht"
 lang_term    "hat"

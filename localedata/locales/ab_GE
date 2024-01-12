@@ -50,7 +50,6 @@ copy "ka_GE"
 END LC_COLLATE
 
 LC_TIME
-% Ажьырныҳəа, Жəабран, Хəажəкыра, Мшаԥы, Лаҵара, Рашəара, Ԥхынгəы, Нанҳəа, Цəыббра, Жьҭаара, Абҵара, Ԥхынҷкәын
 mon          "Ажьырныҳәа";/
 "Жәабран";/
 "Хәажәкыра";/
@@ -63,7 +62,6 @@ mon          "Ажьырныҳәа";/
 "Жьҭаара";/
 "Абҵара";/
 "Ԥхынҷкәын"
-% Ажь, Жəаб, Хəажә, Мш, Лаҵ, Рашә, Ԥхынгә, Нанҳә, Цəыб, Жьҭ, Абҵ, Ԥхынҷ
 abmon         "Ажь";/
 "Жәаб";/
 "Хәажә";/
@@ -76,7 +74,6 @@ abmon         "Ажь";/
 "Жьҭ";/
 "Абҵ";/
 "Ԥхынҷ"
-% Амҽыша, Ашәахьа, Аҩаша, Ахаша, Аԥшьаша, Ахәаша, Асабша
 day          "Амҽыша";/
 "Ашәахьа";/
 "Аҩаша";/
@@ -84,7 +81,6 @@ day          "Амҽыша";/
 "Аԥшьаша";/
 "Ахәаша";/
 "Асабша"
-% Ам, Ашә, Аҩ, Ах, Аԥ, Ахә, Ас
 abday         "Ам";/
 "Ашә";/
 "Аҩ";/
@@ -94,13 +90,11 @@ abday         "Ам";/
 "Ас"
 week          7;19971130;1
 first_weekday 2
-% %Y ашықәс %d %B, %T
 d_t_fmt       "%Y ашықәс %d %B, %T"
 d_fmt         "%m//%d//%Y"
 t_fmt         "%T"
 am_pm         "";""
 t_fmt_ampm    ""
-% %Y ашықәс %d %B, %T %Z
 date_fmt      "%Y ашықәс %d %B, %T %Z"
 END LC_TIME
 
@@ -121,13 +115,9 @@ copy "ka_GE"
 END LC_MEASUREMENT
 
 LC_MESSAGES
-% ^[+1yYаА]
 yesexpr "^[+1yYаА]"
-% ^[-0nNмМ]
 noexpr  "^[-0nNмМ]"
-% ааи
 yesstr  "ааи"
-% мап
 nostr   "мап"
 END LC_MESSAGES
 
@@ -137,14 +127,12 @@ END LC_NAME
 
 LC_ADDRESS
 postal_fmt   "%d%N%f%N%d%N%b%N%s %h 5e %r%N%C%z %T%N%c%N"
-% Кырҭтәыла
 country_name "Кырҭтәыла"
 country_ab2  "GE"
 country_ab3  "GEO"
 country_num  268
 country_car  "GE"
 country_isbn 99928
-% Аԥсшәа
 lang_name    "Аԥсшәа"
 lang_ab      "ab"
 lang_term    "abk"

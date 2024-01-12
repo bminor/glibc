@@ -46,7 +46,6 @@ END LC_CTYPE
 LC_MESSAGES
 yesexpr "^[+1sSyY]"
 noexpr  "^[-0nN]"
-% sí
 yesstr  "sí"
 nostr   "no"
 END LC_MESSAGES
@@ -127,6 +126,5 @@ lang_ab       "an"
 lang_term     "arg"
 lang_lib      "arg"
 country_car   "E"
-% aragonés
 lang_name    "aragonés"
 END LC_ADDRESS

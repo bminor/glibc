@@ -273,7 +273,6 @@ country_ab2 "LT"
 country_ab3 "LTU"
 country_num 440
 country_car    "LT"
-% lietuvių kalba
 lang_name    "lietuvių"
 lang_ab      "lt"
 lang_term    "lit"

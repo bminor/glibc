@@ -37,7 +37,7 @@ END LC_IDENTIFICATION
 
 LC_ADDRESS
 postal_fmt    "%a%N%f%N%d%N%b%N%h %s %e %r%N%T %z%N%c%N"
-% "Canada" in Inuktitut: ᑲᓇᑕ (https://iu.wikipedia.org/wiki/%E1%91%B2%E1%93%87%E1%91%95)
+% "Canada" in Inuktitut: (https://iu.wikipedia.org/wiki/%E1%91%B2%E1%93%87%E1%91%95)
 country_name "ᑲᓇᑕ"
 country_post "CA"
 country_ab2 "CA"

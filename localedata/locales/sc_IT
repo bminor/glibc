@@ -137,7 +137,7 @@ END LC_NAME
 
 LC_ADDRESS
 postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
-% https://sc.wikipedia.org/wiki/It%C3%A0lia : Itàlia
+% https://sc.wikipedia.org/wiki/It%C3%A0lia
 country_name "Itàlia"
 country_ab2 "IT"
 country_ab3 "ITA"

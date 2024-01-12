@@ -171,7 +171,6 @@ country_ab3  "WSM"
 % locale/iso-3166.def
 country_num 882
 % http://www.nationsonline.org/oneworld/international-calling-codes.htm
-% Gagana faʻa Sāmoa
 lang_name    "Gagana faʻa Sāmoa"
 % https://en.wikipedia.org/wiki/Samoan_language
 % ISO 639-1 sm, ISO 639-2 smo, ISO 639-3 smo

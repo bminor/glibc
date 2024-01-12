@@ -53,7 +53,6 @@ copy "iso14651_t1"
 END LC_COLLATE
 
 LC_TIME
-% Am Faoilleach, An Gearran, Am Màrt, An Giblean, An Cèitean, An t-Ògmhios, An t-Iuchar, An Lùnastal, An t-Sultain, An Dàmhair, An t-Samhain, An Dùbhlachd
 alt_mon       "Am Faoilleach";/
      "An Gearran";/
      "Am Màrt";/
@@ -66,9 +65,6 @@ alt_mon       "Am Faoilleach";/
      "An Dàmhair";/
      "An t-Samhain";/
      "An Dùbhlachd"
-% dhen Fhaoilleach, dhen Ghearran, dhen Mhàrt, dhen Ghiblean, dhen Chèitean,
-% dhen Ògmhios, dhen Iuchar, dhen Lùnastal, dhen t-Sultain, dhen Dàmhair,
-% dhen t-Samhain, dhen Dùbhlachd
 mon  "dhen Fhaoilleach";/
      "dhen Ghearran";/
      "dhen Mhàrt";/
@@ -81,7 +77,6 @@ mon  "dhen Fhaoilleach";/
      "dhen Dàmhair";/
      "dhen t-Samhain";/
      "dhen Dùbhlachd"
-% Faoi, Gearr, Màrt, Gibl, Cèit, Ògmh, Iuch, Lùna, Sult, Dàmh, Samh, Dùbh
 abmon         "Faoi";/
        "Gearr";/
        "Màrt";/
@@ -94,7 +89,6 @@ abmon         "Faoi";/
        "Dàmh";/
        "Samh";/
        "Dùbh"
-% DiDòmhnaich, DiLuain, DiMàirt, DiCiadain, DiarDaoin, DihAoine, DiSathairne
 day           "DiDòmhnaich";/
      "DiLuain";/
      "DiMàirt";/
@@ -148,7 +142,6 @@ country_ab3  "GBR"
 country_num  826
 country_car  "GB"
 country_isbn 0
-% Gàidhlig
 lang_name    "Gàidhlig"
 lang_ab      "gd"
 lang_term    "gla"

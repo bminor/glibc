@@ -53,7 +53,6 @@ END LC_COLLATE
 
 LC_TIME
 % abday - The abbreviations for the week days:
-% - Sun, Män, Zis, Mit, Fro, Fri, Sam
 abday	"Sun";/
 	"Män";/
 	"Zis";/
@@ -63,7 +62,6 @@ abday	"Sun";/
 	"Sam"
 
 % day - The full names of the week days:
-% - Suntag, Mäntag, Zischtag, Mittwuch, Frontag, Fritag, Samschtag
 day         "Suntag";/
             "Mäntag";/
             "Zischtag";/
@@ -73,7 +71,6 @@ day         "Suntag";/
             "Samschtag"
 
 % abmon - The abbreviations for the months
-% - Jen, Hor, Mär, Abr, Mei, Brá, Hei, Öig, Her, Wím, Win, Chr
 abmon       	"Jen";/
 		"Hor";/
 		"Mär";/
@@ -88,8 +85,6 @@ abmon       	"Jen";/
 		"Chr"
 
 % mon - The full names of the months -
-% - Jenner, Hornig, Märze, Abrille, Meije, Bráčet, Heiwet,
-%    Öigšte, Herbštmánet, Wímánet, Wintermánet, Chrištmánet
 mon         	"Jenner";/
 		"Hornig";/
 		"Märze";/
@@ -185,16 +180,16 @@ name_fmt    "%d%t%g%t%m%t%f"
 % "Clan names"
 %
 name_miss   "Frölein"
-% Salutation for unmarried females - "Frölein"
+% Salutation for unmarried females
 %
 name_mr     "Herr"
-% Salutation for males - "Herr"
+% Salutation for males
 %
 name_mrs    "Fröiw"
-% Salutation for married females - "Fröiw"
+% Salutation for married females
 %
 name_ms     "Fröiw"
-% Salutation valid for all females - "Fröiw"
+% Salutation valid for all females
 END LC_NAME
 
 LC_ADDRESS

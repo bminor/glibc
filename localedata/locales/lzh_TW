@@ -59,7 +59,6 @@ copy "iso14651_t1"
 END LC_COLLATE
 
 LC_TIME
-% 一月, 二月, 三月, 四月, 五月, 六月, 七月, 八月, 九月, 十月, 十一月, 十二月
 mon           "一月";/
      "二月";/
      "三月";/
@@ -72,7 +71,6 @@ mon           "一月";/
      "十月";/
      "十一月";/
      "十二月"
-%  一 ,  二 ,  三 ,  四 ,  五 ,  六 ,  七 ,  八 ,  九 ,  十 , 十一, 十二
 abmon         " 一 ";/
        " 二 ";/
        " 三 ";/
@@ -85,7 +83,6 @@ abmon         " 一 ";/
        " 十 ";/
        "十一";/
        "十二"
-% 週日, 週一, 週二, 週三, 週四, 週五, 週六
 day           "週日";/
      "週一";/
      "週二";/
@@ -93,7 +90,6 @@ day           "週日";/
      "週四";/
      "週五";/
      "週六"
-% 日, 一, 二, 三, 四, 五, 六
 abday         "日";/
        "一";/
        "二";/
@@ -101,19 +97,12 @@ abday         "日";/
        "四";/
        "五";/
        "六"
-% %OC%Oy年%B%Od日 (%A) %OH時%OM分%OS秒
 d_t_fmt       "%OC%Oy年%B%Od日 (%A) %OH時%OM分%OS秒"
-% %OC%Oy年%B%Od日
 d_fmt         "%OC%Oy年%B%Od日"
-% %OH時%OM分%OS秒
 t_fmt         "%OH時%OM分%OS秒"
-% 朝, 暮
 am_pm         "朝";"暮"
-% %p %OI時%OM分%OS秒
 t_fmt_ampm    "%p %OI時%OM分%OS秒"
-% 公曆 %C%Oy年 %B %Oe日 %A %OH時%OM分%OS秒
 date_fmt      "公曆 %C%Oy年 %B %Oe日 %A %OH時%OM分%OS秒"
-% 〇, 一, 二, 三, 四, 五, 六, 七, 八, 九, 十, 十一, 十二, 十三, 十四, 十五, 十六, 十七, 十八, 十九, 廿, 廿一, 廿二, 廿三, 廿四, 廿五, 廿六, 廿七, 廿八, 廿九, 卅, 卅一
 alt_digits    "〇";/
             "一";/
             "二";/
@@ -201,21 +190,15 @@ END LC_MESSAGES
 
 LC_NAME
 name_fmt  "%f%d%t%g"
-% 君
 name_gen  "君"
-% 女
 name_miss "女"
-% 子
 name_mr   "子"
-% 氏
 name_mrs  "氏"
-% 娘
 name_ms   "娘"
 END LC_NAME
 
 LC_ADDRESS
 postal_fmt   "%c%N%T%N%s %h %e %r%N%b%N%d%N%f%N%a%N"
-% 中華民國
 country_name "中華民國"
 country_post "TW"
 country_ab2  "TW"
@@ -223,7 +206,6 @@ country_ab3  "TWN"
 country_num  158
 country_car "RC"
 country_isbn 957
-% 漢語文言
 lang_name    "漢語文言"
 lang_term    "lzh"
 lang_lib     "lzh"

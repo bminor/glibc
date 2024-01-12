@@ -144,7 +144,6 @@ postal_fmt  "%z%c%T%s%b%e%r"
 country_name "ভাৰত"
 country_car  "IND"
 country_num 356
-% অসমীয়া
 lang_name    "অসমীয়া"
 lang_ab      "as"
 lang_term    "asm"

@@ -59,7 +59,6 @@ copy "iso14651_t1"
 END LC_COLLATE
 
 LC_TIME
-% 一月, 二月, 三月, 四月, 五月, 六月, 七月, 八月, 九月, 十月, 十一月, 十二月
 mon           "一月";/
      "二月";/
      "三月";/
@@ -72,7 +71,6 @@ mon           "一月";/
      "十月";/
      "十一月";/
      "十二月"
-%  1月,  2月,  3月,  4月,  5月,  6月,  7月,  8月,  9月, 10月, 11月, 12月
 abmon         " 1月";/
        " 2月";/
        " 3月";/
@@ -85,7 +83,6 @@ abmon         " 1月";/
        "10月";/
        "11月";/
        "12月"
-% 禮拜日, 禮拜一, 禮拜二, 禮拜三, 禮拜四, 禮拜五, 禮拜六
 day           "禮拜日";/
      "禮拜一";/
      "禮拜二";/
@@ -93,7 +90,6 @@ day           "禮拜日";/
      "禮拜四";/
      "禮拜五";/
      "禮拜六"
-% 日, 一, 二, 三, 四, 五, 六
 abday         "日";/
        "一";/
        "二";/
@@ -101,18 +97,12 @@ abday         "日";/
        "四";/
        "五";/
        "六"
-% %Y年%m月%d日 (%A) %H點%M分%S秒
 d_t_fmt       "%Y年%m月%d日 (%A) %H點%M分%S秒"
-% %Y年%m月%d日
 d_fmt         "%Y年%m月%d日"
-% %H點%M分%S秒
 t_fmt         "%H點%M分%S秒"
-% 頂晡, 下晡
 am_pm         "頂晡";/
        "下晡"
-% %p %I點%M分%S秒
 t_fmt_ampm    "%p %I點%M分%S秒"
-% %Y年 %b %e日 %A %H:%M:%S %Z
 date_fmt      "%Y年 %b %e日 %A %H:%M:%S %Z"
 week 7;19971130;1
 
@@ -168,21 +158,15 @@ END LC_MESSAGES
 
 LC_NAME
 name_fmt  "%f%t%g%t%d"
-% 君
 name_gen  "君"
-% 小姐
 name_miss "小姐"
-% 先生
 name_mr   "先生"
-% 夫人
 name_mrs  "夫人"
-% 女士
 name_ms   "女士"
 END LC_NAME
 
 LC_ADDRESS
 postal_fmt   "%c%N%T%N%s %h %e %r%N%b%N%d%N%f%N%a%N"
-% 中華民國
 country_name "中華民國"
 country_post "TW"
 country_ab2  "TW"
@@ -190,7 +174,6 @@ country_ab3  "TWN"
 country_num  158
 country_car "RC"
 country_isbn 957
-% 閩南語
 lang_name    "閩南語"
 lang_term    "nan"
 lang_lib     "nan"

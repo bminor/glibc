@@ -208,12 +208,10 @@ t_fmt "%l:%M:%S %p"
 t_fmt_ampm "%l:%M:%S %p"
 %
 % Appropriate date and time representation (%c)
-%	"%A፣ %B %e ጋላሳ  %Y %r %Z
 %
 d_t_fmt    "%A፣ %B %e ጋላሳ %Y %r %Z"
 %
 % Appropriate date representation (date(1))
-%	"%A፣ %B %e ጋላሳ %r %Z %Y ግ/ላ
 %
 date_fmt    "%A፣ %B %e ጋላሳ %r %Z %Y ግ//ላ"
 week 7;19971130;1

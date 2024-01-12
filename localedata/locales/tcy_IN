@@ -170,7 +170,7 @@ LC_ADDRESS
 % This is the ISO_IEC TR14652 Locale definition for the
 % LC_ADDRESS
 postal_fmt  "%z%c%T%s%b%e%r"
-% https://tcy.wikipedia.org/wiki/%E0%B2%AD%E0%B2%BE%E0%B2%B0%E0%B2%A4 : "ಭಾರತ"
+% https://tcy.wikipedia.org/wiki/%E0%B2%AD%E0%B2%BE%E0%B2%B0%E0%B2%A4 :
 country_name "ಭಾರತ"
 country_ab2 "IN"
 country_ab3 "IND"

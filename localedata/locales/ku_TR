@@ -170,12 +170,10 @@ END LC_MEASUREMENT
 LC_NAME
 name_fmt    "%d%t%g%t%m%t%f"
 % TODO
-% Sayın
 name_gen    "Sayın"
 name_mr     "M."
 name_mrs    "Jne"
 name_ms     "Jne"
-% "Kc,k"
 name_miss   "Kçk"
 END LC_NAME
 

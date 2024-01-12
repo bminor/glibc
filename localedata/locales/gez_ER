@@ -194,16 +194,10 @@ t_fmt "%l:%M:%S፡%p"
 t_fmt_ampm "%l:%M:%S፡%p"
 %
 % Appropriate date and time representation (%c)
-%	"%A፥%B፡%e፡መዓልት፡%Y፡%r፡%Z"
-%
-d_t_fmt    "%A፥%B፡%e፡መዓልት/
-፡%Y፡%r፡%Z"
+d_t_fmt    "%A፥%B፡%e፡መዓልት፡%Y፡%r፡%Z"
 %
 % Appropriate date representation (date(1))
-%	"%A፥%B፡%e፡መዓልት፡%r፡%Z፡%Y፡ዓ/ም
-%
-date_fmt    "%A፥%B፡%e፡መዓልት/
-፡%r፡%Z፡%Y፡ዓ//ም"
+date_fmt    "%A፥%B፡%e፡መዓልት፡%r፡%Z፡%Y፡ዓ//ም"
 %
 week 7;19971130;1
 first_weekday 2

@@ -130,11 +130,9 @@ date_fmt    "%Y年%m月%d日 %A %H:%M:%S %Z"
 %
 % Appropriate date representation
 % Changed %b to %m, by Anthony Fok <anthony@thizlinux.com>, Feb 2002
-% %Y年%m月%d日 %A
 d_fmt       "%Y年%m月%d日 %A"
 %
 % Appropriate time representation
-% %p %I時%M分%S秒 %Z
 t_fmt       "%p %I時%M分%S秒 %Z"
 %
 % Appropriate 12 h time representation (%r)

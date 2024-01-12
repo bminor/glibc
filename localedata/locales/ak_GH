@@ -55,7 +55,6 @@ copy "iso14651_t1"
 END LC_COLLATE
 
 LC_TIME
-% Sanda-Ɔpɛpɔn, Kwakwar-Ɔgyefuo, Ebɔw-Ɔbenem, Ebɔbira-Oforisuo, Esusow Aketseaba-Kɔtɔnimba, Obirade-Ayɛwohomumu, Ayɛwoho-Kitawonsa, Difuu-Ɔsandaa, Fankwa-Ɛbɔ, Ɔbɛsɛ-Ahinime, Ɔberɛfɛw-Obubuo, Mumu-Ɔpɛnimba
 mon  "Sanda-Ɔpɛpɔn";/
      "Kwakwar-Ɔgyefuo";/
      "Ebɔw-Ɔbenem";/
@@ -68,7 +67,6 @@ mon  "Sanda-Ɔpɛpɔn";/
      "Ɔbɛsɛ-Ahinime";/
      "Ɔberɛfɛw-Obubuo";/
      "Mumu-Ɔpɛnimba"
-% S-Ɔ, K-Ɔ, E-Ɔ, E-O, E-K, O-A, A-K, D-Ɔ, F-Ɛ, Ɔ-A, Ɔ-O, M-Ɔ
 abmon  "S-Ɔ";/
        "K-Ɔ";/
        "E-Ɔ";/
@@ -108,7 +106,6 @@ END LC_NUMERIC
 
 LC_MONETARY
 int_curr_symbol           "GHS "
-% GH₵
 currency_symbol           "GH₵"
 mon_decimal_point         "."
 mon_thousands_sep         ","

@@ -119,18 +119,15 @@ mon         "一月";"二月";/
 am_pm       "上午";"下午"
 %
 % Appropriate date and time representation
-% %Y\u5e74%m\u6708%d\u65e5 %H\u65f6%M\u5206%S\u79d2
 d_t_fmt     "%Y年%m月%d日 %H时%M分%S秒"
 %
 % Appropriate date and time representation for date(1)
 date_fmt     "%Y年%m月%d日 %H时%M分%S秒 %Z"
 %
 % Appropriate date representation
-% %Y\u5e74%m\u6708%d\u65e5
 d_fmt       "%Y年%m月%d日"
 %
 % Appropriate time representation
-% %H\u65f6%M\u5206%S\u79d2 %Z
 t_fmt       "%H时%M分%S秒 %Z"
 %
 % Appropriate 12 h time representation (%r)

@@ -164,13 +164,11 @@ LC_ADDRESS
 postal_fmt  "%z%c%T%s%b%e%r"
 lang_term    "the"
 lang_lib     "the"
-% नेपाल
 country_name "नेपाल"
 country_ab2 "NP"
 country_ab3 "NPL"
 country_num 524
 country_car "NEP"
-% थारु
 lang_name   "थारु"
 END LC_ADDRESS
 

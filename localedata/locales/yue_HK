@@ -98,23 +98,18 @@ mon         "1月";"2月";/
 am_pm       "上午";"下午"
 %
 % Appropriate date and time representation
-% %Y年%m月%d日 %A %H點%M分%S秒
 d_t_fmt     "%Y年%m月%d日 %A %H點%M分%S秒"
 %
 % Appropriate date representation
-% %Y年%m月%d日 %A
 d_fmt       "%Y年%m月%d日 %A"
 %
 % Appropriate time representation
-% %H點%M分%S秒
 t_fmt       "%H點%M分%S秒"
 %
 % Appropriate 12 h time representation
-% %p%I點%M分%S秒
 t_fmt_ampm  "%p%I點%M分%S秒"
 %
 % Appropriate date representation (date(1))
-% %Y年 %b %e日 %A %H:%M:%S %Z
 date_fmt       "%Y年 %b %e日 %A %H:%M:%S %Z"
 %  FIXME: found in CLDR
 week 7;19971130;1

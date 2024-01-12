@@ -65,7 +65,6 @@ LC_TIME
 % for IBM Class for Unicode/Java
 %
 % Abbreviated weekday names (%a)
-% रवि; सोम; मंगल; बुध; बृहस्पति; शुक्र; शनि
 abday       "रवि";/
             "सोम";/
             "मंगल";/
@@ -75,7 +74,6 @@ abday       "रवि";/
             "शनि"
 %
 % Full weekday names (%A)
-% रविवार; सोमवार; मंगलवार; बुधवार; बृहस्पतिवार; शुक्रवार; शनिवार
 day         "रविवार";/
             "सोमवार";/
             "मंगलवार";/
@@ -115,7 +113,6 @@ mon           "जनवरी";/
      "दिसंबर"%
 %
 % Equivalent of AM PM
-% पूर्वाह्न; अपराह्न
 am_pm       "पूर्वाह्न";/
             "अपराह्न"
 %
@@ -156,13 +153,9 @@ LC_NAME
 %
 name_fmt    "%p%t%f%t%g"
 name_gen    ""
-% श्री
 name_mr     "श्री"
-% श्रीमती
 name_mrs    "श्रीमती"
-% कुमारी
 name_miss   "कुमारी"
-% कुमार
 name_ms     "कुमार"
 END LC_NAME
 
@@ -174,7 +167,6 @@ country_ab2 "IN"
 country_ab3 "IND"
 country_num 356
 country_car "IND"
-% अंगिका
 lang_name    "अंगिका"
 lang_term    "anp"
 lang_lib    "anp"

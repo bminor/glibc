@@ -350,7 +350,6 @@ country_ab3  "BGR"
 country_num   100
 country_car  "BG"
 country_isbn  954
-% български език
 lang_name    "български"
 lang_ab      "bg"
 lang_term    "bul"

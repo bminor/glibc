@@ -150,9 +150,7 @@ END LC_ADDRESS
 LC_MESSAGES
 yesexpr "^[+1yYእ]"
 noexpr  "^[-0nNነ]"
-% እወ
 yesstr  "እወ"
-% ነኖእ
 nostr   "ነኖእ"
 END LC_MESSAGES
 

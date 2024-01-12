@@ -340,7 +340,7 @@ LC_ADDRESS
 % implemented form:
 % %f%N%a%d%N%s%t%h%N%b%t%e%t%r%N%z%t%T%N%S%t%c%N
 postal_fmt    "%f%N%a%d%N%s%t%h%N%b%t%e%t%r%N%z%t%T%N%S%t%c%N"
-% Country names are capitalized: Roma>nia
+% Country names are capitalized:
 country_name "România"
 country_ab2 "RO"
 country_ab3 "ROU"
@@ -352,7 +352,7 @@ country_car "RO"
 country_isbn 973
 % FIXME: is it really RO?
 country_post "RO"
-% language names are not capitalized in Romanian ( roma>na( )
+% language names are not capitalized in Romanian
 lang_name "română"
 lang_ab "ro"
 % set the terminology code to "ron" as defined in iso639-2

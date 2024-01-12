@@ -294,9 +294,7 @@ LC_NAME
 %			[profession] Given_Name [middle_name] Family_Name
 name_fmt    "%p%t%g%t%m%t%f"
 name_gen	""
-% name_gen	"ဦး"
 name_mr	"ဦး"
-% name_mr     "ကို"
 name_mrs    "ဒေါ်"
 name_ms     "ဒေါ်"
 name_miss   "မ"
@@ -310,7 +308,6 @@ country_ab2     "MM"
 country_num 104
 country_car "MYA"
 lang_ab         "my"
-% မြန်မာ
 lang_name       "မြန်မာ"
 lang_term   "mya"
 lang_lib    "bur"

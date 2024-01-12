@@ -93,7 +93,6 @@ country_ab2 "AD"
 country_ab3 "AND"
 country_num 020
 country_car  "AND"
-% català
 lang_name    "català"
 lang_ab      "ca"
 lang_term    "cat"

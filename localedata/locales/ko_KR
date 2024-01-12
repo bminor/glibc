@@ -6231,7 +6231,6 @@ country_ab3 "KOR"
 country_num 410
 country_isbn "979-11,978-89"
 country_car    "ROK"
-% 한국말
 lang_name    "한국어"
 lang_ab      "ko"
 lang_term    "kor"

@@ -153,7 +153,6 @@ country_ab3 "IND"
 country_num 356
 % IND
 country_car    "IND"
-% भोजपुरी
 lang_name    "भोजपुरी"
 lang_term    "bho"
 lang_lib    "bho"
