@@ -46,7 +46,7 @@ JAMO_MEDIAL_SHORT_NAME = (
 )
 
 JAMO_FINAL_SHORT_NAME = (
-    '', 'G', 'GG', 'GS', 'N', 'NI', 'NH', 'D', 'L', 'LG', 'LM', 'LB', 'LS',
+    '', 'G', 'GG', 'GS', 'N', 'NJ', 'NH', 'D', 'L', 'LG', 'LM', 'LB', 'LS',
     'LT', 'LP', 'LH', 'M', 'B', 'BS', 'S', 'SS', 'NG', 'J', 'C', 'K', 'T',
     'P', 'H'
 )
