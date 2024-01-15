@@ -124,8 +124,9 @@ __vsyslog_internal (int pri, const char *fmt, va_list ap,
 {
   /* Try to use a static buffer as an optimization.  */
   char bufs[1024];
-  char *buf = NULL;
-  size_t bufsize = 0;
+  char *buf = bufs;
+  size_t bufsize;
+
   int msgoff;
   int saved_errno = errno;
 
@@ -177,29 +178,50 @@ __vsyslog_internal (int pri, const char *fmt, va_list ap,
 #define SYSLOG_HEADER_WITHOUT_TS(__pri, __msgoff)        \
   "<%d>: %n", __pri, __msgoff
 
-  int l;
+  int l, vl;
   if (has_ts)
     l = __snprintf (bufs, sizeof bufs,
 		    SYSLOG_HEADER (pri, timestamp, &msgoff, pid));
   else
     l = __snprintf (bufs, sizeof bufs,
 		    SYSLOG_HEADER_WITHOUT_TS (pri, &msgoff));
+
+  char *pos;
+  size_t len;
+
   if (0 <= l && l < sizeof bufs)
     {
-      va_list apc;
-      va_copy (apc, ap);
-
-      /* Restore errno for %m format.  */
-      __set_errno (saved_errno);
-
-      int vl = __vsnprintf_internal (bufs + l, sizeof bufs - l, fmt, apc,
-                                     mode_flags);
-      if (0 <= vl && vl < sizeof bufs - l)
-        buf = bufs;
-      bufsize = l + vl;
-
-      va_end (apc);
+      /* At this point, there is still a chance that we can print the
+         remaining part of the log into bufs and use that.  */
+      pos = bufs + l;
+      len = sizeof (bufs) - l;
     }
+  else
+    {
+      buf = NULL;
+      /* We already know that bufs is too small to use for this log message.
+         The next vsnprintf into bufs is used only to calculate the total
+         required buffer length.  We will discard bufs contents and allocate
+         an appropriately sized buffer later instead.  */
+      pos = bufs;
+      len = sizeof (bufs);
+    }
+
+  {
+    va_list apc;
+    va_copy (apc, ap);
+
+    /* Restore errno for %m format.  */
+    __set_errno (saved_errno);
+
+    vl = __vsnprintf_internal (pos, len, fmt, apc, mode_flags);
+
+    if (!(0 <= vl && vl < len))
+      buf = NULL;
+
+    bufsize = l + vl;
+    va_end (apc);
+  }
 
   if (buf == NULL)
     {
