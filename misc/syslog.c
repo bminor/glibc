@@ -41,6 +41,7 @@ static char sccsid[] = "@(#)syslog.c	8.4 (Berkeley) 3/18/94";
 #include <sys/uio.h>
 #include <sys/un.h>
 #include <syslog.h>
+#include <limits.h>
 
 static int LogType = SOCK_DGRAM;	/* type of socket connection */
 static int LogFile = -1;		/* fd for log */
@@ -217,7 +218,7 @@ __vsyslog_internal (int pri, const char *fmt, va_list ap,
     vl = __vsnprintf_internal (pos, len, fmt, apc, mode_flags);
     va_end (apc);
 
-    if (vl < 0)
+    if (vl < 0 || vl >= INT_MAX - l)
       goto out;
 
     if (vl >= len)
