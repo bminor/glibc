@@ -61,7 +61,12 @@ typedef unsigned long int fpu_control_t;
 # define _FPU_GETCW(cw) __asm__ __volatile__ ("stx %%fsr,%0" : "=m" (*&cw))
 # define _FPU_SETCW(cw) __asm__ __volatile__ ("ldx %0,%%fsr" : : "m" (*&cw))
 #else
-# define _FPU_GETCW(cw) __asm__ __volatile__ ("st %%fsr,%0" : "=m" (*&cw))
+# ifdef __leon__
+   /* Prevent stfsr from being placed directly after other fp instruction.  */
+#  define _FPU_GETCW(cw) __asm__ __volatile__ ("nop; st %%fsr,%0" : "=m" (*&cw))
+# else
+#  define _FPU_GETCW(cw) __asm__ __volatile__ ("st %%fsr,%0" : "=m" (*&cw))
+# endif
 # define _FPU_SETCW(cw) __asm__ __volatile__ ("ld %0,%%fsr" : : "m" (*&cw))
 #endif
 
