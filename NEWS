@@ -9,6 +9,10 @@ Version 2.39
 
 Major new features:
 
+* A new tunable, glibc.cpu.plt_rewrite, can be used to enable PLT
+  rewrite on x86-64.  When enabled with non-lazy binding, the dynamic
+  linker will rewrite indirect branches in PLT with direct branches.
+
 * Sync with Linux kernel 6.6 shadow stack interface.  The --enable-cet
   configure option in only supported on x86-64.
 
