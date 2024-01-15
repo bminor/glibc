@@ -1502,7 +1502,7 @@ Space}.
 Allocate a block of @var{size} bytes, starting on a page boundary.
 @xref{Aligned Memory Blocks}.
 
-@item void *aligned_alloc (size_t @var{size}, size_t @var{alignment})
+@item void *aligned_alloc (size_t @var{alignment}, size_t @var{size})
 Allocate a block of @var{size} bytes, starting on an address that is a
 multiple of @var{alignment}.  @xref{Aligned Memory Blocks}.
 
@@ -1510,7 +1510,7 @@ multiple of @var{alignment}.  @xref{Aligned Memory Blocks}.
 Allocate a block of @var{size} bytes, starting on an address that is a
 multiple of @var{alignment}.  @xref{Aligned Memory Blocks}.
 
-@item void *memalign (size_t @var{size}, size_t @var{boundary})
+@item void *memalign (size_t @var{boundary}, size_t @var{size})
 Allocate a block of @var{size} bytes, starting on an address that is a
 multiple of @var{boundary}.  @xref{Aligned Memory Blocks}.
 
