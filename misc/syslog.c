@@ -183,11 +183,13 @@ __vsyslog_internal (int pri, const char *fmt, va_list ap,
   else
     l = __snprintf (bufs, sizeof bufs,
 		    SYSLOG_HEADER_WITHOUT_TS (pri, &msgoff));
+  if (l < 0)
+    goto out;
 
   char *pos;
   size_t len;
 
-  if (0 <= l && l < sizeof bufs)
+  if (l < sizeof bufs)
     {
       /* At this point, there is still a chance that we can print the
          remaining part of the log into bufs and use that.  */
@@ -213,12 +215,15 @@ __vsyslog_internal (int pri, const char *fmt, va_list ap,
     __set_errno (saved_errno);
 
     vl = __vsnprintf_internal (pos, len, fmt, apc, mode_flags);
+    va_end (apc);
 
-    if (!(0 <= vl && vl < len))
+    if (vl < 0)
+      goto out;
+
+    if (vl >= len)
       buf = NULL;
 
     bufsize = l + vl;
-    va_end (apc);
   }
 
   if (buf == NULL)
@@ -229,25 +234,37 @@ __vsyslog_internal (int pri, const char *fmt, va_list ap,
 	  /* Tell the cancellation handler to free this buffer.  */
 	  clarg.buf = buf;
 
+	  int cl;
 	  if (has_ts)
-	    __snprintf (buf, l + 1,
-			SYSLOG_HEADER (pri, timestamp, &msgoff, pid));
+	    cl = __snprintf (buf, l + 1,
+			     SYSLOG_HEADER (pri, timestamp, &msgoff, pid));
 	  else
-	    __snprintf (buf, l + 1,
-			SYSLOG_HEADER_WITHOUT_TS (pri, &msgoff));
+	    cl = __snprintf (buf, l + 1,
+			     SYSLOG_HEADER_WITHOUT_TS (pri, &msgoff));
+	  if (cl != l)
+	    goto out;
 
 	  va_list apc;
 	  va_copy (apc, ap);
-	  __vsnprintf_internal (buf + l, bufsize - l + 1, fmt, apc,
-				mode_flags);
+	  cl = __vsnprintf_internal (buf + l, bufsize - l + 1, fmt, apc,
+				     mode_flags);
 	  va_end (apc);
+
+	  if (cl != vl)
+	    goto out;
 	}
       else
         {
+          int bl;
 	  /* Nothing much to do but emit an error message.  */
-          bufsize = __snprintf (bufs, sizeof bufs,
-                                "out of memory[%d]", __getpid ());
+          bl = __snprintf (bufs, sizeof bufs,
+                           "out of memory[%d]", __getpid ());
+          if (bl < 0 || bl >= sizeof bufs)
+            goto out;
+
+          bufsize = bl;
           buf = bufs;
+          msgoff = 0;
         }
     }
 
