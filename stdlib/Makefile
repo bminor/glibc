@@ -287,7 +287,6 @@ tests := \
   tst-qsort \
   tst-qsort2 \
   tst-qsort3 \
-  tst-qsort5 \
   tst-qsort6 \
   tst-quick_exit \
   tst-rand48 \

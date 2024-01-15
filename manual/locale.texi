@@ -253,7 +253,7 @@ The symbols in this section are defined in the header file @file{locale.h}.
 @c    calculate_head_size ok
 @c    __munmap ok
 @c    compute_hashval ok
-@c    qsort dup
+@c    qsort dup @acucorrupt
 @c     rangecmp ok
 @c    malloc @ascuheap @acsmem
 @c    strdup @ascuheap @acsmem
