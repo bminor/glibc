@@ -289,7 +289,10 @@ tests-special += $(objpfx)tst-error1-mem.out \
   $(objpfx)tst-allocate_once-mem.out
 endif
 
-tests-container := tst-syslog
+tests-container := \
+  tst-syslog \
+  tst-syslog-long-progname \
+  # tests-container
 
 CFLAGS-select.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tsearch.c += $(uses-callbacks)
@@ -350,6 +353,9 @@ tst-allocate_once-ENV = MALLOC_TRACE=$(objpfx)tst-allocate_once.mtrace \
 $(objpfx)tst-allocate_once-mem.out: $(objpfx)tst-allocate_once.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-allocate_once.mtrace > $@; \
 	$(evaluate-test)
+
+tst-syslog-long-progname-ENV = GLIBC_TUNABLES=glibc.malloc.check=3 \
+			       LD_PRELOAD=libc_malloc_debug.so.0
 
 $(objpfx)tst-select: $(librt)
 $(objpfx)tst-select-time64: $(librt)
