@@ -23,12 +23,15 @@
 
    [1] https://lkml.org/lkml/2016/5/27/465  */
 
-ENTRY (__rt_sigreturn_stub)
+	nop
+	nop
+
+ENTRY_NOCFI (__rt_sigreturn_stub)
 	mov	__NR_rt_sigreturn, %g1
 	ta	0x10
-END (__rt_sigreturn_stub)
+END_NOCFI (__rt_sigreturn_stub)
 
-ENTRY (__sigreturn_stub)
+ENTRY_NOCFI (__sigreturn_stub)
 	mov	__NR_sigreturn, %g1
 	ta	0x10
-END (__sigreturn_stub)
+END_NOCFI (__sigreturn_stub)
