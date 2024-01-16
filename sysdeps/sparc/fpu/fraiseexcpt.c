@@ -20,6 +20,7 @@
 #include <float.h>
 #include <math.h>
 #include <shlib-compat.h>
+#include <math-barriers.h>
 
 int
 __feraiseexcept (int excepts)
@@ -42,7 +43,7 @@ __feraiseexcept (int excepts)
       /* One example of an invalid operation is 0/0.  */
       __asm ("" : "=e" (d) : "0" (c.zero));
       d /= c.zero;
-      __asm __volatile ("" : : "e" (d));
+      math_force_eval (d);
     }
 
   /* Next: division by zero.  */
@@ -50,7 +51,7 @@ __feraiseexcept (int excepts)
     {
       __asm ("" : "=e" (d) : "0" (c.one));
       d /= c.zero;
-      __asm __volatile ("" : : "e" (d));
+      math_force_eval (d);
     }
 
   /* Next: overflow.  */
@@ -58,7 +59,7 @@ __feraiseexcept (int excepts)
     {
       __asm ("" : "=e" (d) : "0" (c.max));
       d *= d;
-      __asm __volatile ("" : : "e" (d));
+      math_force_eval (d);
     }
 
   /* Next: underflow.  */
@@ -66,7 +67,7 @@ __feraiseexcept (int excepts)
     {
       __asm ("" : "=e" (d) : "0" (c.min));
       d *= d;
-      __asm __volatile ("" : : "e" (d));
+      math_force_eval (d);
     }
 
   /* Last: inexact.  */
@@ -74,7 +75,7 @@ __feraiseexcept (int excepts)
     {
       __asm ("" : "=e" (d) : "0" (c.one));
       d /= c.pi;
-      __asm __volatile ("" : : "e" (d));
+      math_force_eval (d);
     }
 
   /* Success.  */
