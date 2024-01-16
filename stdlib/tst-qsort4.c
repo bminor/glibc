@@ -96,9 +96,7 @@ do_test (void)
   check_one_sort ((signed char[16]) {15, 3, 4, 2, 1, 0, 8, 7, 6, 5, 14,
                                      13, 12, 11, 10, 9}, 16);
 
-  /* Array lengths 2 and less are not handled by heapsort_r and
-     deferred to insertion sort.  */
-  for (int i = 3; i <= 8; ++i)
+  for (int i = 2; i <= 8; ++i)
     {
       signed char *buf = xmalloc (i);
       check_combinations (i, buf, 0);
