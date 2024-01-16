@@ -162,7 +162,7 @@ get_swap_type (void *const pbase, size_t size)
 static void
 heapsort_r (void *base, size_t n, size_t size, __compar_d_fn_t cmp, void *arg)
 {
-  if (n <= 1)
+  if (n == 0)
     return;
 
   enum swap_type_t swap_type = get_swap_type (base, size);
