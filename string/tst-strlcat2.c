@@ -81,6 +81,7 @@ IMPL (STRLCAT, 1)
 typedef size_t (*proto_t) (CHAR *, const CHAR *, size_t);
 
 static void
+__attribute__((noinline))
 do_one_test (impl_t *impl, CHAR *dst, const CHAR *src,
 	     size_t n)
 {
