@@ -53,7 +53,7 @@ longjmp_msg:
 .Lstr:							\
 	.long	longjmp_msg@GOTOFF;			\
 .Lfail:							\
-	.long	__GI___fortify_fail@PLT-(.Lfail0-.);	\
+	.long	HIDDEN_JUMPTARGET(__fortify_fail)@PLT-(.Lfail0-.); \
 	cfi_restore_state;
 #else
 # define CALL_FAIL \
@@ -70,7 +70,7 @@ longjmp_msg:
 .Lstr:							\
 	.long	longjmp_msg;				\
 .Lfail:							\
-	.long	__fortify_fail;				\
+	.long	HIDDEN_JUMPTARGET(__fortify_fail);	\
 	cfi_restore_state;
 #endif
 
