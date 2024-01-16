@@ -76,6 +76,15 @@ C_LABEL(name)				\
 	cfi_endproc;			\
 	.size name, . - name
 
+#define ENTRY_NOCFI(name)			\
+	.align	4;			\
+	.global	C_SYMBOL_NAME(name);	\
+	.type	name, @function;	\
+C_LABEL(name)
+
+#define END_NOCFI(name)			\
+	.size name, . - name
+
 #undef LOC
 #define LOC(name)  .L##name
 
