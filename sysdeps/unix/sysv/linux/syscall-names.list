@@ -21,8 +21,8 @@
 # This file can list all potential system calls.  The names are only
 # used if the installed kernel headers also provide them.
 
-# The list of system calls is current as of Linux 6.6.
-kernel 6.6
+# The list of system calls is current as of Linux 6.7.
+kernel 6.7
 
 FAST_atomic_update
 FAST_cmpxchg
@@ -147,8 +147,11 @@ ftime
 ftruncate
 ftruncate64
 futex
+futex_requeue
 futex_time64
+futex_wait
 futex_waitv
+futex_wake
 futimesat
 get_kernel_syms
 get_mempolicy
