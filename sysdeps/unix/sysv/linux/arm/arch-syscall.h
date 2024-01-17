@@ -91,8 +91,11 @@
 #define __NR_ftruncate 93
 #define __NR_ftruncate64 194
 #define __NR_futex 240
+#define __NR_futex_requeue 456
 #define __NR_futex_time64 422
+#define __NR_futex_wait 455
 #define __NR_futex_waitv 449
+#define __NR_futex_wake 454
 #define __NR_futimesat 326
 #define __NR_get_mempolicy 320
 #define __NR_get_robust_list 339
@@ -170,6 +173,7 @@
 #define __NR_lstat 107
 #define __NR_lstat64 196
 #define __NR_madvise 220
+#define __NR_map_shadow_stack 453
 #define __NR_mbind 319
 #define __NR_membarrier 389
 #define __NR_memfd_create 385

@@ -78,7 +78,10 @@
 #define __NR_fsync 118
 #define __NR_ftruncate 93
 #define __NR_futex 238
+#define __NR_futex_requeue 456
+#define __NR_futex_wait 455
 #define __NR_futex_waitv 449
+#define __NR_futex_wake 454
 #define __NR_futimesat 292
 #define __NR_get_kernel_syms 130
 #define __NR_get_mempolicy 269
@@ -151,6 +154,7 @@
 #define __NR_lsetxattr 225
 #define __NR_lstat 107
 #define __NR_madvise 219
+#define __NR_map_shadow_stack 453
 #define __NR_mbind 268
 #define __NR_membarrier 356
 #define __NR_memfd_create 350
