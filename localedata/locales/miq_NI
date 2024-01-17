@@ -50,7 +50,6 @@ copy "iso14651_t1"
 END LC_COLLATE
 
 LC_TIME
-% siakwa kati, kuswa kati, kakamuk kati, lî wainhka kati, lih mairin kati, lî kati, pastara kati, sikla kati, wîs kati, waupasa kati, yahbra kati, trisu kati
 mon "siakwa kati";/
     "kuswa kati";/
     "kakamuk kati";/
@@ -65,21 +64,19 @@ mon "siakwa kati";/
     "trisu kati"
 
 % re-visit with Jairo
-% siakwa kati, kuswa kati, kakamuk kati, lî wainhka kati, lih mairin kati, lî kati, pastara kati, sikla kati, wîs kati, waupasa kati, yahbra kati, trisu kati
-abmon "siakwa kati";/
-      "kuswa kati";/
-      "kakamuk kati";/
-      "lî wainhka kati";/
-      "lih mairin kati";/
-      "lî kati";/
-      "pastara kati";/
-      "sikla kati";/
-      "wîs kati";/
-      "waupasa kati";/
-      "yahbra kati";/
-      "trisu kati"
+abmon "siakwa";/
+      "kuswa";/
+      "kakamuk";/
+      "lî wainhka";/
+      "lih mairin";/
+      "lî";/
+      "pastara";/
+      "sikla";/
+      "wîs";/
+      "waupasa";/
+      "yahbra";/
+      "trisu"
 
-% sandi, mundi, tiusdi, wensde, tausde, praidi, satadi
 day "sandi";/
     "mundi";/
     "tiusdi";/
@@ -87,7 +84,6 @@ day "sandi";/
     "tausde";/
     "praidi";/
     "satadi"
-% san, mun, tius, wens, taus, prai, sat
 abday "san";/
       "mun";/
       "tius";/
