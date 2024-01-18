@@ -8,7 +8,7 @@ escape_char /
 % exempt you from the conditions of the license if your use would
 % otherwise be governed by that license.
 
-% Kurdish (latin) language locale for Turkey
+% Kurdish (latin) language locale for Türkiye
 % Source: Kader DILSIZ
 % Contact: Kader DILSIZ, Pablo Saratxaga
 % Email: kader@ikader.com, pablo@mandrakesoft.com
@@ -22,7 +22,7 @@ escape_char /
 % History:
 
 LC_IDENTIFICATION
-title      "Kurdish (latin) locale for Turkey"
+title      "Kurdish (latin) locale for Türkiye"
 source     "Kader DILSIZ"
 address    ""
 contact    "Kader DILSIZ, Pablo Saratxaga"
@@ -30,7 +30,7 @@ email      "kader@ikader.com, pablo@mandrakesoft.com"
 tel        ""
 fax        ""
 language   "Kurdish"
-territory  "Turkey"
+territory  "Türkiye"
 revision   "0.1"
 date       "2003-07-27"
 

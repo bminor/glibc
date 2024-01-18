@@ -8,7 +8,7 @@ escape_char /
 % exempt you from the conditions of the license if your use would
 % otherwise be governed by that license.
 
-% Turkish Language Locale for Turkey
+% Turkish Language Locale for Türkiye
 % Source: RAP
 % Address: Sankt Jo//rgens Alle 8
 %    DK-1615 Ko//benhavn V, Danmark
@@ -26,14 +26,14 @@ escape_char /
 % Corrections by:
 %   1998-01-11T15:54:39
 %   Onur Tolga Sehitoglu <onur@ceng.metu.edu.tr>,
-%   Dept. of Comp. Eng. METU/Ankara   Turkey
+%   Dept. of Comp. Eng. METU/Ankara   Türkiye
 %   2004-05-29T15:13
 %   Deniz Akkus Kanca <deniz@arayan.com>
 %   2004-10-30T10:28:35
 %   Nilgün Belma Bugüner <nilgun@belgeler.org>
 
 LC_IDENTIFICATION
-title      "Turkish locale for Turkey"
+title      "Turkish locale for Türkiye"
 source     "RAP"
 address    "Sankt Jørgens Alle 8, DK-1615 København V, Danmark"
 contact    ""
@@ -41,7 +41,7 @@ email      "bug-glibc-locales@gnu.org"
 tel        ""
 fax        ""
 language   "Turkish"
-territory  "Turkey"
+territory  "Türkiye"
 revision   "1.0"
 date       "2023-09-15"
 
