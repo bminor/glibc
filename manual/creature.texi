@@ -192,6 +192,12 @@ Linux kernel version on which the system is running. For Linux kernel
 version above @b{5.1} syscalls supporting 64-bit time are used. Otherwise,
 a fallback code is used with legacy (i.e. 32-bit) syscalls.
 
+On such platforms, @theglibc{} will also define @code{__USE_TIME64_REDIRECTS}
+to indicate whether the declarations are expanded to different ones
+(either by redefiniding the symbol name or using symbol aliais).
+For instance, if the symbol @code{clock_gettime} expands to
+@code{__glock_gettime64}.
+
 @item
 If @code{_TIME_BITS} is defined to be 32, @code{time_t} is defined to
 be a 32-bit integer where that is supported.  This is not recommended,

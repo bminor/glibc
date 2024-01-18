@@ -140,7 +140,7 @@ extern int epoll_pwait (int __epfd, struct epoll_event *__events,
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-#ifndef __USE_TIME_BITS64
+#ifndef __USE_TIME64_REDIRECTS
 extern int epoll_pwait2 (int __epfd, struct epoll_event *__events,
 			 int __maxevents, const struct timespec *__timeout,
 			 const __sigset_t *__ss)

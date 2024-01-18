@@ -71,7 +71,7 @@ __BEGIN_DECLS
    The result / CLOCKS_PER_SEC is program time in seconds.  */
 extern clock_t clock (void) __THROW;
 
-#ifndef __USE_TIME_BITS64
+#ifndef __USE_TIME64_REDIRECTS
 /* Return the current time and put it in *TIMER if TIMER is not NULL.  */
 extern time_t time (time_t *__timer) __THROW;
 
@@ -127,7 +127,7 @@ extern char *strptime_l (const char *__restrict __s,
 #endif
 
 
-#ifndef __USE_TIME_BITS64
+#ifndef __USE_TIME64_REDIRECTS
 /* Return the `struct tm' representation of *TIMER
    in Universal Coordinated Time (aka Greenwich Mean Time).  */
 extern struct tm *gmtime (const time_t *__timer) __THROW;
@@ -149,7 +149,7 @@ extern struct tm *__REDIRECT_NTH (localtime, (const time_t *__timer),
 
 
 #if defined __USE_POSIX || __GLIBC_USE (ISOC23)
-# ifndef __USE_TIME_BITS64
+# ifndef __USE_TIME64_REDIRECTS
 /* Return the `struct tm' representation of *TIMER in UTC,
    using *TP to store the result.  */
 extern struct tm *gmtime_r (const time_t *__restrict __timer,
@@ -180,7 +180,7 @@ extern struct tm*__REDIRECT_NTH (localtime_r, (const time_t *__restrict __t,
 extern char *asctime (const struct tm *__tp) __THROW;
 
 /* Equivalent to `asctime (localtime (timer))'.  */
-#ifndef __USE_TIME_BITS64
+#ifndef __USE_TIME64_REDIRECTS
 extern char *ctime (const time_t *__timer) __THROW;
 #else
 # ifdef __REDIRECT_NTH
@@ -199,7 +199,7 @@ extern char *asctime_r (const struct tm *__restrict __tp,
 			char *__restrict __buf) __THROW;
 
 /* Equivalent to `asctime_r (localtime_r (timer, *TMP*), buf)'.  */
-#ifndef __USE_TIME_BITS64
+#ifndef __USE_TIME64_REDIRECTS
 extern char *ctime_r (const time_t *__restrict __timer,
 		      char *__restrict __buf) __THROW;
 #else
@@ -242,7 +242,7 @@ extern long int timezone;
 
 
 #if defined __USE_MISC || __GLIBC_USE (ISOC23)
-# ifndef __USE_TIME_BITS64
+# ifndef __USE_TIME64_REDIRECTS
 /* Like `mktime', but for TP represents Universal Time, not local time.  */
 extern time_t timegm (struct tm *__tp) __THROW;
 # else
@@ -259,7 +259,7 @@ extern time_t __REDIRECT_NTH (timegm, (struct tm *__tp), __timegm64);
 /* Miscellaneous functions many Unices inherited from the public domain
    localtime package.  These are included only for compatibility.  */
 
-#ifndef __USE_TIME_BITS64
+#ifndef __USE_TIME64_REDIRECTS
 /* Another name for `mktime'.  */
 extern time_t timelocal (struct tm *__tp) __THROW;
 #else
@@ -274,7 +274,7 @@ extern int dysize (int __year) __THROW  __attribute__ ((__const__));
 
 
 #ifdef __USE_POSIX199309
-# ifndef __USE_TIME_BITS64
+# ifndef __USE_TIME64_REDIRECTS
 /* Pause execution for a number of nanoseconds.
 
    This function is a cancellation point and therefore not marked with
@@ -320,7 +320,7 @@ extern int __REDIRECT_NTH (clock_settime, (clockid_t __clock_id, const struct
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-#  ifndef __USE_TIME_BITS64
+#  ifndef __USE_TIME64_REDIRECTS
 extern int clock_nanosleep (clockid_t __clock_id, int __flags,
 			    const struct timespec *__req,
 			    struct timespec *__rem);
@@ -349,7 +349,7 @@ extern int timer_create (clockid_t __clock_id,
 extern int timer_delete (timer_t __timerid) __THROW;
 
 /* Set timer TIMERID to VALUE, returning old value in OVALUE.  */
-# ifndef __USE_TIME_BITS64
+# ifndef __USE_TIME64_REDIRECTS
 extern int timer_settime (timer_t __timerid, int __flags,
 			  const struct itimerspec *__restrict __value,
 			  struct itimerspec *__restrict __ovalue) __THROW;
@@ -379,7 +379,7 @@ extern int timer_getoverrun (timer_t __timerid) __THROW;
 
 
 #ifdef __USE_ISOC11
-# ifndef __USE_TIME_BITS64
+# ifndef __USE_TIME64_REDIRECTS
 /* Set TS to calendar time based in time base BASE.  */
 extern int timespec_get (struct timespec *__ts, int __base)
      __THROW __nonnull ((1));
@@ -395,7 +395,7 @@ extern int __REDIRECT_NTH (timespec_get, (struct timespec *__ts, int __base),
 
 
 #if __GLIBC_USE (ISOC23)
-# ifndef __USE_TIME_BITS64
+# ifndef __USE_TIME64_REDIRECTS
 /* Set TS to resolution of time base BASE.  */
 extern int timespec_getres (struct timespec *__ts, int __base)
      __THROW;
