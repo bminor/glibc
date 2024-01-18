@@ -35,7 +35,7 @@ make_timespec (time_t s, long int ns)
 
 enum { TIMESPEC_HZ = 1000000000 };
 
-#ifndef __USE_TIME_BITS64
+#ifndef __USE_TIME64_REDIRECTS
 struct timespec timespec_add (struct timespec, struct timespec)
   __attribute__((const));
 struct timespec timespec_sub (struct timespec, struct timespec)

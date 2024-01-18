@@ -26,7 +26,7 @@
 #ifndef __USE_FILE_OFFSET64
 struct stat
 {
-#ifdef __USE_TIME_BITS64
+#ifdef __USE_TIME64_REDIRECTS
 # include <bits/struct_stat_time64_helper.h>
 #else
         __dev_t         st_dev;     /* Device.  */
@@ -64,7 +64,7 @@ struct stat
 # endif
         unsigned int            __glibc_reserved4;
         unsigned int            __glibc_reserved5;
-#endif /* __USE_TIME_BITS64  */
+#endif /* __USE_TIME64_REDIRECTS  */
 };
 #else /* __USE_FILE_OFFSET64 */
 /* MS: If __USE_FILE_OFFSET64 is setup then struct stat should match stat64
@@ -74,7 +74,7 @@ struct stat
  * create one ifdef to separate stats structures.  */
 struct stat
 {
-#ifdef __USE_TIME_BITS64
+#ifdef __USE_TIME64_REDIRECTS
 # include <bits/struct_stat_time64_helper.h>
 #else
         unsigned long long      st_dev;     /* Device.  */
@@ -112,14 +112,14 @@ struct stat
 # endif
         unsigned int            __glibc_reserved4;
         unsigned int            __glibc_reserved5;
-# endif /* __USE_TIME_BITS64 */
+# endif /* __USE_TIME64_REDIRECTS */
 };
 #endif /* __USE_FILE_OFFSET64 */
 
 #ifdef __USE_LARGEFILE64
 struct stat64
 {
-# ifdef __USE_TIME_BITS64
+# ifdef __USE_TIME64_REDIRECTS
 #  include <bits/struct_stat_time64_helper.h>
 # else
         unsigned long long      st_dev;     /* Device.  */
@@ -157,7 +157,7 @@ struct stat64
 #  endif
         unsigned int            __glibc_reserved4;
         unsigned int            __glibc_reserved5;
-# endif /* __USE_TIME_BITS64 */
+# endif /* __USE_TIME64_REDIRECTS */
 };
 #endif
 
