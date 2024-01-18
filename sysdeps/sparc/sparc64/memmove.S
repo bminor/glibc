@@ -38,7 +38,7 @@ ENTRY(memmove)
 /*
  * normal, copy forwards
  */
-2:	ble	%XCC, .Ldbytecp
+2:	bleu	%XCC, .Ldbytecp
 	 andcc	%o1, 3, %o5	/* is src word aligned  */
 	bz,pn	%icc, .Laldst
 	 cmp	%o5, 2		/* is src half-word aligned  */
