@@ -22,17 +22,17 @@ escape_char /
 
 LC_IDENTIFICATION
 %
-title      "Afar language locale for Eritrea (Saaho Dialect)."
+title      "Saho language locale for Eritrea."
 source     "Ge'ez Frontier Foundation"
 address    "7802 Solomon Seal Dr., Springfield, VA 22152, USA"
 contact    ""
 email      "locales@geez.org"
 tel        ""
 fax        ""
-language   "Afar"
+language   "Saho"
 territory  "Eritrea"
 revision   "0.20"
-date       "2003-07-05"
+date       "2024-01-18"
 
 category "i18n:2012";LC_IDENTIFICATION
 category "i18n:2012";LC_COLLATE
@@ -98,7 +98,19 @@ END LC_TELEPHONE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 LC_ADDRESS
-copy "aa_ER"
+postal_fmt    "%z%c%T%s%b%e%r"
+country_name  "Eretria"
+country_post  "ERI"
+country_ab2   "ER"
+country_ab3   "ERI"
+country_num   232
+country_car   "ER"
+% country_isbn  unknown, Need ISO 2108
+# https://en.wikipedia.org/wiki/Saho_language has "Saaho" as the endonym but CLDR has "Saho"
+lang_name     "Saho"
+lang_ab       ""
+lang_term     "ssy"
+lang_lib      "ssy"
 END LC_ADDRESS
 
 

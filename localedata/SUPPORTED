@@ -4,7 +4,6 @@ SUPPORTED-LOCALES=\
 aa_DJ.UTF-8/UTF-8 \
 aa_DJ/ISO-8859-1 \
 aa_ER/UTF-8 \
-aa_ER@saaho/UTF-8 \
 aa_ET/UTF-8 \
 af_ZA.UTF-8/UTF-8 \
 af_ZA/ISO-8859-1 \
@@ -421,6 +420,7 @@ sr_ME/UTF-8 \
 sr_RS/UTF-8 \
 sr_RS@latin/UTF-8 \
 ss_ZA/UTF-8 \
+ssy_ER/UTF-8 \
 st_ZA.UTF-8/UTF-8 \
 st_ZA/ISO-8859-1 \
 su_ID/UTF-8 \
