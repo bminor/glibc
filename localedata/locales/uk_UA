@@ -626,7 +626,7 @@ mon_thousands_sep         " " % <NNBSP> (0X202F)
 % FIXME:
 %   Note difference between "123 456 789,01" and "1234,56".
 %   Unfortunately, it can't be implemented with current (2.3.6) glibc.
-mon_grouping              3;3
+mon_grouping              3
 
 % String that is used to indicate a positive sign for monetary
 % quantities
@@ -750,7 +750,7 @@ thousands_sep             " " % <NNBSP> (0X202F)
 % FIXME:
 %   Note difference between "123 456 789,01" and "1234,56".
 %   Unfortunately, it can't be implemented with current glibc.
-grouping                  3;3
+grouping                  3
 
 END LC_NUMERIC
 

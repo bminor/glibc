@@ -53,7 +53,7 @@ int_curr_symbol     "SCR "
 currency_symbol     "SR"
 mon_decimal_point   "."
 mon_thousands_sep   ","
-mon_grouping        3;3
+mon_grouping        3
 positive_sign       ""
 negative_sign       "-"
 int_frac_digits     2

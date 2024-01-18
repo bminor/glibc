@@ -73,7 +73,7 @@ currency_symbol         "USh"
 %
 mon_decimal_point       "."
 mon_thousands_sep       ","
-mon_grouping            3;3
+mon_grouping            3
 % For money there are three numbers to the between each
 % pair of thousands separators, e.g. "123,456,786"
 %
@@ -124,7 +124,7 @@ decimal_point           "."
 thousands_sep           ","
 % For normal numbers, the thousands separator is a ","
 %
-grouping                3;3
+grouping                3
 % For normal numbers, there are three numbers between each
 % pair of thousands separators, e.g. 123,456,789
 %

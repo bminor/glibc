@@ -56,7 +56,7 @@ END LC_MONETARY
 LC_NUMERIC
 decimal_point             ","
 thousands_sep             "."
-grouping                  0;0
+grouping                  -1
 END LC_NUMERIC
 
 LC_TIME

@@ -359,6 +359,7 @@ $(addprefix $(objpfx)siglist, $(object-suffixes-noshared)): \
 
 ifeq ($(run-built-tests),yes)
 LOCALES := \
+  bn_BD.UTF-8 \
   de_DE.ISO-8859-1 \
   de_DE.UTF-8 \
   en_US.ISO-8859-1 \
@@ -366,7 +367,9 @@ LOCALES := \
   hi_IN.UTF-8 \
   ja_JP.EUC-JP \
   ps_AF.UTF-8 \
+  rw_RW.UTF-8 \
   tg_TJ.UTF-8 \
+  unm_US.UTF-8 \
   # LOCALES
 include ../gen-locales.mk
 

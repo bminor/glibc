@@ -69,7 +69,7 @@ int_curr_symbol           "EUR "
 currency_symbol           "€"
 mon_decimal_point         ","
 mon_thousands_sep         " "
-mon_grouping              3;3
+mon_grouping              3
 positive_sign             ""
 negative_sign             "-"
 int_frac_digits           2
@@ -85,7 +85,7 @@ END LC_MONETARY
 LC_NUMERIC
 decimal_point             ","
 thousands_sep             " "
-grouping                  3;3
+grouping                  3
 END LC_NUMERIC
 
 LC_TIME

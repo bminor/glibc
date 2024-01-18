@@ -166,7 +166,7 @@ mon_decimal_point         ","
 % the separation of digits is made in groups of three
 % and the separator between the groups is the full stop (dot)
 mon_thousands_sep         "."
-mon_grouping              3;3
+mon_grouping              3
 % the positive sign is not usualy represented
 positive_sign             ""
 % while the negative one is
@@ -190,7 +190,7 @@ decimal_point             ","
 % and the separator between groups is full stop
 thousands_sep             "."
 % the separation of figures is made in groups of three
-grouping                  3;3
+grouping                  3
 END LC_NUMERIC
 
 

@@ -181,13 +181,13 @@ do_test (void)
   TEST_COMPARE (it.remaining_in_current_group, 2);
   TEST_COMPARE (it.remaining, 8);
   TEST_COMPARE (*it.groupings, 3);
-  TEST_COMPARE (it.non_repeating_groups, 3); /* Locale duplicates 3.  */
+  TEST_COMPARE (it.non_repeating_groups, 0);
   TEST_COMPARE (it.separators, 2);
   TEST_COMPARE (__grouping_iterator_init (&it, LC_MONETARY, loc, 8), true);
   TEST_COMPARE (it.remaining_in_current_group, 2);
   TEST_COMPARE (it.remaining, 8);
   TEST_COMPARE (*it.groupings, 3);
-  TEST_COMPARE (it.non_repeating_groups, 3); /* Locale duplicates 3.  */
+  TEST_COMPARE (it.non_repeating_groups, 0);
   TEST_COMPARE (it.separators, 2);
   freelocale (loc);
 
@@ -202,13 +202,13 @@ do_test (void)
   TEST_COMPARE (it.remaining_in_current_group, 2);
   TEST_COMPARE (it.remaining, 8);
   TEST_COMPARE (*it.groupings, 3);
-  TEST_COMPARE (it.non_repeating_groups, 3); /* Locale duplicates 3.  */
+  TEST_COMPARE (it.non_repeating_groups, 0);
   TEST_COMPARE (it.separators, 2);
   TEST_COMPARE (__grouping_iterator_init (&it, LC_MONETARY, loc, 8), true);
   TEST_COMPARE (it.remaining_in_current_group, 2);
   TEST_COMPARE (it.remaining, 8);
   TEST_COMPARE (*it.groupings, 3);
-  TEST_COMPARE (it.non_repeating_groups, 3); /* Locale duplicates 3.  */
+  TEST_COMPARE (it.non_repeating_groups, 0);
   TEST_COMPARE (it.separators, 2);
   freelocale (loc);
 
@@ -248,6 +248,68 @@ do_test (void)
   TEST_COMPARE (*it.groupings, 3);
   TEST_COMPARE (it.non_repeating_groups, 0);
   TEST_COMPARE (it.separators, 2);
+  TEST_COMPARE (__grouping_iterator_init (&it, LC_MONETARY, loc, 8), true);
+  TEST_COMPARE (it.remaining_in_current_group, 2);
+  TEST_COMPARE (it.remaining, 8);
+  TEST_COMPARE (*it.groupings, 3);
+  TEST_COMPARE (it.non_repeating_groups, 0);
+  TEST_COMPARE (it.separators, 2);
+  freelocale (loc);
+
+  loc = newlocale (LC_ALL_MASK, "bn_BD.UTF-8", 0);
+  TEST_VERIFY_EXIT (loc != 0);
+  ctype = loc->__locales[LC_CTYPE]->private;
+  TEST_VERIFY (ctype->outdigit_translation_needed);
+  for (int i = 0; i <= 9; ++i)
+    /* Locale uses Bengali digits.  */
+    TEST_COMPARE (ctype->outdigit_bytes[i], 3);
+  TEST_COMPARE (ctype->outdigit_bytes_all_equal, 3);
+  TEST_COMPARE (__grouping_iterator_init (&it, LC_NUMERIC, loc, 8), true);
+  TEST_COMPARE (it.remaining_in_current_group, 1);
+  TEST_COMPARE (it.remaining, 8);
+  TEST_COMPARE (*it.groupings, 2);
+  TEST_COMPARE (it.non_repeating_groups, 3);
+  TEST_COMPARE (it.separators, 3);
+  TEST_COMPARE (__grouping_iterator_init (&it, LC_MONETARY, loc, 8), true);
+  TEST_COMPARE (it.remaining_in_current_group, 1);
+  TEST_COMPARE (it.remaining, 8);
+  TEST_COMPARE (*it.groupings, 2);
+  TEST_COMPARE (it.non_repeating_groups, 3);
+  TEST_COMPARE (it.separators, 3);
+  freelocale (loc);
+
+  loc = newlocale (LC_ALL_MASK, "unm_US.UTF-8", 0);
+  TEST_VERIFY_EXIT (loc != 0);
+  ctype = loc->__locales[LC_CTYPE]->private;
+  TEST_VERIFY (!ctype->outdigit_translation_needed);
+  for (int i = 0; i <= 9; ++i)
+    TEST_COMPARE (ctype->outdigit_bytes[i], 1);
+  TEST_COMPARE (ctype->outdigit_bytes_all_equal, 1);
+  TEST_COMPARE (__grouping_iterator_init (&it, LC_NUMERIC, loc, 8), true);
+  TEST_COMPARE (it.remaining_in_current_group, 2);
+  TEST_COMPARE (it.remaining, 8);
+  TEST_COMPARE (*it.groupings, 3);
+  TEST_COMPARE (it.non_repeating_groups, 9);
+  TEST_COMPARE (it.separators, 3);
+  TEST_COMPARE (__grouping_iterator_init (&it, LC_MONETARY, loc, 8), true);
+  TEST_COMPARE (it.remaining_in_current_group, 2);
+  TEST_COMPARE (it.remaining, 8);
+  TEST_COMPARE (*it.groupings, 3);
+  TEST_COMPARE (it.non_repeating_groups, 0);
+  TEST_COMPARE (it.separators, 2);
+  freelocale (loc);
+
+  loc = newlocale (LC_ALL_MASK, "rw_RW.UTF-8", 0);
+  TEST_VERIFY_EXIT (loc != 0);
+  ctype = loc->__locales[LC_CTYPE]->private;
+  TEST_VERIFY (!ctype->outdigit_translation_needed);
+  for (int i = 0; i <= 9; ++i)
+    TEST_COMPARE (ctype->outdigit_bytes[i], 1);
+  TEST_COMPARE (ctype->outdigit_bytes_all_equal, 1);
+  /* rw_RW has grouping -1 in LC_NUMERIC */
+  TEST_COMPARE (__grouping_iterator_init (&it, LC_NUMERIC, loc, 8), false);
+  TEST_COMPARE (it.remaining_in_current_group, 8);
+  TEST_COMPARE (it.remaining, 8);
   TEST_COMPARE (__grouping_iterator_init (&it, LC_MONETARY, loc, 8), true);
   TEST_COMPARE (it.remaining_in_current_group, 2);
   TEST_COMPARE (it.remaining, 8);
