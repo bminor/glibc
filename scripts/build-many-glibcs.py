@@ -1057,7 +1057,8 @@ class Context(object):
     def update_build_state(self, action, build_time, build_versions):
         """Update the build state after a build."""
         build_time = build_time.replace(microsecond=0)
-        self.build_state[action]['build-time'] = str(build_time)
+        self.build_state[action]['build-time'] = build_time.strftime(
+            '%Y-%m-%d %H:%M:%S')
         self.build_state[action]['build-versions'] = build_versions
         build_results = {}
         for log in self.status_log_list:
@@ -1103,15 +1104,17 @@ class Context(object):
         old_time_str = self.build_state[action]['build-time']
         if not old_time_str:
             return True
-        old_time = datetime.datetime.strptime(old_time_str,
-                                              '%Y-%m-%d %H:%M:%S')
-        new_time = datetime.datetime.utcnow()
+        old_time = datetime.datetime.strptime(
+            old_time_str, '%Y-%m-%d %H:%M:%S').replace(
+                tzinfo=datetime.timezone.utc)
+        new_time = datetime.datetime.now(datetime.timezone.utc)
         delta = new_time - old_time
         return delta.total_seconds() >= delay
 
     def bot_cycle(self):
         """Run a single round of checkout and builds."""
-        print('Bot cycle starting %s.' % str(datetime.datetime.utcnow()))
+        print('Bot cycle starting %s.'
+              % str(datetime.datetime.now(datetime.timezone.utc)))
         self.load_bot_config_json()
         actions = ('host-libraries', 'compilers', 'glibcs')
         self.bot_run_self(['--replace-sources'], 'checkout')
@@ -1163,12 +1166,13 @@ class Context(object):
             shutil.copytree(self.logsdir, self.logsdir_old)
         for a in actions:
             if must_build[a]:
-                build_time = datetime.datetime.utcnow()
+                build_time = datetime.datetime.now(datetime.timezone.utc)
                 print('Rebuilding %s at %s.' % (a, str(build_time)))
                 self.bot_run_self([], a)
                 self.load_build_state_json()
                 self.bot_build_mail(a, build_time)
-        print('Bot cycle done at %s.' % str(datetime.datetime.utcnow()))
+        print('Bot cycle done at %s.'
+              % str(datetime.datetime.now(datetime.timezone.utc)))
 
     def bot_build_mail(self, action, build_time):
         """Send email with the results of a build."""
@@ -1184,7 +1188,7 @@ class Context(object):
         build_time = build_time.replace(microsecond=0)
         subject = (self.bot_config['email-subject'] %
                    {'action': action,
-                    'build-time': str(build_time)})
+                    'build-time': build_time.strftime('%Y-%m-%d %H:%M:%S')})
         results = self.build_state[action]['build-results']
         changes = self.build_state[action]['result-changes']
         ever_passed = set(self.build_state[action]['ever-passed'])
@@ -1233,7 +1237,8 @@ class Context(object):
         msg['From'] = self.bot_config['email-from']
         msg['To'] = self.bot_config['email-to']
         msg['Message-ID'] = email.utils.make_msgid()
-        msg['Date'] = email.utils.format_datetime(datetime.datetime.utcnow())
+        msg['Date'] = email.utils.format_datetime(
+            datetime.datetime.now(datetime.timezone.utc))
         with smtplib.SMTP(self.bot_config['email-server']) as s:
             s.send_message(msg)
 
