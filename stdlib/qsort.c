@@ -353,7 +353,7 @@ __qsort_r (void *const pbase, size_t total_elems, size_t size,
   if (size > INDIRECT_SORT_SIZE_THRES)
     total_size = 2 * total_elems * sizeof (void *) + size;
 
-  if (total_size < sizeof buf)
+  if (total_size <= sizeof tmp)
     buf = tmp;
   else
     {
