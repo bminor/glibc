@@ -32,6 +32,8 @@ bench-math := \
   atan2 \
   atanh \
   cbrt \
+  ceil \
+  ceilf \
   cos \
   cosf \
   cosh \
@@ -44,6 +46,8 @@ bench-math := \
   exp2f \
   expf \
   expm1 \
+  floor \
+  floorf \
   fmax \
   fmaxf \
   fmin \
@@ -60,6 +64,8 @@ bench-math := \
   j0 \
   j1 \
   lgamma \
+  llrint \
+  llrintf \
   log \
   log10 \
   log1p \
@@ -68,10 +74,15 @@ bench-math := \
   logb \
   logbf \
   logf \
+  lrint \
+  lrintf \
   modf \
+  nearbyint \
+  nearbyintf \
   pow \
   powf \
   rint \
+  rintf \
   roundeven \
   roundevenf \
   sin \
