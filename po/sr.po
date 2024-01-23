@@ -1,14 +1,14 @@
 # Serbian translation for libc.
 # Copyright © 2020 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
-# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2020–2023.
+# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2020-2024.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.36.9000\n"
+"Project-Id-Version: libc 2.38.9000\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-01 21:05+0100\n"
-"PO-Revision-Date: 2023-02-26 08:17+0100\n"
+"PO-Revision-Date: 2024-01-21 08:35+0100\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: Serbian <(nothing)>\n"
 "Language: sr\n"
@@ -17,7 +17,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
-"X-Generator: Gtranslator 41.0\n"
 
 #: argp/argp-help.c:229
 #, c-format
@@ -244,6 +243,11 @@ msgstr "неисправан ред"
 #: catgets/gencat.c:821
 msgid "malformed line ignored"
 msgstr "лош ред је занемарен"
+
+#: catgets/gencat.c:939 catgets/gencat.c:947
+#, c-format
+msgid "cannot allocate memory"
+msgstr "не могу да доделим меморију"
 
 #: catgets/gencat.c:1000 catgets/gencat.c:1045
 #, c-format
@@ -864,6 +868,11 @@ msgstr " (од %s:%d)\n"
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Не могу да отворим директоријум „%s“"
+
+#: elf/ldconfig.c:753 elf/ldconfig.c:758
+#, c-format
+msgid "Could not form library path"
+msgstr "Не могу да направим путању библиотеке"
 
 #: elf/ldconfig.c:787 elf/ldconfig.c:825 elf/readlib.c:78
 #, c-format
@@ -1564,6 +1573,21 @@ msgstr "приликом уметања у стабло претраге"
 #, c-format
 msgid "cannot generate output file"
 msgstr "не могу да створим излазну датотеку"
+
+#: include/unistd_ext.h:38
+#, c-format
+msgid "write of %zu bytes failed after %td: %m"
+msgstr "писање %zu бајта није успело након „%td“: %m"
+
+#: include/unistd_ext.h:43
+#, c-format
+msgid "write returned 0 after writing %td bytes of %zu"
+msgstr "писање је вратило 0 након писања %td бајта од %zu"
+
+#: include/unistd_ext.h:59
+#, c-format
+msgid "read of %zu bytes failed after %td: %m"
+msgstr "читање %zu бајта није успело након %td: %m"
 
 #: inet/rcmd.c:160
 msgid "rcmd: Cannot allocate memory\n"
@@ -4695,6 +4719,11 @@ msgstr "двоструки кључ"
 msgid "problems while reading `%s'"
 msgstr "проблеми приликом читања „%s“"
 
+#: nss/makedb.c:748
+#, c-format
+msgid "failed to allocate memory"
+msgstr "нисам успео да доделим меморију"
+
 #: nss/makedb.c:814
 #, c-format
 msgid "failed to write new database file"
@@ -6459,6 +6488,10 @@ msgstr "Прекинуто сигналом"
 msgid "Parameter string not correctly encoded"
 msgstr "Ниска параметра није исправно кодирана"
 
+#: sysdeps/posix/gai_strerror-strs.h:19
+msgid "Result too large for supplied buffer"
+msgstr "Резултат је превелик за достављену међумеморију"
+
 #: sysdeps/unix/sysv/linux/ia64/makecontext.c:57
 #, c-format
 msgid "makecontext: does not know how to handle more than 8 arguments\n"
@@ -6471,6 +6504,14 @@ msgstr "поново гради дељени објекат са укључен�
 #: sysdeps/x86/dl-cet.c:233
 msgid "rebuild shared object with SHSTK support enabled"
 msgstr "поново гради дељени објекат са укљученом „SHSTK“ подршком"
+
+#: sysdeps/x86/dl-cet.c:251
+msgid "can't disable IBT"
+msgstr "не могу да искључим „IBT“"
+
+#: sysdeps/x86/dl-cet.c:253
+msgid "can't disable SHSTK"
+msgstr "не могу да искључим „SHSTK“"
 
 #: sysdeps/x86/dl-prop.h:61
 msgid "CPU ISA level is lower than required"
