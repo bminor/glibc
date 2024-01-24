@@ -1815,6 +1815,14 @@ using shared object dependencies or @code{LD_PRELOAD}.  For static
 linking, the @code{malloc} replacement library must be linked in before
 linking against @code{libc.a} (explicitly or implicitly).
 
+Care must be taken not to use functionality from @theglibc{} that uses
+@code{malloc} internally.  For example, the @code{fopen},
+@code{opendir}, @code{dlopen}, and @code{pthread_setspecific} functions
+currently use the @code{malloc} subsystem internally.  If the
+replacement @code{malloc} or its dependencies use thread-local storage
+(TLS), it must use the initial-exec TLS model, and not one of the
+dynamic TLS variants.
+
 @strong{Note:} Failure to provide a complete set of replacement
 functions (that is, all the functions used by the application,
 @theglibc{}, and other linked-in libraries) can lead to static linking

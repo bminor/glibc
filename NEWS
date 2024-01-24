@@ -91,6 +91,12 @@ Deprecated and removed features, and other changes affecting compatibility:
   of GNU libc are advised to check whether their build processes can be
   simplified.
 
+* The dynamic linker calls the malloc and free functions in more cases
+  during TLS access if a shared object with dynamic TLS is loaded and
+  unloaded.  This can result in an infinite recursion if a malloc
+  replacement library or its dependencies use dynamic TLS instead of
+  initial-exec TLS.
+
 * The ia64*-*-linux-gnu configurations are no longer supported.
 
 Changes to build and runtime requirements:
