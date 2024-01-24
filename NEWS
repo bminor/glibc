@@ -69,8 +69,8 @@ Major new features:
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The ldconfig program now skips file names containing ';' or ending in
-  ".tmp", to avoid examining temporary files created by the RPM and dpkg
-  package managers.
+  ".dpkg.tmp" or ".dpkg.new", to avoid examining temporary files created
+  by the RPM and dpkg package managers.
 
 * libcrypt has been removed from the GNU C Library.  The configure
   options "--enable-crypt" and "--enable-nss-crypt" are no longer
