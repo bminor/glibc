@@ -22,7 +22,7 @@
 #include <support/support.h>
 #include <support/xsignal.h>
 #include <support/xunistd.h>
-#include <support/xtime.h>
+#include <support/process_state.h>
 #include <stdlib.h>
 #include <sys/epoll.h>
 
@@ -97,8 +97,8 @@ test_epoll_basic (epoll_wait_check_t epoll_wait_check)
   xclose (fds[0][0]);
   xclose (fds[1][1]);
 
-  /* Wait some time so child is blocked on the syscall.  */
-  nanosleep (&(struct timespec) {0, 10000000}, NULL);
+  /* Wait until child is blocked on epoll_wait.  */
+  support_process_state_wait (p, support_process_state_sleeping);
   TEST_COMPARE (kill (p, SIGUSR1), 0);
 
   int e = epoll_wait_check (efd, &event, 1, 500000000, &ss);
