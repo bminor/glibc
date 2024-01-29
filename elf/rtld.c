@@ -2815,10 +2815,9 @@ print_statistics (const hp_timing_t *rtld_total_timep)
 	    num_relative_relocations
 	      += l->l_info[VERSYMIDX (DT_RELCOUNT)]->d_un.d_val;
 #ifndef ELF_MACHINE_REL_RELATIVE
-	  /* Relative relocations are processed on these architectures if
-	     library is loaded to different address than p_vaddr.  */
-	  if ((l->l_addr != 0)
-	      && l->l_info[VERSYMIDX (DT_RELACOUNT)])
+	  /* Relative relocations are always processed on these
+	     architectures.  */
+	  if (l->l_info[VERSYMIDX (DT_RELACOUNT)])
 #else
 	  /* On e.g. IA-64 or Alpha, relative relocations are processed
 	     only if library is loaded to different address than p_vaddr.  */
