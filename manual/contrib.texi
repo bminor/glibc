@@ -97,6 +97,9 @@ Yinyu Cai for their maintainership of the LoongArch port.
 Rogerio Alves Cardoso for various fixes to PowerPC.
 
 @item
+Daniel Cederman for fixes to the Sparc port.
+
+@item
 Kito Cheng for various fixes.
 
 @item
@@ -121,7 +124,10 @@ Palmer Dabbelt for contributing the port to Linux/RISC-V.
 DJ Delorie for maintenance of Linux/RISC-V, and various fixes.
 
 @item
-Wilco Dijkstra for various fixes.
+Jianbo Deng for the work on the Loongson port.
+
+@item
+Wilco Dijkstra for various fixes and work on the AArch64 port.
 
 @item
 Liubov Dmitrieva for optimized string and math functions on x86-64 and
@@ -170,7 +176,7 @@ Steve Ellcey for various fixes.
 
 @item
 Mike FABIAN for automating Unicode updates, for updating the locale data
-for ISO 14651, for updating the library Unicode support, and for various
+for ISO 14651, for updating the library Unicode support, and for many
 locale updates and fixes.
 
 @item
@@ -226,7 +232,7 @@ and malloc checking functions like @code{mcheck}.
 
 @item
 Bruno Haible for his improvements to the @code{iconv} and locale
-implementations.
+implementations and various fixes.
 
 @item
 Mao Han for the C-SKY port.
@@ -243,6 +249,9 @@ Leonhard Holz for various fixes.
 
 @item
 Stafford Horne for maintainership of the OpenRISC port.
+
+@item
+Ying Huang for work on the MIPS port.
 
 @item
 Guy-Fleury Iteriteka for contributions to Hurd support.
@@ -423,8 +432,8 @@ Joseph S. Myers for numerous bug fixes for the libm functions, for
 his maintainership of the ARM and MIPS architectures and the math
 component, improving cross-compilation and cross-testing of
 @theglibc{}, expanded coverage of conformtest, merging the ports/
-subdirectory into the @glibcadj{} main repository and his direction as
-FSF Project Steward for @theglibc{}.
+subdirectory into the @glibcadj{} main repository, C23 support,
+and his direction as FSF Project Steward for @theglibc{}.
 
 @item
 Marko Myllynen for various fixes.
@@ -452,6 +461,9 @@ safety documentation in the manual, for his direction as FSF Project
 Maintainer and for various fixes.
 
 @item
+Sunil K. Pandey for various fixes.
+
+@item
 Ronan Pigott for various fixes.
 
 @item
@@ -471,7 +483,8 @@ libraries and the port to SGI machines running Irix 4
 (@code{mips-sgi-irix4}).
 
 @item
-Joe Ramsay for contributing to the AArch64 port.
+Joe Ramsay for contributing to the AArch64 port, in particular the
+vector library.
 
 @item
 Torvald Riegel for the implementation of new algorithms for semaphores,
@@ -568,6 +581,9 @@ Pino Toscano for various fixes.
 Matt Turner for various fixes to the Alpha port.
 
 @item
+Valery Ushakov for locale fixes.
+
+@item
 Hsiangkai Wang for various fixes.
 
 @item
@@ -601,8 +617,8 @@ Adam Yi for various fixes.
 Eric Youngdale for implementing versioning of objects on the symbol level.
 
 @item
-Adhemerval Zanella for optimized functions on PowerPC, ISO C threads support
-and numerous contributions and fixes.
+Adhemerval Zanella for optimized functions on PowerPC, ISO C threads support,
+the work on tunables, and numerous contributions and fixes.
 
 @item
 Xuelei Zhang for optimized functions on AArch64.
