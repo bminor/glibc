@@ -778,7 +778,6 @@ __erfl (_Float128 x)
     }
   u.parts32.w0 = ix;
   a = u.value;
-  z = x * x;
   if (ix < 0x3ffec000)  /* a < 0.875 */
     {
       if (ix < 0x3fc60000) /* |x|<2**-57 */
@@ -792,6 +791,7 @@ __erfl (_Float128 x)
 	    }
 	  return x + efx * x;
 	}
+      z = x * x;
       y = a + a * neval (z, TN1, NTN1) / deval (z, TD1, NTD1);
     }
   else
