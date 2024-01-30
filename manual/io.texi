@@ -59,7 +59,7 @@ the actual read or write operations, to tell them which file to operate
 on.  Certain functions expect streams, and others are designed to
 operate on file descriptors.
 
-When you have finished reading to or writing from the file, you can
+When you have finished reading from or writing to the file, you can
 terminate the connection by @dfn{closing} the file.  Once you have
 closed a stream or file descriptor, you cannot do any more input or
 output operations on it.
