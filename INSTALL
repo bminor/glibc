@@ -462,7 +462,7 @@ build the GNU C Library:
 
    • GNU ‘make’ 4.0 or newer
 
-     As of release time, GNU ‘make’ 4.4 is the newest verified to work
+     As of release time, GNU ‘make’ 4.4.1 is the newest verified to work
      to build the GNU C Library.
 
    • GCC 6.2 or newer
@@ -508,7 +508,7 @@ build the GNU C Library:
 
      You must use GNU ‘binutils’ (as and ld) to build the GNU C Library.
      No other assembler or linker has the necessary functionality at the
-     moment.  As of release time, GNU ‘binutils’ 2.41 is the newest
+     moment.  As of release time, GNU ‘binutils’ 2.42 is the newest
      verified to work to build the GNU C Library.
 
      For PowerPC 64-bits little-endian (powerpc64le), ‘objcopy’ is
@@ -545,7 +545,7 @@ build the GNU C Library:
 
      Perl is not required, but if present it is used in some tests and
      the ‘mtrace’ program, to build the GNU C Library manual.  As of
-     release time ‘perl’ version 5.38.0 is the newest verified to work
+     release time ‘perl’ version 5.38.2 is the newest verified to work
      to build the GNU C Library.
 
    • GNU ‘sed’ 3.02 or newer

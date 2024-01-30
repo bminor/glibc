@@ -502,7 +502,7 @@ build @theglibc{}:
 @item
 GNU @code{make} 4.0 or newer
 
-As of release time, GNU @code{make} 4.4 is the newest verified to work
+As of release time, GNU @code{make} 4.4.1 is the newest verified to work
 to build @theglibc{}.
 
 @item
@@ -550,7 +550,7 @@ GNU @code{binutils} 2.25 or later
 
 You must use GNU @code{binutils} (as and ld) to build @theglibc{}.
 No other assembler or linker has the necessary functionality at the
-moment. As of release time, GNU @code{binutils} 2.41 is the newest
+moment. As of release time, GNU @code{binutils} 2.42 is the newest
 verified to work to build @theglibc{}.
 
 For PowerPC 64-bits little-endian (powerpc64le), @command{objcopy} is required
@@ -590,7 +590,7 @@ Perl 5
 
 Perl is not required, but if present it is used in some tests and the
 @code{mtrace} program, to build the @glibcadj{} manual.  As of release
-time @code{perl} version 5.38.0 is the newest verified to work to
+time @code{perl} version 5.38.2 is the newest verified to work to
 build @theglibc{}.
 
 @item
