@@ -417,7 +417,22 @@ class Context(object):
                         glibcs=[{},
                                 {'arch': 's390', 'ccopts': '-m31'}],
                         extra_glibcs=[{'variant': 'O3',
-                                       'cflags': '-O3'}])
+                                       'cflags': '-O3'},
+                                      {'variant': 'zEC12',
+                                       'ccopts': '-march=zEC12'},
+                                      {'variant': 'z13',
+                                       'ccopts': '-march=z13'},
+                                      {'variant': 'z15',
+                                       'ccopts': '-march=z15'},
+                                      {'variant': 'zEC12-disable-multi-arch',
+                                       'ccopts': '-march=zEC12',
+                                       'cfg': ['--disable-multi-arch']},
+                                      {'variant': 'z13-disable-multi-arch',
+                                       'ccopts': '-march=z13',
+                                       'cfg': ['--disable-multi-arch']},
+                                      {'variant': 'z15-disable-multi-arch',
+                                       'ccopts': '-march=z15',
+                                       'cfg': ['--disable-multi-arch']}])
         self.add_config(arch='sh3',
                         os_name='linux-gnu')
         self.add_config(arch='sh3eb',
