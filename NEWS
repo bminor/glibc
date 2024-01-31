@@ -9,7 +9,10 @@ Version 2.40
 
 Major new features:
 
-  [Add new features here]
+* The <stdbit.h> header type-generic macros have been changed when using
+  GCC 14.1 or later to use __builtin_stdc_bit_ceil etc. built-in functions
+  in order to support unsigned __int128 and/or unsigned _BitInt(N) operands
+  with arbitrary precisions when supported by the target.
 
 Deprecated and removed features, and other changes affecting compatibility:
 

@@ -32,7 +32,13 @@ and @code{unsigned long long int}.  In addition, there is a
 corresponding type-generic macro (not listed below), named the same as
 the functions but without any suffix such as @samp{_uc}.  The
 type-generic macro can only be used with an argument of an unsigned
-integer type with a width of 8, 16, 32 or 64 bits.
+integer type with a width of 8, 16, 32 or 64 bits, or when using
+a compiler with support for
+@uref{https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html@code{__builtin_stdc_bit_ceil}},
+etc.@:, built-in functions such as GCC 14.1 or later
+any unsigned integer type those built-in functions support.
+In GCC 14.1 that includes support for @code{unsigned __int128} and
+@code{unsigned _BitInt(@var{n})} if supported by the target.
 
 @deftypefun {unsigned int} stdc_leading_zeros_uc (unsigned char @var{x})
 @deftypefunx {unsigned int} stdc_leading_zeros_us (unsigned short @var{x})

@@ -308,6 +308,7 @@ tests := \
   tst-setcontext10 \
   tst-setcontext11 \
   tst-stdbit-Wconversion \
+  tst-stdbit-builtins \
   tst-stdc_bit_ceil \
   tst-stdc_bit_floor \
   tst-stdc_bit_width \
