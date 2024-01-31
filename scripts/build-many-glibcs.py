@@ -1888,7 +1888,7 @@ def get_parser():
     return parser
 
 
-def get_version_common(progname,line,word,delchars,arg1):
+def get_version_common(progname,line,word,arg1):
     try:
         out = subprocess.run([progname, arg1],
                              stdout=subprocess.PIPE,
@@ -1896,13 +1896,12 @@ def get_version_common(progname,line,word,delchars,arg1):
                              stdin=subprocess.DEVNULL,
                              check=True, universal_newlines=True)
         v = out.stdout.splitlines()[line].split()[word]
-        if delchars:
-            v = v.replace(delchars,'')
+        v = re.match(r'[0-9]+(.[0-9]+)*', v).group()
         return [int(x) for x in v.split('.')]
     except:
         return 'missing';
 
-def get_version_common_stderr(progname,line,word,delchars,arg1):
+def get_version_common_stderr(progname,line,word,arg1):
     try:
         out = subprocess.run([progname, arg1],
                              stdout=subprocess.DEVNULL,
@@ -1910,20 +1909,19 @@ def get_version_common_stderr(progname,line,word,delchars,arg1):
                              stdin=subprocess.DEVNULL,
                              check=True, universal_newlines=True)
         v = out.stderr.splitlines()[line].split()[word]
-        if delchars:
-            v = v.replace(delchars,'')
+        v = re.match(r'[0-9]+(.[0-9]+)*', v).group()
         return [int(x) for x in v.split('.')]
     except:
         return 'missing';
 
 def get_version(progname):
-    return get_version_common (progname, 0, -1, None, '--version');
+    return get_version_common(progname, 0, -1, '--version');
 
 def get_version_awk(progname):
-    return get_version_common (progname, 0, 2, ',', '--version');
+    return get_version_common(progname, 0, 2, '--version');
 
 def get_version_bzip2(progname):
-    return get_version_common_stderr (progname, 0, 6, ',', '-h');
+    return get_version_common_stderr(progname, 0, 6, '-h');
 
 def check_version(ver, req):
     for v, r in zip(ver, req):
