@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.2.3\n"
-"POT-Creation-Date: 2024-01-01 21:05+0100\n"
+"POT-Creation-Date: 2024-01-31 00:48+0100\n"
 "PO-Revision-Date: 2001-05-21 19:20:31+0000\n"
 "Last-Translator: Nikos Mavroyanopoulos <nmav@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -2971,7 +2971,7 @@ msgstr "Το ai_socktype δεν υποστηρίζεται"
 msgid "System error"
 msgstr "Σφάλμα συστήματος"
 
-#: sysdeps/x86/readelflib.c:62
+#: sysdeps/x86/readelflib.c:49
 #, c-format
 msgid "%s is for unknown machine %d.\n"
 msgstr "το %s είναι για το άγνωστο σύστημά %d.\n"
