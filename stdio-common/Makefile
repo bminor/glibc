@@ -240,7 +240,7 @@ tests := \
   tst-renameat2 \
   tst-rndseek \
   tst-scanf-binary-c11 \
-  tst-scanf-binary-c2x \
+  tst-scanf-binary-c23 \
   tst-scanf-binary-gnu11 \
   tst-scanf-binary-gnu89 \
   tst-scanf-intn \
@@ -495,7 +495,7 @@ CFLAGS-tst-memstream-string.c += -fno-builtin-fprintf
 # the test for that version uses -std=c11 and then _ISOC23_SOURCE is defined in
 # the test as needed.
 CFLAGS-tst-scanf-binary-c11.c += -std=c11 -DOBJPFX=\"$(objpfx)\"
-CFLAGS-tst-scanf-binary-c2x.c += -std=c11 -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-scanf-binary-c23.c += -std=c11 -DOBJPFX=\"$(objpfx)\"
 CFLAGS-tst-scanf-binary-gnu11.c += -std=gnu11 -DOBJPFX=\"$(objpfx)\"
 CFLAGS-tst-scanf-binary-gnu89.c += -std=gnu89 -DOBJPFX=\"$(objpfx)\"
 

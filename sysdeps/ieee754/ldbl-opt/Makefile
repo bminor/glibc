@@ -232,7 +232,7 @@ endif
 
 ifeq ($(subdir), stdio-common)
 tests += tst-nldbl-scanf-binary-c11 \
-	 tst-nldbl-scanf-binary-c2x \
+	 tst-nldbl-scanf-binary-c23 \
 	 tst-nldbl-scanf-binary-gnu11 \
 	 tst-nldbl-scanf-binary-gnu89
 
@@ -242,7 +242,7 @@ tests += tst-nldbl-scanf-binary-c11 \
 # the test as needed.
 CFLAGS-tst-nldbl-scanf-binary-c11.c += -mlong-double-64 -std=c11 \
 				       -DOBJPFX=\"$(objpfx)\"
-CFLAGS-tst-nldbl-scanf-binary-c2x.c += -mlong-double-64 -std=c11 \
+CFLAGS-tst-nldbl-scanf-binary-c23.c += -mlong-double-64 -std=c11 \
 				       -DOBJPFX=\"$(objpfx)\"
 CFLAGS-tst-nldbl-scanf-binary-gnu11.c += -mlong-double-64 -std=gnu11 \
 					 -DOBJPFX=\"$(objpfx)\"
@@ -253,7 +253,7 @@ endif
 
 ifeq ($(subdir), wcsmbs)
 tests += tst-nldbl-wscanf-binary-c11 \
-	 tst-nldbl-wscanf-binary-c2x \
+	 tst-nldbl-wscanf-binary-c23 \
 	 tst-nldbl-wscanf-binary-gnu11 \
 	 tst-nldbl-wscanf-binary-gnu89
 
@@ -263,7 +263,7 @@ tests += tst-nldbl-wscanf-binary-c11 \
 # the test as needed.
 CFLAGS-tst-nldbl-wscanf-binary-c11.c += -mlong-double-64 -std=c11 \
 					-DOBJPFX=\"$(objpfx)\"
-CFLAGS-tst-nldbl-wscanf-binary-c2x.c += -mlong-double-64 -std=c11 \
+CFLAGS-tst-nldbl-wscanf-binary-c23.c += -mlong-double-64 -std=c11 \
 					-DOBJPFX=\"$(objpfx)\"
 CFLAGS-tst-nldbl-wscanf-binary-gnu11.c += -mlong-double-64 -std=gnu11 \
 					  -DOBJPFX=\"$(objpfx)\"

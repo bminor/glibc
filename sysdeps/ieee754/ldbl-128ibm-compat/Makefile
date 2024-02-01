@@ -346,11 +346,11 @@ endif
 
 ifeq ($(subdir), stdio-common)
 tests += tst-ibm128-scanf-binary-c11 \
-	 tst-ibm128-scanf-binary-c2x \
+	 tst-ibm128-scanf-binary-c23 \
 	 tst-ibm128-scanf-binary-gnu11 \
 	 tst-ibm128-scanf-binary-gnu89 \
 	 tst-ieee128-scanf-binary-c11 \
-	 tst-ieee128-scanf-binary-c2x \
+	 tst-ieee128-scanf-binary-c23 \
 	 tst-ieee128-scanf-binary-gnu11 \
 	 tst-ieee128-scanf-binary-gnu89
 
@@ -360,7 +360,7 @@ tests += tst-ibm128-scanf-binary-c11 \
 # the test as needed.
 CFLAGS-tst-ibm128-scanf-binary-c11.c += -mabi=ibmlongdouble -Wno-psabi \
 					-std=c11 -DOBJPFX=\"$(objpfx)\"
-CFLAGS-tst-ibm128-scanf-binary-c2x.c += -mabi=ibmlongdouble -Wno-psabi \
+CFLAGS-tst-ibm128-scanf-binary-c23.c += -mabi=ibmlongdouble -Wno-psabi \
 					-std=c11 -DOBJPFX=\"$(objpfx)\"
 CFLAGS-tst-ibm128-scanf-binary-gnu11.c += -mabi=ibmlongdouble -Wno-psabi \
 					  -std=gnu11 -DOBJPFX=\"$(objpfx)\"
@@ -369,7 +369,7 @@ CFLAGS-tst-ibm128-scanf-binary-gnu89.c += -mabi=ibmlongdouble -Wno-psabi \
 CFLAGS-tst-ieee128-scanf-binary-c11.c += -mfloat128 -mabi=ieeelongdouble \
 					 -Wno-psabi -std=c11 \
 					 -DOBJPFX=\"$(objpfx)\"
-CFLAGS-tst-ieee128-scanf-binary-c2x.c += -mfloat128 -mabi=ieeelongdouble \
+CFLAGS-tst-ieee128-scanf-binary-c23.c += -mfloat128 -mabi=ieeelongdouble \
 					 -Wno-psabi -std=c11 \
 					 -DOBJPFX=\"$(objpfx)\"
 CFLAGS-tst-ieee128-scanf-binary-gnu11.c += -mfloat128 -mabi=ieeelongdouble \
@@ -383,11 +383,11 @@ endif
 
 ifeq ($(subdir), wcsmbs)
 tests += tst-ibm128-wscanf-binary-c11 \
-	 tst-ibm128-wscanf-binary-c2x \
+	 tst-ibm128-wscanf-binary-c23 \
 	 tst-ibm128-wscanf-binary-gnu11 \
 	 tst-ibm128-wscanf-binary-gnu89 \
 	 tst-ieee128-wscanf-binary-c11 \
-	 tst-ieee128-wscanf-binary-c2x \
+	 tst-ieee128-wscanf-binary-c23 \
 	 tst-ieee128-wscanf-binary-gnu11 \
 	 tst-ieee128-wscanf-binary-gnu89
 
@@ -397,7 +397,7 @@ tests += tst-ibm128-wscanf-binary-c11 \
 # the test as needed.
 CFLAGS-tst-ibm128-wscanf-binary-c11.c += -mabi=ibmlongdouble -Wno-psabi \
 					 -std=c11 -DOBJPFX=\"$(objpfx)\"
-CFLAGS-tst-ibm128-wscanf-binary-c2x.c += -mabi=ibmlongdouble -Wno-psabi \
+CFLAGS-tst-ibm128-wscanf-binary-c23.c += -mabi=ibmlongdouble -Wno-psabi \
 					 -std=c11 -DOBJPFX=\"$(objpfx)\"
 CFLAGS-tst-ibm128-wscanf-binary-gnu11.c += -mabi=ibmlongdouble -Wno-psabi \
 					   -std=gnu11 -DOBJPFX=\"$(objpfx)\"
@@ -406,7 +406,7 @@ CFLAGS-tst-ibm128-wscanf-binary-gnu89.c += -mabi=ibmlongdouble -Wno-psabi \
 CFLAGS-tst-ieee128-wscanf-binary-c11.c += -mfloat128 -mabi=ieeelongdouble \
 					  -Wno-psabi -std=c11 \
 					  -DOBJPFX=\"$(objpfx)\"
-CFLAGS-tst-ieee128-wscanf-binary-c2x.c += -mfloat128 -mabi=ieeelongdouble \
+CFLAGS-tst-ieee128-wscanf-binary-c23.c += -mfloat128 -mabi=ieeelongdouble \
 					  -Wno-psabi -std=c11 \
 					  -DOBJPFX=\"$(objpfx)\"
 CFLAGS-tst-ieee128-wscanf-binary-gnu11.c += -mfloat128 -mabi=ieeelongdouble \

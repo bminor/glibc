@@ -161,7 +161,7 @@ CFLAGS-printf_size.c = $(type-float128-CFLAGS)
 #Older GCC (<10) doesn't like -mabi=ieeelongdouble and -mlong-double-64.
 $(foreach suf,$(all-object-suffixes),\
          $(objpfx)tst-nldbl-scanf-binary-c11$(suf) \
-         $(objpfx)tst-nldbl-scanf-binary-c2x$(suf) \
+         $(objpfx)tst-nldbl-scanf-binary-c23$(suf) \
          $(objpfx)tst-nldbl-scanf-binary-gnu11$(suf) \
          $(objpfx)tst-nldbl-scanf-binary-gnu89$(suf) \
          ): sysdep-CFLAGS := $(filter-out -mabi=ieeelongdouble,$(sysdep-CFLAGS))
@@ -171,7 +171,7 @@ endif
 ifeq ($(subdir), wcsmbs)
 $(foreach suf,$(all-object-suffixes),\
          $(objpfx)tst-nldbl-wscanf-binary-c11$(suf) \
-         $(objpfx)tst-nldbl-wscanf-binary-c2x$(suf) \
+         $(objpfx)tst-nldbl-wscanf-binary-c23$(suf) \
          $(objpfx)tst-nldbl-wscanf-binary-gnu11$(suf) \
          $(objpfx)tst-nldbl-wscanf-binary-gnu89$(suf) \
          ): sysdep-CFLAGS := $(filter-out -mabi=ieeelongdouble,$(sysdep-CFLAGS))
