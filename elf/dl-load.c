@@ -72,7 +72,6 @@ struct filebuf
 #include <dl-map-segments.h>
 #include <dl-unmap-segments.h>
 #include <dl-machine-reject-phdr.h>
-#include <dl-sysdep-open.h>
 #include <dl-prop.h>
 #include <not-cancel.h>
 
@@ -2090,20 +2089,6 @@ _dl_map_object (struct link_map *loader, const char *name,
 	fd = open_path (name, namelen, mode,
 			&loader->l_runpath_dirs, &realname, &fb, loader,
 			LA_SER_RUNPATH, &found_other_class);
-
-      if (fd == -1)
-        {
-          realname = _dl_sysdep_open_object (name, namelen, &fd);
-          if (realname != NULL)
-            {
-              fd = open_verify (realname, fd,
-                                &fb, loader ?: GL(dl_ns)[nsid]._ns_loaded,
-                                LA_SER_CONFIG, mode, &found_other_class,
-                                false);
-              if (fd == -1)
-                free (realname);
-            }
-        }
 
 #ifdef USE_LDCONFIG
       if (fd == -1
