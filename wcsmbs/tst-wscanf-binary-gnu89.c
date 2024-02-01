@@ -1,4 +1,4 @@
-/* Test wscanf functions with C2X binary integers (wide strings,
+/* Test wscanf functions with C23 binary integers (wide strings,
    GNU extensions to C89).
    Copyright (C) 2022-2024 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
@@ -20,7 +20,7 @@
 #define CHAR wchar_t
 #define FNW w
 #define L_(C) L ## C
-#define TEST_C2X 0
+#define TEST_C23 0
 #define STD "gnu89"
 
 #include "../stdio-common/tst-scanf-binary-main.c"

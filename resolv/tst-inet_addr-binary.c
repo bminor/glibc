@@ -1,4 +1,4 @@
-/* Test inet_addr does not accept C2X binary constants.
+/* Test inet_addr does not accept C23 binary constants.
    Copyright (C) 2022-2024 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

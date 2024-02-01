@@ -17,8 +17,8 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <features.h>
-#undef __GLIBC_USE_C2X_STRTOL
-#define __GLIBC_USE_C2X_STRTOL 0
+#undef __GLIBC_USE_C23_STRTOL
+#define __GLIBC_USE_C23_STRTOL 0
 
 #if HAVE_CONFIG_H
 # include <config.h>

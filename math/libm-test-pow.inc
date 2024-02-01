@@ -249,7 +249,7 @@ static const struct test_ff_f_data pow_test_data[] =
     TEST_ff_f (pow, 0, plus_infty, 0, ERRNO_UNCHANGED),
     TEST_ff_f (pow, minus_zero, plus_infty, 0, ERRNO_UNCHANGED),
     /* C99 erroneously specified a divide-by-zero exception here,
-       which is not permitted in C2x (C11 specified it as optional).
+       which is not permitted in C23 (C11 specified it as optional).
        See <http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1515.pdf>
        and
        <http://www.open-std.org/jtc1/sc22/wg14/www/docs/n2271.pdf>.  */

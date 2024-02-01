@@ -1828,8 +1828,8 @@ output, but are different when used with @code{scanf} for input
 @item @samp{%b}, @samp{%B}
 Print an integer as an unsigned binary number.  @samp{%b} uses
 lower-case @samp{b} with the @samp{#} flag and @samp{%B} uses
-upper-case.  @samp{%b} is an ISO C2X feature; @samp{%B} is an
-optional ISO C2X feature.  @xref{Integer Conversions}, for
+upper-case.  @samp{%b} is an ISO C23 feature; @samp{%B} is an
+optional ISO C23 feature.  @xref{Integer Conversions}, for
 details.
 
 @item @samp{%o}
@@ -2036,7 +2036,7 @@ taking signed integers, or @code{uint@var{n}_t} or
 taking unsigned integers.  If the type is narrower than @code{int},
 the promoted argument is converted back to the specified type.
 
-This modifier was introduced in @w{ISO C2X}.
+This modifier was introduced in @w{ISO C23}.
 
 @item wf@var{n}
 Specifies that the argument is a @code{int_fast@var{n}_t} or
@@ -2044,7 +2044,7 @@ Specifies that the argument is a @code{int_fast@var{n}_t} or
 than @code{int}, the promoted argument is converted back to the
 specified type.
 
-This modifier was introduced in @w{ISO C2X}.
+This modifier was introduced in @w{ISO C23}.
 
 @item z
 @itemx Z
@@ -2144,7 +2144,7 @@ specifier is @samp{%a}, @samp{%e}, @samp{%f}, or @samp{%g} and it is
 @w{[@code{-}]@code{INF}} or @code{NAN} respectively if the conversion is
 @samp{%A}, @samp{%E}, @samp{%F} or @samp{%G}.  On some implementations, a NaN
 may result in longer output with information about the payload of the
-NaN; ISO C2X defines a macro @code{_PRINTF_NAN_LEN_MAX} giving the
+NaN; ISO C23 defines a macro @code{_PRINTF_NAN_LEN_MAX} giving the
 maximum length of such output.
 
 The following flags can be used to modify the behavior:
@@ -3547,7 +3547,7 @@ Input Conversions}.
 
 @item @samp{%b}
 Matches an unsigned integer written in binary radix.  This is an ISO
-C2X feature.  @xref{Numeric Input Conversions}.
+C23 feature.  @xref{Numeric Input Conversions}.
 
 @item @samp{%o}
 Matches an unsigned integer written in octal radix.
@@ -3720,13 +3720,13 @@ Specifies that the argument is an @code{int@var{n}_t *} or
 @code{uint@var{n}_t *} or @code{uint_least@var{n}_t *} (which are the
 same type).
 
-This modifier was introduced in @w{ISO C2X}.
+This modifier was introduced in @w{ISO C23}.
 
 @item wf@var{n}
 Specifies that the argument is an @code{int_fast@var{n}_t *} or
 @code{uint_fast@var{n}_t *}.
 
-This modifier was introduced in @w{ISO C2X}.
+This modifier was introduced in @w{ISO C23}.
 
 @item z
 Specifies that the argument is a @code{size_t *}.

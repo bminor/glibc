@@ -1,4 +1,4 @@
-/* Test scanf functions with C2X binary integers (narrow strings,
+/* Test scanf functions with C23 binary integers (narrow strings,
    no extensions to C11).
    Copyright (C) 2022-2024 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
@@ -22,7 +22,7 @@
 #define CHAR char
 #define FNW
 #define L_(C) C
-#define TEST_C2X 0
+#define TEST_C23 0
 #define STD "c11"
 
 #include <tst-scanf-binary-main.c>

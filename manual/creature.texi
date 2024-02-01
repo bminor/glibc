@@ -220,11 +220,11 @@ when the compiler uses an earlier language version.
 If this macro is defined, ISO C11 extensions to ISO C99 are included.
 @end defvr
 
-@defvr Macro _ISOC2X_SOURCE
-@standards{C2X, (none)}
-If this macro is defined, ISO C2X extensions to ISO C11 are included.
+@defvr Macro _ISOC23_SOURCE
+@standards{C23, (none)}
+If this macro is defined, ISO C23 extensions to ISO C11 are included.
 Only some features from this draft standard are supported by
-@theglibc{}.
+@theglibc{}.  The older name @code{_ISOC2X_SOURCE} is also supported.
 @end defvr
 
 @defvr Macro __STDC_WANT_LIB_EXT2__
@@ -260,7 +260,7 @@ enabled.  Only some of the features from this TS are supported by
 
 @defvr Macro __STDC_WANT_IEC_60559_EXT__
 @standards{ISO, (none)}
-If you define this macro, ISO C2X features defined in Annex F of that
+If you define this macro, ISO C23 features defined in Annex F of that
 standard are enabled.  This affects declarations of the
 @code{totalorder} functions and functions related to NaN payloads.
 @end defvr

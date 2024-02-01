@@ -1,4 +1,4 @@
-/* Test scanf functions with C2X binary integers (narrow strings,
+/* Test scanf functions with C23 binary integers (narrow strings,
    no extensions).
    Copyright (C) 2022-2024 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
@@ -18,14 +18,14 @@
    <https://www.gnu.org/licenses/>.  */
 
 /* Some versions of GCC supported for building glibc do not support
-   -std=c2x.  */
+   -std=c23 or -std=c2x.  */
 #undef _GNU_SOURCE
-#define _ISOC2X_SOURCE
+#define _ISOC23_SOURCE
 
 #define CHAR char
 #define FNW
 #define L_(C) C
-#define TEST_C2X 1
-#define STD "c2x"
+#define TEST_C23 1
+#define STD "c23"
 
 #include <tst-scanf-binary-main.c>

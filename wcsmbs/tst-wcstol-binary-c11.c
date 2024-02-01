@@ -1,4 +1,4 @@
-/* Test wcstol functions with C2X binary integers (wide strings,
+/* Test wcstol functions with C23 binary integers (wide strings,
    no extensions to C11).
    Copyright (C) 2022-2024 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
@@ -23,7 +23,7 @@
 #define WIDE 1
 #define FNPFX wcsto
 #define L_(C) L ## C
-#define TEST_C2X 0
+#define TEST_C23 0
 #define TEST_Q 0
 #define TEST_LOCALE 0
 

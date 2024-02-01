@@ -139,7 +139,7 @@ typedef __fpos64_t fpos64_t;
 #define FOPEN_MAX 16
 
 
-#if __GLIBC_USE (ISOC2X)
+#if __GLIBC_USE (ISOC23)
 /* Maximum length of printf output for a NaN.  */
 # define _PRINTF_NAN_LEN_MAX 4
 #endif
@@ -437,7 +437,7 @@ extern int sscanf (const char *__restrict __s,
 #include <bits/floatn.h>
 #if !__GLIBC_USE (DEPRECATED_SCANF) && !defined __LDBL_COMPAT \
     && __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 0
-# if __GLIBC_USE (C2X_STRTOL)
+# if __GLIBC_USE (C23_STRTOL)
 #  ifdef __REDIRECT
 extern int __REDIRECT (fscanf, (FILE *__restrict __stream,
 				const char *__restrict __format, ...),
@@ -505,7 +505,7 @@ extern int vsscanf (const char *__restrict __s,
 
 /* Same redirection as above for the v*scanf family.  */
 # if !__GLIBC_USE (DEPRECATED_SCANF)
-#  if __GLIBC_USE (C2X_STRTOL)
+#  if __GLIBC_USE (C23_STRTOL)
 #   if defined __REDIRECT && !defined __LDBL_COMPAT	\
       && __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 0
 extern int __REDIRECT (vfscanf,

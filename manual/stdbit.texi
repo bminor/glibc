@@ -4,7 +4,7 @@
 
 This chapter contains information about functions and macros for
 determining the endianness of integer types and manipulating the bits
-of unsigned integers.  These functions and macros are from ISO C2X and
+of unsigned integers.  These functions and macros are from ISO C23 and
 are declared in the header file @file{stdbit.h}.
 
 The following macros describe the endianness of integer types.  They
@@ -45,7 +45,7 @@ In GCC 14.1 that includes support for @code{unsigned __int128} and
 @deftypefunx {unsigned int} stdc_leading_zeros_ui (unsigned int @var{x})
 @deftypefunx {unsigned int} stdc_leading_zeros_ul (unsigned long int @var{x})
 @deftypefunx {unsigned int} stdc_leading_zeros_ull (unsigned long long int @var{x})
-@standards{C2X, stdbit.h}
+@standards{C23, stdbit.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{stdc_leading_zeros} functions count the number of leading
 (most significant) zero bits in @var{x}, starting from the most
@@ -58,7 +58,7 @@ the width of @var{x} in bits.
 @deftypefunx {unsigned int} stdc_leading_ones_ui (unsigned int @var{x})
 @deftypefunx {unsigned int} stdc_leading_ones_ul (unsigned long int @var{x})
 @deftypefunx {unsigned int} stdc_leading_ones_ull (unsigned long long int @var{x})
-@standards{C2X, stdbit.h}
+@standards{C23, stdbit.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{stdc_leading_ones} functions count the number of leading
 (most significant) one bits in @var{x}, starting from the most
@@ -70,7 +70,7 @@ significant bit of the argument type.
 @deftypefunx {unsigned int} stdc_trailing_zeros_ui (unsigned int @var{x})
 @deftypefunx {unsigned int} stdc_trailing_zeros_ul (unsigned long int @var{x})
 @deftypefunx {unsigned int} stdc_trailing_zeros_ull (unsigned long long int @var{x})
-@standards{C2X, stdbit.h}
+@standards{C23, stdbit.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{stdc_trailing_zeros} functions count the number of trailing
 (least significant) zero bits in @var{x}, starting from the least
@@ -83,7 +83,7 @@ the width of @var{x} in bits.
 @deftypefunx {unsigned int} stdc_trailing_ones_ui (unsigned int @var{x})
 @deftypefunx {unsigned int} stdc_trailing_ones_ul (unsigned long int @var{x})
 @deftypefunx {unsigned int} stdc_trailing_ones_ull (unsigned long long int @var{x})
-@standards{C2X, stdbit.h}
+@standards{C23, stdbit.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{stdc_trailing_ones} functions count the number of trailing
 (least significant) one bits in @var{x}, starting from the least
@@ -95,7 +95,7 @@ significant bit of the argument type.
 @deftypefunx {unsigned int} stdc_first_leading_zero_ui (unsigned int @var{x})
 @deftypefunx {unsigned int} stdc_first_leading_zero_ul (unsigned long int @var{x})
 @deftypefunx {unsigned int} stdc_first_leading_zero_ull (unsigned long long int @var{x})
-@standards{C2X, stdbit.h}
+@standards{C23, stdbit.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{stdc_first_leading_zero} functions return the position of
 the most significant zero bit in @var{x}, counting from the most
@@ -108,7 +108,7 @@ significant bit of @var{x} as 1, or zero if there is no zero bit in
 @deftypefunx {unsigned int} stdc_first_leading_one_ui (unsigned int @var{x})
 @deftypefunx {unsigned int} stdc_first_leading_one_ul (unsigned long int @var{x})
 @deftypefunx {unsigned int} stdc_first_leading_one_ull (unsigned long long int @var{x})
-@standards{C2X, stdbit.h}
+@standards{C23, stdbit.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{stdc_first_leading_one} functions return the position of the
 most significant one bit in @var{x}, counting from the most
@@ -121,7 +121,7 @@ significant bit of @var{x} as 1, or zero if there is no one bit in
 @deftypefunx {unsigned int} stdc_first_trailing_zero_ui (unsigned int @var{x})
 @deftypefunx {unsigned int} stdc_first_trailing_zero_ul (unsigned long int @var{x})
 @deftypefunx {unsigned int} stdc_first_trailing_zero_ull (unsigned long long int @var{x})
-@standards{C2X, stdbit.h}
+@standards{C23, stdbit.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{stdc_first_trailing_zero} functions return the position of
 the least significant zero bit in @var{x}, counting from the least
@@ -134,7 +134,7 @@ significant bit of @var{x} as 1, or zero if there is no zero bit in
 @deftypefunx {unsigned int} stdc_first_trailing_one_ui (unsigned int @var{x})
 @deftypefunx {unsigned int} stdc_first_trailing_one_ul (unsigned long int @var{x})
 @deftypefunx {unsigned int} stdc_first_trailing_one_ull (unsigned long long int @var{x})
-@standards{C2X, stdbit.h}
+@standards{C23, stdbit.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{stdc_first_trailing_one} functions return the position of
 the least significant one bit in @var{x}, counting from the least
@@ -147,7 +147,7 @@ significant bit of @var{x} as 1, or zero if there is no one bit in
 @deftypefunx {unsigned int} stdc_count_zeros_ui (unsigned int @var{x})
 @deftypefunx {unsigned int} stdc_count_zeros_ul (unsigned long int @var{x})
 @deftypefunx {unsigned int} stdc_count_zeros_ull (unsigned long long int @var{x})
-@standards{C2X, stdbit.h}
+@standards{C23, stdbit.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{stdc_count_zeros} functions count the number of zero bits in
 @var{x}.
@@ -158,7 +158,7 @@ The @code{stdc_count_zeros} functions count the number of zero bits in
 @deftypefunx {unsigned int} stdc_count_ones_ui (unsigned int @var{x})
 @deftypefunx {unsigned int} stdc_count_ones_ul (unsigned long int @var{x})
 @deftypefunx {unsigned int} stdc_count_ones_ull (unsigned long long int @var{x})
-@standards{C2X, stdbit.h}
+@standards{C23, stdbit.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{stdc_count_ones} functions count the number of one bits in
 @var{x}.
@@ -169,7 +169,7 @@ The @code{stdc_count_ones} functions count the number of one bits in
 @deftypefunx {_Bool} stdc_has_single_bit_ui (unsigned int @var{x})
 @deftypefunx {_Bool} stdc_has_single_bit_ul (unsigned long int @var{x})
 @deftypefunx {_Bool} stdc_has_single_bit_ull (unsigned long long int @var{x})
-@standards{C2X, stdbit.h}
+@standards{C23, stdbit.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{stdc_has_single_bit} functions return whether @var{x} has
 exactly one bit set to one.
@@ -180,7 +180,7 @@ exactly one bit set to one.
 @deftypefunx {unsigned int} stdc_bit_width_ui (unsigned int @var{x})
 @deftypefunx {unsigned int} stdc_bit_width_ul (unsigned long int @var{x})
 @deftypefunx {unsigned int} stdc_bit_width_ull (unsigned long long int @var{x})
-@standards{C2X, stdbit.h}
+@standards{C23, stdbit.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{stdc_bit_width} functions return the minimum number of bits
 needed to store @var{x}, not counting leading zero bits.  If @var{x}
@@ -192,7 +192,7 @@ is zero, they return zero.
 @deftypefunx {unsigned int} stdc_bit_floor_ui (unsigned int @var{x})
 @deftypefunx {unsigned long int} stdc_bit_floor_ul (unsigned long int @var{x})
 @deftypefunx {unsigned long long int} stdc_bit_floor_ull (unsigned long long int @var{x})
-@standards{C2X, stdbit.h}
+@standards{C23, stdbit.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{stdc_bit_floor} functions return the largest integer power
 of two that is less than or equal to @var{x}.  If @var{x} is zero,
@@ -204,7 +204,7 @@ they return zero.
 @deftypefunx {unsigned int} stdc_bit_ceil_ui (unsigned int @var{x})
 @deftypefunx {unsigned long int} stdc_bit_ceil_ul (unsigned long int @var{x})
 @deftypefunx {unsigned long long int} stdc_bit_ceil_ull (unsigned long long int @var{x})
-@standards{C2X, stdbit.h}
+@standards{C23, stdbit.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{stdc_bit_ceil} functions return the smallest integer power
 of two that is greater than or equal to @var{x}.  If this cannot be

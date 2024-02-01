@@ -25,7 +25,7 @@
 # complex integer types, which are a GNU extension, but are currently
 # disabled here because they do not work properly with tgmath.h).
 
-# C2x makes the <tgmath.h> rules for selecting a function to call
+# C23 makes the <tgmath.h> rules for selecting a function to call
 # correspond to the usual arithmetic conversions (applied successively
 # to the arguments for generic parameters in order), which choose the
 # type whose set of values contains that of the other type (undefined
@@ -743,7 +743,7 @@ class Tests(object):
                 self.add_tests(prefix + fn, ret, ['r'] * args)
         # TS 18661-4 functions.
         self.add_tests('exp10', 'r', ['r'])
-        # C2X functions.
+        # C23 functions.
         self.add_tests('fmaximum', 'r', ['r', 'r'])
         self.add_tests('fmaximum_mag', 'r', ['r', 'r'])
         self.add_tests('fmaximum_num', 'r', ['r', 'r'])

@@ -354,8 +354,9 @@ tests += tst-ibm128-scanf-binary-c11 \
 	 tst-ieee128-scanf-binary-gnu11 \
 	 tst-ieee128-scanf-binary-gnu89
 
-# Some versions of GCC supported for building glibc do not support -std=c2x, so
-# the test for that version uses -std=c11 and then _ISOC2X_SOURCE is defined in
+# Some versions of GCC supported for building glibc do not support -std=c23
+# (added in GCC 14), or the older name -std=c2x (added in GCC 9), so
+# the test for that version uses -std=c11 and then _ISOC23_SOURCE is defined in
 # the test as needed.
 CFLAGS-tst-ibm128-scanf-binary-c11.c += -mabi=ibmlongdouble -Wno-psabi \
 					-std=c11 -DOBJPFX=\"$(objpfx)\"
@@ -390,8 +391,9 @@ tests += tst-ibm128-wscanf-binary-c11 \
 	 tst-ieee128-wscanf-binary-gnu11 \
 	 tst-ieee128-wscanf-binary-gnu89
 
-# Some versions of GCC supported for building glibc do not support -std=c2x, so
-# the test for that version uses -std=c11 and then _ISOC2X_SOURCE is defined in
+# Some versions of GCC supported for building glibc do not support -std=c23
+# (added in GCC 14), or the older name -std=c2x (added in GCC 9), so
+# the test for that version uses -std=c11 and then _ISOC23_SOURCE is defined in
 # the test as needed.
 CFLAGS-tst-ibm128-wscanf-binary-c11.c += -mabi=ibmlongdouble -Wno-psabi \
 					 -std=c11 -DOBJPFX=\"$(objpfx)\"

@@ -1904,7 +1904,7 @@ operation.  These functions, defined by TS 18661-1:2014 and TS
 floating-point number); if @var{x} is not a NaN, they return
 @minus{}1.  They raise no floating-point exceptions even for signaling
 NaNs.  (The return value of @minus{}1 for an argument that is not a
-NaN is specified in C2x; the value was unspecified in TS 18661.)
+NaN is specified in C23; the value was unspecified in TS 18661.)
 @end deftypefun
 
 @deftypefun int setpayload (double *@var{x}, double @var{payload})
@@ -2128,7 +2128,7 @@ are NaN, or either is a signaling NaN, NaN is returned.
 @deftypefunx {long double} fminimuml (long double @var{x}, long double @var{y})
 @deftypefunx _FloatN fminimumfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
 @deftypefunx _FloatNx fminimumfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
-@standards{C2X, math.h}
+@standards{C23, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{fminimum} function returns the lesser of the two values @var{x}
 and @var{y}.  Unlike @code{fmin}, if either argument is a NaN, NaN is returned.
@@ -2140,7 +2140,7 @@ Positive zero is treated as greater than negative zero.
 @deftypefunx {long double} fmaximuml (long double @var{x}, long double @var{y})
 @deftypefunx _FloatN fmaximumfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
 @deftypefunx _FloatNx fmaximumfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
-@standards{C2X, math.h}
+@standards{C23, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{fmaximum} function returns the greater of the two values @var{x}
 and @var{y}.  Unlike @code{fmax}, if either argument is a NaN, NaN is returned.
@@ -2152,7 +2152,7 @@ Positive zero is treated as greater than negative zero.
 @deftypefunx {long double} fminimum_numl (long double @var{x}, long double @var{y})
 @deftypefunx _FloatN fminimum_numfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
 @deftypefunx _FloatNx fminimum_numfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
-@standards{C2X, math.h}
+@standards{C23, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{fminimum_num} function returns the lesser of the two values
 @var{x} and @var{y}.  If one argument is a number and the other is a
@@ -2165,7 +2165,7 @@ treated as greater than negative zero.
 @deftypefunx {long double} fmaximum_numl (long double @var{x}, long double @var{y})
 @deftypefunx _FloatN fmaximum_numfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
 @deftypefunx _FloatNx fmaximum_numfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
-@standards{C2X, math.h}
+@standards{C23, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{fmaximum_num} function returns the greater of the two values
 @var{x} and @var{y}.  If one argument is a number and the other is a
@@ -2208,7 +2208,7 @@ as the @code{fmax} functions.
 @deftypefunx {long double} fminimum_magl (long double @var{x}, long double @var{y})
 @deftypefunx _FloatN fminimum_magfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
 @deftypefunx _FloatNx fminimum_magfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
-@standards{C2X, math.h}
+@standards{C23, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return whichever of the two values @var{x} and @var{y}
 has the smaller absolute value.  If both have the same absolute value,
@@ -2221,7 +2221,7 @@ functions.
 @deftypefunx {long double} fmaximum_magl (long double @var{x}, long double @var{y})
 @deftypefunx _FloatN fmaximum_magfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
 @deftypefunx _FloatNx fmaximum_magfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
-@standards{C2X, math.h}
+@standards{C23, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return whichever of the two values @var{x} and @var{y}
 has the greater absolute value.  If both have the same absolute value,
@@ -2234,7 +2234,7 @@ functions.
 @deftypefunx {long double} fminimum_mag_numl (long double @var{x}, long double @var{y})
 @deftypefunx _FloatN fminimum_mag_numfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
 @deftypefunx _FloatNx fminimum_mag_numfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
-@standards{C2X, math.h}
+@standards{C23, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return whichever of the two values @var{x} and @var{y}
 has the smaller absolute value.  If both have the same absolute value,
@@ -2247,7 +2247,7 @@ functions.
 @deftypefunx {long double} fmaximum_mag_numl (long double @var{x}, long double @var{y})
 @deftypefunx _FloatN fmaximum_mag_numfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
 @deftypefunx _FloatNx fmaximum_mag_numfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
-@standards{C2X, math.h}
+@standards{C23, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return whichever of the two values @var{x} and @var{y}
 has the greater absolute value.  If both have the same absolute value,
@@ -2663,12 +2663,12 @@ A nonempty sequence of digits in the radix specified by @var{base}.
 If @var{base} is zero, decimal radix is assumed unless the series of
 digits begins with @samp{0} (specifying octal radix), or @samp{0x} or
 @samp{0X} (specifying hexadecimal radix), or @samp{0b} or @samp{0B}
-(specifying binary radix; only supported when C2X features are
+(specifying binary radix; only supported when C23 features are
 enabled); in other words, the same syntax used for integer constants in C.
 
 Otherwise @var{base} must have a value between @code{2} and @code{36}.
 If @var{base} is @code{16}, the digits may optionally be preceded by
-@samp{0x} or @samp{0X}.  If @var{base} is @code{2}, and C2X features
+@samp{0x} or @samp{0X}.  If @var{base} is @code{2}, and C23 features
 are enabled, the digits may optionally be preceded by
 @samp{0b} or @samp{0B}.  If base has no legal value the value returned
 is @code{0l} and the global variable @code{errno} is set to @code{EINVAL}.

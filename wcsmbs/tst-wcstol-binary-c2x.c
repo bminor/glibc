@@ -1,4 +1,4 @@
-/* Test wcstol functions with C2X binary integers (wide strings,
+/* Test wcstol functions with C23 binary integers (wide strings,
    no extensions).
    Copyright (C) 2022-2024 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
@@ -18,15 +18,15 @@
    <https://www.gnu.org/licenses/>.  */
 
 /* Some versions of GCC supported for building glibc do not support
-   -std=c2x.  */
+   -std=c23 or -std-c2x.  */
 #undef _GNU_SOURCE
-#define _ISOC2X_SOURCE
+#define _ISOC23_SOURCE
 
 #define CHAR wchar_t
 #define WIDE 1
 #define FNPFX wcsto
 #define L_(C) L ## C
-#define TEST_C2X 1
+#define TEST_C23 1
 #define TEST_Q 0
 #define TEST_LOCALE 0
 

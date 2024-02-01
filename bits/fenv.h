@@ -54,7 +54,7 @@ fenv_t;
 /* If the default argument is used we use this value.  */
 #define FE_DFL_ENV	((const fenv_t *) -1l)
 
-#if __GLIBC_USE (IEC_60559_BFP_EXT_C2X)
+#if __GLIBC_USE (IEC_60559_BFP_EXT_C23)
 /* Type representing floating-point control modes.  */
 typedef unsigned int femode_t;
 

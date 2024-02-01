@@ -14,6 +14,13 @@ Major new features:
   in order to support unsigned __int128 and/or unsigned _BitInt(N) operands
   with arbitrary precisions when supported by the target.
 
+* The GNU C Library now supports a feature test macro _ISOC23_SOURCE to
+  enable features from the ISO C23 standard.  Only some features from
+  this standard are supported by the GNU C Library.  The older name
+  _ISOC2X_SOURCE is still supported.  Features from C23 are also enabled
+  by _GNU_SOURCE, or by compiling with the GCC options -std=c23,
+  -std=gnu23, -std=c2x or -std=gnu2x.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
   [Add deprecations, removals and changes affecting compatibility here]

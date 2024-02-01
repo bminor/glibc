@@ -236,8 +236,9 @@ tests += tst-nldbl-scanf-binary-c11 \
 	 tst-nldbl-scanf-binary-gnu11 \
 	 tst-nldbl-scanf-binary-gnu89
 
-# Some versions of GCC supported for building glibc do not support -std=c2x, so
-# the test for that version uses -std=c11 and then _ISOC2X_SOURCE is defined in
+# Some versions of GCC supported for building glibc do not support -std=c23
+# (added in GCC 14), or the older name -std=c2x (added in GCC 9), so
+# the test for that version uses -std=c11 and then _ISOC23_SOURCE is defined in
 # the test as needed.
 CFLAGS-tst-nldbl-scanf-binary-c11.c += -mlong-double-64 -std=c11 \
 				       -DOBJPFX=\"$(objpfx)\"
@@ -256,8 +257,9 @@ tests += tst-nldbl-wscanf-binary-c11 \
 	 tst-nldbl-wscanf-binary-gnu11 \
 	 tst-nldbl-wscanf-binary-gnu89
 
-# Some versions of GCC supported for building glibc do not support -std=c2x, so
-# the test for that version uses -std=c11 and then _ISOC2X_SOURCE is defined in
+# Some versions of GCC supported for building glibc do not support -std=c23
+# (added in GCC 14), or the older name -std=c2x (added in GCC 9), so
+# the test for that version uses -std=c11 and then _ISOC23_SOURCE is defined in
 # the test as needed.
 CFLAGS-tst-nldbl-wscanf-binary-c11.c += -mlong-double-64 -std=c11 \
 					-DOBJPFX=\"$(objpfx)\"

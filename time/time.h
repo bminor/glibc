@@ -148,7 +148,7 @@ extern struct tm *__REDIRECT_NTH (localtime, (const time_t *__timer),
 #endif
 
 
-#if defined __USE_POSIX || __GLIBC_USE (ISOC2X)
+#if defined __USE_POSIX || __GLIBC_USE (ISOC23)
 # ifndef __USE_TIME_BITS64
 /* Return the `struct tm' representation of *TIMER in UTC,
    using *TP to store the result.  */
@@ -173,7 +173,7 @@ extern struct tm*__REDIRECT_NTH (localtime_r, (const time_t *__restrict __t,
 #   define localtime_r __localtime_r
 #  endif
 # endif
-#endif	/* POSIX || C2X */
+#endif	/* POSIX || C23 */
 
 /* Return a string of the form "Day Mon dd hh:mm:ss yyyy\n"
    that is the representation of TP in this format.  */
@@ -241,7 +241,7 @@ extern long int timezone;
   ((year) % 4 == 0 && ((year) % 100 != 0 || (year) % 400 == 0))
 
 
-#if defined __USE_MISC || __GLIBC_USE (ISOC2X)
+#if defined __USE_MISC || __GLIBC_USE (ISOC23)
 # ifndef __USE_TIME_BITS64
 /* Like `mktime', but for TP represents Universal Time, not local time.  */
 extern time_t timegm (struct tm *__tp) __THROW;
@@ -394,7 +394,7 @@ extern int __REDIRECT_NTH (timespec_get, (struct timespec *__ts, int __base),
 #endif
 
 
-#if __GLIBC_USE (ISOC2X)
+#if __GLIBC_USE (ISOC23)
 # ifndef __USE_TIME_BITS64
 /* Set TS to resolution of time base BASE.  */
 extern int timespec_getres (struct timespec *__ts, int __base)

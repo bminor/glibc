@@ -115,7 +115,7 @@ libc_hidden_proto (__isoc23_sscanf)
 libc_hidden_proto (__isoc23_vsscanf)
 libc_hidden_proto (__isoc23_vfscanf)
 
-/* Internal uses of sscanf should call the C2X-compliant version.
+/* Internal uses of sscanf should call the C23-compliant version.
    Unfortunately, symbol redirection is not transitive, so the
    __REDIRECT in the public header does not link up with the above
    libc_hidden_proto.  Bridge the gap with a macro.  */

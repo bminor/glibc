@@ -1,4 +1,4 @@
-/* Test scanf functions with C2X binary integers.
+/* Test scanf functions with C23 binary integers.
    Copyright (C) 2022-2024 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -78,7 +78,7 @@ one_check (const CHAR *s, int expected, char expected_c)
   TEST_VERIFY_EXIT (0 <= ret);
   xfclose (fp);
 
-  if (!TEST_C2X)
+  if (!TEST_C23)
     {
       expected = 0;
       expected_c = s[0] == L_('-') ? s[2] : s[1];
@@ -340,7 +340,7 @@ one_check_b (const CHAR *s, int expected, char expected_c)
 static void
 one_check_scnb (const CHAR *s, int expected, char expected_c)
 {
-#if TEST_C2X || defined _GNU_SOURCE
+#if TEST_C23 || defined _GNU_SOURCE
   CHECK_SCNB (uint8_t, SCNb8, s, (uint8_t) expected, expected_c);
   CHECK_SCNB (uint16_t, SCNb16, s, (uint16_t) expected, expected_c);
   CHECK_SCNB (uint32_t, SCNb32, s, (uint32_t) expected, expected_c);

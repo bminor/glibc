@@ -1493,7 +1493,7 @@ With @code{%B}, @code{%b}, and @code{%h}: use the grammatical form for
 month names that is appropriate when the month is named by itself,
 rather than the form that is appropriate when the month is used as
 part of a complete date.  The @code{%OB} and @code{%Ob} formats are a
-C2X feature, specified in C2X to use the locale's `alternative' month
+C23 feature, specified in C23 to use the locale's `alternative' month
 name; @theglibc{} extends this specification to say that the form used
 in a complete date is the default and the form naming the month by
 itself is the alternative.
@@ -1516,14 +1516,14 @@ The full weekday name according to the current locale.
 @item %b
 The abbreviated month name according to the current locale, in the
 grammatical form used when the month is part of a complete date.
-As a C2X feature (with a more detailed specification in @theglibc{}),
+As a C23 feature (with a more detailed specification in @theglibc{}),
 the @code{O} modifier can be used (@code{%Ob}) to get the grammatical
 form used when the month is named by itself.
 
 @item %B
 The full month name according to the current locale, in the
 grammatical form used when the month is part of a complete date.
-As a C2X feature (with a more detailed specification in @theglibc{}),
+As a C23 feature (with a more detailed specification in @theglibc{}),
 the @code{O} modifier can be used (@code{%OB}) to get the grammatical
 form used when the month is named by itself.
 
