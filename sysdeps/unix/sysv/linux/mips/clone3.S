@@ -37,11 +37,6 @@
 
 	.text
 	.set		nomips16
-#if _MIPS_SIM == _ABIO32
-# define EXTRA_LOCALS 1
-#else
-# define EXTRA_LOCALS 0
-#endif
 #define FRAMESZ ((NARGSAVE*SZREG)+ALSZ)&ALMASK
 GPOFF= FRAMESZ-(1*SZREG)
 NESTED(__clone3, SZREG, sp)
@@ -68,8 +63,31 @@ NESTED(__clone3, SZREG, sp)
 	beqz	a0, L(error)	/* No NULL cl_args pointer.  */
 	beqz	a2, L(error)	/* No NULL function pointer.  */
 
+#if _MIPS_SIM == _ABIO32
+	/* Both stack and stack_size on clone_args are defined as uint64_t, and
+	   there is no need to handle values larger than to 32 bits for o32.  */
+# if __BYTE_ORDER == __BIG_ENDIAN
+#  define CL_STACKPOINTER_OFFSET  44
+#  define CL_STACKSIZE_OFFSET     52
+# else
+#  define CL_STACKPOINTER_OFFSET  40
+#  define CL_STACKSIZE_OFFSET     48
+# endif
+
+	/* For o32 we need to setup a minimal stack frame to allow cprestore
+	   on __thread_start_clone3.  Also there is no guarantee by kABI that
+	   $8 will be preserved after syscall execution (so we need to save it
+	   on the provided stack).  */
+	lw	t0, CL_STACKPOINTER_OFFSET(a0)	/* Load the stack pointer.  */
+	lw	t1, CL_STACKSIZE_OFFSET(a0)	/* Load the stack_size.  */
+	addiu	t1, -32				/* Update the stack size.  */
+	addu	t2, t1, t0			/* Calculate the thread stack.  */
+	sw	a3, 0(t2)			/* Save argument pointer.  */
+	sw	t1, CL_STACKSIZE_OFFSET(a0)	/* Save the new stack size.  */
+#else
 	move	$8, a3		/* a3 is set to 0/1 for syscall success/error
 				   while a4/$8 is returned unmodified.  */
+#endif
 
 	/* Do the system call, the kernel expects:
 	   v0: system call number
@@ -125,7 +143,11 @@ L(thread_start_clone3):
 
 	/* Restore the arg for user's function.  */
 	move		t9, a2		/* Function pointer.  */
+#if _MIPS_SIM == _ABIO32
+	PTR_L		a0, 0(sp)
+#else
 	move		a0, $8		/* Argument pointer.  */
+#endif
 
 	/* Call the user's function.  */
 	jal		t9
