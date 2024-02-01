@@ -35,18 +35,21 @@ second, zero if they are ``equal'', and positive if the first argument
 is ``greater''.
 
 Here is an example of a comparison function which works with an array of
-numbers of type @code{double}:
+numbers of type @code{long int}:
 
 @smallexample
 int
-compare_doubles (const void *a, const void *b)
+compare_long_ints (const void *a, const void *b)
 @{
-  const double *da = (const double *) a;
-  const double *db = (const double *) b;
+  const long int *la = a;
+  const long int *lb = b;
 
-  return (*da > *db) - (*da < *db);
+  return (*la > *lb) - (*la < *lb);
 @}
 @end smallexample
+
+(The code would have to be more complicated for an array of @code{double},
+to handle NaNs correctly.)
 
 The header file @file{stdlib.h} defines a name for the data type of
 comparison functions.  This type is a GNU extension.
@@ -183,16 +186,16 @@ in the array before making some comparisons.  The only way to perform
 a stable sort with @code{qsort} is to first augment the objects with a
 monotonic counter of some kind.
 
-Here is a simple example of sorting an array of doubles in numerical
+Here is a simple example of sorting an array of @code{long int} in numerical
 order, using the comparison function defined above (@pxref{Comparison
 Functions}):
 
 @smallexample
 @{
-  double *array;
-  int size;
+  long int *array;
+  size_t nmemb;
   @dots{}
-  qsort (array, size, sizeof (double), compare_doubles);
+  qsort (array, nmemb, sizeof *array, compare_long_ints);
 @}
 @end smallexample
 
