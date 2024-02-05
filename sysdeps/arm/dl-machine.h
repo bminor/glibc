@@ -139,7 +139,6 @@ _start:\n\
 _dl_start_user:\n\
 	adr	r6, .L_GET_GOT\n\
 	add	sl, sl, r6\n\
-	ldr	r4, [sl, r4]\n\
 	@ save the entry point in another register\n\
 	mov	r6, r0\n\
 	@ get the original arg count\n\
