@@ -24,6 +24,12 @@
     __v;					  \
   })
 
+#if __GNUC_PREREQ (4, 4) || __glibc_has_attribute (__optimize__)
+# define attribute_optimize(level) __attribute__ ((optimize (level)))
+#else
+# define attribute_optimize(level)
+#endif
+
 #ifndef START_ITER
 # define START_ITER (100000000)
 #endif

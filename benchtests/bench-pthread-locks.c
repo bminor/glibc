@@ -29,6 +29,7 @@
 #include <sys/time.h>
 #include <math.h>
 #include "bench-timing.h"
+#include "bench-util.h"
 #include "json-lib.h"
 
 /* The point of this benchmark is to measure the overhead of an empty
@@ -61,10 +62,7 @@ typedef timing_t (*test_t)(long, int);
    total time each test iteration takes, so as to not swamp the useful
    timings.  */
 
-#pragma GCC push_options
-#pragma GCC optimize(1)
-
-static int __attribute__((noinline))
+static int __attribute__((noinline)) attribute_optimize (1)
 fibonacci (int i)
 {
   asm("");
@@ -73,15 +71,13 @@ fibonacci (int i)
   return 10+i;
 }
 
-static void
+static void attribute_optimize (1)
 do_filler (void)
 {
   static char buf1[512], buf2[512];
   int f = fibonacci (5);
   memcpy (buf1, buf2, f);
 }
-
-#pragma GCC pop_options
 
 static timing_t
 test_mutex (long iters, int filler)
