@@ -68,7 +68,7 @@ get_block_size (unsigned int rand_data)
   float min_pow = powf (dist_min, exponent + 1);
   float max_pow = powf (dist_max, exponent + 1);
 
-  float r = (float) rand_data / RAND_MAX;
+  float r = (float) rand_data / (float) RAND_MAX;
 
   return (unsigned int) powf ((max_pow - min_pow) * r + min_pow,
 			      1 / (exponent + 1));
