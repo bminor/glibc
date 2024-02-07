@@ -106,7 +106,7 @@ country_ab3   "ERI"
 country_num   232
 country_car   "ER"
 % country_isbn  unknown, Need ISO 2108
-# https://en.wikipedia.org/wiki/Saho_language has "Saaho" as the endonym but CLDR has "Saho"
+% https://en.wikipedia.org/wiki/Saho_language has "Saaho" as the endonym but CLDR has "Saho"
 lang_name     "Saho"
 lang_ab       ""
 lang_term     "ssy"
