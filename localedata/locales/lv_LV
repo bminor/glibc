@@ -56,63 +56,94 @@ LC_COLLATE
 
 copy "iso14651_t1"
 
-% CLDR collation rules for Latvian:
+% CLDR collation rules for Latvian (as of 2024-02-07):
 % (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/lv.xml)
 %
-% &[before 1]D<č<<<Č
-% &[before 1]H<ģ<<<Ģ
-% &I<<y<<<Y
-% &[before 1]L<ķ<<<Ķ
-% &[before 1]M<ļ<<<Ļ
-% &[before 1]O<ņ<<<Ņ
-% &[before 1]S<ŗ<<<Ŗ
-% &[before 1]T<š<<<Š
-% &[before 1]Ʒ<ž<<<Ž
+% &A<ā<<<Ā
+% &C<č<<<Č
+% &E<ē<<<Ē
+% &G<ģ<<<Ģ
+% &I<y<<<Y<ī<<<Ī
+% &K<ķ<<<Ķ
+% &L<ļ<<<Ļ
+% &N<ņ<<<Ņ
+% &O<ō<<<Ō
+% &R<ŗ<<<Ŗ
+% &S<š<<<Š
+% &U<ū<<<Ū
+% &Z<ž<<<Ž
 %
 % The following rules implement the same order for glibc.
 
+collating-symbol <a-macron>
 collating-symbol <c-caron>
+collating-symbol <e-macron>
 collating-symbol <g-cedilla>
+collating-symbol <ypsilon>
+collating-symbol <i-macron>
 collating-symbol <k-cedilla>
 collating-symbol <l-cedilla>
 collating-symbol <n-cedilla>
+collating-symbol <o-macron>
 collating-symbol <r-cedilla>
 collating-symbol <s-caron>
+collating-symbol <u-macron>
 collating-symbol <z-caron>
 
-reorder-after <BEFORE-D>
+reorder-after <AFTER-A>
+<a-macron>
+reorder-after <AFTER-C>
 <c-caron>
-reorder-after <BEFORE-H>
+reorder-after <AFTER-E>
+<e-macron>
+reorder-after <AFTER-G>
 <g-cedilla>
-reorder-after <BEFORE-L>
+reorder-after <AFTER-I>
+<ypsilon>
+<i-macron>
+reorder-after <AFTER-K>
 <k-cedilla>
-reorder-after <BEFORE-M>
+reorder-after <AFTER-L>
 <l-cedilla>
-reorder-after <BEFORE-O>
+reorder-after <AFTER-N>
 <n-cedilla>
-reorder-after <BEFORE-S>
+reorder-after <AFTER-O>
+<o-macron>
+reorder-after <AFTER-R>
 <r-cedilla>
-reorder-after <BEFORE-T>
+reorder-after <AFTER-S>
 <s-caron>
-reorder-after <BEFORE-EZH>
+reorder-after <AFTER-U>
+<u-macron>
+reorder-after <AFTER-Z>
 <z-caron>
 
+<U0101> <a-macron>;<BASE>;<MIN>;IGNORE % ā
+<U0100> <a-macron>;<BASE>;<CAP>;IGNORE % Ā
 <U010D> <c-caron>;<BASE>;<MIN>;IGNORE % č
 <U010C> <c-caron>;<BASE>;<CAP>;IGNORE % Č
+<U0113> <e-macron>;<BASE>;<MIN>;IGNORE % ē
+<U0112> <e-macron>;<BASE>;<CAP>;IGNORE % Ē
 <U0123> <g-cedilla>;<BASE>;<MIN>;IGNORE % ģ
 <U0122> <g-cedilla>;<BASE>;<CAP>;IGNORE % Ģ
-<U0079> <S0069>;<LOWLINE>;<MIN>;IGNORE % y
-<U0059> <S0069>;<LOWLINE>;<CAP>;IGNORE % Y
+<U0079> <ypsilon>;<BASE>;<MIN>;IGNORE % y
+<U0059> <ypsilon>;<BASE>;<CAP>;IGNORE % Y
+<U012B> <i-macron>;<BASE>;<MIN>;IGNORE % ī
+<U012A> <i-macron>;<BASE>;<CAP>;IGNORE % Ī
 <U0137> <k-cedilla>;<BASE>;<MIN>;IGNORE % ķ
 <U0136> <k-cedilla>;<BASE>;<CAP>;IGNORE % Ķ
 <U013C> <l-cedilla>;<BASE>;<MIN>;IGNORE % ļ
 <U013B> <l-cedilla>;<BASE>;<CAP>;IGNORE % Ļ
 <U0146> <n-cedilla>;<BASE>;<MIN>;IGNORE % ņ
 <U0145> <n-cedilla>;<BASE>;<CAP>;IGNORE % Ņ
+<U014D> <o-macron>;<BASE>;<MIN>;IGNORE % ō
+<U014C> <o-macron>;<BASE>;<CAP>;IGNORE % Ō
 <U0157> <r-cedilla>;<BASE>;<MIN>;IGNORE % ŗ
 <U0156> <r-cedilla>;<BASE>;<CAP>;IGNORE % Ŗ
 <U0161> <s-caron>;<BASE>;<MIN>;IGNORE % š
 <U0160> <s-caron>;<BASE>;<CAP>;IGNORE % Š
+<U016B> <u-macron>;<BASE>;<MIN>;IGNORE % ū
+<U016A> <u-macron>;<BASE>;<CAP>;IGNORE % Ū
 <U017E> <z-caron>;<BASE>;<MIN>;IGNORE % ž
 <U017D> <z-caron>;<BASE>;<CAP>;IGNORE % Ž
 
