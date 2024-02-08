@@ -791,7 +791,6 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
   long int data = -1;
   long int shared = -1;
   long int shared_per_thread = -1;
-  long int core = -1;
   unsigned int threads = 0;
   unsigned long int level1_icache_size = -1;
   unsigned long int level1_icache_linesize = -1;
@@ -809,7 +808,6 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
   if (cpu_features->basic.kind == arch_kind_intel)
     {
       data = handle_intel (_SC_LEVEL1_DCACHE_SIZE, cpu_features);
-      core = handle_intel (_SC_LEVEL2_CACHE_SIZE, cpu_features);
       shared = handle_intel (_SC_LEVEL3_CACHE_SIZE, cpu_features);
       shared_per_thread = shared;
 
@@ -822,7 +820,8 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
 	= handle_intel (_SC_LEVEL1_DCACHE_ASSOC, cpu_features);
       level1_dcache_linesize
 	= handle_intel (_SC_LEVEL1_DCACHE_LINESIZE, cpu_features);
-      level2_cache_size = core;
+      level2_cache_size
+	= handle_intel (_SC_LEVEL2_CACHE_SIZE, cpu_features);
       level2_cache_assoc
 	= handle_intel (_SC_LEVEL2_CACHE_ASSOC, cpu_features);
       level2_cache_linesize
@@ -835,12 +834,12 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
       level4_cache_size
 	= handle_intel (_SC_LEVEL4_CACHE_SIZE, cpu_features);
 
-      get_common_cache_info (&shared, &shared_per_thread, &threads, core);
+      get_common_cache_info (&shared, &shared_per_thread, &threads,
+			     level2_cache_size);
     }
   else if (cpu_features->basic.kind == arch_kind_zhaoxin)
     {
       data = handle_zhaoxin (_SC_LEVEL1_DCACHE_SIZE);
-      core = handle_zhaoxin (_SC_LEVEL2_CACHE_SIZE);
       shared = handle_zhaoxin (_SC_LEVEL3_CACHE_SIZE);
       shared_per_thread = shared;
 
@@ -849,19 +848,19 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
       level1_dcache_size = data;
       level1_dcache_assoc = handle_zhaoxin (_SC_LEVEL1_DCACHE_ASSOC);
       level1_dcache_linesize = handle_zhaoxin (_SC_LEVEL1_DCACHE_LINESIZE);
-      level2_cache_size = core;
+      level2_cache_size = handle_zhaoxin (_SC_LEVEL2_CACHE_SIZE);
       level2_cache_assoc = handle_zhaoxin (_SC_LEVEL2_CACHE_ASSOC);
       level2_cache_linesize = handle_zhaoxin (_SC_LEVEL2_CACHE_LINESIZE);
       level3_cache_size = shared;
       level3_cache_assoc = handle_zhaoxin (_SC_LEVEL3_CACHE_ASSOC);
       level3_cache_linesize = handle_zhaoxin (_SC_LEVEL3_CACHE_LINESIZE);
 
-      get_common_cache_info (&shared, &shared_per_thread, &threads, core);
+      get_common_cache_info (&shared, &shared_per_thread, &threads,
+			     level2_cache_size);
     }
   else if (cpu_features->basic.kind == arch_kind_amd)
     {
       data = handle_amd (_SC_LEVEL1_DCACHE_SIZE);
-      core = handle_amd (_SC_LEVEL2_CACHE_SIZE);
       shared = handle_amd (_SC_LEVEL3_CACHE_SIZE);
 
       level1_icache_size = handle_amd (_SC_LEVEL1_ICACHE_SIZE);
@@ -869,7 +868,7 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
       level1_dcache_size = data;
       level1_dcache_assoc = handle_amd (_SC_LEVEL1_DCACHE_ASSOC);
       level1_dcache_linesize = handle_amd (_SC_LEVEL1_DCACHE_LINESIZE);
-      level2_cache_size = core;
+      level2_cache_size = handle_amd (_SC_LEVEL2_CACHE_SIZE);;
       level2_cache_assoc = handle_amd (_SC_LEVEL2_CACHE_ASSOC);
       level2_cache_linesize = handle_amd (_SC_LEVEL2_CACHE_LINESIZE);
       level3_cache_size = shared;
@@ -880,12 +879,12 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
       if (shared <= 0)
         {
            /* No shared L3 cache.  All we have is the L2 cache.  */
-           shared = core;
+           shared = level2_cache_size;
         }
       else if (cpu_features->basic.family < 0x17)
         {
            /* Account for exclusive L2 and L3 caches.  */
-           shared += core;
+           shared += level2_cache_size;
         }
 
       shared_per_thread = shared;
@@ -987,6 +986,12 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
   if (CPU_FEATURE_USABLE_P (cpu_features, FSRM))
     rep_movsb_threshold = 2112;
 
+   /* For AMD CPUs that support ERMS (Zen3+), REP MOVSB is in a lot of
+      cases slower than the vectorized path (and for some alignments,
+      it is really slow, check BZ #30994).  */
+  if (cpu_features->basic.kind == arch_kind_amd)
+    rep_movsb_threshold = non_temporal_threshold;
+
   /* The default threshold to use Enhanced REP STOSB.  */
   unsigned long int rep_stosb_threshold = 2048;
 
@@ -1028,16 +1033,9 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
 			   SIZE_MAX);
 
   unsigned long int rep_movsb_stop_threshold;
-  /* ERMS feature is implemented from AMD Zen3 architecture and it is
-     performing poorly for data above L2 cache size. Henceforth, adding
-     an upper bound threshold parameter to limit the usage of Enhanced
-     REP MOVSB operations and setting its value to L2 cache size.  */
-  if (cpu_features->basic.kind == arch_kind_amd)
-    rep_movsb_stop_threshold = core;
   /* Setting the upper bound of ERMS to the computed value of
-     non-temporal threshold for architectures other than AMD.  */
-  else
-    rep_movsb_stop_threshold = non_temporal_threshold;
+     non-temporal threshold for all architectures.  */
+  rep_movsb_stop_threshold = non_temporal_threshold;
 
   cpu_features->data_cache_size = data;
   cpu_features->shared_cache_size = shared;
