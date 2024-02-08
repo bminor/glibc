@@ -257,7 +257,9 @@
 
 # define __fortify_clang_warning(__c, __msg) \
   __attribute__ ((__diagnose_if__ ((__c), (__msg), "warning")))
-# define __fortify_clang_warning_only_if_bos0_lt(n, buf, complaint) \
+#  define __fortify_clang_error(__c, __msg) \
+  __attribute__ ((__diagnose_if__ ((__c), (__msg), "error")))
+#  define __fortify_clang_warning_only_if_bos0_lt(n, buf, complaint) \
   __attribute__ ((__diagnose_if__ \
 		  (__fortify_clang_bosn_args (__bos0, n, buf, 1, complaint))))
 # define __fortify_clang_warning_only_if_bos0_lt2(n, buf, div, complaint) \
@@ -269,6 +271,11 @@
 # define __fortify_clang_warning_only_if_bos_lt2(n, buf, div, complaint) \
   __attribute__ ((__diagnose_if__ \
 		  (__fortify_clang_bosn_args (__bos, n, buf, div, complaint))))
+
+#  define __fortify_clang_prefer_this_overload \
+  __attribute__ ((enable_if (1, "")))
+#  define __fortify_clang_unavailable(__msg) \
+  __attribute__ ((unavailable(__msg)))
 
 # if __USE_FORTIFY_LEVEL == 3
 #  define __fortify_clang_overload_arg(__type, __attr, __name) \
