@@ -60,6 +60,7 @@ routines_no_fortify += \
   iofgets_u \
   iofgetws \
   iofgetws_u \
+  iovdprintf \
   swprintf \
   vasprintf \
   vsnprintf \

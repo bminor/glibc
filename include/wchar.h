@@ -166,7 +166,6 @@ libc_hidden_proto (putwc)
 
 libc_hidden_proto (mbrtowc)
 libc_hidden_proto (wcrtomb)
-libc_hidden_proto (__wcrtomb_chk)
 
 extern int __wcscmp (const wchar_t *__s1, const wchar_t *__s2)
      __THROW __attribute_pure__;

@@ -35,3 +35,4 @@ __vasprintf_chk (char **result_ptr, int flag, const char *format, va_list ap)
 
   return __vasprintf_internal (result_ptr, format, ap, mode);
 }
+libc_hidden_def (__vasprintf_chk)

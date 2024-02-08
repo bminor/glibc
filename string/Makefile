@@ -121,6 +121,7 @@ routines := \
 
 # Exclude fortified routines from being built with _FORTIFY_SOURCE
 routines_no_fortify += \
+  bzero \
   explicit_bzero \
   memcpy \
   memmove \

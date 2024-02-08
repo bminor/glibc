@@ -23,8 +23,12 @@
     redirecting ldouble to _Float128 variants.  We can therefore safely
     directly alias them to their internal name.  */
 # if __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1 && IS_IN (libc)
-#  define stdio_hidden_ldbl_proto(p, f) \
-  extern __typeof (p ## f) p ## f __asm (__ASMNAME ("___ieee128_" #f));
+#  ifdef SHARED
+#   define stdio_hidden_ldbl_proto(p, f) __LDBL_REDIR2_DECL (f)
+#  else
+#   define stdio_hidden_ldbl_proto(p, f) \
+  extern __typeof (p ## f) p ## f __asm (#p __ASMNAME (#f "ieee128"));
+#  endif
 # elif __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 #  define stdio_hidden_ldbl_proto(p,f) __LDBL_REDIR1_DECL (p ## f, p ## f ## ieee128)
 # else
@@ -70,10 +74,12 @@ extern int __printf_chk (int, const char *, ...);
 extern int __fprintf_chk (FILE *, int, const char *, ...);
 extern int __vprintf_chk (int, const char *, __gnuc_va_list);
 extern int __vfprintf_chk (FILE *, int, const char *, __gnuc_va_list);
+stdio_hidden_ldbl_proto (__, vfprintf_chk)
 extern char *__fgets_unlocked_chk (char *buf, size_t size, int n, FILE *fp);
 extern char *__fgets_chk (char *buf, size_t size, int n, FILE *fp);
 extern int __asprintf_chk (char **, int, const char *, ...) __THROW;
 extern int __vasprintf_chk (char **, int, const char *, __gnuc_va_list) __THROW;
+stdio_hidden_ldbl_proto (__, vasprintf_chk)
 extern int __dprintf_chk (int, int, const char *, ...);
 extern int __vdprintf_chk (int, int, const char *, __gnuc_va_list);
 extern int __obstack_printf_chk (struct obstack *, int, const char *, ...)

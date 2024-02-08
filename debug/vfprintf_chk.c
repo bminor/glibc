@@ -29,3 +29,4 @@ ___vfprintf_chk (FILE *fp, int flag, const char *format, va_list ap)
   return __vfprintf_internal (fp, format, ap, mode);
 }
 ldbl_strong_alias (___vfprintf_chk, __vfprintf_chk)
+ldbl_hidden_def (___vfprintf_chk, __vfprintf_chk)
