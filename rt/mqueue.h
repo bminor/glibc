@@ -110,8 +110,7 @@ extern int __REDIRECT (mq_timedsend, (mqd_t __mqdes,
 #endif
 
 /* Define some inlines helping to catch common problems.  */
-#if __USE_FORTIFY_LEVEL > 0 && defined __fortify_function \
-    && defined __va_arg_pack_len
+#if __USE_FORTIFY_LEVEL > 0 && defined __fortify_function
 # include <bits/mqueue2.h>
 #endif
 
