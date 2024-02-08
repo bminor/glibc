@@ -21,7 +21,9 @@
    2. If size is less than VEC, use integer register stores.
    3. If size is from VEC_SIZE to 2 * VEC_SIZE, use 2 VEC stores.
    4. If size is from 2 * VEC_SIZE to 4 * VEC_SIZE, use 4 VEC stores.
-   5. If size is more to 4 * VEC_SIZE, align to 4 * VEC_SIZE with
+   5. On machines ERMS feature, if size is greater or equal than
+      __x86_rep_stosb_threshold then REP STOSB will be used.
+   6. If size is more to 4 * VEC_SIZE, align to 4 * VEC_SIZE with
       4 VEC stores and store 4 * VEC at a time until done.  */
 
 #include <sysdep.h>
