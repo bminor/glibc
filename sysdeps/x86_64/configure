@@ -67,7 +67,7 @@ cat > conftest.c <<EOF
 int _start (void) { return 42; }
 EOF
 if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp
-		  -Wl,-z,mark-plt -nostdlib -nostartfiles
+		  -Wl,-z,mark-plt -Wl,--fatal-warnings -nostdlib -nostartfiles
 		  -fPIC -shared -o conftest.so conftest.c
 		  1>&5'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
@@ -76,7 +76,7 @@ if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp
   printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; }
 then
-  if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp -Wl,-z,mark-plt -nostdlib \
+  if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp -Wl,-z,mark-plt, -Wl,--fatal-warnings -nostdlib \
       -nostartfiles -fPIC -shared -o conftest.so conftest.c 2>&1 \
       | grep "warning: -z mark-plt ignored" > /dev/null 2>&1; then
     true
