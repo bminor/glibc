@@ -222,7 +222,7 @@ else:
 def parse_diagnostics(cmd):
     global errors
     diag_out = subprocess.run(cmd, stdout=subprocess.PIPE, check=True,
-                              universal_newlines=True).stdout
+                              universal_newlines=True, shell=True).stdout
     if diag_out[-1] != '\n':
         print('error: ld.so output does not end in newline')
         errors += 1
@@ -293,8 +293,7 @@ def main(argv):
     if opts.manual:
         check_consistency_with_manual(opts.manual)
 
-    # Remove the initial 'env' command.
-    parse_diagnostics(opts.command.split()[1:])
+    parse_diagnostics(opts.command)
 
     if errors:
         sys.exit(1)
