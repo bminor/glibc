@@ -727,8 +727,7 @@ identified by a number.  Macros for all the possible system call numbers
 are defined in @file{sys/syscall.h}
 
 The remaining arguments are the arguments for the system call, in
-order, and their meanings depend on the kind of system call.  Each kind
-of system call has a definite number of arguments, from zero to five.
+order, and their meanings depend on the kind of system call.
 If you code more arguments than the system call takes, the extra ones to
 the right are ignored.
 
