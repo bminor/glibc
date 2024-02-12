@@ -98,7 +98,7 @@ try:
     # If everything's ok, spawn the gdb process we'll use for testing.
     gdb = pexpect.spawn(gdb_invocation, echo=False, timeout=timeout,
                         encoding=encoding)
-    gdb_prompt = u'\(gdb\)'
+    gdb_prompt = u'\\(gdb\\)'
     gdb.expect(gdb_prompt)
 
 except pexpect.ExceptionPexpect as exception:
