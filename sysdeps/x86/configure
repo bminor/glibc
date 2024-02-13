@@ -98,6 +98,7 @@ printf "%s\n" "$libc_cv_have_x86_lahf_sahf" >&6; }
   if test $libc_cv_have_x86_lahf_sahf = yes; then
     printf "%s\n" "#define HAVE_X86_LAHF_SAHF 1" >>confdefs.h
 
+    ISAFLAG="-DHAVE_X86_LAHF_SAHF"
   fi
   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for MOVBE instruction support" >&5
 printf %s "checking for MOVBE instruction support... " >&6; }
@@ -120,8 +121,40 @@ printf "%s\n" "$libc_cv_have_x86_movbe" >&6; }
   if test $libc_cv_have_x86_movbe = yes; then
     printf "%s\n" "#define HAVE_X86_MOVBE 1" >>confdefs.h
 
+    ISAFLAG="$ISAFLAG -DHAVE_X86_MOVBE"
   fi
+
+  # Check for ISA level support.
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for ISA level support" >&5
+printf %s "checking for ISA level support... " >&6; }
+if test ${libc_cv_have_x86_isa_level+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  cat > conftest.c <<EOF
+#include <sysdeps/x86/isa-level.h>
+#if MINIMUM_X86_ISA_LEVEL >= 4
+libc_cv_have_x86_isa_level=4
+#elif MINIMUM_X86_ISA_LEVEL == 3
+libc_cv_have_x86_isa_level=3
+#elif MINIMUM_X86_ISA_LEVEL == 2
+libc_cv_have_x86_isa_level=2
+#else
+libc_cv_have_x86_isa_level=baseline
+#endif
+EOF
+		 eval `${CC-cc} $CFLAGS $CPPFLAGS $ISAFLAG -I$srcdir -E conftest.c | grep libc_cv_have_x86_isa_level`
+		 rm -rf conftest*
 fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_have_x86_isa_level" >&5
+printf "%s\n" "$libc_cv_have_x86_isa_level" >&6; }
+else
+  libc_cv_have_x86_isa_level=baseline
+fi
+config_vars="$config_vars
+have-x86-isa-level = $libc_cv_have_x86_isa_level"
+config_vars="$config_vars
+x86-isa-level-3-or-above = 3 4"
 config_vars="$config_vars
 enable-x86-isa-level = $libc_cv_include_x86_isa_level"
 

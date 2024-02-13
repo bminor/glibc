@@ -16,15 +16,18 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <libm-alias-double.h>
+#include <sysdeps/x86/isa-level.h>
+#if MINIMUM_X86_ISA_LEVEL < AVX2_X86_ISA_LEVEL
+# include <libm-alias-double.h>
 
 extern double __redirect_atan (double);
 
-#define SYMBOL_NAME atan
-#include "ifunc-avx-fma4.h"
+# define SYMBOL_NAME atan
+# include "ifunc-avx-fma4.h"
 
 libc_ifunc_redirected (__redirect_atan, __atan, IFUNC_SELECTOR ());
 libm_alias_double (__atan, atan)
 
-#define __atan __atan_sse2
+# define __atan __atan_sse2
+#endif
 #include <sysdeps/ieee754/dbl-64/s_atan.c>

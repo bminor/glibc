@@ -16,17 +16,20 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define NO_MATH_REDIRECT
-#include <libm-alias-float.h>
+#include <sysdeps/x86/isa-level.h>
+#if MINIMUM_X86_ISA_LEVEL < SSE4_1_X86_ISA_LEVEL
+# define NO_MATH_REDIRECT
+# include <libm-alias-float.h>
 
-#define rintf __redirect_rintf
-#define __rintf __redirect___rintf
-#include <math.h>
-#undef rintf
-#undef __rintf
+# define rintf __redirect_rintf
+# define __rintf __redirect___rintf
+# include <math.h>
+# undef rintf
+# undef __rintf
 
-#define SYMBOL_NAME rintf
-#include "ifunc-sse4_1.h"
+# define SYMBOL_NAME rintf
+# include "ifunc-sse4_1.h"
 
 libc_ifunc_redirected (__redirect_rintf, __rintf, IFUNC_SELECTOR ());
 libm_alias_float (__rint, rint)
+#endif

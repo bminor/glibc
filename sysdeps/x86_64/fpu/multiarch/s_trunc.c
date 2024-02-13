@@ -16,17 +16,20 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define NO_MATH_REDIRECT
-#include <libm-alias-double.h>
+#include <sysdeps/x86/isa-level.h>
+#if MINIMUM_X86_ISA_LEVEL < SSE4_1_X86_ISA_LEVEL
+# define NO_MATH_REDIRECT
+# include <libm-alias-double.h>
 
-#define trunc __redirect_trunc
-#define __trunc __redirect___trunc
-#include <math.h>
-#undef trunc
-#undef __trunc
+# define trunc __redirect_trunc
+# define __trunc __redirect___trunc
+# include <math.h>
+# undef trunc
+# undef __trunc
 
-#define SYMBOL_NAME trunc
-#include "ifunc-sse4_1.h"
+# define SYMBOL_NAME trunc
+# include "ifunc-sse4_1.h"
 
 libc_ifunc_redirected (__redirect_trunc, __trunc, IFUNC_SELECTOR ());
 libm_alias_double (__trunc, trunc)
+#endif

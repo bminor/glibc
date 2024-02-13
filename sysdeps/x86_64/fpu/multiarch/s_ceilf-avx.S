@@ -1,5 +1,5 @@
-/* Multiple versions of __nearbyint.
-   Copyright (C) 2017-2024 Free Software Foundation, Inc.
+/* AVX implementation of ceilf function.
+   Copyright (C) 2024 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,20 +16,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sysdeps/x86/isa-level.h>
-#if MINIMUM_X86_ISA_LEVEL < SSE4_1_X86_ISA_LEVEL
-# include <libm-alias-double.h>
+#include <sysdep.h>
+#include <libm-alias-float.h>
 
-# define nearbyint __redirect_nearbyint
-# define __nearbyint __redirect___nearbyint
-# include <math.h>
-# undef nearbyint
-# undef __nearbyint
+	.text
+ENTRY(__ceilf)
+	vroundss $10, %xmm0, %xmm0, %xmm0
+	ret
+END(__ceilf)
 
-# define SYMBOL_NAME nearbyint
-# include "ifunc-sse4_1.h"
-
-libc_ifunc_redirected (__redirect_nearbyint, __nearbyint,
-		       IFUNC_SELECTOR ());
-libm_alias_double (__nearbyint, nearbyint)
-#endif
+libm_alias_float (__ceil, ceil)

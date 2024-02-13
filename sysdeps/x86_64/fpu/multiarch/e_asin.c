@@ -16,26 +16,29 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <libm-alias-finite.h>
+#include <sysdeps/x86/isa-level.h>
+#if MINIMUM_X86_ISA_LEVEL < AVX2_X86_ISA_LEVEL
+# include <libm-alias-finite.h>
 
 extern double __redirect_ieee754_asin (double);
 extern double __redirect_ieee754_acos (double);
 
-#define SYMBOL_NAME ieee754_asin
-#include "ifunc-fma4.h"
+# define SYMBOL_NAME ieee754_asin
+# include "ifunc-fma4.h"
 
 libc_ifunc_redirected (__redirect_ieee754_asin, __ieee754_asin,
 		       IFUNC_SELECTOR ());
 libm_alias_finite (__ieee754_asin, __asin)
 
-#undef SYMBOL_NAME
-#define SYMBOL_NAME ieee754_acos
-#include "ifunc-fma4.h"
+# undef SYMBOL_NAME
+# define SYMBOL_NAME ieee754_acos
+# include "ifunc-fma4.h"
 
 libc_ifunc_redirected (__redirect_ieee754_acos, __ieee754_acos,
 		       IFUNC_SELECTOR ());
 libm_alias_finite (__ieee754_acos, __acos)
 
-#define __ieee754_acos __ieee754_acos_sse2
-#define __ieee754_asin __ieee754_asin_sse2
+# define __ieee754_acos __ieee754_acos_sse2
+# define __ieee754_asin __ieee754_asin_sse2
+#endif
 #include <sysdeps/ieee754/dbl-64/e_asin.c>

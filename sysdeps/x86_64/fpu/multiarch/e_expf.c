@@ -16,28 +16,31 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <libm-alias-float.h>
-#include <libm-alias-finite.h>
+#include <sysdeps/x86/isa-level.h>
+#if MINIMUM_X86_ISA_LEVEL < AVX2_X86_ISA_LEVEL
+# include <libm-alias-float.h>
+# include <libm-alias-finite.h>
 
 extern float __redirect_expf (float);
 
-#define SYMBOL_NAME expf
-#include "ifunc-fma.h"
+# define SYMBOL_NAME expf
+# include "ifunc-fma.h"
 
 libc_ifunc_redirected (__redirect_expf, __expf, IFUNC_SELECTOR ());
 
-#ifdef SHARED
+# ifdef SHARED
 __hidden_ver1 (__expf, __GI___expf, __redirect_expf)
   __attribute__ ((visibility ("hidden")));
 
 versioned_symbol (libm, __ieee754_expf, expf, GLIBC_2_27);
 libm_alias_float_other (__exp, exp)
-#else
+# else
 libm_alias_float (__exp, exp)
-#endif
+# endif
 
 strong_alias (__expf, __ieee754_expf)
 libm_alias_finite (__expf, __expf)
 
-#define __expf __expf_sse2
+# define __expf __expf_sse2
+#endif
 #include <sysdeps/ieee754/flt-32/e_expf.c>

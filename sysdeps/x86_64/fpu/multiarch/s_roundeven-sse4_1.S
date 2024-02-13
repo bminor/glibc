@@ -17,8 +17,20 @@
 
 #include <sysdep.h>
 
+#include <sysdeps/x86/isa-level.h>
+#if MINIMUM_X86_ISA_LEVEL == SSE4_1_X86_ISA_LEVEL
+# include <libm-alias-double.h>
+# define __roundeven_sse41 __roundeven
+	.text
+#else
 	.section .text.sse4.1,"ax",@progbits
+#endif
+
 ENTRY(__roundeven_sse41)
 	roundsd	$8, %xmm0, %xmm0
 	ret
 END(__roundeven_sse41)
+
+#if MINIMUM_X86_ISA_LEVEL == SSE4_1_X86_ISA_LEVEL
+libm_alias_double (__roundeven, roundeven)
+#endif

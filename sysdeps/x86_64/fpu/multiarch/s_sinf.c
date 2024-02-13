@@ -16,13 +16,18 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <libm-alias-float.h>
+#include <sysdeps/x86/isa-level.h>
+#if MINIMUM_X86_ISA_LEVEL < AVX2_X86_ISA_LEVEL
+# include <libm-alias-float.h>
 
 extern float __redirect_sinf (float);
 
-#define SYMBOL_NAME sinf
-#include "ifunc-fma.h"
+# define SYMBOL_NAME sinf
+# include "ifunc-fma.h"
 
 libc_ifunc_redirected (__redirect_sinf, __sinf, IFUNC_SELECTOR ());
 
 libm_alias_float (__sin, sin)
+#else
+# include <sysdeps/ieee754/flt-32/s_sinf.c>
+#endif

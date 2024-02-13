@@ -16,31 +16,34 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <libm-alias-float.h>
-#include <libm-alias-finite.h>
+#include <sysdeps/x86/isa-level.h>
+#if MINIMUM_X86_ISA_LEVEL < AVX2_X86_ISA_LEVEL
+# include <libm-alias-float.h>
+# include <libm-alias-finite.h>
 
-#define powf __redirect_powf
-#define __DECL_SIMD___redirect_powf
-#include <math.h>
-#undef powf
+# define powf __redirect_powf
+# define __DECL_SIMD___redirect_powf
+# include <math.h>
+# undef powf
 
-#define SYMBOL_NAME powf
-#include "ifunc-fma.h"
+# define SYMBOL_NAME powf
+# include "ifunc-fma.h"
 
 libc_ifunc_redirected (__redirect_powf, __powf, IFUNC_SELECTOR ());
 
-#ifdef SHARED
+# ifdef SHARED
 __hidden_ver1 (__powf, __GI___powf, __redirect_powf)
   __attribute__ ((visibility ("hidden")));
 
 versioned_symbol (libm, __ieee754_powf, powf, GLIBC_2_27);
 libm_alias_float_other (__pow, pow)
-#else
+# else
 libm_alias_float (__pow, pow)
-#endif
+# endif
 
 strong_alias (__powf, __ieee754_powf)
 libm_alias_finite (__powf, __powf)
 
-#define __powf __powf_sse2
+# define __powf __powf_sse2
+#endif
 #include <sysdeps/ieee754/flt-32/e_powf.c>
