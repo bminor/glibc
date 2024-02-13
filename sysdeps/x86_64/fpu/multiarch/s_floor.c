@@ -16,17 +16,20 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define NO_MATH_REDIRECT
-#include <libm-alias-double.h>
+#include <sysdeps/x86/isa-level.h>
+#if MINIMUM_X86_ISA_LEVEL < SSE4_1_X86_ISA_LEVEL
+# define NO_MATH_REDIRECT
+# include <libm-alias-double.h>
 
-#define floor __redirect_floor
-#define __floor __redirect___floor
-#include <math.h>
-#undef floor
-#undef __floor
+# define floor __redirect_floor
+# define __floor __redirect___floor
+# include <math.h>
+# undef floor
+# undef __floor
 
-#define SYMBOL_NAME floor
-#include "ifunc-sse4_1.h"
+# define SYMBOL_NAME floor
+# include "ifunc-sse4_1.h"
 
 libc_ifunc_redirected (__redirect_floor, __floor, IFUNC_SELECTOR ());
 libm_alias_double (__floor, floor)
+#endif

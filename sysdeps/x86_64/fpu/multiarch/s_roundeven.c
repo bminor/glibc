@@ -16,16 +16,19 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <libm-alias-double.h>
+#include <sysdeps/x86/isa-level.h>
+#if MINIMUM_X86_ISA_LEVEL < SSE4_1_X86_ISA_LEVEL
+# include <libm-alias-double.h>
 
-#define roundeven __redirect_roundeven
-#define __roundeven __redirect___roundeven
-#include <math.h>
-#undef roundeven
-#undef __roundeven
+# define roundeven __redirect_roundeven
+# define __roundeven __redirect___roundeven
+# include <math.h>
+# undef roundeven
+# undef __roundeven
 
-#define SYMBOL_NAME roundeven
-#include "ifunc-sse4_1.h"
+# define SYMBOL_NAME roundeven
+# include "ifunc-sse4_1.h"
 
 libc_ifunc_redirected (__redirect_roundeven, __roundeven, IFUNC_SELECTOR ());
 libm_alias_double (__roundeven, roundeven)
+#endif

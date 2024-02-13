@@ -16,28 +16,31 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <libm-alias-float.h>
-#include <libm-alias-finite.h>
+#include <sysdeps/x86/isa-level.h>
+#if MINIMUM_X86_ISA_LEVEL < AVX2_X86_ISA_LEVEL
+# include <libm-alias-float.h>
+# include <libm-alias-finite.h>
 
 extern float __redirect_logf (float);
 
-#define SYMBOL_NAME logf
-#include "ifunc-fma.h"
+# define SYMBOL_NAME logf
+# include "ifunc-fma.h"
 
 libc_ifunc_redirected (__redirect_logf, __logf, IFUNC_SELECTOR ());
 
-#ifdef SHARED
+# ifdef SHARED
 __hidden_ver1 (__logf, __GI___logf, __redirect_logf)
   __attribute__ ((visibility ("hidden")));
 
 versioned_symbol (libm, __ieee754_logf, logf, GLIBC_2_27);
 libm_alias_float_other (__log, log)
-#else
+# else
 libm_alias_float (__log, log)
-#endif
+# endif
 
 strong_alias (__logf, __ieee754_logf)
 libm_alias_finite (__logf, __logf)
 
-#define __logf __logf_sse2
+# define __logf __logf_sse2
+#endif
 #include <sysdeps/ieee754/flt-32/e_logf.c>

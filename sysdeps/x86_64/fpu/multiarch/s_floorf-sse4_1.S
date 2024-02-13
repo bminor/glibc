@@ -17,8 +17,20 @@
 
 #include <sysdep.h>
 
+#include <sysdeps/x86/isa-level.h>
+#if MINIMUM_X86_ISA_LEVEL == SSE4_1_X86_ISA_LEVEL
+# include <libm-alias-float.h>
+# define __floorf_sse41 __floorf
+	.text
+#else
 	.section .text.sse4.1,"ax",@progbits
+#endif
+
 ENTRY(__floorf_sse41)
 	roundss	$9, %xmm0, %xmm0
 	ret
 END(__floorf_sse41)
+
+#if MINIMUM_X86_ISA_LEVEL == SSE4_1_X86_ISA_LEVEL
+libm_alias_float (__floor, floor)
+#endif

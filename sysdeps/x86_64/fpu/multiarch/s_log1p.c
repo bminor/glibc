@@ -16,14 +16,17 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <libm-alias-double.h>
+#include <sysdeps/x86/isa-level.h>
+#if MINIMUM_X86_ISA_LEVEL < AVX2_X86_ISA_LEVEL
+# include <libm-alias-double.h>
 
 extern double __redirect_log1p (double);
 
-#define SYMBOL_NAME log1p
-#include "ifunc-fma.h"
+# define SYMBOL_NAME log1p
+# include "ifunc-fma.h"
 
 libc_ifunc_redirected (__redirect_log1p, __log1p, IFUNC_SELECTOR ());
 
-#define __log1p __log1p_sse2
+# define __log1p __log1p_sse2
+#endif
 #include <sysdeps/ieee754/dbl-64/s_log1p.c>

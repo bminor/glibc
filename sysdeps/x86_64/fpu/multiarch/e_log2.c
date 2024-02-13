@@ -16,28 +16,31 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <libm-alias-double.h>
-#include <libm-alias-finite.h>
+#include <sysdeps/x86/isa-level.h>
+#if MINIMUM_X86_ISA_LEVEL < AVX2_X86_ISA_LEVEL
+# include <libm-alias-double.h>
+# include <libm-alias-finite.h>
 
 extern double __redirect_log2 (double);
 
-#define SYMBOL_NAME log2
-#include "ifunc-fma.h"
+# define SYMBOL_NAME log2
+# include "ifunc-fma.h"
 
 libc_ifunc_redirected (__redirect_log2, __log2, IFUNC_SELECTOR ());
 
-#ifdef SHARED
+# ifdef SHARED
 __hidden_ver1 (__log2, __GI___log2, __redirect_log2)
   __attribute__ ((visibility ("hidden")));
 
 versioned_symbol (libm, __ieee754_log2, log2, GLIBC_2_29);
 libm_alias_double_other (__log2, log2)
-#else
+# else
 libm_alias_double (__log2, log2)
-#endif
+# endif
 
 strong_alias (__log2, __ieee754_log2)
 libm_alias_finite (__log2, __log2)
 
-#define __log2 __log2_sse2
+# define __log2 __log2_sse2
+#endif
 #include <sysdeps/ieee754/dbl-64/e_log2.c>

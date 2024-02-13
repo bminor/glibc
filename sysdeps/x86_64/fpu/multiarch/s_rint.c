@@ -16,17 +16,20 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define NO_MATH_REDIRECT
-#include <libm-alias-double.h>
+#include <sysdeps/x86/isa-level.h>
+#if MINIMUM_X86_ISA_LEVEL < SSE4_1_X86_ISA_LEVEL
+# define NO_MATH_REDIRECT
+# include <libm-alias-double.h>
 
-#define rint __redirect_rint
-#define __rint __redirect___rint
-#include <math.h>
-#undef rint
-#undef __rint
+# define rint __redirect_rint
+# define __rint __redirect___rint
+# include <math.h>
+# undef rint
+# undef __rint
 
-#define SYMBOL_NAME rint
-#include "ifunc-sse4_1.h"
+# define SYMBOL_NAME rint
+# include "ifunc-sse4_1.h"
 
 libc_ifunc_redirected (__redirect_rint, __rint, IFUNC_SELECTOR ());
 libm_alias_double (__rint, rint)
+#endif
