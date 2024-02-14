@@ -11,6 +11,8 @@
 #include <sys/wait.h>
 #include <libc-diag.h>
 
+#include <support/xsignal.h>
+
 /* The sigset function is deprecated.  */
 DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wdeprecated-declarations");
 
@@ -148,6 +150,8 @@ returnTest3 (void)
 int
 main (int argc, char *argv[])
 {
+  xsignal (TEST_SIG, SIG_DFL);
+
   pid_t childPid;
 
   childPid = fork();
