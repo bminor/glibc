@@ -1,3 +1,72 @@
+this branch contains experimental GCS support (not ABI stable)
+
+source and branches
+-------------------
+
+binutils-gdb: upstream-git users/ARM/gcs-binutils-gdb-master
+gcc (trunk): upstream-git vendors/ARM/gcs
+gcc (gcc-13): upstream-git vendors/ARM/gcs-13
+	note: gcc vendor branches need setup https://gcc.gnu.org/gitwrite.html#vendor
+glibc: upstream-git arm/gcs
+linux: https://git.kernel.org/pub/scm/linux/kernel/git/broonie/misc.git arm64-gcs
+fvp fast model can be used for testing.
+
+toolchain build
+---------------
+
+two options:
+
+(1) branch-protect by default
+  configure gcc with --enable-standard-branch-protection
+  and build glibc normally
+
+(2) do not branch-protect by default, require explicit cflags
+  configure gcc with
+    CFLAGS_FOR_TARGET='-O2 -mbranch-protection=standard'
+    CXXFLAGS_FOR_TARGET='-O2 -mbranch-protection=standard'
+  and configure glibc with
+    CFLAGS='-g -O2 -mbranch-protection=standard'
+  build user code with
+    CFLAGS+=-mbranch-protection=standard
+    (equivalent to -mbranch-protection=bti+pac+gcs)
+
+linking
+-------
+
+use ldflags:
+
+-z experimental-gcs={always,never,implicit}
+  always: force GCS marking on
+  never: force GCS marking off
+  implicit: mark output if all inputs are marked (default)
+
+-z experimental-gcs-report={none,warning,error}
+  none: silent (default)
+  warning: when output is marked, unmarked input is a warning
+  error: when output is marked, unmarked input is an error
+
+runtime
+-------
+
+run with environment var
+
+  GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1:glibc.cpu.aarch64_gcs_policy=2
+
+by default both tunables are 0, the meaning is
+
+glibc.cpu.aarch64_gcs_policy=0:
+  GCS is enabled if glibc.cpu.aarch64_gcs is set
+glibc.cpu.aarch64_gcs_policy=1:
+  GCS is enabled if glibc.cpu.aarch64_gcs is set and binary is marked
+  if GCS is enabled an incompatible dlopen is an error
+glibc.cpu.aarch64_gcs_policy=2:
+  GCS is enabled if glibc.cpu.aarch64_gcs is set
+  if GCS is enabled any incompatible binary is an error
+
+
+original readme
+---------------
+
 This directory contains the sources of the GNU C Library.
 See the file "version.h" for what release version you have.
 
