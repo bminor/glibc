@@ -1,52 +1,52 @@
 ifeq ($(subdir),string)
 sysdep_routines += \
-  strlen-aligned \
-  strlen-lsx \
-  strlen-lasx \
-  strnlen-aligned \
-  strnlen-lsx \
-  strnlen-lasx \
-  strchr-aligned \
-  strchr-lsx \
-  strchr-lasx \
-  strrchr-aligned \
-  strrchr-lsx \
-  strrchr-lasx \
-  strchrnul-aligned \
-  strchrnul-lsx \
-  strchrnul-lasx \
-  strcmp-aligned \
-  strcmp-lsx \
-  strncmp-aligned \
-  strncmp-lsx \
-  strcpy-aligned \
-  strcpy-unaligned \
-  strcpy-lsx \
-  strcpy-lasx \
-  stpcpy-aligned \
-  stpcpy-unaligned \
-  stpcpy-lsx \
-  stpcpy-lasx \
+  memchr-aligned \
+  memchr-lasx \
+  memchr-lsx \
+  memcmp-aligned \
+  memcmp-lasx \
+  memcmp-lsx \
   memcpy-aligned \
   memcpy-unaligned \
-  memmove-unaligned \
-  memmove-lsx \
   memmove-lasx \
-  rawmemchr-aligned \
-  rawmemchr-lsx \
-  rawmemchr-lasx \
-  memchr-aligned \
-  memchr-lsx \
-  memchr-lasx \
+  memmove-lsx \
+  memmove-unaligned \
   memrchr-generic \
-  memrchr-lsx \
   memrchr-lasx \
+  memrchr-lsx \
   memset-aligned \
-  memset-unaligned \
-  memset-lsx \
   memset-lasx \
-  memcmp-aligned \
-  memcmp-lsx \
-  memcmp-lasx \
+  memset-lsx \
+  memset-unaligned \
+  rawmemchr-aligned \
+  rawmemchr-lasx \
+  rawmemchr-lsx \
+  stpcpy-aligned \
+  stpcpy-lasx \
+  stpcpy-lsx \
+  stpcpy-unaligned \
+  strchr-aligned \
+  strchr-lasx \
+  strchr-lsx \
+  strchrnul-aligned \
+  strchrnul-lasx \
+  strchrnul-lsx \
+  strcmp-aligned \
+  strcmp-lsx \
+  strcpy-aligned \
+  strcpy-lasx \
+  strcpy-lsx \
+  strcpy-unaligned \
+  strlen-aligned \
+  strlen-lasx \
+  strlen-lsx \
+  strncmp-aligned \
+  strncmp-lsx \
+  strnlen-aligned \
+  strnlen-lasx \
+  strnlen-lsx \
+  strrchr-aligned \
+  strrchr-lasx \
+  strrchr-lsx \
 # sysdep_routines
 endif
