@@ -15,17 +15,17 @@ CFLAGS-dl-get-cpu-features.os += $(rtld-early-cflags)
 CFLAGS-get-cpuid-feature-leaf.o += $(no-stack-protector)
 
 tests += \
-  tst-get-cpu-features \
-  tst-get-cpu-features-static \
   tst-cpu-features-cpuinfo \
   tst-cpu-features-cpuinfo-static \
   tst-cpu-features-supports \
   tst-cpu-features-supports-static \
+  tst-get-cpu-features \
+  tst-get-cpu-features-static \
 # tests
 tests-static += \
-  tst-get-cpu-features-static \
   tst-cpu-features-cpuinfo-static \
   tst-cpu-features-supports-static \
+  tst-get-cpu-features-static \
 # tests-static
 ifeq (yes,$(have-ifunc))
 ifeq (yes,$(have-gcc-ifunc))

@@ -4,10 +4,10 @@ libm-sysdep_routines += \
   s_ceilf-c \
   s_floor-c \
   s_floorf-c \
-  s_rint-c \
-  s_rintf-c \
   s_nearbyint-c \
   s_nearbyintf-c \
+  s_rint-c \
+  s_rintf-c \
   s_roundeven-c \
   s_roundevenf-c \
   s_trunc-c \
@@ -21,10 +21,10 @@ libm-sysdep_routines += \
   s_floorf-sse4_1 \
   s_nearbyint-sse4_1 \
   s_nearbyintf-sse4_1 \
-  s_roundeven-sse4_1 \
-  s_roundevenf-sse4_1 \
   s_rint-sse4_1 \
   s_rintf-sse4_1 \
+  s_roundeven-sse4_1 \
+  s_roundevenf-sse4_1 \
   s_trunc-sse4_1 \
   s_truncf-sse4_1 \
 # libm-sysdep_routines
@@ -84,12 +84,12 @@ CFLAGS-s_cosf-fma.c = -mfma -mavx2
 CFLAGS-s_sincosf-fma.c = -mfma -mavx2
 
 libm-sysdep_routines += \
+  e_asin-fma4 \
+  e_atan2-fma4 \
   e_exp-fma4 \
   e_log-fma4 \
   e_pow-fma4 \
-  e_asin-fma4 \
   s_atan-fma4 \
-  e_atan2-fma4 \
   s_sin-fma4 \
   s_sincos-fma4 \
   s_tan-fma4 \
@@ -106,10 +106,10 @@ CFLAGS-s_tan-fma4.c = -mfma4
 CFLAGS-s_sincos-fma4.c = -mfma4
 
 libm-sysdep_routines += \
+  e_atan2-avx \
   e_exp-avx \
   e_log-avx \
   s_atan-avx \
-  e_atan2-avx \
   s_sin-avx \
   s_sincos-avx \
   s_tan-avx \
