@@ -129,7 +129,7 @@ def sort_makefile_lines():
     for i in range(len(lines)):
         # Look for things like "var = \", "var := \" or "var += \"
         # to start the sorted list.
-        var = re.search(r'^([a-zA-Z0-9-]*) [\+:]?\= \\$', lines[i])
+        var = re.search(r'^([-_a-zA-Z0-9]*) [\+:]?\= \\$', lines[i])
         if var:
             # Remember the index and the name.
             startmarks.append((i, var.group(1)))
@@ -140,7 +140,7 @@ def sort_makefile_lines():
     rangemarks = []
     for sm in startmarks:
         # Look for things like "  # var" to end the sorted list.
-        reg = r'^  # ' + sm[1] + r'$'
+        reg = r'^ *# ' + sm[1] + r'$'
         for j in range(sm[0] + 1, len(lines)):
             if re.search(reg, lines[j]):
                 # Remember the block to sort (inclusive).
