@@ -32,7 +32,8 @@ sysdep_routines += \
 # sysdep_routines
 gen-as-const-headers += locale-defines.sym
 tests += \
-  tst-rsi-strlen
+  tst-rsi-strlen \
+# tests
 endif
 
 ifeq ($(subdir),elf)
@@ -230,7 +231,8 @@ sysdep_routines += \
 # sysdep_routines
 
 tests += \
-  tst-rsi-wcslen
+  tst-rsi-wcslen \
+# tests
 endif
 
 
