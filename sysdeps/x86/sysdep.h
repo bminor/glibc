@@ -21,14 +21,54 @@
 
 #include <sysdeps/generic/sysdep.h>
 
+/* The extended state feature IDs in the state component bitmap.  */
+#define X86_XSTATE_X87_ID	0
+#define X86_XSTATE_SSE_ID	1
+#define X86_XSTATE_AVX_ID	2
+#define X86_XSTATE_BNDREGS_ID	3
+#define X86_XSTATE_BNDCFG_ID	4
+#define X86_XSTATE_K_ID		5
+#define X86_XSTATE_ZMM_H_ID	6
+#define X86_XSTATE_ZMM_ID	7
+#define X86_XSTATE_PKRU_ID	9
+#define X86_XSTATE_TILECFG_ID	17
+#define X86_XSTATE_TILEDATA_ID	18
+#define X86_XSTATE_APX_F_ID	19
+
+#ifdef __x86_64__
 /* Offset for fxsave/xsave area used by _dl_runtime_resolve.  Also need
    space to preserve RCX, RDX, RSI, RDI, R8, R9 and RAX.  It must be
-   aligned to 16 bytes for fxsave and 64 bytes for xsave.  */
-#define STATE_SAVE_OFFSET (8 * 7 + 8)
+   aligned to 16 bytes for fxsave and 64 bytes for xsave.
 
-/* Save SSE, AVX, AVX512, mask and bound registers.  */
-#define STATE_SAVE_MASK \
-  ((1 << 1) | (1 << 2) | (1 << 3) | (1 << 5) | (1 << 6) | (1 << 7))
+   NB: Is is non-zero because of the 128-byte red-zone.  Some registers
+   are saved on stack without adjusting stack pointer first.  When we
+   update stack pointer to allocate more space, we need to take the
+   red-zone into account.  */
+# define STATE_SAVE_OFFSET (8 * 7 + 8)
+
+/* Save SSE, AVX, AVX512, mask, bound and APX registers.  Bound and APX
+   registers are mutually exclusive.  */
+# define STATE_SAVE_MASK		\
+  ((1 << X86_XSTATE_SSE_ID)		\
+   | (1 << X86_XSTATE_AVX_ID)		\
+   | (1 << X86_XSTATE_BNDREGS_ID)	\
+   | (1 << X86_XSTATE_K_ID)		\
+   | (1 << X86_XSTATE_ZMM_H_ID) 	\
+   | (1 << X86_XSTATE_ZMM_ID)		\
+   | (1 << X86_XSTATE_APX_F_ID))
+#else
+/* Offset for fxsave/xsave area used by _dl_tlsdesc_dynamic.  Since i386
+   doesn't have red-zone, use 0 here.  */
+# define STATE_SAVE_OFFSET 0
+
+/* Save SSE, AVX, AXV512, mask and bound registers.   */
+# define STATE_SAVE_MASK		\
+  ((1 << X86_XSTATE_SSE_ID)		\
+   | (1 << X86_XSTATE_AVX_ID)		\
+   | (1 << X86_XSTATE_BNDREGS_ID)	\
+   | (1 << X86_XSTATE_K_ID)		\
+   | (1 << X86_XSTATE_ZMM_H_ID))
+#endif
 
 /* Constants for bits in __x86_string_control:  */
 
