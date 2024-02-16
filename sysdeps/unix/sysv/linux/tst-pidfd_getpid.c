@@ -61,7 +61,8 @@ do_test (void)
 	  {
 	    /* Older kernels may not support all the options, or security
 	       policy may block this call.  */
-	    if (errno == EINVAL || errno == EPERM || errno == ENOSPC)
+	    if (errno == EINVAL || errno == EPERM
+	        || errno == ENOSPC || errno == EACCES)
 	      exit (EXIT_UNSUPPORTED);
 	    FAIL_EXIT1 ("unshare user/fs/pid failed: %m");
 	  }
