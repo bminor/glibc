@@ -720,5 +720,4 @@ L(ret_null):
 	ret
 
 END (__memrchr_sse2)
-strong_alias (__memrchr_sse2, __GI___memrchr)
 #endif
