@@ -46,6 +46,7 @@ open_tree	EXTRA	open_tree	i:isU	open_tree
 pipe2		-	pipe2		i:fi	__pipe2		pipe2
 pidfd_open	EXTRA	pidfd_open	i:iU	pidfd_open
 pidfd_getfd	EXTRA	pidfd_getfd	i:iiU	pidfd_getfd
+prctl		EXTRA	prctl		i:iiiii	__prctl		prctl __prctl_time64
 pivot_root	EXTRA	pivot_root	i:ss	pivot_root
 pidfd_send_signal	EXTRA	pidfd_send_signal	i:iiPU	pidfd_send_signal
 process_madvise EXTRA   process_madvise i:iPniU process_madvise

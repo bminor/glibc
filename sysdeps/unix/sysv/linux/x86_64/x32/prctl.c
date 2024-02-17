@@ -1,4 +1,4 @@
-/* prctl - Linux specific syscall.
+/* prctl - Linux specific syscall.  x86-64 x32 version.
    Copyright (C) 2020-2024 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -40,6 +40,3 @@ __prctl (int option, ...)
 
 libc_hidden_def (__prctl)
 weak_alias (__prctl, prctl)
-#if __TIMESIZE != 64
-weak_alias (__prctl, __prctl_time64)
-#endif
