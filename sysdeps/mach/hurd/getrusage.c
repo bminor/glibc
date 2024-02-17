@@ -75,9 +75,13 @@ __getrusage (enum __rusage_who who, struct rusage *usage)
       break;
 
     case RUSAGE_CHILDREN:
-      /* XXX Not implemented yet.  However, zero out USAGE to be
-         consistent with the wait3 and wait4 functions.  */
+#ifdef HAVE_HURD_PROC_GETCHILDREN_RUSAGE
+      err = __USEPORT (PROC, __proc_getchildren_rusage (port, usage));
+      if (err)
+	return __hurd_fail (err);
+#else
       memset (usage, 0, sizeof (struct rusage));
+#endif
 
       break;
 

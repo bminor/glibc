@@ -159,6 +159,9 @@
 /* Mach/i386 specific: define if the `i386_set_gdt' RPC is available.  */
 #undef	HAVE_I386_SET_GDT
 
+/* Hurd specific; define if the `proc_getchildren_rusage' RPC is available.  */
+#undef HAVE_HURD_PROC_GETCHILDREN_RUSAGE
+
 /* Define if inlined system calls are available.  */
 #undef HAVE_INLINED_SYSCALLS
 

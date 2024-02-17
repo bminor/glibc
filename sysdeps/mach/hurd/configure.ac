@@ -23,6 +23,25 @@ if test "x$libc_cv_hurd_version" != xok; then
   AC_MSG_ERROR(Hurd headers not installed or too old)
 fi
 
+dnl
+dnl hurd_RPC_CHECK(interface.defs, rpc_method, define)
+dnl
+dnl Check if rpc_method RPC is defined by interface.defs
+dnl and define `define`.
+dnl
+AC_DEFUN([hurd_RPC_CHECK], [dnl
+AC_CACHE_CHECK(for $2 in $1, libc_cv_hurd_rpc_$2, [dnl
+AC_EGREP_HEADER($2, hurd/$1,
+		libc_cv_hurd_rpc_$2=yes,
+		libc_cv_hurd_rpc_$2=no)])
+if test $libc_cv_hurd_rpc_$2 = yes; then
+  AC_DEFINE([$3])
+fi
+])
+
+hurd_RPC_CHECK(process.defs, proc_getchildren_rusage,
+	       HAVE_HURD_PROC_GETCHILDREN_RUSAGE)
+
 if test -n "$sysheaders"; then
   CPPFLAGS=$OLD_CPPFLAGS
 fi

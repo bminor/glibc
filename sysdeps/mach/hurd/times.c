@@ -32,6 +32,13 @@ clock_from_time_value (const time_value_t *t)
   return t->seconds * 1000000 + t->microseconds;
 }
 
+#ifdef HAVE_HURD_PROC_GETCHILDREN_RUSAGE
+static inline clock_t
+clock_from_timeval (const struct timeval *t) {
+  return t->tv_sec * 1000000 + t->tv_usec;
+}
+#endif
+
 /* Store the CPU time used by this process and all its
    dead children (and their dead children) in BUFFER.
    Return the elapsed real time, or (clock_t) -1 for errors.
@@ -62,8 +69,17 @@ __times (struct tms *tms)
   tms->tms_stime = (clock_from_time_value (&bi.system_time)
 		    + clock_from_time_value (&tti.system_time));
 
-  /* XXX This can't be implemented until getrusage(RUSAGE_CHILDREN) can be.  */
+#ifdef HAVE_HURD_PROC_GETCHILDREN_RUSAGE
+  struct rusage child_rusage;
+  err = __USEPORT (PROC, __proc_getchildren_rusage (port, &child_rusage));
+  if (err)
+    return __hurd_fail (err);
+
+  tms->tms_cutime = clock_from_timeval (&child_rusage.ru_utime);
+  tms->tms_cstime = clock_from_timeval (&child_rusage.ru_stime);
+#else
   tms->tms_cutime = tms->tms_cstime = 0;
+#endif
 
   __host_get_time (__mach_host_self (), &now);
 
