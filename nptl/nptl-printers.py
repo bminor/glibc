@@ -587,7 +587,7 @@ def register(objfile):
     printer.add_printer('pthread_rwlockattr_t', r'^pthread_rwlockattr_t$',
                         RWLockAttributesPrinter)
 
-    if objfile == None:
+    if objfile is None:
         objfile = gdb
 
     gdb.printing.register_pretty_printer(objfile, printer)

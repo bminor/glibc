@@ -414,7 +414,7 @@ class Tests(object):
         elif ret == 'g' or 'g' in args:
             # Real and complex.
             have_complex = True
-            if complex_func == None:
+            if complex_func is None:
                 complex_func = 'c%s' % func
         # For narrowing macros, compute narrow_args, the list of
         # argument types for which there is an actual corresponding
@@ -462,7 +462,7 @@ class Tests(object):
                 continue
             if t.complex and not have_complex:
                 continue
-            if func == None and not t.complex:
+            if func is None and not t.complex:
                 continue
             if ret == 's' and t.name.startswith('_Float'):
                 continue
@@ -544,7 +544,7 @@ class Tests(object):
             all_conds.append(can_comb)
             if narrowing:
                 all_conds.append(narrow_cond)
-            any_complex = func == None
+            any_complex = func is None
             for t in this_args:
                 if t.complex:
                     any_complex = True
