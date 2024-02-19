@@ -9,7 +9,6 @@ $(foreach suf,$(all-object-suffixes),$(objpfx)rtld$(suf)): \
 endif
 
 ifeq ($(subdir),string)
-sysdep_routines += strstr-ppc64
 CFLAGS-strncase.c += -funroll-loops
 CFLAGS-strncase_l.c += -funroll-loops
 endif
