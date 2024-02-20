@@ -104,6 +104,11 @@ libmvec {
     _ZGVnN4v_erff;
     _ZGVsMxv_erf;
     _ZGVsMxv_erff;
+    _ZGVnN2v_erfc;
+    _ZGVnN2v_erfcf;
+    _ZGVnN4v_erfcf;
+    _ZGVsMxv_erfc;
+    _ZGVsMxv_erfcf;
     _ZGVnN2v_sinh;
     _ZGVnN2v_sinhf;
     _ZGVnN4v_sinhf;

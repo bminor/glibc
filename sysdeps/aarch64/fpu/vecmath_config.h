@@ -114,4 +114,20 @@ extern const struct sv_erf_data
   double scale[769];
 } __sv_erf_data attribute_hidden;
 
+extern const struct erfc_data
+{
+  struct
+  {
+    double erfc, scale;
+  } tab[3488];
+} __erfc_data attribute_hidden;
+
+extern const struct erfcf_data
+{
+  struct
+  {
+    float erfc, scale;
+  } tab[645];
+} __erfcf_data attribute_hidden;
+
 #endif
