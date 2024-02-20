@@ -79,6 +79,11 @@ libmvec {
     _ZGVsMxv_tan;
   }
   GLIBC_2.40 {
+    _ZGVnN2v_acosh;
+    _ZGVnN2v_acoshf;
+    _ZGVnN4v_acoshf;
+    _ZGVsMxv_acosh;
+    _ZGVsMxv_acoshf;
     _ZGVnN2v_cosh;
     _ZGVnN2v_coshf;
     _ZGVnN4v_coshf;

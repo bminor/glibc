@@ -1,4 +1,5 @@
 libmvec-supported-funcs = acos \
+                          acosh \
                           asin \
                           atan \
                           atan2 \
