@@ -23,7 +23,7 @@
 static const struct data
 {
   float64x2_t poly[11];
-  float64x2_t invln2, ln2_lo, ln2_hi, shift;
+  float64x2_t invln2, ln2, shift;
   int64x2_t exponent_bias;
 #if WANT_SIMD_EXCEPT
   uint64x2_t thresh, tiny_bound;
@@ -38,8 +38,7 @@ static const struct data
 	    V2 (0x1.71ddf82db5bb4p-19), V2 (0x1.27e517fc0d54bp-22),
 	    V2 (0x1.af5eedae67435p-26), V2 (0x1.1f143d060a28ap-29) },
   .invln2 = V2 (0x1.71547652b82fep0),
-  .ln2_hi = V2 (0x1.62e42fefa39efp-1),
-  .ln2_lo = V2 (0x1.abc9e3b39803fp-56),
+  .ln2 = { 0x1.62e42fefa39efp-1, 0x1.abc9e3b39803fp-56 },
   .shift = V2 (0x1.8p52),
   .exponent_bias = V2 (0x3ff0000000000000),
 #if WANT_SIMD_EXCEPT
@@ -83,7 +82,7 @@ float64x2_t VPCS_ATTR V_NAME_D1 (expm1) (float64x2_t x)
     x = v_zerofy_f64 (x, special);
 #else
   /* Large input, NaNs and Infs.  */
-  uint64x2_t special = vceqzq_u64 (vcaltq_f64 (x, d->oflow_bound));
+  uint64x2_t special = vcageq_f64 (x, d->oflow_bound);
 #endif
 
   /* Reduce argument to smaller range:
@@ -93,8 +92,8 @@ float64x2_t VPCS_ATTR V_NAME_D1 (expm1) (float64x2_t x)
      where 2^i is exact because i is an integer.  */
   float64x2_t n = vsubq_f64 (vfmaq_f64 (d->shift, d->invln2, x), d->shift);
   int64x2_t i = vcvtq_s64_f64 (n);
-  float64x2_t f = vfmsq_f64 (x, n, d->ln2_hi);
-  f = vfmsq_f64 (f, n, d->ln2_lo);
+  float64x2_t f = vfmsq_laneq_f64 (x, n, d->ln2, 0);
+  f = vfmsq_laneq_f64 (f, n, d->ln2, 1);
 
   /* Approximate expm1(f) using polynomial.
      Taylor expansion for expm1(x) has the form:

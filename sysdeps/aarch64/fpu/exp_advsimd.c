@@ -54,7 +54,7 @@ const static volatile struct
 # define BigBound v_u64 (0x4080000000000000) /* asuint64 (0x1p9).  */
 # define SpecialBound v_u64 (0x2080000000000000) /* BigBound - TinyBound.  */
 
-static inline float64x2_t VPCS_ATTR
+static float64x2_t VPCS_ATTR NOINLINE
 special_case (float64x2_t x, float64x2_t y, uint64x2_t cmp)
 {
   /* If fenv exceptions are to be triggered correctly, fall back to the scalar
@@ -69,7 +69,7 @@ special_case (float64x2_t x, float64x2_t y, uint64x2_t cmp)
 # define SpecialBias1 v_u64 (0x7000000000000000) /* 0x1p769.  */
 # define SpecialBias2 v_u64 (0x3010000000000000) /* 0x1p-254.  */
 
-static float64x2_t VPCS_ATTR NOINLINE
+static inline float64x2_t VPCS_ATTR
 special_case (float64x2_t s, float64x2_t y, float64x2_t n)
 {
   /* 2^(n/N) may overflow, break it up into s1*s2.  */

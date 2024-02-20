@@ -63,8 +63,7 @@ float64x2_t VPCS_ATTR V_NAME_D1 (cos) (float64x2_t x)
        special-case handler later.  */
     r = vbslq_f64 (cmp, v_f64 (1.0), r);
 #else
-  cmp = vcageq_f64 (d->range_val, x);
-  cmp = vceqzq_u64 (cmp); /* cmp = ~cmp.  */
+  cmp = vcageq_f64 (x, d->range_val);
   r = x;
 #endif
 

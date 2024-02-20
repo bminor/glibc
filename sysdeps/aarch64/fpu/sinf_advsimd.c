@@ -67,8 +67,7 @@ float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (sin) (float32x4_t x)
   r = vbslq_f32 (cmp, vreinterpretq_f32_u32 (cmp), x);
 #else
   r = x;
-  cmp = vcageq_f32 (d->range_val, x);
-  cmp = vceqzq_u32 (cmp); /* cmp = ~cmp.  */
+  cmp = vcageq_f32 (x, d->range_val);
 #endif
 
   /* n = rint(|x|/pi) */

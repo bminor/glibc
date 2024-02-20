@@ -75,8 +75,7 @@ float64x2_t VPCS_ATTR V_NAME_D1 (sin) (float64x2_t x)
   r = vbslq_f64 (cmp, vreinterpretq_f64_u64 (cmp), x);
 #else
   r = x;
-  cmp = vcageq_f64 (d->range_val, x);
-  cmp = vceqzq_u64 (cmp); /* cmp = ~cmp.  */
+  cmp = vcageq_f64 (x, d->range_val);
 #endif
 
   /* n = rint(|x|/pi).  */

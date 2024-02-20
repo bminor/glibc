@@ -23,7 +23,8 @@
 static const struct data
 {
   float32x4_t poly[6];
-  float32x4_t neg_half_pi_1, neg_half_pi_2, neg_half_pi_3, two_over_pi, shift;
+  float32x4_t pi_consts;
+  float32x4_t shift;
 #if !WANT_SIMD_EXCEPT
   float32x4_t range_val;
 #endif
@@ -31,10 +32,9 @@ static const struct data
   /* Coefficients generated using FPMinimax.  */
   .poly = { V4 (0x1.55555p-2f), V4 (0x1.11166p-3f), V4 (0x1.b88a78p-5f),
 	    V4 (0x1.7b5756p-6f), V4 (0x1.4ef4cep-8f), V4 (0x1.0e1e74p-7f) },
-  .neg_half_pi_1 = V4 (-0x1.921fb6p+0f),
-  .neg_half_pi_2 = V4 (0x1.777a5cp-25f),
-  .neg_half_pi_3 = V4 (0x1.ee59dap-50f),
-  .two_over_pi = V4 (0x1.45f306p-1f),
+  /* Stores constants: (-pi/2)_high, (-pi/2)_mid, (-pi/2)_low, and 2/pi.  */
+  .pi_consts
+  = { -0x1.921fb6p+0f, 0x1.777a5cp-25f, 0x1.ee59dap-50f, 0x1.45f306p-1f },
   .shift = V4 (0x1.8p+23f),
 #if !WANT_SIMD_EXCEPT
   .range_val = V4 (0x1p15f),
@@ -58,10 +58,11 @@ eval_poly (float32x4_t z, const struct data *d)
 {
   float32x4_t z2 = vmulq_f32 (z, z);
 #if WANT_SIMD_EXCEPT
-  /* Tiny z (<= 0x1p-31) will underflow when calculating z^4. If fp exceptions
-     are to be triggered correctly, sidestep this by fixing such lanes to 0.  */
+  /* Tiny z (<= 0x1p-31) will underflow when calculating z^4.
+     If fp exceptions are to be triggered correctly,
+     sidestep this by fixing such lanes to 0.  */
   uint32x4_t will_uflow
-    = vcleq_u32 (vreinterpretq_u32_f32 (vabsq_f32 (z)), TinyBound);
+      = vcleq_u32 (vreinterpretq_u32_f32 (vabsq_f32 (z)), TinyBound);
   if (__glibc_unlikely (v_any_u32 (will_uflow)))
     z2 = vbslq_f32 (will_uflow, v_f32 (0), z2);
 #endif
@@ -94,16 +95,16 @@ float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (tan) (float32x4_t x)
 #endif
 
   /* n = rint(x/(pi/2)).  */
-  float32x4_t q = vfmaq_f32 (d->shift, d->two_over_pi, x);
+  float32x4_t q = vfmaq_laneq_f32 (d->shift, x, d->pi_consts, 3);
   float32x4_t n = vsubq_f32 (q, d->shift);
   /* Determine if x lives in an interval, where |tan(x)| grows to infinity.  */
   uint32x4_t pred_alt = vtstq_u32 (vreinterpretq_u32_f32 (q), v_u32 (1));
 
   /* r = x - n * (pi/2)  (range reduction into -pi./4 .. pi/4).  */
   float32x4_t r;
-  r = vfmaq_f32 (x, d->neg_half_pi_1, n);
-  r = vfmaq_f32 (r, d->neg_half_pi_2, n);
-  r = vfmaq_f32 (r, d->neg_half_pi_3, n);
+  r = vfmaq_laneq_f32 (x, n, d->pi_consts, 0);
+  r = vfmaq_laneq_f32 (r, n, d->pi_consts, 1);
+  r = vfmaq_laneq_f32 (r, n, d->pi_consts, 2);
 
   /* If x lives in an interval, where |tan(x)|
      - is finite, then use a polynomial approximation of the form
