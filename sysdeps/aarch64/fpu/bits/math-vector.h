@@ -49,6 +49,10 @@
 # define __DECL_SIMD_cos __DECL_SIMD_aarch64
 # undef __DECL_SIMD_cosf
 # define __DECL_SIMD_cosf __DECL_SIMD_aarch64
+# undef __DECL_SIMD_cosh
+# define __DECL_SIMD_cosh __DECL_SIMD_aarch64
+# undef __DECL_SIMD_coshf
+# define __DECL_SIMD_coshf __DECL_SIMD_aarch64
 # undef __DECL_SIMD_erf
 # define __DECL_SIMD_erf __DECL_SIMD_aarch64
 # undef __DECL_SIMD_erff
@@ -124,6 +128,7 @@ __vpcs __f32x4_t _ZGVnN4v_acosf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_asinf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_atanf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_cosf (__f32x4_t);
+__vpcs __f32x4_t _ZGVnN4v_coshf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_erff (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_expf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_exp10f (__f32x4_t);
@@ -141,6 +146,7 @@ __vpcs __f64x2_t _ZGVnN2v_acos (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_asin (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_atan (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_cos (__f64x2_t);
+__vpcs __f64x2_t _ZGVnN2v_cosh (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_erf (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_exp (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_exp10 (__f64x2_t);
@@ -163,6 +169,7 @@ __sv_f32_t _ZGVsMxv_acosf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_asinf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_atanf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_cosf (__sv_f32_t, __sv_bool_t);
+__sv_f32_t _ZGVsMxv_coshf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_erff (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_expf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_exp10f (__sv_f32_t, __sv_bool_t);
@@ -180,6 +187,7 @@ __sv_f64_t _ZGVsMxv_acos (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_asin (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_atan (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_cos (__sv_f64_t, __sv_bool_t);
+__sv_f64_t _ZGVsMxv_cosh (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_erf (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_exp (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_exp10 (__sv_f64_t, __sv_bool_t);

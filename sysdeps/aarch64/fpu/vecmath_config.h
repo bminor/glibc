@@ -59,6 +59,8 @@ extern const struct v_log_data
   } table[1 << V_LOG_TABLE_BITS];
 } __v_log_data attribute_hidden;
 
+#define V_EXP_TAIL_TABLE_BITS 8
+extern const uint64_t __v_exp_tail_data[1 << V_EXP_TAIL_TABLE_BITS] attribute_hidden;
 #define V_EXP_TABLE_BITS 7
 extern const uint64_t __v_exp_data[1 << V_EXP_TABLE_BITS] attribute_hidden;
 

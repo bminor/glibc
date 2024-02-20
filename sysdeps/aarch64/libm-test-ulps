@@ -701,10 +701,18 @@ double: 2
 float: 2
 ldouble: 2
 
+Function: "cosh_advsimd":
+double: 2
+float: 2
+
 Function: "cosh_downward":
 double: 3
 float: 1
 ldouble: 3
+
+Function: "cosh_sve":
+double: 2
+float: 2
 
 Function: "cosh_towardzero":
 double: 3
