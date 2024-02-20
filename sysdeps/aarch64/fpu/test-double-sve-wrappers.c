@@ -45,6 +45,7 @@
 SVE_VECTOR_WRAPPER (acos_sve, _ZGVsMxv_acos)
 SVE_VECTOR_WRAPPER (acosh_sve, _ZGVsMxv_acosh)
 SVE_VECTOR_WRAPPER (asin_sve, _ZGVsMxv_asin)
+SVE_VECTOR_WRAPPER (asinh_sve, _ZGVsMxv_asinh)
 SVE_VECTOR_WRAPPER (atan_sve, _ZGVsMxv_atan)
 SVE_VECTOR_WRAPPER_ff (atan2_sve, _ZGVsMxvv_atan2)
 SVE_VECTOR_WRAPPER (cos_sve, _ZGVsMxv_cos)

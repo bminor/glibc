@@ -26,6 +26,7 @@
 VPCS_VECTOR_WRAPPER (acos_advsimd, _ZGVnN2v_acos)
 VPCS_VECTOR_WRAPPER (acosh_advsimd, _ZGVnN2v_acosh)
 VPCS_VECTOR_WRAPPER (asin_advsimd, _ZGVnN2v_asin)
+VPCS_VECTOR_WRAPPER (asinh_advsimd, _ZGVnN2v_asinh)
 VPCS_VECTOR_WRAPPER (atan_advsimd, _ZGVnN2v_atan)
 VPCS_VECTOR_WRAPPER_ff (atan2_advsimd, _ZGVnN2vv_atan2)
 VPCS_VECTOR_WRAPPER (cos_advsimd, _ZGVnN2v_cos)

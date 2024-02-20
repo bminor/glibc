@@ -84,6 +84,11 @@ libmvec {
     _ZGVnN4v_acoshf;
     _ZGVsMxv_acosh;
     _ZGVsMxv_acoshf;
+    _ZGVnN2v_asinh;
+    _ZGVnN2v_asinhf;
+    _ZGVnN4v_asinhf;
+    _ZGVsMxv_asinh;
+    _ZGVsMxv_asinhf;
     _ZGVnN2v_cosh;
     _ZGVnN2v_coshf;
     _ZGVnN4v_coshf;
