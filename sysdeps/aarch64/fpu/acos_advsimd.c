@@ -40,8 +40,8 @@ static const struct data
 };
 
 #define AllMask v_u64 (0xffffffffffffffff)
-#define Oneu (0x3ff0000000000000)
-#define Small (0x3e50000000000000) /* 2^-53.  */
+#define Oneu 0x3ff0000000000000
+#define Small 0x3e50000000000000 /* 2^-53.  */
 
 #if WANT_SIMD_EXCEPT
 static float64x2_t VPCS_ATTR NOINLINE

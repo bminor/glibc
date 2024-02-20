@@ -20,6 +20,8 @@
 #include "sv_math.h"
 #include "poly_sve_f32.h"
 
+#define Thres 0x1.5d5e2ap+6f
+
 static const struct data
 {
   float poly[5];
@@ -33,7 +35,7 @@ static const struct data
   .shift = 0x1.903f8p17f,
   /* Roughly 87.3. For x < -Thres, the result is subnormal and not handled
      correctly by FEXPA.  */
-  .thres = 0x1.5d5e2ap+6f,
+  .thres = Thres,
 };
 
 static svfloat32_t NOINLINE

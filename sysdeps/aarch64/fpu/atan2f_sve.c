@@ -32,10 +32,8 @@ static const struct data
   .pi_over_2 = 0x1.921fb6p+0f,
 };
 
-#define SignMask sv_u32 (0x80000000)
-
 /* Special cases i.e. 0, infinity, nan (fall back to scalar calls).  */
-static inline svfloat32_t
+static svfloat32_t NOINLINE
 special_case (svfloat32_t y, svfloat32_t x, svfloat32_t ret,
 	      const svbool_t cmp)
 {
@@ -67,14 +65,15 @@ svfloat32_t SV_NAME_F2 (atan2) (svfloat32_t y, svfloat32_t x, const svbool_t pg)
   svbool_t cmp_y = zeroinfnan (iy, pg);
   svbool_t cmp_xy = svorr_z (pg, cmp_x, cmp_y);
 
-  svuint32_t sign_x = svand_x (pg, ix, SignMask);
-  svuint32_t sign_y = svand_x (pg, iy, SignMask);
-  svuint32_t sign_xy = sveor_x (pg, sign_x, sign_y);
-
   svfloat32_t ax = svabs_x (pg, x);
   svfloat32_t ay = svabs_x (pg, y);
+  svuint32_t iax = svreinterpret_u32 (ax);
+  svuint32_t iay = svreinterpret_u32 (ay);
 
-  svbool_t pred_xlt0 = svcmplt (pg, x, 0.0);
+  svuint32_t sign_x = sveor_x (pg, ix, iax);
+  svuint32_t sign_y = sveor_x (pg, iy, iay);
+  svuint32_t sign_xy = sveor_x (pg, sign_x, sign_y);
+
   svbool_t pred_aygtax = svcmpgt (pg, ay, ax);
 
   /* Set up z for call to atan.  */
@@ -83,11 +82,12 @@ svfloat32_t SV_NAME_F2 (atan2) (svfloat32_t y, svfloat32_t x, const svbool_t pg)
   svfloat32_t z = svdiv_x (pg, n, d);
 
   /* Work out the correct shift.  */
-  svfloat32_t shift = svsel (pred_xlt0, sv_f32 (-2.0), sv_f32 (0.0));
-  shift = svsel (pred_aygtax, svadd_x (pg, shift, 1.0), shift);
+  svfloat32_t shift = svreinterpret_f32 (svlsr_x (pg, sign_x, 1));
+  shift = svsel (pred_aygtax, sv_f32 (1.0), shift);
+  shift = svreinterpret_f32 (svorr_x (pg, sign_x, svreinterpret_u32 (shift)));
   shift = svmul_x (pg, shift, sv_f32 (data_ptr->pi_over_2));
 
-  /* Use split Estrin scheme for P(z^2) with deg(P)=7.  */
+  /* Use pure Estrin scheme for P(z^2) with deg(P)=7.  */
   svfloat32_t z2 = svmul_x (pg, z, z);
   svfloat32_t z4 = svmul_x (pg, z2, z2);
   svfloat32_t z8 = svmul_x (pg, z4, z4);
@@ -101,10 +101,12 @@ svfloat32_t SV_NAME_F2 (atan2) (svfloat32_t y, svfloat32_t x, const svbool_t pg)
   ret = svadd_m (pg, ret, shift);
 
   /* Account for the sign of x and y.  */
-  ret = svreinterpret_f32 (sveor_x (pg, svreinterpret_u32 (ret), sign_xy));
 
   if (__glibc_unlikely (svptest_any (pg, cmp_xy)))
-    return special_case (y, x, ret, cmp_xy);
+    return special_case (
+	y, x,
+	svreinterpret_f32 (sveor_x (pg, svreinterpret_u32 (ret), sign_xy)),
+	cmp_xy);
 
-  return ret;
+  return svreinterpret_f32 (sveor_x (pg, svreinterpret_u32 (ret), sign_xy));
 }

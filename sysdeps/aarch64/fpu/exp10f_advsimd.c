@@ -25,7 +25,8 @@
 static const struct data
 {
   float32x4_t poly[5];
-  float32x4_t shift, log10_2, log2_10_hi, log2_10_lo;
+  float32x4_t log10_2_and_inv, shift;
+
 #if !WANT_SIMD_EXCEPT
   float32x4_t scale_thresh;
 #endif
@@ -38,9 +39,9 @@ static const struct data
   .poly = { V4 (0x1.26bb16p+1f), V4 (0x1.5350d2p+1f), V4 (0x1.04744ap+1f),
 	    V4 (0x1.2d8176p+0f), V4 (0x1.12b41ap-1f) },
   .shift = V4 (0x1.8p23f),
-  .log10_2 = V4 (0x1.a934fp+1),
-  .log2_10_hi = V4 (0x1.344136p-2),
-  .log2_10_lo = V4 (-0x1.ec10cp-27),
+
+  /* Stores constants 1/log10(2), log10(2)_high, log10(2)_low, 0.  */
+  .log10_2_and_inv = { 0x1.a934fp+1, 0x1.344136p-2, -0x1.ec10cp-27, 0 },
 #if !WANT_SIMD_EXCEPT
   .scale_thresh = V4 (ScaleBound)
 #endif
@@ -98,24 +99,22 @@ float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (exp10) (float32x4_t x)
 #if WANT_SIMD_EXCEPT
   /* asuint(x) - TinyBound >= BigBound - TinyBound.  */
   uint32x4_t cmp = vcgeq_u32 (
-      vsubq_u32 (vandq_u32 (vreinterpretq_u32_f32 (x), v_u32 (0x7fffffff)),
-		 TinyBound),
-      Thres);
+      vsubq_u32 (vreinterpretq_u32_f32 (vabsq_f32 (x)), TinyBound), Thres);
   float32x4_t xm = x;
   /* If any lanes are special, mask them with 1 and retain a copy of x to allow
      special case handler to fix special lanes later. This is only necessary if
      fenv exceptions are to be triggered correctly.  */
   if (__glibc_unlikely (v_any_u32 (cmp)))
-    x = vbslq_f32 (cmp, v_f32 (1), x);
+    x = v_zerofy_f32 (x, cmp);
 #endif
 
   /* exp10(x) = 2^n * 10^r = 2^n * (1 + poly (r)),
      with poly(r) in [1/sqrt(2), sqrt(2)] and
      x = r + n * log10 (2), with r in [-log10(2)/2, log10(2)/2].  */
-  float32x4_t z = vfmaq_f32 (d->shift, x, d->log10_2);
+  float32x4_t z = vfmaq_laneq_f32 (d->shift, x, d->log10_2_and_inv, 0);
   float32x4_t n = vsubq_f32 (z, d->shift);
-  float32x4_t r = vfmsq_f32 (x, n, d->log2_10_hi);
-  r = vfmsq_f32 (r, n, d->log2_10_lo);
+  float32x4_t r = vfmsq_laneq_f32 (x, n, d->log10_2_and_inv, 1);
+  r = vfmsq_laneq_f32 (r, n, d->log10_2_and_inv, 2);
   uint32x4_t e = vshlq_n_u32 (vreinterpretq_u32_f32 (z), 23);
 
   float32x4_t scale = vreinterpretq_f32_u32 (vaddq_u32 (e, ExponentBias));

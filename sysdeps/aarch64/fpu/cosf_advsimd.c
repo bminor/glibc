@@ -64,8 +64,7 @@ float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (cos) (float32x4_t x)
        special-case handler later.  */
     r = vbslq_f32 (cmp, v_f32 (1.0f), r);
 #else
-  cmp = vcageq_f32 (d->range_val, x);
-  cmp = vceqzq_u32 (cmp); /* cmp = ~cmp.  */
+  cmp = vcageq_f32 (x, d->range_val);
   r = x;
 #endif
 

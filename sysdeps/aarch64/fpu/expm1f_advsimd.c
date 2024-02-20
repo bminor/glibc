@@ -23,7 +23,8 @@
 static const struct data
 {
   float32x4_t poly[5];
-  float32x4_t invln2, ln2_lo, ln2_hi, shift;
+  float32x4_t invln2_and_ln2;
+  float32x4_t shift;
   int32x4_t exponent_bias;
 #if WANT_SIMD_EXCEPT
   uint32x4_t thresh;
@@ -34,9 +35,8 @@ static const struct data
   /* Generated using fpminimax with degree=5 in [-log(2)/2, log(2)/2].  */
   .poly = { V4 (0x1.fffffep-2), V4 (0x1.5554aep-3), V4 (0x1.555736p-5),
 	    V4 (0x1.12287cp-7), V4 (0x1.6b55a2p-10) },
-  .invln2 = V4 (0x1.715476p+0f),
-  .ln2_hi = V4 (0x1.62e4p-1f),
-  .ln2_lo = V4 (0x1.7f7d1cp-20f),
+  /* Stores constants: invln2, ln2_hi, ln2_lo, 0.  */
+  .invln2_and_ln2 = { 0x1.715476p+0f, 0x1.62e4p-1f, 0x1.7f7d1cp-20f, 0 },
   .shift = V4 (0x1.8p23f),
   .exponent_bias = V4 (0x3f800000),
 #if !WANT_SIMD_EXCEPT
@@ -80,7 +80,7 @@ float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (expm1) (float32x4_t x)
     x = v_zerofy_f32 (x, special);
 #else
   /* Handles very large values (+ve and -ve), +/-NaN, +/-Inf.  */
-  uint32x4_t special = vceqzq_u32 (vcaltq_f32 (x, d->oflow_bound));
+  uint32x4_t special = vcagtq_f32 (x, d->oflow_bound);
 #endif
 
   /* Reduce argument to smaller range:
@@ -88,10 +88,11 @@ float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (expm1) (float32x4_t x)
      and f = x - i * ln2, then f is in [-ln2/2, ln2/2].
      exp(x) - 1 = 2^i * (expm1(f) + 1) - 1
      where 2^i is exact because i is an integer.  */
-  float32x4_t j = vsubq_f32 (vfmaq_f32 (d->shift, d->invln2, x), d->shift);
+  float32x4_t j = vsubq_f32 (
+      vfmaq_laneq_f32 (d->shift, x, d->invln2_and_ln2, 0), d->shift);
   int32x4_t i = vcvtq_s32_f32 (j);
-  float32x4_t f = vfmsq_f32 (x, j, d->ln2_hi);
-  f = vfmsq_f32 (f, j, d->ln2_lo);
+  float32x4_t f = vfmsq_laneq_f32 (x, j, d->invln2_and_ln2, 1);
+  f = vfmsq_laneq_f32 (f, j, d->invln2_and_ln2, 2);
 
   /* Approximate expm1(f) using polynomial.
      Taylor expansion for expm1(x) has the form:

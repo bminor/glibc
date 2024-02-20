@@ -24,6 +24,7 @@
 #define IndexMask (N - 1)
 #define BigBound 1022.0
 #define UOFlowBound 1280.0
+#define TinyBound 0x2000000000000000 /* asuint64(0x1p-511).  */
 
 static const struct data
 {
@@ -48,14 +49,13 @@ lookup_sbits (uint64x2_t i)
 
 #if WANT_SIMD_EXCEPT
 
-# define TinyBound 0x2000000000000000 /* asuint64(0x1p-511).  */
 # define Thres 0x2080000000000000     /* asuint64(512.0) - TinyBound.  */
 
 /* Call scalar exp2 as a fallback.  */
 static float64x2_t VPCS_ATTR NOINLINE
-special_case (float64x2_t x)
+special_case (float64x2_t x, float64x2_t y, uint64x2_t is_special)
 {
-  return v_call_f64 (exp2, x, x, v_u64 (0xffffffffffffffff));
+  return v_call_f64 (exp2, x, y, is_special);
 }
 
 #else
@@ -65,7 +65,7 @@ special_case (float64x2_t x)
 # define SpecialBias1 0x7000000000000000 /* 0x1p769.  */
 # define SpecialBias2 0x3010000000000000 /* 0x1p-254.  */
 
-static float64x2_t VPCS_ATTR
+static inline float64x2_t VPCS_ATTR
 special_case (float64x2_t s, float64x2_t y, float64x2_t n,
 	      const struct data *d)
 {
@@ -94,10 +94,10 @@ float64x2_t V_NAME_D1 (exp2) (float64x2_t x)
 #if WANT_SIMD_EXCEPT
   uint64x2_t ia = vreinterpretq_u64_f64 (vabsq_f64 (x));
   cmp = vcgeq_u64 (vsubq_u64 (ia, v_u64 (TinyBound)), v_u64 (Thres));
-  /* If any special case (inf, nan, small and large x) is detected,
-     fall back to scalar for all lanes.  */
-  if (__glibc_unlikely (v_any_u64 (cmp)))
-    return special_case (x);
+  /* Mask special lanes and retain a copy of x for passing to special-case
+     handler.  */
+  float64x2_t xc = x;
+  x = v_zerofy_f64 (x, cmp);
 #else
   cmp = vcagtq_f64 (x, d->scale_big_bound);
 #endif
@@ -120,9 +120,11 @@ float64x2_t V_NAME_D1 (exp2) (float64x2_t x)
   float64x2_t y = v_pairwise_poly_3_f64 (r, r2, d->poly);
   y = vmulq_f64 (r, y);
 
-#if !WANT_SIMD_EXCEPT
   if (__glibc_unlikely (v_any_u64 (cmp)))
+#if !WANT_SIMD_EXCEPT
     return special_case (s, y, n, d);
+#else
+    return special_case (xc, vfmaq_f64 (s, s, y), cmp);
 #endif
   return vfmaq_f64 (s, s, y);
 }

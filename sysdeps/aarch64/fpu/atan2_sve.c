@@ -37,9 +37,6 @@ static const struct data
   .pi_over_2 = 0x1.921fb54442d18p+0,
 };
 
-/* Useful constants.  */
-#define SignMask sv_u64 (0x8000000000000000)
-
 /* Special cases i.e. 0, infinity, nan (fall back to scalar calls).  */
 static svfloat64_t NOINLINE
 special_case (svfloat64_t y, svfloat64_t x, svfloat64_t ret,
@@ -72,14 +69,15 @@ svfloat64_t SV_NAME_D2 (atan2) (svfloat64_t y, svfloat64_t x, const svbool_t pg)
   svbool_t cmp_y = zeroinfnan (iy, pg);
   svbool_t cmp_xy = svorr_z (pg, cmp_x, cmp_y);
 
-  svuint64_t sign_x = svand_x (pg, ix, SignMask);
-  svuint64_t sign_y = svand_x (pg, iy, SignMask);
-  svuint64_t sign_xy = sveor_x (pg, sign_x, sign_y);
-
   svfloat64_t ax = svabs_x (pg, x);
   svfloat64_t ay = svabs_x (pg, y);
+  svuint64_t iax = svreinterpret_u64 (ax);
+  svuint64_t iay = svreinterpret_u64 (ay);
 
-  svbool_t pred_xlt0 = svcmplt (pg, x, 0.0);
+  svuint64_t sign_x = sveor_x (pg, ix, iax);
+  svuint64_t sign_y = sveor_x (pg, iy, iay);
+  svuint64_t sign_xy = sveor_x (pg, sign_x, sign_y);
+
   svbool_t pred_aygtax = svcmpgt (pg, ay, ax);
 
   /* Set up z for call to atan.  */
@@ -88,8 +86,9 @@ svfloat64_t SV_NAME_D2 (atan2) (svfloat64_t y, svfloat64_t x, const svbool_t pg)
   svfloat64_t z = svdiv_x (pg, n, d);
 
   /* Work out the correct shift.  */
-  svfloat64_t shift = svsel (pred_xlt0, sv_f64 (-2.0), sv_f64 (0.0));
-  shift = svsel (pred_aygtax, svadd_x (pg, shift, 1.0), shift);
+  svfloat64_t shift = svreinterpret_f64 (svlsr_x (pg, sign_x, 1));
+  shift = svsel (pred_aygtax, sv_f64 (1.0), shift);
+  shift = svreinterpret_f64 (svorr_x (pg, sign_x, svreinterpret_u64 (shift)));
   shift = svmul_x (pg, shift, data_ptr->pi_over_2);
 
   /* Use split Estrin scheme for P(z^2) with deg(P)=19.  */
@@ -109,10 +108,10 @@ svfloat64_t SV_NAME_D2 (atan2) (svfloat64_t y, svfloat64_t x, const svbool_t pg)
   ret = svadd_m (pg, ret, shift);
 
   /* Account for the sign of x and y.  */
-  ret = svreinterpret_f64 (sveor_x (pg, svreinterpret_u64 (ret), sign_xy));
-
   if (__glibc_unlikely (svptest_any (pg, cmp_xy)))
-    return special_case (y, x, ret, cmp_xy);
-
-  return ret;
+    return special_case (
+	y, x,
+	svreinterpret_f64 (sveor_x (pg, svreinterpret_u64 (ret), sign_xy)),
+	cmp_xy);
+  return svreinterpret_f64 (sveor_x (pg, svreinterpret_u64 (ret), sign_xy));
 }
