@@ -78,4 +78,11 @@ libmvec {
     _ZGVsMxv_tanf;
     _ZGVsMxv_tan;
   }
+  GLIBC_2.40 {
+    _ZGVnN2v_erf;
+    _ZGVnN2v_erff;
+    _ZGVnN4v_erff;
+    _ZGVsMxv_erf;
+    _ZGVsMxv_erff;
+  }
 }

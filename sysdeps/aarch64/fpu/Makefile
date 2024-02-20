@@ -3,6 +3,7 @@ libmvec-supported-funcs = acos \
                           atan \
                           atan2 \
                           cos \
+                          erf \
                           exp \
                           exp10 \
                           exp2 \
@@ -27,7 +28,11 @@ libmvec-support = $(addsuffix f_advsimd,$(float-advsimd-funcs)) \
                   v_log_data \
                   v_exp_data \
                   v_log2_data \
-                  v_log10_data
+                  v_log10_data \
+                  erf_data \
+                  erff_data \
+                  sv_erf_data \
+                  sv_erff_data
 endif
 
 sve-cflags = -march=armv8-a+sve
