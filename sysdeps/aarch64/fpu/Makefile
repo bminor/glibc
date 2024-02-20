@@ -18,7 +18,8 @@ libmvec-supported-funcs = acos \
                           log2 \
                           sin \
                           sinh \
-                          tan
+                          tan \
+                          tanh
 
 float-advsimd-funcs = $(libmvec-supported-funcs)
 double-advsimd-funcs = $(libmvec-supported-funcs)

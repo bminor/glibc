@@ -1496,10 +1496,18 @@ double: 2
 float: 2
 ldouble: 2
 
+Function: "tanh_advsimd":
+double: 2
+float: 2
+
 Function: "tanh_downward":
 double: 3
 float: 3
 ldouble: 4
+
+Function: "tanh_sve":
+double: 2
+float: 2
 
 Function: "tanh_towardzero":
 double: 2

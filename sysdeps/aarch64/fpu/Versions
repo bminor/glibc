@@ -109,5 +109,10 @@ libmvec {
     _ZGVnN4v_sinhf;
     _ZGVsMxv_sinh;
     _ZGVsMxv_sinhf;
+    _ZGVnN2v_tanh;
+    _ZGVnN2v_tanhf;
+    _ZGVnN4v_tanhf;
+    _ZGVsMxv_tanh;
+    _ZGVsMxv_tanhf;
   }
 }

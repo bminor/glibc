@@ -7747,7 +7747,7 @@ tan min_subnorm
 tan -min_subnorm
 
 tanh 0
-tanh -0
+tanh -0 no-mathvec
 tanh 0.75
 tanh -0.75
 tanh 1.0
