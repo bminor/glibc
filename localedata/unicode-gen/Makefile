@@ -41,6 +41,7 @@ PYTHON3 = python3
 WGET = wget
 
 DOWNLOADS = UnicodeData.txt DerivedCoreProperties.txt EastAsianWidth.txt PropList.txt
+LICENSE = unicode-license.txt
 GENERATED = i18n_ctype tr_TR UTF-8 translit_combining translit_compat translit_circle translit_cjk_compat translit_font translit_fraction
 REPORTS = i18n_ctype-report UTF-8-report
 
@@ -137,9 +138,12 @@ translit_fraction: gen_translit_fraction.py
 	-o $@ --unicode_version $(UNICODE_VERSION)
 
 .PHONY: downloads clean-downloads
-downloads: $(DOWNLOADS)
+downloads: $(DOWNLOADS) $(LICENSE)
 clean-downloads:
-	-rm -f $(DOWNLOADS)
+	-rm -f $(DOWNLOADS) $(LICENSE)
 
 $(DOWNLOADS):
 	$(WGET) http://www.unicode.org/Public/$(UNICODE_VERSION)/ucd/$@
+
+$(LICENSE):
+	$(WGET) https://www.unicode.org/license.txt --output-document=$@
