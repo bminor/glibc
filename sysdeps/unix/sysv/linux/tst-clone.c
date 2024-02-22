@@ -16,12 +16,16 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* BZ #2386 */
+/* BZ #2386, BZ #31402 */
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sched.h>
+#include <stackinfo.h>  /* For _STACK_GROWS_{UP,DOWN}.  */
+#include <support/check.h>
+
+volatile unsigned v = 0xdeadbeef;
 
 int child_fn(void *arg)
 {
@@ -30,22 +34,67 @@ int child_fn(void *arg)
 }
 
 static int
-do_test (void)
+__attribute__((noinline))
+do_clone (int (*fn)(void *), void *stack)
 {
   int result;
+  unsigned int a = v;
+  unsigned int b = v;
+  unsigned int c = v;
+  unsigned int d = v;
+  unsigned int e = v;
+  unsigned int f = v;
+  unsigned int g = v;
+  unsigned int h = v;
+  unsigned int i = v;
+  unsigned int j = v;
+  unsigned int k = v;
+  unsigned int l = v;
+  unsigned int m = v;
+  unsigned int n = v;
+  unsigned int o = v;
 
-  result = clone (child_fn, NULL, 0, NULL);
+  result = clone (fn, stack, 0, NULL);
 
-  if (errno != EINVAL || result != -1)
-    {
-      printf ("FAIL: clone()=%d (wanted -1) errno=%d (wanted %d)\n",
-              result, errno, EINVAL);
-      return 1;
-    }
+  /* Check that clone does not clobber call-saved registers.  */
+  TEST_VERIFY (a == v && b == v && c == v && d == v && e == v && f == v
+	       && g == v && h == v && i == v && j == v && k == v && l == v
+	       && m == v && n == v && o == v);
 
-  puts ("All OK");
+  return result;
+}
+
+static void
+__attribute__((noinline))
+do_test_single (int (*fn)(void *), void *stack)
+{
+  printf ("%s (fn=%p, stack=%p)\n", __FUNCTION__, fn, stack);
+  errno = 0;
+
+  int result = do_clone (fn, stack);
+
+  TEST_COMPARE (errno, EINVAL);
+  TEST_COMPARE (result, -1);
+}
+
+static int
+do_test (void)
+{
+  char st[128 * 1024] __attribute__ ((aligned));
+  void *stack = NULL;
+#if _STACK_GROWS_DOWN
+  stack = st + sizeof (st);
+#elif _STACK_GROWS_UP
+  stack = st;
+#else
+# error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
+#endif
+
+  do_test_single (child_fn, NULL);
+  do_test_single (NULL, stack);
+  do_test_single (NULL, NULL);
+
   return 0;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>
