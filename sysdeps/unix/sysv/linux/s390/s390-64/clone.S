@@ -54,6 +54,7 @@ ENTRY(__clone)
 	br	%r14
 error:
 	lghi	%r2,-EINVAL
+	lmg	%r6,%r7,48(%r15)	/* Restore registers.  */
 	jg	SYSCALL_ERROR_LABEL
 PSEUDO_END (__clone)
 
