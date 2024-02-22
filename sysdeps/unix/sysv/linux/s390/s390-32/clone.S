@@ -53,6 +53,7 @@ ENTRY(__clone)
 	br	%r14
 error:
 	lhi	%r2,-EINVAL
+	lm	%r6,%r7,24(%r15)	/* Load registers.  */
 	j	SYSCALL_ERROR_LABEL
 PSEUDO_END (__clone)
 
