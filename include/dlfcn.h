@@ -4,7 +4,8 @@
 #include <link.h>		/* For ElfW.  */
 #include <stdbool.h>
 
-rtld_hidden_proto (_dl_find_object)
+extern __typeof (_dl_find_object) __dl_find_object;
+hidden_proto (__dl_find_object)
 
 /* Internally used flag.  */
 #define __RTLD_DLOPEN	0x80000000
