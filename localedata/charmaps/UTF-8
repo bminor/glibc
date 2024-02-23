@@ -49856,13 +49856,27 @@ CHARMAP
 END CHARMAP
 
 % Character width according to Unicode 15.1.0.
-% - Default width is 1.
+% Width is determined by the following rules, in order of decreasing precedence:
+% - U+00AD SOFT HYPHEN has width 1, as a special case for compatibility (https://archive.is/b5Ck).
+% - U+115F HANGUL CHOSEONG FILLER has width 2.
+%   This character stands in for an intentionally omitted leading consonant
+%   in a Hangul syllable block; as such it must be assigned width 2 despite its lack
+%   of visible display to ensure that the complete block has the correct width.
+%   (See below for more information on Hangul syllables.)
+% - Combining jungseong and jongseong Hangul jamo have width 0; generated from
+%   "grep '^[^;]*;[VT]' HangulSyllableType.txt".
+%   One composed Hangul "syllable block" like 퓛 is made up of
+%   two to three individual component characters called "jamo".
+%   The complete block must have total width 2;
+%   to achieve this, we assign a width of 2 to leading "choseong" jamo,
+%   and of 0 to medial vowel "jungseong" and trailing "jongseong" jamo.
+% - Non-spacing and enclosing marks have width 0; generated from
+%   "grep -E '^[^;]*;[^;]*;(Mn|Me);' UnicodeData.txt".
+% - "Default_Ignorable_Code_Point"s have width 0; generated from
+%   "grep '^[^;]*;\s*Default_Ignorable_Code_Point' DerivedCoreProperties.txt".
 % - Double-width characters have width 2; generated from
-%        "grep '^[^;]*;\s*[WF]' EastAsianWidth.txt"
-% - Non-spacing characters have width 0; generated from PropList.txt or
-%   "grep '^[^;]*;[^;]*;[^;]*;[^;]*;NSM;' UnicodeData.txt"
-% - Format control characters have width 0; generated from
-%   "grep '^[^;]*;[^;]*;Cf;' UnicodeData.txt"
+%   "grep '^[^;]*;[WF]' EastAsianWidth.txt".
+% - Default width for all other characters is 1.
 WIDTH
 <U0300>...<U036F>	0
 <U0483>...<U0489>	0
@@ -50083,7 +50097,9 @@ WIDTH
 <U3099>...<U309A>	0
 <U309B>...<U30FF>	2
 <U3105>...<U312F>	2
-<U3131>...<U318E>	2
+<U3131>...<U3163>	2
+<U3164>	0
+<U3165>...<U318E>	2
 <U3190>...<U31E3>	2
 <U31EF>...<U321E>	2
 <U3220>...<UA48C>	2
@@ -50138,8 +50154,8 @@ WIDTH
 <UFE68>...<UFE6B>	2
 <UFEFF>	0
 <UFF01>...<UFF60>	2
+<UFFA0>	0
 <UFFE0>...<UFFE6>	2
-<UFFF9>...<UFFFB>	0
 <U000101FD>	0
 <U000102E0>	0
 <U00010376>...<U0001037A>	0
@@ -50240,7 +50256,7 @@ WIDTH
 <U00011F36>...<U00011F3A>	0
 <U00011F40>	0
 <U00011F42>	0
-<U00013430>...<U00013440>	0
+<U00013440>	0
 <U00013447>...<U00013455>	0
 <U00016AF0>...<U00016AF4>	0
 <U00016B30>...<U00016B36>	0

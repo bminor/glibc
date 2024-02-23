@@ -175,7 +175,7 @@ unicode:
   localedata/unicode-gen/unicode-license.txt
   localedata/unicode-gen/DerivedCoreProperties.txt
   localedata/unicode-gen/EastAsianWidth.txt
-  localedata/unicode-gen/PropList.txt
+  localedata/unicode-gen/HangulSyllableType.txt
 
 # The following files are shared with the upstream tzcode project and must be
 # updated regularly to stay in sync with the upstream releases.
