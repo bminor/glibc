@@ -447,10 +447,12 @@ native-compile-mkdep-flags = -MMD -MP -MF $@.dt -MT $@
 compile.c = $(CC) $< -c $(CFLAGS) $(CPPFLAGS)
 compile.cc = $(CXX) $< -c $(CXXFLAGS) $(CPPFLAGS)
 compile.S = $(CC) $< -c $(CPPFLAGS) $(S-CPPFLAGS) \
-		  $(ASFLAGS) $(ASFLAGS-$(suffix $@))
+		  $(ASFLAGS) $(ASFLAGS-$(suffix $@)) $(sysdep-ASFLAGS) \
+		  $(ASFLAGS-$(<F)) $(ASFLAGS-$(@F))
 COMPILE.c = $(CC) -c $(CFLAGS) $(CPPFLAGS)
 COMPILE.S = $(CC) -c $(CPPFLAGS) $(S-CPPFLAGS) \
-		  $(ASFLAGS) $(ASFLAGS-$(suffix $@))
+		  $(ASFLAGS) $(ASFLAGS-$(suffix $@)) $(sysdep-ASFLAGS) \
+		  $(ASFLAGS-$(<F)) $(ASFLAGS-$(@F))
 
 # We need this for the output to go in the right place.  It will default to
 # empty if make was configured to work with a cc that can't grok -c and -o
