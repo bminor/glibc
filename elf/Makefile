@@ -419,6 +419,7 @@ tests += \
   tst-glibc-hwcaps-prepend \
   tst-global1 \
   tst-global2 \
+  tst-gnu2-tls2 \
   tst-initfinilazyfail \
   tst-initorder \
   tst-initorder2 \
@@ -846,6 +847,9 @@ modules-names += \
   tst-filterobj-flt \
   tst-finilazyfailmod \
   tst-globalmod2 \
+  tst-gnu2-tls2mod0 \
+  tst-gnu2-tls2mod1 \
+  tst-gnu2-tls2mod2 \
   tst-initlazyfailmod \
   tst-initorder2a \
   tst-initorder2b \
@@ -3046,10 +3050,24 @@ $(objpfx)tst-tlsgap.out: \
   $(objpfx)tst-tlsgap-mod0.so \
   $(objpfx)tst-tlsgap-mod1.so \
   $(objpfx)tst-tlsgap-mod2.so
+
+$(objpfx)tst-gnu2-tls2: $(shared-thread-library)
+$(objpfx)tst-gnu2-tls2.out: \
+  $(objpfx)tst-gnu2-tls2mod0.so \
+  $(objpfx)tst-gnu2-tls2mod1.so \
+  $(objpfx)tst-gnu2-tls2mod2.so
+
 ifeq (yes,$(have-mtls-dialect-gnu2))
+# This test fails if dl_tlsdesc_dynamic doesn't preserve all caller-saved
+# registers.  See https://sourceware.org/bugzilla/show_bug.cgi?id=31372
+test-xfail-tst-gnu2-tls2 = yes
+
 CFLAGS-tst-tlsgap-mod0.c += -mtls-dialect=gnu2
 CFLAGS-tst-tlsgap-mod1.c += -mtls-dialect=gnu2
 CFLAGS-tst-tlsgap-mod2.c += -mtls-dialect=gnu2
+CFLAGS-tst-gnu2-tls2mod0.c += -mtls-dialect=gnu2
+CFLAGS-tst-gnu2-tls2mod1.c += -mtls-dialect=gnu2
+CFLAGS-tst-gnu2-tls2mod2.c += -mtls-dialect=gnu2
 endif
 
 $(objpfx)tst-recursive-tls: $(objpfx)tst-recursive-tlsmallocmod.so

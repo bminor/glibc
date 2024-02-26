@@ -1,5 +1,5 @@
 ifeq ($(subdir),csu)
-gen-as-const-headers += cpu-features-offsets.sym
+gen-as-const-headers += cpu-features-offsets.sym features-offsets.sym
 endif
 
 ifeq ($(subdir),elf)
@@ -84,6 +84,11 @@ $(objpfx)tst-isa-level-1.out: $(objpfx)tst-isa-level-mod-1-baseline.so \
 endif
 tst-ifunc-isa-2-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-SSE4_2,-AVX,-AVX2,-AVX512F
 tst-ifunc-isa-2-static-ENV = $(tst-ifunc-isa-2-ENV)
+
+CFLAGS-tst-gnu2-tls2.c += -msse
+CFLAGS-tst-gnu2-tls2mod0.c += -msse2 -mtune=haswell
+CFLAGS-tst-gnu2-tls2mod1.c += -msse2 -mtune=haswell
+CFLAGS-tst-gnu2-tls2mod2.c += -msse2 -mtune=haswell
 endif
 
 ifeq ($(subdir),math)

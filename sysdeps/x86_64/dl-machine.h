@@ -67,9 +67,6 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
 			   int lazy, int profile)
 {
   Elf64_Addr *got;
-  extern void _dl_runtime_resolve_fxsave (ElfW(Word)) attribute_hidden;
-  extern void _dl_runtime_resolve_xsave (ElfW(Word)) attribute_hidden;
-  extern void _dl_runtime_resolve_xsavec (ElfW(Word)) attribute_hidden;
   extern void _dl_runtime_profile_sse (ElfW(Word)) attribute_hidden;
   extern void _dl_runtime_profile_avx (ElfW(Word)) attribute_hidden;
   extern void _dl_runtime_profile_avx512 (ElfW(Word)) attribute_hidden;
@@ -120,15 +117,8 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
 	  /* This function will get called to fix up the GOT entry
 	     indicated by the offset on the stack, and then jump to
 	     the resolved address.  */
-	  if (MINIMUM_X86_ISA_LEVEL >= AVX_X86_ISA_LEVEL
-	      || GLRO(dl_x86_cpu_features).xsave_state_size != 0)
-	    *(ElfW(Addr) *) (got + 2)
-	      = (CPU_FEATURE_USABLE_P (cpu_features, XSAVEC)
-		 ? (ElfW(Addr)) &_dl_runtime_resolve_xsavec
-		 : (ElfW(Addr)) &_dl_runtime_resolve_xsave);
-	  else
-	    *(ElfW(Addr) *) (got + 2)
-	      = (ElfW(Addr)) &_dl_runtime_resolve_fxsave;
+	  *(ElfW(Addr) *) (got + 2)
+	    = (ElfW(Addr)) GLRO(dl_x86_64_runtime_resolve);
 	}
     }
 
@@ -380,7 +370,7 @@ and creates an unsatisfiable circular dependency.\n",
 		  {
 		    td->arg = _dl_make_tlsdesc_dynamic
 		      (sym_map, sym->st_value + reloc->r_addend);
-		    td->entry = _dl_tlsdesc_dynamic;
+		    td->entry = GLRO(dl_x86_tlsdesc_dynamic);
 		  }
 		else
 #  endif

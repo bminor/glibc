@@ -18,7 +18,26 @@
 
 #include <sysdep.h>
 #include <tls.h>
+#include <cpu-features-offsets.h>
+#include <features-offsets.h>
 #include "tlsdesc.h"
+
+#ifndef DL_STACK_ALIGNMENT
+/* Due to GCC bug:
+
+   https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58066
+
+   __tls_get_addr may be called with 4-byte stack alignment.  Although
+   this bug has been fixed in GCC 4.9.4, 5.3 and 6, we can't assume
+   that stack will be always aligned at 16 bytes.  */
+# define DL_STACK_ALIGNMENT 4
+#endif
+
+/* True if _dl_tlsdesc_dynamic should align stack for STATE_SAVE or align
+   stack to MINIMUM_ALIGNMENT bytes before calling ___tls_get_addr.  */
+#define DL_RUNTIME_RESOLVE_REALIGN_STACK \
+  (STATE_SAVE_ALIGNMENT > DL_STACK_ALIGNMENT \
+   || MINIMUM_ALIGNMENT > DL_STACK_ALIGNMENT)
 
 	.text
 
@@ -65,69 +84,35 @@ _dl_tlsdesc_undefweak:
 	.size	_dl_tlsdesc_undefweak, .-_dl_tlsdesc_undefweak
 
 #ifdef SHARED
-	.hidden _dl_tlsdesc_dynamic
-	.global	_dl_tlsdesc_dynamic
-	.type	_dl_tlsdesc_dynamic,@function
+# define USE_FNSAVE
+# define MINIMUM_ALIGNMENT	4
+# define STATE_SAVE_ALIGNMENT	4
+# define _dl_tlsdesc_dynamic	_dl_tlsdesc_dynamic_fnsave
+# include "dl-tlsdesc-dynamic.h"
+# undef _dl_tlsdesc_dynamic
+# undef MINIMUM_ALIGNMENT
+# undef USE_FNSAVE
 
-     /* This function is used for symbols that need dynamic TLS.
+# define MINIMUM_ALIGNMENT	16
 
-	%eax points to the TLS descriptor, such that 0(%eax) points to
-	_dl_tlsdesc_dynamic itself, and 4(%eax) points to a struct
-	tlsdesc_dynamic_arg object.  It must return in %eax the offset
-	between the thread pointer and the object denoted by the
-	argument, without clobbering any registers.
+# define USE_FXSAVE
+# define STATE_SAVE_ALIGNMENT	16
+# define _dl_tlsdesc_dynamic	_dl_tlsdesc_dynamic_fxsave
+# include "dl-tlsdesc-dynamic.h"
+# undef _dl_tlsdesc_dynamic
+# undef USE_FXSAVE
 
-	The assembly code that follows is a rendition of the following
-	C code, hand-optimized a little bit.
+# define USE_XSAVE
+# define STATE_SAVE_ALIGNMENT	64
+# define _dl_tlsdesc_dynamic	_dl_tlsdesc_dynamic_xsave
+# include "dl-tlsdesc-dynamic.h"
+# undef _dl_tlsdesc_dynamic
+# undef USE_XSAVE
 
-ptrdiff_t
-__attribute__ ((__regparm__ (1)))
-_dl_tlsdesc_dynamic (struct tlsdesc *tdp)
-{
-  struct tlsdesc_dynamic_arg *td = tdp->arg;
-  dtv_t *dtv = *(dtv_t **)((char *)__thread_pointer + DTV_OFFSET);
-  if (__builtin_expect (td->gen_count <= dtv[0].counter
-			&& (dtv[td->tlsinfo.ti_module].pointer.val
-			    != TLS_DTV_UNALLOCATED),
-			1))
-    return dtv[td->tlsinfo.ti_module].pointer.val + td->tlsinfo.ti_offset
-      - __thread_pointer;
-
-  return ___tls_get_addr (&td->tlsinfo) - __thread_pointer;
-}
-*/
-	cfi_startproc
-	.align 16
-_dl_tlsdesc_dynamic:
-	/* Like all TLS resolvers, preserve call-clobbered registers.
-	   We need two scratch regs anyway.  */
-	subl	$28, %esp
-	cfi_adjust_cfa_offset (28)
-	movl	%ecx, 20(%esp)
-	movl	%edx, 24(%esp)
-	movl	TLSDESC_ARG(%eax), %eax
-	movl	%gs:DTV_OFFSET, %edx
-	movl	TLSDESC_GEN_COUNT(%eax), %ecx
-	cmpl	(%edx), %ecx
-	ja	.Lslow
-	movl	TLSDESC_MODID(%eax), %ecx
-	movl	(%edx,%ecx,8), %edx
-	cmpl	$-1, %edx
-	je	.Lslow
-	movl	TLSDESC_MODOFF(%eax), %eax
-	addl	%edx, %eax
-.Lret:
-	movl	20(%esp), %ecx
-	subl	%gs:0, %eax
-	movl	24(%esp), %edx
-	addl	$28, %esp
-	cfi_adjust_cfa_offset (-28)
-	ret
-	.p2align 4,,7
-.Lslow:
-	cfi_adjust_cfa_offset (28)
-	call	HIDDEN_JUMPTARGET (___tls_get_addr)
-	jmp	.Lret
-	cfi_endproc
-	.size	_dl_tlsdesc_dynamic, .-_dl_tlsdesc_dynamic
+# define USE_XSAVEC
+# define STATE_SAVE_ALIGNMENT	64
+# define _dl_tlsdesc_dynamic	_dl_tlsdesc_dynamic_xsavec
+# include "dl-tlsdesc-dynamic.h"
+# undef _dl_tlsdesc_dynamic
+# undef USE_XSAVEC
 #endif /* SHARED */

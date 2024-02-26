@@ -345,7 +345,7 @@ and creates an unsatisfiable circular dependency.\n",
 		  {
 		    td->arg = _dl_make_tlsdesc_dynamic
 		      (sym_map, sym->st_value + (ElfW(Word))td->arg);
-		    td->entry = _dl_tlsdesc_dynamic;
+		    td->entry = GLRO(dl_x86_tlsdesc_dynamic);
 		  }
 		else
 #  endif

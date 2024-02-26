@@ -70,6 +70,12 @@
    | (1 << X86_XSTATE_ZMM_H_ID))
 #endif
 
+/* States which should be saved for TLSDESC_CALL and TLS_DESC_CALL.
+   Compiler assumes that all registers, including x87 FPU stack registers,
+   are unchanged after CALL, except for EFLAGS and RAX/EAX.  */
+#define TLSDESC_CALL_STATE_SAVE_MASK	\
+  (STATE_SAVE_MASK | (1 << X86_XSTATE_X87_ID))
+
 /* Constants for bits in __x86_string_control:  */
 
 /* Avoid short distance REP MOVSB.  */

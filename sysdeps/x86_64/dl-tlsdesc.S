@@ -18,7 +18,19 @@
 
 #include <sysdep.h>
 #include <tls.h>
+#include <cpu-features-offsets.h>
+#include <features-offsets.h>
 #include "tlsdesc.h"
+#include "dl-trampoline-save.h"
+
+/* Area on stack to save and restore registers used for parameter
+   passing when calling _dl_tlsdesc_dynamic.  */
+#define REGISTER_SAVE_RCX	0
+#define REGISTER_SAVE_RDX	(REGISTER_SAVE_RCX + 8)
+#define REGISTER_SAVE_R8	(REGISTER_SAVE_RDX + 8)
+#define REGISTER_SAVE_R9	(REGISTER_SAVE_R8 + 8)
+#define REGISTER_SAVE_R10	(REGISTER_SAVE_R9 + 8)
+#define REGISTER_SAVE_R11	(REGISTER_SAVE_R10 + 8)
 
 	.text
 
@@ -67,80 +79,24 @@ _dl_tlsdesc_undefweak:
 	.size	_dl_tlsdesc_undefweak, .-_dl_tlsdesc_undefweak
 
 #ifdef SHARED
-	.hidden _dl_tlsdesc_dynamic
-	.global	_dl_tlsdesc_dynamic
-	.type	_dl_tlsdesc_dynamic,@function
+# define USE_FXSAVE
+# define STATE_SAVE_ALIGNMENT	16
+# define _dl_tlsdesc_dynamic	_dl_tlsdesc_dynamic_fxsave
+# include "dl-tlsdesc-dynamic.h"
+# undef _dl_tlsdesc_dynamic
+# undef USE_FXSAVE
 
-     /* %rax points to the TLS descriptor, such that 0(%rax) points to
-	_dl_tlsdesc_dynamic itself, and 8(%rax) points to a struct
-	tlsdesc_dynamic_arg object.  It must return in %rax the offset
-	between the thread pointer and the object denoted by the
-	argument, without clobbering any registers.
+# define USE_XSAVE
+# define STATE_SAVE_ALIGNMENT	64
+# define _dl_tlsdesc_dynamic	_dl_tlsdesc_dynamic_xsave
+# include "dl-tlsdesc-dynamic.h"
+# undef _dl_tlsdesc_dynamic
+# undef USE_XSAVE
 
-	The assembly code that follows is a rendition of the following
-	C code, hand-optimized a little bit.
-
-ptrdiff_t
-_dl_tlsdesc_dynamic (register struct tlsdesc *tdp asm ("%rax"))
-{
-  struct tlsdesc_dynamic_arg *td = tdp->arg;
-  dtv_t *dtv = *(dtv_t **)((char *)__thread_pointer + DTV_OFFSET);
-  if (__builtin_expect (td->gen_count <= dtv[0].counter
-			&& (dtv[td->tlsinfo.ti_module].pointer.val
-			    != TLS_DTV_UNALLOCATED),
-			1))
-    return dtv[td->tlsinfo.ti_module].pointer.val + td->tlsinfo.ti_offset
-      - __thread_pointer;
-
-  return __tls_get_addr_internal (&td->tlsinfo) - __thread_pointer;
-}
-*/
-	cfi_startproc
-	.align 16
-_dl_tlsdesc_dynamic:
-	_CET_ENDBR
-	/* Preserve call-clobbered registers that we modify.
-	   We need two scratch regs anyway.  */
-	movq	%rsi, -16(%rsp)
-	mov	%fs:DTV_OFFSET, %RSI_LP
-	movq	%rdi, -8(%rsp)
-	movq	TLSDESC_ARG(%rax), %rdi
-	movq	(%rsi), %rax
-	cmpq	%rax, TLSDESC_GEN_COUNT(%rdi)
-	ja	.Lslow
-	movq	TLSDESC_MODID(%rdi), %rax
-	salq	$4, %rax
-	movq	(%rax,%rsi), %rax
-	cmpq	$-1, %rax
-	je	.Lslow
-	addq	TLSDESC_MODOFF(%rdi), %rax
-.Lret:
-	movq	-16(%rsp), %rsi
-	sub	%fs:0, %RAX_LP
-	movq	-8(%rsp), %rdi
-	ret
-.Lslow:
-	/* Besides rdi and rsi, saved above, save rdx, rcx, r8, r9,
-	   r10 and r11.  Also, align the stack, that's off by 8 bytes.	*/
-	subq	$72, %rsp
-	cfi_adjust_cfa_offset (72)
-	movq	%rdx, 8(%rsp)
-	movq	%rcx, 16(%rsp)
-	movq	%r8, 24(%rsp)
-	movq	%r9, 32(%rsp)
-	movq	%r10, 40(%rsp)
-	movq	%r11, 48(%rsp)
-	/* %rdi already points to the tlsinfo data structure.  */
-	call	HIDDEN_JUMPTARGET (__tls_get_addr)
-	movq	8(%rsp), %rdx
-	movq	16(%rsp), %rcx
-	movq	24(%rsp), %r8
-	movq	32(%rsp), %r9
-	movq	40(%rsp), %r10
-	movq	48(%rsp), %r11
-	addq	$72, %rsp
-	cfi_adjust_cfa_offset (-72)
-	jmp	.Lret
-	cfi_endproc
-	.size	_dl_tlsdesc_dynamic, .-_dl_tlsdesc_dynamic
+# define USE_XSAVEC
+# define STATE_SAVE_ALIGNMENT	64
+# define _dl_tlsdesc_dynamic	_dl_tlsdesc_dynamic_xsavec
+# include "dl-tlsdesc-dynamic.h"
+# undef _dl_tlsdesc_dynamic
+# undef USE_XSAVEC
 #endif /* SHARED */
