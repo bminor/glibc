@@ -617,7 +617,8 @@ tests-special += $(objpfx)tst-valgrind-smoke.out
 endif
 $(objpfx)tst-valgrind-smoke.out: tst-valgrind-smoke.sh $(objpfx)ld.so $(objpfx)valgrind-test
 	$(SHELL) $< $(objpfx)ld.so  $(rtlddir)/$(rtld-installed-name) '$(test-wrapper-env)' \
-		'$(run-program-env)' '$(rpath-link)' $(objpfx)valgrind-test > $@; $(evaluate-test)
+		'$(run-program-env)' '$(rpath-link)' $(objpfx)valgrind-test \
+		'$(valgrind-suppressions-tst-valgrind-smoke)' > $@; $(evaluate-test)
 
 tests += $(tests-execstack-$(have-z-execstack))
 ifeq ($(run-built-tests),yes)

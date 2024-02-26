@@ -25,6 +25,7 @@ test_wrapper_env="$3"
 run_program_env="$4"
 library_path="$5"
 test_prog="$6"
+valgrind_suppressions="$7"
 
 # Test whether valgrind is available in the test
 # environment.  If not, skip the test.
@@ -34,7 +35,7 @@ ${test_wrapper_env} ${run_program_env} \
 # Test valgrind works with the system ld.so in the test environment
 /bin/sh -c \
   "${test_wrapper_env} ${run_program_env} \
-   valgrind -q --error-exitcode=1 \
+   valgrind -q --error-exitcode=1 ${valgrind_suppressions} \
      ${system_rtld} /bin/echo ${system_rtld}" || exit 77
 
 # Finally the actual test inside the test environment,
@@ -42,5 +43,5 @@ ${test_wrapper_env} ${run_program_env} \
 # the smoke test under valgrind.
 /bin/sh -c \
   "${test_wrapper_env} ${run_program_env} \
-   valgrind -q --error-exitcode=1 \
+   valgrind -q --error-exitcode=1 ${valgrind_suppressions} \
      ${rtld} --library-path ${library_path} ${test_prog} ${rtld}"
