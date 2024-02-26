@@ -27,8 +27,13 @@
 extern void TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *)
   attribute_hidden;
 
-#if defined SHARED && defined __x86_64__
-# include <dl-plt-rewrite.h>
+#if defined SHARED
+extern void _dl_tlsdesc_dynamic_fxsave (void) attribute_hidden;
+extern void _dl_tlsdesc_dynamic_xsave (void) attribute_hidden;
+extern void _dl_tlsdesc_dynamic_xsavec (void) attribute_hidden;
+
+# ifdef __x86_64__
+#  include <dl-plt-rewrite.h>
 
 static void
 TUNABLE_CALLBACK (set_plt_rewrite) (tunable_val_t *valp)
@@ -47,6 +52,15 @@ TUNABLE_CALLBACK (set_plt_rewrite) (tunable_val_t *valp)
 		 : plt_rewrite_jmp);
     }
 }
+# else
+extern void _dl_tlsdesc_dynamic_fnsave (void) attribute_hidden;
+# endif
+#endif
+
+#ifdef __x86_64__
+extern void _dl_runtime_resolve_fxsave (void) attribute_hidden;
+extern void _dl_runtime_resolve_xsave (void) attribute_hidden;
+extern void _dl_runtime_resolve_xsavec (void) attribute_hidden;
 #endif
 
 #ifdef __LP64__
@@ -1129,6 +1143,44 @@ no_cpuid:
   TUNABLE_GET (x86_shstk, tunable_val_t *,
 	       TUNABLE_CALLBACK (set_x86_shstk));
 #endif
+
+  if (GLRO(dl_x86_cpu_features).xsave_state_size != 0)
+    {
+      if (CPU_FEATURE_USABLE_P (cpu_features, XSAVEC))
+	{
+#ifdef __x86_64__
+	  GLRO(dl_x86_64_runtime_resolve) = _dl_runtime_resolve_xsavec;
+#endif
+#ifdef SHARED
+	  GLRO(dl_x86_tlsdesc_dynamic) = _dl_tlsdesc_dynamic_xsavec;
+#endif
+	}
+      else
+	{
+#ifdef __x86_64__
+	  GLRO(dl_x86_64_runtime_resolve) = _dl_runtime_resolve_xsave;
+#endif
+#ifdef SHARED
+	  GLRO(dl_x86_tlsdesc_dynamic) = _dl_tlsdesc_dynamic_xsave;
+#endif
+	}
+    }
+  else
+    {
+#ifdef __x86_64__
+      GLRO(dl_x86_64_runtime_resolve) = _dl_runtime_resolve_fxsave;
+# ifdef SHARED
+      GLRO(dl_x86_tlsdesc_dynamic) = _dl_tlsdesc_dynamic_fxsave;
+# endif
+#else
+# ifdef SHARED
+      if (CPU_FEATURE_USABLE_P (cpu_features, FXSR))
+	GLRO(dl_x86_tlsdesc_dynamic) = _dl_tlsdesc_dynamic_fxsave;
+      else
+	GLRO(dl_x86_tlsdesc_dynamic) = _dl_tlsdesc_dynamic_fnsave;
+# endif
+#endif
+    }
 
 #ifdef SHARED
 # ifdef __x86_64__

@@ -10,7 +10,7 @@ LDFLAGS-rtld += -Wl,-z,nomark-plt
 endif
 
 ifeq ($(subdir),csu)
-gen-as-const-headers += features-offsets.sym link-defines.sym
+gen-as-const-headers += link-defines.sym
 endif
 
 ifeq ($(subdir),gmon)
