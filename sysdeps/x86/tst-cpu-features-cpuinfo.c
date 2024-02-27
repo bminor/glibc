@@ -294,7 +294,10 @@ do_test (int argc, char **argv)
   fails += CHECK_PROC (waitpkg, WAITPKG);
   fails += CHECK_PROC (wbnoinvd, WBNOINVD);
   fails += CHECK_PROC (x2apic, X2APIC);
+#if 0
+  /* NB: /proc/cpuinfo doesn't report this feature.  */
   fails += CHECK_PROC (xfd, XFD);
+#endif
   fails += CHECK_PROC (xgetbv1, XGETBV_ECX_1);
   fails += CHECK_PROC (xop, XOP);
   fails += CHECK_PROC (xsave, XSAVE);
