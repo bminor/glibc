@@ -22,6 +22,7 @@
 
 #include <features.h>
 #include <stddef.h>
+#include <errno.h>
 #ifdef __has_include
 # if __has_include (<asm/hwprobe.h>)
 #  include <asm/hwprobe.h>
@@ -78,6 +79,34 @@ typedef int (*__riscv_hwprobe_t) (struct riscv_hwprobe *__pairs, size_t __pair_c
      __nonnull ((1)) __wur
      __fortified_attr_access (__read_write__, 1, 2)
      __fortified_attr_access (__read_only__, 4, 3);
+
+/* Helper function usable from ifunc selectors that probes a single key. */
+static __inline int
+__riscv_hwprobe_one(__riscv_hwprobe_t hwprobe_func,
+                    long long int key,
+                    unsigned long long int *value)
+{
+  struct riscv_hwprobe pair;
+  int rc;
+
+  /* Earlier versions of glibc pass NULL as the second ifunc parameter. Other C
+     libraries on non-Linux systems may pass +1 as this function pointer to
+     indicate no support. Users copying this function to exotic worlds
+     (non-Linux non-glibc) may want to do additional validity checks here. */
+  if (hwprobe_func == NULL)
+    return ENOSYS;
+
+  pair.key = key;
+  rc = hwprobe_func (&pair, 1, 0, NULL, 0);
+  if (rc != 0)
+    return rc;
+
+  if (pair.key < 0)
+    return ENOENT;
+
+  *value = pair.value;
+  return 0;
+}
 
 __END_DECLS
 
