@@ -2511,3 +2511,4 @@ GLIBC_2.39 stdc_trailing_zeros_ui F
 GLIBC_2.39 stdc_trailing_zeros_ul F
 GLIBC_2.39 stdc_trailing_zeros_ull F
 GLIBC_2.39 stdc_trailing_zeros_us F
+GLIBC_2.40 __riscv_hwprobe F

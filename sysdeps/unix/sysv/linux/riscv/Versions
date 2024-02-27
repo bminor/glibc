@@ -8,4 +8,7 @@ libc {
   GLIBC_2.27 {
     __riscv_flush_icache;
   }
+  GLIBC_2.40 {
+    __riscv_hwprobe;
+  }
 }

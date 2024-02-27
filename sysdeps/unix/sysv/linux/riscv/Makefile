@@ -1,6 +1,14 @@
 ifeq ($(subdir),misc)
-sysdep_headers += sys/cachectl.h
-sysdep_routines += flush-icache
+sysdep_headers += \
+  sys/cachectl.h \
+  sys/hwprobe.h \
+  # sysdep_headers
+
+sysdep_routines += \
+  flush-icache \
+  hwprobe \
+  # sysdep_routines
+
 endif
 
 ifeq ($(subdir),stdlib)
