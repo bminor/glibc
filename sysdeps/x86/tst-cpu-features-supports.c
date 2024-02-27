@@ -115,7 +115,7 @@ do_test (int argc, char **argv)
 #if __GNUC_PREREQ (11, 0)
   fails += CHECK_FEATURE_ACTIVE (cmpxchg16b, CMPXCHG16B);
   fails += CHECK_FEATURE_ACTIVE (cmpxchg8b, CX8);
-  fails += CHECK_FEATURE_ACTIVE (enqcmd, ENQCMD);
+  fails += CHECK_FEATURE_PRESENT (enqcmd, ENQCMD);
   fails += CHECK_FEATURE_ACTIVE (f16c, F16C);
 #endif
 #if __GNUC_PREREQ (4, 9)
