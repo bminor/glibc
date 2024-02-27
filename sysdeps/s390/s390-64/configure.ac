@@ -1,34 +1,6 @@
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/s390/s390-64.
 
-# Bypass result of runtime configure check for known linker versions as
-# e.g. crt-files or libc.so might not be available in bootstrapping
-# environments.
-case $($LD --version) in
-  "GNU gold"*)
-    # As of 2023-08-07, gold does not support static PIE due to
-    # Bug 22221 - add --no-dynamic-linker option
-    # https://sourceware.org/bugzilla/show_bug.cgi?id=22221
-    libc_cv_s390x_staticpie_req_version=no
-    ;;
-  "LLD"*)
-    # As of 2023-08-07, there is no lld which supports s390x.
-    libc_cv_s390x_staticpie_req_version=no
-    ;;
-  *)
-    # The required binutils patches are available with bintuils 2.39
-    libc_cv_s390x_staticpie_req_version=yes
-    # Skip AC_CHECK_PROGS and just use the result from main configure.ac.
-    libc_cv_s390x_staticpie_req_LD=$LD
-    AC_CHECK_PROG_VER(libc_cv_s390x_staticpie_req_LD, $LD, --version,
-		      [GNU ld.* \([0-9][0-9]*\.[0-9.]*\)],
-		      [2.1[0-9][0-9]*|2.39*|2.[4-9][0-9]*|[3-9].*|[1-9][0-9]*],
-		      libc_cv_s390x_staticpie_req_version=no)
-    ;;
-esac
-AC_MSG_CHECKING([for s390-specific static PIE requirements (version check)])
-AC_MSG_RESULT($libc_cv_s390x_staticpie_req_version)
-
 # Minimal checking for static PIE support in ld.
 # Compare to ld testcase/bugzilla:
 # <binutils-source>/ld/testsuite/ld-elf/pr22263-1.rd
@@ -42,81 +14,44 @@ bar (void)
 {
   *foo = 1;
 }
+
+void bar2 (void);
+void* bar2_ifunc (void) __asm__ ("bar2");
+__asm__ (".type bar2, %gnu_indirect_function");
+void* bar2_ifunc (void) { return 0; }
 EOF
   cat > conftest2.c <<EOF
 extern __thread int *foo;
 extern void bar (void);
+extern void bar2 (void);
 static int x;
 
 int
 main ()
 {
   foo = &x;
+  bar2 ();
   return 0;
 }
 EOF
   libc_cv_s390x_staticpie_req_runtime=no
+  # Check if the static linker does not generate dynamic TLS relocs in PIE
+  # (binutils PR ld/22263), if it accepts --no-dynamic-linker
+  # (by using -static-pie), and if it adds a DT_JMPREL pointing to .rela.iplt
+  # with static pie.
   if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -fPIE -c conftest1.c -o conftest1.o]) \
      && AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -fPIE -c conftest2.c -o conftest2.o]) \
-     && AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -pie -o conftest conftest1.o conftest2.o]) \
-     && AC_TRY_COMMAND([! LC_ALL=C $READELF -Wr conftest | grep R_390_TLS_TPOFF])
+     && AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -static-pie -nostartfiles -nostdlib -fPIE -o conftest conftest1.o conftest2.o]) \
+     && AC_TRY_COMMAND([! LC_ALL=C $READELF -Wr conftest | grep R_390_TLS_TPOFF]) \
+     && AC_TRY_COMMAND([LC_ACLL=C $READELF -d conftest | grep JMPREL])
   then
     libc_cv_s390x_staticpie_req_runtime=yes
   fi
   rm -rf conftest.*])
 
-if test $libc_cv_s390x_staticpie_req_runtime = yes \
-   || test $libc_cv_s390x_staticpie_req_version = yes; then
-   # Static PIE is supported only on 64bit.
-   # Ensure you also have those patches for:
-   # - binutils (ld)
-   #   - "[PR ld/22263] s390: Avoid dynamic TLS relocs in PIE"
-   #     https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=26b1426577b5dcb32d149c64cca3e603b81948a9
-   #     (Tested by configure check above)
-   #     Otherwise there will be a R_390_TLS_TPOFF relocation, which fails to
-   #     be processed in _dl_relocate_static_pie() as static TLS map is not setup.
-   #   - "s390: Add DT_JMPREL pointing to .rela.[i]plt with static-pie"
-   #     https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=d942d8db12adf4c9e5c7d9ed6496a779ece7149e
-   #     (We can't test it in configure as we are not able to link a static PIE
-   #     executable if the system glibc lacks static PIE support)
-   #     Otherwise there won't be DT_JMPREL, DT_PLTRELA, DT_PLTRELASZ entries
-   #     and the IFUNC symbols are not processed, which leads to crashes.
-   #
-   # - kernel (the mentioned links to the commits belong to 5.19 merge window):
-   #   - "s390/mmap: increase stack/mmap gap to 128MB"
-   #     https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git/commit/?h=features&id=f2f47d0ef72c30622e62471903ea19446ea79ee2
-   #   - "s390/vdso: move vdso mapping to its own function"
-   #     https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git/commit/?h=features&id=57761da4dc5cd60bed2c81ba0edb7495c3c740b8
-   #   - "s390/vdso: map vdso above stack"
-   #     https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git/commit/?h=features&id=9e37a2e8546f9e48ea76c839116fa5174d14e033
-   #   - "s390/vdso: add vdso randomization"
-   #     https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git/commit/?h=features&id=41cd81abafdc4e58a93fcb677712a76885e3ca25
-   #   (We can't test the kernel of the target system)
-   #   Otherwise if /proc/sys/kernel/randomize_va_space is turned off (0),
-   #   static PIE executables like ldconfig will crash.  While startup sbrk is
-   #   used to enlarge the HEAP.  Unfortunately the underlying brk syscall fails
-   #   as there is not enough space after the HEAP.  Then the address of the TLS
-   #   image is invalid and the following memcpy in __libc_setup_tls() leads
-   #   to a segfault.
-   #   If /proc/sys/kernel/randomize_va_space is activated (default: 2), there
-   #   is enough space after HEAP.
-   #
-   # - glibc
-   #   - "Linux: Define MMAP_CALL_INTERNAL"
-   #     https://sourceware.org/git/?p=glibc.git;a=commit;h=c1b68685d438373efe64e5f076f4215723004dfb
-   #   - "i386: Remove OPTIMIZE_FOR_GCC_5 from Linux libc-do-syscall.S"
-   #     https://sourceware.org/git/?p=glibc.git;a=commit;h=6e5c7a1e262961adb52443ab91bd2c9b72316402
-   #   - "i386: Honor I386_USE_SYSENTER for 6-argument Linux system calls"
-   #     https://sourceware.org/git/?p=glibc.git;a=commit;h=60f0f2130d30cfd008ca39743027f1e200592dff
-   #   - "ia64: Always define IA64_USE_NEW_STUB as a flag macro"
-   #     https://sourceware.org/git/?p=glibc.git;a=commit;h=18bd9c3d3b1b6a9182698c85354578d1d58e9d64
-   #   - "Linux: Implement a useful version of _startup_fatal"
-   #     https://sourceware.org/git/?p=glibc.git;a=commit;h=a2a6bce7d7e52c1c34369a7da62c501cc350bc31
-   #   - "Linux: Introduce __brk_call for invoking the brk system call"
-   #     https://sourceware.org/git/?p=glibc.git;a=commit;h=b57ab258c1140bc45464b4b9908713e3e0ee35aa
-   #   - "csu: Implement and use _dl_early_allocate during static startup"
-   #     https://sourceware.org/git/?p=glibc.git;a=commit;h=f787e138aa0bf677bf74fa2a08595c446292f3d7
-   #   The mentioned patch series by Florian Weimer avoids the mentioned failing
-   #   sbrk syscall by falling back to mmap.
+if test $libc_cv_s390x_staticpie_req_runtime = yes; then
+   # Some kernels might fail with /proc/sys/kernel/randomize_va_space set to 0
+   # due not enough space for a brk call.  However, there is no reliable way to
+   # test it.
    AC_DEFINE(SUPPORT_STATIC_PIE)
 fi
