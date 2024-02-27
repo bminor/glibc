@@ -24,6 +24,7 @@
 #include <unistd.h>
 #include <ldsodefs.h>
 #include <sysdep.h>
+#include <sys/hwprobe.h>
 
 #define ELF_MACHINE_IRELA	1
 
@@ -31,10 +32,10 @@ static inline ElfW(Addr)
 __attribute ((always_inline))
 elf_ifunc_invoke (ElfW(Addr) addr)
 {
-  /* The second argument is a void pointer to preserve the extension
-     fexibility.  */
-  return ((ElfW(Addr) (*) (uint64_t, void *)) (addr))
-	 (GLRO(dl_hwcap), NULL);
+  /* The third argument is a void pointer to preserve the extension
+     flexibility.  */
+  return ((ElfW(Addr) (*) (uint64_t, void *, void *)) (addr))
+	 (GLRO(dl_hwcap), __riscv_hwprobe, NULL);
 }
 
 static inline void

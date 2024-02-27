@@ -69,6 +69,16 @@ extern int __riscv_hwprobe (struct riscv_hwprobe *__pairs, size_t __pair_count,
      __fortified_attr_access (__read_write__, 1, 2)
      __fortified_attr_access (__read_only__, 4, 3);
 
+/* A pointer to the __riscv_hwprobe vDSO function is passed as the second
+   argument to ifunc selector routines. Include a function pointer type for
+   convenience in calling the function in those settings. */
+typedef int (*__riscv_hwprobe_t) (struct riscv_hwprobe *__pairs, size_t __pair_count,
+				  size_t __cpu_count, unsigned long int *__cpus,
+				  unsigned int __flags)
+     __nonnull ((1)) __wur
+     __fortified_attr_access (__read_write__, 1, 2)
+     __fortified_attr_access (__read_only__, 4, 3);
+
 __END_DECLS
 
 #endif /* sys/hwprobe.h */
