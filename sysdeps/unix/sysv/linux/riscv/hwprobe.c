@@ -28,8 +28,8 @@ int __riscv_hwprobe (struct riscv_hwprobe *pairs, size_t pair_count,
 {
   int r;
 
-  r = INTERNAL_SYSCALL_CALL (riscv_hwprobe, pairs, pair_count,
-                             cpu_count, cpus, flags);
+  r = INTERNAL_VSYSCALL (riscv_hwprobe, 5, pairs, pair_count,
+                         cpu_count, cpus, flags);
 
   /* Negate negative errno values to match pthreads API. */
   return -r;

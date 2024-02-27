@@ -47,6 +47,9 @@ setup_vdso_pointers (void)
 #ifdef HAVE_GET_TBFREQ
   GLRO(dl_vdso_get_tbfreq) = dl_vdso_vsym (HAVE_GET_TBFREQ);
 #endif
+#ifdef HAVE_RISCV_HWPROBE
+  GLRO(dl_vdso_riscv_hwprobe) = dl_vdso_vsym (HAVE_RISCV_HWPROBE);
+#endif
 }
 
 #endif

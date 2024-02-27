@@ -71,6 +71,16 @@ PROCINFO_CLASS int (*_dl_vdso_clock_getres_time64) (clockid_t,
 # ifdef HAVE_GET_TBFREQ
 PROCINFO_CLASS uint64_t (*_dl_vdso_get_tbfreq)(void) RELRO;
 # endif
+
+/* RISC-V specific ones.  */
+# ifdef HAVE_RISCV_HWPROBE
+PROCINFO_CLASS int (*_dl_vdso_riscv_hwprobe)(void *,
+                                             size_t,
+                                             size_t,
+                                             unsigned long *,
+                                             unsigned int) RELRO;
+# endif
+
 #endif
 
 #undef RELRO
