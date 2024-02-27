@@ -15,6 +15,15 @@ ifeq ($(subdir),stdlib)
 gen-as-const-headers += ucontext_i.sym
 endif
 
+ifeq ($(subdir),string)
+sysdep_routines += \
+  memcpy \
+  memcpy-generic \
+  memcpy_noalignment \
+  # sysdep_routines
+
+endif
+
 abi-variants := ilp32 ilp32d lp64 lp64d
 
 ifeq (,$(filter $(default-abi),$(abi-variants)))
