@@ -63,6 +63,33 @@ $(objpfx)libx86-64-isa-level%.os: $(..)/sysdeps/unix/sysv/linux/x86_64/x86-64-is
 $(objpfx)libx86-64-isa-level.so: $(objpfx)libx86-64-isa-level-1.so
 	cp $< $@
 endif
+
+ifeq (yes,$(have-mamx-tile))
+tests += \
+  tst-gnu2-tls2-amx \
+# tests
+
+modules-names += \
+  tst-gnu2-tls2-amx-mod0 \
+  tst-gnu2-tls2-amx-mod1 \
+  tst-gnu2-tls2-amx-mod2 \
+# modules-names
+
+$(objpfx)tst-gnu2-tls2-amx: $(shared-thread-library)
+$(objpfx)tst-gnu2-tls2-amx.out: \
+  $(objpfx)tst-gnu2-tls2-amx-mod0.so \
+  $(objpfx)tst-gnu2-tls2-amx-mod1.so \
+  $(objpfx)tst-gnu2-tls2-amx-mod2.so
+$(objpfx)tst-gnu2-tls2-amx-mod0.so: $(libsupport)
+$(objpfx)tst-gnu2-tls2-amx-mod1.so: $(libsupport)
+$(objpfx)tst-gnu2-tls2-amx-mod2.so: $(libsupport)
+
+CFLAGS-tst-gnu2-tls2-amx.c += -mamx-tile
+CFLAGS-tst-gnu2-tls2-amx-mod0.c += -mamx-tile -mtls-dialect=gnu2
+CFLAGS-tst-gnu2-tls2-amx-mod1.c += -mamx-tile -mtls-dialect=gnu2
+CFLAGS-tst-gnu2-tls2-amx-mod2.c += -mamx-tile -mtls-dialect=gnu2
+endif
+
 endif # $(subdir) == elf
 
 ifneq ($(enable-cet),no)
