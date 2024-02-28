@@ -56,6 +56,14 @@
    | (1 << X86_XSTATE_ZMM_H_ID) 	\
    | (1 << X86_XSTATE_ZMM_ID)		\
    | (1 << X86_XSTATE_APX_F_ID))
+
+/* AMX state mask.  */
+# define AMX_STATE_SAVE_MASK		\
+  ((1 << X86_XSTATE_TILECFG_ID) | (1 << X86_XSTATE_TILEDATA_ID))
+
+/* States to be included in xsave_state_full_size.  */
+# define FULL_STATE_SAVE_MASK		\
+  (STATE_SAVE_MASK | AMX_STATE_SAVE_MASK)
 #else
 /* Offset for fxsave/xsave area used by _dl_tlsdesc_dynamic.  Since i386
    doesn't have red-zone, use 0 here.  */
@@ -68,13 +76,17 @@
    | (1 << X86_XSTATE_BNDREGS_ID)	\
    | (1 << X86_XSTATE_K_ID)		\
    | (1 << X86_XSTATE_ZMM_H_ID))
+
+/* States to be included in xsave_state_size.  */
+# define FULL_STATE_SAVE_MASK		STATE_SAVE_MASK
 #endif
 
 /* States which should be saved for TLSDESC_CALL and TLS_DESC_CALL.
-   Compiler assumes that all registers, including x87 FPU stack registers,
-   are unchanged after CALL, except for EFLAGS and RAX/EAX.  */
+   Compiler assumes that all registers, including AMX and x87 FPU
+   stack registers, are unchanged after CALL, except for EFLAGS and
+   RAX/EAX.  */
 #define TLSDESC_CALL_STATE_SAVE_MASK	\
-  (STATE_SAVE_MASK | (1 << X86_XSTATE_X87_ID))
+  (FULL_STATE_SAVE_MASK | (1 << X86_XSTATE_X87_ID))
 
 /* Constants for bits in __x86_string_control:  */
 
