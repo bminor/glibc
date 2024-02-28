@@ -17,18 +17,21 @@ endif
 ifeq ($(subdir),elf)
 ifeq (yes,$(enable-x86-isa-level))
 tests += \
-  tst-glibc-hwcaps-2
+  tst-glibc-hwcaps-2 \
+# tests
 ifeq (no,$(build-hardcoded-path-in-tests))
 # This is an ld.so.cache test, and RPATH/RUNPATH in the executable
 # interferes with its test objectives.
 tests-container += \
-  tst-glibc-hwcaps-2-cache
+  tst-glibc-hwcaps-2-cache \
+# tests-container
 endif
 modules-names += \
   libx86-64-isa-level-1 \
   libx86-64-isa-level-2 \
   libx86-64-isa-level-3 \
-  libx86-64-isa-level-4
+  libx86-64-isa-level-4 \
+# modules-names
 
 $(objpfx)tst-glibc-hwcaps-2: $(objpfx)libx86-64-isa-level.so
 
