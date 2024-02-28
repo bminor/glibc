@@ -909,6 +909,8 @@ struct cpu_features
   /* The full state size for XSAVE when XSAVEC is disabled by
 
      GLIBC_TUNABLES=glibc.cpu.hwcaps=-XSAVEC
+
+     and the AMX state size when XSAVEC is available.
    */
   unsigned int xsave_state_full_size;
   /* Data cache size for use in memory and string routines, typically

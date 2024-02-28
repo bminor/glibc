@@ -20,3 +20,8 @@
 # define ARCH_SHSTK_SHSTK		0x1
 # define ARCH_SHSTK_WRSS		0x2
 #endif
+
+#ifndef ARCH_GET_XCOMP_PERM
+# define ARCH_GET_XCOMP_PERM		0x1022
+# define ARCH_REQ_XCOMP_PERM		0x1023
+#endif

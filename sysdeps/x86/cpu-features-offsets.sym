@@ -3,3 +3,4 @@
 #include <ldsodefs.h>
 
 XSAVE_STATE_SIZE_OFFSET	offsetof (struct cpu_features, xsave_state_size)
+XSAVE_STATE_FULL_SIZE_OFFSET offsetof (struct cpu_features, xsave_state_full_size)
