@@ -223,6 +223,17 @@ parse_tunables_string (const char *valstring, struct tunable_toset_t *tunables)
 	    {
 	      tunables[ntunables++] =
 		(struct tunable_toset_t) { cur, value, p - value };
+
+	      /* Ignore tunables if enable_secure is set */
+	      if (tunable_is_name ("glibc.rtld.enable_secure", name))
+		{
+                  tunable_num_t val = (tunable_num_t) _dl_strtoul (value, NULL);
+		  if (val == 1)
+		    {
+		      __libc_enable_secure = 1;
+		      return 0;
+		    }
+		}
 	      break;
 	    }
 	}

@@ -285,6 +285,7 @@ tests-static-internal := \
   tst-tls1-static \
   tst-tls1-static-non-pie \
   tst-tunables \
+  tst-tunables-enable_secure \
   # tests-static-internal
 
 CRT-tst-tls1-static-non-pie := $(csu-objpfx)crt1.o
@@ -2681,6 +2682,7 @@ $(objpfx)tst-glibc-hwcaps-mask.out: \
 $(objpfx)tst-glibc-hwcaps-cache.out: $(objpfx)tst-glibc-hwcaps
 
 tst-tunables-ARGS = -- $(host-test-program-cmd)
+tst-tunables-enable_secure-ARGS = -- $(host-test-program-cmd)
 
 $(objpfx)list-tunables.out: tst-rtld-list-tunables.sh $(objpfx)ld.so
 	$(SHELL) $< $(objpfx)ld.so '$(test-wrapper-env)' \

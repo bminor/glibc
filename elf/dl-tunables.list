@@ -136,6 +136,12 @@ glibc {
       minval: 0
       default: 512
     }
+    enable_secure {
+      type: INT_32
+      minval: 0
+      maxval: 1
+      default: 0
+    }
   }
 
   mem {
