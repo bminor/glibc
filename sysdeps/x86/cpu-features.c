@@ -1117,9 +1117,8 @@ no_cpuid:
 	       TUNABLE_CALLBACK (set_x86_shstk));
 #endif
 
-#if MINIMUM_X86_ISA_LEVEL < AVX_X86_ISA_LEVEL
-  if (GLRO(dl_x86_cpu_features).xsave_state_size != 0)
-#endif
+  if (MINIMUM_X86_ISA_LEVEL >= AVX_X86_ISA_LEVEL
+      || (GLRO(dl_x86_cpu_features).xsave_state_size != 0))
     {
       if (CPU_FEATURE_USABLE_P (cpu_features, XSAVEC))
 	{
@@ -1140,24 +1139,22 @@ no_cpuid:
 #endif
 	}
     }
-#if MINIMUM_X86_ISA_LEVEL < AVX_X86_ISA_LEVEL
   else
     {
-# ifdef __x86_64__
+#ifdef __x86_64__
       GLRO(dl_x86_64_runtime_resolve) = _dl_runtime_resolve_fxsave;
-#  ifdef SHARED
+# ifdef SHARED
       GLRO(dl_x86_tlsdesc_dynamic) = _dl_tlsdesc_dynamic_fxsave;
-#  endif
-# else
-#  ifdef SHARED
+# endif
+#else
+# ifdef SHARED
       if (CPU_FEATURE_USABLE_P (cpu_features, FXSR))
 	GLRO(dl_x86_tlsdesc_dynamic) = _dl_tlsdesc_dynamic_fxsave;
       else
 	GLRO(dl_x86_tlsdesc_dynamic) = _dl_tlsdesc_dynamic_fnsave;
-#  endif
 # endif
-    }
 #endif
+    }
 
 #ifndef SHARED
   /* NB: In libc.a, call init_cacheinfo.  */
