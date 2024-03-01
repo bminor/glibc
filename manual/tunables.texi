@@ -345,6 +345,16 @@ performance issues of @samp{1}.
 The default value of this tunable is @samp{2}.
 @end deftp
 
+@deftp Tunable glibc.rtld.enable_secure
+Used to run a program as if it were a setuid process.  The only valid value
+is @samp{1} as this tunable can only be used to set and not unset
+@code{enable_secure}.  Setting this tunable to @samp{1} also disables all other
+tunables.  This tunable is intended to facilitate more extensive verification
+tests for @code{AT_SECURE} programs and not meant to be a security feature.
+
+The default value of this tunable is @samp{0}.
+@end deftp
+
 @node Elision Tunables
 @section Elision Tunables
 @cindex elision tunables
