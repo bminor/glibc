@@ -34,3 +34,4 @@ int __riscv_hwprobe (struct riscv_hwprobe *pairs, size_t pair_count,
   /* Negate negative errno values to match pthreads API. */
   return -r;
 }
+libc_hidden_def (__riscv_hwprobe)

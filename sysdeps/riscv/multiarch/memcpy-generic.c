@@ -1,4 +1,4 @@
-/* memcopy.h -- definitions for memory copy functions. RISC-V version.
+/* Re-include the default memcpy implementation.
    Copyright (C) 2024 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,11 +16,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sysdeps/generic/memcopy.h>
+#include <string.h>
 
-/* Redefine the generic memcpy implementation to __memcpy_generic, so
-   the memcpy ifunc can select between generic and special versions.
-   In rtld, don't bother with all the ifunciness. */
-#if IS_IN (libc)
-#define MEMCPY __memcpy_generic
+#if IS_IN(libc)
+# define MEMCPY __memcpy_generic
+# undef libc_hidden_builtin_def
+# define libc_hidden_builtin_def(x)
 #endif
+#include <string/memcpy.c>

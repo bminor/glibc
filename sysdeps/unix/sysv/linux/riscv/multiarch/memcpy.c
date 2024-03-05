@@ -28,8 +28,6 @@
 # include <riscv-ifunc.h>
 # include <sys/hwprobe.h>
 
-# define INIT_ARCH()
-
 extern __typeof (__redirect_memcpy) __libc_memcpy;
 
 extern __typeof (__redirect_memcpy) __memcpy_generic attribute_hidden;
@@ -38,14 +36,9 @@ extern __typeof (__redirect_memcpy) __memcpy_noalignment attribute_hidden;
 static inline __typeof (__redirect_memcpy) *
 select_memcpy_ifunc (uint64_t dl_hwcap, __riscv_hwprobe_t hwprobe_func)
 {
-  unsigned long long int value;
-
-  INIT_ARCH ();
-
-  if (__riscv_hwprobe_one (hwprobe_func, RISCV_HWPROBE_KEY_CPUPERF_0, &value) != 0)
-    return __memcpy_generic;
-
-  if ((value & RISCV_HWPROBE_MISALIGNED_MASK) == RISCV_HWPROBE_MISALIGNED_FAST)
+  unsigned long long int v;
+  if (__riscv_hwprobe_one (hwprobe_func, RISCV_HWPROBE_KEY_CPUPERF_0, &v) == 0
+      && (v & RISCV_HWPROBE_MISALIGNED_MASK) == RISCV_HWPROBE_MISALIGNED_FAST)
     return __memcpy_noalignment;
 
   return __memcpy_generic;
@@ -59,5 +52,6 @@ strong_alias (__libc_memcpy, memcpy);
 __hidden_ver1 (memcpy, __GI_memcpy, __redirect_memcpy)
   __attribute__ ((visibility ("hidden"))) __attribute_copy__ (memcpy);
 # endif
-
+#else
+# include <string/memcpy.c>
 #endif
