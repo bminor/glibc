@@ -26,7 +26,7 @@ sysdep_routines += memcpy-power8-cached memcpy-power7 memcpy-a2 memcpy-power6 \
 		   memmove-power7 memmove-ppc64 wordcopy-ppc64 \
 		   strncpy-power8 \
 		   strspn-power8 strspn-ppc64 strcspn-power8 strcspn-ppc64 \
-		   strlen-power8 strcasestr-power8 strcasestr-ppc64 \
+		   strlen-power8 \
 		   strcasecmp-ppc64 strcasecmp-power8 strncase-ppc64 \
 		   strncase-power8
 

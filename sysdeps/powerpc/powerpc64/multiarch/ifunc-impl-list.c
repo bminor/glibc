@@ -432,14 +432,5 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
              IFUNC_IMPL_ADD (array, i, strcspn, 1,
                              __strcspn_ppc))
 
-  /* Support sysdeps/powerpc/powerpc64/multiarch/strcasestr.c.  */
-  IFUNC_IMPL (i, name, strcasestr,
-	      IFUNC_IMPL_ADD (array, i, strcasestr,
-			      hwcap2 & PPC_FEATURE2_ARCH_2_07
-			      && hwcap & PPC_FEATURE_HAS_ALTIVEC,
-			      __strcasestr_power8)
-             IFUNC_IMPL_ADD (array, i, strcasestr, 1,
-                             __strcasestr_ppc))
-
   return 0;
 }
