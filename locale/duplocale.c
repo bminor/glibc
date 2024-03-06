@@ -43,6 +43,11 @@ __duplocale (locale_t dataset)
   int cnt;
   size_t names_len = 0;
 
+  /* If dataset points to _nl_global_locale, we need to prevent other
+     threads from modifying it.  We also modify global data below (the
+     usage counts).  */
+  __libc_rwlock_wrlock (__libc_setlocale_lock);
+
   /* Calculate the total space we need to store all the names.  */
   for (cnt = 0; cnt < __LC_LAST; ++cnt)
     if (cnt != LC_ALL && dataset->__names[cnt] != _nl_C_name)
@@ -54,9 +59,6 @@ __duplocale (locale_t dataset)
   if (result != NULL)
     {
       char *namep = (char *) (result + 1);
-
-      /* We modify global data (the usage counts).  */
-      __libc_rwlock_wrlock (__libc_setlocale_lock);
 
       for (cnt = 0; cnt < __LC_LAST; ++cnt)
 	if (cnt != LC_ALL)
@@ -78,10 +80,10 @@ __duplocale (locale_t dataset)
       result->__ctype_b = dataset->__ctype_b;
       result->__ctype_tolower = dataset->__ctype_tolower;
       result->__ctype_toupper = dataset->__ctype_toupper;
-
-      /* It's done.  */
-      __libc_rwlock_unlock (__libc_setlocale_lock);
     }
+
+  /* It's done.  */
+  __libc_rwlock_unlock (__libc_setlocale_lock);
 
   return result;
 }
