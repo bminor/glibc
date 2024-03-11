@@ -89,6 +89,17 @@ do_test (void)
     TEST_COMPARE (sigisemptyset (&set), 1);
   }
 
+  {
+    sigset_t set;
+    for (int sig = 1; sig <= NSIG; sig++)
+      {
+	sigemptyset (&set);
+	if (sigaddset (&set, sig) < 0)
+	  continue;
+	TEST_COMPARE (sigisemptyset (&set), 0);
+      }
+  }
+
   return 0;
 }
 
