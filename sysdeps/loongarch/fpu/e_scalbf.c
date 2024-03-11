@@ -57,4 +57,4 @@ __ieee754_scalbf (float x, float fn)
 
   return x;
 }
-libm_alias_finite (__ieee754_scalb, __scalb)
+libm_alias_finite (__ieee754_scalbf, __scalbf)
