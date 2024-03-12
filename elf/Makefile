@@ -3056,10 +3056,6 @@ $(objpfx)tst-gnu2-tls2.out: \
   $(objpfx)tst-gnu2-tls2mod2.so
 
 ifeq (yes,$(have-mtls-dialect-gnu2))
-# This test fails if dl_tlsdesc_dynamic doesn't preserve all caller-saved
-# registers.  See https://sourceware.org/bugzilla/show_bug.cgi?id=31372
-test-xfail-tst-gnu2-tls2 = yes
-
 CFLAGS-tst-tlsgap-mod0.c += -mtls-dialect=gnu2
 CFLAGS-tst-tlsgap-mod1.c += -mtls-dialect=gnu2
 CFLAGS-tst-tlsgap-mod2.c += -mtls-dialect=gnu2

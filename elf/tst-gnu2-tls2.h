@@ -27,6 +27,10 @@ extern struct tls *apply_tls (struct tls *);
 
 /* An architecture can define them to verify that clobber caller-saved
    registers aren't changed by the implicit TLSDESC call.  */
+#ifndef INIT_TLSDESC_CALL
+# define INIT_TLSDESC_CALL()
+#endif
+
 #ifndef BEFORE_TLSDESC_CALL
 # define BEFORE_TLSDESC_CALL()
 #endif

@@ -187,6 +187,38 @@ else
 default-abi = soft"
 fi
 
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether VFP supports 32 registers" >&5
+printf %s "checking whether VFP supports 32 registers... " >&6; }
+if test ${libc_cv_arm_pcs_vfp_d32+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+void foo (void)
+{
+  asm volatile ("vldr d16,=17" : : : "d16");
+}
+
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"
+then :
+  libc_cv_arm_pcs_vfp_d32=yes
+else $as_nop
+  libc_cv_arm_pcs_vfp_d32=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_arm_pcs_vfp_d32" >&5
+printf "%s\n" "$libc_cv_arm_pcs_vfp_d32" >&6; }
+if test "$libc_cv_arm_pcs_vfp_d32" = yes ;
+then
+  printf "%s\n" "#define HAVE_ARM_PCS_VFP_D32 1" >>confdefs.h
+
+fi
+
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether PC-relative relocs in movw/movt work properly" >&5
 printf %s "checking whether PC-relative relocs in movw/movt work properly... " >&6; }
 if test ${libc_cv_arm_pcrel_movw+y}
