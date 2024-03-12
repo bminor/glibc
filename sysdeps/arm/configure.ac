@@ -21,6 +21,21 @@ else
   LIBC_CONFIG_VAR([default-abi], [soft])
 fi
 
+AC_CACHE_CHECK([whether VFP supports 32 registers],
+		libc_cv_arm_pcs_vfp_d32, [
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
+void foo (void)
+{
+  asm volatile ("vldr d16,=17" : : : "d16");
+}
+]])],
+                [libc_cv_arm_pcs_vfp_d32=yes],
+                [libc_cv_arm_pcs_vfp_d32=no])])
+if test "$libc_cv_arm_pcs_vfp_d32" = yes ;
+then
+  AC_DEFINE(HAVE_ARM_PCS_VFP_D32)
+fi
+
 AC_CACHE_CHECK([whether PC-relative relocs in movw/movt work properly],
 	       libc_cv_arm_pcrel_movw, [
 cat > conftest.s <<\EOF

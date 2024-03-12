@@ -141,6 +141,9 @@
 /* LOONGARCH floating-point ABI for ld.so.  */
 #undef LOONGARCH_ABI_FRLEN
 
+/* Define whether ARM used hard-float and support VFPvX-D32.  */
+#undef HAVE_ARM_PCS_VFP_D32
+
 /* Linux specific: minimum supported kernel version.  */
 #undef	__LINUX_KERNEL_VERSION
 
