@@ -21,8 +21,8 @@
 # This file can list all potential system calls.  The names are only
 # used if the installed kernel headers also provide them.
 
-# The list of system calls is current as of Linux 6.7.
-kernel 6.7
+# The list of system calls is current as of Linux 6.8.
+kernel 6.8
 
 FAST_atomic_update
 FAST_cmpxchg
@@ -239,6 +239,7 @@ lgetxattr
 link
 linkat
 listen
+listmount
 listxattr
 llistxattr
 llseek
@@ -247,6 +248,9 @@ lookup_dcookie
 lremovexattr
 lseek
 lsetxattr
+lsm_get_self_attr
+lsm_list_modules
+lsm_set_self_attr
 lstat
 lstat64
 madvise
@@ -593,6 +597,7 @@ stat
 stat64
 statfs
 statfs64
+statmount
 statx
 stime
 stty

@@ -143,12 +143,16 @@
 #define __NR_link 1073741910
 #define __NR_linkat 1073742089
 #define __NR_listen 1073741874
+#define __NR_listmount 1073742282
 #define __NR_listxattr 1073742018
 #define __NR_llistxattr 1073742019
 #define __NR_lookup_dcookie 1073742036
 #define __NR_lremovexattr 1073742022
 #define __NR_lseek 1073741832
 #define __NR_lsetxattr 1073742013
+#define __NR_lsm_get_self_attr 1073742283
+#define __NR_lsm_list_modules 1073742285
+#define __NR_lsm_set_self_attr 1073742284
 #define __NR_lstat 1073741830
 #define __NR_madvise 1073741852
 #define __NR_mbind 1073742061
@@ -312,6 +316,7 @@
 #define __NR_splice 1073742099
 #define __NR_stat 1073741828
 #define __NR_statfs 1073741961
+#define __NR_statmount 1073742281
 #define __NR_statx 1073742156
 #define __NR_swapoff 1073741992
 #define __NR_swapon 1073741991

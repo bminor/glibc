@@ -146,12 +146,16 @@
 #define __NR_link 9
 #define __NR_linkat 296
 #define __NR_listen 363
+#define __NR_listmount 458
 #define __NR_listxattr 230
 #define __NR_llistxattr 231
 #define __NR_lookup_dcookie 110
 #define __NR_lremovexattr 234
 #define __NR_lseek 19
 #define __NR_lsetxattr 225
+#define __NR_lsm_get_self_attr 459
+#define __NR_lsm_list_modules 461
+#define __NR_lsm_set_self_attr 460
 #define __NR_lstat 107
 #define __NR_madvise 219
 #define __NR_map_shadow_stack 453
@@ -329,6 +333,7 @@
 #define __NR_stat 106
 #define __NR_statfs 99
 #define __NR_statfs64 265
+#define __NR_statmount 457
 #define __NR_statx 379
 #define __NR_swapoff 115
 #define __NR_swapon 87
