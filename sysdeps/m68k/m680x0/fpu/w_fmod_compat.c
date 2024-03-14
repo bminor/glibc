@@ -7,8 +7,9 @@
 # define LIBM_SVID_COMPAT 1
 # undef compat_symbol
 # define compat_symbol(a, b, c, d)
-#endif
 #include <math/w_fmod_compat.c>
-#ifdef SHARED
 libm_alias_double (__fmod_compat, fmod)
+#else
+#include <math-type-macros-double.h>
+#include <w_fmod_template.c>
 #endif
