@@ -17,13 +17,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
+#if IS_IN (libc) && defined SHARED
 # define declare_mgen_alias(f,t)
 #endif
 #include <math-type-macros-ldouble.h>
 #include <s_ldexp_template.c>
 
-#if IS_IN (libc)
+#if IS_IN (libc) && defined SHARED
 long_double_symbol (libc, __ldexpl, ldexpl);
 long_double_symbol (libc, __wrap_scalbnl, scalbnl);
 #endif

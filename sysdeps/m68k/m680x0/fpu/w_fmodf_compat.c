@@ -7,8 +7,9 @@
 # define LIBM_SVID_COMPAT 1
 # undef compat_symbol
 # define compat_symbol(a, b, c, d)
-#endif
-#include <math/w_fmodf_compat.c>
-#ifdef SHARED
+# include <math/w_fmodf_compat.c>
 libm_alias_float (__fmod_compat, fmod)
+#else
+#include <math-type-macros-float.h>
+#include <w_fmod_template.c>
 #endif
