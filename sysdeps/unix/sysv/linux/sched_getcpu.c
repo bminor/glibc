@@ -33,17 +33,9 @@ vsyscall_sched_getcpu (void)
   return r == -1 ? r : cpu;
 }
 
-#ifdef RSEQ_SIG
 int
 sched_getcpu (void)
 {
   int cpu_id = THREAD_GETMEM_VOLATILE (THREAD_SELF, rseq_area.cpu_id);
   return __glibc_likely (cpu_id >= 0) ? cpu_id : vsyscall_sched_getcpu ();
 }
-#else /* RSEQ_SIG */
-int
-sched_getcpu (void)
-{
-  return vsyscall_sched_getcpu ();
-}
-#endif /* RSEQ_SIG */
