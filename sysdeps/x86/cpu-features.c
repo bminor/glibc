@@ -265,7 +265,7 @@ update_active (struct cpu_features *cpu_features)
 	      /* NB: On AMX capable processors, ebx always includes AMX
 		 states.  */
 	      unsigned int xsave_state_full_size
-		= ALIGN_UP (ebx + STATE_SAVE_OFFSET, 64);
+		= ALIGN_UP (ebx + TLSDESC_CALL_REGISTER_SAVE_AREA, 64);
 
 	      cpu_features->xsave_state_size
 		= xsave_state_full_size;
@@ -355,8 +355,10 @@ update_active (struct cpu_features *cpu_features)
 		      unsigned int amx_size
 			= (xstate_amx_comp_offsets[31]
 			   + xstate_amx_comp_sizes[31]);
-		      amx_size = ALIGN_UP (amx_size + STATE_SAVE_OFFSET,
-					   64);
+		      amx_size
+			= ALIGN_UP ((amx_size
+				     + TLSDESC_CALL_REGISTER_SAVE_AREA),
+				    64);
 		      /* Set xsave_state_full_size to the compact AMX
 			 state size for XSAVEC.  NB: xsave_state_full_size
 			 is only used in _dl_tlsdesc_dynamic_xsave and
@@ -364,7 +366,8 @@ update_active (struct cpu_features *cpu_features)
 		      cpu_features->xsave_state_full_size = amx_size;
 #endif
 		      cpu_features->xsave_state_size
-			= ALIGN_UP (size + STATE_SAVE_OFFSET, 64);
+			= ALIGN_UP (size + TLSDESC_CALL_REGISTER_SAVE_AREA,
+				    64);
 		      CPU_FEATURE_SET (cpu_features, XSAVEC);
 		    }
 		}

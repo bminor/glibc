@@ -38,13 +38,58 @@
 #ifdef __x86_64__
 /* Offset for fxsave/xsave area used by _dl_runtime_resolve.  Also need
    space to preserve RCX, RDX, RSI, RDI, R8, R9 and RAX.  It must be
-   aligned to 16 bytes for fxsave and 64 bytes for xsave.
+   aligned to 16 bytes for fxsave and 64 bytes for xsave.  It is non-zero
+   because MOV, instead of PUSH, is used to save registers onto stack.
 
-   NB: Is is non-zero because of the 128-byte red-zone.  Some registers
-   are saved on stack without adjusting stack pointer first.  When we
-   update stack pointer to allocate more space, we need to take the
-   red-zone into account.  */
+   +==================+<- stack frame start aligned at 8 or 16 bytes
+   |                  |<- paddings for stack realignment of 64 bytes
+   |------------------|<- xsave buffer end aligned at 64 bytes
+   |                  |<-
+   |                  |<-
+   |                  |<-
+   |------------------|<- xsave buffer start at STATE_SAVE_OFFSET(%rsp)
+   |                  |<- 8-byte padding for 64-byte alignment
+   |                  |<- R9
+   |                  |<- R8
+   |                  |<- RDI
+   |                  |<- RSI
+   |                  |<- RDX
+   |                  |<- RCX
+   |                  |<- RAX
+   +==================+<- RSP aligned at 64 bytes
+
+ */
 # define STATE_SAVE_OFFSET (8 * 7 + 8)
+
+/* _dl_tlsdesc_dynamic preserves RDI, RSI and RBX before realigning
+   stack.  After realigning stack, it saves RCX, RDX, R8, R9, R10 and
+   R11.  Allocate space for RDI, RSI and RBX to avoid clobbering saved
+   RDI, RSI and RBX values on stack by xsave.
+
+   +==================+<- stack frame start aligned at 8 or 16 bytes
+   |                  |<- RDI saved in the red zone
+   |                  |<- RSI saved in the red zone
+   |                  |<- RBX saved in the red zone
+   |                  |<- paddings for stack realignment of 64 bytes
+   |------------------|<- xsave buffer end aligned at 64 bytes
+   |                  |<-
+   |                  |<-
+   |                  |<-
+   |------------------|<- xsave buffer start at STATE_SAVE_OFFSET(%rsp)
+   |                  |<- 8-byte padding for 64-byte alignment
+   |                  |<- 8-byte padding for 64-byte alignment
+   |                  |<- R11
+   |                  |<- R10
+   |                  |<- R9
+   |                  |<- R8
+   |                  |<- RDX
+   |                  |<- RCX
+   +==================+<- RSP aligned at 64 bytes
+
+   Define the total register save area size for all integer registers by
+   adding 24 to STATE_SAVE_OFFSET since RDI, RSI and RBX are saved onto
+   stack without adjusting stack pointer first, using the red-zone.  */
+# define TLSDESC_CALL_REGISTER_SAVE_AREA (STATE_SAVE_OFFSET + 24)
 
 /* Save SSE, AVX, AVX512, mask, bound and APX registers.  Bound and APX
    registers are mutually exclusive.  */
@@ -66,8 +111,9 @@
   (STATE_SAVE_MASK | AMX_STATE_SAVE_MASK)
 #else
 /* Offset for fxsave/xsave area used by _dl_tlsdesc_dynamic.  Since i386
-   doesn't have red-zone, use 0 here.  */
+   uses PUSH to save registers onto stack, use 0 here.  */
 # define STATE_SAVE_OFFSET 0
+# define TLSDESC_CALL_REGISTER_SAVE_AREA 0
 
 /* Save SSE, AVX, AXV512, mask and bound registers.   */
 # define STATE_SAVE_MASK		\
