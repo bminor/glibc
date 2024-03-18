@@ -51,6 +51,7 @@
    SUCH DAMAGE.*/
 
 #include <libc-lock.h>
+#include <sys/single_threaded.h>
 #include <limits.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -287,6 +288,12 @@ long int
 __random (void)
 {
   int32_t retval;
+
+  if (SINGLE_THREAD_P)
+    {
+      (void) __random_r (&unsafe_state, &retval);
+      return retval;
+    }
 
   __libc_lock_lock (lock);
 
