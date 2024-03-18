@@ -18,9 +18,8 @@
 
 #define TEST_MAIN
 #define TEST_NAME "memset"
-#define START_SIZE (128 * 1024)
-#define MIN_PAGE_SIZE (getpagesize () + 64 * 1024 * 1024)
-#define TIMEOUT (20 * 60)
+#define START_SIZE (64 * 1024)
+#define MIN_PAGE_SIZE (getpagesize () + 16 * 1024 * 1024)
 #include "bench-string.h"
 
 #include "json-lib.h"
@@ -35,7 +34,7 @@ static void
 do_one_test (json_ctx_t *json_ctx, impl_t *impl, CHAR *s,
 	     int c __attribute ((unused)), size_t n)
 {
-  size_t i, iters = 16;
+  size_t i, iters = (MIN_PAGE_SIZE * 64) / n;
   timing_t start, stop, cur;
 
   TIMING_NOW (start);
@@ -53,10 +52,6 @@ do_one_test (json_ctx_t *json_ctx, impl_t *impl, CHAR *s,
 static void
 do_test (json_ctx_t *json_ctx, size_t align, int c, size_t len)
 {
-  align &= 63;
-  if ((align + len) * sizeof (CHAR) > page_size)
-    return;
-
   json_element_object_begin (json_ctx);
   json_attr_uint (json_ctx, "length", len);
   json_attr_uint (json_ctx, "alignment", align);
@@ -64,10 +59,7 @@ do_test (json_ctx_t *json_ctx, size_t align, int c, size_t len)
   json_array_begin (json_ctx, "timings");
 
   FOR_EACH_IMPL (impl, 0)
-    {
-      do_one_test (json_ctx, impl, (CHAR *) (buf1) + align, c, len);
-      alloc_bufs ();
-    }
+    do_one_test (json_ctx, impl, (CHAR *) (buf1) + align, c, len);
 
   json_array_end (json_ctx);
   json_element_object_end (json_ctx);

@@ -19,10 +19,9 @@
 #ifndef MEMCPY_RESULT
 # define MEMCPY_RESULT(dst, len) dst
 # define START_SIZE (64 * 1024)
-# define MIN_PAGE_SIZE (getpagesize () + 32 * 1024 * 1024)
+# define MIN_PAGE_SIZE (getpagesize () + 16 * 1024 * 1024)
 # define TEST_MAIN
 # define TEST_NAME "memcpy"
-# define TIMEOUT (20 * 60)
 # include "bench-string.h"
 
 IMPL (memcpy, 1)
@@ -36,7 +35,7 @@ static void
 do_one_test (json_ctx_t *json_ctx, impl_t *impl, char *dst, const char *src,
 	     size_t len)
 {
-  size_t i, iters = 16;
+  size_t i, iters = (MIN_PAGE_SIZE * 8) / len;
   timing_t start, stop, cur;
 
   TIMING_NOW (start);
@@ -59,12 +58,7 @@ do_test (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len,
   char *s1, *s2;
   size_t repeats;
   align1 &= 4095;
-  if (align1 + len >= page_size)
-    return;
-
   align2 &= 4095;
-  if (align2 + len >= page_size)
-    return;
 
   s1 = (char *) (buf1 + align1);
   s2 = (char *) (buf2 + align2);

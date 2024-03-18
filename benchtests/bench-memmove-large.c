@@ -16,12 +16,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define BASE_PAGE_SIZE (1024 * 1024)
-#define START_SIZE (4 * 1024)
+#define START_SIZE (64 * 1024)
 #define MIN_PAGE_SIZE (getpagesize () + 16 * 1024 * 1024)
 #define TEST_MAIN
 #define TEST_NAME "memmove"
-#define TIMEOUT (20 * 60)
 #include "bench-string.h"
 #include "json-lib.h"
 
@@ -33,7 +31,7 @@ static void
 do_one_test (json_ctx_t *json_ctx, impl_t *impl, char *dst, char *src,
 	     size_t len)
 {
-  size_t i, iters = 16;
+  size_t i, iters = (MIN_PAGE_SIZE * 8) / len;
   timing_t start, stop, cur;
 
   TIMING_NOW (start);
@@ -54,13 +52,8 @@ do_test (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len)
   size_t i, j;
   char *s1, *s2;
 
-  align1 &= 127;
-  if (align1 + len >= page_size)
-    return;
-
-  align2 &= 127;
-  if (align2 + len >= page_size)
-    return;
+  align1 &= 4095;
+  align2 &= 4095;
 
   s1 = (char *) (buf2 + align1);
   s2 = (char *) (buf2 + align2);
