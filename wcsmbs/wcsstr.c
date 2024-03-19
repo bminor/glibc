@@ -28,8 +28,12 @@
 
 #include <wchar.h>
 
+#ifndef WCSSTR
+# define WCSSTR wcsstr
+#endif
+
 wchar_t *
-wcsstr (const wchar_t *haystack, const wchar_t *needle)
+WCSSTR (const wchar_t *haystack, const wchar_t *needle)
 {
   wchar_t b, c;
 

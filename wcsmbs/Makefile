@@ -163,6 +163,7 @@ tests := \
   test-wcspbrk \
   test-wcsrchr \
   test-wcsspn \
+  test-wcsstr \
   test-wmemchr \
   test-wmemcmp \
   test-wmemset \
