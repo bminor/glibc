@@ -217,6 +217,8 @@ valgrind-suppressions-tst-valgrind-smoke = \
   --suppressions=$(..)sysdeps/x86_64/tst-valgrind-smoke.supp
 endif
 
+test-internal-extras += tst-gnu2-tls2mod1
+
 endif # $(subdir) == elf
 
 ifeq ($(subdir),csu)
