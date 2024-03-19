@@ -94,6 +94,8 @@ init_cpu_features (struct cpu_features *cpu_features, uint64_t hwcaps[])
      which are set by __tcb_parse_hwcap_and_convert_at_platform.  */
   cpu_features->hwcap = hwcaps[0];
   cpu_features->hwcap2 = hwcaps[1];
+  cpu_features->hwcap3 = hwcaps[2];
+  cpu_features->hwcap4 = hwcaps[3];
   /* Default is to use aligned memory access on optimized function unless
      tunables is enable, since for this case user can explicit disable
      unaligned optimizations.  */

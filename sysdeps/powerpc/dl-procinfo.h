@@ -22,16 +22,17 @@
 #include <ldsodefs.h>
 #include <sysdep.h>	/* This defines the PPC_FEATURE[2]_* macros.  */
 
-/* The total number of available bits (including those prior to
-   _DL_HWCAP_FIRST).  Some of these bits might not be used.  */
-#define _DL_HWCAP_COUNT		64
+/* Feature masks are all 32-bits in size.  */
+#define _DL_HWCAP_SIZE		32
 
-/* Features started at bit 31 and decremented as new features were added.  */
-#define _DL_HWCAP_LAST		31
+/* AT_HWCAP2 feature strings follow the AT_HWCAP feature strings.  */
+#define _DL_HWCAP2_OFFSET	_DL_HWCAP_SIZE
 
-/* AT_HWCAP2 features started at bit 31 and decremented as new features were
-   added.  HWCAP2 feature bits start at bit 0.  */
-#define _DL_HWCAP2_LAST		31
+/* AT_HWCAP3 feature strings follow the AT_HWCAP2 feature strings.  */
+#define _DL_HWCAP3_OFFSET	(_DL_HWCAP2_OFFSET + _DL_HWCAP_SIZE)
+
+/* AT_HWCAP4 feature strings follow the AT_HWCAP3 feature strings.  */
+#define _DL_HWCAP4_OFFSET	(_DL_HWCAP3_OFFSET + _DL_HWCAP_SIZE)
 
 /* These bits influence library search.  */
 #define HWCAP_IMPORTANT		(PPC_FEATURE_HAS_ALTIVEC \
@@ -187,21 +188,42 @@ _dl_procinfo (unsigned int type, unsigned long int word)
     case AT_HWCAP:
       _dl_printf ("AT_HWCAP:            ");
 
-      for (int i = 0; i <= _DL_HWCAP_LAST; ++i)
+      for (int i = 0; i < _DL_HWCAP_SIZE; ++i)
        if (word & (1 << i))
          _dl_printf (" %s", _dl_hwcap_string (i));
       break;
     case AT_HWCAP2:
       {
-       unsigned int offset = _DL_HWCAP_LAST + 1;
 
        _dl_printf ("AT_HWCAP2:           ");
 
-        /* We have to go through them all because the kernel added the
-          AT_HWCAP2 features starting with the high bits.  */
-       for (int i = 0; i <= _DL_HWCAP2_LAST; ++i)
-         if (word & (1 << i))
-           _dl_printf (" %s", _dl_hwcap_string (offset + i));
+       /* We have to go through them all because the kernel added the
+	  AT_HWCAP2 features starting with the high bits.  */
+       for (int i = 0; i < _DL_HWCAP_SIZE; ++i)
+	 if (word & (1 << i))
+	   _dl_printf (" %s", _dl_hwcap_string (_DL_HWCAP2_OFFSET + i));
+       break;
+      }
+    case AT_HWCAP3:
+      {
+       _dl_printf ("AT_HWCAP3:           ");
+
+       /* We have to go through them all because the kernel added the
+	  AT_HWCAP3 features starting with the high bits.  */
+       for (int i = 0; i < _DL_HWCAP_SIZE; ++i)
+	 if (word & (1 << i))
+	   _dl_printf (" %s", _dl_hwcap_string (_DL_HWCAP3_OFFSET + i));
+       break;
+      }
+    case AT_HWCAP4:
+      {
+       _dl_printf ("AT_HWCAP4:           ");
+
+       /* We have to go through them all because the kernel added the
+	  AT_HWCAP4 features starting with the high bits.  */
+       for (int i = 0; i <= _DL_HWCAP_SIZE; ++i)
+	 if (word & (1 << i))
+	   _dl_printf (" %s", _dl_hwcap_string (_DL_HWCAP4_OFFSET + i));
        break;
       }
     case AT_L1I_CACHEGEOMETRY:

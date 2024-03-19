@@ -235,6 +235,8 @@ _dl_print_diagnostics (char **environ)
   _dl_diagnostics_print_labeled_value ("dl_hwcap", GLRO (dl_hwcap));
   _dl_diagnostics_print_labeled_value ("dl_hwcap_important", HWCAP_IMPORTANT);
   _dl_diagnostics_print_labeled_value ("dl_hwcap2", GLRO (dl_hwcap2));
+  _dl_diagnostics_print_labeled_value ("dl_hwcap3", GLRO (dl_hwcap3));
+  _dl_diagnostics_print_labeled_value ("dl_hwcap4", GLRO (dl_hwcap4));
   _dl_diagnostics_print_labeled_string
     ("dl_hwcaps_subdirs", _dl_hwcaps_subdirs);
   _dl_diagnostics_print_labeled_value
