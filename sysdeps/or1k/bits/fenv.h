@@ -21,6 +21,7 @@
 # error "Never use <bits/fenv.h> directly; include <fenv.h> instead."
 #endif
 
+#ifdef __or1k_hard_float__
 /* Define bits representing exceptions in the FPCSR status word.  */
 enum
   {
@@ -50,6 +51,24 @@ enum
 #define FE_TOWARDZERO (0x1 << 1)
 #define FE_UPWARD     (0x2 << 1)
 #define FE_DOWNWARD   (0x3 << 1)
+
+#else
+
+/* In the soft-float case only rounding to nearest is supported, with
+   no exceptions.  */
+
+enum
+  {
+    __FE_UNDEFINED = -1,
+
+    FE_TONEAREST =
+# define FE_TONEAREST	0x0
+      FE_TONEAREST
+  };
+
+# define FE_ALL_EXCEPT 0
+
+#endif /* __or1k_hard_float__ */
 
 /* Type representing exception flags.  */
 typedef unsigned int fexcept_t;
