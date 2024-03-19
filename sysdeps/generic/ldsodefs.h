@@ -646,6 +646,8 @@ struct rtld_global_ro
   /* Mask for more hardware capabilities that are available on some
      platforms.  */
   EXTERN uint64_t _dl_hwcap2;
+  EXTERN uint64_t _dl_hwcap3;
+  EXTERN uint64_t _dl_hwcap4;
 
   EXTERN enum dso_sort_algorithm _dl_dso_sort_algo;
 

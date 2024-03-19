@@ -31,7 +31,7 @@ void
 __tcb_parse_hwcap_and_convert_at_platform (void)
 {
 
-  uint64_t h1, h2;
+  uint64_t h1, h2, h3, h4;
 
   /* Read AT_PLATFORM string from auxv and convert it to a number.  */
   __tcb.at_platform = _dl_string_platform (GLRO (dl_platform));
@@ -39,6 +39,8 @@ __tcb_parse_hwcap_and_convert_at_platform (void)
   /* Read HWCAP and HWCAP2 from auxv.  */
   h1 = GLRO (dl_hwcap);
   h2 = GLRO (dl_hwcap2);
+  h3 = GLRO (dl_hwcap3);
+  h4 = GLRO (dl_hwcap4);
 
   /* hwcap contains only the latest supported ISA, the code checks which is
      and fills the previous supported ones.  */
@@ -64,13 +66,16 @@ __tcb_parse_hwcap_and_convert_at_platform (void)
   else if (h1 & PPC_FEATURE_POWER5)
     h1 |= PPC_FEATURE_POWER4;
 
-  uint64_t array_hwcaps[] = { h1, h2 };
+  uint64_t array_hwcaps[] = { h1, h2, h3, h4 };
   init_cpu_features (&GLRO(dl_powerpc_cpu_features), array_hwcaps);
 
   /* Consolidate both HWCAP and HWCAP2 into a single doubleword so that
      we can read both in a single load later.  */
   __tcb.hwcap = (h1 << 32) | (h2 & 0xffffffff);
-  __tcb.hwcap_extn = 0x0;
+
+  /* Consolidate both HWCAP3 and HWCAP4 into a single doubleword so that
+     we can read both in a single load later.  */
+  __tcb.hwcap_extn = (h3 << 32) | (h4 & 0xffffffff);
 
 }
 #if IS_IN (rtld)

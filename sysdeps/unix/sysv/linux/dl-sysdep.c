@@ -197,6 +197,8 @@ _dl_show_auxv (void)
 	  [AT_SYSINFO_EHDR - 2] =	{ "SYSINFO_EHDR:      0x", hex },
 	  [AT_RANDOM - 2] =		{ "RANDOM:            0x", hex },
 	  [AT_HWCAP2 - 2] =		{ "HWCAP2:            0x", hex },
+	  [AT_HWCAP3 - 2] =		{ "HWCAP3:            0x", hex },
+	  [AT_HWCAP4 - 2] =		{ "HWCAP4:            0x", hex },
 	  [AT_MINSIGSTKSZ - 2] =	{ "MINSIGSTKSZ:       ", dec },
 	  [AT_L1I_CACHESIZE - 2] =	{ "L1I_CACHESIZE:     ", dec },
 	  [AT_L1I_CACHEGEOMETRY - 2] =	{ "L1I_CACHEGEOMETRY: 0x", hex },

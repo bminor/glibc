@@ -87,6 +87,12 @@ __libc_start_main_impl (int argc, char **argv,
       case AT_HWCAP2:
 	_dl_hwcap2 = (unsigned long int) av->a_un.a_val;
 	break;
+      case AT_HWCAP3:
+	_dl_hwcap3 = (unsigned long int) av->a_un.a_val;
+	break;
+      case AT_HWCAP4:
+	_dl_hwcap4 = (unsigned long int) av->a_un.a_val;
+	break;
       case AT_PLATFORM:
 	_dl_platform = (void *) av->a_un.a_val;
 	break;

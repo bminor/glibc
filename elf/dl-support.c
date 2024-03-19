@@ -158,6 +158,8 @@ const ElfW(Phdr) *_dl_phdr;
 size_t _dl_phnum;
 uint64_t _dl_hwcap;
 uint64_t _dl_hwcap2;
+uint64_t _dl_hwcap3;
+uint64_t _dl_hwcap4;
 
 enum dso_sort_algorithm _dl_dso_sort_algo;
 

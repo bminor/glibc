@@ -47,6 +47,8 @@ void _dl_parse_auxv (ElfW(auxv_t) *av, dl_parse_auxv_t auxv_values)
   GLRO(dl_platform) = (void *) auxv_values[AT_PLATFORM];
   GLRO(dl_hwcap) = auxv_values[AT_HWCAP];
   GLRO(dl_hwcap2) = auxv_values[AT_HWCAP2];
+  GLRO(dl_hwcap3) = auxv_values[AT_HWCAP3];
+  GLRO(dl_hwcap4) = auxv_values[AT_HWCAP4];
   GLRO(dl_clktck) = auxv_values[AT_CLKTCK];
   GLRO(dl_fpu_control) = auxv_values[AT_FPUCW];
   _dl_random = (void *) auxv_values[AT_RANDOM];
