@@ -58,7 +58,7 @@ fi
 
     ;;
 
-  a2|970|power[4-9]|power5x|power6+|power10)
+  a2|970|power[4-9]|power5x|power6+|power10|power11)
     submachine=${archcpu}
     if test ${libc_cv_cc_submachine+y}
 then :
