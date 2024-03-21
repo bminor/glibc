@@ -35,32 +35,15 @@
 
 extern __typeof (__redirect_strstr) __strstr_sse2_unaligned attribute_hidden;
 extern __typeof (__redirect_strstr) __strstr_generic attribute_hidden;
-extern __typeof (__redirect_strstr) __strstr_avx512 attribute_hidden;
 
 #include "init-arch.h"
 
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
 extern __typeof (__redirect_strstr) __libc_strstr;
-
-static inline void *
-IFUNC_SELECTOR (void)
-{
-  const struct cpu_features *cpu_features = __get_cpu_features ();
-
-  if (!CPU_FEATURES_ARCH_P (cpu_features, Prefer_No_AVX512)
-      && CPU_FEATURE_USABLE_P (cpu_features, AVX512VL)
-      && CPU_FEATURE_USABLE_P (cpu_features, AVX512BW)
-      && CPU_FEATURE_USABLE_P (cpu_features, AVX512DQ)
-      && CPU_FEATURE_USABLE_P (cpu_features, BMI2))
-    return __strstr_avx512;
-
-  if (CPU_FEATURES_ARCH_P (cpu_features, Fast_Unaligned_Load))
-    return __strstr_sse2_unaligned;
-
-  return __strstr_generic;
-}
-
-libc_ifunc_redirected (__redirect_strstr, __libc_strstr, IFUNC_SELECTOR ());
+libc_ifunc (__libc_strstr,
+	    HAS_ARCH_FEATURE (Fast_Unaligned_Load)
+	    ? __strstr_sse2_unaligned
+	    : __strstr_generic)
 #undef strstr
 strong_alias (__libc_strstr, strstr)
