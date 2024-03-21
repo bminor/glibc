@@ -36,5 +36,7 @@
     MTE_ENABLED ();							      \
   bool __attribute__((unused)) sve =					      \
     GLRO(dl_aarch64_cpu_features).sve;					      \
+  bool __attribute__((unused)) prefer_sve_ifuncs =			      \
+    GLRO(dl_aarch64_cpu_features).prefer_sve_ifuncs;			      \
   bool __attribute__((unused)) mops =					      \
     GLRO(dl_aarch64_cpu_features).mops;
