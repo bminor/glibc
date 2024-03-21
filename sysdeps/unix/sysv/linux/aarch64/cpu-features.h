@@ -71,6 +71,7 @@ struct cpu_features
   /* Currently, the GLIBC memory tagging tunable only defines 8 bits.  */
   uint8_t mte_state;
   bool sve;
+  bool prefer_sve_ifuncs;
   bool mops;
 };
 
