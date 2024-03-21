@@ -1,6 +1,6 @@
 /* Initialize CPU feature data.  AArch64 version.
    This file is part of the GNU C Library.
-   Copyright (C) 2017-2021 Free Software Foundation, Inc.
+   Copyright (C) 2017-2024 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -71,6 +71,7 @@ struct cpu_features
   /* Currently, the GLIBC memory tagging tunable only defines 8 bits.  */
   uint8_t mte_state;
   bool sve;
+  bool prefer_sve_ifuncs;
   bool mops;
 };
 

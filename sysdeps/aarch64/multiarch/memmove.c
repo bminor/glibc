@@ -47,7 +47,7 @@ select_memmove_ifunc (void)
     {
       if (IS_A64FX (midr))
 	return __memmove_a64fx;
-      return __memmove_sve;
+      return prefer_sve_ifuncs ? __memmove_sve : __memmove_generic;
     }
 
   if (IS_THUNDERX (midr))
