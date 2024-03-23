@@ -358,7 +358,9 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
     ._dl_debug_fd = STDERR_FILENO,
     ._dl_lazy = 1,
     ._dl_fpu_control = _FPU_DEFAULT,
+#ifdef EXEC_PAGESIZE
     ._dl_pagesize = EXEC_PAGESIZE,
+#endif
     ._dl_inhibit_cache = 0,
     ._dl_profile_output = "/var/tmp",
 

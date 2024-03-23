@@ -135,7 +135,11 @@ void *_dl_random;
 #include <dl-procruntime.c>
 #include <dl-procinfo.c>
 
-size_t _dl_pagesize = EXEC_PAGESIZE;
+size_t _dl_pagesize
+#ifdef EXEC_PAGESIZE
+  = EXEC_PAGESIZE
+#endif
+;
 
 size_t _dl_minsigstacksize = CONSTANT_MINSIGSTKSZ;
 

@@ -852,7 +852,7 @@ extern off64_t _IO_seekpos_unlocked (FILE *, off64_t, int)
 #  define MAP_ANONYMOUS MAP_ANON
 # endif
 
-# if !defined(MAP_ANONYMOUS) || !defined(EXEC_PAGESIZE)
+# if !defined(MAP_ANONYMOUS)
 #  undef _G_HAVE_MMAP
 #  define _G_HAVE_MMAP 0
 # endif
