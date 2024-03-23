@@ -1658,8 +1658,8 @@ _hurdsig_getenv (const char *variable)
       while (*ep)
 	{
 	  const char *p = *ep;
-	  _hurdsig_fault_preemptor.first = (long int) p;
-	  _hurdsig_fault_preemptor.last = VM_MAX_ADDRESS;
+	  _hurdsig_fault_preemptor.first = (unsigned long int) p;
+	  _hurdsig_fault_preemptor.last = (unsigned long int) -1;
 	  if (! strncmp (p, variable, len) && p[len] == '=')
 	    {
 	      size_t valuelen;
@@ -1671,8 +1671,8 @@ _hurdsig_getenv (const char *variable)
 		memcpy (value, p, valuelen);
 	      break;
 	    }
-	  _hurdsig_fault_preemptor.first = (long int) ++ep;
-	  _hurdsig_fault_preemptor.last = (long int) (ep + 1);
+	  _hurdsig_fault_preemptor.first = (unsigned long int) ++ep;
+	  _hurdsig_fault_preemptor.last = (unsigned long int) (ep + 1);
 	}
       _hurdsig_end_catch_fault ();
       return value;
