@@ -31,9 +31,14 @@ int
 __pthread_stack_alloc (void **stackaddr, size_t stacksize)
 {
   error_t err;
+  vm_prot_t prot = VM_PROT_READ | VM_PROT_WRITE;
 
-  err = __vm_allocate (__mach_task_self (), (vm_offset_t *) stackaddr,
-		       stacksize, TRUE);
+  if (GL(dl_stack_flags) & PF_X)
+    prot |= VM_PROT_EXECUTE;
+
+  err = __vm_map (__mach_task_self (), (vm_offset_t *) stackaddr,
+		  stacksize, 0, TRUE, MEMORY_OBJECT_NULL, 0, FALSE,
+		  prot, VM_PROT_ALL, VM_INHERIT_COPY);
 
   if (err == KERN_NO_SPACE)
     err = EAGAIN;
