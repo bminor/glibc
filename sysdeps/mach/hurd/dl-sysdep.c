@@ -457,7 +457,7 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
   if (prot & PROT_EXEC)
     vmprot |= VM_PROT_EXECUTE;
 
-#ifdef __LP64__
+#ifdef __x86_64__
   if ((addr == NULL) && (prot & PROT_EXEC)
       && HAS_ARCH_FEATURE (Prefer_MAP_32BIT_EXEC))
     flags |= MAP_32BIT;

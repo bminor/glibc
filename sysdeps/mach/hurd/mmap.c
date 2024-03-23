@@ -60,7 +60,7 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
   copy = ! (flags & MAP_SHARED);
   anywhere = ! (flags & MAP_FIXED);
 
-#ifdef __LP64__
+#ifdef __x86_64__
   if ((addr == NULL) && (prot & PROT_EXEC)
       && HAS_ARCH_FEATURE (Prefer_MAP_32BIT_EXEC))
     flags |= MAP_32BIT;
