@@ -177,7 +177,9 @@ __pthread_create_internal (struct __pthread **thread,
       err = ENOMEM;
       goto failed_thread_tls_alloc;
     }
+#if TLS_TCB_AT_TP
   pthread->tcb->tcb = pthread->tcb;
+#endif
 
   /* And initialize the rest of the machine context.  This may include
      additional machine- and system-specific initializations that

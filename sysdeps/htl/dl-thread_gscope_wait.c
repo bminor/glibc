@@ -20,6 +20,18 @@
 #include <pthread.h>
 #include <htl/pt-internal.h>
 
+static inline int *
+thread_gscope_flag (struct __pthread *t)
+{
+#if TLS_TCB_AT_TP
+  return &t->tcb->gscope_flag;
+#elif TLS_DTV_AT_TP
+  return &((tcbprehead_t *) t->tcb - 1)->gscope_flag;
+#else
+# error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+#endif
+}
+
 void
 __thread_gscope_wait (void)
 {
@@ -33,10 +45,10 @@ __thread_gscope_wait (void)
   for (i = 0; i < GL (dl_pthread_num_threads); ++i)
     {
       t = GL (dl_pthread_threads[i]);
-      if (t == NULL || t->tcb->gscope_flag == THREAD_GSCOPE_FLAG_UNUSED)
+      if (t == NULL || *thread_gscope_flag (t) == THREAD_GSCOPE_FLAG_UNUSED)
         continue;
 
-      gscope_flagp = &t->tcb->gscope_flag;
+      gscope_flagp = thread_gscope_flag (t);
 
       /* We have to wait until this thread is done with the global
          scope.  First tell the thread that we are waiting and

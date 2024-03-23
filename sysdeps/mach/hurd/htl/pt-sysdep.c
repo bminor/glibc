@@ -100,7 +100,16 @@ _init_routine (void *stack)
      to the new stack.  Pretend it wasn't allocated so that it remains
      valid if the main thread terminates.  */
   thread->stack = 0;
+#if TLS_TCB_AT_TP
   thread->tcb = THREAD_SELF;
+#elif TLS_DTV_AT_TP
+  /* Assuming THREAD_SELF is implemented as subtracting TLS_PRE_TCB_SIZE
+     from the value of a thread pointer regsiter, this should optimize
+     down to simply reading that register.  */
+  thread->tcb = (tcbhead_t *) (((char *) THREAD_SELF) + TLS_PRE_TCB_SIZE);
+#else
+# error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+#endif
 
 #ifndef PAGESIZE
   __pthread_default_attr.__guardsize = __vm_page_size;
