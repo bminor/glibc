@@ -222,7 +222,7 @@ _hurd_stack_setup (void **argptr)
      this may not be a valid pointer in case we're supposed to receive the
      arguments from the exec server, so we can not dereference it yet.  */
 
-  void *caller = __builtin_extract_return_addr (__builtin_return_address (0));
+  void *caller = RETURN_ADDRESS (0);
   /* Init the essential things.  */
   first_init ();
 
