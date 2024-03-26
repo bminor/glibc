@@ -56,7 +56,6 @@ struct proc_maps_t
   int n_user_threads;
   int n_arenas;
   int n_malloc_mmap;
-  int n_loader_malloc_mmap;
 };
 
 static struct proc_maps_t
@@ -82,8 +81,12 @@ read_proc_maps (void)
 	r.n_arenas++;
       else if (strstr (line, "[anon: glibc: malloc]") != NULL)
 	r.n_malloc_mmap++;
-      else if (strstr (line, "[anon: glibc: loader malloc]") != NULL)
-	r.n_loader_malloc_mmap++;
+      /* On some architectures and depending on the page size, the loader can
+	 also allocate some memory during dependencies loading and it will be
+	 marked as 'loader malloc'.  However, if the system page size is large
+	 enough, the initial data page will be enough for all required
+	 allocation and there will be no extra loader mmap.  To avoid false
+	 negatives, the test does not check for such pages.  */
     }
   free (line);
   xfclose (f);
@@ -148,8 +151,6 @@ do_test_threads (bool set_guard)
     TEST_COMPARE (r.n_user_threads, num_user_threads);
     TEST_COMPARE (r.n_arenas, expected_n_arenas);
     TEST_COMPARE (r.n_malloc_mmap, 1);
-    /* On some architectures the loader might use more than one page.  */
-    TEST_VERIFY (r.n_loader_malloc_mmap >= 1);
   }
 
   /* Let the threads finish.  */
@@ -164,7 +165,6 @@ do_test_threads (bool set_guard)
     TEST_COMPARE (r.n_user_threads, 0);
     TEST_COMPARE (r.n_arenas, expected_n_arenas);
     TEST_COMPARE (r.n_malloc_mmap, 1);
-    TEST_VERIFY (r.n_loader_malloc_mmap >= 1);
   }
 
   free (p);
