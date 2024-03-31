@@ -561,7 +561,7 @@ These functions return the base-2 logarithm of @var{x}.
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions extract the exponent of @var{x} and return it as a
 floating-point value.  If @code{FLT_RADIX} is two, @code{logb} is equal
-to @code{floor (log2 (x))}, except it's probably faster.
+to @code{floor (log2 (fabs (x)))}, except it's probably faster.
 
 If @var{x} is de-normalized, @code{logb} returns the exponent @var{x}
 would have if it were normalized.  If @var{x} is infinity (positive or
