@@ -700,8 +700,12 @@ Mathematically, it should return a complex number.
 @standardsx{cbrtfN, TS 18661-3:2015, math.h}
 @standardsx{cbrtfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-These functions return the cube root of @var{x}.  They cannot
-fail; every representable real value has a representable real cube root.
+These functions return the cube root of @var{x}.
+They cannot fail;
+every representable real value
+has a real cube root,
+and rounding it to a representable value
+never causes overflow nor underflow.
 @end deftypefun
 
 @deftypefun double hypot (double @var{x}, double @var{y})
