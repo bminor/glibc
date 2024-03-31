@@ -1395,7 +1395,7 @@ The @code{scalb} function is the BSD name for @code{ldexp}.
 @standards{BSD, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @code{significand} returns the mantissa of @var{x} scaled to the range
-@math{[1, 2)}.
+@math{[1, @code{FLT_RADIX})}.
 It is equivalent to @w{@code{scalb (@var{x}, (double) -ilogb (@var{x}))}}.
 
 This function exists mainly for use in certain standardized tests
