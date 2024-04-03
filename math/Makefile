@@ -511,6 +511,7 @@ tests = \
   test-fetestexceptflag \
   test-fexcept \
   test-fexcept-traps \
+  test-floor-except-2 \
   test-flt-eval-method \
   test-fp-ilogb-constants \
   test-fp-llogb-constants \
@@ -991,6 +992,7 @@ CFLAGS-test-fe-snans-always-signal.c += $(config-cflags-signaling-nans)
 CFLAGS-test-nan-const.c += -fno-builtin
 
 CFLAGS-test-ceil-except-2.c += -fno-builtin
+CFLAGS-test-floor-except-2.c += -fno-builtin
 
 include ../Rules
 
