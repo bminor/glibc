@@ -1339,6 +1339,10 @@ will fail and set @code{errno} to @code{EAGAIN} if the operation would block.
 
 @item RWF_APPEND
 Per-IO synchronization as if the file was opened with @code{O_APPEND} flag.
+
+@item RWF_NOAPPEND
+This flag allows an offset to be honored, even if the file was opened with
+@code{O_APPEND} flag.
 @end vtable
 
 When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} the
