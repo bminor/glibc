@@ -539,6 +539,7 @@ tests = \
   test-tgmath-int \
   test-tgmath-ret \
   test-tgmath2 \
+  test-trunc-except-2 \
   tst-CMPLX \
   tst-CMPLX2 \
   tst-definitions \
@@ -993,6 +994,7 @@ CFLAGS-test-nan-const.c += -fno-builtin
 
 CFLAGS-test-ceil-except-2.c += -fno-builtin
 CFLAGS-test-floor-except-2.c += -fno-builtin
+CFLAGS-test-trunc-except-2.c += -fno-builtin
 
 include ../Rules
 
