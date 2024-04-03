@@ -498,6 +498,7 @@ tests = \
   bug-nextafter \
   bug-nexttoward \
   bug-tgmath1 \
+  test-ceil-except-2 \
   test-femode \
   test-femode-traps \
   test-fenv basic-test \
@@ -988,6 +989,8 @@ CFLAGS-test-flt-eval-method.c += -fexcess-precision=standard
 CFLAGS-test-fe-snans-always-signal.c += $(config-cflags-signaling-nans)
 
 CFLAGS-test-nan-const.c += -fno-builtin
+
+CFLAGS-test-ceil-except-2.c += -fno-builtin
 
 include ../Rules
 
