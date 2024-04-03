@@ -1441,10 +1441,18 @@ double: 2
 float: 2
 ldouble: 2
 
+Function: "sinh_advsimd":
+double: 2
+float: 1
+
 Function: "sinh_downward":
 double: 3
 float: 3
 ldouble: 3
+
+Function: "sinh_sve":
+double: 2
+float: 1
 
 Function: "sinh_towardzero":
 double: 3
