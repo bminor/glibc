@@ -173,10 +173,18 @@ double: 2
 float: 2
 ldouble: 4
 
+Function: "atanh_advsimd":
+double: 1
+float: 1
+
 Function: "atanh_downward":
 double: 3
 float: 3
 ldouble: 4
+
+Function: "atanh_sve":
+double: 2
+float: 1
 
 Function: "atanh_towardzero":
 double: 2

@@ -3,6 +3,7 @@ libmvec-supported-funcs = acos \
                           asin \
                           asinh \
                           atan \
+                          atanh \
                           atan2 \
                           cos \
                           cosh \
