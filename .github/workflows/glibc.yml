@@ -16,6 +16,7 @@ jobs:
       - name: Build
         run: |
           cd build
+          make -j $(nproc)
           make install DESTDIR=$GITHUB_WORKSPACE/install -j $(nproc)
       - name: Package glibc
         run: |
