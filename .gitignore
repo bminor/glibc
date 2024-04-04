@@ -44,3 +44,6 @@ core
 /linuxthreads_db
 /rtkaio
 *.pyc
+build
+install
+release

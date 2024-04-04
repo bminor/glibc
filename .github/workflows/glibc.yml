@@ -16,7 +16,7 @@ jobs:
       - name: Build
         run: |
           cd build
-          make DESTDIR=$GITHUB_WORKSPACE/install -j $(nproc)
+          make install DESTDIR=$GITHUB_WORKSPACE/install -j $(nproc)
       - name: Package glibc
         run: |
           mkdir -p release
