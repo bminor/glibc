@@ -99,18 +99,16 @@ jobs:
         with:
           path: assets
 
-      # - name: Cleanup files
-      #   run: |
-      #     mv -vf assets/changelog/* .
-      #     rm -rf assets/MAACore-macos-*
-      #     cd assets
-      #     # find . -type f | xargs mv -fvt .
-      #     find . -type f | while read f; do mv -fvt . $f; done
+      - name: Cleanup files
+        run: |
+          mv -vf assets/changelog/* .
+          cd assets
+          find . -type f | while read f; do mv -fvt . $f; done
 
       - name: Release to Github
         uses: softprops/action-gh-release@v1
         with:
-          body_path: assets/changelog/CHANGELOG.md
+          body_path: CHANGELOG.md
           files: |
             assets/*
           prerelease: ${{ needs.meta.outputs.prerelease != 'false' }}
