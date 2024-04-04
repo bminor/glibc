@@ -295,4 +295,7 @@
 /* Define if -mmovbe is enabled by default on x86.  */
 #undef HAVE_X86_MOVBE
 
+/* Define if -mapxf is enabled by default on x86.  */
+#undef HAVE_X86_APX
+
 #endif

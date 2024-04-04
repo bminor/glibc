@@ -38,29 +38,36 @@ libm-sysdep_routines += \
   s_truncf-avx \
 # libm-sysdep_routines
 else
+ifeq (no,$(have-x86-apx))
+libm-sysdep_routines += \
+  e_asin-fma4 \
+  e_atan2-fma4 \
+  e_exp-fma4 \
+  e_log-fma4 \
+  e_pow-fma4 \
+  s_atan-fma4 \
+  s_sin-fma4 \
+  s_sincos-fma4 \
+  s_tan-fma4 \
+# libm-sysdep_routines
+endif
 libm-sysdep_routines += \
   e_asin-fma \
-  e_asin-fma4 \
   e_atan2-avx \
   e_atan2-fma \
-  e_atan2-fma4 \
   e_exp-avx \
   e_exp-fma \
-  e_exp-fma4 \
   e_exp2f-fma \
   e_expf-fma \
   e_log-avx \
   e_log-fma \
-  e_log-fma4 \
   e_log2-fma \
   e_log2f-fma \
   e_logf-fma \
   e_pow-fma \
-  e_pow-fma4 \
   e_powf-fma \
   s_atan-avx \
   s_atan-fma \
-  s_atan-fma4 \
   s_ceil-sse4_1 \
   s_ceilf-sse4_1 \
   s_cosf-fma \
@@ -77,17 +84,14 @@ libm-sysdep_routines += \
   s_roundevenf-sse4_1 \
   s_sin-avx \
   s_sin-fma \
-  s_sin-fma4 \
   s_sincos-avx \
   s_sincos-fma \
-  s_sincos-fma4 \
   s_sincosf-fma \
   s_sincosf-sse2 \
   s_sinf-fma \
   s_sinf-sse2 \
   s_tan-avx \
   s_tan-fma \
-  s_tan-fma4 \
   s_trunc-sse4_1 \
   s_truncf-sse4_1 \
 # libm-sysdep_routines
