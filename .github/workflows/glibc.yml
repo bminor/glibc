@@ -1,9 +1,9 @@
 name: glibc
 
-on: 
-  push: 
-    tags: 
-      - "v*"
+on: [push, pull_request]
+#   push: 
+#     tags: 
+#       - "v*"
 
 jobs:
   release: 
