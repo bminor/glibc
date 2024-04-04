@@ -220,7 +220,7 @@ _dl_tlsdesc_dynamic:
 	SAVE_Q_REGISTERS
 
 	mov	x0, x1
-	bl	__tls_get_addr
+	bl	HIDDEN_JUMPTARGET(__tls_get_addr)
 
 	mrs	x1, tpidr_el0
 	sub	PTR_REG (0), PTR_REG (0), PTR_REG (1)
@@ -246,5 +246,6 @@ _dl_tlsdesc_dynamic:
 	b	1b
 	cfi_endproc
 	.size	_dl_tlsdesc_dynamic, .-_dl_tlsdesc_dynamic
+	.hidden HIDDEN_JUMPTARGET(__tls_get_addr)
 # undef NSAVEXREGPAIRS
 #endif
