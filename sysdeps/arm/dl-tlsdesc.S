@@ -147,7 +147,7 @@ _dl_tlsdesc_dynamic:
 4:	.inst	0xeef12a10	/* vmrs	r2, fpscr */
 	str	r2, [r3]
 .Lno_vfp:
-	bl	__tls_get_addr
+	bl	HIDDEN_JUMPTARGET(__tls_get_addr)
 	rsb	r0, r4, r0
 #ifdef __SOFTFP__
 	tst     r5, #HWCAP_ARM_VFP
@@ -181,6 +181,7 @@ _dl_tlsdesc_dynamic:
 	eabi_fnend
 	cfi_endproc
 	.size	_dl_tlsdesc_dynamic, .-_dl_tlsdesc_dynamic
+	.hidden HIDDEN_JUMPTARGET(__tls_get_addr)
 
 3:      .long   _GLOBAL_OFFSET_TABLE_ - 0b - PC_OFS
 .Lrtld_global_ro:

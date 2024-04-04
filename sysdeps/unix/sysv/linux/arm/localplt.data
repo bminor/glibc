@@ -4,5 +4,3 @@ libc.so: malloc
 libc.so: raise
 libc.so: realloc
 libm.so: matherr
-# The dynamic loader needs __tls_get_addr for TLS.
-ld.so: __tls_get_addr
