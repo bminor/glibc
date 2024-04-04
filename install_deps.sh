@@ -1,7 +1,6 @@
 sudo apt-get install -y gcc make gdb
 sudo apt-get install -y texinfo gawk bison sed
-sudo apt-get install -y python3-dev python3-pip python-is-python3
-pip install pexpect
+sudo apt-get install -y python3-dev python-is-python3
 mkdir -p build
 mkdir -p install
 cd build
