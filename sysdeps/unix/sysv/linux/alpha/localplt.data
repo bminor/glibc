@@ -23,5 +23,3 @@ libm.so: matherr + RELA R_ALPHA_GLOB_DAT
 # We used to offer inline functions that used this, so it must be exported.
 # Ought to reorg things such that carg isn't thus forced to use a plt.
 libm.so: __atan2
-# The dynamic loader needs __tls_get_addr for TLS.
-ld.so: __tls_get_addr ?
