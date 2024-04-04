@@ -15,7 +15,7 @@ jobs:
           bash ./install_deps.sh
       - name: Build
         run: |
-          make -j $(nproc)
+          make all install -j $(nproc)
       - name: Package glibc
         run: |
           mkdir -p release
