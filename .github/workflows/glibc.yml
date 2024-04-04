@@ -20,7 +20,7 @@ jobs:
       - name: Package glibc
         run: |
           mkdir -p release
-          cd install && tar czvf $GITHUB_WORKSPACE/release/glibc.tar.gz *
+          cd install && tar czvf $GITHUB_WORKSPACE/release/glibc.tar.gz .
       - name: Upload to Github
         uses: actions/upload-artifact@v4
         with:
