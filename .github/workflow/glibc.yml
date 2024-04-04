@@ -1,0 +1,30 @@
+name: glibc
+
+on: 
+  push: 
+    tags: 
+      - "v*"
+
+jobs:
+  release: 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: |
+          bash ./install_deps.sh
+      - name: Build
+        run: |
+          make -j $(nproc)
+      - name: Package glibc
+        run: |
+          mkdir -p release
+          cd install && tar czvf $GITHUB_WORKSPACE/release/glibc.tar.gz *
+      - name: Upload to Github
+        uses: actions/upload-artifact@v4
+        with:
+          name: glibc
+          path: |
+            release/*.tar.gz
+          
+        
