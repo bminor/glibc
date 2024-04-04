@@ -7,7 +7,7 @@ mkdir build
 mkdir install
 echo "target install dir is ${PWD}/install"
 cd build
-../glibc/configure \
+../configure \
   --prefix=${PWD}/install \
   --host=x86_64-linux-gnu \
   --build=x86_64-linux-gnu \
