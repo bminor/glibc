@@ -32,8 +32,10 @@ IFUNC_SELECTOR (void)
       && CPU_FEATURE_USABLE_P (cpu_features, AVX2))
     return OPTIMIZE (fma);
 
+#ifndef HAVE_X86_APX
   if (CPU_FEATURE_USABLE_P (cpu_features, FMA4))
     return OPTIMIZE (fma4);
+#endif
 
   return OPTIMIZE (sse2);
 }
