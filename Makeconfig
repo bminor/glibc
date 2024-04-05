@@ -705,13 +705,15 @@ endif
 +prectorS = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtbeginS.o`
 +postctorS = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtendS.o`
 # Variants of the two previous definitions for statically linking programs.
+static-prector = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtbeginT.o`
+static-postctor = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtend.o`
 ifeq (yes,$(enable-static-pie))
 # Static PIE must use PIE variants.
-+prectorT = $(+prectorS)
-+postctorT = $(+postctorS)
++prectorT = $(if $($(@F)-no-pie),$(static-prector),$(+prectorS))
++postctorT = $(if $($(@F)-no-pie),$(static-postctor),$(+postctorS))
 else
-+prectorT = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtbeginT.o`
-+postctorT = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtend.o`
++prectorT = $(static-prector)
++postctorT =$(static-postctor)
 endif
 csu-objpfx = $(common-objpfx)csu/
 elf-objpfx = $(common-objpfx)elf/
