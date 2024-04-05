@@ -51,7 +51,7 @@ __arc4random_buf (void *p, size_t n)
 	  n -= l;
 	  continue; /* Interrupted by a signal; keep going.  */
 	}
-      else if (l == -ENOSYS)
+      else if (l < 0 && errno == ENOSYS)
 	break; /* No syscall, so fallback to /dev/urandom.  */
       arc4random_getrandom_failure ();
     }
