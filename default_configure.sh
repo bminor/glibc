@@ -1,6 +1,6 @@
 mkdir -p build
 mkdir -p install
-if [ -z "$ARCH" ] || [ "$ARCH" != "x86_64" ] && [ "$ARCH" != "riscv" ]; then
+if [ -z "$ARCH" ] || [ "$ARCH" != "x86_64" ] && [ "$ARCH" != "riscv" ] &&  [ "$ARCH" != "aarch64" ]; then
     echo "No ARCH specified, use x86_64 as default"
     export ARCH="x86_64"
 fi
