@@ -50,6 +50,8 @@ The following bugs are resolved with this release:
     saved registers
   [31429] build: Glibc failed to build with -march=x86-64-v3
   [31501] dynamic-link: _dl_tlsdesc_dynamic_xsavec may clobber %rbx
+  [31612] libc: arc4random fails to fallback to /dev/urandom if
+    getrandom is not present
   [31640] dynamic-link: POWER10 ld.so crashes in
     elf_machine_load_address with GCC 14
   [31676] Configuring with CC="gcc -march=x86-64-v3"
