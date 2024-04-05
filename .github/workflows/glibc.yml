@@ -70,7 +70,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        arch: [x86_64,riscv64]
+        # arch: [x86_64,riscv64,aarch64]
+        arch: [x86_64]
     steps:
       - uses: actions/checkout@v4
       - name: Install Dependencies

@@ -13,4 +13,7 @@ cd build
   --prefix=/usr \
   --host=${TRIPLET} \
   --build=${BUILD}-linux-gnu \
-  CC=${TRIPLET}-gcc
+  CC="${TRIPLET}-gcc -m64" \
+  CXX="${TRIPLET}-g++ -m64" \
+  CFLAGS="-O2" \
+  CXXFLAGS="-O2"
