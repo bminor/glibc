@@ -13,4 +13,4 @@ cd build
   --prefix=/usr \
   --host=${TRIPLET} \
   --build=${BUILD}-linux-gnu \
-  --CC=${TRIPLET}
+  --CC=${TRIPLET}-gcc
