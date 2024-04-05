@@ -6,8 +6,12 @@ if [ -z "$ARCH" ] || [ "$ARCH" != "x86_64" ] && [ "$ARCH" != "riscv" ] &&  [ "$A
     export ARCH="x86_64"
 fi
 
-if [ "$ARCH" == "x86_64" ] || [ "$ARCH" == "riscv" ] ||  [ "$ARCH" == "aarch64" ]; then
+if [ "$ARCH" == "riscv" ] ||  [ "$ARCH" == "aarch64" ]; then
     export TRIPLET=${ARCH}-linux-gnu
+fi
+
+if [ "$ARCH" == "x86_64" ] ; then
+    export TRIPLET=x86-64-linux-gnu
 fi
 
 sudo apt-get install -y gcc-${TRIPLET}
