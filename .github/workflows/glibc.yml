@@ -70,7 +70,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        arch: [x86_64,riscv64,aarch64]
+        arch: [x86_64,riscv64]
     steps:
       - uses: actions/checkout@v4
       - name: Install Dependencies
@@ -89,7 +89,7 @@ jobs:
       - name: Package glibc
         run: |
           mkdir -p release
-          cd install && ls -ahl && tar czvf $GITHUB_WORKSPACE/release/glibc-${{matrix.arch}}-${{ needs.meta.outputs.tag }}.tar.gz ./*
+          cd install && ls -ahl && tar czvf $GITHUB_WORKSPACE/release/glibc-${{matrix.arch}}-${{ needs.meta.outputs.tag }}.tar.gz .
       - name: Upload to Github
         uses: actions/upload-artifact@v4
         with:
