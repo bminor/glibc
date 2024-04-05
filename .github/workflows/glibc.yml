@@ -78,7 +78,7 @@ jobs:
           bash ./install_deps.sh
       - name: Configure
         run: |
-          export ARCH = ${{matrix.arch}}
+          export ARCH=${{matrix.arch}}
           bash ./default_configure.sh
       - name: Build
         run: |
