@@ -10,7 +10,7 @@ fi
 export BUILD=`uname -m`
 cd build
 ../configure \
-  --prefix=/usr \
+  --prefix=/ \
   --host=${TRIPLET} \
   --build=${BUILD}-linux-gnu \
   CC="${TRIPLET}-gcc -m64" \
