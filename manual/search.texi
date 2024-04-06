@@ -84,8 +84,9 @@ The return value is a pointer to the matching element in the array
 starting at @var{base} if it is found.  If no matching element is
 available @code{NULL} is returned.
 
-The mean runtime of this function is @code{*@var{nmemb}}/2.  This
-function should only be used if elements often get added to or deleted from
+The mean runtime of this function is proportional to @code{*@var{nmemb}/2},
+assuming random elements of the array are searched for.  This
+function should be used only if elements often get added to or deleted from
 the array in which case it might not be useful to sort the array before
 searching.
 @end deftypefun
@@ -122,26 +123,34 @@ bytes.  If one is sure the element is in the array it is better to use
 calling @code{lsearch}.
 @end deftypefun
 
-To search a sorted array for an element matching the key, use the
-@code{bsearch} function.  The prototype for this function is in
+To search a sorted or partially sorted array for an element matching the key,
+use the @code{bsearch} function.  The prototype for this function is in
 the header file @file{stdlib.h}.
 @pindex stdlib.h
 
 @deftypefun {void *} bsearch (const void *@var{key}, const void *@var{array}, size_t @var{count}, size_t @var{size}, comparison_fn_t @var{compare})
 @standards{ISO, stdlib.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-The @code{bsearch} function searches the sorted array @var{array} for an object
+The @code{bsearch} function searches @var{array} for an element
 that is equivalent to @var{key}.  The array contains @var{count} elements,
 each of which is of size @var{size} bytes.
 
 The @var{compare} function is used to perform the comparison.  This
-function is called with two pointer arguments and should return an
+function is called with arguments that point to the key and to an
+array element, in that order, and should return an
 integer less than, equal to, or greater than zero corresponding to
-whether its first argument is considered less than, equal to, or greater
-than its second argument.  The elements of the @var{array} must already
-be sorted in ascending order according to this comparison function.
+whether the key is considered less than, equal to, or greater than
+the array element.  The function should not alter the array's contents,
+and the same array element should always compare the same way with the key.
 
-The return value is a pointer to the matching array element, or a null
+Although the array need not be completely sorted, it should be
+partially sorted with respect to @var{key}.  That is, the array should
+begin with elements that compare less than @var{key}, followed by
+elements that compare equal to @var{key}, and ending with elements
+that compare greater than @var{key}.  Any or all of these element
+sequences can be empty.
+
+The return value is a pointer to a matching array element, or a null
 pointer if no match is found.  If the array contains more than one element
 that matches, the one that is returned is unspecified.
 
@@ -171,20 +180,22 @@ array elements.  This function is called with two pointer arguments and
 should return an integer less than, equal to, or greater than zero
 corresponding to whether its first argument is considered less than,
 equal to, or greater than its second argument.
+The function must not alter the array's contents, and must define a
+total ordering on the array elements, including any unusual values
+such as floating-point NaN (@pxref{Infinity and NaN}).
+Because the sorting process can move elements,
+the function's return value must not depend on the element addresses
+or the relative positions of elements within the array,
+as these are meaningless while @code{qsort} is running.
 
 @cindex stable sorting
-@strong{Warning:} If two objects compare as equal, their order after
+@strong{Warning:} If two elements compare equal, their order after
 sorting is unpredictable.  That is to say, the sorting is not stable.
 This can make a difference when the comparison considers only part of
-the elements.  Two elements with the same sort key may differ in other
-respects.
-
-Although the object addresses passed to the comparison function lie
-within the array, they need not correspond with the original locations
-of those objects because the sorting algorithm may swap around objects
-in the array before making some comparisons.  The only way to perform
-a stable sort with @code{qsort} is to first augment the objects with a
-monotonic counter of some kind.
+the elements and two elements that compare equal may differ in other
+respects.  To ensure a stable sort in this situation, you can augment
+each element with an appropriate tie-breaking value, such as its
+original array index.
 
 Here is a simple example of sorting an array of @code{long int} in numerical
 order, using the comparison function defined above (@pxref{Comparison
@@ -202,18 +213,19 @@ Functions}):
 The @code{qsort} function derives its name from the fact that it was
 originally implemented using the ``quick sort'' algorithm.
 
-The implementation of @code{qsort} attempts to allocate auxiliary storage
+The implementation of @code{qsort} attempts to allocate auxiliary memory
 and use the merge sort algorithm, without violating C standard requirement
 that arguments passed to the comparison function point within the array.
+If the memory allocation fails, @code{qsort} resorts to a slower algorithm.
 @end deftypefun
 
 @node Search/Sort Example
 @section Searching and Sorting Example
 
 Here is an example showing the use of @code{qsort} and @code{bsearch}
-with an array of structures.  The objects in the array are sorted
+with an array of structures.  The elements of the array are sorted
 by comparing their @code{name} fields with the @code{strcmp} function.
-Then, we can look up individual objects based on their names.
+Then, we can look up individual elements based on their names.
 
 @comment This example is dedicated to the memory of Jim Henson.  RIP.
 @smallexample
