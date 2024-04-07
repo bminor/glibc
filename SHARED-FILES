@@ -177,23 +177,25 @@ unicode:
 # The following files are shared with the upstream tzcode project and must be
 # updated regularly to stay in sync with the upstream releases.
 #
-# Update from tzcode 2017b.
-# Latest is 2018g:
-#   https://mm.icann.org/pipermail/tz-announce/2018-October/000052.html
+# Currently synced to TZDB 2024a, announced and distributed here:
+#	https://mm.icann.org/pipermail/tz-announce/2024-February/000081.html
+#	https://data.iana.org/time-zones/releases/tzdb-2024a.tar.lz
 tzcode:
   timezone/private.h
   timezone/tzfile.h
+  timezone/tzselect.ksh
+  timezone/version
   timezone/zdump.c
   timezone/zic.c
-  timezone/tzselect.ksh
 
 # The following files are shared with the upstream tzdata project but is not
 # synchronized regularly. The data files themselves are used only for testing
 # purposes and their data is never used to generate any output. We synchronize
 # them only to stay on top of newer data that might help with testing.
 #
-# Currently synced to 2009i.  Latest is 2018g.
-# https://mm.icann.org/pipermail/tz-announce/2018-October/000052.html
+# Currently synced to tzcode 2009i, announced and distributed here:
+#	https://mm.icann.org/pipermail/tz/2009-June/040697.html
+#	https://data.iana.org/time-zones/releases/tzdata2009i.tar.gz
 tzdata:
   timezone/africa
   timezone/antarctica

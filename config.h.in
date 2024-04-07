@@ -240,10 +240,6 @@
 
 #ifdef	_LIBC
 
-/* The zic and zdump programs need these definitions.  */
-
-#define	HAVE_STRERROR	1
-
 /* The locale code needs these definitions.  */
 
 #define HAVE_REGEX 1

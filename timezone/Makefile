@@ -49,6 +49,13 @@ endif
 include ../Rules
 
 
+$(objpfx)zic.o: $(objpfx)tzdir.h
+
+# In glibc this file is an empty placeholder,
+# as tz-cflags defines TZDEFAULT and TZDIR.
+$(objpfx)tzdir.h:
+	> $@
+
 $(objpfx)zic.o $(objpfx)zdump.o: $(objpfx)version.h
 
 $(objpfx)version.h: $(common-objpfx)config.make
