@@ -228,7 +228,90 @@ reported by the @code{uname} function.  @xref{Platform Type}.
 @item x86.cpu_features.@dots{}
 These items are specific to the i386 and x86-64 architectures.  They
 reflect supported CPU features and information on cache geometry, mostly
-collected using the @code{CPUID} instruction.
+collected using the CPUID instruction.
+
+@item x86.processor[@var{index}].@dots{}
+These are additional items for the i386 and x86-64 architectures, as
+described below.  They mostly contain raw data from the CPUID
+instruction.  The probes are performed for each active CPU for the
+@code{ld.so} process, and data for different probed CPUs receives a
+uniqe @var{index} value.  Some CPUID data is expected to differ from CPU
+core to CPU core.  In some cases, CPUs are not correctly initialized and
+indicate the presence of different feature sets.
+
+@item x86.processor[@var{index}].requested=@var{kernel-cpu}
+The kernel is told to run the subsequent probing on the CPU numbered
+@var{kernel-cpu}.  The values @var{kernel-cpu} and @var{index} can be
+distinct if there are gaps in the process CPU affinity mask.  This line
+is not included if CPU affinity mask information is not available.
+
+@item x86.processor[@var{index}].observed=@var{kernel-cpu}
+This line reports the kernel CPU number @var{kernel-cpu} on which the
+probing code initially ran.  If the CPU number cannot be obtained,
+this line is not printed.
+
+@item x86.processor[@var{index}].observed_node=@var{node}
+This reports the observed NUMA node number, as reported by the
+@code{getcpu} system call.  If this information cannot be obtained, this
+line is not printed.
+
+@item x86.processor[@var{index}].cpuid_leaves=@var{count}
+This line indicates that @var{count} distinct CPUID leaves were
+encountered.  (This reflects internal @code{ld.so} storage space, it
+does not directly correspond to @code{CPUID} enumeration ranges.)
+
+@item x86.processor[@var{index}].ecx_limit=@var{value}
+The CPUID data extraction code uses a brute-force approach to enumerate
+subleaves (see the @samp{.subleaf_eax} lines below).  The last
+@code{%rcx} value used in a CPUID query on this probed CPU was
+@var{value}.
+
+@item x86.processor[@var{index}].cpuid.eax[@var{query_eax}].eax=@var{eax}
+@itemx x86.processor[@var{index}].cpuid.eax[@var{query_eax}].ebx=@var{ebx}
+@itemx x86.processor[@var{index}].cpuid.eax[@var{query_eax}].ecx=@var{ecx}
+@itemx x86.processor[@var{index}].cpuid.eax[@var{query_eax}].edx=@var{edx}
+These lines report the register contents after executing the CPUID
+instruction with @samp{%rax == @var{query_eax}} and @samp{%rcx == 0} (a
+@dfn{leaf}).  For the first probed CPU (with a zero @var{index}), only
+leaves with non-zero register contents are reported.  For subsequent
+CPUs, only leaves whose register contents differs from the previously
+probed CPUs (with @var{index} one less) are reported.
+
+Basic and extended leaves are reported using the same syntax.  This
+means there is a large jump in @var{query_eax} for the first reported
+extended leaf.
+
+@item x86.processor[@var{index}].cpuid.subleaf_eax[@var{query_eax}].ecx[@var{query_ecx}].eax=@var{eax}
+@itemx x86.processor[@var{index}].cpuid.subleaf_eax[@var{query_eax}].ecx[@var{query_ecx}].ebx=@var{ebx}
+@itemx x86.processor[@var{index}].cpuid.subleaf_eax[@var{query_eax}].ecx[@var{query_ecx}].ecx=@var{ecx}
+@itemx x86.processor[@var{index}].cpuid.subleaf_eax[@var{query_eax}].ecx[@var{query_ecx}].edx=@var{edx}
+This is similar to the leaves above, but for a @dfn{subleaf}.  For
+subleaves, the CPUID instruction is executed with @samp{%rax ==
+@var{query_eax}} and @samp{%rcx == @var{query_ecx}}, so the result
+depends on both register values.  The same rules about filtering zero
+and identical results apply.
+
+@item x86.processor[@var{index}].cpuid.subleaf_eax[@var{query_eax}].ecx[@var{query_ecx}].until_ecx=@var{ecx_limit}
+Some CPUID results are the same regardless the @var{query_ecx} value.
+If this situation is detected, a line with the @samp{.until_ecx}
+selector ins included, and this indicates that the CPUID register
+contents is the same for @code{%rcx} values between @var{query_ecx}
+and @var{ecx_limit} (inclusive).
+
+@item x86.processor[@var{index}].cpuid.subleaf_eax[@var{query_eax}].ecx[@var{query_ecx}].ecx_query_mask=0xff
+This line indicates that in an @samp{.until_ecx} range, the CPUID
+instruction preserved the lowested 8 bits of the input @code{%rcx} in
+the output @code{%rcx} registers.  Otherwise, the subleaves in the range
+have identical values.  This special treatment is necessary to report
+compact range information in case such copying occurs (because the
+subleaves would otherwise be all different).
+
+@item x86.processor[@var{index}].xgetbv.ecx[@var{query_ecx}]=@var{result}
+This line shows the 64-bit @var{result} value in the @code{%rdx:%rax}
+register pair after executing the XGETBV instruction with @code{%rcx}
+set to @var{query_ecx}.  Zero values and values matching the previously
+probed CPU are omitted.  Nothing is printed if the system does not
+support the XGETBV instruction.
 @end table
 
 @node Dynamic Linker Introspection
