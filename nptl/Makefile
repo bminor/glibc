@@ -315,6 +315,7 @@ tests = \
   tst-pthread-defaultattr-free \
   tst-pthread-gdb-attach \
   tst-pthread-gdb-attach-static \
+  tst-pthread-key1-static \
   tst-pthread-timedlock-lockloop \
   tst-pthread_exit-nothreads \
   tst-pthread_exit-nothreads-static \
@@ -536,6 +537,7 @@ tests-static += \
   tst-mutex8-static \
   tst-mutexpi8-static \
   tst-pthread-gdb-attach-static \
+  tst-pthread-key1-static \
   tst-pthread_exit-nothreads-static \
   tst-sem11-static \
   tst-sem12-static tst-cond11-static \
