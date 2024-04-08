@@ -126,7 +126,11 @@ _dl_signal_error (int errcode, const char *objname, const char *occasion,
       __longjmp (lcatch->env[0].__jmpbuf, 1);
     }
   else
-    fatal_error (errcode, objname, occasion, errstring);
+    {
+      if (objname == NULL)
+	objname = "";
+      fatal_error (errcode, objname, occasion, errstring);
+    }
 }
 rtld_hidden_def (_dl_signal_error)
 
