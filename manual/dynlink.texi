@@ -224,6 +224,40 @@ reflect adjustment by @theglibc{}.
 These Linux-specific items show the values of @code{struct utsname}, as
 reported by the @code{uname} function.  @xref{Platform Type}.
 
+@item aarch64.cpu_features.@dots{}
+These items are specific to the AArch64 architectures.  They report data
+@theglibc{} uses to activate conditionally supported features such as
+BTI and MTE, and to select alternative function implementations.
+
+@item aarch64.processor[@var{index}].@dots{}
+These are additional items for the AArch64 architecture and are
+described below.
+
+@item aarch64.processor[@var{index}].requested=@var{kernel-cpu}
+The kernel is told to run the subsequent probing on the CPU numbered
+@var{kernel-cpu}.  The values @var{kernel-cpu} and @var{index} can be
+distinct if there are gaps in the process CPU affinity mask.  This line
+is not included if CPU affinity mask information is not available.
+
+@item aarch64.processor[@var{index}].observed=@var{kernel-cpu}
+This line reports the kernel CPU number @var{kernel-cpu} on which the
+probing code initially ran.  If the CPU number cannot be obtained,
+this line is not printed.
+
+@item aarch64.processor[@var{index}].observed_node=@var{node}
+This reports the observed NUMA node number, as reported by the
+@code{getcpu} system call.  If this information cannot be obtained, this
+line is not printed.
+
+@item aarch64.processor[@var{index}].midr_el1=@var{value}
+The value of the @code{midr_el1} system register on the processor
+@var{index}.  This line is only printed if the kernel indicates that
+this system register is supported.
+
+@item aarch64.processor[@var{index}].dczid_el0=@var{value}
+The value of the @code{dczid_el0} system register on the processor
+@var{index}.
+
 @cindex CPUID (diagnostics)
 @item x86.cpu_features.@dots{}
 These items are specific to the i386 and x86-64 architectures.  They
