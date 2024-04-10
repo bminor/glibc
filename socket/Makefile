@@ -70,6 +70,7 @@ tests := \
   tst-accept4 \
   tst-cmsg_cloexec \
   tst-cmsghdr \
+  tst-connect \
   tst-sockopt \
   # tests
 
