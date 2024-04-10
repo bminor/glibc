@@ -131,6 +131,7 @@ libsupport-routines = \
   xfreopen \
   xftruncate \
   xgetline \
+  xgetpeername \
   xgetsockname \
   xlisten \
   xlseek \

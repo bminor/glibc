@@ -26,6 +26,7 @@
 int xsocket (int, int, int);
 void xsetsockopt (int, int, int, const void *, socklen_t);
 void xgetsockname (int, struct sockaddr *, socklen_t *);
+void xgetpeername (int, struct sockaddr *, socklen_t *);
 void xconnect (int, const struct sockaddr *, socklen_t);
 void xbind (int, const struct sockaddr *, socklen_t);
 void xlisten (int, int);
