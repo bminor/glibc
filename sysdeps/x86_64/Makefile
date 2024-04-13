@@ -211,14 +211,7 @@ tst-plt-rewrite2-ENV = GLIBC_TUNABLES=glibc.cpu.plt_rewrite=2
 $(objpfx)tst-plt-rewrite2: $(objpfx)tst-plt-rewritemod2.so
 endif
 
-# Check if ISA level is 3 or above.
-ifneq (,$(filter $(have-x86-isa-level),$(x86-isa-level-3-or-above)))
-valgrind-suppressions-tst-valgrind-smoke = \
-  --suppressions=$(..)sysdeps/x86_64/tst-valgrind-smoke.supp
-endif
-
 test-internal-extras += tst-gnu2-tls2mod1
-
 endif # $(subdir) == elf
 
 ifeq ($(subdir),csu)
