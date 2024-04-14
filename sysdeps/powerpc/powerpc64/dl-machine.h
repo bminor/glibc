@@ -78,6 +78,7 @@ elf_host_tolerates_class (const Elf64_Ehdr *ehdr)
 static inline Elf64_Addr
 elf_machine_load_address (void) __attribute__ ((const));
 
+#ifndef __PCREL__
 static inline Elf64_Addr
 elf_machine_load_address (void)
 {
@@ -105,6 +106,24 @@ elf_machine_dynamic (void)
   /* Then subtract off the load address offset.  */
   return runtime_dynamic - elf_machine_load_address() ;
 }
+#else /* __PCREL__ */
+/* In PCREL mode, r2 may have been clobbered.  Rely on relative
+   relocations instead.  */
+
+static inline ElfW(Addr)
+elf_machine_load_address (void)
+{
+  extern const ElfW(Ehdr) __ehdr_start attribute_hidden;
+  return (ElfW(Addr)) &__ehdr_start;
+}
+
+static inline ElfW(Addr)
+elf_machine_dynamic (void)
+{
+  extern ElfW(Dyn) _DYNAMIC[] attribute_hidden;
+  return (ElfW(Addr)) _DYNAMIC - elf_machine_load_address ();
+}
+#endif /* __PCREL__ */
 
 /* The PLT uses Elf64_Rela relocs.  */
 #define elf_machine_relplt elf_machine_rela
