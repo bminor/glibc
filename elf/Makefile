@@ -315,6 +315,7 @@ tests := \
   tst-leaks1 \
   tst-stringtable \
   tst-tls9 \
+  tst-tunables-enable_secure-env \
   # tests
 
 tests-internal := \
@@ -1188,6 +1189,7 @@ tests-special += \
   $(objpfx)tst-trace3.out \
   $(objpfx)tst-trace4.out \
   $(objpfx)tst-trace5.out \
+  $(objpfx)tst-tunables-enable_secure-env.out \
   $(objpfx)tst-unused-dep-cmp.out \
   $(objpfx)tst-unused-dep.out \
   # tests-special
@@ -2214,6 +2216,14 @@ $(objpfx)tst-unused-dep.out: $(objpfx)testobj1.so
 $(objpfx)tst-unused-dep-cmp.out: $(objpfx)tst-unused-dep.out
 	cmp $< /dev/null > $@; \
 	$(evaluate-test)
+
+$(objpfx)tst-tunables-enable_secure-env.out: $(objpfx)tst-tunables-enable_secure-env
+	$(test-wrapper-env) \
+	GLIBC_TUNABLES=glibc.rtld.enable_secure=1 \
+	$(rtld-prefix) \
+	  $< > $@; \
+	$(evaluate-test)
+
 
 $(objpfx)tst-audit11.out: $(objpfx)tst-auditmod11.so $(objpfx)tst-audit11mod1.so
 tst-audit11-ENV = LD_AUDIT=$(objpfx)tst-auditmod11.so

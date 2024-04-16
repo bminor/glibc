@@ -155,7 +155,7 @@ static void dl_main_state_init (struct dl_main_state *state);
    Since all of them start with `LD_' we are a bit smarter while finding
    all the entries.  */
 extern char **_environ attribute_hidden;
-static void process_envvars (struct dl_main_state *state);
+static int process_envvars (struct dl_main_state *state);
 
 int _dl_argc attribute_relro attribute_hidden;
 char **_dl_argv attribute_relro = NULL;
@@ -1289,7 +1289,7 @@ rtld_setup_main_map (struct link_map *main_map)
    _dl_argv and _dl_argc accordingly.  Those arguments are removed from
    argv here.  */
 static void
-_dl_start_args_adjust (int skip_args)
+_dl_start_args_adjust (int skip_args, int skip_env)
 {
   void **sp = (void **) (_dl_argv - skip_args - 1);
   void **p = sp + skip_args;
@@ -1321,7 +1321,7 @@ _dl_start_args_adjust (int skip_args)
   while (*p != NULL);
 
 #ifdef HAVE_AUX_VECTOR
-  void **auxv = (void **) GLRO(dl_auxv) - skip_args;
+  void **auxv = (void **) GLRO(dl_auxv) - skip_args - skip_env;
   GLRO(dl_auxv) = (ElfW(auxv_t) *) auxv; /* Aliasing violation.  */
   assert (auxv == sp + 1);
 
@@ -1352,6 +1352,7 @@ dl_main (const ElfW(Phdr) *phdr,
   unsigned int i;
   bool rtld_is_main = false;
   void *tcbp = NULL;
+  int skip_env = 0;
 
   struct dl_main_state state;
   dl_main_state_init (&state);
@@ -1365,7 +1366,7 @@ dl_main (const ElfW(Phdr) *phdr,
 #endif
 
   /* Process the environment variable which control the behaviour.  */
-  process_envvars (&state);
+  skip_env = process_envvars (&state);
 
 #ifndef HAVE_INLINED_SYSCALLS
   /* Set up a flag which tells we are just starting.  */
@@ -1630,7 +1631,7 @@ dl_main (const ElfW(Phdr) *phdr,
         _dl_argv[0] = argv0;
 
       /* Adjust arguments for the application entry point.  */
-      _dl_start_args_adjust (_dl_argv - orig_argv);
+      _dl_start_args_adjust (_dl_argv - orig_argv, skip_env);
     }
   else
     {
@@ -2534,11 +2535,12 @@ a filename can be specified using the LD_DEBUG_OUTPUT environment variable.\n");
     }
 }
 
-static void
+static int
 process_envvars_secure (struct dl_main_state *state)
 {
   char **runp = _environ;
   char *envline;
+  int skip_env = 0;
 
   while ((envline = _dl_next_ld_env_entry (&runp)) != NULL)
     {
@@ -2580,6 +2582,14 @@ process_envvars_secure (struct dl_main_state *state)
   const char *nextp = UNSECURE_ENVVARS;
   do
     {
+      /* Keep track of the number of environment variables that were set in
+         the environment and are unset below.  Use getenv() which returns
+	 non-NULL if the variable is set in the environment.  This count is
+	 needed if we need to adjust the location of the AUX vector on the
+	 stack when running ld.so directly. */
+      if (getenv (nextp) != NULL)
+        skip_env++;
+
       unsetenv (nextp);
       nextp = strchr (nextp, '\0') + 1;
     }
@@ -2592,6 +2602,8 @@ process_envvars_secure (struct dl_main_state *state)
       || state->mode != rtld_mode_normal
       || state->version_info)
     _exit (5);
+
+  return skip_env;
 }
 
 static void
@@ -2745,13 +2757,16 @@ process_envvars_default (struct dl_main_state *state)
     }
 }
 
-static void
+static int
 process_envvars (struct dl_main_state *state)
 {
+  int skip_env = 0;
   if (__glibc_unlikely (__libc_enable_secure))
-    process_envvars_secure (state);
+    skip_env += process_envvars_secure (state);
   else
     process_envvars_default (state);
+
+  return skip_env;
 }
 
 #if HP_TIMING_INLINE
