@@ -178,4 +178,7 @@
 # error "ISAs that do not subsume the A extension are not supported"
 #endif /* !__riscv_atomic */
 
+/* Execute a PAUSE hint when spinning.  */
+#define atomic_spin_nop() __asm(".insn i 0x0f, 0, x0, x0, 0x010")
+
 #endif /* bits/atomic.h */
