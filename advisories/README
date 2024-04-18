@@ -37,6 +37,10 @@ entries for each release branch in the glibc repository, indicating that
 all of those commits contributed to fixing that issue in each of those
 branches.
 
+Reported-By:
+The entity that reported this issue. There could be multiple entries, one for
+each reporter.
+
 Adding an Advisory
 ------------------
 
