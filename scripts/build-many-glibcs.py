@@ -358,7 +358,8 @@ class Context(object):
                                 {'variant': 'n64',
                                  'ccopts': '-mabi=64'}])
         self.add_config(arch='nios2',
-                        os_name='linux-gnu')
+                        os_name='linux-gnu',
+                        gcc_cfg=['--enable-obsolete'])
         self.add_config(arch='or1k',
                         os_name='linux-gnu',
                         variant='soft',
