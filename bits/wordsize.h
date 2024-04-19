@@ -21,7 +21,9 @@
 #define __WORDSIZE32_PTRDIFF_LONG
 
 /* Set to 1 in order to force time types to be 32 bits instead of 64 bits in
-   struct lastlog and struct utmp{,x} on 64-bit ports.  This may be done in
+   struct lastlog and struct utmp{,x}.  This may be done in
    order to make 64-bit ports compatible with 32-bit ports.  Set to 0 for
-   64-bit ports where the time types are 64-bits or for any 32-bit ports.  */
+   64-bit ports where the time types are 64-bits and new 32-bit ports
+   where time_t is 64 bits, and there is no companion architecture with
+   32-bit time_t.  */
 #define __WORDSIZE_TIME64_COMPAT32
