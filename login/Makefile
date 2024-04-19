@@ -44,7 +44,7 @@ subdir-dirs = programs
 vpath %.c programs
 
 tests := tst-utmp tst-utmpx tst-grantpt tst-ptsname tst-getlogin tst-updwtmpx \
-  tst-pututxline-lockfail tst-pututxline-cache
+  tst-pututxline-lockfail tst-pututxline-cache tst-utmp-size
 
 # Empty compatibility library for old binaries.
 extra-libs      := libutil
