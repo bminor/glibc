@@ -28,7 +28,14 @@ Major new features:
 
 Deprecated and removed features, and other changes affecting compatibility:
 
-  [Add deprecations, removals and changes affecting compatibility here]
+* Architectures which use a 32-bit seconds-since-epoch field in struct
+  lastlog, struct utmp, struct utmpx (such as i386, powerpc64le, rv32,
+  rv64, x86-64) switched from a signed to an unsigned type for that
+  field.  This allows these fields to store timestamps beyond the year
+  2038, until the year 2106.  Please note that applications are still
+  expected to migrate off the interfaces declared in <utmp.h> and
+  <utmpx.h> (except for login_tty) due to locking and session management
+  problems.
 
 Changes to build and runtime requirements:
 
