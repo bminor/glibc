@@ -239,6 +239,7 @@ tests = \
   tst-iconv-emojis-trans \
   tst-iconv-math-trans \
   tst-leaks \
+  tst-locale-loadlocale \
   tst-mbswcs1 \
   tst-mbswcs2 \
   tst-mbswcs3 \
@@ -325,6 +326,7 @@ LOCALES := \
   dsb_DE.UTF-8 \
   dz_BT.UTF-8 \
   en_GB.UTF-8 \
+  en_US \
   en_US.ANSI_X3.4-1968 \
   en_US.ISO-8859-1\
   en_US.UTF-8 \
@@ -406,6 +408,8 @@ include ../gen-locales.mk
 $(objpfx)tst-iconv-emojis-trans.out: $(gen-locales)
 
 $(objpfx)tst-iconv-math-trans.out: $(gen-locales)
+# tst-locale-loadlocale: Needs an en_US-named locale for the test.
+$(objpfx)tst-locale-loadlocale.out: $(gen-locales)
 endif
 
 include ../Rules

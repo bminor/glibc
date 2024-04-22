@@ -48,9 +48,9 @@ generate_locale ()
 }
 
 locfile=`echo $locfile|sed 's|.*/\([^/]*/LC_CTYPE\)|\1|'`
-locale=`echo $locfile|sed 's|\([^.]*\)[.].*/LC_CTYPE|\1|'`
-charmap=`echo $locfile|sed 's|[^.]*[.]\([^@ ]*\)\(@[^ ]*\)\?/LC_CTYPE|\1|'`
-modifier=`echo $locfile|sed 's|[^.]*[.]\([^@ ]*\)\(@[^ ]*\)\?/LC_CTYPE|\2|'`
+locale=`echo $locfile|sed 's|\([^.]*\).*/LC_CTYPE|\1|'`
+charmap=`echo $locfile|sed -e 's|[^.]*\([^@ ]*\)\(@[^ ]*\)\?/LC_CTYPE|\1|' -e 's|^\.||g'`
+modifier=`echo $locfile|sed 's|[^.]*\([^@ ]*\)\(@[^ ]*\)\?/LC_CTYPE|\2|'`
 
 echo "Generating locale $locale.$charmap: this might take a while..."
 
@@ -63,10 +63,16 @@ echo "Generating locale $locale.$charmap: this might take a while..."
 # you to develop in-progress locales.
 flags=""
 
+charmap_real="$charmap"
+
+# If no character map is specified then we fall back to UTF-8.
+if [ -z "$charmap" ]; then
+  charmap_real="UTF-8"
+fi
+
 # For SJIS the charmap is SHIFT_JIS. We just want the locale to have
 # a slightly nicer name instead of using "*.SHIFT_SJIS", but that
 # means we need a mapping here.
-charmap_real="$charmap"
 if [ "$charmap" = "SJIS" ]; then
   charmap_real="SHIFT_JIS"
 fi
@@ -80,4 +86,12 @@ if [ "$charmap_real" = 'SHIFT_JIS' ] \
   flags="$flags --no-warnings=ascii"
 fi
 
-generate_locale $charmap_real $locale$modifier $locale.$charmap$modifier "$flags"
+# If the character map is not specified then we output a locale
+# with the just the name of the locale e.g. eo, en_US. This is
+# used for test locales that act as fallbacks.
+output_file="$locale.$charmap$modifier"
+if [ -z "$charmap" ]; then
+  output_file="$locale"
+fi
+
+generate_locale $charmap_real $locale$modifier $output_file "$flags"

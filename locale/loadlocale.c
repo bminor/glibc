@@ -237,7 +237,6 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
   int save_err;
   int alloc = ld_mapped;
 
-  file->decided = 1;
   file->data = NULL;
 
   fd = __open_nocancel (file->filename, O_RDONLY | O_CLOEXEC);
@@ -345,6 +344,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
   newdata->alloc = alloc;
 
   file->data = newdata;
+  file->decided = 1;
 }
 
 void
