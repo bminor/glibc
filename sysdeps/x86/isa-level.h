@@ -61,8 +61,10 @@
 # define __X86_ISA_V4 0
 #endif
 
-#define MINIMUM_X86_ISA_LEVEL                                                 \
+#ifndef MINIMUM_X86_ISA_LEVEL
+# define MINIMUM_X86_ISA_LEVEL                                                 \
   (__X86_ISA_V1 + __X86_ISA_V2 + __X86_ISA_V3 + __X86_ISA_V4)
+#endif
 
 /* Depending on the minimum ISA level, a feature check result can be a
    compile-time constant.. */

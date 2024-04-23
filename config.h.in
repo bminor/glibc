@@ -285,6 +285,9 @@
 /* Define if x86 ISA level should be included in shared libraries.  */
 #undef INCLUDE_X86_ISA_LEVEL
 
+/* The x86 ISA level.  1 for baseline.  Undefined on non-x86.  */
+#undef MINIMUM_X86_ISA_LEVEL
+
 /* Define if -msahf is enabled by default on x86.  */
 #undef HAVE_X86_LAHF_SAHF
 
