@@ -151,6 +151,13 @@ printf "%s\n" "$libc_cv_have_x86_isa_level" >&6; }
 else
   libc_cv_have_x86_isa_level=baseline
 fi
+if test $libc_cv_have_x86_isa_level = baseline; then
+  printf "%s\n" "#define MINIMUM_X86_ISA_LEVEL 1" >>confdefs.h
+
+else
+  printf "%s\n" "#define MINIMUM_X86_ISA_LEVEL $libc_cv_have_x86_isa_level" >>confdefs.h
+
+fi
 config_vars="$config_vars
 have-x86-isa-level = $libc_cv_have_x86_isa_level"
 config_vars="$config_vars
