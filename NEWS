@@ -26,6 +26,10 @@ Major new features:
   more extensive verification tests for AT_SECURE programs and not meant to
   be a security feature.
 
+* On Linux, the openat2 function has been added.  It is an extension of
+  openat and provides a superset of its functionality.  It is supported only
+  in LFS mode and as other open like it is a cancellable entrypoint.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * Architectures which use a 32-bit seconds-since-epoch field in struct

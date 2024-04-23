@@ -133,6 +133,7 @@ sysdep_headers += \
   bits/mman-linux.h \
   bits/mman-map-flags-generic.h \
   bits/mman-shared.h \
+  bits/openat2.h \
   bits/procfs-extra.h \
   bits/procfs-id.h \
   bits/procfs-prregset.h \
@@ -593,6 +594,7 @@ sysdep_routines += \
   open_nocancel \
   openat64_nocancel \
   openat_nocancel \
+  openat2 \
   pread64_nocancel \
   read_nocancel \
   stat_t64_cp \
@@ -607,11 +609,23 @@ sysdep_headers += \
   # sysdep_headers
 
 tests += \
+  tst-openat2 \
   tst-fallocate \
   tst-fallocate64 \
   tst-getcwd-smallbuff \
   tst-o_path-locks \
   # tests
+
+tests-special += \
+  $(objpfx)tst-openat2-consts.out \
+  # tests-special
+$(objpfx)tst-openat2-consts.out: ../sysdeps/unix/sysv/linux/tst-openat2-consts.py
+	$(sysdeps-linux-python) \
+	  ../sysdeps/unix/sysv/linux/tst-openat2-consts.py \
+	    $(sysdeps-linux-python-cc) \
+	  < /dev/null > $@ 2>&1; $(evaluate-test)
+$(objpfx)tst-openat2-consts.out: $(sysdeps-linux-python-deps)
+
 endif
 
 ifeq ($(subdir),elf)

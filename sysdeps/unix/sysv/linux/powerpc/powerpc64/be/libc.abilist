@@ -2892,6 +2892,7 @@ GLIBC_2.4 wcstold F
 GLIBC_2.4 wcstold_l F
 GLIBC_2.4 wprintf F
 GLIBC_2.4 wscanf F
+GLIBC_2.40 openat2 F
 GLIBC_2.5 __readlinkat_chk F
 GLIBC_2.5 inet6_opt_append F
 GLIBC_2.5 inet6_opt_find F
