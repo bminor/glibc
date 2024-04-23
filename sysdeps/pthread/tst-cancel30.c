@@ -18,6 +18,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <errno.h>
 #include <support/check.h>
 #include <support/xstdio.h>
 #include <support/xthread.h>
@@ -46,13 +47,19 @@ tf (void *arg)
 
   /* Wait indefinitely for cancellation, which only works if asynchronous
      cancellation is enabled.  */
-#if defined SYS_ppoll || defined SYS_ppoll_time64
-# ifndef SYS_ppoll_time64
-#  define SYS_ppoll_time64 SYS_ppoll
+#ifdef SYS_ppoll_time64
+  long int ret = syscall (SYS_ppoll_time64, NULL, 0, NULL, NULL);
+  (void) ret;
+# ifdef SYS_ppoll
+  if (ret == -1 && errno == ENOSYS)
+    syscall (SYS_ppoll, NULL, 0, NULL, NULL);
 # endif
-  syscall (SYS_ppoll_time64, NULL, 0, NULL, NULL);
 #else
+# ifdef SYS_ppoll
+  syscall (SYS_ppoll, NULL, 0, NULL, NULL);
+# else
   for (;;);
+# endif
 #endif
 
   return 0;
