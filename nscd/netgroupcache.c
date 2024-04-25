@@ -511,14 +511,15 @@ addinnetgrX (struct database_dyn *db, int fd, request_header *req,
 
   datahead_init_pos (&dataset->head, sizeof (*dataset) + req->key_len,
 		     sizeof (innetgroup_response_header),
-		     he == NULL ? 0 : dh->nreloads + 1, result->head.ttl);
+		     he == NULL ? 0 : dh->nreloads + 1,
+		     result == NULL ? db->negtimeout : result->head.ttl);
   /* Set the notfound status and timeout based on the result from
      getnetgrent.  */
-  dataset->head.notfound = result->head.notfound;
+  dataset->head.notfound = result == NULL || result->head.notfound;
   dataset->head.timeout = timeout;
 
   dataset->resp.version = NSCD_VERSION;
-  dataset->resp.found = result->resp.found;
+  dataset->resp.found = result != NULL && result->resp.found;
   /* Until we find a matching entry the result is 0.  */
   dataset->resp.result = 0;
 
@@ -566,7 +567,9 @@ addinnetgrX (struct database_dyn *db, int fd, request_header *req,
       goto out;
     }
 
-  if (he == NULL)
+  /* addgetnetgrentX may have already sent a notfound response.  Do
+     not send another one.  */
+  if (he == NULL && dataset->resp.found)
     {
       /* We write the dataset before inserting it to the database
 	 since while inserting this thread might block and so would
