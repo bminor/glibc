@@ -148,7 +148,7 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
       /* No such service.  */
       cacheable = do_notfound (db, fd, req, key, &dataset, &total, &timeout,
 			       &key_copy);
-      goto writeout;
+      goto maybe_cache_add;
     }
 
   memset (&data, '\0', sizeof (data));
@@ -349,7 +349,7 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
     {
       cacheable = do_notfound (db, fd, req, key, &dataset, &total, &timeout,
 			       &key_copy);
-      goto writeout;
+      goto maybe_cache_add;
     }
 
   total = buffilled;
@@ -411,14 +411,12 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
   }
 
   if (he == NULL && fd != -1)
-    {
-      /* We write the dataset before inserting it to the database
-	 since while inserting this thread might block and so would
-	 unnecessarily let the receiver wait.  */
-    writeout:
+    /* We write the dataset before inserting it to the database since
+       while inserting this thread might block and so would
+       unnecessarily let the receiver wait.  */
       writeall (fd, &dataset->resp, dataset->head.recsize);
-    }
 
+ maybe_cache_add:
   if (cacheable)
     {
       /* If necessary, we also propagate the data to disk.  */
