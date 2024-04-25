@@ -502,12 +502,13 @@ addinnetgrX (struct database_dyn *db, int fd, request_header *req,
       = (struct indataset *) mempool_alloc (db,
 					    sizeof (*dataset) + req->key_len,
 					    1);
-  struct indataset dataset_mem;
   bool cacheable = true;
   if (__glibc_unlikely (dataset == NULL))
     {
       cacheable = false;
-      dataset = &dataset_mem;
+      /* The alloca is safe because nscd_run_worker verfies that
+	 key_len is not larger than MAXKEYLEN.  */
+      dataset = alloca (sizeof (*dataset) + req->key_len);
     }
 
   datahead_init_pos (&dataset->head, sizeof (*dataset) + req->key_len,
