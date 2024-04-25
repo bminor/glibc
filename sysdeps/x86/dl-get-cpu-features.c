@@ -64,6 +64,11 @@ Fatal glibc error: CPU does not support x86-64-v%d\n", 4);
 #    endif /* ISA level 4 */
 #   endif /* ISA level 3 */
 #  endif /* ISA level 2 */
+# ifdef GCCMACRO__APX_F__
+      if (!CPU_FEATURE_USABLE_P (cpu_features, APX_F))
+	_dl_fatal_printf ("\
+Fatal glibc error: CPU does not support APX\n");
+# endif
 # endif /* IS_IN (rtld) */
     }
 }
