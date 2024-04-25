@@ -1232,6 +1232,7 @@ ldouble: 6
 
 Function: "hypot":
 double: 1
+float: 1
 float128: 1
 ldouble: 1
 
