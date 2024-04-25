@@ -170,6 +170,7 @@ CFLAGS-.op += $(call elide-stack-protector,.op,$(elide-routines.os))
 CFLAGS-.os += $(call elide-stack-protector,.os,$(all-rtld-routines))
 
 # Add the requested compiler flags to the early startup code.
+CFLAGS-dl-misc.os += $(rtld-early-cflags)
 CFLAGS-dl-printf.os += $(rtld-early-cflags)
 CFLAGS-dl-setup_hash.os += $(rtld-early-cflags)
 CFLAGS-dl-sysdep.os += $(rtld-early-cflags)
