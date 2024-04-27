@@ -2255,3 +2255,7 @@ GLIBC_2.39 stdc_trailing_zeros_ui F
 GLIBC_2.39 stdc_trailing_zeros_ul F
 GLIBC_2.39 stdc_trailing_zeros_ull F
 GLIBC_2.39 stdc_trailing_zeros_us F
+GLIBC_2.40 getcontext F
+GLIBC_2.40 makecontext F
+GLIBC_2.40 setcontext F
+GLIBC_2.40 swapcontext F

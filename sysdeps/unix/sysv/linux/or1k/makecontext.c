@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <shlib-compat.h>
 #include <sysdep.h>
 #include <stdarg.h>
 #include <stdint.h>
@@ -36,12 +37,11 @@
      r1     : stack pointer
      r2     : frame pointer, set to NULL
 */
-void
-__makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
+static void
+do_makecontext (ucontext_t *ucp, void (*startcontext) (void),
+		void (*func) (void), int argc, va_list ap)
 {
-  extern void __startcontext (void);
   unsigned long int *sp;
-  va_list ap;
   int i;
 
   sp = (unsigned long int *)
@@ -55,8 +55,8 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
 
   /* Keep uc_link in r14.  */
   ucp->uc_mcontext.__gprs[14] = (uintptr_t) ucp->uc_link;
-  /* Return address points to function __startcontext.  */
-  ucp->uc_mcontext.__gprs[9] = (uintptr_t) &__startcontext;
+  /* Return address points to function startcontext.  */
+  ucp->uc_mcontext.__gprs[9] = (uintptr_t) startcontext;
   /* Frame pointer is null.  */
   ucp->uc_mcontext.__gprs[2] = (uintptr_t) 0;
   /* Restart in user-space starting at 'func'.  */
@@ -64,14 +64,47 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
   /* Set stack pointer.  */
   ucp->uc_mcontext.__gprs[1] = (uintptr_t) sp;
 
-  va_start (ap, argc);
   for (i = 0; i < argc; ++i)
     if (i < 6)
       ucp->uc_mcontext.__gprs[i + 3] = va_arg (ap, unsigned long int);
     else
       sp[i - 6] = va_arg (ap, unsigned long int);
+}
 
+void
+__makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
+{
+  extern void __startcontext (void);
+  va_list ap;
+
+  va_start (ap, argc);
+  do_makecontext (ucp, &__startcontext, func, argc, ap);
   va_end (ap);
 }
 
-weak_alias (__makecontext, makecontext)
+versioned_symbol (libc, __makecontext, makecontext, GLIBC_2_40);
+
+#if SHLIB_COMPAT (libc, GLIBC_2_35, GLIBC_2_40)
+
+/* Define a compat version of makecontext for glibc's before the fpcsr
+   field was added to mcontext_t.  The offset sigmask changed with this
+   introduction, the change was done because glibc's definition of
+   ucontext_t was initially defined incompatible with the Linux
+   definition of ucontext_t.  We keep the compatability definition to
+   allow getcontext, setcontext and swapcontext to work in older
+   binaries.  */
+
+void
+__makecontext_nofpcsr (ucontext_t *ucp, void (*func) (void), int argc, ...)
+{
+  extern void __startcontext_nofpcsr (void);
+  va_list ap;
+
+  va_start (ap, argc);
+  do_makecontext (ucp, &__startcontext_nofpcsr, func, argc, ap);
+  va_end (ap);
+}
+
+compat_symbol (libc, __makecontext_nofpcsr, makecontext, GLIBC_2_35);
+
+#endif

@@ -16,93 +16,39 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <shlib-compat.h>
 #include <sysdep.h>
 #include "ucontext_i.h"
 
-/* int setcontext (const ucontext_t *ucp) */
-	.text
-ENTRY(__setcontext)
-	l.ori	r30, r3, 0
+#define __CONTEXT_FUNC_NAME __setcontext
+#define __CONTEXT_ENABLE_FPCSR 1
+#define __CONTEXT_SIGMASK_OFFSET UCONTEXT_SIGMASK
+#define __STARTCONTEXT_FUNC_NAME __startcontext
 
-	/* Restore signal mask.  */
-	/* rt_sigprocmask (SIG_SETMASK, &ucp->uc_sigmask, NULL, _NSIG8) */
-	l.ori	r6, r0, _NSIG8
-	l.ori	r5, r0, 0
-	l.addi	r4, r3, UCONTEXT_SIGMASK
-	l.ori	r3, r0, SIG_SETMASK
-	l.ori	r11, r0, SYS_ify (rt_sigprocmask)
-	/* Do the syscall.  */
-	l.sys 1
-	 l.nop
+#include "setcontext-common.S"
 
-	/* if -4096 < ret < 0 holds, it's an error */
-	l.sfgeui r11, 0xf001
-	l.bf	1f
-	 l.nop
+versioned_symbol (libc, __setcontext, setcontext, GLIBC_2_40)
 
-	/* Restore argument registers, for the makecontext case.  */
-	l.lwz	r3, (UCONTEXT_MCONTEXT +  3*4)(r30)
-	l.lwz	r4, (UCONTEXT_MCONTEXT +  4*4)(r30)
-	l.lwz	r5, (UCONTEXT_MCONTEXT +  5*4)(r30)
-	l.lwz	r6, (UCONTEXT_MCONTEXT +  6*4)(r30)
-	l.lwz	r7, (UCONTEXT_MCONTEXT +  7*4)(r30)
-	l.lwz	r8, (UCONTEXT_MCONTEXT +  8*4)(r30)
+#if SHLIB_COMPAT (libc, GLIBC_2_35, GLIBC_2_40)
 
-	/* Restore registers stored in getcontext.  */
-	l.lwz	r1,  (UCONTEXT_MCONTEXT +  1*4)(r30)
-	l.lwz	r2,  (UCONTEXT_MCONTEXT +  2*4)(r30)
-	l.lwz	r9,  (UCONTEXT_MCONTEXT +  9*4)(r30)
-	l.lwz	r10, (UCONTEXT_MCONTEXT + 10*4)(r30)
-	l.lwz	r11, (UCONTEXT_MCONTEXT + 11*4)(r30)
-	/* Restore r14-r30 even, callee saved registers.  */
-	l.lwz	r14, (UCONTEXT_MCONTEXT + 14*4)(r30)
-	l.lwz	r16, (UCONTEXT_MCONTEXT + 16*4)(r30)
-	l.lwz	r18, (UCONTEXT_MCONTEXT + 18*4)(r30)
-	l.lwz	r20, (UCONTEXT_MCONTEXT + 20*4)(r30)
-	l.lwz	r22, (UCONTEXT_MCONTEXT + 22*4)(r30)
-	l.lwz	r24, (UCONTEXT_MCONTEXT + 24*4)(r30)
-	l.lwz	r26, (UCONTEXT_MCONTEXT + 26*4)(r30)
-	l.lwz	r28, (UCONTEXT_MCONTEXT + 28*4)(r30)
-	l.lwz	r30, (UCONTEXT_MCONTEXT + 30*4)(r30)
+/* Define a compat version of setcontext for glibc's before the fpcsr
+   field was added to mcontext_t.  The offset sigmask changed with this
+   introduction, the change was done because glibc's definition of
+   ucontext_t was initially defined incompatible with the Linux
+   definition of ucontext_t.  We keep the compatability definition to
+   allow getcontext, setcontext and swapcontext to work in older
+   binaries.  */
 
-	l.jr	r11
-	 l.ori	r11, r0, 0
+# undef __CONTEXT_FUNC_NAME
+# undef __CONTEXT_ENABLE_FPCSR
+# undef __CONTEXT_SIGMASK_OFFSET
+# undef __STARTCONTEXT_FUNC_NAME
+# define __CONTEXT_FUNC_NAME __setcontext_nofpcsr
+# define __CONTEXT_SIGMASK_OFFSET (UCONTEXT_SIGMASK - 4)
+# define __STARTCONTEXT_FUNC_NAME __startcontext_nofpcsr
 
-1:	l.j	__syscall_error
-	 l.ori	r3, r11, 0
+# include "setcontext-common.S"
 
-END (__setcontext)
-weak_alias (__setcontext, setcontext)
+compat_symbol (libc, __setcontext_nofpcsr, setcontext, GLIBC_2_35)
 
-	/* We add a NOP here because when the unwinder is looking for the
-	   enclosing function of the link register (r9) address FDE lookup will
-	   use '$r9 - 1' finding setcontext which is wrong.  This is because in
-	   makecontext we have set r9 to the start of &__startcontext.
-
-	   If this NOP did not exist the unwinder would repeatedly find
-	   __setcontext's FDE in an infinite loop.  Modifying/deleting the below
-	   __startcontext's FDE has no help on this.  */
-	l.nop
-
-ENTRY(__startcontext)
-
-	l.ori	r3, r14, 0
-	l.sfeq	r3, r0
-	/* If uc_link is not 0 resume there, otherwise exit.  */
-	l.bnf	__setcontext
-	 l.nop
-
-#ifdef SHARED
-	/* Obtain a pointer to .got in r16 */
-	l.jal	0x8
-	 l.movhi r16, gotpchi(_GLOBAL_OFFSET_TABLE_-4)
-	l.ori	r16, r16, gotpclo(_GLOBAL_OFFSET_TABLE_+0)
-	l.add	r16, r16, r9
-	l.lwz	r16, got(exit)(r16)
-	l.jr	r16
-#else
-	l.j	exit
 #endif
-	 l.nop
-
-END(__startcontext)

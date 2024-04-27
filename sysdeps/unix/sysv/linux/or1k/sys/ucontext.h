@@ -38,6 +38,7 @@ typedef struct
     unsigned long int __gprs[__NGREG];
     unsigned long int __pc;
     unsigned long int __sr;
+    unsigned long int __fpcsr;
   } mcontext_t;
 
 /* Userlevel context.  */
