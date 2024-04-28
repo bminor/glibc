@@ -737,7 +737,7 @@ endif
 INSTALL: manual/install-plain.texi manual/macros.texi \
 	 $(common-objpfx)manual/pkgvers.texi manual/install.texi
 	makeinfo --no-validate --plaintext --no-number-sections \
-		 -I$(common-objpfx)manual $< -o $@-tmp
+		 --disable-encoding -I$(common-objpfx)manual $< -o $@-tmp
 	$(AWK) 'NF == 0 { ++n; next } \
 		NF != 0 { while (n-- > 0) print ""; n = 0; print }' \
 	  < $@-tmp > $@-tmp2
