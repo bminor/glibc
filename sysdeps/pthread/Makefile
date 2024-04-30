@@ -282,6 +282,10 @@ tests += \
   tst-vfork2x \
   # tests
 
+tests-2.0 += \
+  tst-pthread_kill-exited
+  # tests-2.0
+
 tests-time64 += \
   tst-abstime-time64 \
   tst-cnd-timedwait-time64 \

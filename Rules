@@ -188,6 +188,7 @@ binaries-all = $(binaries-all-notests) $(binaries-all-tests)
 binaries-static-notests = $(others-static)
 binaries-static-tests = $(tests-static) $(xtests-static)
 binaries-static = $(binaries-static-notests) $(binaries-static-tests)
+binaries-shared-2.0-tests = $(tests-2.0)
 ifeq (yesyes,$(have-fpie)$(build-shared))
 binaries-pie-tests = $(tests-pie) $(xtests-pie)
 binaries-pie-notests = $(others-pie)
@@ -215,7 +216,8 @@ binaries-malloc-hugetlb2-tests =
 endif
 
 binaries-pie = $(binaries-pie-tests) $(binaries-pie-notests)
-binaries-shared-tests = $(filter-out $(binaries-pie) $(binaries-static), \
+binaries-shared-tests = $(filter-out $(binaries-pie) $(binaries-static) \
+				     $(binaries-shared-2.0-tests), \
 				     $(binaries-all-tests))
 binaries-shared-notests = $(filter-out $(binaries-pie) $(binaries-static), \
 				       $(binaries-all-notests))
@@ -233,6 +235,15 @@ $(addprefix $(objpfx),$(binaries-shared-tests)): %: %.o \
   $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
 	$(+link-tests)
+endif
+
+# Linking test programs with crt1.o from glibc 2.0.
+ifneq "$(strip $(binaries-shared-2.0-tests))" ""
+$(addprefix $(objpfx),$(binaries-shared-2.0-tests)): %: %.o \
+  $(link-extra-libs-tests) \
+  $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
+  $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
+	$(+link-2.0-tests)
 endif
 
 ifneq "$(strip $(binaries-mcheck-tests))" ""

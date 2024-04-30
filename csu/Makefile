@@ -33,7 +33,7 @@ elide-routines.os = libc-tls
 csu-dummies = $(filter-out $(start-installed-name),crt1.o Mcrt1.o)
 extra-objs = start.o \
 	     $(start-installed-name) g$(start-installed-name) $(csu-dummies) \
-	     S$(start-installed-name)
+	     S$(start-installed-name) $(start-name-2.0)
 omit-deps = $(patsubst %.o,%,$(start-installed-name) g$(start-installed-name) \
 			     b$(start-installed-name) $(csu-dummies) \
 			     S$(start-installed-name) \
@@ -137,6 +137,9 @@ ifndef start-installed-name-rule
 # the kernel ABI the binaries linked with this library will require.
 $(objpfx)$(start-installed-name): $(objpfx)start.o $(objpfx)abi-note.o \
 				  $(objpfx)init.o $(objpfx)static-reloc.o
+	$(link-relocatable)
+$(objpfx)$(start-name-2.0): $(objpfx)start.o $(objpfx)abi-note.o \
+			    $(objpfx)static-reloc.o
 	$(link-relocatable)
 $(objpfx)r$(start-installed-name): $(objpfx)start.o $(objpfx)abi-note.o \
 				  $(objpfx)init.o

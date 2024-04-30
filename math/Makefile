@@ -261,6 +261,9 @@ tests-static = test-fpucw-static test-fpucw-ieee-static \
 # The tested symbols matherr, _LIB_VERSION have been removed in glibc 2.27.
 ifeq ($(have-GLIBC_2.26)$(build-shared),yesyes)
 tests += test-matherr test-matherr-2
+tests-2.0 += \
+  test-matherr-2 \
+  # tests-2.0
 endif
 
 # These tests use internal (unexported) GMP functions and are linked
