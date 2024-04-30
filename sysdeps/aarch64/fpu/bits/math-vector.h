@@ -57,6 +57,10 @@
 # define __DECL_SIMD_atan2 __DECL_SIMD_aarch64
 # undef __DECL_SIMD_atan2f
 # define __DECL_SIMD_atan2f __DECL_SIMD_aarch64
+# undef __DECL_SIMD_cbrt
+# define __DECL_SIMD_cbrt __DECL_SIMD_aarch64
+# undef __DECL_SIMD_cbrtf
+# define __DECL_SIMD_cbrtf __DECL_SIMD_aarch64
 # undef __DECL_SIMD_cos
 # define __DECL_SIMD_cos __DECL_SIMD_aarch64
 # undef __DECL_SIMD_cosf
@@ -158,6 +162,7 @@ __vpcs __f32x4_t _ZGVnN4v_asinf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_asinhf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_atanf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_atanhf (__f32x4_t);
+__vpcs __f32x4_t _ZGVnN4v_cbrtf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_cosf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_coshf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_erff (__f32x4_t);
@@ -183,6 +188,7 @@ __vpcs __f64x2_t _ZGVnN2v_asin (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_asinh (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_atan (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_atanh (__f64x2_t);
+__vpcs __f64x2_t _ZGVnN2v_cbrt (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_cos (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_cosh (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_erf (__f64x2_t);
@@ -213,6 +219,7 @@ __sv_f32_t _ZGVsMxv_asinf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_asinhf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_atanf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_atanhf (__sv_f32_t, __sv_bool_t);
+__sv_f32_t _ZGVsMxv_cbrtf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_cosf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_coshf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_erff (__sv_f32_t, __sv_bool_t);
@@ -238,6 +245,7 @@ __sv_f64_t _ZGVsMxv_asin (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_asinh (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_atan (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_atanh (__sv_f64_t, __sv_bool_t);
+__sv_f64_t _ZGVsMxv_cbrt (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_cos (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_cosh (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_erf (__sv_f64_t, __sv_bool_t);

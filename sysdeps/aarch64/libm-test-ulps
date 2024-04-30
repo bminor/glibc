@@ -477,10 +477,18 @@ double: 4
 float: 1
 ldouble: 1
 
+Function: "cbrt_advsimd":
+double: 1
+float: 1
+
 Function: "cbrt_downward":
 double: 4
 float: 1
 ldouble: 1
+
+Function: "cbrt_sve":
+double: 1
+float: 1
 
 Function: "cbrt_towardzero":
 double: 3
