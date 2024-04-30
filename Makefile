@@ -577,6 +577,13 @@ $(objpfx)lint-makefiles.out: scripts/lint-makefiles.sh
 	$(SHELL) $< "$(PYTHON)" `pwd` > $@ ; \
 	$(evaluate-test)
 
+# Link libc.a as a whole to verify that it does not contain multiple
+# definitions of any symbols.
+tests-special += $(objpfx)link-static-libc.out
+$(objpfx)link-static-libc.out:
+	$(LINK.o) $(whole-archive) -r $(objpfx)libc.a -o /dev/null > $@ 2>&1; \
+	$(evaluate-test)
+
 # Print test summary for tests in $1 .sum file;
 # $2 is optional test identifier.
 # Fail if there are unexpected failures in the test results.
