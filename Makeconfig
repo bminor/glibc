@@ -360,6 +360,8 @@ whole-archive = -Wl,--whole-archive
 # Installed name of the startup code.
 # The ELF convention is that the startfile is called crt1.o
 start-installed-name = crt1.o
+# Similar to crt1.o, but without _IO_stdin_used.
+start-name-2.0 = crt1-2.0.o
 # On systems that do not need a special startfile for statically linked
 # binaries, simply set it to the normal name.
 ifndef static-start-installed-name
@@ -536,6 +538,25 @@ else  # build-static
 +link-printers-tests = $(+link-static-tests)
 endif  # build-shared
 endif  # +link
+
+# Command for linking test programs with crt1.o from glibc 2.0.
++link-2.0-before-inputs = -nostdlib -nostartfiles $(no-pie-ldflag) \
+	      $(sysdep-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F)) \
+	      $(relro-LDFLAGS) $(hashstyle-LDFLAGS) \
+	      $(firstword $(CRT-$(@F)) $(csu-objpfx)$(start-name-2.0)) \
+	      $(+preinit) $(+prector)
++link-2.0-before-libc = -o $@ $(+link-2.0-before-inputs) \
+	      $(filter-out $(addprefix $(csu-objpfx),start.o \
+						     $(start-name-2.0))\
+			   $(+preinit) $(link-extra-libs) \
+			   $(common-objpfx)libc% $(+postinit),$^) \
+	      $(link-extra-libs)
++link-after-libc = $(+postctor) $(+postinit)
+define +link-2.0-tests
+$(CC) $(+link-2.0-before-libc) $(rtld-tests-LDFLAGS) $(link-libc-tests) \
+  $(+link-after-libc)
+$(call after-link,$@)
+endef
 
 # The pretty printer test programs need to be compiled without optimizations
 # so they won't confuse gdb.  We could use either the 'GCC optimize' pragma
