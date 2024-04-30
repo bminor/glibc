@@ -68,22 +68,76 @@ routines_no_fortify += \
   wprintf \
   # routines_no_fortify
 
-tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf tst_getwc tst_putwc   \
-	tst_wprintf2 tst-widetext test-fmemopen tst-ext tst-ext2 \
-	tst-fgetws tst-ungetwc1 tst-ungetwc2 tst-swscanf tst-sscanf	      \
-	tst-mmap-setvbuf bug-ungetwc1 bug-ungetwc2 tst-atime tst-eof          \
-	tst-freopen bug-rewind bug-rewind2 bug-ungetc bug-fseek \
-	tst-mmap-eofsync tst-mmap-fflushsync bug-mmap-fflush \
-	tst-mmap2-eofsync tst-mmap-offend bug-fopena+ bug-wfflush \
-	bug-ungetc2 bug-ftell bug-ungetc3 bug-ungetc4 tst-fopenloc2 \
-	tst-memstream1 tst-memstream2 tst-memstream3 tst-memstream4 \
-	tst-wmemstream1 tst-wmemstream2 tst-wmemstream3 tst-wmemstream4 \
-	tst-wmemstream5 bug-memstream1 bug-wmemstream1 \
-	tst-setvbuf1 tst-popen1 tst-fgetwc bug-wsetpos tst-fseek \
-	tst-fwrite-error tst-ftell-partial-wide tst-ftell-active-handler \
-	tst-ftell-append tst-fputws tst-bz22415 tst-fgetc-after-eof \
-	tst-sprintf-ub tst-sprintf-chk-ub tst-bz24051 tst-bz24153 \
-	tst-wfile-sync tst-bz28828 tst-getdelim
+tests = \
+  bug-fopena+ \
+  bug-fseek \
+  bug-ftell \
+  bug-memstream1 \
+  bug-mmap-fflush \
+  bug-rewind \
+  bug-rewind2 \
+  bug-ungetc \
+  bug-ungetc2 \
+  bug-ungetc3 \
+  bug-ungetc4 \
+  bug-ungetwc1 \
+  bug-ungetwc2 \
+  bug-wfflush \
+  bug-wmemstream1 \
+  bug-wsetpos \
+  test-fmemopen \
+  tst-atime \
+  tst-bz22415 \
+  tst-bz24051 \
+  tst-bz24153 \
+  tst-bz28828 \
+  tst-eof \
+  tst-ext \
+  tst-ext2 \
+  tst-fgetc-after-eof \
+  tst-fgetwc \
+  tst-fgetws \
+  tst-fopenloc2 \
+  tst-fputws \
+  tst-freopen \
+  tst-fseek \
+  tst-ftell-active-handler \
+  tst-ftell-append \
+  tst-ftell-partial-wide \
+  tst-fwrite-error \
+  tst-getdelim \
+  tst-memstream1 \
+  tst-memstream2 \
+  tst-memstream3 \
+  tst-memstream4 \
+  tst-mmap-eofsync \
+  tst-mmap-fflushsync \
+  tst-mmap-offend \
+  tst-mmap-setvbuf \
+  tst-mmap2-eofsync \
+  tst-popen1 \
+  tst-setvbuf1 \
+  tst-sprintf-chk-ub \
+  tst-sprintf-ub \
+  tst-sscanf \
+  tst-swscanf \
+  tst-ungetwc1 \
+  tst-ungetwc2 \
+  tst-wfile-sync \
+  tst-widetext \
+  tst-wmemstream1 \
+  tst-wmemstream2 \
+  tst-wmemstream3 \
+  tst-wmemstream4 \
+  tst-wmemstream5 \
+  tst_getwc \
+  tst_putwc \
+  tst_swprintf \
+  tst_swscanf \
+  tst_wprintf \
+  tst_wprintf2 \
+  tst_wscanf \
+  # tests
 
 tests-internal = tst-vtables tst-vtables-interposed
 
@@ -235,16 +289,26 @@ tests-special += $(objpfx)tst-fopenloc-cmp.out $(objpfx)tst-fopenloc-mem.out \
 		 $(objpfx)tst-bz24228-mem.out
 endif
 
-tests += tst-cleanup-default tst-cleanup-default-static
+tests += \
+  tst-cleanup-default \
+  tst-cleanup-default-static \
+  # tests
 tests-static += tst-cleanup-default-static
 tests-special += $(objpfx)tst-cleanup-default-cmp.out $(objpfx)tst-cleanup-default-static-cmp.out
 LDFLAGS-tst-cleanup-default = -Wl,--gc-sections
 LDFLAGS-tst-cleanup-default-static = -Wl,--gc-sections
 
 ifeq ($(have-gnu-retain)$(have-z-start-stop-gc),yesyes)
-tests += tst-cleanup-start-stop-gc tst-cleanup-start-stop-gc-static \
-		tst-cleanup-nostart-stop-gc tst-cleanup-nostart-stop-gc-static
-tests-static += tst-cleanup-start-stop-gc-static tst-cleanup-nostart-stop-gc-static
+tests += \
+  tst-cleanup-nostart-stop-gc \
+  tst-cleanup-nostart-stop-gc-static \
+  tst-cleanup-start-stop-gc \
+  tst-cleanup-start-stop-gc-static \
+  # tests
+tests-static += \
+  tst-cleanup-nostart-stop-gc-static \
+  tst-cleanup-start-stop-gc-static \
+  # tests-static
 tests-special += $(objpfx)tst-cleanup-start-stop-gc-cmp.out \
 		$(objpfx)tst-cleanup-start-stop-gc-static-cmp.out \
 		$(objpfx)tst-cleanup-nostart-stop-gc-cmp.out \
