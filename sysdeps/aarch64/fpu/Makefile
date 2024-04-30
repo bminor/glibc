@@ -13,6 +13,7 @@ libmvec-supported-funcs = acos \
                           exp10 \
                           exp2 \
                           expm1 \
+                          hypot \
                           log \
                           log10 \
                           log1p \

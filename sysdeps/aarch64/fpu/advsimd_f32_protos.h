@@ -31,6 +31,7 @@ libmvec_hidden_proto (V_NAME_F1(exp10));
 libmvec_hidden_proto (V_NAME_F1(exp2));
 libmvec_hidden_proto (V_NAME_F1(exp));
 libmvec_hidden_proto (V_NAME_F1(expm1));
+libmvec_hidden_proto (V_NAME_F2(hypot));
 libmvec_hidden_proto (V_NAME_F1(log10));
 libmvec_hidden_proto (V_NAME_F1(log1p));
 libmvec_hidden_proto (V_NAME_F1(log2));

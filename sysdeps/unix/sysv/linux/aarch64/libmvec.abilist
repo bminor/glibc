@@ -89,6 +89,8 @@ GLIBC_2.40 _ZGVnN2v_sinh F
 GLIBC_2.40 _ZGVnN2v_sinhf F
 GLIBC_2.40 _ZGVnN2v_tanh F
 GLIBC_2.40 _ZGVnN2v_tanhf F
+GLIBC_2.40 _ZGVnN2vv_hypot F
+GLIBC_2.40 _ZGVnN2vv_hypotf F
 GLIBC_2.40 _ZGVnN4v_acoshf F
 GLIBC_2.40 _ZGVnN4v_asinhf F
 GLIBC_2.40 _ZGVnN4v_atanhf F
@@ -97,6 +99,7 @@ GLIBC_2.40 _ZGVnN4v_erfcf F
 GLIBC_2.40 _ZGVnN4v_erff F
 GLIBC_2.40 _ZGVnN4v_sinhf F
 GLIBC_2.40 _ZGVnN4v_tanhf F
+GLIBC_2.40 _ZGVnN4vv_hypotf F
 GLIBC_2.40 _ZGVsMxv_acosh F
 GLIBC_2.40 _ZGVsMxv_acoshf F
 GLIBC_2.40 _ZGVsMxv_asinh F
@@ -113,3 +116,5 @@ GLIBC_2.40 _ZGVsMxv_sinh F
 GLIBC_2.40 _ZGVsMxv_sinhf F
 GLIBC_2.40 _ZGVsMxv_tanh F
 GLIBC_2.40 _ZGVsMxv_tanhf F
+GLIBC_2.40 _ZGVsMxvv_hypot F
+GLIBC_2.40 _ZGVsMxvv_hypotf F

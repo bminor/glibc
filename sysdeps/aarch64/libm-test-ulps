@@ -1174,9 +1174,17 @@ double: 1
 float: 1
 ldouble: 1
 
+Function: "hypot_advsimd":
+double: 1
+float: 1
+
 Function: "hypot_downward":
 double: 1
 ldouble: 1
+
+Function: "hypot_sve":
+double: 1
+float: 1
 
 Function: "hypot_towardzero":
 double: 1
