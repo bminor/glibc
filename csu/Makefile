@@ -42,6 +42,7 @@ csu-dummies = $(filter-out $(start-installed-name),crt1.o Mcrt1.o)
 extra-objs = \
   $(csu-dummies) \
   $(start-installed-name) \
+  $(start-name-2.0) \
   S$(start-installed-name) \
   g$(start-installed-name) \
   start.o \
@@ -181,6 +182,9 @@ ifndef start-installed-name-rule
 # the kernel ABI the binaries linked with this library will require.
 $(objpfx)$(start-installed-name): $(objpfx)start.o $(objpfx)abi-note.o \
 				  $(objpfx)init.o $(objpfx)static-reloc.o
+	$(link-relocatable)
+$(objpfx)$(start-name-2.0): $(objpfx)start.o $(objpfx)abi-note.o \
+			    $(objpfx)static-reloc.o
 	$(link-relocatable)
 $(objpfx)r$(start-installed-name): $(objpfx)start.o $(objpfx)abi-note.o \
 				  $(objpfx)init.o

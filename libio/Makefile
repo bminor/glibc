@@ -266,6 +266,12 @@ aux	:= fileops genops stdfiles stdio strops
 ifeq ($(build-shared),yes)
 generated += tst-bz24228.mtrace tst-bz24228.check
 aux	+= oldfileops oldstdfiles
+tests += \
+  tst-stderr-compat \
+# tests
+tests-2.0 += \
+  tst-stderr-compat \
+# tests-2.0
 endif
 
 shared-only-routines = oldiofopen oldiofdopen oldiofclose oldfileops	\

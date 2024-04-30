@@ -566,6 +566,9 @@ tests += \
   test-matherr \
   test-matherr-2 \
   # tests
+tests-2.0 += \
+  test-matherr-2 \
+  # tests-2.0
 endif
 
 # These tests use internal (unexported) GMP functions and are linked
