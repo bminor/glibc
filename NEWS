@@ -177,6 +177,25 @@ found in the advisories directory of the release tarball:
   GLIBC-SA-2024-0003:
     syslog: Integer overflow in __vsyslog_internal (CVE-2023-6780)
 
+  GLIBC-SA-2024-0004:
+    ISO-2022-CN-EXT: fix out-of-bound writes when writing escape
+    sequence (CVE-2024-2961)
+
+  GLIBC-SA-2024-0005:
+    nscd: Stack-based buffer overflow in netgroup cache (CVE-2024-33599)
+
+  GLIBC-SA-2024-0006:
+    nscd: Null pointer crashes after notfound response
+    (CVE-2024-33600)
+
+  GLIBC-SA-2024-0007:
+    nscd: netgroup cache may terminate daemon on memory allocation
+    failure (CVE-2024-33601)
+
+  GLIBC-SA-2024-0008:
+    nscd: netgroup cache assumes NSS callback uses in-buffer strings
+    (CVE-2024-33602)
+
 The following bugs are resolved with this release:
 
   [14522] localedata: fy_DE: LC_IDENTIFICATION data looks weird
