@@ -26,7 +26,7 @@ static const struct data
   float64x2_t max, shift;
   float64x2_t p20, p40, p41, p42;
   float64x2_t p51, p52;
-  float64x2_t qr5, qr6, qr7, qr8, qr9;
+  double qr5[2], qr6[2], qr7[2], qr8[2], qr9[2];
 #if WANT_SIMD_EXCEPT
   float64x2_t uflow_bound;
 #endif
@@ -68,8 +68,10 @@ static inline struct entry
 lookup (uint64x2_t i)
 {
   struct entry e;
-  float64x2_t e1 = vld1q_f64 ((float64_t *) (__erfc_data.tab - Off + i[0])),
-	      e2 = vld1q_f64 ((float64_t *) (__erfc_data.tab - Off + i[1]));
+  float64x2_t e1
+      = vld1q_f64 (&__erfc_data.tab[vgetq_lane_u64 (i, 0) - Off].erfc);
+  float64x2_t e2
+      = vld1q_f64 (&__erfc_data.tab[vgetq_lane_u64 (i, 1) - Off].erfc);
   e.erfc = vuzp1q_f64 (e1, e2);
   e.scale = vuzp2q_f64 (e1, e2);
   return e;
@@ -161,16 +163,19 @@ float64x2_t V_NAME_D1 (erfc) (float64x2_t x)
   p5 = vmulq_f64 (r, vfmaq_f64 (vmulq_f64 (v_f64 (0.5), dat->p20), r2, p5));
   /* Compute p_i using recurrence relation:
      p_{i+2} = (p_i + r * Q_{i+1} * p_{i+1}) * R_{i+1}.  */
-  float64x2_t p6 = vfmaq_f64 (p4, p5, vmulq_laneq_f64 (r, dat->qr5, 0));
-  p6 = vmulq_laneq_f64 (p6, dat->qr5, 1);
-  float64x2_t p7 = vfmaq_f64 (p5, p6, vmulq_laneq_f64 (r, dat->qr6, 0));
-  p7 = vmulq_laneq_f64 (p7, dat->qr6, 1);
-  float64x2_t p8 = vfmaq_f64 (p6, p7, vmulq_laneq_f64 (r, dat->qr7, 0));
-  p8 = vmulq_laneq_f64 (p8, dat->qr7, 1);
-  float64x2_t p9 = vfmaq_f64 (p7, p8, vmulq_laneq_f64 (r, dat->qr8, 0));
-  p9 = vmulq_laneq_f64 (p9, dat->qr8, 1);
-  float64x2_t p10 = vfmaq_f64 (p8, p9, vmulq_laneq_f64 (r, dat->qr9, 0));
-  p10 = vmulq_laneq_f64 (p10, dat->qr9, 1);
+  float64x2_t qr5 = vld1q_f64 (dat->qr5), qr6 = vld1q_f64 (dat->qr6),
+	      qr7 = vld1q_f64 (dat->qr7), qr8 = vld1q_f64 (dat->qr8),
+	      qr9 = vld1q_f64 (dat->qr9);
+  float64x2_t p6 = vfmaq_f64 (p4, p5, vmulq_laneq_f64 (r, qr5, 0));
+  p6 = vmulq_laneq_f64 (p6, qr5, 1);
+  float64x2_t p7 = vfmaq_f64 (p5, p6, vmulq_laneq_f64 (r, qr6, 0));
+  p7 = vmulq_laneq_f64 (p7, qr6, 1);
+  float64x2_t p8 = vfmaq_f64 (p6, p7, vmulq_laneq_f64 (r, qr7, 0));
+  p8 = vmulq_laneq_f64 (p8, qr7, 1);
+  float64x2_t p9 = vfmaq_f64 (p7, p8, vmulq_laneq_f64 (r, qr8, 0));
+  p9 = vmulq_laneq_f64 (p9, qr8, 1);
+  float64x2_t p10 = vfmaq_f64 (p8, p9, vmulq_laneq_f64 (r, qr9, 0));
+  p10 = vmulq_laneq_f64 (p10, qr9, 1);
   /* Compute polynomial in d using pairwise Horner scheme.  */
   float64x2_t p90 = vfmaq_f64 (p9, d, p10);
   float64x2_t p78 = vfmaq_f64 (p7, d, p8);

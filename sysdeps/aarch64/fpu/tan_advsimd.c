@@ -23,7 +23,8 @@
 static const struct data
 {
   float64x2_t poly[9];
-  float64x2_t half_pi, two_over_pi, shift;
+  double half_pi[2];
+  float64x2_t two_over_pi, shift;
 #if !WANT_SIMD_EXCEPT
   float64x2_t range_val;
 #endif
@@ -81,8 +82,9 @@ float64x2_t VPCS_ATTR V_NAME_D1 (tan) (float64x2_t x)
   /* Use q to reduce x to r in [-pi/4, pi/4], by:
      r = x - q * pi/2, in extended precision.  */
   float64x2_t r = x;
-  r = vfmsq_laneq_f64 (r, q, dat->half_pi, 0);
-  r = vfmsq_laneq_f64 (r, q, dat->half_pi, 1);
+  float64x2_t half_pi = vld1q_f64 (dat->half_pi);
+  r = vfmsq_laneq_f64 (r, q, half_pi, 0);
+  r = vfmsq_laneq_f64 (r, q, half_pi, 1);
   /* Further reduce r to [-pi/8, pi/8], to be reconstructed using double angle
      formula.  */
   r = vmulq_n_f64 (r, 0.5);

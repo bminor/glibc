@@ -25,7 +25,8 @@
 struct v_expf_data
 {
   float32x4_t poly[5];
-  float32x4_t shift, invln2_and_ln2;
+  float32x4_t shift;
+  float invln2_and_ln2[4];
 };
 
 /* maxerr: 1.45358 +0.5 ulp.  */
@@ -50,10 +51,11 @@ v_expf_inline (float32x4_t x, const struct v_expf_data *d)
   /* exp(x) = 2^n (1 + poly(r)), with 1 + poly(r) in [1/sqrt(2),sqrt(2)]
      x = ln2*n + r, with r in [-ln2/2, ln2/2].  */
   float32x4_t n, r, z;
-  z = vfmaq_laneq_f32 (d->shift, x, d->invln2_and_ln2, 0);
+  float32x4_t invln2_and_ln2 = vld1q_f32 (d->invln2_and_ln2);
+  z = vfmaq_laneq_f32 (d->shift, x, invln2_and_ln2, 0);
   n = vsubq_f32 (z, d->shift);
-  r = vfmsq_laneq_f32 (x, n, d->invln2_and_ln2, 1);
-  r = vfmsq_laneq_f32 (r, n, d->invln2_and_ln2, 2);
+  r = vfmsq_laneq_f32 (x, n, invln2_and_ln2, 1);
+  r = vfmsq_laneq_f32 (r, n, invln2_and_ln2, 2);
   uint32x4_t e = vshlq_n_u32 (vreinterpretq_u32_f32 (z), 23);
   float32x4_t scale = vreinterpretq_f32_u32 (vaddq_u32 (e, ExponentBias));
 

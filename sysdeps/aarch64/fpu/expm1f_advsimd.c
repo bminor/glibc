@@ -23,7 +23,7 @@
 static const struct data
 {
   float32x4_t poly[5];
-  float32x4_t invln2_and_ln2;
+  float invln2_and_ln2[4];
   float32x4_t shift;
   int32x4_t exponent_bias;
 #if WANT_SIMD_EXCEPT
@@ -88,11 +88,12 @@ float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (expm1) (float32x4_t x)
      and f = x - i * ln2, then f is in [-ln2/2, ln2/2].
      exp(x) - 1 = 2^i * (expm1(f) + 1) - 1
      where 2^i is exact because i is an integer.  */
-  float32x4_t j = vsubq_f32 (
-      vfmaq_laneq_f32 (d->shift, x, d->invln2_and_ln2, 0), d->shift);
+  float32x4_t invln2_and_ln2 = vld1q_f32 (d->invln2_and_ln2);
+  float32x4_t j
+      = vsubq_f32 (vfmaq_laneq_f32 (d->shift, x, invln2_and_ln2, 0), d->shift);
   int32x4_t i = vcvtq_s32_f32 (j);
-  float32x4_t f = vfmsq_laneq_f32 (x, j, d->invln2_and_ln2, 1);
-  f = vfmsq_laneq_f32 (f, j, d->invln2_and_ln2, 2);
+  float32x4_t f = vfmsq_laneq_f32 (x, j, invln2_and_ln2, 1);
+  f = vfmsq_laneq_f32 (f, j, invln2_and_ln2, 2);
 
   /* Approximate expm1(f) using polynomial.
      Taylor expansion for expm1(x) has the form:

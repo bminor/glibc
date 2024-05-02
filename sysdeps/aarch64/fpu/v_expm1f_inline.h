@@ -26,7 +26,8 @@
 struct v_expm1f_data
 {
   float32x4_t poly[5];
-  float32x4_t invln2_and_ln2, shift;
+  float invln2_and_ln2[4];
+  float32x4_t shift;
   int32x4_t exponent_bias;
 };
 
@@ -49,11 +50,12 @@ expm1f_inline (float32x4_t x, const struct v_expm1f_data *d)
      calling routine should handle special values if required.  */
 
   /* Reduce argument: f in [-ln2/2, ln2/2], i is exact.  */
-  float32x4_t j = vsubq_f32 (
-      vfmaq_laneq_f32 (d->shift, x, d->invln2_and_ln2, 0), d->shift);
+  float32x4_t invln2_and_ln2 = vld1q_f32 (d->invln2_and_ln2);
+  float32x4_t j
+      = vsubq_f32 (vfmaq_laneq_f32 (d->shift, x, invln2_and_ln2, 0), d->shift);
   int32x4_t i = vcvtq_s32_f32 (j);
-  float32x4_t f = vfmsq_laneq_f32 (x, j, d->invln2_and_ln2, 1);
-  f = vfmsq_laneq_f32 (f, j, d->invln2_and_ln2, 2);
+  float32x4_t f = vfmsq_laneq_f32 (x, j, invln2_and_ln2, 1);
+  f = vfmsq_laneq_f32 (f, j, invln2_and_ln2, 2);
 
   /* Approximate expm1(f) with polynomial P, expm1(f) ~= f + f^2 * P(f).
      Uses Estrin scheme, where the main _ZGVnN4v_expm1f routine uses

@@ -23,7 +23,8 @@ static const struct data
 {
   uint32x4_t offset, table_scale;
   float32x4_t max, shift;
-  float32x4_t coeffs, third, two_over_five, tenth;
+  float coeffs[4];
+  float32x4_t third, two_over_five, tenth;
 #if WANT_SIMD_EXCEPT
   float32x4_t uflow_bound;
 #endif
@@ -37,7 +38,7 @@ static const struct data
   .shift = V4 (0x1p17f),
   /* Store 1/3, 2/3 and 2/15 in a single register for use with indexed muls and
      fmas.  */
-  .coeffs = (float32x4_t){ 0x1.555556p-2f, 0x1.555556p-1f, 0x1.111112p-3f, 0 },
+  .coeffs = { 0x1.555556p-2f, 0x1.555556p-1f, 0x1.111112p-3f, 0 },
   .third = V4 (0x1.555556p-2f),
   .two_over_five = V4 (-0x1.99999ap-2f),
   .tenth = V4 (-0x1.99999ap-4f),
@@ -60,12 +61,16 @@ static inline struct entry
 lookup (uint32x4_t i)
 {
   struct entry e;
-  float64_t t0 = *((float64_t *) (__erfcf_data.tab - Off + i[0]));
-  float64_t t1 = *((float64_t *) (__erfcf_data.tab - Off + i[1]));
-  float64_t t2 = *((float64_t *) (__erfcf_data.tab - Off + i[2]));
-  float64_t t3 = *((float64_t *) (__erfcf_data.tab - Off + i[3]));
-  float32x4_t e1 = vreinterpretq_f32_f64 ((float64x2_t){ t0, t1 });
-  float32x4_t e2 = vreinterpretq_f32_f64 ((float64x2_t){ t2, t3 });
+  float32x2_t t0
+      = vld1_f32 (&__erfcf_data.tab[vgetq_lane_u32 (i, 0) - Off].erfc);
+  float32x2_t t1
+      = vld1_f32 (&__erfcf_data.tab[vgetq_lane_u32 (i, 1) - Off].erfc);
+  float32x2_t t2
+      = vld1_f32 (&__erfcf_data.tab[vgetq_lane_u32 (i, 2) - Off].erfc);
+  float32x2_t t3
+      = vld1_f32 (&__erfcf_data.tab[vgetq_lane_u32 (i, 3) - Off].erfc);
+  float32x4_t e1 = vcombine_f32 (t0, t1);
+  float32x4_t e2 = vcombine_f32 (t2, t3);
   e.erfc = vuzp1q_f32 (e1, e2);
   e.scale = vuzp2q_f32 (e1, e2);
   return e;
@@ -140,10 +145,11 @@ float32x4_t NOINLINE V_NAME_F1 (erfc) (float32x4_t x)
   float32x4_t r2 = vmulq_f32 (r, r);
 
   float32x4_t p1 = r;
-  float32x4_t p2 = vfmsq_laneq_f32 (dat->third, r2, dat->coeffs, 1);
+  float32x4_t coeffs = vld1q_f32 (dat->coeffs);
+  float32x4_t p2 = vfmsq_laneq_f32 (dat->third, r2, coeffs, 1);
   float32x4_t p3
-      = vmulq_f32 (r, vfmaq_laneq_f32 (v_f32 (-0.5), r2, dat->coeffs, 0));
-  float32x4_t p4 = vfmaq_laneq_f32 (dat->two_over_five, r2, dat->coeffs, 2);
+      = vmulq_f32 (r, vfmaq_laneq_f32 (v_f32 (-0.5), r2, coeffs, 0));
+  float32x4_t p4 = vfmaq_laneq_f32 (dat->two_over_five, r2, coeffs, 2);
   p4 = vfmsq_f32 (dat->tenth, r2, p4);
 
   float32x4_t y = vfmaq_f32 (p3, d, p4);

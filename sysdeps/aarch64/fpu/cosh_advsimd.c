@@ -22,7 +22,9 @@
 static const struct data
 {
   float64x2_t poly[3];
-  float64x2_t inv_ln2, ln2, shift, thres;
+  float64x2_t inv_ln2;
+  double ln2[2];
+  float64x2_t shift, thres;
   uint64x2_t index_mask, special_bound;
 } data = {
   .poly = { V2 (0x1.fffffffffffd4p-2), V2 (0x1.5555571d6b68cp-3),
@@ -58,8 +60,9 @@ exp_inline (float64x2_t x)
   float64x2_t n = vsubq_f64 (z, d->shift);
 
   /* r = x - n*ln2/N.  */
-  float64x2_t r = vfmaq_laneq_f64 (x, n, d->ln2, 0);
-  r = vfmaq_laneq_f64 (r, n, d->ln2, 1);
+  float64x2_t ln2 = vld1q_f64 (d->ln2);
+  float64x2_t r = vfmaq_laneq_f64 (x, n, ln2, 0);
+  r = vfmaq_laneq_f64 (r, n, ln2, 1);
 
   uint64x2_t e = vshlq_n_u64 (u, 52 - V_EXP_TAIL_TABLE_BITS);
   uint64x2_t i = vandq_u64 (u, d->index_mask);

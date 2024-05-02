@@ -22,8 +22,9 @@
 
 static const struct data
 {
-  float64x2_t poly[11];
-  float64x2_t inv_ln2, m_ln2, shift;
+  float64x2_t poly[11], inv_ln2;
+  double m_ln2[2];
+  float64x2_t shift;
   uint64x2_t halff;
   int64x2_t onef;
 #if WANT_SIMD_EXCEPT
@@ -40,7 +41,7 @@ static const struct data
 	    V2 (0x1.af5eedae67435p-26), V2 (0x1.1f143d060a28ap-29), },
 
   .inv_ln2 = V2 (0x1.71547652b82fep0),
-  .m_ln2 = (float64x2_t) {-0x1.62e42fefa39efp-1, -0x1.abc9e3b39803fp-56},
+  .m_ln2 = {-0x1.62e42fefa39efp-1, -0x1.abc9e3b39803fp-56},
   .shift = V2 (0x1.8p52),
 
   .halff = V2 (0x3fe0000000000000),
@@ -67,8 +68,10 @@ expm1_inline (float64x2_t x)
      and   f = x - i * ln2 (f in [-ln2/2, ln2/2]).  */
   float64x2_t j = vsubq_f64 (vfmaq_f64 (d->shift, d->inv_ln2, x), d->shift);
   int64x2_t i = vcvtq_s64_f64 (j);
-  float64x2_t f = vfmaq_laneq_f64 (x, j, d->m_ln2, 0);
-  f = vfmaq_laneq_f64 (f, j, d->m_ln2, 1);
+
+  float64x2_t m_ln2 = vld1q_f64 (d->m_ln2);
+  float64x2_t f = vfmaq_laneq_f64 (x, j, m_ln2, 0);
+  f = vfmaq_laneq_f64 (f, j, m_ln2, 1);
   /* Approximate expm1(f) using polynomial.  */
   float64x2_t f2 = vmulq_f64 (f, f);
   float64x2_t f4 = vmulq_f64 (f2, f2);
