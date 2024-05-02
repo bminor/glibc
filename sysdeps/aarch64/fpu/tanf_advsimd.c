@@ -23,7 +23,7 @@
 static const struct data
 {
   float32x4_t poly[6];
-  float32x4_t pi_consts;
+  float pi_consts[4];
   float32x4_t shift;
 #if !WANT_SIMD_EXCEPT
   float32x4_t range_val;
@@ -95,16 +95,17 @@ float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (tan) (float32x4_t x)
 #endif
 
   /* n = rint(x/(pi/2)).  */
-  float32x4_t q = vfmaq_laneq_f32 (d->shift, x, d->pi_consts, 3);
+  float32x4_t pi_consts = vld1q_f32 (d->pi_consts);
+  float32x4_t q = vfmaq_laneq_f32 (d->shift, x, pi_consts, 3);
   float32x4_t n = vsubq_f32 (q, d->shift);
   /* Determine if x lives in an interval, where |tan(x)| grows to infinity.  */
   uint32x4_t pred_alt = vtstq_u32 (vreinterpretq_u32_f32 (q), v_u32 (1));
 
   /* r = x - n * (pi/2)  (range reduction into -pi./4 .. pi/4).  */
   float32x4_t r;
-  r = vfmaq_laneq_f32 (x, n, d->pi_consts, 0);
-  r = vfmaq_laneq_f32 (r, n, d->pi_consts, 1);
-  r = vfmaq_laneq_f32 (r, n, d->pi_consts, 2);
+  r = vfmaq_laneq_f32 (x, n, pi_consts, 0);
+  r = vfmaq_laneq_f32 (r, n, pi_consts, 1);
+  r = vfmaq_laneq_f32 (r, n, pi_consts, 2);
 
   /* If x lives in an interval, where |tan(x)|
      - is finite, then use a polynomial approximation of the form

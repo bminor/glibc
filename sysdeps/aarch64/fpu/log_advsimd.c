@@ -54,17 +54,12 @@ lookup (uint64x2_t i)
 {
   /* Since N is a power of 2, n % N = n & (N - 1).  */
   struct entry e;
-  uint64_t i0 = (i[0] >> (52 - V_LOG_TABLE_BITS)) & IndexMask;
-  uint64_t i1 = (i[1] >> (52 - V_LOG_TABLE_BITS)) & IndexMask;
+  uint64_t i0 = (vgetq_lane_u64 (i, 0) >> (52 - V_LOG_TABLE_BITS)) & IndexMask;
+  uint64_t i1 = (vgetq_lane_u64 (i, 1) >> (52 - V_LOG_TABLE_BITS)) & IndexMask;
   float64x2_t e0 = vld1q_f64 (&__v_log_data.table[i0].invc);
   float64x2_t e1 = vld1q_f64 (&__v_log_data.table[i1].invc);
-#if __BYTE_ORDER == __LITTLE_ENDIAN
   e.invc = vuzp1q_f64 (e0, e1);
   e.logc = vuzp2q_f64 (e0, e1);
-#else
-  e.invc = vuzp1q_f64 (e1, e0);
-  e.logc = vuzp2q_f64 (e1, e0);
-#endif
   return e;
 }
 

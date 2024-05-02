@@ -23,7 +23,9 @@
 static const struct data
 {
   float64x2_t poly[11];
-  float64x2_t invln2, ln2, shift;
+  float64x2_t invln2;
+  double ln2[2];
+  float64x2_t shift;
   int64x2_t exponent_bias;
 #if WANT_SIMD_EXCEPT
   uint64x2_t thresh, tiny_bound;
@@ -92,8 +94,9 @@ float64x2_t VPCS_ATTR V_NAME_D1 (expm1) (float64x2_t x)
      where 2^i is exact because i is an integer.  */
   float64x2_t n = vsubq_f64 (vfmaq_f64 (d->shift, d->invln2, x), d->shift);
   int64x2_t i = vcvtq_s64_f64 (n);
-  float64x2_t f = vfmsq_laneq_f64 (x, n, d->ln2, 0);
-  f = vfmsq_laneq_f64 (f, n, d->ln2, 1);
+  float64x2_t ln2 = vld1q_f64 (&d->ln2[0]);
+  float64x2_t f = vfmsq_laneq_f64 (x, n, ln2, 0);
+  f = vfmsq_laneq_f64 (f, n, ln2, 1);
 
   /* Approximate expm1(f) using polynomial.
      Taylor expansion for expm1(x) has the form:

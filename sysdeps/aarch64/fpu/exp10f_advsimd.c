@@ -25,7 +25,8 @@
 static const struct data
 {
   float32x4_t poly[5];
-  float32x4_t log10_2_and_inv, shift;
+  float log10_2_and_inv[4];
+  float32x4_t shift;
 
 #if !WANT_SIMD_EXCEPT
   float32x4_t scale_thresh;
@@ -111,10 +112,11 @@ float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (exp10) (float32x4_t x)
   /* exp10(x) = 2^n * 10^r = 2^n * (1 + poly (r)),
      with poly(r) in [1/sqrt(2), sqrt(2)] and
      x = r + n * log10 (2), with r in [-log10(2)/2, log10(2)/2].  */
-  float32x4_t z = vfmaq_laneq_f32 (d->shift, x, d->log10_2_and_inv, 0);
+  float32x4_t log10_2_and_inv = vld1q_f32 (d->log10_2_and_inv);
+  float32x4_t z = vfmaq_laneq_f32 (d->shift, x, log10_2_and_inv, 0);
   float32x4_t n = vsubq_f32 (z, d->shift);
-  float32x4_t r = vfmsq_laneq_f32 (x, n, d->log10_2_and_inv, 1);
-  r = vfmsq_laneq_f32 (r, n, d->log10_2_and_inv, 2);
+  float32x4_t r = vfmsq_laneq_f32 (x, n, log10_2_and_inv, 1);
+  r = vfmsq_laneq_f32 (r, n, log10_2_and_inv, 2);
   uint32x4_t e = vshlq_n_u32 (vreinterpretq_u32_f32 (z), 23);
 
   float32x4_t scale = vreinterpretq_f32_u32 (vaddq_u32 (e, ExponentBias));
