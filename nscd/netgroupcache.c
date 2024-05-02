@@ -680,8 +680,8 @@ readdinnetgr (struct database_dyn *db, struct hashentry *he,
       .key_len = he->len
     };
 
-  int timeout = addinnetgrX (db, -1, &req, db->data + he->key, he->owner,
-			     he, dh);
+  time_t timeout = addinnetgrX (db, -1, &req, db->data + he->key, he->owner,
+				he, dh);
   if (timeout < 0)
     timeout = 0;
   return timeout;
