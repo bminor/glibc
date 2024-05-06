@@ -119,6 +119,17 @@ do_tunable_update_val (tunable_t *cur, const tunable_val_t *valp,
   cur->initialized = true;
 }
 
+static bool
+tunable_parse_num (const char *strval, size_t len, tunable_num_t *val)
+{
+  char *endptr = NULL;
+  uint64_t numval = _dl_strtoul (strval, &endptr);
+  if (endptr != strval + len)
+    return false;
+  *val = (tunable_num_t) numval;
+  return true;
+}
+
 /* Validate range of the input value and initialize the tunable CUR if it looks
    good.  */
 static bool
@@ -128,11 +139,8 @@ tunable_initialize (tunable_t *cur, const char *strval, size_t len)
 
   if (cur->type.type_code != TUNABLE_TYPE_STRING)
     {
-      char *endptr = NULL;
-      uint64_t numval = _dl_strtoul (strval, &endptr);
-      if (endptr != strval + len)
+      if (!tunable_parse_num (strval, len, &val.numval))
 	return false;
-      val.numval = (tunable_num_t) numval;
     }
   else
     val.strval = (struct tunable_str_t) { strval, len };
@@ -223,23 +231,22 @@ parse_tunables_string (const char *valstring, struct tunable_toset_t *tunables)
 	  if (tunable_is_name (cur->name, name))
 	    {
 	      tunables[i] = (struct tunable_toset_t) { cur, value, p - value };
-
-	      /* Ignore tunables if enable_secure is set */
-	      if (tunable_is_name ("glibc.rtld.enable_secure", name))
-		{
-                  tunable_num_t val = (tunable_num_t) _dl_strtoul (value, NULL);
-		  if (val == 1)
-		    {
-		      __libc_enable_secure = 1;
-		      return 0;
-		    }
-		}
 	      break;
 	    }
 	}
     }
 
   return ntunables;
+}
+
+static void
+parse_tunable_print_error (const struct tunable_toset_t *toset)
+{
+  _dl_error_printf ("WARNING: ld.so: invalid GLIBC_TUNABLES value `%.*s' "
+		    "for option `%s': ignored.\n",
+		    (int) toset->len,
+		    toset->value,
+		    toset->t->name);
 }
 
 static void
@@ -253,6 +260,21 @@ parse_tunables (const char *valstring)
       return;
     }
 
+  /* Ignore tunables if enable_secure is set */
+  struct tunable_toset_t *tsec =
+    &tunables[TUNABLE_ENUM_NAME(glibc, rtld, enable_secure)];
+  if (tsec->t != NULL)
+    {
+      tunable_num_t val;
+      if (!tunable_parse_num (tsec->value, tsec->len, &val))
+        parse_tunable_print_error (tsec);
+      else if (val == 1)
+	{
+	  __libc_enable_secure = 1;
+	  return;
+	}
+    }
+
   for (int i = 0; i < tunables_list_size; i++)
     {
       if (tunables[i].t == NULL)
@@ -260,11 +282,7 @@ parse_tunables (const char *valstring)
 
       if (!tunable_initialize (tunables[i].t, tunables[i].value,
 			       tunables[i].len))
-	_dl_error_printf ("WARNING: ld.so: invalid GLIBC_TUNABLES value `%.*s' "
-			  "for option `%s': ignored.\n",
-			  (int) tunables[i].len,
-			  tunables[i].value,
-			  tunables[i].t->name);
+	parse_tunable_print_error (&tunables[i]);
     }
 }
 
