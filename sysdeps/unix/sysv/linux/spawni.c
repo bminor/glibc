@@ -449,13 +449,22 @@ __spawnix (int *pid, const char *file,
 	 caller to actually collect it.  */
       ec = args.err;
       if (ec > 0)
-	/* There still an unlikely case where the child is cancelled after
-	   setting args.err, due to a positive error value.  Also there is
-	   possible pid reuse race (where the kernel allocated the same pid
-	   to an unrelated process).  Unfortunately due synchronization
-	   issues where the kernel might not have the process collected
-	   the waitpid below can not use WNOHANG.  */
-	__waitpid (new_pid, NULL, 0);
+	{
+	  /* There still an unlikely case where the child is cancelled after
+	     setting args.err, due to a positive error value.  Also there is
+	     possible pid reuse race (where the kernel allocated the same pid
+	     to an unrelated process).  Unfortunately due synchronization
+	     issues where the kernel might not have the process collected
+	     the waitpid below can not use WNOHANG.  */
+	  __waitid (use_pidfd ? P_PIDFD : P_PID,
+		    use_pidfd ? args.pidfd : new_pid,
+		    NULL,
+		    WEXITED);
+	  /* For pidfd we need to also close the file descriptor for the case
+	     where execve fails.  */
+	  if (use_pidfd)
+	    __close_nocancel_nostatus (args.pidfd);
+	}
     }
   else
     ec = errno;

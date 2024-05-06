@@ -26,6 +26,7 @@
 #include <stdio.h>
 
 #include <support/check.h>
+#include <support/descriptors.h>
 #include <tst-spawn.h>
 
 int
@@ -38,38 +39,53 @@ do_test (void)
   char * const args[] = { 0 };
   PID_T_TYPE pid = -1;
 
-  int ret = POSIX_SPAWN (&pid, program, 0, 0, args, environ);
-  if (ret != ENOENT)
-    {
-      errno = ret;
-      FAIL_EXIT1 ("posix_spawn: %m");
-    }
+  {
+    struct support_descriptors *descrs = support_descriptors_list ();
 
-  /* POSIX states the value returned on pid variable in case of an error
-     is not specified.  GLIBC will update the value iff the child
-     execution is successful.  */
-  if (pid != -1)
-    FAIL_EXIT1 ("posix_spawn returned pid != -1 (%i)", (int) pid);
+    int ret = POSIX_SPAWN (&pid, program, 0, 0, args, environ);
+    if (ret != ENOENT)
+      {
+	errno = ret;
+	FAIL_EXIT1 ("posix_spawn: %m");
+      }
 
-  /* Check if no child is actually created.  */
-  TEST_COMPARE (WAITID (P_ALL, 0, NULL, WEXITED), -1);
-  TEST_COMPARE (errno, ECHILD);
+    /* POSIX states the value returned on pid variable in case of an error
+       is not specified.  GLIBC will update the value iff the child
+       execution is successful.  */
+    if (pid != -1)
+      FAIL_EXIT1 ("posix_spawn returned pid != -1 (%i)", (int) pid);
 
-  /* Same as before, but with posix_spawnp.  */
-  char *args2[] = { (char*) program, 0 };
+    /* Check if no child is actually created.  */
+    TEST_COMPARE (WAITID (P_ALL, 0, NULL, WEXITED), -1);
+    TEST_COMPARE (errno, ECHILD);
 
-  ret = POSIX_SPAWNP (&pid, args2[0], 0, 0, args2, environ);
-  if (ret != ENOENT)
-    {
-      errno = ret;
-      FAIL_EXIT1 ("posix_spawnp: %m");
-    }
+    /* Also check if there is no leak descriptors.  */
+    support_descriptors_check (descrs);
+    support_descriptors_free (descrs);
+  }
 
-  if (pid != -1)
-    FAIL_EXIT1 ("posix_spawnp returned pid != -1 (%i)", (int) pid);
+  {
+    /* Same as before, but with posix_spawnp.  */
+    char *args2[] = { (char*) program, 0 };
 
-  TEST_COMPARE (WAITID (P_ALL, 0, NULL, WEXITED), -1);
-  TEST_COMPARE (errno, ECHILD);
+    struct support_descriptors *descrs = support_descriptors_list ();
+
+    int ret = POSIX_SPAWNP (&pid, args2[0], 0, 0, args2, environ);
+    if (ret != ENOENT)
+      {
+	errno = ret;
+	FAIL_EXIT1 ("posix_spawnp: %m");
+      }
+
+    if (pid != -1)
+      FAIL_EXIT1 ("posix_spawnp returned pid != -1 (%i)", (int) pid);
+
+    TEST_COMPARE (WAITID (P_ALL, 0, NULL, WEXITED), -1);
+    TEST_COMPARE (errno, ECHILD);
+
+    support_descriptors_check (descrs);
+    support_descriptors_free (descrs);
+  }
 
   return 0;
 }

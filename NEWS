@@ -64,6 +64,7 @@ The following bugs are resolved with this release:
     strings
   [31686] dynamic-link: Stack-based buffer overflow in
     parse_tunables_string
+  [31695] libc: pidfd_spawn/pidfd_spawnp leak an fd if clone3 succeeds
   [31719] dynamic-link: --enable-hardcoded-path-in-tests doesn't work
     with -Wl,--enable-new-dtags
   [31782] Test build failure with recent GCC trunk
