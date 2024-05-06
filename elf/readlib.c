@@ -33,6 +33,7 @@
 #include <gnu/lib-names.h>
 
 #include <ldconfig.h>
+#include <endswith.h>
 
 #define Elf32_CLASS ELFCLASS32
 #define Elf64_CLASS ELFCLASS64
@@ -48,7 +49,7 @@ static bool
 is_gdb_python_file (const char *name)
 {
   size_t len = strlen (name);
-  return len > 7 && strcmp (name + len - 7, "-gdb.py") == 0;
+  return endswithn (name, len, "-gdb.py");
 }
 
 /* Returns 0 if everything is ok, != 0 in case of error.  */
