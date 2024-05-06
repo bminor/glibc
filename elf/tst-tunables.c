@@ -17,6 +17,10 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <array_length.h>
+/* The test uses the tunable_list size, which is only exported for
+   ld.so.  This will result in a copy of tunable_list, which is ununsed by
+   the test itself.  */
+#define TUNABLES_INTERNAL 1
 #include <dl-tunables.h>
 #include <getopt.h>
 #include <intprops.h>
@@ -24,12 +28,13 @@
 #include <stdlib.h>
 #include <support/capture_subprocess.h>
 #include <support/check.h>
+#include <support/support.h>
 
 static int restart;
 #define CMDLINE_OPTIONS \
   { "restart", no_argument, &restart, 1 },
 
-static const struct test_t
+static struct test_t
 {
   const char *name;
   const char *value;
@@ -284,6 +289,29 @@ static const struct test_t
     0,
     0,
   },
+  /* Also check for repeated tunables with a count larger than the total number
+     of tunables.  */
+  {
+    "GLIBC_TUNABLES",
+    NULL,
+    2,
+    0,
+    0,
+  },
+  {
+    "GLIBC_TUNABLES",
+    NULL,
+    1,
+    0,
+    0,
+  },
+  {
+    "GLIBC_TUNABLES",
+    NULL,
+    0,
+    0,
+    0,
+  },
 };
 
 static int
@@ -325,6 +353,37 @@ do_test (int argc, char *argv[])
     spargv[i++] = (char *) "--restart";
     spargv[i++] = nteststr;
     spargv[i] = NULL;
+  }
+
+  /* Create a tunable line with the duplicate values with a total number
+     larger than the different number of tunables.  */
+  {
+    enum { tunables_list_size = array_length (tunable_list) };
+    const char *value = "";
+    for (int i = 0; i < tunables_list_size; i++)
+      value = xasprintf ("%sglibc.malloc.check=2%c",
+			 value,
+			 i == (tunables_list_size - 1) ? '\0' : ':');
+    tests[33].value = value;
+  }
+  /* Same as before, but the last tunable values is differen than the
+     rest.  */
+  {
+    enum { tunables_list_size = array_length (tunable_list) };
+    const char *value = "";
+    for (int i = 0; i < tunables_list_size - 1; i++)
+      value = xasprintf ("%sglibc.malloc.check=2:", value);
+    value = xasprintf ("%sglibc.malloc.check=1", value);
+    tests[34].value = value;
+  }
+  /* Same as before, but with an invalid last entry.  */
+  {
+    enum { tunables_list_size = array_length (tunable_list) };
+    const char *value = "";
+    for (int i = 0; i < tunables_list_size - 1; i++)
+      value = xasprintf ("%sglibc.malloc.check=2:", value);
+    value = xasprintf ("%sglibc.malloc.check=1=1", value);
+    tests[35].value = value;
   }
 
   for (int i = 0; i < array_length (tests); i++)

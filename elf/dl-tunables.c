@@ -32,6 +32,7 @@
 #include <ldsodefs.h>
 #include <array_length.h>
 #include <dl-minimal-malloc.h>
+#include <dl-symbol-redir-ifunc.h>
 
 #define TUNABLES_INTERNAL 1
 #include "dl-tunables.h"
@@ -223,6 +224,7 @@ parse_tunables_string (const char *valstring, struct tunable_toset_t *tunables)
 	    {
 	      tunables[ntunables++] =
 		(struct tunable_toset_t) { cur, value, p - value };
+
 	      break;
 	    }
 	}
@@ -234,23 +236,27 @@ parse_tunables_string (const char *valstring, struct tunable_toset_t *tunables)
 static void
 parse_tunables (const char *valstring)
 {
-  struct tunable_toset_t tunables[tunables_list_size];
-  int ntunables = parse_tunables_string (valstring, tunables);
-  if (ntunables == -1)
+  struct tunable_toset_t tunables[tunables_list_size] = { 0 };
+  if (parse_tunables_string (valstring, tunables) == -1)
     {
       _dl_error_printf (
         "WARNING: ld.so: invalid GLIBC_TUNABLES `%s': ignored.\n", valstring);
       return;
     }
 
-  for (int i = 0; i < ntunables; i++)
-    if (!tunable_initialize (tunables[i].t, tunables[i].value,
-			     tunables[i].len))
-      _dl_error_printf ("WARNING: ld.so: invalid GLIBC_TUNABLES value `%.*s' "
-		       "for option `%s': ignored.\n",
-		       (int) tunables[i].len,
-		       tunables[i].value,
-		       tunables[i].t->name);
+  for (int i = 0; i < tunables_list_size; i++)
+    {
+      if (tunables[i].t == NULL)
+	continue;
+
+      if (!tunable_initialize (tunables[i].t, tunables[i].value,
+			       tunables[i].len))
+	_dl_error_printf ("WARNING: ld.so: invalid GLIBC_TUNABLES value `%.*s' "
+			  "for option `%s': ignored.\n",
+			  (int) tunables[i].len,
+			  tunables[i].value,
+			  tunables[i].t->name);
+    }
 }
 
 /* Initialize the tunables list from the environment.  For now we only use the

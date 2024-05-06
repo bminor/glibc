@@ -33,3 +33,7 @@
 #endif
 
 #include <../memset.S>
+
+#if IS_IN (rtld)
+strong_alias (memset, __memset_generic)
+#endif
