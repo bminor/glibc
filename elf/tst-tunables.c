@@ -396,7 +396,7 @@ do_test (int argc, char *argv[])
 	      tests[i].value);
       setenv (tests[i].name, tests[i].value, 1);
       struct support_capture_subprocess result
-	= support_capture_subprogram (spargv[0], spargv);
+	= support_capture_subprogram (spargv[0], spargv, NULL);
       support_capture_subprocess_check (&result, "tst-tunables", 0,
 					sc_allow_stderr);
       support_capture_subprocess_free (&result);

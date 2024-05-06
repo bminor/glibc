@@ -30,7 +30,7 @@ do_test (void)
   {
     char *argv[] = { (char *) "ld.so", ldconfig_path, (char *) "--help", NULL };
     struct support_capture_subprocess cap
-      = support_capture_subprogram (support_objdir_elf_ldso, argv);
+      = support_capture_subprogram (support_objdir_elf_ldso, argv, NULL);
     support_capture_subprocess_check (&cap, "no --argv0", 0, sc_allow_stdout);
     puts ("info: output without --argv0:");
     puts (cap.out.buffer);
@@ -46,7 +46,7 @@ do_test (void)
         ldconfig_path, (char *) "--help", NULL
       };
     struct support_capture_subprocess cap
-      = support_capture_subprogram (support_objdir_elf_ldso, argv);
+      = support_capture_subprogram (support_objdir_elf_ldso, argv, NULL);
     support_capture_subprocess_check (&cap, "with --argv0", 0, sc_allow_stdout);
     puts ("info: output with --argv0:");
     puts (cap.out.buffer);

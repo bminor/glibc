@@ -93,13 +93,14 @@ support_capture_subprocess (void (*callback) (void *), void *closure)
 }
 
 struct support_capture_subprocess
-support_capture_subprogram (const char *file, char *const argv[])
+support_capture_subprogram (const char *file, char *const argv[],
+			    char *const envp[])
 {
   struct support_capture_subprocess result;
   xopen_memstream (&result.out);
   xopen_memstream (&result.err);
 
-  struct support_subprocess proc = support_subprogram (file, argv);
+  struct support_subprocess proc = support_subprogram (file, argv, envp);
 
   support_capture_poll (&result, &proc);
   return result;

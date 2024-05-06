@@ -33,10 +33,11 @@ struct support_subprocess
 struct support_subprocess support_subprocess
   (void (*callback) (void *), void *closure);
 
-/* Issue FILE with ARGV arguments by using posix_spawn and return is PID, a
-   pipe redirected to STDOUT, and a pipe redirected to STDERR.  */
+/* Issue FILE with ARGV arguments and ENVP environments by using posix_spawn
+   and return is PID, a pipe redirected to STDOUT, and a pipe redirected to
+   STDERR.  If ENVP is NULL the current environment variable is used.  */
 struct support_subprocess support_subprogram
-  (const char *file, char *const argv[]);
+  (const char *file, char *const argv[], char *const envp[]);
 
 /* Invoke program FILE with ARGV arguments by using posix_spawn and wait for it
    to complete.  Return program exit status.  */

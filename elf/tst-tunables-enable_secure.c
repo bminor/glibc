@@ -113,7 +113,7 @@ do_test (int argc, char *argv[])
       printf ("[%d] Spawned test for %s\n", i, tests[i].env);
       setenv ("GLIBC_TUNABLES", tests[i].env, 1);
       struct support_capture_subprocess result
-	= support_capture_subprogram (spargv[0], spargv);
+	= support_capture_subprogram (spargv[0], spargv, NULL);
       support_capture_subprocess_check (&result, "tst-tunables-enable_secure",
 		                        0, sc_allow_stderr);
       support_capture_subprocess_free (&result);

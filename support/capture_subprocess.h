@@ -35,11 +35,12 @@ struct support_capture_subprocess
 struct support_capture_subprocess support_capture_subprocess
   (void (*callback) (void *), void *closure);
 
-/* Issue FILE with ARGV arguments by using posix_spawn and capture standard
-   output, standard error, and the exit status.  The out.buffer and err.buffer
-   are handle as support_capture_subprocess.  */
+/* Issue FILE with ARGV arguments and ENVP environments by using posix_spawn
+   and capture standard output, standard error, and the exit status.  If
+   ENVP is NULL the current environment variable is used.  The out.buffer and
+   err.buffer are handle by support_capture_subprocess.  */
 struct support_capture_subprocess support_capture_subprogram
-  (const char *file, char *const argv[]);
+  (const char *file, char *const argv[], char *const envp[]);
 
 /* Copy the running program into a setgid binary and run it with CHILD_ID
    argument.  If execution is successful, return the exit status of the child

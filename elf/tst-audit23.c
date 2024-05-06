@@ -82,7 +82,7 @@ do_test (int argc, char *argv[])
 
   setenv ("LD_AUDIT", "tst-auditmod23.so", 0);
   struct support_capture_subprocess result
-    = support_capture_subprogram (spargv[0], spargv);
+    = support_capture_subprogram (spargv[0], spargv, NULL);
   support_capture_subprocess_check (&result, "tst-audit22", 0, sc_allow_stderr);
 
   /* The expected la_objopen/la_objclose:

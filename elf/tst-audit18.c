@@ -79,7 +79,7 @@ do_test (int argc, char *argv[])
 
   setenv ("LD_AUDIT", "tst-auditmod18.so", 0);
   struct support_capture_subprocess result
-    = support_capture_subprogram (spargv[0], spargv);
+    = support_capture_subprogram (spargv[0], spargv, NULL);
   support_capture_subprocess_check (&result, "tst-audit18", 0, sc_allow_stderr);
 
   struct

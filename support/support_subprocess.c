@@ -69,7 +69,7 @@ support_subprocess (void (*callback) (void *), void *closure)
 }
 
 struct support_subprocess
-support_subprogram (const char *file, char *const argv[])
+support_subprogram (const char *file, char *const argv[], char *const envp[])
 {
   struct support_subprocess result = support_subprocess_init ();
 
@@ -84,7 +84,8 @@ support_subprogram (const char *file, char *const argv[])
   xposix_spawn_file_actions_addclose (&fa, result.stdout_pipe[1]);
   xposix_spawn_file_actions_addclose (&fa, result.stderr_pipe[1]);
 
-  result.pid = xposix_spawn (file, &fa, NULL, argv, environ);
+  result.pid = xposix_spawn (file, &fa, NULL, argv,
+			     envp == NULL ? environ : envp);
 
   xclose (result.stdout_pipe[1]);
   xclose (result.stderr_pipe[1]);
