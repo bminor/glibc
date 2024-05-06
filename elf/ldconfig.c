@@ -40,6 +40,7 @@
 #include <libgen.h>
 
 #include <ldconfig.h>
+#include <endswith.h>
 #include <dl-cache.h>
 #include <dl-hwcaps.h>
 #include <dl-is_dso.h>
@@ -660,17 +661,6 @@ struct dlib_entry
   unsigned int isa_level;
   struct dlib_entry *next;
 };
-
-/* Return true if the N bytes at NAME end with with the characters in
-   the string SUFFIX.  (NAME[N + 1] does not have to be a null byte.)
-   Expected to be called with a string literal for SUFFIX.  */
-static inline bool
-endswithn (const char *name, size_t n, const char *suffix)
-{
-  return (n >= strlen (suffix)
-	  && memcmp (name + n - strlen (suffix), suffix,
-		     strlen (suffix)) == 0);
-}
 
 /* Skip some temporary DSO files.  These files may be partially written
    and lead to ldconfig crashes when examined.  */
