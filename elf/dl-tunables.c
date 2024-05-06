@@ -300,6 +300,9 @@ __tunables_init (char **envp)
   if (__libc_enable_secure)
     return;
 
+  enum { tunable_num_env_alias = array_length (tunable_env_alias_list) };
+  struct tunable_toset_t tunables_env_alias[tunable_num_env_alias] = { 0 };
+
   while ((envp = get_next_env (envp, &envname, &envval, &prev_envp)) != NULL)
     {
       /* The environment variable is allocated on the stack by the kernel, so
@@ -311,28 +314,43 @@ __tunables_init (char **envp)
 	  continue;
 	}
 
-      for (int i = 0; i < tunables_list_size; i++)
+      for (int i = 0; i < tunable_num_env_alias; i++)
 	{
-	  tunable_t *cur = &tunable_list[i];
-
-	  /* Skip over tunables that have either been set already or should be
-	     skipped.  */
-	  if (cur->initialized || cur->env_alias[0] == '\0')
-	    continue;
-
+	  tunable_t *cur = &tunable_list[tunable_env_alias_list[i]];
 	  const char *name = cur->env_alias;
 
-	  /* We have a match.  Initialize and move on to the next line.  */
+	  if (name[0] == '\0')
+	    continue;
+
 	  if (tunable_is_name (name, envname))
 	    {
 	      size_t envvallen = 0;
 	      /* The environment variable is always null-terminated.  */
 	      for (const char *p = envval; *p != '\0'; p++, envvallen++);
 
-	      tunable_initialize (cur, envval, envvallen);
+	      tunables_env_alias[i] =
+		(struct tunable_toset_t) { cur, envval, envvallen };
 	      break;
 	    }
 	}
+    }
+
+  /* Check if glibc.rtld.enable_secure was set and skip over the environment
+     variables aliases.  */
+  if (__libc_enable_secure)
+    return;
+
+  for (int i = 0; i < tunable_num_env_alias; i++)
+    {
+      /* Skip over tunables that have either been set or already initialized.  */
+      if (tunables_env_alias[i].t == NULL
+	  || tunables_env_alias[i].t->initialized)
+	continue;
+
+      if (!tunable_initialize (tunables_env_alias[i].t,
+			       tunables_env_alias[i].value,
+			       tunables_env_alias[i].len))
+	parse_tunable_print_error (&tunables_env_alias[i]);
     }
 }
 

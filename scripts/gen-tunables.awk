@@ -156,7 +156,7 @@ END {
   print "# define TUNABLE_ALIAS_MAX " (max_alias_len + 1)
   print "# include \"dl-tunable-types.h\""
   # Finally, the tunable list.
-  print "static tunable_t tunable_list[] attribute_relro = {"
+  print "static tunable_t tunable_list[] attribute_relro __attribute_used__ = {"
   for (tnm in types) {
     split (tnm, indices, SUBSEP);
     t = indices[1];
@@ -168,5 +168,19 @@ END {
 	    default_val[t,n,m], env_alias[t,n,m]);
   }
   print "};"
+
+  # Map of tunable with environment variables aliases used during parsing.  */
+  print "\nstatic const tunable_id_t tunable_env_alias_list[] ="
+  printf "{\n"
+  for (tnm in types) {
+    split (tnm, indices, SUBSEP);
+    t = indices[1];
+    n = indices[2];
+    m = indices[3];
+    if (env_alias[t,n,m] != "{0}") {
+      printf ("  TUNABLE_ENUM_NAME(%s, %s, %s),\n", t, n, m);
+    }
+  }
+  printf "};\n"
   print "#endif"
 }
