@@ -93,6 +93,7 @@ test-input := \
   ln_CD.UTF-8 \
   lt_LT.UTF-8 \
   lv_LV.UTF-8 \
+  mdf_RU.UTF-8 \
   mi_NZ.UTF-8 \
   ml_IN.UTF-8 \
   mn_MN.UTF-8 \
@@ -358,6 +359,7 @@ LOCALES := \
   ln_CD.UTF-8 \
   lt_LT.UTF-8 \
   lv_LV.UTF-8 \
+  mdf_RU.UTF-8 \
   mi_NZ.UTF-8 \
   ml_IN.UTF-8 \
   mn_MN.UTF-8 \
