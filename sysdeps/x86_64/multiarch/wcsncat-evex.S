@@ -1,9 +1,9 @@
-#ifndef WCSCAT
-# define WCSCAT	__wcsncat_evex
+#ifndef WCSNCAT
+# define WCSNCAT	__wcsncat_evex
 #endif
 
 #define USE_AS_WCSCPY
 #define USE_AS_STRCAT
 
-#define STRNCAT	WCSCAT
+#define STRNCAT	WCSNCAT
 #include "strncat-evex.S"
