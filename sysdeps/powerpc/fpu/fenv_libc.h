@@ -182,19 +182,13 @@ __fesetround_inline (int round)
   return 0;
 }
 
-/* Same as __fesetround_inline, however without runtime check to use DFP
-   mtfsfi syntax (as relax_fenv_state) or if round value is valid.  */
+/* Same as __fesetround_inline, and it also disable the floating-point
+   inexact execption (bit 60 - XE, assuming NI is 0).  It does not check
+   if ROUND is a valid value.  */
 static inline void
-__fesetround_inline_nocheck (const int round)
+__fesetround_inline_disable_inexact (const int round)
 {
-#ifdef _ARCH_PWR9
-  __fe_mffscrn (round);
-#else
-  if (__glibc_likely (GLRO(dl_hwcap2) & PPC_FEATURE2_ARCH_3_00))
-    __fe_mffscrn (round);
-  else
-    asm volatile ("mtfsfi 7,%0" : : "n" (round));
-#endif
+  asm volatile ("mtfsfi 7,%0" : : "n" (round));
 }
 
 #define FPSCR_MASK(bit) (1 << (31 - (bit)))
