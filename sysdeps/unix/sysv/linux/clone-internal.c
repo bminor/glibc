@@ -80,7 +80,7 @@ __clone3_internal (struct clone_args *cl_args, int (*func) (void *args),
   if (atomic_load_relaxed (&clone3_supported) == 1)
     {
       int ret = __clone3 (cl_args, sizeof (*cl_args), func, arg);
-      if (ret != -1 || errno != ENOSYS)
+      if (ret != -1 || errno != ENOSYS || errno != EPERM)
 	return ret;
 
       atomic_store_relaxed (&clone3_supported, 0);
@@ -98,7 +98,7 @@ __clone_internal (struct clone_args *cl_args,
 #ifdef HAVE_CLONE3_WRAPPER
   int saved_errno = errno;
   int ret = __clone3_internal (cl_args, func, arg);
-  if (ret != -1 || errno != ENOSYS)
+  if (ret != -1 || errno != ENOSYS || errno != EPERM)
     return ret;
 
   /* NB: Restore errno since errno may be checked against non-zero
