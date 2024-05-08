@@ -113,22 +113,23 @@ END LC_NUMERIC
 
 LC_TIME
 % day - The full names of the week days:
+% https://sourceware.org/bugzilla/show_bug.cgi?id=31530#c6
 % https://en.wiktionary.org/wiki/Appendix:Days_of_the_week
-day     "таргоши";/
-        "одговши";/
-        "шавши";/
-        "вержи";/
-        "шуваланя";/
-        "цилеши";/
-        "ёткши"
+day     "Недляши";/
+        "Атяньжи";/
+        "Шавши";/
+        "Вержи";/
+        "Шуваланя";/
+        "Пяденця";/
+        "Ёткши"
 % abday - The abbreviations for the week days:
-abday   "тар";/
-        "одг";/
-        "шав";/
-        "вер";/
-        "шув";/
-        "цил";/
-        "ётк"
+abday   "Нед";/
+        "Атя";/
+        "Шав";/
+        "Вер";/
+        "Шув";/
+        "Пяд";/
+        "Ётк"
 mon     "январь";/
         "февраль";/
         "март";/
