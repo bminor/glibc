@@ -1065,7 +1065,7 @@ macros are supposed to be at least @code{10}.
 @standards{C90, float.h}
 This is the smallest possible exponent value for type @code{float}.
 More precisely, it is the minimum negative integer such that the value
-@code{FLT_RADIX} raised to this power minus 1 can be represented as a
+@code{FLT_RADIX} raised to one less than this power can be represented as a
 normalized floating point number of type @code{float}.
 
 @item DBL_MIN_EXP
@@ -1078,7 +1078,7 @@ These are similar to @code{FLT_MIN_EXP}, but for the data types
 @item FLT_MIN_10_EXP
 @standards{C90, float.h}
 This is the minimum negative integer such that @code{10} raised to this
-power minus 1 can be represented as a normalized floating point number
+power can be represented as a normalized floating point number
 of type @code{float}.  This is supposed to be @code{-37} or even less.
 
 @item DBL_MIN_10_EXP
@@ -1091,8 +1091,8 @@ These are similar to @code{FLT_MIN_10_EXP}, but for the data types
 @standards{C90, float.h}
 This is the largest possible exponent value for type @code{float}.  More
 precisely, this is the maximum positive integer such that value
-@code{FLT_RADIX} raised to this power minus 1 can be represented as a
-floating point number of type @code{float}.
+@code{FLT_RADIX} raised to one less than this power can be represented as a
+finite floating point number of type @code{float}.
 
 @item DBL_MAX_EXP
 @itemx LDBL_MAX_EXP
@@ -1103,7 +1103,7 @@ These are similar to @code{FLT_MAX_EXP}, but for the data types
 @item FLT_MAX_10_EXP
 @standards{C90, float.h}
 This is the maximum positive integer such that @code{10} raised to this
-power minus 1 can be represented as a normalized floating point number
+power can be represented as a finite floating point number
 of type @code{float}.  This is supposed to be at least @code{37}.
 
 @item DBL_MAX_10_EXP
