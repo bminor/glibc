@@ -97,6 +97,7 @@
 #define fcc5 $fcc5
 #define fcc6 $fcc6
 #define fcc7 $fcc7
+#define fcsr0 $fcsr0
 
 #define vr0 $vr0
 #define vr1 $vr1

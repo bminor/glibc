@@ -25,7 +25,7 @@
 #include <entry.h>
 #include <elf/elf.h>
 #include <sys/asm.h>
-#include <dl-tls.h>
+#include <dl-tlsdesc.h>
 #include <dl-static-tls.h>
 #include <dl-machine-rel.h>
 
@@ -206,6 +206,36 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
       *addr_field = TLS_TPREL_VALUE (sym_map, sym) + reloc->r_addend;
       break;
 
+    case __WORDSIZE == 64 ? R_LARCH_TLS_DESC64 : R_LARCH_TLS_DESC32:
+      {
+	struct tlsdesc volatile *td = (struct tlsdesc volatile *)addr_field;
+	if (sym == NULL)
+	  {
+	    td->arg = (void*)reloc->r_addend;
+	    td->entry = _dl_tlsdesc_undefweak;
+	  }
+	else
+	  {
+# ifndef SHARED
+	    CHECK_STATIC_TLS (map, sym_map);
+# else
+	    if (!TRY_STATIC_TLS (map, sym_map))
+	      {
+		td->arg = _dl_make_tlsdesc_dynamic (sym_map,
+			      sym->st_value + reloc->r_addend);
+		td->entry = _dl_tlsdesc_dynamic;
+	      }
+	    else
+# endif
+	      {
+		td->arg = (void *)(TLS_TPREL_VALUE (sym_map, sym)
+			    + reloc->r_addend);
+		td->entry = _dl_tlsdesc_return;
+	      }
+	  }
+	break;
+      }
+
     case R_LARCH_COPY:
       {
 	  if (sym == NULL)
@@ -273,6 +303,26 @@ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
 	}
       else
 	*reloc_addr = map->l_mach.plt;
+    }
+  else if (__glibc_likely (r_type == R_LARCH_TLS_DESC64)
+	    || __glibc_likely (r_type == R_LARCH_TLS_DESC32))
+    {
+      const Elf_Symndx symndx = ELFW (R_SYM) (reloc->r_info);
+      const ElfW (Sym) *symtab = (const void *)D_PTR (map, l_info[DT_SYMTAB]);
+      const ElfW (Sym) *sym = &symtab[symndx];
+      const struct r_found_version *version = NULL;
+
+      if (map->l_info[VERSYMIDX (DT_VERSYM)] != NULL)
+	{
+	  const ElfW (Half) *vernum = (const void *)D_PTR (map,
+					  l_info[VERSYMIDX (DT_VERSYM)]);
+	  version = &map->l_versions[vernum[symndx] & 0x7fff];
+	}
+
+      /* Always initialize TLS descriptors completely, because lazy
+	 initialization requires synchronization at every TLS access.  */
+      elf_machine_rela (map, scope, reloc, sym, version, reloc_addr,
+			skip_ifunc);
     }
   else
     _dl_reloc_bad_type (map, r_type, 1);

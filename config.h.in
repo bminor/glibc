@@ -141,6 +141,9 @@
 /* LOONGARCH floating-point ABI for ld.so.  */
 #undef LOONGARCH_ABI_FRLEN
 
+/* Define whether compiler support vector.  */
+#undef HAVE_LOONGARCH_VEC_COM
+
 /* Define whether ARM used hard-float and support VFPvX-D32.  */
 #undef HAVE_ARM_PCS_VFP_D32
 

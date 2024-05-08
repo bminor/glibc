@@ -16,12 +16,17 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _DL_TLS_H
+#define _DL_TLS_H
+
 /* Type used for the representation of TLS information in the GOT.  */
 typedef struct
 {
   unsigned long int ti_module;
   unsigned long int ti_offset;
 } tls_index;
+
+extern void *__tls_get_addr (tls_index *ti);
 
 /* The thread pointer points to the first static TLS block.  */
 #define TLS_TP_OFFSET 0
@@ -37,10 +42,10 @@ typedef struct
 /* Compute the value for a DTPREL reloc.  */
 #define TLS_DTPREL_VALUE(sym) ((sym)->st_value - TLS_DTV_OFFSET)
 
-extern void *__tls_get_addr (tls_index *ti);
-
 #define GET_ADDR_OFFSET (ti->ti_offset + TLS_DTV_OFFSET)
 #define __TLS_GET_ADDR(__ti) (__tls_get_addr (__ti) - TLS_DTV_OFFSET)
 
 /* Value used for dtv entries for which the allocation is delayed.  */
 #define TLS_DTV_UNALLOCATED ((void *) -1l)
+
+#endif

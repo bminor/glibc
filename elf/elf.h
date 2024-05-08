@@ -4241,6 +4241,8 @@ enum
 #define R_LARCH_TLS_TPREL32	10
 #define R_LARCH_TLS_TPREL64	11
 #define R_LARCH_IRELATIVE	12
+#define R_LARCH_TLS_DESC32	13
+#define R_LARCH_TLS_DESC64	14
 
 /* Reserved for future relocs that the dynamic linker must understand.  */
 

@@ -1,5 +1,7 @@
-/* Definition of link_map_machine.
-   Copyright (C) 2022-2024 Free Software Foundation, Inc.
+/* Manage TLS descriptors.  LoongArch64 version.
+
+   Copyright (C) 2024 Free Software Foundation, Inc.
+
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -13,11 +15,25 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-struct link_map_machine
+#include <ldsodefs.h>
+#include <tls.h>
+#include <dl-tlsdesc.h>
+#include <dl-unmap-segments.h>
+#include <tlsdeschtab.h>
+
+/* Unmap the dynamic object, but also release its TLS descriptor table
+   if there is one.  */
+
+void
+_dl_unmap (struct link_map *map)
 {
-  ElfW (Addr) plt;	/* Address of .plt.  */
-  void *tlsdesc_table;	/* Address of TLS descriptor hash table.  */
-};
+  _dl_unmap_segments (map);
+
+#ifdef SHARED
+  if (map->l_mach.tlsdesc_table)
+    htab_delete (map->l_mach.tlsdesc_table);
+#endif
+}

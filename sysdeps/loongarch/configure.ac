@@ -65,3 +65,19 @@ rm -f conftest*])
 if test $libc_cv_loongarch_vec_asm = no; then
   AC_MSG_ERROR([binutils version is too old, use 2.41 or newer version])
 fi
+
+AC_CACHE_CHECK([for vector support in compiler],
+		libc_cv_loongarch_vec_com, [
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
+void foo (void)
+{
+  asm volatile ("vldi $vr0, 1" ::: "$vr0");
+  asm volatile ("xvldi $xr0, 1" ::: "$xr0");
+}
+]])],
+                [libc_cv_loongarch_vec_com=yes],
+                [libc_cv_loongarch_vec_com=no])])
+if test "$libc_cv_loongarch_vec_com" = yes ;
+then
+  AC_DEFINE(HAVE_LOONGARCH_VEC_COM)
+fi
