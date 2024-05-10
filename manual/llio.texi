@@ -1573,10 +1573,15 @@ permitted.  They include @code{PROT_READ}, @code{PROT_WRITE}, and
 of address space for future use.  The @code{mprotect} function can be
 used to change the protection flags.  @xref{Memory Protection}.
 
-@var{flags} contains flags that control the nature of the map.
-One of @code{MAP_SHARED} or @code{MAP_PRIVATE} must be specified.
+The @var{flags} parameter contains flags that control the nature of
+the map.  One of @code{MAP_SHARED}, @code{MAP_SHARED_VALIDATE}, or
+@code{MAP_PRIVATE} must be specified.  Additional flags may be bitwise
+OR'd to further define the mapping.
 
-They include:
+Note that, aside from @code{MAP_PRIVATE} and @code{MAP_SHARED}, not
+all flags are supported on all versions of all operating systems.
+Consult the kernel-specific documentation for details.  The flags
+include:
 
 @vtable @code
 @item MAP_PRIVATE
@@ -1598,9 +1603,19 @@ Note that actual writing may take place at any time.  You need to use
 @code{msync}, described below, if it is important that other processes
 using conventional I/O get a consistent view of the file.
 
+@item MAP_SHARED_VALIDATE
+Similar to @code{MAP_SHARED} except that additional flags will be
+validated by the kernel, and the call will fail if an unrecognized
+flag is provided.  With @code{MAP_SHARED} using a flag on a kernel
+that doesn't support it causes the flag to be ignored.
+@code{MAP_SHARED_VALIDATE} should be used when the behavior of all
+flags is required.
+
 @item MAP_FIXED
 This forces the system to use the exact mapping address specified in
-@var{address} and fail if it can't.
+@var{address} and fail if it can't.  Note that if the new mapping
+would overlap an existing mapping, the overlapping portion of the
+existing map is unmapped.
 
 @c One of these is official - the other is obviously an obsolete synonym
 @c Which is which?
@@ -1641,10 +1656,73 @@ The @code{MAP_HUGETLB} flag is specific to Linux.
 @c There is a mechanism to select different hugepage sizes; see
 @c include/uapi/asm-generic/hugetlb_encode.h in the kernel sources.
 
-@c Linux has some other MAP_ options, which I have not discussed here.
-@c MAP_DENYWRITE, MAP_EXECUTABLE and MAP_GROWSDOWN don't seem applicable to
-@c user programs (and I don't understand the last two).  MAP_LOCKED does
-@c not appear to be implemented.
+@item MAP_32BIT
+Require addresses that can be accessed with a signed 32 bit pointer,
+i.e., within the first 2 GiB.  Ignored if MAP_FIXED is specified.
+
+@item MAP_DENYWRITE
+@itemx MAP_EXECUTABLE
+@itemx MAP_FILE
+
+Provided for compatibility.  Ignored by the Linux kernel.
+
+@item MAP_FIXED_NOREPLACE
+Similar to @code{MAP_FIXED} except the call will fail with
+@code{EEXIST} if the new mapping would overwrite an existing mapping.
+To test for support for this flag, specify MAP_FIXED_NOREPLACE without
+MAP_FIXED, and (if the call was successful) check the actual address
+returned.  If it does not match the address passed, then this flag is
+not supported.
+
+@item MAP_GROWSDOWN
+This flag is used to make stacks, and is typically only needed inside
+the program loader to set up the main stack for the running process.
+The mapping is created according to the other flags, except an
+additional page just prior to the mapping is marked as a ``guard
+page''.  If a write is attempted inside this guard page, that page is
+mapped, the mapping is extended, and a new guard page is created.
+Thus, the mapping continues to grow towards lower addresses until it
+encounters some other mapping.
+
+Note that accessing memory beyond the guard page will not trigger this
+feature.  In gcc, use @code{-fstack-clash-protection} to ensure the
+guard page is always touched.
+
+@item MAP_LOCKED
+A hint that requests that mapped pages are locked in memory (i.e. not
+paged out).  Note that this is a request and not a requirement; use
+@code{mlock} if locking is required.
+
+@item MAP_POPULATE
+@itemx MAP_NONBLOCK
+@code{MAP_POPULATE} is a hint that requests that the kernel read-ahead
+a file-backed mapping, causing pages to be mapped before they're
+needed.  @code{MAP_NONBLOCK} is a hint that requests that the kernel
+@emph{not} attempt such except for pages are already in memory.  Note
+that neither of these hints affects future paging activity, use
+@code{mlock} if such needs to be controlled.
+
+@item MAP_NORESERVE
+Asks the kernel to not reserve physical backing (i.e. space in a swap
+device) for a mapping.  This would be useful for, for example, a very
+large but sparsely used mapping which need not be limited in total
+length by available RAM, but with very few mapped pages.  Note that
+writes to such a mapping may cause a @code{SIGSEGV} if the system is
+unable to map a page due to lack of resources.
+
+On Linux, this flag's behavior may be overwridden by
+@file{/proc/sys/vm/overcommit_memory} as documented in the proc(5) man
+page.
+
+@item MAP_STACK
+Ensures that the resulting mapping is suitable for use as a program
+stack.  For example, the use of huge pages might be precluded.
+
+@item MAP_SYNC
+This is a special flag for DAX devices, which tells the kernel to
+write dirty metadata out whenever dirty data is written out.  Unlike
+most other flags, this one will fail unless @code{MAP_SHARED_VALIDATE}
+is also given.
 
 @end vtable
 
@@ -1655,6 +1733,24 @@ Possible errors include:
 
 @table @code
 
+@item EACCES
+
+@var{filedes} was not open for the type of access specified in @var{protect}.
+
+@item EAGAIN
+
+The system has temporarily run out of resources.
+
+@item EBADF
+
+The @var{fd} passed is invalid, and a valid file descriptor is
+required (i.e. MAP_ANONYMOUS was not specified).
+
+@item EEXIST
+
+@code{MAP_FIXED_NOREPLACE} was specified and an existing mapping was
+found overlapping the requested address range.
+
 @item EINVAL
 
 Either @var{address} was unusable (because it is not a multiple of the
@@ -1663,22 +1759,36 @@ applicable page size), or inconsistent @var{flags} were given.
 If @code{MAP_HUGETLB} was specified, the file or system does not support
 large page sizes.
 
-@item EACCES
+@item ENODEV
 
-@var{filedes} was not open for the type of access specified in @var{protect}.
+This file is of a type that doesn't support mapping, the process has
+exceeded its data space limit, or the map request would exceed the
+process's virtual address space.
 
 @item ENOMEM
 
-Either there is not enough memory for the operation, or the process is
-out of address space.
-
-@item ENODEV
-
-This file is of a type that doesn't support mapping.
+There is not enough memory for the operation, the process is out of
+address space, or there are too many mappings.  On Linux, the maximum
+number of mappings can be controlled via
+@file{/proc/sys/vm/max_map_count} or, if your OS supports it, via
+the @code{vm.max_map_count} @code{sysctl} setting.
 
 @item ENOEXEC
 
 The file is on a filesystem that doesn't support mapping.
+
+@item EPERM
+
+@code{PROT_EXEC} was requested but the file is on a filesystem that
+was mounted with execution denied, a file seal prevented the mapping,
+or the caller set MAP_HUDETLB but does not have the required
+priviledges.
+
+@item EOVERFLOW
+
+Either the offset into the file plus the length of the mapping causes
+internal page counts to overflow, or the offset requested exceeds the
+length of the file.
 
 @c On Linux, EAGAIN will appear if the file has a conflicting mandatory lock.
 @c However mandatory locks are not discussed in this manual.
