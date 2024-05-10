@@ -24,60 +24,92 @@ include ../Makeconfig
 
 dist-headers := malloc.h
 headers := $(dist-headers) obstack.h mcheck.h
-tests := mallocbug tst-malloc tst-valloc tst-calloc tst-obstack \
-	 tst-malloc-check tst-mallocfork tst-trim1 \
-	 tst-malloc-usable tst-realloc tst-reallocarray tst-posix_memalign \
-	 tst-pvalloc tst-pvalloc-fortify tst-memalign tst-mallopt \
-	 tst-malloc-backtrace tst-malloc-thread-exit \
-	 tst-malloc-thread-fail tst-malloc-fork-deadlock \
-	 tst-mallocfork2 \
-	 tst-mallocfork3 \
-	 tst-interpose-nothread \
-	 tst-interpose-thread \
-	 tst-alloc_buffer \
-	 tst-free-errno \
-	 tst-malloc-tcache-leak \
-	 tst-malloc_info tst-mallinfo2 \
-	 tst-malloc-too-large \
-	 tst-malloc-stats-cancellation \
-	 tst-tcfree1 tst-tcfree2 tst-tcfree3 \
-	 tst-safe-linking \
-	 tst-mallocalign1 \
-	 tst-memalign-2 \
-	 tst-memalign-3 \
-	 tst-aligned-alloc
+tests := \
+  mallocbug \
+  tst-aligned-alloc \
+  tst-alloc_buffer \
+  tst-calloc \
+  tst-free-errno \
+  tst-interpose-nothread \
+  tst-interpose-thread \
+  tst-malloc \
+  tst-malloc-backtrace \
+  tst-malloc-check \
+  tst-malloc-fork-deadlock \
+  tst-malloc-stats-cancellation \
+  tst-malloc-tcache-leak \
+  tst-malloc-thread-exit \
+  tst-malloc-thread-fail \
+  tst-malloc-too-large \
+  tst-malloc-usable \
+  tst-malloc_info tst-mallinfo2 \
+  tst-mallocalign1 \
+  tst-mallocfork \
+  tst-mallocfork2 \
+  tst-mallocfork3 \
+  tst-mallopt \
+  tst-memalign \
+  tst-memalign-2 \
+  tst-memalign-3 \
+  tst-obstack \
+  tst-posix_memalign \
+  tst-pvalloc \
+  tst-pvalloc-fortify \
+  tst-realloc \
+  tst-reallocarray \
+  tst-safe-linking \
+  tst-tcfree1 tst-tcfree2 tst-tcfree3 \
+  tst-trim1 \
+  tst-valloc \
+# tests
 
 tests-static := \
-	 tst-interpose-static-nothread \
-	 tst-interpose-static-thread \
-	 tst-aligned-alloc-static
+  tst-aligned-alloc-static \
+  tst-interpose-static-nothread \
+  tst-interpose-static-thread \
+# tests-static
 
 # Test for the malloc_set_state symbol removed in glibc 2.25.
 ifeq ($(have-GLIBC_2.23)$(build-shared),yesyes)
-tests += tst-mallocstate tst-compathooks-off tst-compathooks-on
+tests += \
+  tst-compathooks-off \
+  tst-compathooks-on \
+  tst-mallocstate \
+# tests
 endif
 
 tests-internal := tst-scratch_buffer
 
 # The dynarray framework is only available inside glibc.
 tests-internal += \
-	 tst-dynarray \
-	 tst-dynarray-fail \
-	 tst-dynarray-at-fail \
+  tst-dynarray \
+  tst-dynarray-at-fail \
+  tst-dynarray-fail \
+# tests-internal
 
-tests += tst-malloc-usable-tunables tst-mxfast
+tests += \
+  tst-malloc-usable-tunables \
+  tst-mxfast \
+# tests
 
 tests += $(tests-static)
 test-srcs = tst-mtrace
 
 # These tests either are run with MALLOC_CHECK_=3 by default or do not work
 # with MALLOC_CHECK_=3 because they expect a specific failure.
-tests-exclude-malloc-check = tst-malloc-check tst-malloc-usable \
-	tst-mxfast tst-safe-linking \
-	tst-compathooks-off tst-compathooks-on tst-memalign-2 tst-memalign-3 \
-	tst-mallocfork2 \
-	tst-mallocfork3 \
-	tst-malloc-tcache-leak
+tests-exclude-malloc-check = \
+  tst-compathooks-off \
+  tst-compathooks-on \
+  tst-malloc-check \
+  tst-malloc-tcache-leak \
+  tst-malloc-usable \
+  tst-mallocfork2 \
+  tst-mallocfork3 \
+  tst-memalign-2 \
+  tst-memalign-3 \
+  tst-mxfast \
+  tst-safe-linking \
+# tests-exclude-malloc-check
 
 # Run all tests with MALLOC_CHECK_=3
 tests-malloc-check = $(filter-out $(tests-exclude-malloc-check) \
@@ -87,18 +119,19 @@ tests-malloc-check = $(filter-out $(tests-exclude-malloc-check) \
 # the Transparent Huge Pages support (1) or automatic huge page support (2).
 # We need exclude some tests that define the ENV vars.
 tests-exclude-hugetlb1 = \
-	tst-compathooks-off \
-	tst-compathooks-on \
-	tst-interpose-nothread \
-	tst-interpose-thread \
-	tst-interpose-static-nothread \
-	tst-interpose-static-thread \
-	tst-malloc-usable \
-	tst-malloc-usable-tunables \
-	tst-mallocstate \
-	tst-malloc-tcache-leak \
-	tst-mallocfork2 \
-	tst-mallocfork3
+  tst-compathooks-off \
+  tst-compathooks-on \
+  tst-interpose-nothread \
+  tst-interpose-static-nothread \
+  tst-interpose-static-thread \
+  tst-interpose-thread \
+  tst-malloc-tcache-leak \
+  tst-malloc-usable \
+  tst-malloc-usable-tunables \
+  tst-mallocfork2 \
+  tst-mallocfork3 \
+  tst-mallocstate \
+# tests-exclude-hugetlb1
 # The tst-free-errno relies on the used malloc page size to mmap an
 # overlapping region.
 tests-exclude-hugetlb2 = \
@@ -114,22 +147,25 @@ ifeq ($(have-GLIBC_2.23)$(build-shared),yesyes)
 # Tests that don't play well with mcheck.  They are either bugs in mcheck or
 # the tests expect specific internal behavior that is changed due to linking to
 # libmcheck.a.
-tests-exclude-mcheck = tst-mallocstate \
-	tst-safe-linking \
-	tst-malloc-backtrace \
-	tst-malloc-fork-deadlock \
-	tst-malloc-stats-cancellation \
-	tst-malloc-tcache-leak \
-	tst-malloc-thread-exit \
-	tst-malloc-thread-fail \
-	tst-malloc-usable-tunables \
-	tst-malloc_info \
-	tst-compathooks-off tst-compathooks-on \
-	tst-memalign-2 \
-	tst-memalign-3 \
-	tst-mxfast \
-	tst-mallocfork2 \
-	tst-mallocfork3
+tests-exclude-mcheck = \
+  tst-compathooks-off \
+  tst-compathooks-on \
+  tst-malloc-backtrace \
+  tst-malloc-fork-deadlock \
+  tst-malloc-stats-cancellation \
+  tst-malloc-tcache-leak \
+  tst-malloc-thread-exit \
+  tst-malloc-thread-fail \
+  tst-malloc-usable-tunables \
+  tst-malloc_info \
+  tst-mallocfork2 \
+  tst-mallocfork3 \
+  tst-mallocstate \
+  tst-memalign-2 \
+  tst-memalign-3 \
+  tst-mxfast \
+  tst-safe-linking \
+# tests-exclude-mcheck
 
 tests-mcheck = $(filter-out $(tests-exclude-mcheck) $(tests-static), $(tests))
 endif
@@ -159,10 +195,12 @@ extra-libs-others = $(extra-libs)
 extra-test-objs += \
   tst-interpose-aux-nothread.o \
   tst-interpose-aux-thread.o \
+# extra-test-objs
 
 test-extras = \
   tst-interpose-aux-nothread \
   tst-interpose-aux-thread \
+# test-extras
 
 libmemusage-routines = memusage
 libmemusage-inhibit-o = $(filter-out .os,$(object-suffixes))
