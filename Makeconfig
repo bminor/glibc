@@ -586,10 +586,13 @@ link-libc-rpath-link = -Wl,-rpath-link=$(rpath-link)
 # before the expansion of LDLIBS-* variables).
 
 # Tests use -Wl,-rpath instead of -Wl,-rpath-link for
-# build-hardcoded-path-in-tests.
+# build-hardcoded-path-in-tests.  Add -Wl,--disable-new-dtags to force
+# DT_RPATH instead of DT_RUNPATH which only applies to DT_NEEDED entries
+# in the executable and doesn't applies to DT_NEEDED entries in shared
+# libraries which are loaded via DT_NEEDED entries in the executable.
 ifeq (yes,$(build-hardcoded-path-in-tests))
-link-libc-tests-rpath-link = $(link-libc-rpath)
-link-test-modules-rpath-link = $(link-libc-rpath)
+link-libc-tests-rpath-link = $(link-libc-rpath) -Wl,--disable-new-dtags
+link-test-modules-rpath-link = $(link-libc-rpath) -Wl,--disable-new-dtags
 else
 link-libc-tests-rpath-link = $(link-libc-rpath-link)
 link-test-modules-rpath-link =
