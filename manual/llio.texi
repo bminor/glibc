@@ -3415,6 +3415,14 @@ middle of calling @code{dup2} at which @var{new} is closed and not yet a
 duplicate of @var{old}.
 @end deftypefun
 
+@deftypefun int dup3 (int @var{old}, int @var{new}, int @var{flags})
+@standards{Linux, unistd.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This function is the same as @code{dup2} but creates the new
+descriptor as if it had been opened with flags @var{flags}.  The only
+allowed flag is @code{O_CLOEXEC}.
+@end deftypefun
+
 @deftypevr Macro int F_DUPFD
 @standards{POSIX.1, fcntl.h}
 This macro is used as the @var{command} argument to @code{fcntl}, to
