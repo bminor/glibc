@@ -95,8 +95,14 @@ __backtrace_symbols_fd (void *const *array, int size, int fd)
 				   - (char *) iov[last].iov_base);
 	      ++last;
 
-	      iov[last].iov_base = (void *) ")";
-	      iov[last].iov_len = 1;
+	      iov[last].iov_base = (void *) ") ";
+	      iov[last].iov_len = 2;
+	      ++last;
+	    }
+	  else
+	    {
+	      iov[last].iov_base = (void *) "() ";
+	      iov[last].iov_len = 3;
 	      ++last;
 	    }
 	}
