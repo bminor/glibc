@@ -37,7 +37,7 @@ do_test (void)
 
   if (fp == NULL)
     {
-      printf ("fdopen: %m\n");
+      printf ("fopen: %m\n");
       return 1;
     }
 
