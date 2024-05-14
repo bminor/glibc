@@ -130,7 +130,7 @@ static int noTests;	/* number of tests (without testing exceptions) */
 static int noExcTests;	/* number of tests for exception flags */
 static int noErrnoTests;/* number of tests for errno values */
 
-static int verbose;
+static unsigned int verbose;
 static int output_max_error;	/* Should the maximal errors printed?  */
 static int output_points;	/* Should the single function results printed?  */
 static int ignore_max_ulp;	/* Should we ignore max_ulp?  */
@@ -1057,7 +1057,14 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
     case 'v':
       if (optarg)
-	verbose = (unsigned int) strtoul (optarg, NULL, 0);
+	{
+	  char *optstr_conv = optarg;
+	  unsigned int opt_verbose;
+
+	  opt_verbose = (unsigned int) strtoul (optarg, &optstr_conv, 0);
+          if (*optstr_conv == '\0' && optstr_conv != optarg)
+            verbose = opt_verbose;
+	}
       else
 	verbose = 3;
       break;
@@ -1139,6 +1146,7 @@ libm_test_init (int argc, char **argv)
   int remaining;
   char *ulps_file_path;
   size_t dir_len = 0;
+  char *envstr_verbose;
 
   verbose = 1;
   output_ulps = 0;
@@ -1147,6 +1155,17 @@ libm_test_init (int argc, char **argv)
   output_dir = NULL;
   /* XXX set to 0 for releases.  */
   ignore_max_ulp = 0;
+
+  envstr_verbose = getenv("GLIBC_TEST_LIBM_VERBOSE");
+  if (envstr_verbose != NULL)
+    {
+      char *envstr_conv = envstr_verbose;
+      unsigned int env_verbose;
+
+      env_verbose = (unsigned int) strtoul (envstr_verbose, &envstr_conv, 0);
+      if (*envstr_conv == '\0' && envstr_conv != envstr_verbose)
+        verbose = env_verbose;
+    }
 
   /* Parse and process arguments.  */
   argp_parse (&argp, argc, argv, 0, &remaining, NULL);
