@@ -27,6 +27,7 @@ headers := $(dist-headers) obstack.h mcheck.h
 tests := \
   mallocbug \
   tst-aligned-alloc \
+  tst-aligned-alloc-random \
   tst-alloc_buffer \
   tst-calloc \
   tst-free-errno \
@@ -36,6 +37,7 @@ tests := \
   tst-malloc-backtrace \
   tst-malloc-check \
   tst-malloc-fork-deadlock \
+  tst-malloc-random \
   tst-malloc-stats-cancellation \
   tst-malloc-tcache-leak \
   tst-malloc-thread-exit \
@@ -193,6 +195,7 @@ extra-libs-others = $(extra-libs)
 
 # Helper objects for some tests.
 extra-test-objs += \
+  tst-aligned_alloc-lib.so \
   tst-interpose-aux-nothread.o \
   tst-interpose-aux-thread.o \
 # extra-test-objs
@@ -201,6 +204,9 @@ test-extras = \
   tst-interpose-aux-nothread \
   tst-interpose-aux-thread \
 # test-extras
+
+modules-names = \
+  tst-aligned_alloc-lib
 
 libmemusage-routines = memusage
 libmemusage-inhibit-o = $(filter-out .os,$(object-suffixes))
@@ -408,3 +414,9 @@ tst-mallocstate-malloc-check-ENV = LD_PRELOAD=$(objpfx)libc_malloc_debug.so
 # libc_malloc_debug.so.
 $(objpfx)tst-mallocstate: $(objpfx)libc_malloc_debug.so
 $(objpfx)tst-mallocstate-malloc-check: $(objpfx)libc_malloc_debug.so
+
+$(objpfx)tst-aligned-alloc-random.out: $(objpfx)tst-aligned_alloc-lib.so
+$(objpfx)tst-malloc-random.out: $(objpfx)tst-aligned_alloc-lib.so
+
+tst-aligned-alloc-random-ENV = LD_PRELOAD=$(objpfx)tst-aligned_alloc-lib.so
+tst-malloc-random-ENV = LD_PRELOAD=$(objpfx)tst-aligned_alloc-lib.so

@@ -18,7 +18,9 @@
 #include <errno.h>
 #include <malloc.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <libc-diag.h>
+#include <time.h>
 
 static int errors = 0;
 
@@ -34,6 +36,8 @@ do_test (void)
 {
   void *p, *q;
   int save;
+
+  srandom (time (NULL));
 
   errno = 0;
 
