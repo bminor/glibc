@@ -1340,6 +1340,10 @@ typedef struct
    https://systemd.io/ELF_PACKAGE_METADATA/ */
 #define NT_FDO_PACKAGING_METADATA 0xcafe1a7e
 
+/* dlopen metadata as defined on
+   https://systemd.io/ELF_DLOPEN_METADATA/ */
+#define NT_FDO_DLOPEN_METADATA 0x407c0c0a
+
 /* Note section name of program property.   */
 #define NOTE_GNU_PROPERTY_SECTION_NAME ".note.gnu.property"
 
