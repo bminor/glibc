@@ -1337,7 +1337,7 @@ typedef struct
 #define NT_GNU_PROPERTY_TYPE_0 5
 
 /* Packaging metadata as defined on
-   https://systemd.io/COREDUMP_PACKAGE_METADATA/ */
+   https://systemd.io/ELF_PACKAGE_METADATA/ */
 #define NT_FDO_PACKAGING_METADATA 0xcafe1a7e
 
 /* Note section name of program property.   */
