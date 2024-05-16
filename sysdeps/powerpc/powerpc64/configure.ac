@@ -7,7 +7,7 @@ AC_CACHE_CHECK(for support for overlapping .opd entries,
 libc_cv_overlapping_opd, [dnl
 libc_cv_overlapping_opd=no
 echo 'void foo (void) {}' > conftest.c
-if AC_TRY_COMMAND(${CC-cc} $CFLAGS $CPPFLAGS -S conftest.c -o conftest.s 1>&AS_MESSAGE_LOG_FD); then
+if AC_TRY_COMMAND(${CC-cc} $CFLAGS $CPPFLAGS $libc_cv_cc_submachine -S conftest.c -o conftest.s 1>&AS_MESSAGE_LOG_FD); then
 changequote(,)dnl
   if grep '\.TOC\.@tocbase' conftest.s > /dev/null; then
     if grep '\.TOC\.@tocbase[ 	]*,[ 	]*0' conftest.s > /dev/null; then
@@ -35,7 +35,7 @@ int bar (void);
 int foo (void) { return bar () + 1; }
 EOF
   libc_cv_ppc64_notoc=no
-  if AC_TRY_COMMAND([${CC-cc} $libc_cv_cc_submachine $CFLAGS $CPPFLAGS -S -o conftest.s conftest.c]) \
+  if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $libc_cv_cc_submachine -S -o conftest.s conftest.c]) \
      && AC_TRY_COMMAND([grep -q -E 'bar@notoc' conftest.s])
   then
     libc_cv_ppc64_notoc=yes
