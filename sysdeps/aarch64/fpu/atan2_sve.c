@@ -17,6 +17,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include "math_config.h"
 #include "sv_math.h"
 #include "poly_sve_f64.h"
 

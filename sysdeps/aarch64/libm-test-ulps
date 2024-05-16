@@ -1417,10 +1417,18 @@ double: 1
 float: 1
 ldouble: 2
 
+Function: "pow_advsimd":
+double: 1
+float: 2
+
 Function: "pow_downward":
 double: 1
 float: 1
 ldouble: 2
+
+Function: "pow_sve":
+double: 1
+float: 2
 
 Function: "pow_towardzero":
 double: 1
