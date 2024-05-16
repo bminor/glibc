@@ -899,9 +899,10 @@ endif
 +math-flags = -frounding-math
 
 # Logically only "libnldbl", "nonlib" and "testsuite" should be using
-# -fno-math-errno. However due to GCC bug #88576, only "libm" can use
-# -fno-math-errno.
-+extra-math-flags = $(if $(filter libm,$(in-module)),-fno-math-errno,-fmath-errno)
+# -fno-math-errno. However due to GCC bug #88576, only "libm" and
+# "libmvec" can use -fno-math-errno.
++extra-math-flags = $(if $(filter libmvec libm,$(in-module)),\
+                      -fno-math-errno,-fmath-errno)
 
 # Use 64 bit time_t support for installed programs
 installed-modules = nonlib nscd ldconfig locale_programs \
