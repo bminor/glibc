@@ -261,6 +261,10 @@ stdlib-benchset := \
   strtod \
   # stdlib-benchset
 
+stdio-benchset := \
+  fclose \
+  # stdio-benchset
+
 stdio-common-benchset := sprintf
 
 math-benchset := math-inlines
@@ -269,6 +273,7 @@ ifeq (${BENCHSET},)
 benchset := \
   $(hash-benchset) \
   $(math-benchset) \
+  $(stdio-benchset) \
   $(stdio-common-benchset) \
   $(stdlib-benchset) \
   $(string-benchset-all) \
@@ -419,6 +424,7 @@ VALIDBENCHSETNAMES := \
   malloc-simple \
   malloc-thread \
   math-benchset \
+  stdio-benchset \
   stdio-common-benchset \
   stdlib-benchset \
   string-benchset \

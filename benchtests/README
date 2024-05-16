@@ -87,6 +87,7 @@ where BENCHSET may be a space-separated list of the following values:
     hash-benchset
     malloc-thread
     math-benchset
+    stdio-benchset
     stdio-common-benchset
     stdlib-benchset
     string-benchset
