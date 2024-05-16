@@ -54,4 +54,19 @@ DEF_STDFILE(_IO_2_1_stdout_, 1, &_IO_2_1_stdin_, _IO_NO_READS);
 DEF_STDFILE(_IO_2_1_stderr_, 2, &_IO_2_1_stdout_, _IO_NO_READS+_IO_UNBUFFERED);
 
 struct _IO_FILE_plus *_IO_list_all = &_IO_2_1_stderr_;
+
+/* Finish double-linking stdin, stdout, and stderr in a constructor.
+   Static initialization cannot complete the _prevchain setup.  */
+
+__THROW __attribute__ ((constructor))
+static void
+_IO_stdfiles_init (void)
+{
+  struct _IO_FILE **f;
+  for (f = (struct _IO_FILE **) &_IO_list_all;
+       *f != NULL;
+       f = &(*f)->_chain)
+    (*f)->_prevchain = f;
+}
+
 libc_hidden_data_def (_IO_list_all)

@@ -48,6 +48,19 @@ flush_cleanup (void *not_used)
 }
 #endif
 
+/* Fields in struct _IO_FILE after the _lock field are internal to
+   glibc and opaque to applications.  We can change them as long as
+   the size of struct _IO_FILE is unchanged, which is checked as the
+   part of glibc ABI with sizes of _IO_2_1_stdin_, _IO_2_1_stdout_
+   and _IO_2_1_stderr_.
+
+   NB: When _IO_vtable_offset (fp) == 0, copy relocation will cover the
+   whole struct _IO_FILE.  Otherwise, only fields up to the _lock field
+   will be copied.  */
+_Static_assert (offsetof (struct _IO_FILE, _prevchain)
+		> offsetof (struct _IO_FILE, _lock),
+		"offset of _prevchain > offset of _lock");
+
 void
 _IO_un_link (struct _IO_FILE_plus *fp)
 {
@@ -62,6 +75,14 @@ _IO_un_link (struct _IO_FILE_plus *fp)
 #endif
       if (_IO_list_all == NULL)
 	;
+      else if (_IO_vtable_offset ((FILE *) fp) == 0)
+	{
+	  FILE **pr = fp->file._prevchain;
+	  FILE *nx = fp->file._chain;
+	  *pr = nx;
+	  if (nx != NULL)
+	    nx->_prevchain = pr;
+	}
       else if (fp == _IO_list_all)
 	_IO_list_all = (struct _IO_FILE_plus *) _IO_list_all->file._chain;
       else
@@ -95,6 +116,11 @@ _IO_link_in (struct _IO_FILE_plus *fp)
       _IO_flockfile ((FILE *) fp);
 #endif
       fp->file._chain = (FILE *) _IO_list_all;
+      if (_IO_vtable_offset ((FILE *) fp) == 0)
+	{
+	  fp->file._prevchain = (FILE **) &_IO_list_all;
+	  _IO_list_all->file._prevchain = &fp->file._chain;
+	}
       _IO_list_all = fp;
 #ifdef _IO_MTSAFE_IO
       _IO_funlockfile ((FILE *) fp);
