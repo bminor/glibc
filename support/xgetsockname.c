@@ -1,5 +1,6 @@
 /* getsockname with error checking.
    Copyright (C) 2016-2024 Free Software Foundation, Inc.
+   Copyright The GNU Toolchain Authors.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,5 +27,5 @@ void
 xgetsockname (int fd, struct sockaddr *sa, socklen_t *plen)
 {
   if (getsockname (fd, sa, plen) != 0)
-    FAIL_EXIT1 ("setsockopt (%d): %m", fd);
+    FAIL_EXIT1 ("getsockname (%d): %m", fd);
 }
