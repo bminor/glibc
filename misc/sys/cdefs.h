@@ -874,4 +874,13 @@ _Static_assert (0, "IEEE 128-bits long double requires redirection on this platf
 # define __attribute_returns_twice__ /* Ignore.  */
 #endif
 
+/* Mark struct types as aliasable.  Restricted to compilers that
+   support forward declarations of structs in the presence of the
+   attribute.  */
+#if __GNUC_PREREQ (7, 1) || defined __clang__
+# define __attribute_struct_may_alias__ __attribute__ ((__may_alias__))
+#else
+# define __attribute_struct_may_alias__
+#endif
+
 #endif	 /* sys/cdefs.h */
