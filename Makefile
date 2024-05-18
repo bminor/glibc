@@ -581,7 +581,8 @@ $(objpfx)lint-makefiles.out: scripts/lint-makefiles.sh
 # definitions of any symbols.
 tests-special += $(objpfx)link-static-libc.out
 $(objpfx)link-static-libc.out:
-	$(LINK.o) $(whole-archive) -r $(objpfx)libc.a -o /dev/null > $@ 2>&1; \
+	$(LINK.o) $(whole-archive) -nostdlib -nostartfiles -r \
+	  $(objpfx)libc.a -o /dev/null > $@ 2>&1; \
 	$(evaluate-test)
 
 # Print test summary for tests in $1 .sum file;
