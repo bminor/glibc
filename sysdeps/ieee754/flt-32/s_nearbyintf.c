@@ -68,4 +68,6 @@ __nearbyintf (float x)
   return t;
 #endif /* ! USE_NEARBYINT_BUILTIN  */
 }
+#ifndef __nearbyintf
 libm_alias_float (__nearbyint, nearbyint)
+#endif

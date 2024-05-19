@@ -72,4 +72,6 @@ __nearbyint (double x)
   return t;
 #endif /* ! USE_NEARBYINT_BUILTIN  */
 }
+#ifndef __nearbyint
 libm_alias_double (__nearbyint, nearbyint)
+#endif
