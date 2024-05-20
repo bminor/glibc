@@ -1083,9 +1083,9 @@ struct test_Ff_b1_data
     = STR_CON3 (FUN, SUFF, TEST_SUFF) TEST_SUFF_STR;		\
   init_max_error (this_func, EXACT, TEST_COND_any_ibm128)
 #define END					\
-  print_max_error (this_func)
+  check_max_error (this_func)
 #define END_COMPLEX				\
-  print_complex_max_error (this_func)
+  check_complex_max_error (this_func)
 
 /* Run tests for a given function in all rounding modes.  */
 #define ALL_RM_TEST(FUNC, EXACT, ARRAY, LOOP_MACRO, END_MACRO, ...)	\

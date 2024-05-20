@@ -170,8 +170,8 @@ extern const char doc[];
 
 int enable_test (int);
 void init_max_error (const char *, int, int);
-void print_max_error (const char *);
-void print_complex_max_error (const char *);
+void check_max_error (const char *);
+void check_complex_max_error (const char *);
 void check_float (const char *, FLOAT, FLOAT, int);
 void check_complex (const char *, CFLOAT, CFLOAT, int);
 void check_int (const char *, int, int, int);
