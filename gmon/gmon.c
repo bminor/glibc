@@ -439,6 +439,7 @@ write_gmon (void)
 }
 
 
+#ifdef PROF
 void
 __write_profiling (void)
 {
@@ -448,7 +449,7 @@ __write_profiling (void)
     write_gmon ();
   _gmonparam.state = save;
 }
-#ifndef SHARED
+
 /* This symbol isn't used anywhere in the DSO and it is not exported.
    This would normally mean it should be removed to get the same API
    in static libraries.  But since profiling is special in static libs
