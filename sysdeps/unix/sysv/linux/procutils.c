@@ -71,8 +71,9 @@ next_line (char **r, int fd, char *const buffer, char **cp, char **re,
 }
 
 bool
-procutils_read_file (const char *filename, procutils_closure_t closure,
-		     void *arg)
+__libc_procutils_read_file (const char *filename,
+			    procutils_closure_t closure,
+			    void *arg)
 {
   enum { buffer_size = PROCUTILS_MAX_LINE_LEN };
   char buffer[buffer_size];

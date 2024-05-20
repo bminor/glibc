@@ -105,7 +105,7 @@ pidfd_getpid (int fd)
   *_fitoa_word (fd, p, 10, 0) = '\0';
 
   struct parse_fdinfo_t fdinfo = { .found = false, .pid = -1 };
-  if (!procutils_read_file (fdinfoname, parse_fdinfo, &fdinfo))
+  if (!__libc_procutils_read_file (fdinfoname, parse_fdinfo, &fdinfo))
     /* The fdinfo contains an invalid 'Pid:' value.  */
     return INLINE_SYSCALL_ERROR_RETURN_VALUE (EBADF);
 

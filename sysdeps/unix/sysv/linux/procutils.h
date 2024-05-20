@@ -37,7 +37,8 @@ typedef int (*procutils_closure_t) (const char *line, void *arg);
 
    It returns true in case the file is fully read or false if CLOSURE
    returns a value diferent than 0.  */
-bool procutils_read_file (const char *filename, procutils_closure_t closure,
-			  void *arg) attribute_hidden;
+bool __libc_procutils_read_file (const char *filename,
+				 procutils_closure_t closure,
+				 void *arg) attribute_hidden;
 
 #endif
