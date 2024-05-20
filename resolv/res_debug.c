@@ -141,6 +141,7 @@ static const char res_opcodes[][9] =
   };
 #if SHLIB_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_26)
 strong_alias (res_opcodes, _res_opcodes)
+compat_symbol (libresolv, _res_opcodes, _res_opcodes, GLIBC_2_0);
 #endif
 
 static const char *p_section(int section, int opcode);
