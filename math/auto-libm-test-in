@@ -6664,6 +6664,57 @@ log2 min
 log2 min_subnorm
 log2 max
 
+log2p1 0
+log2p1 -0
+log2p1 e-1
+log2p1 -0.25
+log2p1 -0.875
+log2p1 0x1p-5
+log2p1 0x1p-10
+log2p1 0x1p-15
+log2p1 0x1p-20
+log2p1 0x1p-25
+log2p1 0x1p-30
+log2p1 0x1p-35
+log2p1 0x1p-40
+log2p1 0x1p-45
+log2p1 0x1p-50
+log2p1 0x1p-55
+log2p1 0x1p-60
+log2p1 0x1p-100
+log2p1 0x1p-600
+log2p1 0x1p-10000
+log2p1 min
+log2p1 min_subnorm
+log2p1 -min
+log2p1 -min_subnorm
+log2p1 0x1p10
+log2p1 0x1p20
+log2p1 0x1p30
+log2p1 0x1p50
+log2p1 0x1p60
+log2p1 0x1p100
+log2p1 0x1p1000
+log2p1 0x6.a0cf42befce9ed4085ef59254b48p-4
+log2p1 max
+
+log2p1 0x7.2a4368p-4
+log2p1 0x6.d3a118p-4
+log2p1 0x5.03f228p+0
+log2p1 0x7.264963888ac9p-4
+log2p1 0x8.786bdp-4
+log2p1 0x7.89dc17790eeb4p-4
+log2p1 0x9.81ccf8887c24a7bp-4
+log2p1 0xa.5028608bd65f38dp-4
+log2p1 0x5.bf78873e20a2d468p-4
+log2p1 0x7.aa5198p-4
+log2p1 0x2.564fap+0
+log2p1 0x7.fc242a2235222ef8p-4
+log2p1 -0x4.f37d3c9ce0b14bdd86eb157df5d4p-4
+log2p1 0x7.2eca50c4d93196362b4f37f6e8dcp-4
+log2p1 -0x6.3fef3067427e43dfcde9e48f74bcp-4
+log2p1 0x6.af53d00fd2845d4772260ef5adc4p-4
+
 mul 0 0
 mul 0 -0
 mul -0 0

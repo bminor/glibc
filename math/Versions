@@ -639,4 +639,10 @@ libm {
     # No SVID compatible error handling.
     exp10;
   }
+  GLIBC_2.40 {
+    # Functions not involving _Float64x or _Float128, for all configurations.
+    log2p1; log2p1f; log2p1l; log2p1f32; log2p1f64; log2p1f32x;
+    # Functions involving _Float64x or _Float128, for some configurations.
+    log2p1f64x; log2p1f128;
+  }
 }

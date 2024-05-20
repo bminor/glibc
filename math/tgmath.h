@@ -874,6 +874,9 @@
 #if __GLIBC_USE (IEC_60559_FUNCS_EXT_C23)
 /* Compute exponent to base ten.  */
 #define exp10(Val) __TGMATH_UNARY_REAL_ONLY (Val, exp10)
+
+/* Return log2(1 + X).  */
+#define log2p1(Val) __TGMATH_UNARY_REAL_ONLY (Val, log2p1)
 #endif
 
 

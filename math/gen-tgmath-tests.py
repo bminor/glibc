@@ -743,6 +743,7 @@ class Tests(object):
                 self.add_tests(prefix + fn, ret, ['r'] * args)
         # TS 18661-4 functions.
         self.add_tests('exp10', 'r', ['r'])
+        self.add_tests('log2p1', 'r', ['r'])
         # C23 functions.
         self.add_tests('fmaximum', 'r', ['r', 'r'])
         self.add_tests('fmaximum_mag', 'r', ['r', 'r'])

@@ -137,6 +137,9 @@ libm {
     __fminimum_magieee128;
     __fminimum_mag_numieee128;
   }
+  GLIBC_2.40 {
+    __log2p1ieee128;
+  }
 }
 libc {
   LDBL_IBM128_VERSION {

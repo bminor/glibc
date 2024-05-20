@@ -127,6 +127,7 @@ gen-libm-calls = \
   s_fminimum_numF \
   s_fminmagF \
   s_iseqsigF \
+  s_log2p1F \
   s_nanF \
   s_nextdownF \
   s_significandF \
@@ -650,6 +651,7 @@ libm-test-funcs-auto = \
   log10 \
   log1p \
   log2 \
+  log2p1 \
   pow \
   sin \
   sincos \
@@ -892,6 +894,7 @@ tgmath3-macros = \
   log10 \
   log1p \
   log2 \
+  log2p1 \
   logb \
   lrint \
   lround \
@@ -1264,6 +1267,7 @@ CFLAGS-e_log.c += -fno-builtin-logl
 CFLAGS-w_log10.c += -fno-builtin-log10l
 CFLAGS-w_log1p.c += -fno-builtin-log1pl
 CFLAGS-e_log2.c += -fno-builtin-log2l
+CFLAGS-s_log2p1.c += -fno-builtin-log2p1l
 CFLAGS-s_logb.c += -fno-builtin-logbl
 CFLAGS-s_lrint.c += -fno-builtin-lrintl
 CFLAGS-s_lround.c += -fno-builtin-lroundl
@@ -1389,6 +1393,7 @@ CFLAGS-e_log.c += -fno-builtin-logf32x -fno-builtin-logf64
 CFLAGS-w_log10.c += -fno-builtin-log10f32x -fno-builtin-log10f64
 CFLAGS-w_log1p.c += -fno-builtin-log1pf32x -fno-builtin-log1pf64
 CFLAGS-e_log2.c += -fno-builtin-log2f32x -fno-builtin-log2f64
+CFLAGS-s_log2p1.c += -fno-builtin-log2p1f32x -fno-builtin-log2p1f64
 CFLAGS-s_logb.c += -fno-builtin-logbf32x -fno-builtin-logbf64
 CFLAGS-s_lrint.c += -fno-builtin-lrintf32x -fno-builtin-lrintf64
 CFLAGS-s_lround.c += -fno-builtin-lroundf32x -fno-builtin-lroundf64
@@ -1503,6 +1508,7 @@ CFLAGS-e_logf.c += -fno-builtin-logf32
 CFLAGS-w_log10f.c += -fno-builtin-log10f32
 CFLAGS-w_log1pf.c += -fno-builtin-log1pf32
 CFLAGS-e_log2f.c += -fno-builtin-log2f32
+CFLAGS-s_log2p1f.c += -fno-builtin-log2p1f32
 CFLAGS-s_logbf.c += -fno-builtin-logbf32
 CFLAGS-s_lrintf.c += -fno-builtin-lrintf32
 CFLAGS-s_lroundf.c += -fno-builtin-lroundf32

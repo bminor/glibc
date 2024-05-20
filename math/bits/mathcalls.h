@@ -112,6 +112,9 @@ __MATHCALL (modf,, (_Mdouble_ __x, _Mdouble_ *__iptr)) __nonnull ((2));
 #if __GLIBC_USE (IEC_60559_FUNCS_EXT_C23)
 /* Compute exponent to base ten.  */
 __MATHCALL_VEC (exp10,, (_Mdouble_ __x));
+
+/* Return log2(1 + X).  */
+__MATHCALL (log2p1,, (_Mdouble_ __x));
 #endif
 
 #if defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99

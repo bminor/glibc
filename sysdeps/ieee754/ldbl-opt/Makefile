@@ -51,7 +51,8 @@ libnldbl-calls = asprintf dprintf fprintf fscanf fwprintf fwscanf iovfscanf \
 		 roundeven fromfp ufromfp fromfpx ufromfpx fadd dadd \
 		 fdiv ddiv ffma dfma fmul dmul fsqrt dsqrt fsub dsub \
 		 fmaximum fmaximum_mag fmaximum_num fmaximum_mag_num \
-		 fminimum fminimum_mag fminimum_num fminimum_mag_num
+		 fminimum fminimum_mag fminimum_num fminimum_mag_num \
+		 log2p1
 libnldbl-routines = $(libnldbl-calls:%=nldbl-%)
 libnldbl-inhibit-o = $(object-suffixes)
 libnldbl-static-only-routines = $(libnldbl-routines)
@@ -151,6 +152,7 @@ CFLAGS-nldbl-log.c = -fno-builtin-logl
 CFLAGS-nldbl-log10.c = -fno-builtin-log10l
 CFLAGS-nldbl-log1p.c = -fno-builtin-log1pl
 CFLAGS-nldbl-log2.c = -fno-builtin-log2l
+CFLAGS-nldbl-log2p1.c = -fno-builtin-log2p1l
 CFLAGS-nldbl-logb.c = -fno-builtin-logbl
 CFLAGS-nldbl-lrint.c = -fno-builtin-lrintl
 CFLAGS-nldbl-lround.c = -fno-builtin-lroundl

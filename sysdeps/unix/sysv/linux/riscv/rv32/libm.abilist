@@ -1028,3 +1028,11 @@ GLIBC_2.35 fminimumf64x F
 GLIBC_2.35 fminimuml F
 GLIBC_2.35 fsqrt F
 GLIBC_2.35 fsqrtl F
+GLIBC_2.40 log2p1 F
+GLIBC_2.40 log2p1f F
+GLIBC_2.40 log2p1f128 F
+GLIBC_2.40 log2p1f32 F
+GLIBC_2.40 log2p1f32x F
+GLIBC_2.40 log2p1f64 F
+GLIBC_2.40 log2p1f64x F
+GLIBC_2.40 log2p1l F

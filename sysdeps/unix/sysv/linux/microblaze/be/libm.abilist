@@ -848,3 +848,9 @@ GLIBC_2.35 hypotf F
 GLIBC_2.38 fmod F
 GLIBC_2.38 fmodf F
 GLIBC_2.39 exp10 F
+GLIBC_2.40 log2p1 F
+GLIBC_2.40 log2p1f F
+GLIBC_2.40 log2p1f32 F
+GLIBC_2.40 log2p1f32x F
+GLIBC_2.40 log2p1f64 F
+GLIBC_2.40 log2p1l F

@@ -54,4 +54,5 @@ CFLAGS-s_fmaximum_magl.c += -fno-builtin-fabsl
 CFLAGS-s_fmaximum_mag_numl.c += -fno-builtin-fabsl
 CFLAGS-s_fminimum_magl.c += -fno-builtin-fabsl
 CFLAGS-s_fminimum_mag_numl.c += -fno-builtin-fabsl
+CFLAGS-s_log2p1l.c += -fno-builtin-fabsl
 endif

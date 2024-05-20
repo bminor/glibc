@@ -754,6 +754,20 @@ They are computed in a way that is accurate even if @var{x} is
 near zero.
 @end deftypefun
 
+@deftypefun double log2p1 (double @var{x})
+@deftypefunx float log2p1f (float @var{x})
+@deftypefunx {long double} log2p1l (long double @var{x})
+@deftypefunx _FloatN log2p1fN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx log2p1fNx (_Float@var{N}x @var{x})
+@standards{TS 18661-4:2015, math.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions return a value equivalent to @w{@code{log2 (1 + @var{x})}}.
+They are computed in a way that is accurate even if @var{x} is
+near zero.
+
+The @code{log2p1} functions are from TS 18661-4:2015.
+@end deftypefun
+
 @cindex complex exponentiation functions
 @cindex complex logarithm functions
 

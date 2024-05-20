@@ -21,6 +21,13 @@ Major new features:
   by _GNU_SOURCE, or by compiling with the GCC options -std=c23,
   -std=gnu23, -std=c2x or -std=gnu2x.
 
+* The following ISO C23 function families (introduced in TS
+  18661-4:2015) are now supported in <math.h>.  Each family includes
+  functions for float, double, long double, _FloatN and _FloatNx, and a
+  type-generic macro in <tgmath.h>.
+
+  - Logarithmic functions: log2p1.
+
 * A new tunable, glibc.rtld.enable_secure, used to run a program
   as if it were a setuid process. This is currently a testing tool to allow
   more extensive verification tests for AT_SECURE programs and not meant to

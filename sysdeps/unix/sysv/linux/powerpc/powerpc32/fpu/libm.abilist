@@ -995,3 +995,9 @@ GLIBC_2.4 truncl F
 GLIBC_2.4 y0l F
 GLIBC_2.4 y1l F
 GLIBC_2.4 ynl F
+GLIBC_2.40 log2p1 F
+GLIBC_2.40 log2p1f F
+GLIBC_2.40 log2p1f32 F
+GLIBC_2.40 log2p1f32x F
+GLIBC_2.40 log2p1f64 F
+GLIBC_2.40 log2p1l F
