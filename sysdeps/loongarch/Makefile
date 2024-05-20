@@ -35,9 +35,11 @@ sysdep-dl-routines += \
 # Disable the compiler from using LSX for TLS descriptor tests, or storing into
 # 16B TLS variable may clobber FP/vector registers and prevent us from checking
 # their contents.
+ifeq (yes,$(loongarch-vec-com))
 CFLAGS-tst-gnu2-tls2mod0.c += -mno-lsx
 CFLAGS-tst-gnu2-tls2mod1.c += -mno-lsx
 CFLAGS-tst-gnu2-tls2mod2.c += -mno-lsx
+endif
 endif
 
 # LoongArch's assembler also needs to know about PIC as it changes the

@@ -71,8 +71,8 @@ AC_CACHE_CHECK([for vector support in compiler],
 AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 void foo (void)
 {
-  asm volatile ("vldi $vr0, 1" ::: "$vr0");
-  asm volatile ("xvldi $xr0, 1" ::: "$xr0");
+  asm volatile ("vldi \$vr0, 1" ::: "\$vr0");
+  asm volatile ("xvldi \$xr0, 1" ::: "\$xr0");
 }
 ]])],
                 [libc_cv_loongarch_vec_com=yes],
@@ -81,3 +81,4 @@ if test "$libc_cv_loongarch_vec_com" = yes ;
 then
   AC_DEFINE(HAVE_LOONGARCH_VEC_COM)
 fi
+LIBC_CONFIG_VAR([loongarch-vec-com], [$libc_cv_loongarch_vec_com])
