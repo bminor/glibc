@@ -83,5 +83,9 @@ _Float128 __nextafterl(_Float128 x, _Float128 y)
 	return x;
 }
 libm_alias_ldouble (__nextafter, nextafter)
+#ifndef __nexttowardl
 strong_alias (__nextafterl, __nexttowardl)
+#endif
+#ifndef nexttowardl
 weak_alias (__nextafterl, nexttowardl)
+#endif

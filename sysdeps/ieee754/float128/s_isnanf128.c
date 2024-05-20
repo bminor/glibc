@@ -16,7 +16,9 @@ hidden_ver (__isnanf128_impl, __isnanf128)
 #else
 strong_alias (__isnanf128_impl, __isnanf128)
 #endif
+#ifndef isnanl
 _weak_alias (__isnanf128_impl, isnanl)
+#endif
 versioned_symbol (libc, __isnanf128_impl, __isnanf128, GLIBC_2_34);
 #if (SHLIB_COMPAT (libc, FLOAT128_VERSION_M, GLIBC_2_34))
 strong_alias (__isnanf128_impl, __isnanf128_alias)

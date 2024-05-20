@@ -32,4 +32,6 @@ int __finitel(_Float128 x)
 				-0x7fff000000000000LL)>>63);
 }
 mathx_hidden_def (__finitel)
+#ifndef finitel
 weak_alias (__finitel, finitel)
+#endif
