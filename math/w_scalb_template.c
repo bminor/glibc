@@ -52,6 +52,18 @@ FLOAT M_DECL_FUNC (__scalb) (FLOAT x, FLOAT fn)
   return z;
 }
 
+/* Don't provide _FloatN aliases for scalb which is a deprecated interface,
+   was obsolescent in POSIX.1-2001, removed in POSIX.1-2008, never made to
+   C standard.  */
+#undef libm_alias_float_other_r
+#define libm_alias_float_other_r(from, to, r)
+#undef libm_alias_double_other_r
+#define libm_alias_double_other_r(from, to, r)
+#undef libm_alias_ldouble_other_r
+#define libm_alias_ldouble_other_r(from, to, r)
+#undef libm_alias_float128_other_r
+#define libm_alias_float128_other_r(from, to, r)
+
 declare_mgen_alias (__scalb, scalb);
 
 #endif /* __USE_WRAPPER_TEMPLATE.  */
