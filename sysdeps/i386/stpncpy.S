@@ -139,4 +139,6 @@ L(9):	popl %esi		/* restore saved register content */
 END (__stpncpy)
 
 libc_hidden_def (__stpncpy)
+#ifndef __stpncpy
 weak_alias (__stpncpy, stpncpy)
+#endif
