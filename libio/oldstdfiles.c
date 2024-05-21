@@ -48,6 +48,10 @@ DEF_STDFILE(_IO_stdin_, 0, 0, _IO_NO_WRITES);
 DEF_STDFILE(_IO_stdout_, 1, &_IO_stdin_, _IO_NO_READS);
 DEF_STDFILE(_IO_stderr_, 2, &_IO_stdout_, _IO_NO_READS+_IO_UNBUFFERED);
 
+compat_symbol (libc, _IO_stdin_, _IO_stdin_, GLIBC_2_0);
+compat_symbol (libc, _IO_stdout_, _IO_stdout_, GLIBC_2_0);
+compat_symbol (libc, _IO_stderr_, _IO_stderr_, GLIBC_2_0);
+
 #if defined __GNUC__ && __GNUC__ >= 2
 
 #include <stdio.h>
