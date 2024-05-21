@@ -33,6 +33,10 @@ test
 	Note that this will rebuild the test if needed, but will not
 	rebuild what "make all" would have rebuilt.
 
+build-math-static-tests
+	Enable extra math tests for static linking.  Use like this:
+		make test t=math/test-float-exp10-static build-math-static-tests=yes
+
 --
 Other useful hints:
 

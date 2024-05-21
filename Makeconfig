@@ -768,6 +768,11 @@ run-built-tests = yes
 endif
 endif
 
+# Whether to build the static math tests
+ifndef build-math-static-tests
+build-math-static-tests = no
+endif
+
 # Whether to stop immediately when a test fails.  Nonempty means to
 # stop, empty means not to stop.
 ifndef stop-on-test-failure
