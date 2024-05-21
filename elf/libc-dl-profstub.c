@@ -19,17 +19,21 @@
 #include <dlfcn.h>
 #include <elf.h>
 #include <ldsodefs.h>
+#include <shlib-compat.h>
 
 /* This is the map for the shared object we profile.  It is defined here
    only because we test for this value being NULL or not.  */
 
-
+#if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_40)
+attribute_compat_text_section
 void
 _dl_mcount_wrapper (void *selfpc)
 {
   GLRO(dl_mcount) ((ElfW(Addr)) RETURN_ADDRESS (0), (ElfW(Addr)) selfpc);
 }
 
+compat_symbol (libc, _dl_mcount_wrapper, _dl_mcount_wrapper, GLIBC_2_1);
+#endif
 
 void
 _dl_mcount_wrapper_check (void *selfpc)
