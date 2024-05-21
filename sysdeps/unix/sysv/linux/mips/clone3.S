@@ -158,4 +158,3 @@ L(thread_start_clone3):
 END(__thread_start_clone3)
 
 libc_hidden_def (__clone3)
-weak_alias (__clone3, clone3)

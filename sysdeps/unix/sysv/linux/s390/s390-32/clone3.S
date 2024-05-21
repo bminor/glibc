@@ -75,4 +75,3 @@ thread_start:
 	ASM_SIZE_DIRECTIVE (thread_start)
 
 libc_hidden_def (__clone3)
-weak_alias (__clone3, clone3)

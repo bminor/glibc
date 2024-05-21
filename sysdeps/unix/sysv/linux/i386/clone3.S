@@ -120,4 +120,3 @@ L(thread_start):
 PSEUDO_END (__clone3)
 
 libc_hidden_def (__clone3)
-weak_alias (__clone3, clone3)

@@ -87,4 +87,3 @@ thread_start_clone3:
 	.size thread_start_clone3, .-thread_start_clone3
 
 libc_hidden_def (__clone3)
-weak_alias (__clone3, clone3)
