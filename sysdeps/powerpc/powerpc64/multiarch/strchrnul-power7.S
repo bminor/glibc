@@ -18,6 +18,9 @@
 
 #define STRCHRNUL __strchrnul_power7
 
+#undef weak_alias
+#define weak_alias(a,b)
+
 #undef libc_hidden_builtin_def
 #define libc_hidden_builtin_def(name)
 
