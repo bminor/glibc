@@ -98,5 +98,7 @@ L(out):
     jr          ra
 END(STRNLEN)
 
+#if !IS_IN (libc)
 weak_alias (STRNLEN, strnlen)
 libc_hidden_builtin_def (STRNLEN)
+#endif
