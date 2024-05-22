@@ -3,6 +3,7 @@ default-abi := 32
 
 ifeq ($(subdir),login)
 sysdep_routines += utmp32 utmpx32 login32
+shared-only-routines += utmp32 utmpx32 login32
 endif
 
 ifeq ($(subdir),misc)
