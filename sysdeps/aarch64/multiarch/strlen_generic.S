@@ -30,6 +30,9 @@
 # undef libc_hidden_builtin_def
 # define libc_hidden_builtin_def(name)
 
+# undef weak_alias
+# define weak_alias(a, b)
+
 # ifdef SHARED
 /* It doesn't make sense to send libc-internal strlen calls through a PLT. */
 	.globl __GI_strlen; __GI_strlen = __strlen_generic

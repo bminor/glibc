@@ -24,6 +24,9 @@
 # undef libc_hidden_builtin_def
 # define libc_hidden_builtin_def(name)
 
+# undef weak_alias
+# define weak_alias(a, b)
+
 /* Add a hidden definition for use within libc.so.  */
 # ifdef SHARED
 	.globl __GI_memchr; __GI_memchr = __memchr_generic
