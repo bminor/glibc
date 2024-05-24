@@ -30,6 +30,9 @@ glibc {
     x86_non_temporal_threshold {
       type: SIZE_T
     }
+    x86_memset_non_temporal_threshold {
+      type: SIZE_T
+    }
     x86_rep_movsb_threshold {
       type: SIZE_T
       # Since there is overhead to set up REP MOVSB operation, REP

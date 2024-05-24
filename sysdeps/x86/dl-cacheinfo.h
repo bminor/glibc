@@ -986,6 +986,13 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
   if (CPU_FEATURE_USABLE_P (cpu_features, FSRM))
     rep_movsb_threshold = 2112;
 
+  /* Non-temporal stores in memset have only been tested on Intel hardware.
+     Until we benchmark data on other x86 processor, disable non-temporal
+     stores in memset. */
+  unsigned long int memset_non_temporal_threshold = SIZE_MAX;
+  if (cpu_features->basic.kind == arch_kind_intel)
+      memset_non_temporal_threshold = non_temporal_threshold;
+
    /* For AMD CPUs that support ERMS (Zen3+), REP MOVSB is in a lot of
       cases slower than the vectorized path (and for some alignments,
       it is really slow, check BZ #30994).  */
@@ -1012,6 +1019,11 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
       && tunable_size <= maximum_non_temporal_threshold)
     non_temporal_threshold = tunable_size;
 
+  tunable_size = TUNABLE_GET (x86_memset_non_temporal_threshold, long int, NULL);
+  if (tunable_size > minimum_non_temporal_threshold
+      && tunable_size <= maximum_non_temporal_threshold)
+    memset_non_temporal_threshold = tunable_size;
+
   tunable_size = TUNABLE_GET (x86_rep_movsb_threshold, long int, NULL);
   if (tunable_size > minimum_rep_movsb_threshold)
     rep_movsb_threshold = tunable_size;
@@ -1032,6 +1044,9 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
   TUNABLE_SET_WITH_BOUNDS (x86_non_temporal_threshold, non_temporal_threshold,
 			   minimum_non_temporal_threshold,
 			   maximum_non_temporal_threshold);
+  TUNABLE_SET_WITH_BOUNDS (
+      x86_memset_non_temporal_threshold, memset_non_temporal_threshold,
+      minimum_non_temporal_threshold, maximum_non_temporal_threshold);
   TUNABLE_SET_WITH_BOUNDS (x86_rep_movsb_threshold, rep_movsb_threshold,
 			   minimum_rep_movsb_threshold, SIZE_MAX);
   TUNABLE_SET_WITH_BOUNDS (x86_rep_stosb_threshold, rep_stosb_threshold, 1,
@@ -1045,6 +1060,7 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
   cpu_features->data_cache_size = data;
   cpu_features->shared_cache_size = shared;
   cpu_features->non_temporal_threshold = non_temporal_threshold;
+  cpu_features->memset_non_temporal_threshold = memset_non_temporal_threshold;
   cpu_features->rep_movsb_threshold = rep_movsb_threshold;
   cpu_features->rep_stosb_threshold = rep_stosb_threshold;
   cpu_features->rep_movsb_stop_threshold = rep_movsb_stop_threshold;

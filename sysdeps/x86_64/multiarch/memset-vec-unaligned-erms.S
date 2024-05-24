@@ -24,9 +24,9 @@
    5. If size is more to 4 * VEC_SIZE, align to 1 * VEC_SIZE with
       4 VEC stores and store 4 * VEC at a time until done.
    6. On machines ERMS feature, if size is range
-	  [__x86_rep_stosb_threshold, __x86_shared_non_temporal_threshold)
+	  [__x86_rep_stosb_threshold, __x86_memset_non_temporal_threshold)
 	  then REP STOSB will be used.
-   7. If size >= __x86_shared_non_temporal_threshold, use a
+   7. If size >= __x86_memset_non_temporal_threshold, use a
 	  non-temporal stores.  */
 
 #include <sysdep.h>
@@ -318,7 +318,7 @@ L(return_vzeroupper):
 	/* If no USE_LESS_VEC_MASK put L(stosb_local) here. Will be in
 	   range for 2-byte jump encoding.  */
 L(stosb_local):
-	cmp	__x86_shared_non_temporal_threshold(%rip), %RDX_LP
+	cmp	__x86_memset_non_temporal_threshold(%rip), %RDX_LP
 	jae	L(nt_memset)
 	movzbl	%sil, %eax
 	mov	%RDX_LP, %RCX_LP
