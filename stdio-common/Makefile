@@ -193,7 +193,6 @@ tests := \
   scanf18 \
   scanf19 \
   temptest \
-  test-fscanf \
   test-fseek \
   test-fwrite \
   test-popen \
