@@ -192,13 +192,17 @@ CFLAGS-nldbl-y0.c = -fno-builtin-y0l
 CFLAGS-nldbl-y1.c = -fno-builtin-y1l
 CFLAGS-nldbl-yn.c = -fno-builtin-ynl
 
-tests += test-narrow-macros-ldbl-64 test-nldbl-redirect \
-	 test-redirection-ldbl-64
+tests += \
+  test-narrow-macros-ldbl-64 \
+  test-nldbl-redirect \
+  test-redirection-ldbl-64 \
+# tests
 CFLAGS-test-narrow-macros-ldbl-64.c += -mlong-double-64
 CFLAGS-test-nldbl-redirect.c += -mlong-double-64
 CFLAGS-test-redirection-ldbl-64.c += -mlong-double-64
 
 $(objpfx)test-nldbl-redirect: $(objpfx)libnldbl_nonshared.a
+$(objpfx)test-nldbl-redirect-static: $(objpfx)libnldbl_nonshared.a
 
 endif
 
@@ -233,10 +237,12 @@ CFLAGS-tst-nldbl-errorfptr.c += -mlong-double-64
 endif
 
 ifeq ($(subdir), stdio-common)
-tests += tst-nldbl-scanf-binary-c11 \
-	 tst-nldbl-scanf-binary-c23 \
-	 tst-nldbl-scanf-binary-gnu11 \
-	 tst-nldbl-scanf-binary-gnu89
+tests += \
+  tst-nldbl-scanf-binary-c11 \
+  tst-nldbl-scanf-binary-c23 \
+  tst-nldbl-scanf-binary-gnu11 \
+  tst-nldbl-scanf-binary-gnu89 \
+# tests
 
 # Some versions of GCC supported for building glibc do not support -std=c23
 # (added in GCC 14), or the older name -std=c2x (added in GCC 9), so
@@ -254,10 +260,12 @@ CFLAGS-tst-nldbl-scanf-binary-gnu89.c += -mlong-double-64 -std=gnu89 \
 endif
 
 ifeq ($(subdir), wcsmbs)
-tests += tst-nldbl-wscanf-binary-c11 \
-	 tst-nldbl-wscanf-binary-c23 \
-	 tst-nldbl-wscanf-binary-gnu11 \
-	 tst-nldbl-wscanf-binary-gnu89
+tests += \
+  tst-nldbl-wscanf-binary-c11 \
+  tst-nldbl-wscanf-binary-c23 \
+  tst-nldbl-wscanf-binary-gnu11 \
+  tst-nldbl-wscanf-binary-gnu89 \
+# tests
 
 # Some versions of GCC supported for building glibc do not support -std=c23
 # (added in GCC 14), or the older name -std=c2x (added in GCC 9), so
