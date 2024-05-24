@@ -85,6 +85,8 @@ _dl_diagnostics_cpu (void)
                             cpu_features->shared_cache_size);
   print_cpu_features_value ("non_temporal_threshold",
                             cpu_features->non_temporal_threshold);
+  print_cpu_features_value ("memset_non_temporal_threshold",
+                            cpu_features->memset_non_temporal_threshold);
   print_cpu_features_value ("rep_movsb_threshold",
                             cpu_features->rep_movsb_threshold);
   print_cpu_features_value ("rep_movsb_stop_threshold",

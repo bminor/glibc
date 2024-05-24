@@ -52,6 +52,7 @@ glibc.elision.skip_lock_busy: 3 (min: 0, max: 2147483647)
 glibc.malloc.top_pad: 0x20000 (min: 0x0, max: 0xffffffffffffffff)
 glibc.cpu.x86_rep_stosb_threshold: 0x800 (min: 0x1, max: 0xffffffffffffffff)
 glibc.cpu.x86_non_temporal_threshold: 0xc0000 (min: 0x4040, max: 0xfffffffffffffff)
+glibc.cpu.x86_memset_non_temporal_threshold: 0xc0000 (min: 0x4040, max: 0xfffffffffffffff)
 glibc.cpu.x86_shstk:
 glibc.pthread.stack_cache_size: 0x2800000 (min: 0x0, max: 0xffffffffffffffff)
 glibc.cpu.hwcap_mask: 0x6 (min: 0x0, max: 0xffffffffffffffff)
@@ -485,7 +486,8 @@ thread stack originally backup by Huge Pages to default pages.
 @cindex shared_cache_size tunables
 @cindex tunables, shared_cache_size
 @cindex non_temporal_threshold tunables
-@cindex tunables, non_temporal_threshold
+@cindex memset_non_temporal_threshold tunables
+@cindex tunables, non_temporal_threshold, memset_non_temporal_threshold
 
 @deftp {Tunable namespace} glibc.cpu
 Behavior of @theglibc{} can be tuned to assume specific hardware capabilities
@@ -560,6 +562,18 @@ like memmove and memcpy.
 
 This tunable is specific to i386 and x86-64.
 @end deftp
+
+@deftp Tunable glibc.cpu.x86_memset_non_temporal_threshold
+The @code{glibc.cpu.x86_memset_non_temporal_threshold} tunable allows
+the user to set threshold in bytes for non temporal store in
+memset. Non temporal stores give a hint to the hardware to move data
+directly to memory without displacing other data from the cache. This
+tunable is used by some platforms to determine when to use non
+temporal stores memset.
+
+This tunable is specific to i386 and x86-64.
+@end deftp
+
 
 @deftp Tunable glibc.cpu.x86_rep_movsb_threshold
 The @code{glibc.cpu.x86_rep_movsb_threshold} tunable allows the user to
