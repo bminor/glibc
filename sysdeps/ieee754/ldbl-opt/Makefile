@@ -202,7 +202,6 @@ CFLAGS-test-nldbl-redirect.c += -mlong-double-64
 CFLAGS-test-redirection-ldbl-64.c += -mlong-double-64
 
 $(objpfx)test-nldbl-redirect: $(objpfx)libnldbl_nonshared.a
-$(objpfx)test-nldbl-redirect-static: $(objpfx)libnldbl_nonshared.a
 
 endif
 
