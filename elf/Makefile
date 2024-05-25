@@ -1033,9 +1033,19 @@ test-xfail-tst-protected1b = yes
 endif
 ifeq (yesyes,$(have-fpie)$(build-shared))
 modules-names += tst-piemod1
-tests += tst-pie1 tst-pie2 tst-dlopen-pie tst-dlopen-tlsmodid-pie \
-  tst-dlopen-self-pie
-tests-pie += tst-pie1 tst-pie2 tst-dlopen-tlsmodid-pie tst-dlopen-self-pie
+tests += \
+  tst-dlopen-pie \
+  tst-dlopen-self-pie \
+  tst-dlopen-tlsmodid-pie \
+  tst-pie1 \
+  tst-pie2 \
+  # tests
+tests-pie += \
+  tst-dlopen-self-pie \
+  tst-dlopen-tlsmodid-pie \
+  tst-pie1 \
+  tst-pie2 \
+  # tests-pie
 ifeq (yes,$(have-protected-data))
 tests += vismain
 tests-pie += vismain
