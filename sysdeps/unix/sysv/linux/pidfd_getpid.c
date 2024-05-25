@@ -74,8 +74,10 @@ parse_fdinfo (const char *l, void *arg)
 
       /* Ignore invalid large values.  */
       if (INT_MULTIPLY_WRAPV (10, n, &n)
-          || INT_ADD_WRAPV (n, *l++ - '0', &n))
+          || INT_ADD_WRAPV (n, *l - '0', &n))
         return -1;
+
+      l++;
     }
 
   /* -1 indicates that the process is terminated.  */
