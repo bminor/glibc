@@ -245,10 +245,11 @@ elf_machine_plt_value (struct link_map *map, const ElfW(Rela) *reloc,
    MAP is the object containing the reloc.  */
 
 static inline void __attribute__((always_inline))
-elf_machine_rela(struct link_map *map, struct r_scope_elem *scope[],
-		 const ElfW(Rela) *reloc, const ElfW(Sym) *sym,
-		 const struct r_found_version *version,
-		 void *const reloc_addr_arg, int skip_ifunc) {
+elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
+		  const ElfW(Rela) *reloc, const ElfW(Sym) *sym,
+		  const struct r_found_version *version,
+		  void *const reloc_addr_arg, int skip_ifunc)
+{
   ElfW(Addr) *const reloc_addr = reloc_addr_arg;
   const unsigned long int r_type = ELFW(R_TYPE) (reloc->r_info);
 
