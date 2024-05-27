@@ -77,7 +77,7 @@ extern time_t time (time_t *__timer) __THROW;
 
 /* Return the difference between TIME1 and TIME0.  */
 extern double difftime (time_t __time1, time_t __time0)
-     __THROW __attribute__ ((__const__));
+     __THROW __attribute_pure__;
 
 /* Return the `time_t' representation of TP and normalize TP.  */
 extern time_t mktime (struct tm *__tp) __THROW;
@@ -85,7 +85,7 @@ extern time_t mktime (struct tm *__tp) __THROW;
 # ifdef __REDIRECT_NTH
 extern time_t __REDIRECT_NTH (time, (time_t *__timer), __time64);
 extern double __REDIRECT_NTH (difftime, (time_t __time1, time_t __time0),
-                              __difftime64) __attribute__ ((__const__));
+                              __difftime64) __attribute_pure__;
 extern time_t __REDIRECT_NTH (mktime, (struct tm *__tp), __mktime64);
 # else
 #  define time __time64
