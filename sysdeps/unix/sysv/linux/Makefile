@@ -200,6 +200,7 @@ tests += \
   tst-clone2 \
   tst-clone3 \
   tst-epoll \
+  tst-epoll-ioctls \
   tst-fanotify \
   tst-fdopendir-o_path \
   tst-getauxval \

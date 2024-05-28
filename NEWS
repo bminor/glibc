@@ -33,6 +33,9 @@ Major new features:
   more extensive verification tests for AT_SECURE programs and not meant to
   be a security feature.
 
+* On Linux, update epoll header to include epoll ioctl definitions and
+  related structure added in Linux kernel 6.9.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * Architectures which use a 32-bit seconds-since-epoch field in struct
