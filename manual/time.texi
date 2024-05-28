@@ -123,7 +123,7 @@ The number of clock ticks per second is system-specific.
 @code{time_t} is the simplest data type used to represent simple
 calendar time.
 
-In ISO C, @code{time_t} can be either an integer or a floating-point
+In ISO C, @code{time_t} can be either an integer or a real floating
 type, and the meaning of @code{time_t} values is not specified.  The
 only things a strictly conforming program can do with @code{time_t}
 values are: pass them to @code{difftime} to get the elapsed time
@@ -134,11 +134,21 @@ and pass them to the functions that convert them to broken-down time
 On POSIX-conformant systems, @code{time_t} is an integer type and its
 values represent the number of seconds elapsed since the @dfn{epoch},
 which is 00:00:00 on January 1, 1970, Coordinated Universal Time.
+The count of seconds ignores leap seconds.
 
 @Theglibc{} additionally guarantees that @code{time_t} is a signed
 type, and that all of its functions operate correctly on negative
 @code{time_t} values, which are interpreted as times before the epoch.
+Functions like @code{localtime} assume the Gregorian calendar even
+though this is historically inaccurate for timestamps before the
+calendar was introduced or after the calendar will become obsolete.
 @cindex epoch
+@Theglibc{} also supports leap seconds as an option, in which case
+@code{time_t} counts leap seconds instead of ignoring them.
+Currently the @code{time_t} type is 64 bits wide on all platforms
+supported by @theglibc{}, except that it is 32 bits wide on a few
+older platforms unless you define @code{_TIME_BITS} to 64.
+@xref{Feature Test Macros}.
 @end deftp
 
 @deftp {Data Type} {struct timespec}
