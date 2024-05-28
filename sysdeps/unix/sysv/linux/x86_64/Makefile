@@ -15,6 +15,12 @@ gen-as-const-headers += sigaltstack-offsets.sym
 endif
 
 ifeq ($(subdir),elf)
+sysdep-dl-routines += dl-x86_probes
+shared-only-routines += dl-x86_probes
+# Used internally by dl-x86_cpu_feature_diagnostics.c.
+CFLAGS-dl-catch.os += $(rtld-early-cflags)
+CFLAGS-rtld-__longjmp.os += $(rtld-early-cflags)
+
 ifeq (yes,$(enable-x86-isa-level))
 tests += \
   tst-glibc-hwcaps-2 \

@@ -4,7 +4,11 @@ endif
 
 ifeq ($(subdir),elf)
 sysdep_routines += get-cpuid-feature-leaf
-sysdep-dl-routines += dl-get-cpu-features
+sysdep-dl-routines += \
+  dl-get-cpu-features \
+  dl-x86_cpu_feature_diagnostics \
+  # sysdep-dl-routines
+shared-only-routines += dl-x86_cpu_feature_diagnostics
 sysdep_headers += \
   bits/platform/features.h \
   bits/platform/x86.h \
@@ -12,6 +16,7 @@ sysdep_headers += \
 # sysdep_headers
 
 CFLAGS-dl-get-cpu-features.os += $(rtld-early-cflags)
+CFLAGS-dl-x86_cpu_feature_diagnostics.os += $(rtld-early-cflags)
 CFLAGS-get-cpuid-feature-leaf.o += $(no-stack-protector)
 
 tests += \

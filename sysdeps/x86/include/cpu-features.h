@@ -987,6 +987,29 @@ extern const struct cpu_features *_dl_x86_get_cpu_features (void)
 
 #define __get_cpu_features() _dl_x86_get_cpu_features()
 
+/* Used to store diagnostic information for startup failure reporting.
+   See _dl_x86_init_cpu_failure in sysdeps/x86/dl-diagnostics-cpu.c.  */
+struct x86_cpu_feature_diagnostics
+{
+  unsigned int count;		/* Bits recorded.  */
+  unsigned long long int reported; /* From CPUID.  */
+  unsigned long long int probed;  /* From execution probing.  */
+};
+
+/* Initialize *DIAG prior to the diagnostics run below.   */
+static inline void
+_dl_x86_cpu_feature_diagnostics_init (struct x86_cpu_feature_diagnostics *diag)
+{
+  diag->count = 0;
+  diag->reported = 0;
+  diag->probed = 0;
+}
+
+/* Updated the diagnostics with CPUID and execution probing information.  */
+void _dl_x86_cpu_feature_diagnostics_run (const struct cpu_features *,
+					  struct x86_cpu_feature_diagnostics *)
+  attribute_hidden;
+
 #if defined (_LIBC) && !IS_IN (nonlib)
 /* Unused for x86.  */
 # define INIT_ARCH()

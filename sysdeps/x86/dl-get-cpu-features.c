@@ -33,14 +33,20 @@ void (*const __x86_cpu_features_p) (void) attribute_hidden
   = __x86_cpu_features;
 
 _Noreturn static void __attribute__ ((unused))
-_dl_x86_init_cpu_failure (const struct cpu_features *cpu_features, int level)
+_dl_x86_init_cpu_failure (const struct cpu_features *cpu_features,
+			  const char *label)
 {
-  if (level == 5)
-    _dl_fatal_printf ("\
-Fatal glibc error: CPU does not support APX\n");
-  else
-    _dl_fatal_printf ("\
-Fatal glibc error: CPU does not support x86-64-v%d\n", level);
+  struct x86_cpu_feature_diagnostics diag;
+  _dl_x86_cpu_feature_diagnostics_init (&diag);
+  _dl_x86_cpu_feature_diagnostics_run (cpu_features, &diag);
+
+  _dl_fatal_printf ("\
+Fatal glibc error: CPU does not support %s [%u 0x%x:%x 0x%x:%x]\n",
+		    label, diag.count,
+		    (unsigned int) (diag.reported >> 32),
+		    (unsigned int) diag.reported,
+		    (unsigned int) (diag.probed >> 32),
+		    (unsigned int) diag.probed);
 }
 
 void
@@ -58,23 +64,23 @@ _dl_x86_init_cpu_features (void)
   && defined GCCMACRO__SSE3__ && defined GCCMACRO__SSSE3__		\
   && defined GCCMACRO__SSE4_1__ && defined GCCMACRO__SSE4_2__
       if (!(cpu_features->isa_1 & GNU_PROPERTY_X86_ISA_1_V2))
-	_dl_x86_init_cpu_failure (cpu_features, 2);
+	_dl_x86_init_cpu_failure (cpu_features, "x86-64-v2");
 #   if defined GCCMACRO__AVX__ && defined GCCMACRO__AVX2__ \
   && defined GCCMACRO__F16C__ && defined GCCMACRO__FMA__   \
   && defined GCCMACRO__LZCNT__ && defined HAVE_X86_MOVBE
       if (!(cpu_features->isa_1 & GNU_PROPERTY_X86_ISA_1_V3))
-	_dl_x86_init_cpu_failure (cpu_features, 3);
+	_dl_x86_init_cpu_failure (cpu_features, "x86-64-v3");
 #    if defined GCCMACRO__AVX512F__ && defined GCCMACRO__AVX512BW__ \
      && defined GCCMACRO__AVX512CD__ && defined GCCMACRO__AVX512DQ__ \
      && defined GCCMACRO__AVX512VL__
       if (!(cpu_features->isa_1 & GNU_PROPERTY_X86_ISA_1_V4))
-	_dl_x86_init_cpu_failure (cpu_features, 4);
+	_dl_x86_init_cpu_failure (cpu_features, "x86-64-v4");
 #    endif /* ISA level 4 */
 #   endif /* ISA level 3 */
 #  endif /* ISA level 2 */
 # ifdef GCCMACRO__APX_F__
       if (!CPU_FEATURE_USABLE_P (cpu_features, APX_F))
-	_dl_x86_init_cpu_failure (cpu_features, 5);
+	_dl_x86_init_cpu_failure (cpu_features, "APX");
 # endif
 # endif /* IS_IN (rtld) */
     }

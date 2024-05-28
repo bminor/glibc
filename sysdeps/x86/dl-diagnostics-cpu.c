@@ -51,6 +51,14 @@ print_cpu_feature_preferred (const char *label, unsigned int flag)
   _dl_printf("x86.cpu_features.preferred.%s=0x%x\n", label, flag);
 }
 
+static void
+_dl_x86_cpu_feature_diagnostics_print (const char *label,
+				       unsigned long long int value)
+{
+  _dl_printf("x86.diagnostics.");
+  _dl_diagnostics_print_labeled_value (label, value);
+}
+
 void
 _dl_diagnostics_cpu (void)
 {
@@ -131,6 +139,17 @@ _dl_diagnostics_cpu (void)
 	      + sizeof (cpu_features->cachesize_non_temporal_divisor)
 	  == sizeof (*cpu_features),
       "last cpu_features field has been printed");
+
+  {
+    struct x86_cpu_feature_diagnostics diag;
+    _dl_x86_cpu_feature_diagnostics_init (&diag);
+    _dl_x86_cpu_feature_diagnostics_run (cpu_features, &diag);
+    _dl_x86_cpu_feature_diagnostics_print ("count", diag.count);
+    _dl_x86_cpu_feature_diagnostics_print ("reported", diag.reported);
+    _dl_x86_cpu_feature_diagnostics_print ("probed", diag.probed);
+    _dl_x86_cpu_feature_diagnostics_print ("filtered",
+					   diag.probed & ~diag.reported);
+  }
 
   _dl_diagnostics_cpuid ();
 }
