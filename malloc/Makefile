@@ -34,6 +34,7 @@ tests := \
   tst-interpose-nothread \
   tst-interpose-thread \
   tst-malloc \
+  tst-malloc-alternate-path \
   tst-malloc-backtrace \
   tst-malloc-check \
   tst-malloc-fork-deadlock \
