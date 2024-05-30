@@ -333,6 +333,14 @@ _dl_cet_setup_features (unsigned int cet_feature)
      enabled from executable, not necessarily supported by kernel.  */
   if (cet_feature != 0)
     {
+      void **ssp;
+      asm ("rdsspq %0"
+	   : "=r" (ssp)
+	   : "0" (0));
+      if (ssp != NULL)
+	/* The caller is the top-most frame, hence the + 8.  */
+	THREAD_SETMEM (THREAD_SELF, header.ssp_base, ssp + 8);
+
       cet_feature = dl_cet_get_cet_status ();
       if (cet_feature != 0)
 	{
