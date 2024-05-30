@@ -606,16 +606,31 @@ This tunable is specific to i386 and x86-64.
 @deftp Tunable glibc.cpu.x86_shstk
 The @code{glibc.cpu.x86_shstk} tunable allows the user to control how
 the shadow stack (SHSTK) should be enabled.  Accepted values are
-@code{on}, @code{off}, and @code{permissive}.  @code{on} always turns on
-SHSTK regardless of whether SHSTK is enabled in the executable and its
-dependent shared libraries.  @code{off} always turns off SHSTK regardless
-of whether SHSTK is enabled in the executable and its dependent shared
-libraries.  @code{permissive} changes how dlopen works on non-CET shared
-libraries.  By default, when SHSTK is enabled, dlopening a non-CET shared
-library returns an error.  With @code{permissive}, it turns off SHSTK
-instead.
+@code{on}, @code{off}, and @code{permissive}:
 
-This tunable is specific to i386 and x86-64.
+@table @code
+@item on
+Turn on SHSTK if the executable and its dependent shared libraries
+contain markers indicating shadow stack support.  This is the default
+(but see below for additional hardware capability setting).
+
+@item off
+Always turn off SHSTK regardless
+of whether SHSTK is enabled in the executable and its dependent shared
+libraries.
+
+@item permissive
+Same as @code{on}, but change how dlopen works on non-CET shared
+libraries.  With the @code{on} setting, when SHSTK is enabled, dlopening
+a non-CET shared library returns an error.  With @code{permissive}, it
+turns off SHSTK instead.
+@end table
+
+@strong{Note:} By default, the SHSTK capability of the system is masked
+at the hardware capability level.  To turn it on, set the tunable
+@samp{glibc.cpu.hwcaps=SHSTK}.
+
+This tunable is specific to x86-64.
 @end deftp
 
 @deftp Tunable glibc.cpu.prefer_map_32bit_exec
