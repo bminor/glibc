@@ -38,6 +38,7 @@
 #include <version.h>
 #include <clone_internal.h>
 #include <futex-internal.h>
+#include <nptl_arch_thread_init.h>
 
 #include <shlib-compat.h>
 
@@ -362,6 +363,8 @@ start_thread (void *arg)
       if (setup_failed)
 	goto out;
     }
+
+  __nptl_arch_thread_init ();
 
   /* Initialize resolver state pointer.  */
   __resp = &pd->res;
