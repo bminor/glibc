@@ -38,8 +38,10 @@ handler (int signal, siginfo_t *info, void *ctx)
 
   uintptr_t pc = sigcontext_get_pc (ctx);
   printf ("info: address in signal handler: 0x%" PRIxPTR "\n", pc);
+  printf ("info: siginfo_t address: %p\n", info);
+  printf ("info: ucontext_t address: %p\n", ctx);
 
-  void *callstack[10];
+  void *callstack[20];
   int callstack_count = backtrace (callstack, array_length (callstack));
   TEST_VERIFY_EXIT (callstack_count > 0);
   TEST_VERIFY_EXIT (callstack_count <= array_length (callstack));

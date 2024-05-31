@@ -338,8 +338,8 @@ _dl_cet_setup_features (unsigned int cet_feature)
 	   : "=r" (ssp)
 	   : "0" (0));
       if (ssp != NULL)
-	/* The caller is the top-most frame, hence the + 8.  */
-	THREAD_SETMEM (THREAD_SELF, header.ssp_base, ssp + 8);
+	/* The caller is the top-most frame, hence the + 1.  */
+	THREAD_SETMEM (THREAD_SELF, header.ssp_base, ssp + 1);
 
       cet_feature = dl_cet_get_cet_status ();
       if (cet_feature != 0)

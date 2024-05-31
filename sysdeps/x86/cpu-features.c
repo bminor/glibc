@@ -147,7 +147,7 @@ update_active (struct cpu_features *cpu_features)
   if (!CPU_FEATURES_CPU_P (cpu_features, RTM_ALWAYS_ABORT))
     CPU_FEATURE_SET_ACTIVE (cpu_features, RTM);
 
-#if CET_ENABLED && 0
+#if CET_ENABLED
   CPU_FEATURE_SET_ACTIVE (cpu_features, IBT);
   CPU_FEATURE_SET_ACTIVE (cpu_features, SHSTK);
 #endif

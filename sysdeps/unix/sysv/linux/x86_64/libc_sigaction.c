@@ -76,6 +76,7 @@ asm									\
    ".align 16\n"							\
    ".LSTART_" #name ":\n"						\
    "	.type __" #name ",@function\n"					\
+   "    .globl __" #name "\n"						\
    "__" #name ":\n"							\
    "	movq $" #syscall ", %rax\n"					\
    "	syscall\n"							\

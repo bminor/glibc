@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <unwind.h>
 #include <unwind-link.h>
+#include <arch_backtrace.h>
 
 struct trace_arg
 {
@@ -63,6 +64,16 @@ backtrace_helper (struct _Unwind_Context *ctx, void *a)
 int
 __backtrace (void **array, int size)
 {
+  if (size <= 0)
+    return 0;
+
+  /* Try the architecture-specific implementation first.  */
+  {
+    int result = __arch_backtrace (array, size);
+    if (result >= 0)
+      return result;
+  }
+
   struct trace_arg arg =
     {
      .array = array,
@@ -72,7 +83,7 @@ __backtrace (void **array, int size)
      .cnt = -1
     };
 
-  if (size <= 0 || arg.unwind_link == NULL)
+  if (arg.unwind_link == NULL)
     return 0;
 
   UNWIND_LINK_PTR (arg.unwind_link, _Unwind_Backtrace)
