@@ -24,7 +24,22 @@
 
 /* If D is non-NULL, call all functions registered with `__cxa_atexit'
    with the same dso handle.  Otherwise, if D is NULL, call all of the
-   registered handlers.  */
+   registered handlers.
+
+   A __cxa_finalize function is declared in the libstdc++ <cxxabi.h>
+   header, and the libstdc++ implementation calls this function.  GCC
+   calls the glibc variant directly from its CRT files, from an ELF
+   destructor.  this call always passes a non-null D argument.  In the
+   current implementation, the GCC-provided __cxa_finalize call is
+   responsible for removing the registered __cxa_atexit (C++)
+   destructors of an object that is undergoing dlclose.  Note that
+   this is specific to dlclose.  During process termination, glibc
+   invokes the __run_exit_handlers, which calls registered
+   __cxa_atexit (C++) destructors in reverse registration order,
+   across all objects.  The subsequent GCC-provided __cxa_finalize
+   calls (which are ordered according to ELF object dependencies, not
+   __cxa_atexit call order, and group destructor calls per object
+   during dlclose) do not result in further destructor invocations.  */
 void
 __cxa_finalize (void *d)
 {
