@@ -819,7 +819,14 @@ _dl_update_slotinfo (unsigned long int req_modid, size_t new_gen)
 		 dtv entry free it.  Note: this is not AS-safe.  */
 	      /* XXX Ideally we will at some point create a memory
 		 pool.  */
-	      free (dtv[modid].pointer.to_free);
+	      /* Avoid calling free on a null pointer.  Some mallocs
+		 incorrectly use dynamic TLS, and depending on how the
+		 free function was compiled, it could call
+		 __tls_get_addr before the null pointer check in the
+		 free implementation.  Checking here papers over at
+		 least some dynamic TLS usage by interposed mallocs.  */
+	      if (dtv[modid].pointer.to_free != NULL)
+		free (dtv[modid].pointer.to_free);
 	      dtv[modid].pointer.val = TLS_DTV_UNALLOCATED;
 	      dtv[modid].pointer.to_free = NULL;
 
