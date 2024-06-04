@@ -94,6 +94,7 @@ tests = \
   tst-eof \
   tst-ext \
   tst-ext2 \
+  tst-fdopen-seek-failure \
   tst-fgetc-after-eof \
   tst-fgetwc \
   tst-fgetws \
@@ -253,6 +254,9 @@ tst_wprintf2-ARGS = "Some Text"
 
 test-fmemopen-ENV = MALLOC_TRACE=$(objpfx)test-fmemopen.mtrace \
 		    LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
+tst-fdopen-seek-failure-ENV = \
+  MALLOC_TRACE=$(objpfx)tst-fdopen-seek-failure.mtrace \
+  LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
 tst-fopenloc-ENV = MALLOC_TRACE=$(objpfx)tst-fopenloc.mtrace \
 		   LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
 tst-bz22415-ENV = MALLOC_TRACE=$(objpfx)tst-bz22415.mtrace \
@@ -261,6 +265,7 @@ tst-bz24228-ENV = MALLOC_TRACE=$(objpfx)tst-bz24228.mtrace \
 		  LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
 
 generated += test-fmemopen.mtrace test-fmemopen.check
+generated += tst-fdopen-seek-failure.mtrace tst-fdopen-seek-failure.check
 generated += tst-fopenloc.mtrace tst-fopenloc.check
 generated += tst-bz22415.mtrace tst-bz22415.check
 
@@ -283,8 +288,12 @@ shared-only-routines = oldiofopen oldiofdopen oldiofclose oldfileops	\
 		       oldiofsetpos64
 
 ifeq ($(run-built-tests),yes)
-tests-special += $(objpfx)test-freopen.out $(objpfx)test-fmemopen-mem.out \
-		 $(objpfx)tst-bz22415-mem.out
+tests-special += \
+  $(objpfx)test-fmemopen-mem.out \
+  $(objpfx)test-freopen.out \
+  $(objpfx)tst-bz22415-mem.out \
+  $(objpfx)tst-fdopen-seek-failure-mem.out \
+  # tests-special
 ifeq (yes,$(build-shared))
 # Run tst-fopenloc-cmp.out and tst-openloc-mem.out only if shared
 # library is enabled since they depend on tst-fopenloc.out.
@@ -370,6 +379,11 @@ $(objpfx)tst-fopenloc-cmp.out: ../iconvdata/testdata/ISO-8859-1..UTF8 \
 
 $(objpfx)test-fmemopen-mem.out: $(objpfx)test-fmemopen.out
 	$(common-objpfx)malloc/mtrace $(objpfx)test-fmemopen.mtrace > $@; \
+	$(evaluate-test)
+
+$(objpfx)tst-fdopen-seek-failure-mem.out: $(objpfx)tst-fdopen-seek-failure.out
+	$(common-objpfx)malloc/mtrace \
+	  $(objpfx)tst-fdopen-seek-failure.mtrace > $@; \
 	$(evaluate-test)
 
 $(objpfx)tst-fopenloc-mem.out: $(objpfx)tst-fopenloc.out
