@@ -831,6 +831,10 @@ typedef struct
 					   control.  */
 #define NT_ARM_PAC_ENABLED_KEYS	0x40a	/* AArch64 pointer authentication
 					   enabled keys.  */
+#define NT_ARM_SSVE	0x40b		/* ARM Streaming SVE registers.  */
+#define NT_ARM_ZA	0x40c		/* ARM SME ZA registers.  */
+#define NT_ARM_ZT	0x40d		/* ARM SME ZT registers.  */
+#define NT_ARM_FPMR	0x40e		/* ARM floating point mode register.  */
 #define NT_VMCOREDD	0x700		/* Vmcore Device Dump Note.  */
 #define NT_MIPS_DSP	0x800		/* MIPS DSP ASE registers.  */
 #define NT_MIPS_FP_MODE	0x801		/* MIPS floating-point mode.  */
