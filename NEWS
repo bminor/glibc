@@ -87,6 +87,7 @@ The following bugs are resolved with this release:
     (x86/tst-cpu-features-supports.c:69:3: error: parameter to builtin
     not valid: avx5124fmaps)
   [31798] pidfd_getpid.c is miscompiled by GCC 6.4
+  [31840] Remove memory leak in fdopen
   [31867] build: "CPU ISA level is lower than required" on SSE2-free
     CPUs
   [31883] build: ISA level support configure check relies on bashism /
