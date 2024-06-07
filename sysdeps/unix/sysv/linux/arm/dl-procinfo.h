@@ -30,9 +30,6 @@
 /* Low 7 bits are allocated in HWCAP2.  */
 #define _DL_HWCAP2_LAST		6
 
-/* The kernel provides platform data but it is not interesting.  */
-#define _DL_HWCAP_PLATFORM	0
-
 
 static inline const char *
 __attribute__ ((unused))

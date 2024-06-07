@@ -22,9 +22,6 @@
 #include <ldsodefs.h>
 
 
-/* Mask to filter out platforms.  */
-#define _DL_HWCAP_PLATFORM    (-1ULL)
-
 #define _DL_PLATFORMS_COUNT   5
 
 /* We cannot provide a general printing function.  */

@@ -41,9 +41,6 @@
 #define _DL_PLATFORMS_COUNT	17
 
 #define _DL_FIRST_PLATFORM	32
-/* Mask to filter out platforms.  */
-#define _DL_HWCAP_PLATFORM	(((1ULL << _DL_PLATFORMS_COUNT) - 1) \
-				<< _DL_FIRST_PLATFORM)
 
 /* Platform bits (relative to _DL_FIRST_PLATFORM).  */
 #define PPC_PLATFORM_POWER4		0

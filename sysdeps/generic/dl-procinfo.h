@@ -28,9 +28,6 @@
 /* By default there is no important hardware capability.  */
 #define HWCAP_IMPORTANT (0)
 
-/* There're no platforms to filter out.  */
-#define _DL_HWCAP_PLATFORM 0
-
 /* We don't have any hardware capabilities.  */
 #define _DL_HWCAP_COUNT 0
 

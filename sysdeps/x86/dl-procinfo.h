@@ -26,8 +26,5 @@
 
 /* Start at 48 to reserve spaces for hardware capabilities.  */
 #define _DL_FIRST_PLATFORM	48
-/* Mask to filter out platforms.  */
-#define _DL_HWCAP_PLATFORM	(((1ULL << _DL_PLATFORMS_COUNT) - 1) \
-				 << _DL_FIRST_PLATFORM)
 
 #endif /* dl-procinfo.h */

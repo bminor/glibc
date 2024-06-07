@@ -37,7 +37,4 @@ _dl_hwcap_string (int idx)
   return (unsigned)idx < _DL_HWCAP_COUNT ? GLRO(dl_aarch64_cap_flags)[idx] : "";
 };
 
-/* There're no platforms to filter out.  */
-#define _DL_HWCAP_PLATFORM 0
-
 #endif /* dl-procinfo.h */

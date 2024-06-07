@@ -57,7 +57,4 @@ _dl_hwcap_string (int idx)
 #define HWCAP_IMPORTANT		(HWCAP_IMPORTANT_V9 | HWCAP_SPARC_ULTRA3 \
 				 | HWCAP_SPARC_BLKINIT | HWCAP_SPARC_N2)
 
-/* There're no platforms to filter out.  */
-#define _DL_HWCAP_PLATFORM 0
-
 #endif /* dl-procinfo.h */

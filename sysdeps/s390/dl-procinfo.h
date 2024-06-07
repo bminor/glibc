@@ -27,9 +27,6 @@ extern const char _dl_s390_cap_flags[_DL_HWCAP_COUNT][9] attribute_hidden;
 
 /* The kernel provides up to 32 capability bits with elf_hwcap.  */
 #define _DL_FIRST_PLATFORM	32
-/* Mask to filter out platforms.  */
-#define _DL_HWCAP_PLATFORM	(((1ULL << _DL_PLATFORMS_COUNT) - 1) \
-				 << _DL_FIRST_PLATFORM)
 
 /* Hardware capability bit numbers are derived directly from the
    facility indications as stored by the "store facility list" (STFL)
