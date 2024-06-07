@@ -96,11 +96,11 @@ where 'check' is the tunable name and 'val' is a value of same type.
 To get and set tunables in a different namespace from that module, use the full
 form of the macros as follows:
 
-  val = TUNABLE_GET_FULL (glibc, cpu, hwcap_mask, uint64_t, NULL)
+  val = TUNABLE_GET_FULL (glibc, malloc, mmap_max, int32_t, NULL)
 
-  TUNABLE_SET_FULL (glibc, cpu, hwcap_mask, val)
+  TUNABLE_SET_FULL (glibc, malloc, mmap_max, val)
 
-where 'glibc' is the top namespace, 'cpu' is the tunable namespace and the
+where 'glibc' is the top namespace, 'malloc' is the tunable namespace and the
 remaining arguments are the same as the short form macros.
 
 The minimum and maximum values can updated together with the tunable value
@@ -114,11 +114,11 @@ where 'check' is the tunable name, 'val' is a value of same type, 'min' and
 To set the minimum and maximum values of tunables in a different namespace
 from that module, use the full form of the macros as follows:
 
-  val = TUNABLE_GET_FULL (glibc, cpu, hwcap_mask, uint64_t, NULL)
+  val = TUNABLE_GET_FULL (glibc, malloc, mmap_max, int32_t, NULL)
 
-  TUNABLE_SET_WITH_BOUNDS_FULL (glibc, cpu, hwcap_mask, val, min, max)
+  TUNABLE_SET_WITH_BOUNDS_FULL (glibc, malloc, mmap_max, val, min, max)
 
-where 'glibc' is the top namespace, 'cpu' is the tunable namespace and the
+where 'glibc' is the top namespace, 'malloc' is the tunable namespace and the
 remaining arguments are the same as the short form macros.
 
 When TUNABLE_NAMESPACE is not defined in a module, TUNABLE_GET is equivalent to

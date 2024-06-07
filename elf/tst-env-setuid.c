@@ -52,7 +52,6 @@ static const struct envvar_t filtered_envvars[] =
 {
   { "GLIBC_TUNABLES",          FILTERED_VALUE },
   { "LD_AUDIT",                FILTERED_VALUE },
-  { "LD_HWCAP_MASK",           FILTERED_VALUE },
   { "LD_LIBRARY_PATH",         FILTERED_VALUE },
   { "LD_PRELOAD",              FILTERED_VALUE },
   { "LD_PROFILE",              PROFILE_LIB },

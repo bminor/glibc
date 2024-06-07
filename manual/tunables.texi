@@ -55,7 +55,6 @@ glibc.cpu.x86_non_temporal_threshold: 0xc0000 (min: 0x4040, max: 0xfffffffffffff
 glibc.cpu.x86_memset_non_temporal_threshold: 0xc0000 (min: 0x4040, max: 0xfffffffffffffff)
 glibc.cpu.x86_shstk:
 glibc.pthread.stack_cache_size: 0x2800000 (min: 0x0, max: 0xffffffffffffffff)
-glibc.cpu.hwcap_mask: 0x6 (min: 0x0, max: 0xffffffffffffffff)
 glibc.malloc.mmap_max: 0 (min: 0, max: 2147483647)
 glibc.elision.skip_trylock_internal_abort: 3 (min: 0, max: 2147483647)
 glibc.cpu.plt_rewrite: 0 (min: 0, max: 2)
@@ -502,16 +501,6 @@ thread stack originally backup by Huge Pages to default pages.
 @deftp {Tunable namespace} glibc.cpu
 Behavior of @theglibc{} can be tuned to assume specific hardware capabilities
 by setting the following tunables in the @code{cpu} namespace:
-@end deftp
-
-@deftp Tunable glibc.cpu.hwcap_mask
-This tunable supersedes the @env{LD_HWCAP_MASK} environment variable and is
-identical in features.
-
-The @code{AT_HWCAP} key in the Auxiliary Vector specifies instruction set
-extensions available in the processor at runtime for some architectures.  The
-@code{glibc.cpu.hwcap_mask} tunable allows the user to mask out those
-capabilities at runtime, thus disabling use of those extensions.
 @end deftp
 
 @deftp Tunable glibc.cpu.hwcaps

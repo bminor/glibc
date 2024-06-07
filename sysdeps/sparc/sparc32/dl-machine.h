@@ -39,13 +39,7 @@ elf_machine_matches_host (const Elf32_Ehdr *ehdr)
     return 1;
   else if (ehdr->e_machine == EM_SPARC32PLUS)
     {
-#if defined SHARED
-      uint64_t hwcap_mask = TUNABLE_GET (glibc, cpu, hwcap_mask, uint64_t,
-					 NULL);
-      return GLRO(dl_hwcap) & hwcap_mask & HWCAP_SPARC_V9;
-#else
       return GLRO(dl_hwcap) & HWCAP_SPARC_V9;
-#endif
     }
   else
     return 0;

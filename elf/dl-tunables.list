@@ -83,13 +83,6 @@ glibc {
       minval: 0
     }
   }
-  cpu {
-    hwcap_mask {
-      type: UINT_64
-      env_alias: LD_HWCAP_MASK
-      default: HWCAP_IMPORTANT
-    }
-  }
 
   elision {
     enable {
