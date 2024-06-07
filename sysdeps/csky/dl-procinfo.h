@@ -28,9 +28,6 @@
 /* There are no hardware capabilities defined.  */
 #define _dl_hwcap_string(idx) ""
 
-/* By default there is no important hardware capability.  */
-#define HWCAP_IMPORTANT (0)
-
 /* We don't have any hardware capabilities.  */
 #define _DL_HWCAP_COUNT	0
 

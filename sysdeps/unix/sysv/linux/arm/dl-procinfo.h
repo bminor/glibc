@@ -70,6 +70,4 @@ _dl_procinfo (unsigned int type, unsigned long int word)
   return 0;
 }
 
-#define HWCAP_IMPORTANT		(HWCAP_ARM_VFP | HWCAP_ARM_NEON)
-
 #endif /* dl-procinfo.h */

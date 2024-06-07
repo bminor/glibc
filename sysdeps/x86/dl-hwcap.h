@@ -18,19 +18,6 @@
 #ifndef _DL_HWCAP_H
 #define _DL_HWCAP_H
 
-#if IS_IN (ldconfig)
-/* Since ldconfig processes both i386 and x86-64 libraries, it needs
-   to cover all hardware capabilities.  */
-# define HWCAP_IMPORTANT \
-  (HWCAP_X86_SSE2 | HWCAP_X86_64 | HWCAP_X86_AVX512_1)
-#elif defined __x86_64__
-/* For 64 bit, only cover x86-64 capabilities.  */
-# define HWCAP_IMPORTANT	(HWCAP_X86_64 | HWCAP_X86_AVX512_1)
-#else
-/* For 32 bit, only cover i586, i686 and SSE2.  */
-# define HWCAP_IMPORTANT	(HWCAP_X86_SSE2)
-#endif
-
 enum
 {
   HWCAP_X86_SSE2		= 1 << 0,
