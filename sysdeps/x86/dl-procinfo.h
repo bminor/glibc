@@ -22,6 +22,5 @@
 #include <dl-hwcap.h>
 
 #define _DL_HWCAP_COUNT		HWCAP_COUNT
-#define _DL_PLATFORMS_COUNT	HWCAP_PLATFORMS_COUNT
 
 #endif /* dl-procinfo.h */

@@ -23,8 +23,6 @@
 #define _DL_HWCAP_COUNT 23
 extern const char _dl_s390_cap_flags[_DL_HWCAP_COUNT][9] attribute_hidden;
 
-#define _DL_PLATFORMS_COUNT	11
-
 /* Hardware capability bit numbers are derived directly from the
    facility indications as stored by the "store facility list" (STFL)
    instruction.

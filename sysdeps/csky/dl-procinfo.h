@@ -22,9 +22,6 @@
 
 #include <ldsodefs.h>
 
-
-#define _DL_PLATFORMS_COUNT   4
-
 /* We cannot provide a general printing function.  */
 #define _dl_procinfo(word, val) -1
 

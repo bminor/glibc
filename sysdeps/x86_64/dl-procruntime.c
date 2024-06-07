@@ -16,9 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* This information must be kept in sync with the _DL_HWCAP_COUNT,
-   HWCAP_PLATFORMS_START and HWCAP_PLATFORMS_COUNT definitions in
-   dl-hwcap.h.
+/* This information must be kept in sync with the _DL_HWCAP_COUNT
+   definition in dl-hwcap.h.
 
    If anything should be added here check whether the size of each string
    is still ok with the given array size.

@@ -38,8 +38,6 @@
 #define HWCAP_IMPORTANT		(PPC_FEATURE_HAS_ALTIVEC \
 				+ PPC_FEATURE_HAS_DFP)
 
-#define _DL_PLATFORMS_COUNT	17
-
 #define _DL_FIRST_PLATFORM	32
 
 /* Platform bits (relative to _DL_FIRST_PLATFORM).  */
