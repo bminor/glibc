@@ -24,7 +24,4 @@
 #define _DL_HWCAP_COUNT		HWCAP_COUNT
 #define _DL_PLATFORMS_COUNT	HWCAP_PLATFORMS_COUNT
 
-/* Start at 48 to reserve spaces for hardware capabilities.  */
-#define _DL_FIRST_PLATFORM	48
-
 #endif /* dl-procinfo.h */
