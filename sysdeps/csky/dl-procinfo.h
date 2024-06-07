@@ -27,21 +27,6 @@
 
 #define _DL_PLATFORMS_COUNT   4
 
-static inline int
-__attribute__ ((unused, always_inline))
-_dl_string_platform (const char *str)
-{
-  int i;
-
-  if (str != NULL)
-    for (i = 0; i < _DL_PLATFORMS_COUNT; ++i)
-      {
-        if (strcmp (str, GLRO(dl_csky_platforms)[i]) == 0)
-          return i;
-      }
-  return -1;
-};
-
 /* We cannot provide a general printing function.  */
 #define _dl_procinfo(word, val) -1
 

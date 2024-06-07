@@ -34,6 +34,4 @@
 /* We don't have any hardware capabilities.  */
 #define _DL_HWCAP_COUNT 0
 
-#define _dl_string_platform(str) (-1)
-
 #endif /* dl-procinfo.h */

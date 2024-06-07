@@ -83,19 +83,4 @@ _dl_hwcap_string (int idx)
   return _dl_s390_cap_flags[idx];
 };
 
-static inline int
-__attribute__ ((unused, always_inline))
-_dl_string_platform (const char *str)
-{
-  int i;
-
-  if (str != NULL)
-    for (i = 0; i < _DL_PLATFORMS_COUNT; ++i)
-      {
-	if (strcmp (str, _dl_s390_platforms[i]) == 0)
-	  return _DL_FIRST_PLATFORM + i;
-      }
-  return -1;
-};
-
 #endif /* dl-procinfo.h */

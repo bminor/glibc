@@ -40,6 +40,4 @@ _dl_hwcap_string (int idx)
 /* There're no platforms to filter out.  */
 #define _DL_HWCAP_PLATFORM 0
 
-#define _dl_string_platform(str) (-1)
-
 #endif /* dl-procinfo.h */

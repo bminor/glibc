@@ -245,8 +245,6 @@ _dl_print_diagnostics (char **environ)
   _dl_diagnostics_print_labeled_string ("dl_platform", GLRO (dl_platform));
   _dl_diagnostics_print_labeled_string
     ("dl_profile_output", GLRO (dl_profile_output));
-  _dl_diagnostics_print_labeled_value
-    ("dl_string_platform", _dl_string_platform ( GLRO (dl_platform)));
 
   _dl_diagnostics_print_labeled_string ("dso.ld", LD_SO);
   _dl_diagnostics_print_labeled_string ("dso.libc", LIBC_SO);
