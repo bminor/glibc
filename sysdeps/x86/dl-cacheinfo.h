@@ -986,11 +986,11 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
   if (CPU_FEATURE_USABLE_P (cpu_features, FSRM))
     rep_movsb_threshold = 2112;
 
-  /* Non-temporal stores in memset have only been tested on Intel hardware.
-     Until we benchmark data on other x86 processor, disable non-temporal
-     stores in memset. */
+  /* Non-temporal stores are more performant on Intel and AMD hardware above
+     non_temporal_threshold. Enable this for both Intel and AMD hardware. */
   unsigned long int memset_non_temporal_threshold = SIZE_MAX;
-  if (cpu_features->basic.kind == arch_kind_intel)
+  if (cpu_features->basic.kind == arch_kind_intel
+      || cpu_features->basic.kind == arch_kind_amd)
       memset_non_temporal_threshold = non_temporal_threshold;
 
    /* For AMD CPUs that support ERMS (Zen3+), REP MOVSB is in a lot of
