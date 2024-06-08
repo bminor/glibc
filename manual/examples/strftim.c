@@ -18,30 +18,32 @@
 #include <time.h>
 #include <stdio.h>
 
-#define SIZE 256
-
 int
 main (void)
 {
-  char buffer[SIZE];
-  time_t curtime;
-  struct tm *loctime;
+  /* This buffer is big enough that the strftime calls
+     below cannot possibly exhaust it.  */
+  char buf[256];
 
   /* Get the current time. */
-  curtime = time (NULL);
+  time_t curtime = time (NULL);
 
   /* Convert it to local time representation. */
-  loctime = localtime (&curtime);
+  struct tm *lt = localtime (&curtime);
+  if (!lt)
+    return 1;
 
-  /* Print out the date and time in the standard format. */
-  fputs (asctime (loctime), stdout);
+  /* Print the date and time in a simple format
+     that is independent of locale. */
+  strftime (buf, sizeof buf, "%Y-%m-%d %H:%M:%S", lt);
+  puts (buf);
 
 /*@group*/
-  /* Print it out in a nice format. */
-  strftime (buffer, SIZE, "Today is %A, %B %d.\n", loctime);
-  fputs (buffer, stdout);
-  strftime (buffer, SIZE, "The time is %I:%M %p.\n", loctime);
-  fputs (buffer, stdout);
+  /* Print it in a nicer English format. */
+  strftime (buf, sizeof buf, "Today is %A, %B %d.", lt);
+  puts (buf);
+  strftime (buf, sizeof buf, "The time is %I:%M %p.", lt);
+  puts (buf);
 
   return 0;
 }

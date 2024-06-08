@@ -206,7 +206,7 @@ This option hardcodes the newly built C library path in dynamic tests
 so that they can be invoked directly.
 
 @item --disable-timezone-tools
-By default, timezone related utilities (@command{zic}, @command{zdump},
+By default, time zone related utilities (@command{zic}, @command{zdump},
 and @command{tzselect}) are installed with @theglibc{}.  If you are building
 these independently (e.g. by using the @samp{tzcode} package), then this
 option will allow disabling the install of these.
@@ -456,9 +456,9 @@ permissions on a pseudoterminal so it can be used by the calling process.
 If you are using a Linux kernel with the @code{devpts} filesystem enabled
 and mounted at @file{/dev/pts}, you don't need this program.
 
-After installation you should configure the timezone and install locales
-for your system.  The time zone configuration ensures that your system
-time matches the time for your current timezone.  The locales ensure that
+After installation you should configure the time zone ruleset and install
+locales for your system.  The time zone ruleset ensures that timestamps
+are processed correctly for your location.  The locales ensure that
 the display of information on your system matches the expectations of
 your language and geographic region.
 
@@ -481,12 +481,12 @@ as files in the default configured locale installation directory (derived from
 root use @samp{DESTDIR} e.g.@: @samp{make localedata/install-locale-files
 DESTDIR=/opt/glibc}, but note that this does not change the configured prefix.
 
-To configure the locally used timezone, set the @code{TZ} environment
+To configure the time zone ruleset, set the @code{TZ} environment
 variable.  The script @code{tzselect} helps you to select the right value.
 As an example, for Germany, @code{tzselect} would tell you to use
 @samp{TZ='Europe/Berlin'}.  For a system wide installation (the given
 paths are for an installation with @samp{--prefix=/usr}), link the
-timezone file which is in @file{/usr/share/zoneinfo} to the file
+time zone file which is in @file{/usr/share/zoneinfo} to the file
 @file{/etc/localtime}.  For Germany, you might execute @samp{ln -s
 /usr/share/zoneinfo/Europe/Berlin /etc/localtime}.
 

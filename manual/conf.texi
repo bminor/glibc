@@ -89,7 +89,7 @@ process can have open simultaneously.  @xref{Opening Streams}.
 @deftypevr Macro int TZNAME_MAX
 @standards{POSIX.1, limits.h}
 If defined, the unvarying maximum length of a time zone abbreviation.
-@xref{Time Zone Functions}.
+@xref{TZ Variable}.
 @end deftypevr
 
 These limit macros are always defined in @file{limits.h}.

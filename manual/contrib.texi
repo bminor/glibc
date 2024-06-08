@@ -630,7 +630,7 @@ a different license:
 
 @itemize @bullet
 @item
-The timezone support code is derived from the public-domain timezone
+The time zone support code is derived from the public-domain time zone
 package by Arthur David Olson and his many contributors.
 
 @item

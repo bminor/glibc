@@ -18,7 +18,10 @@
 
 #include <time.h>
 
-/* The C Standard says that localtime and gmtime return the same pointer.  */
+/* C89 says that localtime and gmtime return the same pointer.
+   Although C99 and later relax this to let localtime and gmtime
+   return different pointers, POSIX and glibc currently follow C89's stricter
+   requirement even though this can cause naive programs to misbehave.  */
 struct tm _tmbuf;
 
 

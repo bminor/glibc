@@ -567,8 +567,7 @@ Manual}) use the @code{TERM} environment variable, for example.
 @item TZ
 @cindex @code{TZ} environment variable
 
-This specifies the time zone.  @xref{TZ Variable}, for information about
-the format of this string and how it is used.
+This specifies the time zone ruleset.  @xref{TZ Variable}.
 
 @item LANG
 @cindex @code{LANG} environment variable
