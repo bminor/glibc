@@ -92,6 +92,7 @@ test-input := \
   ky_KG.UTF-8 \
   ln_CD.UTF-8 \
   lt_LT.UTF-8 \
+  ltg_LV.UTF-8 \
   lv_LV.UTF-8 \
   mdf_RU.UTF-8 \
   mi_NZ.UTF-8 \
@@ -358,6 +359,7 @@ LOCALES := \
   ky_KG.UTF-8 \
   ln_CD.UTF-8 \
   lt_LT.UTF-8 \
+  ltg_LV.UTF-8 \
   lv_LV.UTF-8 \
   mdf_RU.UTF-8 \
   mi_NZ.UTF-8 \
