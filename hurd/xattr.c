@@ -50,7 +50,15 @@ _hurd_xattr_get (io_t port, const char *name, void *value, size_t *size)
       else if (value)
 	{
 	  if (*size < sizeof st.st_author)
-	    return ERANGE;
+	    {
+	      if (*size > 0)
+		return ERANGE;
+	      else
+		{
+		  *size = sizeof st.st_author;
+		  return 0;
+		}
+	    }
 	  memcpy (value, &st.st_author, sizeof st.st_author);
 	}
       *size = sizeof st.st_author;
@@ -73,12 +81,21 @@ _hurd_xattr_get (io_t port, const char *name, void *value, size_t *size)
       err = __file_get_translator (port, &buf, &bufsz);
       if (err)
 	return err;
-      if (value != NULL && *size < bufsz)
+
+      if (*size < bufsz)
 	{
 	  if (buf != value)
 	    __munmap (buf, bufsz);
-	  return ERANGE;
+
+	  if (*size > 0)
+	    return ERANGE;
+	  else
+	    {
+	      *size = bufsz;
+	      return 0;
+	    }
 	}
+
       if (buf != value && bufsz > 0)
 	{
 	  if (value != NULL)
@@ -201,7 +218,7 @@ _hurd_xattr_list (io_t port, void *buffer, size_t *size)
   if (st.st_mode & S_IPTRANS)
     add ("gnu.translator");
 
-  if (buffer != NULL && total > *size)
+  if (*size > 0 && total > *size)
     return ERANGE;
   *size = total;
   return 0;
