@@ -267,21 +267,21 @@ END LC_NUMERIC
 
 LC_TIME
 
-abday		"Ne";/
-		"Po";/
-		"Út";/
-		"St";/
-		"Čt";/
-		"Pá";/
-		"So"
+abday		"ne";/
+		"po";/
+		"út";/
+		"st";/
+		"čt";/
+		"pá";/
+		"so"
 
-day		"Neděle";/
-		"Pondělí";/
-		"Úterý";/
-		"Středa";/
-		"Čtvrtek";/
-		"Pátek";/
-		"Sobota"
+day		"neděle";/
+		"pondělí";/
+		"úterý";/
+		"středa";/
+		"čtvrtek";/
+		"pátek";/
+		"sobota"
 
 alt_mon		"leden";/
 		"únor";/
