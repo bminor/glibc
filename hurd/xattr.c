@@ -61,7 +61,16 @@ _hurd_xattr_get (io_t port, const char *name, void *value, size_t *size)
     {
       char *buf = value;
       mach_msg_type_number_t bufsz = value ? *size : 0;
-      error_t err = __file_get_translator (port, &buf, &bufsz);
+      struct stat64 st;
+      error_t err;
+
+      err = __io_stat (port, &st);
+      if (err)
+	return err;
+      if ((st.st_mode & S_IPTRANS) == 0)
+	return ENODATA;
+
+      err = __file_get_translator (port, &buf, &bufsz);
       if (err)
 	return err;
       if (value != NULL && *size < bufsz)
