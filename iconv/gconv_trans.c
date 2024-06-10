@@ -150,7 +150,7 @@ __gconv_transliterate (struct __gconv_step *step,
 
 	  /* Nothing found, continue searching.  */
 	}
-      else if (cnt > 0)
+      else if (cnt > 0 && winbuf + cnt == winbufend)
 	/* This means that the input buffer contents matches a prefix of
 	   an entry.  Since we cannot match it unless we get more input,
 	   we will tell the caller about it.  */
