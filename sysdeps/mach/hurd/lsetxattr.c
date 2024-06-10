@@ -32,5 +32,5 @@ lsetxattr (const char *path, const char *name, const void *value, size_t size,
     return -1;
   err = _hurd_xattr_set (port, name, value, size, flags);
   __mach_port_deallocate (__mach_task_self (), port);
-  return err ? __hurd_fail (err) : size;
+  return __hurd_fail (err);
 }
