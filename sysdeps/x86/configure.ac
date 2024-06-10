@@ -96,14 +96,18 @@ libc_cv_have_x86_isa_level=4
 libc_cv_have_x86_isa_level=3
 #elif MINIMUM_X86_ISA_LEVEL == 2
 libc_cv_have_x86_isa_level=2
-#else
+#elif defined __x86_64__
 libc_cv_have_x86_isa_level=baseline
+#else
+libc_cv_have_x86_isa_level=MINIMUM_X86_ISA_LEVEL
 #endif
 EOF
 		 eval `${CC-cc} $CFLAGS $CPPFLAGS $ISAFLAG -I$srcdir -E conftest.c | grep libc_cv_have_x86_isa_level`
 		 rm -rf conftest*])
-else
+elif test $base_machine = x86_64; then
   libc_cv_have_x86_isa_level=baseline
+else
+  libc_cv_have_x86_isa_level=0
 fi
 if test $libc_cv_have_x86_isa_level = baseline; then
   AC_DEFINE_UNQUOTED(MINIMUM_X86_ISA_LEVEL, 1)
