@@ -158,10 +158,9 @@ _hurd_xattr_set (io_t port, const char *name, const void *value, size_t size,
 	  if (err)
 	    return err;
 	  if (bufsz > 0)
-	    {
-	      __munmap (buf, bufsz);
-	      return ENODATA;
-	    }
+	    __munmap (buf, bufsz);
+	  else
+	    return ENODATA;
 	}
       return __file_set_translator (port,
 				    FS_TRANS_SET | ((flags & XATTR_CREATE)
