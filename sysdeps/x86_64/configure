@@ -6,8 +6,8 @@ printf %s "checking -mprefer-vector-width=128... " >&6; }
 if test ${libc_cv_cc_mprefer_vector_width+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-  if { ac_try='${CC-cc} -mprefer-vector-width=128 -xc /dev/null -S -o /dev/null'
+else case e in #(
+  e) if { ac_try='${CC-cc} -mprefer-vector-width=128 -xc /dev/null -S -o /dev/null'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -15,10 +15,12 @@ else $as_nop
   test $ac_status = 0; }; }
 then :
   libc_cv_cc_mprefer_vector_width=yes
-else $as_nop
-  libc_cv_cc_mprefer_vector_width=no
+else case e in #(
+  e) libc_cv_cc_mprefer_vector_width=no ;;
+esac
 fi
-
+ ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cc_mprefer_vector_width" >&5
 printf "%s\n" "$libc_cv_cc_mprefer_vector_width" >&6; }
@@ -71,8 +73,8 @@ printf %s "checking whether CET can be enabled... " >&6; }
 if test ${libc_cv_x86_cet_available+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-  cat > conftest.c <<EOF
+else case e in #(
+  e) cat > conftest.c <<EOF
 #if !defined __CET__ || __CET__ != 3
 # error CET isn't available.
 #endif
@@ -87,7 +89,8 @@ EOF
 		 else
 		   libc_cv_x86_cet_available=no
 		 fi
-		 rm -rf conftest*
+		 rm -rf conftest* ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_x86_cet_available" >&5
 printf "%s\n" "$libc_cv_x86_cet_available" >&6; }
@@ -102,8 +105,8 @@ printf %s "checking whether assembler supports CET... " >&6; }
 if test ${libc_cv_x86_cet_as+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-  cat > conftest.s <<EOF
+else case e in #(
+  e) cat > conftest.s <<EOF
 	incsspd %ecx
 EOF
 		 if { ac_try='${CC-cc} -c $CFLAGS conftest.s -o conftest.o 1>&5'
@@ -116,7 +119,8 @@ EOF
 		 else
 		   libc_cv_x86_cet_as=no
 		 fi
-		 rm -rf conftest*
+		 rm -rf conftest* ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_x86_cet_as" >&5
 printf "%s\n" "$libc_cv_x86_cet_as" >&6; }
@@ -140,8 +144,8 @@ printf %s "checking whether -mamx-tile works properly... " >&6; }
 if test ${libc_cv_x86_have_amx_tile+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-  cat > conftest.c <<EOF
+else case e in #(
+  e) cat > conftest.c <<EOF
 #include <x86intrin.h>
 EOF
 	       libc_cv_x86_have_amx_tile=no
@@ -155,7 +159,8 @@ EOF
 		   libc_cv_x86_have_amx_tile=yes
 	         fi
 	       fi
-	       rm -rf conftest*
+	       rm -rf conftest* ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_x86_have_amx_tile" >&5
 printf "%s\n" "$libc_cv_x86_have_amx_tile" >&6; }
@@ -168,8 +173,8 @@ printf %s "checking whether -mapxf is enabled... " >&6; }
 if test ${libc_cv_x86_have_apx+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-  cat > conftest.c <<EOF
+else case e in #(
+  e) cat > conftest.c <<EOF
 #ifndef __APX_F__
 # error APX isn't enabled
 #endif
@@ -183,7 +188,8 @@ EOF
   test $ac_status = 0; }; }; then
 		   libc_cv_x86_have_apx=yes
 	       fi
-	       rm -rf conftest*
+	       rm -rf conftest* ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_x86_have_apx" >&5
 printf "%s\n" "$libc_cv_x86_have_apx" >&6; }

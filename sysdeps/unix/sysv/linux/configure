@@ -12,8 +12,8 @@ printf %s "checking installed Linux kernel header files... " >&6; }
 if test ${libc_cv_linux320+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+else case e in #(
+  e) cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #include <linux/version.h>
 #if !defined LINUX_VERSION_CODE || LINUX_VERSION_CODE <  (3 *65536+ 2 *256+ 0) /* 3.2.0 */
@@ -30,10 +30,12 @@ _ACEOF
 if ac_fn_c_try_cpp "$LINENO"
 then :
   libc_cv_linux320='3.2.0 or later'
-else $as_nop
-  libc_cv_linux320='missing or too old!'
+else case e in #(
+  e) libc_cv_linux320='missing or too old!' ;;
+esac
 fi
-rm -f conftest.err conftest.i conftest.$ac_ext
+rm -f conftest.err conftest.i conftest.$ac_ext ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_linux320" >&5
 printf "%s\n" "$libc_cv_linux320" >&6; }
@@ -91,8 +93,9 @@ _ACEOF
 if ac_fn_c_try_cpp "$LINENO"
 then :
   libc_minimum_kernel=ok
-else $as_nop
-  libc_minimum_kernel='too old!'
+else case e in #(
+  e) libc_minimum_kernel='too old!' ;;
+esac
 fi
 rm -f conftest.err conftest.i conftest.$ac_ext
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_minimum_kernel" >&5

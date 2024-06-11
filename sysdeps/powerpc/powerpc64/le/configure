@@ -9,8 +9,8 @@ printf %s "checking if the target machine is at least POWER8... " >&6; }
 if test ${libc_cv_target_power8_ok+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-
+else case e in #(
+  e)
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -22,10 +22,12 @@ _ACEOF
 if ac_fn_c_try_compile "$LINENO"
 then :
   libc_cv_target_power8_ok=yes
-else $as_nop
-  libc_cv_target_power8_ok=no
+else case e in #(
+  e) libc_cv_target_power8_ok=no ;;
+esac
 fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_target_power8_ok" >&5
 printf "%s\n" "$libc_cv_target_power8_ok" >&6; }
@@ -42,8 +44,8 @@ printf %s "checking if the compiler supports -mno-gnu-attribute... " >&6; }
 if test ${libc_cv_no_gnu_attr_ok+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-
+else case e in #(
+  e)
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -52,10 +54,12 @@ _ACEOF
 if ac_fn_c_try_compile "$LINENO"
 then :
   libc_cv_no_gnu_attr_ok=yes
-else $as_nop
-  libc_cv_no_gnu_attr_ok=no
+else case e in #(
+  e) libc_cv_no_gnu_attr_ok=no ;;
+esac
 fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_no_gnu_attr_ok" >&5
 printf "%s\n" "$libc_cv_no_gnu_attr_ok" >&6; }
@@ -70,8 +74,8 @@ printf %s "checking if $CC compiles signbit with 128-bit floating point type... 
 if test ${libc_cv_compiler_powerpc64le_ice+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-  save_CFLAGS="$CFLAGS"
+else case e in #(
+  e) save_CFLAGS="$CFLAGS"
 CFLAGS="$CFLAGS -mabi=ieeelongdouble -Wno-psabi"
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
@@ -86,11 +90,13 @@ _ACEOF
 if ac_fn_c_try_compile "$LINENO"
 then :
   libc_cv_compiler_powerpc64le_ice=yes
-else $as_nop
-  libc_cv_compiler_powerpc64le_ice=no
+else case e in #(
+  e) libc_cv_compiler_powerpc64le_ice=no ;;
+esac
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
-CFLAGS="$save_CFLAGS"
+CFLAGS="$save_CFLAGS" ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_compiler_powerpc64le_ice" >&5
 printf "%s\n" "$libc_cv_compiler_powerpc64le_ice" >&6; }
@@ -104,8 +110,8 @@ printf %s "checking if $CC compiles with -mabi=ieeelongdouble and -mlong-double-
 if test ${libc_cv_compiler_powerpc64le_ldbl128_mabi+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-  save_CFLAGS="$CFLAGS"
+else case e in #(
+  e) save_CFLAGS="$CFLAGS"
 CFLAGS="$CFLAGS -mabi=ieeelongdouble -mlong-double-128"
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
@@ -116,11 +122,13 @@ _ACEOF
 if ac_fn_c_try_compile "$LINENO"
 then :
   libc_cv_compiler_powerpc64le_ldbl128_mabi=yes
-else $as_nop
-  libc_cv_compiler_powerpc64le_ldbl128_mabi=no
+else case e in #(
+  e) libc_cv_compiler_powerpc64le_ldbl128_mabi=no ;;
+esac
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
-CFLAGS="$save_CFLAGS"
+CFLAGS="$save_CFLAGS" ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_compiler_powerpc64le_ldbl128_mabi" >&5
 printf "%s\n" "$libc_cv_compiler_powerpc64le_ldbl128_mabi" >&6; }
@@ -138,8 +146,8 @@ printf %s "checking for $ac_word... " >&6; }
 if test ${ac_cv_prog_OBJCOPY+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-  if test -n "$OBJCOPY"; then
+else case e in #(
+  e) if test -n "$OBJCOPY"; then
   ac_cv_prog_OBJCOPY="$OBJCOPY" # Let the user override the test.
 else
 as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
@@ -161,7 +169,8 @@ done
   done
 IFS=$as_save_IFS
 
-fi
+fi ;;
+esac
 fi
 OBJCOPY=$ac_cv_prog_OBJCOPY
 if test -n "$OBJCOPY"; then

@@ -8,8 +8,8 @@ printf %s "checking if the compiler supports -mcpu=power10... " >&6; }
 if test ${libc_cv_mcpu_power10+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-
+else case e in #(
+  e)
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -18,10 +18,12 @@ _ACEOF
 if ac_fn_c_try_compile "$LINENO"
 then :
   libc_cv_mcpu_power10=yes
-else $as_nop
-  libc_cv_mcpu_power10=no
+else case e in #(
+  e) libc_cv_mcpu_power10=no ;;
+esac
 fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_mcpu_power10" >&5
 printf "%s\n" "$libc_cv_mcpu_power10" >&6; }

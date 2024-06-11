@@ -7,8 +7,8 @@ printf %s "checking whether $CC $CFLAGS supports -mlong-double-128... " >&6; }
 if test ${libc_cv_mlong_double_128+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-  save_CFLAGS="$CFLAGS"
+else case e in #(
+  e) save_CFLAGS="$CFLAGS"
 CFLAGS="$CFLAGS -mlong-double-128"
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
@@ -28,11 +28,13 @@ _ACEOF
 if ac_fn_c_try_compile "$LINENO"
 then :
   libc_cv_mlong_double_128=yes
-else $as_nop
-  libc_cv_mlong_double_128=no
+else case e in #(
+  e) libc_cv_mlong_double_128=no ;;
+esac
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
-CFLAGS="$save_CFLAGS"
+CFLAGS="$save_CFLAGS" ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_mlong_double_128" >&5
 printf "%s\n" "$libc_cv_mlong_double_128" >&6; }

@@ -5,8 +5,8 @@ printf %s "checking for assembler line separator... " >&6; }
 if test ${libc_cv_asm_line_sep+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-  cat > conftest.s <<EOF
+else case e in #(
+  e) cat > conftest.s <<EOF
 nop ; is_old_puffin
 EOF
 if { ac_try='${CC-cc} -c $ASFLAGS conftest.s 1>&5'
@@ -24,7 +24,8 @@ else
   fi
   libc_cv_asm_line_sep=';'
 fi
-rm -f conftest*
+rm -f conftest* ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_asm_line_sep" >&5
 printf "%s\n" "$libc_cv_asm_line_sep" >&6; }

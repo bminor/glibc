@@ -7,8 +7,8 @@ printf %s "checking for fcfid use... " >&6; }
 if test ${libc_cv_ppc_fcfid+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-  echo 'double foo (int x) { return (double) x; }' > conftest.c
+else case e in #(
+  e) echo 'double foo (int x) { return (double) x; }' > conftest.c
 libc_cv_ppc_fcfid=no
 if { ac_try='${CC-cc} -S $CFLAGS conftest.c -o conftest.s 1>&5'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
@@ -20,7 +20,8 @@ if { ac_try='${CC-cc} -S $CFLAGS conftest.c -o conftest.s 1>&5'
     libc_cv_ppc_fcfid=yes
   fi
 fi
-rm -rf conftest*
+rm -rf conftest* ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ppc_fcfid" >&5
 printf "%s\n" "$libc_cv_ppc_fcfid" >&6; }
@@ -35,8 +36,8 @@ printf %s "checking for fctidz use... " >&6; }
 if test ${libc_cv_ppc_fctidz+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-  echo 'long long int foo (double x) { return (long long int) x; }' > conftest.c
+else case e in #(
+  e) echo 'long long int foo (double x) { return (long long int) x; }' > conftest.c
 libc_cv_ppc_fctidz=no
 if { ac_try='${CC-cc} -S $CFLAGS conftest.c -o conftest.s 1>&5'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
@@ -48,7 +49,8 @@ if { ac_try='${CC-cc} -S $CFLAGS conftest.c -o conftest.s 1>&5'
     libc_cv_ppc_fctidz=yes
   fi
 fi
-rm -rf conftest*
+rm -rf conftest* ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ppc_fctidz" >&5
 printf "%s\n" "$libc_cv_ppc_fctidz" >&6; }

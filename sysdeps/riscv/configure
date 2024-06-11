@@ -7,8 +7,8 @@ printf %s "checking for R_RISCV_ALIGN linker relaxation support... " >&6; }
 if test ${libc_cv_riscv_r_align+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-    cat > conftest.S <<EOF
+else case e in #(
+  e)   cat > conftest.S <<EOF
 .align 3
 foo:
   li a0,42
@@ -24,7 +24,8 @@ EOF
   then
     libc_cv_riscv_r_align=yes
   fi
-  rm -rf conftest.*
+  rm -rf conftest.* ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_riscv_r_align" >&5
 printf "%s\n" "$libc_cv_riscv_r_align" >&6; }
@@ -36,8 +37,8 @@ printf %s "checking if the toolchain is sufficient to build static PIE on RISC-V
 if test ${libc_cv_static_pie_on_riscv+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-
+else case e in #(
+  e)
   cat > conftest1.S <<\EOF
     .globl _start
     .type   _start, @function
@@ -71,7 +72,8 @@ EOF
   then
     libc_cv_static_pie_on_riscv=yes
   fi
-  rm -rf conftest*
+  rm -rf conftest*  ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_static_pie_on_riscv" >&5
 printf "%s\n" "$libc_cv_static_pie_on_riscv" >&6; }
@@ -80,3 +82,4 @@ if test "$libc_cv_static_pie_on_riscv" = yes; then
   printf "%s\n" "#define SUPPORT_STATIC_PIE 1" >>confdefs.h
 
 fi
+

@@ -6,8 +6,8 @@ printf %s "checking for __builtin_tbegin... " >&6; }
 if test ${libc_cv_gcc_builtin_tbegin+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-  cat > conftest.c <<\EOF
+else case e in #(
+  e) cat > conftest.c <<\EOF
 #include <htmintrin.h>
 void testtransaction ()
 {
@@ -28,7 +28,8 @@ then
 else
   libc_cv_gcc_builtin_tbegin=no
 fi
-rm -f conftest*
+rm -f conftest*  ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_gcc_builtin_tbegin" >&5
 printf "%s\n" "$libc_cv_gcc_builtin_tbegin" >&6; }
@@ -44,8 +45,8 @@ printf %s "checking for S390 vector instruction support... " >&6; }
 if test ${libc_cv_asm_s390_vx+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-
+else case e in #(
+  e)
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -61,10 +62,12 @@ _ACEOF
 if ac_fn_c_try_compile "$LINENO"
 then :
   libc_cv_asm_s390_vx=yes
-else $as_nop
-  libc_cv_asm_s390_vx=no
+else case e in #(
+  e) libc_cv_asm_s390_vx=no ;;
+esac
 fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_asm_s390_vx" >&5
 printf "%s\n" "$libc_cv_asm_s390_vx" >&6; }
@@ -83,8 +86,8 @@ printf %s "checking for S390 vector support in gcc... " >&6; }
 if test ${libc_cv_gcc_s390_vx+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-
+else case e in #(
+  e)
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -97,10 +100,12 @@ _ACEOF
 if ac_fn_c_try_compile "$LINENO"
 then :
   libc_cv_gcc_s390_vx=yes
-else $as_nop
-  libc_cv_gcc_s390_vx=no
+else case e in #(
+  e) libc_cv_gcc_s390_vx=no ;;
+esac
 fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_gcc_s390_vx" >&5
 printf "%s\n" "$libc_cv_gcc_s390_vx" >&6; }
@@ -116,8 +121,8 @@ printf %s "checking for S390 arch13 zarch instruction support... " >&6; }
 if test ${libc_cv_asm_s390_arch13+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-
+else case e in #(
+  e)
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -135,10 +140,12 @@ _ACEOF
 if ac_fn_c_try_compile "$LINENO"
 then :
   libc_cv_asm_s390_arch13=yes
-else $as_nop
-  libc_cv_asm_s390_arch13=no
+else case e in #(
+  e) libc_cv_asm_s390_arch13=no ;;
+esac
 fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_asm_s390_arch13" >&5
 printf "%s\n" "$libc_cv_asm_s390_arch13" >&6; }
@@ -154,8 +161,8 @@ printf %s "checking for S390 z10 zarch instruction support as default... " >&6; 
 if test ${libc_cv_asm_s390_min_z10_zarch+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-
+else case e in #(
+  e)
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -173,10 +180,12 @@ _ACEOF
 if ac_fn_c_try_compile "$LINENO"
 then :
   libc_cv_asm_s390_min_z10_zarch=yes
-else $as_nop
-  libc_cv_asm_s390_min_z10_zarch=no
+else case e in #(
+  e) libc_cv_asm_s390_min_z10_zarch=no ;;
+esac
 fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_asm_s390_min_z10_zarch" >&5
 printf "%s\n" "$libc_cv_asm_s390_min_z10_zarch" >&6; }
@@ -192,8 +201,8 @@ printf %s "checking for S390 z196 zarch instruction support as default... " >&6;
 if test ${libc_cv_asm_s390_min_z196_zarch+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-
+else case e in #(
+  e)
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -208,10 +217,12 @@ _ACEOF
 if ac_fn_c_try_compile "$LINENO"
 then :
   libc_cv_asm_s390_min_z196_zarch=yes
-else $as_nop
-  libc_cv_asm_s390_min_z196_zarch=no
+else case e in #(
+  e) libc_cv_asm_s390_min_z196_zarch=no ;;
+esac
 fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_asm_s390_min_z196_zarch" >&5
 printf "%s\n" "$libc_cv_asm_s390_min_z196_zarch" >&6; }
@@ -227,8 +238,8 @@ printf %s "checking for S390 z13 zarch instruction support as default... " >&6; 
 if test ${libc_cv_asm_s390_min_z13_zarch+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-
+else case e in #(
+  e)
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -245,10 +256,12 @@ _ACEOF
 if ac_fn_c_try_compile "$LINENO"
 then :
   libc_cv_asm_s390_min_z13_zarch=yes
-else $as_nop
-  libc_cv_asm_s390_min_z13_zarch=no
+else case e in #(
+  e) libc_cv_asm_s390_min_z13_zarch=no ;;
+esac
 fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_asm_s390_min_z13_zarch" >&5
 printf "%s\n" "$libc_cv_asm_s390_min_z13_zarch" >&6; }
@@ -264,8 +277,8 @@ printf %s "checking for S390 arch13 zarch instruction support as default... " >&
 if test ${libc_cv_asm_s390_min_arch13_zarch+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-
+else case e in #(
+  e)
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -281,10 +294,12 @@ _ACEOF
 if ac_fn_c_try_compile "$LINENO"
 then :
   libc_cv_asm_s390_min_arch13_zarch=yes
-else $as_nop
-  libc_cv_asm_s390_min_arch13_zarch=no
+else case e in #(
+  e) libc_cv_asm_s390_min_arch13_zarch=no ;;
+esac
 fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_asm_s390_min_arch13_zarch" >&5
 printf "%s\n" "$libc_cv_asm_s390_min_arch13_zarch" >&6; }
@@ -301,8 +316,8 @@ printf %s "checking if $CC is sufficient to build libc on s390x... " >&6; }
 if test ${libc_cv_compiler_ok_on_s390x+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-
+else case e in #(
+  e)
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -321,10 +336,12 @@ _ACEOF
 if ac_fn_c_try_cpp "$LINENO"
 then :
   libc_cv_compiler_ok_on_s390x=yes
-else $as_nop
-  libc_cv_compiler_ok_on_s390x=no
+else case e in #(
+  e) libc_cv_compiler_ok_on_s390x=no ;;
+esac
 fi
-rm -f conftest.err conftest.i conftest.$ac_ext
+rm -f conftest.err conftest.i conftest.$ac_ext ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_compiler_ok_on_s390x" >&5
 printf "%s\n" "$libc_cv_compiler_ok_on_s390x" >&6; }

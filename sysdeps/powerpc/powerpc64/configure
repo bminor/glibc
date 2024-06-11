@@ -9,8 +9,8 @@ printf %s "checking for support for overlapping .opd entries... " >&6; }
 if test ${libc_cv_overlapping_opd+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-  libc_cv_overlapping_opd=no
+else case e in #(
+  e) libc_cv_overlapping_opd=no
 echo 'void foo (void) {}' > conftest.c
 if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $libc_cv_cc_submachine -S conftest.c -o conftest.s 1>&5'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
@@ -27,7 +27,8 @@ if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $libc_cv_cc_submachine -S conftest.c -o 
   fi
 fi
 rm -f conftest.c conftest.s
-
+ ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_overlapping_opd" >&5
 printf "%s\n" "$libc_cv_overlapping_opd" >&6; }
@@ -45,8 +46,8 @@ printf %s "checking if the compiler supports @notoc... " >&6; }
 if test ${libc_cv_ppc64_notoc+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-    cat > conftest.c <<EOF
+else case e in #(
+  e)   cat > conftest.c <<EOF
 int bar (void);
 int foo (void) { return bar () + 1; }
 EOF
@@ -66,7 +67,8 @@ EOF
   then
     libc_cv_ppc64_notoc=yes
   fi
-  rm -rf conftest.*
+  rm -rf conftest.* ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ppc64_notoc" >&5
 printf "%s\n" "$libc_cv_ppc64_notoc" >&6; }

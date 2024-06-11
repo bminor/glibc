@@ -10,8 +10,8 @@ if { as_var=\
 libc_cv_s390x_staticpie_req_runtime; eval test \${$as_var+y}; }
 then :
   printf %s "(cached) " >&6
-else $as_nop
-    cat > conftest1.c <<EOF
+else case e in #(
+  e)   cat > conftest1.c <<EOF
 __thread int * foo;
 
 void
@@ -77,7 +77,8 @@ EOF
   then
     libc_cv_s390x_staticpie_req_runtime=yes
   fi
-  rm -rf conftest.*
+  rm -rf conftest.* ;;
+esac
 fi
 eval ac_res=\$\
 libc_cv_s390x_staticpie_req_runtime

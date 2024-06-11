@@ -61,8 +61,8 @@ printf %s "checking for linker static PIE support... " >&6; }
 if test ${libc_cv_ld_static_pie+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-  cat > conftest.s <<\EOF
+else case e in #(
+  e) cat > conftest.s <<\EOF
 	.text
 	.global _start
 _start:
@@ -80,7 +80,8 @@ EOF
       libc_cv_ld_static_pie=yes
     fi
   fi
-rm -f conftest*
+rm -f conftest* ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ld_static_pie" >&5
 printf "%s\n" "$libc_cv_ld_static_pie" >&6; }

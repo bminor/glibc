@@ -7,8 +7,8 @@ printf %s "checking for linker x86 ISA level support... " >&6; }
 if test ${libc_cv_include_x86_isa_level+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-  cat > conftest1.S <<EOF
+else case e in #(
+  e) cat > conftest1.S <<EOF
 #ifdef __LP64__
 # define P2ALIGN 3
 #else
@@ -70,7 +70,8 @@ if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -nostartfiles -nostdlib -r -o conftest c
     libc_cv_include_x86_isa_level=yes
   fi
 fi
-rm -f conftest*
+rm -f conftest* ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_include_x86_isa_level" >&5
 printf "%s\n" "$libc_cv_include_x86_isa_level" >&6; }
@@ -82,8 +83,8 @@ printf %s "checking for LAHF/SAHF instruction support... " >&6; }
 if test ${libc_cv_have_x86_lahf_sahf+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-      libc_cv_have_x86_lahf_sahf=no
+else case e in #(
+  e)     libc_cv_have_x86_lahf_sahf=no
     if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -fverbose-asm -S -o - -x c /dev/null'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
@@ -91,7 +92,8 @@ else $as_nop
   printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; } | grep -qE '(-msahf\b|-march=x86-64-v)'; then
       libc_cv_have_x86_lahf_sahf=yes
-    fi
+    fi ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_have_x86_lahf_sahf" >&5
 printf "%s\n" "$libc_cv_have_x86_lahf_sahf" >&6; }
@@ -105,8 +107,8 @@ printf %s "checking for MOVBE instruction support... " >&6; }
 if test ${libc_cv_have_x86_movbe+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-      libc_cv_have_x86_movbe=no
+else case e in #(
+  e)     libc_cv_have_x86_movbe=no
     if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -fverbose-asm -S -o - -x c /dev/null'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
@@ -114,7 +116,8 @@ else $as_nop
   printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; } | grep -qE '(-mmovbe\b|-march=x86-64-v([3-9]|[1-9][0-9]))'; then
       libc_cv_have_x86_movbe=yes
-    fi
+    fi ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_have_x86_movbe" >&5
 printf "%s\n" "$libc_cv_have_x86_movbe" >&6; }
@@ -130,8 +133,8 @@ printf %s "checking for ISA level support... " >&6; }
 if test ${libc_cv_have_x86_isa_level+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-  cat > conftest.c <<EOF
+else case e in #(
+  e) cat > conftest.c <<EOF
 #include <sysdeps/x86/isa-level.h>
 #if MINIMUM_X86_ISA_LEVEL >= 4
 libc_cv_have_x86_isa_level=4
@@ -148,7 +151,8 @@ libc_cv_have_x86_isa_level=0
 #endif
 EOF
 		 eval `${CC-cc} $CFLAGS $CPPFLAGS $ISAFLAG -I$srcdir -E conftest.c | grep libc_cv_have_x86_isa_level`
-		 rm -rf conftest*
+		 rm -rf conftest* ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_have_x86_isa_level" >&5
 printf "%s\n" "$libc_cv_have_x86_isa_level" >&6; }
