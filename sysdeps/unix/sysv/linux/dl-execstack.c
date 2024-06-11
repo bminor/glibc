@@ -27,35 +27,30 @@
 #include <sysdep.h>
 #include <unistd.h>
 
-extern int __stack_prot attribute_relro attribute_hidden;
-
 static int
 make_main_stack_executable (void **stack_endp)
 {
   /* This gives us the highest/lowest page that needs to be changed.  */
   uintptr_t page = ((uintptr_t) *stack_endp
 		    & -(intptr_t) GLRO(dl_pagesize));
-  int result = 0;
 
-  if (__builtin_expect (__mprotect ((void *) page, GLRO(dl_pagesize),
-				    __stack_prot) == 0, 1))
-    goto return_success;
-  result = errno;
-  goto out;
+  if (__mprotect ((void *) page, GLRO(dl_pagesize),
+		  PROT_READ | PROT_WRITE | PROT_EXEC
+#if _STACK_GROWS_DOWN
+		  | PROT_GROWSDOWN
+#elif _STACK_GROWS_UP
+		  | PROT_GROWSUP
+#endif
+		  ) != 0)
+    return errno;
 
- return_success:
   /* Clear the address.  */
   *stack_endp = NULL;
 
   /* Remember that we changed the permission.  */
   GL(dl_stack_flags) |= PF_X;
 
- out:
-#ifdef check_consistency
-  check_consistency ();
-#endif
-
-  return result;
+  return 0;
 }
 
 int

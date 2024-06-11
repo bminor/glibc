@@ -88,16 +88,6 @@ struct filebuf
 #define STRING(x) __STRING (x)
 
 
-int __stack_prot attribute_hidden attribute_relro
-#if _STACK_GROWS_DOWN && defined PROT_GROWSDOWN
-  = PROT_GROWSDOWN;
-#elif _STACK_GROWS_UP && defined PROT_GROWSUP
-  = PROT_GROWSUP;
-#else
-  = 0;
-#endif
-
-
 /* This is the decomposed LD_LIBRARY_PATH search path.  */
 struct r_search_path_struct __rtld_env_path_list attribute_relro;
 
@@ -1308,41 +1298,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
   if (__glibc_unlikely ((stack_flags &~ GL(dl_stack_flags)) & PF_X))
     {
       /* The stack is presently not executable, but this module
-	 requires that it be executable.  We must change the
-	 protection of the variable which contains the flags used in
-	 the mprotect calls.  */
-#ifdef SHARED
-      if ((mode & (__RTLD_DLOPEN | __RTLD_AUDIT)) == __RTLD_DLOPEN)
-	{
-	  const uintptr_t p = (uintptr_t) &__stack_prot & -GLRO(dl_pagesize);
-	  const size_t s = (uintptr_t) (&__stack_prot + 1) - p;
-
-	  struct link_map *const m = &GL(dl_rtld_map);
-	  const uintptr_t relro_end = ((m->l_addr + m->l_relro_addr
-					+ m->l_relro_size)
-				       & -GLRO(dl_pagesize));
-	  if (__glibc_likely (p + s <= relro_end))
-	    {
-	      /* The variable lies in the region protected by RELRO.  */
-	      if (__mprotect ((void *) p, s, PROT_READ|PROT_WRITE) < 0)
-		{
-		  errstring = N_("cannot change memory protections");
-		  goto lose_errno;
-		}
-	      __stack_prot |= PROT_READ|PROT_WRITE|PROT_EXEC;
-	      __mprotect ((void *) p, s, PROT_READ);
-	    }
-	  else
-	    __stack_prot |= PROT_READ|PROT_WRITE|PROT_EXEC;
-	}
-      else
-#endif
-	__stack_prot |= PROT_READ|PROT_WRITE|PROT_EXEC;
-
-#ifdef check_consistency
-      check_consistency ();
-#endif
-
+	 requires that it be executable.  */
 #if PTHREAD_IN_LIBC
       errval = _dl_make_stacks_executable (stack_endp);
 #else
