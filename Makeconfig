@@ -1265,7 +1265,7 @@ $(common-objpfx)dl-tunable-list.stmp: \
 		$(..)elf/dl-tunables.list \
 		$(wildcard $(subdirs:%=$(..)%/dl-tunables.list)) \
 		$(wildcard $(sysdirs:%=%/dl-tunables.list))
-	$(AWK) -f $^ > ${@:stmp=T}
+	LC_ALL=C $(AWK) -f $^ > ${@:stmp=T}
 	$(move-if-change) ${@:stmp=T} ${@:stmp=h}
 	touch $@
 
