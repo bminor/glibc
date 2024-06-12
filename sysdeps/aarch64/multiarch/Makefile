@@ -5,6 +5,7 @@ sysdep_routines += \
   memcpy_a64fx \
   memcpy_generic \
   memcpy_mops \
+  memcpy_oryon1 \
   memcpy_sve \
   memcpy_thunderx \
   memcpy_thunderx2 \

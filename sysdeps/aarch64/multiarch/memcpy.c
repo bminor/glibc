@@ -1,5 +1,6 @@
 /* Multiple versions of memcpy. AARCH64 version.
    Copyright (C) 2017-2024 Free Software Foundation, Inc.
+   Copyright The GNU Toolchain Authors.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,6 +35,7 @@ extern __typeof (__redirect_memcpy) __memcpy_thunderx2 attribute_hidden;
 extern __typeof (__redirect_memcpy) __memcpy_a64fx attribute_hidden;
 extern __typeof (__redirect_memcpy) __memcpy_sve attribute_hidden;
 extern __typeof (__redirect_memcpy) __memcpy_mops attribute_hidden;
+extern __typeof (__redirect_memcpy) __memcpy_oryon1 attribute_hidden;
 
 static inline __typeof (__redirect_memcpy) *
 select_memcpy_ifunc (void)
@@ -49,6 +51,9 @@ select_memcpy_ifunc (void)
 	return __memcpy_a64fx;
       return prefer_sve_ifuncs ? __memcpy_sve : __memcpy_generic;
     }
+
+  if (IS_ORYON1 (midr))
+    return __memcpy_oryon1;
 
   if (IS_THUNDERX (midr))
     return __memcpy_thunderx;

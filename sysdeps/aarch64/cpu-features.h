@@ -1,6 +1,7 @@
 /* Initialize CPU feature data.  AArch64 version.
    This file is part of the GNU C Library.
    Copyright (C) 2017-2024 Free Software Foundation, Inc.
+   Copyright The GNU Toolchain Authors.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -55,6 +56,11 @@
 
 #define IS_A64FX(midr) (MIDR_IMPLEMENTOR(midr) == 'F'			      \
 			&& MIDR_PARTNUM(midr) == 0x001)
+
+#define IS_ORYON1(midr) (MIDR_IMPLEMENTOR(midr) == 'Q'			\
+		         && (MIDR_PARTNUM(midr) == 0x001		\
+			     || (MIDR_PARTNUM(midr) == 0x002		\
+			         && MIDR_VARIANT(midr) == 0)))
 
 struct cpu_features
 {

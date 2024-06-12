@@ -1,5 +1,6 @@
 /* Enumerate available IFUNC implementations of a function.  AARCH64 version.
    Copyright (C) 2017-2024 Free Software Foundation, Inc.
+   Copyright The GNU Toolchain Authors.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,6 +36,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   /* Support sysdeps/aarch64/multiarch/memcpy.c, memmove.c and memset.c.  */
   IFUNC_IMPL (i, name, memcpy,
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_thunderx)
+	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_oryon1)
 	      IFUNC_IMPL_ADD (array, i, memcpy, !bti, __memcpy_thunderx2)
 #if HAVE_AARCH64_SVE_ASM
 	      IFUNC_IMPL_ADD (array, i, memcpy, sve && !bti, __memcpy_a64fx)
@@ -44,6 +46,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_generic))
   IFUNC_IMPL (i, name, memmove,
 	      IFUNC_IMPL_ADD (array, i, memmove, 1, __memmove_thunderx)
+	      IFUNC_IMPL_ADD (array, i, memmove, 1, __memmove_oryon1)
 	      IFUNC_IMPL_ADD (array, i, memmove, !bti, __memmove_thunderx2)
 #if HAVE_AARCH64_SVE_ASM
 	      IFUNC_IMPL_ADD (array, i, memmove, sve && !bti, __memmove_a64fx)
