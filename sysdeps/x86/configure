@@ -141,8 +141,10 @@ libc_cv_have_x86_isa_level=3
 libc_cv_have_x86_isa_level=2
 #elif defined __x86_64__
 libc_cv_have_x86_isa_level=baseline
+#elif MINIMUM_X86_ISA_LEVEL == 1
+libc_cv_have_x86_isa_level=1
 #else
-libc_cv_have_x86_isa_level=MINIMUM_X86_ISA_LEVEL
+libc_cv_have_x86_isa_level=0
 #endif
 EOF
 		 eval `${CC-cc} $CFLAGS $CPPFLAGS $ISAFLAG -I$srcdir -E conftest.c | grep libc_cv_have_x86_isa_level`
