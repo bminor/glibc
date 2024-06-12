@@ -71,22 +71,6 @@ PROCINFO_CLASS const char _dl_x86_hwcap_flags[3][9]
 ,
 #endif
 
-#if !defined PROCINFO_DECL && defined SHARED
-  ._dl_x86_platforms
-#else
-PROCINFO_CLASS const char _dl_x86_platforms[4][9]
-#endif
-#ifndef PROCINFO_DECL
-= {
-    "i586", "i686", "haswell", "xeon_phi"
-  }
-#endif
-#if !defined SHARED || defined PROCINFO_DECL
-;
-#else
-,
-#endif
-
 #if defined SHARED && !IS_IN (ldconfig)
 # if !defined PROCINFO_DECL
   ._dl_x86_tlsdesc_dynamic

@@ -16,47 +16,12 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* This information must be kept in sync with the _DL_PLATFORM_COUNT
-   definitions in procinfo.h.
-
-   If anything should be added here check whether the size of each string
-   is still ok with the given array size.
-
-   All the #ifdefs in the definitions are quite irritating but
-   necessary if we want to avoid duplicating the information.  There
-   are three different modes:
-
-   - PROCINFO_DECL is defined.  This means we are only interested in
-     declarations.
-
-   - PROCINFO_DECL is not defined:
-
-     + if SHARED is defined the file is included in an array
-       initializer.  The .element = { ... } syntax is needed.
-
-     + if SHARED is not defined a normal array initialization is
-       needed.
-  */
-
-#ifndef PROCINFO_CLASS
-#define PROCINFO_CLASS
-#endif
-
-#if !defined PROCINFO_DECL && defined SHARED
-  ._dl_mips_platforms
-#else
-PROCINFO_CLASS const char _dl_mips_platforms[4][11]
-#endif
-#ifndef PROCINFO_DECL
-= {
-    "loongson2e", "loongson2f", "octeon", "octeon2"
-  }
-#endif
-#if !defined SHARED || defined PROCINFO_DECL
-;
-#else
-,
-#endif
-
+/* Note:
+   When compiling elf/ldconfig.c, PROCINFO_CLASS is defined to static.
+   This dl-procinfo.c is included in sysdeps/generic/ldsodefs.h.
+   Afterwards, if not yet defined, PROCINFO_CLASS is defined to EXTERN
+   just before dl-vdso-setup.c is included.  A "static" _dl_vdso_xyz
+   function prototype would lead to gcc warnings/errors: defined but
+   not used.  */
 #undef PROCINFO_DECL
 #undef PROCINFO_CLASS

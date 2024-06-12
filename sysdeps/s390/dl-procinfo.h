@@ -24,7 +24,6 @@
 extern const char _dl_s390_cap_flags[_DL_HWCAP_COUNT][9] attribute_hidden;
 
 #define _DL_PLATFORMS_COUNT	11
-extern const char _dl_s390_platforms[_DL_PLATFORMS_COUNT][7] attribute_hidden;
 
 /* The kernel provides up to 32 capability bits with elf_hwcap.  */
 #define _DL_FIRST_PLATFORM	32

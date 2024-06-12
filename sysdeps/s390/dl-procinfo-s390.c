@@ -24,9 +24,3 @@ const char _dl_s390_cap_flags[_DL_HWCAP_COUNT][9] =
     "highgprs", "te", "vx", "vxd", "vxe", "gs", "vxe2", "vxp", "sort", "dflt",
     "vxp2", "nnpa", "pcimio", "sie"
   };
-
-const char _dl_s390_platforms[_DL_PLATFORMS_COUNT][7] =
-  {
-    "g5", "z900", "z990", "z9-109", "z10", "z196", "zEC12", "z13", "z14", "z15",
-    "z16"
-  };
