@@ -1,5 +1,6 @@
 /* Multiple versions of memset. AARCH64 version.
    Copyright (C) 2017-2024 Free Software Foundation, Inc.
+   Copyright The GNU Toolchain Authors.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,6 +35,7 @@ extern __typeof (__redirect_memset) __memset_kunpeng attribute_hidden;
 extern __typeof (__redirect_memset) __memset_a64fx attribute_hidden;
 extern __typeof (__redirect_memset) __memset_generic attribute_hidden;
 extern __typeof (__redirect_memset) __memset_mops attribute_hidden;
+extern __typeof (__redirect_memset) __memset_oryon1 attribute_hidden;
 
 static inline __typeof (__redirect_memset) *
 select_memset_ifunc (void)
@@ -48,6 +50,9 @@ select_memset_ifunc (void)
       if (IS_A64FX (midr) && zva_size == 256)
 	return __memset_a64fx;
     }
+
+  if (IS_ORYON1 (midr) && zva_size == 64)
+    return __memset_oryon1;
 
   if (IS_KUNPENG920 (midr))
     return __memset_kunpeng;
