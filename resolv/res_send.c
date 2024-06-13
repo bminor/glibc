@@ -947,9 +947,11 @@ send_dg(res_state statp,
 		seconds /= statp->nscount;
 	if (seconds <= 0)
 		seconds = 1;
-	bool single_request_reopen = (statp->options & RES_SNGLKUPREOP) != 0;
-	bool single_request = (((statp->options & RES_SNGLKUP) != 0)
-			       | single_request_reopen);
+	bool single_request_reopen = ((statp->options & RES_SNGLKUPREOP)
+				      || (statp->_flags & RES_F_SNGLKUPREOP));
+	bool single_request = ((statp->options & RES_SNGLKUP)
+			       || (statp->_flags & RES_F_SNGLKUP)
+			       || single_request_reopen);
 	int save_gotsomewhere = *gotsomewhere;
 
 	int retval;
@@ -1006,14 +1008,14 @@ send_dg(res_state statp,
 		       have received the first answer.  */
 		    if (!single_request)
 		      {
-			statp->options |= RES_SNGLKUP;
+			statp->_flags |= RES_F_SNGLKUP;
 			single_request = true;
 			*gotsomewhere = save_gotsomewhere;
 			goto retry;
 		      }
 		    else if (!single_request_reopen)
 		      {
-			statp->options |= RES_SNGLKUPREOP;
+			statp->_flags |= RES_F_SNGLKUPREOP;
 			single_request_reopen = true;
 			*gotsomewhere = save_gotsomewhere;
 			__res_iclose (statp, false);
