@@ -26,6 +26,8 @@
 #define RES_F_VC        0x00000001 /* Socket is TCP.  */
 #define RES_F_CONN      0x00000002 /* Socket is connected.  */
 #define RES_F_EDNS0ERR  0x00000004 /* EDNS0 caused errors.  */
+#define RES_F_SNGLKUP	0x00200000 /* Private version of RES_SNGLKUP.  */
+#define RES_F_SNGLKUPREOP 0x00400000 /* Private version of RES_SNGLKUPREOP.  */
 
 /* The structure HEADER is normally aligned on a word boundary.  In
    some code, we need to access this structure when it may be aligned
