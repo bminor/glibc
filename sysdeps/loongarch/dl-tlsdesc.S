@@ -100,7 +100,7 @@ _dl_tlsdesc_undefweak:
 _dl_tlsdesc_dynamic:
 	/* Save just enough registers to support fast path, if we fall
 	   into slow path we will save additional registers.  */
-	ADDI	sp, sp, -24
+	ADDI	sp, sp, -32
 	REG_S	t0, sp, 0
 	REG_S	t1, sp, 8
 	REG_S	t2, sp, 16
@@ -141,7 +141,7 @@ Hign address	dynamic_block1 <----- dtv5  */
 	REG_L	t0, sp, 0
 	REG_L	t1, sp, 8
 	REG_L	t2, sp, 16
-	ADDI	sp, sp, 24
+	ADDI	sp, sp, 32
 	RET
 
 .Lslow:
@@ -171,9 +171,8 @@ Hign address	dynamic_block1 <----- dtv5  */
 	/* Save fcsr0 register.
 	   Only one physical fcsr0 register, fcsr1-fcsr3 are aliases
 	   of some fields in fcsr0.  */
-	ADDI	sp, sp, -SZFCSREG
 	movfcsr2gr  t0, fcsr0
-	st.w	t0, sp, 0
+	st.w	t0, sp, FRAME_SIZE + 24 /* Use the spare slot above t2 */
 
 	/* Whether support LASX.  */
 	la.global   t0, _rtld_global_ro
@@ -406,9 +405,8 @@ Hign address	dynamic_block1 <----- dtv5  */
 
 .Lfcsr:
 	/* Restore fcsr0 register.  */
-	ld.w	t0, sp, 0
+	ld.w	t0, sp, FRAME_SIZE + 24
 	movgr2fcsr  fcsr0, t0
-	ADDI	sp, sp, SZFCSREG
 
 #endif /* #ifndef __loongarch_soft_float */
 
