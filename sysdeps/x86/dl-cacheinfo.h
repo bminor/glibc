@@ -1044,9 +1044,9 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
   TUNABLE_SET_WITH_BOUNDS (x86_non_temporal_threshold, non_temporal_threshold,
 			   minimum_non_temporal_threshold,
 			   maximum_non_temporal_threshold);
-  TUNABLE_SET_WITH_BOUNDS (
-      x86_memset_non_temporal_threshold, memset_non_temporal_threshold,
-      minimum_non_temporal_threshold, maximum_non_temporal_threshold);
+  TUNABLE_SET_WITH_BOUNDS (x86_memset_non_temporal_threshold,
+			   memset_non_temporal_threshold,
+			   minimum_non_temporal_threshold, SIZE_MAX);
   TUNABLE_SET_WITH_BOUNDS (x86_rep_movsb_threshold, rep_movsb_threshold,
 			   minimum_rep_movsb_threshold, SIZE_MAX);
   TUNABLE_SET_WITH_BOUNDS (x86_rep_stosb_threshold, rep_stosb_threshold, 1,
