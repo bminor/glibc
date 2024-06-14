@@ -1153,7 +1153,7 @@ modules-names += \
   ifuncmod1 \
   ifuncmod3 \
   ifuncmod6 \
-  # module-names
+  # modules-names
 ifeq (no,$(with-lld))
 modules-names += ifuncmod5
 endif
