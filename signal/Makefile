@@ -46,11 +46,22 @@ routines	:= signal raise killpg \
 		   allocrtsig sigtimedwait sigwaitinfo sigqueue \
 		   sighold sigrelse sigignore sigset
 
-tests		:= tst-signal tst-sigset tst-sigsimple tst-raise tst-sigset2 \
-		   tst-sigwait-eintr tst-sigaction \
-		   tst-minsigstksz-1 tst-minsigstksz-2 tst-minsigstksz-3 \
-		   tst-minsigstksz-3a tst-minsigstksz-4 tst-minsigstksz-5 \
-		   tst-sigisemptyset
+tests := \
+  tst-minsigstksz-1 \
+  tst-minsigstksz-2 \
+  tst-minsigstksz-3 \
+  tst-minsigstksz-3a \
+  tst-minsigstksz-4 \
+  tst-minsigstksz-5 \
+  tst-raise \
+  tst-sigaction \
+  tst-sigisemptyset \
+  tst-signal \
+  tst-sigset \
+  tst-sigset2 \
+  tst-sigsimple \
+  tst-sigwait-eintr \
+# tests
 
 include ../Rules
 
