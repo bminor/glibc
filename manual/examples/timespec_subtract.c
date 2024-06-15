@@ -22,12 +22,12 @@
 
 bool
 timespec_subtract (struct timespec *r,
-		   struct timespec x, struct timespec y)
+                   struct timespec x, struct timespec y)
 {
-  /* Compute nanoseconds, setting @var{borrow} to 1, 0, or -1
+  /* Compute nanoseconds, setting @var{borrow} to 1 or 0
      for propagation into seconds.  */
   long int nsec_diff = x.tv_nsec - y.tv_nsec;
-  int borrow = (nsec_diff < 0) - ! (nsec_diff < 1000000000);
+  bool borrow = nsec_diff < 0;
   r->tv_nsec = nsec_diff + 1000000000 * borrow;
 
   /* Compute seconds, returning true if this overflows.  */
