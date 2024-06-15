@@ -179,7 +179,7 @@ if 'CFLAGS' is specified it must enable optimization.  For example:
      dynamic tests so that they can be invoked directly.
 
 '--disable-timezone-tools'
-     By default, timezone related utilities ('zic', 'zdump', and
+     By default, time zone related utilities ('zic', 'zdump', and
      'tzselect') are installed with the GNU C Library.  If you are
      building these independently (e.g.  by using the 'tzcode' package),
      then this option will allow disabling the install of these.
@@ -417,9 +417,9 @@ a pseudoterminal so it can be used by the calling process.  If you are
 using a Linux kernel with the 'devpts' filesystem enabled and mounted at
 '/dev/pts', you don't need this program.
 
-   After installation you should configure the timezone and install
-locales for your system.  The time zone configuration ensures that your
-system time matches the time for your current timezone.  The locales
+   After installation you should configure the time zone ruleset and
+install locales for your system.  The time zone ruleset ensures that
+timestamps are processed correctly for your location.  The locales
 ensure that the display of information on your system matches the
 expectations of your language and geographic region.
 
@@ -445,11 +445,11 @@ root use 'DESTDIR' e.g. 'make localedata/install-locale-files
 DESTDIR=/opt/glibc', but note that this does not change the configured
 prefix.
 
-   To configure the locally used timezone, set the 'TZ' environment
+   To configure the time zone ruleset, set the 'TZ' environment
 variable.  The script 'tzselect' helps you to select the right value.
 As an example, for Germany, 'tzselect' would tell you to use
 'TZ='Europe/Berlin''.  For a system wide installation (the given paths
-are for an installation with '--prefix=/usr'), link the timezone file
+are for an installation with '--prefix=/usr'), link the time zone file
 which is in '/usr/share/zoneinfo' to the file '/etc/localtime'.  For
 Germany, you might execute 'ln -s /usr/share/zoneinfo/Europe/Berlin
 /etc/localtime'.
