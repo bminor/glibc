@@ -1193,7 +1193,7 @@ nice (int increment)
 On a multi-processor system the operating system usually distributes
 the different processes which are runnable on all available CPUs in a
 way which allows the system to work most efficiently.  Which processes
-and threads run can be to some extend be control with the scheduling
+and threads run can to some extend be controlled with the scheduling
 functionality described in the last sections.  But which CPU finally
 executes which process or thread is not covered.
 
