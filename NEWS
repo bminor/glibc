@@ -5,6 +5,56 @@ See the end for copying conditions.
 Please send GNU C library bug reports via <https://sourceware.org/bugzilla/>
 using `glibc' in the "product" field.
 
+Version 2.39.1
+
+Security related changes:
+
+The following bugs are resolved with this release:
+
+  [19622] network: Support aliasing with struct sockaddr
+  [30701] time: getutxent misbehaves on 32-bit x86 when _TIME_BITS=64
+  [30994] REP MOVSB performance suffers from page aliasing on Zen 4
+  [31339] libc: arm32 loader crash after cleanup in 2.36
+  [31325] mips: clone3 is wrong for o32
+  [31335] math: Compile glibc with -march=x86-64-v3 should disable FMA4
+    multi-arch version
+  [31402] libc: clone (NULL, NULL, ...) clobbers %r7 register on
+    s390{,x}
+  [31479] libc: Missing #include <sys/rseq.h> in sched_getcpu.c may
+    result in a loss of rseq acceleration
+  [31316] build: Fails test misc/tst-dirname "Didn't expect signal from
+    child: got `Illegal instruction'" on non SSE CPUs
+  [31371] x86-64: APX and Tile registers aren't preserved in ld.so 
+    trampoline
+  [31372] dynamic-link: _dl_tlsdesc_dynamic doesn't preserve all caller-
+    saved registers
+  [31429] build: Glibc failed to build with -march=x86-64-v3
+  [31501] dynamic-link: _dl_tlsdesc_dynamic_xsavec may clobber %rbx
+  [31640] dynamic-link: POWER10 ld.so crashes in
+    elf_machine_load_address with GCC 14
+  [31676] Configuring with CC="gcc -march=x86-64-v3"
+    --with-rtld-early-cflags=-march=x86-64 results in linker failure
+  [31677] nscd: nscd: netgroup cache: invalid memcpy under low
+    memory/storage conditions
+  [31678] nscd: nscd: Null pointer dereferences after failed netgroup
+    cache insertion
+  [31679] nscd: nscd: netgroup cache may terminate daemon on memory
+    allocation failure
+  [31680] nscd: nscd: netgroup cache assumes NSS callback uses in-buffer
+    strings
+  [31686] dynamic-link: Stack-based buffer overflow in
+    parse_tunables_string
+  [31719] dynamic-link: --enable-hardcoded-path-in-tests doesn't work
+    with -Wl,--enable-new-dtags
+  [31782] Test build failure with recent GCC trunk
+    (x86/tst-cpu-features-supports.c:69:3: error: parameter to builtin
+    not valid: avx5124fmaps)
+  [31798] pidfd_getpid.c is miscompiled by GCC 6.4
+  [31867] build: "CPU ISA level is lower than required" on SSE2-free
+    CPUs
+  [31883] build: ISA level support configure check relies on bashism /
+    is otherwise broken for arithmetic
+
 Version 2.39
 
 Major new features:
