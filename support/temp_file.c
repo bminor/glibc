@@ -27,6 +27,7 @@
 #include <support/support.h>
 
 #include <errno.h>
+#include <limits.h>
 #include <paths.h>
 #include <stdio.h>
 #include <stdlib.h>
