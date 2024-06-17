@@ -106,11 +106,13 @@ F128_REDIR (__remainderf128);
 extern _Float128 __wrap_scalbnf128 (_Float128, int);
 extern _Float128 __w_scalblnf128 (_Float128, long int);
 extern _Float128 __w_log1pf128 (_Float128);
+extern _Float128 __w_logp1f128 (_Float128);
 extern _Float128 __scalbf128 (_Float128, _Float128);
 F128_REDIR (__scalbf128);
 F128_REDIR (__wrap_scalbnf128);
 F128_REDIR (__w_scalblnf128);
 F128_REDIR (__w_log1pf128);
+F128_REDIR (__w_logp1f128);
 
 /* Include the redirects shared with math_private.h users.  */
 #include <float128-ifunc-redirects.h>

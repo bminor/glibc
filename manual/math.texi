@@ -745,13 +745,25 @@ to subtraction of two numbers that are nearly equal.
 @deftypefunx {long double} log1pl (long double @var{x})
 @deftypefunx _FloatN log1pfN (_Float@var{N} @var{x})
 @deftypefunx _FloatNx log1pfNx (_Float@var{N}x @var{x})
+@deftypefunx double logp1 (double @var{x})
+@deftypefunx float logp1f (float @var{x})
+@deftypefunx {long double} logp1l (long double @var{x})
+@deftypefunx _FloatN logp1fN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx logp1fNx (_Float@var{N}x @var{x})
 @standards{ISO, math.h}
 @standardsx{log1pfN, TS 18661-3:2015, math.h}
 @standardsx{log1pfNx, TS 18661-3:2015, math.h}
+@standardsx{logp1, TS 18661-4:2015, math.h}
+@standardsx{logp1f, TS 18661-4:2015, math.h}
+@standardsx{logp1l, TS 18661-4:2015, math.h}
+@standardsx{logp1fN, TS 18661-4:2015, math.h}
+@standardsx{logp1fNx, TS 18661-4:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return a value equivalent to @w{@code{log (1 + @var{x})}}.
 They are computed in a way that is accurate even if @var{x} is
 near zero.
+
+The @code{logp1} names for these functions are from TS 18661-4:2015.
 @end deftypefun
 
 @deftypefun double log2p1 (double @var{x})

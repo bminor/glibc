@@ -877,6 +877,9 @@
 
 /* Return log2(1 + X).  */
 #define log2p1(Val) __TGMATH_UNARY_REAL_ONLY (Val, log2p1)
+
+/* Return log(1 + X).  */
+#define logp1(Val) __TGMATH_UNARY_REAL_ONLY (Val, logp1)
 #endif
 
 

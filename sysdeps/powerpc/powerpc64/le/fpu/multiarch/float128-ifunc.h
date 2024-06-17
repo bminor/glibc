@@ -138,7 +138,9 @@
 
 /* Ensure the wrapper functions get exposed via IFUNC, not the
    wrappee (e.g __w_log1pf128_power8 instead of __log1pf128_power8.  */
-#define DECL_ALIAS_w_log1p(x) MAKE_IFUNCP_WRAP_R(w_,x,)
+#define DECL_ALIAS_w_log1p(x)			\
+  MAKE_IFUNCP_WRAP_R (w_, x, )			\
+  MAKE_IFUNCP_WRAP_R (w_, logp1, )
 #define DECL_ALIAS_w_scalbln(x) MAKE_IFUNCP_WRAP_R(w_,x,)
 
 /* These are declared in their respective jX objects.  */

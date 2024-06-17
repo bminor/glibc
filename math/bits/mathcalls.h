@@ -115,6 +115,9 @@ __MATHCALL_VEC (exp10,, (_Mdouble_ __x));
 
 /* Return log2(1 + X).  */
 __MATHCALL (log2p1,, (_Mdouble_ __x));
+
+/* Return log(1 + X).  */
+__MATHCALL (logp1,, (_Mdouble_ __x));
 #endif
 
 #if defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99

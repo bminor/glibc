@@ -33,3 +33,5 @@ M_DECL_FUNC (__w_log1p) (FLOAT x)
   return M_SUF (__log1p) (x);
 }
 declare_mgen_alias (__w_log1p, log1p)
+strong_alias (M_SUF (__w_log1p), M_SUF (__w_logp1))
+declare_mgen_alias (__w_logp1, logp1)

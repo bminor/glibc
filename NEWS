@@ -26,7 +26,7 @@ Major new features:
   functions for float, double, long double, _FloatN and _FloatNx, and a
   type-generic macro in <tgmath.h>.
 
-  - Logarithmic functions: log2p1.
+  - Logarithmic functions: log2p1, logp1.
 
 * A new tunable, glibc.rtld.enable_secure, used to run a program
   as if it were a setuid process. This is currently a testing tool to allow

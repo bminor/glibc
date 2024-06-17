@@ -234,6 +234,10 @@ Function: "log2":
 double: 2
 float: 1
 
+Function: "logp1":
+double: 1
+float: 1
+
 Function: "pow":
 double: 1
 

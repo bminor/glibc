@@ -33,6 +33,10 @@ extern __typeof (ldexpf128) F128_SFX_APPEND (__ldexpf128);
 
 #define __ldexpf128 F128_SFX_APPEND (__ldexpf128)
 
+extern __typeof (log1pf128) F128_SFX_APPEND (__w_log1pf128);
+
+#define __w_log1pf128 F128_SFX_APPEND (__w_log1pf128)
+
 /* libm_hidden_proto is disabled by the time we reach here.
    Ensure some internally called functions are still called
    without going through the PLT.  Note, this code is only

@@ -1546,6 +1546,30 @@ float: 2
 float128: 1
 ldouble: 1
 
+Function: "logp1":
+double: 1
+float: 1
+float128: 3
+ldouble: 2
+
+Function: "logp1_downward":
+double: 1
+float: 2
+float128: 3
+ldouble: 2
+
+Function: "logp1_towardzero":
+double: 2
+float: 2
+float128: 3
+ldouble: 3
+
+Function: "logp1_upward":
+double: 2
+float: 2
+float128: 2
+ldouble: 3
+
 Function: "mul_downward_ldouble":
 double: 1
 float: 1

@@ -979,6 +979,22 @@ Function: "log_upward":
 double: 1
 float: 1
 
+Function: "logp1":
+double: 1
+float: 1
+
+Function: "logp1_downward":
+double: 1
+float: 2
+
+Function: "logp1_towardzero":
+double: 2
+float: 2
+
+Function: "logp1_upward":
+double: 2
+float: 2
+
 Function: "pow":
 double: 1
 float: 1

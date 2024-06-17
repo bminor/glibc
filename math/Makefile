@@ -966,6 +966,7 @@ tgmath3-macros = \
   log2 \
   log2p1 \
   logb \
+  logp1 \
   lrint \
   lround \
   nearbyint \
@@ -1145,7 +1146,7 @@ $(foreach t,$(libm-tests-vector),$(objpfx)$(t).c): $(objpfx)test-%.c:
 	type_func=$*; \
 	type=$${type_func%-*}; \
 	func=$${type_func##*-}; \
-	func_args=$$(grep ALL_RM_TEST libm-test-$$func.inc \
+	func_args=$$(grep "ALL_RM_TEST ($$func," libm-test-$$func.inc \
 		     | sed 's/.*RUN_TEST_LOOP_//;s/_.*//'); \
 	( \
 	  echo "#include <test-$$type.h>"; \
@@ -1375,7 +1376,7 @@ CFLAGS-s_llrint.c += -fno-builtin-llrintl
 CFLAGS-s_llround.c += -fno-builtin-llroundl
 CFLAGS-e_log.c += -fno-builtin-logl
 CFLAGS-w_log10.c += -fno-builtin-log10l
-CFLAGS-w_log1p.c += -fno-builtin-log1pl
+CFLAGS-w_log1p.c += -fno-builtin-log1pl -fno-builtin-logp1l
 CFLAGS-e_log2.c += -fno-builtin-log2l
 CFLAGS-s_log2p1.c += -fno-builtin-log2p1l
 CFLAGS-s_logb.c += -fno-builtin-logbl
@@ -1501,7 +1502,7 @@ CFLAGS-s_llrint.c += -fno-builtin-llrintf32x -fno-builtin-llrintf64
 CFLAGS-s_llround.c += -fno-builtin-llroundf32x -fno-builtin-llroundf64
 CFLAGS-e_log.c += -fno-builtin-logf32x -fno-builtin-logf64
 CFLAGS-w_log10.c += -fno-builtin-log10f32x -fno-builtin-log10f64
-CFLAGS-w_log1p.c += -fno-builtin-log1pf32x -fno-builtin-log1pf64
+CFLAGS-w_log1p.c += -fno-builtin-log1pf32x -fno-builtin-log1pf64 -fno-builtin-logp1f32x -fno-builtin-logp1f64
 CFLAGS-e_log2.c += -fno-builtin-log2f32x -fno-builtin-log2f64
 CFLAGS-s_log2p1.c += -fno-builtin-log2p1f32x -fno-builtin-log2p1f64
 CFLAGS-s_logb.c += -fno-builtin-logbf32x -fno-builtin-logbf64
@@ -1616,7 +1617,7 @@ CFLAGS-s_llrintf.c += -fno-builtin-llrintf32
 CFLAGS-s_llroundf.c += -fno-builtin-llroundf32
 CFLAGS-e_logf.c += -fno-builtin-logf32
 CFLAGS-w_log10f.c += -fno-builtin-log10f32
-CFLAGS-w_log1pf.c += -fno-builtin-log1pf32
+CFLAGS-w_log1pf.c += -fno-builtin-log1pf32 -fno-builtin-logp1f32
 CFLAGS-e_log2f.c += -fno-builtin-log2f32
 CFLAGS-s_log2p1f.c += -fno-builtin-log2p1f32
 CFLAGS-s_logbf.c += -fno-builtin-logbf32
