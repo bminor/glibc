@@ -140,6 +140,7 @@ libnldbl-calls = \
   log \
   log2 \
   log10 \
+  log10p1 \
   log1p \
   log2p1 \
   logb \
@@ -341,6 +342,7 @@ CFLAGS-nldbl-llrint.c = -fno-builtin-llrintl
 CFLAGS-nldbl-llround.c = -fno-builtin-llroundl
 CFLAGS-nldbl-log.c = -fno-builtin-logl
 CFLAGS-nldbl-log10.c = -fno-builtin-log10l
+CFLAGS-nldbl-log10p1.c = -fno-builtin-log10p1l
 CFLAGS-nldbl-log1p.c = -fno-builtin-log1pl -fno-builtin-logp1l
 CFLAGS-nldbl-log2.c = -fno-builtin-log2l
 CFLAGS-nldbl-log2p1.c = -fno-builtin-log2p1l

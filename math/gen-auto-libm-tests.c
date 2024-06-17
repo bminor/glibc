@@ -578,6 +578,7 @@ static test_function test_functions[] =
 	  false, CALC (mpfr_f_f1, mpfr_lgamma)),
     FUNC_mpfr_f_f ("log", mpfr_log, false),
     FUNC_mpfr_f_f ("log10", mpfr_log10, false),
+    FUNC_mpfr_f_f ("log10p1", mpfr_log10p1, false),
     FUNC_mpfr_f_f ("log1p", mpfr_log1p, false),
     FUNC_mpfr_f_f ("log2", mpfr_log2, false),
     FUNC_mpfr_f_f ("log2p1", mpfr_log2p1, false),

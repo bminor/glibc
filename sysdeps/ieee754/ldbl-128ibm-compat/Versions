@@ -139,6 +139,7 @@ libm {
   }
   GLIBC_2.40 {
     __log2p1ieee128;
+    __log10p1ieee128;
     __logp1ieee128;
   }
 }

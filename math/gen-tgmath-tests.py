@@ -744,6 +744,7 @@ class Tests(object):
         # TS 18661-4 functions.
         self.add_tests('exp10', 'r', ['r'])
         self.add_tests('log2p1', 'r', ['r'])
+        self.add_tests('log10p1', 'r', ['r'])
         self.add_tests('logp1', 'r', ['r'])
         # C23 functions.
         self.add_tests('fmaximum', 'r', ['r', 'r'])
