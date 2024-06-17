@@ -875,6 +875,12 @@
 /* Compute exponent to base ten.  */
 #define exp10(Val) __TGMATH_UNARY_REAL_ONLY (Val, exp10)
 
+/* Return exp2(X) - 1.  */
+#define exp2m1(Val) __TGMATH_UNARY_REAL_ONLY (Val, exp2m1)
+
+/* Return exp10(X) - 1.  */
+#define exp10m1(Val) __TGMATH_UNARY_REAL_ONLY (Val, exp10m1)
+
 /* Return log2(1 + X).  */
 #define log2p1(Val) __TGMATH_UNARY_REAL_ONLY (Val, log2p1)
 

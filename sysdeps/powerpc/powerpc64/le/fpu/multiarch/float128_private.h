@@ -59,6 +59,8 @@ F128_REDIR (__cosf128)
 F128_REDIR (__erfcf128)
 F128_REDIR (__erff128)
 F128_REDIR (__expf128)
+F128_REDIR (__exp10m1f128);
+F128_REDIR (__exp2m1f128);
 F128_REDIR (__expm1f128)
 F128_REDIR (__fabsf128)
 F128_REDIR (__fdimf128)

@@ -740,6 +740,36 @@ near zero---a case where @code{exp (@var{x}) - 1} would be inaccurate owing
 to subtraction of two numbers that are nearly equal.
 @end deftypefun
 
+@deftypefun double exp2m1 (double @var{x})
+@deftypefunx float exp2m1f (float @var{x})
+@deftypefunx {long double} exp2m1l (long double @var{x})
+@deftypefunx _FloatN exp2m1fN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx exp2m1fNx (_Float@var{N}x @var{x})
+@standards{TS 18661-4:2015, math.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions return a value equivalent to @code{exp2 (@var{x}) - 1}.
+They are computed in a way that is accurate even if @var{x} is
+near zero---a case where @code{exp2 (@var{x}) - 1} would be inaccurate owing
+to subtraction of two numbers that are nearly equal.
+
+The @code{exp2m1} functions are from TS 18661-4:2015.
+@end deftypefun
+
+@deftypefun double exp10m1 (double @var{x})
+@deftypefunx float exp10m1f (float @var{x})
+@deftypefunx {long double} exp10m1l (long double @var{x})
+@deftypefunx _FloatN exp10m1fN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx exp10m1fNx (_Float@var{N}x @var{x})
+@standards{TS 18661-4:2015, math.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions return a value equivalent to @code{exp10 (@var{x}) - 1}.
+They are computed in a way that is accurate even if @var{x} is
+near zero---a case where @code{exp10 (@var{x}) - 1} would be inaccurate owing
+to subtraction of two numbers that are nearly equal.
+
+The @code{exp10m1} functions are from TS 18661-4:2015.
+@end deftypefun
+
 @deftypefun double log1p (double @var{x})
 @deftypefunx float log1pf (float @var{x})
 @deftypefunx {long double} log1pl (long double @var{x})

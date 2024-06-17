@@ -1429,6 +1429,30 @@ float: 1
 Function: "exp10_vlen8_avx2":
 float: 1
 
+Function: "exp10m1":
+double: 2
+float: 1
+float128: 1
+ldouble: 1
+
+Function: "exp10m1_downward":
+double: 1
+float: 1
+float128: 3
+ldouble: 2
+
+Function: "exp10m1_towardzero":
+double: 1
+float: 1
+float128: 3
+ldouble: 2
+
+Function: "exp10m1_upward":
+double: 3
+float: 1
+float128: 3
+ldouble: 2
+
 Function: "exp2":
 double: 1
 float: 1
@@ -1472,6 +1496,30 @@ float: 1
 
 Function: "exp2_vlen8_avx2":
 float: 1
+
+Function: "exp2m1":
+double: 1
+float: 1
+float128: 1
+ldouble: 1
+
+Function: "exp2m1_downward":
+double: 2
+float: 1
+float128: 2
+ldouble: 3
+
+Function: "exp2m1_towardzero":
+double: 2
+float: 1
+float128: 2
+ldouble: 3
+
+Function: "exp2m1_upward":
+double: 1
+float: 1
+float128: 2
+ldouble: 3
 
 Function: "exp_downward":
 double: 1

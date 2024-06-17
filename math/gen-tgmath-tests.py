@@ -743,6 +743,8 @@ class Tests(object):
                 self.add_tests(prefix + fn, ret, ['r'] * args)
         # TS 18661-4 functions.
         self.add_tests('exp10', 'r', ['r'])
+        self.add_tests('exp2m1', 'r', ['r'])
+        self.add_tests('exp10m1', 'r', ['r'])
         self.add_tests('log2p1', 'r', ['r'])
         self.add_tests('log10p1', 'r', ['r'])
         self.add_tests('logp1', 'r', ['r'])

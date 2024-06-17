@@ -48,7 +48,7 @@ volatile int count_cdouble;
 volatile int count_cfloat;
 volatile int count_cldouble;
 
-#define NCALLS     164
+#define NCALLS     168
 #define NCALLS_INT 4
 #define NCCALLS    47
 
@@ -250,6 +250,8 @@ F(compile_test) (void)
   b = ldexp (ldexp (a, 1), 5);
   a = frexp (frexp (x, &i), &i);
   b = expm1 (expm1 (a));
+  a = exp2m1 (exp2m1 (b));
+  b = exp10m1 (exp10m1 (a));
   a = log1p (log1p (x));
   b = logb (logb (a));
   a = exp2 (exp2 (x));
@@ -366,6 +368,8 @@ F(compile_test) (void)
       a = ldexp (y, 5);
       a = frexp (y, &i);
       a = expm1 (y);
+      a = exp2m1 (y);
+      a = exp10m1 (y);
       a = log1p (y);
       a = logb (y);
       a = exp2 (y);
@@ -601,6 +605,22 @@ TYPE
 
 TYPE
 (F(expm1)) (TYPE x)
+{
+  ++count;
+  P ();
+  return x;
+}
+
+TYPE
+(F(exp2m1)) (TYPE x)
+{
+  ++count;
+  P ();
+  return x;
+}
+
+TYPE
+(F(exp10m1)) (TYPE x)
 {
   ++count;
   P ();

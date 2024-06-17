@@ -113,6 +113,8 @@ gen-libm-calls = \
   s_csqrtF \
   s_ctanF \
   s_ctanhF \
+  s_exp10m1F \
+  s_exp2m1F \
   s_fdimF \
   s_fmaxF \
   s_fmaximumF \
@@ -643,6 +645,8 @@ libm-test-funcs-auto = \
   exp \
   exp2 \
   exp10 \
+  exp10m1 \
+  exp2m1 \
   expm1 \
   fma \
   hypot \
@@ -651,10 +655,10 @@ libm-test-funcs-auto = \
   jn \
   lgamma \
   log \
+  log2 \
   log10 \
   log10p1 \
   log1p \
-  log2 \
   log2p1 \
   pow \
   sin \
@@ -932,8 +936,10 @@ tgmath3-macros = \
   erf \
   erfc \
   exp \
+  exp10m1 \
   exp2 \
   exp10 \
+  exp2m1 \
   expm1 \
   fabs \
   fdim \
@@ -1328,7 +1334,9 @@ CFLAGS-s_erf.c += -fno-builtin-erfl
 CFLAGS-s_erfc.c += -fno-builtin-erfcl
 CFLAGS-e_exp.c += -fno-builtin-expl
 CFLAGS-w_exp10.c += -fno-builtin-exp10l
+CFLAGS-s_exp10m1.c += -fno-builtin-exp10m1l
 CFLAGS-e_exp2.c += -fno-builtin-exp2l
+CFLAGS-s_exp2m1.c += -fno-builtin-exp2m1l
 CFLAGS-s_expm1.c += -fno-builtin-expm1l
 CFLAGS-s_f32xaddf64.c += -fno-builtin-daddl
 CFLAGS-s_f32xdivf64.c += -fno-builtin-ddivl
@@ -1464,7 +1472,9 @@ CFLAGS-s_erf.c += -fno-builtin-erff32x -fno-builtin-erff64
 CFLAGS-s_erfc.c += -fno-builtin-erfcf32x -fno-builtin-erfcf64
 CFLAGS-e_exp.c += -fno-builtin-expf32x -fno-builtin-expf64
 CFLAGS-w_exp10.c += -fno-builtin-exp10f32x -fno-builtin-exp10f64
+CFLAGS-s_exp10m1.c += -fno-builtin-exp10m1f32x -fno-builtin-exp10m1f64
 CFLAGS-e_exp2.c += -fno-builtin-exp2f32x -fno-builtin-exp2f64
+CFLAGS-s_exp2m1.c += -fno-builtin-exp2m1f32x -fno-builtin-exp2m1f64
 CFLAGS-s_expm1.c += -fno-builtin-expm1f32x -fno-builtin-expm1f64
 CFLAGS-s_fabs.c += -fno-builtin-fabsf32x -fno-builtin-fabsf64
 CFLAGS-s_fadd.c += -fno-builtin-f32addf32x -fno-builtin-f32addf64
@@ -1586,7 +1596,9 @@ CFLAGS-s_erff.c += -fno-builtin-erff32
 CFLAGS-s_erfcf.c += -fno-builtin-erfcf32
 CFLAGS-e_expf.c += -fno-builtin-expf32
 CFLAGS-w_exp10f.c += -fno-builtin-exp10f32
+CFLAGS-s_exp10m1f.c += -fno-builtin-exp10m1f32
 CFLAGS-e_exp2f.c += -fno-builtin-exp2f32
+CFLAGS-s_exp2m1f.c += -fno-builtin-exp2m1f32
 CFLAGS-s_expm1f.c += -fno-builtin-expm1f32
 CFLAGS-s_fabsf.c += -fno-builtin-fabsf32
 CFLAGS-s_fdimf.c += -fno-builtin-fdimf32

@@ -26,6 +26,8 @@ Major new features:
   functions for float, double, long double, _FloatN and _FloatNx, and a
   type-generic macro in <tgmath.h>.
 
+  - Exponential functions: exp2m1, exp10m1.
+
   - Logarithmic functions: log2p1, log10p1, logp1.
 
 * A new tunable, glibc.rtld.enable_secure, used to run a program

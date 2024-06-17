@@ -138,6 +138,8 @@ libm {
     __fminimum_mag_numieee128;
   }
   GLIBC_2.40 {
+    __exp2m1ieee128;
+    __exp10m1ieee128;
     __log2p1ieee128;
     __log10p1ieee128;
     __logp1ieee128;

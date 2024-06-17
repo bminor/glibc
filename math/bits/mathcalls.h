@@ -113,6 +113,12 @@ __MATHCALL (modf,, (_Mdouble_ __x, _Mdouble_ *__iptr)) __nonnull ((2));
 /* Compute exponent to base ten.  */
 __MATHCALL_VEC (exp10,, (_Mdouble_ __x));
 
+/* Return exp2(X) - 1.  */
+__MATHCALL (exp2m1,, (_Mdouble_ __x));
+
+/* Return exp10(X) - 1.  */
+__MATHCALL (exp10m1,, (_Mdouble_ __x));
+
 /* Return log2(1 + X).  */
 __MATHCALL (log2p1,, (_Mdouble_ __x));
 

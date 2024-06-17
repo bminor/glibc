@@ -61,8 +61,10 @@ libnldbl-calls = \
   erf \
   erfc \
   exp \
+  exp10m1 \
   exp2 \
   exp10 \
+  exp2m1 \
   expm1 \
   fabs \
   fadd \
@@ -296,7 +298,9 @@ CFLAGS-nldbl-erf.c = -fno-builtin-erfl
 CFLAGS-nldbl-erfc.c = -fno-builtin-erfcl
 CFLAGS-nldbl-exp.c = -fno-builtin-expl
 CFLAGS-nldbl-exp10.c = -fno-builtin-exp10l
+CFLAGS-nldbl-exp10m1.c = -fno-builtin-exp10m1l
 CFLAGS-nldbl-exp2.c = -fno-builtin-exp2l
+CFLAGS-nldbl-exp2m1.c = -fno-builtin-exp2m1l
 CFLAGS-nldbl-expm1.c = -fno-builtin-expm1l
 CFLAGS-nldbl-fabs.c = -fno-builtin-fabsl
 CFLAGS-nldbl-fadd.c = -fno-builtin-faddl
