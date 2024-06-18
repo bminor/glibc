@@ -40,6 +40,7 @@
 #include <sys/utsname.h>
 #include <tls.h>
 #include <unistd.h>
+#include <dl-symbol-redir-ifunc.h>
 
 #include <dl-machine.h>
 #include <dl-hwcap-check.h>
