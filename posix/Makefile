@@ -418,6 +418,17 @@ generated += \
   $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
   annexc \
   annexc.out \
+  getconf.speclist \
+  ptestcases.h \
+  testcases.h \
+  tst-getconf.out \
+  wordexp-tst.out \
+  # generated
+
+ifeq ($(run-built-tests),yes)
+ifeq (yes,$(build-shared))
+ifneq ($(PERL),no)
+generated += \
   bug-ga2-mem.out \
   bug-ga2.mtrace \
   bug-glob2-mem.out \
@@ -430,23 +441,22 @@ generated += \
   bug-regex21.mtrace \
   bug-regex31-mem.out \
   bug-regex31.mtrace \
+  bug-regex36-mem.out \
   bug-regex36.mtrace \
-  getconf.speclist \
-  ptestcases.h \
-  testcases.h \
   tst-boost-mem.out \
   tst-boost.mtrace \
   tst-fnmatch-mem.out \
   tst-fnmatch.mtrace \
-  tst-getconf.out \
   tst-pcre-mem.out \
   tst-pcre.mtrace \
   tst-rxspencer-no-utf8-mem.out \
   tst-rxspencer-no-utf8.mtrace \
   tst-vfork3-mem.out \
   tst-vfork3.mtrace \
-  wordexp-tst.out \
   # generated
+endif
+endif
+endif
 
 ifeq ($(run-built-tests),yes)
 ifeq (yes,$(build-shared))
@@ -461,6 +471,9 @@ endif
 # XXX Please note that for now we ignore the result of this test.
 tests-special += $(objpfx)annexc.out
 ifeq ($(run-built-tests),yes)
+tests-special += $(objpfx)tst-getconf.out
+ifeq (yes,$(build-shared))
+ifneq ($(PERL),no)
 tests-special += \
   $(objpfx)bug-ga2-mem.out \
   $(objpfx)bug-glob2-mem.out \
@@ -471,12 +484,13 @@ tests-special += \
   $(objpfx)bug-regex36-mem.out \
   $(objpfx)tst-boost-mem.out \
   $(objpfx)tst-fnmatch-mem.out \
-  $(objpfx)tst-getconf.out \
   $(objpfx)tst-glob-tilde-mem.out \
   $(objpfx)tst-pcre-mem.out \
   $(objpfx)tst-rxspencer-no-utf8-mem.out \
   $(objpfx)tst-vfork3-mem.out \
   # tests-special
+endif
+endif
 endif
 
 include ../Rules

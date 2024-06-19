@@ -261,15 +261,28 @@ tst-bz22415-ENV = MALLOC_TRACE=$(objpfx)tst-bz22415.mtrace \
 tst-bz24228-ENV = MALLOC_TRACE=$(objpfx)tst-bz24228.mtrace \
 		  LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
 
-generated += test-fmemopen.mtrace test-fmemopen.check
-generated += tst-fdopen-seek-failure.mtrace tst-fdopen-seek-failure.check
-generated += tst-fopenloc.mtrace tst-fopenloc.check
-generated += tst-bz22415.mtrace tst-bz22415.check
-
 aux	:= fileops genops stdfiles stdio strops
 
+ifeq ($(run-built-tests),yes)
 ifeq ($(build-shared),yes)
-generated += tst-bz24228.mtrace tst-bz24228.check
+ifneq ($(PERL),no)
+generated += \
+  test-fmemopen.check \
+  test-fmemopen.mtrace \
+  tst-bz22415.check \
+  tst-bz22415.mtrace \
+  tst-bz24228.check \
+  tst-bz24228.mtrace \
+  tst-fdopen-seek-failure.check \
+  tst-fdopen-seek-failure.mtrace \
+  tst-fopenloc.check \
+  tst-fopenloc.mtrace \
+  # generated
+endif
+endif
+endif
+
+ifeq ($(build-shared),yes)
 aux	+= oldfileops oldstdfiles
 tests += \
   tst-stderr-compat \
@@ -286,16 +299,23 @@ shared-only-routines = oldiofopen oldiofdopen oldiofclose oldfileops	\
 
 ifeq ($(run-built-tests),yes)
 tests-special += \
-  $(objpfx)test-fmemopen-mem.out \
   $(objpfx)test-freopen.out \
-  $(objpfx)tst-bz22415-mem.out \
-  $(objpfx)tst-fdopen-seek-failure-mem.out \
   # tests-special
 ifeq (yes,$(build-shared))
 # Run tst-fopenloc-cmp.out and tst-openloc-mem.out only if shared
 # library is enabled since they depend on tst-fopenloc.out.
-tests-special += $(objpfx)tst-fopenloc-cmp.out $(objpfx)tst-fopenloc-mem.out \
-		 $(objpfx)tst-bz24228-mem.out
+tests-special += $(objpfx)tst-fopenloc-cmp.out
+ifeq ($(build-shared),yes)
+ifneq ($(PERL),no)
+tests-special += \
+  $(objpfx)test-fmemopen-mem.out \
+  $(objpfx)tst-bz22415-mem.out \
+  $(objpfx)tst-bz24228-mem.out \
+  $(objpfx)tst-fdopen-seek-failure-mem.out \
+  $(objpfx)tst-fopenloc-mem.out \
+  # tests-special
+endif
+endif
 endif
 
 tests += \

@@ -214,12 +214,18 @@ routines_no_fortify += \
   syslog \
   # routines_no_fortify
 
+ifeq ($(run-built-tests),yes)
+ifeq (yes,$(build-shared))
+ifneq ($(PERL),no)
 generated += \
   tst-allocate_once-mem.out \
   tst-allocate_once.mtrace \
   tst-error1-mem.out \
   tst-error1.mtrace \
   # generated
+endif
+endif
+endif
 
 aux := init-misc
 install-lib := libg.a
@@ -285,8 +291,14 @@ tests-internal += tst-fd_to_filename
 tests-static += tst-fd_to_filename
 
 ifeq ($(run-built-tests),yes)
-tests-special += $(objpfx)tst-error1-mem.out \
-  $(objpfx)tst-allocate_once-mem.out
+ifeq (yes,$(build-shared))
+ifneq ($(PERL),no)
+tests-special += \
+  $(objpfx)tst-allocate_once-mem.out \
+  $(objpfx)tst-error1-mem.out \
+  # tests-special
+endif
+endif
 endif
 
 tests-container := \

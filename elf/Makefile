@@ -632,13 +632,19 @@ $(objpfx)tst-rtld-does-not-exist.out: tst-rtld-does-not-exist.sh $(objpfx)ld.so
 tests += $(tests-execstack-$(have-z-execstack))
 ifeq ($(run-built-tests),yes)
 tests-special += \
-  $(objpfx)noload-mem.out \
   $(objpfx)tst-ldconfig-X.out \
   $(objpfx)tst-ldconfig-p.out \
   $(objpfx)tst-ldconfig-soname.out \
-  $(objpfx)tst-leaks1-mem.out \
   $(objpfx)tst-rtld-help.out \
   # tests-special
+ifeq (yes,$(build-shared))
+ifneq ($(PERL),no)
+tests-special += \
+  $(objpfx)noload-mem.out \
+  $(objpfx)tst-leaks1-mem.out \
+  # tests-special
+endif
+endif
 endif
 tlsmod17a-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
 tlsmod18a-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
