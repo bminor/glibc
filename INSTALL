@@ -224,6 +224,14 @@ if 'CFLAGS' is specified it must enable optimization.  For example:
      By default for x86_64, the GNU C Library is built with the vector
      math library.  Use this option to disable the vector math library.
 
+'--disable-static-c++-link-check'
+     By default, if the C++ toolchain lacks support for static linking,
+     configure fails to find the C++ header files and the glibc build
+     fails.  Use this option to disable the static C++ link check so
+     that the C++ header files can be located.  The newly built libc.a
+     can be used to create static C++ tests if the C++ toolchain has the
+     necessary static C++ libraries.
+
 '--disable-scv'
      Disable using 'scv' instruction for syscalls.  All syscalls will
      use 'sc' instead, even if the kernel supports 'scv'.  PowerPC only.

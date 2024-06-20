@@ -771,6 +771,7 @@ ac_user_opts='
 enable_option_checking
 with_pkgversion
 with_bugurl
+enable_static_c___link_check
 with_gd
 with_gd_include
 with_gd_lib
@@ -1440,6 +1441,8 @@ Optional Features:
   --disable-option-checking  ignore unrecognized --enable/--with options
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
+  --disable-static-c++-link-check
+                          disable static C++ link check [default=no]
   --disable-sanity-checks really do not use threads (should not be used except
                           in special situations) [default=yes]
   --enable-shared         build shared library [default=yes if GNU ld]
@@ -3855,6 +3858,15 @@ if test -z "$CPP"; then
 fi
 
 
+# Check whether --enable-static-c++-link-check was given.
+if test ${enable_static_c___link_check+y}
+then :
+  enableval=$enable_static_c___link_check; static_cxx_link_check=$enableval
+else $as_nop
+  static_cxx_link_check=yes
+fi
+
+
 # We need the C++ compiler only for testing.
 
 
@@ -4279,10 +4291,11 @@ esac
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.beam \
     conftest$ac_exeext conftest.$ac_ext
-# Static case.
-old_LDFLAGS="$LDFLAGS"
-LDFLAGS="$LDFLAGS -static"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+if test $static_cxx_link_check = yes; then
+  # Static case.
+  old_LDFLAGS="$LDFLAGS"
+  LDFLAGS="$LDFLAGS -static"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 #include <iostream>
@@ -4304,7 +4317,8 @@ esac
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.beam \
     conftest$ac_exeext conftest.$ac_ext
-LDFLAGS="$old_LDFLAGS"
+  LDFLAGS="$old_LDFLAGS"
+fi
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'

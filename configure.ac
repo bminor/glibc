@@ -52,6 +52,12 @@ fi
 AC_SUBST(cross_compiling)
 AC_PROG_CPP
 
+AC_ARG_ENABLE([static-c++-link-check],
+	      AS_HELP_STRING([--disable-static-c++-link-check],
+			     [disable static C++ link check @<:@default=no@:>@]),
+	      [static_cxx_link_check=$enableval],
+	      [static_cxx_link_check=yes])
+
 # We need the C++ compiler only for testing.
 AC_PROG_CXX
 # It's useless to us if it can't link programs (e.g. missing -lstdc++).
@@ -61,10 +67,11 @@ AC_LANG_PUSH([C++])
 AC_LINK_IFELSE([AC_LANG_PROGRAM([], [])],
 	       [libc_cv_cxx_link_ok=yes],
 	       [libc_cv_cxx_link_ok=no])
-# Static case.
-old_LDFLAGS="$LDFLAGS"
-LDFLAGS="$LDFLAGS -static"
-AC_LINK_IFELSE([AC_LANG_SOURCE([
+if test $static_cxx_link_check = yes; then
+  # Static case.
+  old_LDFLAGS="$LDFLAGS"
+  LDFLAGS="$LDFLAGS -static"
+  AC_LINK_IFELSE([AC_LANG_SOURCE([
 #include <iostream>
 
 int
@@ -74,9 +81,10 @@ main()
   return 0;
 }
 ])],
-	       [],
-	       [libc_cv_cxx_link_ok=no])
-LDFLAGS="$old_LDFLAGS"
+		 [],
+		 [libc_cv_cxx_link_ok=no])
+  LDFLAGS="$old_LDFLAGS"
+fi
 AC_LANG_POP([C++])])
 AS_IF([test $libc_cv_cxx_link_ok != yes], [CXX=])
 
