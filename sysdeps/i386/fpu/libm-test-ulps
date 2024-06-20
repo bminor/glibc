@@ -1024,7 +1024,7 @@ ldouble: 3
 
 Function: Imaginary part of "ctan_upward":
 double: 2
-float: 1
+float: 2
 float128: 5
 ldouble: 3
 
@@ -1153,6 +1153,30 @@ float: 1
 float128: 3
 ldouble: 2
 
+Function: "exp10m1":
+double: 1
+float: 1
+float128: 1
+ldouble: 1
+
+Function: "exp10m1_downward":
+double: 1
+float: 1
+float128: 3
+ldouble: 2
+
+Function: "exp10m1_towardzero":
+double: 1
+float: 1
+float128: 3
+ldouble: 2
+
+Function: "exp10m1_upward":
+double: 3
+float: 1
+float128: 3
+ldouble: 2
+
 Function: "exp2":
 double: 1
 float128: 1
@@ -1171,6 +1195,30 @@ Function: "exp2_upward":
 float: 1
 float128: 2
 ldouble: 1
+
+Function: "exp2m1":
+double: 1
+float: 1
+float128: 1
+ldouble: 1
+
+Function: "exp2m1_downward":
+double: 2
+float: 1
+float128: 2
+ldouble: 2
+
+Function: "exp2m1_towardzero":
+double: 2
+float: 1
+float128: 2
+ldouble: 2
+
+Function: "exp2m1_upward":
+double: 1
+float: 1
+float128: 2
+ldouble: 3
 
 Function: "exp_downward":
 double: 1
@@ -1258,13 +1306,13 @@ float128: 2
 ldouble: 8
 
 Function: "j0_downward":
-double: 5
+double: 6
 float: 9
 float128: 9
 ldouble: 6
 
 Function: "j0_towardzero":
-double: 6
+double: 7
 float: 9
 float128: 9
 ldouble: 6
@@ -1375,6 +1423,30 @@ float: 1
 float128: 1
 ldouble: 1
 
+Function: "log10p1":
+double: 1
+float: 2
+float128: 3
+ldouble: 2
+
+Function: "log10p1_downward":
+double: 2
+float: 1
+float128: 2
+ldouble: 3
+
+Function: "log10p1_towardzero":
+double: 2
+float: 1
+float128: 2
+ldouble: 3
+
+Function: "log10p1_upward":
+double: 2
+float: 2
+float128: 3
+ldouble: 3
+
 Function: "log1p":
 double: 1
 float128: 3
@@ -1420,6 +1492,30 @@ double: 1
 float: 1
 float128: 1
 ldouble: 1
+
+Function: "log2p1":
+double: 1
+float: 1
+float128: 3
+ldouble: 2
+
+Function: "log2p1_downward":
+double: 2
+float: 2
+float128: 3
+ldouble: 3
+
+Function: "log2p1_towardzero":
+double: 2
+float: 2
+float128: 2
+ldouble: 3
+
+Function: "log2p1_upward":
+double: 1
+float: 2
+float128: 2
+ldouble: 5
 
 Function: "log_downward":
 double: 1
