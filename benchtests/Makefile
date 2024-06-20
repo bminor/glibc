@@ -139,7 +139,6 @@ bench-string := \
 string-benchset := \
   bzero \
   bzero-large \
-  bzero-walk \
   memccpy \
   memchr \
   memcmp \
@@ -147,19 +146,15 @@ string-benchset := \
   memcpy \
   memcpy-large \
   memcpy-random \
-  memcpy-walk \
   memmem \
   memmove \
   memmove-large \
-  memmove-walk \
   mempcpy \
   memrchr \
   memset \
   memset-large \
-  memset-walk \
   memset-zero \
   memset-zero-large \
-  memset-zero-walk \
   rawmemchr \
   stpcpy \
   stpcpy_chk \
