@@ -545,6 +545,9 @@ tests-static += \
   # tests-static
 
 tests += tst-cancel24-static
+ifeq ($(static-cxx-tests),no)
+tests-unsupported += tst-cancel24-static
+endif
 
 tests-internal += \
   tst-sem11-static \

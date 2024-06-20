@@ -771,6 +771,7 @@ ac_user_opts='
 enable_option_checking
 with_pkgversion
 with_bugurl
+enable_static_c___tests
 enable_static_c___link_check
 with_gd
 with_gd_include
@@ -1441,6 +1442,8 @@ Optional Features:
   --disable-option-checking  ignore unrecognized --enable/--with options
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
+  --disable-static-c++-tests
+                          disable static C++ tests[default=no]
   --disable-static-c++-link-check
                           disable static C++ link check [default=no]
   --disable-sanity-checks really do not use threads (should not be used except
@@ -3858,6 +3861,20 @@ if test -z "$CPP"; then
 fi
 
 
+# This will get text that should go into config.make.
+config_vars=
+
+# Check whether --enable-static-c++-tests was given.
+if test ${enable_static_c___tests+y}
+then :
+  enableval=$enable_static_c___tests; static_cxx_tests=$enableval
+else $as_nop
+  static_cxx_tests=yes
+fi
+
+config_vars="$config_vars
+static-cxx-tests = $static_cxx_tests"
+
 # Check whether --enable-static-c++-link-check was given.
 if test ${enable_static_c___link_check+y}
 then :
@@ -4291,7 +4308,7 @@ esac
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.beam \
     conftest$ac_exeext conftest.$ac_ext
-if test $static_cxx_link_check = yes; then
+if test $static_cxx_link_check$static_cxx_tests = yesyes; then
   # Static case.
   old_LDFLAGS="$LDFLAGS"
   LDFLAGS="$LDFLAGS -static"
@@ -4337,9 +4354,6 @@ fi
 if test "`cd $srcdir; pwd -P`" = "`pwd -P`"; then
   as_fn_error $? "you must configure in a separate build directory" "$LINENO" 5
 fi
-
-# This will get text that should go into config.make.
-config_vars=
 
 # Check for a --with-gd argument and set libgd-LDFLAGS in config.make.
 

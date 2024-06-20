@@ -224,6 +224,15 @@ if 'CFLAGS' is specified it must enable optimization.  For example:
      By default for x86_64, the GNU C Library is built with the vector
      math library.  Use this option to disable the vector math library.
 
+'--disable-static-c++-tests'
+     By default, if the C++ toolchain lacks support for static linking,
+     configure fails to find the C++ header files and the glibc build
+     fails.  '--disable-static-c++-link-check' allows the glibc build to
+     finish, but static C++ tests will fail if the C++ toolchain doesn't
+     have the necessary static C++ libraries.  Use this option to skip
+     the static C++ tests.  This option implies
+     '--disable-static-c++-link-check'.
+
 '--disable-static-c++-link-check'
      By default, if the C++ toolchain lacks support for static linking,
      configure fails to find the C++ header files and the glibc build
