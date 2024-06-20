@@ -1,6 +1,12 @@
 #! /bin/sh
-eval exec "perl -e 'shift; \$progname=shift; shift; require \$progname'" . "$0" . "$@"
-   if 0;
+# -*- perl -*-
+eval "q () {
+  :
+}";
+q {
+    exec perl -e '$_ = shift; $_ = "./$_" unless m,^/,; do $_' "$0" "$@"
+}
+;
 # Copyright (C) 1997-2024 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Based on the mtrace.awk script.
@@ -22,6 +28,7 @@ eval exec "perl -e 'shift; \$progname=shift; shift; require \$progname'" . "$0" 
 $VERSION = "@VERSION@";
 $PKGVERSION = "@PKGVERSION@";
 $REPORT_BUGS_TO = '@REPORT_BUGS_TO@';
+$progname = $_;
 
 sub usage {
     print "Usage: mtrace [OPTION]... [Binary] MtraceData\n";
@@ -31,6 +38,11 @@ sub usage {
     print "For bug reporting instructions, please see:\n";
     print "$REPORT_BUGS_TO.\n";
     exit 0;
+}
+
+sub fatal {
+    print STDERR "$_[0]\n";
+    exit 1;
 }
 
 # We expect two arguments:
@@ -86,7 +98,7 @@ if ($#ARGV == 0) {
 	close (LOCS);
     }
 } else {
-    die "Wrong number of arguments, run $progname --help for help.";
+    fatal "Wrong number of arguments, run $progname --help for help.";
 }
 
 sub addr2line {
@@ -148,7 +160,8 @@ sub location {
 }
 
 $nr=0;
-open(DATA, "<$data") || die "Cannot open mtrace data file";
+open(DATA, "<$data")
+  or fatal "$progname: Cannot open mtrace data file $data: $!";
 while (<DATA>) {
     my @cols = split (' ');
     my $n, $where;
