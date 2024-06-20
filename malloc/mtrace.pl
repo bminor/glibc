@@ -87,7 +87,7 @@ if ($#ARGV == 0) {
     }
     # Set the environment variable LD_TRACE_LOADED_OBJECTS to 2 so the
     # executable is also printed.
-    if (open (locs, "env LD_TRACE_LOADED_OBJECTS=2 $prog |")) {
+    if (open (locs, "-|", "env", "LD_TRACE_LOADED_OBJECTS=2", $prog)) {
 	while (<locs>) {
 	    chop;
 	    if (/^.*=> (.*) .(0x[0123456789abcdef]*).$/) {
@@ -104,7 +104,7 @@ if ($#ARGV == 0) {
 sub addr2line {
     my $addr = pop(@_);
     my $prog = pop(@_);
-    if (open (ADDR, "addr2line -e $prog $addr|")) {
+    if (open (ADDR, "-|", "addr2line", "-e", $prog, $addr)) {
 	my $line = <ADDR>;
 	chomp $line;
 	close (ADDR);
