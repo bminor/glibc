@@ -1,6 +1,6 @@
-#! @PERL@
-eval "exec @PERL@ -S $0 $@"
-    if 0;
+#! /bin/sh
+eval exec "perl -e 'shift; \$progname=shift; shift; require \$progname'" . "$0" . "$@"
+   if 0;
 # Copyright (C) 1997-2024 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Based on the mtrace.awk script.
@@ -22,7 +22,6 @@ eval "exec @PERL@ -S $0 $@"
 $VERSION = "@VERSION@";
 $PKGVERSION = "@PKGVERSION@";
 $REPORT_BUGS_TO = '@REPORT_BUGS_TO@';
-$progname = $0;
 
 sub usage {
     print "Usage: mtrace [OPTION]... [Binary] MtraceData\n";

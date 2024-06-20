@@ -250,7 +250,6 @@ others-extras = mcheck-init.o
 aux := set-freeres thread-freeres
 
 # The Perl script to analyze the output of the mtrace functions.
-ifneq ($(PERL),no)
 install-bin-script = mtrace
 generated += mtrace
 
@@ -260,7 +259,6 @@ ifneq ($(findstring wordsize-32,$(config-sysdirs)),)
 address-width=10
 else
 address-width=18
-endif
 endif
 
 # Unless we get a test for the availability of libgd which also works
@@ -349,7 +347,7 @@ sLIBdir := $(shell echo $(slibdir) | sed 's,lib\(\|64\)$$,\\\\$$LIB,')
 
 $(objpfx)mtrace: mtrace.pl
 	rm -f $@.new
-	sed -e 's|@PERL@|$(PERL)|' -e 's|@XXX@|$(address-width)|' \
+	sed -e 's|@XXX@|$(address-width)|' \
 	    -e 's|@VERSION@|$(version)|' \
 	    -e 's|@PKGVERSION@|$(PKGVERSION)|' \
 	    -e 's|@REPORT_BUGS_TO@|$(REPORT_BUGS_TO)|' $^ > $@.new \
