@@ -4,7 +4,7 @@ GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Minimal checking for static PIE support in ld.
 # Compare to ld testcase/bugzilla:
 # <binutils-source>/ld/testsuite/ld-elf/pr22263-1.rd
-AC_CACHE_CHECK([for s390-specific static PIE requirements (runtime check)], \
+AC_CACHE_CHECK([for s390-specific static PIE requirements], \
 [libc_cv_s390x_staticpie_req_runtime], [dnl
   cat > conftest1.c <<EOF
 __thread int * foo;
@@ -42,8 +42,8 @@ EOF
   if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -fPIE -c conftest1.c -o conftest1.o]) \
      && AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -fPIE -c conftest2.c -o conftest2.o]) \
      && AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -static-pie -nostartfiles -nostdlib -fPIE -o conftest conftest1.o conftest2.o]) \
-     && AC_TRY_COMMAND([! LC_ALL=C $READELF -Wr conftest | grep R_390_TLS_TPOFF]) \
-     && AC_TRY_COMMAND([LC_ACLL=C $READELF -d conftest | grep JMPREL])
+     && AC_TRY_COMMAND([! LC_ALL=C $READELF -Wr conftest | grep R_390_TLS_TPOFF] >&AS_MESSAGE_LOG_FD) \
+     && AC_TRY_COMMAND([LC_ALL=C $READELF -Wd conftest | grep JMPREL >&AS_MESSAGE_LOG_FD])
   then
     libc_cv_s390x_staticpie_req_runtime=yes
   fi
