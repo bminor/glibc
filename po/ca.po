@@ -48,7 +48,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.37.9000\n"
-"POT-Creation-Date: 2024-01-31 00:48+0100\n"
+"POT-Creation-Date: 2024-06-19 22:30+0200\n"
 "PO-Revision-Date: 2023-08-21 18:12+0200\n"
 "Last-Translator: Ivan Vilata i Balaguer <ivan@selidor.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
@@ -201,7 +201,7 @@ msgstr ""
 #: iconv/iconvconfig.c:380 locale/programs/locale.c:275
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:88
 #: malloc/memusagestat.c:564 nss/getent.c:961 nss/makedb.c:371
-#: posix/getconf.c:503
+#: posix/getconf.c:505
 #, c-format
 msgid ""
 "For bug reporting instructions, please see:\n"
@@ -215,7 +215,7 @@ msgstr ""
 #: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
-#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:485
+#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:487
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -232,7 +232,7 @@ msgstr ""
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
-#: posix/getconf.c:490
+#: posix/getconf.c:492
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Escrit per %s.\n"
@@ -579,142 +579,142 @@ msgstr "no s’han pogut crear les prioritats de «HWCAP»"
 msgid "cannot create capability list"
 msgstr "no s’ha pogut crear la llista de capacitats"
 
-#: elf/dl-load.c:434
+#: elf/dl-load.c:423
 msgid "cannot allocate name record"
 msgstr "no s’ha pogut reservar el registre de nom"
 
-#: elf/dl-load.c:536 elf/dl-load.c:649 elf/dl-load.c:743 elf/dl-load.c:840
+#: elf/dl-load.c:525 elf/dl-load.c:638 elf/dl-load.c:732 elf/dl-load.c:829
 msgid "cannot create cache for search path"
 msgstr "no s’ha pogut crear la memòria cau dels camins de cerca"
 
-#: elf/dl-load.c:632
+#: elf/dl-load.c:621
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "no s’ha pogut crear una còpia de RUNPATH o RPATH"
 
-#: elf/dl-load.c:729
+#: elf/dl-load.c:718
 msgid "cannot create search path array"
 msgstr "no s’ha pogut crear el vector de camins de cerca"
 
-#: elf/dl-load.c:968
+#: elf/dl-load.c:957
 msgid "cannot stat shared object"
 msgstr "ha fallat stat() sobre l’objecte compartit"
 
-#: elf/dl-load.c:1059 elf/dl-load.c:2222
+#: elf/dl-load.c:1048 elf/dl-load.c:2163
 msgid "cannot create shared object descriptor"
 msgstr "no s’ha pogut crear el descriptor d’objecte compartit"
 
-#: elf/dl-load.c:1078 elf/dl-load.c:1655 elf/dl-load.c:1763
+#: elf/dl-load.c:1067 elf/dl-load.c:1610 elf/dl-load.c:1718
 msgid "cannot read file data"
 msgstr "no s’han pogut llegir les dades del fitxer"
 
-#: elf/dl-load.c:1131 elf/dl-map-segments.h:117
+#: elf/dl-load.c:1120 elf/dl-map-segments.h:117
 msgid "ELF load command address/offset not page-aligned"
 msgstr "l’adreça o desplaçament de l’ordre ELF de càrrega no està alineada amb la pàgina"
 
-#: elf/dl-load.c:1223
+#: elf/dl-load.c:1212
 msgid "object file has no loadable segments"
 msgstr "el fitxer d’objecte no té segments carregables"
 
-#: elf/dl-load.c:1240
+#: elf/dl-load.c:1229
 msgid "cannot dynamically load executable"
 msgstr "no s’ha pogut carregar dinàmicament l’executable"
 
-#: elf/dl-load.c:1247
+#: elf/dl-load.c:1236
 msgid "object file has no dynamic section"
 msgstr "el fitxer d’objecte no té secció dinàmica"
 
-#: elf/dl-load.c:1282
+#: elf/dl-load.c:1271
 msgid "cannot dynamically load position-independent executable"
 msgstr "no s’ha pogut carregar dinàmicament l’executable independent de la posició"
 
-#: elf/dl-load.c:1284
+#: elf/dl-load.c:1273
 msgid "shared object cannot be dlopen()ed"
 msgstr "ha fallat dlopen() sobre l’objecte compartit"
 
-#: elf/dl-load.c:1297
+#: elf/dl-load.c:1286
 msgid "cannot allocate memory for program header"
 msgstr "no s’ha pogut reservar memòria per a la capçalera del programa"
 
-#: elf/dl-load.c:1330 elf/dl-load.h:128
-msgid "cannot change memory protections"
-msgstr "no s’han pogut canviar les proteccions de memòria"
-
-#: elf/dl-load.c:1354
+#: elf/dl-load.c:1309
 msgid "cannot enable executable stack as shared object requires"
 msgstr "no s’ha pogut habilitar la pila executable a requeriment de l’objecte compartit"
 
-#: elf/dl-load.c:1382
+#: elf/dl-load.c:1337
 msgid "cannot close file descriptor"
 msgstr "no s’ha pogut tancar un descriptor de fitxer"
 
-#: elf/dl-load.c:1655
+#: elf/dl-load.c:1610
 msgid "file too short"
 msgstr "el fitxer és massa curt"
 
-#: elf/dl-load.c:1691
+#: elf/dl-load.c:1646
 msgid "invalid ELF header"
 msgstr "la capçalera ELF no és vàlida"
 
-#: elf/dl-load.c:1706
+#: elf/dl-load.c:1661
 msgid "ELF file data encoding not big-endian"
 msgstr "la codificació de les dades del fitxer ELF no és big‐endian"
 
-#: elf/dl-load.c:1708
+#: elf/dl-load.c:1663
 msgid "ELF file data encoding not little-endian"
 msgstr "la codificació de les dades del fitxer ELF no és little‐endian"
 
-#: elf/dl-load.c:1712
+#: elf/dl-load.c:1667
 msgid "ELF file version ident does not match current one"
 msgstr "la identificació de la versió del fitxer ELF no concorda amb l’actual"
 
 # ivb (2001/11(06)
 # ivb  ABI = Application Binary Interface (interfície binària d'aplicació)
-#: elf/dl-load.c:1716
+#: elf/dl-load.c:1671
 msgid "ELF file OS ABI invalid"
 msgstr "l’ABI de sistema operatiu del fitxer ELF no és vàlida"
 
-#: elf/dl-load.c:1719
+#: elf/dl-load.c:1674
 msgid "ELF file ABI version invalid"
 msgstr "la versió de l’ABI del fitxer ELF no és vàlida"
 
-#: elf/dl-load.c:1722
+#: elf/dl-load.c:1677
 msgid "nonzero padding in e_ident"
 msgstr "el replè de «e_ident» no conté només zeros"
 
-#: elf/dl-load.c:1725
+#: elf/dl-load.c:1680
 msgid "internal error"
 msgstr "error intern"
 
-#: elf/dl-load.c:1732
+#: elf/dl-load.c:1687
 msgid "ELF file version does not match current one"
 msgstr "la versió del fitxer ELF no concorda amb l’actual"
 
-#: elf/dl-load.c:1744
+#: elf/dl-load.c:1699
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "només es poden carregar els tipus ET_DYN i ET_EXEC"
 
 # ivb (2001/11/01)
 # ivb  La traducció completa de «phentsize» vindria a ser: mida d'entrada
 # ivb  de taula de la capçalera de programa.
-#: elf/dl-load.c:1749
+#: elf/dl-load.c:1704
 msgid "ELF file's phentsize not the expected size"
 msgstr "el valor de «phentsize» del fitxer ELF no és l’esperat"
 
-#: elf/dl-load.c:2241
+#: elf/dl-load.c:2182
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "la classe ELF no és vàlida: ELFCLASS64"
 
-#: elf/dl-load.c:2242
+#: elf/dl-load.c:2183
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "la classe ELF no és vàlida: ELFCLASS32"
 
-#: elf/dl-load.c:2245
+#: elf/dl-load.c:2186
 msgid "cannot open shared object file"
 msgstr "no s’ha pogut obrir el fitxer d’objecte compartit"
 
 #: elf/dl-load.h:126
 msgid "failed to map segment from shared object"
 msgstr "no s’ha pogut mapar un segment de l’objecte compartit"
+
+#: elf/dl-load.h:128
+msgid "cannot change memory protections"
+msgstr "no s’han pogut canviar les proteccions de memòria"
 
 #: elf/dl-load.h:130
 msgid "cannot map zero-fill pages"
@@ -775,7 +775,7 @@ msgstr "no s’ha pogut protegir la memòria després de reubicar"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "s’ha emprat RTLD_NEXT en un codi no carregat dinàmicament"
 
-#: elf/dl-tls.c:1052
+#: elf/dl-tls.c:1059
 msgid "cannot create TLS data structures"
 msgstr "no s’han pogut crear les estructures de dades TLS"
 
@@ -992,7 +992,7 @@ msgstr "cal indicar el camí absolut del fitxer de configuració en emprar «-r�
 
 #: elf/ldconfig.c:1135 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
-#: posix/getconf.c:458 posix/getconf.c:697
+#: posix/getconf.c:460 posix/getconf.c:699
 #, c-format
 msgid "memory exhausted"
 msgstr "la memòria s’ha exhaurit"
@@ -4325,25 +4325,25 @@ msgid "no more memory for database '%s'"
 msgstr "no resta memòria per a la base de dades «%s»"
 
 # El nom de la base de dades s’usa més a sovint que la descripció.  ivb
-#: nscd/netgroupcache.c:121
+#: nscd/netgroupcache.c:198
 #, c-format
 msgid "Haven't found \"%s\" in netgroup cache!"
 msgstr "no s’ha trobat «%s» a la memòria cau de «netgroup»"
 
 # El nom de la base de dades s’usa més a sovint que la descripció.  ivb
-#: nscd/netgroupcache.c:123
+#: nscd/netgroupcache.c:200
 #, c-format
 msgid "Reloading \"%s\" in netgroup cache!"
 msgstr "es torna a carregar «%s» a la memòria cau de «netgroup»"
 
 # El nom de la base de dades s’usa més a sovint que la descripció.  ivb
-#: nscd/netgroupcache.c:469
+#: nscd/netgroupcache.c:486
 #, c-format
 msgid "Haven't found \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "no s’ha trobat «%s (%s,%s,%s)» a la memòria cau de «netgroup»"
 
 # El nom de la base de dades s’usa més a sovint que la descripció.  ivb
-#: nscd/netgroupcache.c:472
+#: nscd/netgroupcache.c:489
 #, c-format
 msgid "Reloading \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "es torna a carregar «%s (%s,%s,%s)» a la memòria cau de «netgroup»"
@@ -4954,18 +4954,18 @@ msgstr "no s’ha pogut iniciar el context de SELinux"
 msgid "cannot set file creation context for `%s'"
 msgstr "no s’ha pogut establir el context de creació per a «%s»"
 
-#: posix/getconf.c:417
+#: posix/getconf.c:419
 #, c-format
 msgid "Usage: %s [-v specification] variable_name [pathname]\n"
 msgstr "Forma d’ús: %s [-v ESPECIFICACIÓ] NOM_DE_VARIABLE [CAMÍ]\n"
 
 # S’alinea amb el nom de programa de dalt.  ivb
-#: posix/getconf.c:420
+#: posix/getconf.c:422
 #, c-format
 msgid "       %s -a [pathname]\n"
 msgstr "            %s -a [CAMÍ]\n"
 
-#: posix/getconf.c:496
+#: posix/getconf.c:498
 #, c-format
 msgid ""
 "Usage: getconf [-v SPEC] VAR\n"
@@ -4984,23 +4984,23 @@ msgstr ""
 "de compilació indicat.\n"
 "\n"
 
-#: posix/getconf.c:572
+#: posix/getconf.c:574
 #, c-format
 msgid "unknown specification \"%s\""
 msgstr "l’especificació «%s» no és coneguda"
 
-#: posix/getconf.c:624
+#: posix/getconf.c:626
 #, c-format
 msgid "Couldn't execute %s"
 msgstr "no s’ha pogut executar «%s»"
 
 # ivb (2001/11/01)
 # ivb  Es refereix a variables de configuració -> femení.
-#: posix/getconf.c:669 posix/getconf.c:685
+#: posix/getconf.c:671 posix/getconf.c:687
 msgid "undefined"
 msgstr "indefinida"
 
-#: posix/getconf.c:707
+#: posix/getconf.c:709
 #, c-format
 msgid "Unrecognized variable `%s'"
 msgstr "la variable «%s» no és reconeguda"
@@ -5296,7 +5296,7 @@ msgstr "Hi ha memòria intermèdia disponible a l’eixida"
 msgid "Input message available"
 msgstr "Hi ha un missatge disponible a l’entrada"
 
-#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:375 timezone/zic.c:564
+#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:445 timezone/zic.c:652
 msgid "I/O error"
 msgstr "Error d’E/S"
 
@@ -6744,26 +6744,26 @@ msgstr "recompileu l’objecte compartit activant la compatibilitat amb IBT"
 msgid "rebuild shared object with SHSTK support enabled"
 msgstr "recompileu l’objecte compartit activant la compatibilitat amb SHSTK"
 
-#: timezone/zdump.c:332
+#: timezone/zdump.c:402
 msgid "has characters other than ASCII alphanumerics, '-' or '+'"
 msgstr "conté caràcters que no són ASCII alfanumèrics, «-» ni «+»"
 
-#: timezone/zdump.c:334
+#: timezone/zdump.c:404
 msgid "has fewer than 3 characters"
 msgstr "té menys de 3 caràcters"
 
-#: timezone/zdump.c:336
+#: timezone/zdump.c:406
 msgid "has more than 6 characters"
 msgstr "té més de 6 caràcters"
 
 # FIXME: language-dependent
 # La cadena final és una de les anteriors.  ivb
-#: timezone/zdump.c:341
+#: timezone/zdump.c:411
 #, c-format
 msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
 msgstr "%1$s: avís: l’abreviatura «%3$s» de la zona «%2$s» %4$s\n"
 
-#: timezone/zdump.c:387
+#: timezone/zdump.c:457
 #, c-format
 msgid ""
 "%s: usage: %s OPTIONS TIMEZONE ...\n"
@@ -6794,517 +6794,437 @@ msgstr ""
 "\n"
 "Informeu dels errors a %s.\n"
 
-#: timezone/zdump.c:473
+#: timezone/zdump.c:543
 #, c-format
 msgid "%s: wild -c argument %s\n"
 msgstr "%s: l’argument de l’opció «-c» no és vàlid: %s\n"
 
-#: timezone/zdump.c:506
+#: timezone/zdump.c:576
 #, c-format
 msgid "%s: wild -t argument %s\n"
 msgstr "%s: l’argument de l’opció «-t» no és vàlid: %s\n"
 
-#: timezone/zic.c:432
+#: timezone/zic.c:463
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: la memòria s’ha exhaurit: %s\n"
 
-#: timezone/zic.c:440
+#: timezone/zic.c:470
 msgid "size overflow"
 msgstr "desbordament de la mida"
 
-#: timezone/zic.c:450
-msgid "alignment overflow"
-msgstr "desbordament de l’alineament"
-
-#: timezone/zic.c:498
+#: timezone/zic.c:559
 msgid "integer overflow"
 msgstr "desbordament enter"
 
-#: timezone/zic.c:532
+#: timezone/zic.c:585
+msgid "command line"
+msgstr "línia d’ordres"
+
+#: timezone/zic.c:588
+msgid "standard input"
+msgstr "entrada estàndard"
+
+#: timezone/zic.c:616
 #, c-format
 msgid "\"%s\", line %<PRIdMAX>: "
 msgstr "«%s», línia %<PRIdMAX>: "
 
-#: timezone/zic.c:535
+#: timezone/zic.c:620
 #, c-format
 msgid " (rule from \"%s\", line %<PRIdMAX>)"
 msgstr " (regla de «%s», línia %<PRIdMAX>)"
 
-#: timezone/zic.c:554
+#: timezone/zic.c:639
 #, c-format
 msgid "warning: "
 msgstr "avís: "
 
-# ivb (2001/10/28)
-# ivb  Deixe algunes paraules per traduir perquè es refereixen a paraules
-# ivb  reservades dels fitxers amb què treballa zic.
-# Sembla que la barra al final de la línia no pinta res.  ivb
-#: timezone/zic.c:579
-#, c-format
-msgid ""
-"%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
-"\t[ -b {slim|fat} ] [ -d directory ] [ -l localtime ] [ -L leapseconds ] \\\n"
-"\t[ -p posixrules ] [ -r '[@lo][/@hi]' ] [ -t localtime-link ] \\\n"
-"\t[ filename ... ]\n"
-"\n"
-"Report bugs to %s.\n"
-msgstr ""
-"%s: forma d’ús: %s [--version] [--help] [-v]\n"
-"\t[-b {slim|fat}] [-d DIRECTORI] [-l FITXER_localtime]\n"
-"\t[-L FITXER_SEGONS_INTERCALARS] [-p FITXER_posixrules]\n"
-"\t[-r '[@inici][/@fi]'] [-t ENLLAÇ_A_localtime] [FITXER…]\n"
-"\n"
-"Informeu dels errors a %s.\n"
-
 # No usa quote().  ivb
-#: timezone/zic.c:604
+#: timezone/zic.c:695
 #, c-format
 msgid "%s: Can't chdir to %s: %s\n"
 msgstr "%s: no s’ha pogut canviar al directori «%s»: %s\n"
 
-#: timezone/zic.c:698
+#: timezone/zic.c:992
 msgid "wild compilation-time specification of zic_t"
 msgstr "l’especificació de «zic_t» en temps de compilació no és vàlida"
 
-#: timezone/zic.c:716 timezone/zic.c:720
+#: timezone/zic.c:1011 timezone/zic.c:1015
 msgid "incompatible -b options"
 msgstr "els arguments de l’opció «-b» no són compatibles"
 
-#: timezone/zic.c:723
+#: timezone/zic.c:1018
 #, c-format
 msgid "invalid option: -b '%s'"
 msgstr "l’opció no és vàlida: -b '%s'"
 
-#: timezone/zic.c:730
+#: timezone/zic.c:1025
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr "%s: s’ha indicat l’opció «-d» més d’una volta\n"
 
-#: timezone/zic.c:740
+#: timezone/zic.c:1036
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr "%s: s’ha indicat l’opció «-l» més d’una volta\n"
 
-#: timezone/zic.c:750
+#: timezone/zic.c:1047
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr "%s: s’ha indicat l’opció «-p» més d’una volta\n"
 
-#: timezone/zic.c:758
+#: timezone/zic.c:1056
 #, c-format
 msgid "%s: More than one -t option specified\n"
 msgstr "%s: s’ha indicat l’opció «-t» més d’una volta\n"
 
-#: timezone/zic.c:767
-msgid "-y is obsolescent"
-msgstr "l’opció «-y» és obsoleta"
-
-#: timezone/zic.c:771
-#, c-format
-msgid "%s: More than one -y option specified\n"
-msgstr "%s: s’ha indicat l’opció «-y» més d’una volta\n"
-
-#: timezone/zic.c:781
+#: timezone/zic.c:1071
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr "%s: s’ha indicat l’opció «-L» més d’una volta\n"
 
-#: timezone/zic.c:792
+#: timezone/zic.c:1083
 #, c-format
 msgid "%s: More than one -r option specified\n"
 msgstr "%s: s’ha indicat l’opció «-r» més d’una volta\n"
 
-#: timezone/zic.c:798
+#: timezone/zic.c:1090
 #, c-format
 msgid "%s: invalid time range: %s\n"
 msgstr "%s: el rang temporal no és vàlid: %s\n"
 
-#: timezone/zic.c:805
+#: timezone/zic.c:1104
 msgid "-s ignored"
 msgstr "es descarta l’opció «-s»"
 
-#: timezone/zic.c:848
-msgid "link to link"
-msgstr "enllaç a un altre enllaç"
-
-#: timezone/zic.c:851 timezone/zic.c:855
-msgid "command line"
-msgstr "línia d’ordres"
-
-#: timezone/zic.c:871
+#: timezone/zic.c:1171
 msgid "empty file name"
 msgstr "el nom de fitxer és buit"
 
-#: timezone/zic.c:874
+#: timezone/zic.c:1174
 #, c-format
 msgid "file name '%s' begins with '/'"
 msgstr "el nom de fitxer «%s» comença per «/»"
 
-#: timezone/zic.c:884
+#: timezone/zic.c:1184
 #, c-format
 msgid "file name '%s' contains '%.*s' component"
 msgstr "el nom de fitxer «%s» conté un component «%.*s»"
 
 # Crec que queda més clar que «respecte al temps universal».  ivb
-#: timezone/zic.c:890
+#: timezone/zic.c:1190
 #, c-format
 msgid "file name '%s' component contains leading '-'"
 msgstr "el nom de fitxer «%s» conté un component que comença per «-»"
 
-#: timezone/zic.c:893
+#: timezone/zic.c:1193
 #, c-format
 msgid "file name '%s' contains overlength component '%.*s...'"
 msgstr "el nom de fitxer «%s» conté un component massa llarg «%.*s…»"
 
-#: timezone/zic.c:921
+#: timezone/zic.c:1221
 #, c-format
 msgid "file name '%s' contains byte '%c'"
 msgstr "el nom de fitxer «%s» conté l’octet «%c»"
 
-#: timezone/zic.c:922
+#: timezone/zic.c:1222
 #, c-format
 msgid "file name '%s' contains byte '\\%o'"
 msgstr "el nom de fitxer «%s» conté l’octet «\\%o»"
 
 # No usa quote().  ivb
-#: timezone/zic.c:992
+#: timezone/zic.c:1369
 #, c-format
-msgid "%s: link from %s/%s failed: %s\n"
-msgstr "%s: no s’ha pogut enllaçar des de «%s/%s»: %s\n"
+msgid "%s: Can't create %s/%s: %s\n"
+msgstr "%s: no s’ha pogut crear «%s/%s»: %s\n"
 
 # No usa quote().  ivb
-#: timezone/zic.c:1002 timezone/zic.c:1992
+#: timezone/zic.c:1463
 #, c-format
 msgid "%s: Can't remove %s/%s: %s\n"
 msgstr "%s: no s’ha pogut eliminar «%s/%s»: %s\n"
 
-#: timezone/zic.c:1026
+#: timezone/zic.c:1536
 #, c-format
 msgid "symbolic link used because hard link failed: %s"
 msgstr "s’ha emprat un enllaç simbòlic perquè l’enllaç fort ha fallat: %s"
 
 # No usa quote().  ivb
-#: timezone/zic.c:1034
+#: timezone/zic.c:1544
 #, c-format
 msgid "%s: Can't read %s/%s: %s\n"
 msgstr "%s: no s’ha pogut llegir «%s/%s»: %s\n"
 
-# No usa quote().  ivb
-#: timezone/zic.c:1041 timezone/zic.c:2005
-#, c-format
-msgid "%s: Can't create %s/%s: %s\n"
-msgstr "%s: no s’ha pogut crear «%s/%s»: %s\n"
-
-#: timezone/zic.c:1050
+#: timezone/zic.c:1554
 #, c-format
 msgid "copy used because hard link failed: %s"
 msgstr "s’ha emprat una còpia perquè l’enllaç fort ha fallat: %s"
 
-#: timezone/zic.c:1053
+#: timezone/zic.c:1557
 #, c-format
 msgid "copy used because symbolic link failed: %s"
 msgstr "s’ha emprat una còpia perquè l’enllaç simbòlic ha fallat: %s"
 
-#: timezone/zic.c:1122 timezone/zic.c:1124
+#: timezone/zic.c:1608 timezone/zic.c:1610
 msgid "same rule name in multiple files"
 msgstr "el mateix nom de regla és repetit a diversos fitxers"
 
-#: timezone/zic.c:1171
+#: timezone/zic.c:1656
 #, c-format
 msgid "%s in ruleless zone"
 msgstr "«%s» en una zona sense regles"
 
-#: timezone/zic.c:1191
-msgid "standard input"
-msgstr "entrada estàndard"
+#: timezone/zic.c:1688
+msgid "line too long"
+msgstr "la línia és massa llarga"
 
-#: timezone/zic.c:1196
+#: timezone/zic.c:1709
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr "%s: no s’ha pogut obrir «%s»: %s\n"
 
-#: timezone/zic.c:1207
-msgid "line too long"
-msgstr "la línia és massa llarga"
-
-#: timezone/zic.c:1230
+#: timezone/zic.c:1734
 msgid "input line of unknown type"
 msgstr "la línia introduïda pertany a un tipus desconegut"
 
-#: timezone/zic.c:1253 timezone/zic.c:1699 timezone/zic.c:1721
-#, c-format
-msgid "%s: panic: Invalid l_value %d\n"
-msgstr "%s: pànic: el valor esquerre %d no és vàlid\n"
-
-#: timezone/zic.c:1262
+#: timezone/zic.c:1761
 msgid "expected continuation line not found"
 msgstr "cal una línia de continuació, però se’n troba cap"
 
-#: timezone/zic.c:1298
+#: timezone/zic.c:1797
 msgid "fractional seconds rejected by pre-2018 versions of zic"
 msgstr "les versions de «zic» anteriors a 2018 no admeten segons fraccionals"
 
-#: timezone/zic.c:1316 timezone/zic.c:3282
+#: timezone/zic.c:1815 timezone/zic.c:3761
 msgid "time overflow"
 msgstr "desbordament de l’hora"
 
-#: timezone/zic.c:1322
+#: timezone/zic.c:1821
 msgid "values over 24 hours not handled by pre-2007 versions of zic"
 msgstr "les versions de «zic» anteriors a 2007 no admeten valors majors que 24 hores"
 
-#: timezone/zic.c:1340
+#: timezone/zic.c:1839
 msgid "invalid saved time"
 msgstr "el temps estalviat no és vàlid"
 
-#: timezone/zic.c:1351
+#: timezone/zic.c:1850
 msgid "wrong number of fields on Rule line"
 msgstr "el nombre de camps de la línia «Rule» és incorrecte"
 
-#: timezone/zic.c:1360
+#: timezone/zic.c:1859
 #, c-format
 msgid "Invalid rule name \"%s\""
 msgstr "«%s» no és un nom de regla vàlid"
 
-#: timezone/zic.c:1382
+#: timezone/zic.c:1883
 msgid "wrong number of fields on Zone line"
 msgstr "el nombre de camps de la línia «Zone» no és correcte"
 
-#: timezone/zic.c:1387
+#: timezone/zic.c:1887
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr "la línia «Zone %s» i l’opció «-l» són mútuament excloents"
 
-#: timezone/zic.c:1393
+#: timezone/zic.c:1892
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr "la línia «Zone %s» i l’opció «-p» són mútuament excloents"
 
-#: timezone/zic.c:1400
+#: timezone/zic.c:1899
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %<PRIdMAX>)"
 msgstr "el nom de zona «%s» (fitxer «%s», línia %<PRIdMAX>) és duplicat"
 
-#: timezone/zic.c:1414
+#: timezone/zic.c:1913
 msgid "wrong number of fields on Zone continuation line"
 msgstr "el nombre de camps de la línia de continuació de «Zone» no és correcte"
 
 # Crec que queda més clar que «respecte al temps universal».  ivb
-#: timezone/zic.c:1454
+#: timezone/zic.c:1952
 msgid "invalid UT offset"
 msgstr "el desplaçament respecte a UTC no és vàlid"
 
-#: timezone/zic.c:1458
+#: timezone/zic.c:1956
 msgid "invalid abbreviation format"
 msgstr "el format de l’abreviatura no és vàlid"
 
-#: timezone/zic.c:1467
+#: timezone/zic.c:1986
+msgid "Zone continuation line end time is not after end time of previous line"
+msgstr "el temps final de la línia de continuació de «Zone» no ve darrere del temps final de la línia anterior"
+
+#: timezone/zic.c:1997
 #, c-format
 msgid "format '%s' not handled by pre-2015 versions of zic"
 msgstr "les versions de «zic» anteriors a 2015 no admeten el format «%s»"
 
-#: timezone/zic.c:1494
-msgid "Zone continuation line end time is not after end time of previous line"
-msgstr "el temps final de la línia de continuació de «Zone» no ve darrere del temps final de la línia anterior"
-
-#: timezone/zic.c:1526
+#: timezone/zic.c:2027
 msgid "invalid leaping year"
 msgstr "l’any bixest no és vàlid"
 
-#: timezone/zic.c:1548 timezone/zic.c:1653
+#: timezone/zic.c:2049 timezone/zic.c:2154
 msgid "invalid month name"
 msgstr "el nom del mes no és vàlid"
 
-#: timezone/zic.c:1561 timezone/zic.c:1769 timezone/zic.c:1783
+#: timezone/zic.c:2062 timezone/zic.c:2252 timezone/zic.c:2266
 msgid "invalid day of month"
 msgstr "el dia del mes no és vàlid"
 
-#: timezone/zic.c:1566
+#: timezone/zic.c:2067
 msgid "time too small"
 msgstr "l’hora és massa menuda"
 
-#: timezone/zic.c:1570
+#: timezone/zic.c:2071
 msgid "time too large"
 msgstr "l’hora és massa gran"
 
-#: timezone/zic.c:1574 timezone/zic.c:1682
+#: timezone/zic.c:2075 timezone/zic.c:2183
 msgid "invalid time of day"
 msgstr "l’hora del dia no és vàlida"
 
 # I?  ivb
-#: timezone/zic.c:1577
+#: timezone/zic.c:2078
 msgid "leap second precedes Epoch"
 msgstr "el segon intercalar és anterior a l’Època"
 
-#: timezone/zic.c:1585
+#: timezone/zic.c:2086
 msgid "wrong number of fields on Leap line"
 msgstr "el nombre de camps de la línia «Leap» no és correcte"
 
-#: timezone/zic.c:1591
+#: timezone/zic.c:2092
 msgid "invalid Rolling/Stationary field on Leap line"
 msgstr "el camp «Rolling/Stationary» de la línia «Leap» no és vàlid"
 
-#: timezone/zic.c:1599
+#: timezone/zic.c:2100
 msgid "invalid CORRECTION field on Leap line"
 msgstr "el camp de correcció de la línia de «Leap» no és vàlid"
 
-#: timezone/zic.c:1611
+#: timezone/zic.c:2112
 msgid "wrong number of fields on Expires line"
 msgstr "el nombre de camps de la línia «Expires» és incorrecte"
 
-#: timezone/zic.c:1613
+#: timezone/zic.c:2114
 msgid "multiple Expires lines"
 msgstr "s’han trobat múltiples línies «Expires»"
 
-#: timezone/zic.c:1624
+#: timezone/zic.c:2125
 msgid "wrong number of fields on Link line"
 msgstr "el nombre de camps de la línia «Link» no és correcte"
 
-# El nom del camp no és una paraula clau del fitxer.  ivb
-#: timezone/zic.c:1628
-msgid "blank FROM field on Link line"
-msgstr "el camp d’inici de la línia «Link» és buit"
-
-#: timezone/zic.c:1703
+#: timezone/zic.c:2199
 msgid "invalid starting year"
 msgstr "l’any de començament no és vàlid"
 
-#: timezone/zic.c:1725
+#: timezone/zic.c:2214
 msgid "invalid ending year"
 msgstr "l’any d’acabament no és vàlid"
 
-#: timezone/zic.c:1729
+#: timezone/zic.c:2218
 msgid "starting year greater than ending year"
 msgstr "l’any de començament és major que el d’acabament"
 
-#: timezone/zic.c:1736
-msgid "typed single year"
-msgstr "s’ha especificat un sol any"
-
-#: timezone/zic.c:1739
-#, c-format
-msgid "year type \"%s\" is obsolete; use \"-\" instead"
-msgstr "el tipus d’any «%s» és obsolet; empreu «-» en el seu lloc"
-
-#: timezone/zic.c:1774
+#: timezone/zic.c:2257
 msgid "invalid weekday name"
 msgstr "el nom del dia de la setmana no és vàlid"
 
-#: timezone/zic.c:1935
+#: timezone/zic.c:2435
 #, c-format
 msgid "reference clients mishandle more than %d transition times"
 msgstr "els clients de referència processen malament més de %d dates de transició"
 
-#: timezone/zic.c:1939
+#: timezone/zic.c:2439
 msgid "pre-2014 clients may mishandle more than 1200 transition times"
 msgstr "els clients anteriors a 2014 podrien processar malament més de 1200 dates de transició"
 
-#: timezone/zic.c:2058
+#: timezone/zic.c:2537
 msgid "too many transition times"
 msgstr "hi ha massa dates de transició"
 
-#: timezone/zic.c:2297
+#: timezone/zic.c:2801
 #, c-format
 msgid "%%z UT offset magnitude exceeds 99:59:59"
 msgstr "la magnitud «%%z» del desplaçament respecte a UTC excedeix 99:59:59"
 
-#: timezone/zic.c:2673
-msgid "no POSIX environment variable for zone"
-msgstr "no s’ha establert una variable d’entorn POSIX per a la zona"
-
 # L’enter és un any.  ivb
-#: timezone/zic.c:2679
+#: timezone/zic.c:3187
 #, c-format
 msgid "%s: pre-%d clients may mishandle distant timestamps"
 msgstr "%s: els clients anteriors a %d podrien processar malament les dates distants"
 
-#: timezone/zic.c:2818
+#: timezone/zic.c:3316
 msgid "two rules for same instant"
 msgstr "dues regles per al mateix instant"
 
-#: timezone/zic.c:2889
+#: timezone/zic.c:3389
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr "no s’ha pogut determinar l’abreviatura de zona horària a emprar just després de la data límit (until)"
 
 # Crec que queda més clar que «respecte al temps universal».  ivb
-#: timezone/zic.c:2964
+#: timezone/zic.c:3490
 msgid "UT offset out of range"
 msgstr "el desplaçament respecte a UTC és fora de rang"
 
-#: timezone/zic.c:2987
+#: timezone/zic.c:3513
 msgid "too many local time types"
 msgstr "hi ha massa tipus d’hora local"
 
-#: timezone/zic.c:3005
+#: timezone/zic.c:3531
 msgid "too many leap seconds"
 msgstr "hi ha massa segons intercalars"
 
-#: timezone/zic.c:3032
+#: timezone/zic.c:3562
 msgid "Leap seconds too close together"
 msgstr "els segons intercalars són massa propers"
 
-#: timezone/zic.c:3043
-msgid "\"#expires\" is obsolescent; use \"Expires\""
-msgstr "«#expires» és obsolet; empreu «Expires» en el seu lloc"
-
 # Es refereix a directives del fitxer de segons intercalars.  ivb
-#: timezone/zic.c:3049
+#: timezone/zic.c:3573
 msgid "last Leap time does not precede Expires time"
 msgstr "el darrer temps de «Leap» no precedeix el temps d’«Expires»"
 
-#: timezone/zic.c:3095
-msgid "Wild result from command execution"
-msgstr "l’execució de l’ordre ha donat un resultat estrany"
-
-#: timezone/zic.c:3096
-#, c-format
-msgid "%s: command was '%s', result was %d\n"
-msgstr "%s: l’ordre ha estat «%s», el resultat ha estat %d\n"
-
 # El primer és un prefix, masculí.  ivb
-#: timezone/zic.c:3202
+#: timezone/zic.c:3680
 #, c-format
 msgid "\"%s\" is undocumented; use \"last%s\" instead"
 msgstr "«%s» no està documentat; empreu «last%s» en el seu lloc"
 
 # Es refereix a una paraula.  ivb
-#: timezone/zic.c:3233
+#: timezone/zic.c:3711
 #, c-format
 msgid "\"%s\" is ambiguous in pre-2017c zic"
 msgstr "«%s» és ambígua en la versió «pre-2017c» de «zic»"
 
 # ivb (2001/10/30)
 # ivb  Es refereix a les cometes dobles «"».
-#: timezone/zic.c:3267
+#: timezone/zic.c:3742
 msgid "Odd number of quotation marks"
 msgstr "el nombre de cometes és senar"
 
-#: timezone/zic.c:3361
+#: timezone/zic.c:3839
 msgid "use of 2/29 in non leap-year"
 msgstr "s’ha emprat el dia 29 de febrer en un any no bixest"
 
-#: timezone/zic.c:3396
+#: timezone/zic.c:3865
 msgid "rule goes past start/end of month; will not work with pre-2004 versions of zic"
 msgstr "la regla va més enllà de l’inici o fi del mes; no funcionarà en les versions de «zic» anteriors a 2004"
 
-#: timezone/zic.c:3423
+#: timezone/zic.c:3892
 msgid "time zone abbreviation has fewer than 3 characters"
 msgstr "l’abreviatura de la zona horària té menys de 3 caràcters"
 
-#: timezone/zic.c:3425
+#: timezone/zic.c:3894
 msgid "time zone abbreviation has too many characters"
 msgstr "l’abreviatura de la zona horària té massa caràcters"
 
-#: timezone/zic.c:3427
+#: timezone/zic.c:3896
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr "l’abreviatura de la zona horària difereix de l’estàndard POSIX"
 
-#: timezone/zic.c:3433
+#: timezone/zic.c:3902
 msgid "too many, or too long, time zone abbreviations"
 msgstr "hi ha massa abreviatures de zona horària (o són massa llargues)"
 
 # No usa quote().  ivb
-#: timezone/zic.c:3479
+#: timezone/zic.c:3953
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: no s’ha pogut crear el directori «%s»: %s"

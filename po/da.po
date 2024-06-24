@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc-2.11.1\n"
-"POT-Creation-Date: 2024-01-31 00:48+0100\n"
+"POT-Creation-Date: 2024-06-19 22:30+0200\n"
 "PO-Revision-Date: 2010-11-01 10:37+0100\n"
 "Last-Translator: Keld Simonsen <keld@keldix.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
@@ -131,7 +131,7 @@ msgstr ""
 #: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
-#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:485
+#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:487
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -148,7 +148,7 @@ msgstr ""
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
-#: posix/getconf.c:490
+#: posix/getconf.c:492
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Skrevet af %s.\n"
@@ -423,125 +423,125 @@ msgstr "intern fejl: symidx er udenfor intervallet for fptr-tabellen"
 msgid "cannot create capability list"
 msgstr "kan ikke oprette egenskabsliste"
 
-#: elf/dl-load.c:434
+#: elf/dl-load.c:423
 msgid "cannot allocate name record"
 msgstr "kan ikke allokere navnepost"
 
-#: elf/dl-load.c:536 elf/dl-load.c:649 elf/dl-load.c:743 elf/dl-load.c:840
+#: elf/dl-load.c:525 elf/dl-load.c:638 elf/dl-load.c:732 elf/dl-load.c:829
 msgid "cannot create cache for search path"
 msgstr "Kan ikke oprette buffer for søgesti"
 
-#: elf/dl-load.c:632
+#: elf/dl-load.c:621
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "kan ikke oprette kopi af RUNPATH/RPATH"
 
-#: elf/dl-load.c:729
+#: elf/dl-load.c:718
 msgid "cannot create search path array"
 msgstr "kan ikke oprette tabel over søgestier"
 
-#: elf/dl-load.c:968
+#: elf/dl-load.c:957
 msgid "cannot stat shared object"
 msgstr "kan ikke tage status på delt objekt"
 
-#: elf/dl-load.c:1059 elf/dl-load.c:2222
+#: elf/dl-load.c:1048 elf/dl-load.c:2163
 msgid "cannot create shared object descriptor"
 msgstr "kan ikke oprette delt objektbeskriver"
 
-#: elf/dl-load.c:1078 elf/dl-load.c:1655 elf/dl-load.c:1763
+#: elf/dl-load.c:1067 elf/dl-load.c:1610 elf/dl-load.c:1718
 msgid "cannot read file data"
 msgstr "kan ikke indlæse fildata"
 
-#: elf/dl-load.c:1223
+#: elf/dl-load.c:1212
 msgid "object file has no loadable segments"
 msgstr "objektfil har ingen indlæsbare segmenter"
 
-#: elf/dl-load.c:1240
+#: elf/dl-load.c:1229
 msgid "cannot dynamically load executable"
 msgstr "kan ikke indlæse udførbare programmer dynamisk"
 
-#: elf/dl-load.c:1247
+#: elf/dl-load.c:1236
 msgid "object file has no dynamic section"
 msgstr "objektfil har ingen dynamisk sektion"
 
-#: elf/dl-load.c:1284
+#: elf/dl-load.c:1273
 msgid "shared object cannot be dlopen()ed"
 msgstr "delt objekt kan ikke åbnes med dlopen()"
 
-#: elf/dl-load.c:1297
+#: elf/dl-load.c:1286
 msgid "cannot allocate memory for program header"
 msgstr "kan ikke allokere hukommelse til programhoved"
 
-#: elf/dl-load.c:1330 elf/dl-load.h:128
-msgid "cannot change memory protections"
-msgstr "kan ikke ændre hukommelsesbeskyttelser"
-
-#: elf/dl-load.c:1354
+#: elf/dl-load.c:1309
 msgid "cannot enable executable stack as shared object requires"
 msgstr "kan ikke oprette udførbar stak som kræves af delt objekt"
 
-#: elf/dl-load.c:1382
+#: elf/dl-load.c:1337
 msgid "cannot close file descriptor"
 msgstr "kan ikke lukke filbeskriver"
 
-#: elf/dl-load.c:1655
+#: elf/dl-load.c:1610
 msgid "file too short"
 msgstr "for kort fil"
 
-#: elf/dl-load.c:1691
+#: elf/dl-load.c:1646
 msgid "invalid ELF header"
 msgstr "ugyldigt ELF-hoved"
 
-#: elf/dl-load.c:1706
+#: elf/dl-load.c:1661
 msgid "ELF file data encoding not big-endian"
 msgstr "Kodning for ELF-fildata er ikke \"big-endian\""
 
-#: elf/dl-load.c:1708
+#: elf/dl-load.c:1663
 msgid "ELF file data encoding not little-endian"
 msgstr "Kodning for ELF-fildata er ikke \"little-endian\""
 
-#: elf/dl-load.c:1712
+#: elf/dl-load.c:1667
 msgid "ELF file version ident does not match current one"
 msgstr "ELF-filens version-identitet passer ikke med den aktuelle"
 
-#: elf/dl-load.c:1716
+#: elf/dl-load.c:1671
 msgid "ELF file OS ABI invalid"
 msgstr "ELF-filens OS ABI er ugyldigt"
 
-#: elf/dl-load.c:1719
+#: elf/dl-load.c:1674
 msgid "ELF file ABI version invalid"
 msgstr "ELF-filens ABI-version er ugyldig"
 
-#: elf/dl-load.c:1725
+#: elf/dl-load.c:1680
 msgid "internal error"
 msgstr "intern fejl"
 
-#: elf/dl-load.c:1732
+#: elf/dl-load.c:1687
 msgid "ELF file version does not match current one"
 msgstr "ELF-filens version passer ikke med den aktuelle"
 
-#: elf/dl-load.c:1744
+#: elf/dl-load.c:1699
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "kun ET_DYN og ET_EXEC kan indlæses"
 
-#: elf/dl-load.c:1749
+#: elf/dl-load.c:1704
 msgid "ELF file's phentsize not the expected size"
 msgstr "ELF-filens 'phentsize' er ikke den forventede størrelse"
 
-#: elf/dl-load.c:2241
+#: elf/dl-load.c:2182
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "forkert ELF-klasse: ELFCLASS64"
 
-#: elf/dl-load.c:2242
+#: elf/dl-load.c:2183
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "forkert ELF-klasse: ELFCLASS32"
 
-#: elf/dl-load.c:2245
+#: elf/dl-load.c:2186
 msgid "cannot open shared object file"
 msgstr "kan ikke åbne delt objektfil"
 
 #: elf/dl-load.h:126
 msgid "failed to map segment from shared object"
 msgstr "kunne ikke afbilde segment fra delt objekt'"
+
+#: elf/dl-load.h:128
+msgid "cannot change memory protections"
+msgstr "kan ikke ændre hukommelsesbeskyttelser"
 
 #: elf/dl-load.h:130
 msgid "cannot map zero-fill pages"
@@ -596,7 +596,7 @@ msgstr "kan ikke udføre yderligere hukommelsesbeskyttelser efter flytning"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT brugt i kode er ikke dynamisk indlæst"
 
-#: elf/dl-tls.c:1052
+#: elf/dl-tls.c:1059
 msgid "cannot create TLS data structures"
 msgstr "kan ikke oprette datastrukturer for TLS"
 
@@ -750,7 +750,7 @@ msgstr "behøver fuldt filnavn for konfigurationsfil når -r bruges"
 
 #: elf/ldconfig.c:1135 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
-#: posix/getconf.c:458 posix/getconf.c:697
+#: posix/getconf.c:460 posix/getconf.c:699
 #, c-format
 msgid "memory exhausted"
 msgstr "hukommelsen opbrugt"
@@ -3880,17 +3880,17 @@ msgstr "duplikér nøgle"
 msgid "problems while reading `%s'"
 msgstr "problemer ved læsning af '%s'"
 
-#: posix/getconf.c:417
+#: posix/getconf.c:419
 #, c-format
 msgid "Usage: %s [-v specification] variable_name [pathname]\n"
 msgstr "Brug: %s [-v specifikation] variabelnavn [søgesti]\n"
 
-#: posix/getconf.c:420
+#: posix/getconf.c:422
 #, c-format
 msgid "       %s -a [pathname]\n"
 msgstr "       %s -a [søgesti]\n"
 
-#: posix/getconf.c:496
+#: posix/getconf.c:498
 #, c-format
 msgid ""
 "Usage: getconf [-v SPEC] VAR\n"
@@ -3909,21 +3909,21 @@ msgstr ""
 "SPEC.\n"
 "\n"
 
-#: posix/getconf.c:572
+#: posix/getconf.c:574
 #, c-format
 msgid "unknown specification \"%s\""
 msgstr "ukendt specifikation '%s'"
 
-#: posix/getconf.c:624
+#: posix/getconf.c:626
 #, c-format
 msgid "Couldn't execute %s"
 msgstr "Kunne ikke udføre %s"
 
-#: posix/getconf.c:669 posix/getconf.c:685
+#: posix/getconf.c:671 posix/getconf.c:687
 msgid "undefined"
 msgstr "udefineret"
 
-#: posix/getconf.c:707
+#: posix/getconf.c:709
 #, c-format
 msgid "Unrecognized variable `%s'"
 msgstr "Ukendt variabel '%s'"
@@ -5384,229 +5384,194 @@ msgstr "Parameterstreng fejlagtigt kodet"
 msgid "%s is for unknown machine %d.\n"
 msgstr "%s er til ukendt maskine %d.\n"
 
-#: timezone/zdump.c:341
+#: timezone/zdump.c:411
 #, c-format
 msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
 msgstr "%s: advarsel: zone \"%s\" forkortelse \"%s\": %s\n"
 
-#: timezone/zdump.c:473
+#: timezone/zdump.c:543
 #, c-format
 msgid "%s: wild -c argument %s\n"
 msgstr "%s: argument \"%s\" til flaget -c har forkert format\n"
 
-#: timezone/zic.c:432
+#: timezone/zic.c:463
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: Lageret opbrugt: %s\n"
 
-#: timezone/zic.c:554
+#: timezone/zic.c:588
+msgid "standard input"
+msgstr "standard inddata"
+
+#: timezone/zic.c:639
 #, c-format
 msgid "warning: "
 msgstr "advarsel: "
 
-#: timezone/zic.c:698
+#: timezone/zic.c:992
 msgid "wild compilation-time specification of zic_t"
 msgstr "definitionen af zic_t ved kompilering er urimelig"
 
-#: timezone/zic.c:730
+#: timezone/zic.c:1025
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr "%s: Mere end et -d-flag specificeret\n"
 
-#: timezone/zic.c:740
+#: timezone/zic.c:1036
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr "%s: Mere end et -l-flag specificeret\n"
 
-#: timezone/zic.c:750
+#: timezone/zic.c:1047
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr "%s: Mere end et -p-flag specificeret\n"
 
-#: timezone/zic.c:771
-#, c-format
-msgid "%s: More than one -y option specified\n"
-msgstr "%s: Mere end et -y-flag specificeret\n"
-
-#: timezone/zic.c:781
+#: timezone/zic.c:1071
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr "%s: Mere end et -L-flag specificeret\n"
 
-#: timezone/zic.c:848
-msgid "link to link"
-msgstr "lænke til lænke"
-
-#: timezone/zic.c:1122 timezone/zic.c:1124
+#: timezone/zic.c:1608 timezone/zic.c:1610
 msgid "same rule name in multiple files"
 msgstr "samme regelnavn i flere filer"
 
-#: timezone/zic.c:1171
+#: timezone/zic.c:1656
 #, c-format
 msgid "%s in ruleless zone"
 msgstr "%s i zone uden regel"
 
-#: timezone/zic.c:1191
-msgid "standard input"
-msgstr "standard inddata"
+#: timezone/zic.c:1688
+msgid "line too long"
+msgstr "for lang linje"
 
-#: timezone/zic.c:1196
+#: timezone/zic.c:1709
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr "%s: Kan ikke åbne %s: %s\n"
 
-#: timezone/zic.c:1207
-msgid "line too long"
-msgstr "for lang linje"
-
-#: timezone/zic.c:1230
+#: timezone/zic.c:1734
 msgid "input line of unknown type"
 msgstr "inddatalinje af ukendt type"
 
-#: timezone/zic.c:1253 timezone/zic.c:1699 timezone/zic.c:1721
-#, c-format
-msgid "%s: panic: Invalid l_value %d\n"
-msgstr "%s: panik: ugyldig l_value %d\n"
-
-#: timezone/zic.c:1262
+#: timezone/zic.c:1761
 msgid "expected continuation line not found"
 msgstr "forventet fortsættelseslinje ikke fundet"
 
-#: timezone/zic.c:1316 timezone/zic.c:3282
+#: timezone/zic.c:1815 timezone/zic.c:3761
 msgid "time overflow"
 msgstr "for stor tidsværdi"
 
-#: timezone/zic.c:1322
+#: timezone/zic.c:1821
 msgid "values over 24 hours not handled by pre-2007 versions of zic"
 msgstr "værdier større end 24 timer håndteres ikke af zic-versioner før 2007"
 
-#: timezone/zic.c:1340
+#: timezone/zic.c:1839
 msgid "invalid saved time"
 msgstr "ugyldig lagret tid"
 
-#: timezone/zic.c:1351
+#: timezone/zic.c:1850
 msgid "wrong number of fields on Rule line"
 msgstr "galt antal felter på 'Rule'-linje"
 
-#: timezone/zic.c:1382
+#: timezone/zic.c:1883
 msgid "wrong number of fields on Zone line"
 msgstr "galt antal felter på 'Zone'-linje"
 
-#: timezone/zic.c:1387
+#: timezone/zic.c:1887
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr "'Zone %s'-linje og flaget -l udelukker hinanden"
 
-#: timezone/zic.c:1393
+#: timezone/zic.c:1892
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr "'Zone %s'-linje og flaget -p udelukker hinanden"
 
-#: timezone/zic.c:1414
+#: timezone/zic.c:1913
 msgid "wrong number of fields on Zone continuation line"
 msgstr "galt antal felter på 'Zone'-fortsættelseslinje"
 
-#: timezone/zic.c:1458
+#: timezone/zic.c:1956
 msgid "invalid abbreviation format"
 msgstr "ugyldig forkortelsesformat"
 
-#: timezone/zic.c:1494
+#: timezone/zic.c:1986
 msgid "Zone continuation line end time is not after end time of previous line"
 msgstr "Sluttiden på fortsætningslinjen til en zone kommer før sluttiden på foregående linje"
 
-#: timezone/zic.c:1526
+#: timezone/zic.c:2027
 msgid "invalid leaping year"
 msgstr "ugyldigt skudår"
 
-#: timezone/zic.c:1548 timezone/zic.c:1653
+#: timezone/zic.c:2049 timezone/zic.c:2154
 msgid "invalid month name"
 msgstr "ugyldigt månedsnavn"
 
-#: timezone/zic.c:1561 timezone/zic.c:1769 timezone/zic.c:1783
+#: timezone/zic.c:2062 timezone/zic.c:2252 timezone/zic.c:2266
 msgid "invalid day of month"
 msgstr "ugyldig dag i måneden"
 
-#: timezone/zic.c:1566
+#: timezone/zic.c:2067
 msgid "time too small"
 msgstr "tid for lille"
 
-#: timezone/zic.c:1570
+#: timezone/zic.c:2071
 msgid "time too large"
 msgstr "tid for stor"
 
-#: timezone/zic.c:1574 timezone/zic.c:1682
+#: timezone/zic.c:2075 timezone/zic.c:2183
 msgid "invalid time of day"
 msgstr "ugyldig tid på dagen"
 
-#: timezone/zic.c:1585
+#: timezone/zic.c:2086
 msgid "wrong number of fields on Leap line"
 msgstr "galt antal felter på 'Leap'-linje"
 
-#: timezone/zic.c:1624
+#: timezone/zic.c:2125
 msgid "wrong number of fields on Link line"
 msgstr "forkert antal felter på 'Link'-linje"
 
-#: timezone/zic.c:1628
-msgid "blank FROM field on Link line"
-msgstr "tomt 'FROM'-felt på 'Link'-linje"
-
-#: timezone/zic.c:1703
+#: timezone/zic.c:2199
 msgid "invalid starting year"
 msgstr "ugyldigt startår"
 
-#: timezone/zic.c:1725
+#: timezone/zic.c:2214
 msgid "invalid ending year"
 msgstr "ugyldigt slutår"
 
-#: timezone/zic.c:1729
+#: timezone/zic.c:2218
 msgid "starting year greater than ending year"
 msgstr "startår er højere end slutår"
 
-#: timezone/zic.c:1736
-msgid "typed single year"
-msgstr "indtastede enkelt år"
-
-#: timezone/zic.c:1774
+#: timezone/zic.c:2257
 msgid "invalid weekday name"
 msgstr "ugyldigt ugedagsnavn"
 
-#: timezone/zic.c:2673
-msgid "no POSIX environment variable for zone"
-msgstr "ingen POSIX-miljøvariabel for zone"
-
-#: timezone/zic.c:2889
+#: timezone/zic.c:3389
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr "kan ikke afgøre tidszoneforkortelse for brug lige efter 'until'-tid"
 
-#: timezone/zic.c:2987
+#: timezone/zic.c:3513
 msgid "too many local time types"
 msgstr "for mange lokale tidstyper"
 
-#: timezone/zic.c:3005
+#: timezone/zic.c:3531
 msgid "too many leap seconds"
 msgstr "for mange skudsekunder"
 
-#: timezone/zic.c:3095
-msgid "Wild result from command execution"
-msgstr "Vildt resultat fra eksekvering af kommando"
-
-#: timezone/zic.c:3096
-#, c-format
-msgid "%s: command was '%s', result was %d\n"
-msgstr "%s: kommandoen var '%s', resultatet blev %d\n"
-
-#: timezone/zic.c:3267
+#: timezone/zic.c:3742
 msgid "Odd number of quotation marks"
 msgstr "Ulige antal anførselstegn"
 
-#: timezone/zic.c:3361
+#: timezone/zic.c:3839
 msgid "use of 2/29 in non leap-year"
 msgstr "bruger 29/2 i ikke-skudår"
 
-#: timezone/zic.c:3427
+#: timezone/zic.c:3896
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr "tidszoneforkortelse afviger fra POSIX-standarden"
 
-#: timezone/zic.c:3433
+#: timezone/zic.c:3902
 msgid "too many, or too long, time zone abbreviations"
 msgstr "for mange eller for lange tidszoneforkortelser"

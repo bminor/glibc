@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.10.1\n"
-"POT-Creation-Date: 2024-01-31 00:48+0100\n"
+"POT-Creation-Date: 2024-06-19 22:30+0200\n"
 "PO-Revision-Date: 2009-06-23 12:30+0700\n"
 "Last-Translator: Arif E. Nugroho <arif_endro@yahoo.com>\n"
 "Language-Team: Indonesian <translation-team-id@lists.sourceforge.net>\n"
@@ -130,7 +130,7 @@ msgstr ""
 #: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
-#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:485
+#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:487
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -146,7 +146,7 @@ msgstr ""
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
-#: posix/getconf.c:490
+#: posix/getconf.c:492
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Ditulis oleh %s.\n"
@@ -420,125 +420,125 @@ msgstr "internal error: symidx diluar dari jangkauan tabel fptr"
 msgid "cannot create capability list"
 msgstr "tidak dapat membuat daftar kapabilitas"
 
-#: elf/dl-load.c:434
+#: elf/dl-load.c:423
 msgid "cannot allocate name record"
 msgstr "tidak dapat mengalokasikan rekaman nama"
 
-#: elf/dl-load.c:536 elf/dl-load.c:649 elf/dl-load.c:743 elf/dl-load.c:840
+#: elf/dl-load.c:525 elf/dl-load.c:638 elf/dl-load.c:732 elf/dl-load.c:829
 msgid "cannot create cache for search path"
 msgstr "tidak dapat membuat cache untuk jalur pencarian"
 
-#: elf/dl-load.c:632
+#: elf/dl-load.c:621
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "tidak dapat membuat salinan RUNPATH/RPATH"
 
-#: elf/dl-load.c:729
+#: elf/dl-load.c:718
 msgid "cannot create search path array"
 msgstr "tidak dapat membuah array jalur pencarian"
 
-#: elf/dl-load.c:968
+#: elf/dl-load.c:957
 msgid "cannot stat shared object"
 msgstr "tidak dapat memperoleh statistik objek terbagi"
 
-#: elf/dl-load.c:1059 elf/dl-load.c:2222
+#: elf/dl-load.c:1048 elf/dl-load.c:2163
 msgid "cannot create shared object descriptor"
 msgstr "tidak dapat membuat deskripsi objek terbagi"
 
-#: elf/dl-load.c:1078 elf/dl-load.c:1655 elf/dl-load.c:1763
+#: elf/dl-load.c:1067 elf/dl-load.c:1610 elf/dl-load.c:1718
 msgid "cannot read file data"
 msgstr "tidak dapat membaca berkas data"
 
-#: elf/dl-load.c:1223
+#: elf/dl-load.c:1212
 msgid "object file has no loadable segments"
 msgstr "berkas objek tidak memiliki segmen yang dapat diangkut"
 
-#: elf/dl-load.c:1240
+#: elf/dl-load.c:1229
 msgid "cannot dynamically load executable"
 msgstr "tidak dapat secara dinamis mengangkut aplikasi"
 
-#: elf/dl-load.c:1247
+#: elf/dl-load.c:1236
 msgid "object file has no dynamic section"
 msgstr "berkas objek tidak memiliki bagian dinamis"
 
-#: elf/dl-load.c:1284
+#: elf/dl-load.c:1273
 msgid "shared object cannot be dlopen()ed"
 msgstr "objek terbagi tidak dapat di dlopen()ed"
 
-#: elf/dl-load.c:1297
+#: elf/dl-load.c:1286
 msgid "cannot allocate memory for program header"
 msgstr "tidak dapat mengalokasikan memori untuk aplikasi header"
 
-#: elf/dl-load.c:1330 elf/dl-load.h:128
-msgid "cannot change memory protections"
-msgstr "tidak dapat mengubah proteksi memori"
-
-#: elf/dl-load.c:1354
+#: elf/dl-load.c:1309
 msgid "cannot enable executable stack as shared object requires"
 msgstr "tidak dapat mengaktifkan stack aplikasi sebagai objek terbagi yang dibutuhkan"
 
-#: elf/dl-load.c:1382
+#: elf/dl-load.c:1337
 msgid "cannot close file descriptor"
 msgstr "tidak dapat menutup berkas deskripsi"
 
-#: elf/dl-load.c:1655
+#: elf/dl-load.c:1610
 msgid "file too short"
 msgstr "berkas terlalu pendek"
 
-#: elf/dl-load.c:1691
+#: elf/dl-load.c:1646
 msgid "invalid ELF header"
 msgstr "header ELF tidak valid"
 
-#: elf/dl-load.c:1706
+#: elf/dl-load.c:1661
 msgid "ELF file data encoding not big-endian"
 msgstr "berkas data enkoding ELF bukan big-endian"
 
-#: elf/dl-load.c:1708
+#: elf/dl-load.c:1663
 msgid "ELF file data encoding not little-endian"
 msgstr "berkas data enkoding ELF bukan little-endian"
 
-#: elf/dl-load.c:1712
+#: elf/dl-load.c:1667
 msgid "ELF file version ident does not match current one"
 msgstr "berkas versi ident ELF tidak cocok dengan yang sekarang"
 
-#: elf/dl-load.c:1716
+#: elf/dl-load.c:1671
 msgid "ELF file OS ABI invalid"
 msgstr "berkas OS ABI ELF tidak valid"
 
-#: elf/dl-load.c:1719
+#: elf/dl-load.c:1674
 msgid "ELF file ABI version invalid"
 msgstr "berkas versi ABI ELF tidak valid"
 
-#: elf/dl-load.c:1725
+#: elf/dl-load.c:1680
 msgid "internal error"
 msgstr "internal error"
 
-#: elf/dl-load.c:1732
+#: elf/dl-load.c:1687
 msgid "ELF file version does not match current one"
 msgstr "berkas versi ELF tidak cocok dengan yang sekarang"
 
-#: elf/dl-load.c:1744
+#: elf/dl-load.c:1699
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "hanya ET_DYN dan ET_EXEC yang dapat diangkut"
 
-#: elf/dl-load.c:1749
+#: elf/dl-load.c:1704
 msgid "ELF file's phentsize not the expected size"
 msgstr "berkas phentsize ELF tidak seperti ukuran yang diduga"
 
-#: elf/dl-load.c:2241
+#: elf/dl-load.c:2182
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "kelas ELF salah: ELFCLASS64"
 
-#: elf/dl-load.c:2242
+#: elf/dl-load.c:2183
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "kelas ELF salah: ELFCLASS32"
 
-#: elf/dl-load.c:2245
+#: elf/dl-load.c:2186
 msgid "cannot open shared object file"
 msgstr "tidak dapat membuka berkas objek terbagi"
 
 #: elf/dl-load.h:126
 msgid "failed to map segment from shared object"
 msgstr "gagal untuk memetakan segmen dari objek terbagi"
+
+#: elf/dl-load.h:128
+msgid "cannot change memory protections"
+msgstr "tidak dapat mengubah proteksi memori"
 
 #: elf/dl-load.h:130
 msgid "cannot map zero-fill pages"
@@ -593,7 +593,7 @@ msgstr "tidak dapat mengaplikasikan proteksi memori tambahan setelah relokasi"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT digunakan dalam kode yang tidak secara dinamis diangkut"
 
-#: elf/dl-tls.c:1052
+#: elf/dl-tls.c:1059
 msgid "cannot create TLS data structures"
 msgstr "tidak dapat membuat struktur data TLS"
 
@@ -747,7 +747,7 @@ msgstr "membutuhkan nama berkas absolut untuk berkas konfigurasi ketika mengguna
 
 #: elf/ldconfig.c:1135 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
-#: posix/getconf.c:458 posix/getconf.c:697
+#: posix/getconf.c:460 posix/getconf.c:699
 #, c-format
 msgid "memory exhausted"
 msgstr "kehabisan memori"
@@ -3875,17 +3875,17 @@ msgstr "kunci terduplikasi"
 msgid "problems while reading `%s'"
 msgstr "masalah ketika membaca `%s'"
 
-#: posix/getconf.c:417
+#: posix/getconf.c:419
 #, c-format
 msgid "Usage: %s [-v specification] variable_name [pathname]\n"
 msgstr "Penggunaan: %s [-v spesifikasi] nama_variabel [nama-jalur]\n"
 
-#: posix/getconf.c:420
+#: posix/getconf.c:422
 #, c-format
 msgid "       %s -a [pathname]\n"
 msgstr "       %s -a [nama-jalur]\n"
 
-#: posix/getconf.c:496
+#: posix/getconf.c:498
 #, c-format
 msgid ""
 "Usage: getconf [-v SPEC] VAR\n"
@@ -3904,21 +3904,21 @@ msgstr ""
 "lingkungan SPEK.\n"
 "\n"
 
-#: posix/getconf.c:572
+#: posix/getconf.c:574
 #, c-format
 msgid "unknown specification \"%s\""
 msgstr "spesifikasi tidak dikenal \"%s\""
 
-#: posix/getconf.c:624
+#: posix/getconf.c:626
 #, c-format
 msgid "Couldn't execute %s"
 msgstr "Tidak dapat menjalankan %s"
 
-#: posix/getconf.c:669 posix/getconf.c:685
+#: posix/getconf.c:671 posix/getconf.c:687
 msgid "undefined"
 msgstr "tidak terdefinisi"
 
-#: posix/getconf.c:707
+#: posix/getconf.c:709
 #, c-format
 msgid "Unrecognized variable `%s'"
 msgstr "Variabel `%s' tidak dikenal"
@@ -5379,229 +5379,194 @@ msgstr "String parameter tidak secara benar terkode"
 msgid "%s is for unknown machine %d.\n"
 msgstr "%s adalah untuk mesin tidak dikenal %d.\n"
 
-#: timezone/zdump.c:341
+#: timezone/zdump.c:411
 #, c-format
 msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
 msgstr "%s: peringatan: daerah \"%s\" kependekan \"%s\" %s\n"
 
-#: timezone/zdump.c:473
+#: timezone/zdump.c:543
 #, c-format
 msgid "%s: wild -c argument %s\n"
 msgstr "%s: argumen -c ganas %s\n"
 
-#: timezone/zic.c:432
+#: timezone/zic.c:463
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: Kehabisan memori: %s\n"
 
-#: timezone/zic.c:554
+#: timezone/zic.c:588
+msgid "standard input"
+msgstr "masukan standar"
+
+#: timezone/zic.c:639
 #, c-format
 msgid "warning: "
 msgstr "peringatan: "
 
-#: timezone/zic.c:698
+#: timezone/zic.c:992
 msgid "wild compilation-time specification of zic_t"
 msgstr "spesifikasi waktu-kompilasi ganas dari zic_t"
 
-#: timezone/zic.c:730
+#: timezone/zic.c:1025
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr "%s: Lebih dari satu pilihan -d dispesifikasikan\n"
 
-#: timezone/zic.c:740
+#: timezone/zic.c:1036
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr "%s: Lebih dari satu pilihan -l dispesifikasikan\n"
 
-#: timezone/zic.c:750
+#: timezone/zic.c:1047
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr "%s: Lebih dari satu pilihan -p dispesifikasikan\n"
 
-#: timezone/zic.c:771
-#, c-format
-msgid "%s: More than one -y option specified\n"
-msgstr "%s: Lebih dari satu pilihan -y dispesifikasikan\n"
-
-#: timezone/zic.c:781
+#: timezone/zic.c:1071
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr "%s: Lebih dari satu pilihan -L dispesifikasikan\n"
 
-#: timezone/zic.c:848
-msgid "link to link"
-msgstr "link ke link"
-
-#: timezone/zic.c:1122 timezone/zic.c:1124
+#: timezone/zic.c:1608 timezone/zic.c:1610
 msgid "same rule name in multiple files"
 msgstr "nama aturan sama dalam beberapa berkas"
 
-#: timezone/zic.c:1171
+#: timezone/zic.c:1656
 #, c-format
 msgid "%s in ruleless zone"
 msgstr "%s dalam daerah tidak beraturan"
 
-#: timezone/zic.c:1191
-msgid "standard input"
-msgstr "masukan standar"
+#: timezone/zic.c:1688
+msgid "line too long"
+msgstr "baris terlalu panjang"
 
-#: timezone/zic.c:1196
+#: timezone/zic.c:1709
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr "%s: Tidak dapat membuka %s: %s\n"
 
-#: timezone/zic.c:1207
-msgid "line too long"
-msgstr "baris terlalu panjang"
-
-#: timezone/zic.c:1230
+#: timezone/zic.c:1734
 msgid "input line of unknown type"
 msgstr "baris masukan dari tipe yang tidak dikenal"
 
-#: timezone/zic.c:1253 timezone/zic.c:1699 timezone/zic.c:1721
-#, c-format
-msgid "%s: panic: Invalid l_value %d\n"
-msgstr "%s: panic: l_value %d tidak valid\n"
-
-#: timezone/zic.c:1262
+#: timezone/zic.c:1761
 msgid "expected continuation line not found"
 msgstr "diduga baris kelanjutan tidak ditemukan"
 
-#: timezone/zic.c:1316 timezone/zic.c:3282
+#: timezone/zic.c:1815 timezone/zic.c:3761
 msgid "time overflow"
 msgstr "waktu overflow"
 
-#: timezone/zic.c:1322
+#: timezone/zic.c:1821
 msgid "values over 24 hours not handled by pre-2007 versions of zic"
 msgstr "nilai lebih 24 jam tidak ditangani oleh versi sebelum 2007 dari zic"
 
-#: timezone/zic.c:1340
+#: timezone/zic.c:1839
 msgid "invalid saved time"
 msgstr "waktu disimpan tidak valid"
 
-#: timezone/zic.c:1351
+#: timezone/zic.c:1850
 msgid "wrong number of fields on Rule line"
 msgstr "jumlah dari daerah salah dalam baris Aturan"
 
-#: timezone/zic.c:1382
+#: timezone/zic.c:1883
 msgid "wrong number of fields on Zone line"
 msgstr "jumlah dari daerah dalam baris daerah salah"
 
-#: timezone/zic.c:1387
+#: timezone/zic.c:1887
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr "\"Daerah %s\" baris dan pilihan -l secara mutual ekslusif"
 
-#: timezone/zic.c:1393
+#: timezone/zic.c:1892
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr "\"Daerah %s\" baris dan pilihan -p secara mutual ekslusif"
 
-#: timezone/zic.c:1414
+#: timezone/zic.c:1913
 msgid "wrong number of fields on Zone continuation line"
 msgstr "jumlah dari daerah salah di baris kelanjutan Daerah"
 
-#: timezone/zic.c:1458
+#: timezone/zic.c:1956
 msgid "invalid abbreviation format"
 msgstr "format kependekan tidak valid"
 
-#: timezone/zic.c:1494
+#: timezone/zic.c:1986
 msgid "Zone continuation line end time is not after end time of previous line"
 msgstr "baris kelanjutan Daerah akhir waktu tidak setelah akhir waktu dari baris sebelumnya"
 
-#: timezone/zic.c:1526
+#: timezone/zic.c:2027
 msgid "invalid leaping year"
 msgstr "tahun leapin tidak valid"
 
-#: timezone/zic.c:1548 timezone/zic.c:1653
+#: timezone/zic.c:2049 timezone/zic.c:2154
 msgid "invalid month name"
 msgstr "nama bulan tidak valid"
 
-#: timezone/zic.c:1561 timezone/zic.c:1769 timezone/zic.c:1783
+#: timezone/zic.c:2062 timezone/zic.c:2252 timezone/zic.c:2266
 msgid "invalid day of month"
 msgstr "hari dari bulan tidak valid"
 
-#: timezone/zic.c:1566
+#: timezone/zic.c:2067
 msgid "time too small"
 msgstr "waktu terlalu kecil"
 
-#: timezone/zic.c:1570
+#: timezone/zic.c:2071
 msgid "time too large"
 msgstr "waktu terlalu besar"
 
-#: timezone/zic.c:1574 timezone/zic.c:1682
+#: timezone/zic.c:2075 timezone/zic.c:2183
 msgid "invalid time of day"
 msgstr "waktu dari hari tidak valid"
 
-#: timezone/zic.c:1585
+#: timezone/zic.c:2086
 msgid "wrong number of fields on Leap line"
 msgstr "jumlah dari daerah salah di baris Leap"
 
-#: timezone/zic.c:1624
+#: timezone/zic.c:2125
 msgid "wrong number of fields on Link line"
 msgstr "jumlah dari daerah salah di baris sambungan"
 
-#: timezone/zic.c:1628
-msgid "blank FROM field on Link line"
-msgstr "daerah FROM kosong di baris Link"
-
-#: timezone/zic.c:1703
+#: timezone/zic.c:2199
 msgid "invalid starting year"
 msgstr "awal tahun tidak valid"
 
-#: timezone/zic.c:1725
+#: timezone/zic.c:2214
 msgid "invalid ending year"
 msgstr "akhir tahun tidak valid"
 
-#: timezone/zic.c:1729
+#: timezone/zic.c:2218
 msgid "starting year greater than ending year"
 msgstr "awal tahun lebih besar dari akhir tahun"
 
-#: timezone/zic.c:1736
-msgid "typed single year"
-msgstr "tipe tahun tunggal"
-
-#: timezone/zic.c:1774
+#: timezone/zic.c:2257
 msgid "invalid weekday name"
 msgstr "nama hari-minggu tidak valid"
 
-#: timezone/zic.c:2673
-msgid "no POSIX environment variable for zone"
-msgstr "tidak ada variabel lingkungan POSIX untuk daerah"
-
-#: timezone/zic.c:2889
+#: timezone/zic.c:3389
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr "tidak dapat menentukan kependekan daerah waktu untuk digunakan setelah waktu"
 
-#: timezone/zic.c:2987
+#: timezone/zic.c:3513
 msgid "too many local time types"
 msgstr "terlalu banyak tipe waktu lokal"
 
-#: timezone/zic.c:3005
+#: timezone/zic.c:3531
 msgid "too many leap seconds"
 msgstr "terlalu banyak leap detik"
 
-#: timezone/zic.c:3095
-msgid "Wild result from command execution"
-msgstr "Hasil ganas dari eksekusi perintah"
-
-#: timezone/zic.c:3096
-#, c-format
-msgid "%s: command was '%s', result was %d\n"
-msgstr "%s: perintah adalah '%s', hasil adalah %d\n"
-
-#: timezone/zic.c:3267
+#: timezone/zic.c:3742
 msgid "Odd number of quotation marks"
 msgstr "Jumlah dari tanda kuotasi ganjil"
 
-#: timezone/zic.c:3361
+#: timezone/zic.c:3839
 msgid "use of 2/29 in non leap-year"
 msgstr "penggunaan dari 2/29 dalam bukan leap-year"
 
-#: timezone/zic.c:3427
+#: timezone/zic.c:3896
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr "kependekan daerah waktu berbeda dari standar POSIX"
 
-#: timezone/zic.c:3433
+#: timezone/zic.c:3902
 msgid "too many, or too long, time zone abbreviations"
 msgstr "terlalu banyak, atau terlalu panjang, kependekan daerah waktu"

@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.33.9000\n"
-"POT-Creation-Date: 2024-01-31 00:48+0100\n"
+"POT-Creation-Date: 2024-06-19 22:30+0200\n"
 "PO-Revision-Date: 2021-07-29 13:23+0300\n"
 "Last-Translator: Mehmet Kececi <mkececi@mehmetkececi.com>\n"
 "Language-Team: Turkish <gnome-turk@gnome.org>\n"
@@ -155,7 +155,7 @@ msgstr ""
 #: iconv/iconvconfig.c:380 locale/programs/locale.c:275
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:88
 #: malloc/memusagestat.c:564 nss/getent.c:961 nss/makedb.c:371
-#: posix/getconf.c:503
+#: posix/getconf.c:505
 #, c-format
 msgid ""
 "For bug reporting instructions, please see:\n"
@@ -169,7 +169,7 @@ msgstr ""
 #: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
-#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:485
+#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:487
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -186,7 +186,7 @@ msgstr ""
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
-#: posix/getconf.c:490
+#: posix/getconf.c:492
 #, c-format
 msgid "Written by %s.\n"
 msgstr "%s tarafından yazıldı.\n"
@@ -512,133 +512,133 @@ msgstr "öncelikler HWCAP oluşturulamıyor"
 msgid "cannot create capability list"
 msgstr "yetenek listesi oluşturulamıyor"
 
-#: elf/dl-load.c:434
+#: elf/dl-load.c:423
 msgid "cannot allocate name record"
 msgstr "isim kaydı ayrılamadı"
 
-#: elf/dl-load.c:536 elf/dl-load.c:649 elf/dl-load.c:743 elf/dl-load.c:840
+#: elf/dl-load.c:525 elf/dl-load.c:638 elf/dl-load.c:732 elf/dl-load.c:829
 msgid "cannot create cache for search path"
 msgstr "dosya arama yolu için arabellek oluşturulamıyor"
 
-#: elf/dl-load.c:632
+#: elf/dl-load.c:621
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "kopyası RUNPATH/RPATH oluşturulamıyor"
 
-#: elf/dl-load.c:729
+#: elf/dl-load.c:718
 msgid "cannot create search path array"
 msgstr "dosya arama yolu dizisi oluşturulamıyor"
 
-#: elf/dl-load.c:968
+#: elf/dl-load.c:957
 msgid "cannot stat shared object"
 msgstr "paylaşımlı nesne durumlanamıyor"
 
-#: elf/dl-load.c:1059 elf/dl-load.c:2222
+#: elf/dl-load.c:1048 elf/dl-load.c:2163
 msgid "cannot create shared object descriptor"
 msgstr "paylaşımlı nesne tanımlayıcı oluşturulamıyor"
 
-#: elf/dl-load.c:1078 elf/dl-load.c:1655 elf/dl-load.c:1763
+#: elf/dl-load.c:1067 elf/dl-load.c:1610 elf/dl-load.c:1718
 msgid "cannot read file data"
 msgstr "dosya verisi okunamıyor"
 
-#: elf/dl-load.c:1223
+#: elf/dl-load.c:1212
 msgid "object file has no loadable segments"
 msgstr "nesne dosyasının yüklenebilir segmanı yok"
 
-#: elf/dl-load.c:1240
+#: elf/dl-load.c:1229
 msgid "cannot dynamically load executable"
 msgstr "çalıştırılabilir dosya dinamik olarak yüklenemiyor"
 
-#: elf/dl-load.c:1247
+#: elf/dl-load.c:1236
 msgid "object file has no dynamic section"
 msgstr "nesne dosyasının dinamik bölümü yok"
 
-#: elf/dl-load.c:1282
+#: elf/dl-load.c:1271
 msgid "cannot dynamically load position-independent executable"
 msgstr "konum-bağımsız yürütülebilir dinamik olarak yükleyemez"
 
-#: elf/dl-load.c:1284
+#: elf/dl-load.c:1273
 msgid "shared object cannot be dlopen()ed"
 msgstr "paylaşımlı nesne dlopen()'lanamıyor"
 
-#: elf/dl-load.c:1297
+#: elf/dl-load.c:1286
 msgid "cannot allocate memory for program header"
 msgstr "uygulama başlığı için bellek ayrılamadı"
 
-#: elf/dl-load.c:1330 elf/dl-load.h:128
-msgid "cannot change memory protections"
-msgstr "bellek korumaları değiştirilemiyor"
-
-#: elf/dl-load.c:1354
+#: elf/dl-load.c:1309
 msgid "cannot enable executable stack as shared object requires"
 msgstr "paylaşımlı nesnenin gerektirdiği çalıştırılabilir yığıt etkinleştirilemiyor"
 
-#: elf/dl-load.c:1382
+#: elf/dl-load.c:1337
 msgid "cannot close file descriptor"
 msgstr "dosya tanıtıcı kapatılamıyor"
 
-#: elf/dl-load.c:1655
+#: elf/dl-load.c:1610
 msgid "file too short"
 msgstr "dosya çok küçük"
 
-#: elf/dl-load.c:1691
+#: elf/dl-load.c:1646
 msgid "invalid ELF header"
 msgstr "geçersiz ELF başlığı"
 
-#: elf/dl-load.c:1706
+#: elf/dl-load.c:1661
 msgid "ELF file data encoding not big-endian"
 msgstr "ELF dosyası verisinin kodlaması en-kıymetli-bayt-ilk (big-endian) değil"
 
-#: elf/dl-load.c:1708
+#: elf/dl-load.c:1663
 msgid "ELF file data encoding not little-endian"
 msgstr "ELF dosyası verisinin kodlaması en-kıymetli-bayt-son (little-endian) değil"
 
-#: elf/dl-load.c:1712
+#: elf/dl-load.c:1667
 msgid "ELF file version ident does not match current one"
 msgstr "ELF dosyası sürüm kimliği mevcut biriyle eşleşmiyor"
 
-#: elf/dl-load.c:1716
+#: elf/dl-load.c:1671
 msgid "ELF file OS ABI invalid"
 msgstr "ELF dosyası OS ABI geçersiz"
 
-#: elf/dl-load.c:1719
+#: elf/dl-load.c:1674
 msgid "ELF file ABI version invalid"
 msgstr "ELF dosyası ABI sürümü geçersiz"
 
-#: elf/dl-load.c:1722
+#: elf/dl-load.c:1677
 msgid "nonzero padding in e_ident"
 msgstr "e_ident içinde sıfır olmayan dolgu"
 
-#: elf/dl-load.c:1725
+#: elf/dl-load.c:1680
 msgid "internal error"
 msgstr "iç hata"
 
-#: elf/dl-load.c:1732
+#: elf/dl-load.c:1687
 msgid "ELF file version does not match current one"
 msgstr "ELF dosyası sürümü mevcut biriyle eşleşmiyor"
 
-#: elf/dl-load.c:1744
+#: elf/dl-load.c:1699
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "sadece ET_DYN ve ET_EXEC yüklü olabilir"
 
-#: elf/dl-load.c:1749
+#: elf/dl-load.c:1704
 msgid "ELF file's phentsize not the expected size"
 msgstr "ELF dosyasının phent uzunluğu beklenen uzunlukta değil"
 
-#: elf/dl-load.c:2241
+#: elf/dl-load.c:2182
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "yanlış ELF sınıfı: ELFCLASS64"
 
-#: elf/dl-load.c:2242
+#: elf/dl-load.c:2183
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "yanlış ELF sınıfı: ELFCLASS32"
 
-#: elf/dl-load.c:2245
+#: elf/dl-load.c:2186
 msgid "cannot open shared object file"
 msgstr "paylaşımlı nesne dosyası açılamıyor"
 
 #: elf/dl-load.h:126
 msgid "failed to map segment from shared object"
 msgstr "parça paylaşımlı nesneden eşleştirilemedi"
+
+#: elf/dl-load.h:128
+msgid "cannot change memory protections"
+msgstr "bellek korumaları değiştirilemiyor"
 
 #: elf/dl-load.h:130
 msgid "cannot map zero-fill pages"
@@ -693,7 +693,7 @@ msgstr "yeniden ayırma işleminden sonra ek bellek koruması uygulanamaz"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT kullanılan kod dinamik olarak yüklenmedi"
 
-#: elf/dl-tls.c:1052
+#: elf/dl-tls.c:1059
 msgid "cannot create TLS data structures"
 msgstr "veri yapıları TLS oluşturulamıyor"
 
@@ -889,7 +889,7 @@ msgstr "-r kullanılırken yapılandırma dosyası için soyut dosya ismi gereki
 
 #: elf/ldconfig.c:1135 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
-#: posix/getconf.c:458 posix/getconf.c:697
+#: posix/getconf.c:460 posix/getconf.c:699
 #, c-format
 msgid "memory exhausted"
 msgstr "bellek tükendi"
@@ -4038,22 +4038,22 @@ msgstr "%2$s arabelleğinde %1$zu bayt serbest bırakıldı"
 msgid "no more memory for database '%s'"
 msgstr "veritabanı '%s' için bellek kalmadı"
 
-#: nscd/netgroupcache.c:121
+#: nscd/netgroupcache.c:198
 #, c-format
 msgid "Haven't found \"%s\" in netgroup cache!"
 msgstr "\"%s\" netgrup arabelleğindebulunaması!"
 
-#: nscd/netgroupcache.c:123
+#: nscd/netgroupcache.c:200
 #, c-format
 msgid "Reloading \"%s\" in netgroup cache!"
 msgstr "\"%s\" netgrup arabelleğine yeniden yükleniyor!"
 
-#: nscd/netgroupcache.c:469
+#: nscd/netgroupcache.c:486
 #, c-format
 msgid "Haven't found \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "\"%s (%s,%s,%s)\" netgrup arabelleğinde bulunamadı!"
 
-#: nscd/netgroupcache.c:472
+#: nscd/netgroupcache.c:489
 #, c-format
 msgid "Reloading \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "\"%s (%s,%s,%s)\" netgrup arabelleğine yeniden yükleniyor!"
@@ -4643,17 +4643,17 @@ msgstr "bir veritabanı dosyası dosya değildir"
 msgid "cannot set file creation context for `%s'"
 msgstr "`%s' için dosya oluşturma bağlamı ayarlayamıyor"
 
-#: posix/getconf.c:417
+#: posix/getconf.c:419
 #, c-format
 msgid "Usage: %s [-v specification] variable_name [pathname]\n"
 msgstr "Kullanımı: %s [-v özellik] değişken_ismi [dosyayolu_ismi]\n"
 
-#: posix/getconf.c:420
+#: posix/getconf.c:422
 #, c-format
 msgid "       %s -a [pathname]\n"
 msgstr "       %s -a [yolismi]\n"
 
-#: posix/getconf.c:496
+#: posix/getconf.c:498
 #, c-format
 msgid ""
 "Usage: getconf [-v SPEC] VAR\n"
@@ -4672,21 +4672,21 @@ msgstr ""
 "SPEC ortamı.\n"
 "\n"
 
-#: posix/getconf.c:572
+#: posix/getconf.c:574
 #, c-format
 msgid "unknown specification \"%s\""
 msgstr "özellik \"%s\" bilinmiyor"
 
-#: posix/getconf.c:624
+#: posix/getconf.c:626
 #, c-format
 msgid "Couldn't execute %s"
 msgstr "%s çalıştırılamadı"
 
-#: posix/getconf.c:669 posix/getconf.c:685
+#: posix/getconf.c:671 posix/getconf.c:687
 msgid "undefined"
 msgstr "atanmamış"
 
-#: posix/getconf.c:707
+#: posix/getconf.c:709
 #, c-format
 msgid "Unrecognized variable `%s'"
 msgstr "Tanınmayan değişken `%s'"
@@ -4979,7 +4979,7 @@ msgstr "Çıkış arabellekleri kullanılabilir"
 msgid "Input message available"
 msgstr "Giriş iletisi kullanılabilir"
 
-#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:375 timezone/zic.c:564
+#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:445 timezone/zic.c:652
 msgid "I/O error"
 msgstr "G/Ç hatası"
 
@@ -6390,24 +6390,24 @@ msgstr "destek IBT etkinken paylaşılan nesneyi yeniden oluşturma"
 msgid "rebuild shared object with SHSTK support enabled"
 msgstr "destek SHSTK etkinken paylaşılan nesneyi yeniden oluştur"
 
-#: timezone/zdump.c:332
+#: timezone/zdump.c:402
 msgid "has characters other than ASCII alphanumerics, '-' or '+'"
 msgstr "alfanümerik ASCII, '-' veya '+' dışındaki karakterlere sahiptir"
 
-#: timezone/zdump.c:334
+#: timezone/zdump.c:404
 msgid "has fewer than 3 characters"
 msgstr "3 karakterden az"
 
-#: timezone/zdump.c:336
+#: timezone/zdump.c:406
 msgid "has more than 6 characters"
 msgstr "6'dan fazla karaktere sahiptir"
 
-#: timezone/zdump.c:341
+#: timezone/zdump.c:411
 #, c-format
 msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
 msgstr "%s: uyarı: zaman dilimi \"%s\"  kısaltma \"%s\" %s\n"
 
-#: timezone/zdump.c:387
+#: timezone/zdump.c:457
 #, c-format
 msgid ""
 "%s: usage: %s OPTIONS TIMEZONE ...\n"
@@ -6434,496 +6434,422 @@ msgstr ""
 "\n"
 "Hataları bildirme %s.\n"
 
-#: timezone/zdump.c:473
+#: timezone/zdump.c:543
 #, c-format
 msgid "%s: wild -c argument %s\n"
 msgstr "%s: ilkel -c argümanı %s\n"
 
-#: timezone/zdump.c:506
+#: timezone/zdump.c:576
 #, c-format
 msgid "%s: wild -t argument %s\n"
 msgstr "%s: ilkel -t argümanı %s\n"
 
-#: timezone/zic.c:432
+#: timezone/zic.c:463
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: Bellek tükendi: %s\n"
 
-#: timezone/zic.c:440
+#: timezone/zic.c:470
 msgid "size overflow"
 msgstr "boyut taşması"
 
-#: timezone/zic.c:450
-msgid "alignment overflow"
-msgstr "hizalama taşması"
-
-#: timezone/zic.c:498
+#: timezone/zic.c:559
 msgid "integer overflow"
 msgstr "tamsayı taşması"
 
-#: timezone/zic.c:532
+#: timezone/zic.c:585
+msgid "command line"
+msgstr "komut satırı"
+
+#: timezone/zic.c:588
+msgid "standard input"
+msgstr "standart girdi"
+
+#: timezone/zic.c:616
 #, c-format
 msgid "\"%s\", line %<PRIdMAX>: "
 msgstr "\"%s\", satır %<PRIdMAX>: "
 
-#: timezone/zic.c:535
+#: timezone/zic.c:620
 #, c-format
 msgid " (rule from \"%s\", line %<PRIdMAX>)"
 msgstr " (\"%s\", %<PRIdMAX> satırından kural)"
 
-#: timezone/zic.c:554
+#: timezone/zic.c:639
 #, c-format
 msgid "warning: "
 msgstr "uyarı: "
 
-#: timezone/zic.c:579
-#, c-format
-msgid ""
-"%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
-"\t[ -b {slim|fat} ] [ -d directory ] [ -l localtime ] [ -L leapseconds ] \\\n"
-"\t[ -p posixrules ] [ -r '[@lo][/@hi]' ] [ -t localtime-link ] \\\n"
-"\t[ filename ... ]\n"
-"\n"
-"Report bugs to %s.\n"
-msgstr ""
-"%s: kullanım %s [ --version ] [ --help ] [ -v ] \\\n"
-"\t[ -b {slim|fat} ] [ -d directory ] [ -l localtime ] [ -L leapseconds ] \\\n"
-"\t[ -p posixrules ] [ -r '[@lo][/@hi]' ] [ -t localtime-link ] \\\n"
-"\t[ filename ... ]\n"
-"\n"
-"Hataları bildirmek için %s.\n"
-
-#: timezone/zic.c:604
+#: timezone/zic.c:695
 #, c-format
 msgid "%s: Can't chdir to %s: %s\n"
 msgstr "%s: %s için chdir olamaz: %s\n"
 
-#: timezone/zic.c:698
+#: timezone/zic.c:992
 msgid "wild compilation-time specification of zic_t"
 msgstr "zic_t'nin derleme zamanı belirtimine güvenilmez"
 
-#: timezone/zic.c:716 timezone/zic.c:720
+#: timezone/zic.c:1011 timezone/zic.c:1015
 msgid "incompatible -b options"
 msgstr "uyumsuz -b seçenekleri"
 
-#: timezone/zic.c:723
+#: timezone/zic.c:1018
 #, c-format
 msgid "invalid option: -b '%s'"
 msgstr "geçersiz seçenek: -b '%s'"
 
-#: timezone/zic.c:730
+#: timezone/zic.c:1025
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr "%s: Birden fazla -d seçeneği belirtilmiş\n"
 
-#: timezone/zic.c:740
+#: timezone/zic.c:1036
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr "%s: Birden fazla -l seçeneği belirtilmiş\n"
 
-#: timezone/zic.c:750
+#: timezone/zic.c:1047
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr "%s: Birden fazla -p seçeneği belirtilmiş\n"
 
-#: timezone/zic.c:758
+#: timezone/zic.c:1056
 #, c-format
 msgid "%s: More than one -t option specified\n"
 msgstr "%s: Birden fazla -t seçeneği belirtilmiş\n"
 
-#: timezone/zic.c:767
-msgid "-y is obsolescent"
-msgstr "-y eskimişdir"
-
-#: timezone/zic.c:771
-#, c-format
-msgid "%s: More than one -y option specified\n"
-msgstr "%s: Birden fazla -y seçeneği belirtilmiş\n"
-
-#: timezone/zic.c:781
+#: timezone/zic.c:1071
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr "%s: Birden fazla -L seçeneği belirtilmiş\n"
 
-#: timezone/zic.c:792
+#: timezone/zic.c:1083
 #, c-format
 msgid "%s: More than one -r option specified\n"
 msgstr "%s: Birden fazla -r seçeneği belirtilmiş\n"
 
-#: timezone/zic.c:798
+#: timezone/zic.c:1090
 #, c-format
 msgid "%s: invalid time range: %s\n"
 msgstr "%s: geçersiz zaman aralığı: %s\n"
 
-#: timezone/zic.c:805
+#: timezone/zic.c:1104
 msgid "-s ignored"
 msgstr "-s ihmal edildi"
 
-#: timezone/zic.c:848
-msgid "link to link"
-msgstr "bağlantıdan bağlantıya"
-
-#: timezone/zic.c:851 timezone/zic.c:855
-msgid "command line"
-msgstr "komut satırı"
-
-#: timezone/zic.c:871
+#: timezone/zic.c:1171
 msgid "empty file name"
 msgstr "boş dosya adı"
 
-#: timezone/zic.c:874
+#: timezone/zic.c:1174
 #, c-format
 msgid "file name '%s' begins with '/'"
 msgstr "dosya adı '%s' ile başlar '/'"
 
-#: timezone/zic.c:884
+#: timezone/zic.c:1184
 #, c-format
 msgid "file name '%s' contains '%.*s' component"
 msgstr "dosya adı '%s' '%.*s' bileşenini içerir"
 
-#: timezone/zic.c:890
+#: timezone/zic.c:1190
 #, c-format
 msgid "file name '%s' component contains leading '-'"
 msgstr "dosya adı '%s' bileşen satır aralığı '-' içerir"
 
-#: timezone/zic.c:893
+#: timezone/zic.c:1193
 #, c-format
 msgid "file name '%s' contains overlength component '%.*s...'"
 msgstr "dosya adı '%s' fazla uzunluk bileşeni '%.*s...' içerir"
 
-#: timezone/zic.c:921
+#: timezone/zic.c:1221
 #, c-format
 msgid "file name '%s' contains byte '%c'"
 msgstr "dosya adı '%s' bayt '%c' içerir"
 
-#: timezone/zic.c:922
+#: timezone/zic.c:1222
 #, c-format
 msgid "file name '%s' contains byte '\\%o'"
 msgstr "dosya adı '%s' bayt '\\%o' içerir"
 
-#: timezone/zic.c:992
-#, c-format
-msgid "%s: link from %s/%s failed: %s\n"
-msgstr "%s: %s/%s den bağ kurulamıyor: %s\n"
-
-#: timezone/zic.c:1002 timezone/zic.c:1992
-#, c-format
-msgid "%s: Can't remove %s/%s: %s\n"
-msgstr "%s:  %s/%s kaldırılamaz: %s\n"
-
-#: timezone/zic.c:1026
-#, c-format
-msgid "symbolic link used because hard link failed: %s"
-msgstr "sabit bağlantı başarısız olduğu için kullanılan sembolik bağlantı: %s"
-
-#: timezone/zic.c:1034
-#, c-format
-msgid "%s: Can't read %s/%s: %s\n"
-msgstr "%s: %s/%s okunamaz: %s\n"
-
-#: timezone/zic.c:1041 timezone/zic.c:2005
+#: timezone/zic.c:1369
 #, c-format
 msgid "%s: Can't create %s/%s: %s\n"
 msgstr "%s: %s/%s oluşturulamaz: %s\n"
 
-#: timezone/zic.c:1050
+#: timezone/zic.c:1463
+#, c-format
+msgid "%s: Can't remove %s/%s: %s\n"
+msgstr "%s:  %s/%s kaldırılamaz: %s\n"
+
+#: timezone/zic.c:1536
+#, c-format
+msgid "symbolic link used because hard link failed: %s"
+msgstr "sabit bağlantı başarısız olduğu için kullanılan sembolik bağlantı: %s"
+
+#: timezone/zic.c:1544
+#, c-format
+msgid "%s: Can't read %s/%s: %s\n"
+msgstr "%s: %s/%s okunamaz: %s\n"
+
+#: timezone/zic.c:1554
 #, c-format
 msgid "copy used because hard link failed: %s"
 msgstr "sabit bağlantı başarısız olduğu için kullanılan kopya: %s"
 
-#: timezone/zic.c:1053
+#: timezone/zic.c:1557
 #, c-format
 msgid "copy used because symbolic link failed: %s"
 msgstr "sembolik bağlantı başarısız olduğundan kullanılan kopya: %s"
 
-#: timezone/zic.c:1122 timezone/zic.c:1124
+#: timezone/zic.c:1608 timezone/zic.c:1610
 msgid "same rule name in multiple files"
 msgstr "bir çok dosyada aynı kural ismi var"
 
-#: timezone/zic.c:1171
+#: timezone/zic.c:1656
 #, c-format
 msgid "%s in ruleless zone"
 msgstr "%s kuralsız zaman diliminde"
 
-#: timezone/zic.c:1191
-msgid "standard input"
-msgstr "standart girdi"
+#: timezone/zic.c:1688
+msgid "line too long"
+msgstr "satır çok uzun"
 
-#: timezone/zic.c:1196
+#: timezone/zic.c:1709
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr "%s: %s açılamıyor: %s\n"
 
-#: timezone/zic.c:1207
-msgid "line too long"
-msgstr "satır çok uzun"
-
-#: timezone/zic.c:1230
+#: timezone/zic.c:1734
 msgid "input line of unknown type"
 msgstr "girdi satırının türü bilinmiyor"
 
-#: timezone/zic.c:1253 timezone/zic.c:1699 timezone/zic.c:1721
-#, c-format
-msgid "%s: panic: Invalid l_value %d\n"
-msgstr "%s: panik: sol değer (l_value) %d geçersiz\n"
-
-#: timezone/zic.c:1262
+#: timezone/zic.c:1761
 msgid "expected continuation line not found"
 msgstr "gereken süreklilik satırı bulunamadı"
 
-#: timezone/zic.c:1298
+#: timezone/zic.c:1797
 msgid "fractional seconds rejected by pre-2018 versions of zic"
 msgstr "zic'in 2018 öncesi sürümleri tarafından reddedilen kesirli saniyeler"
 
-#: timezone/zic.c:1316 timezone/zic.c:3282
+#: timezone/zic.c:1815 timezone/zic.c:3761
 msgid "time overflow"
 msgstr "zaman taşması"
 
-#: timezone/zic.c:1322
+#: timezone/zic.c:1821
 msgid "values over 24 hours not handled by pre-2007 versions of zic"
 msgstr "zic'in 2007 öncesi sürümlerinde 24 saatin üzerindeki değerlerle işlem yapılmaz"
 
-#: timezone/zic.c:1340
+#: timezone/zic.c:1839
 msgid "invalid saved time"
 msgstr "kazanılmış zaman geçersiz"
 
-#: timezone/zic.c:1351
+#: timezone/zic.c:1850
 msgid "wrong number of fields on Rule line"
 msgstr "`Rule' satırının alanları eksik ya da fazla"
 
-#: timezone/zic.c:1360
+#: timezone/zic.c:1859
 #, c-format
 msgid "Invalid rule name \"%s\""
 msgstr "\"%s\" geçersiz kural adı"
 
-#: timezone/zic.c:1382
+#: timezone/zic.c:1883
 msgid "wrong number of fields on Zone line"
 msgstr "`Zone' satırının alanları eksik ya da fazla"
 
-#: timezone/zic.c:1387
+#: timezone/zic.c:1887
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr "\"Zone %s\" satırı ve -l seçeneği çelişiyor"
 
-#: timezone/zic.c:1393
+#: timezone/zic.c:1892
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr "\"Zone %s\" satırı ve -p seçeneği çelişiyor"
 
-#: timezone/zic.c:1400
+#: timezone/zic.c:1899
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %<PRIdMAX>)"
 msgstr "dilim ismi %s tekrarlanmış (dosya \"%s\", satır %<PRIdMAX>)"
 
-#: timezone/zic.c:1414
+#: timezone/zic.c:1913
 msgid "wrong number of fields on Zone continuation line"
 msgstr "`Zone' devam satırının alanları eksik ya da fazla"
 
-#: timezone/zic.c:1454
+#: timezone/zic.c:1952
 msgid "invalid UT offset"
 msgstr "geçersiz UT offset"
 
-#: timezone/zic.c:1458
+#: timezone/zic.c:1956
 msgid "invalid abbreviation format"
 msgstr "kısaltma biçemi geçersiz"
 
-#: timezone/zic.c:1467
+#: timezone/zic.c:1986
+msgid "Zone continuation line end time is not after end time of previous line"
+msgstr "`Zone' devamlılık satırının bitiş zamanı önceki satırın bitiş zamanından sonra değil"
+
+#: timezone/zic.c:1997
 #, c-format
 msgid "format '%s' not handled by pre-2015 versions of zic"
 msgstr "format '%s' 2015 öncesi zic sürümleri tarafından elde edilemez"
 
-#: timezone/zic.c:1494
-msgid "Zone continuation line end time is not after end time of previous line"
-msgstr "`Zone' devamlılık satırının bitiş zamanı önceki satırın bitiş zamanından sonra değil"
-
-#: timezone/zic.c:1526
+#: timezone/zic.c:2027
 msgid "invalid leaping year"
 msgstr "artık yıl geçersiz"
 
-#: timezone/zic.c:1548 timezone/zic.c:1653
+#: timezone/zic.c:2049 timezone/zic.c:2154
 msgid "invalid month name"
 msgstr "ay ismi geçersiz"
 
-#: timezone/zic.c:1561 timezone/zic.c:1769 timezone/zic.c:1783
+#: timezone/zic.c:2062 timezone/zic.c:2252 timezone/zic.c:2266
 msgid "invalid day of month"
 msgstr "ayın günü geçersiz"
 
-#: timezone/zic.c:1566
+#: timezone/zic.c:2067
 msgid "time too small"
 msgstr "süre çok kısa"
 
-#: timezone/zic.c:1570
+#: timezone/zic.c:2071
 msgid "time too large"
 msgstr "süre çok uzun"
 
-#: timezone/zic.c:1574 timezone/zic.c:1682
+#: timezone/zic.c:2075 timezone/zic.c:2183
 msgid "invalid time of day"
 msgstr "günün tarihi geçersiz"
 
-#: timezone/zic.c:1577
+#: timezone/zic.c:2078
 msgid "leap second precedes Epoch"
 msgstr "sıçrama ikinci Dönem öncesinde"
 
-#: timezone/zic.c:1585
+#: timezone/zic.c:2086
 msgid "wrong number of fields on Leap line"
 msgstr "`Leap' satırının alanları eksik ya da fazla"
 
-#: timezone/zic.c:1591
+#: timezone/zic.c:2092
 msgid "invalid Rolling/Stationary field on Leap line"
 msgstr "sıçrama çizgisinde geçersiz Yuvarlanma/Sabit alan"
 
-#: timezone/zic.c:1599
+#: timezone/zic.c:2100
 msgid "invalid CORRECTION field on Leap line"
 msgstr "sıçrama satırında geçersiz DÜZELTME alanı"
 
-#: timezone/zic.c:1611
+#: timezone/zic.c:2112
 msgid "wrong number of fields on Expires line"
 msgstr "sona erme satırındaki yanlış alan sayısı"
 
-#: timezone/zic.c:1613
+#: timezone/zic.c:2114
 msgid "multiple Expires lines"
 msgstr "çoklu Sona Eren satır"
 
-#: timezone/zic.c:1624
+#: timezone/zic.c:2125
 msgid "wrong number of fields on Link line"
 msgstr "`Link' satırının alanları eksik ya da fazla"
 
-#: timezone/zic.c:1628
-msgid "blank FROM field on Link line"
-msgstr "`Link' satırında FROM alanı boş"
-
-#: timezone/zic.c:1703
+#: timezone/zic.c:2199
 msgid "invalid starting year"
 msgstr "başlangıç yılı geçersiz"
 
-#: timezone/zic.c:1725
+#: timezone/zic.c:2214
 msgid "invalid ending year"
 msgstr "bitiş yılı geçersiz"
 
-#: timezone/zic.c:1729
+#: timezone/zic.c:2218
 msgid "starting year greater than ending year"
 msgstr "başlangıç yılı bitiş yılından büyük"
 
-#: timezone/zic.c:1736
-msgid "typed single year"
-msgstr "türünde tek yıl"
-
-#: timezone/zic.c:1739
-#, c-format
-msgid "year type \"%s\" is obsolete; use \"-\" instead"
-msgstr "yıl türü \"%s\" eskidir; yerine \"-\" kullanın"
-
-#: timezone/zic.c:1774
+#: timezone/zic.c:2257
 msgid "invalid weekday name"
 msgstr "gün ismi geçersiz"
 
-#: timezone/zic.c:1935
+#: timezone/zic.c:2435
 #, c-format
 msgid "reference clients mishandle more than %d transition times"
 msgstr "referans istemciler %d geçiş sürelerinin daha fazlasını yanlış yapabilir"
 
-#: timezone/zic.c:1939
+#: timezone/zic.c:2439
 msgid "pre-2014 clients may mishandle more than 1200 transition times"
 msgstr "pre-2014 istemciler 1200 geçiş süresinden daha fazla kötü görev yapabilir"
 
-#: timezone/zic.c:2058
+#: timezone/zic.c:2537
 msgid "too many transition times"
 msgstr "çok fazla geçiş zamanı"
 
-#: timezone/zic.c:2297
+#: timezone/zic.c:2801
 #, c-format
 msgid "%%z UT offset magnitude exceeds 99:59:59"
 msgstr "%%z UT ofset büyüklüğünü aşıyor 99:59:59"
 
-#: timezone/zic.c:2673
-msgid "no POSIX environment variable for zone"
-msgstr "zaman dilimi için POSIX ortam değişkeni yok"
-
-#: timezone/zic.c:2679
+#: timezone/zic.c:3187
 #, c-format
 msgid "%s: pre-%d clients may mishandle distant timestamps"
 msgstr "%s: pre-%d istemciler uzaktaki zaman damgalarını yanlış görevlendirebilir"
 
-#: timezone/zic.c:2818
+#: timezone/zic.c:3316
 msgid "two rules for same instant"
 msgstr "aynlı anlık için iki kural"
 
-#: timezone/zic.c:2889
+#: timezone/zic.c:3389
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr "süreye değinden hemen sonra kullanılacak zaman dilimi kısaltması saptanamadı"
 
-#: timezone/zic.c:2964
+#: timezone/zic.c:3490
 msgid "UT offset out of range"
 msgstr "UT'ye göre saat farkı aralık dışında"
 
-#: timezone/zic.c:2987
+#: timezone/zic.c:3513
 msgid "too many local time types"
 msgstr "yerel zaman türleri çok fazla"
 
-#: timezone/zic.c:3005
+#: timezone/zic.c:3531
 msgid "too many leap seconds"
 msgstr "çok fazla artık saniye"
 
-#: timezone/zic.c:3032
+#: timezone/zic.c:3562
 msgid "Leap seconds too close together"
 msgstr "Sıçrama saniyeleri birbirine çok yakın"
 
-#: timezone/zic.c:3043
-msgid "\"#expires\" is obsolescent; use \"Expires\""
-msgstr "\"#expires\" eskimiş; \"Son kullanma tarihi\" kullan"
-
-#: timezone/zic.c:3049
+#: timezone/zic.c:3573
 msgid "last Leap time does not precede Expires time"
 msgstr "son Sıçrama süresi Sona Ereme zamanından önce değil"
 
-#: timezone/zic.c:3095
-msgid "Wild result from command execution"
-msgstr "Komut icrasından alınan sonuç garip"
-
-#: timezone/zic.c:3096
-#, c-format
-msgid "%s: command was '%s', result was %d\n"
-msgstr "%s: komut `%s' idi, sonuç %d oldu\n"
-
-#: timezone/zic.c:3202
+#: timezone/zic.c:3680
 #, c-format
 msgid "\"%s\" is undocumented; use \"last%s\" instead"
 msgstr "\"%s\" belgesizdir, \"last%s\" yerine kullan"
 
-#: timezone/zic.c:3233
+#: timezone/zic.c:3711
 #, c-format
 msgid "\"%s\" is ambiguous in pre-2017c zic"
 msgstr "\"%s\" 2017c öncesi zic belirsizdir"
 
-#: timezone/zic.c:3267
+#: timezone/zic.c:3742
 msgid "Odd number of quotation marks"
 msgstr "Tırnak işaretleri tek sayıda"
 
-#: timezone/zic.c:3361
+#: timezone/zic.c:3839
 msgid "use of 2/29 in non leap-year"
 msgstr "artık olmayan yıl içinde 2/29 kullanımı"
 
-#: timezone/zic.c:3396
+#: timezone/zic.c:3865
 msgid "rule goes past start/end of month; will not work with pre-2004 versions of zic"
 msgstr "kural ay başından/sonundan geçer; zic 2004 öncesi sürümleri ile çalışmaz"
 
-#: timezone/zic.c:3423
+#: timezone/zic.c:3892
 msgid "time zone abbreviation has fewer than 3 characters"
 msgstr "saat dilimi kısaltması 3 karakterden az"
 
-#: timezone/zic.c:3425
+#: timezone/zic.c:3894
 msgid "time zone abbreviation has too many characters"
 msgstr "saat dilimi kısaltması çok fazla karaktere sahiptir"
 
-#: timezone/zic.c:3427
+#: timezone/zic.c:3896
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr "zaman dilimi kısaltması POSIX standardından farklı"
 
-#: timezone/zic.c:3433
+#: timezone/zic.c:3902
 msgid "too many, or too long, time zone abbreviations"
 msgstr "çok fazla ya da çok uzun zaman dilimi kısaltmaları"
 
-#: timezone/zic.c:3479
+#: timezone/zic.c:3953
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: %s dizini oluşturulamıyor: %s"

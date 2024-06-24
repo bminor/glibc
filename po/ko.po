@@ -6,9 +6,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GNU libc 2.38.9000\n"
-"POT-Creation-Date: 2024-01-31 00:48+0100\n"
-"PO-Revision-Date: 2024-01-04 05:43+0900\n"
+"Project-Id-Version: GNU libc 2.39.9000\n"
+"POT-Creation-Date: 2024-06-19 22:30+0200\n"
+"PO-Revision-Date: 2024-06-22 21:30+0900\n"
 "Last-Translator: Changwoo Ryu <cwryu@debian.org>\n"
 "Language-Team: Korean <translation-team-ko@googlegroups.com>\n"
 "Language: ko\n"
@@ -152,7 +152,7 @@ msgstr ""
 #: iconv/iconvconfig.c:380 locale/programs/locale.c:275
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:88
 #: malloc/memusagestat.c:564 nss/getent.c:961 nss/makedb.c:371
-#: posix/getconf.c:503
+#: posix/getconf.c:505
 #, c-format
 msgid ""
 "For bug reporting instructions, please see:\n"
@@ -166,7 +166,7 @@ msgstr ""
 #: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
-#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:485
+#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:487
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -182,7 +182,7 @@ msgstr ""
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
-#: posix/getconf.c:490
+#: posix/getconf.c:492
 #, c-format
 msgid "Written by %s.\n"
 msgstr "만든 사람: %s.\n"
@@ -521,137 +521,137 @@ msgstr "HWCAP 우선순위를 만들 수 없습니다"
 msgid "cannot create capability list"
 msgstr "케이퍼빌리티 리스트를 만들 수 없습니다"
 
-#: elf/dl-load.c:434
+#: elf/dl-load.c:423
 msgid "cannot allocate name record"
 msgstr "네임 레코드를 할당할 수 없습니다"
 
-#: elf/dl-load.c:536 elf/dl-load.c:649 elf/dl-load.c:743 elf/dl-load.c:840
+#: elf/dl-load.c:525 elf/dl-load.c:638 elf/dl-load.c:732 elf/dl-load.c:829
 msgid "cannot create cache for search path"
 msgstr "검색 경로에 대한 캐시를 만들 수 없습니다"
 
-#: elf/dl-load.c:632
+#: elf/dl-load.c:621
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "RUNPATH/RPATH 카피를 만들 수 없습니다"
 
-#: elf/dl-load.c:729
+#: elf/dl-load.c:718
 msgid "cannot create search path array"
 msgstr "검색 경로 배열을 만들 수 없습니다"
 
-#: elf/dl-load.c:968
+#: elf/dl-load.c:957
 msgid "cannot stat shared object"
 msgstr "동적 오브젝트에 대해 stat()이 실패했습니다"
 
-#: elf/dl-load.c:1059 elf/dl-load.c:2222
+#: elf/dl-load.c:1048 elf/dl-load.c:2163
 msgid "cannot create shared object descriptor"
 msgstr "공유 오브젝트 디스크립터를 만들 수 없습니다"
 
-#: elf/dl-load.c:1078 elf/dl-load.c:1655 elf/dl-load.c:1763
+#: elf/dl-load.c:1067 elf/dl-load.c:1610 elf/dl-load.c:1718
 msgid "cannot read file data"
 msgstr "파일 데이터를 읽을 수 없습니다"
 
-#: elf/dl-load.c:1131 elf/dl-map-segments.h:117
+#: elf/dl-load.c:1120 elf/dl-map-segments.h:117
 msgid "ELF load command address/offset not page-aligned"
 msgstr "ELF 로드 명령의 주소/오프셋이 align되어 있지 않습니다"
 
-#: elf/dl-load.c:1223
+#: elf/dl-load.c:1212
 msgid "object file has no loadable segments"
 msgstr "오브젝트 파일에 읽어들일 수 있는 섹션이 없습니다"
 
-#: elf/dl-load.c:1240
+#: elf/dl-load.c:1229
 msgid "cannot dynamically load executable"
 msgstr "동적으로 실행파일을 읽어들일 수 없습니다"
 
-#: elf/dl-load.c:1247
+#: elf/dl-load.c:1236
 msgid "object file has no dynamic section"
 msgstr "오브젝트 파일에 동적 섹션이 없습니다"
 
-#: elf/dl-load.c:1282
+#: elf/dl-load.c:1271
 msgid "cannot dynamically load position-independent executable"
 msgstr "위치 독립 실행 파일을 동적으로 읽어들일 수 없습니다"
 
-#: elf/dl-load.c:1284
+#: elf/dl-load.c:1273
 msgid "shared object cannot be dlopen()ed"
 msgstr "동적 오브젝트는 dlopen()될 수 없습니다"
 
-#: elf/dl-load.c:1297
+#: elf/dl-load.c:1286
 msgid "cannot allocate memory for program header"
 msgstr "프로그램 헤더에 대한 메모리를 할당할 수 없습니다"
 
-#: elf/dl-load.c:1330 elf/dl-load.h:128
-msgid "cannot change memory protections"
-msgstr "메모리 보호를 바꿀 수 없습니다"
-
-#: elf/dl-load.c:1354
+#: elf/dl-load.c:1309
 msgid "cannot enable executable stack as shared object requires"
 msgstr "실행할 수 있는 스택을 공유 오브젝트 필수요소로 만들 수 없습니다"
 
-#: elf/dl-load.c:1382
+#: elf/dl-load.c:1337
 msgid "cannot close file descriptor"
 msgstr "파일 디스크립터를 닫을 수 없습니다"
 
-#: elf/dl-load.c:1655
+#: elf/dl-load.c:1610
 msgid "file too short"
 msgstr "파일이 너무 짧습니다"
 
-#: elf/dl-load.c:1691
+#: elf/dl-load.c:1646
 msgid "invalid ELF header"
 msgstr "ELF 헤더가 잘못됨"
 
-#: elf/dl-load.c:1706
+#: elf/dl-load.c:1661
 msgid "ELF file data encoding not big-endian"
 msgstr "ELF 파일 데이터 인코딩이 빅인디안이 아닙니다"
 
-#: elf/dl-load.c:1708
+#: elf/dl-load.c:1663
 msgid "ELF file data encoding not little-endian"
 msgstr "ELF 파일 데이터 인코딩이 리틀인디안이 아닙니다"
 
-#: elf/dl-load.c:1712
+#: elf/dl-load.c:1667
 msgid "ELF file version ident does not match current one"
 msgstr "ELF 파일 버전 ident가 현재 ident와 맞지 않습니다"
 
-#: elf/dl-load.c:1716
+#: elf/dl-load.c:1671
 msgid "ELF file OS ABI invalid"
 msgstr "ELF 파일 OS ABI가 잘못되었습니다"
 
-#: elf/dl-load.c:1719
+#: elf/dl-load.c:1674
 msgid "ELF file ABI version invalid"
 msgstr "ELF 파일 ABI 버전이 잘못되었습니다"
 
-#: elf/dl-load.c:1722
+#: elf/dl-load.c:1677
 msgid "nonzero padding in e_ident"
 msgstr "e_ident 안에 0이 아닌 채움"
 
-#: elf/dl-load.c:1725
+#: elf/dl-load.c:1680
 msgid "internal error"
 msgstr "내부 오류"
 
-#: elf/dl-load.c:1732
+#: elf/dl-load.c:1687
 msgid "ELF file version does not match current one"
 msgstr "ELF 파일 버전이 현재 버전과 맞지 않습니다"
 
-#: elf/dl-load.c:1744
+#: elf/dl-load.c:1699
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "ET_DYN과 ET_EXEC만을 읽어들일 수 있습니다"
 
-#: elf/dl-load.c:1749
+#: elf/dl-load.c:1704
 msgid "ELF file's phentsize not the expected size"
 msgstr "ELF 파일의 phentsize가 예상과 맞지 않습니다"
 
-#: elf/dl-load.c:2241
+#: elf/dl-load.c:2182
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "ELF 클래스가 틀렸습니다: ELFCLASS64"
 
-#: elf/dl-load.c:2242
+#: elf/dl-load.c:2183
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "ELF 클래스가 틀렸습니다: ELFCLASS32"
 
-#: elf/dl-load.c:2245
+#: elf/dl-load.c:2186
 msgid "cannot open shared object file"
 msgstr "동적 오브젝트 파일을 열 수 없습니다"
 
 #: elf/dl-load.h:126
 msgid "failed to map segment from shared object"
 msgstr "동적 오브젝트의 세그먼트를 매핑하는 실패"
+
+#: elf/dl-load.h:128
+msgid "cannot change memory protections"
+msgstr "메모리 보호를 바꿀 수 없습니다"
 
 #: elf/dl-load.h:130
 msgid "cannot map zero-fill pages"
@@ -710,7 +710,7 @@ msgstr "리로케이션 뒤에 추가로 메모리 보호를 적용할 수 없�
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "동적으로 적재하지 않은 코드에 RTLD_NEXT를 사용함"
 
-#: elf/dl-tls.c:1052
+#: elf/dl-tls.c:1059
 msgid "cannot create TLS data structures"
 msgstr "TLS 데이터 구조를 만들 수 없습니다"
 
@@ -915,7 +915,7 @@ msgstr "-r 옵션을 사용할 경우 설정 파일의 절대 파일 이름이 �
 
 #: elf/ldconfig.c:1135 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
-#: posix/getconf.c:458 posix/getconf.c:697
+#: posix/getconf.c:460 posix/getconf.c:699
 #, c-format
 msgid "memory exhausted"
 msgstr "메모리가 바닥남"
@@ -4156,22 +4156,22 @@ msgstr "%zu 바이트 메모리 해제 (%s 캐시)"
 msgid "no more memory for database '%s'"
 msgstr "'%s' 데이터베이스에 메모리가 더 이상 없습니다"
 
-#: nscd/netgroupcache.c:121
+#: nscd/netgroupcache.c:198
 #, c-format
 msgid "Haven't found \"%s\" in netgroup cache!"
 msgstr "네트그룹 캐시에서 \"%s\"을(를) 찾을 수 없습니다!"
 
-#: nscd/netgroupcache.c:123
+#: nscd/netgroupcache.c:200
 #, c-format
 msgid "Reloading \"%s\" in netgroup cache!"
 msgstr "네트그룹 캐시에서 \"%s\"을(를) 다시 읽어들입니다!"
 
-#: nscd/netgroupcache.c:469
+#: nscd/netgroupcache.c:486
 #, c-format
 msgid "Haven't found \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "네트그룹 캐시에서 \"%s (%s,%s,%s)\"을(를) 찾을 수 없습니다!"
 
-#: nscd/netgroupcache.c:472
+#: nscd/netgroupcache.c:489
 #, c-format
 msgid "Reloading \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "네트그룹 캐시에서 \"%s (%s,%s,%s)\"을(를) 다시 읽어들입니다!"
@@ -4775,17 +4775,17 @@ msgstr "SELinux 컨텍스트를 초기화할 수 없습니다"
 msgid "cannot set file creation context for `%s'"
 msgstr "`%s'에 대해 파일 만들기 컨텍스트를 지정할 수 없습니다"
 
-#: posix/getconf.c:417
+#: posix/getconf.c:419
 #, c-format
 msgid "Usage: %s [-v specification] variable_name [pathname]\n"
 msgstr "사용법: %s [-v <스펙>] <변수이름> [경로이름]\n"
 
-#: posix/getconf.c:420
+#: posix/getconf.c:422
 #, c-format
 msgid "       %s -a [pathname]\n"
 msgstr "       %s -a [경로이름]\n"
 
-#: posix/getconf.c:496
+#: posix/getconf.c:498
 #, c-format
 msgid ""
 "Usage: getconf [-v SPEC] VAR\n"
@@ -4804,21 +4804,21 @@ msgstr ""
 "환경 SPEC에 대한 값을 읽습니다.\n"
 "\n"
 
-#: posix/getconf.c:572
+#: posix/getconf.c:574
 #, c-format
 msgid "unknown specification \"%s\""
 msgstr "알 수 없는 스펙 \"%s\""
 
-#: posix/getconf.c:624
+#: posix/getconf.c:626
 #, c-format
 msgid "Couldn't execute %s"
 msgstr "%s 실행할 수 없습니다"
 
-#: posix/getconf.c:669 posix/getconf.c:685
+#: posix/getconf.c:671 posix/getconf.c:687
 msgid "undefined"
 msgstr "정의하지 않음"
 
-#: posix/getconf.c:707
+#: posix/getconf.c:709
 #, c-format
 msgid "Unrecognized variable `%s'"
 msgstr "인식할 수 없는 변수 `%s'"
@@ -5111,7 +5111,7 @@ msgstr "출력 버퍼가 있음"
 msgid "Input message available"
 msgstr "입력 메시지가 있음"
 
-#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:375 timezone/zic.c:564
+#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:445 timezone/zic.c:652
 msgid "I/O error"
 msgstr "입출력 오류"
 
@@ -6538,24 +6538,44 @@ msgstr "IBT 사용을 끌 수 없습니다"
 msgid "can't disable SHSTK"
 msgstr "SHSTK 사용을 끌 수 없습니다"
 
-#: timezone/zdump.c:332
+#: timezone/zdump.c:131
+#, c-format
+msgid "%s: size overflow\n"
+msgstr "%s: 크기 오버플로\n"
+
+#: timezone/zdump.c:170
+#, c-format
+msgid "%s: Memory exhausted\n"
+msgstr "%s: 메모리가 바닥남\n"
+
+#: timezone/zdump.c:257
+#, c-format
+msgid "%s: setenv: %s\n"
+msgstr "%s: setenv: %s\n"
+
+#: timezone/zdump.c:337 timezone/zdump.c:604
+#, c-format
+msgid "%s: unknown timezone '%s': %s\n"
+msgstr "%s: 알 수 없는 시간대 '%s': %s\n"
+
+#: timezone/zdump.c:402
 msgid "has characters other than ASCII alphanumerics, '-' or '+'"
 msgstr "ASCII 알파벳 및 숫자, '-', '+'가 아닌 문자가 있습니다"
 
-#: timezone/zdump.c:334
+#: timezone/zdump.c:404
 msgid "has fewer than 3 characters"
 msgstr "3자보다 적습니다"
 
-#: timezone/zdump.c:336
+#: timezone/zdump.c:406
 msgid "has more than 6 characters"
 msgstr "6자보다 많습니다"
 
-#: timezone/zdump.c:341
+#: timezone/zdump.c:411
 #, c-format
 msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
 msgstr "%s: 경고: 지역 \"%s\" 약어 \"%s\" %s\n"
 
-#: timezone/zdump.c:387
+#: timezone/zdump.c:457
 #, c-format
 msgid ""
 "%s: usage: %s OPTIONS TIMEZONE ...\n"
@@ -6582,496 +6602,544 @@ msgstr ""
 "\n"
 "Report bugs to %s.\n"
 
-#: timezone/zdump.c:473
+#: timezone/zdump.c:543
 #, c-format
 msgid "%s: wild -c argument %s\n"
 msgstr "%s: 제멋대로인 -c 인수 %s\n"
 
-#: timezone/zdump.c:506
+#: timezone/zdump.c:576
 #, c-format
 msgid "%s: wild -t argument %s\n"
 msgstr "%s: 제멋대로인 -t 인수 %s\n"
 
-#: timezone/zic.c:432
+#: timezone/zdump.c:857
+#, c-format
+msgid " (gmtime failed)"
+msgstr " (gmtime 실패)"
+
+#: timezone/zdump.c:867
+#, c-format
+msgid " (localtime failed)"
+msgstr "(localtime 실패)"
+
+#: timezone/zic.c:463
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: 메모리가 바닥남: %s\n"
 
-#: timezone/zic.c:440
+#: timezone/zic.c:470
 msgid "size overflow"
 msgstr "크기 오버플로"
 
-#: timezone/zic.c:450
-msgid "alignment overflow"
-msgstr "정렬 값 오버플로"
-
-#: timezone/zic.c:498
+#: timezone/zic.c:559
 msgid "integer overflow"
 msgstr "정수 값 오버플로"
 
-#: timezone/zic.c:532
+#: timezone/zic.c:585
+msgid "command line"
+msgstr "명령행"
+
+#: timezone/zic.c:588
+msgid "standard input"
+msgstr "표준 입력"
+
+#: timezone/zic.c:616
 #, c-format
 msgid "\"%s\", line %<PRIdMAX>: "
 msgstr "\"%s\", 행 %<PRIdMAX>: "
 
-#: timezone/zic.c:535
+#: timezone/zic.c:620
 #, c-format
 msgid " (rule from \"%s\", line %<PRIdMAX>)"
 msgstr " (\"%s\"에 있는 규칙, 행 %<PRIdMAX>)"
 
-#: timezone/zic.c:554
+#: timezone/zic.c:639
 #, c-format
 msgid "warning: "
 msgstr "경고: "
 
-#: timezone/zic.c:579
+#: timezone/zic.c:669
 #, c-format
 msgid ""
 "%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
 "\t[ -b {slim|fat} ] [ -d directory ] [ -l localtime ] [ -L leapseconds ] \\\n"
-"\t[ -p posixrules ] [ -r '[@lo][/@hi]' ] [ -t localtime-link ] \\\n"
+"\t[ -p posixrules ] [ -r '[@lo][/@hi]' ] [ -R '@hi' ] \\\n"
+"\t[ -t localtime-link ] \\\n"
 "\t[ filename ... ]\n"
 "\n"
 "Report bugs to %s.\n"
 msgstr ""
 "%s: 사용법은 %s [ --version ] [ --help ] [ -v ] \\\n"
 "\t[ -b {slim|fat} ] [ -d <디렉터리> ] [ -l <지역시각> ] [ -L <윤초> ] \\\n"
-"\t[ -p <POSIX규칙> ] [ -r '[@lo][/@hi]' ] [ -t <지역시각-링크> ] \\\n"
+"\t[ -p <POSIX규칙> ] [ -r '[@lo][/@hi]' ] [ -R '@hi' ] \\\n"
+"        [ -t <지역시각-링크> ] \\\n"
 "\t[ <파일이름> ... ]\n"
 "\n"
 "문제점은 %s 주소로 알려 주십시오.\n"
 
-#: timezone/zic.c:604
+#: timezone/zic.c:695
 #, c-format
 msgid "%s: Can't chdir to %s: %s\n"
 msgstr "%s: %s 디렉터리로 이동할 수 없습니다: %s\n"
 
-#: timezone/zic.c:698
+#: timezone/zic.c:786
+#, c-format
+msgid "\"Link %s %s\" is part of a link cycle"
+msgstr "\"Link %s %s\"은(는) 링크 사이클의 일부입니다"
+
+#: timezone/zic.c:797
+#, c-format
+msgid "link %s targets itself"
+msgstr "%s 링크가 자기 자신을 가리킵니다"
+
+#: timezone/zic.c:817
+#, c-format
+msgid "link %s targeting link %s mishandled by pre-2023 zic"
+msgstr "%s 링크는 (%s 링크 가리킴) 2023 전 버전 zic에서 잘못 처리됩니다"
+
+#: timezone/zic.c:821
+#, c-format
+msgid "link %s targeting link %s"
+msgstr "%s 링크가 %s 링크를 가리킴"
+
+#: timezone/zic.c:992
 msgid "wild compilation-time specification of zic_t"
 msgstr "제멋대로인 zic_t의 컴파일 타임 명세"
 
-#: timezone/zic.c:716 timezone/zic.c:720
+#: timezone/zic.c:1011 timezone/zic.c:1015
 msgid "incompatible -b options"
 msgstr "호환되지 않는 -b 옵션"
 
-#: timezone/zic.c:723
+#: timezone/zic.c:1018
 #, c-format
 msgid "invalid option: -b '%s'"
 msgstr "부적절한 옵션: -b '%s'"
 
-#: timezone/zic.c:730
+#: timezone/zic.c:1025
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr "%s: 여러개의 -d 옵션을 지정했습니다\n"
 
-#: timezone/zic.c:740
+#: timezone/zic.c:1036
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr "%s: 여러개의 -l 옵션을 지정했습니다\n"
 
-#: timezone/zic.c:750
+#: timezone/zic.c:1047
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr "%s: 여러개의 -p 옵션을 지정했습니다\n"
 
-#: timezone/zic.c:758
+#: timezone/zic.c:1056
 #, c-format
 msgid "%s: More than one -t option specified\n"
 msgstr "%s: 여러개의 -t 옵션을 지정했습니다\n"
 
-#: timezone/zic.c:767
-msgid "-y is obsolescent"
-msgstr "-y 옵션은 이제 사용하지 않습니다"
+#: timezone/zic.c:1064
+msgid "-y ignored"
+msgstr "-y 무시됨"
 
-#: timezone/zic.c:771
-#, c-format
-msgid "%s: More than one -y option specified\n"
-msgstr "%s: 여러개의 -y 옵션을 지정했습니다\n"
-
-#: timezone/zic.c:781
+#: timezone/zic.c:1071
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr "%s: 여러개의 -L 옵션을 지정했습니다\n"
 
-#: timezone/zic.c:792
+#: timezone/zic.c:1083
 #, c-format
 msgid "%s: More than one -r option specified\n"
 msgstr "%s: 여러개의 -r 옵션을 지정했습니다\n"
 
-#: timezone/zic.c:798
+#: timezone/zic.c:1090
 #, c-format
 msgid "%s: invalid time range: %s\n"
 msgstr "%s: 시간 범위가 잘못되었습니다: %s\n"
 
-#: timezone/zic.c:805
+#: timezone/zic.c:1098
+#, c-format
+msgid "%s: invalid time: %s\n"
+msgstr "%s: 시간이 잘못되었습니다: %s\n"
+
+#: timezone/zic.c:1104
 msgid "-s ignored"
 msgstr "-s 무시됨"
 
-#: timezone/zic.c:848
-msgid "link to link"
-msgstr "링크로 링크"
+# zic 옵션
+#: timezone/zic.c:1110
+#, c-format
+msgid "%s: -R time exceeds -r cutoff\n"
+msgstr "%s: -R 시간이 -r 제한을 넘어갑니다\n"
 
-#: timezone/zic.c:851 timezone/zic.c:855
-msgid "command line"
-msgstr "명령행"
-
-#: timezone/zic.c:871
+#: timezone/zic.c:1171
 msgid "empty file name"
 msgstr "빈 파일 이름"
 
-#: timezone/zic.c:874
+#: timezone/zic.c:1174
 #, c-format
 msgid "file name '%s' begins with '/'"
 msgstr "'%s' 파일 이름이 '/'로 시작합니다"
 
-#: timezone/zic.c:884
+#: timezone/zic.c:1184
 #, c-format
 msgid "file name '%s' contains '%.*s' component"
 msgstr "'%s' 파일 이름에 '%.*s' 내용이 들어 있습니다"
 
-#: timezone/zic.c:890
+#: timezone/zic.c:1190
 #, c-format
 msgid "file name '%s' component contains leading '-'"
 msgstr "'%s' 파일 이름에 앞에 '-'가 들어 있습니다"
 
-#: timezone/zic.c:893
+#: timezone/zic.c:1193
 #, c-format
 msgid "file name '%s' contains overlength component '%.*s...'"
 msgstr "'%s' 파일 이름에 길이가 제한보다 긴 '%.*s...' 내용이 들어 있습니다"
 
-#: timezone/zic.c:921
+#: timezone/zic.c:1221
 #, c-format
 msgid "file name '%s' contains byte '%c'"
 msgstr "'%s' 파일 이름에 '%c' 바이트가 들어 있습니다"
 
-#: timezone/zic.c:922
+#: timezone/zic.c:1222
 #, c-format
 msgid "file name '%s' contains byte '\\%o'"
 msgstr "'%s' 파일 이름에 '\\%o' 바이트가 들어 있습니다"
 
-#: timezone/zic.c:992
-#, c-format
-msgid "%s: link from %s/%s failed: %s\n"
-msgstr "%s: %s/%s에서 연결 실패: %s\n"
-
-#: timezone/zic.c:1002 timezone/zic.c:1992
-#, c-format
-msgid "%s: Can't remove %s/%s: %s\n"
-msgstr "%s: %s/%s을(를) 제거할 수 없습니다: %s\n"
-
-#: timezone/zic.c:1026
-#, c-format
-msgid "symbolic link used because hard link failed: %s"
-msgstr "하드 링크가 실패해서 심볼릭 링크를 사용합니다: %s"
-
-#: timezone/zic.c:1034
-#, c-format
-msgid "%s: Can't read %s/%s: %s\n"
-msgstr "%s: %s/%s을(를) 읽을 수 없습니다: %s\n"
-
-#: timezone/zic.c:1041 timezone/zic.c:2005
+#: timezone/zic.c:1369
 #, c-format
 msgid "%s: Can't create %s/%s: %s\n"
 msgstr "%s: %s/%s을(를) 만들 수 없습니다: %s\n"
 
-#: timezone/zic.c:1050
+#: timezone/zic.c:1388
+#, c-format
+msgid "%s: rename to %s/%s: %s\n"
+msgstr "%s: %s/%s(으)로 이름 바꿈: %s\n"
+
+#: timezone/zic.c:1463
+#, c-format
+msgid "%s: Can't remove %s/%s: %s\n"
+msgstr "%s: %s/%s을(를) 제거할 수 없습니다: %s\n"
+
+#: timezone/zic.c:1507
+#, c-format
+msgid "%s: Can't link %s/%s to %s/%s: %s\n"
+msgstr "%s: %s/%s에서 %s/%s(으)로 링크를 만들 수 없습니다: %s\n"
+
+#: timezone/zic.c:1536
+#, c-format
+msgid "symbolic link used because hard link failed: %s"
+msgstr "하드 링크가 실패해서 심볼릭 링크를 사용합니다: %s"
+
+#: timezone/zic.c:1544
+#, c-format
+msgid "%s: Can't read %s/%s: %s\n"
+msgstr "%s: %s/%s을(를) 읽을 수 없습니다: %s\n"
+
+#: timezone/zic.c:1554
 #, c-format
 msgid "copy used because hard link failed: %s"
 msgstr "하드 링크가 실패해서 복사를 사용합니다: %s"
 
-#: timezone/zic.c:1053
+#: timezone/zic.c:1557
 #, c-format
 msgid "copy used because symbolic link failed: %s"
 msgstr "심볼릭 링크가 실패해서 복사를 사용합니다: %s"
 
-#: timezone/zic.c:1122 timezone/zic.c:1124
+#: timezone/zic.c:1608 timezone/zic.c:1610
 msgid "same rule name in multiple files"
 msgstr "여러 파일에 같은 이름의 규칙이 있음"
 
-#: timezone/zic.c:1171
+#: timezone/zic.c:1656
 #, c-format
 msgid "%s in ruleless zone"
 msgstr "규칙없는 지역에 %s 있음"
 
-#: timezone/zic.c:1191
-msgid "standard input"
-msgstr "표준 입력"
+#: timezone/zic.c:1674
+msgid "input error"
+msgstr "입력 오류"
 
-#: timezone/zic.c:1196
+#: timezone/zic.c:1679
+msgid "unterminated line"
+msgstr "종료하지 않은 줄"
+
+#: timezone/zic.c:1683
+msgid "NUL input byte"
+msgstr "NUL 입력 바이트"
+
+#: timezone/zic.c:1688
+msgid "line too long"
+msgstr "행이 너무 깁니다"
+
+#: timezone/zic.c:1709
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr "%s: %s을(를) 열 수 없습니다: %s\n"
 
-#: timezone/zic.c:1207
-msgid "line too long"
-msgstr "행이 너무 깁니다"
-
-#: timezone/zic.c:1230
+#: timezone/zic.c:1734
 msgid "input line of unknown type"
 msgstr "알 수 없는 형태의 입력행"
 
-#: timezone/zic.c:1253 timezone/zic.c:1699 timezone/zic.c:1721
-#, c-format
-msgid "%s: panic: Invalid l_value %d\n"
-msgstr "%s: 문제상태: 잘못된 좌변값 %d\n"
-
-#: timezone/zic.c:1262
+#: timezone/zic.c:1761
 msgid "expected continuation line not found"
 msgstr "예상했던 연속 행을 찾지 못했음"
 
-#: timezone/zic.c:1298
+#: timezone/zic.c:1797
 msgid "fractional seconds rejected by pre-2018 versions of zic"
 msgstr "2018보다 전 버전의 zic는 초보다 작은 단위를 거부합니다"
 
-#: timezone/zic.c:1316 timezone/zic.c:3282
+#: timezone/zic.c:1815 timezone/zic.c:3761
 msgid "time overflow"
 msgstr "시간 값 오버플로"
 
-#: timezone/zic.c:1322
+#: timezone/zic.c:1821
 msgid "values over 24 hours not handled by pre-2007 versions of zic"
 msgstr "2007보다 전 버전의 zic는 24보다 큰 값을 처리하지 못합니다"
 
-#: timezone/zic.c:1340
+#: timezone/zic.c:1839
 msgid "invalid saved time"
 msgstr "절약 시간이 부적절함"
 
-#: timezone/zic.c:1351
+#: timezone/zic.c:1850
 msgid "wrong number of fields on Rule line"
 msgstr "Rule 줄에 필드의 개수가 잘못되었음"
 
-#: timezone/zic.c:1360
+#: timezone/zic.c:1859
 #, c-format
 msgid "Invalid rule name \"%s\""
 msgstr "\"%s\" 규칙 이름이 잘못되었습니다"
 
-#: timezone/zic.c:1382
+#: timezone/zic.c:1883
 msgid "wrong number of fields on Zone line"
 msgstr "Zone 줄에 필드의 갯수가 잘못되었음"
 
-#: timezone/zic.c:1387
+#: timezone/zic.c:1887
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr "\"지역 %s\" 행과 -l 옵션은 상호 배타적입니다"
 
-#: timezone/zic.c:1393
+#: timezone/zic.c:1892
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr "\"지역 %s\" 행과 -p 옵션은 상호 배타적입니다"
 
-#: timezone/zic.c:1400
+#: timezone/zic.c:1899
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %<PRIdMAX>)"
 msgstr "지역명 %s (파일 \"%s\", 행 %<PRIdMAX>) 중복되어 있습니다"
 
-#: timezone/zic.c:1414
+#: timezone/zic.c:1913
 msgid "wrong number of fields on Zone continuation line"
 msgstr "Zone continuation 줄에 필드의 개수가 잘못되었음"
 
-#: timezone/zic.c:1454
+#: timezone/zic.c:1952
 msgid "invalid UT offset"
 msgstr "UT 옵셋이 잘못됨"
 
-#: timezone/zic.c:1458
+#: timezone/zic.c:1956
 msgid "invalid abbreviation format"
 msgstr "약어 형식이 잘못됨"
 
-#: timezone/zic.c:1467
+#: timezone/zic.c:1986
+msgid "Zone continuation line end time is not after end time of previous line"
+msgstr "계속되는 Zone 줄에 있는 끝 시각이 윗 줄에 있는 끝시각보다 늦은 시각이 아닙니다"
+
+#: timezone/zic.c:1997
 #, c-format
 msgid "format '%s' not handled by pre-2015 versions of zic"
 msgstr "2015보다 전 버전이 zic는 '%s' 포맷을 처리하지 못합니다"
 
-#: timezone/zic.c:1494
-msgid "Zone continuation line end time is not after end time of previous line"
-msgstr "계속되는 Zone 줄에 있는 끝 시각이 윗 줄에 있는 끝시각보다 늦은 시각이 아닙니다"
-
-#: timezone/zic.c:1526
+#: timezone/zic.c:2027
 msgid "invalid leaping year"
 msgstr "윤년이 잘못됨"
 
-#: timezone/zic.c:1548 timezone/zic.c:1653
+#: timezone/zic.c:2049 timezone/zic.c:2154
 msgid "invalid month name"
 msgstr "달 이름이 잘못됨"
 
-#: timezone/zic.c:1561 timezone/zic.c:1769 timezone/zic.c:1783
+#: timezone/zic.c:2062 timezone/zic.c:2252 timezone/zic.c:2266
 msgid "invalid day of month"
 msgstr "달의 날짜 수가 잘못됨"
 
-#: timezone/zic.c:1566
+#: timezone/zic.c:2067
 msgid "time too small"
 msgstr "시간 값이 너무 작습니다"
 
-#: timezone/zic.c:1570
+#: timezone/zic.c:2071
 msgid "time too large"
 msgstr "시간 값이 너무 큽니다"
 
-#: timezone/zic.c:1574 timezone/zic.c:1682
+#: timezone/zic.c:2075 timezone/zic.c:2183
 msgid "invalid time of day"
 msgstr "하루 중 시각이 잘못됨"
 
-#: timezone/zic.c:1577
+#: timezone/zic.c:2078
 msgid "leap second precedes Epoch"
 msgstr "윤초가 시간 원점보다 앞섬"
 
-#: timezone/zic.c:1585
+#: timezone/zic.c:2086
 msgid "wrong number of fields on Leap line"
 msgstr "Leap 줄에 필드의 개수가 잘못되었음"
 
-#: timezone/zic.c:1591
+#: timezone/zic.c:2092
 msgid "invalid Rolling/Stationary field on Leap line"
 msgstr "Leap 줄에 Rolling/Stationary 필드가 잘못됨"
 
-#: timezone/zic.c:1599
+#: timezone/zic.c:2100
 msgid "invalid CORRECTION field on Leap line"
 msgstr "Leap 줄에 CORRECTION 필드가 잘못됨"
 
-#: timezone/zic.c:1611
+#: timezone/zic.c:2112
 msgid "wrong number of fields on Expires line"
 msgstr "Expires 줄에 필드의 개수가 잘못되었음"
 
-#: timezone/zic.c:1613
+#: timezone/zic.c:2114
 msgid "multiple Expires lines"
 msgstr "Expire 줄이 여러개입니다"
 
-#: timezone/zic.c:1624
+#: timezone/zic.c:2125
 msgid "wrong number of fields on Link line"
 msgstr "Link 줄에 필드의 수가 틀렸음"
 
-#: timezone/zic.c:1628
-msgid "blank FROM field on Link line"
-msgstr "Link 줄에 FROM 필드가 없음"
+#: timezone/zic.c:2129
+msgid "blank TARGET field on Link line"
+msgstr "Link 줄에 TARGET 필드가 비어 있음"
 
-#: timezone/zic.c:1703
+#: timezone/zic.c:2192
+#, c-format
+msgid "FROM year \"%s\" is obsolete; treated as %d"
+msgstr "FROM 연도 \"%s\"은(는) 이제 사용되지 않습니다. %d로 취급됩니다"
+
+#: timezone/zic.c:2199
 msgid "invalid starting year"
 msgstr "시작하는 해가 잘못됨"
 
-#: timezone/zic.c:1725
+#: timezone/zic.c:2214
 msgid "invalid ending year"
 msgstr "끝나는 해가 잘못됨"
 
-#: timezone/zic.c:1729
+#: timezone/zic.c:2218
 msgid "starting year greater than ending year"
 msgstr "시작하는 해가 끝나는 해보다 큽니다"
 
-#: timezone/zic.c:1736
-msgid "typed single year"
-msgstr "연도를 한개 입력했습니다"
-
-#: timezone/zic.c:1739
+#: timezone/zic.c:2222
 #, c-format
-msgid "year type \"%s\" is obsolete; use \"-\" instead"
-msgstr "연도 종류 \"%s\"은(는) 이제 사용되지 않습니다. 대신 \"-\"를 사용하십시오"
+msgid "year type \"%s\" is unsupported; use \"-\" instead"
+msgstr "연도 종류 \"%s\"은(는) 지원되지 않습니다. 대신 \"-\"를 사용하십시오"
 
-#: timezone/zic.c:1774
+#: timezone/zic.c:2257
 msgid "invalid weekday name"
 msgstr "요일 이름이 잘못됨"
 
-#: timezone/zic.c:1935
+#: timezone/zic.c:2435
 #, c-format
 msgid "reference clients mishandle more than %d transition times"
 msgstr "레퍼런스 클라이언트는 이행 과정을 %d번 넘게 잘못 처리합니다"
 
-#: timezone/zic.c:1939
+#: timezone/zic.c:2439
 msgid "pre-2014 clients may mishandle more than 1200 transition times"
 msgstr "2014년보다 전의 클라이언트는 이행 과정을 1200번 이상 잘못 처리할 수도 있습니다"
 
-#: timezone/zic.c:2058
+#: timezone/zic.c:2480
+#, c-format
+msgid "%s: pre-2021b clients may mishandle leap second expiry"
+msgstr "%s: 2021b 버전보다 전의 클라이언트는 윤초 만료를 잘못 처리할 수도 있습니다"
+
+#: timezone/zic.c:2488
+#, c-format
+msgid "%s: pre-2021b clients may mishandle leap second table truncation"
+msgstr "%s: 2021b 버전보다 전의 클라이언트는 윤초 테이블 자르기를 잘못 처리할 수도 있습니다"
+
+#: timezone/zic.c:2537
 msgid "too many transition times"
 msgstr "시각 이행이 너무 많습니다"
 
-#: timezone/zic.c:2297
+#: timezone/zic.c:2801
 #, c-format
 msgid "%%z UT offset magnitude exceeds 99:59:59"
 msgstr "%%z UT 오프셋 크기가 99:59:59를 넘어갑니다"
 
-#: timezone/zic.c:2673
-msgid "no POSIX environment variable for zone"
-msgstr "지역에 대해 POSIX 환경 변수가 없습니다"
+#: timezone/zic.c:3180
+msgid "no POSIX.1-2017 environment variable for zone"
+msgstr "지역에 대해 POSIX.1-2017 환경 변수가 없습니다"
 
-#: timezone/zic.c:2679
+#: timezone/zic.c:3187
 #, c-format
 msgid "%s: pre-%d clients may mishandle distant timestamps"
 msgstr "%s: %d년보다 전의 클라이언트는 타임스탬프를 잘못 처리할 수도 있습니다."
 
-#: timezone/zic.c:2818
+#: timezone/zic.c:3316
 msgid "two rules for same instant"
 msgstr "같은 순간에 대해 규칙 2개"
 
-#: timezone/zic.c:2889
+#: timezone/zic.c:3389
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr "단지 종료시각 이후에 사용하기 위한 시간대 약어를 결정할 수 없습니다"
 
-#: timezone/zic.c:2964
+#: timezone/zic.c:3490
 msgid "UT offset out of range"
 msgstr "UT 오프셋이 범위를 벗어났습니다"
 
-#: timezone/zic.c:2987
+#: timezone/zic.c:3513
 msgid "too many local time types"
 msgstr "지역 시각의 종류가 너무 많습니다"
 
-#: timezone/zic.c:3005
+#: timezone/zic.c:3531
 msgid "too many leap seconds"
 msgstr "윤초가 너무 많습니다"
 
-#: timezone/zic.c:3032
+#: timezone/zic.c:3535
+msgid "Rolling leap seconds not supported with -r"
+msgstr "-r 옵션에서 단계적 윤초는 지원하지 않습니다"
+
+#: timezone/zic.c:3562
 msgid "Leap seconds too close together"
 msgstr "윤초가 너무 가깝습니다"
 
-#: timezone/zic.c:3043
-msgid "\"#expires\" is obsolescent; use \"Expires\""
-msgstr "\"#expires\"는 이제 사용되지 않습니다. \"Expires\"를 사용하십시오"
-
-#: timezone/zic.c:3049
+#: timezone/zic.c:3573
 msgid "last Leap time does not precede Expires time"
 msgstr "마지막 윤초 시간이 Expires 시간보다 앞서지 않습니다"
 
-#: timezone/zic.c:3095
-msgid "Wild result from command execution"
-msgstr "명령 실행에서 제 멋대로의 결과가 나왔습니다"
-
-#: timezone/zic.c:3096
-#, c-format
-msgid "%s: command was '%s', result was %d\n"
-msgstr "%s: 명령은 '%s'였고, 결과는 %d였습니다\n"
-
-#: timezone/zic.c:3202
+#: timezone/zic.c:3680
 #, c-format
 msgid "\"%s\" is undocumented; use \"last%s\" instead"
 msgstr "\"%s\"은(는) 문서화되지 않았습니다. 대신 \"last%s\"를(를) 사용하십시오"
 
-#: timezone/zic.c:3233
+#: timezone/zic.c:3711
 #, c-format
 msgid "\"%s\" is ambiguous in pre-2017c zic"
 msgstr "\"%s\"은(는) 2017c 보다 전 버전의 zic에서 애매한 표현입니다"
 
-#: timezone/zic.c:3267
+#: timezone/zic.c:3742
 msgid "Odd number of quotation marks"
 msgstr "따옴표 수가 홀수입니다"
 
-#: timezone/zic.c:3361
+#: timezone/zic.c:3750
+msgid "Too many input fields"
+msgstr "입력 파일이 너무 많음"
+
+#: timezone/zic.c:3839
 msgid "use of 2/29 in non leap-year"
 msgstr "평년에 2월 29일을 사용"
 
-#: timezone/zic.c:3396
+#: timezone/zic.c:3865
 msgid "rule goes past start/end of month; will not work with pre-2004 versions of zic"
 msgstr "2004보다 전 버전의 zic에서는 달의 시작/끝을 넘어가는 규칙이 동작하지 않습니다"
 
-#: timezone/zic.c:3423
+#: timezone/zic.c:3892
 msgid "time zone abbreviation has fewer than 3 characters"
 msgstr "시간대 약어가 3자보다 짧습니다"
 
-#: timezone/zic.c:3425
+#: timezone/zic.c:3894
 msgid "time zone abbreviation has too many characters"
 msgstr "시간대 약어에 글자가 너무 많습니다"
 
-#: timezone/zic.c:3427
+#: timezone/zic.c:3896
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr "시간대 약어가 POSIX 표준과 다릅니다"
 
-#: timezone/zic.c:3433
+#: timezone/zic.c:3902
 msgid "too many, or too long, time zone abbreviations"
 msgstr "너무 많거나 너무 긴 시간대 약어"
 
-#: timezone/zic.c:3479
+#: timezone/zic.c:3953
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: %s 디렉터리를 만들 수 없습니다: %s"

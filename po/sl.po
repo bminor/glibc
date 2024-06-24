@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.22-pre1\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2024-01-31 00:48+0100\n"
+"POT-Creation-Date: 2024-06-19 22:30+0200\n"
 "PO-Revision-Date: 2016-01-04 23:59+0100\n"
 "Last-Translator: Primož Peterlin <primozz.peterlin@gmail.com>\n"
 "Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
@@ -142,7 +142,7 @@ msgstr ""
 #: iconv/iconvconfig.c:380 locale/programs/locale.c:275
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:88
 #: malloc/memusagestat.c:564 nss/getent.c:961 nss/makedb.c:371
-#: posix/getconf.c:503
+#: posix/getconf.c:505
 #, c-format
 msgid ""
 "For bug reporting instructions, please see:\n"
@@ -156,7 +156,7 @@ msgstr ""
 #: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
-#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:485
+#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:487
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -173,7 +173,7 @@ msgstr ""
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
-#: posix/getconf.c:490
+#: posix/getconf.c:492
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Avtor(ica): %s.\n"
@@ -459,129 +459,129 @@ msgstr "interna napaka: symidx je izven obsega tabele fptr"
 msgid "cannot create capability list"
 msgstr "seznama sposobnosti ni mogoče ustvariti"
 
-#: elf/dl-load.c:434
+#: elf/dl-load.c:423
 msgid "cannot allocate name record"
 msgstr "zapisa imena ni mogoče dodeliti"
 
-#: elf/dl-load.c:536 elf/dl-load.c:649 elf/dl-load.c:743 elf/dl-load.c:840
+#: elf/dl-load.c:525 elf/dl-load.c:638 elf/dl-load.c:732 elf/dl-load.c:829
 msgid "cannot create cache for search path"
 msgstr "predpomnilnika za iskalno pot ni mogoče ustvariti"
 
-#: elf/dl-load.c:632
+#: elf/dl-load.c:621
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "kopije RUNPATH/RPATH ni mogoče ustvariti"
 
-#: elf/dl-load.c:729
+#: elf/dl-load.c:718
 msgid "cannot create search path array"
 msgstr "polja iskalnih poti ni mogoče ustvariti"
 
-#: elf/dl-load.c:968
+#: elf/dl-load.c:957
 msgid "cannot stat shared object"
 msgstr "statusa deljenega predmeta ni mogoče ugotoviti"
 
-#: elf/dl-load.c:1059 elf/dl-load.c:2222
+#: elf/dl-load.c:1048 elf/dl-load.c:2163
 msgid "cannot create shared object descriptor"
 msgstr "deljenega predmetnega deskriptorja ni mogoče ustvariti"
 
-#: elf/dl-load.c:1078 elf/dl-load.c:1655 elf/dl-load.c:1763
+#: elf/dl-load.c:1067 elf/dl-load.c:1610 elf/dl-load.c:1718
 msgid "cannot read file data"
 msgstr "podatkov datoteke ni mogoče prebrati"
 
-#: elf/dl-load.c:1223
+#: elf/dl-load.c:1212
 msgid "object file has no loadable segments"
 msgstr "predmetna datoteka nima včitljivega segmenta"
 
-#: elf/dl-load.c:1240
+#: elf/dl-load.c:1229
 msgid "cannot dynamically load executable"
 msgstr "dinamično nalaganje izvedljive datoteke ni mogoče"
 
-#: elf/dl-load.c:1247
+#: elf/dl-load.c:1236
 msgid "object file has no dynamic section"
 msgstr "predmetna datoteka nima dinamične sekcije"
 
-#: elf/dl-load.c:1284
+#: elf/dl-load.c:1273
 msgid "shared object cannot be dlopen()ed"
 msgstr "dlopen() na deljenih predmetih ni mogoč"
 
-#: elf/dl-load.c:1297
+#: elf/dl-load.c:1286
 msgid "cannot allocate memory for program header"
 msgstr "dodelitev pomnilnika za glavo programa ni mogoča"
 
-#: elf/dl-load.c:1330 elf/dl-load.h:128
-msgid "cannot change memory protections"
-msgstr "sprememba zaščite pomnilnika ni mogoča"
-
-#: elf/dl-load.c:1354
+#: elf/dl-load.c:1309
 msgid "cannot enable executable stack as shared object requires"
 msgstr "izvedljivega sklada ni mogoče omogočiti, kot to zahteva deljeni predmet"
 
-#: elf/dl-load.c:1382
+#: elf/dl-load.c:1337
 msgid "cannot close file descriptor"
 msgstr "datotečnega deskriptorja ni mogoče zapreti"
 
-#: elf/dl-load.c:1655
+#: elf/dl-load.c:1610
 msgid "file too short"
 msgstr "datoteka je prekratka"
 
-#: elf/dl-load.c:1691
+#: elf/dl-load.c:1646
 msgid "invalid ELF header"
 msgstr "neveljavna glava ELF"
 
-#: elf/dl-load.c:1706
+#: elf/dl-load.c:1661
 msgid "ELF file data encoding not big-endian"
 msgstr "kodiranje podatkov datoteke ELF ni »big-endian«"
 
-#: elf/dl-load.c:1708
+#: elf/dl-load.c:1663
 msgid "ELF file data encoding not little-endian"
 msgstr "kodiranje podatkov datoteke ELF ni »little-endian«"
 
-#: elf/dl-load.c:1712
+#: elf/dl-load.c:1667
 msgid "ELF file version ident does not match current one"
 msgstr "identifikator različice datoteke ELF se ne ujema s trenutnim"
 
-#: elf/dl-load.c:1716
+#: elf/dl-load.c:1671
 msgid "ELF file OS ABI invalid"
 msgstr "OS ABI datoteke ELF ni veljaven"
 
-#: elf/dl-load.c:1719
+#: elf/dl-load.c:1674
 msgid "ELF file ABI version invalid"
 msgstr "različica ABI datoteke ELF ni veljavna"
 
-#: elf/dl-load.c:1722
+#: elf/dl-load.c:1677
 msgid "nonzero padding in e_ident"
 msgstr "neničelno zapolnjenje pri e_ident"
 
-#: elf/dl-load.c:1725
+#: elf/dl-load.c:1680
 msgid "internal error"
 msgstr "interna napaka"
 
-#: elf/dl-load.c:1732
+#: elf/dl-load.c:1687
 msgid "ELF file version does not match current one"
 msgstr "različica datoteke ELF se ne ujema s trenutno"
 
-#: elf/dl-load.c:1744
+#: elf/dl-load.c:1699
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "samo ET_DYN in ET_EXEC je mogoče naložiti"
 
-#: elf/dl-load.c:1749
+#: elf/dl-load.c:1704
 msgid "ELF file's phentsize not the expected size"
 msgstr "phentsize datoteke ELF ni pričakovane velikosti"
 
-#: elf/dl-load.c:2241
+#: elf/dl-load.c:2182
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "napačen razred ELF: ELFCLASS64"
 
-#: elf/dl-load.c:2242
+#: elf/dl-load.c:2183
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "napačen razred ELF: ELFCLASS32"
 
-#: elf/dl-load.c:2245
+#: elf/dl-load.c:2186
 msgid "cannot open shared object file"
 msgstr "deljene predmetne datoteke ni mogoče odpreti"
 
 #: elf/dl-load.h:126
 msgid "failed to map segment from shared object"
 msgstr "preslikava segmenta iz deljenega predmeta ni uspela"
+
+#: elf/dl-load.h:128
+msgid "cannot change memory protections"
+msgstr "sprememba zaščite pomnilnika ni mogoča"
 
 #: elf/dl-load.h:130
 msgid "cannot map zero-fill pages"
@@ -636,7 +636,7 @@ msgstr "dodatne zaščite pomnilnika po premiku ni mogoče uporabiti"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT uporabljen v kodi se ni dinamično naložil"
 
-#: elf/dl-tls.c:1052
+#: elf/dl-tls.c:1059
 msgid "cannot create TLS data structures"
 msgstr "podatkovnih struktur TLS ni mogoče ustvariti"
 
@@ -805,7 +805,7 @@ msgstr "ob izbiri -r je potrebo absolutno ime za nastavitveno datoteko"
 #  Morda ,,Zmanjkalo pomnilnika''?
 #: elf/ldconfig.c:1135 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
-#: posix/getconf.c:458 posix/getconf.c:697
+#: posix/getconf.c:460 posix/getconf.c:699
 #, c-format
 msgid "memory exhausted"
 msgstr "pomnilnik porabljen"
@@ -1922,7 +1922,7 @@ msgstr "vejitev ni mogoča"
 msgid "cannot create temporary file"
 msgstr "začasne datoteke ni mogoče ustvariti"
 
-#: posix/getconf.c:669 posix/getconf.c:685
+#: posix/getconf.c:671 posix/getconf.c:687
 msgid "undefined"
 msgstr "nedoločeno"
 
@@ -2004,7 +2004,7 @@ msgstr "Zaklepaj ) ali \\) brez para"
 msgid "No previous regular expression"
 msgstr "Manjkajoč prejšnji regularni izraz"
 
-#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:375 timezone/zic.c:564
+#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:445 timezone/zic.c:652
 msgid "I/O error"
 msgstr "V/I napaka"
 
@@ -2605,16 +2605,16 @@ msgstr "Parametrični niz nepravilno kodiran"
 # ! INEXACT
 # #-#-#-#-#  gnulib-3.0.0.6062.a6b16.sl.po (gnulib 3.0.0.6062.a6b16)  #-#-#-#-#
 # ! INEXACT
-#: timezone/zic.c:432
+#: timezone/zic.c:463
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: Pomnilnik porabljen: %s\n"
 
-#: timezone/zic.c:554
+#: timezone/zic.c:588
+msgid "standard input"
+msgstr "standardni vhod"
+
+#: timezone/zic.c:639
 #, c-format
 msgid "warning: "
 msgstr "opozorilo: "
-
-#: timezone/zic.c:1191
-msgid "standard input"
-msgstr "standardni vhod"

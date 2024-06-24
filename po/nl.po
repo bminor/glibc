@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc-2.37.9000\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-31 00:48+0100\n"
+"POT-Creation-Date: 2024-06-19 22:30+0200\n"
 "PO-Revision-Date: 2023-07-24 09:34+0200\n"
 "Last-Translator: Benno Schulenberg <vertaling@coevern.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
@@ -164,7 +164,7 @@ msgstr ""
 #: iconv/iconvconfig.c:380 locale/programs/locale.c:275
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:88
 #: malloc/memusagestat.c:564 nss/getent.c:961 nss/makedb.c:371
-#: posix/getconf.c:503
+#: posix/getconf.c:505
 #, c-format
 msgid ""
 "For bug reporting instructions, please see:\n"
@@ -178,7 +178,7 @@ msgstr ""
 #: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
-#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:485
+#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:487
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -195,7 +195,7 @@ msgstr ""
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
-#: posix/getconf.c:490
+#: posix/getconf.c:492
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Geschreven door %s.\n"
@@ -524,137 +524,137 @@ msgstr "kan HWCAP-prioriteiten niet aanmaken"
 msgid "cannot create capability list"
 msgstr "kan privilegeslijst niet aanmaken"
 
-#: elf/dl-load.c:434
+#: elf/dl-load.c:423
 msgid "cannot allocate name record"
 msgstr "kan geen geheugen reserveren voor naamrecord"
 
-#: elf/dl-load.c:536 elf/dl-load.c:649 elf/dl-load.c:743 elf/dl-load.c:840
+#: elf/dl-load.c:525 elf/dl-load.c:638 elf/dl-load.c:732 elf/dl-load.c:829
 msgid "cannot create cache for search path"
 msgstr "kan cache voor zoekpad niet aanmaken"
 
-#: elf/dl-load.c:632
+#: elf/dl-load.c:621
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "kan geen kopie van RUNPATH/RPATH maken"
 
-#: elf/dl-load.c:729
+#: elf/dl-load.c:718
 msgid "cannot create search path array"
 msgstr "kan zoekpad-array niet aanmaken"
 
-#: elf/dl-load.c:968
+#: elf/dl-load.c:957
 msgid "cannot stat shared object"
 msgstr "kan gedeeld object niet vinden"
 
-#: elf/dl-load.c:1059 elf/dl-load.c:2222
+#: elf/dl-load.c:1048 elf/dl-load.c:2163
 msgid "cannot create shared object descriptor"
 msgstr "kan descriptor voor gedeeld object niet aanmaken"
 
-#: elf/dl-load.c:1078 elf/dl-load.c:1655 elf/dl-load.c:1763
+#: elf/dl-load.c:1067 elf/dl-load.c:1610 elf/dl-load.c:1718
 msgid "cannot read file data"
 msgstr "kan bestandsgegevens niet lezen"
 
-#: elf/dl-load.c:1131 elf/dl-map-segments.h:117
+#: elf/dl-load.c:1120 elf/dl-map-segments.h:117
 msgid "ELF load command address/offset not page-aligned"
 msgstr "adres/positie in ELF-laadopdracht is niet pagina-uitgelijnd"
 
-#: elf/dl-load.c:1223
+#: elf/dl-load.c:1212
 msgid "object file has no loadable segments"
 msgstr "objectbestand heeft geen laadbare segmenten"
 
-#: elf/dl-load.c:1240
+#: elf/dl-load.c:1229
 msgid "cannot dynamically load executable"
 msgstr "kan uitvoerbaar bestand niet dynamisch laden"
 
-#: elf/dl-load.c:1247
+#: elf/dl-load.c:1236
 msgid "object file has no dynamic section"
 msgstr "objectbestand heeft geen dynamische sectie"
 
-#: elf/dl-load.c:1282
+#: elf/dl-load.c:1271
 msgid "cannot dynamically load position-independent executable"
 msgstr "kan positie-onafhankelijk uitvoerbaar bestand niet dynamisch laden"
 
-#: elf/dl-load.c:1284
+#: elf/dl-load.c:1273
 msgid "shared object cannot be dlopen()ed"
 msgstr "gedeeld object kan niet met dlopen() geopend worden -- heeft DF_1_NOOPEN-vlag"
 
-#: elf/dl-load.c:1297
+#: elf/dl-load.c:1286
 msgid "cannot allocate memory for program header"
 msgstr "kan geen geheugen reserveren voor programmakop"
 
-#: elf/dl-load.c:1330 elf/dl-load.h:128
-msgid "cannot change memory protections"
-msgstr "kan geheugenbeschermingen niet veranderen"
-
-#: elf/dl-load.c:1354
+#: elf/dl-load.c:1309
 msgid "cannot enable executable stack as shared object requires"
 msgstr "kan uitvoerbare stack niet aanzetten zoals gedeeld object vereist"
 
-#: elf/dl-load.c:1382
+#: elf/dl-load.c:1337
 msgid "cannot close file descriptor"
 msgstr "kan bestandsdescriptor niet sluiten"
 
-#: elf/dl-load.c:1655
+#: elf/dl-load.c:1610
 msgid "file too short"
 msgstr "bestand is te kort"
 
-#: elf/dl-load.c:1691
+#: elf/dl-load.c:1646
 msgid "invalid ELF header"
 msgstr "ongeldige ELF-header"
 
-#: elf/dl-load.c:1706
+#: elf/dl-load.c:1661
 msgid "ELF file data encoding not big-endian"
 msgstr "gegevenscodering van ELF-bestand is niet big-endian"
 
-#: elf/dl-load.c:1708
+#: elf/dl-load.c:1663
 msgid "ELF file data encoding not little-endian"
 msgstr "gegevenscodering van ELF-bestand is niet little-endian"
 
-#: elf/dl-load.c:1712
+#: elf/dl-load.c:1667
 msgid "ELF file version ident does not match current one"
 msgstr "ELF-bestands-identversie komt niet overeen met huidige"
 
-#: elf/dl-load.c:1716
+#: elf/dl-load.c:1671
 msgid "ELF file OS ABI invalid"
 msgstr "OS-ABI van ELF-bestand is ongeldig"
 
-#: elf/dl-load.c:1719
+#: elf/dl-load.c:1674
 msgid "ELF file ABI version invalid"
 msgstr "ABI-versie van ELF-bestand is ongeldig"
 
-#: elf/dl-load.c:1722
+#: elf/dl-load.c:1677
 msgid "nonzero padding in e_ident"
 msgstr "opvulling met niet-nullen in e_ident()"
 
-#: elf/dl-load.c:1725
+#: elf/dl-load.c:1680
 msgid "internal error"
 msgstr "**interne fout**"
 
-#: elf/dl-load.c:1732
+#: elf/dl-load.c:1687
 msgid "ELF file version does not match current one"
 msgstr "ELF-bestandsversie komt niet overeen met huidige"
 
-#: elf/dl-load.c:1744
+#: elf/dl-load.c:1699
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "alleen ET_DYN en ET_EXEC kunnen worden geladen"
 
-#: elf/dl-load.c:1749
+#: elf/dl-load.c:1704
 msgid "ELF file's phentsize not the expected size"
 msgstr "'phentsize' van ELF-bestand heeft niet de verwachte grootte"
 
-#: elf/dl-load.c:2241
+#: elf/dl-load.c:2182
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "verkeerde ELF-klasse: ELFCLASS64"
 
-#: elf/dl-load.c:2242
+#: elf/dl-load.c:2183
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "verkeerde ELF-klasse: ELFCLASS32"
 
-#: elf/dl-load.c:2245
+#: elf/dl-load.c:2186
 msgid "cannot open shared object file"
 msgstr "kan gedeeld objectbestand niet openen"
 
 #: elf/dl-load.h:126
 msgid "failed to map segment from shared object"
 msgstr "kan segment van gedeeld object niet in het geheugen plaatsen"
+
+#: elf/dl-load.h:128
+msgid "cannot change memory protections"
+msgstr "kan geheugenbeschermingen niet veranderen"
 
 #: elf/dl-load.h:130
 msgid "cannot map zero-fill pages"
@@ -715,7 +715,7 @@ msgstr "kan extra geheugenbescherming niet toepassen na verplaatsing"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT is gebruikt in code die niet dynamisch geladen is"
 
-#: elf/dl-tls.c:1052
+#: elf/dl-tls.c:1059
 msgid "cannot create TLS data structures"
 msgstr "kan TLS-gegevensstructuren niet aanmaken"
 
@@ -925,7 +925,7 @@ msgstr "bij gebruik van '-r' is voor het configuratiebestand een absoluut pad ve
 
 #: elf/ldconfig.c:1135 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
-#: posix/getconf.c:458 posix/getconf.c:697
+#: posix/getconf.c:460 posix/getconf.c:699
 #, c-format
 msgid "memory exhausted"
 msgstr "onvoldoende geheugen beschikbaar"
@@ -4174,22 +4174,22 @@ msgstr "%zu bytes in cache %s zijn vrijgegeven"
 msgid "no more memory for database '%s'"
 msgstr "onvoldoende geheugen beschikbaar voor gegevensbank '%s'"
 
-#: nscd/netgroupcache.c:121
+#: nscd/netgroupcache.c:198
 #, c-format
 msgid "Haven't found \"%s\" in netgroup cache!"
 msgstr "Item \"%s\" niet gevonden in groeps-cache!"
 
-#: nscd/netgroupcache.c:123
+#: nscd/netgroupcache.c:200
 #, c-format
 msgid "Reloading \"%s\" in netgroup cache!"
 msgstr "Herladen van \"%s\" in groeps-cache!"
 
-#: nscd/netgroupcache.c:469
+#: nscd/netgroupcache.c:486
 #, c-format
 msgid "Haven't found \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "Item \"%s (%s,%s,%s)\" niet gevonden in groeps-cache!"
 
-#: nscd/netgroupcache.c:472
+#: nscd/netgroupcache.c:489
 #, c-format
 msgid "Reloading \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "Herladen van \"%s (%s,%s,%s)\" in groeps-cache!"
@@ -4792,17 +4792,17 @@ msgstr "kan SELinux-context niet initialiseren"
 msgid "cannot set file creation context for `%s'"
 msgstr "kan aanmaakcontext voor '%s' niet instellen"
 
-#: posix/getconf.c:417
+#: posix/getconf.c:419
 #, c-format
 msgid "Usage: %s [-v specification] variable_name [pathname]\n"
 msgstr "Gebruik:  %s [-v specificatie] naam_van_variabele [padnaam]\n"
 
-#: posix/getconf.c:420
+#: posix/getconf.c:422
 #, c-format
 msgid "       %s -a [pathname]\n"
 msgstr "          %s -a [padnaam]\n"
 
-#: posix/getconf.c:496
+#: posix/getconf.c:498
 #, c-format
 msgid ""
 "Usage: getconf [-v SPEC] VAR\n"
@@ -4821,21 +4821,21 @@ msgstr ""
 "SPEC weergeven.\n"
 "\n"
 
-#: posix/getconf.c:572
+#: posix/getconf.c:574
 #, c-format
 msgid "unknown specification \"%s\""
 msgstr "onbekende specificatie '%s'"
 
-#: posix/getconf.c:624
+#: posix/getconf.c:626
 #, c-format
 msgid "Couldn't execute %s"
 msgstr "Kan %s niet uitvoeren"
 
-#: posix/getconf.c:669 posix/getconf.c:685
+#: posix/getconf.c:671 posix/getconf.c:687
 msgid "undefined"
 msgstr "ongedefinieerd"
 
-#: posix/getconf.c:707
+#: posix/getconf.c:709
 #, c-format
 msgid "Unrecognized variable `%s'"
 msgstr "Onbekende variabele '%s'"
@@ -5129,7 +5129,7 @@ msgstr "Uitvoerbuffers zijn beschikbaar"
 msgid "Input message available"
 msgstr "Invoerbericht is beschikbaar"
 
-#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:375 timezone/zic.c:564
+#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:445 timezone/zic.c:652
 msgid "I/O error"
 msgstr "Invoer-/uitvoerfout"
 
@@ -6551,24 +6551,24 @@ msgstr "hercompileer het gedeeld object met IBT-ondersteuning"
 msgid "rebuild shared object with SHSTK support enabled"
 msgstr "hercompileer het gedeeld object met SHSTK-ondersteuning"
 
-#: timezone/zdump.c:332
+#: timezone/zdump.c:402
 msgid "has characters other than ASCII alphanumerics, '-' or '+'"
 msgstr "bevat andere tekens dan ASCII-letters en -cijfers en '+' en '-'"
 
-#: timezone/zdump.c:334
+#: timezone/zdump.c:404
 msgid "has fewer than 3 characters"
 msgstr "heeft minder dan drie tekens"
 
-#: timezone/zdump.c:336
+#: timezone/zdump.c:406
 msgid "has more than 6 characters"
 msgstr "heeft meer dan zes tekens"
 
-#: timezone/zdump.c:341
+#: timezone/zdump.c:411
 #, c-format
 msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
 msgstr "%s: Waarschuwing: zone \"%s\", afkorting \"%s\" %s\n"
 
-#: timezone/zdump.c:387
+#: timezone/zdump.c:457
 #, c-format
 msgid ""
 "%s: usage: %s OPTIONS TIMEZONE ...\n"
@@ -6597,503 +6597,428 @@ msgstr ""
 "Rapporteer gebreken in het programma aan %s;\n"
 "meld fouten in de vertaling aan <vertaling@vrijschrift.nl>.\n"
 
-#: timezone/zdump.c:473
+#: timezone/zdump.c:543
 #, c-format
 msgid "%s: wild -c argument %s\n"
 msgstr "%s: extra argument %s bij optie -c\n"
 
-#: timezone/zdump.c:506
+#: timezone/zdump.c:576
 #, c-format
 msgid "%s: wild -t argument %s\n"
 msgstr "%s: extra argument %s bij optie -t\n"
 
-#: timezone/zic.c:432
+#: timezone/zic.c:463
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: Onvoldoende geheugen beschikbaar: %s\n"
 
-#: timezone/zic.c:440
+#: timezone/zic.c:470
 msgid "size overflow"
 msgstr "grootteoverloop"
 
-#: timezone/zic.c:450
-msgid "alignment overflow"
-msgstr "uitlijningsoverloop"
-
-#: timezone/zic.c:498
+#: timezone/zic.c:559
 msgid "integer overflow"
 msgstr "geheelgetaloverloop"
 
-#: timezone/zic.c:532
-#, c-format
-msgid "\"%s\", line %<PRIdMAX>: "
-msgstr "\"%s\", regel %<PRIdMAX>: "
-
-#: timezone/zic.c:535
-#, c-format
-msgid " (rule from \"%s\", line %<PRIdMAX>)"
-msgstr " (voorschrift uit \"%s\", regel %<PRIdMAX>)"
-
-#: timezone/zic.c:554
-#, c-format
-msgid "warning: "
-msgstr "waarschuwing: "
-
-#: timezone/zic.c:579
-#, c-format
-msgid ""
-"%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
-"\t[ -b {slim|fat} ] [ -d directory ] [ -l localtime ] [ -L leapseconds ] \\\n"
-"\t[ -p posixrules ] [ -r '[@lo][/@hi]' ] [ -t localtime-link ] \\\n"
-"\t[ filename ... ]\n"
-"\n"
-"Report bugs to %s.\n"
-msgstr ""
-"Gebruik:  %s [-v] [-b {slim|fat}] [-d map] [-l lokaletijdzone]\\\n"
-"               [-L schrikkelsecondenbestand] [-p posixvoorschriftenzone]\\\n"
-"               [-r '[@lo][/@hi]'] [-t lokaletijdlink]  [bestand...]\\\n"
-"     of:  %s [--version] [--help]\n"
-"\n"
-"Rapporteer gebreken in het programma aan %s;\n"
-"meld fouten in de vertaling aan <vertaling@vrijschrift.nl>.\n"
-
-#: timezone/zic.c:604
-#, c-format
-msgid "%s: Can't chdir to %s: %s\n"
-msgstr "%s: Kan huidige map niet wijzigen naar %s: %s\n"
-
-#: timezone/zic.c:698
-msgid "wild compilation-time specification of zic_t"
-msgstr "compilatiefout: type 'zic_t' heeft te weinig bits"
-
-#: timezone/zic.c:716 timezone/zic.c:720
-msgid "incompatible -b options"
-msgstr "niet-samengaande opties -b"
-
-#: timezone/zic.c:723
-#, c-format
-msgid "invalid option: -b '%s'"
-msgstr "ongeldige optie -b '%s'"
-
-#: timezone/zic.c:730
-#, c-format
-msgid "%s: More than one -d option specified\n"
-msgstr "%s: Optie -d is meermaals gegeven\n"
-
-#: timezone/zic.c:740
-#, c-format
-msgid "%s: More than one -l option specified\n"
-msgstr "%s: Optie -l is meermaals gegeven\n"
-
-#: timezone/zic.c:750
-#, c-format
-msgid "%s: More than one -p option specified\n"
-msgstr "%s: Optie -p is meermaals gegeven\n"
-
-#: timezone/zic.c:758
-#, c-format
-msgid "%s: More than one -t option specified\n"
-msgstr "%s: Optie -t is meermaals gegeven\n"
-
-#: timezone/zic.c:767
-msgid "-y is obsolescent"
-msgstr "-y is verouderd"
-
-#: timezone/zic.c:771
-#, c-format
-msgid "%s: More than one -y option specified\n"
-msgstr "%s: Optie -y is meermaals gegeven\n"
-
-#: timezone/zic.c:781
-#, c-format
-msgid "%s: More than one -L option specified\n"
-msgstr "%s: Optie -L is meermaals gegeven\n"
-
-#: timezone/zic.c:792
-#, c-format
-msgid "%s: More than one -r option specified\n"
-msgstr "%s: Optie -r is meermaals gegeven\n"
-
-#: timezone/zic.c:798
-#, c-format
-msgid "%s: invalid time range: %s\n"
-msgstr "%s: ongeldig tijdsbereik: %s\n"
-
-#: timezone/zic.c:805
-msgid "-s ignored"
-msgstr "optie '-s' is genegeerd"
-
-#: timezone/zic.c:848
-msgid "link to link"
-msgstr "koppeling naar een andere koppeling"
-
-#: timezone/zic.c:851 timezone/zic.c:855
+#: timezone/zic.c:585
 msgid "command line"
 msgstr "opdrachtregel"
-
-#: timezone/zic.c:871
-msgid "empty file name"
-msgstr "lege bestandsnaam"
-
-#: timezone/zic.c:874
-#, c-format
-msgid "file name '%s' begins with '/'"
-msgstr "bestandsnaam '%s' begint met '/'"
-
-#: timezone/zic.c:884
-#, c-format
-msgid "file name '%s' contains '%.*s' component"
-msgstr "bestandsnaam '%s' bevat een '%.*s'-component"
-
-#: timezone/zic.c:890
-#, c-format
-msgid "file name '%s' component contains leading '-'"
-msgstr "bestandsnaam '%s' bevat component met een leidende '-'"
-
-#: timezone/zic.c:893
-#, c-format
-msgid "file name '%s' contains overlength component '%.*s...'"
-msgstr "bestandsnaam '%s' bevat overlange component '%.*s...'"
-
-#: timezone/zic.c:921
-#, c-format
-msgid "file name '%s' contains byte '%c'"
-msgstr "bestandsnaam '%s' bevat byte '%c'"
-
-#: timezone/zic.c:922
-#, c-format
-msgid "file name '%s' contains byte '\\%o'"
-msgstr "bestandsnaam '%s' bevat byte '\\%o'"
-
-#: timezone/zic.c:992
-#, c-format
-msgid "%s: link from %s/%s failed: %s\n"
-msgstr "%s: aanmaken van koppeling vanaf %s/%s is mislukt: %s\n"
-
-#: timezone/zic.c:1002 timezone/zic.c:1992
-#, c-format
-msgid "%s: Can't remove %s/%s: %s\n"
-msgstr "%s: Kan %s/%s niet verwijderen: %s\n"
-
-#: timezone/zic.c:1026
-#, c-format
-msgid "symbolic link used because hard link failed: %s"
-msgstr "symbolische koppeling gemaakt omdat harde koppeling mislukte: %s"
-
-#: timezone/zic.c:1034
-#, c-format
-msgid "%s: Can't read %s/%s: %s\n"
-msgstr "%s: Kan %s/%s niet lezen: %s\n"
-
-#: timezone/zic.c:1041 timezone/zic.c:2005
-#, c-format
-msgid "%s: Can't create %s/%s: %s\n"
-msgstr "%s: Kan %s/%s niet aanmaken: %s\n"
-
-#: timezone/zic.c:1050
-#, c-format
-msgid "copy used because hard link failed: %s"
-msgstr "kopie gemaakt omdat harde koppeling mislukte: %s"
-
-#: timezone/zic.c:1053
-#, c-format
-msgid "copy used because symbolic link failed: %s"
-msgstr "kopie gemaakt omdat symbolische koppeling mislukte: %s"
-
-#: timezone/zic.c:1122 timezone/zic.c:1124
-msgid "same rule name in multiple files"
-msgstr "dezelfde voorschriftnaam in meerdere bestanden"
-
-#: timezone/zic.c:1171
-#, c-format
-msgid "%s in ruleless zone"
-msgstr "%s in voorschriftloze zone"
 
 #
 # This is the name of the program's standard input.  The place input
 # from getchar (et al) comes from.
 #
-#: timezone/zic.c:1191
+#: timezone/zic.c:588
 msgid "standard input"
 msgstr "standaardinvoer"
 
-#: timezone/zic.c:1196
+#: timezone/zic.c:616
+#, c-format
+msgid "\"%s\", line %<PRIdMAX>: "
+msgstr "\"%s\", regel %<PRIdMAX>: "
+
+#: timezone/zic.c:620
+#, c-format
+msgid " (rule from \"%s\", line %<PRIdMAX>)"
+msgstr " (voorschrift uit \"%s\", regel %<PRIdMAX>)"
+
+#: timezone/zic.c:639
+#, c-format
+msgid "warning: "
+msgstr "waarschuwing: "
+
+#: timezone/zic.c:695
+#, c-format
+msgid "%s: Can't chdir to %s: %s\n"
+msgstr "%s: Kan huidige map niet wijzigen naar %s: %s\n"
+
+#: timezone/zic.c:992
+msgid "wild compilation-time specification of zic_t"
+msgstr "compilatiefout: type 'zic_t' heeft te weinig bits"
+
+#: timezone/zic.c:1011 timezone/zic.c:1015
+msgid "incompatible -b options"
+msgstr "niet-samengaande opties -b"
+
+#: timezone/zic.c:1018
+#, c-format
+msgid "invalid option: -b '%s'"
+msgstr "ongeldige optie -b '%s'"
+
+#: timezone/zic.c:1025
+#, c-format
+msgid "%s: More than one -d option specified\n"
+msgstr "%s: Optie -d is meermaals gegeven\n"
+
+#: timezone/zic.c:1036
+#, c-format
+msgid "%s: More than one -l option specified\n"
+msgstr "%s: Optie -l is meermaals gegeven\n"
+
+#: timezone/zic.c:1047
+#, c-format
+msgid "%s: More than one -p option specified\n"
+msgstr "%s: Optie -p is meermaals gegeven\n"
+
+#: timezone/zic.c:1056
+#, c-format
+msgid "%s: More than one -t option specified\n"
+msgstr "%s: Optie -t is meermaals gegeven\n"
+
+#: timezone/zic.c:1071
+#, c-format
+msgid "%s: More than one -L option specified\n"
+msgstr "%s: Optie -L is meermaals gegeven\n"
+
+#: timezone/zic.c:1083
+#, c-format
+msgid "%s: More than one -r option specified\n"
+msgstr "%s: Optie -r is meermaals gegeven\n"
+
+#: timezone/zic.c:1090
+#, c-format
+msgid "%s: invalid time range: %s\n"
+msgstr "%s: ongeldig tijdsbereik: %s\n"
+
+#: timezone/zic.c:1104
+msgid "-s ignored"
+msgstr "optie '-s' is genegeerd"
+
+#: timezone/zic.c:1171
+msgid "empty file name"
+msgstr "lege bestandsnaam"
+
+#: timezone/zic.c:1174
+#, c-format
+msgid "file name '%s' begins with '/'"
+msgstr "bestandsnaam '%s' begint met '/'"
+
+#: timezone/zic.c:1184
+#, c-format
+msgid "file name '%s' contains '%.*s' component"
+msgstr "bestandsnaam '%s' bevat een '%.*s'-component"
+
+#: timezone/zic.c:1190
+#, c-format
+msgid "file name '%s' component contains leading '-'"
+msgstr "bestandsnaam '%s' bevat component met een leidende '-'"
+
+#: timezone/zic.c:1193
+#, c-format
+msgid "file name '%s' contains overlength component '%.*s...'"
+msgstr "bestandsnaam '%s' bevat overlange component '%.*s...'"
+
+#: timezone/zic.c:1221
+#, c-format
+msgid "file name '%s' contains byte '%c'"
+msgstr "bestandsnaam '%s' bevat byte '%c'"
+
+#: timezone/zic.c:1222
+#, c-format
+msgid "file name '%s' contains byte '\\%o'"
+msgstr "bestandsnaam '%s' bevat byte '\\%o'"
+
+#: timezone/zic.c:1369
+#, c-format
+msgid "%s: Can't create %s/%s: %s\n"
+msgstr "%s: Kan %s/%s niet aanmaken: %s\n"
+
+#: timezone/zic.c:1463
+#, c-format
+msgid "%s: Can't remove %s/%s: %s\n"
+msgstr "%s: Kan %s/%s niet verwijderen: %s\n"
+
+#: timezone/zic.c:1536
+#, c-format
+msgid "symbolic link used because hard link failed: %s"
+msgstr "symbolische koppeling gemaakt omdat harde koppeling mislukte: %s"
+
+#: timezone/zic.c:1544
+#, c-format
+msgid "%s: Can't read %s/%s: %s\n"
+msgstr "%s: Kan %s/%s niet lezen: %s\n"
+
+#: timezone/zic.c:1554
+#, c-format
+msgid "copy used because hard link failed: %s"
+msgstr "kopie gemaakt omdat harde koppeling mislukte: %s"
+
+#: timezone/zic.c:1557
+#, c-format
+msgid "copy used because symbolic link failed: %s"
+msgstr "kopie gemaakt omdat symbolische koppeling mislukte: %s"
+
+#: timezone/zic.c:1608 timezone/zic.c:1610
+msgid "same rule name in multiple files"
+msgstr "dezelfde voorschriftnaam in meerdere bestanden"
+
+#: timezone/zic.c:1656
+#, c-format
+msgid "%s in ruleless zone"
+msgstr "%s in voorschriftloze zone"
+
+#: timezone/zic.c:1688
+msgid "line too long"
+msgstr "regel is te lang"
+
+#: timezone/zic.c:1709
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr "%s: Kan %s niet openen: %s\n"
 
-#: timezone/zic.c:1207
-msgid "line too long"
-msgstr "regel is te lang"
-
-#: timezone/zic.c:1230
+#: timezone/zic.c:1734
 msgid "input line of unknown type"
 msgstr "invoerregel is van onbekende soort"
 
-#: timezone/zic.c:1253 timezone/zic.c:1699 timezone/zic.c:1721
-#, c-format
-msgid "%s: panic: Invalid l_value %d\n"
-msgstr "%s: **interne fout** -- ongeldige regelcode %d\n"
-
-#: timezone/zic.c:1262
+#: timezone/zic.c:1761
 msgid "expected continuation line not found"
 msgstr "verwachte regelcontinuering is niet gevonden"
 
-#: timezone/zic.c:1298
+#: timezone/zic.c:1797
 msgid "fractional seconds rejected by pre-2018 versions of zic"
 msgstr "fractionele seconden worden geweigerd door versies van 'zic' van voor 2018"
 
-#: timezone/zic.c:1316 timezone/zic.c:3282
+#: timezone/zic.c:1815 timezone/zic.c:3761
 msgid "time overflow"
 msgstr "tijdsoverloop"
 
-#: timezone/zic.c:1322
+#: timezone/zic.c:1821
 msgid "values over 24 hours not handled by pre-2007 versions of zic"
 msgstr "versies van 'zic' van voor 2007 kunnen uren boven de 24 niet aan"
 
-#: timezone/zic.c:1340
+#: timezone/zic.c:1839
 msgid "invalid saved time"
 msgstr "ongeldige opgeslagen tijd"
 
-#: timezone/zic.c:1351
+#: timezone/zic.c:1850
 msgid "wrong number of fields on Rule line"
 msgstr "verkeerd aantal velden op 'Rule'-regel"
 
-#: timezone/zic.c:1360
+#: timezone/zic.c:1859
 #, c-format
 msgid "Invalid rule name \"%s\""
 msgstr "Ongeldige regelnaam \"%s\""
 
-#: timezone/zic.c:1382
+#: timezone/zic.c:1883
 msgid "wrong number of fields on Zone line"
 msgstr "verkeerd aantal velden op 'Zone'-regel"
 
-#: timezone/zic.c:1387
+#: timezone/zic.c:1887
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr "De regel \"Zone %s\" en optie -l sluiten elkaar uit"
 
-#: timezone/zic.c:1393
+#: timezone/zic.c:1892
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr "De regel \"Zone %s\" en optie -p sluiten elkaar uit"
 
-#: timezone/zic.c:1400
+#: timezone/zic.c:1899
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %<PRIdMAX>)"
 msgstr "dubbele zonenaam '%s' (in bestand %s, regel %<PRIdMAX>)"
 
-#: timezone/zic.c:1414
+#: timezone/zic.c:1913
 msgid "wrong number of fields on Zone continuation line"
 msgstr "verkeerd aantal velden op 'Zone'-continueringsregel"
 
-#: timezone/zic.c:1454
+#: timezone/zic.c:1952
 msgid "invalid UT offset"
 msgstr "ongeldige verschuiving ten opzichte van UTC"
 
-#: timezone/zic.c:1458
+#: timezone/zic.c:1956
 msgid "invalid abbreviation format"
 msgstr "ongeldige opmaak voor afkorting"
 
-#: timezone/zic.c:1467
+#: timezone/zic.c:1986
+msgid "Zone continuation line end time is not after end time of previous line"
+msgstr "'Zone'-continueringsregel: eindtijd ligt niet na eindtijd van vorige regel"
+
+#: timezone/zic.c:1997
 #, c-format
 msgid "format '%s' not handled by pre-2015 versions of zic"
 msgstr "opmaak '%s' werkt niet in versies van 'zic' van voor 2015"
 
-#: timezone/zic.c:1494
-msgid "Zone continuation line end time is not after end time of previous line"
-msgstr "'Zone'-continueringsregel: eindtijd ligt niet na eindtijd van vorige regel"
-
-#: timezone/zic.c:1526
+#: timezone/zic.c:2027
 msgid "invalid leaping year"
 msgstr "ongeldig schrikkeljaar"
 
-#: timezone/zic.c:1548 timezone/zic.c:1653
+#: timezone/zic.c:2049 timezone/zic.c:2154
 msgid "invalid month name"
 msgstr "ongeldige maandnaam"
 
-#: timezone/zic.c:1561 timezone/zic.c:1769 timezone/zic.c:1783
+#: timezone/zic.c:2062 timezone/zic.c:2252 timezone/zic.c:2266
 msgid "invalid day of month"
 msgstr "ongeldige dag van maand"
 
-#: timezone/zic.c:1566
+#: timezone/zic.c:2067
 msgid "time too small"
 msgstr "tijdswaarde is te klein"
 
-#: timezone/zic.c:1570
+#: timezone/zic.c:2071
 msgid "time too large"
 msgstr "tijdswaarde is te groot"
 
-#: timezone/zic.c:1574 timezone/zic.c:1682
+#: timezone/zic.c:2075 timezone/zic.c:2183
 msgid "invalid time of day"
 msgstr "ongeldige tijd van de dag"
 
-#: timezone/zic.c:1577
+#: timezone/zic.c:2078
 msgid "leap second precedes Epoch"
 msgstr "schrikkelseconde valt voor begin van tijdperk"
 
-#: timezone/zic.c:1585
+#: timezone/zic.c:2086
 msgid "wrong number of fields on Leap line"
 msgstr "verkeerd aantal velden op 'Leap'-regel"
 
-#: timezone/zic.c:1591
+#: timezone/zic.c:2092
 msgid "invalid Rolling/Stationary field on Leap line"
 msgstr "ongeldig 'Rolling'/'Stationary'-veld op 'Leap'-regel"
 
-#: timezone/zic.c:1599
+#: timezone/zic.c:2100
 msgid "invalid CORRECTION field on Leap line"
 msgstr "ongeldig CORRECTION-veld op 'Leap'-regel"
 
-#: timezone/zic.c:1611
+#: timezone/zic.c:2112
 msgid "wrong number of fields on Expires line"
 msgstr "verkeerd aantal velden op 'Expires'-regel"
 
-#: timezone/zic.c:1613
+#: timezone/zic.c:2114
 msgid "multiple Expires lines"
 msgstr "meerdere 'Expires'-regels"
 
-#: timezone/zic.c:1624
+#: timezone/zic.c:2125
 msgid "wrong number of fields on Link line"
 msgstr "verkeerd aantal velden op 'Link'-regel"
 
-#: timezone/zic.c:1628
-msgid "blank FROM field on Link line"
-msgstr "leeg FROM-veld op 'Link'-regel"
-
-#: timezone/zic.c:1703
+#: timezone/zic.c:2199
 msgid "invalid starting year"
 msgstr "ongeldig beginjaar"
 
-#: timezone/zic.c:1725
+#: timezone/zic.c:2214
 msgid "invalid ending year"
 msgstr "ongeldig eindjaar"
 
-#: timezone/zic.c:1729
+#: timezone/zic.c:2218
 msgid "starting year greater than ending year"
 msgstr "beginjaar is groter dan eindjaar"
 
-#: timezone/zic.c:1736
-msgid "typed single year"
-msgstr "begin- en eindjaar zijn gelijk"
-
-#: timezone/zic.c:1739
-#, c-format
-msgid "year type \"%s\" is obsolete; use \"-\" instead"
-msgstr "jaartype \"%s\" is verouderd; gebruik \"-\""
-
-#: timezone/zic.c:1774
+#: timezone/zic.c:2257
 msgid "invalid weekday name"
 msgstr "ongeldige naam voor weekdag"
 
-#: timezone/zic.c:1935
+#: timezone/zic.c:2435
 #, c-format
 msgid "reference clients mishandle more than %d transition times"
 msgstr "meer dan %d overgangstijden worden door referentie-clients onjuist behandeld"
 
-#: timezone/zic.c:1939
+#: timezone/zic.c:2439
 msgid "pre-2014 clients may mishandle more than 1200 transition times"
 msgstr "clients van voor 2014 zouden meer dan 1200 overgangstijden onjuist kunnen behandelen"
 
-#: timezone/zic.c:2058
+#: timezone/zic.c:2537
 msgid "too many transition times"
 msgstr "te veel overgangstijden"
 
-#: timezone/zic.c:2297
+#: timezone/zic.c:2801
 #, c-format
 msgid "%%z UT offset magnitude exceeds 99:59:59"
 msgstr "verschuiving %%z t.o.v. UT is groter dan 99:59:59"
 
-#: timezone/zic.c:2673
-msgid "no POSIX environment variable for zone"
-msgstr "geen POSIX-omgevingsvariabele voor tijdzone"
-
-#: timezone/zic.c:2679
+#: timezone/zic.c:3187
 #, c-format
 msgid "%s: pre-%d clients may mishandle distant timestamps"
 msgstr "%s: clients van voor %d zouden verre tijdsstempels onjuist kunnen behandelen"
 
-#: timezone/zic.c:2818
+#: timezone/zic.c:3316
 msgid "two rules for same instant"
 msgstr "twee voorschriften voor hetzelfde moment"
 
-#: timezone/zic.c:2889
+#: timezone/zic.c:3389
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr "kan tijdzone-afkorting voor gebruik na een tot-tijd niet bepalen"
 
-#: timezone/zic.c:2964
+#: timezone/zic.c:3490
 msgid "UT offset out of range"
 msgstr "verschuiving ten opzichte van UTC valt buiten bereik"
 
-#: timezone/zic.c:2987
+#: timezone/zic.c:3513
 msgid "too many local time types"
 msgstr "te veel soorten lokale tijd"
 
-#: timezone/zic.c:3005
+#: timezone/zic.c:3531
 msgid "too many leap seconds"
 msgstr "te veel schrikkelseconden"
 
-#: timezone/zic.c:3032
+#: timezone/zic.c:3562
 msgid "Leap seconds too close together"
 msgstr "schrikkelseconden liggen te dicht bij elkaar"
 
-#: timezone/zic.c:3043
-msgid "\"#expires\" is obsolescent; use \"Expires\""
-msgstr "\"#expires\" is verouderd; gebruik \"Expires\""
-
-#: timezone/zic.c:3049
+#: timezone/zic.c:3573
 msgid "last Leap time does not precede Expires time"
 msgstr "laatste 'Leap'-tijd is niet vóór 'Expires'-tijd"
 
-#: timezone/zic.c:3095
-msgid "Wild result from command execution"
-msgstr "Vreemd resultaat van uitgevoerde opdracht"
-
-#: timezone/zic.c:3096
-#, c-format
-msgid "%s: command was '%s', result was %d\n"
-msgstr "%s: opdracht was '%s', resultaat was %d\n"
-
-#: timezone/zic.c:3202
+#: timezone/zic.c:3680
 #, c-format
 msgid "\"%s\" is undocumented; use \"last%s\" instead"
 msgstr "\"%s\" is ongedocumenteerd; gebruik hiervoor in de plaats \"last%s\""
 
-#: timezone/zic.c:3233
+#: timezone/zic.c:3711
 #, c-format
 msgid "\"%s\" is ambiguous in pre-2017c zic"
 msgstr "\"%s\" is niet eenduidig in 'zic' van voor 2017"
 
-#: timezone/zic.c:3267
+#: timezone/zic.c:3742
 msgid "Odd number of quotation marks"
 msgstr "Oneven aantal aanhalingstekens"
 
-#: timezone/zic.c:3361
+#: timezone/zic.c:3839
 msgid "use of 2/29 in non leap-year"
 msgstr "'29-2' gebruikt in een niet-schrikkeljaar"
 
-#: timezone/zic.c:3396
+#: timezone/zic.c:3865
 msgid "rule goes past start/end of month; will not work with pre-2004 versions of zic"
 msgstr ""
 "voorschrift gaat voorbij begin of einde van maand --\n"
 "dit zal niet werken met versies van 'zic' van voor 2004"
 
-#: timezone/zic.c:3423
+#: timezone/zic.c:3892
 msgid "time zone abbreviation has fewer than 3 characters"
 msgstr "tijdzone-afkorting heeft minder dan drie tekens"
 
-#: timezone/zic.c:3425
+#: timezone/zic.c:3894
 msgid "time zone abbreviation has too many characters"
 msgstr "tijdzone-afkorting heeft te veel tekens"
 
-#: timezone/zic.c:3427
+#: timezone/zic.c:3896
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr "tijdzone-afkorting verschilt van de POSIX-standaard"
 
-#: timezone/zic.c:3433
+#: timezone/zic.c:3902
 msgid "too many, or too long, time zone abbreviations"
 msgstr "te veel of te lange tijdzone-afkortingen"
 
-#: timezone/zic.c:3479
+#: timezone/zic.c:3953
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: Kan map %s niet aanmaken: %s"

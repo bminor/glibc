@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.2.3\n"
-"POT-Creation-Date: 2024-01-31 00:48+0100\n"
+"POT-Creation-Date: 2024-06-19 22:30+0200\n"
 "PO-Revision-Date: 2001-05-21 19:20:31+0000\n"
 "Last-Translator: Nikos Mavroyanopoulos <nmav@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -121,7 +121,7 @@ msgstr ""
 #: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
-#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:485
+#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:487
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -138,7 +138,7 @@ msgstr ""
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
-#: posix/getconf.c:490
+#: posix/getconf.c:492
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Εγγράφηκε από %s.\n"
@@ -220,7 +220,7 @@ msgstr " (άλλαξε)\n"
 
 #: elf/ldconfig.c:1135 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
-#: posix/getconf.c:458 posix/getconf.c:697
+#: posix/getconf.c:460 posix/getconf.c:699
 #, c-format
 msgid "memory exhausted"
 msgstr "η μνήμη εξαντλήθηκε"
@@ -1655,11 +1655,11 @@ msgstr "διπλό κλειδί"
 msgid "problems while reading `%s'"
 msgstr "προβλήματα κατά την ανάγνωση του `%s'"
 
-#: posix/getconf.c:669 posix/getconf.c:685
+#: posix/getconf.c:671 posix/getconf.c:687
 msgid "undefined"
 msgstr "αόριστο"
 
-#: posix/getconf.c:707
+#: posix/getconf.c:709
 #, c-format
 msgid "Unrecognized variable `%s'"
 msgstr "Μη αναγνωρίσιμη μεταβλητή `%s'"
@@ -1756,7 +1756,7 @@ msgstr "Εσωτερικό σφάλμα του αναλυτή διευθύνσε
 msgid "Unknown resolver error"
 msgstr "Άγνωστο σφάλμα αναλύτη διευθύνσεων"
 
-#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:375 timezone/zic.c:564
+#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:445 timezone/zic.c:652
 msgid "I/O error"
 msgstr "Σφάλμα εισόδου/εξόδου"
 
@@ -2976,193 +2976,166 @@ msgstr "Σφάλμα συστήματος"
 msgid "%s is for unknown machine %d.\n"
 msgstr "το %s είναι για το άγνωστο σύστημά %d.\n"
 
-#: timezone/zic.c:432
+#: timezone/zic.c:463
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: Η μνήμη εξαντλήθηκε: %s\n"
 
-#: timezone/zic.c:554
+#: timezone/zic.c:588
+msgid "standard input"
+msgstr "κανονική είσοδος"
+
+#: timezone/zic.c:639
 #, c-format
 msgid "warning: "
 msgstr "προειδοποίηση: "
 
-#: timezone/zic.c:730
+#: timezone/zic.c:1025
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr "%s: Περισσότερες από μία -d επιλογές καθορίστηκαν\n"
 
-#: timezone/zic.c:740
+#: timezone/zic.c:1036
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr "%s: Περισσότερες από μία -l επιλογές καθορίστηκαν\n"
 
-#: timezone/zic.c:750
+#: timezone/zic.c:1047
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr "%s: Περισσότερες από μία -p επιλογές καθορίστηκαν\n"
 
-#: timezone/zic.c:771
-#, c-format
-msgid "%s: More than one -y option specified\n"
-msgstr "%s: Περισσότερες από μία -y επιλογές καθορίστηκαν\n"
-
-#: timezone/zic.c:781
+#: timezone/zic.c:1071
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr "%s: Περισσότερες από μία -L επιλογές καθορίστηκαν\n"
 
-#: timezone/zic.c:1122 timezone/zic.c:1124
+#: timezone/zic.c:1608 timezone/zic.c:1610
 msgid "same rule name in multiple files"
 msgstr "ο ίδιος κανόνας σε πολλαπλά αρχεία"
 
-#: timezone/zic.c:1171
+#: timezone/zic.c:1656
 #, c-format
 msgid "%s in ruleless zone"
 msgstr "%s σε ακανόνιστη ζώνη"
 
-#: timezone/zic.c:1191
-msgid "standard input"
-msgstr "κανονική είσοδος"
+#: timezone/zic.c:1688
+msgid "line too long"
+msgstr "πολύ μεγάλη γραμμή"
 
-#: timezone/zic.c:1196
+#: timezone/zic.c:1709
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr "%s: Δεν είναι δυνατόν να ανοιχτεί το %s: %s\n"
 
-#: timezone/zic.c:1207
-msgid "line too long"
-msgstr "πολύ μεγάλη γραμμή"
-
-#: timezone/zic.c:1230
+#: timezone/zic.c:1734
 msgid "input line of unknown type"
 msgstr "γραμμή εισαγωγής αγνώστου τύπου"
 
-#: timezone/zic.c:1253 timezone/zic.c:1699 timezone/zic.c:1721
-#, c-format
-msgid "%s: panic: Invalid l_value %d\n"
-msgstr "%s: πανικός: Μη έγκυρη l_value %d\n"
-
-#: timezone/zic.c:1262
+#: timezone/zic.c:1761
 msgid "expected continuation line not found"
 msgstr "αναμενόταν γραμμή παράτασης και δεν βρέθηκε"
 
-#: timezone/zic.c:1316 timezone/zic.c:3282
+#: timezone/zic.c:1815 timezone/zic.c:3761
 msgid "time overflow"
 msgstr "υπερχείλιση ώρας"
 
-#: timezone/zic.c:1340
+#: timezone/zic.c:1839
 msgid "invalid saved time"
 msgstr "μη έγκυρη σωσμένη ώρα"
 
-#: timezone/zic.c:1351
+#: timezone/zic.c:1850
 msgid "wrong number of fields on Rule line"
 msgstr "λάθος αριθμός πεδίων στη γραμμή Rule"
 
-#: timezone/zic.c:1382
+#: timezone/zic.c:1883
 msgid "wrong number of fields on Zone line"
 msgstr "λάθος αριθμός πεδίων στη γραμμή Zone"
 
-#: timezone/zic.c:1387
+#: timezone/zic.c:1887
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr "\"Ζώνη %s\" γραμμή και επιλογή -l είναι αμοιβαίως αποκλειόμενα"
 
-#: timezone/zic.c:1393
+#: timezone/zic.c:1892
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr "\"Ζώνη %s\" γραμμή και επιλογή -p είναι αμοιβαίως αποκλειόμενα"
 
-#: timezone/zic.c:1414
+#: timezone/zic.c:1913
 msgid "wrong number of fields on Zone continuation line"
 msgstr "λάθος αριθμός πεδίων στη γραμμή παράτασης Zone"
 
-#: timezone/zic.c:1458
+#: timezone/zic.c:1956
 msgid "invalid abbreviation format"
 msgstr "μη έγκυρη διαμόρφωση συντόμευσης"
 
-#: timezone/zic.c:1494
+#: timezone/zic.c:1986
 msgid "Zone continuation line end time is not after end time of previous line"
 msgstr "Ο χρόνος τέλους της γραμμής συνέχισης της ζώνης δεν είναι μετά από το χρόνο τέλους της προηγούμενης γραμμής"
 
-#: timezone/zic.c:1526
+#: timezone/zic.c:2027
 msgid "invalid leaping year"
 msgstr "μη έγκυρος χρόνος αναπήδης"
 
-#: timezone/zic.c:1548 timezone/zic.c:1653
+#: timezone/zic.c:2049 timezone/zic.c:2154
 msgid "invalid month name"
 msgstr "μη έγκυρο όνομα μήνα"
 
-#: timezone/zic.c:1561 timezone/zic.c:1769 timezone/zic.c:1783
+#: timezone/zic.c:2062 timezone/zic.c:2252 timezone/zic.c:2266
 msgid "invalid day of month"
 msgstr "μη έγκυρη μέρα του μήνα"
 
-#: timezone/zic.c:1574 timezone/zic.c:1682
+#: timezone/zic.c:2075 timezone/zic.c:2183
 msgid "invalid time of day"
 msgstr "μη έγκυρη ώρα της μέρας"
 
-#: timezone/zic.c:1585
+#: timezone/zic.c:2086
 msgid "wrong number of fields on Leap line"
 msgstr "λάθος αριθμός πεδίων στη γραμμή Leap"
 
-#: timezone/zic.c:1624
+#: timezone/zic.c:2125
 msgid "wrong number of fields on Link line"
 msgstr "λάθος αριθμός πεδίων στη γραμμή Link"
 
-#: timezone/zic.c:1628
-msgid "blank FROM field on Link line"
-msgstr "Λευκό πεδίο FROM σε γραμμή Link"
-
-#: timezone/zic.c:1703
+#: timezone/zic.c:2199
 msgid "invalid starting year"
 msgstr "μη έγκυρος χρόνος έναρξης"
 
-#: timezone/zic.c:1725
+#: timezone/zic.c:2214
 msgid "invalid ending year"
 msgstr "μη έγκυρος χρόνος λήξης"
 
-#: timezone/zic.c:1729
+#: timezone/zic.c:2218
 msgid "starting year greater than ending year"
 msgstr "το έτος έναρξης είναι μεγαλύτερος το έτος τερματισμού"
 
-#: timezone/zic.c:1736
-msgid "typed single year"
-msgstr "τυπώθηκε απλός χρόνος"
-
-#: timezone/zic.c:1774
+#: timezone/zic.c:2257
 msgid "invalid weekday name"
 msgstr "μη έγκυρο όνομα εβδομάδας"
 
-#: timezone/zic.c:2889
+#: timezone/zic.c:3389
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr ""
 "δεν είναι δυνατόν να καθοριστεί η συντόμευση της ζώνης ώρας για\n"
 "να χρησιμοποιηθεί αμέσως μετά το 'until time'"
 
-#: timezone/zic.c:2987
+#: timezone/zic.c:3513
 msgid "too many local time types"
 msgstr "υπορβολικά πολλοί τύποι τοπικής ώρας"
 
-#: timezone/zic.c:3005
+#: timezone/zic.c:3531
 msgid "too many leap seconds"
 msgstr "υπερβολικά πολλά δευτερόλεπτα αναπήδησης"
 
-#: timezone/zic.c:3095
-msgid "Wild result from command execution"
-msgstr "Αγριο αποτέλεσμα από την εκτέλεση της εντολής"
-
-#: timezone/zic.c:3096
-#, c-format
-msgid "%s: command was '%s', result was %d\n"
-msgstr "%s: η εντολή ήταν '%s', το αποτέλεσμα ήταν %d\n"
-
-#: timezone/zic.c:3267
+#: timezone/zic.c:3742
 msgid "Odd number of quotation marks"
 msgstr "Περιττός αριθμός εισαγωγικών"
 
-#: timezone/zic.c:3361
+#: timezone/zic.c:3839
 msgid "use of 2/29 in non leap-year"
 msgstr "χρήση του 2/29 σε χρόνο μη δίσεκτο"
 
-#: timezone/zic.c:3433
+#: timezone/zic.c:3902
 msgid "too many, or too long, time zone abbreviations"
 msgstr "υπερβολικά πολλές, ή πολύ μακρές, συντομεύσεις ζώνης ώρας"

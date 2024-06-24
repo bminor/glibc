@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU libc 2.19.90\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-31 00:48+0100\n"
+"POT-Creation-Date: 2024-06-19 22:30+0200\n"
 "PO-Revision-Date: 2014-08-25 16:18-0700\n"
 "Last-Translator: Santiago Vila Doncel <sanvila@unex.es>\n"
 "Language-Team: Spanish <es@tp.org.es>\n"
@@ -151,7 +151,7 @@ msgstr ""
 #: iconv/iconvconfig.c:380 locale/programs/locale.c:275
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:88
 #: malloc/memusagestat.c:564 nss/getent.c:961 nss/makedb.c:371
-#: posix/getconf.c:503
+#: posix/getconf.c:505
 #, c-format
 msgid ""
 "For bug reporting instructions, please see:\n"
@@ -165,7 +165,7 @@ msgstr ""
 #: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
-#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:485
+#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:487
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -182,7 +182,7 @@ msgstr ""
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
-#: posix/getconf.c:490
+#: posix/getconf.c:492
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Escrito por %s.\n"
@@ -479,131 +479,131 @@ msgstr "error interno: symidx fuera del rango de la tabla fptr"
 msgid "cannot create capability list"
 msgstr "no se puede crear la lista de capacidades"
 
-#: elf/dl-load.c:434
+#: elf/dl-load.c:423
 msgid "cannot allocate name record"
 msgstr "no se puede asignar el registro del nombre"
 
 # He intentado mejorarlo un poco ...
 #
-#: elf/dl-load.c:536 elf/dl-load.c:649 elf/dl-load.c:743 elf/dl-load.c:840
+#: elf/dl-load.c:525 elf/dl-load.c:638 elf/dl-load.c:732 elf/dl-load.c:829
 msgid "cannot create cache for search path"
 msgstr "no se puede crear un caché para la ruta de búsqueda"
 
-#: elf/dl-load.c:632
+#: elf/dl-load.c:621
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "no se puede crear una copia RUNPATH/RPATH"
 
-#: elf/dl-load.c:729
+#: elf/dl-load.c:718
 msgid "cannot create search path array"
 msgstr "no se puede crear la matriz de la ruta de búsqueda"
 
-#: elf/dl-load.c:968
+#: elf/dl-load.c:957
 msgid "cannot stat shared object"
 msgstr "no se puede efectuar `stat' sobre el objeto compartido"
 
-#: elf/dl-load.c:1059 elf/dl-load.c:2222
+#: elf/dl-load.c:1048 elf/dl-load.c:2163
 msgid "cannot create shared object descriptor"
 msgstr "no se puede crear el descriptor del objeto compartido"
 
-#: elf/dl-load.c:1078 elf/dl-load.c:1655 elf/dl-load.c:1763
+#: elf/dl-load.c:1067 elf/dl-load.c:1610 elf/dl-load.c:1718
 msgid "cannot read file data"
 msgstr "no se pueden leer los datos del fichero"
 
-#: elf/dl-load.c:1223
+#: elf/dl-load.c:1212
 msgid "object file has no loadable segments"
 msgstr "el fichero objeto no tiene segmentos cargables"
 
-#: elf/dl-load.c:1240
+#: elf/dl-load.c:1229
 msgid "cannot dynamically load executable"
 msgstr "no se puede cargar el ejecutable dinámicamente"
 
-#: elf/dl-load.c:1247
+#: elf/dl-load.c:1236
 msgid "object file has no dynamic section"
 msgstr "el fichero objeto no tiene sección dinámica"
 
-#: elf/dl-load.c:1284
+#: elf/dl-load.c:1273
 msgid "shared object cannot be dlopen()ed"
 msgstr "no se puede efectuar dlopen() sobre el objeto compartido"
 
-#: elf/dl-load.c:1297
+#: elf/dl-load.c:1286
 msgid "cannot allocate memory for program header"
 msgstr "no se puede asignar memoria para la cabecera del programa"
 
-#: elf/dl-load.c:1330 elf/dl-load.h:128
-msgid "cannot change memory protections"
-msgstr "no se pueden cambiar las protecciones de memoria"
-
-#: elf/dl-load.c:1354
+#: elf/dl-load.c:1309
 msgid "cannot enable executable stack as shared object requires"
 msgstr "no se puede activar la pila ejecutable tal y como el objeto compartido necesita"
 
-#: elf/dl-load.c:1382
+#: elf/dl-load.c:1337
 msgid "cannot close file descriptor"
 msgstr "no se puede cerrar el descriptor de fichero"
 
-#: elf/dl-load.c:1655
+#: elf/dl-load.c:1610
 msgid "file too short"
 msgstr "fichero demasiado corto"
 
-#: elf/dl-load.c:1691
+#: elf/dl-load.c:1646
 msgid "invalid ELF header"
 msgstr "cabecera ELF inválida"
 
-#: elf/dl-load.c:1706
+#: elf/dl-load.c:1661
 msgid "ELF file data encoding not big-endian"
 msgstr "La codificación de los datos del fichero ELF no es `big-endian'"
 
-#: elf/dl-load.c:1708
+#: elf/dl-load.c:1663
 msgid "ELF file data encoding not little-endian"
 msgstr "La codificación de los datos del fichero ELF no es `little-endian'"
 
-#: elf/dl-load.c:1712
+#: elf/dl-load.c:1667
 msgid "ELF file version ident does not match current one"
 msgstr "La identificación de versión del fichero ELF no encaja con la actual"
 
-#: elf/dl-load.c:1716
+#: elf/dl-load.c:1671
 msgid "ELF file OS ABI invalid"
 msgstr "ABI del OS del fichero ELF inválida"
 
-#: elf/dl-load.c:1719
+#: elf/dl-load.c:1674
 msgid "ELF file ABI version invalid"
 msgstr "Versión de ABI del fichero ELF inválida"
 
-#: elf/dl-load.c:1722
+#: elf/dl-load.c:1677
 msgid "nonzero padding in e_ident"
 msgstr "relleno con no ceros en e_ident"
 
-#: elf/dl-load.c:1725
+#: elf/dl-load.c:1680
 msgid "internal error"
 msgstr "error interno"
 
-#: elf/dl-load.c:1732
+#: elf/dl-load.c:1687
 msgid "ELF file version does not match current one"
 msgstr "La versión del fichero ELF no coincide con la actual"
 
-#: elf/dl-load.c:1744
+#: elf/dl-load.c:1699
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "solamente pueden cargarse ET_DYN y ET_EXEC"
 
-#: elf/dl-load.c:1749
+#: elf/dl-load.c:1704
 msgid "ELF file's phentsize not the expected size"
 msgstr "El `phentsize' del fichero ELF no es el tamaño esperado"
 
-#: elf/dl-load.c:2241
+#: elf/dl-load.c:2182
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "clase ELF errónea: ELFCLASS64"
 
-#: elf/dl-load.c:2242
+#: elf/dl-load.c:2183
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "clase ELF errónea: ELFCLASS32"
 
-#: elf/dl-load.c:2245
+#: elf/dl-load.c:2186
 msgid "cannot open shared object file"
 msgstr "no se puede abrir el fichero del objeto compartido"
 
 #: elf/dl-load.h:126
 msgid "failed to map segment from shared object"
 msgstr "fallo al asignar un segmento del objeto compartido"
+
+#: elf/dl-load.h:128
+msgid "cannot change memory protections"
+msgstr "no se pueden cambiar las protecciones de memoria"
 
 #: elf/dl-load.h:130
 msgid "cannot map zero-fill pages"
@@ -659,7 +659,7 @@ msgstr "no se pueden aplicar protecciones de memoria adicionales después de rel
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "Se ha usado RTLD_NEXT en una parte del código que no se cargó dinámicamente"
 
-#: elf/dl-tls.c:1052
+#: elf/dl-tls.c:1059
 msgid "cannot create TLS data structures"
 msgstr "no se pueden crear las estructuras de datos TLS"
 
@@ -826,7 +826,7 @@ msgstr "se necesita un nombre de fichero absoluto para el fichero de configuraci
 
 #: elf/ldconfig.c:1135 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
-#: posix/getconf.c:458 posix/getconf.c:697
+#: posix/getconf.c:460 posix/getconf.c:699
 #, c-format
 msgid "memory exhausted"
 msgstr "memoria agotada"
@@ -3882,22 +3882,22 @@ msgstr "se han liberado %zu bytes en la caché %s"
 msgid "no more memory for database '%s'"
 msgstr "no hay más memoria para la base de datos '%s'"
 
-#: nscd/netgroupcache.c:121
+#: nscd/netgroupcache.c:198
 #, c-format
 msgid "Haven't found \"%s\" in netgroup cache!"
 msgstr "No se ha encontrado \"%s\" en el caché de netgroup"
 
-#: nscd/netgroupcache.c:123
+#: nscd/netgroupcache.c:200
 #, c-format
 msgid "Reloading \"%s\" in netgroup cache!"
 msgstr "Recargando \"%s\" en el caché de netgroup"
 
-#: nscd/netgroupcache.c:469
+#: nscd/netgroupcache.c:486
 #, c-format
 msgid "Haven't found \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "No se ha encontrado \"%s (%s,%s,%s)\" en el caché de netgroup"
 
-#: nscd/netgroupcache.c:472
+#: nscd/netgroupcache.c:489
 #, c-format
 msgid "Reloading \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "Recargando \"%s (%s,%s,%s)\" en el caché de netgroup"
@@ -4470,17 +4470,17 @@ msgstr "el fichero no es un fichero de base de datos"
 msgid "cannot set file creation context for `%s'"
 msgstr "no se puede establecer el contexto de creación de fichero para `%s'"
 
-#: posix/getconf.c:417
+#: posix/getconf.c:419
 #, c-format
 msgid "Usage: %s [-v specification] variable_name [pathname]\n"
 msgstr "Modo de empleo: %s [-v especificación] nombre_de_variable [ruta]\n"
 
-#: posix/getconf.c:420
+#: posix/getconf.c:422
 #, c-format
 msgid "       %s -a [pathname]\n"
 msgstr "       %s -a [ruta]\n"
 
-#: posix/getconf.c:496
+#: posix/getconf.c:498
 #, c-format
 msgid ""
 "Usage: getconf [-v SPEC] VAR\n"
@@ -4498,21 +4498,21 @@ msgstr ""
 "variable RUTA_VAR para la ruta RUTA. Si se especifica ESP, se dan\n"
 "los valores para el entorno de compilación ESP.\n"
 
-#: posix/getconf.c:572
+#: posix/getconf.c:574
 #, c-format
 msgid "unknown specification \"%s\""
 msgstr "especificación \"%s\" desconocida"
 
-#: posix/getconf.c:624
+#: posix/getconf.c:626
 #, c-format
 msgid "Couldn't execute %s"
 msgstr "No se pudo ejecutar %s"
 
-#: posix/getconf.c:669 posix/getconf.c:685
+#: posix/getconf.c:671 posix/getconf.c:687
 msgid "undefined"
 msgstr "sin definir"
 
-#: posix/getconf.c:707
+#: posix/getconf.c:709
 #, c-format
 msgid "Unrecognized variable `%s'"
 msgstr "Variable no reconocida `%s'"
@@ -4800,7 +4800,7 @@ msgstr "Hay búfers de salida disponibles"
 msgid "Input message available"
 msgstr "Mensaje de entrada disponible"
 
-#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:375 timezone/zic.c:564
+#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:445 timezone/zic.c:652
 msgid "I/O error"
 msgstr "Error de E/S"
 
@@ -6479,171 +6479,156 @@ msgstr "Cadena de parámetros codificada incorrectamente"
 msgid "%s is for unknown machine %d.\n"
 msgstr "%s es para la máquina desconocida %d.\n"
 
-#: timezone/zdump.c:341
+#: timezone/zdump.c:411
 #, c-format
 msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
 msgstr "%s: atención: zona \"%s\" abreviatura \"%s\" %s\n"
 
-#: timezone/zdump.c:473
+#: timezone/zdump.c:543
 #, c-format
 msgid "%s: wild -c argument %s\n"
 msgstr "%s: argumento %s descabellado para -c\n"
 
-#: timezone/zdump.c:506
+#: timezone/zdump.c:576
 #, c-format
 msgid "%s: wild -t argument %s\n"
 msgstr "%s: argumento %s descabellado para -t\n"
 
-#: timezone/zic.c:432
+#: timezone/zic.c:463
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: Memoria agotada: %s\n"
 
-#: timezone/zic.c:554
+#: timezone/zic.c:588
+msgid "standard input"
+msgstr "entrada estándar"
+
+#: timezone/zic.c:639
 #, c-format
 msgid "warning: "
 msgstr "atención: "
 
-#: timezone/zic.c:698
+#: timezone/zic.c:992
 msgid "wild compilation-time specification of zic_t"
 msgstr "especificación de zic_t en tiempo de compilación descabellada"
 
-#: timezone/zic.c:730
+#: timezone/zic.c:1025
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr "%s: La opción -d se ha especificado más de una vez\n"
 
-#: timezone/zic.c:740
+#: timezone/zic.c:1036
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr "%s: La opción -l se ha especificado más de una vez\n"
 
-#: timezone/zic.c:750
+#: timezone/zic.c:1047
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr "%s: La opción -p se ha especificado más de una vez\n"
 
-#: timezone/zic.c:771
-#, c-format
-msgid "%s: More than one -y option specified\n"
-msgstr "%s: La opción -y se ha especificado más de una vez\n"
-
-#: timezone/zic.c:781
+#: timezone/zic.c:1071
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr "%s: La opción -L se ha especificado más de una vez\n"
 
-#: timezone/zic.c:848
-msgid "link to link"
-msgstr "enlace a un enlace"
-
-#: timezone/zic.c:1122 timezone/zic.c:1124
+#: timezone/zic.c:1608 timezone/zic.c:1610
 msgid "same rule name in multiple files"
 msgstr "mismo nombre de regla en varios ficheros"
 
-#: timezone/zic.c:1171
+#: timezone/zic.c:1656
 #, c-format
 msgid "%s in ruleless zone"
 msgstr "%s en una zona sin reglas"
 
-#: timezone/zic.c:1191
-msgid "standard input"
-msgstr "entrada estándar"
+#: timezone/zic.c:1688
+msgid "line too long"
+msgstr "línea demasiado larga"
 
-#: timezone/zic.c:1196
+#: timezone/zic.c:1709
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr "%s: No se puede abrir %s: %s\n"
 
-#: timezone/zic.c:1207
-msgid "line too long"
-msgstr "línea demasiado larga"
-
-#: timezone/zic.c:1230
+#: timezone/zic.c:1734
 msgid "input line of unknown type"
 msgstr "línea de entrada de tipo desconocido"
 
-# Ídem. 1984.
-#: timezone/zic.c:1253 timezone/zic.c:1699 timezone/zic.c:1721
-#, c-format
-msgid "%s: panic: Invalid l_value %d\n"
-msgstr "%s: grave: valor_l %d inválido\n"
-
-#: timezone/zic.c:1262
+#: timezone/zic.c:1761
 msgid "expected continuation line not found"
 msgstr "la línea de continuación esperada no se encuentra"
 
 # Sugerencia: Desbordamiento de fecha. (?) sv+
-#: timezone/zic.c:1316 timezone/zic.c:3282
+#: timezone/zic.c:1815 timezone/zic.c:3761
 msgid "time overflow"
 msgstr "desbordamiento horario"
 
-#: timezone/zic.c:1322
+#: timezone/zic.c:1821
 msgid "values over 24 hours not handled by pre-2007 versions of zic"
 msgstr "las versiones de zic anteriores a 2007 no manejan valores por encima de 24 horas"
 
-#: timezone/zic.c:1340
+#: timezone/zic.c:1839
 msgid "invalid saved time"
 msgstr "la hora almacenada no es válida"
 
-#: timezone/zic.c:1351
+#: timezone/zic.c:1850
 msgid "wrong number of fields on Rule line"
 msgstr "número incorrecto de argumentos en la línea de regla (Rule)"
 
-#: timezone/zic.c:1382
+#: timezone/zic.c:1883
 msgid "wrong number of fields on Zone line"
 msgstr "número de campos incorrecto en la línea de zona (Zone)"
 
-#: timezone/zic.c:1387
+#: timezone/zic.c:1887
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr "la línea \"Zone %s\" y la opción -l son mutuamente excluyentes"
 
-#: timezone/zic.c:1393
+#: timezone/zic.c:1892
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr "la línea \"Zone %s\" y la opción -p son mutuamente excluyentes"
 
-#: timezone/zic.c:1414
+#: timezone/zic.c:1913
 msgid "wrong number of fields on Zone continuation line"
 msgstr "número de campos incorrecto en la línea de continuación de zona (Zone)"
 
-#: timezone/zic.c:1454
+#: timezone/zic.c:1952
 msgid "invalid UT offset"
 msgstr "desplazamiento UT inválido"
 
-#: timezone/zic.c:1458
+#: timezone/zic.c:1956
 msgid "invalid abbreviation format"
 msgstr "formato de abreviatura incorrecto"
 
 # VER
-#: timezone/zic.c:1494
+#: timezone/zic.c:1986
 msgid "Zone continuation line end time is not after end time of previous line"
 msgstr ""
 "La línea de continuación de la zona no está después del tiempo de final\n"
 "de la línea anterior"
 
-#: timezone/zic.c:1526
+#: timezone/zic.c:2027
 msgid "invalid leaping year"
 msgstr "año bisiesto inválido"
 
-#: timezone/zic.c:1548 timezone/zic.c:1653
+#: timezone/zic.c:2049 timezone/zic.c:2154
 msgid "invalid month name"
 msgstr "nombre de mes incorrecto"
 
-#: timezone/zic.c:1561 timezone/zic.c:1769 timezone/zic.c:1783
+#: timezone/zic.c:2062 timezone/zic.c:2252 timezone/zic.c:2266
 msgid "invalid day of month"
 msgstr "día del mes inválido"
 
-#: timezone/zic.c:1566
+#: timezone/zic.c:2067
 msgid "time too small"
 msgstr "tiempo demasiado pequeño"
 
-#: timezone/zic.c:1570
+#: timezone/zic.c:2071
 msgid "time too large"
 msgstr "tiempo demasiado grande"
 
-#: timezone/zic.c:1574 timezone/zic.c:1682
+#: timezone/zic.c:2075 timezone/zic.c:2183
 msgid "invalid time of day"
 msgstr "hora del día inválida"
 
@@ -6657,81 +6642,59 @@ msgstr "hora del día inválida"
 # Si es mejor, ponlo en todos los sitios. Y si no, en ninguno.
 # Yo creo que es mucho mejor poner "número incorrecto ..."
 # Si no, queda como "al revés". sv+
-#: timezone/zic.c:1585
+#: timezone/zic.c:2086
 msgid "wrong number of fields on Leap line"
 msgstr "número incorrecto de campos en la línea de bisiesto (Leap)"
 
-#: timezone/zic.c:1624
+#: timezone/zic.c:2125
 msgid "wrong number of fields on Link line"
 msgstr "número incorrecto de campos en la línea de enlace (Link)"
 
-#: timezone/zic.c:1628
-msgid "blank FROM field on Link line"
-msgstr "Campo FROM vacío en la línea `Link'"
-
-#: timezone/zic.c:1703
+#: timezone/zic.c:2199
 msgid "invalid starting year"
 msgstr "año de comienzo inválido"
 
-#: timezone/zic.c:1725
+#: timezone/zic.c:2214
 msgid "invalid ending year"
 msgstr "año de final inválido"
 
-#: timezone/zic.c:1729
+#: timezone/zic.c:2218
 msgid "starting year greater than ending year"
 msgstr "año de comienzo mayor que año de final"
 
-#: timezone/zic.c:1736
-msgid "typed single year"
-msgstr "tecleado un único año"
-
-#: timezone/zic.c:1774
+#: timezone/zic.c:2257
 msgid "invalid weekday name"
 msgstr "nombre del día de la semana incorrecto"
 
-#: timezone/zic.c:1939
+#: timezone/zic.c:2439
 msgid "pre-2014 clients may mishandle more than 1200 transition times"
 msgstr "los clientes anteriores a 2014 pueden confundirse con más de 1200 tiempos de transición"
 
-#: timezone/zic.c:2673
-msgid "no POSIX environment variable for zone"
-msgstr "no hay ninguna variable de entorno POSIX para la zona"
-
-#: timezone/zic.c:2679
+#: timezone/zic.c:3187
 #, c-format
 msgid "%s: pre-%d clients may mishandle distant timestamps"
 msgstr "%s: los clientes pre-%d pueden confundirse con marcas de tiempo distantes"
 
 # FUZZY
-#: timezone/zic.c:2889
+#: timezone/zic.c:3389
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr ""
 "No se puede determinar la abreviación de zona horaria que se usará justo\n"
 "después"
 
-#: timezone/zic.c:2964
+#: timezone/zic.c:3490
 msgid "UT offset out of range"
 msgstr "desplazamiento UT fuera de rango"
 
-#: timezone/zic.c:2987
+#: timezone/zic.c:3513
 msgid "too many local time types"
 msgstr "demasiados tipos de hora local"
 
-#: timezone/zic.c:3005
+#: timezone/zic.c:3531
 msgid "too many leap seconds"
 msgstr "demasiados segundos intercalares"
 
-# # Otra opción, resultado incongruente al ejecutar la orden em
-#: timezone/zic.c:3095
-msgid "Wild result from command execution"
-msgstr "Resultado salvaje en la ejecución de la orden"
-
-#: timezone/zic.c:3096
-#, c-format
-msgid "%s: command was '%s', result was %d\n"
-msgstr "%s: la orden fue '%s', el resultado fue %d\n"
-
-#: timezone/zic.c:3267
+#: timezone/zic.c:3742
 msgid "Odd number of quotation marks"
 msgstr "Número impar de comillas"
 
@@ -6740,14 +6703,14 @@ msgstr "Número impar de comillas"
 # se entiende mejor. no sé. sv
 # Si, estas pensando lo mismo que yo, 29 de febrero puede confundir, porque
 # en el fichero pondrá 2/29  em
-#: timezone/zic.c:3361
+#: timezone/zic.c:3839
 msgid "use of 2/29 in non leap-year"
 msgstr "uso de 2/29 en un año no bisiesto"
 
-#: timezone/zic.c:3427
+#: timezone/zic.c:3896
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr "la abreviatura de la zona horaria difiere del estándar POSIX"
 
-#: timezone/zic.c:3433
+#: timezone/zic.c:3902
 msgid "too many, or too long, time zone abbreviations"
 msgstr "demasiadas abreviaturas de zona horaria, o demasiado largas"

@@ -1,21 +1,23 @@
+# Romanian translation for glibc.
 # Mesajele în limba română pentru pachetul glibc.
 # Copyright © 2023, 2024 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
 #
-# Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>, 2023.
+# Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>, 2023, 2024.
 #
 # Cronologia traducerii fișierului „libc”:
 # Traducerea inițială, făcută de R-GC, pentru versiunea libc 2.36.9000.
 # Actualizare a traducerii pentru versiunea 2.37.9000, făcută de R-GC, iul-2023.
 # Corectare un „typo” (Aargument) + reformularea unui mesaj de „seek” pentru versiunea 2.37.9000, făcută de R-GC, oct-2023.
 # Actualizare a traducerii pentru versiunea 2.38.9000, făcută de R-GC, ian-2024.
+# Actualizare a traducerii pentru versiunea 2.39.9000, făcută de R-GC, iun-2024.
 # Actualizare a traducerii pentru versiunea Y, făcută de X, Z(luna-anul).
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.38.9000\n"
-"POT-Creation-Date: 2024-01-31 00:48+0100\n"
-"PO-Revision-Date: 2024-01-03 12:47+0100\n"
+"Project-Id-Version: libc 2.39.9000\n"
+"POT-Creation-Date: 2024-06-19 22:30+0200\n"
+"PO-Revision-Date: 2024-06-22 19:05+0200\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
 "Language: ro\n"
@@ -24,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.4.3\n"
 
 #: argp/argp-help.c:229
 #, c-format
@@ -161,7 +163,7 @@ msgstr ""
 #: iconv/iconvconfig.c:380 locale/programs/locale.c:275
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:88
 #: malloc/memusagestat.c:564 nss/getent.c:961 nss/makedb.c:371
-#: posix/getconf.c:503
+#: posix/getconf.c:505
 #, c-format
 msgid ""
 "For bug reporting instructions, please see:\n"
@@ -175,7 +177,7 @@ msgstr ""
 #: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
-#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:485
+#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:487
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -191,7 +193,7 @@ msgstr ""
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
-#: posix/getconf.c:490
+#: posix/getconf.c:492
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Scris de %s.\n"
@@ -413,32 +415,32 @@ msgstr "Zonă de prestocare(cache) generată de către: "
 #: elf/cache.c:296 elf/ldconfig.c:1249
 #, c-format
 msgid "Can't open cache file %s\n"
-msgstr "Nu se poate deschide fișierul zonei de prestocare(cache) %s\n"
+msgstr "Nu se poate deschide fișierul spațiului de prestocare(cache) %s\n"
 
 #: elf/cache.c:310
 #, c-format
 msgid "mmap of cache file failed.\n"
-msgstr "execuția mmap() asupra fișierului zonei de prestocare(cache) a eșuat\n"
+msgstr "execuția mmap() asupra fișierului spațiului de prestocare(cache) a eșuat\n"
 
 #: elf/cache.c:314 elf/cache.c:328 elf/cache.c:339
 #, c-format
 msgid "File is not a cache file.\n"
-msgstr "Fișierul nu este un fișier de zonă de prestocare(cache).\n"
+msgstr "Fișierul nu este un fișier de spațiu de prestocare(cache).\n"
 
 #: elf/cache.c:368 elf/cache.c:383
 #, c-format
 msgid "%d libs found in cache `%s'\n"
-msgstr "%d biblioteci găsite în zona de prestocare(cache) „%s”\n"
+msgstr "%d biblioteci găsite în spațiul de prestocare(cache) „%s”\n"
 
 #: elf/cache.c:381
 #, c-format
 msgid "Malformed extension data in cache file %s\n"
-msgstr "Date de extensie incorecte în fișierul zonei de prestocare(cache) %s\n"
+msgstr "Date de extensie incorecte în fișierul spațiului de prestocare(cache) %s\n"
 
 #: elf/cache.c:510
 #, c-format
 msgid "Writing of cache extension data failed"
-msgstr "Scrierea datelor extensiei zonei de prestocare(cache) a eșuat"
+msgstr "Scrierea datelor de extensie a spațiului de prestocare(cache) a eșuat"
 
 #: elf/cache.c:521
 #, c-format
@@ -534,137 +536,137 @@ msgstr "nu se pot crea priorități HWCAP"
 msgid "cannot create capability list"
 msgstr "nu se poate crea lista de capacităț/iproprietăți"
 
-#: elf/dl-load.c:434
+#: elf/dl-load.c:423
 msgid "cannot allocate name record"
 msgstr "nu se poate aloca înregistrarea de nume"
 
-#: elf/dl-load.c:536 elf/dl-load.c:649 elf/dl-load.c:743 elf/dl-load.c:840
+#: elf/dl-load.c:525 elf/dl-load.c:638 elf/dl-load.c:732 elf/dl-load.c:829
 msgid "cannot create cache for search path"
-msgstr "nu se poate crea zona de prestocare(cache) pentru ruta de căutare"
+msgstr "nu se poate crea spațiul de prestocare(cache) pentru ruta de căutare"
 
-#: elf/dl-load.c:632
+#: elf/dl-load.c:621
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "nu se poate crea o copie RUNPATH/RPATH"
 
-#: elf/dl-load.c:729
+#: elf/dl-load.c:718
 msgid "cannot create search path array"
 msgstr "nu se poate crea matricea de rute de căutare"
 
-#: elf/dl-load.c:968
+#: elf/dl-load.c:957
 msgid "cannot stat shared object"
 msgstr "nu s-a putut obține starea obiectului partajat"
 
-#: elf/dl-load.c:1059 elf/dl-load.c:2222
+#: elf/dl-load.c:1048 elf/dl-load.c:2163
 msgid "cannot create shared object descriptor"
 msgstr "nu se poate crea un descriptor de obiect partajat"
 
-#: elf/dl-load.c:1078 elf/dl-load.c:1655 elf/dl-load.c:1763
+#: elf/dl-load.c:1067 elf/dl-load.c:1610 elf/dl-load.c:1718
 msgid "cannot read file data"
 msgstr "nu se pot citi datele fișierului"
 
-#: elf/dl-load.c:1131 elf/dl-map-segments.h:117
+#: elf/dl-load.c:1120 elf/dl-map-segments.h:117
 msgid "ELF load command address/offset not page-aligned"
 msgstr "Adresa/poziția comenzii de încărcare ELF nu este aliniată în pagină"
 
-#: elf/dl-load.c:1223
+#: elf/dl-load.c:1212
 msgid "object file has no loadable segments"
 msgstr "fișierul obiect nu are segmente încărcabile"
 
-#: elf/dl-load.c:1240
+#: elf/dl-load.c:1229
 msgid "cannot dynamically load executable"
 msgstr "nu se poate încărca în mod dinamic executabilul"
 
-#: elf/dl-load.c:1247
+#: elf/dl-load.c:1236
 msgid "object file has no dynamic section"
 msgstr "fișierul obiect nu are secțiune dinamică"
 
-#: elf/dl-load.c:1282
+#: elf/dl-load.c:1271
 msgid "cannot dynamically load position-independent executable"
 msgstr "nu poate încărca dinamic executabilul independent de poziție"
 
-#: elf/dl-load.c:1284
+#: elf/dl-load.c:1273
 msgid "shared object cannot be dlopen()ed"
 msgstr "obiectul partajat nu poate fi deschis cu dlopen()"
 
-#: elf/dl-load.c:1297
+#: elf/dl-load.c:1286
 msgid "cannot allocate memory for program header"
 msgstr "nu se poate aloca memorie pentru antetul programului"
 
-#: elf/dl-load.c:1330 elf/dl-load.h:128
-msgid "cannot change memory protections"
-msgstr "nu se pot modifica protecțiile memoriei"
-
-#: elf/dl-load.c:1354
+#: elf/dl-load.c:1309
 msgid "cannot enable executable stack as shared object requires"
 msgstr "nu se poate activa stiva executabilă așa cum necesită obiectul partajat"
 
-#: elf/dl-load.c:1382
+#: elf/dl-load.c:1337
 msgid "cannot close file descriptor"
 msgstr "nu se poate închide descriptorul de fișier"
 
-#: elf/dl-load.c:1655
+#: elf/dl-load.c:1610
 msgid "file too short"
 msgstr "fișier prea scurt"
 
-#: elf/dl-load.c:1691
+#: elf/dl-load.c:1646
 msgid "invalid ELF header"
 msgstr "antet ELF nevalid"
 
-#: elf/dl-load.c:1706
+#: elf/dl-load.c:1661
 msgid "ELF file data encoding not big-endian"
 msgstr "codificarea datelor fișierului ELF nu este de tipul big-endian"
 
-#: elf/dl-load.c:1708
+#: elf/dl-load.c:1663
 msgid "ELF file data encoding not little-endian"
 msgstr "codificarea datelor fișierului ELF nu este de tipul little-endian"
 
-#: elf/dl-load.c:1712
+#: elf/dl-load.c:1667
 msgid "ELF file version ident does not match current one"
 msgstr "versiunea de identificare a fișierului ELF nu se potrivește cu cea actuală"
 
-#: elf/dl-load.c:1716
+#: elf/dl-load.c:1671
 msgid "ELF file OS ABI invalid"
 msgstr "ABI(interfața) SO(sistemului operațional) a fișierului ELF nu este validă"
 
-#: elf/dl-load.c:1719
+#: elf/dl-load.c:1674
 msgid "ELF file ABI version invalid"
 msgstr "versiunea ABI a fișierului ELF nu este validă"
 
-#: elf/dl-load.c:1722
+#: elf/dl-load.c:1677
 msgid "nonzero padding in e_ident"
 msgstr "umplutură diferită de zero în e_ident"
 
-#: elf/dl-load.c:1725
+#: elf/dl-load.c:1680
 msgid "internal error"
 msgstr "eroare internă"
 
-#: elf/dl-load.c:1732
+#: elf/dl-load.c:1687
 msgid "ELF file version does not match current one"
 msgstr "versiunea fișierului ELF nu se potrivește cu cea actuală"
 
-#: elf/dl-load.c:1744
+#: elf/dl-load.c:1699
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "numai ET_DYN și ET_EXEC pot fi încărcate"
 
-#: elf/dl-load.c:1749
+#: elf/dl-load.c:1704
 msgid "ELF file's phentsize not the expected size"
 msgstr "„phentsize” a fișierului ELF nu are dimensiunea așteptată"
 
-#: elf/dl-load.c:2241
+#: elf/dl-load.c:2182
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "clasă ELF greșită: ELFCLASS64"
 
-#: elf/dl-load.c:2242
+#: elf/dl-load.c:2183
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "clasă ELF greșită: ELFCLASS32"
 
-#: elf/dl-load.c:2245
+#: elf/dl-load.c:2186
 msgid "cannot open shared object file"
 msgstr "nu se poate deschide fișierul obiect partajat"
 
 #: elf/dl-load.h:126
 msgid "failed to map segment from shared object"
 msgstr "a eșuat memorarea segmentului din obiectul partajat"
+
+#: elf/dl-load.h:128
+msgid "cannot change memory protections"
+msgstr "nu se pot modifica protecțiile memoriei"
 
 #: elf/dl-load.h:130
 msgid "cannot map zero-fill pages"
@@ -723,7 +725,7 @@ msgstr "nu se poate aplica protecția suplimentară de memorie după realocare"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT utilizat în cod nu s-a încărcat dinamic"
 
-#: elf/dl-tls.c:1052
+#: elf/dl-tls.c:1059
 msgid "cannot create TLS data structures"
 msgstr "nu se pot crea structurile de date TLS"
 
@@ -928,7 +930,7 @@ msgstr "este nevoie de numele absolut de fișier pentru fișierul de configurare
 
 #: elf/ldconfig.c:1135 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
-#: posix/getconf.c:458 posix/getconf.c:697
+#: posix/getconf.c:460 posix/getconf.c:699
 #, c-format
 msgid "memory exhausted"
 msgstr "memorie epuizată"
@@ -941,7 +943,7 @@ msgstr "%s:%u: nu se poate citi directorul %s"
 #: elf/ldconfig.c:1206
 #, c-format
 msgid "relative path `%s' used to build cache"
-msgstr "ruta relativă „%s” este folosită pentru a construi zona de prestocare(cache)"
+msgstr "ruta relativă „%s” este folosită pentru a construi spațiul de prestocare (cache)"
 
 #: elf/ldconfig.c:1228
 #, c-format
@@ -951,7 +953,7 @@ msgstr "Nu se poate executa «chdir» la /"
 #: elf/ldconfig.c:1269
 #, c-format
 msgid "Can't open cache file directory %s\n"
-msgstr "Nu se poate deschide directorul de fișiere de zonă de prestocare(cache) %s\n"
+msgstr "Nu se poate deschide directorul de fișiere de spațiu de prestocare(cache) %s\n"
 
 #: elf/ldd.bash.in:42
 msgid "Written by %s and %s.\n"
@@ -3826,17 +3828,17 @@ msgstr "yp_update: nu se poate obține adresa serverului\n"
 #: nscd/aicache.c:68 nscd/hstcache.c:451
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
-msgstr "Nu s-a găsit „%s” în zona de prestocare a memoriei(cache) a gazdelor!"
+msgstr "Nu s-a găsit „%s” în spațiul de prestocare(cache) a gazdelor!"
 
 #: nscd/aicache.c:70 nscd/hstcache.c:453
 #, c-format
 msgid "Reloading \"%s\" in hosts cache!"
-msgstr "Se reîncarcă „%s” în zona de prestocare a memoriei(cache) a gazdelor!"
+msgstr "Se reîncarcă „%s” în spațiul de prestocare(cache) a gazdelor!"
 
 #: nscd/cache.c:150
 #, c-format
 msgid "add new entry \"%s\" of type %s for %s to cache%s"
-msgstr "adaugă o nouă intrare „%s” de tip %s pentru %s în zona de prestocare a memoriei(cache)%s"
+msgstr "adaugă o nouă intrare „%s” de tip %s pentru %s în spațiul de prestocare(cache)%s"
 
 #: nscd/cache.c:152
 msgid " (first)"
@@ -3855,7 +3857,7 @@ msgstr "fișierul monitorizat „%s” a fost modificat (mtime)"
 #: nscd/cache.c:340
 #, c-format
 msgid "pruning %s cache; time %ld"
-msgstr "scurtează zona de prestocare a memoriei(cache) %s; timp %ld"
+msgstr "scurtează spațiul de prestocare(cache) %s; timp %ld"
 
 #: nscd/cache.c:369
 #, c-format
@@ -4136,12 +4138,12 @@ msgstr "scriere insuficientă în %s: %s"
 #: nscd/grpcache.c:429 nscd/initgrcache.c:74
 #, c-format
 msgid "Haven't found \"%s\" in group cache!"
-msgstr "Nu s-a găsit „%s” în zona de prestocare a memoriei(cache) a grupului!"
+msgstr "Nu s-a găsit „%s” în spațiul de prestocare(cache) a grupului!"
 
 #: nscd/grpcache.c:431 nscd/initgrcache.c:76
 #, c-format
 msgid "Reloading \"%s\" in group cache!"
-msgstr "Se reîncarcă „%s” în zona de prestocare a memoriei(cache) a grupului!"
+msgstr "Se reîncarcă „%s” în spațiul de prestocare(cache) a grupului!"
 
 #: nscd/grpcache.c:491
 #, c-format
@@ -4151,32 +4153,32 @@ msgstr "Gid numeric „%s” nevalid!"
 #: nscd/mem.c:420
 #, c-format
 msgid "freed %zu bytes in %s cache"
-msgstr "s-au eliberat %zu octeți din zona de prestocare a memoriei(cache) %s"
+msgstr "s-au eliberat %zu octeți din spațiul de prestocare(cache) %s"
 
 #: nscd/mem.c:563
 #, c-format
 msgid "no more memory for database '%s'"
 msgstr "nu mai există memorie pentru baza de date „%s”"
 
-#: nscd/netgroupcache.c:121
+#: nscd/netgroupcache.c:198
 #, c-format
 msgid "Haven't found \"%s\" in netgroup cache!"
-msgstr "Nu s-a găsit „%s” în zona de prestocare a memoriei(cache) a netgroup!"
+msgstr "Nu s-a găsit „%s” în spațiul de prestocare(cache) a netgroup!"
 
-#: nscd/netgroupcache.c:123
+#: nscd/netgroupcache.c:200
 #, c-format
 msgid "Reloading \"%s\" in netgroup cache!"
-msgstr "Se reîncarcă „%s” în zona de prestocare a memoriei(cache) a netgroup!"
+msgstr "Se reîncarcă „%s” în spațiul de prestocare(cache) a netgroup!"
 
-#: nscd/netgroupcache.c:469
+#: nscd/netgroupcache.c:486
 #, c-format
 msgid "Haven't found \"%s (%s,%s,%s)\" in netgroup cache!"
-msgstr "Nu s-a găsit „%s (%s,%s,%s)” în zona de prestocare a memoriei(cache) a netgroup!"
+msgstr "Nu s-a găsit „%s (%s,%s,%s)” în spațiul de prestocare(cache) a netgroup!"
 
-#: nscd/netgroupcache.c:472
+#: nscd/netgroupcache.c:489
 #, c-format
 msgid "Reloading \"%s (%s,%s,%s)\" in netgroup cache!"
-msgstr "Se reîncarcă „%s (%s,%s,%s)” în zona de prestocare a memoriei(cache) a netgroup!"
+msgstr "Se reîncarcă „%s (%s,%s,%s)” în spațiul de prestocare(cache) a netgroup!"
 
 #: nscd/nscd.c:107
 msgid "Read configuration data from NAME"
@@ -4188,7 +4190,7 @@ msgstr "Nu bifurcă procesul și afișează mesajele pe tty-ul curent"
 
 #: nscd/nscd.c:111
 msgid "Print contents of the offline cache file NAME"
-msgstr "Afișează conținutul fișierului NUME de zonă de prestocare(cache) fără conexiune"
+msgstr "Afișează conținutul fișierului NUME al spațiului de prestocare(cache) fără conexiune"
 
 #: nscd/nscd.c:113
 msgid "Do not fork, but otherwise behave like a daemon"
@@ -4777,17 +4779,17 @@ msgstr "nu se poate inițializa contextul SELinux"
 msgid "cannot set file creation context for `%s'"
 msgstr "nu se poate stabilii contextul de creare a fișierului pentru „%s”"
 
-#: posix/getconf.c:417
+#: posix/getconf.c:419
 #, c-format
 msgid "Usage: %s [-v specification] variable_name [pathname]\n"
 msgstr "Utilizare: %s [-v specificația] nume_variabilă [nume_rută]\n"
 
-#: posix/getconf.c:420
+#: posix/getconf.c:422
 #, c-format
 msgid "       %s -a [pathname]\n"
 msgstr "       %s -a [nume_rută]\n"
 
-#: posix/getconf.c:496
+#: posix/getconf.c:498
 #, c-format
 msgid ""
 "Usage: getconf [-v SPEC] VAR\n"
@@ -4806,21 +4808,21 @@ msgstr ""
 "mediul de compilare SPECificat.\n"
 "\n"
 
-#: posix/getconf.c:572
+#: posix/getconf.c:574
 #, c-format
 msgid "unknown specification \"%s\""
 msgstr "specificație necunoscută „%s”"
 
-#: posix/getconf.c:624
+#: posix/getconf.c:626
 #, c-format
 msgid "Couldn't execute %s"
 msgstr "Nu s-a putut executa %s"
 
-#: posix/getconf.c:669 posix/getconf.c:685
+#: posix/getconf.c:671 posix/getconf.c:687
 msgid "undefined"
 msgstr "nedefinită"
 
-#: posix/getconf.c:707
+#: posix/getconf.c:709
 #, c-format
 msgid "Unrecognized variable `%s'"
 msgstr "Variabilă nerecunoscută „%s”"
@@ -5121,7 +5123,7 @@ msgstr "Memorii tampon de ieșire disponibile"
 msgid "Input message available"
 msgstr "Mesaj de intrare disponibil"
 
-#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:375 timezone/zic.c:564
+#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:445 timezone/zic.c:652
 msgid "I/O error"
 msgstr "Eroare de In/Ieș"
 
@@ -6556,24 +6558,44 @@ msgstr "nu se poate dezactiva IBT"
 msgid "can't disable SHSTK"
 msgstr "nu se poate dezactiva SHSTK"
 
-#: timezone/zdump.c:332
+#: timezone/zdump.c:131
+#, c-format
+msgid "%s: size overflow\n"
+msgstr "%s: depășire dimensiune\n"
+
+#: timezone/zdump.c:170
+#, c-format
+msgid "%s: Memory exhausted\n"
+msgstr "%s: Memorie epuizată\n"
+
+#: timezone/zdump.c:257
+#, c-format
+msgid "%s: setenv: %s\n"
+msgstr "%s: setenv: %s\n"
+
+#: timezone/zdump.c:337 timezone/zdump.c:604
+#, c-format
+msgid "%s: unknown timezone '%s': %s\n"
+msgstr "%s: fus orar necunoscut „%s”: %s\n"
+
+#: timezone/zdump.c:402
 msgid "has characters other than ASCII alphanumerics, '-' or '+'"
 msgstr "are alte caractere decât caracterele alfanumerice ASCII, „-” sau „+”"
 
-#: timezone/zdump.c:334
+#: timezone/zdump.c:404
 msgid "has fewer than 3 characters"
 msgstr "are mai puțin de 3 caractere"
 
-#: timezone/zdump.c:336
+#: timezone/zdump.c:406
 msgid "has more than 6 characters"
 msgstr "are mai mult de 6 caractere"
 
-#: timezone/zdump.c:341
+#: timezone/zdump.c:411
 #, c-format
 msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
 msgstr "%s: avertisment: abrevierea zonei „%s” „%s” %s\n"
 
-#: timezone/zdump.c:387
+#: timezone/zdump.c:457
 #, c-format
 msgid ""
 "%s: usage: %s OPTIONS TIMEZONE ...\n"
@@ -6602,496 +6624,543 @@ msgstr ""
 "\n"
 "Raportați erorile la %s.\n"
 
-#: timezone/zdump.c:473
+#: timezone/zdump.c:543
 #, c-format
 msgid "%s: wild -c argument %s\n"
 msgstr "%s: argument extra %s cu opțiunea „-c”\n"
 
-#: timezone/zdump.c:506
+#: timezone/zdump.c:576
 #, c-format
 msgid "%s: wild -t argument %s\n"
 msgstr "%s: argument extra %s cu opțiunea „-t”\n"
 
-#: timezone/zic.c:432
+#: timezone/zdump.c:857
+#, c-format
+msgid " (gmtime failed)"
+msgstr " (gmtime() a eșuat)"
+
+#: timezone/zdump.c:867
+#, c-format
+msgid " (localtime failed)"
+msgstr " (localtime() a eșuat)"
+
+#: timezone/zic.c:463
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: Memorie epuizată: %s\n"
 
-#: timezone/zic.c:440
+#: timezone/zic.c:470
 msgid "size overflow"
 msgstr "depășire dimensiune"
 
-#: timezone/zic.c:450
-msgid "alignment overflow"
-msgstr "depășire aliniere"
-
-#: timezone/zic.c:498
+#: timezone/zic.c:559
 msgid "integer overflow"
 msgstr "depășire a numărului întreg"
 
-#: timezone/zic.c:532
+#: timezone/zic.c:585
+msgid "command line"
+msgstr "linie de comandă"
+
+#: timezone/zic.c:588
+msgid "standard input"
+msgstr "intrarea standard"
+
+#: timezone/zic.c:616
 #, c-format
 msgid "\"%s\", line %<PRIdMAX>: "
 msgstr "„%s”, linia %<PRIdMAX>: "
 
-#: timezone/zic.c:535
+#: timezone/zic.c:620
 #, c-format
 msgid " (rule from \"%s\", line %<PRIdMAX>)"
 msgstr " (regula de la „%s”, linia %<PRIdMAX>)"
 
-#: timezone/zic.c:554
+#: timezone/zic.c:639
 #, c-format
 msgid "warning: "
 msgstr "avertisment: "
 
-#: timezone/zic.c:579
+#: timezone/zic.c:669
 #, c-format
 msgid ""
 "%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
 "\t[ -b {slim|fat} ] [ -d directory ] [ -l localtime ] [ -L leapseconds ] \\\n"
-"\t[ -p posixrules ] [ -r '[@lo][/@hi]' ] [ -t localtime-link ] \\\n"
+"\t[ -p posixrules ] [ -r '[@lo][/@hi]' ] [ -R '@hi' ] \\\n"
+"\t[ -t localtime-link ] \\\n"
 "\t[ filename ... ]\n"
 "\n"
 "Report bugs to %s.\n"
 msgstr ""
 "%s: sintaxa este %s [ --version ] [ --help ] [ -v ] \\\n"
 "\t[ -b {slim|fat} ] [ -d director ] [ -l ora_locală ] [ -L secunde_an-bisect ] \\\n"
-"\t[ -p reguli_posix ] [ -r '[@lo][/@hi]' ] [ -t legătură-ora_locală ] \\\n"
+"\t[ -p reguli_posix ] [ -r '[@lo][/@hi]' ] [ -R '@hi' ] \\\n"
+"[ -t legătură-ora_locală ] \\\n"
 "\t[ nume_fișier ... ]\n"
 "\n"
 "Raportați erorile la %s.\n"
 
-#: timezone/zic.c:604
+#: timezone/zic.c:695
 #, c-format
 msgid "%s: Can't chdir to %s: %s\n"
 msgstr "%s: Nu s-a putut schimba la directorul %s: %s\n"
 
-#: timezone/zic.c:698
+#: timezone/zic.c:786
+#, c-format
+msgid "\"Link %s %s\" is part of a link cycle"
+msgstr "„Legătura %s %s” face parte dintr-o referință circulară"
+
+#: timezone/zic.c:797
+#, c-format
+msgid "link %s targets itself"
+msgstr "legătura %s indică spre ea însăși"
+
+#: timezone/zic.c:817
+#, c-format
+msgid "link %s targeting link %s mishandled by pre-2023 zic"
+msgstr "legătura %s care vizează legătura %s gestionată greșit de «zic» de dinainte de 2023"
+
+#: timezone/zic.c:821
+#, c-format
+msgid "link %s targeting link %s"
+msgstr "legătura %s vizează legătura %s"
+
+#: timezone/zic.c:992
 msgid "wild compilation-time specification of zic_t"
 msgstr "specificație greșită a timpului de compilare pentru zic_t"
 
-#: timezone/zic.c:716 timezone/zic.c:720
+#: timezone/zic.c:1011 timezone/zic.c:1015
 msgid "incompatible -b options"
 msgstr "opțiuni incompatibile „-b”"
 
-#: timezone/zic.c:723
+#: timezone/zic.c:1018
 #, c-format
 msgid "invalid option: -b '%s'"
 msgstr "opțiune nevalidă: „-b %s”"
 
-#: timezone/zic.c:730
+#: timezone/zic.c:1025
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr "%s: Mai mult de o opțiune „-d” specificată\n"
 
-#: timezone/zic.c:740
+#: timezone/zic.c:1036
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr "%s: Mai mult de o opțiune „-l” specificată\n"
 
-#: timezone/zic.c:750
+#: timezone/zic.c:1047
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr "%s: Mai mult de o opțiune „-p” specificată\n"
 
-#: timezone/zic.c:758
+#: timezone/zic.c:1056
 #, c-format
 msgid "%s: More than one -t option specified\n"
 msgstr "%s: Mai mult de o opțiune „-t” specificată\n"
 
-#: timezone/zic.c:767
-msgid "-y is obsolescent"
-msgstr "opțiunea „-y” este învechit"
+#: timezone/zic.c:1064
+msgid "-y ignored"
+msgstr "opțiunea „-y” este ignorată"
 
-#: timezone/zic.c:771
-#, c-format
-msgid "%s: More than one -y option specified\n"
-msgstr "%s: Mai mult de o opțiune „-y” specificată\n"
-
-#: timezone/zic.c:781
+#: timezone/zic.c:1071
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr "%s: Mai mult de o opțiune „-L” specificată\n"
 
-#: timezone/zic.c:792
+#: timezone/zic.c:1083
 #, c-format
 msgid "%s: More than one -r option specified\n"
 msgstr "%s: Mai mult de o opțiune „-r” specificată\n"
 
-#: timezone/zic.c:798
+#: timezone/zic.c:1090
 #, c-format
 msgid "%s: invalid time range: %s\n"
 msgstr "%s: interval de timp nevalid: %s\n"
 
-#: timezone/zic.c:805
+#: timezone/zic.c:1098
+#, c-format
+msgid "%s: invalid time: %s\n"
+msgstr "%s: oră nevalidă: %s\n"
+
+#: timezone/zic.c:1104
 msgid "-s ignored"
 msgstr "opțiunea „-s” este ignorată"
 
-#: timezone/zic.c:848
-msgid "link to link"
-msgstr "legătură către altă legătură"
+#: timezone/zic.c:1110
+#, c-format
+msgid "%s: -R time exceeds -r cutoff\n"
+msgstr "%s: timpul opțiunii „-R” depășește limita opțiunii „-r”\n"
 
-#: timezone/zic.c:851 timezone/zic.c:855
-msgid "command line"
-msgstr "linie de comandă"
-
-#: timezone/zic.c:871
+#: timezone/zic.c:1171
 msgid "empty file name"
 msgstr "nume de fișier gol"
 
-#: timezone/zic.c:874
+#: timezone/zic.c:1174
 #, c-format
 msgid "file name '%s' begins with '/'"
 msgstr "numele fișierului „%s” începe cu „/”"
 
-#: timezone/zic.c:884
+#: timezone/zic.c:1184
 #, c-format
 msgid "file name '%s' contains '%.*s' component"
 msgstr "numele fișierului „%s” conține componenta „%.*s”"
 
-#: timezone/zic.c:890
+#: timezone/zic.c:1190
 #, c-format
 msgid "file name '%s' component contains leading '-'"
 msgstr "componenta numele fișierului „%s” conține de început caracterul „-”"
 
-#: timezone/zic.c:893
+#: timezone/zic.c:1193
 #, c-format
 msgid "file name '%s' contains overlength component '%.*s...'"
 msgstr "numele fișierului „%s” conține componenta super-lungă „%.*s...”"
 
-#: timezone/zic.c:921
+#: timezone/zic.c:1221
 #, c-format
 msgid "file name '%s' contains byte '%c'"
 msgstr "numele fișierului „%s” conține octetul „%c”"
 
-#: timezone/zic.c:922
+#: timezone/zic.c:1222
 #, c-format
 msgid "file name '%s' contains byte '\\%o'"
 msgstr "numele fișierului „%s” conține octetul „%o”"
 
-#: timezone/zic.c:992
-#, c-format
-msgid "%s: link from %s/%s failed: %s\n"
-msgstr "%s: legătura de la %s/%s a eșuat: %s\n"
-
-#: timezone/zic.c:1002 timezone/zic.c:1992
-#, c-format
-msgid "%s: Can't remove %s/%s: %s\n"
-msgstr "%s: Nu se poate elimina %s/%s: %s\n"
-
-#: timezone/zic.c:1026
-#, c-format
-msgid "symbolic link used because hard link failed: %s"
-msgstr "legătura simbolică este utilizată deoarece legătura dură a eșuat: %s"
-
-#: timezone/zic.c:1034
-#, c-format
-msgid "%s: Can't read %s/%s: %s\n"
-msgstr "%s: Nu se poate citi %s/%s: %s\\\n"
-
-#: timezone/zic.c:1041 timezone/zic.c:2005
+#: timezone/zic.c:1369
 #, c-format
 msgid "%s: Can't create %s/%s: %s\n"
 msgstr "%s: Nu se poate crea %s/%s: %s\n"
 
-#: timezone/zic.c:1050
+#: timezone/zic.c:1388
+#, c-format
+msgid "%s: rename to %s/%s: %s\n"
+msgstr "%s: redenumește în %s/%s: %s\n"
+
+#: timezone/zic.c:1463
+#, c-format
+msgid "%s: Can't remove %s/%s: %s\n"
+msgstr "%s: Nu se poate elimina %s/%s: %s\n"
+
+#: timezone/zic.c:1507
+#, c-format
+msgid "%s: Can't link %s/%s to %s/%s: %s\n"
+msgstr "%s: Nu se poate lega %s/%s la %s/%s: %s\n"
+
+#: timezone/zic.c:1536
+#, c-format
+msgid "symbolic link used because hard link failed: %s"
+msgstr "legătura simbolică este utilizată deoarece legătura dură a eșuat: %s"
+
+#: timezone/zic.c:1544
+#, c-format
+msgid "%s: Can't read %s/%s: %s\n"
+msgstr "%s: Nu se poate citi %s/%s: %s\\\n"
+
+#: timezone/zic.c:1554
 #, c-format
 msgid "copy used because hard link failed: %s"
 msgstr "copia este utilizată deoarece legătura dură a eșuat: %s"
 
-#: timezone/zic.c:1053
+#: timezone/zic.c:1557
 #, c-format
 msgid "copy used because symbolic link failed: %s"
 msgstr "copia este utilizată deoarece legătura simbolică a eșuat: %s"
 
-#: timezone/zic.c:1122 timezone/zic.c:1124
+#: timezone/zic.c:1608 timezone/zic.c:1610
 msgid "same rule name in multiple files"
 msgstr "același nume de regulă în mai multe fișiere"
 
-#: timezone/zic.c:1171
+#: timezone/zic.c:1656
 #, c-format
 msgid "%s in ruleless zone"
 msgstr "%s într-o zonă fără reguli"
 
-#: timezone/zic.c:1191
-msgid "standard input"
-msgstr "intrarea standard"
+#: timezone/zic.c:1674
+msgid "input error"
+msgstr "eroare de intrare"
 
-#: timezone/zic.c:1196
+#: timezone/zic.c:1679
+msgid "unterminated line"
+msgstr "linie neterminată"
+
+#: timezone/zic.c:1683
+msgid "NUL input byte"
+msgstr "octet de intrare NUL"
+
+#: timezone/zic.c:1688
+msgid "line too long"
+msgstr "linie prea lungă"
+
+#: timezone/zic.c:1709
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr "%s: Nu se poate deschide %s: %s\n"
 
-#: timezone/zic.c:1207
-msgid "line too long"
-msgstr "linie prea lungă"
-
-#: timezone/zic.c:1230
+#: timezone/zic.c:1734
 msgid "input line of unknown type"
 msgstr "linie de intrare de tip necunoscut"
 
-#: timezone/zic.c:1253 timezone/zic.c:1699 timezone/zic.c:1721
-#, c-format
-msgid "%s: panic: Invalid l_value %d\n"
-msgstr "%s: panică: Valoarea l_value %d nu este validă\n"
-
-#: timezone/zic.c:1262
+#: timezone/zic.c:1761
 msgid "expected continuation line not found"
 msgstr "linia de continuare așteptată nu a fost găsită"
 
-#: timezone/zic.c:1298
+#: timezone/zic.c:1797
 msgid "fractional seconds rejected by pre-2018 versions of zic"
 msgstr "fracții de secunde respinse de versiunile anterioare de 2018 ale «zic»"
 
-#: timezone/zic.c:1316 timezone/zic.c:3282
+#: timezone/zic.c:1815 timezone/zic.c:3761
 msgid "time overflow"
 msgstr "debordare orară"
 
-#: timezone/zic.c:1322
+#: timezone/zic.c:1821
 msgid "values over 24 hours not handled by pre-2007 versions of zic"
 msgstr "valorile peste 24 de ore nu sunt gestionate de versiunile anterioare anului 2007 ale «zic»"
 
-#: timezone/zic.c:1340
+#: timezone/zic.c:1839
 msgid "invalid saved time"
 msgstr "ora salvată nu este validă"
 
-#: timezone/zic.c:1351
+#: timezone/zic.c:1850
 msgid "wrong number of fields on Rule line"
 msgstr "număr greșit de câmpuri pe linia regulii „Rule”"
 
-#: timezone/zic.c:1360
+#: timezone/zic.c:1859
 #, c-format
 msgid "Invalid rule name \"%s\""
 msgstr "Nume nevalid de regulă „%s”"
 
-#: timezone/zic.c:1382
+#: timezone/zic.c:1883
 msgid "wrong number of fields on Zone line"
 msgstr "număr greșit de câmpuri pe linia zonei „Zone”"
 
-#: timezone/zic.c:1387
+#: timezone/zic.c:1887
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr "Linia „Zone %s” și opțiunea „-l” se exclud reciproc"
 
-#: timezone/zic.c:1393
+#: timezone/zic.c:1892
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr "Linia „Zone %s” și opțiunea „-p” se exclud reciproc"
 
-#: timezone/zic.c:1400
+#: timezone/zic.c:1899
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %<PRIdMAX>)"
 msgstr "nume de zonă duplicat %s (fișierul „%s”, linia %<PRIdMAX>)"
 
-#: timezone/zic.c:1414
+#: timezone/zic.c:1913
 msgid "wrong number of fields on Zone continuation line"
 msgstr "număr greșit de câmpuri pe linia de continuare a zonei „Zone”"
 
-#: timezone/zic.c:1454
+#: timezone/zic.c:1952
 msgid "invalid UT offset"
 msgstr "decalaj nevalid față de UTC"
 
-#: timezone/zic.c:1458
+#: timezone/zic.c:1956
 msgid "invalid abbreviation format"
 msgstr "format de abreviere nevalid"
 
-#: timezone/zic.c:1467
+#: timezone/zic.c:1986
+msgid "Zone continuation line end time is not after end time of previous line"
+msgstr "Ora de încheiere a liniei de continuare a zonei nu este după ora de încheiere a liniei precedente"
+
+#: timezone/zic.c:1997
 #, c-format
 msgid "format '%s' not handled by pre-2015 versions of zic"
 msgstr "formatul „%s” nu este gestionat de versiunile anterioare anului 2015 ale «zic»"
 
-#: timezone/zic.c:1494
-msgid "Zone continuation line end time is not after end time of previous line"
-msgstr "Ora de încheiere a liniei de continuare a zonei nu este după ora de încheiere a liniei precedente"
-
-#: timezone/zic.c:1526
+#: timezone/zic.c:2027
 msgid "invalid leaping year"
 msgstr "an bisect nevalid"
 
-#: timezone/zic.c:1548 timezone/zic.c:1653
+#: timezone/zic.c:2049 timezone/zic.c:2154
 msgid "invalid month name"
 msgstr "nume de lună nevalid"
 
-#: timezone/zic.c:1561 timezone/zic.c:1769 timezone/zic.c:1783
+#: timezone/zic.c:2062 timezone/zic.c:2252 timezone/zic.c:2266
 msgid "invalid day of month"
 msgstr "zi a lunii nevalidă"
 
-#: timezone/zic.c:1566
+#: timezone/zic.c:2067
 msgid "time too small"
 msgstr "valoarea timpului este prea mică"
 
-#: timezone/zic.c:1570
+#: timezone/zic.c:2071
 msgid "time too large"
 msgstr "valoarea timpului este prea mare"
 
-#: timezone/zic.c:1574 timezone/zic.c:1682
+#: timezone/zic.c:2075 timezone/zic.c:2183
 msgid "invalid time of day"
 msgstr "oră nevalidă a zilei"
 
-#: timezone/zic.c:1577
+#: timezone/zic.c:2078
 msgid "leap second precedes Epoch"
 msgstr "secunda intercalată(de an bisect) cade înainte de începutul erei"
 
-#: timezone/zic.c:1585
+#: timezone/zic.c:2086
 msgid "wrong number of fields on Leap line"
 msgstr "număr greșit de câmpuri pe linia „Leap”"
 
-#: timezone/zic.c:1591
+#: timezone/zic.c:2092
 msgid "invalid Rolling/Stationary field on Leap line"
 msgstr "câmp „Rolling/Stationary” nevalid pe linia „Leap”"
 
-#: timezone/zic.c:1599
+#: timezone/zic.c:2100
 msgid "invalid CORRECTION field on Leap line"
 msgstr "câmp „CORRECTION” nevalid pe linia „Leap”"
 
-#: timezone/zic.c:1611
+#: timezone/zic.c:2112
 msgid "wrong number of fields on Expires line"
 msgstr "număr greșit de câmpuri pe linia „Expires”"
 
-#: timezone/zic.c:1613
+#: timezone/zic.c:2114
 msgid "multiple Expires lines"
 msgstr "multiple linii „Expires”"
 
-#: timezone/zic.c:1624
+#: timezone/zic.c:2125
 msgid "wrong number of fields on Link line"
 msgstr "număr greșit de câmpuri pe linia „Link”"
 
-#: timezone/zic.c:1628
-msgid "blank FROM field on Link line"
-msgstr "câmp „FROM” gol pe linia „Link”"
+#: timezone/zic.c:2129
+msgid "blank TARGET field on Link line"
+msgstr "câmp „TARGET” gol pe linia „Link”"
 
-#: timezone/zic.c:1703
+#: timezone/zic.c:2192
+#, c-format
+msgid "FROM year \"%s\" is obsolete; treated as %d"
+msgstr "FROM anul „%s” este învechit; tratat ca %d"
+
+#: timezone/zic.c:2199
 msgid "invalid starting year"
 msgstr "anul de început nevalid"
 
-#: timezone/zic.c:1725
+#: timezone/zic.c:2214
 msgid "invalid ending year"
 msgstr "anul de sfârșit nevalid"
 
-#: timezone/zic.c:1729
+#: timezone/zic.c:2218
 msgid "starting year greater than ending year"
 msgstr "anul de început mai mare decât anul de sfârșit"
 
-#: timezone/zic.c:1736
-msgid "typed single year"
-msgstr "un singur an introdus"
-
-#: timezone/zic.c:1739
+#: timezone/zic.c:2222
 #, c-format
-msgid "year type \"%s\" is obsolete; use \"-\" instead"
-msgstr "tipul de an „%s” este învechit; utilizați în schimb „-”"
+msgid "year type \"%s\" is unsupported; use \"-\" instead"
+msgstr "tipul de an „%s” nu este acceptat; utilizați în schimb „-”"
 
-#: timezone/zic.c:1774
+#: timezone/zic.c:2257
 msgid "invalid weekday name"
 msgstr "nume nevalid pentru ziua săptămânii"
 
-#: timezone/zic.c:1935
+#: timezone/zic.c:2435
 #, c-format
 msgid "reference clients mishandle more than %d transition times"
 msgstr "clienții de referință gestionează greșit mai mult de %d timpi de tranziție"
 
-#: timezone/zic.c:1939
+#: timezone/zic.c:2439
 msgid "pre-2014 clients may mishandle more than 1200 transition times"
 msgstr "clienții dinainte de anul 2014 pot gestiona greșit peste 1200 de timpi de tranziție"
 
-#: timezone/zic.c:2058
+#: timezone/zic.c:2480
+#, c-format
+msgid "%s: pre-2021b clients may mishandle leap second expiry"
+msgstr "%s: clienții de dinainte de 2021b pot gestiona greșit expirarea secundelor bisecte"
+
+#: timezone/zic.c:2488
+#, c-format
+msgid "%s: pre-2021b clients may mishandle leap second table truncation"
+msgstr "%s: clienții de dinainte de 2021b pot gestiona greșit trunchierea tabelului cu secunde bisecte"
+
+#: timezone/zic.c:2537
 msgid "too many transition times"
 msgstr "prea multe perioade de tranziție"
 
-#: timezone/zic.c:2297
+#: timezone/zic.c:2801
 #, c-format
 msgid "%%z UT offset magnitude exceeds 99:59:59"
 msgstr "Mărimea decalajului UTC %%z depășește 99:59:59"
 
-#: timezone/zic.c:2673
-msgid "no POSIX environment variable for zone"
-msgstr "nicio variabilă de mediu POSIX pentru zonă(fusul orar)"
+#: timezone/zic.c:3180
+msgid "no POSIX.1-2017 environment variable for zone"
+msgstr "nicio variabilă de mediu POSIX.1-2017 pentru zonă(fusul orar)"
 
-#: timezone/zic.c:2679
+#: timezone/zic.c:3187
 #, c-format
 msgid "%s: pre-%d clients may mishandle distant timestamps"
 msgstr "%s: clienții dinainte de %d pot gestiona greșit marcajele de timp îndepărtate"
 
-#: timezone/zic.c:2818
+#: timezone/zic.c:3316
 msgid "two rules for same instant"
 msgstr "două reguli pentru același moment"
 
-#: timezone/zic.c:2889
+#: timezone/zic.c:3389
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr "nu se poate determina abrevierea fusului orar de utilizat imediat după această dată"
 
-#: timezone/zic.c:2964
+#: timezone/zic.c:3490
 msgid "UT offset out of range"
 msgstr "Decalaj UTC în afara intervalului"
 
-#: timezone/zic.c:2987
+#: timezone/zic.c:3513
 msgid "too many local time types"
 msgstr "prea multe tipuri de oră locală"
 
-#: timezone/zic.c:3005
+#: timezone/zic.c:3531
 msgid "too many leap seconds"
 msgstr "prea multe secunde intercalate (de an bisect)"
 
-#: timezone/zic.c:3032
+#: timezone/zic.c:3535
+msgid "Rolling leap seconds not supported with -r"
+msgstr "Secundele bisecte nu sunt acceptate cu opțiunea „-r”"
+
+#: timezone/zic.c:3562
 msgid "Leap seconds too close together"
 msgstr "Secundele intercalate (de an bisect) sunt prea apropiate una de cealaltă"
 
-#: timezone/zic.c:3043
-msgid "\"#expires\" is obsolescent; use \"Expires\""
-msgstr "„#expires” este învechit; utilizați „Expires”"
-
-#: timezone/zic.c:3049
+#: timezone/zic.c:3573
 msgid "last Leap time does not precede Expires time"
 msgstr "ultimul timp „Leap” nu este înainte de timpul „Expires”"
 
-#: timezone/zic.c:3095
-msgid "Wild result from command execution"
-msgstr "Rezultat ciudat al comenzii executate"
-
-#: timezone/zic.c:3096
-#, c-format
-msgid "%s: command was '%s', result was %d\n"
-msgstr "%s: comanda a fost „%s”, rezultatul a fost %d\n"
-
-#: timezone/zic.c:3202
+#: timezone/zic.c:3680
 #, c-format
 msgid "\"%s\" is undocumented; use \"last%s\" instead"
 msgstr "„%s” este nedocumentat; utilizați în schimb „last%s”"
 
-#: timezone/zic.c:3233
+#: timezone/zic.c:3711
 #, c-format
 msgid "\"%s\" is ambiguous in pre-2017c zic"
 msgstr "„%s” este ambiguu în «zic» de dinainte de 2017c"
 
-#: timezone/zic.c:3267
+#: timezone/zic.c:3742
 msgid "Odd number of quotation marks"
 msgstr "Număr impar de ghilimele"
 
-#: timezone/zic.c:3361
+#: timezone/zic.c:3750
+msgid "Too many input fields"
+msgstr "Prea multe câmpuri de intrare"
+
+#: timezone/zic.c:3839
 msgid "use of 2/29 in non leap-year"
 msgstr "utilizare a 2/29 în an non-bisect"
 
-#: timezone/zic.c:3396
+#: timezone/zic.c:3865
 msgid "rule goes past start/end of month; will not work with pre-2004 versions of zic"
 msgstr "regula depășește începutul/sfârșitul lunii; nu va funcționa cu versiunile anterioare de anul 2004 ale «zic»"
 
-#: timezone/zic.c:3423
+#: timezone/zic.c:3892
 msgid "time zone abbreviation has fewer than 3 characters"
 msgstr "abrevierea fusului orar are mai puțin de 3 caractere"
 
-#: timezone/zic.c:3425
+#: timezone/zic.c:3894
 msgid "time zone abbreviation has too many characters"
 msgstr "abrevierea fusului orar are prea multe caractere"
 
-#: timezone/zic.c:3427
+#: timezone/zic.c:3896
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr "abrevierea fusului orar diferă de standardul POSIX"
 
-#: timezone/zic.c:3433
+#: timezone/zic.c:3902
 msgid "too many, or too long, time zone abbreviations"
 msgstr "prea multe sau prea lungi abrevieri de fus orar"
 
-#: timezone/zic.c:3479
+#: timezone/zic.c:3953
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: Nu se poate crea directorul %s: %s"
