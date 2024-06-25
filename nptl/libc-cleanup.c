@@ -69,10 +69,7 @@ __libc_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer)
 						    &cancelhandling, newval));
 
       if (cancel_enabled_and_canceled (cancelhandling))
-	{
-	  self->result = PTHREAD_CANCELED;
-	  __do_cancel ();
-	}
+	__do_cancel (PTHREAD_CANCELED);
     }
 }
 libc_hidden_def (__libc_cleanup_pop_restore)

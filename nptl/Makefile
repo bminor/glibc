@@ -204,6 +204,7 @@ routines = \
   sem_timedwait \
   sem_unlink \
   sem_wait \
+  syscall_cancel \
   tpp \
   unwind \
   vars \
@@ -235,7 +236,8 @@ CFLAGS-pthread_setcanceltype.c += -fexceptions -fasynchronous-unwind-tables
 
 # These are internal functions which similar functionality as setcancelstate
 # and setcanceltype.
-CFLAGS-cancellation.c += -fasynchronous-unwind-tables
+CFLAGS-cancellation.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-syscall_cancel.c += -fexceptions -fasynchronous-unwind-tables
 
 # Calling pthread_exit() must cause the registered cancel handlers to
 # be executed.  Therefore exceptions have to be thrown through this
@@ -279,6 +281,7 @@ tests = \
   tst-cancel7 \
   tst-cancel17 \
   tst-cancel24 \
+  tst-cancel31 \
   tst-cond26 \
   tst-context1 \
   tst-default-attr \
@@ -404,7 +407,10 @@ xtests += tst-eintr1
 
 test-srcs = tst-oddstacklimit
 
-gen-as-const-headers = unwindbuf.sym
+gen-as-const-headers = \
+  descr-const.sym \
+  unwindbuf.sym \
+  # gen-as-const-headers
 
 gen-py-const-headers := nptl_lock_constants.pysym
 pretty-printers := nptl-printers.py

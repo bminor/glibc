@@ -24,6 +24,7 @@
 
 #define ALIGNARG(log2) log2
 #define ASM_SIZE_DIRECTIVE(name) .size name,.-name
+#define L(label) .L##label
 
 #ifdef SHARED
 #define PLTJMP(_x)	_x##@PLT

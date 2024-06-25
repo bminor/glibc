@@ -1,6 +1,5 @@
-/* Single-thread optimization definitions.  Linux version.
-   Copyright (C) 2017-2024 Free Software Foundation, Inc.
-
+/* Types and macros used for syscall issuing.
+   Copyright (C) 2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,9 +16,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _SYSDEP_CANCEL_H
-#define _SYSDEP_CANCEL_H
+#ifndef _SYSCALL_TYPES_H
+#define _SYSCALL_TYPES_H
 
-#include <sysdep.h>
+typedef long int __syscall_arg_t;
+#define __SSC(__x) ((__syscall_arg_t) (__x))
 
 #endif

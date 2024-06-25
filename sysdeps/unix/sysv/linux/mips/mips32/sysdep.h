@@ -18,6 +18,10 @@
 #ifndef _LINUX_MIPS_MIPS32_SYSDEP_H
 #define _LINUX_MIPS_MIPS32_SYSDEP_H 1
 
+/* mips32 have cancelable syscalls with 7 arguments (currently only
+   sync_file_range).  */
+#define HAVE_CANCELABLE_SYSCALL_WITH_7_ARGS	1
+
 /* There is some commonality.  */
 #include <sysdeps/unix/sysv/linux/mips/sysdep.h>
 #include <sysdeps/unix/sysv/linux/sysdep.h>

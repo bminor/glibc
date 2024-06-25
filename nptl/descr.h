@@ -426,6 +426,24 @@ struct pthread
 } __attribute ((aligned (TCB_ALIGNMENT)));
 
 static inline bool
+cancel_enabled (int value)
+{
+  return (value & CANCELSTATE_BITMASK) == 0;
+}
+
+static inline bool
+cancel_async_enabled (int value)
+{
+  return (value & CANCELTYPE_BITMASK) != 0;
+}
+
+static inline bool
+cancel_exiting (int value)
+{
+  return (value & EXITING_BITMASK) != 0;
+}
+
+static inline bool
 cancel_enabled_and_canceled (int value)
 {
   return (value & (CANCELSTATE_BITMASK | CANCELED_BITMASK | EXITING_BITMASK

@@ -48,7 +48,7 @@ __pthread_setcancelstate (int state, int *oldstate)
 						&oldval, newval))
 	{
 	  if (cancel_enabled_and_canceled_and_async (newval))
-	    __do_cancel ();
+	    __do_cancel (PTHREAD_CANCELED);
 
 	  break;
 	}

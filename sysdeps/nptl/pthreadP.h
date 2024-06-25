@@ -261,9 +261,11 @@ libc_hidden_proto (__pthread_unregister_cancel)
 /* Called when a thread reacts on a cancellation request.  */
 static inline void
 __attribute ((noreturn, always_inline))
-__do_cancel (void)
+__do_cancel (void *result)
 {
   struct pthread *self = THREAD_SELF;
+
+  self->result = result;
 
   /* Make sure we get no more cancellations.  */
   atomic_fetch_or_relaxed (&self->cancelhandling, EXITING_BITMASK);
@@ -271,6 +273,13 @@ __do_cancel (void)
   __pthread_unwind ((__pthread_unwind_buf_t *)
 		    THREAD_GETMEM (self, cleanup_jmp_buf));
 }
+
+extern long int __syscall_cancel_arch (volatile int *, __syscall_arg_t nr,
+     __syscall_arg_t arg1, __syscall_arg_t arg2, __syscall_arg_t arg3,
+     __syscall_arg_t arg4, __syscall_arg_t arg5, __syscall_arg_t arg6
+     __SYSCALL_CANCEL7_ARCH_ARG_DEF) attribute_hidden;
+
+extern _Noreturn void __syscall_do_cancel (void) attribute_hidden;
 
 
 /* Internal prototypes.  */

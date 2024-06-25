@@ -104,6 +104,9 @@ GOT_LABEL:			;					      \
 # define JUMPTARGET(name) name
 #endif
 
+#define TAIL_CALL_NO_RETURN(__func) \
+    b __func@local
+
 #if defined SHARED && defined PIC && !defined NO_HIDDEN
 # undef HIDDEN_JUMPTARGET
 # define HIDDEN_JUMPTARGET(name) __GI_##name##@local

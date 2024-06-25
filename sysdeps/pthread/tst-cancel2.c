@@ -32,6 +32,10 @@ tf (void *arg)
   char buf[100000];
 
   while (write (fd[1], buf, sizeof (buf)) > 0);
+  /* The write can return -1/EPIPE if the pipe was closed before the
+     thread calls write, which signals a side-effect that must be
+     signaled to the thread.  */
+  pthread_testcancel ();
 
   return (void *) 42l;
 }

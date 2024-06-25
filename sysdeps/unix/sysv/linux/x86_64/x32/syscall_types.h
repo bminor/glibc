@@ -1,6 +1,5 @@
-/* Single-thread optimization definitions.  Linux version.
-   Copyright (C) 2017-2024 Free Software Foundation, Inc.
-
+/* Types and macros used for syscall issuing.  x86_64/x32 version.
+   Copyright (C) 2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,9 +16,19 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _SYSDEP_CANCEL_H
-#define _SYSDEP_CANCEL_H
+#ifndef _SYSCALL_TYPES_H
+#define _SYSCALL_TYPES_H
 
-#include <sysdep.h>
+#include <libc-diag.h>
+
+typedef long long int __syscall_arg_t;
+
+/* Syscall arguments for x32 follows x86_64 ABI, however pointers are 32 bits
+   should be zero extended.  */
+#define __SSC(__x) \
+  ({					\
+    TYPEFY (__x, __tmp) = ARGIFY (__x);	\
+    (__syscall_arg_t) __tmp;		\
+  })
 
 #endif

@@ -82,10 +82,7 @@ ___pthread_unregister_cancel_restore (__pthread_unwind_buf_t *buf)
 						    &cancelhandling, newval));
 
       if (cancel_enabled_and_canceled (cancelhandling))
-	{
-	  self->result = PTHREAD_CANCELED;
-	  __do_cancel ();
-	}
+	__do_cancel (PTHREAD_CANCELED);
     }
 }
 versioned_symbol (libc, ___pthread_unregister_cancel_restore,

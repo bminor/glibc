@@ -48,7 +48,7 @@ __pthread_setcanceltype (int type, int *oldtype)
 	  if (cancel_enabled_and_canceled_and_async (newval))
 	    {
 	      THREAD_SETMEM (self, result, PTHREAD_CANCELED);
-	      __do_cancel ();
+	      __do_cancel (PTHREAD_CANCELED);
 	    }
 
 	  break;

@@ -31,9 +31,7 @@ __pthread_exit (void *value)
                     " must be installed for pthread_exit to work\n");
   }
 
-  THREAD_SETMEM (THREAD_SELF, result, value);
-
-  __do_cancel ();
+  __do_cancel (value);
 }
 libc_hidden_def (__pthread_exit)
 weak_alias (__pthread_exit, pthread_exit)

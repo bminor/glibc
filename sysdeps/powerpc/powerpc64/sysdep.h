@@ -353,6 +353,25 @@ LT_LABELSUFFIX(name,_name_end): ; \
   DO_CALL (SYS_ify (syscall_name))
 
 #ifdef SHARED
+# define TAIL_CALL_NO_RETURN(__func) \
+    b JUMPTARGET(__func)
+#else
+# define TAIL_CALL_NO_RETURN(__func) \
+    .ifdef .Local ## __func; \
+    b .Local ## __func; \
+    .else; \
+.Local ## __func: \
+    mflr 0; \
+    std 0,FRAME_LR_SAVE(1); \
+    stdu 1,-FRAME_MIN_SIZE(1); \
+    cfi_adjust_cfa_offset(FRAME_MIN_SIZE); \
+    cfi_offset(lr,FRAME_LR_SAVE); \
+    bl JUMPTARGET(__func); \
+    nop; \
+    .endif
+#endif
+
+#ifdef SHARED
 #define TAIL_CALL_SYSCALL_ERROR \
     b JUMPTARGET (NOTOC (__syscall_error))
 #else
