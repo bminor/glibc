@@ -62,7 +62,7 @@ open (const char *__path, int __oflag, ...)
 }
 #elif __fortify_use_clang
 __fortify_function_error_function __attribute_overloadable__ int
-open (const char *__path, int __oflag, mode_t __mode, ...)
+open (__fortify_clang_overload_arg (const char *, ,__path), int __oflag, ...)
      __fortify_clang_unavailable ("open can be called either with 2 or 3 arguments, not more");
 
 __fortify_function __attribute_overloadable__ int
