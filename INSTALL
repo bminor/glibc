@@ -475,11 +475,12 @@ build the GNU C Library:
 
      For PowerPC 64-bits little-endian (powerpc64le), a GCC version with
      support for '-mno-gnu-attribute', '-mabi=ieeelongdouble', and
-     '-mabi=ibmlondouble' is required.  Likewise, the compiler must also
-     support passing '-mlong-double-128' with the preceding options.  As
-     of release, this implies GCC 7.4 and newer (excepting GCC 7.5.0,
-     see GCC PR94200).  These additional features are required for
-     building the GNU C Library with support for IEEE long double.
+     '-mabi=ibmlongdouble' is required.  Likewise, the compiler must
+     also support passing '-mlong-double-128' with the preceding
+     options.  As of release, this implies GCC 7.4 and newer (excepting
+     GCC 7.5.0, see GCC PR94200).  These additional features are
+     required for building the GNU C Library with support for IEEE long
+     double.
 
      For ARC architecture builds, GCC 8.3 or higher is needed.
 
