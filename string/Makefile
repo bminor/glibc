@@ -184,6 +184,7 @@ tests := \
   test-strncpy \
   test-strndup \
   test-strnlen \
+  test-strnlen-nonarray \
   test-strpbrk \
   test-strrchr \
   test-strspn \
