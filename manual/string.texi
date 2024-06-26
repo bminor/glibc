@@ -309,12 +309,12 @@ This function was introduced in @w{Amendment 1} to @w{ISO C90}.
 @end deftypefun
 
 @deftypefun size_t strnlen (const char *@var{s}, size_t @var{maxlen})
-@standards{GNU, string.h}
+@standards{POSIX.1, string.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-If the array @var{s} of size @var{maxlen} contains a null byte,
-the @code{strnlen} function returns the length of the string @var{s} in
-bytes.  Otherwise it
-returns @var{maxlen}.  Therefore this function is equivalent to
+This returns the offset of the first null byte in the array @var{s},
+except that it returns @var{maxlen} if the first @var{maxlen} bytes
+are all non-null.
+Therefore this function is equivalent to
 @code{(strlen (@var{s}) < @var{maxlen} ? strlen (@var{s}) : @var{maxlen})}
 but it
 is more efficient and works even if @var{s} is not null-terminated so
@@ -328,7 +328,9 @@ strnlen (string, 5)
     @result{} 5
 @end smallexample
 
-This function is a GNU extension and is declared in @file{string.h}.
+This function is part of POSIX.1-2008 and later editions, but was
+available in @theglibc{} and other systems as an extension long before
+it was standardized.  It is declared in @file{string.h}.
 @end deftypefun
 
 @deftypefun size_t wcsnlen (const wchar_t *@var{ws}, size_t @var{maxlen})
@@ -337,7 +339,8 @@ This function is a GNU extension and is declared in @file{string.h}.
 @code{wcsnlen} is the wide character equivalent to @code{strnlen}.  The
 @var{maxlen} parameter specifies the maximum number of wide characters.
 
-This function is a GNU extension and is declared in @file{wchar.h}.
+This function is part of POSIX.1-2008 and later editions, and is
+declared in @file{wchar.h}.
 @end deftypefun
 
 @node Copying Strings and Arrays
