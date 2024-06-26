@@ -160,6 +160,7 @@ tests := \
   test-wcsncmp \
   test-wcsncpy \
   test-wcsnlen \
+  test-wcsnlen-nonarray \
   test-wcspbrk \
   test-wcsrchr \
   test-wcsspn \
