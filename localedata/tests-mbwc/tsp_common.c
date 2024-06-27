@@ -35,30 +35,16 @@ main (int argc, char *argv[])
   return (ret != 0);
 }
 
-#define	 MAX_RESULT_REC	 132
-char result_rec[MAX_RESULT_REC];
-
-
 int
 result (FILE * fp, char res, const char *func, const char *loc, int rec_no,
 	int seq_no, int case_no, const char *msg)
 {
-  if (fp == NULL
-      || strlen (func) + strlen (loc) + strlen (msg) + 32 > MAX_RESULT_REC)
-    {
-      fprintf (stderr,
-	       "Warning: result(): can't write the result: %s:%s:%d:%d:%s\n",
-	       func, loc, rec_no, case_no, msg);
-      return 0;
-    }
+  if (fp == NULL)
+    fp = stderr;
 
-  sprintf (result_rec, "%s:%s:%d:%d:%d:%c:%s\n", func, loc, rec_no, seq_no,
-	   case_no, res, msg);
-
-  if (fputs (result_rec, fp) == EOF)
-    {
-      return 0;
-    }
+  if (fprintf (fp, "%s:%s:%d:%d:%d:%c:%s\n", func, loc, rec_no, seq_no,
+	       case_no, res, msg) == EOF)
+    return 0;
 
   return 1;
 }
