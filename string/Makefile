@@ -236,7 +236,10 @@ tests-unsupported += $(tests-translation)
 endif
 
 # This test allocates a lot of memory and can run for a long time.
-xtests = tst-strcoll-overflow
+xtests += tst-strcoll-overflow
+
+# This test runs for a long time.
+xtests += test-strncmp-nonarray
 
 # This test needs libdl.
 ifeq (yes,$(build-shared))
