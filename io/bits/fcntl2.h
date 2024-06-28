@@ -61,13 +61,8 @@ open (const char *__path, int __oflag, ...)
   return __open_alias (__path, __oflag, __va_arg_pack ());
 }
 #elif __fortify_use_clang
-__fortify_function_error_function __attribute_overloadable__ int
-open (__fortify_clang_overload_arg (const char *, ,__path), int __oflag, ...)
-     __fortify_clang_unavailable ("open can be called either with 2 or 3 arguments, not more");
-
 __fortify_function __attribute_overloadable__ int
 open (__fortify_clang_overload_arg (const char *, ,__path), int __oflag)
-     __fortify_clang_prefer_this_overload
      __fortify_clang_error (__OPEN_NEEDS_MODE (__oflag),
 			    "open with O_CREAT or O_TMPFILE in second argument needs 3 arguments")
 {
