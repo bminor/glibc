@@ -1023,39 +1023,58 @@ https://www.intel.com/content/www/us/en/support/articles/000059422/processors.ht
 
       model += extended_model;
       if (family == 0x6)
-        {
-          if (model == 0xf || model == 0x19)
-            {
-	      CPU_FEATURE_UNSET (cpu_features, AVX);
-	      CPU_FEATURE_UNSET (cpu_features, AVX2);
-
-              cpu_features->preferred[index_arch_Slow_SSE4_2]
-                |= bit_arch_Slow_SSE4_2;
-
-	      cpu_features->preferred[index_arch_AVX_Fast_Unaligned_Load]
-		&= ~bit_arch_AVX_Fast_Unaligned_Load;
-            }
-        }
-      else if (family == 0x7)
-        {
-	  if (model == 0x1b)
+	{
+	  /* Tuning for older Zhaoxin processors.  */
+	  if (model == 0xf || model == 0x19)
 	    {
 	      CPU_FEATURE_UNSET (cpu_features, AVX);
 	      CPU_FEATURE_UNSET (cpu_features, AVX2);
 
 	      cpu_features->preferred[index_arch_Slow_SSE4_2]
-		|= bit_arch_Slow_SSE4_2;
+		  |= bit_arch_Slow_SSE4_2;
+
+	      /*  Unaligned AVX loads are slower.  */
+	      cpu_features->preferred[index_arch_AVX_Fast_Unaligned_Load]
+		  &= ~bit_arch_AVX_Fast_Unaligned_Load;
+	    }
+	}
+      else if (family == 0x7)
+	{
+	  switch (model)
+	    {
+	      /* Wudaokou microarch tuning.  */
+	    case 0x1b:
+	      CPU_FEATURE_UNSET (cpu_features, AVX);
+	      CPU_FEATURE_UNSET (cpu_features, AVX2);
+
+	      cpu_features->preferred[index_arch_Slow_SSE4_2]
+		  |= bit_arch_Slow_SSE4_2;
 
 	      cpu_features->preferred[index_arch_AVX_Fast_Unaligned_Load]
-		&= ~bit_arch_AVX_Fast_Unaligned_Load;
-	    }
-	  else if (model == 0x3b)
-	    {
+		  &= ~bit_arch_AVX_Fast_Unaligned_Load;
+	      break;
+
+	      /* Lujiazui microarch tuning.  */
+	    case 0x3b:
 	      CPU_FEATURE_UNSET (cpu_features, AVX);
 	      CPU_FEATURE_UNSET (cpu_features, AVX2);
 
 	      cpu_features->preferred[index_arch_AVX_Fast_Unaligned_Load]
-		&= ~bit_arch_AVX_Fast_Unaligned_Load;
+		  &= ~bit_arch_AVX_Fast_Unaligned_Load;
+	      break;
+
+	      /* Yongfeng and Shijidadao mircoarch tuning.  */
+	    case 0x5b:
+	    case 0x6b:
+	      cpu_features->preferred[index_arch_AVX_Fast_Unaligned_Load]
+		  &= ~bit_arch_AVX_Fast_Unaligned_Load;
+
+	      /* To use sse2_unaligned versions of memset, strcpy and strcat.
+	       */
+	      cpu_features->preferred[index_arch_Prefer_No_VZEROUPPER]
+		  |= (bit_arch_Prefer_No_VZEROUPPER
+		      | bit_arch_Fast_Unaligned_Load);
+	      break;
 	    }
 	}
     }
