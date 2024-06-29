@@ -151,13 +151,10 @@ L(more_2x_vec):
 	   loop.  */
 	movups	%xmm0, (%rdi)
 
-# ifdef SHARED_CACHE_SIZE_HALF
-	cmp	$SHARED_CACHE_SIZE_HALF, %RDX_LP
-# else
-	cmp	__x86_shared_cache_size_half(%rip), %rdx
-# endif
+	cmp	__x86_shared_non_temporal_threshold(%rip), %rdx
 	ja	L(large_memcpy)
 
+L(loop_fwd):
 	leaq	-64(%rdi, %rdx), %r8
 	andq	$-16, %rdi
 	movl	$48, %edx
@@ -198,6 +195,13 @@ L(copy_backward):
 L(large_memcpy):
 	movups	-64(%r9, %rdx), %xmm10
 	movups	-80(%r9, %rdx), %xmm11
+
+	/* Check if src and dst overlap. If they do use cacheable
+	   writes to potentially gain positive interference between
+	   the loads during the memmove.  */
+	subq	%rdi, %r9
+	cmpq	%rdx, %r9
+	jb	L(loop_fwd)
 
 	sall	$5, %ecx
 	leal	(%rcx, %rcx, 2), %r8d
