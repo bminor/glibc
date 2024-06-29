@@ -934,8 +934,10 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
   /* If no ERMS, we use the per-thread L3 chunking. Normal cacheable stores run
      a higher risk of actually thrashing the cache as they don't have a HW LRU
      hint. As well, their performance in highly parallel situations is
-     noticeably worse.  */
-  if (!CPU_FEATURE_USABLE_P (cpu_features, ERMS))
+     noticeably worse. Zhaoxin processors are an exception, the lowbound is not
+     suitable for them based on actual test data.  */
+  if (!CPU_FEATURE_USABLE_P (cpu_features, ERMS)
+      && cpu_features->basic.kind != arch_kind_zhaoxin)
     non_temporal_threshold = non_temporal_threshold_lowbound;
   /* SIZE_MAX >> 4 because memmove-vec-unaligned-erms right-shifts the value of
      'x86_non_temporal_threshold' by `LOG_4X_MEMCPY_THRESH` (4) and it is best

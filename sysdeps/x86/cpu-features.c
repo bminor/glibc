@@ -1065,6 +1065,7 @@ https://www.intel.com/content/www/us/en/support/articles/000059422/processors.ht
 
 	      /* Yongfeng and Shijidadao mircoarch tuning.  */
 	    case 0x5b:
+	      cpu_features->cachesize_non_temporal_divisor = 2;
 	    case 0x6b:
 	      cpu_features->preferred[index_arch_AVX_Fast_Unaligned_Load]
 		  &= ~bit_arch_AVX_Fast_Unaligned_Load;
