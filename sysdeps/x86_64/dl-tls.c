@@ -41,7 +41,10 @@ __tls_get_addr_slow (GET_ADDR_ARGS)
   dtv_t *dtv = THREAD_DTV ();
 
   size_t gen = atomic_load_acquire (&GL(dl_tls_generation));
-  if (__glibc_unlikely (dtv[0].counter != gen))
+  if (__glibc_unlikely (dtv[0].counter != gen)
+      /* See comment in __tls_get_addr in elf/dl-tls.c.  */
+      && !(_dl_tls_allocate_active ()
+           && GET_ADDR_MODULE < _dl_tls_initial_modid_limit))
     return update_get_addr (GET_ADDR_PARAM, gen);
 
   return tls_get_addr_tail (GET_ADDR_PARAM, dtv, NULL);
