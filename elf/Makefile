@@ -443,6 +443,7 @@ tests += \
   tst-p_align1 \
   tst-p_align2 \
   tst-p_align3 \
+  tst-recursive-tls \
   tst-relsort1 \
   tst-ro-dynamic \
   tst-rtld-run-static \
@@ -877,6 +878,23 @@ modules-names += \
   tst-null-argv-lib \
   tst-p_alignmod-base \
   tst-p_alignmod3 \
+  tst-recursive-tlsmallocmod \
+  tst-recursive-tlsmod0 \
+  tst-recursive-tlsmod1 \
+  tst-recursive-tlsmod2 \
+  tst-recursive-tlsmod3 \
+  tst-recursive-tlsmod4 \
+  tst-recursive-tlsmod5 \
+  tst-recursive-tlsmod6 \
+  tst-recursive-tlsmod7 \
+  tst-recursive-tlsmod8 \
+  tst-recursive-tlsmod9 \
+  tst-recursive-tlsmod10 \
+  tst-recursive-tlsmod11 \
+  tst-recursive-tlsmod12 \
+  tst-recursive-tlsmod13 \
+  tst-recursive-tlsmod14 \
+  tst-recursive-tlsmod15 \
   tst-relsort1mod1 \
   tst-relsort1mod2 \
   tst-ro-dynamic-mod \
@@ -3064,3 +3082,11 @@ CFLAGS-tst-gnu2-tls2mod0.c += -mtls-dialect=$(have-mtls-descriptor)
 CFLAGS-tst-gnu2-tls2mod1.c += -mtls-dialect=$(have-mtls-descriptor)
 CFLAGS-tst-gnu2-tls2mod2.c += -mtls-dialect=$(have-mtls-descriptor)
 endif
+
+$(objpfx)tst-recursive-tls: $(objpfx)tst-recursive-tlsmallocmod.so
+# More objects than DTV_SURPLUS, to trigger DTV reallocation.
+$(objpfx)tst-recursive-tls.out: \
+  $(patsubst %,$(objpfx)tst-recursive-tlsmod%.so, \
+    0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15)
+$(objpfx)tst-recursive-tlsmod%.os: tst-recursive-tlsmodN.c
+	$(compile-command.c) -DVAR=thread_$* -DFUNC=get_threadvar_$*

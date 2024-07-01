@@ -1256,6 +1256,20 @@ extern struct link_map *_dl_update_slotinfo (unsigned long int req_modid,
 					     size_t gen)
      attribute_hidden;
 
+/* The last TLS module ID that is initially loaded, plus 1.  TLS
+   addresses for modules with IDs lower than that can be obtained from
+   the DTV even if its generation is outdated.  */
+extern size_t _dl_tls_initial_modid_limit attribute_hidden attribute_relro;
+
+/* Compute _dl_tls_initial_modid_limit.  To be called after initial
+   relocation.  */
+void _dl_tls_initial_modid_limit_setup (void) attribute_hidden;
+
+/* Number of threads currently in a TLS update.  This is used to
+   detect reentrant __tls_get_addr calls without a per-thread
+   flag.  */
+extern unsigned int _dl_tls_threads_in_update attribute_hidden;
+
 /* Look up the module's TLS block as for __tls_get_addr,
    but never touch anything.  Return null if it's not allocated yet.  */
 extern void *_dl_tls_get_addr_soft (struct link_map *l) attribute_hidden;
