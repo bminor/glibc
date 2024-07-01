@@ -409,6 +409,7 @@ tests += \
   tst-nodelete-opened \
   tst-noload \
   tst-null-argv \
+  tst-recursive-tls \
   tst-relsort1 \
   tst-ro-dynamic \
   tst-single_threaded \
@@ -759,6 +760,23 @@ modules-names = \
   tst-nodelete-dlclose-plugin \
   tst-nodelete-opened-lib \
   tst-null-argv-lib \
+  tst-recursive-tlsmallocmod \
+  tst-recursive-tlsmod0 \
+  tst-recursive-tlsmod1 \
+  tst-recursive-tlsmod2 \
+  tst-recursive-tlsmod3 \
+  tst-recursive-tlsmod4 \
+  tst-recursive-tlsmod5 \
+  tst-recursive-tlsmod6 \
+  tst-recursive-tlsmod7 \
+  tst-recursive-tlsmod8 \
+  tst-recursive-tlsmod9 \
+  tst-recursive-tlsmod10 \
+  tst-recursive-tlsmod11 \
+  tst-recursive-tlsmod12 \
+  tst-recursive-tlsmod13 \
+  tst-recursive-tlsmod14 \
+  tst-recursive-tlsmod15 \
   tst-relsort1mod1 \
   tst-relsort1mod2 \
   tst-ro-dynamic-mod \
@@ -2629,3 +2647,11 @@ tst-audit-tlsdesc-dlopen-ENV = LD_AUDIT=$(objpfx)tst-auditmod-tlsdesc.so
 $(objpfx)tst-dlmopen-twice.out: \
   $(objpfx)tst-dlmopen-twice-mod1.so \
   $(objpfx)tst-dlmopen-twice-mod2.so
+
+$(objpfx)tst-recursive-tls: $(objpfx)tst-recursive-tlsmallocmod.so
+# More objects than DTV_SURPLUS, to trigger DTV reallocation.
+$(objpfx)tst-recursive-tls.out: \
+  $(patsubst %,$(objpfx)tst-recursive-tlsmod%.so, \
+    0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15)
+$(objpfx)tst-recursive-tlsmod%.os: tst-recursive-tlsmodN.c
+	$(compile-command.c) -DVAR=thread_$* -DFUNC=get_threadvar_$*
