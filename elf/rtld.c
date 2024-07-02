@@ -1327,7 +1327,7 @@ _dl_start_args_adjust (int skip_args, int skip_env)
 
   /* Shuffle auxv down. */
   ElfW(auxv_t) ax;
-  char *oldp = (char *) (p + 1);
+  char *oldp = (char *) (p + 1 + skip_env);
   char *newp = (char *) (sp + 1);
   do
     {
