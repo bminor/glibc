@@ -260,6 +260,9 @@
    any external dependencies such as making a function call.  */
 #define HAVE_BUILTIN_TRAP 0
 
+/* Define if ld may produce gaps in load segments.  */
+#undef HAVE_LD_LOAD_GAPS
+
 /* ports/sysdeps/mips/configure.in  */
 /* Define if using the IEEE 754-2008 NaN encoding on the MIPS target.  */
 #undef HAVE_MIPS_NAN2008

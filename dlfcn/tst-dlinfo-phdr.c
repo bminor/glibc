@@ -64,8 +64,8 @@ do_test (void)
 
   do
     {
-      printf ("info: checking link map %p (%p) for \"%s\"\n",
-              l, l->l_phdr, l->l_name);
+      printf ("info: checking link map %p (%p %p) for \"%s\"\n",
+              l, l->l_phdr, (void *) l->l_addr, l->l_name);
 
       /* Cause dlerror () to return an error message.  */
       dlsym (RTLD_DEFAULT, "does-not-exist");

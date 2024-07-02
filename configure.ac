@@ -526,6 +526,26 @@ case $($LD --version) in
 esac
 LIBC_CONFIG_VAR([with-lld], [$libc_cv_with_lld])
 
+dnl Workaround for binutils LOAD segment gaps bug (swbz#28743)
+dnl Fixed in commit 9833b7757d246f22db4eb24b8e5db7eb5e05b6d9
+dnl ("PR28824, relro security issues"), part of binutils 2.39.
+AC_ARG_WITH([ld_load_gaps],
+  [AS_HELP_STRING([--with-ld-load-gaps],
+    [support linker with LOAD segment gaps bug @<:@default=check@:>@])],
+  [],
+  [: m4_divert_text([DEFAULTS], [with_ld_load_gaps=check])])
+AS_IF([test "x$with_ld_load_gaps" = xcheck],
+  [echo "Checking binutils ld version:" >&AS_MESSAGE_LOG_FD
+   AS_IF([LC_ALL=C $LD --version | grep -E '^GNU ld version 2\.(2[[0-9]]|3[[0-8]])[[^0-9]]' >&AS_MESSAGE_LOG_FD],
+        [with_ld_load_gaps=yes],
+	[with_ld_load_gaps=no
+	 echo "(linker not binutils or not impacted)" >&AS_MESSAGE_LOG_FD])])
+AS_IF([test "x$with_ld_load_gaps" != xyes && test "x$with_ld_load_gaps" != xno],
+  AC_MSG_ERROR([invalid --with-ld-load-gaps argument: $with_ld_load_gaps]))
+AS_IF([test "x$with_ld_load_gaps" = xyes],
+  [AC_DEFINE(HAVE_LD_LOAD_GAPS)])
+AC_SUBST(with_ld_load_gaps)
+
 # These programs are version sensitive.
 AC_CHECK_PROG_VER(MAKE, gnumake gmake make, --version,
   [GNU Make[^0-9]*\([0-9][0-9.]*\)],

@@ -615,6 +615,14 @@ $(objpfx)tst-relro-libc.out: tst-relro-symbols.py $(..)/scripts/glibcelf.py \
 	    --required=_IO_wfile_jumps \
 	    --required=__io_vtables \
 	  > $@ 2>&1; $(evaluate-test)
+tests-special += $(objpfx)tst-gaps-ldso.out
+$(objpfx)tst-gaps-ldso.out: tst-load-segment-gaps.py \
+  $(..)/scripts/glibcelf.py $(objpfx)ld.so
+	$(PYTHON) tst-load-segment-gaps.py $(objpfx)ld.so \
+	  > $@ 2>&1; $(evaluate-test)
+ifeq ($(have-ld-load-gaps),yes)
+test-xfail-tst-gaps-ldso = yes
+endif
 
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-valgrind-smoke.out

@@ -466,6 +466,38 @@ __dl_find_object (void *pc1, struct dl_find_object *result)
 hidden_def (__dl_find_object)
 weak_alias (__dl_find_object, _dl_find_object)
 
+/* Subroutine of _dlfo_process_initial to split out noncontigous link
+   maps.  NODELETE is the number of used _dlfo_nodelete_mappings
+   elements.  It is incremented as needed, and the new NODELETE value
+   is returned.  */
+static size_t
+_dlfo_process_initial_noncontiguous_map (struct link_map *map,
+                                         size_t nodelete)
+{
+  struct dl_find_object_internal dlfo;
+  _dl_find_object_from_map (map, &dlfo);
+
+  /* PT_LOAD segments for a non-contiguous link map are added to the
+     non-closeable mappings.  */
+  const ElfW(Phdr) *ph = map->l_phdr;
+  const ElfW(Phdr) *ph_end = map->l_phdr + map->l_phnum;
+  for (; ph < ph_end; ++ph)
+    if (ph->p_type == PT_LOAD)
+      {
+        if (_dlfo_nodelete_mappings != NULL)
+          {
+            /* Second pass only.  */
+            _dlfo_nodelete_mappings[nodelete] = dlfo;
+            _dlfo_nodelete_mappings[nodelete].map_start
+              = ph->p_vaddr + map->l_addr;
+            _dlfo_nodelete_mappings[nodelete].map_end
+              = _dlfo_nodelete_mappings[nodelete].map_start + ph->p_memsz;
+          }
+        ++nodelete;
+      }
+  return nodelete;
+}
+
 /* _dlfo_process_initial is called twice.  First to compute the array
    sizes from the initial loaded mappings.  Second to fill in the
    bases and infos arrays with the (still unsorted) data.  Returns the
@@ -477,29 +509,8 @@ _dlfo_process_initial (void)
 
   size_t nodelete = 0;
   if (!main_map->l_contiguous)
-    {
-      struct dl_find_object_internal dlfo;
-      _dl_find_object_from_map (main_map, &dlfo);
-
-      /* PT_LOAD segments for a non-contiguous are added to the
-         non-closeable mappings.  */
-      for (const ElfW(Phdr) *ph = main_map->l_phdr,
-             *ph_end = main_map->l_phdr + main_map->l_phnum;
-           ph < ph_end; ++ph)
-        if (ph->p_type == PT_LOAD)
-          {
-            if (_dlfo_nodelete_mappings != NULL)
-              {
-                /* Second pass only.  */
-                _dlfo_nodelete_mappings[nodelete] = dlfo;
-                _dlfo_nodelete_mappings[nodelete].map_start
-                  = ph->p_vaddr + main_map->l_addr;
-                _dlfo_nodelete_mappings[nodelete].map_end
-                  = _dlfo_nodelete_mappings[nodelete].map_start + ph->p_memsz;
-              }
-            ++nodelete;
-          }
-    }
+    /* Contiguous case already handled in _dl_find_object_init.  */
+    nodelete = _dlfo_process_initial_noncontiguous_map (main_map, nodelete);
 
   size_t loaded = 0;
   for (Lmid_t ns = 0; ns < GL(dl_nns); ++ns)
@@ -511,11 +522,20 @@ _dlfo_process_initial (void)
           /* lt_library link maps are implicitly NODELETE.  */
           if (l->l_type == lt_library || l->l_nodelete_active)
             {
-              if (_dlfo_nodelete_mappings != NULL)
-                /* Second pass only.  */
-                _dl_find_object_from_map
-                  (l, _dlfo_nodelete_mappings + nodelete);
-              ++nodelete;
+#if defined HAVE_LD_LOAD_GAPS && defined SHARED
+              /* The kernel may have loaded ld.so with gaps.   */
+              if (!l->l_contiguous && l == &GL(dl_rtld_map))
+                nodelete
+                  = _dlfo_process_initial_noncontiguous_map (l, nodelete);
+              else
+#endif
+                {
+                  if (_dlfo_nodelete_mappings != NULL)
+                    /* Second pass only.  */
+                    _dl_find_object_from_map
+                      (l, _dlfo_nodelete_mappings + nodelete);
+                  ++nodelete;
+                }
             }
           else if (l->l_type == lt_loaded)
             {

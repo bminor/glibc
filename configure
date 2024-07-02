@@ -610,6 +610,7 @@ PACKAGE_URL='https://www.gnu.org/software/glibc/'
 
 ac_unique_file="include/features.h"
 enable_option_checking=no
+with_ld_load_gaps=check
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
 pthread_in_libc
@@ -679,6 +680,7 @@ SED
 MAKEINFO
 MSGFMT
 MAKE
+with_ld_load_gaps
 LD
 NM
 OBJDUMP
@@ -807,6 +809,7 @@ enable_cet
 enable_scv
 enable_fortify_source
 with_cpu
+with_ld_load_gaps
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1509,6 +1512,8 @@ Optional Packages:
   --with-timeoutfactor=NUM
                           specify an integer to scale the timeout
   --with-cpu=CPU          select code for CPU variant
+  --with-ld-load-gaps     support linker with LOAD segment gaps bug
+                          [default=check]
 
 Some influential environment variables:
   CC          C compiler command
@@ -5301,6 +5306,39 @@ fi
 esac
 config_vars="$config_vars
 with-lld = $libc_cv_with_lld"
+
+
+# Check whether --with-ld_load_gaps was given.
+if test ${with_ld_load_gaps+y}
+then :
+  withval=$with_ld_load_gaps;
+else case e in #(
+  e) :  ;;
+esac
+fi
+
+if test "x$with_ld_load_gaps" = xcheck
+then :
+  echo "Checking binutils ld version:" >&5
+   if LC_ALL=C $LD --version | grep -E '^GNU ld version 2\.(2[0-9]|3[0-8])[^0-9]' >&5
+then :
+  with_ld_load_gaps=yes
+else case e in #(
+  e) with_ld_load_gaps=no
+	 echo "(linker not binutils or not impacted)" >&5 ;;
+esac
+fi
+fi
+if test "x$with_ld_load_gaps" != xyes && test "x$with_ld_load_gaps" != xno
+then :
+  as_fn_error $? "invalid --with-ld-load-gaps argument: $with_ld_load_gaps" "$LINENO" 5
+fi
+if test "x$with_ld_load_gaps" = xyes
+then :
+  printf "%s\n" "#define HAVE_LD_LOAD_GAPS 1" >>confdefs.h
+
+fi
+
 
 # These programs are version sensitive.
 for ac_prog in gnumake gmake make
