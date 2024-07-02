@@ -473,11 +473,8 @@ L(pre_end):					ASM_LINE_SEP	\
 
 #ifdef __LP64__
 # define HAVE_CLOCK_GETTIME_VSYSCALL    "__vdso_clock_gettime"
-# define HAVE_GETTIMEOFDAY_VSYSCALL     "__vdso_gettimeofday"
 #else
-# define HAVE_CLOCK_GETTIME_VSYSCALL    "__vdso_clock_gettime"
 # define HAVE_CLOCK_GETTIME64_VSYSCALL  "__vdso_clock_gettime64"
-# define HAVE_GETTIMEOFDAY_VSYSCALL     "__vdso_gettimeofday"
 #endif /* __LP64__ */
 
 #endif	/* __ASSEMBLER__ */
