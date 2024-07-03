@@ -45,8 +45,10 @@ rtld_mutex_dummy (pthread_mutex_t *lock)
 #endif
 
 const unsigned int __rseq_flags;
-const unsigned int __rseq_size attribute_relro;
-const ptrdiff_t __rseq_offset attribute_relro;
+
+/* The variables are in .data.relro but are not yet write-protected.  */
+extern unsigned int _rseq_size attribute_hidden;
+extern ptrdiff_t _rseq_offset attribute_hidden;
 
 void
 __tls_pre_init_tp (void)
@@ -105,10 +107,7 @@ __tls_init_tp (void)
     do_rseq = TUNABLE_GET (rseq, int, NULL);
     if (rseq_register_current_thread (pd, do_rseq))
       {
-        /* We need a writable view of the variables.  They are in
-           .data.relro and are not yet write-protected.  */
-        extern unsigned int size __asm__ ("__rseq_size");
-        size = sizeof (pd->rseq_area);
+        _rseq_size = sizeof (pd->rseq_area);
       }
 
 #ifdef RSEQ_SIG
@@ -117,8 +116,7 @@ __tls_init_tp (void)
        all targets support __thread_pointer, so set __rseq_offset only
        if the rseq registration may have happened because RSEQ_SIG is
        defined.  */
-    extern ptrdiff_t offset __asm__ ("__rseq_offset");
-    offset = (char *) &pd->rseq_area - (char *) __thread_pointer ();
+    _rseq_offset = (char *) &pd->rseq_area - (char *) __thread_pointer ();
 #endif
   }
 
