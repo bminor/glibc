@@ -368,6 +368,7 @@ endif
 
 ifeq ($(subdir),elf)
 sysdep-rtld-routines += dl-brk dl-sbrk dl-getcwd dl-openat64 dl-opendir
+dl-routines += dl-rseq-symbols
 
 libof-lddlibc4 = lddlibc4
 
