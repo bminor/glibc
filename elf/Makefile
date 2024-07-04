@@ -73,7 +73,6 @@ dl-routines = \
   dl-origin \
   dl-printf \
   dl-reloc \
-  dl-rseq-symbols \
   dl-runtime \
   dl-scope \
   dl-setup_hash \
