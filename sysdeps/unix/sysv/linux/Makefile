@@ -615,6 +615,10 @@ tests += \
 endif
 
 ifeq ($(subdir),elf)
+dl-routines += \
+  dl-rseq-symbols \
+  # dl-routines
+
 sysdep-rtld-routines += \
   dl-brk \
   dl-getcwd \
