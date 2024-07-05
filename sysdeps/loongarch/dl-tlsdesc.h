@@ -43,6 +43,10 @@ extern ptrdiff_t attribute_hidden _dl_tlsdesc_undefweak (struct tlsdesc *);
 
 #ifdef SHARED
 extern void *_dl_make_tlsdesc_dynamic (struct link_map *, size_t);
+#ifndef __loongarch_soft_float
+extern ptrdiff_t attribute_hidden _dl_tlsdesc_dynamic_lasx (struct tlsdesc *);
+extern ptrdiff_t attribute_hidden _dl_tlsdesc_dynamic_lsx (struct tlsdesc *);
+#endif
 extern ptrdiff_t attribute_hidden _dl_tlsdesc_dynamic (struct tlsdesc *);
 #endif
 

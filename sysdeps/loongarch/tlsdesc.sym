@@ -4,12 +4,6 @@
 #include <link.h>
 #include <dl-tlsdesc.h>
 
-#define SHARED 1
-
-#include <ldsodefs.h>
-
-#define GLRO_offsetof(name) offsetof (struct rtld_global_ro, _##name)
-
 --
 
 -- Abuse tls.h macros to derive offsets relative to the thread register.
@@ -23,6 +17,3 @@ DTV_COUNTER		offsetof(dtv_t, counter)
 TLS_DTV_UNALLOCATED	TLS_DTV_UNALLOCATED
 TLS_DTV_OFFSET		TLS_DTV_OFFSET
 SIZE_OF_TCB		sizeof(tcbhead_t)
-GLRO_DL_HWCAP_OFFSET    GLRO_offsetof (dl_hwcap)
-HWCAP_LOONGARCH_LSX	HWCAP_LOONGARCH_LSX
-HWCAP_LOONGARCH_LASX	HWCAP_LOONGARCH_LASX
