@@ -14,6 +14,11 @@ Major new features:
   configured on the current host i.e. as-if you had not passed
   AI_ADDRCONFIG to getaddrinfo calls.
 
+Deprecated and removed features, and other changes affecting compatibility:
+
+* __rseq_size now denotes the size of the active rseq area (20 bytes
+  initially), not the size of struct rseq (32 bytes initially).
+
 Security related changes:
 
   CVE-2022-39046: When the syslog function is passed a crafted input
@@ -92,6 +97,7 @@ The following bugs are resolved with this release:
   [30843] potential use-after-free in getcanonname (CVE-2023-4806)
   [31184] FAIL: elf/tst-tlsgap
   [31185] Incorrect thread point access in _dl_tlsdesc_undefweak and _dl_tlsdesc_dynamic
+  [31965] rseq extension mechanism does not work as intended
 
 Version 2.36
 
