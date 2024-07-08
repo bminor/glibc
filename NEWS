@@ -49,6 +49,9 @@ Deprecated and removed features, and other changes affecting compatibility:
   <utmpx.h> (except for login_tty) due to locking and session management
   problems.
 
+* __rseq_size now denotes the size of the active rseq area (20 bytes
+  initially), not the size of struct rseq (32 bytes initially).
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]
