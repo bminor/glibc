@@ -689,7 +689,25 @@ you don't need to know about it because you can just use @theglibc{}'s
 @code{chmod} function.
 
 @cindex kernel call
-System calls are sometimes called kernel calls.
+System calls are sometimes called syscalls or kernel calls, and this
+interface is mostly a purely mechanical translation from the kernel's
+ABI to the C ABI. For the set of syscalls where we do not guarantee
+POSIX Thread cancellation the wrappers only organize the incoming
+arguments from the C calling convention to the calling convention of
+the target kernel. For the set of syscalls where we provided POSIX
+Thread cancellation the wrappers set some internal state in the
+library to support cancellation, but this does not impact the
+behaviour of the syscall provided by the kernel.
+
+In some cases, if @theglibc{} detects that a system call has been
+superseded by a more capable one, the wrapper may map the old call to
+the new one.  For example, @code{dup2} is implemented via @code{dup3}
+by passing an additional empty flags argument, and @code{open} calls
+@code{openat} passing the additional @code{AT_FDCWD}.  Sometimes even
+more is done, such as converting between 32-bit and 64-bit time
+values.  In general, though, such processing is only to make the
+system call better match the C ABI, rather than change its
+functionality.
 
 However, there are times when you want to make a system call explicitly,
 and for that, @theglibc{} provides the @code{syscall} function.
@@ -711,6 +729,8 @@ we won't describe it here either because anyone who is coding
 library source code as a specification of the interface between them
 anyway.
 
+@code{syscall} does not provide cancellation logic, even if the system
+call you're calling is listed as cancellable above.
 
 @code{syscall} is declared in @file{unistd.h}.
 

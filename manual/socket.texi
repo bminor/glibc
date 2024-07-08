@@ -41,6 +41,7 @@ aren't documented either so far.
 			   is to make it work with Inetd.
 * Socket Options::	Miscellaneous low-level socket options.
 * Networks Database::   Accessing the database of network names.
+* Other Socket APIs::   Other socket-related functions.
 @end menu
 
 @node Socket Concepts
@@ -3134,38 +3135,8 @@ You can use plain @code{recv} (@pxref{Receiving Data}) instead of
 treat all possible senders alike).  Even @code{read} can be used if
 you don't want to specify @var{flags} (@pxref{I/O Primitives}).
 
-@ignore
-@c sendmsg and recvmsg are like readv and writev in that they
-@c use a series of buffers.  It's not clear this is worth
-@c supporting or that we support them.
-@c !!! they can do more; it is hairy
-
-@deftp {Data Type} {struct msghdr}
-@standards{BSD, sys/socket.h}
-@end deftp
-
-@deftypefun ssize_t sendmsg (int @var{socket}, const struct msghdr *@var{message}, int @var{flags})
-@standards{BSD, sys/socket.h}
-@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-
-This function is defined as a cancellation point in multi-threaded
-programs, so one has to be prepared for this and make sure that
-allocated resources (like memory, files descriptors, semaphores or
-whatever) are freed even if the thread is cancel.
-@c @xref{pthread_cleanup_push}, for a method how to do this.
-@end deftypefun
-
-@deftypefun ssize_t recvmsg (int @var{socket}, struct msghdr *@var{message}, int @var{flags})
-@standards{BSD, sys/socket.h}
-@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-
-This function is defined as a cancellation point in multi-threaded
-programs, so one has to be prepared for this and make sure that
-allocated resources (like memory, files descriptors, semaphores or
-whatever) are freed even if the thread is canceled.
-@c @xref{pthread_cleanup_push}, for a method how to do this.
-@end deftypefun
-@end ignore
+If you need more flexibility and/or control over sending and receiving
+packets, see @code{sendmsg} and @code{recvmsg} (@pxref{Other Socket APIs}).
 
 @node Datagram Example
 @subsection Datagram Socket Example
@@ -3663,4 +3634,21 @@ returns a null pointer if there are no more entries.
 @c   nss_next2 dup @ascudlopen @ascuplugin @ascuheap @asulock @acucorrupt @aculock @acsfd @acsmem
 @c  libc_lock_unlock @aculock
 This function closes the networks database.
+@end deftypefun
+
+@node Other Socket APIs
+@section Other Socket APIs
+
+@deftp {Data Type} {struct msghdr}
+@standards{BSD, sys/socket.h}
+@end deftp
+
+@deftypefun ssize_t sendmsg (int @var{socket}, const struct msghdr *@var{message}, int @var{flags})
+
+@manpagefunctionstub{sendmsg,2}
+@end deftypefun
+
+@deftypefun ssize_t recvmsg (int @var{socket}, struct msghdr *@var{message}, int @var{flags})
+
+@manpagefunctionstub{recvmsg,2}
 @end deftypefun

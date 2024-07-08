@@ -65,6 +65,7 @@ directly.)
 * Interrupt Input::                     Getting an asynchronous signal when
                                          input arrives.
 * IOCTLs::                              Generic I/O Control operations.
+* Other Low-Level I/O APIs::            Other low-level-I/O-related functions.
 @end menu
 
 
@@ -2324,6 +2325,8 @@ file descriptor, or until the timeout period expires.
 There is another example showing the use of @code{select} to multiplex
 input from multiple sockets in @ref{Server Example}.
 
+For an alternate interface to this functionality, see @code{poll}
+(@pxref{Other Low-Level I/O APIs}).
 
 @node Synchronizing I/O
 @section Synchronizing I/O operations
@@ -3407,7 +3410,9 @@ require additional arguments to be supplied.  These additional arguments
 and the return value and error conditions are given in the detailed
 descriptions of the individual commands.
 
-Briefly, here is a list of what the various commands are.
+Briefly, here is a list of what the various commands are.  For an
+exhaustive list of kernel-specific options, please see @xref{System
+Calls}.
 
 @vtable @code
 @item F_DUPFD
@@ -4743,5 +4748,28 @@ Most IOCTLs are OS-specific and/or only used in special system utilities,
 and are thus beyond the scope of this document.  For an example of the use
 of an IOCTL, see @ref{Out-of-Band Data}.
 
-@c FIXME this is undocumented:
-@c dup3
+@node Other Low-Level I/O APIs
+@section Other low-level-I/O-related functions
+
+@deftp {Data Type} {struct pollfd}
+@standards{POSIX.1,poll.h}
+@end deftp
+
+@deftp {Data Type} {struct epoll_event}
+@standards{Linux,sys/epoll.h}
+@end deftp
+
+@deftypefun int poll (struct pollfd *@var{fds}, nfds_t @var{nfds}, int @var{timeout})
+
+@manpagefunctionstub{poll,2}
+@end deftypefun
+
+@deftypefun int epoll_create(int @var{size})
+
+@manpagefunctionstub{epoll_create,2}
+@end deftypefun
+
+@deftypefun int epoll_wait(int @var{epfd}, struct epoll_event *@var{events}, int @var{maxevents}, int @var{timeout})
+
+@manpagefunctionstub{epoll_wait,2}
+@end deftypefun

@@ -85,6 +85,7 @@ standards each function or symbol comes from.
 * Berkeley Unix::               BSD and SunOS.
 * SVID::                        The System V Interface Description.
 * XPG::                         The X/Open Portability Guide.
+* Linux Kernel::                The Linux kernel.
 @end menu
 
 @node ISO C, POSIX,  , Standards and Portability
@@ -941,7 +942,7 @@ inter-process communication and shared memory, the @code{hsearch} and
 @code{drand48} families of functions, @code{fmtmsg} and several of the
 mathematical functions.
 
-@node XPG, , SVID, Standards and Portability
+@node XPG, Linux Kernel, SVID, Standards and Portability
 @subsection XPG (The X/Open Portability Guide)
 
 The X/Open Portability Guide, published by the X/Open Company, Ltd., is
@@ -960,6 +961,20 @@ fulfilling the XPG standard with the Unix extensions is a
 precondition for getting the Unix brand chances are good that the
 functionality is available on commercial systems.
 
+@node Linux Kernel, , XPG, Standards and Portability
+@subsection Linux (The Linux Kernel)
+
+@Theglibc{} includes by reference the Linux man-pages
+@value{man_pages_version} documentation to document the listed
+syscalls for the Linux kernel. For reference purposes only the latest
+@uref{https://www.kernel.org/doc/man-pages/,Linux man-pages Project}
+documentation can be accessed from the
+@uref{https://www.kernel.org,Linux kernel} website.  Where the syscall
+has more specific documentation in this manual that more specific
+documentation is considered authoritative.
+
+Additional details on the Linux system call interface can be found in
+@xref{System Calls}.
 
 @node Using the Library, Roadmap to the Manual, Standards and Portability, Introduction
 @section Using the Library

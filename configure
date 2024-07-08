@@ -699,6 +699,7 @@ force_install
 bindnow
 hardcoded_path_in_tests
 enable_timezone_tools
+man_pages_version
 rtld_early_cflags
 extra_nonshared_cflags
 sysheaders
@@ -782,6 +783,7 @@ with_headers
 with_nonshared_cflags
 with_rtld_early_cflags
 with_timeoutfactor
+with_man_pages
 enable_sanity_checks
 enable_shared
 enable_profile
@@ -1508,6 +1510,8 @@ Optional Packages:
                           build early initialization with additional CFLAGS
   --with-timeoutfactor=NUM
                           specify an integer to scale the timeout
+  --with-man-pages=VERSION
+                          tie manual to a specific man-pages version
   --with-cpu=CPU          select code for CPU variant
 
 Some influential environment variables:
@@ -3868,8 +3872,9 @@ config_vars=
 if test ${enable_static_c___tests+y}
 then :
   enableval=$enable_static_c___tests; static_cxx_tests=$enableval
-else $as_nop
-  static_cxx_tests=yes
+else case e in #(
+  e) static_cxx_tests=yes ;;
+esac
 fi
 
 config_vars="$config_vars
@@ -3879,8 +3884,9 @@ static-cxx-tests = $static_cxx_tests"
 if test ${enable_static_c___link_check+y}
 then :
   enableval=$enable_static_c___link_check; static_cxx_link_check=$enableval
-else $as_nop
-  static_cxx_link_check=yes
+else case e in #(
+  e) static_cxx_link_check=yes ;;
+esac
 fi
 
 
@@ -4467,6 +4473,17 @@ esac
 fi
 
 printf "%s\n" "#define TIMEOUTFACTOR $timeoutfactor" >>confdefs.h
+
+
+man_pages_version=6.9.1
+
+
+# Check whether --with-man-pages was given.
+if test ${with_man_pages+y}
+then :
+  withval=$with_man_pages; man_pages_version=$withval
+fi
+
 
 
 # Check whether --enable-sanity-checks was given.

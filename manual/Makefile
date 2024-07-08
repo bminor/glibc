@@ -117,6 +117,7 @@ $(objpfx)stamp-pkgvers: $(common-objpfx)config.make
 	  echo "@set PKGVERSION_DEFAULT" >> $(objpfx)pkgvers-tmp; \
 	fi
 	echo "@set REPORT_BUGS_TO $(REPORT_BUGS_TEXI)" >> $(objpfx)pkgvers-tmp
+	echo "@set man_pages_version $(man-pages-version)" >> $(objpfx)pkgvers-tmp; \
 	echo "@end ifclear" >> $(objpfx)pkgvers-tmp
 	$(move-if-change) $(objpfx)pkgvers-tmp $(objpfx)pkgvers.texi
 	touch $@
