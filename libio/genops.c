@@ -119,7 +119,8 @@ _IO_link_in (struct _IO_FILE_plus *fp)
       if (_IO_vtable_offset ((FILE *) fp) == 0)
 	{
 	  fp->file._prevchain = (FILE **) &_IO_list_all;
-	  _IO_list_all->file._prevchain = &fp->file._chain;
+	  if (_IO_list_all != NULL)
+	    _IO_list_all->file._prevchain = &fp->file._chain;
 	}
       _IO_list_all = fp;
 #ifdef _IO_MTSAFE_IO

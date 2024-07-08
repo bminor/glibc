@@ -91,6 +91,7 @@ tests = \
   tst-bz24051 \
   tst-bz24153 \
   tst-bz28828 \
+  tst-closeall \
   tst-eof \
   tst-ext \
   tst-ext2 \
