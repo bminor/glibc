@@ -1007,8 +1007,12 @@ This variable is either zero (if restartable sequence registration
 failed or has been disabled) or the size of the restartable sequence
 registration.  This can be different from the size of @code{struct rseq}
 if the kernel has extended the size of the registration.  If
-registration is successful, @code{__rseq_size} is at least 32 (the
-initial size of @code{struct rseq}).
+registration is successful, @code{__rseq_size} is at least 20 (the
+initially active size of @code{struct rseq}).
+
+Previous versions of @theglibc{} set this to 32 even if the kernel only
+supported the initial area of 20 bytes because the value included unused
+padding at the end of the restartable sequence area.
 @end deftypevar
 
 @deftypevar {unsigned int} __rseq_flags

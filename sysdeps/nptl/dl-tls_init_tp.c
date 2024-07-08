@@ -46,10 +46,6 @@ rtld_mutex_dummy (pthread_mutex_t *lock)
 
 const unsigned int __rseq_flags;
 
-/* The variables are in .data.relro but are not yet write-protected.  */
-extern unsigned int _rseq_size attribute_hidden;
-extern ptrdiff_t _rseq_offset attribute_hidden;
-
 void
 __tls_pre_init_tp (void)
 {
@@ -106,9 +102,7 @@ __tls_init_tp (void)
     bool do_rseq = true;
     do_rseq = TUNABLE_GET (rseq, int, NULL);
     if (rseq_register_current_thread (pd, do_rseq))
-      {
-        _rseq_size = sizeof (pd->rseq_area);
-      }
+      _rseq_size = RSEQ_AREA_SIZE_INITIAL_USED;
 
 #ifdef RSEQ_SIG
     /* This should be a compile-time constant, but the current

@@ -29,6 +29,7 @@
 # include <stdlib.h>
 # include <string.h>
 # include <syscall.h>
+# include <sys/auxv.h>
 # include <thread_pointer.h>
 # include <tls.h>
 # include "tst-rseq.h"
@@ -42,7 +43,8 @@ do_rseq_main_test (void)
   TEST_COMPARE (__rseq_flags, 0);
   TEST_VERIFY ((char *) __thread_pointer () + __rseq_offset
                == (char *) &pd->rseq_area);
-  TEST_COMPARE (__rseq_size, sizeof (pd->rseq_area));
+  /* The current implementation only supports the initial size.  */
+  TEST_COMPARE (__rseq_size, 20);
 }
 
 static void
@@ -52,6 +54,12 @@ do_rseq_test (void)
     {
       FAIL_UNSUPPORTED ("kernel does not support rseq, skipping test");
     }
+  printf ("info: __rseq_size: %u\n", __rseq_size);
+  printf ("info: __rseq_offset: %td\n", __rseq_offset);
+  printf ("info: __rseq_flags: %u\n", __rseq_flags);
+  printf ("info: getauxval (AT_RSEQ_FEATURE_SIZE): %ld\n",
+          getauxval (AT_RSEQ_FEATURE_SIZE));
+  printf ("info: getauxval (AT_RSEQ_ALIGN): %ld\n", getauxval (AT_RSEQ_ALIGN));
   do_rseq_main_test ();
 }
 #else /* RSEQ_SIG */
