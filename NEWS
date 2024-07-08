@@ -7,6 +7,11 @@ using `glibc' in the "product" field.
 
 Version 2.39.1
 
+Deprecated and removed features, and other changes affecting compatibility:
+
+* __rseq_size now denotes the size of the active rseq area (20 bytes
+  initially), not the size of struct rseq (32 bytes initially).
+
 Security related changes:
 
 The following CVEs were fixed in this release:
@@ -77,6 +82,7 @@ The following bugs are resolved with this release:
     CPUs
   [31883] build: ISA level support configure check relies on bashism /
     is otherwise broken for arithmetic
+  [31965] rseq extension mechanism does not work as intended
 
 Version 2.39
 
