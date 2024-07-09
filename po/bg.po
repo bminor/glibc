@@ -10,9 +10,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.38.9000\n"
+"Project-Id-Version: libc 2.39.9000\n"
 "POT-Creation-Date: 2024-06-19 22:30+0200\n"
-"PO-Revision-Date: 2024-01-04 09:04+0300\n"
+"PO-Revision-Date: 2024-07-01 08:04+0300\n"
 "Last-Translator: Roumen Petrov <transl@roumenpetrov.info>\n"
 "Language-Team: Bulgarian <dict@ludost.net>\n"
 "Language: bg\n"
@@ -4689,7 +4689,7 @@ msgstr ""
 #: nss/makedb.c:229
 #, c-format
 msgid "cannot open database file `%s'"
-msgstr "не може да се отвори файлът на базата данни: \"%s\""
+msgstr "не може да се отвори файлът на базата данни: '%s'"
 
 #: nss/makedb.c:274
 #, c-format
@@ -6545,6 +6545,26 @@ msgstr "не може да се забрани разрешенната подр
 msgid "can't disable SHSTK"
 msgstr "не може да се забрани разрешенната подръжка на SHSTK"
 
+#: timezone/zdump.c:131
+#, c-format
+msgid "%s: size overflow\n"
+msgstr "%s: препълване на стойността за размер\n"
+
+#: timezone/zdump.c:170
+#, c-format
+msgid "%s: Memory exhausted\n"
+msgstr "%s: Изчерпана памет\n"
+
+#: timezone/zdump.c:257
+#, c-format
+msgid "%s: setenv: %s\n"
+msgstr "%s: установяване на обкръжение: %s\n"
+
+#: timezone/zdump.c:337 timezone/zdump.c:604
+#, c-format
+msgid "%s: unknown timezone '%s': %s\n"
+msgstr "%s: неизвестно времева зона '%s': %s\n"
+
 #: timezone/zdump.c:402
 msgid "has characters other than ASCII alphanumerics, '-' or '+'"
 msgstr "е с букви извън ASCII букви или цифри, '-' или '+'"
@@ -6599,6 +6619,16 @@ msgstr "%s: безумен -c аргумент %s\n"
 msgid "%s: wild -t argument %s\n"
 msgstr "%s: безумен -t аргумент %s\n"
 
+#: timezone/zdump.c:857
+#, c-format
+msgid " (gmtime failed)"
+msgstr " (пропадна gmtime)"
+
+#: timezone/zdump.c:867
+#, c-format
+msgid " (localtime failed)"
+msgstr " (пропадна localtime)"
+
 #: timezone/zic.c:463
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
@@ -6635,10 +6665,49 @@ msgstr " (правило от \"%s\", ред %<PRIdMAX>)"
 msgid "warning: "
 msgstr "предупреждение: "
 
+#: timezone/zic.c:669
+#, c-format
+msgid ""
+"%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
+"\t[ -b {slim|fat} ] [ -d directory ] [ -l localtime ] [ -L leapseconds ] \\\n"
+"\t[ -p posixrules ] [ -r '[@lo][/@hi]' ] [ -R '@hi' ] \\\n"
+"\t[ -t localtime-link ] \\\n"
+"\t[ filename ... ]\n"
+"\n"
+"Report bugs to %s.\n"
+msgstr ""
+"%s: употребата е %s [ --version ] [ --help ] [ -v ] \\\n"
+"\t[ -b {slim|fat} ] [ -d директория ] [ -l местновреме ] [ -L високоснисекунди ]\\\n"
+"\t[ -p posix_правило ] [ -r '[@lo][/@hi]' ] [ -R '@hi' ] \\\n"
+"\t[ -t връзка–към–местновреме ] \\\n"
+"\t[ именафайл ... ]\n"
+"\n"
+"Докладване на грешки към %s.\n"
+
 #: timezone/zic.c:695
 #, c-format
 msgid "%s: Can't chdir to %s: %s\n"
 msgstr "%s: Не може да се смени директорията на %s: %s\n"
+
+#: timezone/zic.c:786
+#, c-format
+msgid "\"Link %s %s\" is part of a link cycle"
+msgstr "\"Връзката %s %s\" е част от цикъл с връзки"
+
+#: timezone/zic.c:797
+#, c-format
+msgid "link %s targets itself"
+msgstr "връзката %s е към себе си"
+
+#: timezone/zic.c:817
+#, c-format
+msgid "link %s targeting link %s mishandled by pre-2023 zic"
+msgstr "zic, преди 2023, не се справя добре при връзка %s целяща връзка %s"
+
+#: timezone/zic.c:821
+#, c-format
+msgid "link %s targeting link %s"
+msgstr "връка %s към връзка %s"
 
 #: timezone/zic.c:992
 msgid "wild compilation-time specification of zic_t"
@@ -6673,6 +6742,10 @@ msgstr "%s: Зададена е повече от една опция -p\n"
 msgid "%s: More than one -t option specified\n"
 msgstr "%s: Зададена е повече от една опция -t\n"
 
+#: timezone/zic.c:1064
+msgid "-y ignored"
+msgstr "-y пренебрегнат"
+
 #: timezone/zic.c:1071
 #, c-format
 msgid "%s: More than one -L option specified\n"
@@ -6688,9 +6761,19 @@ msgstr "%s: Зададена е повече от една опция -r\n"
 msgid "%s: invalid time range: %s\n"
 msgstr "%s: неправилен времеви диапазон: %s\n"
 
+#: timezone/zic.c:1098
+#, c-format
+msgid "%s: invalid time: %s\n"
+msgstr "%s: неправилно време: %s\n"
+
 #: timezone/zic.c:1104
 msgid "-s ignored"
 msgstr "-s пренебрегнат"
+
+#: timezone/zic.c:1110
+#, c-format
+msgid "%s: -R time exceeds -r cutoff\n"
+msgstr "%s: -R 'време' превишава -r 'отрязък'\n"
 
 #: timezone/zic.c:1171
 msgid "empty file name"
@@ -6731,10 +6814,20 @@ msgstr "името на файла '%s' съдържа байт '\\%o'"
 msgid "%s: Can't create %s/%s: %s\n"
 msgstr "%s: Не може да се създаде %s/%s: %s\n"
 
+#: timezone/zic.c:1388
+#, c-format
+msgid "%s: rename to %s/%s: %s\n"
+msgstr "%s: преименуване на %s/%s: %s\n"
+
 #: timezone/zic.c:1463
 #, c-format
 msgid "%s: Can't remove %s/%s: %s\n"
 msgstr "%s: Не може да се изтрие %s/%s: %s\n"
+
+#: timezone/zic.c:1507
+#, c-format
+msgid "%s: Can't link %s/%s to %s/%s: %s\n"
+msgstr "%s: Не може да се свърже %s/%s към %s/%s: %s\n"
 
 #: timezone/zic.c:1536
 #, c-format
@@ -6764,6 +6857,18 @@ msgstr "едно и също име на правило в много файло
 #, c-format
 msgid "%s in ruleless zone"
 msgstr "%s в зона без правила"
+
+#: timezone/zic.c:1674
+msgid "input error"
+msgstr "входна грешка"
+
+#: timezone/zic.c:1679
+msgid "unterminated line"
+msgstr "незавършен ред"
+
+#: timezone/zic.c:1683
+msgid "NUL input byte"
+msgstr "NUL входящ байт"
 
 #: timezone/zic.c:1688
 msgid "line too long"
@@ -6899,6 +7004,15 @@ msgstr "многократни редове Expires"
 msgid "wrong number of fields on Link line"
 msgstr "неправилен брой полета на ред за Link"
 
+#: timezone/zic.c:2129
+msgid "blank TARGET field on Link line"
+msgstr "празно поле TARGET на ред за Link"
+
+#: timezone/zic.c:2192
+#, c-format
+msgid "FROM year \"%s\" is obsolete; treated as %d"
+msgstr "'от година' \"%s\" е отживелица, заместено с %d"
+
 #: timezone/zic.c:2199
 msgid "invalid starting year"
 msgstr "неправилна начална година"
@@ -6910,6 +7024,11 @@ msgstr "неправилна крайна година"
 #: timezone/zic.c:2218
 msgid "starting year greater than ending year"
 msgstr "началната година е по-голяма от крайната"
+
+#: timezone/zic.c:2222
+#, c-format
+msgid "year type \"%s\" is unsupported; use \"-\" instead"
+msgstr "тип на годината \"%s\" не се поддържа, да се използва \"-\""
 
 #: timezone/zic.c:2257
 msgid "invalid weekday name"
@@ -6924,6 +7043,16 @@ msgstr "някой клиенти, се справят зле при повеч�
 msgid "pre-2014 clients may mishandle more than 1200 transition times"
 msgstr "клиенти преди 2014, може да не се справят правилно при повече от 1200 прехода"
 
+#: timezone/zic.c:2480
+#, c-format
+msgid "%s: pre-2021b clients may mishandle leap second expiry"
+msgstr "%s: клиенти преди 2021b , може да не се справят с изтичането на дългата секунда"
+
+#: timezone/zic.c:2488
+#, c-format
+msgid "%s: pre-2021b clients may mishandle leap second table truncation"
+msgstr "%s: клиенти преди 2021b , може да не се справят със съкращаването на таблицата с дълги секунди"
+
 #: timezone/zic.c:2537
 msgid "too many transition times"
 msgstr "твърде много типове за преход"
@@ -6932,6 +7061,10 @@ msgstr "твърде много типове за преход"
 #, c-format
 msgid "%%z UT offset magnitude exceeds 99:59:59"
 msgstr "%%z Отместването спрямо универсалноте време превишава 99:59:59"
+
+#: timezone/zic.c:3180
+msgid "no POSIX.1-2017 environment variable for zone"
+msgstr "в обкръжението, липсва POSIX.1-2017 променлива за зона"
 
 #: timezone/zic.c:3187
 #, c-format
@@ -6958,6 +7091,10 @@ msgstr "твърде много типове за местно време"
 msgid "too many leap seconds"
 msgstr "твърде много високосни секунди"
 
+#: timezone/zic.c:3535
+msgid "Rolling leap seconds not supported with -r"
+msgstr "Претълкалване на дълга секунда не се поддръжа с -r"
+
 #: timezone/zic.c:3562
 msgid "Leap seconds too close together"
 msgstr "твърде близки високосни секунди"
@@ -6979,6 +7116,10 @@ msgstr "\"%s\" е двусмислен за zic от преди 2017c"
 #: timezone/zic.c:3742
 msgid "Odd number of quotation marks"
 msgstr "Неочакван брой кавички"
+
+#: timezone/zic.c:3750
+msgid "Too many input fields"
+msgstr "Твърде много входящи полета"
 
 #: timezone/zic.c:3839
 msgid "use of 2/29 in non leap-year"
