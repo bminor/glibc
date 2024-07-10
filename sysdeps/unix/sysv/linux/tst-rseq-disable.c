@@ -26,32 +26,82 @@
 #include <unistd.h>
 
 #ifdef RSEQ_SIG
+# include <sys/auxv.h>
+# include <dl-tls.h>
+# include "tst-rseq.h"
+
+/* Used to test private registration with the rseq system call because glibc
+   rseq is disabled.  */
+static __thread struct rseq local_rseq = {
+  .cpu_id = RSEQ_CPU_ID_REGISTRATION_FAILED,
+};
+
+/* Used to check if the address of the rseq area comes before or after the tls
+   blocks depending on the TLS model.  */
+static __thread char tls_var __attribute__ ((tls_model ("initial-exec")));
 
 /* Check that rseq can be registered and has not been taken by glibc.  */
 static void
 check_rseq_disabled (void)
 {
-  struct pthread *pd = THREAD_SELF;
+  struct rseq *rseq_abi = (struct rseq *) ((char *) __thread_pointer () +
+		           __rseq_offset);
 
+#if TLS_TCB_AT_TP
+  /* The rseq area block should come before the thread pointer and be at least
+     32 bytes. */
+  TEST_VERIFY (__rseq_offset <= -RSEQ_AREA_SIZE_INITIAL);
+
+  /* The rseq area block should come before TLS variables.  */
+  TEST_VERIFY ((intptr_t) rseq_abi < (intptr_t) &tls_var);
+#elif TLS_DTV_AT_TP
+  /* The rseq area block should come after the TCB, add the TLS block offset to
+     the rseq offset to get a value relative to the TCB and test that it's
+     non-negative.  */
+  TEST_VERIFY (__rseq_offset + TLS_TP_OFFSET >= 0);
+
+  /* The rseq area block should come after TLS variables.  */
+  TEST_VERIFY ((intptr_t) rseq_abi > (intptr_t) &tls_var);
+#else
+# error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+#endif
+
+  /* __rseq_flags is unused and should always be '0'.  */
   TEST_COMPARE (__rseq_flags, 0);
-  TEST_VERIFY ((char *) __thread_pointer () + __rseq_offset
-               == (char *) &pd->rseq_area);
-  TEST_COMPARE (__rseq_size, 0);
-  TEST_COMPARE ((int) pd->rseq_area.cpu_id, RSEQ_CPU_ID_REGISTRATION_FAILED);
 
-  int ret = syscall (__NR_rseq, &pd->rseq_area, sizeof (pd->rseq_area),
-                     0, RSEQ_SIG);
+  /* When rseq is not registered, __rseq_size should always be '0'.  */
+  TEST_COMPARE (__rseq_size, 0);
+
+  /* When rseq is not registered, the 'cpu_id' field should be set to
+     RSEQ_CPU_ID_REGISTRATION_FAILED.  */
+  TEST_COMPARE ((int) rseq_abi->cpu_id, RSEQ_CPU_ID_REGISTRATION_FAILED);
+
+  /* Test a rseq registration which should succeed since the internal
+     registration is disabled.  */
+  int ret = syscall (__NR_rseq, &local_rseq, RSEQ_AREA_SIZE_INITIAL, 0, RSEQ_SIG);
   if (ret == 0)
     {
-      ret = syscall (__NR_rseq, &pd->rseq_area, sizeof (pd->rseq_area),
+      /* A successful registration should set the cpu id.  */
+      TEST_VERIFY (local_rseq.cpu_id >= 0);
+
+      /* Test we can also unregister rseq.  */
+      ret = syscall (__NR_rseq, &local_rseq, RSEQ_AREA_SIZE_INITIAL,
                      RSEQ_FLAG_UNREGISTER, RSEQ_SIG);
       TEST_COMPARE (ret, 0);
-      pd->rseq_area.cpu_id = RSEQ_CPU_ID_REGISTRATION_FAILED;
     }
   else
     {
-      TEST_VERIFY (errno != -EINVAL);
-      TEST_VERIFY (errno != -EBUSY);
+      /* Check if we failed with EINVAL which would mean an invalid rseq flags,
+         a mis-aligned rseq area address or an incorrect rseq size.  */
+      TEST_VERIFY (errno != EINVAL);
+
+      /* Check if we failed with EBUSY which means an existing rseq
+         registration. */
+      TEST_VERIFY (errno != EBUSY);
+
+      /* Check if we failed with EFAULT which means an invalid rseq area
+         address.  */
+      TEST_VERIFY (errno != EFAULT);
     }
 }
 
@@ -71,6 +121,13 @@ proc_func (void *ignored)
 static int
 do_test (void)
 {
+  printf ("info: __rseq_size: %u\n", __rseq_size);
+  printf ("info: __rseq_offset: %td\n", __rseq_offset);
+  printf ("info: __rseq_flags: %u\n", __rseq_flags);
+  printf ("info: getauxval (AT_RSEQ_FEATURE_SIZE): %ld\n",
+          getauxval (AT_RSEQ_FEATURE_SIZE));
+  printf ("info: getauxval (AT_RSEQ_ALIGN): %ld\n", getauxval (AT_RSEQ_ALIGN));
+
   puts ("info: checking main thread");
   check_rseq_disabled ();
 

@@ -109,15 +109,6 @@ __tls_init_tp (void)
     bool do_rseq = TUNABLE_GET (rseq, int, NULL);
     if (!rseq_register_current_thread (pd, do_rseq))
       _rseq_size = 0;
-
-#ifdef RSEQ_SIG
-    /* This should be a compile-time constant, but the current
-       infrastructure makes it difficult to determine its value.  Not
-       all targets support __thread_pointer, so set __rseq_offset only
-       if the rseq registration may have happened because RSEQ_SIG is
-       defined.  */
-    _rseq_offset = (char *) &pd->rseq_area - (char *) __thread_pointer ();
-#endif
   }
 
   /* Set initial thread's stack block from 0 up to __libc_stack_end.

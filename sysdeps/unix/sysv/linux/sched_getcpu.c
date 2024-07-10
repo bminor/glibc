@@ -19,6 +19,7 @@
 #include <sched.h>
 #include <sysdep.h>
 #include <sysdep-vdso.h>
+#include <rseq-internal.h>
 
 static int
 vsyscall_sched_getcpu (void)
@@ -36,6 +37,6 @@ vsyscall_sched_getcpu (void)
 int
 sched_getcpu (void)
 {
-  int cpu_id = THREAD_GETMEM_VOLATILE (THREAD_SELF, rseq_area.cpu_id);
+  int cpu_id = RSEQ_GETMEM_ONCE (cpu_id);
   return __glibc_likely (cpu_id >= 0) ? cpu_id : vsyscall_sched_getcpu ();
 }

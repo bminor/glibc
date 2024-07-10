@@ -268,6 +268,11 @@ tests-internal += \
   tst-rseq-disable \
   # tests-internal
 
+tests-static += \
+  tst-rseq-disable-static \
+  tst-rseq-static \
+  # tests-static
+
 tests-time64 += \
   tst-adjtimex-time64 \
   tst-clock_adjtime-time64 \
@@ -411,6 +416,7 @@ $(objpfx)tst-sched-consts.out: ../sysdeps/unix/sysv/linux/tst-sched-consts.py
 $(objpfx)tst-sched-consts.out: $(sysdeps-linux-python-deps)
 
 tst-rseq-disable-ENV = GLIBC_TUNABLES=glibc.pthread.rseq=0
+tst-rseq-disable-static-ENV = GLIBC_TUNABLES=glibc.pthread.rseq=0
 
 endif # $(subdir) == misc
 
@@ -685,4 +691,8 @@ tests += \
 tests-internal += \
   tst-rseq-nptl \
   # tests-internal
+
+tests-static += \
+  tst-rseq-nptl-static \
+  # tests-static
 endif

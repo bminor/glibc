@@ -28,7 +28,7 @@
 static inline bool
 rseq_thread_registered (void)
 {
-  return THREAD_GETMEM_VOLATILE (THREAD_SELF, rseq_area.cpu_id) >= 0;
+  return RSEQ_GETMEM_ONCE (cpu_id) >= 0;
 }
 
 static inline int

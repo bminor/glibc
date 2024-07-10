@@ -61,15 +61,9 @@ void _dl_parse_auxv (ElfW(auxv_t) *av, dl_parse_auxv_t auxv_values)
 #endif
 
   /* Get the rseq feature size, with a minimum of RSEQ_AREA_SIZE_INITIAL_USED
-     (20) for kernels that don't have AT_RSEQ_FEATURE_SIZE.  Limit the feature
-     size to RSEQ_AREA_SIZE_MAX_USED (28) which fits the rseq area in 'struct
-     pthread' and represents the maximum feature size of currently released
-     kernels.  Since no kernels currently cross the 32 bytes of the original
-     ABI, the semantics of a feature size of 32 or more are still undetermined.
-     */
-  _rseq_size = MIN (MAX (auxv_values[AT_RSEQ_FEATURE_SIZE],
-                         RSEQ_AREA_SIZE_INITIAL_USED),
-		    RSEQ_AREA_SIZE_MAX_USED);
+     (20) for kernels that don't have AT_RSEQ_FEATURE_SIZE.  */
+  _rseq_size = MAX (auxv_values[AT_RSEQ_FEATURE_SIZE],
+                    RSEQ_AREA_SIZE_INITIAL_USED);
   _rseq_align = MAX (auxv_values[AT_RSEQ_ALIGN], RSEQ_MIN_ALIGN);
 
   DL_PLATFORM_AUXV

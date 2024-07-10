@@ -696,7 +696,7 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
 
   /* Inherit rseq registration state.  Without seccomp filters, rseq
      registration will either always fail or always succeed.  */
-  if ((int) THREAD_GETMEM_VOLATILE (self, rseq_area.cpu_id) >= 0)
+  if ((int) RSEQ_GETMEM_ONCE (cpu_id) >= 0)
     pd->flags |= ATTR_FLAG_DO_RSEQ;
 
   /* Initialize the field for the ID of the thread which is waiting
