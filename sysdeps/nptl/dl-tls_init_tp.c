@@ -46,6 +46,8 @@ rtld_mutex_dummy (pthread_mutex_t *lock)
 
 const unsigned int __rseq_flags;
 
+size_t _rseq_align attribute_hidden;
+
 void
 __tls_pre_init_tp (void)
 {
@@ -99,10 +101,14 @@ __tls_init_tp (void)
   }
 
   {
-    bool do_rseq = true;
-    do_rseq = TUNABLE_GET (rseq, int, NULL);
-    if (rseq_register_current_thread (pd, do_rseq))
-      _rseq_size = RSEQ_AREA_SIZE_INITIAL_USED;
+    /* If the registration fails or is disabled by tunable, the public
+       '__rseq_size' will be set to '0' regardless of the feature size of the
+       allocated rseq area.  An rseq area of at least 32 bytes is always
+       allocated since application code is allowed to check the status of the
+       rseq registration by reading the content of the 'cpu_id' field.  */
+    bool do_rseq = TUNABLE_GET (rseq, int, NULL);
+    if (!rseq_register_current_thread (pd, do_rseq))
+      _rseq_size = 0;
 
 #ifdef RSEQ_SIG
     /* This should be a compile-time constant, but the current

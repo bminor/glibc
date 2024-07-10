@@ -25,13 +25,31 @@
 #include <stdio.h>
 #include <sys/rseq.h>
 
-/* 32 is the initially required value for the area size.  The
-   actually used rseq size may be less (20 bytes initially).  */
+/* Minimum size of the rseq area allocation required by the syscall.  The
+   actually used rseq feature size may be less (20 bytes initially).  */
 #define RSEQ_AREA_SIZE_INITIAL 32
+
+/* Minimum used feature size of the rseq area.  */
 #define RSEQ_AREA_SIZE_INITIAL_USED 20
 
-/* The variables are in .data.relro but are not yet write-protected.  */
+/* Maximum currently used feature size of the rseq area.  */
+#define RSEQ_AREA_SIZE_MAX_USED 28
+
+/* Minimum alignment of the rseq area.  */
+#define RSEQ_MIN_ALIGN 32
+
+/* Alignment requirement of the rseq area.
+   Populated from the auxiliary vector with a minimum of '32'.
+   In .data.relro but not yet write-protected.  */
+extern size_t _rseq_align attribute_hidden;
+
+/* Size of the active features in the rseq area.
+   Populated from the auxiliary vector with a minimum of '20'.
+   In .data.relro but not yet write-protected.  */
 extern unsigned int _rseq_size attribute_hidden;
+
+/* Offset from the thread pointer to the rseq area.
+   In .data.relro but not yet write-protected.  */
 extern ptrdiff_t _rseq_offset attribute_hidden;
 
 #ifdef RSEQ_SIG

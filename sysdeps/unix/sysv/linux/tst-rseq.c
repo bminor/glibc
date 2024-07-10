@@ -38,13 +38,15 @@ static void
 do_rseq_main_test (void)
 {
   struct pthread *pd = THREAD_SELF;
+  size_t rseq_feature_size = MIN (MAX (getauxval (AT_RSEQ_FEATURE_SIZE),
+                                       RSEQ_AREA_SIZE_INITIAL_USED),
+                                  RSEQ_AREA_SIZE_MAX_USED);
 
   TEST_VERIFY_EXIT (rseq_thread_registered ());
   TEST_COMPARE (__rseq_flags, 0);
   TEST_VERIFY ((char *) __thread_pointer () + __rseq_offset
                == (char *) &pd->rseq_area);
-  /* The current implementation only supports the initial size.  */
-  TEST_COMPARE (__rseq_size, 20);
+  TEST_COMPARE (__rseq_size, rseq_feature_size);
 }
 
 static void
