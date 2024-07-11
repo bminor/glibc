@@ -293,6 +293,9 @@ if test "x$mach_interface_list" = x; then
   as_fn_error $? "what manner of Mach is this?" "$LINENO" 5
 fi
 
+
+
+
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for egrep -e" >&5
 printf %s "checking for egrep -e... " >&6; }
 if test ${ac_cv_path_EGREP_TRADITIONAL+y}
@@ -429,7 +432,7 @@ printf "%s\n" "$ac_cv_path_EGREP_TRADITIONAL" >&6; }
 
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for host_page_size in mach_host.defs" >&5
 printf %s "checking for host_page_size in mach_host.defs... " >&6; }
-if test ${libc_cv_mach_host_page_size+y}
+if test ${libc_cv_mach_rpc_host_page_size+y}
 then :
   printf %s "(cached) " >&6
 else case e in #(
@@ -441,21 +444,82 @@ _ACEOF
 if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
   $EGREP_TRADITIONAL "host_page_size" >/dev/null 2>&1
 then :
-  libc_cv_mach_host_page_size=yes
+  libc_cv_mach_rpc_host_page_size=yes
 else case e in #(
-  e) libc_cv_mach_host_page_size=no ;;
+  e) libc_cv_mach_rpc_host_page_size=no ;;
 esac
 fi
 rm -rf conftest*
  ;;
 esac
 fi
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_mach_host_page_size" >&5
-printf "%s\n" "$libc_cv_mach_host_page_size" >&6; }
-if test $libc_cv_mach_host_page_size = yes; then
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_mach_rpc_host_page_size" >&5
+printf "%s\n" "$libc_cv_mach_rpc_host_page_size" >&6; }
+if test $libc_cv_mach_rpc_host_page_size = yes; then
   printf "%s\n" "#define HAVE_HOST_PAGE_SIZE 1" >>confdefs.h
 
 fi
+
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for thread_set_name in gnumach.defs" >&5
+printf %s "checking for thread_set_name in gnumach.defs... " >&6; }
+if test ${libc_cv_mach_rpc_thread_set_name+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <mach/gnumach.defs>
+
+_ACEOF
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  $EGREP_TRADITIONAL "thread_set_name" >/dev/null 2>&1
+then :
+  libc_cv_mach_rpc_thread_set_name=yes
+else case e in #(
+  e) libc_cv_mach_rpc_thread_set_name=no ;;
+esac
+fi
+rm -rf conftest*
+ ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_mach_rpc_thread_set_name" >&5
+printf "%s\n" "$libc_cv_mach_rpc_thread_set_name" >&6; }
+if test $libc_cv_mach_rpc_thread_set_name = yes; then
+  printf "%s\n" "#define HAVE_MACH_THREAD_SET_NAME 1" >>confdefs.h
+
+fi
+
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for thread_get_name in gnumach.defs" >&5
+printf %s "checking for thread_get_name in gnumach.defs... " >&6; }
+if test ${libc_cv_mach_rpc_thread_get_name+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <mach/gnumach.defs>
+
+_ACEOF
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  $EGREP_TRADITIONAL "thread_get_name" >/dev/null 2>&1
+then :
+  libc_cv_mach_rpc_thread_get_name=yes
+else case e in #(
+  e) libc_cv_mach_rpc_thread_get_name=no ;;
+esac
+fi
+rm -rf conftest*
+ ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_mach_rpc_thread_get_name" >&5
+printf "%s\n" "$libc_cv_mach_rpc_thread_get_name" >&6; }
+if test $libc_cv_mach_rpc_thread_get_name = yes; then
+  printf "%s\n" "#define HAVE_MACH_THREAD_GET_NAME 1" >>confdefs.h
+
+fi
+
 
 ac_fn_c_check_header_preproc "$LINENO" "mach/machine/ndr_def.h" "ac_cv_header_mach_machine_ndr_def_h"
 if test "x$ac_cv_header_mach_machine_ndr_def_h" = xyes

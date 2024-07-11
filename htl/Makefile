@@ -145,6 +145,8 @@ libpthread-routines := \
   pt-getcpuclockid \
   pt-setschedprio \
   pt-yield \
+  pt-getname-np \
+  pt-setname-np \
   sem_close \
   sem-destroy \
   sem-getvalue \

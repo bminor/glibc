@@ -169,6 +169,11 @@ libpthread {
     sem_clockwait;
   }
 
+  GLIBC_2.40 {
+    pthread_getname_np;
+    pthread_setname_np;
+  }
+
   GLIBC_PRIVATE {
     __pthread_initialize_minimal;
 

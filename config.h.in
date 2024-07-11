@@ -159,6 +159,12 @@
 /* Mach specific: define if the `host_page_size' RPC is available.  */
 #undef	HAVE_HOST_PAGE_SIZE
 
+/* Mach specific: define if the `thread_set_name' RPC is available.  */
+#undef  HAVE_MACH_THREAD_SET_NAME
+
+/* Mach specific: define if the `thread_get_name' RPC is available.  */
+#undef  HAVE_MACH_THREAD_GET_NAME
+
 /* Mach/i386 specific: define if the `i386_io_perm_*' RPCs are available.  */
 #undef	HAVE_I386_IO_PERM_MODIFY
 

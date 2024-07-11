@@ -72,14 +72,29 @@ if test "x$mach_interface_list" = x; then
   AC_MSG_ERROR([what manner of Mach is this?])
 fi
 
-AC_CACHE_CHECK(for host_page_size in mach_host.defs,
-	       libc_cv_mach_host_page_size, [dnl
-AC_EGREP_HEADER(host_page_size, mach/mach_host.defs,
-		libc_cv_mach_host_page_size=yes,
-		libc_cv_mach_host_page_size=no)])
-if test $libc_cv_mach_host_page_size = yes; then
-  AC_DEFINE([HAVE_HOST_PAGE_SIZE])
+dnl
+dnl mach_RPC_CHECK(interface.defs, rpc_method, define)
+dnl
+dnl Check if rpc_method RPC is defined by interface.defs
+dnl and define `define`.
+dnl
+AC_DEFUN([mach_RPC_CHECK], [dnl
+AC_CACHE_CHECK(for $2 in $1, libc_cv_mach_rpc_$2, [dnl
+AC_EGREP_HEADER($2, mach/$1,
+		libc_cv_mach_rpc_$2=yes,
+		libc_cv_mach_rpc_$2=no)])
+if test $libc_cv_mach_rpc_$2 = yes; then
+  AC_DEFINE([$3])
 fi
+])
+
+
+mach_RPC_CHECK(mach_host.defs, host_page_size,
+	       HAVE_HOST_PAGE_SIZE)
+mach_RPC_CHECK(gnumach.defs, thread_set_name,
+	       HAVE_MACH_THREAD_SET_NAME)
+mach_RPC_CHECK(gnumach.defs, thread_get_name,
+	       HAVE_MACH_THREAD_GET_NAME)
 
 AC_CHECK_HEADER(mach/machine/ndr_def.h, [dnl
   DEFINES="$DEFINES -DNDR_DEF_HEADER='<mach/machine/ndr_def.h>'"], [dnl
