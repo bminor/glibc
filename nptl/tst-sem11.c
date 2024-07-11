@@ -29,15 +29,15 @@
 static void *
 tf (void *arg)
 {
-#ifdef PREPARE
-  PREPARE
+#ifdef TF_PREPARE
+  TF_PREPARE
 #endif
   SEM_WAIT (arg);
   return NULL;
 }
 
 int
-main (void)
+do_test (void)
 {
   int tries = 5;
   pthread_t th;
@@ -101,3 +101,5 @@ main (void)
 
   return 0;
 }
+
+#include <support/test-driver.c>

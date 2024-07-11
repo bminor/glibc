@@ -20,7 +20,7 @@
 #include <sys/time.h>
 
 
-#define PREPARE \
+#define TF_PREPARE \
   struct timespec ts; \
   struct timeval tv; \
   gettimeofday (&tv, NULL); \
