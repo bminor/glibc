@@ -42,16 +42,49 @@ routines := offtime asctime clock ctime ctime_r difftime \
 
 aux :=	    era alt_digit lc-time-cleanup
 
-tests	:= test_time clocktest tst-posixtz tst-strptime tst_wcsftime \
-	   tst-getdate tst-mktime tst-mktime2 tst-ftime_l tst-strftime \
-	   tst-mktime3 tst-strptime2 bug-asctime bug-asctime_r bug-mktime1 \
-	   tst-strptime3 bug-getdate1 tst-strptime-whitespace tst-ftime \
-	   tst-tzname tst-y2039 bug-mktime4 tst-strftime2 tst-strftime3 \
-	   tst-clock tst-clock2 tst-clock_nanosleep tst-cpuclock1 \
-	   tst-adjtime tst-ctime tst-difftime tst-mktime4 tst-clock_settime \
-	   tst-settimeofday tst-itimer tst-gmtime tst-timegm \
-	   tst-timespec_get tst-timespec_getres tst-strftime4 \
-	   tst-tzfile-fault
+tests := \
+  bug-asctime \
+  bug-asctime_r \
+  bug-getdate1 \
+  bug-mktime1 \
+  bug-mktime4 \
+  clocktest \
+  test_time \
+  tst-adjtime \
+  tst-clock \
+  tst-clock2 \
+  tst-clock_nanosleep \
+  tst-clock_settime \
+  tst-cpuclock1 \
+  tst-ctime \
+  tst-difftime \
+  tst-ftime \
+  tst-ftime_l \
+  tst-getdate \
+  tst-gmtime \
+  tst-itimer \
+  tst-mktime \
+  tst-mktime2 \
+  tst-mktime3 \
+  tst-mktime4 \
+  tst-posixtz \
+  tst-settimeofday \
+  tst-strftime \
+  tst-strftime2 \
+  tst-strftime3 \
+  tst-strftime4 \
+  tst-strptime \
+  tst-strptime-whitespace \
+  tst-strptime2 \
+  tst-strptime3 \
+  tst-timegm \
+  tst-timespec_get \
+  tst-timespec_getres \
+  tst-tzfile-fault \
+  tst-tzname \
+  tst-y2039 \
+  tst_wcsftime \
+  # tests
 
 tests-time64 := \
   tst-adjtime-time64 \
