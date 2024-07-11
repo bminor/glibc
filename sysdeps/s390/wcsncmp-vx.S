@@ -59,14 +59,7 @@ ENTRY(WCSNCMP_Z13)
 	sllg	%r4,%r4,2	/* Convert character-count to byte-count.  */
 	locgrne	%r4,%r1		/* Use max byte-count, if bit 0/1 was one.  */
 
-	/* Check first character without vector load.  */
-	lghi	%r5,4		/* current_len = 4 bytes.  */
-	/* Check s1/2[0].  */
-	lt	%r0,0(%r2)
-	l	%r1,0(%r3)
-	je	.Lend_cmp_one_char
-	crjne	%r0,%r1,.Lend_cmp_one_char
-
+	lghi	%r5,0		/* current_len = 0 bytes.  */
 .Lloop:
 	vlbb	%v17,0(%r5,%r3),6 /* Load s2 to block boundary.  */
 	vlbb	%v16,0(%r5,%r2),6 /* Load s1 to block boundary.  */
@@ -167,7 +160,6 @@ ENTRY(WCSNCMP_Z13)
 	srl	%r4,2		/* And convert it to character-index.  */
 	vlgvf	%r0,%v16,0(%r4)	/* Load character-values.  */
 	vlgvf	%r1,%v17,0(%r4)
-.Lend_cmp_one_char:
 	cr	%r0,%r1
 	je	.Lend_equal
 	lghi	%r2,1
