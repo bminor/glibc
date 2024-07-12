@@ -23,6 +23,15 @@ ASFLAGS-.o += $(pie-default)
 ASFLAGS-.op += $(pie-default)
 
 ifeq ($(subdir),elf)
+
+# These tests fail on all mips configurations (BZ 29404)
+test-xfail-tst-audit24a = yes
+test-xfail-tst-audit24b = yes
+test-xfail-tst-audit24c = yes
+test-xfail-tst-audit24d = yes
+test-xfail-tst-audit25a = yes
+test-xfail-tst-audit25b = yes
+
 ifneq ($(o32-fpabi),)
 tests += tst-abi-interlink
 
