@@ -42,7 +42,10 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
   struct clobber
   {
     mach_msg_type_t type;
-    error_t err;
+    union {
+      error_t err;
+      uintptr_t align;
+    };
   };
   union msg
   {
