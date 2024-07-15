@@ -245,6 +245,11 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
 		(n, cpu_features, MathVec_Prefer_No_AVX512, AVX512F, 24);
 	    }
 	  break;
+	case 25:
+	  {
+	    CHECK_GLIBC_IFUNC_PREFERRED_BOTH (n, cpu_features,
+					      Avoid_Non_Temporal_Memset, 25);
+	  }
 	case 26:
 	    {
 	      CHECK_GLIBC_IFUNC_PREFERRED_NEED_BOTH

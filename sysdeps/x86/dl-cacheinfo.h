@@ -989,13 +989,14 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
   /* Non-temporal stores are more performant on Intel and AMD hardware above
      non_temporal_threshold. Enable this for both Intel and AMD hardware. */
   unsigned long int memset_non_temporal_threshold = SIZE_MAX;
-  if (cpu_features->basic.kind == arch_kind_intel
-      || cpu_features->basic.kind == arch_kind_amd)
-      memset_non_temporal_threshold = non_temporal_threshold;
+  if (!CPU_FEATURES_ARCH_P (cpu_features, Avoid_Non_Temporal_Memset)
+      && (cpu_features->basic.kind == arch_kind_intel
+	  || cpu_features->basic.kind == arch_kind_amd))
+    memset_non_temporal_threshold = non_temporal_threshold;
 
-   /* For AMD CPUs that support ERMS (Zen3+), REP MOVSB is in a lot of
-      cases slower than the vectorized path (and for some alignments,
-      it is really slow, check BZ #30994).  */
+  /* For AMD CPUs that support ERMS (Zen3+), REP MOVSB is in a lot of
+     cases slower than the vectorized path (and for some alignments,
+     it is really slow, check BZ #30994).  */
   if (cpu_features->basic.kind == arch_kind_amd)
     rep_movsb_threshold = non_temporal_threshold;
 

@@ -872,11 +872,18 @@ init_cpu_features (struct cpu_features *cpu_features)
 
 	      /* Newer Bigcore microarch (larger non-temporal store
 		 threshold).  */
-	    case INTEL_BIGCORE_SKYLAKE:
-	    case INTEL_BIGCORE_KABYLAKE:
-	    case INTEL_BIGCORE_COMETLAKE:
 	    case INTEL_BIGCORE_SKYLAKE_AVX512:
 	    case INTEL_BIGCORE_CANNONLAKE:
+	      /* Benchmarks indicate non-temporal memset is not
+		     necessarily profitable on SKX (and in some cases much
+		     worse). This is likely unique to SKX due its it unique
+		     mesh interconnect (not present on ICX or BWD). Disable
+		     non-temporal on all Skylake servers. */
+	      cpu_features->preferred[index_arch_Avoid_Non_Temporal_Memset]
+		  |= bit_arch_Avoid_Non_Temporal_Memset;
+	    case INTEL_BIGCORE_COMETLAKE:
+	    case INTEL_BIGCORE_SKYLAKE:
+	    case INTEL_BIGCORE_KABYLAKE:
 	    case INTEL_BIGCORE_ICELAKE:
 	    case INTEL_BIGCORE_TIGERLAKE:
 	    case INTEL_BIGCORE_ROCKETLAKE:
