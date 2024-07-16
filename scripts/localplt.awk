@@ -10,7 +10,8 @@ BEGIN {
 }
 
 FILENAME != lastfile {
-  if (lastfile && jmprel_offset == 0 && rela_offset == 0 && rel_offset == 0) {
+  if (lastfile && jmprel_offset == 0 && rela_offset == 0 && rel_offset == 0 \
+      && relr_offset == 0) {
     print FILENAME ": *** failed to find expected output (readelf -WSdr)";
     result = 2;
   }
@@ -22,6 +23,7 @@ FILENAME != lastfile {
   jmprel_offset = 0;
   rela_offset = 0;
   rel_offset = 0;
+  relr_offset = 0;
   pltrelsz = -1;
   delete section_offset_by_address;
 }
@@ -77,6 +79,8 @@ in_relocs && relocs_offset == rel_offset && NF >= 5 {
   }
 }
 
+# No need to handle DT_RELR (all packed relocations are relative).
+
 in_relocs { next }
 
 $1 == "Relocation" && $2 == "section" && $5 == "offset" {
@@ -120,5 +124,15 @@ $2 == "(REL)" {
     result = 2;
   }
   next
+}
+
+$2 == "(RELR)" {
+  relr_addr = strtonum($3);
+  if (relr_addr in section_offset_by_address) {
+    relr_offset = section_offset_by_address[relr_addr];
+  } else {
+    print FILENAME ": *** DT_RELR does not match any section's address";
+    result = 2;
+  }
 }
 END { exit(result) }
