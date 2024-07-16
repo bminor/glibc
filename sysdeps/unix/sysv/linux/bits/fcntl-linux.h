@@ -200,6 +200,7 @@
 # define F_SETLEASE	1024	/* Set a lease.  */
 # define F_GETLEASE	1025	/* Enquire what lease is active.  */
 # define F_NOTIFY	1026	/* Request notifications on a directory.  */
+# define F_DUPFD_QUERY  1027    /* Compare two file descriptors for sameness.  */
 # define F_SETPIPE_SZ	1031	/* Set pipe page size array.  */
 # define F_GETPIPE_SZ	1032	/* Set pipe page size array.  */
 # define F_ADD_SEALS	1033	/* Add seals to file.  */
