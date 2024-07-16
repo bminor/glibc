@@ -21,8 +21,8 @@
 # This file can list all potential system calls.  The names are only
 # used if the installed kernel headers also provide them.
 
-# The list of system calls is current as of Linux 6.9.
-kernel 6.9
+# The list of system calls is current as of Linux 6.10.
+kernel 6.10
 
 FAST_atomic_update
 FAST_cmpxchg
@@ -287,6 +287,7 @@ mq_timedsend
 mq_timedsend_time64
 mq_unlink
 mremap
+mseal
 msgctl
 msgget
 msgrcv

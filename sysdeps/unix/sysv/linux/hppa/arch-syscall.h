@@ -197,6 +197,7 @@
 #define __NR_mq_timedsend_time64 418
 #define __NR_mq_unlink 230
 #define __NR_mremap 163
+#define __NR_mseal 462
 #define __NR_msgctl 191
 #define __NR_msgget 190
 #define __NR_msgrcv 189

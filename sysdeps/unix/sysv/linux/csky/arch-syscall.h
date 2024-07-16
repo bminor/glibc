@@ -168,6 +168,7 @@
 #define __NR_mq_timedsend_time64 418
 #define __NR_mq_unlink 181
 #define __NR_mremap 216
+#define __NR_mseal 462
 #define __NR_msgctl 187
 #define __NR_msgget 186
 #define __NR_msgrcv 188
@@ -301,7 +302,7 @@
 #define __NR_swapon 224
 #define __NR_symlinkat 36
 #define __NR_sync 81
-#define __NR_sync_file_range 84
+#define __NR_sync_file_range2 84
 #define __NR_syncfs 267
 #define __NR_sysinfo 179
 #define __NR_syslog 116

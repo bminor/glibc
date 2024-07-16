@@ -24,6 +24,7 @@
 #define __NR_clock_nanosleep 422
 #define __NR_clock_settime 419
 #define __NR_clone 312
+#define __NR_clone3 545
 #define __NR_close 6
 #define __NR_close_range 546
 #define __NR_connect 98
@@ -189,6 +190,7 @@
 #define __NR_mq_timedsend 434
 #define __NR_mq_unlink 433
 #define __NR_mremap 341
+#define __NR_mseal 572
 #define __NR_msgctl 200
 #define __NR_msgget 201
 #define __NR_msgrcv 202
