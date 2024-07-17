@@ -24,6 +24,7 @@
 struct __pthread __pthread_init_thread = {
 	.thread = 1,
 };
+libc_hidden_def (__pthread_init_thread)
 
 __thread struct __pthread *___pthread_self = &__pthread_init_thread;
 libc_hidden_tls_def (___pthread_self)

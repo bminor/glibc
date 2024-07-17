@@ -34,8 +34,8 @@
 
 extern __thread struct __pthread *___pthread_self;
 libc_hidden_tls_proto (___pthread_self)
-extern struct __pthread ___pthread_init_thread;
-libc_hidden_proto (___pthread_init_thread)
+extern struct __pthread __pthread_init_thread;
+libc_hidden_proto (__pthread_init_thread)
 
 #ifdef DEBUG
 #define _pthread_self()                                            \
