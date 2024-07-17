@@ -19,7 +19,9 @@
 
 export LC_ALL=C
 
-rtld="$1"
+# --inhibit-cache to suppress "No such file or directory" message when
+# /etc/ld.so.cache does not exist.
+rtld="$1 --inhibit-cache"
 tmp_out="$(mktemp)"
 
 $rtld program-does-not-exist 2>"$tmp_out"
