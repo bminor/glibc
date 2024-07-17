@@ -17,6 +17,13 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <pt-sysdep.h>
+#include <pt-internal.h>
 
-__thread struct __pthread *___pthread_self;
+/* Initial thread structure used before libpthread is initialized, so various
+ * functions can already work at least basically.  */
+struct __pthread __pthread_init_thread = {
+	.thread = 1,
+};
+
+__thread struct __pthread *___pthread_self = &__pthread_init_thread;
 libc_hidden_tls_def (___pthread_self)

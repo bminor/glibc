@@ -38,6 +38,7 @@ libc {
     __pthread_cleanup_stack;
     __pthread_total;
     ___pthread_self;
+    __pthread_init_thread;
   }
 }
 

@@ -26,10 +26,6 @@
 #include <pt-internal.h>
 #include <pthreadP.h>
 
-/* Initial thread structure used temporarily during initialization, so various
- * functions can already work at least basically.  */
-static struct __pthread init_thread;
-
 static void
 reset_pthread_total (void)
 {
@@ -50,10 +46,6 @@ _init_routine (void *stack)
   if (GL (dl_pthread_threads) != NULL)
     /* Already initialized */
     return;
-
-  /* Initialize early thread structure.  */
-  init_thread.thread = 1;
-  ___pthread_self = &init_thread;
 
   /* Initialize the library.  */
   ___pthread_init ();
@@ -116,9 +108,9 @@ _init_routine (void *stack)
 #endif
 
   /* Copy over the thread-specific state */
-  assert (!init_thread.thread_specifics);
+  assert (!__pthread_init_thread.thread_specifics);
   memcpy (&thread->static_thread_specifics,
-          &init_thread.static_thread_specifics,
+          &__pthread_init_thread.static_thread_specifics,
           sizeof (thread->static_thread_specifics));
 
   ___pthread_self = thread;
