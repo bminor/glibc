@@ -3,6 +3,16 @@ libc {
   GLIBC_2.12 {
     pthread_self;
     __pthread_self;
+    pthread_attr_getdetachstate;
+    pthread_attr_getinheritsched;
+    pthread_attr_getschedparam;
+    pthread_attr_getschedpolicy;
+    pthread_attr_setdetachstate;
+    pthread_attr_setinheritsched;
+    pthread_attr_setschedpolicy;
+    pthread_equal;
+    pthread_getschedparam;
+    pthread_setschedparam;
   }
 
   GLIBC_2.21 {

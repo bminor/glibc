@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <pthread.h>
+#include <shlib-compat.h>
 #include <pt-internal.h>
 
 /* Return true if __T1 and __T2 both name the same thread.  Otherwise,
@@ -27,4 +28,8 @@ __pthread_equal (pthread_t __t1, pthread_t __t2)
   return __t1 == __t2;
 }
 
-weak_alias (__pthread_equal, pthread_equal);
+versioned_symbol (libc, __pthread_equal, pthread_equal, GLIBC_2_21);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
+compat_symbol (libc, __pthread_equal, pthread_equal, GLIBC_2_12);
+#endif

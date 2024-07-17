@@ -19,6 +19,7 @@
 #include <pthread.h>
 #include <sched.h>
 #include <string.h>
+#include <shlib-compat.h>
 
 #include <pt-internal.h>
 
@@ -30,4 +31,8 @@ __pthread_attr_getschedparam (const pthread_attr_t *attr,
   return 0;
 }
 
-weak_alias (__pthread_attr_getschedparam, pthread_attr_getschedparam);
+versioned_symbol (libc, __pthread_attr_getschedparam, pthread_attr_getschedparam, GLIBC_2_21);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
+compat_symbol (libc, __pthread_attr_getschedparam, pthread_attr_getschedparam, GLIBC_2_12);
+#endif

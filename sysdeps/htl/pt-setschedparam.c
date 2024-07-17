@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <pthread.h>
+#include <shlib-compat.h>
 #include <pt-internal.h>
 
 int
@@ -26,5 +27,9 @@ __pthread_setschedparam (pthread_t thread, int policy,
   return ENOSYS;
 }
 
-weak_alias (__pthread_setschedparam, pthread_setschedparam);
+versioned_symbol (libc, __pthread_setschedparam, pthread_setschedparam, GLIBC_2_21);
 stub_warning (pthread_setschedparam)
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
+compat_symbol (libc, __pthread_setschedparam, pthread_setschedparam, GLIBC_2_12);
+#endif
