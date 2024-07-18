@@ -1,3 +1,9 @@
+ifeq ($(subdir),elf)
+# Xfail tst-platform-1 on x32 since kernel passes i686 in AT_PLATFORM.
+# See https://sourceware.org/bugzilla/show_bug.cgi?id=22363
+test-xfail-tst-platform-1 = yes
+endif
+
 ifeq ($(subdir),math)
 # Since x32 returns 32-bit long int and 64-bit long long int in the
 # same 64-bit register, we make the 32b-bit lround an alias of the
