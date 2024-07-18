@@ -46,7 +46,7 @@ check_auxv (unsigned long type, char *argv)
 {
   char *endptr;
   errno = 0;
-  unsigned long int varg = strtol (argv, &endptr, 10);
+  unsigned long int varg = strtoul (argv, &endptr, 10);
   TEST_VERIFY_EXIT (errno == 0);
   TEST_VERIFY_EXIT (*endptr == '\0');
   errno = 0;
