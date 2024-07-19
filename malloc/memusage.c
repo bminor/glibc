@@ -172,7 +172,7 @@ update_data (struct header *result, size_t len, size_t old_len)
     start_sp = __thread_stack_pointer ();
 
   uintptr_t sp = __thread_stack_pointer ();
-#ifdef _STACK_GROWS_UP
+#if _STACK_GROWS_UP
   /* This can happen in threads where we didn't catch the thread's
      stack early enough.  */
   if (__glibc_unlikely (sp < start_sp))

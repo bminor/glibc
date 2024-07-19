@@ -85,7 +85,7 @@ do_test (void)
 {
   /* ____longjmp_chk has  */
 #if 0
-#ifdef _STACK_GROWS_DOWN
+#if _STACK_GROWS_DOWN
 #define called_from(this, saved) ((this) < (saved))
 #else
 #define called_from(this, saved) ((this) > (saved))
@@ -98,7 +98,7 @@ do_test (void)
   /* Arrange stacks for uctx_func1 and uctx_func2 so that called_from
      is true when setjmp is called from uctx_func1 and longjmp is called
      from uctx_func2.  */
-#ifdef _STACK_GROWS_DOWN
+#if _STACK_GROWS_DOWN
 # define UCTX_FUNC1_STACK	1
 # define UCTX_FUNC2_STACK	0
 #else
