@@ -210,7 +210,7 @@ do_test (void)
       if (errno == ENOSYS)
 	FAIL_UNSUPPORTED
 	  ("glibc does not support memory protection keys");
-      FAIL_EXIT1 ("pkey_alloc: %m");
+      FAIL_EXIT1 ("pkey_get: %m");
     }
   for (int i = 1; i < key_count; ++i)
     {
