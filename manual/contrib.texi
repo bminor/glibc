@@ -16,6 +16,9 @@ Nick Alcock for contributing fixes to allow @theglibc{} to be built with the
 stack smashing protector enabled.
 
 @item
+Amrita H. S. for contributions to the PowerPC port.
+
+@item
 John David Anglin for various fixes to the hppa port.
 
 @item
@@ -180,6 +183,9 @@ for ISO 14651, for updating the library Unicode support, and for many
 locale updates and fixes.
 
 @item
+Gabi Falk for various fixes.
+
+@item
 Tulio Magno Quites Machado Filho for adding a new class of installed
 headers for low-level platform-specific functionality, including the
 low-level platform-specific headers for PowerPC, for their maintainership
@@ -222,6 +228,9 @@ implementing the IEEE 128-bit floating point type for PowerPC.
 @item
 Torbj@"orn Granlund for fast implementations of many of the string
 functions (@code{memcpy}, @code{strlen}, etc.).
+
+@item
+Evan Green for work on the riscv port.
 
 @item
 Vineet Gupta for their maintainership of the ARC port.
@@ -349,7 +358,7 @@ Hongjiu Lu for providing the support for a Linux 32-bit runtime
 environment under x86-64 (x32), for porting to Linux on IA64, for
 improved string functions, a framework for testing IFUNC
 implementations, for implementing Intel Control-Flow Enforcement
-Technology, and many bug fixes.
+Technology, many x86-64 improvements, and many bug fixes.
 
 @item
 Rafa@l{} Lu@dotaccent{z}y@'nski
@@ -370,6 +379,9 @@ function and writing the @file{tar.h} header.
 Lukasz Majewski for Y2038 related fixes.
 
 @item
+Manjunath Matti for contributions to the PowerPC port.
+
+@item
 Greg McGary for adding runtime support for bounds checking.
 
 @item
@@ -380,6 +392,9 @@ fixes and reviewing of contributions.
 
 @item
 Allan McRae for various fixes.
+
+@item
+Meng Qinggang for contributions to the LoongArch port.
 
 @item
 Jason Merrill for the port to the Sequent Symmetry running Dynix
@@ -439,7 +454,7 @@ and his direction as FSF Project Steward for @theglibc{}.
 Marko Myllynen for various fixes.
 
 @item
-Szabolcs Nagy for various fixes and contributions to AArch64.
+Szabolcs Nagy for many fixes and contributions to AArch64.
 
 @item
 Nab for various fixes.
@@ -461,10 +476,13 @@ safety documentation in the manual, for his direction as FSF Project
 Maintainer and for various fixes.
 
 @item
-Sunil K. Pandey for various fixes.
+Sunil K. Pandey for many fixes.
 
 @item
 Ronan Pigott for various fixes.
+
+@item
+Andrew Pinski for contributions to the AArch64 port.
 
 @item
 Paul Pluzhnikov for various fixes.
@@ -605,7 +623,7 @@ fixes.
 Mark Wielaard for various fixes.
 
 @item
-Xi Ruoyao for various fixes.
+Xi Ruoyao for various fixes and work on the loongarch port.
 
 @item
 Qixing ksyx Xue for various fixes.
@@ -617,11 +635,17 @@ Adam Yi for various fixes.
 Eric Youngdale for implementing versioning of objects on the symbol level.
 
 @item
+YunQiang Su for work on the mips port.
+
+@item
 Adhemerval Zanella for optimized functions on PowerPC, ISO C threads support,
-the work on tunables, and numerous contributions and fixes.
+the work on tunables, fortify improvements, and numerous contributions and fixes.
 
 @item
 Xuelei Zhang for optimized functions on AArch64.
+
+@item
+Junxian Zhu for work on the mips port.
 
 @end itemize
 
