@@ -527,7 +527,7 @@ GCC 6.2 or newer
 GCC 6.2 or higher is required.  In general it is recommended to use
 the newest version of the compiler that is known to work for building
 @theglibc{}, as newer compilers usually produce better code.  As of
-release time, GCC 13.2 is the newest compiler verified to work to build
+release time, GCC 14.1 is the newest compiler verified to work to build
 @theglibc{}.
 
 For PowerPC 64-bits little-endian (powerpc64le), a GCC version with support
@@ -582,7 +582,7 @@ To correctly translate and install the Texinfo documentation you need
 this version of the @code{texinfo} package.  Earlier versions do not
 understand all the tags used in the document, and the installation
 mechanism for the info files is not present or works differently.
-As of release time, @code{texinfo} 7.0.3 is the newest verified to work
+As of release time, @code{texinfo} 7.1 is the newest verified to work
 to build @theglibc{}.
 
 @item
@@ -591,7 +591,7 @@ GNU @code{awk} 3.1.2, or higher
 @code{awk} is used in several places to generate files.
 Some @code{gawk} extensions are used, including the @code{asorti}
 function, which was introduced in version 3.1.2 of @code{gawk}.
-As of release time, @code{gawk} version 5.2.2 is the newest verified
+As of release time, @code{gawk} version 5.3.0 is the newest verified
 to work to build @theglibc{}.
 
 @item
@@ -606,7 +606,7 @@ Perl 5
 
 Perl is not required, but if present it is used in some tests and the
 @code{mtrace} program, to build the @glibcadj{} manual.  As of release
-time @code{perl} version 5.38.2 is the newest verified to work to
+time @code{perl} version 5.40.0 is the newest verified to work to
 build @theglibc{}.
 
 @item
@@ -620,7 +620,7 @@ with any version of @code{sed}.  As of release time, @code{sed} version
 Python 3.4 or later
 
 Python is required to build @theglibc{}.  As of release time, Python
-3.11 is the newest verified to work for building and testing
+3.12 is the newest verified to work for building and testing
 @theglibc{}.
 
 @item PExpect 4.0
@@ -628,7 +628,7 @@ Python is required to build @theglibc{}.  As of release time, Python
 The pretty printer tests drive GDB through test programs and compare
 its output to the printers'.  PExpect is used to capture the output of
 GDB, and should be compatible with the Python version in your system.
-As of release time PExpect 4.8.0 is the newest verified to work to test
+As of release time PExpect 4.9.0 is the newest verified to work to test
 the pretty printers.
 
 @item
@@ -646,7 +646,7 @@ GDB itself needs to be configured with Python support in order to use
 the pretty printers.  Notice that your system having Python available
 doesn't imply that GDB supports it, nor that your system's Python and
 GDB's have the same version.  As of release time GNU @code{debugger}
-13.2 is the newest verified to work to test the pretty printers.
+14.2 is the newest verified to work to test the pretty printers.
 
 Unless Python, PExpect and GDB with Python support are present, the
 printer tests will report themselves as @code{UNSUPPORTED}.  Notice
@@ -669,7 +669,7 @@ and if you change any of the message translation files you will need
 @item
 GNU @code{gettext} 0.10.36 or later
 
-As of release time, GNU @code{gettext} version 0.21.1 is the newest
+As of release time, GNU @code{gettext} version 0.22.4 is the newest
 version verified to work to build @theglibc{}.
 @end itemize
 
@@ -721,7 +721,7 @@ if you configure @theglibc{} with @samp{--prefix=/usr}.  If you set some other
 prefix or allow it to default to @file{/usr/local}, then all the
 components are installed there.
 
-As of release time, Linux version 6.1.5 is the newest stable version verified
+As of release time, Linux version 6.6 is the newest stable version verified
 to work to build @theglibc{}.
 
 @node Reporting Bugs
