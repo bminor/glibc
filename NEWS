@@ -30,13 +30,23 @@ Major new features:
 
   - Logarithmic functions: log2p1, log10p1, logp1.
 
-* A new tunable, glibc.rtld.enable_secure, used to run a program
+* A new tunable, glibc.rtld.enable_secure, can be used to run a program
   as if it were a setuid process. This is currently a testing tool to allow
   more extensive verification tests for AT_SECURE programs and not meant to
   be a security feature.
 
-* On Linux, update epoll header to include epoll ioctl definitions and
-  related structure added in Linux kernel 6.9.
+* On Linux, the epoll header was updated to include epoll ioctl definitions
+  and the related structure added in Linux kernel 6.9.
+
+* The fortify functionality has been significantly enhanced for building
+  programs with clang against the GNU C Library.
+
+* Many functions have been added to the vector library for aarch64:
+    acosh, asinh, atanh, cbrt, cosh, erf, erfc, hypot, pow, sinh, tanh
+
+* On x86, memset can now use non-temporal stores to improve the performance
+  of large writes. This behaviour is controlled by a new tunable
+  x86_memset_non_temporal_threshold.
 
 Deprecated and removed features, and other changes affecting compatibility:
 
