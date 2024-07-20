@@ -62,10 +62,6 @@ Deprecated and removed features, and other changes affecting compatibility:
 * __rseq_size now denotes the size of the active rseq area (20 bytes
   initially), not the size of struct rseq (32 bytes initially).
 
-Changes to build and runtime requirements:
-
-  [Add changes to build and runtime requirements here]
-
 Security related changes:
 
 The following CVEs were fixed in this release, details of which can be
