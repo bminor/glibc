@@ -230,7 +230,7 @@ Torbj@"orn Granlund for fast implementations of many of the string
 functions (@code{memcpy}, @code{strlen}, etc.).
 
 @item
-Evan Green for work on the riscv port.
+Evan Green for work on the RISC-V port.
 
 @item
 Vineet Gupta for their maintainership of the ARC port.
@@ -635,7 +635,7 @@ Adam Yi for various fixes.
 Eric Youngdale for implementing versioning of objects on the symbol level.
 
 @item
-YunQiang Su for work on the mips port.
+YunQiang Su for work on the MIPS port.
 
 @item
 Adhemerval Zanella for optimized functions on PowerPC, ISO C threads support,
@@ -645,7 +645,7 @@ the work on tunables, fortify improvements, and numerous contributions and fixes
 Xuelei Zhang for optimized functions on AArch64.
 
 @item
-Junxian Zhu for work on the mips port.
+Junxian Zhu for work on the MIPS port.
 
 @end itemize
 
