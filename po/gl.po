@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.3.2\n"
-"POT-Creation-Date: 2024-06-19 22:30+0200\n"
+"POT-Creation-Date: 2024-07-21 00:32+0200\n"
 "PO-Revision-Date: 2003-03-03 20:13+0100\n"
 "Last-Translator: Jacobo Tarrio <jtarrio@trasno.net>\n"
 "Language-Team: Galician <gpul-traduccion@ceu.fi.udc.es>\n"
@@ -125,7 +125,7 @@ msgstr ""
 "[FICHEIRO-SAÍDA [FICHEIRO-ENTRADA]...]"
 
 #: catgets/gencat.c:246 debug/pcprofiledump.c:224 debug/xtrace.sh:63
-#: elf/ldconfig.c:232 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
+#: elf/ldconfig.c:233 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
 #: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
@@ -141,7 +141,7 @@ msgstr ""
 "garantía; nin sequera de COMERCIABILIDADE ou APTITUDE PARA UN FIN DETERMINADO.\n"
 
 #: catgets/gencat.c:251 debug/pcprofiledump.c:229 debug/xtrace.sh:67
-#: elf/ldconfig.c:237 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
+#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
@@ -261,7 +261,7 @@ msgstr "non se pode le-la cabeceira"
 msgid "invalid pointer size"
 msgstr "tamaño de punteiro non válido"
 
-#: elf/cache.c:296 elf/ldconfig.c:1249
+#: elf/cache.c:296 elf/ldconfig.c:1239
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Non se puido abri-lo ficheiro de caché %s\n"
@@ -467,7 +467,7 @@ msgstr "non se pode restaura-la protección do segmento despois de movelo"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "Úsase RTLD_NEXT en código non cargado dinamicamente"
 
-#: elf/dl-tls.c:1059
+#: elf/dl-tls.c:1136
 msgid "cannot create TLS data structures"
 msgstr "non se poden crea-las estructuras de datos TLS"
 
@@ -475,138 +475,138 @@ msgstr "non se poden crea-las estructuras de datos TLS"
 msgid "cannot allocate version reference table"
 msgstr "non se pode localiza-la táboa de referencias de versións"
 
-#: elf/ldconfig.c:124
+#: elf/ldconfig.c:125
 msgid "Print cache"
 msgstr "Amosa-la caché"
 
-#: elf/ldconfig.c:125
+#: elf/ldconfig.c:126
 msgid "Generate verbose messages"
 msgstr "Visualizar máis mensaxes"
 
-#: elf/ldconfig.c:126
+#: elf/ldconfig.c:127
 msgid "Don't build cache"
 msgstr "Non construí-la caché"
 
-#: elf/ldconfig.c:128
+#: elf/ldconfig.c:129
 msgid "Change to and use ROOT as root directory"
 msgstr "Cambiar a e empregar RAÍZ coma directorio raíz"
 
-#: elf/ldconfig.c:129
+#: elf/ldconfig.c:130
 msgid "Use CACHE as cache file"
 msgstr "Empregar CACHÉ coma un ficheiro de caché"
 
-#: elf/ldconfig.c:130
+#: elf/ldconfig.c:131
 msgid "Use CONF as configuration file"
 msgstr "Empregar CONF coma un ficheiro de configuración"
 
-#: elf/ldconfig.c:131
+#: elf/ldconfig.c:132
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "Nó se procesan os directorios especificados na liña de comando. Non se constrúen as cachés."
 
-#: elf/ldconfig.c:132
+#: elf/ldconfig.c:133
 msgid "Manually link individual libraries."
 msgstr "Ligue as bibliotecas individuais manualmente."
 
-#: elf/ldconfig.c:142
+#: elf/ldconfig.c:143
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr "Configura-las Asignacións de Tempo de Execución do Ligador Dinámico"
 
-#: elf/ldconfig.c:276
+#: elf/ldconfig.c:277
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "Proporcionouse a ruta `%s' máis dunha vez"
 
-#: elf/ldconfig.c:405
+#: elf/ldconfig.c:406
 #, c-format
 msgid "Can't stat %s"
 msgstr "Non se puido executar `stat' sobre %s"
 
-#: elf/ldconfig.c:486
+#: elf/ldconfig.c:487
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "Non se puido executar `stat' sobre %s\n"
 
-#: elf/ldconfig.c:496
+#: elf/ldconfig.c:497
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s non é unha ligazón simbólica\n"
 
-#: elf/ldconfig.c:515
+#: elf/ldconfig.c:516
 #, c-format
 msgid "Can't unlink %s"
 msgstr "Non se puido borrar %s"
 
-#: elf/ldconfig.c:521
+#: elf/ldconfig.c:522
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "Non se puido ligar %s a %s"
 
-#: elf/ldconfig.c:527
+#: elf/ldconfig.c:528
 msgid " (changed)\n"
 msgstr " (cambiou)\n"
 
-#: elf/ldconfig.c:529
+#: elf/ldconfig.c:530
 msgid " (SKIPPED)\n"
 msgstr " (OMITIDO)\n"
 
-#: elf/ldconfig.c:584
+#: elf/ldconfig.c:585
 #, c-format
 msgid "Can't find %s"
 msgstr "Non se pode atopar %s"
 
-#: elf/ldconfig.c:600 elf/ldconfig.c:770 elf/ldconfig.c:837
+#: elf/ldconfig.c:601 elf/ldconfig.c:760 elf/ldconfig.c:827
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "Non se pode facer lstat sobre %s"
 
-#: elf/ldconfig.c:606
+#: elf/ldconfig.c:607
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "Ignorouse o ficheiro %s porque non é un ficheiro normal"
 
-#: elf/ldconfig.c:614
+#: elf/ldconfig.c:615
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "Non se creou unha ligazón porque non se atopou o soname para %s"
 
-#: elf/ldconfig.c:726
+#: elf/ldconfig.c:716
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Non se puido abri-lo directorio %s"
 
-#: elf/ldconfig.c:787 elf/ldconfig.c:825 elf/readlib.c:78
+#: elf/ldconfig.c:777 elf/ldconfig.c:815 elf/readlib.c:81
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Non se atopou o ficheiro de entrada %s.\n"
 
-#: elf/ldconfig.c:794
+#: elf/ldconfig.c:784
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Non se pode executar `stat' sobre %s"
 
-#: elf/ldconfig.c:913
+#: elf/ldconfig.c:903
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "biblioteca libc6 %s nun directorio incorrecto"
 
-#: elf/ldconfig.c:932
+#: elf/ldconfig.c:922
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "as bibliotecas %s e %s do directorio %s teñen o mesmo soname pero diferente tipo."
 
-#: elf/ldconfig.c:1135 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1125 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:460 posix/getconf.c:699
 #, c-format
 msgid "memory exhausted"
 msgstr "memoria esgotada"
 
-#: elf/ldconfig.c:1228
+#: elf/ldconfig.c:1218
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Non se pode cambiar ao directorio /"
 
-#: elf/ldconfig.c:1269
+#: elf/ldconfig.c:1259
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Non se puido abri-lo directorio de ficheiros caché %s\n"
@@ -652,22 +652,22 @@ msgstr "%s non é un ficheiro de obxecto compartido (Tipo: %d).\n"
 msgid "more than one dynamic segment\n"
 msgstr "máis dun segmento dinámico\n"
 
-#: elf/readlib.c:84
+#: elf/readlib.c:87
 #, c-format
 msgid "Cannot fstat file %s.\n"
 msgstr "Non se puido executar fstat sobre o ficheiro %s.\n"
 
-#: elf/readlib.c:101
+#: elf/readlib.c:104
 #, c-format
 msgid "File %s is too small, not checked."
 msgstr "O ficheiro %s é pequeno de máis, non se comproba."
 
-#: elf/readlib.c:111
+#: elf/readlib.c:114
 #, c-format
 msgid "Cannot mmap file %s.\n"
 msgstr "Non se puido executar mmap sobre o ficheiro %s.\n"
 
-#: elf/readlib.c:149
+#: elf/readlib.c:152
 #, c-format
 msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
 msgstr "%s non é un ficheiro ELF - non ten os bytes máxicos correctos ao principio.\n"

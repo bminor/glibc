@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.17-pre1\n"
-"POT-Creation-Date: 2024-06-19 22:30+0200\n"
+"POT-Creation-Date: 2024-07-21 00:32+0200\n"
 "PO-Revision-Date: 2013-04-26 04:10+0400\n"
 "Last-Translator: Nik Kalach <nik.kalach@inbox.ru>\n"
 "Language-Team: Interlingua <translation-team-ia@lists.sourceforge.net>\n"
@@ -134,7 +134,7 @@ msgstr ""
 "-o FILE-OUTPUT [FILE-INPUT]...\n"
 "[FILE-OUTPUT [FILE-INPUT]...]"
 
-#: catgets/gencat.c:230 debug/pcprofiledump.c:208 elf/ldconfig.c:216
+#: catgets/gencat.c:230 debug/pcprofiledump.c:208 elf/ldconfig.c:217
 #: elf/pldd.c:246 elf/sln.c:77 elf/sprof.c:371 iconv/iconv_prog.c:387
 #: iconv/iconvconfig.c:380 locale/programs/locale.c:275
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:88
@@ -149,7 +149,7 @@ msgstr ""
 "%s.\n"
 
 #: catgets/gencat.c:246 debug/pcprofiledump.c:224 debug/xtrace.sh:63
-#: elf/ldconfig.c:232 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
+#: elf/ldconfig.c:233 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
 #: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
@@ -165,7 +165,7 @@ msgstr ""
 "NULLE garantia; atque pro MERCABILETATE o APTITUDE PRO UN PROPOSITO PARTICULAR.\n"
 
 #: catgets/gencat.c:251 debug/pcprofiledump.c:229 debug/xtrace.sh:67
-#: elf/ldconfig.c:237 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
+#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
@@ -363,7 +363,7 @@ msgstr "modo invalide"
 msgid "invalid mode parameter"
 msgstr "parametro de modo incorrecte"
 
-#: elf/cache.c:296 elf/ldconfig.c:1249
+#: elf/cache.c:296 elf/ldconfig.c:1239
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Impossibile de aperir le file de cache %s\n"
@@ -634,7 +634,7 @@ msgstr "impossibile de applicar le protection de memoria additional post le relo
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT usate in le codice non cargate dynamicamente"
 
-#: elf/dl-tls.c:1059
+#: elf/dl-tls.c:1136
 msgid "cannot create TLS data structures"
 msgstr "impossibile de crear structuras de datos TLS"
 
@@ -646,178 +646,178 @@ msgstr "error de cerca de version"
 msgid "cannot allocate version reference table"
 msgstr "impossibile de allocar le tabula de referentias a versiones"
 
-#: elf/ldconfig.c:124
+#: elf/ldconfig.c:125
 msgid "Print cache"
 msgstr "Monstrar le cache"
 
-#: elf/ldconfig.c:125
+#: elf/ldconfig.c:126
 msgid "Generate verbose messages"
 msgstr "Monstrar messages in modo verbose"
 
-#: elf/ldconfig.c:126
+#: elf/ldconfig.c:127
 msgid "Don't build cache"
 msgstr "Non construer le cache"
 
-#: elf/ldconfig.c:128
+#: elf/ldconfig.c:129
 msgid "Change to and use ROOT as root directory"
 msgstr "Passar a RADICE e utilisar lo como un directorio de radice"
 
-#: elf/ldconfig.c:128
+#: elf/ldconfig.c:129
 msgid "ROOT"
 msgstr "RADICE"
 
-#: elf/ldconfig.c:129
+#: elf/ldconfig.c:130
 msgid "CACHE"
 msgstr "CACHE"
 
-#: elf/ldconfig.c:129
+#: elf/ldconfig.c:130
 msgid "Use CACHE as cache file"
 msgstr "Utilisar CACHE como un file de cache"
 
-#: elf/ldconfig.c:130
+#: elf/ldconfig.c:131
 msgid "CONF"
 msgstr "CONF"
 
-#: elf/ldconfig.c:130
+#: elf/ldconfig.c:131
 msgid "Use CONF as configuration file"
 msgstr "Utilisar CONF como un file de configuration"
 
-#: elf/ldconfig.c:131
+#: elf/ldconfig.c:132
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "Tractar solo le directorios specificate in le linea de commando. Non construer le cache."
 
-#: elf/ldconfig.c:132
+#: elf/ldconfig.c:133
 msgid "Manually link individual libraries."
 msgstr "Ligar manualmente le bibliothecas individual."
 
-#: elf/ldconfig.c:133
+#: elf/ldconfig.c:134
 msgid "FORMAT"
 msgstr "FORMATO"
 
-#: elf/ldconfig.c:134
+#: elf/ldconfig.c:135
 msgid "Ignore auxiliary cache file"
 msgstr "Ignorar le file de cache auxiliar"
 
-#: elf/ldconfig.c:142
+#: elf/ldconfig.c:143
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr "Configurar le associationes de tempore de execution del editor de ligamines dynamic."
 
-#: elf/ldconfig.c:276
+#: elf/ldconfig.c:277
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "Percurso `%s' fornite plus de un vice"
 
-#: elf/ldconfig.c:405
+#: elf/ldconfig.c:406
 #, c-format
 msgid "Can't stat %s"
 msgstr "Impossibile de effectuar stat sur %s"
 
-#: elf/ldconfig.c:486
+#: elf/ldconfig.c:487
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "Impossibile de effectuar stat sur %s\n"
 
-#: elf/ldconfig.c:496
+#: elf/ldconfig.c:497
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s non es un ligamine symbolic\n"
 
-#: elf/ldconfig.c:515
+#: elf/ldconfig.c:516
 #, c-format
 msgid "Can't unlink %s"
 msgstr "Impossibile de efectuar unlink sur %s"
 
-#: elf/ldconfig.c:521
+#: elf/ldconfig.c:522
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "Impossibile de crear un ligamine de %s a %s"
 
-#: elf/ldconfig.c:527
+#: elf/ldconfig.c:528
 msgid " (changed)\n"
 msgstr " (cambiate)\n"
 
-#: elf/ldconfig.c:529
+#: elf/ldconfig.c:530
 msgid " (SKIPPED)\n"
 msgstr " (OMITTITE)\n"
 
-#: elf/ldconfig.c:584
+#: elf/ldconfig.c:585
 #, c-format
 msgid "Can't find %s"
 msgstr "Impossibile de trovar %s"
 
-#: elf/ldconfig.c:600 elf/ldconfig.c:770 elf/ldconfig.c:837
+#: elf/ldconfig.c:601 elf/ldconfig.c:760 elf/ldconfig.c:827
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "Impossibile de effectuar lstat sur %s"
 
-#: elf/ldconfig.c:606
+#: elf/ldconfig.c:607
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "Le file %s es ignorate proque illo non es un file regular."
 
-#: elf/ldconfig.c:614
+#: elf/ldconfig.c:615
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "Ligamine non create proque il non esseva possibile trovar le so-nomine pro %s"
 
-#: elf/ldconfig.c:726
+#: elf/ldconfig.c:716
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Impossibile de aperir le directorio %s"
 
-#: elf/ldconfig.c:787 elf/ldconfig.c:825 elf/readlib.c:78
+#: elf/ldconfig.c:777 elf/ldconfig.c:815 elf/readlib.c:81
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Le file de entrata %s non trovate.\n"
 
-#: elf/ldconfig.c:794
+#: elf/ldconfig.c:784
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Impossibile de effectuar stat sur %s"
 
-#: elf/ldconfig.c:913
+#: elf/ldconfig.c:903
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "bibliotheca libc6 %s es in un directorio incorrecte"
 
-#: elf/ldconfig.c:932
+#: elf/ldconfig.c:922
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "Le bibliothecas %s e %s es in le directorio %s ha le mesme so-nomine, ma lor typo es differente."
 
-#: elf/ldconfig.c:1061
+#: elf/ldconfig.c:1051
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr "Advertimento: ignorar le file de configuration que non pote esser aperite: %s"
 
-#: elf/ldconfig.c:1128
+#: elf/ldconfig.c:1118
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "il es necessari usar le nomine absolute pro le file de configuration quando on utilisa -r"
 
-#: elf/ldconfig.c:1135 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1125 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:460 posix/getconf.c:699
 #, c-format
 msgid "memory exhausted"
 msgstr "memoria exhaurite"
 
-#: elf/ldconfig.c:1168
+#: elf/ldconfig.c:1158
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: impossibile de leger le directorio %s"
 
-#: elf/ldconfig.c:1206
+#: elf/ldconfig.c:1196
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "percurso relative `%s' usate pro construer le cache"
 
-#: elf/ldconfig.c:1228
+#: elf/ldconfig.c:1218
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Impossibile de effectuar chdir a /"
 
-#: elf/ldconfig.c:1269
+#: elf/ldconfig.c:1259
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Impossibile de aperir le directorio de files de cache %s\n"
@@ -1005,27 +1005,27 @@ msgstr "%s non es un file de objectos condivise (Typo: %d).\n"
 msgid "more than one dynamic segment\n"
 msgstr "plus de un segmento dynamic\n"
 
-#: elf/readlib.c:84
+#: elf/readlib.c:87
 #, c-format
 msgid "Cannot fstat file %s.\n"
 msgstr "Impossibile de effectuar fstat sur le file %s.\n"
 
-#: elf/readlib.c:95
+#: elf/readlib.c:98
 #, c-format
 msgid "File %s is empty, not checked."
 msgstr "Le file %s es vacue, non controlate."
 
-#: elf/readlib.c:101
+#: elf/readlib.c:104
 #, c-format
 msgid "File %s is too small, not checked."
 msgstr "Le file %s es troppo parve, non controlate."
 
-#: elf/readlib.c:111
+#: elf/readlib.c:114
 #, c-format
 msgid "Cannot mmap file %s.\n"
 msgstr "Impossible de effectuar mmap sur le file %s.\n"
 
-#: elf/readlib.c:149
+#: elf/readlib.c:152
 #, c-format
 msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
 msgstr "%s non es un file ELF - illo ha le bytes magic incorrecte al testa.\n"

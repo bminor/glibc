@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.3.3\n"
-"POT-Creation-Date: 2024-06-19 22:30+0200\n"
+"POT-Creation-Date: 2024-07-21 00:32+0200\n"
 "PO-Revision-Date: 2004-08-05 22:19+0200\n"
 "Last-Translator: Marcel Telka <marcel@telka.sk>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -125,7 +125,7 @@ msgstr ""
 "[VÝSTUPNÝ_SÚBOR [VSTUPNÝ_SÚBOR]...]"
 
 #: catgets/gencat.c:246 debug/pcprofiledump.c:224 debug/xtrace.sh:63
-#: elf/ldconfig.c:232 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
+#: elf/ldconfig.c:233 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
 #: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
@@ -142,7 +142,7 @@ msgstr ""
 "NA KONKRÉTNY ÚČEL.\n"
 
 #: catgets/gencat.c:251 debug/pcprofiledump.c:229 debug/xtrace.sh:67
-#: elf/ldconfig.c:237 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
+#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
@@ -266,7 +266,7 @@ msgstr "neprípustná veľkostť ukazovateľa"
 msgid "unsupported dlinfo request"
 msgstr "nepodporovaná žiadosť dlinfo"
 
-#: elf/cache.c:296 elf/ldconfig.c:1249
+#: elf/cache.c:296 elf/ldconfig.c:1239
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Nie je možné otvoriť cache súbor %s\n"
@@ -484,7 +484,7 @@ msgstr "nie je možné obnoviť segment prot po reloc"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT je použité pre kód, ktorý nie je dynamicky zavedený"
 
-#: elf/dl-tls.c:1059
+#: elf/dl-tls.c:1136
 msgid "cannot create TLS data structures"
 msgstr "nie je možné dátové štruktúry TLS"
 
@@ -492,143 +492,143 @@ msgstr "nie je možné dátové štruktúry TLS"
 msgid "cannot allocate version reference table"
 msgstr "nie je možné prideliť pamäť pre referenčnú tabuľku verzií"
 
-#: elf/ldconfig.c:124
+#: elf/ldconfig.c:125
 msgid "Print cache"
 msgstr "Vypísať cache"
 
-#: elf/ldconfig.c:125
+#: elf/ldconfig.c:126
 msgid "Generate verbose messages"
 msgstr "Vypísovať podrobnejšie správy"
 
-#: elf/ldconfig.c:126
+#: elf/ldconfig.c:127
 msgid "Don't build cache"
 msgstr "Nevytvoriť cache"
 
-#: elf/ldconfig.c:128
+#: elf/ldconfig.c:129
 msgid "Change to and use ROOT as root directory"
 msgstr "Zmeniť adresár na ROOT a použiť ho ako koreňový adresár"
 
-#: elf/ldconfig.c:129
+#: elf/ldconfig.c:130
 msgid "Use CACHE as cache file"
 msgstr "Použiť CACHE ako cache súbor"
 
-#: elf/ldconfig.c:130
+#: elf/ldconfig.c:131
 msgid "Use CONF as configuration file"
 msgstr "Použiť CONF ako konfiguračný súbor"
 
-#: elf/ldconfig.c:131
+#: elf/ldconfig.c:132
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "Na príkazovom riadku sú zadané iba adresáre procesov. Nevytvárať cache."
 
-#: elf/ldconfig.c:132
+#: elf/ldconfig.c:133
 msgid "Manually link individual libraries."
 msgstr "Ručne linkovať jednotlivé knižnice."
 
-#: elf/ldconfig.c:142
+#: elf/ldconfig.c:143
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr "Konfigurácia runtime väzieb dynamického linkera."
 
-#: elf/ldconfig.c:276
+#: elf/ldconfig.c:277
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "Cesta `%s' bola zadaná viac ako raz"
 
-#: elf/ldconfig.c:405
+#: elf/ldconfig.c:406
 #, c-format
 msgid "Can't stat %s"
 msgstr "Zlyhal stat %s"
 
-#: elf/ldconfig.c:486
+#: elf/ldconfig.c:487
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "Zlyhal stat %s\n"
 
-#: elf/ldconfig.c:496
+#: elf/ldconfig.c:497
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s nie je symbolický odkaz\n"
 
-#: elf/ldconfig.c:515
+#: elf/ldconfig.c:516
 #, c-format
 msgid "Can't unlink %s"
 msgstr "Nie je možné odstrániť %s"
 
-#: elf/ldconfig.c:521
+#: elf/ldconfig.c:522
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "Nie je možné vytvoriť odkaz %s na %s"
 
-#: elf/ldconfig.c:527
+#: elf/ldconfig.c:528
 msgid " (changed)\n"
 msgstr " (zmenené)\n"
 
-#: elf/ldconfig.c:529
+#: elf/ldconfig.c:530
 msgid " (SKIPPED)\n"
 msgstr " (VYNECHANÉ)\n"
 
-#: elf/ldconfig.c:584
+#: elf/ldconfig.c:585
 #, c-format
 msgid "Can't find %s"
 msgstr "Nie je možné nájsť %s"
 
-#: elf/ldconfig.c:600 elf/ldconfig.c:770 elf/ldconfig.c:837
+#: elf/ldconfig.c:601 elf/ldconfig.c:760 elf/ldconfig.c:827
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "Zlyhal lstat %s"
 
-#: elf/ldconfig.c:606
+#: elf/ldconfig.c:607
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "Súbor %s ignorovaný, keďže nie je regulérnym súborom."
 
-#: elf/ldconfig.c:614
+#: elf/ldconfig.c:615
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "Odkaz nebol vytvorený, keďže pre %s nebolo možné nájsť soname"
 
-#: elf/ldconfig.c:726
+#: elf/ldconfig.c:716
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Nie je možné otvoriť adresár %s"
 
-#: elf/ldconfig.c:787 elf/ldconfig.c:825 elf/readlib.c:78
+#: elf/ldconfig.c:777 elf/ldconfig.c:815 elf/readlib.c:81
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Vstupný súbor %s nebol nájdený.\n"
 
-#: elf/ldconfig.c:794
+#: elf/ldconfig.c:784
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Zlyhal stat %s"
 
-#: elf/ldconfig.c:913
+#: elf/ldconfig.c:903
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "libc6 knižnica %s je v nesprávnom adresári"
 
-#: elf/ldconfig.c:932
+#: elf/ldconfig.c:922
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "knižnice %s a %s v adresári %s majú rovnaké soname, ale odlišný typ."
 
-#: elf/ldconfig.c:1135 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1125 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:460 posix/getconf.c:699
 #, c-format
 msgid "memory exhausted"
 msgstr "nedostatok pamäti"
 
-#: elf/ldconfig.c:1206
+#: elf/ldconfig.c:1196
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "relatívna cesta `%s' použitá na vytvorenie cache"
 
-#: elf/ldconfig.c:1228
+#: elf/ldconfig.c:1218
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Nie je možné zmeniť adresár na /"
 
-#: elf/ldconfig.c:1269
+#: elf/ldconfig.c:1259
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Nie je možné otvoriť adresár cache súboru %s\n"
@@ -674,22 +674,22 @@ msgstr "%s nie je zdieľaný objektový súbor (Typ: %d).\n"
 msgid "more than one dynamic segment\n"
 msgstr "viac ako jeden dynamický segment\n"
 
-#: elf/readlib.c:84
+#: elf/readlib.c:87
 #, c-format
 msgid "Cannot fstat file %s.\n"
 msgstr "Nie je možné vykonať fstat() súboru %s.\n"
 
-#: elf/readlib.c:101
+#: elf/readlib.c:104
 #, c-format
 msgid "File %s is too small, not checked."
 msgstr "Súbor %s je príliš krátky, neskontrolovaný."
 
-#: elf/readlib.c:111
+#: elf/readlib.c:114
 #, c-format
 msgid "Cannot mmap file %s.\n"
 msgstr "Nie je možné mmap-ovať súbor %s.\n"
 
-#: elf/readlib.c:149
+#: elf/readlib.c:152
 #, c-format
 msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
 msgstr "%s nie je ELF súbor - na začiatku obsahujé chybné magické bajty.\n"

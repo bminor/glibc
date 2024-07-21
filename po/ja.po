@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.36.9000\n"
-"POT-Creation-Date: 2024-06-19 22:30+0200\n"
+"POT-Creation-Date: 2024-07-21 00:32+0200\n"
 "PO-Revision-Date: 2023-05-09 08:02+0900\n"
 "Last-Translator: Takeshi Hamasaki <hmatrjp@users.sourceforge.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
@@ -144,7 +144,7 @@ msgstr ""
 "[OUTPUT-FILE [INPUT-FILE]...]"
 
 #: catgets/gencat.c:246 debug/pcprofiledump.c:224 debug/xtrace.sh:63
-#: elf/ldconfig.c:232 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
+#: elf/ldconfig.c:233 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
 #: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
@@ -160,7 +160,7 @@ msgstr ""
 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
 
 #: catgets/gencat.c:251 debug/pcprofiledump.c:229 debug/xtrace.sh:67
-#: elf/ldconfig.c:237 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
+#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
@@ -352,7 +352,7 @@ msgstr "無効なモードです"
 msgid "invalid mode parameter"
 msgstr "無効なモードパラメータです"
 
-#: elf/cache.c:296 elf/ldconfig.c:1249
+#: elf/cache.c:296 elf/ldconfig.c:1239
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "キャッシュファイル %s を開けません\n"
@@ -623,7 +623,7 @@ msgstr "再配置後に追加のメモリ保護を適用できません"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "コード内で使用されている RTLD_NEXT を動的にロード出来ません"
 
-#: elf/dl-tls.c:1059
+#: elf/dl-tls.c:1136
 msgid "cannot create TLS data structures"
 msgstr "TLS データ構造体を作成できません"
 
@@ -635,173 +635,173 @@ msgstr "バージョン検索エラーです"
 msgid "cannot allocate version reference table"
 msgstr "バージョン参照表を配置出来ません"
 
-#: elf/ldconfig.c:124
+#: elf/ldconfig.c:125
 msgid "Print cache"
 msgstr "キャッシュを表示します"
 
-#: elf/ldconfig.c:125
+#: elf/ldconfig.c:126
 msgid "Generate verbose messages"
 msgstr "冗長なメッセージを生成します"
 
-#: elf/ldconfig.c:126
+#: elf/ldconfig.c:127
 msgid "Don't build cache"
 msgstr "キャッシュの構築を行いません"
 
-#: elf/ldconfig.c:128
+#: elf/ldconfig.c:129
 msgid "Change to and use ROOT as root directory"
 msgstr "ルートディレクトリを ROOT に変更し、使用します"
 
-#: elf/ldconfig.c:128
+#: elf/ldconfig.c:129
 msgid "ROOT"
 msgstr "ROOT"
 
-#: elf/ldconfig.c:129
+#: elf/ldconfig.c:130
 msgid "CACHE"
 msgstr "CACHE"
 
-#: elf/ldconfig.c:129
+#: elf/ldconfig.c:130
 msgid "Use CACHE as cache file"
 msgstr "キャッシュファイルとして CACHE を使用します"
 
-#: elf/ldconfig.c:130
+#: elf/ldconfig.c:131
 msgid "CONF"
 msgstr "CONF"
 
-#: elf/ldconfig.c:130
+#: elf/ldconfig.c:131
 msgid "Use CONF as configuration file"
 msgstr "設定ファイルとして CONF を使用します"
 
-#: elf/ldconfig.c:131
+#: elf/ldconfig.c:132
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "コマンドラインで指定されたディレクトリのみ処理します。キャッシュは作成しません。"
 
-#: elf/ldconfig.c:132
+#: elf/ldconfig.c:133
 msgid "Manually link individual libraries."
 msgstr "個々のライブラリを手動でリンクしてください。"
 
-#: elf/ldconfig.c:133
+#: elf/ldconfig.c:134
 msgid "FORMAT"
 msgstr "FORMAT"
 
-#: elf/ldconfig.c:134
+#: elf/ldconfig.c:135
 msgid "Ignore auxiliary cache file"
 msgstr "補助キャッシュファイルを無視しています"
 
-#: elf/ldconfig.c:142
+#: elf/ldconfig.c:143
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr "動的リンカランタイムのバインディングを設定します。"
 
-#: elf/ldconfig.c:276
+#: elf/ldconfig.c:277
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "パス `%s' が二回以上与えられました"
 
-#: elf/ldconfig.c:405
+#: elf/ldconfig.c:406
 #, c-format
 msgid "Can't stat %s"
 msgstr "%s の情報取得 (stat) ができません"
 
-#: elf/ldconfig.c:486
+#: elf/ldconfig.c:487
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "%s の情報取得 (stat) が出来ません\n"
 
-#: elf/ldconfig.c:496
+#: elf/ldconfig.c:497
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s はシンボリックリンクではありません\n"
 
-#: elf/ldconfig.c:515
+#: elf/ldconfig.c:516
 #, c-format
 msgid "Can't unlink %s"
 msgstr "%s をリンク解除できません"
 
-#: elf/ldconfig.c:521
+#: elf/ldconfig.c:522
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "%s から %s へリンクできません"
 
-#: elf/ldconfig.c:527
+#: elf/ldconfig.c:528
 msgid " (changed)\n"
 msgstr " (変更されました)\n"
 
-#: elf/ldconfig.c:529
+#: elf/ldconfig.c:530
 msgid " (SKIPPED)\n"
 msgstr " (スキップされました)\n"
 
-#: elf/ldconfig.c:584
+#: elf/ldconfig.c:585
 #, c-format
 msgid "Can't find %s"
 msgstr "%s を見つけられません"
 
-#: elf/ldconfig.c:600 elf/ldconfig.c:770 elf/ldconfig.c:837
+#: elf/ldconfig.c:601 elf/ldconfig.c:760 elf/ldconfig.c:827
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "%s の状態取得 (lstat) が出来ません"
 
-#: elf/ldconfig.c:606
+#: elf/ldconfig.c:607
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "通常ファイルでないためファイル %s を無視しています。"
 
-#: elf/ldconfig.c:614
+#: elf/ldconfig.c:615
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "%s 用の動的ライブラリ名 (soname) が見つからないためリンクが作成されませんでした"
 
-#: elf/ldconfig.c:726
+#: elf/ldconfig.c:716
 #, c-format
 msgid "Can't open directory %s"
 msgstr "ディレクトリ %s を開けません"
 
-#: elf/ldconfig.c:787 elf/ldconfig.c:825 elf/readlib.c:78
+#: elf/ldconfig.c:777 elf/ldconfig.c:815 elf/readlib.c:81
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "入力ファイル %s が見つかりません。\n"
 
-#: elf/ldconfig.c:794
+#: elf/ldconfig.c:784
 #, c-format
 msgid "Cannot stat %s"
 msgstr "%s の状態取得 (stat) が出来ません"
 
-#: elf/ldconfig.c:913
+#: elf/ldconfig.c:903
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "libc6 ライブラリ %s が誤ったディレクトリ内にあります"
 
-#: elf/ldconfig.c:932
+#: elf/ldconfig.c:922
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "ディレクトリ %3$s 内にあるライブラリ %1$s と %2$s は同一の動的ライブラリ名 (soname) ですが異なった型です。"
 
-#: elf/ldconfig.c:1128
+#: elf/ldconfig.c:1118
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "-r を使用しているときは設定ファイル名として絶対パスのファイル名が必要です"
 
-#: elf/ldconfig.c:1135 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1125 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:460 posix/getconf.c:699
 #, c-format
 msgid "memory exhausted"
 msgstr "メモリを使い果たしました"
 
-#: elf/ldconfig.c:1168
+#: elf/ldconfig.c:1158
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: ディレクトリ %s を読み込めません"
 
-#: elf/ldconfig.c:1206
+#: elf/ldconfig.c:1196
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "キャッシュ生成時に相対パス `%s' が使用されました"
 
-#: elf/ldconfig.c:1228
+#: elf/ldconfig.c:1218
 #, c-format
 msgid "Can't chdir to /"
 msgstr "/ へディレクトリ移動 (chdir) 出来ません"
 
-#: elf/ldconfig.c:1269
+#: elf/ldconfig.c:1259
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "キャッシュファイルディレクトリ %s を開けません\n"
@@ -901,27 +901,27 @@ msgstr "%s は共有オブジェクトファイルではありません (型: %d
 msgid "more than one dynamic segment\n"
 msgstr "二つ以上の動的セグメントがあります\n"
 
-#: elf/readlib.c:84
+#: elf/readlib.c:87
 #, c-format
 msgid "Cannot fstat file %s.\n"
 msgstr "ファイル %s の状態取得 (fstat) ができません。\n"
 
-#: elf/readlib.c:95
+#: elf/readlib.c:98
 #, c-format
 msgid "File %s is empty, not checked."
 msgstr "ファイル %s は空です。検査されません。"
 
-#: elf/readlib.c:101
+#: elf/readlib.c:104
 #, c-format
 msgid "File %s is too small, not checked."
 msgstr "ファイル %s は小さすぎます。検査されません。"
 
-#: elf/readlib.c:111
+#: elf/readlib.c:114
 #, c-format
 msgid "Cannot mmap file %s.\n"
 msgstr "ファイル %s を mmap できません。\n"
 
-#: elf/readlib.c:149
+#: elf/readlib.c:152
 #, c-format
 msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
 msgstr "%s は ELF ファイルではありません - 先頭に誤ったマジックバイトを持っています。\n"
