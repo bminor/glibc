@@ -6955,6 +6955,11 @@ log2p1 0x1p100
 log2p1 0x1p1000
 log2p1 0x6.a0cf42befce9ed4085ef59254b48p-4
 log2p1 max
+# the following inputs yield large errors on x86_64
+log2p1 0x1.a69b4ap-2
+log2p1 0x1.a7b725780ff2cp-2
+log2p1 0x5.dda3a1f4c4020ebp-4
+log2p1 -0x7.fff3a57fdd2666bcecba33bd89f4p-4
 
 log2p1 0x7.2a4368p-4
 log2p1 0x6.d3a118p-4
