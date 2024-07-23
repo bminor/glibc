@@ -144,37 +144,37 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
 .globl _start\n\
 .globl _dl_start_user\n\
 _start:\n\
-	movq %rsp, %rdi\n\
+	mov %" RSP_LP ", %" RDI_LP "\n\
 	call _dl_start\n\
 _dl_start_user:\n\
 	# Save the user entry point address in %r12.\n\
-	movq %rax, %r12\n\
+	mov %" RAX_LP ", %" R12_LP "\n\
 	# Save %rsp value in %r13.\n\
-	movq %rsp, %r13\n\
+	mov %" RSP_LP ", % " R13_LP "\n\
 "\
 	RTLD_START_ENABLE_X86_FEATURES \
 "\
 	# Read the original argument count.\n\
-	movq (%rsp), %rdx\n\
+	mov (%rsp), %" RDX_LP "\n\
 	# Call _dl_init (struct link_map *main_map, int argc, char **argv, char **env)\n\
 	# argc -> rsi\n\
-	movq %rdx, %rsi\n\
+	mov %" RDX_LP ", %" RSI_LP "\n\
 	# And align stack for the _dl_init call. \n\
-	andq $-16, %rsp\n\
+	and $-16, %" RSP_LP "\n\
 	# _dl_loaded -> rdi\n\
-	movq _rtld_local(%rip), %rdi\n\
+	mov _rtld_local(%rip), %" RDI_LP "\n\
 	# env -> rcx\n\
-	leaq 16(%r13,%rdx,8), %rcx\n\
+	lea 2*" LP_SIZE "(%r13,%rdx," LP_SIZE "), %" RCX_LP "\n\
 	# argv -> rdx\n\
-	leaq 8(%r13), %rdx\n\
+	lea " LP_SIZE "(%r13), %" RDX_LP "\n\
 	# Clear %rbp to mark outermost frame obviously even for constructors.\n\
 	xorl %ebp, %ebp\n\
 	# Call the function to run the initializers.\n\
 	call _dl_init\n\
 	# Pass our finalizer function to the user in %rdx, as per ELF ABI.\n\
-	leaq _dl_fini(%rip), %rdx\n\
+	lea _dl_fini(%rip), %" RDX_LP "\n\
 	# And make sure %rsp points to argc stored on the stack.\n\
-	movq %r13, %rsp\n\
+	mov %" R13_LP ", %" RSP_LP "\n\
 	# Jump to the user's entry point.\n\
 	jmp *%r12\n\
 .previous\n\
@@ -239,8 +239,13 @@ elf_machine_plt_value (struct link_map *map, const ElfW(Rela) *reloc,
 
 
 /* Names of the architecture-specific auditing callback functions.  */
+#ifdef __LP64__
 #define ARCH_LA_PLTENTER x86_64_gnu_pltenter
 #define ARCH_LA_PLTEXIT x86_64_gnu_pltexit
+#else
+#define ARCH_LA_PLTENTER x32_gnu_pltenter
+#define ARCH_LA_PLTEXIT x32_gnu_pltexit
+#endif
 
 #endif /* !dl_machine_h */
 
