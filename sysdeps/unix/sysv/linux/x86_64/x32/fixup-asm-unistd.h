@@ -15,6 +15,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef __NR_map_shadow_stack
+# define __NR_map_shadow_stack 1073742277
+#endif
+
 /* X32 uses the same 64-bit syscall interface for set_thread_area.   */
 #ifndef __NR_set_thread_area
 # define __NR_set_thread_area 1073742029
