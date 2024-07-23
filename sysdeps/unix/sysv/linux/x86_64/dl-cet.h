@@ -92,9 +92,9 @@ dl_cet_ibt_enabled (void)
 	# Pass GL(dl_x86_feature_1) to _dl_cet_setup_features.\n\
 	movl %edx, %edi\n\
 	# Align stack for the _dl_cet_setup_features call.\n\
-	andq $-16, %rsp\n\
+	and $-16, %" RSP_LP "\n\
 	call _dl_cet_setup_features\n\
 	# Restore %rax and %rsp from %r12 and %r13.\n\
-	movq %r12, %rax\n\
-	movq %r13, %rsp\n\
+	mov %" R12_LP ", %" RAX_LP "\n\
+	mov %" R13_LP ", %" RSP_LP "\n\
 "

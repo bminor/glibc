@@ -151,6 +151,7 @@
 #define __NR_lsetxattr 1073742013
 #define __NR_lstat 1073741830
 #define __NR_madvise 1073741852
+#define __NR_map_shadow_stack 1073742277
 #define __NR_mbind 1073742061
 #define __NR_membarrier 1073742148
 #define __NR_memfd_create 1073742143
