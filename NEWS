@@ -15,6 +15,16 @@ Major new features:
   the RES_OPTIONS=-no-aaaa environment variable performs AAAA DNS
   queries when the glibc DNS stub resolver is used.
 
+* The DNS stub resolver now supports the strict-error option.  If
+  activated, getaddrinfo for the AF_UNSPEC address family (with dual
+  A/AAAA DNS lookups) attemps to obtain an A/AAAA response pair from
+  another DNS server if one of the responses indicates failure.  Without
+  the strict-error option, getaddrinfo returns the A record data it has
+  obtained even if the AAAA query failed.  The new strict error mode is
+  incompatible with some DNS environments which do not follow the RFCs,
+  which is why this mode is not enabled by default.  A future version
+  of the library may turn it on by default, however.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
   [Add deprecations, removals and changes affecting compatibility here]

@@ -129,6 +129,7 @@ print_resp (FILE *fp, res_state resp)
         print_option_flag (fp, &options, RES_NORELOAD, "no-reload");
         print_option_flag (fp, &options, RES_TRUSTAD, "trust-ad");
         print_option_flag (fp, &options, RES_NOAAAA, "no-aaaa");
+        print_option_flag (fp, &options, RES_STRICTERR, "strict-error");
         fputc ('\n', fp);
         if (options != 0)
           fprintf (fp, "; error: unresolved option bits: 0x%x\n", options);
@@ -736,6 +737,15 @@ struct test_case test_cases[] =
      .conf = "options no-aaaa\n"
      "nameserver 192.0.2.1\n",
      .expected = "options no-aaaa\n"
+     "search example.com\n"
+     "; search[0]: example.com\n"
+     "nameserver 192.0.2.1\n"
+     "; nameserver[0]: [192.0.2.1]:53\n"
+    },
+    {.name = "strict-error flag",
+     .conf = "options strict-error\n"
+     "nameserver 192.0.2.1\n",
+     .expected = "options strict-error\n"
      "search example.com\n"
      "; search[0]: example.com\n"
      "nameserver 192.0.2.1\n"

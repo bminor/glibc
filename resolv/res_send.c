@@ -1234,21 +1234,38 @@ send_dg(res_state statp,
 
 		if (thisansp_error) {
 		next_ns:
-			if (recvresp1 || (buf2 != NULL && recvresp2)) {
-			  *resplen2 = 0;
-			  return resplen;
-			}
-			if (buf2 != NULL && !single_request)
-			  {
-			    /* No data from the first reply.  */
-			    resplen = 0;
-			    /* We are waiting for a possible second reply.  */
-			    if (matching_query == 1)
-			      recvresp1 = 1;
-			    else
-			      recvresp2 = 1;
+		        /* Outside of strict-error mode, use the first
+			   response even if the second response is an
+			   error.  This allows parallel resolution to
+			   succeed even if the recursive resolver
+			   always answers with SERVFAIL for AAAA
+			   queries (which still happens in practice
+			   unfortunately).
 
-			    goto wait;
+			   In strict-error mode, always switch to the
+			   next server and try to get a response from
+			   there.  */
+			if ((statp->options & RES_STRICTERR) == 0)
+			  {
+			    if (recvresp1 || (buf2 != NULL && recvresp2))
+			      {
+				*resplen2 = 0;
+				return resplen;
+			      }
+
+			    if (buf2 != NULL && !single_request)
+			      {
+				/* No data from the first reply.  */
+				resplen = 0;
+				/* We are waiting for a possible
+				   second reply.  */
+				if (matching_query == 1)
+				  recvresp1 = 1;
+				else
+				  recvresp2 = 1;
+
+				goto wait;
+			      }
 			  }
 
 			/* don't retry if called from dig */

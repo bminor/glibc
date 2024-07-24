@@ -67,6 +67,9 @@ response (const struct resolv_response_context *ctx,
   resolv_response_close_record (b);
 }
 
+/* Set to 1 if strict error checking is enabled.  */
+static int do_strict_error;
+
 static void
 check_one (void)
 {
@@ -83,7 +86,10 @@ check_one (void)
       struct addrinfo *ai;
       int ret = getaddrinfo ("www.example", "80", &hints, &ai);
       const char *expected;
-      if (ret == 0 && ai->ai_next != NULL)
+      /* In strict-error mode, a switch to the second name server
+         happens, and both responses are received, so a single
+         response is a bug.  */
+      if (do_strict_error || (ret == 0 && ai->ai_next != NULL))
         expected = ("address: STREAM/TCP 192.0.2.17 80\n"
                     "address: STREAM/TCP 2001:db8::1 80\n");
       else
@@ -99,33 +105,36 @@ check_one (void)
 static int
 do_test (void)
 {
-  for (int do_single_lookup = 0; do_single_lookup < 2; ++do_single_lookup)
-    {
-      struct resolv_test *aux = resolv_test_start
-        ((struct resolv_redirect_config)
-         {
-           .response_callback = response,
-         });
+  for (do_strict_error = 0; do_strict_error < 2; ++do_strict_error)
+    for (int do_single_lookup = 0; do_single_lookup < 2; ++do_single_lookup)
+      {
+        struct resolv_test *aux = resolv_test_start
+          ((struct resolv_redirect_config)
+           {
+             .response_callback = response,
+           });
 
-      if (do_single_lookup)
-        _res.options |= RES_SNGLKUP;
+        if (do_strict_error)
+          _res.options |= RES_STRICTERR;
+        if (do_single_lookup)
+          _res.options |= RES_SNGLKUP;
 
-      for (int do_fail_aaaa = 0; do_fail_aaaa < 2; ++do_fail_aaaa)
-        {
-          fail_aaaa = do_fail_aaaa;
+        for (int do_fail_aaaa = 0; do_fail_aaaa < 2; ++do_fail_aaaa)
+          {
+            fail_aaaa = do_fail_aaaa;
 
-          rcode = 2; /* SERVFAIL.  */
-          check_one ();
+            rcode = 2; /* SERVFAIL.  */
+            check_one ();
 
-          rcode = 4; /* NOTIMP.  */
-          check_one ();
+            rcode = 4; /* NOTIMP.  */
+            check_one ();
 
-          rcode = 5; /* REFUSED.  */
-          check_one ();
-        }
+            rcode = 5; /* REFUSED.  */
+            check_one ();
+          }
 
-      resolv_test_end (aux);
-    }
+        resolv_test_end (aux);
+      }
 
   return 0;
 }
