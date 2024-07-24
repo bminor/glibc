@@ -86,6 +86,7 @@ The following bugs are resolved with this release:
     is otherwise broken for arithmetic
   [31890] resolv: Allow short error responses to match any DNS query
   [31965] rseq extension mechanism does not work as intended
+  [31968] mremap implementation in C does not handle arguments correctly
 
 Version 2.39
 
