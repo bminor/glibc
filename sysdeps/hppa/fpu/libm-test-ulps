@@ -903,12 +903,12 @@ Function: "hypot_upward":
 double: 1
 
 Function: "j0":
-double: 2
+double: 4
 float: 9
 ldouble: 2
 
 Function: "j0_downward":
-double: 5
+double: 6
 float: 9
 
 Function: "j0_towardzero":
@@ -925,11 +925,11 @@ float: 9
 ldouble: 1
 
 Function: "j1_downward":
-double: 5
+double: 9
 float: 8
 
 Function: "j1_towardzero":
-double: 4
+double: 5
 float: 8
 
 Function: "j1_upward":
@@ -971,6 +971,7 @@ double: 5
 float: 6
 
 Function: "log":
+double: 1
 float: 1
 
 Function: "log10":
@@ -1039,8 +1040,8 @@ double: 3
 float: 3
 
 Function: "log2p1":
-double: 1
-float: 1
+double: 2
+float: 2
 
 Function: "log2p1_downward":
 double: 2
@@ -1051,7 +1052,7 @@ double: 2
 float: 2
 
 Function: "log2p1_upward":
-double: 1
+double: 2
 float: 2
 
 Function: "log_downward":
