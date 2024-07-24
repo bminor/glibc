@@ -206,6 +206,7 @@ tests += \
   tst-getauxval \
   tst-gettid \
   tst-gettid-kill \
+  tst-linux-mremap1 \
   tst-memfd_create \
   tst-misalign-clone \
   tst-mlock2 \
