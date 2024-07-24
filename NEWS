@@ -37,6 +37,7 @@ The following CVEs were fixed in this release:
 The following bugs are resolved with this release:
 
   [19622] network: Support aliasing with struct sockaddr
+  [30081] resolv: Do not wait for non-existing second DNS response after error
   [30701] time: getutxent misbehaves on 32-bit x86 when _TIME_BITS=64
   [30994] REP MOVSB performance suffers from page aliasing on Zen 4
   [31339] libc: arm32 loader crash after cleanup in 2.36
