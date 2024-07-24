@@ -126,9 +126,9 @@ extern const struct exp2f_data
   uint64_t tab[1 << EXP2F_TABLE_BITS];
   double shift_scaled;
   double poly[EXP2F_POLY_ORDER];
-  double shift;
   double invln2_scaled;
   double poly_scaled[EXP2F_POLY_ORDER];
+  double shift;
 } __exp2f_data attribute_hidden;
 
 #define LOGF_TABLE_BITS 4
