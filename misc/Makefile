@@ -257,6 +257,8 @@ tests := \
   tst-mntent-blank-passno \
   tst-mntent-escape \
   tst-mntent2 \
+  tst-mremap1 \
+  tst-mremap2 \
   tst-preadvwritev \
   tst-preadvwritev2 \
   tst-preadvwritev64 \
