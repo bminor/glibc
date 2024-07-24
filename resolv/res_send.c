@@ -1197,19 +1197,30 @@ send_dg(res_state statp,
 		}
 
 		/* Check for the correct header layout and a matching
-		   question.  */
+		   question.  Some recursive resolvers send REFUSED
+		   without copying back the question section
+		   (producing a response that is only HFIXEDSZ bytes
+		   long).  Skip query matching in this case.  */
+		bool thisansp_error = (anhp->rcode == SERVFAIL ||
+				       anhp->rcode == NOTIMP ||
+				       anhp->rcode == REFUSED);
+		bool skip_query_match = (*thisresplenp == HFIXEDSZ
+					 && ntohs (anhp->qdcount) == 0
+					 && thisansp_error);
 		int matching_query = 0; /* Default to no matching query.  */
 		if (!recvresp1
 		    && anhp->id == hp->id
-		    && __libc_res_queriesmatch (buf, buf + buflen,
-						*thisansp,
-						*thisansp + *thisanssizp))
+		    && (skip_query_match
+			|| __libc_res_queriesmatch (buf, buf + buflen,
+						    *thisansp,
+						    *thisansp + *thisanssizp)))
 		  matching_query = 1;
 		if (!recvresp2
 		    && anhp->id == hp2->id
-		    && __libc_res_queriesmatch (buf2, buf2 + buflen2,
-						*thisansp,
-						*thisansp + *thisanssizp))
+		    && (skip_query_match
+			|| __libc_res_queriesmatch (buf2, buf2 + buflen2,
+						    *thisansp,
+						    *thisansp + *thisanssizp)))
 		  matching_query = 2;
 		if (matching_query == 0)
 		  /* Spurious UDP packet.  Drop it and continue
@@ -1219,9 +1230,7 @@ send_dg(res_state statp,
 		    goto wait;
 		  }
 
-		if (anhp->rcode == SERVFAIL ||
-		    anhp->rcode == NOTIMP ||
-		    anhp->rcode == REFUSED) {
+		if (thisansp_error) {
 		next_ns:
 			if (recvresp1 || (buf2 != NULL && recvresp2)) {
 			  *resplen2 = 0;
