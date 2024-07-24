@@ -10,6 +10,7 @@ Version 2.40.1
 The following bugs are resolved with this release:
 
   [30081] resolv: Do not wait for non-existing second DNS response after error
+  [31968] mremap implementation in C does not handle arguments correctly
   [31890] resolv: Allow short error responses to match any DNS query
   [31968] mremap implementation in C does not handle arguments correctly
 
