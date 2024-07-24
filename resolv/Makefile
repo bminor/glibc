@@ -103,6 +103,7 @@ tests += \
   tst-resolv-nondecimal \
   tst-resolv-res_init-multi \
   tst-resolv-search \
+  tst-resolv-short-response \
   tst-resolv-trailing \
 
 # This test calls __res_context_send directly, which is not exported
@@ -283,6 +284,8 @@ $(objpfx)tst-resolv-nondecimal: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-qtypes: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-rotate: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-search: $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-short-response: $(objpfx)libresolv.so \
+  $(shared-thread-library)
 $(objpfx)tst-resolv-trailing: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-threads: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-txnid-collision: $(objpfx)libresolv.a \
