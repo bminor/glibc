@@ -9,7 +9,11 @@ Version 2.41
 
 Major new features:
 
-  [Add new features here]
+* In /etc/resolv.conf and the RES_OPTIONS, option flags can now be
+  prefixed with “-” to clear previously set flags.  For example, if
+  /etc/resolv.conf contains “options no-aaaa”, a process running with
+  the RES_OPTIONS=-no-aaaa environment variable performs AAAA DNS
+  queries when the glibc DNS stub resolver is used.
 
 Deprecated and removed features, and other changes affecting compatibility:
 

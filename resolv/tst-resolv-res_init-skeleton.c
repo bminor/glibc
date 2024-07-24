@@ -679,6 +679,16 @@ struct test_case test_cases[] =
      "; nameserver[0]: [192.0.2.1]:53\n",
      .res_options = "attempts:5 ndots:3 edns0 ",
     },
+    {.name = "RES_OPTIONS can clear flags",
+     .conf = "options ndots:2 use-vc no-aaaa edns0\n"
+     "nameserver 192.0.2.1\n",
+     .expected = "options ndots:3 use-vc\n"
+     "search example.com\n"
+     "; search[0]: example.com\n"
+     "nameserver 192.0.2.1\n"
+     "; nameserver[0]: [192.0.2.1]:53\n",
+     .res_options = "ndots:3 -edns0 -no-aaaa",
+    },
     {.name = "many search list entries (bug 19569)",
      .conf = "nameserver 192.0.2.1\n"
      "search corp.example.com support.example.com"
