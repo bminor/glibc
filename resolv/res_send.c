@@ -1238,7 +1238,7 @@ send_dg(res_state statp,
 			  *resplen2 = 0;
 			  return resplen;
 			}
-			if (buf2 != NULL)
+			if (buf2 != NULL && !single_request)
 			  {
 			    /* No data from the first reply.  */
 			    resplen = 0;
