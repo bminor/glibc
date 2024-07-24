@@ -81,6 +81,18 @@ check_one (void)
       check_hostent ("www.example", gethostbyname2 ("www.example", AF_INET6),
                      "name: www.example\n"
                      "address: 2001:db8::1\n");
+      static const struct addrinfo hints =
+        {
+          .ai_family = AF_UNSPEC,
+          .ai_socktype = SOCK_STREAM,
+        };
+      struct addrinfo *ai;
+      int ret = getaddrinfo ("www.example", "80", &hints, &ai);
+      check_addrinfo ("www.example", ai, ret,
+                      "address: STREAM/TCP 192.0.2.17 80\n"
+                      "address: STREAM/TCP 2001:db8::1 80\n");
+      if (ret == 0)
+        freeaddrinfo (ai);
     }
 }
 
