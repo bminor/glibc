@@ -993,21 +993,21 @@ The dynamic segment should also mention @code{BIND_NOW} on the
 enough).
 
 @item
-For shared objects (not main programs), if the program header has a
-@code{PT_TLS} segment, the dynamic segment (as shown by @samp{readelf
--dW}) should contain the @code{STATIC_TLS} flag on the @code{FLAGS}
-line.
-
-If @code{STATIC_TLS} is missing in shared objects, ensure that the
-appropriate relocations for GNU2 TLS descriptors are used (for example,
+Ensure that only static TLS relocations (thread-pointer relative offset
+locations) are used, for example @code{R_AARCH64_TLS_TPREL} and
+@code{X86_64_TPOFF64}.  As the second-best option, and only if
+compatibility with non-hardened applications using @code{dlopen} is
+needed, GNU2 TLS descriptor relocations can be used (for example,
 @code{R_AARCH64_TLSDESC} or @code{R_X86_64_TLSDESC}).
 
 @item
-There should not be a reference to the symbols @code{__tls_get_addr},
-@code{__tls_get_offset}, @code{__tls_get_addr_opt} in the dynamic symbol
-table (in the @samp{readelf -sDW} output).  Thread-local storage must be
-accessed using the initial-exec (static) model, or using GNU2 TLS
-descriptors.
+There should not be references to the traditional TLS function symbols
+@code{__tls_get_addr}, @code{__tls_get_offset},
+@code{__tls_get_addr_opt} in the dynamic symbol table (in the
+@samp{readelf -sDW} output).  Supporting global dynamic TLS relocations
+(such as @code{R_AARCH64_TLS_DTPMOD}, @code{R_AARCH64_TLS_DTPREL},
+@code{R_X86_64_DTPMOD64}, @code{R_X86_64_DTPOFF64}) should not be used,
+either.
 
 @item
 Likewise, the functions @code{dlopen}, @code{dlmopen}, @code{dlclose}
