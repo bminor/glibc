@@ -1497,7 +1497,7 @@ Function: "log2p1":
 double: 1
 float: 1
 float128: 3
-ldouble: 2
+ldouble: 4
 
 Function: "log2p1_downward":
 double: 2
@@ -1514,7 +1514,7 @@ ldouble: 3
 Function: "log2p1_upward":
 double: 1
 float: 2
-float128: 2
+float128: 3
 ldouble: 5
 
 Function: "log_downward":
