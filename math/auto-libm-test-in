@@ -5348,6 +5348,30 @@ exp10m1 0x1p-16384
 exp10m1 -0x1p-128
 exp10m1 -0x1p-1024
 exp10m1 -0x1p-16384
+# the next values yield large errors on x86_64 for binary32
+exp10m1 0x1.e4fb5ap-2
+exp10m1 0x1.cc3352p-2
+exp10m1 0x1.c8a6e6p-2
+exp10m1 -0x1.c03a7ep-8
+# the next values yield large errors on x86_64 for binary64
+exp10m1 0x1.e880c5bafbd41p-2
+exp10m1 0x1.ce521eafe0f21p-2
+exp10m1 0x1.ce21fffa5aed8p-2
+exp10m1 -0x1.bcb951df89248p-15
+# the next values yield large errors on x86_64 for intel96
+exp10m1 0x2.6882b807049f54ap-4
+exp10m1 -0x6.f6469fc524a1de1p-12
+exp10m1 0x2.cf6c5a8ec5919c0cp-4
+exp10m1 0x2.d08614068c3c5514p-4
+exp10m1 0x2.c7fd02fd98797bf4p-4
+exp10m1 -0x6.f36b2669aee2d2e8p-12
+exp10m1 0x2.c83d897086a4e644p-4
+exp10m1 0x2.b47fd78c73d7fa7cp-4
+# the next values yield large errors on x86_64 for binary128
+exp10m1 0xb.2ee9062818e91afe8e80fae1818p-4
+exp10m1 0xb.2e822db54f357c3f65ad743758bp-4
+exp10m1 0xb.2edd92a794cbc6f81f5f4f82c14p-4
+exp10m1 0xb.2eca344f0d4f0af54bdbd5974858p-4
 
 exp2 0
 exp2 -0
@@ -5553,6 +5577,30 @@ exp2m1 0x1p-16381
 exp2m1 -0x1p-125
 exp2m1 -0x1p-1021
 exp2m1 -0x1p-16381
+# the next values yield large errors on x86_64 for binary32
+exp2m1 0x1.9cac28p-1
+exp2m1 -0x1.715546p-15
+exp2m1 0x1.fffffep-1
+exp2m1 -0x1.720d9ap-8
+# the next values yield large errors on x86_64 for binary64
+exp2m1 0x1.d047583a6c6dp-1
+exp2m1 0x1.fff7be96c5276p-1
+exp2m1 -0x1.715bd8586d057p-12
+exp2m1 0x1.ffffb5c6996fp-1
+# the next values yield large errors on x86_64 for intel96
+exp2m1 0x9.58009dd25960a7bp-4
+exp2m1 -0x1.7159454d13d4e3fap-12
+exp2m1 0x9.5a4e825121e5782p-4
+exp2m1 0x9.3e34e79efaa18cfp-4
+exp2m1 0x9.3754a635820f937p-4
+exp2m1 -0x1.71573dd150de9ccap-8
+exp2m1 0x9.3d27303441ac81fp-4
+exp2m1 0x8.fe7f91d947a1cfdp-4
+# the next values yield large errors on x86_64 for binary128
+exp2m1 0x9.1217d12087d76b2ca347683e4b5p-4
+exp2m1 0x8.80db492a604297e1a3816aeec568p-4
+exp2m1 0x8.872e307510a80e501665a37c218p-4
+exp2m1 0x9.10b9251f0cc9bdc81d6ab13bb74p-4
 
 expm1 0
 expm1 -0 no-mathvec
@@ -6833,6 +6881,30 @@ log10p1 -0x4.f37d3c9ce0b14bdd86eb157df5d4p-4
 log10p1 0x7.2eca50c4d93196362b4f37f6e8dcp-4
 log10p1 -0x6.3fef3067427e43dfcde9e48f74bcp-4
 log10p1 0x6.af53d00fd2845d4772260ef5adc4p-4
+# the next values generate large errors on x86_64 for binary32
+log10p1 0x1.ce84ep+0
+log10p1 -0x1.c9bc9cp-3
+log10p1 0x1.3b8ad4p+106
+log10p1 -0x1.2611b2p-8
+# the next values generate large errors on x86_64 for binary64
+log10p1 -0x1.4c2971893052fp-1
+log10p1 -0x1.000196a3d9e18p-2
+log10p1 -0x1.26975ba3e6553p-43
+log10p1 0x1.00d67bdd93083p+53
+# the next values generate large errors on x86_64 for intel96
+log10p1 0x4.a486e7fa771f839p-4
+log10p1 0x4.f974ef417a9fe778p-4
+log10p1 0x5.006dfbf1945a6648p-4
+log10p1 0x4.f6e989b93bb1cd78p-4
+log10p1 0x4.ab40181dbc47cdfp-4
+log10p1 0x5.2876604a22752338p-4
+log10p1 0x4.a422197a61a14128p-4
+log10p1 0x5.48bb2c181e72e838p-4
+# the next values generate large errors on x86_64 for binary128
+log10p1 -0x6.eec527c6a8d6e31ca9f0dcdd747cp-4
+log10p1 0xc.42dd6485aeceeca7f23b39ad0518p-4
+log10p1 0xa.78451e366c2303f4f67b1178e628p-4
+log10p1 -0x6.fe3adf062a38696216fa72657104p-4
 
 log1p 0
 log1p -0 no-mathvec
@@ -6955,11 +7027,30 @@ log2p1 0x1p100
 log2p1 0x1p1000
 log2p1 0x6.a0cf42befce9ed4085ef59254b48p-4
 log2p1 max
-# the following inputs yield large errors on x86_64
+# the following inputs yield large errors on x86_64 for binary32
 log2p1 0x1.a69b4ap-2
+log2p1 -0x1.2516d6p-2
+log2p1 -0x1.5ffeaep-15
+log2p1 0x1.fa9f4cp+63
+# the following inputs yield large errors on x86_64 for binary64
 log2p1 0x1.a7b725780ff2cp-2
+log2p1 -0x1.2bcacac1db278p-2
+log2p1 -0x1.61d589bf42045p-30
+log2p1 0x1.f7b1d1fa54e5ep+1023
+# the following inputs yield large errors on x86_64 for intel96
 log2p1 0x5.dda3a1f4c4020ebp-4
+log2p1 0x4.a90a8d35a43eef98p-4
+log2p1 0x4.cd0c83636c3eec48p-4
+log2p1 0x4.a438707de6d1ba58p-4
+log2p1 0x5.843d01be597f38fp-4
+log2p1 0x4.a4fa45b26be621b8p-4
+log2p1 0x5.86a6205c56dda348p-4
+log2p1 0x4.a45c98a3ade2dcb8p-4
+# the following inputs yield large errors on x86_64 for binary128
 log2p1 -0x7.fff3a57fdd2666bcecba33bd89f4p-4
+log2p1 0xf.ffea148f0646fb70b8e8c4dae998p-4
+log2p1 -0x7.ffdfd0a8ad0496b2ee0e1c8e382cp-4
+log2p1 0x6.a9a5ea3f87fe4bc20f7a0e83cf2cp-4
 
 log2p1 0x7.2a4368p-4
 log2p1 0x6.d3a118p-4
