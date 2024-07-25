@@ -132,9 +132,17 @@ __run_exit_handlers (int status, struct exit_function_list **listp,
 }
 
 
+/* The lock handles concurrent exit(), even though the C/POSIX standard states
+   that calling exit() more than once is UB.  The recursive lock allows
+   atexit() handlers or destructors to call exit() itself.  In this case, the
+   handler list execution will resume at the point of the current handler.  */
+__libc_lock_define_initialized_recursive (static, __exit_lock)
+
 void
 exit (int status)
 {
+  /* The exit should never return, so there is no need to unlock it.  */
+  __libc_lock_lock_recursive (__exit_lock);
   __run_exit_handlers (status, &__exit_funcs, true, true);
 }
 libc_hidden_def (exit)
