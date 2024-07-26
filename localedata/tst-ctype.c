@@ -21,6 +21,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <support/check.h>
+
 
 static const char lower[] = "abcdefghijklmnopqrstuvwxyz";
 static const char upper[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -53,19 +55,11 @@ static struct classes
 #define nclasses (sizeof (classes) / sizeof (classes[0]))
 
 
-#define FAIL(str, args...) \
-  {									      \
-    printf ("      " str "\n", ##args);					      \
-    ++errors;								      \
-  }
-
-
 static int
 do_test (void)
 {
   const char *cp;
   const char *cp2;
-  int errors = 0;
   char *inpline = NULL;
   size_t inplinelen = 0;
   char *resline = NULL;
@@ -394,11 +388,8 @@ punct = %04x  alnum = %04x\n",
 	    {
 	      if (((__ctype_b[(unsigned int) *inp] & classes[n].mask) != 0)
 		  != (*resp != '0'))
-		{
-		  printf ("    is%s('%c' = '\\x%02x') %s true\n", inpline,
-			  *inp, *inp, *resp == '1' ? "not" : "is");
-		  ++errors;
-		}
+		FAIL ("    is%s('%c' = '\\x%02x') %s true\n", inpline,
+		      *inp, *inp, *resp == '1' ? "not" : "is");
 	      ++inp;
 	      ++resp;
 	    }
@@ -408,11 +399,8 @@ punct = %04x  alnum = %04x\n",
 	  while (*inp != '\0')
 	    {
 	      if (tolower (*inp) != *resp)
-		{
-		  printf ("    tolower('%c' = '\\x%02x') != '%c'\n",
-			  *inp, *inp, *resp);
-		  ++errors;
-		}
+		FAIL ("    tolower('%c' = '\\x%02x') != '%c'\n",
+		      *inp, *inp, *resp);
 	      ++inp;
 	      ++resp;
 	    }
@@ -422,11 +410,8 @@ punct = %04x  alnum = %04x\n",
 	  while (*inp != '\0')
 	    {
 	      if (toupper (*inp) != *resp)
-		{
-		  printf ("    toupper('%c' = '\\x%02x') != '%c'\n",
-			  *inp, *inp, *resp);
-		  ++errors;
-		}
+		FAIL ("    toupper('%c' = '\\x%02x') != '%c'\n",
+		      *inp, *inp, *resp);
 	      ++inp;
 	      ++resp;
 	    }
@@ -436,14 +421,7 @@ punct = %04x  alnum = %04x\n",
     }
 
 
-  if (errors != 0)
-    {
-      printf ("  %d error%s for `%s' locale\n\n\n", errors,
-	      errors == 1 ? "" : "s", setlocale (LC_ALL, NULL));
-      return 1;
-    }
-
-  printf ("  No errors for `%s' locale\n\n\n", setlocale (LC_ALL, NULL));
+  printf ("Completed testing for `%s' locale\n\n\n", setlocale (LC_ALL, NULL));
   return 0;
 }
 
