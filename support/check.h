@@ -25,6 +25,11 @@
 __BEGIN_DECLS
 
 /* Record a test failure, print the failure message to standard output
+   and pass the result of 1 through.  */
+#define FAIL(...) \
+  support_print_failure_impl (__FILE__, __LINE__, __VA_ARGS__)
+
+/* Record a test failure, print the failure message to standard output
    and return 1.  */
 #define FAIL_RET(...) \
   return support_print_failure_impl (__FILE__, __LINE__, __VA_ARGS__)
