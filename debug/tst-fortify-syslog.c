@@ -22,7 +22,6 @@
 #include <syslog.h>
 #include <string.h>
 #include <unistd.h>
-#include <stdio.h>
 
 #include <support/check.h>
 #include <support/support.h>
@@ -46,18 +45,13 @@ handler (int sig)
     _exit (127);
 }
 
-#define FAIL()						\
-  do {							\
-      printf ("Failure on line %d\n", __LINE__);	\
-      support_record_failure ();			\
-  } while (0)
 #define CHK_FAIL_START					\
   chk_fail_ok = 1;					\
   if (! setjmp (chk_fail_buf))				\
     {
 #define CHK_FAIL_END					\
       chk_fail_ok = 0;					\
-      FAIL ();						\
+      FAIL ("not supposed to reach here");		\
     }
 
 static void
