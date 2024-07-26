@@ -634,6 +634,13 @@ $(objpfx)tst-rtld-does-not-exist.out: tst-rtld-does-not-exist.sh $(objpfx)ld.so
 	$(SHELL) $< $(objpfx)ld.so > $@; \
 	$(evaluate-test)
 
+ifeq ($(run-built-tests),yes)
+tests-special += $(objpfx)tst-rtld-dash-dash.out
+endif
+$(objpfx)tst-rtld-dash-dash.out: tst-rtld-dash-dash.sh $(objpfx)ld.so
+	$(SHELL) $< $(objpfx)ld.so > $@; \
+	$(evaluate-test)
+
 tests += $(tests-execstack-$(have-z-execstack))
 ifeq ($(run-built-tests),yes)
 tests-special += \
