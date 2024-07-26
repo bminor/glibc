@@ -240,6 +240,7 @@ tests := \
   tst-scanf-binary-c23 \
   tst-scanf-binary-gnu11 \
   tst-scanf-binary-gnu89 \
+  tst-scanf-bz27650 \
   tst-scanf-intn \
   tst-scanf-round \
   tst-scanf-to_inpunct \
@@ -328,6 +329,7 @@ generated += \
   tst-printf-fp-free.mtrace \
   tst-printf-fp-leak-mem.out \
   tst-printf-fp-leak.mtrace \
+  tst-scanf-bz27650.mtrace \
   tst-vfprintf-width-prec-mem.out \
   tst-vfprintf-width-prec.mtrace \
   # generated
@@ -419,6 +421,9 @@ tst-printf-fp-free-ENV = \
 tst-printf-fp-leak-ENV = \
   MALLOC_TRACE=$(objpfx)tst-printf-fp-leak.mtrace \
   LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
+tst-scanf-bz27650-ENV = \
+  MALLOC_TRACE=$(objpfx)tst-scanf-bz27650.mtrace \
+  LD_PRELOAD=$(common-objpfx)malloc/libc_malloc_debug.so
 
 $(objpfx)tst-unbputc.out: tst-unbputc.sh $(objpfx)tst-unbputc
 	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'; \
