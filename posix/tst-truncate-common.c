@@ -21,6 +21,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include <support/check.h>
+
 static void do_prepare (void);
 #define PREPARE(argc, argv)     do_prepare ()
 static int do_test (void);
@@ -42,9 +44,6 @@ do_prepare (void)
     }
 }
 
-#define FAIL(str) \
-  do { printf ("error: %s (line %d)\n", str, __LINE__); return 1; } while (0)
-
 static int
 do_test_with_offset (off_t offset)
 {
@@ -54,35 +53,35 @@ do_test_with_offset (off_t offset)
   memset (buf, 0xcf, sizeof (buf));
 
   if (pwrite (temp_fd, buf, sizeof (buf), offset) != sizeof (buf))
-    FAIL ("write failed");
+    FAIL_RET ("write failed");
   if (fstat (temp_fd, &st) < 0 || st.st_size != (offset + sizeof (buf)))
-    FAIL ("initial size wrong");
+    FAIL_RET ("initial size wrong");
 
   if (ftruncate (temp_fd, offset + 800) < 0)
-    FAIL ("size reduction with ftruncate failed");
+    FAIL_RET ("size reduction with ftruncate failed");
   if (fstat (temp_fd, &st) < 0 || st.st_size != (offset + 800))
-    FAIL ("size after reduction with ftruncate is incorrect");
+    FAIL_RET ("size after reduction with ftruncate is incorrect");
 
   /* The following test covers more than POSIX.  POSIX does not require
      that ftruncate() can increase the file size.  But we are testing
      Unix systems.  */
   if (ftruncate (temp_fd, offset + 1200) < 0)
-    FAIL ("size increate with ftruncate failed");
+    FAIL_RET ("size increate with ftruncate failed");
   if (fstat (temp_fd, &st) < 0 || st.st_size != (offset + 1200))
-    FAIL ("size after increase is incorrect");
+    FAIL_RET ("size after increase is incorrect");
 
   if (truncate (temp_filename, offset + 800) < 0)
-    FAIL ("size reduction with truncate failed");
+    FAIL_RET ("size reduction with truncate failed");
   if (fstat (temp_fd, &st) < 0 || st.st_size != (offset + 800))
-    FAIL ("size after reduction with truncate incorrect");
+    FAIL_RET ("size after reduction with truncate incorrect");
 
   /* The following test covers more than POSIX.  POSIX does not require
      that truncate() can increase the file size.  But we are testing
      Unix systems.  */
   if (truncate (temp_filename, (offset + 1200)) < 0)
-    FAIL ("size increase with truncate failed");
+    FAIL_RET ("size increase with truncate failed");
   if (fstat (temp_fd, &st) < 0 || st.st_size != (offset + 1200))
-    FAIL ("size increase with truncate is incorrect");
+    FAIL_RET ("size increase with truncate is incorrect");
 
   return 0;
 }
