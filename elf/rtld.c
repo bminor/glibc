@@ -1501,12 +1501,16 @@ dl_main (const ElfW(Phdr) *phdr,
 	  _dl_version ();
 	else if (_dl_argv[1][0] == '-' && _dl_argv[1][1] == '-')
 	  {
-	   if (_dl_argv[1][1] == '\0')
-	     /* End of option list.  */
-	     break;
-	   else
-	     /* Unrecognized option.  */
-	     _dl_usage (ld_so_name, _dl_argv[1]);
+	    if (_dl_argv[1][2] == '\0')
+	      {
+		/* End of option list.  */
+		--_dl_argc;
+		++_dl_argv;
+		break;
+	      }
+	    else
+	      /* Unrecognized option.  */
+	      _dl_usage (ld_so_name, _dl_argv[1]);
 	  }
 	else
 	  break;
