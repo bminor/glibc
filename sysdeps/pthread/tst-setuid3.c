@@ -15,23 +15,18 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <stdio.h>
 #include <errno.h>
 #include <pthread.h>
 #include <stdbool.h>
 #include <unistd.h>
+
+#include <support/check.h>
 
 /* The test must run under a non-privileged user ID.  */
 static const uid_t test_uid = 1;
 
 static pthread_barrier_t barrier1;
 static pthread_barrier_t barrier2;
-
-#define FAIL(fmt, ...) \
-  do { printf ("FAIL: " fmt "\n", __VA_ARGS__); _exit (1); } while (0)
-
-#define FAIL_ERR(fmt, ...) \
-  do { printf ("FAIL: " fmt ": %m\n", __VA_ARGS__); _exit (1); } while (0)
 
 /* True if x is not a successful return code from pthread_barrier_wait.  */
 static inline bool
@@ -45,10 +40,10 @@ thread_func (void *ctx __attribute__ ((unused)))
 {
   int ret = pthread_barrier_wait (&barrier1);
   if (is_invalid_barrier_ret (ret))
-    FAIL ("pthread_barrier_wait (barrier1) (on thread): %d", ret);
+    FAIL_EXIT1 ("pthread_barrier_wait (barrier1) (on thread): %d", ret);
   ret = pthread_barrier_wait (&barrier2);
   if (is_invalid_barrier_ret (ret))
-    FAIL ("pthread_barrier_wait (barrier2) (on thread): %d", ret);
+    FAIL_EXIT1 ("pthread_barrier_wait (barrier2) (on thread): %d", ret);
   return NULL;
 }
 
@@ -59,13 +54,13 @@ setuid_failure (int phase)
   switch (ret)
     {
     case 0:
-      FAIL ("setuid succeeded unexpectedly in phase %d", phase);
+      FAIL_EXIT1 ("setuid succeeded unexpectedly in phase %d", phase);
     case -1:
       if (errno != EPERM)
-	FAIL_ERR ("setuid phase %d", phase);
+	FAIL_EXIT1 ("setuid phase %d: %m", phase);
       break;
     default:
-      FAIL ("invalid setuid return value in phase %d: %d", phase, ret);
+      FAIL_EXIT1 ("invalid setuid return value in phase %d: %d", phase, ret);
     }
 }
 
@@ -74,42 +69,42 @@ do_test (void)
 {
   if (getuid () == 0)
     if (setuid (test_uid) != 0)
-      FAIL_ERR ("setuid (%u)", (unsigned) test_uid);
+      FAIL_EXIT1 ("setuid (%u): %m", (unsigned) test_uid);
   if (setuid (getuid ()))
-    FAIL_ERR ("setuid (%s)", "getuid ()");
+    FAIL_EXIT1 ("setuid (%s): %m", "getuid ()");
   setuid_failure (1);
 
   int ret = pthread_barrier_init (&barrier1, NULL, 2);
   if (ret != 0)
-    FAIL ("pthread_barrier_init (barrier1): %d", ret);
+    FAIL_EXIT1 ("pthread_barrier_init (barrier1): %d", ret);
   ret = pthread_barrier_init (&barrier2, NULL, 2);
   if (ret != 0)
-    FAIL ("pthread_barrier_init (barrier2): %d", ret);
+    FAIL_EXIT1 ("pthread_barrier_init (barrier2): %d", ret);
 
   pthread_t thread;
   ret = pthread_create (&thread, NULL, thread_func, NULL);
   if (ret != 0)
-    FAIL ("pthread_create: %d", ret);
+    FAIL_EXIT1 ("pthread_create: %d", ret);
 
   /* Ensure that the thread is running properly.  */
   ret = pthread_barrier_wait (&barrier1);
   if (is_invalid_barrier_ret (ret))
-    FAIL ("pthread_barrier_wait (barrier1): %d", ret);
+    FAIL_EXIT1 ("pthread_barrier_wait (barrier1): %d", ret);
 
   setuid_failure (2);
 
   /* Check success case. */
   if (setuid (getuid ()) != 0)
-    FAIL_ERR ("setuid (%s)", "getuid ()");
+    FAIL_EXIT1 ("setuid (%s): %m", "getuid ()");
 
   /* Shutdown.  */
   ret = pthread_barrier_wait (&barrier2);
   if (is_invalid_barrier_ret (ret))
-    FAIL ("pthread_barrier_wait (barrier2): %d", ret);
+    FAIL_EXIT1 ("pthread_barrier_wait (barrier2): %d", ret);
 
   ret = pthread_join (thread, NULL);
   if (ret != 0)
-    FAIL ("pthread_join: %d", ret);
+    FAIL_EXIT1 ("pthread_join: %d", ret);
 
   return 0;
 }
