@@ -25,6 +25,8 @@
 #include <string.h>
 #include <tgmath.h>
 
+#include <support/check.h>
+
 //#define DEBUG
 
 typedef complex float cfloat;
@@ -88,13 +90,6 @@ enum
 int count;
 int counts[Tlast][C_last];
 
-#define FAIL(str) \
-  do								\
-    {								\
-      printf ("%s failure on line %d\n", (str), __LINE__);	\
-      result = 1;						\
-    }								\
-  while (0)
 #define TEST_TYPE_ONLY(expr, rettype) \
   do								\
     {								\
@@ -134,8 +129,6 @@ int counts[Tlast][C_last];
 int
 test_cos (const int Vint4, const long long int Vllong4)
 {
-  int result = 0;
-
   TEST (cos (vfloat1), float, cos);
   TEST (cos (vdouble1), double, cos);
   TEST (cos (vldouble1), ldouble, cos);
@@ -153,7 +146,7 @@ test_cos (const int Vint4, const long long int Vllong4)
   TEST (cos (Vcdouble1), cdouble, cos);
   TEST (cos (Vcldouble1), cldouble, cos);
 
-  return result;
+  return 0;
 }
 
 int
