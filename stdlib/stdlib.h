@@ -727,7 +727,7 @@ extern void *aligned_alloc (size_t __alignment, size_t __size)
 #endif
 
 /* Abort execution and generate a core-dump.  */
-extern void abort (void) __THROW __attribute__ ((__noreturn__));
+extern void abort (void) __THROW __attribute__ ((__noreturn__)) __COLD;
 
 
 /* Register a function to be called when `exit' is called.  */
