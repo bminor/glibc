@@ -201,6 +201,7 @@ string-benchset := \
   strcpy_chk \
   strcspn \
   strlen \
+  strlen-random \
   strncasecmp \
   strncat \
   strncmp \
