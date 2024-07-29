@@ -903,21 +903,21 @@ This function is a GNU extension.
 @deftypefun int putc (int @var{c}, FILE *@var{stream})
 @standards{ISO, stdio.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{} @aculock{}}}
-This is just like @code{fputc}, except that most systems implement it as
+This is just like @code{fputc}, except that it may be implemented as
 a macro, making it faster.  One consequence is that it may evaluate the
 @var{stream} argument more than once, which is an exception to the
-general rule for macros.  @code{putc} is usually the best function to
-use for writing a single character.
+general rule for macros.  Therefore, @var{stream} should never be an
+expression with side-effects.
 @end deftypefun
 
 @deftypefun wint_t putwc (wchar_t @var{wc}, FILE *@var{stream})
 @standards{ISO, wchar.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{} @aculock{}}}
-This is just like @code{fputwc}, except that it can be implement as
+This is just like @code{fputwc}, except that it may be implemented as
 a macro, making it faster.  One consequence is that it may evaluate the
 @var{stream} argument more than once, which is an exception to the
-general rule for macros.  @code{putwc} is usually the best function to
-use for writing a single wide character.
+general rule for macros.  Therefore, @var{stream} should never be an
+expression with side-effects.
 @end deftypefun
 
 @deftypefun int putc_unlocked (int @var{c}, FILE *@var{stream})
