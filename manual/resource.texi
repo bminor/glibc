@@ -192,8 +192,8 @@ If the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
 @standards{BSD, sys/resource.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Direct syscall on most systems; lock-taking critical section on HURD.
-Store the current and maximum limits for the resource @var{resource}
-in @code{*@var{rlp}}.
+Change the current and maximum limits of the process for the resource
+@var{resource} to the values provided in @code{*@var{rlp}}.
 
 The return value is @code{0} on success and @code{-1} on failure.  The
 following @code{errno} error condition is possible:
