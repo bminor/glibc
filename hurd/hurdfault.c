@@ -121,7 +121,14 @@ faulted (void)
   struct
     {
       mach_msg_header_t head;
-      char buf[64];
+        /* This is the size of the exception_raise request
+         * including mach_msg_header_t.
+         * See generated code in faultexc_server.c.  */
+#ifdef __LP64__
+        char buf[112];
+#else
+        char buf[64];
+#endif
     } request;
   mig_reply_header_t reply;
   extern int _hurdsig_fault_exc_server (mach_msg_header_t *,
