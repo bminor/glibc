@@ -904,20 +904,16 @@ This function is a GNU extension.
 @standards{ISO, stdio.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{} @aculock{}}}
 This is just like @code{fputc}, except that it may be implemented as
-a macro, making it faster.  One consequence is that it may evaluate the
-@var{stream} argument more than once, which is an exception to the
-general rule for macros.  Therefore, @var{stream} should never be an
-expression with side-effects.
+a macro and may evaluate the @var{stream} argument more than once.
+Therefore, @var{stream} should never be an expression with side-effects.
 @end deftypefun
 
 @deftypefun wint_t putwc (wchar_t @var{wc}, FILE *@var{stream})
 @standards{ISO, wchar.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{} @aculock{}}}
 This is just like @code{fputwc}, except that it may be implemented as
-a macro, making it faster.  One consequence is that it may evaluate the
-@var{stream} argument more than once, which is an exception to the
-general rule for macros.  Therefore, @var{stream} should never be an
-expression with side-effects.
+a macro and may evaluate the @var{stream} argument more than once.
+Therefore, @var{stream} should never be an expression with side-effects.
 @end deftypefun
 
 @deftypefun int putc_unlocked (int @var{c}, FILE *@var{stream})
@@ -1110,20 +1106,17 @@ This function is a GNU extension.
 @deftypefun int getc (FILE *@var{stream})
 @standards{ISO, stdio.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
-This is just like @code{fgetc}, except that it is permissible (and
-typical) for it to be implemented as a macro that evaluates the
-@var{stream} argument more than once.  @code{getc} is often highly
-optimized, so it is usually the best function to use to read a single
-character.
+This is just like @code{fgetc}, except that it may be implemented as
+a macro and may evaluate the @var{stream} argument more than once.
+Therefore, @var{stream} should never be an expression with side-effects.
 @end deftypefun
 
 @deftypefun wint_t getwc (FILE *@var{stream})
 @standards{ISO, wchar.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
-This is just like @code{fgetwc}, except that it is permissible for it to
-be implemented as a macro that evaluates the @var{stream} argument more
-than once.  @code{getwc} can be highly optimized, so it is usually the
-best function to use to read a single wide character.
+This is just like @code{fgetwc}, except that it may be implemented as
+a macro and may evaluate the @var{stream} argument more than once.
+Therefore, @var{stream} should never be an expression with side-effects.
 @end deftypefun
 
 @deftypefun int getc_unlocked (FILE *@var{stream})
