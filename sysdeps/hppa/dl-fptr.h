@@ -19,7 +19,28 @@
 #ifndef dl_hppa_fptr_h
 #define dl_hppa_fptr_h 1
 
-#include <sysdeps/generic/dl-fptr.h>
+/* An FDESC is a function descriptor.  */
+
+struct fdesc
+  {
+    ElfW(Addr) ip;	/* code entry point */
+    ElfW(Addr) gp;	/* global pointer */
+  };
+
+struct fdesc_table
+  {
+    struct fdesc_table *next;
+    unsigned int len;			/* # of entries in fdesc table */
+    volatile unsigned int first_unused;	/* index of first available entry */
+    struct fdesc fdesc[0];
+  };
+
+struct link_map;
+
+extern ElfW(Addr) _dl_boot_fptr_table [];
+
+extern ElfW(Addr) _dl_make_fptr (struct link_map *, const ElfW(Sym) *,
+				 ElfW(Addr));
 
 /* Initialize function pointer code. Call before relocation processing.  */
 extern void _dl_fptr_init (void);
