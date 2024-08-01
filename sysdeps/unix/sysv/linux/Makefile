@@ -127,6 +127,7 @@ tests += tst-clone tst-clone2 tst-clone3 tst-fanotify tst-personality \
   tst-scm_rights \
   tst-epoll \
   tst-getauxval \
+  tst-linux-mremap1 \
   # tests
 
 # Test for the symbol version of fcntl that was replaced in glibc 2.28.
