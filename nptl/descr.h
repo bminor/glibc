@@ -407,27 +407,11 @@ struct pthread
   /* getrandom vDSO per-thread opaque state.  */
   void *getrandom_buf;
 
-  /* rseq area registered with the kernel.  Use a custom definition
-     here to isolate from kernel struct rseq changes.  The
-     implementation of sched_getcpu needs acccess to the cpu_id field;
-     the other fields are unused and not included here.  */
-  union
-  {
-    struct
-    {
-      uint32_t cpu_id_start;
-      uint32_t cpu_id;
-      uint64_t rseq_cs;
-      uint32_t flags;
-    };
-    char pad[32];		/* Original rseq area size.  */
-  } rseq_area __attribute__ ((aligned (32)));
-
   /* Amount of end padding, if any, in this structure.
-     This definition relies on rseq_area being last.  */
+     This definition relies on getrandom_buf being last.  */
 #define PTHREAD_STRUCT_END_PADDING \
-  (sizeof (struct pthread) - offsetof (struct pthread, rseq_area) \
-   + sizeof ((struct pthread) {}.rseq_area))
+  (sizeof (struct pthread) - offsetof (struct pthread, getrandom_buf) \
+   + sizeof ((struct pthread) {}.getrandom_buf))
 } __attribute ((aligned (TCB_ALIGNMENT)));
 
 static inline bool
