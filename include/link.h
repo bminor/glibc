@@ -212,6 +212,7 @@ struct link_map
     unsigned int l_find_object_processed:1; /* Zero if _dl_find_object_update
 					       needs to process this
 					       lt_library map.  */
+    unsigned int l_tls_in_slotinfo:1; /* TLS slotinfo updated in dlopen.  */
 
     /* NODELETE status of the map.  Only valid for maps of type
        lt_loaded.  Lazy binding sets l_nodelete_active directly,

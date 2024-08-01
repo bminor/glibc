@@ -632,17 +632,21 @@ _dl_allocate_tls_init (void *result, bool main_thread)
 	     some platforms use in static programs requires it.  */
 	  dtv[map->l_tls_modid].pointer.val = dest;
 
-	  /* Copy the initialization image and clear the BSS part.  For
-	     audit modules or dependencies with initial-exec TLS, we can not
-	     set the initial TLS image on default loader initialization
-	     because it would already be set by the audit setup.  However,
-	     subsequent thread creation would need to follow the default
-	     behaviour.   */
+	  /* Copy the initialization image and clear the BSS part.
+	     For audit modules or dependencies with initial-exec TLS,
+	     we can not set the initial TLS image on default loader
+	     initialization because it would already be set by the
+	     audit setup, which uses the dlopen code and already
+	     clears l_need_tls_init.  Calls with !main_thread from
+	     pthread_create need to initialze TLS for the current
+	     thread regardless of namespace.  */
 	  if (map->l_ns != LM_ID_BASE && main_thread)
 	    continue;
 	  memset (__mempcpy (dest, map->l_tls_initimage,
 			     map->l_tls_initimage_size), '\0',
 		  map->l_tls_blocksize - map->l_tls_initimage_size);
+	  if (main_thread)
+	    map->l_need_tls_init = 0;
 	}
 
       total += cnt;
@@ -1099,9 +1103,32 @@ _dl_tls_initial_modid_limit_setup (void)
 }
 
 
-void
+/* Add module to slot information data.  If DO_ADD is false, only the
+   required memory is allocated.  Must be called with
+   GL (dl_load_tls_lock) acquired.  If the function has already been
+   called for the link map L with !DO_ADD, then this function will not
+   raise an exception, otherwise it is possible that it encounters a
+   memory allocation failure.
+
+   Return false if L has already been added to the slotinfo data, or
+   if L has no TLS data.  If the returned value is true, L has been
+   added with this call (DO_ADD), or has been added in a previous call
+   (!DO_ADD).
+
+   The expected usage is as follows: Call _dl_add_to_slotinfo for
+   several link maps with DO_ADD set to false, and record if any calls
+   result in a true result.  If there was a true result, call
+   _dl_add_to_slotinfo again, this time with DO_ADD set to true.  (For
+   simplicity, it's possible to call the function for link maps where
+   the previous result was false.)  The return value from the second
+   round of calls can be ignored.  If there was true result initially,
+   call _dl_update_slotinfo to update the TLS generation counter.  */
+bool
 _dl_add_to_slotinfo (struct link_map *l, bool do_add)
 {
+  if (l->l_tls_blocksize == 0 || l->l_tls_in_slotinfo)
+    return false;
+
   /* Now that we know the object is loaded successfully add
      modules containing TLS data to the dtv info table.  We
      might have to increase its size.  */
@@ -1157,7 +1184,10 @@ cannot create TLS data structures"));
       atomic_store_relaxed (&listp->slotinfo[idx].map, l);
       atomic_store_relaxed (&listp->slotinfo[idx].gen,
 			    GL(dl_tls_generation) + 1);
+      l->l_tls_in_slotinfo = true;
     }
+
+  return true;
 }
 
 #if PTHREAD_IN_LIBC
