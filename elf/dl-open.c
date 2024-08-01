@@ -363,17 +363,8 @@ resize_tls_slotinfo (struct link_map *new)
 {
   bool any_tls = false;
   for (unsigned int i = 0; i < new->l_searchlist.r_nlist; ++i)
-    {
-      struct link_map *imap = new->l_searchlist.r_list[i];
-
-      /* Only add TLS memory if this object is loaded now and
-	 therefore is not yet initialized.  */
-      if (! imap->l_init_called && imap->l_tls_blocksize > 0)
-	{
-	  _dl_add_to_slotinfo (imap, false);
-	  any_tls = true;
-	}
-    }
+    if (_dl_add_to_slotinfo (new->l_searchlist.r_list[i], false))
+      any_tls = true;
   return any_tls;
 }
 
@@ -383,22 +374,8 @@ resize_tls_slotinfo (struct link_map *new)
 static void
 update_tls_slotinfo (struct link_map *new)
 {
-  unsigned int first_static_tls = new->l_searchlist.r_nlist;
   for (unsigned int i = 0; i < new->l_searchlist.r_nlist; ++i)
-    {
-      struct link_map *imap = new->l_searchlist.r_list[i];
-
-      /* Only add TLS memory if this object is loaded now and
-	 therefore is not yet initialized.  */
-      if (! imap->l_init_called && imap->l_tls_blocksize > 0)
-	{
-	  _dl_add_to_slotinfo (imap, true);
-
-	  if (imap->l_need_tls_init
-	      && first_static_tls == new->l_searchlist.r_nlist)
-	    first_static_tls = i;
-	}
-    }
+    _dl_add_to_slotinfo (new->l_searchlist.r_list[i], true);
 
   size_t newgen = GL(dl_tls_generation) + 1;
   if (__glibc_unlikely (newgen == 0))
@@ -410,13 +387,11 @@ TLS generation counter wrapped!  Please report this."));
   /* We need a second pass for static tls data, because
      _dl_update_slotinfo must not be run while calls to
      _dl_add_to_slotinfo are still pending.  */
-  for (unsigned int i = first_static_tls; i < new->l_searchlist.r_nlist; ++i)
+  for (unsigned int i = 0; i < new->l_searchlist.r_nlist; ++i)
     {
       struct link_map *imap = new->l_searchlist.r_list[i];
 
-      if (imap->l_need_tls_init
-	  && ! imap->l_init_called
-	  && imap->l_tls_blocksize > 0)
+      if (imap->l_need_tls_init && imap->l_tls_blocksize > 0)
 	{
 	  /* For static TLS we have to allocate the memory here and
 	     now, but we can delay updating the DTV.  */
