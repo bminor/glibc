@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <sys/rseq.h>
 #include <ldsodefs.h>
+#include <thread_pointer.h>
 
 /* Minimum size of the rseq area allocation required by the syscall.  The
    actually used rseq feature size may be less (20 bytes initially).  */
@@ -58,6 +59,13 @@ extern ptrdiff_t _rseq_offset attribute_hidden;
    binding at run time for both variables.  */
 rtld_hidden_proto (__rseq_size)
 rtld_hidden_proto (__rseq_offset)
+
+/* Returns a pointer to the current thread rseq area.  */
+static inline struct rseq_area *
+RSEQ_SELF (void)
+{
+  return (struct rseq_area *) ((char *) __thread_pointer () + __rseq_offset);
+}
 
 #ifdef RSEQ_SIG
 static inline bool
