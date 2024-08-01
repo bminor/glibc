@@ -33,8 +33,10 @@ response (const struct resolv_response_context *ctx,
     {
     case 0:
       /* First server times out.  */
-      struct resolv_response_flags flags = {.rcode = rcode};
-      resolv_response_init (b, flags);
+      {
+        struct resolv_response_flags flags = {.rcode = rcode};
+        resolv_response_init (b, flags);
+      }
       break;
     case 1:
       /* Second server sends reply.  */
