@@ -552,9 +552,14 @@ _dl_resize_dtv (dtv_t *dtv, size_t max_modid)
 /* Allocate initial TLS.  RESULT should be a non-NULL pointer to storage
    for the TLS space.  The DTV may be resized, and so this function may
    call malloc to allocate that space.  The loader's GL(dl_load_tls_lock)
-   is taken when manipulating global TLS-related data in the loader.  */
+   is taken when manipulating global TLS-related data in the loader.
+
+   If MAIN_THREAD, this is the first call during process
+   initialization.  In this case, TLS initialization for secondary
+   (audit) namespaces is skipped because that has already been handled
+   by dlopen.  */
 void *
-_dl_allocate_tls_init (void *result, bool init_tls)
+_dl_allocate_tls_init (void *result, bool main_thread)
 {
   if (result == NULL)
     /* The memory allocation failed.  */
@@ -633,7 +638,7 @@ _dl_allocate_tls_init (void *result, bool init_tls)
 	     because it would already be set by the audit setup.  However,
 	     subsequent thread creation would need to follow the default
 	     behaviour.   */
-	  if (map->l_ns != LM_ID_BASE && !init_tls)
+	  if (map->l_ns != LM_ID_BASE && main_thread)
 	    continue;
 	  memset (__mempcpy (dest, map->l_tls_initimage,
 			     map->l_tls_initimage_size), '\0',
@@ -661,7 +666,7 @@ _dl_allocate_tls (void *mem)
 {
   return _dl_allocate_tls_init (mem == NULL
 				? _dl_allocate_tls_storage ()
-				: allocate_dtv (mem), true);
+				: allocate_dtv (mem), false);
 }
 rtld_hidden_def (_dl_allocate_tls)
 
