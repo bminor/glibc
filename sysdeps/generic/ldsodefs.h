@@ -1200,10 +1200,8 @@ extern void _dl_get_tls_static_info (size_t *sizep, size_t *alignp);
 
 extern void _dl_allocate_static_tls (struct link_map *map) attribute_hidden;
 
-/* These are internal entry points to the two halves of _dl_allocate_tls,
-   only used within rtld.c itself at startup time.  */
 extern void *_dl_allocate_tls_storage (void) attribute_hidden;
-extern void *_dl_allocate_tls_init (void *, bool);
+extern void *_dl_allocate_tls_init (void *result, bool main_thread);
 rtld_hidden_proto (_dl_allocate_tls_init)
 
 /* True if the TCB has been set up.  */
