@@ -624,3 +624,4 @@ $(objpfx)tst-setcontext3.out: tst-setcontext3.sh $(objpfx)tst-setcontext3
 	$(evaluate-test)
 
 $(objpfx)tst-qsort5: $(libm)
+$(objpfx)tst-concurrent-exit: $(shared-thread-library)
