@@ -250,6 +250,7 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
 	    CHECK_GLIBC_IFUNC_PREFERRED_BOTH (n, cpu_features,
 					      Avoid_Non_Temporal_Memset, 25);
 	  }
+	  break;
 	case 26:
 	    {
 	      CHECK_GLIBC_IFUNC_PREFERRED_NEED_BOTH
