@@ -879,6 +879,7 @@ init_cpu_features (struct cpu_features *cpu_features)
 		     non-temporal on all Skylake servers. */
 	      cpu_features->preferred[index_arch_Avoid_Non_Temporal_Memset]
 		  |= bit_arch_Avoid_Non_Temporal_Memset;
+	      /* fallthrough */
 	    case INTEL_BIGCORE_COMETLAKE:
 	    case INTEL_BIGCORE_SKYLAKE:
 	    case INTEL_BIGCORE_KABYLAKE:
@@ -1073,6 +1074,7 @@ https://www.intel.com/content/www/us/en/support/articles/000059422/processors.ht
 	      /* Yongfeng and Shijidadao mircoarch tuning.  */
 	    case 0x5b:
 	      cpu_features->cachesize_non_temporal_divisor = 2;
+	      /* fallthrough */
 	    case 0x6b:
 	      cpu_features->preferred[index_arch_AVX_Fast_Unaligned_Load]
 		  &= ~bit_arch_AVX_Fast_Unaligned_Load;
