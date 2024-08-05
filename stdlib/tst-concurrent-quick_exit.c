@@ -1,4 +1,4 @@
-/* Check if exit can be called concurrently by multiple threads.
+/* Check if quick_exit can be called concurrently by multiple threads.
    Copyright (C) 2024 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define EXIT(__r)    exit (__r)
-#define ATEXIT(__f)  atexit (__f)
+#define EXIT(__r)    quick_exit (__r)
+#define ATEXIT(__f)  at_quick_exit (__f)
 
 #include "tst-concurrent-exit-skeleton.c"

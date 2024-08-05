@@ -274,6 +274,7 @@ tests := \
   tst-bz20544 \
   tst-canon-bz26341 \
   tst-concurrent-exit \
+  tst-concurrent-quick_exit \
   tst-cxa_atexit \
   tst-environ \
   tst-getrandom \
