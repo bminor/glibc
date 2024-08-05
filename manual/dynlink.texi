@@ -352,8 +352,109 @@ support the XGETBV instruction.
 @node Dynamic Linker Introspection
 @section Dynamic Linker Introspection
 
-@Theglibc{} provides various functions for querying information from the
+@Theglibc{} provides various facilities for querying information from the
 dynamic linker.
+
+@deftp {Data Type} {struct link_map}
+
+@cindex link map
+A @dfn{link map} is associated with the main executable and each shared
+object.  Some fields of the link map are accessible to applications and
+exposed through the @code{struct link_map}.  Applications must not modify
+the link map directly.
+
+Pointers to link maps can be obtained from the @code{_r_debug} variable,
+from the @code{RTLD_DI_LINKMAP} request for @code{dlinfo}, and from the
+@code{_dl_find_object} function.  See below for details.
+
+@table @code
+@item l_addr
+@cindex load address
+This field contains the @dfn{load address} of the object.  This is the
+offset that needs to be applied to unrelocated addresses in the object
+image (as stored on disk) to form an address that can be used at run
+time for accessing data or running code.  For position-dependent
+executables, the load address is typically zero, and no adjustment is
+required.  For position-independent objects, the @code{l_addr} field
+usually contains the address of the object's ELF header in the process
+image.  However, this correspondence is not guaranteed because the ELF
+header might not be mapped at all, and the ELF file as stored on disk
+might use zero as the lowest virtual address.  Due to the second
+variable, values of the @code{l_addr} field do not necessarily uniquely
+identify a shared object.
+
+On Linux, to obtain the lowest loaded address of the main program, use
+@code{getauxval} to obtain the @code{AT_PHDR} and @code{AT_PHNUM} values
+for the current process.  Alternatively, call
+@samp{dlinfo (_r_debug.r_map, &@var{phdr})}
+to obtain the number of program headers, and the address of the program
+header array will be stored in @var{phdr}
+(of type @code{const ElfW(Phdr) *}, as explained below).
+These values allow processing the array of program headers and the
+address information in the @code{PT_LOAD} entries among them.
+This works even when the program was started with an explicit loader
+invocation.
+
+@item l_name
+For a shared object, this field contains the file name that the
+@theglibc{} dynamic loader used when opening the object.  This can be
+a relative path (relative to the current directory at process start,
+or if the object was loaded later, via @code{dlopen} or
+@code{dlmopen}).  Symbolic links are not necessarily resolved.
+
+For the main executable, @code{l_name} is @samp{""} (the empty string).
+(The main executable is not loaded by @theglibc{}, so its file name is
+not available.)  On Linux, the main executable is available as
+@file{/proc/self/exe} (unless an explicit loader invocation was used to
+start the program).  The file name @file{/proc/self/exe} continues to
+resolve to the same file even if it is moved within or deleted from the
+file system.  Its current location can be read using @code{readlink}.
+@xref{Symbolic Links}.  (Although @file{/proc/self/exe} is not actually
+a symbol link, it is only presented as one.)  Note that @file{/proc} may
+not be mounted, in which case @file{/proc/self/exe} is not available.
+
+If an explicit loader invocation is used (such as @samp{ld.so
+/usr/bin/emacs}), the @file{/proc/self/exe} approach does not work
+because the file name refers to the dynamic linker @code{ld.so}, and not
+the @code{/usr/bin/emacs} program.  An approximation to the executable
+path is still available in the @code{@var{info}.dli_fname} member after
+calling @samp{dladdr (_r_debug.r_map->l_ld, &@var{info})}.  Note that
+this could be a relative path, and it is supplied by the process that
+created the current process, not the kernel, so it could be inaccurate.
+
+@item l_ld
+This is a pointer to the ELF dynamic segment, an array of tag/value
+pairs that provide various pieces of information that the dynamic
+linking process uses.  On most architectures, addresses in the dynamic
+segment are relocated at run time, but on some architectures and in some
+run-time configurations, it is necessary to add the @code{l_addr} field
+value to obtain a proper address.
+
+@item l_prev
+@itemx l_next
+These fields are used to maintain a double-linked linked list of all
+link maps within one @code{dlmopen} namespace.  Note that there is
+currently no thread-safe way to iterate over this list.  The
+callback-based @code{dl_iterate_phdr} interface can be used instead.
+@end table
+@end deftp
+
+@strong{Portability note:} It is not possible to create a @code{struct
+link_map} object and pass a pointer to a function that expects a
+@code{struct link_map *} argument.  Only link map pointers initially
+supplied by @theglibc{} are permitted as arguments.  In current versions
+of @theglibc{}, handles returned by @code{dlopen} and @code{dlmopen} are
+pointers to link maps.  However, this is not a portable assumption, and
+may even change in future versions of @theglibc{}.  To obtain the link
+map associated with a handle, see @code{dlinfo} and
+@code{RTLD_DI_LINKMAP} below.  If a function accepts both
+@code{dlopen}/@code{dlmopen} handles and @code{struct link_map} pointers
+in its @code{void *} argument, that is documented explicitly.
+
+@subsection Querying information for loaded objects
+
+The @code{dlinfo} function provides access to internal information
+associated with @code{dlopen}/@code{dlmopen} handles and link maps.
 
 @deftypefun {int} dlinfo (void *@var{handle}, int @var{request}, void *@var{arg})
 @safety{@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
@@ -361,7 +462,9 @@ dynamic linker.
 This function returns information about @var{handle} in the memory
 location @var{arg}, based on @var{request}.  The @var{handle} argument
 must be a pointer returned by @code{dlopen} or @code{dlmopen}; it must
-not have been closed by @code{dlclose}.
+not have been closed by @code{dlclose}.  Alternatively, @var{handle}
+can be a @code{struct link_map *} value for a link map of an object
+that has not been closed.
 
 On success, @code{dlinfo} returns 0 for most request types; exceptions
 are noted below.  If there is an error, the function returns @math{-1},
