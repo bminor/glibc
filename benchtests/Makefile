@@ -153,6 +153,7 @@ string-benchset := \
   memrchr \
   memset \
   memset-large \
+  memset-random \
   memset-zero \
   memset-zero-large \
   rawmemchr \
