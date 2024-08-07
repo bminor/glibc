@@ -181,6 +181,43 @@ new, extended API using 64 bit file sizes and offsets transparently
 replaces the old API.
 @end deftypefun
 
+@deftypefun int openat (int @var{filedes}, const char *@var{filename}, int @var{flags}[, mode_t @var{mode}])
+@standards{POSIX.1, fcntl.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{@acsfd{}}}
+This function is the descriptor-relative variant of the @code{open}
+function.  @xref{Descriptor-Relative Access}.
+
+Note that the @var{flags} argument of @code{openat} does not accept
+@code{AT_@dots{}} flags, only the flags described for the @code{open}
+function above.
+
+The @code{openat} function can fail for additional reasons:
+
+@table @code
+@item EBADF
+The @var{filedes} argument is not a valid file descriptor.
+
+@item ENOTDIR
+The descriptor @var{filedes} is not associated with a directory, and
+@var{filename} is a relative file name.
+@end table
+
+When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} this
+function is in fact @code{openat64} since the LFS interface transparently
+replaces the normal implementation.
+@end deftypefun
+
+@deftypefun int openat64 (int @var{filedes}, const char *@var{filename}, int @var{flags}[, mode_t @var{mode}])
+@standards{GNU, fcntl.h}
+The large-file variant of the @code{openat}, similar to how
+@code{open64} is the large-file variant of @code{open}.
+
+When the sources are translated with @code{_FILE_OFFSET_BITS == 64} this
+function is actually available under the name @code{openat}.  I.e., the
+new, extended API using 64 bit file sizes and offsets transparently
+replaces the old API.
+@end deftypefun
+
 @deftypefn {Obsolete function} int creat (const char *@var{filename}, mode_t @var{mode})
 @standards{POSIX.1, fcntl.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{@acsfd{}}}
@@ -3807,7 +3844,9 @@ contains it is still needed), and permissions are checked when the
 descriptor is used later on.
 
 For example, such descriptors can be used with the @code{fexecve}
-function (@pxref{Executing a File}).
+function (@pxref{Executing a File}).  Other applications involve the
+@samp{*at} function variants, along with the @code{AT_EMPTY_PATH} flag.
+@xref{Descriptor-Relative Access}.
 
 This access mode is specific to Linux.  On @gnuhurdsystems{}, it is
 possible to use @code{O_EXEC} explicitly, or specify no access modes

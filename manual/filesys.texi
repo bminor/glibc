@@ -15,6 +15,7 @@ access permissions and modification times.
 @menu
 * Working Directory::           This is used to resolve relative
 				 file names.
+* Descriptor-Relative Access::  Ways to control file name lookup.
 * Accessing Directories::       Finding out what files a directory
 				 contains.
 * Working with Directory Trees:: Apply actions to all files or a selectable
@@ -206,6 +207,151 @@ An I/O error occurred.
 @end table
 @end deftypefun
 
+@node Descriptor-Relative Access
+@section Descriptor-Relative Access
+@cindex file name resolution based on descriptors
+@cindex descriptor-based file name resolution
+@cindex @code{@dots{}at} functions
+
+Many functions that accept file names have @code{@dots{}at} variants
+which accept a file descriptor and a file name argument instead of just
+a file name argument.  For example, @code{fstatat} is the
+descriptor-based variant of the @code{fstat} function.  Most such
+functions also accept an additional flags argument which changes the
+behavior of the file name lookup based on the passed @code{AT_@dots{}}
+flags.
+
+There are several reasons to use descriptor-relative access:
+
+@itemize @bullet
+@item
+The working directory is a process-wide resource, so individual threads
+cannot change it without affecting other threads in the process.
+Explicitly specifying the directory against which relative paths are
+resolved can be a thread-safe alternative to changing the working
+directory.
+
+@item
+If a program wishes to access a directory tree which is being modified
+concurrently, perhaps even by a different user on the system, the
+program must avoid looking up file names with multiple components, in
+order to detect symbolic links, using the @code{O_NOFOLLOW} flag
+(@pxref{Open-time Flags}) or the @code{AT_SYMLINK_FOLLOW} flag
+(described below).  Without directory-relative access, it is necessary
+to use the @code{fchdir} function to change the working directory
+(@pxref{Working Directory}), which is not thread-safe.
+
+@item
+Listing directory contents using the @code{readdir} or @code{readdir64}
+functions (@pxref{Reading/Closing Directory}) does not provide full file
+name paths.  Using @code{@dots{}at} functions, it is possible to use the
+file names directly, without having to construct such full paths.
+
+@item
+Additional flags available with some of the @code{@dots{}at} functions
+provide access to functionality which is not available otherwise.
+@end itemize
+
+The file descriptor used by these @code{@dots{}at} functions has the
+following uses:
+
+@itemize @bullet
+@item
+It can be a file descriptor referring to a directory.  Such a descriptor
+can be created explicitly using the @code{open} function and the
+@code{O_RDONLY} file access mode, with or without the @code{O_DIRECTORY}
+flag.  @xref{Opening and Closing Files}.  Or it can be created
+implicitly by @code{opendir} and retrieved using the @code{dirfd}
+function.  @xref{Opening a Directory}.
+
+If a directory descriptor is used with one of the @code{@dots{}at}
+functions, a relative file name argument is resolved relative to
+directory referred to by the file descriptor, just as if that directory
+were the current working directory.  Absolute file name arguments
+(starting with @samp{/}) are resolved against the file system root, and
+the descriptor argument is effectively ignored.
+
+This means that file name lookup is not constrained to the directory of
+the descriptor.  For example, it is possible to access a file
+@file{example} in the descriptor's parent directory using a file name
+argument @code{"../example"}, or in the root directory using
+@code{"/example"}.
+
+If the file descriptor refers to a directory, the empty string @code{""}
+is not a valid file name argument.  It is possible to use @code{"."} to
+refer to the directory itself.  Also see @code{AT_EMPTY_PATH} below.
+
+@item
+@vindex @code{AT_FDCWD}
+The special value @code{AT_FDCWD}.  This means that the current working
+directory is used for the lookup if the file name is a relative.  For
+@code{@dots{}at} functions with an @code{AT_@dots{}} flags argument,
+this provides a shortcut to use those flags with regular (not
+descriptor-based) file name lookups.
+
+If @code{AT_FDCWD} is used, the empty string @code{""} is not a valid
+file name argument.
+
+@item
+An arbitrary file descriptor, along with an empty string @code{""} as
+the file name argument, and the @code{AT_EMPTY_PATH} flag.  In this
+case, the operation uses the file descriptor directly, without further
+file name resolution.  On Linux, this allows operations on descriptors
+opened with the @code{O_PATH} flag.  For regular descriptors (opened
+without @code{O_PATH}), the same functionality is also available through
+the plain descriptor-based functions (for example, @code{fstat} instead
+of @code{fstatat}).
+
+This is a GNU extension.
+@end itemize
+
+@cindex file name resolution flags
+@cindex @code{AT_*} file name resolution flags
+The flags argument in @code{@dots{}at} functions can be a combination of
+the following flags, defined in @file{fcntl.h}.  Not all such functions
+support all flags, and some (such as @code{openat}) do not accept a
+flags argument at all.
+
+In the flag descriptions below, the @dfn{effective final path component}
+refers to the final component (basename) of the full path constructed
+from the descriptor and file name arguments, using file name lookup, as
+described above.
+
+@vtable @code
+@item AT_EMPTY_PATH
+This flag is used with an empty file name @code{""} and a descriptor
+which does not necessarily refer to a directory.  It is most useful with
+@code{O_PATH} descriptors, as described above.  This flag is a GNU
+extension.
+
+@item AT_NO_AUTOMOUNT
+If the effective final path component refers to a potential file system
+mount point controlled by an auto-mounting service, the operation does
+not trigger auto-mounting and refers to the unmounted mount point
+instead.  @xref{Mount-Unmount-Remount}.  If a file system has already
+been mounted at the effective final path component, the operation
+applies to the file or directory in the mounted file system, not the
+underlying file system that was mounted over.  This flag is a GNU
+extension.
+
+@item AT_SYMLINK_FOLLOW
+If the effective final path component is a symbolic link, the
+operation follows the symbolic link and operates on its target.  (For
+most functions, this is the default behavior.)
+
+@item AT_SYMLINK_NOFOLLOW
+If the effective final path component is a symbolic link, the
+operation operates on the symbolic link, without following it.  The
+difference in behavior enabled by this flag is similar to the difference
+between the @code{lstat} and @code{stat} functions, or the behavior
+activated by the @code{O_NOFOLLOW} argument to the @code{open} function.
+Even with the @code{AT_SYMLINK_NOFOLLOW} flag present, symbolic links in
+a non-final component of the file name are still followed.
+@end vtable
+
+@strong{Note:} There is no relationship between these flags and the type
+argument to the @code{getauxval} function (with @code{AT_@dots{}}
+constants defined in @file{elf.h}).  @xref{Auxiliary Vector}.
 
 @node Accessing Directories
 @section Accessing Directories
@@ -1250,10 +1396,11 @@ A hardware error occurred while trying to read or write the to filesystem.
 
 The @code{linkat} function is analogous to the @code{link} function,
 except that it identifies its source and target using a combination of a
-file descriptor (referring to a directory) and a pathname.  If a
-pathnames is not absolute, it is resolved relative to the corresponding
-file descriptor.  The special file descriptor @code{AT_FDCWD} denotes
-the current directory.
+file descriptor (referring to a directory) and a file name.
+@xref{Descriptor-Relative Access}.  For @code{linkat}, if a file name is
+not absolute, it is resolved relative to the corresponding file
+descriptor.  As usual, the special value @code{AT_FDCWD} denotes the
+current directory.
 
 The @var{flags} argument is a combination of the following flags:
 
@@ -2091,9 +2238,44 @@ function is available under the name @code{fstat} and so transparently
 replaces the interface for small files on 32-bit machines.
 @end deftypefun
 
-@c fstatat will call alloca and snprintf if the syscall is not
-@c available.
-@c @safety{@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+@deftypefun int fstatat (int @var{filedes}, const char *@var{filename}, struct stat *@var{buf}, int @var{flags})
+@standards{POSIX.1, sys/stat.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This function is a descriptor-relative version of the @code{fstat}
+function above.  @xref{Descriptor-Relative Access}.  The @var{flags}
+argument can contain a combination of the flags @code{AT_EMPTY_PATH},
+@code{AT_NO_AUTOMOUNT}, @code{AT_SYMLINK_NOFOLLOW}.
+
+Compared to @code{fstat}, the following additional error conditions can
+occur:
+
+@table @code
+@item EBADF
+The @var{filedes} argument is not a valid file descriptor.
+
+@item EINVAL
+The @var{flags} argument is not valid for this function.
+
+@item ENOTDIR
+The descriptor @var{filedes} is not associated with a directory, and
+@var{filename} is a relative file name.
+@end table
+
+When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} this
+function is in fact @code{fstatat64} since the LFS interface transparently
+replaces the normal implementation.
+@end deftypefun
+
+@deftypefun int fstatat64 (int @var{filedes}, const char *@var{filename}, struct stat64 *@var{buf}, int @var{flags})
+@standards{GNU, sys/stat.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This function is the large-file variant of @code{fstatat}, similar to
+how @code{fstat64} is the variant of @code{fstat}.
+
+When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} this
+function is available under the name @code{fstatat} and so transparently
+replaces the interface for small files on 32-bit machines.
+@end deftypefun
 
 @deftypefun int lstat (const char *@var{filename}, struct stat *@var{buf})
 @standards{BSD, sys/stat.h}
