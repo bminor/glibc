@@ -1157,28 +1157,28 @@ float128: 3
 ldouble: 2
 
 Function: "exp10m1":
-double: 1
-float: 1
-float128: 1
-ldouble: 1
-
-Function: "exp10m1_downward":
-double: 1
-float: 1
-float128: 3
-ldouble: 2
-
-Function: "exp10m1_towardzero":
-double: 1
-float: 1
-float128: 3
-ldouble: 2
-
-Function: "exp10m1_upward":
 double: 3
 float: 1
 float128: 3
-ldouble: 2
+ldouble: 4
+
+Function: "exp10m1_downward":
+double: 3
+float: 3
+float128: 6
+ldouble: 6
+
+Function: "exp10m1_towardzero":
+double: 2
+float: 2
+float128: 6
+ldouble: 5
+
+Function: "exp10m1_upward":
+double: 5
+float: 3
+float128: 6
+ldouble: 6
 
 Function: "exp2":
 double: 1
@@ -1200,28 +1200,28 @@ float128: 2
 ldouble: 1
 
 Function: "exp2m1":
-double: 1
+double: 2
 float: 1
-float128: 1
-ldouble: 1
+float128: 2
+ldouble: 3
 
 Function: "exp2m1_downward":
-double: 2
-float: 1
-float128: 2
-ldouble: 3
+double: 3
+float: 3
+float128: 3
+ldouble: 6
 
 Function: "exp2m1_towardzero":
-double: 2
-float: 1
-float128: 2
-ldouble: 3
+double: 3
+float: 2
+float128: 4
+ldouble: 5
 
 Function: "exp2m1_upward":
-double: 1
-float: 1
-float128: 2
-ldouble: 3
+double: 3
+float: 3
+float128: 5
+ldouble: 6
 
 Function: "exp_downward":
 double: 1
@@ -1430,25 +1430,25 @@ Function: "log10p1":
 double: 1
 float: 2
 float128: 3
-ldouble: 2
+ldouble: 4
 
 Function: "log10p1_downward":
 double: 2
 float: 1
-float128: 2
-ldouble: 4
+float128: 4
+ldouble: 8
 
 Function: "log10p1_towardzero":
 double: 2
 float: 1
-float128: 2
-ldouble: 4
+float128: 3
+ldouble: 8
 
 Function: "log10p1_upward":
 double: 2
 float: 2
-float128: 3
-ldouble: 3
+float128: 4
+ldouble: 6
 
 Function: "log1p":
 double: 1
