@@ -92,6 +92,7 @@ do_one_test (int action, int family, bool canon)
 	  printf ("merge unexpectedly succeeded:\n %s\n", formatted);
 	  support_record_failure ();
 	  free (formatted);
+	  break;
 	}
       else
 	return;
