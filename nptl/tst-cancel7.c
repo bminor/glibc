@@ -38,6 +38,8 @@ static char *semfilename;
 
 static sem_t *sem;
 
+static void do_cleanup (void);
+
 static void *
 tf (void *arg)
 {
@@ -108,6 +110,8 @@ do_prepare (int argc, char *argv[])
 
   xwrite (fd, " ", 1);
   xclose (fd);
+
+  atexit (do_cleanup);
 }
 
 
