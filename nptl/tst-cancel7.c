@@ -57,9 +57,6 @@ sl (void)
   fprintf (f, "%lld\n", (long long) getpid ());
   fflush (f);
 
-  if (sem_post (sem) != 0)
-    FAIL_EXIT1 ("sem_post: %m");
-
   struct flock fl =
     {
       .l_type = F_WRLCK,
@@ -69,6 +66,9 @@ sl (void)
     };
   if (fcntl (fileno (f), F_SETLK, &fl) != 0)
     FAIL_EXIT1 ("fcntl (F_SETFL): %m");
+
+  if (sem_post (sem) != 0)
+    FAIL_EXIT1 ("sem_post: %m");
 
   sigset_t ss;
   sigfillset (&ss);
@@ -116,7 +116,7 @@ do_test (void)
 {
   pthread_t th = xpthread_create (NULL, tf, NULL);
 
-  /* Wait to cancel until after the pid is written.  */
+  /* Wait to cancel until after the pid is written and file locked.  */
   if (sem_wait (sem) != 0)
     FAIL_EXIT1 ("sem_wait: %m");
 
