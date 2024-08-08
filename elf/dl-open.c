@@ -486,22 +486,11 @@ _dl_open_relocate_one_object (struct dl_open_args *args, struct r_debug *r,
     _dl_relocate_object (l, l->l_scope, reloc_mode, 0);
 }
 
-
-/* struct dl_init_args and call_dl_init are used to call _dl_init with
-   exception handling disabled.  */
-struct dl_init_args
-{
-  struct link_map *new;
-  int argc;
-  char **argv;
-  char **env;
-};
-
 static void
 call_dl_init (void *closure)
 {
-  struct dl_init_args *args = closure;
-  _dl_init (args->new, args->argc, args->argv, args->env);
+  struct dl_open_args *args = closure;
+  _dl_init (args->map, args->argc, args->argv, args->env);
 }
 
 static void
@@ -793,16 +782,7 @@ dl_open_worker (void *a)
   /* Run the initializer functions of new objects.  Temporarily
      disable the exception handler, so that lazy binding failures are
      fatal.  */
-  {
-    struct dl_init_args init_args =
-      {
-        .new = new,
-        .argc = args->argc,
-        .argv = args->argv,
-        .env = args->env
-      };
-    _dl_catch_exception (NULL, call_dl_init, &init_args);
-  }
+  _dl_catch_exception (NULL, call_dl_init, args);
 
   /* Now we can make the new map available in the global scope.  */
   if (mode & RTLD_GLOBAL)
