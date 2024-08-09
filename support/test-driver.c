@@ -155,6 +155,7 @@ main (int argc, char **argv)
     {
       CMDLINE_OPTIONS
       TEST_DEFAULT_OPTIONS
+      { 0, }
     };
   test_config.options = &options;
 #endif
