@@ -7465,6 +7465,32 @@ if test $libc_cv_cc_loop_to_function = yes; then
 fi
 
 
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for -Wimplicit-fallthrough" >&5
+printf %s "checking for -Wimplicit-fallthrough... " >&6; }
+if test ${libc_cv_cc_wimplicit_fallthrough+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) if { ac_try='${CC-cc} -Werror -Wimplicit-fallthrough -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+then :
+  libc_cv_cc_wimplicit_fallthrough=-Wimplicit-fallthrough
+else case e in #(
+  e) libc_cv_cc_wimplicit_fallthrough= ;;
+esac
+fi
+ ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cc_wimplicit_fallthrough" >&5
+printf "%s\n" "$libc_cv_cc_wimplicit_fallthrough" >&6; }
+config_vars="$config_vars
+cc-option-wimplicit-fallthrough = $libc_cv_cc_wimplicit_fallthrough"
+
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for libgd" >&5
 printf %s "checking for libgd... " >&6; }
 if test "$with_gd" != "no"; then

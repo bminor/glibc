@@ -1468,6 +1468,15 @@ if test $libc_cv_cc_loop_to_function = yes; then
 fi
 AC_SUBST(libc_cv_cc_loop_to_function)
 
+AC_CACHE_CHECK([for -Wimplicit-fallthrough],
+	       libc_cv_cc_wimplicit_fallthrough, [dnl
+LIBC_TRY_CC_OPTION([-Werror -Wimplicit-fallthrough],
+		   [libc_cv_cc_wimplicit_fallthrough=-Wimplicit-fallthrough],
+		   [libc_cv_cc_wimplicit_fallthrough=])
+])
+LIBC_CONFIG_VAR([cc-option-wimplicit-fallthrough],
+		[$libc_cv_cc_wimplicit_fallthrough])
+
 dnl Check whether we have the gd library available.
 AC_MSG_CHECKING(for libgd)
 if test "$with_gd" != "no"; then
