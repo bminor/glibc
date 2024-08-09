@@ -91,6 +91,7 @@ tests := \
   tst-getni1 \
   tst-getni2 \
   tst-if_index-long \
+  tst-if_nameindex \
   tst-inet6_rth \
   tst-network \
   tst-ntoa \
