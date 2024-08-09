@@ -69,6 +69,7 @@ _dl_fini (void)
 
 	  unsigned int i;
 	  struct link_map *l;
+	  struct link_map *proxy_link_map = NULL;
 	  assert (nloaded != 0 || GL(dl_ns)[ns]._ns_loaded == NULL);
 	  for (l = GL(dl_ns)[ns]._ns_loaded, i = 0; l != NULL; l = l->l_next)
 	    /* Do not handle ld.so in secondary namespaces.  */
@@ -84,6 +85,11 @@ _dl_fini (void)
 		   are not dlclose()ed from underneath us.  */
 		++l->l_direct_opencount;
 	      }
+	    else
+	      /* Used below to call la_objclose for the ld.so proxy
+		 link map.  */
+	      proxy_link_map = l;
+
 	  assert (ns != LM_ID_BASE || i == nloaded);
 	  assert (ns == LM_ID_BASE || i == nloaded || i == nloaded - 1);
 	  unsigned int nmaps = i;
@@ -121,6 +127,9 @@ _dl_fini (void)
 	      /* Correct the previous increment.  */
 	      --l->l_direct_opencount;
 	    }
+
+	  if (proxy_link_map != NULL)
+	    _dl_audit_objclose (proxy_link_map);
 
 #ifdef SHARED
 	  _dl_audit_activity_nsid (ns, LA_ACT_CONSISTENT);

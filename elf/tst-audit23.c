@@ -236,13 +236,26 @@ do_test (int argc, char *argv[])
 	}
     }
 
+  Lmid_t lmid_other = LM_ID_NEWLM;
+  unsigned int other_namespace_count = 0;
   for (size_t i = 0; i < nobjs; i++)
     {
-      /* This subtest currently does not pass because of bug 32065.  */
-      if (! (endswith (objs[i].lname, LD_SO) && objs[i].lmid != LM_ID_BASE))
-	TEST_COMPARE (objs[i].closed, true);
+      if (objs[i].lmid != LM_ID_BASE)
+	{
+	  if (lmid_other == LM_ID_NEWLM)
+	    lmid_other = objs[i].lmid;
+	  TEST_COMPARE (objs[i].lmid, lmid_other);
+	  ++other_namespace_count;
+	  if (!(endswith (objs[i].lname, "/" LIBC_SO)
+		|| endswith (objs[i].lname, "/" LD_SO)))
+	    FAIL ("unexpected object in secondary namespace: %s",
+		  objs[i].lname);
+	}
+      TEST_COMPARE (objs[i].closed, true);
       free (objs[i].lname);
     }
+  /* Both libc.so and ld.so should be present.  */
+  TEST_COMPARE (other_namespace_count, 2);
 
   /* la_activity(LA_ACT_CONSISTENT) should be the last callback received.
      Since only one link map may be not-CONSISTENT at a time, this also
