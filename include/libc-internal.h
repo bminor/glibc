@@ -53,6 +53,9 @@ extern __typeof (__profile_frequency) __profile_frequency attribute_hidden;
    is not for an audit module, not loaded via dlmopen, and not loaded
    via static dlopen either).  */
 extern _Bool __libc_initial attribute_hidden;
+#else
+/* The static libc is always the initial namespace.  */
+# define __libc_initial ((_Bool) 1)
 #endif
 
 #endif /* _LIBC_INTERNAL  */
