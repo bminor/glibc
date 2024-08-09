@@ -929,6 +929,37 @@ _dl_process_pt_gnu_property (struct link_map *l, int fd, const ElfW(Phdr) *ph)
     }
 }
 
+static void
+_dl_notify_new_object (int mode, Lmid_t nsid, struct link_map *l)
+{
+  /* Signal that we are going to add new objects.  */
+  struct r_debug *r = _dl_debug_update (nsid);
+  if (r->r_state == RT_CONSISTENT)
+    {
+#ifdef SHARED
+      /* Auditing checkpoint: we are going to add new objects.  Since this
+         is called after _dl_add_to_namespace_list the namespace is guaranteed
+	 to not be empty.  */
+      if ((mode & __RTLD_AUDIT) == 0)
+	_dl_audit_activity_nsid (nsid, LA_ACT_ADD);
+#endif
+
+      /* Notify the debugger we have added some objects.  We need to
+	 call _dl_debug_initialize in a static program in case dynamic
+	 linking has not been used before.  */
+      r->r_state = RT_ADD;
+      _dl_debug_state ();
+      LIBC_PROBE (map_start, 2, nsid, r);
+    }
+  else
+    assert (r->r_state == RT_ADD);
+
+#ifdef SHARED
+  /* Auditing checkpoint: we have a new object.  */
+  if (!GL(dl_ns)[l->l_ns]._ns_loaded->l_auditing)
+    _dl_audit_objopen (l, nsid);
+#endif
+}
 
 /* Map in the shared object NAME, actually located in REALNAME, and already
    opened on FD.  */
@@ -1028,6 +1059,8 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 
       /* Add the map for the mirrored object to the object list.  */
       _dl_add_to_namespace_list (l, nsid);
+
+      _dl_notify_new_object (mode, nsid, l);
 
       return l;
     }
@@ -1487,33 +1520,7 @@ cannot enable executable stack as shared object requires");
   if (mode & __RTLD_SPROF)
     return l;
 
-  /* Signal that we are going to add new objects.  */
-  struct r_debug *r = _dl_debug_update (nsid);
-  if (r->r_state == RT_CONSISTENT)
-    {
-#ifdef SHARED
-      /* Auditing checkpoint: we are going to add new objects.  Since this
-         is called after _dl_add_to_namespace_list the namespace is guaranteed
-	 to not be empty.  */
-      if ((mode & __RTLD_AUDIT) == 0)
-	_dl_audit_activity_nsid (nsid, LA_ACT_ADD);
-#endif
-
-      /* Notify the debugger we have added some objects.  We need to
-	 call _dl_debug_initialize in a static program in case dynamic
-	 linking has not been used before.  */
-      r->r_state = RT_ADD;
-      _dl_debug_state ();
-      LIBC_PROBE (map_start, 2, nsid, r);
-    }
-  else
-    assert (r->r_state == RT_ADD);
-
-#ifdef SHARED
-  /* Auditing checkpoint: we have a new object.  */
-  if (!GL(dl_ns)[l->l_ns]._ns_loaded->l_auditing)
-    _dl_audit_objopen (l, nsid);
-#endif
+  _dl_notify_new_object (mode, nsid, l);
 
   return l;
 }
