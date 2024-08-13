@@ -124,13 +124,13 @@ L(page_cross):
 	VPCMPNE	%VMM(1), %VMM(0), %k1
 	VPTEST	%VMM(1), %VMM(1), %k0{%k1}
 	KMOV	%k0, %VRAX
-# ifdef USE_AS_WCSCHR
+	sar	%cl, %VRAX
+#ifdef USE_AS_WCSCHR
 	sub	$VEC_MATCH_MASK, %VRAX
-# else
+#else
 	inc	%VRAX
-# endif
+#endif
 	/* Ignore number of character for alignment adjustment.  */
-	shr	%cl, %VRAX
 	jz	L(align_more)
 
 	bsf	%VRAX, %VRAX
