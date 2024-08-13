@@ -2525,6 +2525,26 @@ store the result in which case @code{-1} is returned.  This was
 changed in order to comply with the @w{ISO C99} standard.
 @end deftypefun
 
+@deftypefun dprintf (int @var{fd}, @var{template}, ...)
+@standards{POSIX, stdio.h}
+@safety{@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+This function formats its arguments according to @var{template} and
+writes the result to the file descriptor @var{fd}, using the
+@code{write} function.  It returns the number of bytes written, or a
+negative value if there was an error.  In the error case, @code{errno}
+is set appropriately.  The possible @code{errno} values depend on the
+type of the file descriptor @var{fd}, in addition to the general
+@code{printf} error codes.
+
+The number of calls to @code{write} is unspecified, and some @code{write}
+calls may have happened even if @code{dprintf} returns with an error.
+
+@strong{Portability Note:} POSIX does not require that this function is
+async-signal-safe, and @theglibc{} implementation is not.  However, some
+other systems offer this function as an async-signal-safe alternative to
+@code{fprintf}.  @xref{POSIX Safety Concepts}.
+@end deftypefun
+
 @node Dynamic Output
 @subsection Dynamically Allocating Formatted Output
 
@@ -2736,6 +2756,13 @@ variable argument list specified directly as for @code{vprintf}.
 The @code{obstack_vprintf} function is the equivalent of
 @code{obstack_printf} with the variable argument list specified directly
 as for @code{vprintf}.
+@end deftypefun
+
+@deftypefun int vdprintf (int @var{fd}, const char *@var{template}, va_list @var{ap})
+@standards{POSIX, stdio.h}
+@safety{@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+The @code{vdprintf} is the equivalent of @code{dprintf}, but processes
+an argument list.
 @end deftypefun
 
 Here's an example showing how you might use @code{vfprintf}.  This is a
