@@ -255,6 +255,69 @@ check1 (void)
     check_result (impl, s, c, exp_result);
 }
 
+static void
+check2 (void)
+{
+  CHAR *s = (CHAR *) (buf1 + getpagesize () - 4 * sizeof (CHAR));
+  CHAR *s_begin = (CHAR *) (buf1 + getpagesize () - 64);
+#ifndef USE_FOR_STRCHRNUL
+  CHAR *exp_result = NULL;
+#else
+  CHAR *exp_result = s + 1;
+#endif
+  CHAR val = 0x12;
+  for (; s_begin != s; ++s_begin)
+    *s_begin = val;
+
+  s[0] = val + 1;
+  s[1] = 0;
+  s[2] = val + 1;
+  s[3] = val + 1;
+
+  {
+    FOR_EACH_IMPL (impl, 0)
+      check_result (impl, s, val, exp_result);
+  }
+  s[3] = val;
+  {
+    FOR_EACH_IMPL (impl, 0)
+      check_result (impl, s, val, exp_result);
+  }
+  exp_result = s;
+  s[0] = val;
+  {
+    FOR_EACH_IMPL (impl, 0)
+      check_result (impl, s, val, exp_result);
+  }
+
+  s[3] = val + 1;
+  {
+    FOR_EACH_IMPL (impl, 0)
+      check_result (impl, s, val, exp_result);
+  }
+
+  s[0] = val + 1;
+  s[1] = val + 1;
+  s[2] = val + 1;
+  s[3] = val + 1;
+  s[4] = val;
+  exp_result = s + 4;
+  {
+    FOR_EACH_IMPL (impl, 0)
+      check_result (impl, s, val, exp_result);
+  }
+  s[4] = 0;
+#ifndef USE_FOR_STRCHRNUL
+  exp_result = NULL;
+#else
+  exp_result = s + 4;
+#endif
+  {
+    FOR_EACH_IMPL (impl, 0)
+      check_result (impl, s, val, exp_result);
+  }
+}
+
 int
 test_main (void)
 {
@@ -263,7 +326,7 @@ test_main (void)
   test_init ();
 
   check1 ();
-
+  check2 ();
   printf ("%20s", "");
   FOR_EACH_IMPL (impl, 0)
     printf ("\t%s", impl->name);
