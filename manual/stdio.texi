@@ -2356,6 +2356,29 @@ the easiest way to make sure you have all the right prototypes is to
 just include @file{stdio.h}.
 @pindex stdio.h
 
+The @code{printf} family shares the error codes listed below.
+Individual functions may report additional @code{errno} values if they
+fail.
+
+@table @code
+@item EOVERFLOW
+The number of written bytes would have exceeded @code{INT_MAX}, and thus
+could not be represented in the return type @code{int}.
+
+@item ENOMEM
+The function could not allocate memory during processing.  Long argument
+lists and certain floating point conversions may require memory
+allocation, as does initialization of an output stream upon first use.
+
+@item EILSEQ
+POSIX specifies this error code should be used if a wide character is
+encountered that does not have a matching valid character.  @Theglibc{}
+always performs transliteration, using a replacement character if
+necessary, so this error condition cannot occur on output.  However,
+@theglibc{} uses @code{EILSEQ} to indicate that an input character
+sequence (wide or multi-byte) could not be converted successfully.
+@end table
+
 @deftypefun int printf (const char *@var{template}, @dots{})
 @standards{ISO, stdio.h}
 @safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acsmem{} @aculock{} @acucorrupt{}}}
