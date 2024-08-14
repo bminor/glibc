@@ -577,8 +577,8 @@ extern void _IO_old_init (FILE *fp, int flags) __THROW;
        ((__fp)->_wide_data->_IO_write_base \
 	= (__fp)->_wide_data->_IO_write_ptr = __p, \
 	(__fp)->_wide_data->_IO_write_end = (__ep))
-#define _IO_have_backup(fp) ((fp)->_IO_save_base != NULL)
-#define _IO_have_wbackup(fp) ((fp)->_wide_data->_IO_save_base != NULL)
+#define _IO_have_backup(fp) ((fp)->_IO_backup_base != NULL)
+#define _IO_have_wbackup(fp) ((fp)->_wide_data->_IO_backup_base != NULL)
 #define _IO_in_backup(fp) ((fp)->_flags & _IO_IN_BACKUP)
 #define _IO_have_markers(fp) ((fp)->_markers != NULL)
 #define _IO_blen(fp) ((fp)->_IO_buf_end - (fp)->_IO_buf_base)
