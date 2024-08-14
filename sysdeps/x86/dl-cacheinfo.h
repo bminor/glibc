@@ -1041,18 +1041,42 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
        slightly better than ERMS.  */
     rep_stosb_threshold = SIZE_MAX;
 
+  /*
+     For memset, the non-temporal implementation is only accessed through the
+     stosb code. ie:
+     ```
+     if (size >= rep_stosb_thresh)
+     {
+    	if (size >= non_temporal_thresh)
+     {
+     do_non_temporal ();
+     }
+    	do_stosb ();
+     }
+     do_normal_vec_loop ();
+     ```
+     So if we prefer non-temporal, set `rep_stosb_thresh = non_temporal_thresh`
+     to enable the implementation. If `rep_stosb_thresh = non_temporal_thresh`,
+    `rep stosb` will never be used.
+   */
+  TUNABLE_SET_WITH_BOUNDS (x86_memset_non_temporal_threshold,
+			   memset_non_temporal_threshold,
+			   minimum_non_temporal_threshold, SIZE_MAX);
+  /* Do `rep_stosb_thresh = non_temporal_thresh` after setting/getting the
+     final value of `x86_memset_non_temporal_threshold`. In some cases this can
+     be a matter of correctness.  */
+  if (CPU_FEATURES_ARCH_P (cpu_features, Avoid_STOSB))
+    rep_stosb_threshold
+	= TUNABLE_GET (x86_memset_non_temporal_threshold, long int, NULL);
+  TUNABLE_SET_WITH_BOUNDS (x86_rep_stosb_threshold, rep_stosb_threshold, 1,
+			   SIZE_MAX);
   TUNABLE_SET_WITH_BOUNDS (x86_data_cache_size, data, 0, SIZE_MAX);
   TUNABLE_SET_WITH_BOUNDS (x86_shared_cache_size, shared, 0, SIZE_MAX);
   TUNABLE_SET_WITH_BOUNDS (x86_non_temporal_threshold, non_temporal_threshold,
 			   minimum_non_temporal_threshold,
 			   maximum_non_temporal_threshold);
-  TUNABLE_SET_WITH_BOUNDS (x86_memset_non_temporal_threshold,
-			   memset_non_temporal_threshold,
-			   minimum_non_temporal_threshold, SIZE_MAX);
   TUNABLE_SET_WITH_BOUNDS (x86_rep_movsb_threshold, rep_movsb_threshold,
 			   minimum_rep_movsb_threshold, SIZE_MAX);
-  TUNABLE_SET_WITH_BOUNDS (x86_rep_stosb_threshold, rep_stosb_threshold, 1,
-			   SIZE_MAX);
 
   unsigned long int rep_movsb_stop_threshold;
   /* Setting the upper bound of ERMS to the computed value of

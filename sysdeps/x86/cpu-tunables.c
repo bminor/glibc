@@ -193,6 +193,8 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
 						11);
 	      CHECK_GLIBC_IFUNC_PREFERRED_BOTH (n, cpu_features, Prefer_FSRM,
 						11);
+	      CHECK_GLIBC_IFUNC_PREFERRED_BOTH (n, cpu_features, Avoid_STOSB,
+						11);
 	      CHECK_GLIBC_IFUNC_PREFERRED_NEED_BOTH (n, cpu_features,
 						     Slow_SSE4_2,
 						     SSE4_2,

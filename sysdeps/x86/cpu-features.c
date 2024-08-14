@@ -1119,6 +1119,10 @@ https://www.intel.com/content/www/us/en/support/articles/000059422/processors.ht
   if (CPU_FEATURES_CPU_P (cpu_features, CMOV))
     cpu_features->preferred[index_arch_I686] |= bit_arch_I686;
 
+  /* No ERMS, we want to avoid stosb for memset.  */
+  if (!CPU_FEATURE_USABLE_P (cpu_features, ERMS))
+    cpu_features->preferred[index_arch_Avoid_STOSB] |= bit_arch_Avoid_STOSB;
+
 #if !HAS_CPUID
 no_cpuid:
 #endif

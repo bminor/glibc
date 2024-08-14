@@ -46,6 +46,13 @@ extern __typeof (REDIRECT_NAME) OPTIMIZE (sse2_unaligned)
 extern __typeof (REDIRECT_NAME) OPTIMIZE (sse2_unaligned_erms)
   attribute_hidden;
 
+static inline int
+prefer_erms_nt_impl (const struct cpu_features *cpu_features)
+{
+  return CPU_FEATURE_USABLE_P (cpu_features, ERMS)
+	 || !CPU_FEATURES_ARCH_P (cpu_features, Avoid_Non_Temporal_Memset);
+}
+
 static inline void *
 IFUNC_SELECTOR (void)
 {
@@ -61,7 +68,7 @@ IFUNC_SELECTOR (void)
 	  && X86_ISA_CPU_FEATURE_USABLE_P (cpu_features, AVX512BW)
 	  && X86_ISA_CPU_FEATURE_USABLE_P (cpu_features, BMI2))
 	{
-	  if (CPU_FEATURE_USABLE_P (cpu_features, ERMS))
+	  if (prefer_erms_nt_impl (cpu_features))
 	    return OPTIMIZE (avx512_unaligned_erms);
 
 	  return OPTIMIZE (avx512_unaligned);
@@ -76,7 +83,7 @@ IFUNC_SELECTOR (void)
 	  && X86_ISA_CPU_FEATURE_USABLE_P (cpu_features, AVX512BW)
 	  && X86_ISA_CPU_FEATURE_USABLE_P (cpu_features, BMI2))
 	{
-	  if (CPU_FEATURE_USABLE_P (cpu_features, ERMS))
+	  if (prefer_erms_nt_impl (cpu_features))
 	    return OPTIMIZE (evex_unaligned_erms);
 
 	  return OPTIMIZE (evex_unaligned);
@@ -84,7 +91,7 @@ IFUNC_SELECTOR (void)
 
       if (CPU_FEATURE_USABLE_P (cpu_features, RTM))
 	{
-	  if (CPU_FEATURE_USABLE_P (cpu_features, ERMS))
+	  if (prefer_erms_nt_impl (cpu_features))
 	    return OPTIMIZE (avx2_unaligned_erms_rtm);
 
 	  return OPTIMIZE (avx2_unaligned_rtm);
@@ -93,14 +100,15 @@ IFUNC_SELECTOR (void)
       if (X86_ISA_CPU_FEATURES_ARCH_P (cpu_features,
 				       Prefer_No_VZEROUPPER, !))
 	{
-	  if (CPU_FEATURE_USABLE_P (cpu_features, ERMS))
+	  if (prefer_erms_nt_impl (cpu_features))
 	    return OPTIMIZE (avx2_unaligned_erms);
 
 	  return OPTIMIZE (avx2_unaligned);
 	}
     }
 
-  if (CPU_FEATURE_USABLE_P (cpu_features, ERMS))
+  if (CPU_FEATURE_USABLE_P (cpu_features, ERMS)
+      || !CPU_FEATURES_ARCH_P (cpu_features, Avoid_Non_Temporal_Memset))
     return OPTIMIZE (sse2_unaligned_erms);
 
   return OPTIMIZE (sse2_unaligned);
