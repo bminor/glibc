@@ -1,70 +1,72 @@
-/* Test for ungetc bugs.  */
+/* Test for ungetc bugs.
+   Copyright (C) 1996-2024 Free Software Foundation, Inc.
+   Copyright The GNU Toolchain Authors.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
+#include <support/check.h>
+#include <support/support.h>
+#include <support/temp_file.h>
+#include <support/xstdio.h>
+#include <support/xunistd.h>
 
-#undef assert
-#define assert(x) \
-  if (!(x)) \
-    { \
-      fputs ("test failed: " #x "\n", stderr); \
-      retval = 1; \
-      goto the_end; \
-    }
-
-int
-main (int argc, char *argv[])
+static int
+do_test (void)
 {
-  char name[] = "/tmp/tst-ungetc.XXXXXX";
+  char *name = NULL;
   FILE *fp = NULL;
-  int retval = 0;
   int c;
   char buffer[64];
 
-  int fd = mkstemp (name);
+  int fd = create_temp_file ("tst-ungetc.", &name);
   if (fd == -1)
-    {
-      printf ("mkstemp failed: %m\n");
-      return 1;
-    }
-  close (fd);
-  fp = fopen (name, "w");
-  assert (fp != NULL)
+    FAIL_EXIT1 ("cannot create temporary file: %m");
+  xclose (fd);
+
+  fp = xfopen (name, "w");
   fputs ("bla", fp);
-  fclose (fp);
-  fp = NULL;
+  xfclose (fp);
 
-  fp = fopen (name, "r");
-  assert (fp != NULL);
-  assert (ungetc ('z', fp) == 'z');
-  assert (getc (fp) == 'z');
-  assert (getc (fp) == 'b');
-  assert (getc (fp) == 'l');
-  assert (ungetc ('m', fp) == 'm');
-  assert (getc (fp) == 'm');
-  assert ((c = getc (fp)) == 'a');
-  assert (getc (fp) == EOF);
-  assert (ungetc (c, fp) == c);
-  assert (feof (fp) == 0);
-  assert (getc (fp) == c);
-  assert (getc (fp) == EOF);
-  fclose (fp);
-  fp = NULL;
+  fp = xfopen (name, "r");
+  TEST_VERIFY_EXIT (ungetc ('z', fp) == 'z');
+  TEST_VERIFY_EXIT (getc (fp) == 'z');
+  TEST_VERIFY_EXIT (getc (fp) == 'b');
+  TEST_VERIFY_EXIT (getc (fp) == 'l');
+  TEST_VERIFY_EXIT (ungetc ('m', fp) == 'm');
+  TEST_VERIFY_EXIT (getc (fp) == 'm');
+  TEST_VERIFY_EXIT ((c = getc (fp)) == 'a');
+  TEST_VERIFY_EXIT (getc (fp) == EOF);
+  TEST_VERIFY_EXIT (ungetc (c, fp) == c);
+  TEST_VERIFY_EXIT (feof (fp) == 0);
+  TEST_VERIFY_EXIT (getc (fp) == c);
+  TEST_VERIFY_EXIT (getc (fp) == EOF);
+  xfclose (fp);
 
-  fp = fopen (name, "r");
-  assert (fp != NULL);
-  assert (getc (fp) == 'b');
-  assert (getc (fp) == 'l');
-  assert (ungetc ('b', fp) == 'b');
-  assert (fread (buffer, 1, 64, fp) == 2);
-  assert (buffer[0] == 'b');
-  assert (buffer[1] == 'a');
+  fp = xfopen (name, "r");
+  TEST_VERIFY_EXIT (getc (fp) == 'b');
+  TEST_VERIFY_EXIT (getc (fp) == 'l');
+  TEST_VERIFY_EXIT (ungetc ('b', fp) == 'b');
+  TEST_VERIFY_EXIT (fread (buffer, 1, 64, fp) == 2);
+  TEST_VERIFY_EXIT (buffer[0] == 'b');
+  TEST_VERIFY_EXIT (buffer[1] == 'a');
+  xfclose (fp);
 
-the_end:
-  if (fp != NULL)
-    fclose (fp);
-  unlink (name);
-
-  return retval;
+  return 0;
 }
+
+#include <support/test-driver.c>
