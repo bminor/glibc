@@ -1467,11 +1467,9 @@ program; usually @code{ungetc} is used only to unread a character that
 was just read from the same stream.  @Theglibc{} supports this
 even on files opened in binary mode, but other systems might not.
 
-@Theglibc{} only supports one character of pushback---in other
-words, it does not work to call @code{ungetc} twice without doing input
-in between.  Other systems might let you push back multiple characters;
-then reading from the stream retrieves the characters in the reverse
-order that they were pushed.
+@Theglibc{} supports pushing back multiple characters; subsequently
+reading from the stream retrieves the characters in the reverse order
+that they were pushed.
 
 Pushing back characters doesn't alter the file; only the internal
 buffering for the stream is affected.  If a file positioning function

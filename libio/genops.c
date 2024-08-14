@@ -662,7 +662,7 @@ _IO_sputbackc (FILE *fp, int c)
 {
   int result;
 
-  if (fp->_IO_read_ptr > fp->_IO_read_base
+  if (fp->_IO_read_ptr > fp->_IO_read_base && !_IO_in_backup (fp)
       && (unsigned char)fp->_IO_read_ptr[-1] == (unsigned char)c)
     {
       fp->_IO_read_ptr--;
