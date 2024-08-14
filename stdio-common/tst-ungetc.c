@@ -48,6 +48,8 @@ do_test (void)
   TEST_VERIFY_EXIT (getc (fp) == 'b');
   TEST_VERIFY_EXIT (getc (fp) == 'l');
   TEST_VERIFY_EXIT (ungetc ('m', fp) == 'm');
+  TEST_VERIFY_EXIT (ungetc ('n', fp) == 'n');
+  TEST_VERIFY_EXIT (getc (fp) == 'n');
   TEST_VERIFY_EXIT (getc (fp) == 'm');
   TEST_VERIFY_EXIT ((c = getc (fp)) == 'a');
   TEST_VERIFY_EXIT (getc (fp) == EOF);
