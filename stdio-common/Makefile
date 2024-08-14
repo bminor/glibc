@@ -257,6 +257,7 @@ tests := \
   tst-swscanf \
   tst-tmpnam \
   tst-ungetc \
+  tst-ungetc-leak \
   tst-unlockedio \
   tst-vfprintf-mbs-prec \
   tst-vfprintf-user-type \
@@ -301,6 +302,7 @@ tests-special += \
   $(objpfx)tst-printfsz-islongdouble.out \
   $(objpfx)tst-setvbuf1-cmp.out \
   $(objpfx)tst-unbputc.out \
+  $(objpfx)tst-ungetc-leak-mem.out \
   $(objpfx)tst-vfprintf-width-prec-mem.out \
   # tests-special
 
@@ -315,6 +317,8 @@ generated += \
   tst-printf-fp-leak-mem.out \
   tst-printf-fp-leak.mtrace \
   tst-scanf-bz27650.mtrace \
+  tst-ungetc-leak-mem.out \
+  tst-ungetc-leak.mtrace \
   tst-vfprintf-width-prec-mem.out \
   tst-vfprintf-width-prec.mtrace \
   # generated
@@ -406,6 +410,9 @@ tst-printf-fp-leak-ENV = \
   LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
 tst-scanf-bz27650-ENV = \
   MALLOC_TRACE=$(objpfx)tst-scanf-bz27650.mtrace \
+  LD_PRELOAD=$(common-objpfx)malloc/libc_malloc_debug.so
+tst-ungetc-leak-ENV = \
+  MALLOC_TRACE=$(objpfx)tst-ungetc-leak.mtrace \
   LD_PRELOAD=$(common-objpfx)malloc/libc_malloc_debug.so
 
 $(objpfx)tst-unbputc.out: tst-unbputc.sh $(objpfx)tst-unbputc
