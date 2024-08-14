@@ -21,6 +21,7 @@
    declared in the headers.  */
 #define _LIBC_TEST 1
 #define __STDC_WANT_IEC_60559_TYPES_EXT__
+#include <errno.h>
 #include <fenv.h>
 #include <float.h>
 #include <math.h>
@@ -205,7 +206,9 @@ struct test {
 #define GEN_ONE_TEST(FSUF, FTYPE, FTOSTR, LSUF, CSUF)		\
 {								\
   feclearexcept (FE_ALL_EXCEPT);				\
+  errno = 0;							\
   FTYPE f = STRTO (FSUF) (s, NULL);				\
+  int new_errno = errno;					\
   if (f != expected->FSUF					\
       || (copysign ## CSUF) (1.0 ## LSUF, f)			\
 	 != (copysign ## CSUF) (1.0 ## LSUF, expected->FSUF))	\
@@ -253,6 +256,14 @@ struct test {
 	      else						\
 		printf ("ignoring this exception error\n");	\
 	    }							\
+	}							\
+      if (overflow->FSUF && new_errno != ERANGE)		\
+	{							\
+	  printf (FNPFXS "to" #FSUF				\
+		  " (" STRM ") left errno == %d,"		\
+		  " not %d (ERANGE)\n",				\
+		  s, new_errno, ERANGE);			\
+	  result = 1;						\
 	}							\
     }								\
 }
