@@ -758,6 +758,12 @@ init_cpu_features (struct cpu_features *cpu_features)
   unsigned int stepping = 0;
   enum cpu_features_kind kind;
 
+  /* Default is avoid non-temporal memset for non Intel/AMD hardware. This is,
+     as of writing this, we only have benchmarks indicatings it profitability
+     on Intel/AMD.  */
+  cpu_features->preferred[index_arch_Avoid_Non_Temporal_Memset]
+      |= bit_arch_Avoid_Non_Temporal_Memset;
+
   cpu_features->cachesize_non_temporal_divisor = 4;
 #if !HAS_CPUID
   if (__get_cpuid_max (0, 0) == 0)
@@ -782,6 +788,11 @@ init_cpu_features (struct cpu_features *cpu_features)
       get_extended_indices (cpu_features);
 
       update_active (cpu_features);
+
+      /* Benchmarks indicate non-temporal memset can be profitable on Intel
+	hardware.  */
+      cpu_features->preferred[index_arch_Avoid_Non_Temporal_Memset]
+	  &= ~bit_arch_Avoid_Non_Temporal_Memset;
 
       if (family == 0x06)
 	{
@@ -992,6 +1003,11 @@ https://www.intel.com/content/www/us/en/support/articles/000059422/processors.ht
       update_active (cpu_features);
 
       ecx = cpu_features->features[CPUID_INDEX_1].cpuid.ecx;
+
+      /* Benchmarks indicate non-temporal memset can be profitable on AMD
+	hardware.  */
+      cpu_features->preferred[index_arch_Avoid_Non_Temporal_Memset]
+	  &= ~bit_arch_Avoid_Non_Temporal_Memset;
 
       if (CPU_FEATURE_USABLE_P (cpu_features, AVX))
 	{

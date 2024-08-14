@@ -986,14 +986,6 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
   if (CPU_FEATURE_USABLE_P (cpu_features, FSRM))
     rep_movsb_threshold = 2112;
 
-  /* Non-temporal stores are more performant on Intel and AMD hardware above
-     non_temporal_threshold. Enable this for both Intel and AMD hardware. */
-  unsigned long int memset_non_temporal_threshold = SIZE_MAX;
-  if (!CPU_FEATURES_ARCH_P (cpu_features, Avoid_Non_Temporal_Memset)
-      && (cpu_features->basic.kind == arch_kind_intel
-	  || cpu_features->basic.kind == arch_kind_amd))
-    memset_non_temporal_threshold = non_temporal_threshold;
-
   /* For AMD CPUs that support ERMS (Zen3+), REP MOVSB is in a lot of
      cases slower than the vectorized path (and for some alignments,
      it is really slow, check BZ #30994).  */
@@ -1014,6 +1006,13 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
   /* NB: Ignore the default value 0.  */
   if (tunable_size != 0)
     shared = tunable_size;
+
+  /* Non-temporal stores are more performant on some hardware above
+     non_temporal_threshold. Currently Prefer_Non_Temporal is set for for both
+     Intel and AMD hardware. */
+  unsigned long int memset_non_temporal_threshold = SIZE_MAX;
+  if (!CPU_FEATURES_ARCH_P (cpu_features, Avoid_Non_Temporal_Memset))
+    memset_non_temporal_threshold = non_temporal_threshold;
 
   tunable_size = TUNABLE_GET (x86_non_temporal_threshold, long int, NULL);
   if (tunable_size > minimum_non_temporal_threshold
