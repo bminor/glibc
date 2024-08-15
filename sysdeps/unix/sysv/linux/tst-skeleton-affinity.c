@@ -157,7 +157,7 @@ test_size (const struct conf *conf, size_t size)
   if (setaffinity (kernel_size, initial_set) < 0)
     {
       printf ("error: size %zu: setaffinity: %m\n", size);
-      return true;
+      return false;
     }
 
   /* Use one-CPU set to test switching between CPUs.  */
