@@ -62,7 +62,7 @@ check_link (struct test_data step)
   char *output;
 
   output = xasprintf ("%s/%s", support_complocaledir_prefix, step.output);
-  xstat (output, &locale);
+  xstat64 (output, &locale);
   free (output);
   TEST_COMPARE (locale.st_nlink, step.st_nlink);
 }

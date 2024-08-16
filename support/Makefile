@@ -42,14 +42,12 @@ libsupport-routines = \
   resolv_test \
   set_fortify_handler \
   support-open-dev-null-range \
-  support-xfstat \
-  support-xfstat-time64 \
-  support-xstat \
-  support-xstat-time64 \
   support_become_root \
   support_can_chroot \
   support_capture_subprocess \
   support_capture_subprocess_check \
+  support_check_stat_fd \
+  support_check_stat_path \
   support_chroot \
   support_copy_file \
   support_copy_file_range \
@@ -135,8 +133,6 @@ libsupport-routines = \
   xgetsockname \
   xlisten \
   xlseek \
-  xlstat \
-  xlstat-time64 \
   xmalloc \
   xmemstream \
   xmkdir \

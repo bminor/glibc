@@ -155,7 +155,7 @@ do_test (void)
   tmp_sh = xasprintf ("%s/tmp_sh", tmp_dir);
   add_temp_file (tmp_sh);
   fd_out = xopen (symlink_name, O_CREAT | O_WRONLY, 0);
-  xstat ("/bin/sh", &st);
+  xstat64 ("/bin/sh", &st);
   fd = xopen ("/bin/sh", O_RDONLY, 0);
   xcopy_file_range (fd, 0, fd_out, 0, st.st_size, 0);
   xfchmod (fd_out, 0700);

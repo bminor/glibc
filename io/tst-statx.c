@@ -78,7 +78,7 @@ both_implementations_tests (statx_function impl, const char *path, int fd)
     struct statx stx = { 0, };
     TEST_COMPARE (statx (fd, "", AT_EMPTY_PATH, STATX_BASIC_STATS, &stx), 0);
     struct stat64 st;
-    xfstat (fd, &st);
+    xfstat64 (fd, &st);
     TEST_COMPARE (stx.stx_mode, st.st_mode);
     TEST_COMPARE (stx.stx_dev_major, major (st.st_dev));
     TEST_COMPARE (stx.stx_dev_minor, minor (st.st_dev));
@@ -88,7 +88,7 @@ both_implementations_tests (statx_function impl, const char *path, int fd)
     TEST_COMPARE (statx (AT_FDCWD, "/dev/null", 0, STATX_BASIC_STATS, &stx),
                   0);
     struct stat64 st;
-    xstat ("/dev/null", &st);
+    xstat64 ("/dev/null", &st);
     TEST_COMPARE (stx.stx_mode, st.st_mode);
     TEST_COMPARE (stx.stx_dev_major, major (st.st_dev));
     TEST_COMPARE (stx.stx_dev_minor, minor (st.st_dev));

@@ -85,7 +85,7 @@ do_test (void)
   support_capture_subprocess_check (&result, "execv", 0, sc_allow_none);
   support_capture_subprocess_free (&result);
 
-  xstat (path, &fs);
+  xstat64 (path, &fs);
 
   size = fs.st_size;
   /* Run 3 tests, each truncating aux-cache shorter and shorter.  */

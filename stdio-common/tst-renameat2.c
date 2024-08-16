@@ -82,7 +82,7 @@ static void
 check_size (const char *path, off64_t expected_size)
 {
   struct stat64 st;
-  xstat (path, &st);
+  xstat64 (path, &st);
   if (st.st_size != expected_size)
     FAIL_EXIT1 ("file \"%s\": expected size %lld, actual size %lld",
                 path, (unsigned long long int) expected_size,

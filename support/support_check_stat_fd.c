@@ -1,5 +1,5 @@
-/* 64-bit time_t stat with error checking.
-   Copyright (C) 2021-2024 Free Software Foundation, Inc.
+/* Error checking for descriptor-based stat functions.
+   Copyright (C) 2024 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,17 +16,12 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* NB: Non-standard file name to avoid sysdeps override for xstat.  */
-
 #include <support/check.h>
 #include <support/xunistd.h>
-#include <sys/stat.h>
 
-#if __TIMESIZE != 64
 void
-xstat_time64 (const char *path, struct __stat64_t64 *result)
+support_check_stat_fd (const char *name, int fd, int result)
 {
-  if (__stat64_time64 (path, result) != 0)
-    FAIL_EXIT1 ("__stat64_time64 (\"%s\"): %m", path);
+  if (result != 0)
+    FAIL_EXIT1 ("%s (%d): %m", name, fd);
 }
-#endif

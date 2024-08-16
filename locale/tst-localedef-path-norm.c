@@ -84,7 +84,7 @@ run_test (void *closure)
   support_capture_subprocess_free (&result);
 
   /* Verify path is present and is a directory.  */
-  xstat (path, &fs);
+  xstat64 (path, &fs);
   if (!S_ISDIR (fs.st_mode))
     {
       support_record_failure ();

@@ -169,7 +169,7 @@ do_test (void)
 
   {
     struct stat64 st;
-    xstat (_PATH_BSHELL, &st);
+    xstat64 (_PATH_BSHELL, &st);
     mode_t mode = st.st_mode;
     xchmod (_PATH_BSHELL, mode & ~(S_IXUSR | S_IXGRP | S_IXOTH));
 
