@@ -18,34 +18,32 @@
 
 #include <support/check.h>
 #include <support/xunistd.h>
+#include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/time.h>
-
-#ifndef struct_stat
-# define struct_stat struct stat64
-#endif
 
 static int
 test_lutimes_helper (const char *testfile, int fd, const char *testlink,
                      const struct timeval *tv)
 {
-  struct_stat stfile_orig;
-  xlstat (testfile, &stfile_orig);
+  struct statx stfile_orig;
+  xstatx (AT_FDCWD, testfile, AT_SYMLINK_NOFOLLOW, STATX_BASIC_STATS,
+          &stfile_orig);
 
   TEST_VERIFY_EXIT (lutimes (testlink, tv) == 0);
 
-  struct_stat stlink;
-  xlstat (testlink, &stlink);
+  struct statx stlink;
+  xstatx (AT_FDCWD, testlink, AT_SYMLINK_NOFOLLOW, STATX_BASIC_STATS, &stlink);
 
-  TEST_COMPARE (stlink.st_atime, tv[0].tv_sec);
-  TEST_COMPARE (stlink.st_mtime, tv[1].tv_sec);
+  TEST_COMPARE (stlink.stx_atime.tv_sec, tv[0].tv_sec);
+  TEST_COMPARE (stlink.stx_mtime.tv_sec, tv[1].tv_sec);
 
   /* Check if the timestamp from original file is not changed.  */
-  struct_stat stfile;
-  xlstat (testfile, &stfile);
+  struct statx stfile;
+  xstatx (AT_FDCWD, testfile, AT_SYMLINK_NOFOLLOW, STATX_BASIC_STATS, &stfile);
 
-  TEST_COMPARE (stfile_orig.st_atime, stfile.st_atime);
-  TEST_COMPARE (stfile_orig.st_mtime, stfile.st_mtime);
+  TEST_COMPARE (stfile_orig.stx_atime.tv_sec, stfile.stx_atime.tv_sec);
+  TEST_COMPARE (stfile_orig.stx_mtime.tv_sec, stfile.stx_mtime.tv_sec);
 
   return 0;
 }

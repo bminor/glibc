@@ -19,11 +19,8 @@
 #include <utime.h>
 #include <support/check.h>
 #include <support/xunistd.h>
+#include <fcntl.h>
 #include <sys/stat.h>
-
-#ifndef struct_stat
-# define struct_stat struct stat64
-#endif
 
 static int
 test_utime_helper (const char *file, int fd, const struct utimbuf *ut)
@@ -31,14 +28,14 @@ test_utime_helper (const char *file, int fd, const struct utimbuf *ut)
   int result = utime (file, ut);
   TEST_VERIFY_EXIT (result == 0);
 
-  struct_stat st;
-  xfstat (fd, &st);
+  struct statx st;
+  xstatx (fd, "", AT_EMPTY_PATH, STATX_BASIC_STATS, &st);
 
   /* Check if seconds for actime match */
-  TEST_COMPARE (st.st_atime, ut->actime);
+  TEST_COMPARE (st.stx_atime.tv_sec, ut->actime);
 
   /* Check if seconds for modtime match */
-  TEST_COMPARE (st.st_mtime, ut->modtime);
+  TEST_COMPARE (st.stx_mtime.tv_sec, ut->modtime);
 
   return 0;
 }

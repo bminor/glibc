@@ -18,11 +18,8 @@
 
 #include <support/check.h>
 #include <support/xunistd.h>
+#include <fcntl.h>
 #include <sys/stat.h>
-
-#ifndef struct_stat
-# define struct_stat struct stat64
-#endif
 
 static int
 test_futimens_helper (const char *file, int fd, const struct timespec *ts)
@@ -30,14 +27,14 @@ test_futimens_helper (const char *file, int fd, const struct timespec *ts)
   int result = futimens (fd, ts);
   TEST_VERIFY_EXIT (result == 0);
 
-  struct_stat st;
-  xfstat (fd, &st);
+  struct statx st;
+  xstatx (fd, "", AT_EMPTY_PATH, STATX_BASIC_STATS, &st);
 
   /* Check if seconds for atime match */
-  TEST_COMPARE (st.st_atime, ts[0].tv_sec);
+  TEST_COMPARE (st.stx_atime.tv_sec, ts[0].tv_sec);
 
   /* Check if seconds for mtime match */
-  TEST_COMPARE (st.st_mtime, ts[1].tv_sec);
+  TEST_COMPARE (st.stx_mtime.tv_sec, ts[1].tv_sec);
 
   return 0;
 }

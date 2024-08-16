@@ -30,12 +30,6 @@
 #include <support/temp_file.h>
 #include <support/xunistd.h>
 
-#ifndef struct_stat
-# define struct_stat struct stat64
-# define fstat       fstat64
-# define fstatat     fstatat64
-#endif
-
 static int dir_fd;
 
 static void
@@ -118,19 +112,15 @@ do_test (void)
   xwrite (fd, "hello", 5);
   puts ("file created");
 
-  struct_stat st1;
-  if (fstat (fd, &st1) != 0)
-    {
-      puts ("fstat64 failed");
-      return 1;
-    }
+  struct statx st1;
+  xstatx (fd, "", AT_EMPTY_PATH, STATX_BASIC_STATS, &st1);
 
   close (fd);
 
   struct timeval tv[2];
-  tv[0].tv_sec = st1.st_atime + 1;
+  tv[0].tv_sec = st1.stx_atime.tv_sec + 1;
   tv[0].tv_usec = 0;
-  tv[1].tv_sec = st1.st_mtime + 1;
+  tv[1].tv_sec = st1.stx_mtime.tv_sec + 1;
   tv[1].tv_usec = 0;
   if (futimesat (dir_fd, "some-file", tv) != 0)
     {
@@ -138,16 +128,12 @@ do_test (void)
       return 1;
     }
 
-  struct_stat st2;
-  if (fstatat (dir_fd, "some-file", &st2, 0) != 0)
-    {
-      puts ("fstatat64 failed");
-      return 1;
-    }
+  struct statx st2;
+  xstatx (dir_fd, "some-file", 0, STATX_BASIC_STATS, &st2);
 
-  if (st2.st_mtime != tv[1].tv_sec
+  if (st2.stx_mtime.tv_sec != tv[1].tv_sec
 #ifdef _STATBUF_ST_NSEC
-      || st2.st_mtim.tv_nsec != 0
+      || st2.stx_mtime.tv_nsec != 0
 #endif
       )
     {

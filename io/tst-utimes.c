@@ -18,13 +18,10 @@
 
 #include <support/check.h>
 #include <support/xunistd.h>
+#include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <time.h>
-
-#ifndef struct_stat
-# define struct_stat struct stat64
-#endif
 
 static int
 test_utimes_helper (const char *file, int fd, const struct timeval *tv)
@@ -32,14 +29,14 @@ test_utimes_helper (const char *file, int fd, const struct timeval *tv)
   int result = utimes (file, tv);
   TEST_VERIFY_EXIT (result == 0);
 
-  struct_stat st;
-  xfstat (fd, &st);
+  struct statx st;
+  xstatx (fd, "", AT_EMPTY_PATH, STATX_BASIC_STATS, &st);
 
   /* Check if seconds for atime match */
-  TEST_COMPARE (st.st_atime, tv[0].tv_sec);
+  TEST_COMPARE (st.stx_atime.tv_sec, tv[0].tv_sec);
 
   /* Check if seconds for mtime match */
-  TEST_COMPARE (st.st_mtime, tv[1].tv_sec);
+  TEST_COMPARE (st.stx_mtime.tv_sec, tv[1].tv_sec);
 
   return 0;
 }
