@@ -21,7 +21,6 @@
    overflow, return an extremal value.  This assumes 0 <= tv_nsec <
    TIMESPEC_HZ.  */
 
-#include <config.h>
 #include "timespec.h"
 
 #include "intprops.h"

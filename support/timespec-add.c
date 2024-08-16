@@ -20,7 +20,6 @@
 /* Return the sum of two timespec values A and B.  On overflow, return
    an extremal value.  This assumes 0 <= tv_nsec < TIMESPEC_HZ.  */
 
-#include <config.h>
 #include "timespec.h"
 
 #include "intprops.h"
