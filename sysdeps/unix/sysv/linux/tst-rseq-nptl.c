@@ -28,6 +28,11 @@
 #include <sys/rseq.h>
 #include <unistd.h>
 
+/* Set this in 'do_test' only so as to invoke the destructor test in
+   the test process only and not 'support_test_main' parent.  Otherwise
+   the test harness may hang in the destructor if something goes wrong.  */
+static int run_destructor_test;
+
 #ifdef RSEQ_SIG
 # include <array_length.h>
 # include <errno.h>
@@ -236,6 +241,9 @@ do_rseq_test (void)
 static void __attribute__ ((destructor))
 do_rseq_destructor_test (void)
 {
+  if (!run_destructor_test)
+    return;
+
   /* Cannot use deferred failure reporting after main returns.  */
   if (do_rseq_test ())
     FAIL_EXIT1 ("rseq not registered within destructor");
@@ -254,6 +262,7 @@ do_rseq_test (void)
 static int
 do_test (void)
 {
+  run_destructor_test = 1;
   return do_rseq_test ();
 }
 
