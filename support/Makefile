@@ -210,6 +210,7 @@ libsupport-routines = \
   xsignal \
   xsigstack \
   xsocket \
+  xstatx \
   xstrdup \
   xstrndup \
   xsymlink \

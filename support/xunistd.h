@@ -30,6 +30,7 @@
 __BEGIN_DECLS
 
 struct stat64;
+struct statx;
 
 pid_t xfork (void);
 pid_t xwaitpid (pid_t, int *status, int flags);
@@ -51,6 +52,7 @@ void __REDIRECT (xstat, (const char *path, struct stat *), xstat_time64);
 void __REDIRECT (xlstat, (const char *path, struct stat *), xlstat_time64);
 void __REDIRECT (xfstat, (int fd, struct stat *), xfstat_time64);
 #endif
+void xstatx (int, const char *, int, unsigned int, struct statx *);
 void xmkdir (const char *path, mode_t);
 void xchroot (const char *path);
 void xunlink (const char *path);
