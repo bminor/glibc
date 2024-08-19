@@ -567,6 +567,48 @@ handle_zhaoxin (int name)
   return 0;
 }
 
+static long int __attribute__ ((noinline))
+handle_hygon (int name)
+{
+  unsigned int eax;
+  unsigned int ebx;
+  unsigned int ecx;
+  unsigned int edx;
+  unsigned int count = 0x1;
+
+  if (name >= _SC_LEVEL3_CACHE_SIZE)
+    count = 0x3;
+  else if (name >= _SC_LEVEL2_CACHE_SIZE)
+    count = 0x2;
+  else if (name >= _SC_LEVEL1_DCACHE_SIZE)
+    count = 0x0;
+
+  /* Use __cpuid__ '0x8000_001D' to compute cache details.  */
+  __cpuid_count (0x8000001D, count, eax, ebx, ecx, edx);
+
+  switch (name)
+    {
+    case _SC_LEVEL1_ICACHE_ASSOC:
+    case _SC_LEVEL1_DCACHE_ASSOC:
+    case _SC_LEVEL2_CACHE_ASSOC:
+    case _SC_LEVEL3_CACHE_ASSOC:
+      return ((ebx >> 22) & 0x3ff) + 1;
+    case _SC_LEVEL1_ICACHE_LINESIZE:
+    case _SC_LEVEL1_DCACHE_LINESIZE:
+    case _SC_LEVEL2_CACHE_LINESIZE:
+    case _SC_LEVEL3_CACHE_LINESIZE:
+      return (ebx & 0xfff) + 1;
+    case _SC_LEVEL1_ICACHE_SIZE:
+    case _SC_LEVEL1_DCACHE_SIZE:
+    case _SC_LEVEL2_CACHE_SIZE:
+    case _SC_LEVEL3_CACHE_SIZE:
+      return (((ebx >> 22) & 0x3ff) + 1) * ((ebx & 0xfff) + 1) * (ecx + 1);
+    default:
+      __builtin_unreachable ();
+    }
+  return -1;
+}
+
 static void
 get_common_cache_info (long int *shared_ptr, long int * shared_per_thread_ptr, unsigned int *threads_ptr,
                 long int core)
@@ -888,6 +930,24 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
         }
 
       shared_per_thread = shared;
+    }
+  else if (cpu_features->basic.kind == arch_kind_hygon)
+    {
+      data = handle_hygon (_SC_LEVEL1_DCACHE_SIZE);
+      shared = handle_hygon (_SC_LEVEL3_CACHE_SIZE);
+      shared_per_thread = shared;
+
+      level1_icache_size = handle_hygon (_SC_LEVEL1_ICACHE_SIZE);
+      level1_icache_linesize = handle_hygon (_SC_LEVEL1_ICACHE_LINESIZE);
+      level1_dcache_size = data;
+      level1_dcache_assoc = handle_hygon (_SC_LEVEL1_DCACHE_ASSOC);
+      level1_dcache_linesize = handle_hygon (_SC_LEVEL1_DCACHE_LINESIZE);
+      level2_cache_size = handle_hygon (_SC_LEVEL2_CACHE_SIZE);;
+      level2_cache_assoc = handle_hygon (_SC_LEVEL2_CACHE_ASSOC);
+      level2_cache_linesize = handle_hygon (_SC_LEVEL2_CACHE_LINESIZE);
+      level3_cache_size = shared;
+      level3_cache_assoc = handle_hygon (_SC_LEVEL3_CACHE_ASSOC);
+      level3_cache_linesize = handle_hygon (_SC_LEVEL3_CACHE_LINESIZE);
     }
 
   cpu_features->level1_icache_size = level1_icache_size;
