@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <tls-internal.h>
-
+#include <libc-internal.h>
 
 static const char *
 translate (const char *str, locale_t loc)
@@ -29,6 +29,12 @@ translate (const char *str, locale_t loc)
   const char *res = _(str);
   __uselocale (oldloc);
   return res;
+}
+
+static char *
+unknown_error (locale_t loc)
+{
+  return (char *) translate ("Unknown error", loc);
 }
 
 
@@ -40,18 +46,25 @@ __strerror_l (int errnum, locale_t loc)
   char *err = (char *) __get_errlist (errnum);
   if (__glibc_unlikely (err == NULL))
     {
-      struct tls_internal_t *tls_internal = __glibc_tls_internal ();
-      free (tls_internal->strerror_l_buf);
-      if (__asprintf (&tls_internal->strerror_l_buf, "%s%d",
-		      translate ("Unknown error ", loc), errnum) > 0)
-	err = tls_internal->strerror_l_buf;
-      else
+      if (__libc_initial)
 	{
-	  /* The memory was freed above.  */
-	  tls_internal->strerror_l_buf = NULL;
-	  /* Provide a fallback translation.  */
-	  err = (char *) translate ("Unknown error", loc);
+	  struct tls_internal_t *tls_internal = __glibc_tls_internal ();
+	  free (tls_internal->strerror_l_buf);
+	  if (__asprintf (&tls_internal->strerror_l_buf, "%s%d",
+			  translate ("Unknown error ", loc), errnum) > 0)
+	    err = tls_internal->strerror_l_buf;
+	  else
+	    {
+	      /* The memory was freed above.  */
+	      tls_internal->strerror_l_buf = NULL;
+	      /* Provide a fallback translation.  */
+	      err = unknown_error (loc);
+	    }
 	}
+      else
+	/* Secondary namespaces use a different malloc, so cannot
+	   participate in the buffer management.  */
+	err = unknown_error (loc);
     }
   else
     err = (char *) translate (err, loc);
