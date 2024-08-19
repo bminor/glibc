@@ -13,6 +13,7 @@ The following bugs are resolved with this release:
   [31968] mremap implementation in C does not handle arguments correctly
   [31890] resolv: Allow short error responses to match any DNS query
   [31968] mremap implementation in C does not handle arguments correctly
+  [32026] strerror/strsignal TLS not handled correctly for secondary namespaces
   [32052] Name space violation in fortify wrappers
 
 Version 2.40
