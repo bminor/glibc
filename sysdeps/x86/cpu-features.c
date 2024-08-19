@@ -756,9 +756,9 @@ init_cpu_features (struct cpu_features *cpu_features)
   unsigned int stepping = 0;
   enum cpu_features_kind kind;
 
-  /* Default is avoid non-temporal memset for non Intel/AMD hardware. This is,
+  /* Default is avoid non-temporal memset for non Intel/AMD/Hygon hardware. This is,
      as of writing this, we only have benchmarks indicatings it profitability
-     on Intel/AMD.  */
+     on Intel/AMD/Hygon.  */
   cpu_features->preferred[index_arch_Avoid_Non_Temporal_Memset]
       |= bit_arch_Avoid_Non_Temporal_Memset;
 
@@ -1116,6 +1116,11 @@ https://www.intel.com/content/www/us/en/support/articles/000059422/processors.ht
       get_extended_indices (cpu_features);
 
       update_active (cpu_features);
+
+      /* Benchmarks indicate non-temporal memset can be profitable on Hygon
+       hardware.  */
+      cpu_features->preferred[index_arch_Avoid_Non_Temporal_Memset]
+	    &= ~bit_arch_Avoid_Non_Temporal_Memset;
     }
   else
     {

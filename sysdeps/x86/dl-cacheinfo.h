@@ -1071,7 +1071,7 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
 
   /* Non-temporal stores are more performant on some hardware above
      non_temporal_threshold. Currently Prefer_Non_Temporal is set for for both
-     Intel and AMD hardware. */
+     Intel, AMD and Hygon hardware. */
   unsigned long int memset_non_temporal_threshold = SIZE_MAX;
   if (!CPU_FEATURES_ARCH_P (cpu_features, Avoid_Non_Temporal_Memset))
     memset_non_temporal_threshold = non_temporal_threshold;
