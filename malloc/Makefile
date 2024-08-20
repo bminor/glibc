@@ -420,8 +420,14 @@ $(objpfx)tst-mallocstate-malloc-check: $(objpfx)libc_malloc_debug.so
 
 $(objpfx)tst-aligned-alloc-random.out: $(objpfx)tst-aligned_alloc-lib.so
 $(objpfx)tst-aligned-alloc-random-thread: $(shared-thread-library)
+$(objpfx)tst-aligned-alloc-random-thread-malloc-check: $(shared-thread-library)
+$(objpfx)tst-aligned-alloc-random-thread-malloc-hugetlb1: $(shared-thread-library)
+$(objpfx)tst-aligned-alloc-random-thread-malloc-hugetlb2: $(shared-thread-library)
 $(objpfx)tst-aligned-alloc-random-thread.out: $(objpfx)tst-aligned_alloc-lib.so
 $(objpfx)tst-aligned-alloc-random-thread-cross: $(shared-thread-library)
+$(objpfx)tst-aligned-alloc-random-thread-cross-malloc-check: $(shared-thread-library)
+$(objpfx)tst-aligned-alloc-random-thread-cross-malloc-hugetlb1: $(shared-thread-library)
+$(objpfx)tst-aligned-alloc-random-thread-cross-malloc-hugetlb2: $(shared-thread-library)
 $(objpfx)tst-aligned-alloc-random-thread-cross.out: $(objpfx)tst-aligned_alloc-lib.so
 $(objpfx)tst-malloc-random.out: $(objpfx)tst-aligned_alloc-lib.so
 
