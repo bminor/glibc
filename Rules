@@ -145,7 +145,11 @@ others: $(py-const)
 ifeq ($(run-built-tests),no)
 tests: $(addprefix $(objpfx),$(filter-out $(tests-unsupported), \
                                           $(tests) $(tests-internal) \
-					  $(tests-container)) \
+					  $(tests-container) \
+					  $(tests-mcheck:%=%-mcheck) \
+					  $(tests-malloc-check:%=%-malloc-check) \
+					  $(tests-malloc-hugetlb1:%=%-malloc-hugetlb1) \
+					  $(tests-malloc-hugetlb2:%=%-malloc-hugetlb2)) \
 			     $(test-srcs)) $(tests-special) \
 			     $(tests-printers-programs)
 xtests: tests $(xtests-special)
