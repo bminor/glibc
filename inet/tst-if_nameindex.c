@@ -96,13 +96,15 @@ do_test (void)
       /* Make sure our "invalid" name is really invalid.  */
       for (ifp = if_ni; !(ifp->if_index == 0 && ifp->if_name == NULL); ifp++)
 	if (strcmp (test_names[i], ifp->if_name) == 0)
-	  continue;
+	  goto not_this_one;
 
       printf ("Testing if_nametoindex (%s) == 0\n", test_names[i]);
 
       unsigned int idx = if_nametoindex (test_names[i]);
       TEST_VERIFY (idx == 0);
       TEST_VERIFY (errno == ENODEV);
+
+    not_this_one:
     }
 
 
