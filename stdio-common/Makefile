@@ -218,6 +218,8 @@ tests := \
   tst-fphex-wide \
   tst-fseek \
   tst-fwrite \
+  tst-getline \
+  tst-getline-enomem \
   tst-gets \
   tst-grouping \
   tst-grouping2 \
@@ -313,6 +315,8 @@ tests-special += \
 ifeq (yes,$(build-shared))
 ifneq ($(PERL),no)
 tests-special += \
+  $(objpfx)tst-getline-enomem-mem.out \
+  $(objpfx)tst-getline-mem.out \
   $(objpfx)tst-printf-bz18872-mem.out \
   $(objpfx)tst-printf-bz25691-mem.out \
   $(objpfx)tst-printf-fp-free-mem.out \
@@ -322,6 +326,10 @@ tests-special += \
   # tests-special
 
 generated += \
+  tst-getline-enomem-mem.out \
+  tst-getline-enomem.mtrace \
+  tst-getline-mem.out \
+  tst-getline.mtrace \
   tst-printf-bz18872-mem.out \
   tst-printf-bz18872.c \
   tst-printf-bz18872.mtrace \
@@ -430,6 +438,12 @@ tst-scanf-bz27650-ENV = \
   LD_PRELOAD=$(common-objpfx)malloc/libc_malloc_debug.so
 tst-ungetc-leak-ENV = \
   MALLOC_TRACE=$(objpfx)tst-ungetc-leak.mtrace \
+  LD_PRELOAD=$(common-objpfx)malloc/libc_malloc_debug.so
+tst-getline-ENV = \
+  MALLOC_TRACE=$(objpfx)tst-getline.mtrace \
+  LD_PRELOAD=$(common-objpfx)malloc/libc_malloc_debug.so
+tst-getline-enomem-ENV = \
+  MALLOC_TRACE=$(objpfx)tst-getline-enomem.mtrace \
   LD_PRELOAD=$(common-objpfx)malloc/libc_malloc_debug.so
 
 $(objpfx)tst-unbputc.out: tst-unbputc.sh $(objpfx)tst-unbputc
