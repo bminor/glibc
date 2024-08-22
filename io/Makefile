@@ -189,6 +189,7 @@ tests := \
   tst-copy_file_range \
   tst-faccessat \
   tst-fchmod-errors \
+  tst-fchmod-fuse \
   tst-fchmodat \
   tst-fchownat \
   tst-fcntl \
