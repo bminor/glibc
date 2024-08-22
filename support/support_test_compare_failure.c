@@ -17,7 +17,9 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
+#include <limits.h>
 #include <stdio.h>
+#include <string.h>
 #include <support/check.h>
 
 static void
@@ -31,7 +33,14 @@ report (const char *which, const char *expr, long long value, int positive,
     printf ("%lld", value);
   unsigned long long mask
     = (~0ULL) >> (8 * (sizeof (unsigned long long) - size));
-  printf (" (0x%llx); from: %s\n", (unsigned long long) value & mask, expr);
+  const char *errno_constant = NULL;
+  if (strcmp (expr, "errno") == 0
+      && positive && (unsigned long long int) value <= INT_MAX)
+    errno_constant = strerrorname_np (value);
+  printf (" (0x%llx", (unsigned long long) value & mask);
+  if (errno_constant != NULL)
+    printf (", %s", errno_constant);
+  printf ("); from: %s\n", expr);
 }
 
 void
