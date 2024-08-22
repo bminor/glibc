@@ -53,6 +53,10 @@ prepare (void)
 static int
 do_test (void)
 {
+  /* Find the current umask.  */
+  mode_t mask = umask (022);
+  umask (mask);
+
   /* fdopendir takes over the descriptor, make a copy.  */
   int dupfd = dup (dir_fd);
   if (dupfd == -1)
@@ -107,6 +111,13 @@ do_test (void)
       puts ("mkdirat did not create a directory");
       return 1;
     }
+  if ((st1.st_mode & 01777) != (~mask & 0777))
+    {
+      printf ("mkdirat created directory with wrong mode %o, expected %o\n",
+	      (unsigned int) (st1.st_mode & 01777),
+	      (unsigned int) (~mask & 0777));
+      return 1;
+    }
 
   dupfd = dup (dir_fd);
   if (dupfd == -1)
@@ -153,6 +164,37 @@ do_test (void)
   if (unlinkat (dir_fd, "some-dir", AT_REMOVEDIR) != 0)
     {
       puts ("unlinkat failed");
+      return 1;
+    }
+
+  /* Test again with a different mode.  */
+  umask (0);
+  e = mkdirat (dir_fd, "some-dir", 01755);
+  umask (mask);
+  if (e == -1)
+    {
+      puts ("directory creation (different mode) failed");
+      return 1;
+    }
+  if (fstatat64 (dir_fd, "some-dir", &st1, 0) != 0)
+    {
+      puts ("fstat64 (different mode) failed");
+      return 1;
+    }
+  if (!S_ISDIR (st1.st_mode))
+    {
+      puts ("mkdirat (different mode) did not create a directory");
+      return 1;
+    }
+  if ((st1.st_mode & 01777) != 01755)
+    {
+      printf ("mkdirat (different mode) created directory with wrong mode %o\n",
+	      (unsigned int) (st1.st_mode & 01777));
+      return 1;
+    }
+  if (unlinkat (dir_fd, "some-dir", AT_REMOVEDIR) != 0)
+    {
+      puts ("unlinkat (different mode) failed");
       return 1;
     }
 
