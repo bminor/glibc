@@ -43,6 +43,9 @@ __sleep (unsigned int seconds)
   after = time_now ();
   __mach_port_destroy (__mach_task_self (), recv);
 
+  if (after - before > seconds)
+    return 0;
+
   return seconds - (after - before);
 }
 weak_alias (__sleep, sleep)
