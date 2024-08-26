@@ -105,6 +105,7 @@ do_test (void)
       TEST_VERIFY (errno == ENODEV);
 
     not_this_one:
+      ;
     }
 
 
