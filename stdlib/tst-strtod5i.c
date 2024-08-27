@@ -16,52 +16,112 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+/* Defining _LIBC_TEST ensures long double math functions are
+   declared in the headers.  */
+#define _LIBC_TEST 1
 #include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 
+#include "tst-strtod.h"
+
+/* This tests internal interfaces, which are only defined for types
+   with distinct ABIs, so disable testing for types without distinct
+   ABIs.  */
+#undef IF_FLOAT32
+#define IF_FLOAT32(x)
+#undef IF_FLOAT64
+#define IF_FLOAT64(x)
+#undef IF_FLOAT32X
+#define IF_FLOAT32X(x)
+#undef IF_FLOAT64X
+#define IF_FLOAT64X(x)
+#if !__HAVE_DISTINCT_FLOAT128
+# undef IF_FLOAT128
+# define IF_FLOAT128(x)
+#endif
+
 #define NNBSP "\xe2\x80\xaf"
 
-static const struct
-{
-  const char *in;
-  int group;
-  double expected;
-} tests[] =
-  {
-    { "0", 0, 0.0 },
-    { "000", 0, 0.0 },
-    { "-0", 0, -0.0 },
-    { "-000", 0, -0.0 },
-    { "0,", 0, 0.0 },
-    { "-0,", 0, -0.0 },
-    { "0,0", 0, 0.0 },
-    { "-0,0", 0, -0.0 },
-    { "0e-10", 0, 0.0 },
-    { "-0e-10", 0, -0.0 },
-    { "0,e-10", 0, 0.0 },
-    { "-0,e-10", 0, -0.0 },
-    { "0,0e-10", 0, 0.0 },
-    { "-0,0e-10", 0, -0.0 },
-    { "0e-1000000", 0, 0.0 },
-    { "-0e-1000000", 0, -0.0 },
-    { "0,0e-1000000", 0, 0.0 },
-    { "-0,0e-1000000", 0, -0.0 },
-    { "0", 1, 0.0 },
-    { "000", 1, 0.0 },
-    { "-0", 1, -0.0 },
-    { "-000", 1, -0.0 },
-    { "0e-10", 1, 0.0 },
-    { "-0e-10", 1, -0.0 },
-    { "0e-1000000", 1, 0.0 },
-    { "-0e-1000000", 1, -0.0 },
-    { "000"NNBSP"000"NNBSP"000", 1, 0.0 },
-    { "-000"NNBSP"000"NNBSP"000", 1, -0.0 }
-  };
-#define NTESTS (sizeof (tests) / sizeof (tests[0]))
+#define TEST_STRTOD(FSUF, FTYPE, FTOSTR, LSUF, CSUF)			\
+static const struct							\
+{									\
+  const char *in;							\
+  int group;								\
+  FTYPE expected;							\
+} tests_strto ## FSUF[] =						\
+  {									\
+    { "0", 0, 0.0 ## LSUF },						\
+    { "000", 0, 0.0 ## LSUF },						\
+    { "-0", 0, -0.0 ## LSUF },						\
+    { "-000", 0, -0.0 ## LSUF },					\
+    { "0,", 0, 0.0 ## LSUF },						\
+    { "-0,", 0, -0.0 ## LSUF },						\
+    { "0,0", 0, 0.0 ## LSUF },						\
+    { "-0,0", 0, -0.0 ## LSUF },					\
+    { "0e-10", 0, 0.0 ## LSUF },					\
+    { "-0e-10", 0, -0.0 ## LSUF },					\
+    { "0,e-10", 0, 0.0 ## LSUF },					\
+    { "-0,e-10", 0, -0.0 ## LSUF },					\
+    { "0,0e-10", 0, 0.0 ## LSUF },					\
+    { "-0,0e-10", 0, -0.0 ## LSUF },					\
+    { "0e-1000000", 0, 0.0 ## LSUF },					\
+    { "-0e-1000000", 0, -0.0 ## LSUF },					\
+    { "0,0e-1000000", 0, 0.0 ## LSUF },					\
+    { "-0,0e-1000000", 0, -0.0 ## LSUF },				\
+    { "0", 1, 0.0 ## LSUF },						\
+    { "000", 1, 0.0 ## LSUF },						\
+    { "-0", 1, -0.0 ## LSUF },						\
+    { "-000", 1, -0.0 ## LSUF },					\
+    { "0e-10", 1, 0.0 ## LSUF },					\
+    { "-0e-10", 1, -0.0 ## LSUF },					\
+    { "0e-1000000", 1, 0.0 ## LSUF },					\
+    { "-0e-1000000", 1, -0.0 ## LSUF },					\
+    { "000"NNBSP"000"NNBSP"000", 1, 0.0 ## LSUF },			\
+    { "-000"NNBSP"000"NNBSP"000", 1, -0.0 ## LSUF }			\
+  };									\
+									\
+static int								\
+test_strto ## FSUF (void)						\
+{									\
+  int status = 0;							\
+									\
+  for (int i = 0;							\
+       i < sizeof (tests_strto ## FSUF) / sizeof (tests_strto ## FSUF[0]); \
+       ++i)								\
+    {									\
+      char *ep;								\
+      FTYPE r = __strto ## FSUF ## _internal (tests_strto ## FSUF[i].in, \
+					      &ep,			\
+					      tests_strto ## FSUF[i].group); \
+									\
+      if (*ep != '\0')							\
+	{								\
+	  printf ("%d: got rest string \"%s\", expected \"\"\n", i, ep); \
+	  status = 1;							\
+	}								\
+									\
+      if (r != tests_strto ## FSUF[i].expected				\
+	  || (copysign ## CSUF (10.0 ## LSUF, r)			\
+	      != copysign ## CSUF (10.0 ## LSUF,			\
+				   tests_strto ## FSUF[i].expected)))	\
+	{								\
+	  char buf1[FSTRLENMAX], buf2[FSTRLENMAX];			\
+	  FTOSTR (buf1, sizeof (buf1), "%g", r);			\
+	  FTOSTR (buf2, sizeof (buf2), "%g",				\
+		  tests_strto ## FSUF[i].expected);			\
+	  printf ("%d: got wrong results %s, expected %s\n",		\
+		  i, buf1, buf2);					\
+	  status = 1;							\
+	}								\
+    }									\
+									\
+  return status;							\
+}
 
+GEN_TEST_STRTOD_FOREACH (TEST_STRTOD)
 
 static int
 do_test (void)
@@ -72,29 +132,7 @@ do_test (void)
       return 1;
     }
 
-  int status = 0;
-
-  for (int i = 0; i < NTESTS; ++i)
-    {
-      char *ep;
-      double r = __strtod_internal (tests[i].in, &ep, tests[i].group);
-
-      if (*ep != '\0')
-	{
-	  printf ("%d: got rest string \"%s\", expected \"\"\n", i, ep);
-	  status = 1;
-	}
-
-      if (r != tests[i].expected
-	  || copysign (10.0, r) != copysign (10.0, tests[i].expected))
-	{
-	  printf ("%d: got wrong results %g, expected %g\n",
-		  i, r, tests[i].expected);
-	  status = 1;
-	}
-    }
-
-  return status;
+  return STRTOD_TEST_FOREACH (test_strto);
 }
 
 #include <support/test-driver.c>
