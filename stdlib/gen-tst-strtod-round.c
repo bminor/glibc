@@ -46,6 +46,7 @@ static int
 string_to_fp (mpfr_t f, const char *s, mpfr_rnd_t rnd)
 {
   mpfr_clear_overflow ();
+  mpfr_clear_underflow ();
 #ifdef WORKAROUND
   mpfr_t f2;
   mpfr_init2 (f2, 100000);
@@ -53,12 +54,16 @@ string_to_fp (mpfr_t f, const char *s, mpfr_rnd_t rnd)
   int r = mpfr_set (f, f2, rnd);
   r |= mpfr_subnormalize (f, r, rnd);
   mpfr_clear (f2);
-  return r0 | r;
+  r |= r0;
 #else
   int r = mpfr_strtofr (f, s, NULL, 0, rnd);
   r |= mpfr_subnormalize (f, r, rnd);
-  return r;
 #endif
+  if (r == 0)
+    /* The MPFR underflow flag is set for exact subnormal results,
+       which is not wanted here.  */
+    mpfr_clear_underflow ();
+  return r;
 }
 
 void
@@ -68,6 +73,21 @@ print_fp (FILE *fout, mpfr_t f, const char *suffix)
     mpfr_fprintf (fout, "\t%sINF%s", mpfr_signbit (f) ? "-" : "", suffix);
   else
     mpfr_fprintf (fout, "\t%Ra%s", f, suffix);
+}
+
+static const char *
+suffix_to_print (bool overflow, bool underflow, bool underflow_before_rounding,
+		 bool with_comma)
+{
+  if (overflow)
+    return with_comma ? ", true, false,\n" : ", true, false";
+  if (underflow)
+    return with_comma ? ", false, true,\n" : ", false, true";
+  if (underflow_before_rounding)
+    return (with_comma
+	    ? ", false, !TININESS_AFTER_ROUNDING,\n"
+	    : ", false, !TININESS_AFTER_ROUNDING");
+  return with_comma ? ", false, false,\n" : ", false, false";
 }
 
 static void
@@ -80,8 +100,11 @@ round_str (FILE *fout, const char *s, int prec, int emin, int emax,
   mpfr_set_emin (emin);
   mpfr_set_emax (emax);
   mpfr_init (f);
+  string_to_fp (f, s, MPFR_RNDZ);
+  bool underflow_before_rounding = mpfr_underflow_p () != 0;
   int r = string_to_fp (f, s, MPFR_RNDD);
   bool overflow = mpfr_overflow_p () != 0;
+  bool underflow = mpfr_underflow_p () != 0;
   if (ibm_ld)
     {
       assert (prec == 106 && emin == -1073 && emax == 1024);
@@ -97,19 +120,27 @@ round_str (FILE *fout, const char *s, int prec, int emin, int emax,
 	}
     }
   mpfr_fprintf (fout, "\t%s,\n", r ? "false" : "true");
-  print_fp (fout, f, overflow ? ", true,\n" : ", false,\n");
+  print_fp (fout, f,
+	    suffix_to_print (overflow, underflow, underflow_before_rounding,
+			     true));
   string_to_fp (f, s, MPFR_RNDN);
   overflow = (mpfr_overflow_p () != 0
 	      || (ibm_ld && mpfr_cmpabs (f, max_value) > 0));
-  print_fp (fout, f, overflow ? ", true,\n" : ", false,\n");
+  print_fp (fout, f,
+	    suffix_to_print (overflow, underflow, underflow_before_rounding,
+			     true));
   string_to_fp (f, s, MPFR_RNDZ);
   overflow = (mpfr_overflow_p () != 0
 	      || (ibm_ld && mpfr_cmpabs (f, max_value) > 0));
-  print_fp (fout, f, overflow ? ", true,\n" : ", false,\n");
+  print_fp (fout, f,
+	    suffix_to_print (overflow, underflow, underflow_before_rounding,
+			     true));
   string_to_fp (f, s, MPFR_RNDU);
   overflow = (mpfr_overflow_p () != 0
 	      || (ibm_ld && mpfr_cmpabs (f, max_value) > 0));
-  print_fp (fout, f, overflow ? ", true" : ", false");
+  print_fp (fout, f,
+	    suffix_to_print (overflow, underflow, underflow_before_rounding,
+			     false));
   mpfr_clear (f);
   if (ibm_ld)
     mpfr_clear (max_value);
