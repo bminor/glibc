@@ -23,6 +23,8 @@
 #include <ucontext.h>
 #include <sys/mman.h>
 
+#include "aarch64-gcs.h"
+
 #define GCS_MAGIC 0x47435300
 
 static struct _aarch64_ctx *extension (void *p)
@@ -30,41 +32,17 @@ static struct _aarch64_ctx *extension (void *p)
   return p;
 }
 
-#ifndef SHADOW_STACK_SET_TOKEN
-# define SHADOW_STACK_SET_TOKEN (1UL << 0)
-# define SHADOW_STACK_SET_MARKER (1UL << 1)
-#endif
-
-static void *
-map_shadow_stack (void *addr, size_t size, unsigned long flags)
-{
-  return (void *) INLINE_SYSCALL_CALL (map_shadow_stack, addr, size, flags);
-}
-
-#define GCS_MAX_SIZE (1UL << 31)
-#define GCS_ALTSTACK_RESERVE 160
-
+/* Allocate GCS stack for new context.  */
 static void *
 alloc_makecontext_gcs (size_t stack_size)
 {
-  size_t size = (stack_size / 2 + GCS_ALTSTACK_RESERVE) & -8UL;
-  if (size > GCS_MAX_SIZE)
-    size = GCS_MAX_SIZE;
-
-  unsigned long flags = SHADOW_STACK_SET_MARKER | SHADOW_STACK_SET_TOKEN;
-  void *base = map_shadow_stack (NULL, size, flags);
-  if (base == MAP_FAILED)
+  void *base;
+  size_t size;
+  void *gcsp = __alloc_gcs (stack_size, &base, &size);
+  if (gcsp == NULL)
     /* ENOSYS, bad size or OOM.  */
     abort ();
-  uint64_t *gcsp = (uint64_t *) ((char *) base + size);
-  /* Skip end of GCS token.  */
-  gcsp--;
-  /* Verify GCS cap token.  */
-  gcsp--;
-  if (((uint64_t)gcsp & 0xfffffffffffff000) + 1 != *gcsp)
-    abort ();
-  /* Return the target GCS pointer for context switch.  */
-  return gcsp + 1;
+  return gcsp;
 }
 
 /* makecontext sets up a stack and the registers for the
