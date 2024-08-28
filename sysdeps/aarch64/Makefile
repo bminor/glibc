@@ -71,7 +71,8 @@ sysdep_headers += sys/ifunc.h
 sysdep_routines += \
   __mtag_tag_zero_region \
   __mtag_tag_region \
-  __arm_za_disable
+  __arm_za_disable \
+  __alloc_gcs
 
 tests += \
   tst-sme-jmp
