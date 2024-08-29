@@ -223,6 +223,7 @@ tests := \
   tst-freopen64-3 \
   tst-fseek \
   tst-fwrite \
+  tst-fwrite-memstrm \
   tst-fwrite-ro \
   tst-getline \
   tst-getline-enomem \
