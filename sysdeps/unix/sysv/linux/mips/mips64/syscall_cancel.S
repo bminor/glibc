@@ -77,7 +77,11 @@ __syscall_cancel_arch_end:
 
 	.set noreorder
 	.set nomacro
+#if __mips_isa_rev >= 6
+	beqzc	$7, 1f
+#else
 	bnel	a3, zero, 1f
+#endif
 	SUBU	v0, zero, v0
 	.set macro
 	.set reorder
