@@ -1086,7 +1086,9 @@ typedef struct malloc_chunk* mchunkptr;
 /* Internal routines.  */
 
 static void*  _int_malloc(mstate, size_t);
-static void     _int_free(mstate, mchunkptr, int);
+static void _int_free (mstate, mchunkptr, int);
+static void _int_free_check (mstate, mchunkptr, INTERNAL_SIZE_T);
+static void _int_free_chunk (mstate, mchunkptr, INTERNAL_SIZE_T, int);
 static void _int_free_merge_chunk (mstate, mchunkptr, INTERNAL_SIZE_T);
 static INTERNAL_SIZE_T _int_free_create_chunk (mstate,
 					       mchunkptr, INTERNAL_SIZE_T,
@@ -3206,6 +3208,57 @@ tcache_next (tcache_entry *e)
   return (tcache_entry *) REVEAL_PTR (e->next);
 }
 
+/* Verify if the suspicious tcache_entry is double free.
+   It's not expected to execute very often, mark it as noinline.  */
+static __attribute__ ((noinline)) void
+tcache_double_free_verify (tcache_entry *e, size_t tc_idx)
+{
+  tcache_entry *tmp;
+  size_t cnt = 0;
+  LIBC_PROBE (memory_tcache_double_free, 2, e, tc_idx);
+  for (tmp = tcache->entries[tc_idx];
+       tmp;
+       tmp = REVEAL_PTR (tmp->next), ++cnt)
+    {
+      if (cnt >= mp_.tcache_count)
+	malloc_printerr ("free(): too many chunks detected in tcache");
+      if (__glibc_unlikely (!aligned_OK (tmp)))
+	malloc_printerr ("free(): unaligned chunk detected in tcache 2");
+      if (tmp == e)
+	malloc_printerr ("free(): double free detected in tcache 2");
+      /* If we get here, it was a coincidence.  We've wasted a
+	 few cycles, but don't abort.  */
+    }
+}
+
+/* Try to free chunk to the tcache, if success return true.
+   Caller must ensure that chunk and size are valid.  */
+static inline bool
+tcache_free (mchunkptr p, INTERNAL_SIZE_T size)
+{
+  bool done = false;
+  size_t tc_idx = csize2tidx (size);
+  if (tcache != NULL && tc_idx < mp_.tcache_bins)
+    {
+      /* Check to see if it's already in the tcache.  */
+      tcache_entry *e = (tcache_entry *) chunk2mem (p);
+
+      /* This test succeeds on double free.  However, we don't 100%
+	 trust it (it also matches random payload data at a 1 in
+	 2^<size_t> chance), so verify it's not an unlikely
+	 coincidence before aborting.  */
+      if (__glibc_unlikely (e->key == tcache_key))
+	tcache_double_free_verify (e, tc_idx);
+
+      if (tcache->counts[tc_idx] < mp_.tcache_count)
+	{
+	  tcache_put (p, tc_idx);
+	  done = true;
+	}
+    }
+  return done;
+}
+
 static void
 tcache_thread_shutdown (void)
 {
@@ -4490,14 +4543,9 @@ _int_malloc (mstate av, size_t bytes)
    ------------------------------ free ------------------------------
  */
 
-static void
-_int_free (mstate av, mchunkptr p, int have_lock)
+static inline void
+_int_free_check (mstate av, mchunkptr p, INTERNAL_SIZE_T size)
 {
-  INTERNAL_SIZE_T size;        /* its size */
-  mfastbinptr *fb;             /* associated fastbin */
-
-  size = chunksize (p);
-
   /* Little security check which won't hurt performance: the
      allocator never wraps around at the end of the address space.
      Therefore we can exclude some size values which might appear
@@ -4510,48 +4558,16 @@ _int_free (mstate av, mchunkptr p, int have_lock)
   if (__glibc_unlikely (size < MINSIZE || !aligned_OK (size)))
     malloc_printerr ("free(): invalid size");
 
-  check_inuse_chunk(av, p);
+  check_inuse_chunk (av, p);
+}
 
-#if USE_TCACHE
-  {
-    size_t tc_idx = csize2tidx (size);
-    if (tcache != NULL && tc_idx < mp_.tcache_bins)
-      {
-	/* Check to see if it's already in the tcache.  */
-	tcache_entry *e = (tcache_entry *) chunk2mem (p);
-
-	/* This test succeeds on double free.  However, we don't 100%
-	   trust it (it also matches random payload data at a 1 in
-	   2^<size_t> chance), so verify it's not an unlikely
-	   coincidence before aborting.  */
-	if (__glibc_unlikely (e->key == tcache_key))
-	  {
-	    tcache_entry *tmp;
-	    size_t cnt = 0;
-	    LIBC_PROBE (memory_tcache_double_free, 2, e, tc_idx);
-	    for (tmp = tcache->entries[tc_idx];
-		 tmp;
-		 tmp = REVEAL_PTR (tmp->next), ++cnt)
-	      {
-		if (cnt >= mp_.tcache_count)
-		  malloc_printerr ("free(): too many chunks detected in tcache");
-		if (__glibc_unlikely (!aligned_OK (tmp)))
-		  malloc_printerr ("free(): unaligned chunk detected in tcache 2");
-		if (tmp == e)
-		  malloc_printerr ("free(): double free detected in tcache 2");
-		/* If we get here, it was a coincidence.  We've wasted a
-		   few cycles, but don't abort.  */
-	      }
-	  }
-
-	if (tcache->counts[tc_idx] < mp_.tcache_count)
-	  {
-	    tcache_put (p, tc_idx);
-	    return;
-	  }
-      }
-  }
-#endif
+/* Free chunk P of SIZE bytes to the arena.  HAVE_LOCK indicates where
+   the arena for P has already been locked.  Caller must ensure chunk
+   and size are valid.  */
+static void
+_int_free_chunk (mstate av, mchunkptr p, INTERNAL_SIZE_T size, int have_lock)
+{
+  mfastbinptr *fb;             /* associated fastbin */
 
   /*
     If eligible, place chunk on a fastbin so it can be found
@@ -4655,6 +4671,27 @@ _int_free (mstate av, mchunkptr p, int have_lock)
   else {
     munmap_chunk (p);
   }
+}
+
+/* Free chunk P to its arena AV.  HAVE_LOCK indicates where the arena for
+   P has already been locked.  It will perform sanity check, then try the
+   fast path to free into tcache.  If the attempt not success, free the
+   chunk to arena.  */
+static void
+_int_free (mstate av, mchunkptr p, int have_lock)
+{
+  INTERNAL_SIZE_T size;        /* its size */
+
+  size = chunksize (p);
+
+  _int_free_check (av, p, size);
+
+#if USE_TCACHE
+  if (tcache_free (p, size))
+    return;
+#endif
+
+  _int_free_chunk (av, p, size, have_lock);
 }
 
 /* Try to merge chunk P of SIZE bytes with its neighbors.  Put the
