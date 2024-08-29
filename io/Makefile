@@ -208,6 +208,7 @@ tests := \
   tst-lchmod \
   tst-linkat \
   tst-lockf \
+  tst-lstat-nofollow \
   tst-lutimes \
   tst-mkdirat \
   tst-mkfifoat \
@@ -237,6 +238,7 @@ tests-time64 := \
   tst-futimes-time64\
   tst-futimesat-time64 \
   tst-lchmod-time64 \
+  tst-lstat-nofollow-time64 \
   tst-lutimes-time64 \
   tst-stat-time64 \
   tst-utime-time64 \
