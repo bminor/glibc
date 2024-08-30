@@ -64,6 +64,7 @@ libsupport-routines = \
   support_format_herrno \
   support_format_hostent \
   support_format_netent \
+  support_fuse \
   support_isolate_in_subprocess \
   support_mutex_pi_monotonic \
   support_need_proc \
@@ -327,6 +328,7 @@ tests = \
   tst-support_capture_subprocess \
   tst-support_descriptors \
   tst-support_format_dns_packet \
+  tst-support_fuse \
   tst-support_quote_blob \
   tst-support_quote_blob_wide \
   tst-support_quote_string \
