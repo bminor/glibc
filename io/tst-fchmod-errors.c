@@ -18,8 +18,10 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <stdio.h>
 #include <support/check.h>
 #include <support/xunistd.h>
+#include <unistd.h>
 
 static int
 do_test (void)
@@ -27,9 +29,14 @@ do_test (void)
   {
     /* Permissions on /dev/null (the opened descriptor) cannot be changed.  */
     int fd = xopen ("/dev/null", O_RDWR, 0);
-    errno = 0;
-    TEST_COMPARE (fchmod (fd, 0), -1);
-    TEST_COMPARE (errno, EPERM);
+    if (getuid () == 0)
+      puts ("info: /dev/null fchmod test skipped because of root privileges");
+    else
+      {
+        errno = 0;
+        TEST_COMPARE (fchmod (fd, 0), -1);
+        TEST_COMPARE (errno, EPERM);
+      }
     xclose (fd);
 
     /* Now testing an invalid file descriptor.   */
