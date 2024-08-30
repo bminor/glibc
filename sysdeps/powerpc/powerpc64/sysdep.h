@@ -354,7 +354,7 @@ LT_LABELSUFFIX(name,_name_end): ; \
 
 #ifdef SHARED
 # define TAIL_CALL_NO_RETURN(__func) \
-    b JUMPTARGET(__func)
+    b JUMPTARGET (NOTOC (__func))
 #else
 # define TAIL_CALL_NO_RETURN(__func) \
     .ifdef .Local ## __func; \
