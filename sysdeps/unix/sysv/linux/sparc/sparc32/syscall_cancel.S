@@ -42,7 +42,11 @@ __syscall_cancel_arch_start:
 	     __syscall_do_cancel()  */
 	ld	[%i0], %g2
 	andcc	%g2, TCB_CANCELED_BITMASK, %g0
+#ifdef __sparcv9
 	bne,pn	%icc, 2f
+#else
+	bne	2f
+#endif
 	/* Issue a 6 argument syscall.  */
 	 mov	%i1, %g1
 	mov	%i2, %o0
@@ -60,8 +64,13 @@ __syscall_cancel_arch_end:
 	sub	%g0, %o0, %o0
 1:
 	mov	%o0, %i0
+#ifdef __sparcv9
 	return	%i7+8
 	 nop
+#else
+	jmp	%i7+8
+	 restore
+#endif
 
 2:
 	call	__syscall_do_cancel, 0
