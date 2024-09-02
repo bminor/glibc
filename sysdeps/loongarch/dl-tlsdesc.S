@@ -69,6 +69,12 @@ _dl_tlsdesc_undefweak:
 #define Lslow Lslow_lasx
 #include "dl-tlsdesc-dynamic.h"
 #undef FRAME_SIZE
+#undef V_REG_S
+#undef V_REG_L
+#undef V_SPACE
+#undef V_REG
+#undef V_REGS
+#undef V_REGSZ
 #undef USE_LASX
 #undef _dl_tlsdesc_dynamic
 #undef Lret
@@ -80,6 +86,12 @@ _dl_tlsdesc_undefweak:
 #define Lslow Lslow_lsx
 #include "dl-tlsdesc-dynamic.h"
 #undef FRAME_SIZE
+#undef V_REG_S
+#undef V_REG_L
+#undef V_SPACE
+#undef V_REG
+#undef V_REGS
+#undef V_REGSZ
 #undef USE_LSX
 #undef _dl_tlsdesc_dynamic
 #undef Lret

@@ -19,9 +19,6 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define FRAME_SIZE	  (-((-14 * SZREG) & ALMASK))
-#define FRAME_SIZE_LSX	  (-((-32 * SZVREG) & ALMASK))
-#define FRAME_SIZE_LASX	  (-((-32 * SZXREG) & ALMASK))
-#define FRAME_SIZE_FLOAT  (-((-24 * SZFREG) & ALMASK))
 
 	/* Handler for dynamic TLS symbols.
 	   Prototype:
@@ -155,7 +152,7 @@ Hign address	dynamic_block1 <----- dtv5  */
 #ifdef USE_LASX
   #define V_REG_S xvst
   #define V_REG_L xvld
-  #define V_SPACE FRAME_SIZE_LASX
+  #define V_SPACE (-((-32 * SZXREG) & ALMASK)) /* Space for LASX registers.  */
   #define V_REG(n) $xr##n
   #define V_REGS 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,  \
 		 17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
@@ -163,7 +160,7 @@ Hign address	dynamic_block1 <----- dtv5  */
 #elif defined USE_LSX
   #define V_REG_S vst
   #define V_REG_L vld
-  #define V_SPACE FRAME_SIZE_LSX
+  #define V_SPACE (-((-32 * SZVREG) & ALMASK)) /* Space for LSX registers.  */
   #define V_REG(n) $vr##n
   #define V_REGS 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,  \
 		 17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
@@ -171,7 +168,7 @@ Hign address	dynamic_block1 <----- dtv5  */
 #else
   #define V_REG_S fst.d
   #define V_REG_L fld.d
-  #define V_SPACE FRAME_SIZE_FLOAT
+  #define V_SPACE (-((-24 * SZFREG) & ALMASK)) /* Space for FLOAT registers.  */
   #define V_REG(n) $f##n
   #define V_REGS 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23
   #define V_REGSZ SZFREG
