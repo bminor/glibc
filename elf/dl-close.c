@@ -264,6 +264,12 @@ _dl_close_worker (struct link_map *map, bool force)
 	    _dl_catch_exception (NULL, _dl_call_fini, imap);
 
 #ifdef SHARED
+	  /* Auditing checkpoint: we will start deleting objects.
+	     This is supposed to happen before la_objclose (see _dl_fini),
+	     but only once per non-recursive dlclose call.  */
+	  if (!unload_any)
+	    _dl_audit_activity_nsid (nsid, LA_ACT_DELETE);
+
 	  /* Auditing checkpoint: we remove an object.  */
 	  _dl_audit_objclose (imap);
 #endif
@@ -424,12 +430,8 @@ _dl_close_worker (struct link_map *map, bool force)
   if (!unload_any)
     goto out;
 
-#ifdef SHARED
-  /* Auditing checkpoint: we will start deleting objects.  */
-  _dl_audit_activity_nsid (nsid, LA_ACT_DELETE);
-#endif
-
-  /* Notify the debugger we are about to remove some loaded objects.  */
+  /* Notify the debugger we are about to remove some loaded objects.
+     LA_ACT_DELETE has already been signalled above for !unload_any.  */
   struct r_debug *r = _dl_debug_update (nsid);
   r->r_state = RT_DELETE;
   _dl_debug_state ();
