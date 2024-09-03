@@ -85,13 +85,28 @@ do_test (int argc, char *argv[])
     = support_capture_subprogram (spargv[0], spargv);
   support_capture_subprocess_check (&result, "tst-audit22", 0, sc_allow_stderr);
 
+  {
+    FILE *fp = fmemopen (result.err.buffer, result.err.length, "r");
+    TEST_VERIFY (fp != NULL);
+    unsigned int line = 0;
+    char *buffer = NULL;
+    size_t buffer_length = 0;
+    puts ("info: *** audit log start ***");
+    while (xgetline (&buffer, &buffer_length, fp))
+      printf ("%6u\t%s", ++line, buffer);
+    puts ("info: *** audit log end ***");
+    free (buffer);
+    xfclose (fp);
+  }
+
   /* The expected la_objopen/la_objclose:
      1. executable
      2. loader
      3. libc.so
-     4. tst-audit23mod.so
-     5. libc.so (LM_ID_NEWLM).
-     6. vdso (optional and ignored).  */
+     4. libgcc_s.so (one some architectures, for libsupport)
+     5. tst-audit23mod.so
+     6. libc.so (LM_ID_NEWLM).
+        vdso (optional and ignored).  */
   enum { max_objs = 6 };
   struct la_obj_t
   {
@@ -115,8 +130,10 @@ do_test (int argc, char *argv[])
   TEST_VERIFY (out != NULL);
   char *buffer = NULL;
   size_t buffer_length = 0;
+  unsigned int line = 0;
   while (xgetline (&buffer, &buffer_length, out))
     {
+      ++line;
       if (startswith (buffer, "la_activity: "))
 	{
 	  uintptr_t cookie;
@@ -174,8 +191,8 @@ do_test (int argc, char *argv[])
 	  if (is_vdso (lname))
 	    continue;
 	  if (nobjs == max_objs)
-	    FAIL_EXIT1 ("non expected la_objopen: %s %"PRIxPTR" %ld",
-			lname, laddr, lmid);
+	    FAIL_EXIT1 ("(line %u) non expected la_objopen: %s %"PRIxPTR" %ld",
+			line, lname, laddr, lmid);
 	  objs[nobjs].lname = lname;
 	  objs[nobjs].laddr = laddr;
 	  objs[nobjs].lmid = lmid;
