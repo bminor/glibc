@@ -31,16 +31,21 @@
 #include <support/xstdio.h>
 #include <support/xdlfcn.h>
 #include <support/support.h>
+#include <support/test-driver.h>
 
 static int restart;
+static int do_dlclose;
 #define CMDLINE_OPTIONS \
-  { "restart", no_argument, &restart, 1 },
+  { "restart", no_argument, &restart, 1 }, \
+  { "dlclose", no_argument, &do_dlclose, 1 }, \
 
 static int
 handle_restart (void)
 {
   xdlopen ("tst-audit23mod.so", RTLD_NOW);
-  xdlmopen (LM_ID_NEWLM, LIBC_SO, RTLD_NOW);
+  void *handle = xdlmopen (LM_ID_NEWLM, LIBC_SO, RTLD_NOW);
+  if (do_dlclose)
+    xdlclose (handle);
 
   return 0;
 }
@@ -60,8 +65,8 @@ is_vdso (const char *str)
 	 || startswith (str, "linux-vdso");
 }
 
-static int
-do_test (int argc, char *argv[])
+static void
+do_one_test (int argc, char *argv[], bool pass_dlclose_flag)
 {
   /* We must have either:
      - One or four parameters left if called initially:
@@ -69,16 +74,15 @@ do_test (int argc, char *argv[])
        + "--library-path"      optional
        + the library path      optional
        + the application name  */
-  if (restart)
-    return handle_restart ();
-
-  char *spargv[9];
+  char *spargv[10];
   TEST_VERIFY_EXIT (((argc - 1) + 3) < array_length (spargv));
   int i = 0;
   for (; i < argc - 1; i++)
     spargv[i] = argv[i + 1];
   spargv[i++] = (char *) "--direct";
   spargv[i++] = (char *) "--restart";
+  if (pass_dlclose_flag)
+    spargv[i++] = (char *) "--dlclose";
   spargv[i] = NULL;
 
   setenv ("LD_AUDIT", "tst-auditmod23.so", 0);
@@ -146,8 +150,14 @@ do_test (int argc, char *argv[])
 
 	  /* The cookie identifies the object at the head of the link map,
 	     so we only add a new namespace if it changes from the previous
-	     one.  This works since dlmopen is the last in the test body.  */
-	  if (cookie != last_act_cookie && last_act_cookie != -1)
+	     one.  This works since dlmopen is the last in the test body.
+
+	     Currently, this does not work as expected because there
+	     is no head link map if a namespace is completely deleted.
+	     No LA_ACT_CONSISTENT event is generated in that case.
+	     See the comment in _dl_audit_activity_nsid and bug 32068.  */
+	  if (cookie != last_act_cookie && last_act_cookie != -1
+	      && !pass_dlclose_flag)
 	    TEST_COMPARE (last_act, LA_ACT_CONSISTENT);
 
 	  if (this_act == LA_ACT_ADD && acts[nacts] != cookie)
@@ -265,7 +275,16 @@ do_test (int argc, char *argv[])
 
   free (buffer);
   xfclose (out);
+}
 
+static int
+do_test (int argc, char *argv[])
+{
+  if (restart)
+    return handle_restart ();
+
+  do_one_test (argc, argv, false);
+  do_one_test (argc, argv, true);
   return 0;
 }
 
