@@ -819,7 +819,7 @@ _IO_unbuffer_all (void)
       /* Free up the backup area if it was ever allocated.  */
       if (_IO_have_backup (fp))
 	_IO_free_backup_area (fp);
-      if (fp->_mode > 0 && _IO_have_wbackup (fp))
+      if (!legacy && fp->_mode > 0 && _IO_have_wbackup (fp))
 	_IO_free_wbackup_area (fp);
 
       if (! (fp->_flags & _IO_UNBUFFERED)
