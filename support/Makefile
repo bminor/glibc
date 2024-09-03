@@ -49,6 +49,8 @@ libsupport-routines = \
   support_check_stat_fd \
   support_check_stat_path \
   support_chroot \
+  support_compare_file_bytes \
+  support_compare_file_string \
   support_copy_file \
   support_copy_file_range \
   support_create_timer \
@@ -65,6 +67,8 @@ libsupport-routines = \
   support_isolate_in_subprocess \
   support_mutex_pi_monotonic \
   support_need_proc \
+  support_open_and_compare_file_bytes \
+  support_open_and_compare_file_string \
   support_openpty \
   support_path_support_time64 \
   support_paths \
