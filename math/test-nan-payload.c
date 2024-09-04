@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#define _LIBC_TEST 1
+#define __STDC_WANT_IEC_60559_TYPES_EXT__
 #include <float.h>
 #include <math.h>
 #include <stdio.h>
@@ -31,11 +33,24 @@
 #define CHECK_IS_NAN(TYPE, A)			\
   do						\
     {						\
-      if (isnan (A))				\
+      if (isnan (A) && !issignaling (A))	\
 	puts ("PASS: " #TYPE " " #A);		\
       else					\
 	{					\
 	  puts ("FAIL: " #TYPE " " #A);		\
+	  result = 1;				\
+	}					\
+    }						\
+  while (0)
+
+#define CHECK_PAYLOAD(TYPE, FUNC, A, P)		\
+  do						\
+    {						\
+      if (FUNC (&(A)) == (P))			\
+	puts ("PASS: " #TYPE " payload " #A);	\
+      else					\
+	{					\
+	  puts ("FAIL: " #TYPE " payload " #A);	\
 	  result = 1;				\
 	}					\
     }						\
@@ -71,7 +86,7 @@
    bits.  */
 #define CAN_TEST_EQ(MANT_DIG) ((MANT_DIG) != 64 && (MANT_DIG) != 106)
 
-#define RUN_TESTS(TYPE, SFUNC, FUNC, MANT_DIG)		\
+#define RUN_TESTS(TYPE, SFUNC, FUNC, PLFUNC, MANT_DIG)	\
   do							\
     {							\
      TYPE n123 = WRAP_NAN (FUNC, "123");		\
@@ -82,6 +97,10 @@
      CHECK_IS_NAN (TYPE, n456);				\
      TYPE s456 = WRAP_STRTO (SFUNC, "NAN(456)");	\
      CHECK_IS_NAN (TYPE, s456);				\
+     TYPE nh123 = WRAP_NAN (FUNC, "0x123");		\
+     CHECK_IS_NAN (TYPE, nh123);			\
+     TYPE sh123 = WRAP_STRTO (SFUNC, "NAN(0x123)");	\
+     CHECK_IS_NAN (TYPE, sh123);			\
      TYPE n123x = WRAP_NAN (FUNC, "123)");		\
      CHECK_IS_NAN (TYPE, n123x);			\
      TYPE nemp = WRAP_NAN (FUNC, "");			\
@@ -92,8 +111,16 @@
      CHECK_IS_NAN (TYPE, sx);				\
      if (CAN_TEST_EQ (MANT_DIG))			\
        CHECK_SAME_NAN (TYPE, n123, s123);		\
+     CHECK_PAYLOAD (TYPE, PLFUNC, n123, 123);		\
+     CHECK_PAYLOAD (TYPE, PLFUNC, s123, 123);		\
      if (CAN_TEST_EQ (MANT_DIG))			\
        CHECK_SAME_NAN (TYPE, n456, s456);		\
+     CHECK_PAYLOAD (TYPE, PLFUNC, n456, 456);		\
+     CHECK_PAYLOAD (TYPE, PLFUNC, s456, 456);		\
+     if (CAN_TEST_EQ (MANT_DIG))			\
+       CHECK_SAME_NAN (TYPE, nh123, sh123);		\
+     CHECK_PAYLOAD (TYPE, PLFUNC, nh123, 0x123);	\
+     CHECK_PAYLOAD (TYPE, PLFUNC, sh123, 0x123);	\
      if (CAN_TEST_EQ (MANT_DIG))			\
        CHECK_SAME_NAN (TYPE, nemp, semp);		\
      if (CAN_TEST_EQ (MANT_DIG))			\
@@ -110,9 +137,31 @@ static int
 do_test (void)
 {
   int result = 0;
-  RUN_TESTS (float, strtof, nanf, FLT_MANT_DIG);
-  RUN_TESTS (double, strtod, nan, DBL_MANT_DIG);
-  RUN_TESTS (long double, strtold, nanl, LDBL_MANT_DIG);
+  RUN_TESTS (float, strtof, nanf, getpayloadf, FLT_MANT_DIG);
+  RUN_TESTS (double, strtod, nan, getpayload, DBL_MANT_DIG);
+  RUN_TESTS (long double, strtold, nanl, getpayloadl, LDBL_MANT_DIG);
+#if __HAVE_FLOAT16
+  RUN_TESTS (_Float16, strtof16, nanf16, getpayloadf16, FLT16_MANT_DIG);
+#endif
+#if __HAVE_FLOAT32
+  RUN_TESTS (_Float32, strtof32, nanf32, getpayloadf32, FLT32_MANT_DIG);
+#endif
+#if __HAVE_FLOAT64
+  RUN_TESTS (_Float64, strtof64, nanf64, getpayloadf64, FLT64_MANT_DIG);
+#endif
+#if __HAVE_FLOAT128
+  RUN_TESTS (_Float128, strtof128, nanf128, getpayloadf128, FLT128_MANT_DIG);
+#endif
+#if __HAVE_FLOAT32X
+  RUN_TESTS (_Float32x, strtof32x, nanf32x, getpayloadf32x, FLT32X_MANT_DIG);
+#endif
+#if __HAVE_FLOAT64X
+  RUN_TESTS (_Float64x, strtof64x, nanf64x, getpayloadf64x, FLT64X_MANT_DIG);
+#endif
+#if __HAVE_FLOAT128X
+  RUN_TESTS (_Float128x, strtof128x, nanf128x, getpayloadf128x,
+	     FLT128X_MANT_DIG);
+#endif
   return result;
 }
 
