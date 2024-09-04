@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <errno.h>
 #include <ieee754.h>
 #include <locale.h>
 #include <math.h>
@@ -50,7 +51,9 @@ STRTOD_NAN (const STRING_TYPE *str, STRING_TYPE **endptr, STRING_TYPE endc)
   STRING_TYPE *endp;
   unsigned long long int mant;
 
+  int save_errno = errno;
   mant = STRTOULL (str, &endp, 0);
+  __set_errno (save_errno);
   if (endp == cp)
     SET_NAN_PAYLOAD (retval, mant);
 

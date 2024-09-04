@@ -18,6 +18,7 @@
 
 #define _LIBC_TEST 1
 #define __STDC_WANT_IEC_60559_TYPES_EXT__
+#include <errno.h>
 #include <float.h>
 #include <math.h>
 #include <stdio.h>
@@ -82,6 +83,26 @@
     }							\
   while (0)
 
+#define CLEAR_ERRNO				\
+  do						\
+    {						\
+      errno = 12345;				\
+    }						\
+  while (0)
+
+#define CHECK_ERRNO(TYPE, A)				\
+  do							\
+    {							\
+      if (errno == 12345)				\
+	puts ("PASS: " #TYPE " " #A " errno");		\
+      else						\
+	{						\
+	  puts ("FAIL: " #TYPE " " #A " errno");	\
+	  result = 1;					\
+	}						\
+    }							\
+  while (0)
+
 /* Cannot test payloads by memcmp for formats where NaNs have padding
    bits.  */
 #define CAN_TEST_EQ(MANT_DIG) ((MANT_DIG) != 64 && (MANT_DIG) != 106)
@@ -89,26 +110,58 @@
 #define RUN_TESTS(TYPE, SFUNC, FUNC, PLFUNC, MANT_DIG)	\
   do							\
     {							\
+     CLEAR_ERRNO;					\
      TYPE n123 = WRAP_NAN (FUNC, "123");		\
+     CHECK_ERRNO (TYPE, n123);				\
      CHECK_IS_NAN (TYPE, n123);				\
+     CLEAR_ERRNO;					\
      TYPE s123 = WRAP_STRTO (SFUNC, "NAN(123)");	\
+     CHECK_ERRNO (TYPE, s123);				\
      CHECK_IS_NAN (TYPE, s123);				\
+     CLEAR_ERRNO;					\
      TYPE n456 = WRAP_NAN (FUNC, "456");		\
+     CHECK_ERRNO (TYPE, n456);				\
      CHECK_IS_NAN (TYPE, n456);				\
+     CLEAR_ERRNO;					\
      TYPE s456 = WRAP_STRTO (SFUNC, "NAN(456)");	\
+     CHECK_ERRNO (TYPE, s456);				\
      CHECK_IS_NAN (TYPE, s456);				\
+     CLEAR_ERRNO;					\
      TYPE nh123 = WRAP_NAN (FUNC, "0x123");		\
+     CHECK_ERRNO (TYPE, nh123);				\
      CHECK_IS_NAN (TYPE, nh123);			\
+     CLEAR_ERRNO;					\
      TYPE sh123 = WRAP_STRTO (SFUNC, "NAN(0x123)");	\
+     CHECK_ERRNO (TYPE, sh123);				\
      CHECK_IS_NAN (TYPE, sh123);			\
+     CLEAR_ERRNO;					\
      TYPE n123x = WRAP_NAN (FUNC, "123)");		\
+     CHECK_ERRNO (TYPE, n123x);				\
      CHECK_IS_NAN (TYPE, n123x);			\
+     CLEAR_ERRNO;					\
      TYPE nemp = WRAP_NAN (FUNC, "");			\
+     CHECK_ERRNO (TYPE, nemp);				\
      CHECK_IS_NAN (TYPE, nemp);				\
+     CLEAR_ERRNO;					\
      TYPE semp = WRAP_STRTO (SFUNC, "NAN()");		\
+     CHECK_ERRNO (TYPE, semp);				\
      CHECK_IS_NAN (TYPE, semp);				\
+     CLEAR_ERRNO;					\
      TYPE sx = WRAP_STRTO (SFUNC, "NAN");		\
+     CHECK_ERRNO (TYPE, sx);				\
      CHECK_IS_NAN (TYPE, sx);				\
+     CLEAR_ERRNO;					\
+     TYPE novf = WRAP_NAN (FUNC, "9999999999"		\
+			   "99999999999999999999"	\
+			   "9999999999");		\
+     CHECK_ERRNO (TYPE, novf);				\
+     CHECK_IS_NAN (TYPE, novf);				\
+     CLEAR_ERRNO;					\
+     TYPE sovf = WRAP_STRTO (SFUNC, "NAN(9999999999"	\
+			     "99999999999999999999"	\
+			     "9999999999)");		\
+     CHECK_ERRNO (TYPE, sovf);				\
+     CHECK_IS_NAN (TYPE, sovf);				\
      if (CAN_TEST_EQ (MANT_DIG))			\
        CHECK_SAME_NAN (TYPE, n123, s123);		\
      CHECK_PAYLOAD (TYPE, PLFUNC, n123, 123);		\
