@@ -33,11 +33,10 @@ time_syscall (time_t *t)
 }
 
 # undef INIT_ARCH
-# define INIT_ARCH() \
-  void *vdso_time = dl_vdso_vsym (HAVE_TIME_VSYSCALL);
+# define INIT_ARCH()
 libc_ifunc (time,
-	    vdso_time ? VDSO_IFUNC_RET (vdso_time)
-		      : (void *) time_syscall);
+	    GLRO(dl_vdso_time) != NULL ? VDSO_IFUNC_RET (GLRO(dl_vdso_time))
+				       : (void *) time_syscall);
 
 # else
 time_t
