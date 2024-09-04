@@ -37,11 +37,11 @@ __gettimeofday_syscall (struct timeval *restrict tv, void *restrict tz)
 }
 
 # undef INIT_ARCH
-# define INIT_ARCH() \
-  void *vdso_gettimeofday = dl_vdso_vsym (HAVE_GETTIMEOFDAY_VSYSCALL)
+# define INIT_ARCH()
 libc_ifunc (__gettimeofday,
-	    vdso_gettimeofday ? VDSO_IFUNC_RET (vdso_gettimeofday)
-			      : (void *) __gettimeofday_syscall)
+	    GLRO(dl_vdso_gettimeofday) != NULL
+	    ? VDSO_IFUNC_RET (GLRO(dl_vdso_gettimeofday))
+	    : (void *) __gettimeofday_syscall)
 
 # else
 int
