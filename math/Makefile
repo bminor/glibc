@@ -1077,6 +1077,7 @@ CFLAGS-test-flt-eval-method.c += -fexcess-precision=standard
 CFLAGS-test-fe-snans-always-signal.c += $(config-cflags-signaling-nans)
 
 CFLAGS-test-nan-const.c += -fno-builtin
+CFLAGS-test-nan-payload.c += -fno-builtin
 
 CFLAGS-test-ceil-except-2.c += -fno-builtin
 CFLAGS-test-floor-except-2.c += -fno-builtin
