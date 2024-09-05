@@ -63,6 +63,9 @@ freopen (const char *filename, const char *mode, FILE *fp)
 	 up here. */
       _IO_old_file_close_it (fp);
       _IO_JUMPS_FUNC_UPDATE (fp, &_IO_old_file_jumps);
+      fp->_flags2 &= ~(_IO_FLAGS2_MMAP
+		       | _IO_FLAGS2_NOTCANCEL
+		       | _IO_FLAGS2_CLOEXEC);
       result = _IO_old_file_fopen (fp, gfilename, mode);
     }
   else
@@ -72,6 +75,9 @@ freopen (const char *filename, const char *mode, FILE *fp)
       _IO_JUMPS_FILE_plus (fp) = &_IO_file_jumps;
       if (_IO_vtable_offset (fp) == 0 && fp->_wide_data != NULL)
 	fp->_wide_data->_wide_vtable = &_IO_wfile_jumps;
+      fp->_flags2 &= ~(_IO_FLAGS2_MMAP
+		       | _IO_FLAGS2_NOTCANCEL
+		       | _IO_FLAGS2_CLOEXEC);
       result = _IO_file_fopen (fp, gfilename, mode, 1);
       if (result != NULL)
 	result = __fopen_maybe_mmap (result);

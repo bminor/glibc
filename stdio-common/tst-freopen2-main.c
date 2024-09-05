@@ -308,9 +308,7 @@ do_test (void)
   TEST_VERIFY_EXIT (fp != NULL);
   ret = fcntl (fileno (fp), F_GETFD);
   TEST_VERIFY (ret != -1);
-#if 0 /* Fails to clear FD_CLOEXEC (bug 32134).  */
   TEST_COMPARE (ret & FD_CLOEXEC, 0);
-#endif
   TEST_COMPARE_FILE_STRING (fp, "plustomore");
   xfclose (fp);
   END_TEST;
