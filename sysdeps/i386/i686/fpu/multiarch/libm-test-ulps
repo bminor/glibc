@@ -1215,7 +1215,7 @@ Function: "exp2m1_towardzero":
 double: 3
 float: 2
 float128: 4
-ldouble: 5
+ldouble: 6
 
 Function: "exp2m1_upward":
 double: 3
