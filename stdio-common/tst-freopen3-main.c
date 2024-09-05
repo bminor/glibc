@@ -18,6 +18,7 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <mcheck.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -48,6 +49,7 @@
 int
 do_test (void)
 {
+  mtrace ();
   struct support_descriptors *fds;
   char *temp_dir = support_create_temp_directory ("tst-freopen3");
   char *file1 = xasprintf ("%s/file1", temp_dir);

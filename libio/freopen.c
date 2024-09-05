@@ -114,5 +114,7 @@ freopen (const char *filename, const char *mode, FILE *fp)
 
 end:
   _IO_release_lock (fp);
+  if (result == NULL && (fp->_flags & _IO_IS_FILEBUF) != 0)
+    _IO_deallocate_file (fp);
   return result;
 }

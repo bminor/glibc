@@ -321,7 +321,9 @@ ifeq (yes,$(build-shared))
 ifneq ($(PERL),no)
 tests-special += \
   $(objpfx)tst-freopen2-mem.out \
+  $(objpfx)tst-freopen3-mem.out \
   $(objpfx)tst-freopen64-2-mem.out \
+  $(objpfx)tst-freopen64-3-mem.out \
   $(objpfx)tst-getline-enomem-mem.out \
   $(objpfx)tst-getline-mem.out \
   $(objpfx)tst-printf-bz18872-mem.out \
@@ -335,8 +337,12 @@ tests-special += \
 generated += \
   tst-freopen2-mem.out \
   tst-freopen2.mtrace \
+  tst-freopen3-mem.out \
+  tst-freopen3.mtrace \
   tst-freopen64-2-mem.out \
   tst-freopen64-2.mtrace \
+  tst-freopen64-3-mem.out \
+  tst-freopen64-3.mtrace \
   tst-getline-enomem-mem.out \
   tst-getline-enomem.mtrace \
   tst-getline-mem.out \
@@ -461,6 +467,12 @@ tst-freopen2-ENV = \
   LD_PRELOAD=$(common-objpfx)malloc/libc_malloc_debug.so
 tst-freopen64-2-ENV = \
   MALLOC_TRACE=$(objpfx)tst-freopen64-2.mtrace \
+  LD_PRELOAD=$(common-objpfx)malloc/libc_malloc_debug.so
+tst-freopen3-ENV = \
+  MALLOC_TRACE=$(objpfx)tst-freopen3.mtrace \
+  LD_PRELOAD=$(common-objpfx)malloc/libc_malloc_debug.so
+tst-freopen64-3-ENV = \
+  MALLOC_TRACE=$(objpfx)tst-freopen64-3.mtrace \
   LD_PRELOAD=$(common-objpfx)malloc/libc_malloc_debug.so
 
 $(objpfx)tst-unbputc.out: tst-unbputc.sh $(objpfx)tst-unbputc
