@@ -59,15 +59,13 @@ freopen64 (const char *filename, const char *mode, FILE *fp)
   fp->_flags2 &= ~(_IO_FLAGS2_MMAP
 		   | _IO_FLAGS2_NOTCANCEL
 		   | _IO_FLAGS2_CLOEXEC);
+  fp->_mode = 0;
   result = _IO_file_fopen (fp, gfilename, mode, 0);
   fp->_flags2 &= ~_IO_FLAGS2_NOCLOSE;
   if (result != NULL)
     result = __fopen_maybe_mmap (result);
   if (result != NULL)
     {
-      /* unbound stream orientation */
-      result->_mode = 0;
-
       if (fd != -1 && _IO_fileno (result) != fd)
 	{
 	  /* At this point we have both file descriptors already allocated,
