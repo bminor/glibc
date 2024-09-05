@@ -180,9 +180,8 @@ unicode:
 # The following files are shared with the upstream tzcode project and must be
 # updated regularly to stay in sync with the upstream releases.
 #
-# Currently synced to TZDB 2024a, announced and distributed here:
-#	https://mm.icann.org/pipermail/tz-announce/2024-February/000081.html
-#	https://data.iana.org/time-zones/releases/tzdb-2024a.tar.lz
+# Currently synced to TZDB 2024b, announced and distributed here:
+#	https://github.com/eggert/tz/releases/tag/2024b
 tzcode:
   timezone/private.h
   timezone/tzfile.h
