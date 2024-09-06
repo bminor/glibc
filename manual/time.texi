@@ -532,6 +532,7 @@ Systems may support more than just these two POSIX clocks.
 
 @deftypefun int clock_gettime (clockid_t @var{clock}, struct timespec *@var{ts})
 @standards{POSIX.1, time.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Get the current time according to the clock identified by @var{clock},
 storing it as seconds and nanoseconds in @code{*@var{ts}}.
 @xref{Time Types}, for a description of @code{struct timespec}.
@@ -553,6 +554,7 @@ clock:
 
 @deftypefun int clock_getres (clockid_t @var{clock}, struct timespec *@var{res})
 @standards{POSIX.1, time.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Get the actual resolution of the clock identified by @var{clock},
 storing it in @code{*@var{ts}}.
 
