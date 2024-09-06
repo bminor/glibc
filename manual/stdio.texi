@@ -330,6 +330,14 @@ this ability, so using @code{freopen} is more portable.
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
 32 bit machine this function is in fact @code{freopen64} since the LFS
 interface replaces transparently the old interface.
+
+@Theglibc{} only supports use of @code{freopen} on streams opened with
+@code{fopen} or @code{fopen64} and on the original values of the
+standard streams @code{stdin}, @code{stdout}, and @code{stderr}; such
+a stream may be reopened multiple times with @code{freopen}.  If it is
+called on another kind of stream (opened with functions such as
+@code{popen}, @code{fmemopen}, @code{open_memstream}, and
+@code{fopencookie}), @code{freopen} fails and returns a null pointer.
 @end deftypefun
 
 @deftypefun {FILE *} freopen64 (const char *@var{filename}, const char *@var{opentype}, FILE *@var{stream})
