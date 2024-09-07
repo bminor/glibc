@@ -293,11 +293,18 @@ endif
 ifeq ($(build-shared),yes)
 aux	+= oldfileops oldstdfiles
 tests += \
+  tst-fopen-compat \
   tst-stderr-compat \
 # tests
 tests-2.0 += \
+  tst-fopen-compat \
   tst-stderr-compat \
 # tests-2.0
+
+tst-fopen-compat-ARGS = tst-fopen-compat.c
+# Disable PIE to trigger copy relocation.
+CFLAGS-tst-fopen-compat.c += -fno-pie
+tst-fopen-compat-no-pie = yes
 endif
 
 shared-only-routines = oldiofopen oldiofdopen oldiofclose oldfileops	\

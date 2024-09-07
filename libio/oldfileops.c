@@ -103,9 +103,11 @@ _IO_old_file_init_internal (struct _IO_FILE_plus *fp)
   fp->file._old_offset = _IO_pos_BAD;
   fp->file._flags |= CLOSED_FILEBUF_FLAGS;
 
-  _IO_link_in (fp);
+  /* NB: _vtable_offset must be set before calling _IO_link_in since
+     _IO_vtable_offset is used to detect the old binaries.  */
   fp->file._vtable_offset = ((int) sizeof (struct _IO_FILE)
 			     - (int) sizeof (struct _IO_FILE_complete));
+  _IO_link_in (fp);
   fp->file._fileno = -1;
 
   if (&_IO_stdin_used != NULL || !_IO_legacy_file ((FILE *) fp))
