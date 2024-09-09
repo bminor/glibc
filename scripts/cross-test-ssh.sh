@@ -32,6 +32,9 @@ instead of ordinary 'ssh'.
 If the '--timeoutfactor FACTOR' flag is present, set TIMEOUTFACTOR on
 the remote machine to the specified FACTOR.
 
+If the '--glibctunables VALUE' flag is present, set GLIBC_TUNABLES on
+the remote machine to the specified VALUE.
+
 If the '--allow-time-setting' flag is present, set
 GLIBC_TEST_ALLOW_TIME_SETTING on the remote machine to indicate that
 time can be safely adjusted (e.g. on a virtual machine).
@@ -66,6 +69,7 @@ appropriately."
 
 ssh='ssh'
 timeoutfactor=$TIMEOUTFACTOR
+glibctunables=$GLIBC_TUNABLES
 while [ $# -gt 0 ]; do
   case "$1" in
 
@@ -83,6 +87,14 @@ while [ $# -gt 0 ]; do
         break
       fi
       timeoutfactor="$1"
+      ;;
+
+    "--glibctunables")
+      shift
+      if [ $# -lt 1 ]; then
+        break
+      fi
+      glibctunables="$1"
       ;;
 
     "--allow-time-setting")
@@ -132,6 +144,12 @@ ${command}"
 # Add command to set the timeout factor, if required.
 if [ "$timeoutfactor" ]; then
   command="export TIMEOUTFACTOR=$(bourne_quote "$timeoutfactor")
+${command}"
+fi
+
+# Add command to set glibc tunables, if required.
+if [ "$glibctunables" ]; then
+  command="export GLIBC_TUNABLES=$(bourne_quote "$glibctunables")
 ${command}"
 fi
 
