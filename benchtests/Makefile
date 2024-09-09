@@ -266,6 +266,7 @@ hash-benchset := \
 
 stdlib-benchset := \
   arc4random \
+  bsearch \
   random-lock \
   strtod \
   # stdlib-benchset
