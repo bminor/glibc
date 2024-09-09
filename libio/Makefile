@@ -101,6 +101,8 @@ tests = \
   tst-fclose-unopened \
   tst-fclose-unopened2 \
   tst-fdopen-seek-failure \
+  tst-fflush \
+  tst-fflush-NULL \
   tst-fgetc-after-eof \
   tst-fgetwc \
   tst-fgetws \
