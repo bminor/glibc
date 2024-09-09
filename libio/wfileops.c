@@ -420,14 +420,14 @@ _IO_wfile_overflow (FILE *f, wint_t wch)
 	{
 	  _IO_wdoallocbuf (f);
 	  _IO_free_wbackup_area (f);
-	  _IO_wsetg (f, f->_wide_data->_IO_buf_base,
-		     f->_wide_data->_IO_buf_base, f->_wide_data->_IO_buf_base);
 
 	  if (f->_IO_write_base == NULL)
 	    {
 	      _IO_doallocbuf (f);
 	      _IO_setg (f, f->_IO_buf_base, f->_IO_buf_base, f->_IO_buf_base);
 	    }
+	  _IO_wsetg (f, f->_wide_data->_IO_buf_base,
+		     f->_wide_data->_IO_buf_base, f->_wide_data->_IO_buf_base);
 	}
       else
 	{
@@ -958,7 +958,7 @@ _IO_wfile_xsputn (FILE *f, const void *data, size_t n)
   const wchar_t *s = (const wchar_t *) data;
   size_t to_do = n;
   int must_flush = 0;
-  size_t count;
+  size_t count = 0;
 
   if (n <= 0)
     return 0;
@@ -967,7 +967,6 @@ _IO_wfile_xsputn (FILE *f, const void *data, size_t n)
      (or the filebuf is unbuffered), use sys_write directly. */
 
   /* First figure out how much space is available in the buffer. */
-  count = f->_wide_data->_IO_write_end - f->_wide_data->_IO_write_ptr;
   if ((f->_flags & _IO_LINE_BUF) && (f->_flags & _IO_CURRENTLY_PUTTING))
     {
       count = f->_wide_data->_IO_buf_end - f->_wide_data->_IO_write_ptr;
@@ -985,6 +984,10 @@ _IO_wfile_xsputn (FILE *f, const void *data, size_t n)
 	    }
 	}
     }
+  else if (f->_wide_data->_IO_write_end > f->_wide_data->_IO_write_ptr)
+    count = f->_wide_data->_IO_write_end
+      - f->_wide_data->_IO_write_ptr; /* Space available.  */
+
   /* Then fill the buffer. */
   if (count > 0)
     {

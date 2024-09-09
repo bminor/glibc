@@ -86,6 +86,8 @@ tests = \
   bug-wmemstream1 \
   bug-wsetpos \
   test-fmemopen \
+  test-fputs-unbuffered-full \
+  test-fputws-unbuffered-full \
   tst-atime \
   tst-bz22415 \
   tst-bz24051 \
