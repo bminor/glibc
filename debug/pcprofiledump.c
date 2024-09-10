@@ -75,6 +75,44 @@ static struct argp argp =
   options, parse_opt, args_doc, doc, NULL, more_help
 };
 
+/* Try to read SIZE bytes from FD and store them on BUF.  Terminate
+   the process upon read error.  Also terminate the process if less
+   than SIZE bytes are remaining in the file.  If !IN_HEADER, do not
+   terminate the process if the end of the file is encountered
+   immediately, before any bytes are read.
+
+   Returns true if SIZE bytes have been read, and false if no bytes
+   have been read due to an end-of-file condition.  */
+static bool
+read_exactly (int fd, void *buffer, size_t size, bool in_header)
+{
+  char *p = buffer;
+  char *end = p + size;
+  while (p < end)
+    {
+      ssize_t ret = TEMP_FAILURE_RETRY (read (fd, p, end - p));
+      if (ret < 0)
+	{
+	  if (in_header)
+	    error (EXIT_FAILURE, errno, _("cannot read header"));
+	  else
+	    error (EXIT_FAILURE, errno,  _("cannot read pointer pair"));
+	}
+      if (ret == 0)
+	{
+	  if (p == buffer && !in_header)
+	    /* Nothing has been read.  */
+	    return false;
+	  if (in_header)
+	    error (EXIT_FAILURE, 0, _("unexpected end of file in header"));
+	  else
+	    error (EXIT_FAILURE, 0,
+		   _("unexpected end of file in pointer pair"));
+	}
+      p += ret;
+    }
+  return true;
+}
 
 int
 main (int argc, char *argv[])
@@ -110,8 +148,7 @@ main (int argc, char *argv[])
   /* Read the first 4-byte word.  It contains the information about
      the word size and the endianness.  */
   uint32_t word;
-  if (TEMP_FAILURE_RETRY (read (fd, &word, 4)) != 4)
-    error (EXIT_FAILURE, errno, _("cannot read header"));
+  read_exactly (fd, &word, sizeof (word), true);
 
   /* Check whether we have to swap the byte order.  */
   int must_swap = (word & 0x0fffffff) == bswap_32 (0xdeb00000);
@@ -121,56 +158,30 @@ main (int argc, char *argv[])
   /* We have two loops, one for 32 bit pointers, one for 64 bit pointers.  */
   if (word == 0xdeb00004)
     {
-      union
-      {
-	uint32_t ptrs[2];
-	char bytes[8];
-      } pair;
+      uint32_t ptrs[2];
 
       while (1)
 	{
-	  size_t len = sizeof (pair);
-	  size_t n;
-
-	  while (len > 0
-		 && (n = TEMP_FAILURE_RETRY (read (fd, &pair.bytes[8 - len],
-						   len))) != 0)
-	    len -= n;
-
-	  if (len != 0)
-	    /* Nothing to read.  */
+	  if (!read_exactly (fd, ptrs, sizeof (ptrs), false))
 	    break;
 
 	  printf ("this = %#010" PRIx32 ", caller = %#010" PRIx32 "\n",
-		  must_swap ? bswap_32 (pair.ptrs[0]) : pair.ptrs[0],
-		  must_swap ? bswap_32 (pair.ptrs[1]) : pair.ptrs[1]);
+		  must_swap ? bswap_32 (ptrs[0]) : ptrs[0],
+		  must_swap ? bswap_32 (ptrs[1]) : ptrs[1]);
 	}
     }
   else if (word == 0xdeb00008)
     {
-      union
-      {
-	uint64_t ptrs[2];
-	char bytes[16];
-      } pair;
+      uint64_t ptrs[2];
 
       while (1)
 	{
-	  size_t len = sizeof (pair);
-	  size_t n;
-
-	  while (len > 0
-		 && (n = TEMP_FAILURE_RETRY (read (fd, &pair.bytes[8 - len],
-						   len))) != 0)
-	    len -= n;
-
-	  if (len != 0)
-	    /* Nothing to read.  */
+	  if (!read_exactly (fd, ptrs, sizeof (ptrs), false))
 	    break;
 
 	  printf ("this = %#018" PRIx64 ", caller = %#018" PRIx64 "\n",
-		  must_swap ? bswap_64 (pair.ptrs[0]) : pair.ptrs[0],
-		  must_swap ? bswap_64 (pair.ptrs[1]) : pair.ptrs[1]);
+		  must_swap ? bswap_64 (ptrs[0]) : ptrs[0],
+		  must_swap ? bswap_64 (ptrs[1]) : ptrs[1]);
 	}
     }
   else
