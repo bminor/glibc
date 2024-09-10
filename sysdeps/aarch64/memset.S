@@ -30,7 +30,6 @@
  */
 
 #define dstin	x0
-#define val	x1
 #define valw	w1
 #define count	x2
 #define dst	x3

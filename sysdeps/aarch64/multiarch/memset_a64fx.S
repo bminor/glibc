@@ -18,7 +18,6 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <sysdeps/aarch64/memset-reg.h>
 
 /* Assumptions:
  *
@@ -35,6 +34,14 @@
 #if HAVE_AARCH64_SVE_ASM
 
 	.arch armv8.2-a+sve
+
+#define dstin   x0
+#define valw    w1
+#define count   x2
+#define dst     x3
+#define dstend  x4
+#define tmp1    x5
+#define tmp2    x6
 
 	.macro st1b_unroll first=0, last=7
 	st1b	z0.b, p0, [dst, \first, mul vl]
