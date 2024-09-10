@@ -635,6 +635,7 @@ libc_cv_gcc_unwind_find_fde
 libc_extra_cppflags
 libc_extra_cflags
 libc_cv_cxx_thread_local
+no_time_bits_source
 no_file_offset_bits_source
 fortify_source
 no_fortify_source
@@ -7815,6 +7816,35 @@ fi
 config_vars="$config_vars
 no-file-offset-bits-source = $no_file_offset_bits_source"
 
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main (void)
+{
+
+#ifndef _TIME_BITS
+# error _TIME_BITS not defined
+#endif
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_cpp "$LINENO"
+then :
+  libc_cv_compiler_default_time_bits=yes
+else case e in #(
+  e) libc_cv_compiler_default_time_bits=no ;;
+esac
+fi
+rm -f conftest.err conftest.i conftest.$ac_ext
+if test "$libc_cv_compiler_default_time_bits" = yes
+then :
+  no_time_bits_source="-U_TIME_BITS"
+fi
+
+config_vars="$config_vars
+no-time-bits-source = $no_time_bits_source"
 
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether the assembler requires one version per symbol" >&5
 printf %s "checking whether the assembler requires one version per symbol... " >&6; }

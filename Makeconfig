@@ -1014,6 +1014,9 @@ endif
 # Filter out LFS flags if compiler defines it by default.
 +cflags += $(no-file-offset-bits-source)
 
+# Filter out 64 bit time_t flags if compiler defines it by default.
++cflags += $(no-time-bits-source)
+
 # Each sysdeps directory can contain header files that both will be
 # used to compile and will be installed.  Each can also contain an
 # include/ subdirectory, whose header files will be used to compile

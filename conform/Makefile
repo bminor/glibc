@@ -372,7 +372,7 @@ test-xfail-UNIX98/ndbm.h/conform = yes
 test-xfail-XOPEN2K/ndbm.h/conform = yes
 test-xfail-XOPEN2K8/ndbm.h/conform = yes
 
-conformtest-cc-flags =  -I../include $(+sysdep-includes) $(sysincludes) -I.. $(no-file-offset-bits-source)
+conformtest-cc-flags =  -I../include $(+sysdep-includes) $(sysincludes) -I.. $(no-file-offset-bits-source) $(no-time-bits-source)
 # conformtest-xfail-conds may be set by a sysdeps Makefile fragment to
 # a list of conditions that are considered to be true when encountered
 # in xfail[cond]- lines in test expectations.

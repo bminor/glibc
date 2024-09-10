@@ -1576,6 +1576,17 @@ AS_IF([test "$libc_cv_compiler_default_file_offset_bits" = yes],
 AC_SUBST(no_file_offset_bits_source)
 LIBC_CONFIG_VAR([no-file-offset-bits-source], [$no_file_offset_bits_source])
 
+dnl Check if compiler define _TIME_BITS by default
+AC_PREPROC_IFELSE([AC_LANG_PROGRAM([[]], [[
+#ifndef _TIME_BITS
+# error _TIME_BITS not defined
+#endif]])],
+	       [libc_cv_compiler_default_time_bits=yes],
+	       [libc_cv_compiler_default_time_bits=no])
+AS_IF([test "$libc_cv_compiler_default_time_bits" = yes],
+      [no_time_bits_source="-U_TIME_BITS"])
+AC_SUBST(no_time_bits_source)
+LIBC_CONFIG_VAR([no-time-bits-source], [$no_time_bits_source])
 
 dnl Starting with binutils 2.35, GAS can attach multiple symbol versions
 dnl to one symbol (PR 23840).
