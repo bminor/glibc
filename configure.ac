@@ -1564,6 +1564,19 @@ AC_SUBST(no_fortify_source)
 AC_SUBST(fortify_source)
 LIBC_CONFIG_VAR([supported-fortify], [$libc_cv_supported_fortify_source])
 
+dnl Check if compiler define _FILE_OFFSET_BITS by default
+AC_PREPROC_IFELSE([AC_LANG_PROGRAM([[]], [[
+#ifndef _FILE_OFFSET_BITS
+# error _FILE_OFFSET_BITS not defined
+#endif]])],
+	       [libc_cv_compiler_default_file_offset_bits=yes],
+	       [libc_cv_compiler_default_file_offset_bits=no])
+AS_IF([test "$libc_cv_compiler_default_file_offset_bits" = yes],
+      [no_file_offset_bits_source="-U_FILE_OFFSET_BITS"])
+AC_SUBST(no_file_offset_bits_source)
+LIBC_CONFIG_VAR([no-file-offset-bits-source], [$no_file_offset_bits_source])
+
+
 dnl Starting with binutils 2.35, GAS can attach multiple symbol versions
 dnl to one symbol (PR 23840).
 AC_CACHE_CHECK(whether the assembler requires one version per symbol,

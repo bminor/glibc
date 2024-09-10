@@ -635,6 +635,7 @@ libc_cv_gcc_unwind_find_fde
 libc_extra_cppflags
 libc_extra_cflags
 libc_cv_cxx_thread_local
+no_file_offset_bits_source
 fortify_source
 no_fortify_source
 libc_cv_fortify_source
@@ -7783,6 +7784,37 @@ fi
 
 config_vars="$config_vars
 supported-fortify = $libc_cv_supported_fortify_source"
+
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main (void)
+{
+
+#ifndef _FILE_OFFSET_BITS
+# error _FILE_OFFSET_BITS not defined
+#endif
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_cpp "$LINENO"
+then :
+  libc_cv_compiler_default_file_offset_bits=yes
+else case e in #(
+  e) libc_cv_compiler_default_file_offset_bits=no ;;
+esac
+fi
+rm -f conftest.err conftest.i conftest.$ac_ext
+if test "$libc_cv_compiler_default_file_offset_bits" = yes
+then :
+  no_file_offset_bits_source="-U_FILE_OFFSET_BITS"
+fi
+
+config_vars="$config_vars
+no-file-offset-bits-source = $no_file_offset_bits_source"
+
 
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether the assembler requires one version per symbol" >&5
 printf %s "checking whether the assembler requires one version per symbol... " >&6; }
