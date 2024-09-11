@@ -282,10 +282,13 @@ cwd\comments\
 @macro standardsx {element, standard, header}
 @end macro
 
+@macro manpageurl {func, sec}
+@url{https://man7.org/linux/man-pages/man\sec\/\func\.\sec\.html}
+@end macro
+
 @macro manpagefunctionstub {func,sec}
 This documentation is a stub.  For additional information on this
-function, consult the manual page
-@url{https://man7.org/linux/man-pages/man\sec\/\func\.\sec\.html}.
+function, consult the manual page @manpageurl{\func\,\sec\}.
 @xref{Linux Kernel}.
 @end macro
 
