@@ -95,6 +95,8 @@ sysdep_routines += \
   process_vm_writev \
   pselect32 \
   readahead \
+  sched_getattr \
+  sched_setattr \
   setfsgid \
   setfsuid \
   setvmaname \
@@ -224,6 +226,7 @@ tests += \
   tst-process_mrelease \
   tst-quota \
   tst-rlimit-infinity \
+  tst-sched_setattr \
   tst-scm_rights \
   tst-sigtimedwait \
   tst-sync_file_range \

@@ -478,6 +478,7 @@ POSIX syntax had in mind.
 * Absolute Priority::               The first tier of priority.  Posix
 * Realtime Scheduling::             Scheduling among the process nobility
 * Basic Scheduling Functions::      Get/set scheduling policy, priority
+* Extensible Scheduling::           Parameterized scheduling policies.
 * Traditional Scheduling::          Scheduling among the vulgar masses
 * CPU Affinity::                    Limiting execution to certain CPUs
 @end menu
@@ -950,6 +951,120 @@ that it fails, the return value is @code{-1} and @code{errno} is set
 accordingly.  There is nothing specific that can go wrong with this
 function, so there are no specific @code{errno} values.
 
+@end deftypefun
+
+@node Extensible Scheduling
+@subsection Extensible Scheduling
+@cindex scheduling, extensible
+
+The type @code{struct sched_attr} and the functions @code{sched_setattr}
+and @code{sched_getattr} are used to implement scheduling policies with
+multiple parameters (not just priority and niceness).
+
+It is expected that these interfaces will be compatible with all future
+scheduling policies.
+
+For additional information about scheduling policies, consult consult
+the manual pages @manpageurl{sched,7} and @manpageurl{sched_setattr,2}.
+@xref{Linux Kernel}.
+
+@strong{Note:} Calling the @code{sched_setattr} function is incompatible
+with support for @code{PTHREAD_PRIO_PROTECT} mutexes.
+
+@deftp {Data Type} {struct sched_attr}
+@standards{Linux, sched.h}
+The @code{sched_attr} structure describes a parameterized scheduling policy.
+
+@strong{Portability note:} In the future, additional fields can be added
+to @code{struct sched_attr} at the end, so that the size of this data
+type changes.  Do not use it in places where this matters, such as
+structure fields in installed header files, where such a change could
+impact the application binary interface (ABI).
+
+The following generic fields are available.
+
+@table @code
+@item size
+The actually used size of the data structure.  See the description of
+the functions @code{sched_setattr} and @code{sched_getattr} below how this
+field is used to support extension of @code{struct sched_attr} with
+more fields.
+
+@item sched_policy
+The scheduling policy.  This field determines which fields in the
+structure are used, and how the @code{sched_flags} field is interpreted.
+
+@item sched_flags
+Scheduling flags associated with the scheduling policy.
+@end table
+
+In addition to the generic fields, policy-specific fields are available.
+For additional information, consult the manual page
+@manpageurl{sched_setattr,2}.  @xref{Linux Kernel}.
+@end deftp
+
+@deftypefun int sched_setaddr (pid_t @var{tid}, struct sched_attr *@var{attr}, unsigned int flags)
+@standards{Linux, sched.h}
+@safety{@mtsafe{}@assafe{}@acsafe{}}
+This functions applies the scheduling policy described by
+@code{*@var{attr}} to the thread @var{tid} (the value zero denotes the
+current thread).
+
+It is recommended to initialize unused fields to zero, either using
+@code{memset}, or using a structure initializer.  The
+@code{@var{attr->size}} field should be set to @code{sizeof (struct
+sched_attr)}, to inform the kernel of the structure version in use.
+
+The @var{flags} argument must be zero.  Other values may become
+available in the future.
+
+On failure, @code{sched_setattr} returns @math{-1} and sets
+@code{errno}.  The following errors are related the way
+extensibility is handled.
+@table @code
+@item E2BIG
+A field in @code{*@var{attr}} has a non-zero value, but is unknown to
+the kernel.  The application could try to apply a modified policy, where
+more fields are zero.
+
+@item EINVAL
+The policy in @code{@var{attr}->sched_policy} is unknown to the kernel,
+or flags are set in @code{@var{attr}->sched_flags} that the kernel does
+not know how to interpret.  The application could try with fewer flags
+set, or a different scheduling policy.
+
+This error also occurs if @var{attr} is @code{NULL} or @var{flags} is
+not zero.
+
+@item EPERM
+The current thread is not sufficiently privileged to assign the policy,
+either because access to the policy is restricted in general, or because
+the current thread does not have the rights to change the scheduling
+policy of the thread @var{tid}.
+@end table
+
+Other error codes depend on the scheduling policy.
+@end deftypefun
+
+@deftypefun int sched_getaddr (pid_t @var{tid}, struct sched_attr *@var{attr}, unsigned int size, unsigned int flags)
+@standards{Linux, sched.h}
+@safety{@mtsafe{}@assafe{}@acsafe{}}
+This function obtains the scheduling policy of the thread @var{tid}
+(zero denotes the current thread) and store it in @code{*@var{attr}},
+which must have space for at least @var{size} bytes.
+
+The @var{flags} argument must be zero.  Other values may become
+available in the future.
+
+Upon success, @code{@var{attr}->size} contains the size of the structure
+version used by the kernel.  Fields with offsets greater or equal to
+@code{@var{attr}->size} are not updated by the kernel.  To obtain
+predictable values for unknown fields, use @code{memset} to set
+all @var{size} bytes to zero prior to calling @code{sched_getattr}.
+
+On failure, @code{sched_getattr} returns @math{-1} and sets @code{errno}.
+If @code{errno} is @code{E2BIG}, this means that the buffer is not large
+large enough, and the application could retry with a larger buffer.
 @end deftypefun
 
 @node Traditional Scheduling

@@ -25,6 +25,9 @@ Major new features:
   which is why this mode is not enabled by default.  A future version
   of the library may turn it on by default, however.
 
+* On Linux, the sched_setattr and sched_getattr have been added, for
+  supporting parameterized scheduling policies such as SCHED_DEADLINE.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
   [Add deprecations, removals and changes affecting compatibility here]

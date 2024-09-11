@@ -34,10 +34,39 @@
 # define SCHED_IDLE		5
 # define SCHED_DEADLINE		6
 
+/* Flags that can be used in policy values.  */
 # define SCHED_RESET_ON_FORK	0x40000000
-#endif
 
-#ifdef __USE_GNU
+/* Use "" to work around incorrect macro expansion of the
+   __has_include argument (GCC PR 80005).  */
+# ifdef __has_include
+#  if __has_include ("linux/sched/types.h")
+/* Some older Linux versions defined sched_param in <linux/sched/types.h>.  */
+#   define sched_param __glibc_mask_sched_param
+#   include <linux/sched/types.h>
+#   undef sched_param
+#  endif
+# endif
+# ifndef SCHED_ATTR_SIZE_VER0
+#  include <linux/types.h>
+#  define SCHED_ATTR_SIZE_VER0 48
+#  define SCHED_ATTR_SIZE_VER1 56
+struct sched_attr
+{
+  __u32 size;
+  __u32 sched_policy;
+  __u64 sched_flags;
+  __s32 sched_nice;
+  __u32 sched_priority;
+  __u64 sched_runtime;
+  __u64 sched_deadline;
+  __u64 sched_period;
+  __u32 sched_util_min;
+  __u32 sched_util_max;
+  /* Additional fields may be added at the end.  */
+};
+# endif /* !SCHED_ATTR_SIZE_VER0 */
+
 /* Cloning flags.  */
 # define CSIGNAL       0x000000ff /* Signal mask to be sent at exit.  */
 # define CLONE_VM      0x00000100 /* Set if VM shared between processes.  */
@@ -97,6 +126,17 @@ extern int getcpu (unsigned int *, unsigned int *) __THROW;
 
 /* Switch process to namespace of type NSTYPE indicated by FD.  */
 extern int setns (int __fd, int __nstype) __THROW;
+
+/* Apply the scheduling attributes from *ATTR to the process or thread TID.  */
+int sched_setattr (pid_t tid, struct sched_attr *attr, unsigned int flags)
+  __THROW __nonnull ((2));
+
+/* Obtain the scheduling attributes of the process or thread TID and
+   store it in *ATTR.  */
+int sched_getattr (pid_t tid, struct sched_attr *attr, unsigned int size,
+		   unsigned int flags)
+  __THROW __nonnull ((2)) __attr_access ((__write_only__, 2, 3));
+
 #endif
 
 __END_DECLS

@@ -328,6 +328,10 @@ libc {
     posix_spawnattr_getcgroup_np;
     posix_spawnattr_setcgroup_np;
   }
+  GLIBC_2.41 {
+    sched_getattr;
+    sched_setattr;
+  }
   GLIBC_PRIVATE {
     # functions used in other libraries
     __syscall_rt_sigqueueinfo;
