@@ -29,6 +29,7 @@
 #define SCHED_FIFO		1
 #define SCHED_RR		2
 #ifdef __USE_GNU
+# define SCHED_NORMAL		SCHED_OTHER
 # define SCHED_BATCH		3
 # define SCHED_ISO		4
 # define SCHED_IDLE		5
@@ -36,6 +37,19 @@
 
 /* Flags that can be used in policy values.  */
 # define SCHED_RESET_ON_FORK	0x40000000
+
+/* Flags for the sched_flags field in struct sched_attr.   */
+#define SCHED_FLAG_RESET_ON_FORK	0x01
+#define SCHED_FLAG_RECLAIM		0x02
+#define SCHED_FLAG_DL_OVERRUN		0x04
+#define SCHED_FLAG_KEEP_POLICY		0x08
+#define SCHED_FLAG_KEEP_PARAMS		0x10
+#define SCHED_FLAG_UTIL_CLAMP_MIN	0x20
+#define SCHED_FLAG_UTIL_CLAMP_MAX	0x40
+
+/* Combinations of sched_flags fields.  */
+#define SCHED_FLAG_KEEP_ALL		0x18
+#define SCHED_FLAG_UTIL_CLAMP		0x60
 
 /* Use "" to work around incorrect macro expansion of the
    __has_include argument (GCC PR 80005).  */

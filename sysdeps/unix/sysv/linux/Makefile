@@ -398,6 +398,16 @@ $(objpfx)tst-mount-compile.out: ../sysdeps/unix/sysv/linux/tst-mount-compile.py
 	  < /dev/null > $@ 2>&1; $(evaluate-test)
 $(objpfx)tst-mount-compile.out: $(sysdeps-linux-python-deps)
 
+tests-special += \
+  $(objpfx)tst-sched-consts.out \
+  # tests-special
+$(objpfx)tst-sched-consts.out: ../sysdeps/unix/sysv/linux/tst-sched-consts.py
+	$(sysdeps-linux-python) \
+	  ../sysdeps/unix/sysv/linux/tst-sched-consts.py \
+	    $(sysdeps-linux-python-cc) \
+	  < /dev/null > $@ 2>&1; $(evaluate-test)
+$(objpfx)tst-sched-consts.out: $(sysdeps-linux-python-deps)
+
 tst-rseq-disable-ENV = GLIBC_TUNABLES=glibc.pthread.rseq=0
 
 endif # $(subdir) == misc

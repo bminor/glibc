@@ -44,6 +44,8 @@ check_unused (void)
 static int
 do_test (void)
 {
+  _Static_assert (SCHED_OTHER == SCHED_NORMAL,
+                  "SCHED_OTHER, SCHED_NORMAL values");
   TEST_VERIFY (sizeof (struct sched_attr) < sizeof (u));
 
   /* Check that reading and re-applying the current policy works.  */
