@@ -78,6 +78,7 @@ libsupport-routines = \
   support_quote_blob \
   support_quote_blob_wide \
   support_quote_string \
+  support_readdir \
   support_readdir_check \
   support_readdir_r_check \
   support_record_failure \
@@ -332,6 +333,7 @@ tests = \
   tst-support_quote_blob \
   tst-support_quote_blob_wide \
   tst-support_quote_string \
+  tst-support_readdir \
   tst-support_record_failure \
   tst-test_compare \
   tst-test_compare_blob \
