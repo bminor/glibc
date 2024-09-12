@@ -39,10 +39,13 @@ do_test (void)
       e.d_name = NULL;
       TEST_VERIFY (support_readdir (stream, op, &e));
       TEST_COMPARE (e.d_ino, reference->d_ino);
-      if (support_readdir_offset_width (op) != 0)
-        TEST_COMPARE (e.d_off, reference->d_off);
-      else
-        TEST_COMPARE (e.d_off, 0);
+#ifdef _DIRENT_HAVE_D_OFF
+      TEST_VERIFY (support_readdir_offset_width (op) != 0);
+      TEST_COMPARE (e.d_off, reference->d_off);
+#else
+      TEST_COMPARE (support_readdir_offset_width (op), 0);
+      TEST_COMPARE (e.d_off, 0);
+#endif
       TEST_COMPARE (e.d_type, reference->d_type);
       TEST_COMPARE_STRING (e.d_name, reference->d_name);
       free (e.d_name);
