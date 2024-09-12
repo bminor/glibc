@@ -36,7 +36,7 @@
 # files for making modifications.
 
 
-UNICODE_VERSION = 15.1.0
+UNICODE_VERSION = 16.0.0
 
 PYTHON3 = python3
 WGET = wget

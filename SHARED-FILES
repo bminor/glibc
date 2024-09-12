@@ -169,7 +169,7 @@ gettext:
 # The following files are shared with the upstream Unicode project and must be
 # updated regularly to stay in sync with the upstream unicode releases.
 #
-# Merged from Unicode 15.1.0 release.
+# Merged from Unicode 16.0.0 release.
 unicode:
   localedata/unicode-gen/UnicodeData.txt
   localedata/unicode-gen/unicode-license.txt
