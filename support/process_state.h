@@ -31,13 +31,16 @@ enum support_process_state
   support_process_state_dead         = 0x20,  /* X (dead).  */
   support_process_state_zombie       = 0x40,  /* Z (zombie).  */
   support_process_state_parked       = 0x80,  /* P (parked).  */
+  support_process_state_invalid      = 0x100  /* Invalid state.  */
 };
 
 /* Wait for process PID to reach state STATE.  It can be a combination of
    multiple possible states ('process_state_running | process_state_sleeping')
    where the function return when any of these state are observed.
    For an invalid state not represented by SUPPORT_PROCESS_STATE, it fallbacks
-   to a 2 second sleep.  */
-void support_process_state_wait (pid_t pid, enum support_process_state state);
+   to a 2 second sleep.
+   Return the found process state.  */
+enum support_process_state
+support_process_state_wait (pid_t pid, enum support_process_state state);
 
 #endif
