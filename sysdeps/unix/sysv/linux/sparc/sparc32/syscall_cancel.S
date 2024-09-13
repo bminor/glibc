@@ -48,13 +48,13 @@ __syscall_cancel_arch_start:
 	bne	2f
 #endif
 	/* Issue a 6 argument syscall.  */
-	 mov	%i1, %g1
-	mov	%i2, %o0
+	 mov	%i2, %o0
 	mov	%i3, %o1
 	mov	%i4, %o2
 	mov	%i5, %o3
 	ld	[%fp+92], %o4
 	ld	[%fp+96], %o5
+	 mov	%i1, %g1
 	ta	0x10
 
 	.globl __syscall_cancel_arch_end

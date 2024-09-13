@@ -46,13 +46,13 @@ __syscall_cancel_arch_start:
 	andcc	%g2, TCB_CANCELED_BITMASK, %g0
 	bne,pn	%xcc, 2f
 	/* Issue a 6 argument syscall.  */
-	 mov	%i1, %g1
-	mov	%i2, %o0
+	 mov	%i2, %o0
 	mov	%i3, %o1
 	mov	%i4, %o2
 	mov	%i5, %o3
 	ldx	[%fp + STACK_BIAS + 176], %o4
 	ldx	[%fp + STACK_BIAS + 184], %o5
+	mov	%i1, %g1
 	ta	0x6d
 
 	.global __syscall_cancel_arch_end
