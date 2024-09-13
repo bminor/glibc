@@ -68,28 +68,39 @@ do_test (void)
   if (test_verbose)
     printf ("info: waiting pid %d, state_stopped/state_tracing_stop\n",
 	    (int) pid);
-  support_process_state_wait (pid, stop_state);
+  {
+    enum support_process_state state =
+      support_process_state_wait (pid, stop_state);
+    TEST_VERIFY (state == support_process_state_stopped
+		 || state == support_process_state_tracing_stop);
+  }
 
   if (kill (pid, SIGCONT) != 0)
     FAIL_RET ("kill (%d, SIGCONT): %m\n", pid);
 
   if (test_verbose)
     printf ("info: waiting pid %d, state_sleeping\n", (int) pid);
-  support_process_state_wait (pid, support_process_state_sleeping);
+  TEST_COMPARE (support_process_state_wait (pid,
+					    support_process_state_sleeping),
+		support_process_state_sleeping);
 
   if (kill (pid, SIGUSR1) != 0)
     FAIL_RET ("kill (%d, SIGUSR1): %m\n", pid);
 
   if (test_verbose)
     printf ("info: waiting pid %d, state_running\n", (int) pid);
-  support_process_state_wait (pid, support_process_state_running);
+  TEST_COMPARE (support_process_state_wait (pid,
+					    support_process_state_running),
+		support_process_state_running);
 
   if (kill (pid, SIGKILL) != 0)
     FAIL_RET ("kill (%d, SIGKILL): %m\n", pid);
 
   if (test_verbose)
     printf ("info: waiting pid %d, state_zombie\n", (int) pid);
-  support_process_state_wait (pid, support_process_state_zombie);
+  TEST_COMPARE (support_process_state_wait (pid,
+					    support_process_state_zombie),
+		support_process_state_zombie);;
 
   siginfo_t info;
   int r = waitid (P_PID, pid, &info, WEXITED);
