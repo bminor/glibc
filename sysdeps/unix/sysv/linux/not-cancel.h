@@ -27,6 +27,7 @@
 #include <sys/syscall.h>
 #include <sys/wait.h>
 #include <time.h>
+#include <sys/random.h>
 
 /* Non cancellable open syscall.  */
 __typeof (open) __open_nocancel;
@@ -84,15 +85,17 @@ __writev_nocancel_nostatus (int fd, const struct iovec *iov, int iovcnt)
 }
 
 static inline ssize_t
-__getrandom_nocancel (void *buf, size_t buflen, unsigned int flags)
+__getrandom_nocancel_direct (void *buf, size_t buflen, unsigned int flags)
 {
   return INLINE_SYSCALL_CALL (getrandom, buf, buflen, flags);
 }
 
+__typeof (getrandom) __getrandom_nocancel attribute_hidden;
+
 /* Non cancellable getrandom syscall that does not also set errno in case of
    failure.  */
 static inline ssize_t
-__getrandom_nocancel_nostatus (void *buf, size_t buflen, unsigned int flags)
+__getrandom_nocancel_nostatus_direct (void *buf, size_t buflen, unsigned int flags)
 {
   return INTERNAL_SYSCALL_CALL (getrandom, buf, buflen, flags);
 }

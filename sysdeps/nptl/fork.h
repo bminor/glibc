@@ -26,6 +26,7 @@
 #include <mqueue.h>
 #include <pthreadP.h>
 #include <sysdep.h>
+#include <getrandom-internal.h>
 
 static inline void
 fork_system_setup (void)
@@ -46,6 +47,7 @@ fork_system_setup_after_fork (void)
 
   call_function_static_weak (__mq_notify_fork_subprocess);
   call_function_static_weak (__timer_fork_subprocess);
+  call_function_static_weak (__getrandom_fork_subprocess);
 }
 
 /* In case of a fork() call the memory allocation in the child will be
@@ -128,7 +130,17 @@ reclaim_stacks (void)
 		    curp->specific_used = true;
 		  }
 	    }
+
+	  call_function_static_weak (__getrandom_reset_state, curp);
 	}
+    }
+
+  /* Also reset stale getrandom states for user stack threads.  */
+  list_for_each (runp, &GL (dl_stack_user))
+    {
+      struct pthread *curp = list_entry (runp, struct pthread, list);
+      if (curp != self)
+	call_function_static_weak (__getrandom_reset_state, curp);
     }
 
   /* Add the stack of all running threads to the cache.  */

@@ -3140,8 +3140,8 @@ static void
 tcache_key_initialize (void)
 {
   /* We need to use the _nostatus version here, see BZ 29624.  */
-  if (__getrandom_nocancel_nostatus (&tcache_key, sizeof(tcache_key),
-				     GRND_NONBLOCK)
+  if (__getrandom_nocancel_nostatus_direct (&tcache_key, sizeof(tcache_key),
+					    GRND_NONBLOCK)
       != sizeof (tcache_key))
     {
       tcache_key = random_bits ();

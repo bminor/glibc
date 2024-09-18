@@ -376,6 +376,7 @@
 # define HAVE_TIME_VSYSCALL             "__vdso_time"
 # define HAVE_GETCPU_VSYSCALL		"__vdso_getcpu"
 # define HAVE_CLOCK_GETRES64_VSYSCALL   "__vdso_clock_getres"
+# define HAVE_GETRANDOM_VSYSCALL        "__vdso_getrandom"
 
 # define HAVE_CLONE3_WRAPPER			1
 

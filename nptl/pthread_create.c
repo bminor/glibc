@@ -38,6 +38,7 @@
 #include <version.h>
 #include <clone_internal.h>
 #include <futex-internal.h>
+#include <getrandom-internal.h>
 
 #include <shlib-compat.h>
 
@@ -548,6 +549,10 @@ start_thread (void *arg)
       while (robust != (void *) &pd->robust_head);
     }
 #endif
+
+  /* Release the vDSO getrandom per-thread buffer with all signal blocked,
+     to avoid creating a new free-state block during thread release.  */
+  __getrandom_vdso_release (pd);
 
   if (!pd->user_stack)
     advise_stack_range (pd->stackblock, pd->stackblock_size, (uintptr_t) pd,

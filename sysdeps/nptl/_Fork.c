@@ -19,6 +19,7 @@
 #include <arch-fork.h>
 #include <libc-lock.h>
 #include <pthreadP.h>
+#include <getrandom-internal.h>
 
 pid_t
 _Fork (void)
@@ -50,6 +51,7 @@ _Fork (void)
       self->robust_head.list = &self->robust_head;
       INTERNAL_SYSCALL_CALL (set_robust_list, &self->robust_head,
 			     sizeof (struct robust_list_head));
+      call_function_static_weak (__getrandom_fork_subprocess);
     }
 
   __abort_lock_unlock (&original_sigmask);

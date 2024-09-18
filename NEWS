@@ -49,7 +49,9 @@ Deprecated and removed features, and other changes affecting compatibility:
 
 Changes to build and runtime requirements:
 
-  [Add changes to build and runtime requirements here]
+* On recent Linux kernels with vDSO getrandom support, getrandom does not
+  act as a "shall occur" cancellation point, in which case it might
+  not issue a syscall or trigger a deferred cancellation event.
 
 Security related changes:
 

@@ -119,6 +119,7 @@
 #define HAVE_CLOCK_GETTIME64_VSYSCALL "__vdso_clock_gettime"
 #define HAVE_GETTIMEOFDAY_VSYSCALL "__vdso_gettimeofday"
 #define HAVE_GETCPU_VSYSCALL "__vdso_getcpu"
+#define HAVE_GETRANDOM_VSYSCALL "__vdso_getrandom"
 
 #define HAVE_CLONE3_WRAPPER 1
 

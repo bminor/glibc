@@ -23,6 +23,7 @@
 #include <lowlevellock.h>
 #include <pthread_early_init.h>
 #include <sys/single_threaded.h>
+#include <getrandom-internal.h>
 
 #ifdef SHARED
 _Bool __libc_initial;
@@ -42,6 +43,8 @@ __libc_early_init (_Bool initial)
 #endif
 
   __pthread_early_init ();
+
+  __getrandom_early_init (initial);
 
 #if ENABLE_ELISION_SUPPORT
   __lll_elision_init ();

@@ -132,6 +132,8 @@ get_cached_stack (size_t *sizep, void **memp)
   __libc_lock_init (result->exit_lock);
   memset (&result->tls_state, 0, sizeof result->tls_state);
 
+  result->getrandom_buf = NULL;
+
   /* Clear the DTV.  */
   dtv_t *dtv = GET_DTV (TLS_TPADJ (result));
   for (size_t cnt = 0; cnt < dtv[-1].counter; ++cnt)
