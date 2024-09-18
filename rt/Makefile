@@ -77,6 +77,7 @@ tests := tst-shm tst-timer tst-timer2 \
 	 tst-bz28213 \
 	 tst-timer3 tst-timer4 tst-timer5 \
 	 tst-cpuclock2 tst-cputimer1 tst-cputimer2 tst-cputimer3 \
+	 tst-clock_nanosleep2 \
 	 tst-shm-cancel \
 	 tst-mqueue10
 tests-internal := tst-timer-sigmask
@@ -84,6 +85,7 @@ tests-internal := tst-timer-sigmask
 tests-time64 := \
   tst-aio6-time64 \
   tst-cpuclock2-time64 \
+  tst-clock_nanosleep2-time64 \
   tst-mqueue1-time64 \
   tst-mqueue2-time64 \
   tst-mqueue4-time64 \
