@@ -16,11 +16,12 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <mcheck.h>
 #include <stdio.h>
 #include <support/check.h>
 
 /* Verify that fclose on an unopened file returns EOF.  This test uses
-   a file with an unallocated buffer.
+   a file with an allocated buffer.
 
    This is not part of the fclose external contract but there are
    dependencies on this behaviour.  */
@@ -28,6 +29,14 @@
 static int
 do_test (void)
 {
+  mtrace ();
+
+  /* Input file tst-fclose-unopened2.input has 6 bytes plus newline.  */
+  char buf[6];
+
+  /* Read from the file to ensure its internal buffer is allocated.  */
+  TEST_COMPARE (fread (buf, 1, sizeof (buf), stdin), sizeof (buf));
+
   TEST_COMPARE (fclose (stdin), 0);
 
   /* Attempt to close the unopened file and verify that EOF is returned.
