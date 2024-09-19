@@ -127,3 +127,5 @@ VPCS_ATTR float64x2_t V_NAME_D1 (log1p) (float64x2_t x)
 
   return vfmaq_f64 (y, f2, p);
 }
+
+strong_alias (V_NAME_D1 (log1p), V_NAME_D1 (logp1))
