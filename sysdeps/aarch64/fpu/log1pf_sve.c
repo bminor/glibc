@@ -98,3 +98,5 @@ svfloat32_t SV_NAME_F1 (log1p) (svfloat32_t x, svbool_t pg)
 
   return y;
 }
+
+strong_alias (SV_NAME_F1 (log1p), SV_NAME_F1 (logp1))
