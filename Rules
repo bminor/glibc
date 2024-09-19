@@ -143,8 +143,9 @@ endif
 others: $(py-const)
 
 ifeq ($(run-built-tests),no)
+# The $(xtests) dependency ensures that xtests are always built.
 tests: $(addprefix $(objpfx),$(filter-out $(tests-unsupported), \
-                                          $(tests) $(tests-internal) \
+                                          $(tests) $(tests-internal) $(xtests) \
 					  $(tests-container) \
 					  $(tests-mcheck:%=%-mcheck) \
 					  $(tests-malloc-check:%=%-malloc-check) \
@@ -153,8 +154,10 @@ tests: $(addprefix $(objpfx),$(filter-out $(tests-unsupported), \
 			     $(test-srcs)) $(tests-special) \
 			     $(tests-printers-programs)
 xtests: tests $(xtests-special)
-else
+else # $(run-built-tests) != no
+# The $(xtests) dependency ensures that xtests are always built.
 tests: $(tests:%=$(objpfx)%.out) $(tests-internal:%=$(objpfx)%.out) \
+       $(addprefix $(objpfx),$(filter-out $(tests-unsupported), $(xtests))) \
        $(tests-container:%=$(objpfx)%.out) \
        $(tests-mcheck:%=$(objpfx)%-mcheck.out) \
        $(tests-malloc-check:%=$(objpfx)%-malloc-check.out) \
@@ -162,26 +165,28 @@ tests: $(tests:%=$(objpfx)%.out) $(tests-internal:%=$(objpfx)%.out) \
        $(tests-malloc-hugetlb2:%=$(objpfx)%-malloc-hugetlb2.out) \
        $(tests-special) $(tests-printers-out)
 xtests: tests $(xtests:%=$(objpfx)%.out) $(xtests-special)
-endif
+endif # $(run-built-tests) != no
 
 tests-special-notdir = $(patsubst $(objpfx)%, %, $(tests-special))
 xtests-special-notdir = $(patsubst $(objpfx)%, %, $(xtests-special))
 ifeq ($(run-built-tests),no)
 tests-expected =
-else
+xtests-expected =
+else # $(run-built-tests) != no
 tests-expected = $(tests) $(tests-internal) $(tests-printers) \
 	$(tests-container) $(tests-malloc-check:%=%-malloc-check) \
 	$(tests-malloc-hugetlb1:%=%-malloc-hugetlb1) \
 	$(tests-malloc-hugetlb2:%=%-malloc-hugetlb2) \
 	$(tests-mcheck:%=%-mcheck)
-endif
+xtests-expected = $(xtests)
+endif # $(run-built-tests) != no
 tests:
 	$(..)scripts/merge-test-results.sh -s $(objpfx) $(subdir) \
 	  $(sort $(tests-expected) $(tests-special-notdir:.out=)) \
 	  > $(objpfx)subdir-tests.sum
 xtests:
 	$(..)scripts/merge-test-results.sh -s $(objpfx) $(subdir) \
-	  $(sort $(xtests) $(xtests-special-notdir:.out=)) \
+	  $(sort $(xtests-expected) $(xtests-special-notdir:.out=)) \
 	  > $(objpfx)subdir-xtests.sum
 
 ifeq ($(build-programs),yes)
