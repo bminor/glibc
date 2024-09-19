@@ -185,6 +185,15 @@ __faccessat_common (int fd, const char *file, int type, int at_flags,
 	return errfunc (err);
     }
 
+  /* If all we wanted was to check for a file existing at the path,
+     then we already got our answer, and we don't need to call
+     file_check_access ().  */
+  if (type == F_OK)
+    {
+      __mach_port_deallocate (__mach_task_self (), io);
+      return 0;
+    }
+
   /* Find out what types of access we are allowed to this file.  */
   err = __file_check_access (io, &allowed);
   __mach_port_deallocate (__mach_task_self (), io);
