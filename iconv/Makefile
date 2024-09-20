@@ -76,8 +76,11 @@ include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
 
 ifeq ($(run-built-tests),yes)
 xtests-special += $(objpfx)test-iconvconfig.out
-tests-special += $(objpfx)tst-iconv_prog.out
-tests-special += $(objpfx)tst-translit-mchar.out
+tests-special += \
+	$(objpfx)tst-iconv_prog-buffer.out \
+	$(objpfx)tst-iconv_prog.out \
+	$(objpfx)tst-translit-mchar.out \
+	# tests-special
 endif
 
 # Make a copy of the file because gconv module names are constructed
@@ -140,4 +143,9 @@ $(objpfx)tst-translit-mchar.out: tst-translit-mchar.sh \
 	$(SHELL) $< $(common-objpfx) '$(run-program-prefix-before-env)' \
 		 '$(run-program-env)' '$(run-program-prefix-after-env)' \
 		 $< > $@; \
+	$(evaluate-test)
+
+$(objpfx)tst-iconv_prog-buffer.out: \
+  tst-iconv_prog-buffer.sh $(objpfx)iconv_prog
+	$(BASH) $< $(common-objdir) '$(test-program-prefix)' > $@; \
 	$(evaluate-test)
