@@ -1,3 +1,4 @@
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -17,8 +18,44 @@ struct test_strto ## FSUF						\
   { "0x.0y", 0.0 ## LSUF, 4 },						\
   { ".y", 0.0 ## LSUF, 0 },						\
   { "0.y", 0.0 ## LSUF, 2 },						\
-  { ".0y", 0.0 ## LSUF, 2 }						\
+  { ".0y", 0.0 ## LSUF, 2 },						\
+  { "1.0e", 1.0 ## LSUF, 3 },						\
+  { "1.0e+", 1.0 ## LSUF, 3 },						\
+  { "1.0e-", 1.0 ## LSUF, 3 },						\
+  { "1.0ex", 1.0 ## LSUF, 3 },						\
+  { "1.0e+x", 1.0 ## LSUF, 3 },						\
+  { "1.0e-x", 1.0 ## LSUF, 3 },						\
+  { "0x1p", 1.0 ## LSUF, 3 },						\
+  { "0x1p+", 1.0 ## LSUF, 3 },						\
+  { "0x1p-", 1.0 ## LSUF, 3 },						\
+  { "0x1px", 1.0 ## LSUF, 3 },						\
+  { "0x1p+x", 1.0 ## LSUF, 3 },						\
+  { "0x1p-x", 1.0 ## LSUF, 3 },						\
+  { "INFx", INFINITY, 3 },						\
+  { "infx", INFINITY, 3 },						\
+  { "INFINITx", INFINITY, 3 },						\
+  { "infinitx", INFINITY, 3 },						\
+  { "INFINITYY", INFINITY, 8 },						\
+  { "infinityy", INFINITY, 8 },						\
+  { "NANx", NAN, 3 },							\
+  { "nanx", NAN, 3 },							\
+  { "NAN(", NAN, 3 },							\
+  { "nan(", NAN, 3 },							\
+  { "NAN(x", NAN, 3 },							\
+  { "nan(x", NAN, 3 },							\
+  { "NAN(x)y", NAN, 6 },						\
+  { "nan(x)y", NAN, 6 },						\
+  { "NAN(*)y", NAN, 3 },						\
+  { "nan(*)y", NAN, 3 }							\
 };									\
+									\
+static int								\
+compare_strto ## FSUF (FTYPE x, FTYPE y)				\
+{									\
+  if (isnan (x) && isnan (y))						\
+    return 1;								\
+  return x == y;							\
+}									\
 									\
 static int								\
 test_strto ## FSUF (void)						\
@@ -30,7 +67,7 @@ test_strto ## FSUF (void)						\
     {									\
       char *ep;								\
       FTYPE r = strto ## FSUF (tests_strto ## FSUF[i].str, &ep);	\
-      if (r != tests_strto ## FSUF[i].result)				\
+      if (!compare_strto ## FSUF (r, tests_strto ## FSUF[i].result))	\
 	{								\
 	  char buf1[FSTRLENMAX], buf2[FSTRLENMAX];			\
 	  FTOSTR (buf1, sizeof (buf1), "%g", r);			\
