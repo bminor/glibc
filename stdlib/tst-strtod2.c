@@ -31,6 +31,20 @@ struct test_strto ## FSUF						\
   { "0x1px", 1.0 ## LSUF, 3 },						\
   { "0x1p+x", 1.0 ## LSUF, 3 },						\
   { "0x1p-x", 1.0 ## LSUF, 3 },						\
+  { "", 0.0 ## LSUF, 0 },						\
+  { ".", 0.0 ## LSUF, 0 },						\
+  { "-", 0.0 ## LSUF, 0 },						\
+  { "-.", 0.0 ## LSUF, 0 },						\
+  { ".e", 0.0 ## LSUF, 0 },						\
+  { "-.e", 0.0 ## LSUF, 0 },						\
+  { " \t", 0.0 ## LSUF, 0 },						\
+  { " \t.", 0.0 ## LSUF, 0 },						\
+  { " \t-", 0.0 ## LSUF, 0 },						\
+  { " \t-.", 0.0 ## LSUF, 0 },						\
+  { " \t.e", 0.0 ## LSUF, 0 },						\
+  { " \t-.e", 0.0 ## LSUF, 0 },						\
+  { " \t\f\r\n\v1", 1.0 ## LSUF, 7 },					\
+  { " \t\f\r\n\v-1.5e2", -150.0 ## LSUF, 12 },				\
   { "INFx", INFINITY, 3 },						\
   { "infx", INFINITY, 3 },						\
   { "INFINITx", INFINITY, 3 },						\
