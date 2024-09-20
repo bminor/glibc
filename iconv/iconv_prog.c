@@ -287,7 +287,8 @@ conversions from `%s' and to `%s' are not supported"),
 		ret = process_fd (cd, fd);
 
 		/* Now close the file.  */
-		close (fd);
+		if (fd != STDIN_FILENO)
+		  close (fd);
 
 		if (ret != 0)
 		  {

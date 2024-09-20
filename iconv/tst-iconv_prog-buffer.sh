@@ -265,6 +265,11 @@ expect_exit 1 run_iconv -o "$tmp/out" "$tmp/abc" "$tmp/0xff" "$tmp/def"
 expect_exit 1 run_iconv -o "$tmp/out" "$tmp/abc" - < "$tmp/0xff" "$tmp/def"
 ! test -e "$tmp/out"
 
+# Listing standard input multiple times should not fail (bug 32050).
+
+run_iconv -o "$tmp/out" "$tmp/xy" - - "$tmp/zt" < "$tmp/abc"
+expect_files xy abc zt
+
 if $failure ; then
     exit 1
 fi
