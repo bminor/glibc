@@ -118,8 +118,9 @@ static size_t output_buffer_size = 1024 * 1024;
 
 /* Prototypes for the functions doing the actual work.  */
 static void prepare_output_file (char **argv);
-static void close_output_file (int status);
-static int process_block (iconv_t cd, char *addr, size_t len);
+static void close_output_file (__gconv_t cd, int status);
+static int process_block (iconv_t cd, char **addr, size_t *len,
+			  off64_t file_offset, bool *incomplete);
 static int process_fd (iconv_t cd, int fd);
 static int process_file (iconv_t cd, FILE *input);
 static void print_known_names (void);
@@ -311,7 +312,7 @@ conversions from `%s' and to `%s' are not supported"),
 	status = EXIT_FAILURE;
 
       /* Close the output file now.  */
-      close_output_file (status);
+      close_output_file (cd, status);
     }
 
   return status;
@@ -599,7 +600,7 @@ flush_output (void)
 }
 
 static void
-close_output_file (int status)
+close_output_file (__gconv_t cd, int status)
 {
   /* Do not perform a flush if a temporary file or the in-memory
      buffer is in use and there was an error.  It would clobber the
@@ -608,10 +609,28 @@ close_output_file (int status)
       (output_using_temporary_file || output_fd < 0))
     return;
 
-  /* The current_input_file_index variable is now larger than
-     last_overlapping_file_index, so the flush_output call switches
+  /* All the input text is processed.  For state-dependent character
+     sets we have to flush the state now.
+
+     The current_input_file_index variable is now larger than
+     last_overlapping_file_index, so the flush_output calls switch
      away from the temporary file.  */
+  size_t n = iconv (cd, NULL, NULL,
+		    &output_buffer_current, &output_buffer_remaining);
+  if (n == (size_t) -1 && errno == E2BIG)
+    {
+      /* Try again if the state flush exceeded the buffer space.  */
+      flush_output ();
+      n = iconv (cd, NULL, NULL,
+		 &output_buffer_current, &output_buffer_remaining);
+    }
+  int saved_errno = errno;
   flush_output ();
+  if (n == (size_t) -1 && !omit_invalid)
+    {
+      errno = saved_errno;
+      output_error ();
+    }
 
   if (output_fd == STDOUT_FILENO)
     {
@@ -625,51 +644,35 @@ close_output_file (int status)
     output_error ();
 }
 
+/* CD is the iconv handle.  Input processing starts at *ADDR, and
+   consumes upto *LEN bytes.  *ADDR and *LEN are updated.  FILE_OFFSET
+   is the file offset of the data initially at ADDR.  *INCOMPLETE is
+   set to true if conversion stops due to an incomplete input
+   sequence.  */
 static int
-process_block (iconv_t cd, char *addr, size_t len)
+process_block (iconv_t cd, char **addr, size_t *len, off64_t file_offset,
+	       bool *incomplete)
 {
-  const char *start = addr;
+  const char *start = *addr;
   size_t n;
   int ret = 0;
 
-  while (len > 0)
+  while (*len > 0)
     {
-      n = iconv (cd, &addr, &len,
+      n = iconv (cd, addr, len,
 		 &output_buffer_current, &output_buffer_remaining);
 
       if (n == (size_t) -1 && omit_invalid && errno == EILSEQ)
 	{
 	  ret = 1;
-	  if (len == 0)
+	  if (*len == 0)
 	    n = 0;
 	  else
 	    errno = E2BIG;
 	}
 
       if (n != (size_t) -1)
-	{
-	  /* All the input test is processed.  For state-dependent
-	     character sets we have to flush the state now.  */
-	  n = iconv (cd, NULL, NULL,
-		     &output_buffer_current, &output_buffer_remaining);
-	  if (n == (size_t) -1 && errno == E2BIG)
-	    {
-	      /* Try again if the state flush exceeded the buffer space.  */
-	      flush_output ();
-	      n = iconv (cd, NULL, NULL,
-			 &output_buffer_current, &output_buffer_remaining);
-	    }
-	  bool errno_is_EILSEQ = errno == EILSEQ;
-
-	  if (n != (size_t) -1)
-	    break;
-
-	  if (omit_invalid && errno_is_EILSEQ)
-	    {
-	      ret = 1;
-	      break;
-	    }
-	}
+	break;
 
       if (errno == E2BIG)
 	flush_output ();
@@ -680,13 +683,12 @@ process_block (iconv_t cd, char *addr, size_t len)
 	    {
 	    case EILSEQ:
 	      if (! omit_invalid)
-		error (0, 0, _("illegal input sequence at position %ld"),
-		       (long int) (addr - start));
+		error (0, 0, _("illegal input sequence at position %lld"),
+		       (long long int) (file_offset + (*addr - start)));
 	      break;
 	    case EINVAL:
-	      error (0, 0, _("\
-incomplete character or shift sequence at end of buffer"));
-	      break;
+	      *incomplete = true;
+	      return ret;
 	    case EBADF:
 	      error (0, 0, _("internal error (illegal descriptor)"));
 	      break;
@@ -706,79 +708,49 @@ incomplete character or shift sequence at end of buffer"));
 static int
 process_fd (iconv_t cd, int fd)
 {
-  /* we have a problem with reading from a descriptor since we must not
-     provide the iconv() function an incomplete character or shift
-     sequence at the end of the buffer.  Since we have to deal with
-     arbitrary encodings we must read the whole text in a buffer and
-     process it in one step.  */
-  static char *inbuf = NULL;
-  static size_t maxlen = 0;
-  char *inptr = inbuf;
-  size_t actlen = 0;
+  char inbuf[BUFSIZ];
+  char *inbuf_end = inbuf + sizeof (inbuf);
+  size_t inbuf_used = 0;
+  off64_t file_offset = 0;
+  int status = 0;
+  bool incomplete = false;
 
-  while (actlen < maxlen)
+  while (true)
     {
-      ssize_t n = read (fd, inptr, maxlen - actlen);
-
-      if (n == 0)
-	/* No more text to read.  */
-	break;
-
-      if (n == -1)
+      char *p = inbuf + inbuf_used;
+      ssize_t read_ret = read (fd, p, inbuf_end - p);
+      if (read_ret == 0)
 	{
-	  /* Error while reading.  */
+	  /* On EOF, check if the previous iconv invocation saw an
+	     incomplete sequence.  */
+	  if (incomplete)
+	    {
+	      error (0, 0, _("\
+incomplete character or shift sequence at end of buffer"));
+	      return 1;
+	    }
+	  return 0;
+	}
+      if (read_ret < 0)
+	{
 	  error (0, errno, _("error while reading the input"));
 	  return -1;
 	}
-
-      inptr += n;
-      actlen += n;
+      inbuf_used += read_ret;
+      incomplete = false;
+      p = inbuf;
+      int ret = process_block (cd, &p, &inbuf_used, file_offset, &incomplete);
+      if (ret != 0)
+	{
+	  status = ret;
+	  if (ret < 0)
+	    break;
+	}
+      /* The next loop iteration consumes the leftover bytes.  */
+      memmove (inbuf, p, inbuf_used);
+      file_offset += read_ret - inbuf_used;
     }
-
-  if (actlen == maxlen)
-    while (1)
-      {
-	ssize_t n;
-	char *new_inbuf;
-
-	/* Increase the buffer.  */
-	new_inbuf = (char *) realloc (inbuf, maxlen + 32768);
-	if (new_inbuf == NULL)
-	  {
-	    error (0, errno, _("unable to allocate buffer for input"));
-	    return -1;
-	  }
-	inbuf = new_inbuf;
-	maxlen += 32768;
-	inptr = inbuf + actlen;
-
-	do
-	  {
-	    n = read (fd, inptr, maxlen - actlen);
-
-	    if (n == 0)
-	      /* No more text to read.  */
-	      break;
-
-	    if (n == -1)
-	      {
-		/* Error while reading.  */
-		error (0, errno, _("error while reading the input"));
-		return -1;
-	      }
-
-	    inptr += n;
-	    actlen += n;
-	  }
-	while (actlen < maxlen);
-
-	if (n == 0)
-	  /* Break again so we leave both loops.  */
-	  break;
-      }
-
-  /* Now we have all the input in the buffer.  Process it in one run.  */
-  return process_block (cd, inbuf, actlen);
+  return status;
 }
 
 

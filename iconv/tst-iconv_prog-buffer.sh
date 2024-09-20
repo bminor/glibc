@@ -50,6 +50,9 @@ echo OUT > "$tmp/out-template"
 : > "$tmp/empty"
 printf '\xff' > "$tmp/0xff"
 
+# Length should be a prime number, to help with buffer alignment testing.
+printf '\xc3\xa4\xe2\x80\x94\xe2\x80\x94\xc3\xa4\n' > "$tmp/utf8-sequence"
+
 # Double all files to produce larger buffers.
 for p in "$tmp"/* ; do
     i=0
@@ -269,6 +272,34 @@ expect_exit 1 run_iconv -o "$tmp/out" "$tmp/abc" - < "$tmp/0xff" "$tmp/def"
 
 run_iconv -o "$tmp/out" "$tmp/xy" - - "$tmp/zt" < "$tmp/abc"
 expect_files xy abc zt
+
+# NB: Extra iconv args are ignored after this point.  Actual
+# multi-byte conversion does not work with tiny buffers.
+iconv_args="-f UTF-8 -t ASCII"
+
+printf 'x\n\xc3' > "$tmp/incomplete"
+expect_exit 1 run_iconv -o "$tmp/out" "$tmp/incomplete"
+check_out <<EOF
+x
+EOF
+
+# Test buffering behavior if the buffer ends with an incomplete
+# multi-byte sequence.
+prefix=""
+prefix_length=0
+while test $prefix_length -lt 12; do
+    echo "info: testing prefix length $prefix_length" 2>&$logfd
+    printf "%s" "$prefix" > "$tmp/prefix"
+    cat "$tmp/prefix" "$tmp/utf8-sequence" > "$tmp/tmp"
+    iconv_args="-f UTF-8 -t UCS-4"
+    run_iconv -o "$tmp/out1" "$tmp/tmp"
+    iconv_args="-f UCS-4 -t UTF-8"
+    run_iconv -o "$tmp/out" "$tmp/out1"
+    expect_files prefix utf8-sequence
+
+    prefix="$prefix@"
+    prefix_length=$(($prefix_length + 1))
+done
 
 if $failure ; then
     exit 1
