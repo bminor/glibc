@@ -22,35 +22,75 @@
 #include <string.h>
 #include <math.h>
 
+#include "tst-strtod.h"
+
 #define NBSP "\xc2\xa0"
 
-static const struct
-{
-  const char *in;
-  double expected;
-} tests[] =
-  {
-    { "0", 0.0 },
-    { "000", 0.0 },
-    { "-0", -0.0 },
-    { "-000", -0.0 },
-    { "0,", 0.0 },
-    { "-0,", -0.0 },
-    { "0,0", 0.0 },
-    { "-0,0", -0.0 },
-    { "0e-10", 0.0 },
-    { "-0e-10", -0.0 },
-    { "0,e-10", 0.0 },
-    { "-0,e-10", -0.0 },
-    { "0,0e-10", 0.0 },
-    { "-0,0e-10", -0.0 },
-    { "0e-1000000", 0.0 },
-    { "-0e-1000000", -0.0 },
-    { "0,0e-1000000", 0.0 },
-    { "-0,0e-1000000", -0.0 },
-  };
-#define NTESTS (sizeof (tests) / sizeof (tests[0]))
+#define TEST_STRTOD(FSUF, FTYPE, FTOSTR, LSUF, CSUF)			\
+static const struct							\
+{									\
+  const char *in;							\
+  FTYPE expected;							\
+} tests_strto ## FSUF[] =						\
+  {									\
+    { "0", 0.0 ## LSUF },						\
+    { "000", 0.0 ## LSUF },						\
+    { "-0", -0.0 ## LSUF },						\
+    { "-000", -0.0 ## LSUF },						\
+    { "0,", 0.0 ## LSUF },						\
+    { "-0,", -0.0 ## LSUF },						\
+    { "0,0", 0.0 ## LSUF },						\
+    { "-0,0", -0.0 ## LSUF },						\
+    { "0e-10", 0.0 ## LSUF },						\
+    { "-0e-10", -0.0 ## LSUF },						\
+    { "0,e-10", 0.0 ## LSUF },						\
+    { "-0,e-10", -0.0 ## LSUF },					\
+    { "0,0e-10", 0.0 ## LSUF },						\
+    { "-0,0e-10", -0.0 ## LSUF },					\
+    { "0e-1000000", 0.0 ## LSUF },					\
+    { "-0e-1000000", -0.0 ## LSUF },					\
+    { "0,0e-1000000", 0.0 ## LSUF },					\
+    { "-0,0e-1000000", -0.0 ## LSUF },					\
+  };									\
+									\
+									\
+static int								\
+test_strto ## FSUF (void)						\
+{									\
+  int status = 0;							\
+									\
+  for (int i = 0;							\
+       i < sizeof (tests_strto ## FSUF) / sizeof (tests_strto ## FSUF[0]); \
+       ++i)								\
+    {									\
+      char *ep;								\
+      FTYPE r = strto ## FSUF (tests_strto ## FSUF[i].in, &ep);		\
+									\
+      if (*ep != '\0')							\
+	{								\
+	  printf ("%d: got rest string \"%s\", expected \"\"\n", i, ep); \
+	  status = 1;							\
+	}								\
+									\
+      if (r != tests_strto ## FSUF[i].expected				\
+	  || (copysign ## CSUF (10.0 ## LSUF, r)			\
+	      != copysign ## CSUF (10.0 ## LSUF,			\
+				   tests_strto ## FSUF[i].expected)))	\
+	{								\
+	  char buf1[FSTRLENMAX], buf2[FSTRLENMAX];			\
+	  FTOSTR (buf1, sizeof (buf1), "%g", r);			\
+	  FTOSTR (buf2, sizeof (buf2), "%g",				\
+		  tests_strto ## FSUF[i].expected);			\
+	  printf ("%d: got wrong results %s, expected %s\n",		\
+		  i, buf1, buf2);					\
+	  status = 1;							\
+	}								\
+    }									\
+									\
+  return status;							\
+}
 
+GEN_TEST_STRTOD_FOREACH (TEST_STRTOD)
 
 static int
 do_test (void)
@@ -61,29 +101,7 @@ do_test (void)
       return 1;
     }
 
-  int status = 0;
-
-  for (int i = 0; i < NTESTS; ++i)
-    {
-      char *ep;
-      double r = strtod (tests[i].in, &ep);
-
-      if (*ep != '\0')
-	{
-	  printf ("%d: got rest string \"%s\", expected \"\"\n", i, ep);
-	  status = 1;
-	}
-
-      if (r != tests[i].expected
-	  || copysign (10.0, r) != copysign (10.0, tests[i].expected))
-	{
-	  printf ("%d: got wrong results %g, expected %g\n",
-		  i, r, tests[i].expected);
-	  status = 1;
-	}
-    }
-
-  return status;
+  return STRTOD_TEST_FOREACH (test_strto);
 }
 
 #include <support/test-driver.c>
