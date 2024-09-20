@@ -31,9 +31,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <libintl.h>
-#ifdef _POSIX_MAPPED_FILES
-# include <sys/mman.h>
-#endif
 #include <charmap.h>
 #include <gconv_int.h>
 #include "iconv_prog.h"
@@ -253,10 +250,6 @@ conversions from `%s' and to `%s' are not supported"),
       else
 	do
 	  {
-#ifdef _POSIX_MAPPED_FILES
-	    struct stat64 st;
-	    char *addr;
-#endif
 	    int fd, ret;
 
 	    if (verbose)
@@ -276,39 +269,6 @@ conversions from `%s' and to `%s' are not supported"),
 		  }
 	      }
 
-#ifdef _POSIX_MAPPED_FILES
-	    /* We have possibilities for reading the input file.  First try
-	       to mmap() it since this will provide the fastest solution.  */
-	    if (fstat64 (fd, &st) == 0
-		&& ((addr = mmap (NULL, st.st_size, PROT_READ, MAP_PRIVATE,
-				  fd, 0)) != MAP_FAILED))
-	      {
-		/* Yes, we can use mmap().  The descriptor is not needed
-		   anymore.  */
-		if (close (fd) != 0)
-		  error (EXIT_FAILURE, errno,
-			 _("error while closing input `%s'"),
-			 argv[remaining]);
-
-		ret = process_block (cd, addr, st.st_size, &output,
-				     output_file);
-
-		/* We don't need the input data anymore.  */
-		munmap ((void *) addr, st.st_size);
-
-		if (ret != 0)
-		  {
-		    status = EXIT_FAILURE;
-
-		    if (ret < 0)
-		      /* We cannot go on with producing output since it might
-			 lead to problem because the last output might leave
-			 the output stream in an undefined state.  */
-		      break;
-		  }
-	      }
-	    else
-#endif	/* _POSIX_MAPPED_FILES */
 	      {
 		/* Read the file in pieces.  */
 		ret = process_fd (cd, fd, &output, output_file);
@@ -544,7 +504,7 @@ process_fd (iconv_t cd, int fd, FILE **output, const char *output_file)
      process it in one step.  */
   static char *inbuf = NULL;
   static size_t maxlen = 0;
-  char *inptr = NULL;
+  char *inptr = inbuf;
   size_t actlen = 0;
 
   while (actlen < maxlen)
