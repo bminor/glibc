@@ -10,7 +10,7 @@ libc_cv_asm_line_sep='`'
 printf "%s\n" "#define ASM_LINE_SEP $libc_cv_asm_line_sep" >>confdefs.h
 
 
-# For big endian ABI, generate a symbol for selecting right dynamic linker
+# ARC big endian ABI is no longer supported.
 
 
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for egrep -e" >&5
