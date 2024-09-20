@@ -2422,11 +2422,11 @@ written into the buffer to signal how much output is available.  If this
 conversion step is not the last one, the element must not be modified.
 The @code{__outbufend} element must not be modified.
 
-@item int __is_last
-This element is nonzero if this conversion step is the last one.  This
-information is necessary for the recursion.  See the description of the
-conversion function internals below.  This element must never be
-modified.
+@item int __flags
+This field is a set of flags.  The @code{__GCONV_IS_LAST} bit is set if
+this conversion step is the last one.  This information is necessary for
+the recursion.  See the description of the conversion function internals
+below.  This element must never be modified.
 
 @item int __invocation_counter
 The conversion function can use this element to see how many calls of
@@ -2731,8 +2731,8 @@ Otherwise the function has to emit a byte sequence to bring the state
 object into the initial state.  Once this all happened the other
 conversion modules in the chain of conversions have to get the same
 chance.  Whether another step follows can be determined from the
-@code{__is_last} element of the step data structure to which the first
-parameter points.
+@code{__GCONV_IS_LAST} flag in the @code{__flags} field of the step
+data structure to which the first parameter points.
 
 The more interesting mode is when actual text has to be converted.  The
 first step in this case is to convert as much text as possible from the
@@ -2866,7 +2866,7 @@ gconv (struct __gconv_step *step, struct __gconv_step_data *data,
 
       /* @r{Call the steps down the chain if there are any but only}
          @r{if we successfully emitted the escape sequence.}  */
-      if (status == __GCONV_OK && ! data->__is_last)
+      if (status == __GCONV_OK && ! (data->__flags & __GCONV_IS_LAST))
         status = fct (next_step, next_data, NULL, NULL,
                       written, 1);
     @}
@@ -2892,7 +2892,7 @@ gconv (struct __gconv_step *step, struct __gconv_step_data *data,
 
           /* @r{If this is the last step, leave the loop.  There is}
              @r{nothing we can do.}  */
-          if (data->__is_last)
+          if (data->__flags & __GCONV_IS_LAST)
             @{
               /* @r{Store information about how many bytes are}
                  @r{available.}  */
