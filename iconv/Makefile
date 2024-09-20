@@ -81,6 +81,8 @@ include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
 ifeq ($(run-built-tests),yes)
 xtests-special += $(objpfx)test-iconvconfig.out
 tests-special += \
+	$(objpfx)tst-iconv_prog-buffer-large.out \
+	$(objpfx)tst-iconv_prog-buffer-tiny.out \
 	$(objpfx)tst-iconv_prog-buffer.out \
 	$(objpfx)tst-iconv_prog.out \
 	$(objpfx)tst-translit-mchar.out \
@@ -152,4 +154,13 @@ $(objpfx)tst-translit-mchar.out: tst-translit-mchar.sh \
 $(objpfx)tst-iconv_prog-buffer.out: \
   tst-iconv_prog-buffer.sh $(objpfx)iconv_prog
 	$(BASH) $< $(common-objdir) '$(test-program-prefix)' > $@; \
+	$(evaluate-test)
+$(objpfx)tst-iconv_prog-buffer-tiny.out: \
+  tst-iconv_prog-buffer.sh $(objpfx)iconv_prog
+	$(BASH) $< $(common-objdir) '$(test-program-prefix)' \
+	  '--buffer-size=1' > $@; \
+	$(evaluate-test)
+$(objpfx)tst-iconv_prog-buffer-large.out: \
+  tst-iconv_prog-buffer.sh $(objpfx)iconv_prog
+	$(BASH) $< $(common-objdir) '$(test-program-prefix)' '' '22' > $@; \
 	$(evaluate-test)

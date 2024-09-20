@@ -28,6 +28,9 @@ Major new features:
 * On Linux, the sched_setattr and sched_getattr have been added, for
   supporting parameterized scheduling policies such as SCHED_DEADLINE.
 
+* The iconv program now supports converting files in place.  The program
+  automatically uses a temporary file if required.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
   [Add deprecations, removals and changes affecting compatibility here]

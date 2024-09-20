@@ -17,6 +17,12 @@
 # License along with the GNU C Library; if not, see
 # <https://www.gnu.org/licenses/>.
 
+# Arguments:
+#   root of the build tree ($(objpfx-common))
+#   test command wrapper (for running on the board/with new ld.so)
+#   extra flags to pass to iconv
+#   number of times to double the input files in size (default: 0)
+
 exec 2>&1
 set -e
 
@@ -26,7 +32,9 @@ codir=$1
 test_program_prefix="$2"
 
 # Use internal converters to avoid issues with module loading.
-iconv_args="-f ASCII -t UTF-8"
+iconv_args="-f ASCII -t UTF-8 $3"
+
+file_size_doublings=${4-0}
 
 failure=false
 
@@ -39,7 +47,19 @@ echo HH > "$tmp/hh"
 echo XY > "$tmp/xy"
 echo ZT > "$tmp/zt"
 echo OUT > "$tmp/out-template"
+: > "$tmp/empty"
 printf '\xff' > "$tmp/0xff"
+
+# Double all files to produce larger buffers.
+for p in "$tmp"/* ; do
+    i=0
+    while test $i -lt $file_size_doublings; do
+	cat "$p" "$p" > "$tmp/scratch"
+	mv "$tmp/scratch" "$p"
+	i=$(($i + 1))
+    done
+done
+
 cat "$tmp/xy" "$tmp/0xff" "$tmp/zt" > "$tmp/0xff-wrapped"
 
 run_iconv () {
@@ -113,6 +133,38 @@ expect_files abc def
 run_iconv -o "$tmp/out" "$tmp/out" "$tmp/abc"
 expect_files abc def abc
 
+run_iconv -o "$tmp/out" "$tmp/ggg" "$tmp/out"
+expect_files ggg abc def abc
+
+run_iconv -o "$tmp/out" "$tmp/hh" "$tmp/out" "$tmp/hh"
+expect_files hh ggg abc def abc hh
+
+cp "$tmp/out-template" "$tmp/out"
+run_iconv -o "$tmp/out" "$tmp/ggg" "$tmp/out" "$tmp/out" "$tmp/ggg"
+expect_files ggg out-template out-template ggg
+
+cp "$tmp/out-template" "$tmp/out"
+run_iconv -o "$tmp/out" "$tmp/ggg" "$tmp/out" "$tmp/hh" "$tmp/out" "$tmp/ggg"
+expect_files ggg out-template hh out-template ggg
+
+# Empty output should truncate the output file if exists.
+
+cp "$tmp/out-template" "$tmp/out"
+run_iconv -o "$tmp/out" </dev/null
+expect_files empty
+
+cp "$tmp/out-template" "$tmp/out"
+run_iconv -o "$tmp/out" - </dev/null
+expect_files empty
+
+cp "$tmp/out-template" "$tmp/out"
+run_iconv -o "$tmp/out" /dev/null
+expect_files empty
+
+cp "$tmp/out-template" "$tmp/out"
+expect_exit 1 run_iconv -c -o "$tmp/out" "$tmp/0xff"
+expect_files empty
+
 # But not if we are writing to standard output.
 
 cp "$tmp/out-template" "$tmp/out"
@@ -142,7 +194,35 @@ cp "$tmp/0xff" "$tmp/out"
 expect_exit 1 run_iconv -o "$tmp/out" - < "$tmp/out"
 expect_files 0xff
 
+cp "$tmp/0xff-wrapped" "$tmp/out"
+expect_exit 1 run_iconv -o "$tmp/out" "$tmp/out"
+expect_files 0xff-wrapped
+
+cp "$tmp/0xff-wrapped" "$tmp/out"
+expect_exit 1 run_iconv -o "$tmp/out" < "$tmp/out"
+expect_files 0xff-wrapped
+
+cp "$tmp/0xff-wrapped" "$tmp/out"
+expect_exit 1 run_iconv -o "$tmp/out" - < "$tmp/out"
+expect_files 0xff-wrapped
+
+cp "$tmp/0xff-wrapped" "$tmp/out"
+expect_exit 1 run_iconv -o "$tmp/out" "$tmp/abc" "$tmp/out"
+expect_files 0xff-wrapped
+
+cp "$tmp/0xff-wrapped" "$tmp/out"
+expect_exit 1 run_iconv -o "$tmp/out" "$tmp/abc" - < "$tmp/out"
+expect_files 0xff-wrapped
+
 # If errors are ignored, the file should be overwritten.
+
+cp "$tmp/0xff-wrapped" "$tmp/out"
+expect_exit 1 run_iconv -c -o "$tmp/out" "$tmp/out"
+expect_files xy zt
+
+cp "$tmp/0xff" "$tmp/out"
+expect_exit 1 run_iconv -c -o "$tmp/out" "$tmp/abc" "$tmp/out" "$tmp/def"
+expect_files abc def
 
 cp "$tmp/out-template" "$tmp/out"
 expect_exit 1 \
@@ -155,6 +235,20 @@ expect_exit 1 run_iconv -c -o "$tmp/out" \
     "$tmp/abc" "$tmp/0xff-wrapped" "$tmp/def" 2>"$tmp/err"
 ! test -s "$tmp/err"
 expect_files abc xy zt def
+
+cp "$tmp/0xff-wrapped" "$tmp/out"
+expect_exit 1 run_iconv -c -o "$tmp/out" "$tmp/out" "$tmp/abc" "$tmp/out" "$tmp/def"
+expect_files xy zt abc xy zt def
+
+cp "$tmp/0xff-wrapped" "$tmp/out"
+expect_exit 1 run_iconv -o "$tmp/out" \
+    "$tmp/out" "$tmp/abc" "$tmp/out" "$tmp/def"
+expect_files 0xff-wrapped
+
+cp "$tmp/0xff-wrapped" "$tmp/out"
+expect_exit 1 run_iconv -c -o "$tmp/out" \
+    "$tmp/abc" "$tmp/out" "$tmp/def" "$tmp/out"
+expect_files abc xy zt def xy zt
 
 # If the file does not exist yet, it should not be created on error.
 
