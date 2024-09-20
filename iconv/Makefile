@@ -61,6 +61,10 @@ test-srcs := \
 	tst-translit-mchar \
 	# test-srcs
 
+tests-internal = \
+	tst-iconv-sticky-input-error \
+	# tests-internal
+
 others		= iconv_prog iconvconfig
 install-others-programs	= $(inst_bindir)/iconv
 install-sbin	= iconvconfig

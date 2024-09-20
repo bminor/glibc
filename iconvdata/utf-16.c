@@ -206,7 +206,7 @@ gconv_end (struct __gconv_step *data)
 	   We must catch this.  If we let surrogates pass through,	      \
 	   attackers could make a security hole exploit by		      \
 	   synthesizing any desired plane 1-16 character.  */		      \
-	result = __GCONV_ILLEGAL_INPUT;					      \
+	result = __gconv_mark_illegal_input (step_data);		      \
 	if (! ignore_errors_p ())					      \
 	  break;							      \
 	inptr += 4;							      \

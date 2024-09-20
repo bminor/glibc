@@ -150,9 +150,8 @@ expect_exit 1 \
 ! test -s "$tmp/err"
 expect_files abc def
 
-# FIXME: This is not correct, -c should not change the exit status.
 cp "$tmp/out-template" "$tmp/out"
-run_iconv -c -o "$tmp/out" \
+expect_exit 1 run_iconv -c -o "$tmp/out" \
     "$tmp/abc" "$tmp/0xff-wrapped" "$tmp/def" 2>"$tmp/err"
 ! test -s "$tmp/err"
 expect_files abc xy zt def

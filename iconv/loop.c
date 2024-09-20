@@ -123,8 +123,7 @@
    `continue' must reach certain points.  */
 #define STANDARD_FROM_LOOP_ERR_HANDLER(Incr) \
   {									      \
-    result = __GCONV_ILLEGAL_INPUT;					      \
-									      \
+    result = __gconv_mark_illegal_input (step_data);			      \
     if (! ignore_errors_p ())						      \
       break;								      \
 									      \
@@ -142,7 +141,7 @@
    points.  */
 #define STANDARD_TO_LOOP_ERR_HANDLER(Incr) \
   {									      \
-    result = __GCONV_ILLEGAL_INPUT;					      \
+    result = __gconv_mark_illegal_input (step_data);			      \
 									      \
     if (irreversible == NULL)						      \
       /* This means we are in call from __gconv_transliterate.  In this	      \

@@ -291,6 +291,11 @@ conversions from `%s' and to `%s' are not supported"),
 	  }
 	while (++remaining < argc);
 
+      /* Ensure that iconv -c still exits with failure if iconv (the
+	 function) has failed with E2BIG instead of EILSEQ.  */
+      if (__gconv_has_illegal_input (cd))
+	status = EXIT_FAILURE;
+
       /* Close the output file now.  */
       if (output != NULL && fclose (output))
 	error (EXIT_FAILURE, errno, _("error while closing output file"));

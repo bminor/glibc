@@ -4831,7 +4831,7 @@ const char __from_big5_to_gb2312 [13973][2] =
 	  {								      \
 	    /* We do not have a mapping for this character.		      \
 	       If ignore errors, map it to 0xa1bc - big5 box character */     \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    result = __gconv_mark_illegal_input (step_data);		      \
 	    if (! ignore_errors_p ())					      \
 	      break;							      \
 									      \
@@ -4922,7 +4922,7 @@ const char __from_big5_to_gb2312 [13973][2] =
 	  {								      \
 	    /* We do not have a mapping for this character.		      \
 	       If ignore errors, map it to 0xa1f5 - gb box character */       \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    result = __gconv_mark_illegal_input (step_data);		      \
 	    if (! ignore_errors_p ())					      \
 	      break;							      \
 									      \

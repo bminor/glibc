@@ -331,4 +331,34 @@ extern wint_t __gconv_btwoc_ascii (struct __gconv_step *step, unsigned char c);
 
 __END_DECLS
 
+/* Internal extensions for <gconv.h>.  */
+
+/* Internal flags for __flags in struct __gconv_step_data.  Overlaps
+   with flags for __gconv_open.  */
+enum
+  {
+    /* The conversion encountered an illegal input character at one
+       point.  */
+    __GCONV_ENCOUNTERED_ILLEGAL_INPUT = 1U << 30,
+  };
+
+/* Mark *STEP_DATA as having seen illegal input, and return
+   __GCONV_ILLEGAL_INPUT.  */
+static inline int
+__gconv_mark_illegal_input (struct __gconv_step_data *step_data)
+{
+  step_data->__flags |= __GCONV_ENCOUNTERED_ILLEGAL_INPUT;
+  return __GCONV_ILLEGAL_INPUT;
+}
+
+/* Returns true if any of the conversion steps encountered illegal input.  */
+static _Bool __attribute__ ((unused))
+__gconv_has_illegal_input (__gconv_t cd)
+{
+  for (size_t i = 0; i < cd->__nsteps; ++i)
+    if (cd->__data[i].__flags & __GCONV_ENCOUNTERED_ILLEGAL_INPUT)
+      return true;
+  return false;
+}
+
 #endif /* gconv_int.h */

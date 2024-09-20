@@ -232,6 +232,6 @@ __gconv_transliterate (struct __gconv_step *step,
     }
 
   /* Haven't found a match.  */
-  return __GCONV_ILLEGAL_INPUT;
+  return __gconv_mark_illegal_input (step_data);
 }
 libc_hidden_def (__gconv_transliterate)
