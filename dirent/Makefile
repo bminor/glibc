@@ -58,12 +58,25 @@ tests := \
   bug-readdir1 \
   list \
   opendir-tst1 \
+  tst-closedir-leaks \
   tst-fdopendir \
   tst-fdopendir2 \
   tst-scandir \
   tst-scandir64 \
   tst-seekdir \
   # tests
+
+ifeq ($(run-built-tests),yes)
+ifneq ($(PERL),no)
+generated += \
+  $(objpfx)tst-closedir-leaks-mem.out \
+  # generated
+
+tests-special += \
+  $(objpfx)tst-closedir-leaks-mem.out \
+  # tests-special
+endif # $(PERL) ! no
+endif # $(run-built-tests) == yes
 
 CFLAGS-scandir.c += $(uses-callbacks)
 CFLAGS-scandir64.c += $(uses-callbacks)
@@ -74,3 +87,10 @@ CFLAGS-dirfd.c += $(config-cflags-wno-ignored-attributes)
 include ../Rules
 
 opendir-tst1-ARGS = --test-dir=${common-objpfx}dirent
+
+tst-closedir-leaks-ENV += MALLOC_TRACE=$(objpfx)tst-closedir-leaks.mtrace \
+		   LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
+
+$(objpfx)tst-closedir-leaks-mem.out: $(objpfx)tst-closedir-leaks.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-closedir-leaks.mtrace > $@; \
+	$(evaluate-test)
