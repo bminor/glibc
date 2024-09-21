@@ -26,16 +26,12 @@
 #undef __readdir
 #undef readdir
 
-/* Read a directory entry from DIRP.  */
-struct dirent64 *
-__readdir64 (DIR *dirp)
+/* Read a directory entry from DIRP.  No locking.  */
+static struct dirent64 *
+__readdir64_unlocked (DIR *dirp)
 {
   struct dirent64 *dp;
   int saved_errno = errno;
-
-#if IS_IN (libc)
-  __libc_lock_lock (dirp->lock);
-#endif
 
   if (dirp->offset >= dirp->size)
     {
@@ -53,9 +49,6 @@ __readdir64 (DIR *dirp)
 	     do not set errno in that case, to indicate success.  */
 	  if (bytes == 0 || errno == ENOENT)
 	    __set_errno (saved_errno);
-#if IS_IN (libc)
-	  __libc_lock_unlock (dirp->lock);
-#endif
 	  return NULL;
 	}
       dirp->size = (size_t) bytes;
@@ -68,10 +61,16 @@ __readdir64 (DIR *dirp)
   dirp->offset += dp->d_reclen;
   dirp->filepos = dp->d_off;
 
-#if IS_IN (libc)
-  __libc_lock_unlock (dirp->lock);
-#endif
+  return dp;
+}
 
+/* Read a directory entry from DIRP.  */
+struct dirent64 *
+__readdir64 (DIR *dirp)
+{
+  __libc_lock_lock (dirp->lock);
+  struct dirent64 *dp = __readdir64_unlocked (dirp);
+  __libc_lock_unlock (dirp->lock);
   return dp;
 }
 libc_hidden_def (__readdir64)
@@ -99,45 +98,54 @@ __old_readdir64 (DIR *dirp)
   struct __old_dirent64 *dp;
   int saved_errno = errno;
 
-#if IS_IN (libc)
   __libc_lock_lock (dirp->lock);
-#endif
 
-  if (dirp->offset >= dirp->size)
+  while (1)
     {
-      /* We've emptied out our buffer.  Refill it.  */
-
-      size_t maxread = dirp->allocation;
-      ssize_t bytes;
-
-      bytes = __old_getdents64 (dirp->fd, dirp->data, maxread);
-      if (bytes <= 0)
+      errno = 0;
+      struct dirent64 *newdp = __readdir64_unlocked (dirp);
+      if (newdp == NULL)
 	{
-	  /* Linux may fail with ENOENT on some file systems if the
-	     directory inode is marked as dead (deleted).  POSIX
-	     treats this as a regular end-of-directory condition, so
-	     do not set errno in that case, to indicate success.  */
-	  if (bytes == 0 || errno == ENOENT)
+	  if (errno == 0 && dirp->errcode != 0)
+	    __set_errno (dirp->errcode);
+	  else if (errno == 0)
 	    __set_errno (saved_errno);
-#if IS_IN (libc)
-	  __libc_lock_unlock (dirp->lock);
-#endif
-	  return NULL;
+	  dp = NULL;
+	  break;
 	}
-      dirp->size = (size_t) bytes;
 
-      /* Reset the offset into the buffer.  */
-      dirp->offset = 0;
+      /* Convert to the target layout.  Use a separate struct and
+	 memcpy to side-step aliasing issues.  */
+      struct __old_dirent64 result;
+      result.d_ino = newdp->d_ino;
+      result.d_off = newdp->d_off;
+      result.d_reclen = newdp->d_reclen;
+      result.d_type = newdp->d_type;
+
+      /* Check for ino_t overflow.  */
+      if (__glibc_unlikely (result.d_ino != newdp->d_ino))
+	{
+	  dirp->errcode = ENAMETOOLONG;
+	  continue;
+	}
+
+      /* Overwrite the fixed-sized part.  */
+      dp = (struct __old_dirent64 *) newdp;
+      memcpy (dp, &result, offsetof (struct __old_dirent64, d_name));
+
+      /* Move  the name.  */
+      _Static_assert (offsetof (struct __old_dirent64, d_name)
+		      <= offsetof (struct dirent64, d_name),
+		      "old struct must be smaller");
+      if (offsetof (struct __old_dirent64, d_name)
+	  != offsetof (struct dirent64, d_name))
+	memmove (dp->d_name, newdp->d_name, strlen (newdp->d_name) + 1);
+
+      __set_errno (saved_errno);
+      break;
     }
 
-  dp = (struct __old_dirent64 *) &dirp->data[dirp->offset];
-  dirp->offset += dp->d_reclen;
-  dirp->filepos = dp->d_off;
-
-#if IS_IN (libc)
   __libc_lock_unlock (dirp->lock);
-#endif
-
   return dp;
 }
 libc_hidden_def (__old_readdir64)
