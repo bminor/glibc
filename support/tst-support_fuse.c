@@ -331,6 +331,7 @@ do_test (void)
   {
     char *subdir_path = xasprintf ("%s/subdir", support_fuse_mountpoint (f));
     xmkdir (subdir_path, 01234);
+    free (subdir_path);
   }
 
   {

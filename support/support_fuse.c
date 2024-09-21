@@ -659,6 +659,7 @@ support_fuse_unmount (struct support_fuse *f)
   if (rmdir (f->mountpoint) != 0)
     FAIL ("FUSE: rmdir (\"%s\"): %m", f->mountpoint);
   xclose (f->fd);
+  free (f->buffer_start);
   free (f->mountpoint);
   free (f->readdir_buffer);
   free (f);
