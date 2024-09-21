@@ -37,7 +37,7 @@ __readdir64_r (DIR *dirp, struct dirent64 *entry, struct dirent64 **result)
 
   __libc_lock_lock (dirp->lock);
 
-  do
+  while (1)
     {
       if (dirp->offset >= dirp->size)
 	{
@@ -79,26 +79,21 @@ __readdir64_r (DIR *dirp, struct dirent64 *entry, struct dirent64 **result)
 
       dirp->filepos = dp->d_off;
 
-      if (reclen > offsetof (struct dirent64, d_name) + NAME_MAX + 1)
+      if (reclen <= offsetof (struct dirent64, d_name) + NAME_MAX + 1)
+	break;
+
+      /* The record is very long.  It could still fit into the
+	 caller-supplied buffer if we can skip padding at the end.  */
+      size_t namelen = _D_EXACT_NAMLEN (dp);
+      if (namelen <= NAME_MAX)
 	{
-	  /* The record is very long.  It could still fit into the
-	     caller-supplied buffer if we can skip padding at the
-	     end.  */
-	  size_t namelen = _D_EXACT_NAMLEN (dp);
-	  if (namelen <= NAME_MAX)
-	    reclen = offsetof (struct dirent64, d_name) + namelen + 1;
-	  else
-	    {
-	      /* The name is too long.  Ignore this file.  */
-	      dirp->errcode = ENAMETOOLONG;
-	      dp->d_ino = 0;
-	      continue;
-	    }
+	  reclen = offsetof (struct dirent64, d_name) + namelen + 1;
+	  break;
 	}
 
-      /* Skip deleted and ignored files.  */
+      /* The name is too long.  Ignore this file.  */
+      dirp->errcode = ENAMETOOLONG;
     }
-  while (dp->d_ino == 0);
 
   if (dp != NULL)
     {

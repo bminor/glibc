@@ -62,6 +62,7 @@ tests := \
   tst-fdopendir \
   tst-fdopendir2 \
   tst-readdir-long \
+  tst-readdir-zero-inode \
   tst-rewinddir \
   tst-scandir \
   tst-scandir64 \
