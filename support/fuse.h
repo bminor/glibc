@@ -16,8 +16,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* Before using this functionality, use support_enter_mount_namespace
-   to ensure that mounts do not impact the overall system.  */
+/* To run FUSE tests under valgrind, pass the
+   --sim-hints=fuse-compatible option to valgrind.  This option tells
+   valgrind that additional system calls effectively call back into
+   the current program.  */
 
 #ifndef SUPPORT_FUSE_H
 #define SUPPORT_FUSE_H
