@@ -22,7 +22,7 @@
 static const struct data
 {
   float32x4_t poly[4];
-  float32x4_t range_val, inv_pi, shift, pi_1, pi_2, pi_3;
+  float32x4_t range_val, inv_pi, pi_1, pi_2, pi_3;
 } data = {
   /* 1.886 ulp error.  */
   .poly = { V4 (-0x1.555548p-3f), V4 (0x1.110df4p-7f), V4 (-0x1.9f42eap-13f),
@@ -33,13 +33,14 @@ static const struct data
   .pi_3 = V4 (-0x1.ee59dap-49f),
 
   .inv_pi = V4 (0x1.45f306p-2f),
-  .shift = V4 (0x1.8p+23f),
   .range_val = V4 (0x1p20f)
 };
 
 #if WANT_SIMD_EXCEPT
-# define TinyBound v_u32 (0x21000000) /* asuint32(0x1p-61f).  */
-# define Thresh v_u32 (0x28800000)    /* RangeVal - TinyBound.  */
+/* asuint32(0x1p-59f), below which multiply by inv_pi underflows.  */
+# define TinyBound v_u32 (0x22000000)
+/* RangeVal - TinyBound.  */
+# define Thresh v_u32 (0x27800000)
 #endif
 
 #define C(i) d->poly[i]
@@ -64,23 +65,22 @@ float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (sin) (float32x4_t x)
   /* If fenv exceptions are to be triggered correctly, set any special lanes
      to 1 (which is neutral w.r.t. fenv). These lanes will be fixed by
      special-case handler later.  */
-  r = vbslq_f32 (cmp, vreinterpretq_f32_u32 (cmp), x);
+  r = vreinterpretq_f32_u32 (vbicq_u32 (vreinterpretq_u32_f32 (x), cmp));
 #else
   r = x;
   cmp = vcageq_f32 (x, d->range_val);
 #endif
 
-  /* n = rint(|x|/pi) */
-  n = vfmaq_f32 (d->shift, d->inv_pi, r);
-  odd = vshlq_n_u32 (vreinterpretq_u32_f32 (n), 31);
-  n = vsubq_f32 (n, d->shift);
+  /* n = rint(|x|/pi).  */
+  n = vrndaq_f32 (vmulq_f32 (r, d->inv_pi));
+  odd = vshlq_n_u32 (vreinterpretq_u32_s32 (vcvtq_s32_f32 (n)), 31);
 
-  /* r = |x| - n*pi  (range reduction into -pi/2 .. pi/2) */
+  /* r = |x| - n*pi  (range reduction into -pi/2 .. pi/2).  */
   r = vfmsq_f32 (r, d->pi_1, n);
   r = vfmsq_f32 (r, d->pi_2, n);
   r = vfmsq_f32 (r, d->pi_3, n);
 
-  /* y = sin(r) */
+  /* y = sin(r).  */
   r2 = vmulq_f32 (r, r);
   y = vfmaq_f32 (C (2), C (3), r2);
   y = vfmaq_f32 (C (1), y, r2);

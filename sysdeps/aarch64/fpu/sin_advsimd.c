@@ -22,7 +22,7 @@
 static const struct data
 {
   float64x2_t poly[7];
-  float64x2_t range_val, inv_pi, shift, pi_1, pi_2, pi_3;
+  float64x2_t range_val, inv_pi, pi_1, pi_2, pi_3;
 } data = {
   .poly = { V2 (-0x1.555555555547bp-3), V2 (0x1.1111111108a4dp-7),
 	    V2 (-0x1.a01a019936f27p-13), V2 (0x1.71de37a97d93ep-19),
@@ -34,12 +34,13 @@ static const struct data
   .pi_1 = V2 (0x1.921fb54442d18p+1),
   .pi_2 = V2 (0x1.1a62633145c06p-53),
   .pi_3 = V2 (0x1.c1cd129024e09p-106),
-  .shift = V2 (0x1.8p52),
 };
 
 #if WANT_SIMD_EXCEPT
-# define TinyBound v_u64 (0x3000000000000000) /* asuint64 (0x1p-255).  */
-# define Thresh v_u64 (0x1160000000000000)    /* RangeVal - TinyBound.  */
+/* asuint64(0x1p-253)), below which multiply by inv_pi underflows.  */
+# define TinyBound v_u64 (0x3020000000000000)
+/* RangeVal - TinyBound.  */
+# define Thresh v_u64 (0x1160000000000000)
 #endif
 
 #define C(i) d->poly[i]
@@ -72,16 +73,15 @@ float64x2_t VPCS_ATTR V_NAME_D1 (sin) (float64x2_t x)
      fenv). These lanes will be fixed by special-case handler later.  */
   uint64x2_t ir = vreinterpretq_u64_f64 (vabsq_f64 (x));
   cmp = vcgeq_u64 (vsubq_u64 (ir, TinyBound), Thresh);
-  r = vbslq_f64 (cmp, vreinterpretq_f64_u64 (cmp), x);
+  r = vreinterpretq_f64_u64 (vbicq_u64 (vreinterpretq_u64_f64 (x), cmp));
 #else
   r = x;
   cmp = vcageq_f64 (x, d->range_val);
 #endif
 
   /* n = rint(|x|/pi).  */
-  n = vfmaq_f64 (d->shift, d->inv_pi, r);
-  odd = vshlq_n_u64 (vreinterpretq_u64_f64 (n), 63);
-  n = vsubq_f64 (n, d->shift);
+  n = vrndaq_f64 (vmulq_f64 (r, d->inv_pi));
+  odd = vshlq_n_u64 (vreinterpretq_u64_s64 (vcvtq_s64_f64 (n)), 63);
 
   /* r = |x| - n*pi  (range reduction into -pi/2 .. pi/2).  */
   r = vfmsq_f64 (r, d->pi_1, n);
