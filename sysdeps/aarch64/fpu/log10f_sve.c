@@ -24,6 +24,7 @@ static const struct data
   float poly_0246[4];
   float poly_1357[4];
   float ln2, inv_ln10;
+  uint32_t off, lower;
 } data = {
   .poly_1357 = {
     /* Coefficients copied from the AdvSIMD routine, then rearranged so that coeffs
@@ -35,18 +36,23 @@ static const struct data
 		 -0x1.0fc92cp-4f },
   .ln2 = 0x1.62e43p-1f,
   .inv_ln10 = 0x1.bcb7b2p-2f,
+  .off = 0x3f2aaaab,
+  /* Lower bound is the smallest positive normal float 0x00800000. For
+     optimised register use subnormals are detected after offset has been
+     subtracted, so lower bound is 0x0080000 - offset (which wraps around).  */
+  .lower = 0x00800000 - 0x3f2aaaab
 };
 
-#define Min 0x00800000
-#define Max 0x7f800000
-#define Thres 0x7f000000  /* Max - Min.  */
-#define Offset 0x3f2aaaab /* 0.666667.  */
+#define Thres 0x7f000000 /* asuint32(inf) - 0x00800000.  */
 #define MantissaMask 0x007fffff
 
 static svfloat32_t NOINLINE
-special_case (svfloat32_t x, svfloat32_t y, svbool_t special)
+special_case (svuint32_t u_off, svfloat32_t p, svfloat32_t r2, svfloat32_t y,
+	      svbool_t cmp)
 {
-  return sv_call_f32 (log10f, x, y, special);
+  return sv_call_f32 (
+      log10f, svreinterpret_f32 (svadd_x (svptrue_b32 (), u_off, data.off)),
+      svmla_x (svptrue_b32 (), p, r2, y), cmp);
 }
 
 /* Optimised implementation of SVE log10f using the same algorithm and
@@ -57,23 +63,25 @@ special_case (svfloat32_t x, svfloat32_t y, svbool_t special)
 svfloat32_t SV_NAME_F1 (log10) (svfloat32_t x, const svbool_t pg)
 {
   const struct data *d = ptr_barrier (&data);
-  svuint32_t ix = svreinterpret_u32 (x);
-  svbool_t special = svcmpge (pg, svsub_x (pg, ix, Min), Thres);
+
+  svuint32_t u_off = svreinterpret_u32 (x);
+
+  u_off = svsub_x (pg, u_off, d->off);
+  svbool_t special = svcmpge (pg, svsub_x (pg, u_off, d->lower), Thres);
 
   /* x = 2^n * (1+r), where 2/3 < 1+r < 4/3.  */
-  ix = svsub_x (pg, ix, Offset);
   svfloat32_t n = svcvt_f32_x (
-      pg, svasr_x (pg, svreinterpret_s32 (ix), 23)); /* signextend.  */
-  ix = svand_x (pg, ix, MantissaMask);
-  ix = svadd_x (pg, ix, Offset);
+      pg, svasr_x (pg, svreinterpret_s32 (u_off), 23)); /* signextend.  */
+  svuint32_t ix = svand_x (pg, u_off, MantissaMask);
+  ix = svadd_x (pg, ix, d->off);
   svfloat32_t r = svsub_x (pg, svreinterpret_f32 (ix), 1.0f);
 
   /* y = log10(1+r) + n*log10(2)
      log10(1+r) ~ r * InvLn(10) + P(r)
      where P(r) is a polynomial. Use order 9 for log10(1+x), i.e. order 8 for
      log10(1+x)/x, with x in [-1/3, 1/3] (offset=2/3).  */
-  svfloat32_t r2 = svmul_x (pg, r, r);
-  svfloat32_t r4 = svmul_x (pg, r2, r2);
+  svfloat32_t r2 = svmul_x (svptrue_b32 (), r, r);
+  svfloat32_t r4 = svmul_x (svptrue_b32 (), r2, r2);
   svfloat32_t p_1357 = svld1rq (svptrue_b32 (), &d->poly_1357[0]);
   svfloat32_t q_01 = svmla_lane (sv_f32 (d->poly_0246[0]), r, p_1357, 0);
   svfloat32_t q_23 = svmla_lane (sv_f32 (d->poly_0246[1]), r, p_1357, 1);
@@ -88,7 +96,6 @@ svfloat32_t SV_NAME_F1 (log10) (svfloat32_t x, const svbool_t pg)
   hi = svmul_x (pg, hi, d->inv_ln10);
 
   if (__glibc_unlikely (svptest_any (pg, special)))
-    return special_case (x, svmla_x (svnot_z (pg, special), hi, r2, y),
-			 special);
-  return svmla_x (pg, hi, r2, y);
+    return special_case (u_off, hi, r2, y, special);
+  return svmla_x (svptrue_b32 (), hi, r2, y);
 }
