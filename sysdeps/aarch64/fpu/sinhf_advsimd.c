@@ -23,15 +23,13 @@
 static const struct data
 {
   struct v_expm1f_data expm1f_consts;
-  uint32x4_t halff;
 #if WANT_SIMD_EXCEPT
   uint32x4_t tiny_bound, thresh;
 #else
-  uint32x4_t oflow_bound;
+  float32x4_t oflow_bound;
 #endif
 } data = {
   .expm1f_consts = V_EXPM1F_DATA,
-  .halff = V4 (0x3f000000),
 #if WANT_SIMD_EXCEPT
   /* 0x1.6a09e8p-32, below which expm1f underflows.  */
   .tiny_bound = V4 (0x2fb504f4),
@@ -39,14 +37,15 @@ static const struct data
   .thresh = V4 (0x12fbbbb3),
 #else
   /* 0x1.61814ep+6, above which expm1f helper overflows.  */
-  .oflow_bound = V4 (0x42b0c0a7),
+  .oflow_bound = V4 (0x1.61814ep+6),
 #endif
 };
 
 static float32x4_t NOINLINE VPCS_ATTR
-special_case (float32x4_t x, float32x4_t y, uint32x4_t special)
+special_case (float32x4_t x, float32x4_t t, float32x4_t halfsign,
+	      uint32x4_t special)
 {
-  return v_call_f32 (sinhf, x, y, special);
+  return v_call_f32 (sinhf, x, vmulq_f32 (t, halfsign), special);
 }
 
 /* Approximation for vector single-precision sinh(x) using expm1.
@@ -60,15 +59,15 @@ float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (sinh) (float32x4_t x)
 
   uint32x4_t ix = vreinterpretq_u32_f32 (x);
   float32x4_t ax = vabsq_f32 (x);
-  uint32x4_t iax = vreinterpretq_u32_f32 (ax);
-  uint32x4_t sign = veorq_u32 (ix, iax);
-  float32x4_t halfsign = vreinterpretq_f32_u32 (vorrq_u32 (sign, d->halff));
+  float32x4_t halfsign = vreinterpretq_f32_u32 (
+      vbslq_u32 (v_u32 (0x80000000), ix, vreinterpretq_u32_f32 (v_f32 (0.5))));
 
 #if WANT_SIMD_EXCEPT
-  uint32x4_t special = vcgeq_u32 (vsubq_u32 (iax, d->tiny_bound), d->thresh);
+  uint32x4_t special = vcgeq_u32 (
+      vsubq_u32 (vreinterpretq_u32_f32 (ax), d->tiny_bound), d->thresh);
   ax = v_zerofy_f32 (ax, special);
 #else
-  uint32x4_t special = vcgeq_u32 (iax, d->oflow_bound);
+  uint32x4_t special = vcageq_f32 (x, d->oflow_bound);
 #endif
 
   /* Up to the point that expm1f overflows, we can use it to calculate sinhf
@@ -80,7 +79,7 @@ float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (sinh) (float32x4_t x)
   /* Fall back to the scalar variant for any lanes that should trigger an
      exception.  */
   if (__glibc_unlikely (v_any_u32 (special)))
-    return special_case (x, vmulq_f32 (t, halfsign), special);
+    return special_case (x, t, halfsign, special);
 
   return vmulq_f32 (t, halfsign);
 }
