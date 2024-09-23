@@ -23,6 +23,7 @@ static const struct data
 {
   float poly_02468[5];
   float poly_1357[4];
+  uint32_t off, lower;
 } data = {
   .poly_1357 = {
     /* Coefficients copied from the AdvSIMD routine, then rearranged so that coeffs
@@ -32,18 +33,23 @@ static const struct data
   },
   .poly_02468 = { 0x1.715476p0f, 0x1.ec701cp-2f, 0x1.27a0b8p-2f,
 		  0x1.9d8ecap-3f, 0x1.9e495p-3f },
+  .off = 0x3f2aaaab,
+  /* Lower bound is the smallest positive normal float 0x00800000. For
+     optimised register use subnormals are detected after offset has been
+     subtracted, so lower bound is 0x0080000 - offset (which wraps around).  */
+  .lower = 0x00800000 - 0x3f2aaaab
 };
 
-#define Min (0x00800000)
-#define Max (0x7f800000)
-#define Thres (0x7f000000) /* Max - Min.  */
+#define Thresh (0x7f000000) /* asuint32(inf) - 0x00800000.  */
 #define MantissaMask (0x007fffff)
-#define Off (0x3f2aaaab) /* 0.666667.  */
 
 static svfloat32_t NOINLINE
-special_case (svfloat32_t x, svfloat32_t y, svbool_t cmp)
+special_case (svuint32_t u_off, svfloat32_t p, svfloat32_t r2, svfloat32_t y,
+	      svbool_t cmp)
 {
-  return sv_call_f32 (log2f, x, y, cmp);
+  return sv_call_f32 (
+      log2f, svreinterpret_f32 (svadd_x (svptrue_b32 (), u_off, data.off)),
+      svmla_x (svptrue_b32 (), p, r2, y), cmp);
 }
 
 /* Optimised implementation of SVE log2f, using the same algorithm
@@ -55,19 +61,20 @@ svfloat32_t SV_NAME_F1 (log2) (svfloat32_t x, const svbool_t pg)
 {
   const struct data *d = ptr_barrier (&data);
 
-  svuint32_t u = svreinterpret_u32 (x);
-  svbool_t special = svcmpge (pg, svsub_x (pg, u, Min), Thres);
+  svuint32_t u_off = svreinterpret_u32 (x);
+
+  u_off = svsub_x (pg, u_off, d->off);
+  svbool_t special = svcmpge (pg, svsub_x (pg, u_off, d->lower), Thresh);
 
   /* x = 2^n * (1+r), where 2/3 < 1+r < 4/3.  */
-  u = svsub_x (pg, u, Off);
   svfloat32_t n = svcvt_f32_x (
-      pg, svasr_x (pg, svreinterpret_s32 (u), 23)); /* Sign-extend.  */
-  u = svand_x (pg, u, MantissaMask);
-  u = svadd_x (pg, u, Off);
+      pg, svasr_x (pg, svreinterpret_s32 (u_off), 23)); /* Sign-extend.  */
+  svuint32_t u = svand_x (pg, u_off, MantissaMask);
+  u = svadd_x (pg, u, d->off);
   svfloat32_t r = svsub_x (pg, svreinterpret_f32 (u), 1.0f);
 
   /* y = log2(1+r) + n.  */
-  svfloat32_t r2 = svmul_x (pg, r, r);
+  svfloat32_t r2 = svmul_x (svptrue_b32 (), r, r);
 
   /* Evaluate polynomial using pairwise Horner scheme.  */
   svfloat32_t p_1357 = svld1rq (svptrue_b32 (), &d->poly_1357[0]);
@@ -81,6 +88,6 @@ svfloat32_t SV_NAME_F1 (log2) (svfloat32_t x, const svbool_t pg)
   y = svmla_x (pg, q_01, r2, y);
 
   if (__glibc_unlikely (svptest_any (pg, special)))
-    return special_case (x, svmla_x (svnot_z (pg, special), n, r, y), special);
-  return svmla_x (pg, n, r, y);
+    return special_case (u_off, n, r, y, special);
+  return svmla_x (svptrue_b32 (), n, r, y);
 }
