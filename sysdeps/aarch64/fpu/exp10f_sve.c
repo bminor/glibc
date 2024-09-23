@@ -18,36 +18,71 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include "sv_math.h"
-#include "poly_sve_f32.h"
 
-/* For x < -SpecialBound, the result is subnormal and not handled correctly by
+/* For x < -Thres, the result is subnormal and not handled correctly by
    FEXPA.  */
-#define SpecialBound 37.9
+#define Thres 37.9
 
 static const struct data
 {
-  float poly[5];
-  float shift, log10_2, log2_10_hi, log2_10_lo, special_bound;
+  float log2_10_lo, c0, c2, c4;
+  float c1, c3, log10_2;
+  float shift, log2_10_hi, thres;
 } data = {
   /* Coefficients generated using Remez algorithm with minimisation of relative
      error.
      rel error: 0x1.89dafa3p-24
      abs error: 0x1.167d55p-23 in [-log10(2)/2, log10(2)/2]
      maxerr: 0.52 +0.5 ulp.  */
-  .poly = { 0x1.26bb16p+1f, 0x1.5350d2p+1f, 0x1.04744ap+1f, 0x1.2d8176p+0f,
-	    0x1.12b41ap-1f },
+  .c0 = 0x1.26bb16p+1f,
+  .c1 = 0x1.5350d2p+1f,
+  .c2 = 0x1.04744ap+1f,
+  .c3 = 0x1.2d8176p+0f,
+  .c4 = 0x1.12b41ap-1f,
   /* 1.5*2^17 + 127, a shift value suitable for FEXPA.  */
-  .shift = 0x1.903f8p17f,
+  .shift = 0x1.803f8p17f,
   .log10_2 = 0x1.a934fp+1,
   .log2_10_hi = 0x1.344136p-2,
   .log2_10_lo = -0x1.ec10cp-27,
-  .special_bound = SpecialBound,
+  .thres = Thres,
 };
 
-static svfloat32_t NOINLINE
-special_case (svfloat32_t x, svfloat32_t y, svbool_t special)
+static inline svfloat32_t
+sv_exp10f_inline (svfloat32_t x, const svbool_t pg, const struct data *d)
 {
-  return sv_call_f32 (exp10f, x, y, special);
+  /* exp10(x) = 2^(n/N) * 10^r = 2^n * (1 + poly (r)),
+     with poly(r) in [1/sqrt(2), sqrt(2)] and
+     x = r + n * log10(2) / N, with r in [-log10(2)/2N, log10(2)/2N].  */
+
+  svfloat32_t lane_consts = svld1rq (svptrue_b32 (), &d->log2_10_lo);
+
+  /* n = round(x/(log10(2)/N)).  */
+  svfloat32_t shift = sv_f32 (d->shift);
+  svfloat32_t z = svmad_x (pg, sv_f32 (d->log10_2), x, shift);
+  svfloat32_t n = svsub_x (svptrue_b32 (), z, shift);
+
+  /* r = x - n*log10(2)/N.  */
+  svfloat32_t r = svmsb_x (pg, sv_f32 (d->log2_10_hi), n, x);
+  r = svmls_lane (r, n, lane_consts, 0);
+
+  svfloat32_t scale = svexpa (svreinterpret_u32 (z));
+
+  /* Polynomial evaluation: poly(r) ~ exp10(r)-1.  */
+  svfloat32_t p12 = svmla_lane (sv_f32 (d->c1), r, lane_consts, 2);
+  svfloat32_t p34 = svmla_lane (sv_f32 (d->c3), r, lane_consts, 3);
+  svfloat32_t r2 = svmul_x (svptrue_b32 (), r, r);
+  svfloat32_t p14 = svmla_x (pg, p12, p34, r2);
+  svfloat32_t p0 = svmul_lane (r, lane_consts, 1);
+  svfloat32_t poly = svmla_x (pg, p0, r2, p14);
+
+  return svmla_x (pg, scale, scale, poly);
+}
+
+static svfloat32_t NOINLINE
+special_case (svfloat32_t x, svbool_t special, const struct data *d)
+{
+  return sv_call_f32 (exp10f, x, sv_exp10f_inline (x, svptrue_b32 (), d),
+		      special);
 }
 
 /* Single-precision SVE exp10f routine. Implements the same algorithm
@@ -58,34 +93,8 @@ special_case (svfloat32_t x, svfloat32_t y, svbool_t special)
 svfloat32_t SV_NAME_F1 (exp10) (svfloat32_t x, const svbool_t pg)
 {
   const struct data *d = ptr_barrier (&data);
-  /* exp10(x) = 2^(n/N) * 10^r = 2^n * (1 + poly (r)),
-     with poly(r) in [1/sqrt(2), sqrt(2)] and
-     x = r + n * log10(2) / N, with r in [-log10(2)/2N, log10(2)/2N].  */
-
-  /* Load some constants in quad-word chunks to minimise memory access (last
-     lane is wasted).  */
-  svfloat32_t log10_2_and_inv = svld1rq (svptrue_b32 (), &d->log10_2);
-
-  /* n = round(x/(log10(2)/N)).  */
-  svfloat32_t shift = sv_f32 (d->shift);
-  svfloat32_t z = svmla_lane (shift, x, log10_2_and_inv, 0);
-  svfloat32_t n = svsub_x (pg, z, shift);
-
-  /* r = x - n*log10(2)/N.  */
-  svfloat32_t r = svmls_lane (x, n, log10_2_and_inv, 1);
-  r = svmls_lane (r, n, log10_2_and_inv, 2);
-
-  svbool_t special = svacgt (pg, x, d->special_bound);
-  svfloat32_t scale = svexpa (svreinterpret_u32 (z));
-
-  /* Polynomial evaluation: poly(r) ~ exp10(r)-1.  */
-  svfloat32_t r2 = svmul_x (pg, r, r);
-  svfloat32_t poly
-      = svmla_x (pg, svmul_x (pg, r, d->poly[0]),
-		 sv_pairwise_poly_3_f32_x (pg, r, r2, d->poly + 1), r2);
-
-  if (__glibc_unlikely (svptest_any (pg, special)))
-    return special_case (x, svmla_x (pg, scale, scale, poly), special);
-
-  return svmla_x (pg, scale, scale, poly);
+  svbool_t special = svacgt (pg, x, d->thres);
+  if (__glibc_unlikely (svptest_any (special, special)))
+    return special_case (x, special, d);
+  return sv_exp10f_inline (x, pg, d);
 }
