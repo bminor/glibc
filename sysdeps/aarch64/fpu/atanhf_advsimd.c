@@ -40,15 +40,17 @@ const static struct data
 #define Half v_u32 (0x3f000000)
 
 static float32x4_t NOINLINE VPCS_ATTR
-special_case (float32x4_t x, float32x4_t y, uint32x4_t special)
+special_case (float32x4_t x, float32x4_t halfsign, float32x4_t y,
+	      uint32x4_t special)
 {
-  return v_call_f32 (atanhf, x, y, special);
+  return v_call_f32 (atanhf, vbslq_f32 (AbsMask, x, halfsign),
+		     vmulq_f32 (halfsign, y), special);
 }
 
 /* Approximation for vector single-precision atanh(x) using modified log1p.
-   The maximum error is 3.08 ULP:
-   __v_atanhf(0x1.ff215p-5) got 0x1.ffcb7cp-5
-			   want 0x1.ffcb82p-5.  */
+   The maximum error is 2.93 ULP:
+   _ZGVnN4v_atanhf(0x1.f43d7p-5) got 0x1.f4dcfep-5
+				want 0x1.f4dcf8p-5.  */
 VPCS_ATTR float32x4_t NOINLINE V_NAME_F1 (atanh) (float32x4_t x)
 {
   const struct data *d = ptr_barrier (&data);
@@ -68,11 +70,19 @@ VPCS_ATTR float32x4_t NOINLINE V_NAME_F1 (atanh) (float32x4_t x)
   uint32x4_t special = vcgeq_u32 (iax, d->one);
 #endif
 
-  float32x4_t y = vdivq_f32 (vaddq_f32 (ax, ax), vsubq_f32 (v_f32 (1), ax));
-  y = log1pf_inline (y, d->log1pf_consts);
+  float32x4_t y = vdivq_f32 (vaddq_f32 (ax, ax),
+			     vsubq_f32 (vreinterpretq_f32_u32 (d->one), ax));
+  y = log1pf_inline (y, &d->log1pf_consts);
 
+  /* If exceptions not required, pass ax to special-case for shorter dependency
+     chain. If exceptions are required ax will have been zerofied, so have to
+     pass x.  */
   if (__glibc_unlikely (v_any_u32 (special)))
-    return special_case (x, vmulq_f32 (halfsign, y), special);
+#if WANT_SIMD_EXCEPT
+    return special_case (x, halfsign, y, special);
+#else
+    return special_case (ax, halfsign, y, special);
+#endif
   return vmulq_f32 (halfsign, y);
 }
 libmvec_hidden_def (V_NAME_F1 (atanh))
