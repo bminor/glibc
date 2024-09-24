@@ -217,6 +217,7 @@ tests := \
   tst-fmemopen4 \
   tst-fphex \
   tst-fphex-wide \
+  tst-fread \
   tst-freopen2 \
   tst-freopen3 \
   tst-freopen4 \
