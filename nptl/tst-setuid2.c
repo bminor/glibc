@@ -76,7 +76,12 @@ run_on_thread (void (*func) (void))
 static void
 change_thread_ids (void)
 {
+#ifdef __NR_setresuid32
+  /* Prefer 32-bit setresuid32 over 16-bit setresuid.  */
+  long ret = syscall (__NR_setresuid32, 2001, 2002, 2003);
+#else
   long ret = syscall (__NR_setresuid, 2001, 2002, 2003);
+#endif
   if (ret != 0)
     FAIL ("setresuid (2001, 2002, 2003): %ld", ret);
 }
