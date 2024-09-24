@@ -17,10 +17,13 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
+#include <sys/mman.h>
 
 int
-pkey_get (int key)
+__pkey_get (int key)
 {
   __set_errno (ENOSYS);
   return -1;
 }
+libc_hidden_def (__pkey_get)
+weak_alias (__pkey_get, pkey_get)

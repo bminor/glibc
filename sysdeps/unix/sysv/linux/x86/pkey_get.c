@@ -18,9 +18,10 @@
 
 #include <arch-pkey.h>
 #include <errno.h>
+#include <sys/mman.h>
 
 int
-pkey_get (int key)
+__pkey_get (int key)
 {
   if (key < 0 || key > 15)
     {
@@ -31,3 +32,5 @@ pkey_get (int key)
   return (pkru >> (2 * key)) & 3;
   return 0;
 }
+libc_hidden_def (__pkey_get)
+weak_alias (__pkey_get, pkey_get)

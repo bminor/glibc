@@ -21,7 +21,7 @@
 #include <sys/mman.h>
 
 int
-pkey_get (int key)
+__pkey_get (int key)
 {
   if (key < 0 || key > PKEY_MAX)
     {
@@ -40,3 +40,5 @@ pkey_get (int key)
     return PKEY_DISABLE_WRITE;
   return 0;
 }
+libc_hidden_def (__pkey_get)
+weak_alias (__pkey_get, pkey_get)

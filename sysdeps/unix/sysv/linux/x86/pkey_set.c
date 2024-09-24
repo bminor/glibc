@@ -18,9 +18,10 @@
 
 #include <arch-pkey.h>
 #include <errno.h>
+#include <sys/mman.h>
 
 int
-pkey_set (int key, unsigned int rights)
+__pkey_set (int key, unsigned int rights)
 {
   if (key < 0 || key > 15 || rights > 3)
     {
@@ -33,3 +34,5 @@ pkey_set (int key, unsigned int rights)
   pkey_write (pkru);
   return 0;
 }
+libc_hidden_def (__pkey_set)
+weak_alias (__pkey_set, pkey_set)
