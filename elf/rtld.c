@@ -452,6 +452,8 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
 {
   ElfW(Addr) start_addr;
 
+  __rtld_malloc_init_stubs ();
+
   /* Do not use an initializer for these members because it would
      interfere with __rtld_static_init.  */
   GLRO (dl_find_object) = &_dl_find_object;
@@ -573,8 +575,6 @@ _dl_start (void *arg)
      header table in core.  Put the rest of _dl_start into a separate
      function, that way the compiler cannot put accesses to the GOT
      before ELF_DYNAMIC_RELOCATE.  */
-
-  __rtld_malloc_init_stubs ();
 
 #ifdef DONT_USE_BOOTSTRAP_MAP
   return _dl_start_final (arg);
