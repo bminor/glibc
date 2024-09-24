@@ -75,9 +75,7 @@ _dl_name_match_p (const char *name, const struct link_map *map)
     if (strcmp (name, runp->name) == 0)
       return 1;
     else
-      /* Synchronize with the release MO store in add_name_to_object.
-	 See CONCURRENCY NOTES in add_name_to_object in dl-load.c.  */
-      runp = atomic_load_acquire (&runp->next);
+      runp = runp->next;
 
   return 0;
 }
