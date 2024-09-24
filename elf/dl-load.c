@@ -1592,15 +1592,13 @@ open_verify (const char *name, int fd,
 	  errval = errno;
 	  errstring = (errval == 0
 		       ? N_("file too short") : N_("cannot read file data"));
-	lose:
+	lose:;
+	  struct dl_exception exception;
+	  _dl_exception_create (&exception, name, errstring);
 	  if (free_name)
-	    {
-	      char *realname = (char *) name;
-	      name = strdupa (realname);
-	      free (realname);
-	    }
+	    free ((char *) name);
 	  __close_nocancel (fd);
-	  _dl_signal_error (errval, name, NULL, errstring);
+	  _dl_signal_exception (errval, &exception, NULL);
 	}
 
       /* See whether the ELF header is what we expect.  */
