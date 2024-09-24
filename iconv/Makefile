@@ -153,14 +153,14 @@ $(objpfx)tst-translit-mchar.out: tst-translit-mchar.sh \
 
 $(objpfx)tst-iconv_prog-buffer.out: \
   tst-iconv_prog-buffer.sh $(objpfx)iconv_prog
-	$(BASH) $< $(common-objdir) '$(test-program-prefix)' > $@; \
+	$(BASH) $< $(common-objdir) '$(run-program-prefix)' > $@; \
 	$(evaluate-test)
 $(objpfx)tst-iconv_prog-buffer-tiny.out: \
   tst-iconv_prog-buffer.sh $(objpfx)iconv_prog
-	$(BASH) $< $(common-objdir) '$(test-program-prefix)' \
+	$(BASH) $< $(common-objdir) '$(run-program-prefix)' \
 	  '--buffer-size=1' > $@; \
 	$(evaluate-test)
 $(objpfx)tst-iconv_prog-buffer-large.out: \
   tst-iconv_prog-buffer.sh $(objpfx)iconv_prog
-	$(BASH) $< $(common-objdir) '$(test-program-prefix)' '' '22' > $@; \
+	$(BASH) $< $(common-objdir) '$(run-program-prefix)' '' '22' > $@; \
 	$(evaluate-test)
