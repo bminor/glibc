@@ -189,9 +189,6 @@ class Context(object):
         self.add_config(arch='arc',
                         os_name='linux-gnuhf',
                         gcc_cfg=['--disable-multilib', '--with-cpu=hs38_linux'])
-        self.add_config(arch='arceb',
-                        os_name='linux-gnu',
-                        gcc_cfg=['--disable-multilib', '--with-cpu=hs38'])
         self.add_config(arch='alpha',
                         os_name='linux-gnu')
         self.add_config(arch='arm',
