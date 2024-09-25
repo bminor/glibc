@@ -206,6 +206,7 @@ tests := \
   tst-cookie \
   tst-dprintf-length \
   tst-fdopen \
+  tst-fdopen2 \
   tst-ferror \
   tst-fgets \
   tst-fileno \
