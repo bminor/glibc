@@ -17,9 +17,6 @@ AC_CACHE_CHECK([for big endian],
                      #endif
   ], libc_cv_arc_be=yes, libc_cv_arc_be=no)])
 if test $libc_cv_arc_be = yes; then
-  # For shlib-versions.
-  AC_DEFINE(HAVE_ARC_BE)
-  LIBC_CONFIG_VAR([default-abi], [arcbe])
-else
-  LIBC_CONFIG_VAR([default-abi], [arcle])
+  AC_MSG_ERROR([big-endian not supported])
 fi
+LIBC_CONFIG_VAR([default-abi], [arcle])

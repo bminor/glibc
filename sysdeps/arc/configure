@@ -175,13 +175,8 @@ fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_arc_be" >&5
 printf "%s\n" "$libc_cv_arc_be" >&6; }
 if test $libc_cv_arc_be = yes; then
-  # For shlib-versions.
-  printf "%s\n" "#define HAVE_ARC_BE 1" >>confdefs.h
-
-  config_vars="$config_vars
-default-abi = arcbe"
-else
-  config_vars="$config_vars
-default-abi = arcle"
+  as_fn_error $? "big-endian not supported" "$LINENO" 5
 fi
+config_vars="$config_vars
+default-abi = arcle"
 

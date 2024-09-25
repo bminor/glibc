@@ -117,9 +117,6 @@
    required version of GNU 'binutils' to 2.28 or later. */
 #define HAVE_AARCH64_SVE_ASM 0
 
-/* ARC big endian ABI */
-#undef HAVE_ARC_BE
-
 /* C-SKY ABI version.  */
 #undef CSKYABI
 

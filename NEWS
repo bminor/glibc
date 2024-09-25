@@ -33,7 +33,7 @@ Major new features:
 
 Deprecated and removed features, and other changes affecting compatibility:
 
-  [Add deprecations, removals and changes affecting compatibility here]
+* The big-endian ARC port (arceb-linux-gnu) has been removed.
 
 Changes to build and runtime requirements:
 
