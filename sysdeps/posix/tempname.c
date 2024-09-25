@@ -117,6 +117,8 @@ random_bits (random_value *r, random_value s)
      succeed.  */
 #if !_LIBC
   *r = mix_random_values (v, clock ());
+#else
+  *r = v;
 #endif
   return false;
 }
