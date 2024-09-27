@@ -397,8 +397,8 @@ gconv_end (struct __gconv_step *data)
   {									\
     register const unsigned char* pInput asm ("8") = inptr;		\
     register size_t inlen asm ("9") = inend - inptr;			\
-    register unsigned char* pOutput asm ("10") = outptr;		\
-    register size_t outlen asm ("11") = outend - outptr;		\
+    register unsigned char* pOutput asm ("6") = outptr;			\
+    register size_t outlen asm ("7") = outend - outptr;			\
     unsigned long tmp, tmp2, tmp3;					\
     asm volatile (".machine push\n\t"					\
 		  ".machine \"z13\"\n\t"				\
@@ -707,8 +707,8 @@ gconv_end (struct __gconv_step *data)
   {									\
     register const unsigned char* pInput asm ("8") = inptr;		\
     register size_t inlen asm ("9") = inend - inptr;			\
-    register unsigned char* pOutput asm ("10") = outptr;		\
-    register size_t outlen asm ("11") = outend - outptr;		\
+    register unsigned char* pOutput asm ("6") = outptr;			\
+    register size_t outlen asm ("7") = outend - outptr;			\
     unsigned long tmp, tmp2, tmp3;					\
     asm volatile (".machine push\n\t"					\
 		  ".machine \"z13\"\n\t"				\
