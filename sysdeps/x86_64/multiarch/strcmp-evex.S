@@ -209,7 +209,9 @@
    returned.  */
 
 	.section SECTION(.text), "ax", @progbits
-	.align	16
+	/* Align 64 bytes here. This is to get the L(loop) block ideally
+	   aligned for the DSB.  */
+	.align	64
 	.type	STRCMP, @function
 	.globl	STRCMP
 # ifdef USE_AS_STRCASECMP_L
@@ -509,9 +511,7 @@ L(ret4):
 	ret
 # endif
 
-	/* 32 byte align here ensures the main loop is ideally aligned
-	   for DSB.  */
-	.p2align 5
+	.p2align 4,, 4
 L(more_3x_vec):
 	/* Safe to compare 4x vectors.  */
 	VMOVU	(VEC_SIZE)(%rdi), %VMM(0)
@@ -1426,10 +1426,9 @@ L(less_32_till_page):
 L(ret_zero_page_cross_slow_case0):
 	xorl	%eax, %eax
 	ret
-# endif
-
-
+# else
 	.p2align 4,, 10
+# endif
 L(less_16_till_page):
 	cmpl	$((VEC_SIZE - 8) / SIZE_OF_CHAR), %eax
 	ja	L(less_8_till_page)
@@ -1482,8 +1481,12 @@ L(less_16_till_page):
 # endif
 	jmp	L(prepare_loop_aligned)
 
-
-
+# ifndef USE_AS_STRNCMP
+	/* Fits in aligning bytes.  */
+L(ret_zero_4_loop):
+	xorl	%eax, %eax
+	ret
+# endif
 
 	.p2align 4,, 10
 L(less_8_till_page):
@@ -1554,6 +1557,7 @@ L(ret_less_8_wcs):
 
 #  ifdef USE_AS_STRNCMP
 	.p2align 4,, 2
+L(ret_zero_4_loop):
 L(ret_zero_page_cross_slow_case1):
 	xorl	%eax, %eax
 	ret
@@ -1586,10 +1590,6 @@ L(less_4_loop):
 	subq	$-(CHAR_PER_VEC * 4), %rdx
 #  endif
 	jmp	L(prepare_loop_aligned)
-
-L(ret_zero_4_loop):
-	xorl	%eax, %eax
-	ret
 L(ret_less_4_loop):
 	xorl	%r8d, %eax
 	subl	%r8d, %eax
