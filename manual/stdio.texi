@@ -4168,6 +4168,15 @@ check indicators that are part of the internal state of the stream
 object, indicators set if the appropriate condition was detected by a
 previous I/O operation on that stream.
 
+The end of file and error conditions are mutually exclusive.  For a
+narrow oriented stream, end of file is not considered an error.  For
+wide oriented streams, reaching the end of the underlying file can
+result an error if the underlying file ends with an incomplete multibyte
+sequence.  This is reported as an error by @code{ferror}, and not as an
+end of file by @code{feof}.  End of file on wide oriented streams that
+does not fall into the middle of a multibyte sequence is reported via
+@code{feof}.
+
 @deftypevr Macro int EOF
 @standards{ISO, stdio.h}
 This macro is an integer value that is returned by a number of narrow
