@@ -33,7 +33,7 @@ int
 do_test (void)
 {
   mtrace ();
-  char *temp_dir = support_create_temp_directory ("tst-freopen4");
+  char *temp_dir;
   FILE *fp;
   int ret;
 
@@ -45,6 +45,8 @@ do_test (void)
   support_become_root ();
   if (!support_can_chroot ())
     return EXIT_UNSUPPORTED;
+
+  temp_dir = support_create_temp_directory ("tst-freopen4");
   xchroot (temp_dir);
 
   /* Test freopen with NULL, renamed file.  This verifies that
