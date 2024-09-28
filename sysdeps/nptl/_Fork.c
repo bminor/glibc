@@ -22,6 +22,11 @@
 pid_t
 _Fork (void)
 {
+  /* Block all signals to avoid revealing the inconsistent TCB state
+     to a signal handler after fork.  */
+  internal_sigset_t original_sigmask;
+  internal_signal_block_all (&original_sigmask);
+
   pid_t pid = arch_fork (&THREAD_SELF->tid);
   if (pid == 0)
     {
@@ -44,6 +49,8 @@ _Fork (void)
       INTERNAL_SYSCALL_CALL (set_robust_list, &self->robust_head,
 			     sizeof (struct robust_list_head));
     }
+
+  internal_signal_restore_set (&original_sigmask);
   return pid;
 }
 libc_hidden_def (_Fork)
