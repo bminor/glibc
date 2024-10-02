@@ -87,6 +87,7 @@ load_gp:
 	ret
 
 	.section .preinit_array,"aw"
+	.align PTRLOG
 	.dc.a load_gp
 
 /* Define a symbol for the first piece of initialized data.  */
