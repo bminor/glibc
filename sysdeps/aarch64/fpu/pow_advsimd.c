@@ -17,6 +17,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#define NO_MATH_REDIRECT
 #include "v_math.h"
 
 /* Defines parameters of the approximation and scalar fallback.  */
