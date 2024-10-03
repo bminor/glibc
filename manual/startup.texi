@@ -1014,10 +1014,7 @@ for this function is in @file{stdlib.h}.
 
 @deftypefun void abort (void)
 @standards{ISO, stdlib.h}
-@safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@aculock{} @acucorrupt{}}}
-@c The implementation takes a recursive lock and attempts to support
-@c calls from signal handlers, but if we're in the middle of flushing or
-@c using streams, we may encounter them in inconsistent states.
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{abort} function causes abnormal program termination.  This
 does not execute cleanup functions registered with @code{atexit} or
 @code{on_exit}.
@@ -1025,6 +1022,10 @@ does not execute cleanup functions registered with @code{atexit} or
 This function actually terminates the process by raising a
 @code{SIGABRT} signal, and your program can include a handler to
 intercept this signal; see @ref{Signal Handling}.
+
+If either the signal handler does not terminate the process, or if the
+signal is blocked, @code{abort} will reset the signal disposition to the
+default @code{SIG_DFL} action and raise the signal again.
 @end deftypefun
 
 @node Termination Internals

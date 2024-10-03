@@ -383,7 +383,11 @@ __spawnix (int *pid, const char *file,
   args.pidfd = 0;
   args.xflags = xflags;
 
-  internal_signal_block_all (&args.oldmask);
+  /* Avoid the potential issues if caller sets a SIG_IGN for SIGABRT, calls
+     abort, and another thread issues posix_spawn just after the sigaction
+     returns.  With default options (not setting POSIX_SPAWN_SETSIGDEF), the
+     process can still see SIG_DFL for SIGABRT, where it should be SIG_IGN.  */
+  __abort_lock_rdlock (&args.oldmask);
 
   /* The clone flags used will create a new child that will run in the same
      memory space (CLONE_VM) and the execution of calling thread will be
@@ -474,7 +478,7 @@ __spawnix (int *pid, const char *file,
   if ((ec == 0) && (pid != NULL))
     *pid = use_pidfd ? args.pidfd : new_pid;
 
-  internal_signal_restore_set (&args.oldmask);
+  __abort_lock_unlock (&args.oldmask);
 
   __pthread_setcancelstate (state, NULL);
 

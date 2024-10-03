@@ -517,6 +517,7 @@ libc_hidden_proto (__pthread_kill)
 extern int __pthread_cancel (pthread_t th);
 extern int __pthread_kill_internal (pthread_t threadid, int signo)
   attribute_hidden;
+extern int __pthread_raise_internal (int signo) attribute_hidden;
 extern void __pthread_exit (void *value) __attribute__ ((__noreturn__));
 libc_hidden_proto (__pthread_exit)
 extern int __pthread_join (pthread_t threadid, void **thread_return);

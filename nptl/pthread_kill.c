@@ -69,6 +69,17 @@ __pthread_kill_implementation (pthread_t threadid, int signo, int no_tid)
   return ret;
 }
 
+/* Send the signal SIGNO to the caller.  Used by abort and called where the
+   signals are being already blocked and there is no need to synchronize with
+   exit_lock.  */
+int
+__pthread_raise_internal (int signo)
+{
+  /* Use the gettid syscall so it works after vfork.  */
+  int ret = INTERNAL_SYSCALL_CALL (tgkill, __getpid (), __gettid(), signo);
+  return INTERNAL_SYSCALL_ERROR_P (ret) ? INTERNAL_SYSCALL_ERRNO (ret) : 0;
+}
+
 int
 __pthread_kill_internal (pthread_t threadid, int signo)
 {

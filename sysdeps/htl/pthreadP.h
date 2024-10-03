@@ -92,6 +92,8 @@ int __pthread_attr_setstack (pthread_attr_t *__attr, void *__stackaddr,
 int __pthread_attr_getstack (const pthread_attr_t *, void **, size_t *);
 void __pthread_testcancel (void);
 
+#define __pthread_raise_internal(__sig) raise (__sig)
+
 libc_hidden_proto (__pthread_self)
 
 #if IS_IN (libpthread)

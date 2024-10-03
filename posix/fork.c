@@ -84,6 +84,8 @@ __libc_fork (void)
 
 	  fork_system_setup_after_fork ();
 
+	  call_function_static_weak (__abort_fork_reset_child);
+
 	  /* Release malloc locks.  */
 	  call_function_static_weak (__malloc_fork_unlock_child);
 

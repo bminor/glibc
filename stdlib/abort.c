@@ -15,13 +15,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <libc-lock.h>
 #include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 #include <internal-signals.h>
+#include <libc-lock.h>
+#include <pthreadP.h>
+#include <unistd.h>
 
 /* Try to get a machine dependent instruction which will make the
    program crash.  This is used in case everything else fails.  */
@@ -35,89 +33,63 @@
 struct abort_msg_s *__abort_msg;
 libc_hidden_def (__abort_msg)
 
-/* We must avoid to run in circles.  Therefore we remember how far we
-   already got.  */
-static int stage;
+/* The lock is used to prevent multiple thread to change the SIGABRT
+   to SIG_IGN while abort tries to change to SIG_DFL, and to avoid
+   a new process to see a wrong disposition if there is a SIGABRT
+   handler installed.  */
+__libc_rwlock_define_initialized (static, lock);
 
-/* We should be prepared for multiple threads trying to run abort.  */
-__libc_lock_define_initialized_recursive (static, lock);
+void
+__abort_fork_reset_child (void)
+{
+  __libc_rwlock_init (lock);
+}
 
+void
+__abort_lock_rdlock (internal_sigset_t *set)
+{
+  internal_signal_block_all (set);
+  __libc_rwlock_rdlock (lock);
+}
+
+void
+__abort_lock_wrlock (internal_sigset_t *set)
+{
+  internal_signal_block_all (set);
+  __libc_rwlock_wrlock (lock);
+}
+
+void
+__abort_lock_unlock (const internal_sigset_t *set)
+{
+  __libc_rwlock_unlock (lock);
+  internal_signal_restore_set (set);
+}
 
 /* Cause an abnormal program termination with core-dump.  */
-void
+_Noreturn void
 abort (void)
 {
-  struct sigaction act;
+  raise (SIGABRT);
 
-  /* First acquire the lock.  */
-  __libc_lock_lock_recursive (lock);
+  /* There is a SIGABRT handle installed and it returned, or SIGABRT was
+     blocked or ignored.  In this case use a AS-safe lock to prevent sigaction
+     to change the signal disposition again, set the handle to default
+     disposition, and re-raise the signal.  Even if POSIX state this step is
+     optional, this a QoI by forcing the process termination through the
+     signal handler.  */
+  __abort_lock_wrlock (NULL);
 
-  /* Now it's for sure we are alone.  But recursive calls are possible.  */
+  struct sigaction act = {.sa_handler = SIG_DFL, .sa_flags = 0 };
+  __sigfillset (&act.sa_mask);
+  __libc_sigaction (SIGABRT, &act, NULL);
+  __pthread_raise_internal (SIGABRT);
+  internal_signal_unblock_signal (SIGABRT);
 
-  /* Unblock SIGABRT.  */
-  if (stage == 0)
-    {
-      ++stage;
-      internal_sigset_t sigs;
-      internal_sigemptyset (&sigs);
-      internal_sigaddset (&sigs, SIGABRT);
-      internal_sigprocmask (SIG_UNBLOCK, &sigs, NULL);
-    }
+  /* This code should be unreachable, try the arch-specific code and the
+     syscall fallback.  */
+  ABORT_INSTRUCTION;
 
-  /* Send signal which possibly calls a user handler.  */
-  if (stage == 1)
-    {
-      /* This stage is special: we must allow repeated calls of
-	 `abort' when a user defined handler for SIGABRT is installed.
-	 This is risky since the `raise' implementation might also
-	 fail but I don't see another possibility.  */
-      int save_stage = stage;
-
-      stage = 0;
-      __libc_lock_unlock_recursive (lock);
-
-      raise (SIGABRT);
-
-      __libc_lock_lock_recursive (lock);
-      stage = save_stage + 1;
-    }
-
-  /* There was a handler installed.  Now remove it.  */
-  if (stage == 2)
-    {
-      ++stage;
-      memset (&act, '\0', sizeof (struct sigaction));
-      act.sa_handler = SIG_DFL;
-      __sigfillset (&act.sa_mask);
-      act.sa_flags = 0;
-      __sigaction (SIGABRT, &act, NULL);
-    }
-
-  /* Try again.  */
-  if (stage == 3)
-    {
-      ++stage;
-      raise (SIGABRT);
-    }
-
-  /* Now try to abort using the system specific command.  */
-  if (stage == 4)
-    {
-      ++stage;
-      ABORT_INSTRUCTION;
-    }
-
-  /* If we can't signal ourselves and the abort instruction failed, exit.  */
-  if (stage == 5)
-    {
-      ++stage;
-      _exit (127);
-    }
-
-  /* If even this fails try to use the provided instruction to crash
-     or otherwise make sure we never return.  */
-  while (1)
-    /* Try for ever and ever.  */
-    ABORT_INSTRUCTION;
+  _exit (127);
 }
 libc_hidden_def (abort)

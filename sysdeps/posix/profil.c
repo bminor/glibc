@@ -82,7 +82,7 @@ __profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
       if (__setitimer (ITIMER_PROF, &otimer, NULL) < 0)
 	return -1;
       samples = NULL;
-      return __sigaction (SIGPROF, &oact, NULL);
+      return __libc_sigaction (SIGPROF, &oact, NULL);
     }
 
  if (samples)
@@ -90,7 +90,7 @@ __profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
       /* Was already turned on.  Restore old timer and signal handler
 	 first.  */
       if (__setitimer (ITIMER_PROF, &otimer, NULL) < 0
-	  || __sigaction (SIGPROF, &oact, NULL) < 0)
+	  || __libc_sigaction (SIGPROF, &oact, NULL) < 0)
 	return -1;
     }
 #else
@@ -114,7 +114,7 @@ __profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
 #endif
   act.sa_flags |= SA_RESTART;
   __sigfillset (&act.sa_mask);
-  if (__sigaction (SIGPROF, &act, oact_ptr) < 0)
+  if (__libc_sigaction (SIGPROF, &act, oact_ptr) < 0)
     return -1;
 
   timer.it_value.tv_sec = 0;

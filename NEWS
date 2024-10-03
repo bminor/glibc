@@ -35,6 +35,11 @@ Deprecated and removed features, and other changes affecting compatibility:
 
 * The big-endian ARC port (arceb-linux-gnu) has been removed.
 
+* The abort is now async-signal-safe and its implementation makes longjmp
+  from the SIGABRT handler always abort if set up with setjmp.  Use sigsetjmp
+  to keep the old behavior, where the handler does not stop the process
+  execution.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]

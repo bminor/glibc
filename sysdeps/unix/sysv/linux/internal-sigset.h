@@ -21,7 +21,7 @@
 
 #include <sigsetops.h>
 
-typedef struct
+typedef struct _internal_sigset_t
 {
   unsigned long int __val[__NSIG_WORDS];
 } internal_sigset_t;

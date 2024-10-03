@@ -90,7 +90,7 @@ do_prepare (int argc, char *argv[])
 
 static volatile int chk_fail_ok;
 static volatile int ret;
-static jmp_buf chk_fail_buf;
+static sigjmp_buf chk_fail_buf;
 
 static void
 handler (int sig)
@@ -133,7 +133,7 @@ static int num2 = 987654;
   do { printf ("Failure on line %d\n", __LINE__); ret = 1; } while (0)
 #define CHK_FAIL_START \
   chk_fail_ok = 1;				\
-  if (! setjmp (chk_fail_buf))			\
+  if (! sigsetjmp (chk_fail_buf, 1))		\
     {
 #define CHK_FAIL_END \
       chk_fail_ok = 0;				\
