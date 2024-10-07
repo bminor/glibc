@@ -224,10 +224,12 @@ tests := \
   tst-freopen4 \
   tst-freopen5 \
   tst-freopen6 \
+  tst-freopen7 \
   tst-freopen64-2 \
   tst-freopen64-3 \
   tst-freopen64-4 \
   tst-freopen64-6 \
+  tst-freopen64-7 \
   tst-fseek \
   tst-fwrite \
   tst-fwrite-memstrm \
@@ -623,3 +625,6 @@ $(objpfx)tst-setvbuf1-cmp.out: tst-setvbuf1.expect $(objpfx)tst-setvbuf1.out
 
 $(objpfx)tst-printf-round: $(libm)
 $(objpfx)tst-scanf-round: $(libm)
+
+$(objpfx)tst-freopen7: $(shared-thread-library)
+$(objpfx)tst-freopen64-7: $(shared-thread-library)
