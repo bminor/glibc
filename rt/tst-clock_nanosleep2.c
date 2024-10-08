@@ -1,4 +1,4 @@
-/* Test program for process CPU clocks - invalid inputs, minimum time
+/* Test for clock_nanosleep parameter checks and sleep duration.
    Copyright (C) 2024 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
