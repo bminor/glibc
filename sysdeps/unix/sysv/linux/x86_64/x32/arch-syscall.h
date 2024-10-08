@@ -351,6 +351,7 @@
 #define __NR_unlink 1073741911
 #define __NR_unlinkat 1073742087
 #define __NR_unshare 1073742096
+#define __NR_uretprobe 1073742159
 #define __NR_userfaultfd 1073742147
 #define __NR_ustat 1073741960
 #define __NR_utime 1073741956

@@ -359,6 +359,7 @@
 #define __NR_unlink 87
 #define __NR_unlinkat 263
 #define __NR_unshare 272
+#define __NR_uretprobe 335
 #define __NR_uselib 134
 #define __NR_userfaultfd 323
 #define __NR_ustat 136

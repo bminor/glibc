@@ -21,8 +21,8 @@
 # This file can list all potential system calls.  The names are only
 # used if the installed kernel headers also provide them.
 
-# The list of system calls is current as of Linux 6.10.
-kernel 6.10
+# The list of system calls is current as of Linux 6.11.
+kernel 6.11
 
 FAST_atomic_update
 FAST_cmpxchg
@@ -653,6 +653,7 @@ uname
 unlink
 unlinkat
 unshare
+uretprobe
 uselib
 userfaultfd
 usr26
