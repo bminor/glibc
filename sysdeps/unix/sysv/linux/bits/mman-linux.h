@@ -43,6 +43,7 @@
 #define MAP_PRIVATE	0x02		/* Changes are private.  */
 #define MAP_SHARED_VALIDATE	0x03	/* Share changes and validate
 					   extension flags.  */
+#define MAP_DROPPABLE	0x08		/* Zero memory under memory pressure.  */
 #define MAP_TYPE	0x0f		/* Mask for type of mapping.  */
 
 /* Other flags.  */

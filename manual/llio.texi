@@ -1762,6 +1762,15 @@ write dirty metadata out whenever dirty data is written out.  Unlike
 most other flags, this one will fail unless @code{MAP_SHARED_VALIDATE}
 is also given.
 
+@item MAP_DROPPABLE
+Request the page to be never written out to swap, it will be zeroed
+under memory pressure (so kernel can just drop the page), it is inherited
+by fork, it is not counted against @code{mlock} budget, and if there is
+not enough memory to service a page fault there is no fatal error (so no
+signal is sent).
+
+The @code{MAP_DROPPABLE} flag is specific to Linux.
+
 @end vtable
 
 @code{mmap} returns the address of the new mapping, or
