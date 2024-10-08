@@ -831,7 +831,7 @@ class Context(object):
                             'gcc': 'vcs-13',
                             'glibc': 'vcs-mainline',
                             'gmp': '6.3.0',
-                            'linux': '6.10',
+                            'linux': '6.11',
                             'mpc': '1.3.1',
                             'mpfr': '4.2.1',
                             'mig': 'vcs-mainline',
