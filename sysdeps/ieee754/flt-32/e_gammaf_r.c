@@ -1,215 +1,150 @@
-/* Implementation of gamma function according to ISO C.
-   Copyright (C) 1997-2024 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
+/* Implementation of the gamma function for binary32.
 
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+Copyright (c) 2023-2024 Alexei Sibidanov.
 
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+The original version of this file was copied from the CORE-MATH
+project (file src/binary32/tgamma/tgammaf.c, revision a48e352).
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
-   <https://www.gnu.org/licenses/>.  */
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+ */
+
+/* Changes with respect to the original CORE-MATH code:
+   - removed the dealing with errno
+     (this is done in the wrapper math/w_tgammaf_compat.c)
+   - usage of math_narrow_eval to deal with underflow/overflow
+   - deal with signgamp
+ */
 
 #include <math.h>
-#include <math-narrow-eval.h>
-#include <math_private.h>
-#include <fenv_private.h>
-#include <math-underflow.h>
 #include <float.h>
+#include <stdint.h>
+#include <stddef.h>
 #include <libm-alias-finite.h>
+#include <math-narrow-eval.h>
 
-/* Coefficients B_2k / 2k(2k-1) of x^-(2k-1) inside exp in Stirling's
-   approximation to gamma function.  */
-
-static const float gamma_coeff[] =
-  {
-    0x1.555556p-4f,
-    -0xb.60b61p-12f,
-    0x3.403404p-12f,
-  };
-
-#define NCOEFF (sizeof (gamma_coeff) / sizeof (gamma_coeff[0]))
-
-/* Return gamma (X), for positive X less than 42, in the form R *
-   2^(*EXP2_ADJ), where R is the return value and *EXP2_ADJ is set to
-   avoid overflow or underflow in intermediate calculations.  */
-
-static float
-gammaf_positive (float x, int *exp2_adj)
-{
-  int local_signgam;
-  if (x < 0.5f)
-    {
-      *exp2_adj = 0;
-      return __ieee754_expf (__ieee754_lgammaf_r (x + 1, &local_signgam)) / x;
-    }
-  else if (x <= 1.5f)
-    {
-      *exp2_adj = 0;
-      return __ieee754_expf (__ieee754_lgammaf_r (x, &local_signgam));
-    }
-  else if (x < 2.5f)
-    {
-      *exp2_adj = 0;
-      float x_adj = x - 1;
-      return (__ieee754_expf (__ieee754_lgammaf_r (x_adj, &local_signgam))
-	      * x_adj);
-    }
-  else
-    {
-      float eps = 0;
-      float x_eps = 0;
-      float x_adj = x;
-      float prod = 1;
-      if (x < 4.0f)
-	{
-	  /* Adjust into the range for applying Stirling's
-	     approximation.  */
-	  float n = ceilf (4.0f - x);
-	  x_adj = math_narrow_eval (x + n);
-	  x_eps = (x - (x_adj - n));
-	  prod = __gamma_productf (x_adj - n, x_eps, n, &eps);
-	}
-      /* The result is now gamma (X_ADJ + X_EPS) / (PROD * (1 + EPS)).
-	 Compute gamma (X_ADJ + X_EPS) using Stirling's approximation,
-	 starting by computing pow (X_ADJ, X_ADJ) with a power of 2
-	 factored out.  */
-      float exp_adj = -eps;
-      float x_adj_int = roundf (x_adj);
-      float x_adj_frac = x_adj - x_adj_int;
-      int x_adj_log2;
-      float x_adj_mant = __frexpf (x_adj, &x_adj_log2);
-      if (x_adj_mant < M_SQRT1_2f)
-	{
-	  x_adj_log2--;
-	  x_adj_mant *= 2.0f;
-	}
-      *exp2_adj = x_adj_log2 * (int) x_adj_int;
-      float ret = (__ieee754_powf (x_adj_mant, x_adj)
-		   * __ieee754_exp2f (x_adj_log2 * x_adj_frac)
-		   * __ieee754_expf (-x_adj)
-		   * sqrtf (2 * M_PIf / x_adj)
-		   / prod);
-      exp_adj += x_eps * __ieee754_logf (x_adj);
-      float bsum = gamma_coeff[NCOEFF - 1];
-      float x_adj2 = x_adj * x_adj;
-      for (size_t i = 1; i <= NCOEFF - 1; i++)
-	bsum = bsum / x_adj2 + gamma_coeff[NCOEFF - 1 - i];
-      exp_adj += bsum / x_adj;
-      return ret + ret * __expm1f (exp_adj);
-    }
-}
+typedef union {float f; uint32_t u;} b32u32_u;
+typedef union {double f; uint64_t u;} b64u64_u;
 
 float
 __ieee754_gammaf_r (float x, int *signgamp)
 {
-  int32_t hx;
-  float ret;
+  /* The wrapper in math/w_tgamma_template.c expects *signgamp to be set to a
+     non-negative value if the returned value is gamma(x), and to a negative
+     value if it is -gamma(x).
+     Since the code here directly computes gamma(x), we set it to 1.
+  */
+  if (signgamp != NULL)
+    *signgamp = 1;
 
-  GET_FLOAT_WORD (hx, x);
+  /* List of exceptional cases. Each entry contains the 32-bit encoding u of x,
+     a binary32 approximation f of gamma(x), and a correction term df.  */
+  static const struct {uint32_t u; float f, df;} tb[] = {
+    {0x27de86a9u, 0x1.268266p+47f, 0x1p22f},      // x = 0x1.bd0d52p-48
+    {0x27e05475u, 0x1.242422p+47f, 0x1p22f},      // x = 0x1.c0a8eap-48
+    {0xb63befb3u, -0x1.5cb6e4p+18f, 0x1p-7f},     // x = -0x1.77df66p-19
+    {0x3c7bb570u, 0x1.021d9p+6f, 0x1p-19f},       // x = 0x1.f76aep-7
+    {0x41e886d1u, 0x1.33136ap+98f, 0x1p73f},      // x = 0x1.d10da2p+4
+    {0xc067d177u, 0x1.f6850cp-3f, 0x1p-28f},      // x = -0x1.cfa2eep+1
+    {0xbd99da31u, -0x1.befe66p+3, -0x1p-22f},     // x = -0x1.33b462p-4
+    {0xbf54c45au, -0x1.a6b4ecp+2, +0x1p-23f},     // x = -0x1.a988b4p-1
+    {0x41ee77feu, 0x1.d3631cp+101, -0x1p-76f},    // x = 0x1.dceffcp+4
+    {0x3f843a64u, 0x1.f6c638p-1, 0x1p-26f},       // x = 0x1.0874c8p+0
+  };
 
-  if (__glibc_unlikely ((hx & 0x7fffffff) == 0))
-    {
-      /* Return value for x == 0 is Inf with divide by zero exception.  */
-      *signgamp = 0;
-      return 1.0 / x;
+  b32u32_u t = {.f = x};
+  uint32_t ax = t.u<<1;
+  if(__builtin_expect(ax>=(0xffu<<24), 0)){ /* x=NaN or +/-Inf */
+    if(ax==(0xffu<<24)){ /* x=+/-Inf */
+      if(t.u>>31){ /* x=-Inf */
+        return x / x; /* will raise the "Invalid operation" exception */
+      }
+      return x; /* x=+Inf */
     }
-  if (__builtin_expect (hx < 0, 0)
-      && (uint32_t) hx < 0xff800000 && rintf (x) == x)
-    {
-      /* Return value for integer x < 0 is NaN with invalid exception.  */
-      *signgamp = 0;
-      return (x - x) / (x - x);
+    return x + x; /* x=NaN, where x+x ensures the "Invalid operation"
+                     exception is set if x is sNaN */
+  }
+  double z = x;
+  if(__builtin_expect(ax<0x6d000000u, 0)){ /* |x| < 0x1p-18 */
+    volatile double d = (0x1.fa658c23b1578p-1 - 0x1.d0a118f324b63p-1*z)*z - 0x1.2788cfc6fb619p-1;
+    double f = 1.0/z + d;
+    float r = f;
+    b64u64_u rt = {.f = f};
+    if(((rt.u+2)&0xfffffff) < 4){
+      for(unsigned i=0;i<sizeof(tb)/sizeof(tb[0]);i++)
+	if(t.u==tb[i].u) return tb[i].f + tb[i].df;
     }
-  if (__glibc_unlikely (hx == 0xff800000))
-    {
-      /* x == -Inf.  According to ISO this is NaN.  */
-      *signgamp = 0;
-      return x - x;
+    return r;
+  }
+  float fx = __builtin_floorf(x);
+  if(__builtin_expect(x >= 0x1.18522p+5f, 0)){
+    /* Overflow case. The original CORE-MATH code returns 0x1p127f * 0x1p127f,
+       but apparently some compilers replace this by +Inf.  */
+    return math_narrow_eval (x * 0x1p127f);
+  }
+  /* compute k only after the overflow check, otherwise the case to integer
+     might overflow */
+  int k = fx;
+  if(__builtin_expect(fx==x, 0)){ /* x is integer */
+    if(x == 0.0f){
+      return 1.0f/x;
     }
-  if (__glibc_unlikely ((hx & 0x7f800000) == 0x7f800000))
-    {
-      /* Positive infinity (return positive infinity) or NaN (return
-	 NaN).  */
-      *signgamp = 0;
-      return x + x;
+    if(x < 0.0f){
+      return 0.0f / 0.0f; /* should raise the "Invalid operation" exception */
     }
+    double t0 = 1, x0 = 1;
+    for(int i=1; i<k; i++, x0 += 1.0) t0 *= x0;
+    return t0;
+  }
+  if(__builtin_expect(x<-42.0f, 0)){ /* negative non-integer */
+    /* For x < -42, x non-integer, |gamma(x)| < 2^-151.  */
+    static const float sgn[2] = {0x1p-127f, -0x1p-127f};
+    /* Underflows always happens */
+    return math_narrow_eval (0x1p-127f * sgn[k&1]);
+  }
+  /* The array c[] stores a degree-15 polynomial approximation for gamma(x).  */
+  static const double c[] =
+    {0x1.c9a76be577123p+0, 0x1.8f2754ddcf90dp+0, 0x1.0d1191949419bp+0, 0x1.e1f42cf0ae4a1p-2,
+     0x1.82b358a3ab638p-3, 0x1.e1f2b30cd907bp-5, 0x1.240f6d4071bd8p-6, 0x1.1522c9f3cd012p-8,
+     0x1.1fd0051a0525bp-10, 0x1.9808a8b96c37ep-13, 0x1.b3f78e01152b5p-15, 0x1.49c85a7e1fd04p-18,
+     0x1.471ca49184475p-19, -0x1.368f0b7ed9e36p-23, 0x1.882222f9049efp-23, -0x1.a69ed2042842cp-25};
 
-  if (x >= 36.0f)
-    {
-      /* Overflow.  */
-      *signgamp = 0;
-      ret = math_narrow_eval (FLT_MAX * FLT_MAX);
-      return ret;
+  double m = z - 0x1.7p+1, i = __builtin_roundeven(m), step = __builtin_copysign(1.0,i);
+  double d = m - i, d2 = d*d, d4 = d2*d2, d8 = d4*d4;
+  double f = (c[0] + d*c[1]) + d2*(c[2] + d*c[3]) + d4*((c[4] + d*c[5]) + d2*(c[6] + d*c[7]))
+    + d8*((c[8] + d*c[9]) + d2*(c[10] + d*c[11]) + d4*((c[12] + d*c[13]) + d2*(c[14] + d*c[15])));
+  int jm = __builtin_fabs(i);
+  double w = 1;
+  if(jm){
+    z -= 0.5 + step*0.5;
+    w = z;
+    for(int j=jm-1; j; j--) {z -= step; w *= z;}
+  }
+  if(i<=-0.5) w = 1/w;
+  f *= w;
+  b64u64_u rt = {.f = f};
+  float r = f;
+  /* Deal with exceptional cases.  */
+  if(__builtin_expect(((rt.u+2)&0xfffffff) < 8, 0)){
+    for(unsigned j=0;j<sizeof(tb)/sizeof(tb[0]);j++) {
+      if(t.u==tb[j].u) return tb[j].f + tb[j].df;
     }
-  else
-    {
-      SET_RESTORE_ROUNDF (FE_TONEAREST);
-      if (x > 0.0f)
-	{
-	  *signgamp = 0;
-	  int exp2_adj;
-	  float tret = gammaf_positive (x, &exp2_adj);
-	  ret = __scalbnf (tret, exp2_adj);
-	}
-      else if (x >= -FLT_EPSILON / 4.0f)
-	{
-	  *signgamp = 0;
-	  ret = 1.0f / x;
-	}
-      else
-	{
-	  float tx = truncf (x);
-	  *signgamp = (tx == 2.0f * truncf (tx / 2.0f)) ? -1 : 1;
-	  if (x <= -42.0f)
-	    /* Underflow.  */
-	    ret = FLT_MIN * FLT_MIN;
-	  else
-	    {
-	      float frac = tx - x;
-	      if (frac > 0.5f)
-		frac = 1.0f - frac;
-	      float sinpix = (frac <= 0.25f
-			      ? __sinf (M_PIf * frac)
-			      : __cosf (M_PIf * (0.5f - frac)));
-	      int exp2_adj;
-	      float tret = M_PIf / (-x * sinpix
-				    * gammaf_positive (-x, &exp2_adj));
-	      ret = __scalbnf (tret, -exp2_adj);
-	      math_check_force_underflow_nonneg (ret);
-	    }
-	}
-      ret = math_narrow_eval (ret);
-    }
-  if (isinf (ret) && x != 0)
-    {
-      if (*signgamp < 0)
-	{
-	  ret = math_narrow_eval (-copysignf (FLT_MAX, ret) * FLT_MAX);
-	  ret = -ret;
-	}
-      else
-	ret = math_narrow_eval (copysignf (FLT_MAX, ret) * FLT_MAX);
-      return ret;
-    }
-  else if (ret == 0)
-    {
-      if (*signgamp < 0)
-	{
-	  ret = math_narrow_eval (-copysignf (FLT_MIN, ret) * FLT_MIN);
-	  ret = -ret;
-	}
-      else
-	ret = math_narrow_eval (copysignf (FLT_MIN, ret) * FLT_MIN);
-      return ret;
-    }
-  else
-    return ret;
+  }
+  return r;
 }
 libm_alias_finite (__ieee754_gammaf_r, __gammaf_r)

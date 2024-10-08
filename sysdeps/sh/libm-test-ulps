@@ -532,11 +532,9 @@ float: 2
 
 Function: "tgamma":
 double: 9
-float: 8
 
 Function: "tgamma_towardzero":
 double: 9
-float: 7
 
 Function: "y0":
 double: 3

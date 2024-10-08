@@ -219,3 +219,15 @@ tzdata:
   timezone/leapseconds
   # This is yearistype.sh in the parent project
   timezone/yearistype
+
+# The following files are shared with the CORE-MATH project
+sysdeps/ieee754/flt-32/e_gammaf_r.c
+  (file src/binary32/tgamma/tgammaf.c in CORE-MATH)
+  Instructions to merge new versions:
+  - change the function name from cr_tgammaf to __ieee754_gammaf_r
+  - add "int *signgamp" as 2nd argument and add at the beginning:
+    if (signgamp != NULL) *signgamp = 1;
+  - remove the errno stuff (this is done by the wrapper)
+  - replace 0x1p127f * 0x1p127f by math_narrow_eval (x * 0x1p127f)
+  - replace 0x1p-127f * sgn[k&1] by math_narrow_eval (0x1p-127f * sgn[k&1])
+  - add libm_alias_finite (__ieee754_gammaf_r, __gammaf_r) at the end

@@ -94,6 +94,7 @@ bench-math := \
   tan \
   tanh \
   tgamma \
+  tgammaf \
   trunc \
   truncf \
   y0 \

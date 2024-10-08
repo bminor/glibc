@@ -257,7 +257,6 @@ float: 2
 
 Function: "tgamma":
 double: 5
-float: 4
 
 Function: "y0":
 double: 2

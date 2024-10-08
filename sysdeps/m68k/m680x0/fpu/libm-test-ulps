@@ -1208,22 +1208,18 @@ float: 1
 
 Function: "tgamma":
 double: 3
-float: 9
 ldouble: 9
 
 Function: "tgamma_downward":
 double: 3
-float: 9
 ldouble: 9
 
 Function: "tgamma_towardzero":
 double: 3
-float: 9
 ldouble: 9
 
 Function: "tgamma_upward":
 double: 2
-float: 9
 ldouble: 9
 
 Function: "y0":

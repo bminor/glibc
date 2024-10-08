@@ -1064,19 +1064,15 @@ float: 3
 
 Function: "tgamma":
 double: 9
-float: 8
 
 Function: "tgamma_downward":
 double: 9
-float: 9
 
 Function: "tgamma_towardzero":
 double: 9
-float: 8
 
 Function: "tgamma_upward":
 double: 9
-float: 8
 
 Function: "y0":
 double: 3
