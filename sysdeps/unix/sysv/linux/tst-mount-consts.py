@@ -42,7 +42,7 @@ def main():
     # Constants in glibc were updated to match Linux v6.10.  When glibc
     # constants are updated this value should be updated to match the
     # released kernel version from which the constants were taken.
-    linux_version_glibc = (6, 10)
+    linux_version_glibc = (6, 11)
     def check(cte, exclude=None):
         return glibcextract.compare_macro_consts(
                 '#include <sys/mount.h>\n',
