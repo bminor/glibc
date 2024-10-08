@@ -48,6 +48,8 @@ extern ssize_t process_vm_writev (pid_t __pid, const struct iovec *__lvec,
 #define RWF_NOWAIT	0x00000008 /* per-IO nonblocking mode.  */
 #define RWF_APPEND	0x00000010 /* per-IO O_APPEND.  */
 #define RWF_NOAPPEND	0x00000020 /* per-IO negation of O_APPEND */
+#define RWF_ATOMIC	0x00000040 /* Write is to be issued with torn-write
+				      prevention.  */
 
 __END_DECLS
 

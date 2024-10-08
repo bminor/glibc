@@ -1381,6 +1381,19 @@ Per-IO synchronization as if the file was opened with @code{O_APPEND} flag.
 @item RWF_NOAPPEND
 This flag allows an offset to be honored, even if the file was opened with
 @code{O_APPEND} flag.
+
+@item RWF_ATOMIC
+Indicate that the write is to be issued with torn-write prevention.  The
+input buffer should follow some contraints: the total length should be
+power-of-2 in size and also sizes between @code{atomic_write_unit_min}
+and @code{atomic_write_unit_max}, the @code{struct iovec} count should be
+up to @code{atomic_write_segments_max}, and the offset should be
+naturally-aligned with regard to total write length.
+
+The @code{atomic_*} values can be obtained with @code{statx} along with
+@code{STATX_WRITE_ATOMIC} flag.
+
+This is a Linux-specific extension.
 @end vtable
 
 When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} the
