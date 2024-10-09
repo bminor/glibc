@@ -2935,7 +2935,7 @@ exceed the process' data storage limit.
 @end deftypefun
 
 
-@deftypefun void *sbrk (ptrdiff_t @var{delta})
+@deftypefun {void *} sbrk (ptrdiff_t @var{delta})
 @standards{BSD, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 

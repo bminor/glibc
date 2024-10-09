@@ -69,6 +69,11 @@ chapters.% top-menu.%: libc-texinfo.sh $(texis-path) Makefile
 				'$(chapters)' \
 			       '$(appendices) $(licenses)'
 
+# Verify validity of texinfo sources against project rules.
+tests-special += \
+  $(objpfx)check-deftype.out \
+  $(objpfx)check-safety.out \
+  # tests-special
 
 $(objpfx)libc.dvi $(objpfx)libc.pdf $(objpfx)libc.info: \
 	$(addprefix $(objpfx),$(libc-texi-generated))
@@ -83,9 +88,18 @@ $(objpfx)summary.texi: $(objpfx)stamp-summary ;
 $(objpfx)stamp-summary: summary.pl $(filter-out $(objpfx)summary.texi, \
 					$(texis-path))
 	$(SHELL) ./check-safety.sh $(filter-out $(objpfx)%, $(texis-path))
+	$(SHELL) ./check-deftype.sh $(filter-out $(objpfx)%, $(texis-path))
 	LC_ALL=C $(PERL) $^ > $(objpfx)summary-tmp
 	$(move-if-change) $(objpfx)summary-tmp $(objpfx)summary.texi
 	touch $@
+
+$(objpfx)check-safety.out: check-safety.sh
+	$(SHELL) $< > $@ ; \
+	$(evaluate-test)
+
+$(objpfx)check-deftype.out: check-deftype.sh
+	$(SHELL) $< > $@ ; \
+	$(evaluate-test)
 
 # Generate a file which can be added to the `dir' content to provide direct
 # access to the documentation of the function, variables, and other
@@ -152,10 +166,19 @@ $(objpfx)%.pdf: %.texinfo
 
 
 # Distribution.
-minimal-dist = summary.pl texis.awk tsort.awk libc-texinfo.sh libc.texinfo \
-	       libm-err.texi stamp-libm-err check-safety.sh		    \
-	       $(filter-out summary.texi, $(nonexamples))		    \
-	       $(patsubst %.c.texi,examples/%.c, $(examples))
+minimal-dist = \
+  $(filter-out summary.texi, $(nonexamples)) \
+  $(patsubst %.c.texi,examples/%.c, $(examples)) \
+  check-deftype.sh \
+  check-safety.sh \
+  libc-texinfo.sh \
+  libc.texinfo \
+  libm-err.texi \
+  stamp-libm-err \
+  summary.pl \
+  texis.awk \
+  tsort.awk \
+  # minimal-dist
 
 indices = cp fn pg tp vr ky
 generated-dirs += libc

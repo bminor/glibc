@@ -2531,7 +2531,7 @@ store the result in which case @code{-1} is returned.  This was
 changed in order to comply with the @w{ISO C99} standard.
 @end deftypefun
 
-@deftypefun dprintf (int @var{fd}, @var{template}, ...)
+@deftypefun int dprintf (int @var{fd}, @var{template}, ...)
 @standards{POSIX, stdio.h}
 @safety{@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
 This function formats its arguments according to @var{template} and

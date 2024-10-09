@@ -1829,7 +1829,7 @@ can be placed in the buffer @var{s} the return value is zero, with the
 same problems indicated in the @code{strftime} documentation.
 @end deftypefun
 
-@deftypefun {Deprecated function} {char *} asctime (const struct tm *@var{brokentime})
+@deftypefn {Deprecated function} {char *} asctime (const struct tm *@var{brokentime})
 @standards{ISO, time.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:asctime} @mtslocale{}}@asunsafe{}@acsafe{}}
 @c asctime @mtasurace:asctime @mtslocale
@@ -1863,9 +1863,9 @@ string.)
 @strong{Portability note:}
 This obsolescent function is deprecated in C23.
 Programs should instead use @code{strftime} or even @code{sprintf}.
-@end deftypefun
+@end deftypefn
 
-@deftypefun {Deprecated function} {char *} asctime_r (const struct tm *@var{brokentime}, char *@var{buffer})
+@deftypefn {Deprecated function} {char *} asctime_r (const struct tm *@var{brokentime}, char *@var{buffer})
 @standards{???, time.h}
 @safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
 @c asctime_r @mtslocale
@@ -1884,9 +1884,9 @@ it returns @code{NULL}.
 @strong{Portability Note:}
 POSIX.1-2024 removed this obsolescent function.
 Programs should instead use @code{strftime} or even @code{sprintf}.
-@end deftypefun
+@end deftypefn
 
-@deftypefun {Deprecated function} {char *} ctime (const time_t *@var{time})
+@deftypefn {Deprecated function} {char *} ctime (const time_t *@var{time})
 @standards{ISO, time.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:tmbuf} @mtasurace{:asctime} @mtsenv{} @mtslocale{}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{} @acsfd{}}}
 @c ctime @mtasurace:tmbuf @mtasurace:asctime @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
@@ -1909,9 +1909,9 @@ Calling @code{ctime} also sets the time zone state as if
 @strong{Portability note:}
 This obsolescent function is deprecated in C23.
 Programs should instead use @code{strftime} or even @code{sprintf}.
-@end deftypefun
+@end deftypefn
 
-@deftypefun {Deprecated function} {char *} ctime_r (const time_t *@var{time}, char *@var{buffer})
+@deftypefn {Deprecated function} {char *} ctime_r (const time_t *@var{time}, char *@var{buffer})
 @standards{???, time.h}
 @safety{@prelim{}@mtsafe{@mtsenv{} @mtslocale{}}@asunsafe{@ascuheap{} @asulock{}}@acunsafe{@aculock{} @acsmem{} @acsfd{}}}
 @c ctime_r @mtsenv @mtslocale @ascuheap @asulock @aculock @acsmem @acsfd
@@ -1935,7 +1935,7 @@ it returns @code{NULL}.
 @strong{Portability Note:}
 POSIX.1-2024 removed this obsolescent function.
 Programs should instead use @code{strftime} or even @code{sprintf}.
-@end deftypefun
+@end deftypefn
 
 @node Parsing Date and Time
 @subsection Convert textual time and date information back

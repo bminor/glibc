@@ -592,7 +592,7 @@ destructor for the thread-specific data is not called during destruction, nor
 is it called during thread exit.
 @end deftypefun
 
-@deftypefun void *pthread_getspecific (pthread_key_t @var{key})
+@deftypefun {void *} pthread_getspecific (pthread_key_t @var{key})
 @standards{POSIX, pthread.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c pthread_getspecific ok
