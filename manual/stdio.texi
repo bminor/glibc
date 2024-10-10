@@ -929,6 +929,9 @@ Therefore, @var{stream} should never be an expression with side-effects.
 @safety{@prelim{}@mtsafe{@mtsrace{:stream}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 The @code{putc_unlocked} function is equivalent to the @code{putc}
 function except that it does not implicitly lock the stream.
+Like @code{putc}, it may be implemented as a macro and may evaluate
+the @var{stream} argument more than once.  Therefore, @var{stream}
+should not be an expression with side-effects.
 @end deftypefun
 
 @deftypefun wint_t putwc_unlocked (wchar_t @var{wc}, FILE *@var{stream})
@@ -1132,6 +1135,9 @@ Therefore, @var{stream} should never be an expression with side-effects.
 @safety{@prelim{}@mtsafe{@mtsrace{:stream}}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 The @code{getc_unlocked} function is equivalent to the @code{getc}
 function except that it does not implicitly lock the stream.
+Like @code{getc}, it may be implemented as a macro and may evaluate
+the @var{stream} argument more than once.  Therefore, @var{stream}
+should not be an expression with side-effects.
 @end deftypefun
 
 @deftypefun wint_t getwc_unlocked (FILE *@var{stream})
@@ -1571,6 +1577,9 @@ The @code{fread_unlocked} function is equivalent to the @code{fread}
 function except that it does not implicitly lock the stream.
 
 This function is a GNU extension.
+This function may be implemented as a macro and may evaluate
+@var{stream} more than once.  Therefore, @var{stream} should not be an
+expression with side-effects.
 @end deftypefun
 
 @deftypefun size_t fwrite (const void *@var{data}, size_t @var{size}, size_t @var{count}, FILE *@var{stream})
@@ -1589,6 +1598,9 @@ The @code{fwrite_unlocked} function is equivalent to the @code{fwrite}
 function except that it does not implicitly lock the stream.
 
 This function is a GNU extension.
+This function may be implemented as a macro and may evaluate
+@var{stream} more than once.  Therefore, @var{stream} should not be an
+expression with side-effects.
 @end deftypefun
 
 @node Formatted Output
