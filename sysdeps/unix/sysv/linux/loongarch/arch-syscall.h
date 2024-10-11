@@ -59,7 +59,6 @@
 #define __NR_fsmount 432
 #define __NR_fsopen 430
 #define __NR_fspick 433
-#define __NR_fstat 80
 #define __NR_fstatfs 44
 #define __NR_fsync 82
 #define __NR_ftruncate 46
@@ -167,7 +166,6 @@
 #define __NR_munmap 215
 #define __NR_name_to_handle_at 264
 #define __NR_nanosleep 101
-#define __NR_newfstatat 79
 #define __NR_nfsservctl 42
 #define __NR_open_by_handle_at 265
 #define __NR_open_tree 428
