@@ -56,15 +56,11 @@ END LC_COLLATE
 LC_CTYPE
 copy "it_IT"
 
-% These translit rules don’t work at the moment,
-% see: https://sourceware.org/bugzilla/show_bug.cgi?id=31859
-% and: https://sourceware.org/pipermail/libc-alpha/2024-May/156769.html
-%
-%translit_start
-%"ḌḌ" "DDH"
-%"ḍḍ" "ddh"
-%"Ḍḍ" "Ddh"
-%translit_end
+translit_start
+"ḌḌ" "DDH"
+"ḍḍ" "ddh"
+"Ḍḍ" "Ddh"
+translit_end
 
 END LC_CTYPE
 
