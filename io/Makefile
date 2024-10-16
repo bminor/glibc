@@ -188,6 +188,7 @@ tests := \
   tst-closefrom \
   tst-copy_file_range \
   tst-faccessat \
+  tst-faccessat-setuid \
   tst-fchmod-errors \
   tst-fchmod-fuse \
   tst-fchmodat \
