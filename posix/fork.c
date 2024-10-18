@@ -62,6 +62,7 @@ __libc_fork (void)
       call_function_static_weak (__nss_database_fork_prepare_parent,
 				 &nss_database_data);
 
+      _IO_proc_file_chain_lock ();
       _IO_list_lock ();
 
       /* Acquire malloc locks.  This needs to come last because fork
@@ -94,6 +95,7 @@ __libc_fork (void)
 
 	  /* Reset locks in the I/O code.  */
 	  _IO_list_resetlock ();
+	  _IO_proc_file_chain_resetlock ();
 
 	  call_function_static_weak (__nss_database_fork_subprocess,
 				     &nss_database_data);
@@ -123,6 +125,7 @@ __libc_fork (void)
 
 	  /* We execute this even if the 'fork' call failed.  */
 	  _IO_list_unlock ();
+	  _IO_proc_file_chain_unlock ();
 	}
 
       /* Run the handlers registered for the parent.  */

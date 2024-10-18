@@ -429,6 +429,12 @@ libc_hidden_proto (_IO_list_resetlock)
 extern void _IO_enable_locks (void) __THROW;
 libc_hidden_proto (_IO_enable_locks)
 
+/* Functions for operating popen's proc_file_chain_lock during fork.  */
+
+extern void _IO_proc_file_chain_lock (void) __THROW attribute_hidden;
+extern void _IO_proc_file_chain_unlock (void) __THROW attribute_hidden;
+extern void _IO_proc_file_chain_resetlock (void) __THROW attribute_hidden;
+
 /* Default jumptable functions. */
 
 extern int _IO_default_underflow (FILE *) __THROW;
