@@ -117,6 +117,7 @@ tests = \
   tst-mmap-offend \
   tst-mmap-setvbuf \
   tst-mmap2-eofsync \
+  tst-popen-fork \
   tst-popen1 \
   tst-setvbuf1 \
   tst-sprintf-chk-ub \
