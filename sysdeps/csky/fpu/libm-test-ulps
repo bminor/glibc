@@ -2,19 +2,15 @@
 
 # Maximal error of functions:
 Function: "acos":
-float: 1
 
 Function: "acos_downward":
 double: 1
-float: 1
 
 Function: "acos_towardzero":
 double: 1
-float: 1
 
 Function: "acos_upward":
 double: 1
-float: 1
 
 Function: "acosh":
 double: 2

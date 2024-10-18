@@ -2,7 +2,6 @@
 
 # Maximal error of functions:
 Function: "acos":
-float: 1
 
 Function: "acosh":
 double: 2

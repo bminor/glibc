@@ -294,3 +294,7 @@ sysdeps/ieee754/flt-32/s_tanf.c:
     functions to handle errno, overflow, and underflow.  It was changed
     to use an internal wrapper for 128 bit unsigned integer operations
     for ABIs that do not support the type natively.
+sysdeps/ieee754/flt-32/e_acosf.c:
+  (src/binary32/acos/acosf.c in CORE-MATH)
+  - The code was adapted to use glibc code style and internal
+    functions to handle errno, overflow, and underflow.
