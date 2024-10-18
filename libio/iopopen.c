@@ -57,6 +57,26 @@ unlock (void *not_used)
 }
 #endif
 
+/* These lock/unlock/resetlock functions are used during fork.  */
+
+void
+_IO_proc_file_chain_lock (void)
+{
+  _IO_lock_lock (proc_file_chain_lock);
+}
+
+void
+_IO_proc_file_chain_unlock (void)
+{
+  _IO_lock_unlock (proc_file_chain_lock);
+}
+
+void
+_IO_proc_file_chain_resetlock (void)
+{
+  _IO_lock_init (proc_file_chain_lock);
+}
+
 /* POSIX states popen shall ensure that any streams from previous popen()
    calls that remain open in the parent process should be closed in the new
    child process.
