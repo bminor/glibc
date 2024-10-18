@@ -57,7 +57,7 @@ check_pid (pid_t pid)
 }
 
 static void *
-tf (void *)
+tf (void *closure)
 {
   pause ();
   return NULL;
