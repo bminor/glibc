@@ -131,12 +131,6 @@ Function: "log10":
 double: 1
 float: 2
 
-Function: "log1p":
-float: 1
-
-Function: "logp1":
-float: 1
-
 Function: "sincos":
 double: 1
 float: 1

@@ -1220,22 +1220,18 @@ ldouble: 4
 
 Function: "log1p":
 double: 1
-float: 1
 ldouble: 3
 
 Function: "log1p_downward":
 double: 2
-float: 2
 ldouble: 3
 
 Function: "log1p_towardzero":
 double: 2
-float: 2
 ldouble: 3
 
 Function: "log1p_upward":
 double: 2
-float: 2
 ldouble: 2
 
 Function: "log2":
@@ -1289,22 +1285,18 @@ ldouble: 1
 
 Function: "logp1":
 double: 1
-float: 1
 ldouble: 3
 
 Function: "logp1_downward":
 double: 2
-float: 2
 ldouble: 3
 
 Function: "logp1_towardzero":
 double: 2
-float: 2
 ldouble: 3
 
 Function: "logp1_upward":
 double: 2
-float: 2
 ldouble: 2
 
 Function: "pow":
