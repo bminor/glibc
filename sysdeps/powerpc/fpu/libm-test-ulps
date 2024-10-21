@@ -23,25 +23,21 @@ ldouble: 2
 
 Function: "acosh":
 double: 2
-float: 2
 float128: 4
 ldouble: 2
 
 Function: "acosh_downward":
 double: 2
-float: 2
 float128: 3
 ldouble: 3
 
 Function: "acosh_towardzero":
 double: 2
-float: 2
 float128: 2
 ldouble: 5
 
 Function: "acosh_upward":
 double: 2
-float: 2
 float128: 3
 ldouble: 4
 

@@ -14,19 +14,15 @@ double: 1
 
 Function: "acosh":
 double: 2
-float: 2
 
 Function: "acosh_downward":
 double: 2
-float: 2
 
 Function: "acosh_towardzero":
 double: 2
-float: 2
 
 Function: "acosh_upward":
 double: 2
-float: 2
 
 Function: "asin":
 float: 1

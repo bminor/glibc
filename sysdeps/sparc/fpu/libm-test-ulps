@@ -19,22 +19,18 @@ ldouble: 1
 
 Function: "acosh":
 double: 2
-float: 2
 ldouble: 4
 
 Function: "acosh_downward":
 double: 2
-float: 2
 ldouble: 3
 
 Function: "acosh_towardzero":
 double: 2
-float: 2
 ldouble: 2
 
 Function: "acosh_upward":
 double: 2
-float: 2
 ldouble: 3
 
 Function: "asin":

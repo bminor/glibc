@@ -3,22 +3,18 @@
 # Maximal error of functions:
 Function: "acosh":
 double: 1
-float: 1
 ldouble: 1
 
 Function: "acosh_downward":
 double: 2
-float: 1
 ldouble: 1
 
 Function: "acosh_towardzero":
 double: 2
-float: 1
 ldouble: 1
 
 Function: "acosh_upward":
 double: 2
-float: 1
 ldouble: 1
 
 Function: "asin":

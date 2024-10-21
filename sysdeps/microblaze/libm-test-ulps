@@ -5,7 +5,6 @@ Function: "acos":
 
 Function: "acosh":
 double: 2
-float: 2
 
 Function: "asin":
 float: 1
