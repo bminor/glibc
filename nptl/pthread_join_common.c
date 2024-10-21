@@ -49,6 +49,12 @@ __pthread_clockjoin_ex (pthread_t threadid, void **thread_return,
     /* We cannot wait for the thread.  */
     return EINVAL;
 
+  /* Make sure the clock and time specified are valid.  */
+  if (abstime
+      && __glibc_unlikely (!futex_abstimed_supported_clockid (clockid)
+			   || ! valid_nanoseconds (abstime->tv_nsec)))
+    return EINVAL;
+
   struct pthread *self = THREAD_SELF;
   int result = 0;
 

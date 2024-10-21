@@ -174,6 +174,7 @@ tests += \
   tst-join13 \
   tst-join14 \
   tst-join15 \
+  tst-join16 \
   tst-key1 \
   tst-key2 \
   tst-key3 \
@@ -291,6 +292,7 @@ tests-time64 += \
   tst-cnd-timedwait-time64 \
   tst-cond11-time64 \
   tst-join14-time64 \
+  tst-join16-time64 \
   tst-mtx-timedlock-time64 \
   tst-rwlock14-time64 \
   tst-sem5-time64 \
