@@ -31,6 +31,13 @@ Major new features:
 * The iconv program now supports converting files in place.  The program
   automatically uses a temporary file if required.
 
+* The GNU C Library now supports a feature test macro _ISOC2Y_SOURCE to
+  enable features from the draft ISO C2Y standard.  Only some features from
+  this draft standard are supported by the GNU C Library, and as the draft
+  is under active development, the set of features enabled by this macro is
+  liable to change.  Features from C2Y are also enabled by _GNU_SOURCE, or
+  by compiling with "gcc -std=gnu2y".
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The big-endian ARC port (arceb-linux-gnu) has been removed.
