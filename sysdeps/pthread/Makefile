@@ -216,6 +216,7 @@ tests += \
   tst-pt-vfork2 \
   tst-pthread-exit-signal \
   tst-pthread-mutexattr \
+  tst-pthread-mutexattr-2 \
   tst-pthread-raise-blocked-self \
   tst-pthread-setuid-loop \
   tst-pthread_cancel-exited \
