@@ -166,6 +166,15 @@ gettext:
   intl/plural.y
   intl/textdomain.c
 
+# The following files are bundled from upstream Linux 6.10 for FUSE testing
+# support.
+linux:
+  support/bundled/linux/COPYING
+  support/bundled/linux/LICENSES
+  support/bundled/linux/LICENSES/exceptions/Linux-syscall-note
+  support/bundled/linux/LICENSES/preferred/GPL-2.0
+  support/bundled/linux/include/uapi/linux/fuse.h
+
 # The following files are shared with the upstream Unicode project and must be
 # updated regularly to stay in sync with the upstream unicode releases.
 #
