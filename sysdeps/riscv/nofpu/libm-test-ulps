@@ -1209,7 +1209,6 @@ ldouble: 1
 
 Function: "log2p1":
 double: 1
-float: 1
 ldouble: 3
 
 Function: "log_downward":
