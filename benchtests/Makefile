@@ -75,6 +75,7 @@ bench-math := \
   log1p \
   log2 \
   log2f \
+  log2p1f \
   logb \
   logbf \
   logf \
