@@ -29,7 +29,7 @@
 #define SCHED_FIFO		1
 #define SCHED_RR		2
 #ifdef __USE_GNU
-# define SCHED_NORMAL		SCHED_OTHER
+# define SCHED_NORMAL		0
 # define SCHED_BATCH		3
 # define SCHED_ISO		4
 # define SCHED_IDLE		5
@@ -48,8 +48,10 @@
 #define SCHED_FLAG_UTIL_CLAMP_MAX	0x40
 
 /* Combinations of sched_flags fields.  */
-#define SCHED_FLAG_KEEP_ALL		0x18
-#define SCHED_FLAG_UTIL_CLAMP		0x60
+#define SCHED_FLAG_KEEP_ALL \
+  (SCHED_FLAG_KEEP_POLICY | SCHED_FLAG_KEEP_PARAMS)
+#define SCHED_FLAG_UTIL_CLAMP \
+  (SCHED_FLAG_UTIL_CLAMP_MIN | SCHED_FLAG_UTIL_CLAMP_MAX)
 
 /* Use "" to work around incorrect macro expansion of the
    __has_include argument (GCC PR 80005).  */
