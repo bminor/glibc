@@ -261,6 +261,7 @@ tests := \
   tst-scanf-binary-gnu89 \
   tst-scanf-bz27650 \
   tst-scanf-intn \
+  tst-scanf-nan \
   tst-scanf-round \
   tst-scanf-to_inpunct \
   tst-setvbuf1 \
