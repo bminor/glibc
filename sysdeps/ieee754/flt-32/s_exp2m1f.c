@@ -3,7 +3,7 @@
 Copyright (c) 2022-2024 Alexei Sibidanov.
 
 The original version of this file was copied from the CORE-MATH
-project (file src/binary32/exp2m1/exp2m1f.c, revision bc385c2).
+project (file src/binary32/exp2m1/exp2m1f.c, revision baf5f6b).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

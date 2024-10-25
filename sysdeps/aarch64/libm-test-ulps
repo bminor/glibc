@@ -801,6 +801,7 @@ float: 1
 ldouble: 1
 
 Function: Imaginary part of "csin":
+float: 1
 ldouble: 1
 
 Function: Real part of "csin_downward":
@@ -1163,7 +1164,6 @@ float: 1
 
 Function: "expm1":
 double: 1
-float: 1
 ldouble: 2
 
 Function: "expm1_advsimd":
@@ -1172,7 +1172,6 @@ float: 1
 
 Function: "expm1_downward":
 double: 1
-float: 1
 ldouble: 2
 
 Function: "expm1_sve":
@@ -1181,12 +1180,10 @@ float: 1
 
 Function: "expm1_towardzero":
 double: 1
-float: 2
 ldouble: 4
 
 Function: "expm1_upward":
 double: 1
-float: 1
 ldouble: 3
 
 Function: "gamma":

@@ -1234,19 +1234,16 @@ ldouble: 3
 
 Function: "expm1_downward":
 double: 1
-float: 1
 float128: 2
 ldouble: 4
 
 Function: "expm1_towardzero":
 double: 1
-float: 1
 float128: 4
 ldouble: 4
 
 Function: "expm1_upward":
 double: 1
-float: 1
 float128: 3
 ldouble: 4
 

@@ -394,11 +394,9 @@ float: 1
 
 Function: "expm1":
 double: 1
-float: 1
 
 Function: "expm1_towardzero":
 double: 1
-float: 2
 
 Function: "fma_towardzero":
 double: 1

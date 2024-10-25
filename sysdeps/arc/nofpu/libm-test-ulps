@@ -203,7 +203,6 @@ double: 2
 
 Function: "expm1":
 double: 1
-float: 1
 
 Function: "gamma":
 double: 4

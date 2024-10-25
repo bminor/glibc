@@ -248,3 +248,7 @@ sysdeps/ieee754/flt-32/s_exp2m1f.c
   (file src/binary32/exp2m1/exp2m1f.c in CORE-MATH)
   - The code was adapted to use glibc code style and internal
     functions to handle errno, overflow, and underflow.
+sysdeps/ieee754/flt-32/s_expm1f.c
+  (file src/binary32/expm1/expm1f.c in CORE-MATH)
+  - The code was adapted to use glibc code style and internal
+    functions to handle errno, overflow, and underflow.
