@@ -576,6 +576,14 @@ dl_open_worker_begin (void *a)
 	_dl_debug_printf ("opening file=%s [%lu]; direct_opencount=%u\n\n",
 			  new->l_name, new->l_ns, new->l_direct_opencount);
 
+#ifdef SHARED
+      /* No relocation processing on this execution path.  But
+	 relocation has not been performed for static
+	 position-dependent executables, so disable the assert for
+	 static linking.  */
+      assert (new->l_relocated);
+#endif
+
       /* If the user requested the object to be in the global
 	 namespace but it is not so far, prepare to add it now.  This
 	 can raise an exception to do a malloc failure.  */
@@ -596,10 +604,6 @@ dl_open_worker_begin (void *a)
       /* Finalize the addition to the global scope.  */
       if ((mode & RTLD_GLOBAL) && new->l_global == 0)
 	add_to_global_update (new);
-
-      const int r_state __attribute__ ((unused))
-        = _dl_debug_update (args->nsid)->r_state;
-      assert (r_state == RT_CONSISTENT);
 
       /* Do not return without calling the (supposedly new) map's
 	 constructor.  This case occurs if a dependency of a directly
@@ -638,17 +642,6 @@ dl_open_worker_begin (void *a)
 	  __rtld_static_init (map);
 #endif
       }
-
-  /* Notify the debugger all new objects are now ready to go.  */
-  struct r_debug *r = _dl_debug_update (args->nsid);
-  r->r_state = RT_CONSISTENT;
-  _dl_debug_state ();
-  LIBC_PROBE (map_complete, 3, args->nsid, r, new);
-
-#ifdef SHARED
-  /* Auditing checkpoint: we have added all objects.  */
-  _dl_audit_activity_nsid (new->l_ns, LA_ACT_CONSISTENT);
-#endif
 
   _dl_open_check (new);
 
@@ -696,6 +689,7 @@ dl_open_worker_begin (void *a)
      created dlmopen namespaces.  Do not do this for static dlopen
      because libc has relocations against ld.so, which may not have
      been relocated at this point.  */
+  struct r_debug *r = _dl_debug_update (args->nsid);
 #ifdef SHARED
   if (GL(dl_ns)[args->nsid].libc_map != NULL)
     _dl_open_relocate_one_object (args, r, GL(dl_ns)[args->nsid].libc_map,
@@ -786,6 +780,26 @@ dl_open_worker (void *a)
     int err = _dl_catch_exception (&ex, dl_open_worker_begin, args);
 
     __rtld_lock_unlock_recursive (GL(dl_load_tls_lock));
+
+    /* Auditing checkpoint and debugger signalling.  Do this even on
+       error, so that dlopen exists with consistent state.  */
+    if (args->nsid >= 0 || args->map != NULL)
+      {
+	Lmid_t nsid = args->map != NULL ? args->map->l_ns : args->nsid;
+	struct r_debug *r = _dl_debug_update (nsid);
+#ifdef SHARED
+	bool was_not_consistent  = r->r_state != RT_CONSISTENT;
+#endif
+	r->r_state = RT_CONSISTENT;
+	_dl_debug_state ();
+	LIBC_PROBE (map_complete, 3, nsid, r, new);
+
+#ifdef SHARED
+	if (was_not_consistent)
+	  /* Avoid redudant/recursive signalling.  */
+	  _dl_audit_activity_nsid (nsid, LA_ACT_CONSISTENT);
+#endif
+      }
 
     if (__glibc_unlikely (ex.errstring != NULL))
       /* Reraise the error.  */
