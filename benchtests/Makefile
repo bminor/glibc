@@ -42,6 +42,7 @@ bench-math := \
   exp \
   exp10 \
   exp10f \
+  exp10m1f \
   exp2 \
   exp2f \
   expf \
