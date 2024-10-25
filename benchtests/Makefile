@@ -45,6 +45,7 @@ bench-math := \
   exp10m1f \
   exp2 \
   exp2f \
+  exp2m1f \
   expf \
   expm1 \
   floor \
