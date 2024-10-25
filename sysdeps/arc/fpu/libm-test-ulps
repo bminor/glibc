@@ -789,19 +789,15 @@ float: 1
 
 Function: "exp10m1":
 double: 4
-float: 2
 
 Function: "exp10m1_downward":
 double: 3
-float: 3
 
 Function: "exp10m1_towardzero":
 double: 2
-float: 3
 
 Function: "exp10m1_upward":
 double: 5
-float: 3
 
 Function: "exp2":
 double: 1

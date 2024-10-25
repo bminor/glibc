@@ -987,22 +987,18 @@ ldouble: 4
 
 Function: "exp10m1":
 double: 3
-float: 2
 ldouble: 3
 
 Function: "exp10m1_downward":
 double: 3
-float: 3
 ldouble: 9
 
 Function: "exp10m1_towardzero":
 double: 2
-float: 3
 ldouble: 9
 
 Function: "exp10m1_upward":
 double: 4
-float: 4
 ldouble: 10
 
 Function: "exp2":

@@ -240,3 +240,7 @@ sysdeps/ieee754/flt-32/e_gammaf_r.c
   - replace 0x1p127f * 0x1p127f by math_narrow_eval (x * 0x1p127f)
   - replace 0x1p-127f * sgn[k&1] by math_narrow_eval (0x1p-127f * sgn[k&1])
   - add libm_alias_finite (__ieee754_gammaf_r, __gammaf_r) at the end
+sysdeps/ieee754/flt-32/s_exp10m1f.c
+  (file src/binary32/exp10m1/exp10m1f.c in CORE-MATH)
+  - The code was adapted to use glibc code style and internal
+    functions to handle errno, overflow, and underflow.

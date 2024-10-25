@@ -974,7 +974,6 @@ ldouble: 3
 
 Function: "exp10m1":
 double: 2
-float: 1
 ldouble: 1
 
 Function: "exp2":
