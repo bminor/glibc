@@ -48,6 +48,7 @@ bench-math := \
   exp2m1f \
   expf \
   expm1 \
+  expm1f \
   floor \
   floorf \
   fmax \
