@@ -73,6 +73,7 @@ bench-math := \
   log10 \
   log10f \
   log1p \
+  log1pf \
   log2 \
   log2f \
   log2p1f \
