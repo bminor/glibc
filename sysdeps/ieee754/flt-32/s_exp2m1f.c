@@ -189,4 +189,6 @@ __exp2m1f (float x)
       return (s - 1.0) + w * c0;
     }
 }
+#ifndef __exp2m1f
 libm_alias_float (__exp2m1, exp2m1)
+#endif
