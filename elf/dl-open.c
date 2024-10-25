@@ -792,7 +792,7 @@ dl_open_worker (void *a)
 #endif
 	r->r_state = RT_CONSISTENT;
 	_dl_debug_state ();
-	LIBC_PROBE (map_complete, 3, nsid, r, new);
+	LIBC_PROBE (map_complete, 3, nsid, r, args->map);
 
 #ifdef SHARED
 	if (was_not_consistent)
