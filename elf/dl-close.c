@@ -723,6 +723,11 @@ _dl_close_worker (struct link_map *map, bool force)
   /* TLS is cleaned up for the unloaded modules.  */
   __rtld_lock_unlock_recursive (GL(dl_load_tls_lock));
 
+  /* Notify the debugger those objects are finalized and gone.  */
+  r->r_state = RT_CONSISTENT;
+  _dl_debug_state ();
+  LIBC_PROBE (unmap_complete, 2, nsid, r);
+
 #ifdef SHARED
   /* Auditing checkpoint: we have deleted all objects.  Also, do not notify
      auditors of the cleanup of a failed audit module loading attempt.  */
@@ -734,11 +739,6 @@ _dl_close_worker (struct link_map *map, bool force)
     do
       --GL(dl_nns);
     while (GL(dl_ns)[GL(dl_nns) - 1]._ns_loaded == NULL);
-
-  /* Notify the debugger those objects are finalized and gone.  */
-  r->r_state = RT_CONSISTENT;
-  _dl_debug_state ();
-  LIBC_PROBE (unmap_complete, 2, nsid, r);
 
   /* Recheck if we need to retry, release the lock.  */
  out:

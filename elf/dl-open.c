@@ -639,16 +639,16 @@ dl_open_worker_begin (void *a)
 #endif
       }
 
-#ifdef SHARED
-  /* Auditing checkpoint: we have added all objects.  */
-  _dl_audit_activity_nsid (new->l_ns, LA_ACT_CONSISTENT);
-#endif
-
   /* Notify the debugger all new objects are now ready to go.  */
   struct r_debug *r = _dl_debug_update (args->nsid);
   r->r_state = RT_CONSISTENT;
   _dl_debug_state ();
   LIBC_PROBE (map_complete, 3, args->nsid, r, new);
+
+#ifdef SHARED
+  /* Auditing checkpoint: we have added all objects.  */
+  _dl_audit_activity_nsid (new->l_ns, LA_ACT_CONSISTENT);
+#endif
 
   _dl_open_check (new);
 
