@@ -1167,7 +1167,6 @@ ldouble: 1
 
 Function: "log10p1":
 double: 1
-float: 1
 ldouble: 3
 
 Function: "log1p":

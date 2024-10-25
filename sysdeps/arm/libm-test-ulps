@@ -958,19 +958,15 @@ float: 2
 
 Function: "log10p1":
 double: 1
-float: 2
 
 Function: "log10p1_downward":
 double: 2
-float: 3
 
 Function: "log10p1_towardzero":
 double: 3
-float: 2
 
 Function: "log10p1_upward":
 double: 2
-float: 3
 
 Function: "log1p":
 double: 1
