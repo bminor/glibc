@@ -142,6 +142,8 @@ tests = \
   tst_wscanf \
   # tests
 
+$(objpfx)tst-popen-fork: $(shared-thread-library)
+
 tests-internal = tst-vtables tst-vtables-interposed
 
 ifeq (yes,$(build-shared))
