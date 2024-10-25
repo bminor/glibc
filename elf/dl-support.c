@@ -99,6 +99,7 @@ static struct link_map _dl_main_map =
     .l_used = 1,
     .l_tls_offset = NO_TLS_OFFSET,
     .l_serial = 1,
+    .l_init_called = 1,
   };
 
 /* Namespace information.  */
