@@ -815,19 +815,15 @@ float: 1
 
 Function: "exp2m1":
 double: 2
-float: 2
 
 Function: "exp2m1_downward":
 double: 3
-float: 3
 
 Function: "exp2m1_towardzero":
 double: 3
-float: 2
 
 Function: "exp2m1_upward":
 double: 3
-float: 3
 
 Function: "exp_downward":
 double: 1

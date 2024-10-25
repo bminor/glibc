@@ -995,7 +995,6 @@ ldouble: 2
 
 Function: "exp2m1":
 double: 1
-float: 1
 ldouble: 1
 
 Function: "exp_downward":
