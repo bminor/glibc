@@ -601,6 +601,14 @@ dl_open_worker_begin (void *a)
         = _dl_debug_update (args->nsid)->r_state;
       assert (r_state == RT_CONSISTENT);
 
+      /* Do not return without calling the (supposedly new) map's
+	 constructor.  This case occurs if a dependency of a directly
+	 opened map has a constructor that calls dlopen again on the
+	 initially opened map.  The new map is initialized last, so
+	 checking only it is enough.  */
+      if (!new->l_init_called)
+	_dl_catch_exception (NULL, call_dl_init, args);
+
       return;
     }
 
