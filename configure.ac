@@ -1763,6 +1763,42 @@ fi
 rm -f conftest.*])
 LIBC_CONFIG_VAR([cc-pie-default], [$libc_cv_cc_pie_default])
 
+# Get Position Dependent Executable (PDE) load address to be used to
+# load static Position Independent Executable (PIE) at a known working
+# non-zero load address.  This is only used by glibc tests to verify
+# that PIE and static PIE with non-zero load address work correctly.
+AC_CACHE_CHECK([PDE load address],
+	       libc_cv_pde_load_address, [dnl
+cat > conftest.S <<EOF
+.globl _start
+_start:
+.globl __start
+__start:
+EOF
+if test $libc_cv_cc_pie_default = yes; then
+  pde_ld_flags="-no-pie"
+fi
+if ${CC-cc} $pde_ld_flags $CFLAGS $CPPFLAGS $LDFLAGS \
+	    -nostartfiles -nostdlib $no_ssp \
+	    -o conftest conftest.S 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD; then
+  # Get the load address of the first PT_LOAD segment.
+  libc_cv_pde_load_address=$(LC_ALL=C $READELF -Wl conftest \
+			     | $AWK '/LOAD/ { print $3; exit 0; }')
+else
+  AC_MSG_ERROR([${CC-cc} can not create PDE])
+fi
+rm -f conftest*])
+LIBC_CONFIG_VAR([pde-load-address], [$libc_cv_pde_load_address])
+
+# Get the linker command-line option to load executable at a non-zero
+# load address.  This is only used by glibc tests to verify that PIE and
+# static PIE with non-zero load address work correctly.
+LIBC_LINKER_FEATURE([-Ttext-segment=$libc_cv_pde_load_address],
+		    [-Wl,-Ttext-segment=$libc_cv_pde_load_address],
+		    [libc_cv_load_address_ldflag=-Wl,-Ttext-segment],
+		    [libc_cv_load_address_ldflag=])
+LIBC_CONFIG_VAR([load-address-ldflag], [$libc_cv_load_address_ldflag])
+
 AC_MSG_CHECKING(if we can build programs as PIE)
 AC_COMPILE_IFELSE([AC_LANG_SOURCE([[#ifdef PIE_UNSUPPORTED
 # error PIE is not supported

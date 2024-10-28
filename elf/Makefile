@@ -1091,6 +1091,25 @@ tests-pie += \
   tst-pie1 \
   tst-pie2 \
   # tests-pie
+ifneq (,$(load-address-ldflag))
+tests += \
+  tst-pie-address \
+  # tests
+tests-pie += \
+  tst-pie-address \
+  # tests-pie
+LDFLAGS-tst-pie-address += $(load-address-ldflag)=$(pde-load-address)
+ifeq (yes,$(enable-static-pie))
+tests += \
+  tst-pie-address-static \
+  # tests
+tests-static += \
+  tst-pie-address-static \
+  # tests-static
+LDFLAGS-tst-pie-address-static += \
+  $(load-address-ldflag)=$(pde-load-address)
+endif
+endif
 ifeq (yes,$(have-protected-data))
 tests += vismain
 tests-pie += vismain
@@ -1937,6 +1956,7 @@ $(objpfx)tst-array5-static-cmp.out: tst-array5-static.exp \
 
 CFLAGS-tst-pie1.c += $(pie-ccflag)
 CFLAGS-tst-pie2.c += $(pie-ccflag)
+CFLAGS-tst-pie-address.c += $(pie-ccflag)
 
 $(objpfx)tst-piemod1.so: $(libsupport)
 $(objpfx)tst-pie1: $(objpfx)tst-piemod1.so
