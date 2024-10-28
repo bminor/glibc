@@ -164,11 +164,9 @@ float: 2
 
 Function: "cbrt":
 double: 4
-float: 1
 
 Function: "cbrt_towardzero":
 double: 3
-float: 1
 
 Function: Real part of "ccos":
 double: 1

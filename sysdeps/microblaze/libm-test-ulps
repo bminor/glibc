@@ -81,7 +81,6 @@ float: 1
 
 Function: "cbrt":
 double: 3
-float: 1
 
 Function: Real part of "ccos":
 double: 1

@@ -474,7 +474,6 @@ ldouble: 2
 
 Function: "cbrt":
 double: 4
-float: 1
 ldouble: 1
 
 Function: "cbrt_advsimd":
@@ -483,7 +482,6 @@ float: 1
 
 Function: "cbrt_downward":
 double: 4
-float: 1
 ldouble: 1
 
 Function: "cbrt_sve":
@@ -492,12 +490,10 @@ float: 1
 
 Function: "cbrt_towardzero":
 double: 3
-float: 1
 ldouble: 1
 
 Function: "cbrt_upward":
 double: 5
-float: 1
 ldouble: 1
 
 Function: Real part of "ccos":

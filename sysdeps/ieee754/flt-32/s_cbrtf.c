@@ -1,61 +1,99 @@
-/* Compute cubic root of float value.
-   Copyright (C) 1997-2024 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
+/* Correctly-rounded cubic root of binary32 value.
 
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+Copyright (c) 2023, 2024 Alexei Sibidanov.
 
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+The original version of this file was copied from the CORE-MATH
+project (file src/binary32/cbrt/cbrtf.c, revision bc385c2).
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
-   <https://www.gnu.org/licenses/>.  */
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-#include <math.h>
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+#include <fenv.h>
 #include <libm-alias-float.h>
-
-
-#define CBRT2 1.2599210498948731648		/* 2^(1/3) */
-#define SQR_CBRT2 1.5874010519681994748		/* 2^(2/3) */
-
-static const double factor[5] =
-{
-  1.0 / SQR_CBRT2,
-  1.0 / CBRT2,
-  1.0,
-  CBRT2,
-  SQR_CBRT2
-};
-
+#include <math.h>
+#include <stdint.h>
+#include "math_config.h"
 
 float
 __cbrtf (float x)
 {
-  float xm, ym, u, t2;
-  int xe;
-
-  /* Reduce X.  XM now is an range 1.0 to 0.5.  */
-  xm = __frexpf (fabsf (x), &xe);
-
-  /* If X is not finite or is null return it (with raising exceptions
-     if necessary.
-     Note: *Our* version of `frexp' sets XE to zero if the argument is
-     Inf or NaN.  This is not portable but faster.  */
-  if (xe == 0 && fpclassify (x) <= FP_ZERO)
-    return x + x;
-
-  u = (0.492659620528969547 + (0.697570460207922770
-			       - 0.191502161678719066 * xm) * xm);
-
-  t2 = u * u * u;
-
-  ym = u * (t2 + 2.0 * xm) / (2.0 * t2 + xm) * factor[2 + xe % 3];
-
-  return __ldexpf (x > 0.0 ? ym : -ym, xe / 3);
+  static const union
+  {
+    double d;
+    uint64_t u;
+  } escale[3] =
+  {
+    { .d = 1.0 },
+    { .d = 0x1.428a2f98d728bp+0 }, /* 2^(1/3) */
+    { .d = 0x1.965fea53d6e3dp+0 }, /* 2^(2/3) */
+  };
+  uint32_t u = asuint (x);
+  uint32_t au = u << 1;
+  uint32_t sgn = u >> 31;
+  uint32_t e = au >> 24;
+  if (__glibc_unlikely (au < 1u << 24 || au >= 0xffu << 24))
+    {
+      if (au >= 0xffu << 24)
+	return x + x; /* inf, nan */
+      if (au == 0)
+	return x;		       /* +-0 */
+      int nz = __builtin_clz (au) - 7; /* subnormal */
+      au <<= nz;
+      e -= nz - 1;
+    }
+  uint32_t mant = au & 0xffffff;
+  e += 899;
+  uint32_t et = e / 3, it = e % 3;
+  uint64_t isc = escale[it].u;
+  isc += (int64_t) (et - 342) << 52;
+  isc |= (int64_t) sgn << 63;
+  double cvt2 = asdouble (isc);
+  static const double c[] =
+    {
+       0x1.2319d352ea5d5p-1,  0x1.67ad8ee258d1ap-1, -0x1.9342edf9cbad9p-2,
+       0x1.b6388fc510a75p-3, -0x1.6002455599e2fp-4,  0x1.7b096936192c4p-6,
+      -0x1.e5577187e8bf8p-9,  0x1.169ef81d6c34ep-12
+    };
+  double z = asdouble ((uint64_t) mant << 28 | UINT64_C(0x3ff) << 52);
+  double r0 = -0x1.9931c6c2d19d1p-6 / z;
+  double z2 = z * z;
+  double z4 = z2 * z2;
+  double f = ((c[0] + z * c[1]) + z2 * (c[2] + z * c[3]))
+	     + z4 * ((c[4] + z * c[5]) + z2 * (c[6] + z * c[7])) + r0;
+  double r = f * cvt2;
+  float ub = r;
+  float lb = r - cvt2 * 1.4182e-9;
+  if (__glibc_likely (ub == lb))
+    return ub;
+  const double u0 = -0x1.ab16ec65d138fp+3;
+  double h = f * f * f - z;
+  f -= (f * r0 * u0) * h;
+  r = f * cvt2;
+  uint64_t cvt1 = asuint64 (r);
+  ub = r;
+  int64_t m0 = cvt1 << 19;
+  int64_t  m1 = m0 >> 63;
+  if (__glibc_unlikely ((m0 ^ m1) < (UINT64_C(1) << 31)))
+    {
+      cvt1 = (cvt1 + (UINT64_C(1) << 31)) & UINT64_C(0xffffffff00000000);
+      ub = asdouble (cvt1);
+    }
+  return ub;
 }
 libm_alias_float (__cbrt, cbrt)
