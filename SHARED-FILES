@@ -272,3 +272,7 @@ sysdeps/ieee754/flt-32/s_cbrtf.c
   (file src/binary32/cbrt/cbrtf.c in CORE-MATH)
   - The code was adapted to use glibc code style and internal
     functions to handle errno, overflow, and underflow.
+sysdeps/ieee754/flt-32/s_erff.c
+  (file src/binary32/erf/erff.c in CORE-MATH)
+  - The code was adapted to use glibc code style and internal
+    functions to handle errno, overflow, and underflow.

@@ -991,7 +991,6 @@ ldouble: 5
 
 Function: "erf":
 double: 1
-float: 1
 ldouble: 1
 
 Function: "erf_advsimd":
