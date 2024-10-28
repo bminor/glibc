@@ -32,6 +32,7 @@ bench-math := \
   atan2 \
   atanh \
   cbrt \
+  cbrtf \
   ceil \
   ceilf \
   cos \
