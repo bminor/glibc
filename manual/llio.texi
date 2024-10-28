@@ -1097,6 +1097,27 @@ streams persist in other processes, their file positions become
 undefined as a result.  To prevent this, you must clean up the streams
 before destroying them.
 
+In addition to cleaning up a stream before doing I/O using another
+linked channel, additional precautions are needed to ensure a
+well-defined file position indicator in some cases.  If both the
+following conditions hold, you must set the file position indicator on
+the new channel (a stream) using a function such as @code{fseek}.
+
+@itemize @bullet
+@item
+The new linked channel is a stream that was previously active.
+
+@item
+The file position indicator was previously set on that channel (while
+it was previously active) with a function such as @code{fseek}.
+@end itemize
+
+POSIX requires such precautions in more cases: if either the old or
+the new linked channel is a stream (whether or not previously active)
+and the file position indicator was previously set on any channel
+linked to those channels with a function such as @code{fseek} or
+@code{lseek}.
+
 @node Independent Channels
 @subsection Independent Channels
 @cindex independent channels
