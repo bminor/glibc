@@ -24,8 +24,8 @@ static const struct data
 {
   uint64x2_t offset, table_scale;
   float64x2_t max, shift;
-  float64x2_t p20, p40, p41, p42;
-  float64x2_t p51, p52;
+  float64x2_t p20, p40, p41, p51;
+  double p42, p52;
   double qr5[2], qr6[2], qr7[2], qr8[2], qr9[2];
 #if WANT_SIMD_EXCEPT
   float64x2_t uflow_bound;
@@ -41,9 +41,9 @@ static const struct data
   .p20 = V2 (0x1.5555555555555p-2),  /* 1/3, used to compute 2/3 and 1/6.  */
   .p40 = V2 (-0x1.999999999999ap-4), /* 1/10.  */
   .p41 = V2 (-0x1.999999999999ap-2), /* 2/5.  */
-  .p42 = V2 (0x1.1111111111111p-3),  /* 2/15.  */
+  .p42 = 0x1.1111111111111p-3,	     /* 2/15.  */
   .p51 = V2 (-0x1.c71c71c71c71cp-3), /* 2/9.  */
-  .p52 = V2 (0x1.6c16c16c16c17p-5),  /* 2/45.  */
+  .p52 = 0x1.6c16c16c16c17p-5,	     /* 2/45.  */
   /* Qi = (i+1) / i, Ri = -2 * i / ((i+1)*(i+2)), for i = 5, ..., 9.  */
   .qr5 = { 0x1.3333333333333p0, -0x1.e79e79e79e79ep-3 },
   .qr6 = { 0x1.2aaaaaaaaaaabp0, -0x1.b6db6db6db6dbp-3 },
@@ -157,9 +157,10 @@ float64x2_t V_NAME_D1 (erfc) (float64x2_t x)
   float64x2_t p1 = r;
   float64x2_t p2 = vfmsq_f64 (dat->p20, r2, vaddq_f64 (dat->p20, dat->p20));
   float64x2_t p3 = vmulq_f64 (r, vfmaq_f64 (v_f64 (-0.5), r2, dat->p20));
-  float64x2_t p4 = vfmaq_f64 (dat->p41, r2, dat->p42);
+  float64x2_t p42_p52 = vld1q_f64 (&dat->p42);
+  float64x2_t p4 = vfmaq_laneq_f64 (dat->p41, r2, p42_p52, 0);
   p4 = vfmsq_f64 (dat->p40, r2, p4);
-  float64x2_t p5 = vfmaq_f64 (dat->p51, r2, dat->p52);
+  float64x2_t p5 = vfmaq_laneq_f64 (dat->p51, r2, p42_p52, 1);
   p5 = vmulq_f64 (r, vfmaq_f64 (vmulq_f64 (v_f64 (0.5), dat->p20), r2, p5));
   /* Compute p_i using recurrence relation:
      p_{i+2} = (p_i + r * Q_{i+1} * p_{i+1}) * R_{i+1}.  */
