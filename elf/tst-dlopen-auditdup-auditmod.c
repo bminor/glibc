@@ -66,7 +66,11 @@ la_activity (uintptr_t *cookie, unsigned int flag)
           _exit (1);
         }
 
-      /* Check that the constructor has run.  */
+      /* Check that the constructor has not run.  Running the
+         constructor would require constructing its dependencies, but
+         the constructor call that triggered this auditing activity
+         has not completed, and constructors among the dependencies
+         may not be able to deal with that.  */
       int *status = dlsym (handle, "auditdupmod_status");
       if (status == NULL)
         {
@@ -75,9 +79,9 @@ la_activity (uintptr_t *cookie, unsigned int flag)
           _exit (1);
         }
       printf ("info: auditdupmod_status == %d\n", *status);
-      if (*status != 1)
+      if (*status != 0)
         {
-          puts ("error: auditdupmod_status == 1 expected");
+          puts ("error: auditdupmod_status == 0 expected");
           fflush (stdout);
           _exit (1);
         }
