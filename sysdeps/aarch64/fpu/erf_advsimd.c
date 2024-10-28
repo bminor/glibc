@@ -22,19 +22,21 @@
 static const struct data
 {
   float64x2_t third;
-  float64x2_t tenth, two_over_five, two_over_fifteen;
-  float64x2_t two_over_nine, two_over_fortyfive;
+  float64x2_t tenth, two_over_five, two_over_nine;
+  double two_over_fifteen, two_over_fortyfive;
   float64x2_t max, shift;
+  uint64x2_t max_idx;
 #if WANT_SIMD_EXCEPT
   float64x2_t tiny_bound, huge_bound, scale_minus_one;
 #endif
 } data = {
+  .max_idx = V2 (768),
   .third = V2 (0x1.5555555555556p-2), /* used to compute 2/3 and 1/6 too.  */
-  .two_over_fifteen = V2 (0x1.1111111111111p-3),
+  .two_over_fifteen = 0x1.1111111111111p-3,
   .tenth = V2 (-0x1.999999999999ap-4),
   .two_over_five = V2 (-0x1.999999999999ap-2),
   .two_over_nine = V2 (-0x1.c71c71c71c71cp-3),
-  .two_over_fortyfive = V2 (0x1.6c16c16c16c17p-5),
+  .two_over_fortyfive = 0x1.6c16c16c16c17p-5,
   .max = V2 (5.9921875), /* 6 - 1/128.  */
   .shift = V2 (0x1p45),
 #if WANT_SIMD_EXCEPT
@@ -87,8 +89,8 @@ float64x2_t VPCS_ATTR V_NAME_D1 (erf) (float64x2_t x)
   float64x2_t a = vabsq_f64 (x);
   /* Reciprocal conditions that do not catch NaNs so they can be used in BSLs
      to return expected results.  */
-  uint64x2_t a_le_max = vcleq_f64 (a, dat->max);
-  uint64x2_t a_gt_max = vcgtq_f64 (a, dat->max);
+  uint64x2_t a_le_max = vcaleq_f64 (x, dat->max);
+  uint64x2_t a_gt_max = vcagtq_f64 (x, dat->max);
 
 #if WANT_SIMD_EXCEPT
   /* |x| huge or tiny.  */
@@ -115,7 +117,7 @@ float64x2_t VPCS_ATTR V_NAME_D1 (erf) (float64x2_t x)
      segfault.  */
   uint64x2_t i
       = vsubq_u64 (vreinterpretq_u64_f64 (z), vreinterpretq_u64_f64 (shift));
-  i = vbslq_u64 (a_le_max, i, v_u64 (768));
+  i = vbslq_u64 (a_le_max, i, dat->max_idx);
   struct entry e = lookup (i);
 
   float64x2_t r = vsubq_f64 (z, shift);
@@ -125,14 +127,19 @@ float64x2_t VPCS_ATTR V_NAME_D1 (erf) (float64x2_t x)
   float64x2_t d2 = vmulq_f64 (d, d);
   float64x2_t r2 = vmulq_f64 (r, r);
 
+  float64x2_t two_over_fifteen_and_fortyfive
+      = vld1q_f64 (&dat->two_over_fifteen);
+
   /* poly (d, r) = 1 + p1(r) * d + p2(r) * d^2 + ... + p5(r) * d^5.  */
   float64x2_t p1 = r;
   float64x2_t p2
       = vfmsq_f64 (dat->third, r2, vaddq_f64 (dat->third, dat->third));
   float64x2_t p3 = vmulq_f64 (r, vfmaq_f64 (v_f64 (-0.5), r2, dat->third));
-  float64x2_t p4 = vfmaq_f64 (dat->two_over_five, r2, dat->two_over_fifteen);
+  float64x2_t p4 = vfmaq_laneq_f64 (dat->two_over_five, r2,
+				    two_over_fifteen_and_fortyfive, 0);
   p4 = vfmsq_f64 (dat->tenth, r2, p4);
-  float64x2_t p5 = vfmaq_f64 (dat->two_over_nine, r2, dat->two_over_fortyfive);
+  float64x2_t p5 = vfmaq_laneq_f64 (dat->two_over_nine, r2,
+				    two_over_fifteen_and_fortyfive, 1);
   p5 = vmulq_f64 (r, vfmaq_f64 (vmulq_f64 (v_f64 (0.5), dat->third), r2, p5));
 
   float64x2_t p34 = vfmaq_f64 (p3, d, p4);
