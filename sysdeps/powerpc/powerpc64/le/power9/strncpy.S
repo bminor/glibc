@@ -43,7 +43,7 @@
 # endif
 #endif
 
-#define FRAMESIZE (FRAME_MIN_SIZE+8)
+#define FRAMESIZE (FRAME_MIN_SIZE+16)
 
 /* Implements the function
 
