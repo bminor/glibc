@@ -1,4 +1,4 @@
-/* s_erff.c -- float version of s_erf.c.
+/* s_erfcf.c -- float version of s_erfc.c.
  */
 
 /*
@@ -17,22 +17,23 @@ static char rcsid[] = "$NetBSD: s_erff.c,v 1.4 1995/05/10 20:47:07 jtc Exp $";
 #endif
 
 #include <errno.h>
-#include <float.h>
-#include <math.h>
-#include <math-narrow-eval.h>
-#include <math_private.h>
-#include <math-underflow.h>
-#include <libm-alias-float.h>
 #include <fix-int-fp-convert-zero.h>
+#include <libm-alias-float.h>
+#include <math-narrow-eval.h>
+#include <math.h>
+#include <math_private.h>
+
 
 static const float
 tiny	    = 1e-30,
+half=  5.0000000000e-01, /* 0x3F000000 */
 one =  1.0000000000e+00, /* 0x3F800000 */
+two =  2.0000000000e+00, /* 0x40000000 */
+	/* c = (subfloat)0.84506291151 */
 erx =  8.4506291151e-01, /* 0x3f58560b */
 /*
  * Coefficients for approximation to  erf on [0,0.84375]
  */
-efx =  1.2837916613e-01, /* 0x3e0375d4 */
 pp0  =  1.2837916613e-01, /* 0x3e0375d4 */
 pp1  = -3.2504209876e-01, /* 0xbea66beb */
 pp2  = -2.8481749818e-02, /* 0xbce9528f */
@@ -96,59 +97,77 @@ sb5  =  2.5530502930e+03, /* 0x451f90ce */
 sb6  =  4.7452853394e+02, /* 0x43ed43a7 */
 sb7  = -2.2440952301e+01; /* 0xc1b38712 */
 
-float __erff(float x)
+float __erfcf(float x)
 {
-	int32_t hx,ix,i;
+	int32_t hx,ix;
 	float R,S,P,Q,s,y,z,r;
 	GET_FLOAT_WORD(hx,x);
 	ix = hx&0x7fffffff;
-	if(ix>=0x7f800000) {		/* erf(nan)=nan */
-	    i = ((uint32_t)hx>>31)<<1;
-	    return (float)(1-i)+one/x;	/* erf(+-inf)=+-1 */
+	if(ix>=0x7f800000) {			/* erfc(nan)=nan */
+						/* erfc(+-inf)=0,2 */
+	    float ret = (float)(((uint32_t)hx>>31)<<1)+one/x;
+	    if (FIX_INT_FP_CONVERT_ZERO && ret == 0.0f)
+	      return 0.0f;
+	    return ret;
 	}
 
 	if(ix < 0x3f580000) {		/* |x|<0.84375 */
-	    if(ix < 0x31800000) { 	/* |x|<2**-28 */
-	        if (ix < 0x04000000)
-		  {
-		    /* Avoid spurious underflow.  */
-		    float ret = 0.0625f * (16.0f * x + (16.0f * efx) * x);
-		    math_check_force_underflow (ret);
-		    return ret;
-		  }
-		return x + efx*x;
-	    }
+	    if(ix < 0x32800000)  	/* |x|<2**-26 */
+		return one-x;
 	    z = x*x;
 	    r = pp0+z*(pp1+z*(pp2+z*(pp3+z*pp4)));
 	    s = one+z*(qq1+z*(qq2+z*(qq3+z*(qq4+z*qq5))));
 	    y = r/s;
-	    return x + x*y;
+	    if(hx < 0x3e800000) {  	/* x<1/4 */
+		return one-(x+x*y);
+	    } else {
+		r = x*y;
+		r += (x-half);
+	        return half - r ;
+	    }
 	}
 	if(ix < 0x3fa00000) {		/* 0.84375 <= |x| < 1.25 */
 	    s = fabsf(x)-one;
 	    P = pa0+s*(pa1+s*(pa2+s*(pa3+s*(pa4+s*(pa5+s*pa6)))));
 	    Q = one+s*(qa1+s*(qa2+s*(qa3+s*(qa4+s*(qa5+s*qa6)))));
-	    if(hx>=0) return erx + P/Q; else return -erx - P/Q;
+	    if(hx>=0) {
+	        z  = one-erx; return z - P/Q;
+	    } else {
+		z = erx+P/Q; return one+z;
+	    }
 	}
-	if (ix >= 0x40c00000) {		/* inf>|x|>=6 */
-	    if(hx>=0) return one-tiny; else return tiny-one;
-	}
-	x = fabsf(x);
- 	s = one/(x*x);
-	if(ix< 0x4036DB6E) {	/* |x| < 1/0.35 */
-	    R=ra0+s*(ra1+s*(ra2+s*(ra3+s*(ra4+s*(
+	if (ix < 0x41e00000) {		/* |x|<28 */
+	    x = fabsf(x);
+	    s = one/(x*x);
+	    if(ix< 0x4036DB6D) {	/* |x| < 1/.35 ~ 2.857143*/
+	        R=ra0+s*(ra1+s*(ra2+s*(ra3+s*(ra4+s*(
 				ra5+s*(ra6+s*ra7))))));
-	    S=one+s*(sa1+s*(sa2+s*(sa3+s*(sa4+s*(
+	        S=one+s*(sa1+s*(sa2+s*(sa3+s*(sa4+s*(
 				sa5+s*(sa6+s*(sa7+s*sa8)))))));
-	} else {	/* |x| >= 1/0.35 */
-	    R=rb0+s*(rb1+s*(rb2+s*(rb3+s*(rb4+s*(
+	    } else {			/* |x| >= 1/.35 ~ 2.857143 */
+		if(hx<0&&ix>=0x40c00000) return two-tiny;/* x < -6 */
+	        R=rb0+s*(rb1+s*(rb2+s*(rb3+s*(rb4+s*(
 				rb5+s*rb6)))));
-	    S=one+s*(sb1+s*(sb2+s*(sb3+s*(sb4+s*(
+	        S=one+s*(sb1+s*(sb2+s*(sb3+s*(sb4+s*(
 				sb5+s*(sb6+s*sb7))))));
+	    }
+	    GET_FLOAT_WORD(ix,x);
+	    SET_FLOAT_WORD(z,ix&0xffffe000);
+	    r  =  __ieee754_expf(-z*z-(float)0.5625)*
+			__ieee754_expf((z-x)*(z+x)+R/S);
+	    if(hx>0) {
+		float ret = math_narrow_eval (r/x);
+		if (ret == 0)
+		    __set_errno (ERANGE);
+		return ret;
+	    } else
+		return two-r/x;
+	} else {
+	    if(hx>0) {
+		__set_errno (ERANGE);
+		return tiny*tiny;
+	    } else
+		return two-tiny;
 	}
-	GET_FLOAT_WORD(ix,x);
-	SET_FLOAT_WORD(z,ix&0xfffff000);
-	r  =  __ieee754_expf(-z*z-(float)0.5625)*__ieee754_expf((z-x)*(z+x)+R/S);
-	if(hx>=0) return one-r/x; else return  r/x-one;
 }
-libm_alias_float (__erf, erf)
+libm_alias_float (__erfc, erfc)

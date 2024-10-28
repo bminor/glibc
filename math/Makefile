@@ -201,6 +201,7 @@ libm-calls = \
   s_ceilF \
   s_cosF \
   s_erfF \
+  s_erfcF \
   s_expm1F \
   s_fabsF \
   s_floorF \
