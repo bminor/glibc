@@ -820,7 +820,7 @@ struct aux_cache_entry
   struct aux_cache_entry *next;
 };
 
-#define AUX_CACHEMAGIC		"glibc-ld.so.auxcache-1.0"
+#define AUX_CACHEMAGIC		"glibc-ld.so.auxcache-2.0"
 
 struct aux_cache_file_entry
 {
