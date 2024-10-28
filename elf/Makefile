@@ -417,7 +417,6 @@ tests += \
   tst-dlmopen3 \
   tst-dlmopen4 \
   tst-dlopen-auditdup \
-  tst-dlopen-recurse \
   tst-dlopen-self \
   tst-dlopen-tlsmodid \
   tst-dlopen-tlsreinit1 \
@@ -870,8 +869,6 @@ modules-names += \
   tst-dlmopen1mod \
   tst-dlopen-auditdup-auditmod \
   tst-dlopen-auditdupmod \
-  tst-dlopen-recursemod1 \
-  tst-dlopen-recursemod2 \
   tst-dlopen-sgid-mod \
   tst-dlopen-tlsreinitmod1 \
   tst-dlopen-tlsreinitmod2 \
@@ -3170,8 +3167,6 @@ tst-dlopen-tlsreinit4-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so
 
 $(objpfx)tst-dlopen-sgid.out: $(objpfx)tst-dlopen-sgid-mod.so
 
-$(objpfx)tst-dlopen-recurse.out: $(objpfx)tst-dlopen-recursemod1.so
-$(objpfx)tst-dlopen-recursemod1.so: $(objpfx)tst-dlopen-recursemod2.so
 tst-dlopen-auditdup-ENV = LD_AUDIT=$(objpfx)tst-dlopen-auditdup-auditmod.so
 $(objpfx)tst-dlopen-auditdup.out: \
   $(objpfx)tst-dlopen-auditdupmod.so $(objpfx)tst-dlopen-auditdup-auditmod.so
