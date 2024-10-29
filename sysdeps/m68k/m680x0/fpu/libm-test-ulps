@@ -854,22 +854,18 @@ ldouble: 1
 
 Function: "erfc":
 double: 1
-float: 2
 ldouble: 2
 
 Function: "erfc_downward":
 double: 1
-float: 4
 ldouble: 4
 
 Function: "erfc_towardzero":
 double: 1
-float: 4
 ldouble: 4
 
 Function: "erfc_upward":
 double: 1
-float: 3
 ldouble: 3
 
 Function: "exp10m1":

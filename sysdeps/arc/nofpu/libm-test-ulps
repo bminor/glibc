@@ -180,7 +180,6 @@ double: 1
 
 Function: "erfc":
 double: 5
-float: 3
 
 Function: "exp":
 double: 1

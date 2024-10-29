@@ -922,22 +922,18 @@ ldouble: 2
 
 Function: "erfc":
 double: 5
-float: 3
 ldouble: 4
 
 Function: "erfc_downward":
 double: 3
-float: 4
 ldouble: 5
 
 Function: "erfc_towardzero":
 double: 3
-float: 3
 ldouble: 4
 
 Function: "erfc_upward":
 double: 3
-float: 4
 ldouble: 5
 
 Function: "exp":

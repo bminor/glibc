@@ -361,11 +361,9 @@ double: 1
 
 Function: "erfc":
 double: 5
-float: 2
 
 Function: "erfc_towardzero":
 double: 3
-float: 3
 
 Function: "exp":
 double: 1

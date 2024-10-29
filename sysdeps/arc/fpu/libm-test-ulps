@@ -745,19 +745,15 @@ double: 2
 
 Function: "erfc":
 double: 5
-float: 5
 
 Function: "erfc_downward":
 double: 4
-float: 4
 
 Function: "erfc_towardzero":
 double: 4
-float: 4
 
 Function: "erfc_upward":
 double: 5
-float: 5
 
 Function: "exp":
 double: 1

@@ -1125,25 +1125,21 @@ ldouble: 3
 
 Function: "erfc":
 double: 2
-float: 2
 float128: 4
 ldouble: 3
 
 Function: "erfc_downward":
 double: 4
-float: 4
 float128: 5
 ldouble: 10
 
 Function: "erfc_towardzero":
 double: 3
-float: 3
 float128: 4
 ldouble: 11
 
 Function: "erfc_upward":
 double: 4
-float: 4
 float128: 5
 ldouble: 7
 

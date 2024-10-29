@@ -175,7 +175,6 @@ double: 1
 
 Function: "erfc":
 double: 3
-float: 2
 
 Function: "exp":
 float: 1
