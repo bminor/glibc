@@ -70,6 +70,7 @@ bench-math := \
   j0 \
   j1 \
   lgamma \
+  lgammaf \
   llrint \
   llrintf \
   log \
