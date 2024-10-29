@@ -276,6 +276,7 @@ LDLIBS-tst-minstack-throw = -lstdc++
 tests = \
   tst-attr2 \
   tst-attr3 \
+  tst-attr4 \
   tst-cancel4_1 \
   tst-cancel4_2 \
   tst-cancel7 \
