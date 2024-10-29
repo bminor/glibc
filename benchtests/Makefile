@@ -40,6 +40,7 @@ bench-math := \
   cosh \
   erf \
   erfc \
+  erfcf \
   erff \
   exp \
   exp10 \
