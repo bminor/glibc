@@ -56,7 +56,6 @@ ENTRY (__clone)
 
 	/* Save fn, args, stack across syscall.  */
 	mr	r30,r3			/* Function in r30.  */
-	mr	r29,r5			/* Flags in r29.  */
 	mr	r31,r6			/* Argument in r31.  */
 
 	/* 'flags' argument is first parameter to clone syscall.
@@ -77,14 +76,12 @@ ENTRY (__clone)
 	CHECK_SCV_SUPPORT r28 0f
 	/* This is equivalent to DO_CALL_SCV, but we cannot use the macro here
 	because it uses CFI directives and we just called cfi_endproc.  */
-	mflr 	r9
-	std 	r9,FRAME_LR_SAVE(r1)
+	mflr 	r29
 	.machine "push"
 	.machine "power9"
 	scv 	0
 	.machine "pop"
-	ld 	r9,FRAME_LR_SAVE(r1)
-	mtlr 	r9
+	mtlr 	r29
 
 	/* Check for child process.  */
 	/* When using scv, error is indicated by negative r3.  */

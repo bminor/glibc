@@ -39,14 +39,12 @@
    because it uses CFI directives and we just called cfi_endproc.  */
 # define DO_CLONE3_SVC_CALL(jumpfalse)				\
 	CHECK_SCV_SUPPORT r28 jumpfalse;			\
-	mflr 	r9;						\
-	std 	r9, FRAME_LR_SAVE(r1);				\
+	mflr 	r31;						\
 	.machine "push";					\
 	.machine "power9";					\
 	scv 	0;						\
 	.machine "pop";						\
-	ld 	r9, FRAME_LR_SAVE(r1);				\
-	mtlr 	r9;						\
+	mtlr 	r31;						\
 	/* With scv an, an error is a value -4095 <= x < 0.  */	\
 	cmpdi	cr1, r3, 0;					\
 	b	1f;
@@ -66,13 +64,15 @@ ENTRY(__clone3)
 
 	/* Save some regs in the "red zone".  */
 #ifdef USE_PPC_SCV
-	std	r28, -24(r1)
-	cfi_offset (r28, -24)
+	std	r28, -32(r1)
+	cfi_offset (r28, -32)
 #endif
-	std	r29, -16(r1)
-	std	r30, -8(r1)
-	cfi_offset (r29, -16)
-	cfi_offset (r30, -8)
+	std	r29, -24(r1)
+	std	r30, -16(r1)
+	std	r31, -8(r1)
+	cfi_offset (r29, -24)
+	cfi_offset (r30, -16)
+	cfi_offset (r31, -8)
 
 	/* Save func and arg across syscall.  */
 	mr	r30, r5		/* Function in r30.  */
@@ -132,16 +132,19 @@ L(parent):
 
 	/* Parent.  Restore registers & return.  */
 #ifdef USE_PPC_SCV
-	cfi_offset (r28, -24)
-	ld	r28, -24(r1)
+	cfi_offset (r28, -32)
+	ld	r28, -32(r1)
 	cfi_restore (r28)
 #endif
-	cfi_offset (r29,-16)
-	cfi_offset (r30,-8)
-	ld	r29, -16(r1)
-	ld	r30, -8(r1)
+	cfi_offset (r29,-24)
+	cfi_offset (r30,-16)
+	cfi_offset (r31,-8)
+	ld	r29, -24(r1)
+	ld	r30, -16(r1)
+	ld	r31, -8(r1)
 	cfi_restore (r29)
 	cfi_restore (r30)
+	cfi_restore (r31)
 
 #ifdef USE_PPC_SCV
 	beq	cr1, 0f
