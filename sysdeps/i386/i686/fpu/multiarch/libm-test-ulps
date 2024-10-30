@@ -1357,7 +1357,6 @@ ldouble: 5
 
 Function: "lgamma":
 double: 4
-float: 5
 float128: 5
 ldouble: 4
 

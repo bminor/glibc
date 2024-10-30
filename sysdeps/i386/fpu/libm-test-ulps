@@ -1354,25 +1354,21 @@ ldouble: 5
 
 Function: "lgamma":
 double: 4
-float: 5
 float128: 5
 ldouble: 4
 
 Function: "lgamma_downward":
 double: 5
-float: 5
 float128: 8
 ldouble: 7
 
 Function: "lgamma_towardzero":
 double: 5
-float: 6
 float128: 5
 ldouble: 7
 
 Function: "lgamma_upward":
 double: 5
-float: 6
 float128: 8
 ldouble: 6
 

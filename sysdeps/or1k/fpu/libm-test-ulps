@@ -881,19 +881,15 @@ float: 9
 
 Function: "lgamma":
 double: 4
-float: 7
 
 Function: "lgamma_downward":
 double: 7
-float: 7
 
 Function: "lgamma_towardzero":
 double: 7
-float: 7
 
 Function: "lgamma_upward":
 double: 5
-float: 6
 
 Function: "log10":
 double: 2

@@ -1017,22 +1017,18 @@ ldouble: 5
 
 Function: "lgamma":
 double: 3
-float: 7
 ldouble: 2
 
 Function: "lgamma_downward":
 double: 3
-float: 7
 ldouble: 3
 
 Function: "lgamma_towardzero":
 double: 4
-float: 6
 ldouble: 3
 
 Function: "lgamma_upward":
 double: 4
-float: 6
 ldouble: 2
 
 Function: "log10_downward":

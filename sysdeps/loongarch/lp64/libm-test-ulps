@@ -1140,22 +1140,18 @@ ldouble: 7
 
 Function: "lgamma":
 double: 4
-float: 7
 ldouble: 5
 
 Function: "lgamma_downward":
 double: 5
-float: 7
 ldouble: 8
 
 Function: "lgamma_towardzero":
 double: 5
-float: 6
 ldouble: 5
 
 Function: "lgamma_upward":
 double: 5
-float: 6
 ldouble: 8
 
 Function: "log":

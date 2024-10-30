@@ -223,7 +223,6 @@ float: 4
 
 Function: "lgamma":
 double: 4
-float: 7
 
 Function: "log10":
 double: 2

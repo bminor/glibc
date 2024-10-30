@@ -280,3 +280,11 @@ sysdeps/ieee754/flt-32/s_erfcf.c
   (file src/binary32/erfc/erfcf.c in CORE-MATH)
   - The code was adapted to use glibc code style and internal
     functions to handle errno, overflow, and underflow.
+sysdeps/ieee754/flt-32/e_lgammaf_r.c:
+  (file src/binary32/lgamma/lgammaf.c in CORE-MATH)
+  - change the function name from cr_lgammaf to __ieee754_lgammaf_r
+  - add "int *signgamp" as 2nd argument and add at the beginning:
+    if (signgamp != NULL) *signgamp = 1;
+  - remove the errno stuff (this is done by the wrapper)
+  - replace 0x1p127f * 0x1p127f by math_narrow_eval (x * 0x1p127f)
+  - add libm_alias_finite (__ieee754_lgammaf_r, __lgammaf_r) at the end

@@ -435,11 +435,9 @@ float: 5
 
 Function: "lgamma":
 double: 4
-float: 3
 
 Function: "lgamma_towardzero":
 double: 5
-float: 3
 
 Function: "log":
 float: 1

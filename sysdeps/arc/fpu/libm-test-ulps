@@ -917,19 +917,15 @@ float: 9
 
 Function: "lgamma":
 double: 7
-float: 6
 
 Function: "lgamma_downward":
 double: 6
-float: 5
 
 Function: "lgamma_towardzero":
 double: 7
-float: 6
 
 Function: "lgamma_upward":
 double: 7
-float: 6
 
 Function: "log":
 double: 1

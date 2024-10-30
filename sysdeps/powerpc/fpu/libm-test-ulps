@@ -1431,25 +1431,21 @@ ldouble: 5
 
 Function: "lgamma":
 double: 3
-float: 4
 float128: 5
 ldouble: 3
 
 Function: "lgamma_downward":
 double: 4
-float: 4
 float128: 8
 ldouble: 15
 
 Function: "lgamma_towardzero":
 double: 4
-float: 3
 float128: 5
 ldouble: 16
 
 Function: "lgamma_upward":
 double: 4
-float: 5
 float128: 8
 ldouble: 11
 
