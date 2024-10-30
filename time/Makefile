@@ -53,6 +53,7 @@ tests := \
   tst-adjtime \
   tst-clock \
   tst-clock2 \
+  tst-clock_gettime \
   tst-clock_nanosleep \
   tst-clock_settime \
   tst-cpuclock1 \
@@ -61,6 +62,7 @@ tests := \
   tst-ftime \
   tst-ftime_l \
   tst-getdate \
+  tst-gettimeofday \
   tst-gmtime \
   tst-itimer \
   tst-mktime \
@@ -77,6 +79,7 @@ tests := \
   tst-strptime-whitespace \
   tst-strptime2 \
   tst-strptime3 \
+  tst-time \
   tst-timegm \
   tst-timespec_get \
   tst-timespec_getres \
@@ -90,16 +93,19 @@ tests-time64 := \
   tst-adjtime-time64 \
   tst-clock-time64 \
   tst-clock2-time64 \
+  tst-clock_gettime-time64 \
   tst-clock_nanosleep-time64 \
   tst-clock_settime-time64 \
   tst-cpuclock1-time64 \
   tst-ctime-time64 \
   tst-difftime-time64 \
+  tst-gettimeofday-time64 \
   tst-gmtime-time64 \
   tst-itimer-time64 \
   tst-mktime4-time64 \
   tst-settimeofday-time64 \
   tst-strftime4-time64 \
+  tst-time-time64 \
   tst-timegm-time64 \
   tst-timespec_get-time64 \
   tst-timespec_getres-time64 \
