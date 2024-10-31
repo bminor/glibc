@@ -127,6 +127,8 @@ $(objpfx)tst-strftime2.out: $(gen-locales)
 $(objpfx)tst-strftime3.out: $(gen-locales)
 endif
 
+$(objpfx)tst-clock_gettime: $(librt)
+$(objpfx)tst-clock_gettime-time64: $(librt)
 $(objpfx)tst-clock_nanosleep: $(librt)
 $(objpfx)tst-clock_nanosleep-time64: $(librt)
 
