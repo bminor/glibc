@@ -67,14 +67,16 @@ svfloat64_t SV_NAME_D1 (erf) (svfloat64_t x, const svbool_t pg)
   svfloat64_t a = svabs_x (pg, x);
   svfloat64_t shift = sv_f64 (dat->shift);
   svfloat64_t z = svadd_x (pg, a, shift);
-  svuint64_t i
-      = svsub_x (pg, svreinterpret_u64 (z), svreinterpret_u64 (shift));
+  svuint64_t i = svand_x (pg, svreinterpret_u64 (z), 0xfff);
+  i = svadd_x (pg, i, i);
 
   /* Lookup without shortcut for small values but with predicate to avoid
      segfault for large values and NaNs.  */
   svfloat64_t r = svsub_x (pg, z, shift);
-  svfloat64_t erfr = svld1_gather_index (a_lt_max, __sv_erf_data.erf, i);
-  svfloat64_t scale = svld1_gather_index (a_lt_max, __sv_erf_data.scale, i);
+  svfloat64_t erfr
+      = svld1_gather_index (a_lt_max, &__v_erf_data.tab[0].erf, i);
+  svfloat64_t scale
+      = svld1_gather_index (a_lt_max, &__v_erf_data.tab[0].scale, i);
 
   /* erf(x) ~ erf(r) + scale * d * poly (r, d).  */
   svfloat64_t d = svsub_x (pg, a, r);

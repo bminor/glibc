@@ -58,8 +58,8 @@ static inline struct entry
 lookup (uint64x2_t i)
 {
   struct entry e;
-  float64x2_t e1 = vld1q_f64 (&__erf_data.tab[vgetq_lane_u64 (i, 0)].erf),
-	      e2 = vld1q_f64 (&__erf_data.tab[vgetq_lane_u64 (i, 1)].erf);
+  float64x2_t e1 = vld1q_f64 (&__v_erf_data.tab[vgetq_lane_u64 (i, 0)].erf),
+	      e2 = vld1q_f64 (&__v_erf_data.tab[vgetq_lane_u64 (i, 1)].erf);
   e.erf = vuzp1q_f64 (e1, e2);
   e.scale = vuzp2q_f64 (e1, e2);
   return e;

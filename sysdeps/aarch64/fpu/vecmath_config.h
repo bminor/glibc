@@ -75,49 +75,37 @@ extern const struct v_log10_data
   } table[1 << V_LOG10_TABLE_BITS];
 } __v_log10_data attribute_hidden;
 
-extern const struct erff_data
+extern const struct v_erff_data
 {
   struct
   {
     float erf, scale;
   } tab[513];
-} __erff_data attribute_hidden;
+} __v_erff_data attribute_hidden;
 
-extern const struct sv_erff_data
-{
-  float erf[513];
-  float scale[513];
-} __sv_erff_data attribute_hidden;
-
-extern const struct erf_data
+extern const struct v_erf_data
 {
   struct
   {
     double erf, scale;
   } tab[769];
-} __erf_data attribute_hidden;
+} __v_erf_data attribute_hidden;
 
-extern const struct sv_erf_data
-{
-  double erf[769];
-  double scale[769];
-} __sv_erf_data attribute_hidden;
-
-extern const struct erfc_data
+extern const struct v_erfc_data
 {
   struct
   {
     double erfc, scale;
   } tab[3488];
-} __erfc_data attribute_hidden;
+} __v_erfc_data attribute_hidden;
 
-extern const struct erfcf_data
+extern const struct v_erfcf_data
 {
   struct
   {
     float erfc, scale;
   } tab[645];
-} __erfcf_data attribute_hidden;
+} __v_erfcf_data attribute_hidden;
 
 /* Some data for AdvSIMD and SVE pow's internal exp and log.  */
 #define V_POW_EXP_TABLE_BITS 8

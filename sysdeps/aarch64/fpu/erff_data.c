@@ -19,14 +19,14 @@
 
 #include "vecmath_config.h"
 
-/* Lookup table used in erff.
+/* Lookup table used in vector erff.
    For each possible rounded input r (multiples of 1/128), between
    r = 0.0 and r = 4.0 (513 values):
-   - the first entry __erff_data.tab.erf contains the values of erf(r),
-   - the second entry __erff_data.tab.scale contains the values of
+   - the first entry __v_erff_data.tab.erf contains the values of erf(r),
+   - the second entry __v_erff_data.tab.scale contains the values of
    2/sqrt(pi)*exp(-r^2). Note that indices 0 and 1 are never hit by the
    algorithm, since lookup is performed only for x >= 1/64-1/512.  */
-const struct erff_data __erff_data = {
+const struct v_erff_data __v_erff_data = {
   .tab = { { 0x0.000000p+0, 0x1.20dd76p+0 },
 	   { 0x1.20dbf4p-7, 0x1.20d8f2p+0 },
 	   { 0x1.20d770p-6, 0x1.20cb68p+0 },
