@@ -41,8 +41,6 @@ libmvec-support = $(addsuffix f_advsimd,$(float-advsimd-funcs)) \
                   v_log10_data \
                   erf_data \
                   erff_data \
-                  sv_erf_data \
-                  sv_erff_data \
                   v_exp_tail_data \
                   erfc_data \
                   erfcf_data \

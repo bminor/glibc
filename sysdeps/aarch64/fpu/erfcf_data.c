@@ -19,14 +19,14 @@
 
 #include "vecmath_config.h"
 
-/* Lookup table used in erfcf.
+/* Lookup table used in vector erfcf.
    For each possible rounded input r (multiples of 1/64), between
    r = 0.0 and r = 10.0625 (645 values):
-   - the first entry __erfcf_data.tab.erfc contains the values of erfc(r),
-   - the second entry __erfcf_data.tab.scale contains the values of
+   - the first entry __v_erfcf_data.tab.erfc contains the values of erfc(r),
+   - the second entry __v_erfcf_data.tab.scale contains the values of
    2/sqrt(pi)*exp(-r^2). Both values may go into subnormal range, therefore
    they are scaled by a large enough value 2^47 (fits in 8 bits).  */
-const struct erfcf_data __erfcf_data = {
+const struct v_erfcf_data __v_erfcf_data = {
   .tab = { { 0x1p47, 0x1.20dd76p47 },
 	   { 0x1.f6f944p46, 0x1.20cb68p47 },
 	   { 0x1.edf3aap46, 0x1.209546p47 },

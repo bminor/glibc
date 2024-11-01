@@ -62,18 +62,17 @@ svfloat32_t SV_NAME_F1 (erf) (svfloat32_t x, const svbool_t pg)
 
   svfloat32_t shift = sv_f32 (dat->shift);
   svfloat32_t z = svadd_x (pg, a, shift);
-  svuint32_t i
-      = svsub_x (pg, svreinterpret_u32 (z), svreinterpret_u32 (shift));
-
-  /* Saturate lookup index.  */
-  i = svsel (a_ge_max, sv_u32 (512), i);
+  svuint32_t i = svand_x (pg, svreinterpret_u32 (z), 0xfff);
+  i = svadd_x (pg, i, i);
 
   /* r and erf(r) set to 0 for |x| below min.  */
   svfloat32_t r = svsub_z (a_gt_min, z, shift);
-  svfloat32_t erfr = svld1_gather_index (a_gt_min, __sv_erff_data.erf, i);
+  svfloat32_t erfr
+      = svld1_gather_index (a_gt_min, &__v_erff_data.tab[0].erf, i);
 
   /* scale set to 2/sqrt(pi) for |x| below min.  */
-  svfloat32_t scale = svld1_gather_index (a_gt_min, __sv_erff_data.scale, i);
+  svfloat32_t scale
+      = svld1_gather_index (a_gt_min, &__v_erff_data.tab[0].scale, i);
   scale = svsel (a_gt_min, scale, sv_f32 (dat->scale));
 
   /* erf(x) ~ erf(r) + scale * d * (1 - r * d + 1/3 * d^2).  */

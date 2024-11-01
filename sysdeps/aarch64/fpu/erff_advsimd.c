@@ -47,10 +47,10 @@ static inline struct entry
 lookup (uint32x4_t i)
 {
   struct entry e;
-  float32x2_t t0 = vld1_f32 (&__erff_data.tab[vgetq_lane_u32 (i, 0)].erf);
-  float32x2_t t1 = vld1_f32 (&__erff_data.tab[vgetq_lane_u32 (i, 1)].erf);
-  float32x2_t t2 = vld1_f32 (&__erff_data.tab[vgetq_lane_u32 (i, 2)].erf);
-  float32x2_t t3 = vld1_f32 (&__erff_data.tab[vgetq_lane_u32 (i, 3)].erf);
+  float32x2_t t0 = vld1_f32 (&__v_erff_data.tab[vgetq_lane_u32 (i, 0)].erf);
+  float32x2_t t1 = vld1_f32 (&__v_erff_data.tab[vgetq_lane_u32 (i, 1)].erf);
+  float32x2_t t2 = vld1_f32 (&__v_erff_data.tab[vgetq_lane_u32 (i, 2)].erf);
+  float32x2_t t3 = vld1_f32 (&__v_erff_data.tab[vgetq_lane_u32 (i, 3)].erf);
   float32x4_t e1 = vcombine_f32 (t0, t1);
   float32x4_t e2 = vcombine_f32 (t2, t3);
   e.erf = vuzp1q_f32 (e1, e2);
