@@ -338,8 +338,7 @@ _dl_non_dynamic_init (void)
   call_function_static_weak (_dl_find_object_init);
 
   /* Setup relro on the binary itself.  */
-  if (_dl_main_map.l_relro_size != 0)
-    _dl_protect_relro (&_dl_main_map);
+  _dl_protect_relro (&_dl_main_map);
 }
 
 #ifdef DL_SYSINFO_IMPLEMENTATION
