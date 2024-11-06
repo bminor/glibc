@@ -19,18 +19,12 @@
 #ifndef _SYS_THREAD_POINTER_H
 #define _SYS_THREAD_POINTER_H
 
-#include <sys/cdefs.h>
+register void *__thread_self asm ("$tp");
 
 static inline void *
 __thread_pointer (void)
 {
-#if __glibc_has_builtin (__builtin_thread_pointer)
-  return __builtin_thread_pointer ();
-#else
-  void *__thread_register;
-  __asm__ ("move %0, $tp" : "=r" (__thread_register));
-  return __thread_register;
-#endif
+  return __thread_self;
 }
 
 #endif /* _SYS_THREAD_POINTER_H */

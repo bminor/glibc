@@ -26,8 +26,8 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <dl-dtv.h>
+#include "thread_pointer.h"
 
-register void *__thread_self asm ("$tp");
 #define READ_THREAD_POINTER() ({ __thread_self; })
 
 /* Get system call information.  */
