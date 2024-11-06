@@ -40,7 +40,7 @@ __exp10m1f (float x)
     { /* x < -7.52575 */
       if (ax > (0xffu << 23))
 	return x + x; /* nan */
-      return (ux == 0xff800000) ? -0x1p+0 : -0x1p+0 + 0x1p-26f;
+      return (ux == 0xff800000) ? -0x1p+0f : -0x1p+0f + 0x1p-26f;
     }
   else if (__glibc_unlikely (ax > 0x421a209au))
     { /* x > 38.5318 */
