@@ -2011,43 +2011,37 @@ dl_main (const ElfW(Phdr) *phdr,
     if (main_map->l_searchlist.r_list[i] == &GL(dl_rtld_map))
       break;
 
-  bool rtld_multiple_ref = false;
-  if (__glibc_likely (i < main_map->l_searchlist.r_nlist))
+  /* Insert the link map for the dynamic loader into the chain in
+     symbol search order because gdb uses the chain's order as its
+     symbol search order.  */
+
+  GL(dl_rtld_map).l_prev = main_map->l_searchlist.r_list[i - 1];
+  if (__glibc_likely (state.mode == rtld_mode_normal))
     {
-      /* Some DT_NEEDED entry referred to the interpreter object itself, so
-	 put it back in the list of visible objects.  We insert it into the
-	 chain in symbol search order because gdb uses the chain's order as
-	 its symbol search order.  */
-      rtld_multiple_ref = true;
-
-      GL(dl_rtld_map).l_prev = main_map->l_searchlist.r_list[i - 1];
-      if (__glibc_likely (state.mode == rtld_mode_normal))
-	{
-	  GL(dl_rtld_map).l_next = (i + 1 < main_map->l_searchlist.r_nlist
-				    ? main_map->l_searchlist.r_list[i + 1]
-				    : NULL);
+      GL(dl_rtld_map).l_next = (i + 1 < main_map->l_searchlist.r_nlist
+				? main_map->l_searchlist.r_list[i + 1]
+				: NULL);
 #ifdef NEED_DL_SYSINFO_DSO
-	  if (GLRO(dl_sysinfo_map) != NULL
-	      && GL(dl_rtld_map).l_prev->l_next == GLRO(dl_sysinfo_map)
-	      && GL(dl_rtld_map).l_next != GLRO(dl_sysinfo_map))
-	    GL(dl_rtld_map).l_prev = GLRO(dl_sysinfo_map);
+      if (GLRO(dl_sysinfo_map) != NULL
+	  && GL(dl_rtld_map).l_prev->l_next == GLRO(dl_sysinfo_map)
+	  && GL(dl_rtld_map).l_next != GLRO(dl_sysinfo_map))
+	GL(dl_rtld_map).l_prev = GLRO(dl_sysinfo_map);
 #endif
-	}
-      else
-	/* In trace mode there might be an invisible object (which we
-	   could not find) after the previous one in the search list.
-	   In this case it doesn't matter much where we put the
-	   interpreter object, so we just initialize the list pointer so
-	   that the assertion below holds.  */
-	GL(dl_rtld_map).l_next = GL(dl_rtld_map).l_prev->l_next;
+    }
+  else
+    /* In trace mode there might be an invisible object (which we
+       could not find) after the previous one in the search list.
+       In this case it doesn't matter much where we put the
+       interpreter object, so we just initialize the list pointer so
+       that the assertion below holds.  */
+    GL(dl_rtld_map).l_next = GL(dl_rtld_map).l_prev->l_next;
 
-      assert (GL(dl_rtld_map).l_prev->l_next == GL(dl_rtld_map).l_next);
-      GL(dl_rtld_map).l_prev->l_next = &GL(dl_rtld_map);
-      if (GL(dl_rtld_map).l_next != NULL)
-	{
-	  assert (GL(dl_rtld_map).l_next->l_prev == GL(dl_rtld_map).l_prev);
-	  GL(dl_rtld_map).l_next->l_prev = &GL(dl_rtld_map);
-	}
+  assert (GL(dl_rtld_map).l_prev->l_next == GL(dl_rtld_map).l_next);
+  GL(dl_rtld_map).l_prev->l_next = &GL(dl_rtld_map);
+  if (GL(dl_rtld_map).l_next != NULL)
+    {
+      assert (GL(dl_rtld_map).l_next->l_prev == GL(dl_rtld_map).l_prev);
+      GL(dl_rtld_map).l_next->l_prev = &GL(dl_rtld_map);
     }
 
   /* Now let us see whether all libraries are available in the
@@ -2375,35 +2369,33 @@ dl_main (const ElfW(Phdr) *phdr,
   /* Make sure no new search directories have been added.  */
   assert (GLRO(dl_init_all_dirs) == GL(dl_all_dirs));
 
-  if (rtld_multiple_ref)
-    {
-      /* There was an explicit ref to the dynamic linker as a shared lib.
-	 Re-relocate ourselves with user-controlled symbol definitions.
+  /* Re-relocate ourselves with user-controlled symbol definitions.
 
-	 We must do this after TLS initialization in case after this
-	 re-relocation, we might call a user-supplied function
-	 (e.g. calloc from _dl_relocate_object) that uses TLS data.  */
+     We must do this after TLS initialization in case after this
+     re-relocation, we might call a user-supplied function
+     (e.g. calloc from _dl_relocate_object) that uses TLS data.  */
 
-      /* Set up the object lookup structures.  */
-      _dl_find_object_init ();
+  /* Set up the object lookup structures.  */
+  _dl_find_object_init ();
 
-      /* The malloc implementation has been relocated, so resolving
-	 its symbols (and potentially calling IFUNC resolvers) is safe
-	 at this point.  */
-      __rtld_malloc_init_real (main_map);
+  /* The malloc implementation has been relocated, so resolving
+     its symbols (and potentially calling IFUNC resolvers) is safe
+     at this point.  */
+  __rtld_malloc_init_real (main_map);
 
-      /* Likewise for the locking implementation.  */
-      __rtld_mutex_init ();
+  /* Likewise for the locking implementation.  */
+  __rtld_mutex_init ();
 
-      RTLD_TIMING_VAR (start);
-      rtld_timer_start (&start);
+  {
+    RTLD_TIMING_VAR (start);
+    rtld_timer_start (&start);
 
-      /* Mark the link map as not yet relocated again.  */
-      GL(dl_rtld_map).l_relocated = 0;
-      _dl_relocate_object (&GL(dl_rtld_map), main_map->l_scope, 0, 0);
+    /* Mark the link map as not yet relocated again.  */
+    GL(dl_rtld_map).l_relocated = 0;
+    _dl_relocate_object (&GL(dl_rtld_map), main_map->l_scope, 0, 0);
 
-      rtld_timer_accum (&relocate_time, start);
-    }
+    rtld_timer_accum (&relocate_time, start);
+  }
 
   /* Relocation is complete.  Perform early libc initialization.  This
      is the initial libc, even if audit modules have been loaded with
