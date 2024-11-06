@@ -268,6 +268,7 @@ tests += \
   tst-spin2 \
   tst-spin3 \
   tst-spin4 \
+  tst-spin5 \
   tst-stack1 \
   tst-stdio1 \
   tst-stdio2 \
