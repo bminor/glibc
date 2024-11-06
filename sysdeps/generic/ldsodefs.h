@@ -1014,6 +1014,13 @@ extern void _dl_relocate_object (struct link_map *map,
 				 int reloc_mode, int consider_profiling)
      attribute_hidden;
 
+/* Perform relocation, but do not apply RELRO.  Does not check
+   L->relocated.  Otherwise the same as _dl_relocate_object.  */
+void _dl_relocate_object_no_relro (struct link_map *map,
+				   struct r_scope_elem *scope[],
+				   int reloc_mode, int consider_profiling)
+     attribute_hidden;
+
 /* Protect PT_GNU_RELRO area.  */
 extern void _dl_protect_relro (struct link_map *map) attribute_hidden;
 
