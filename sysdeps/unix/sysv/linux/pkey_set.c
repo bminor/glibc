@@ -20,7 +20,7 @@
 #include <sys/mman.h>
 
 int
-__pkey_set (int key, unsigned int access_rights)
+__pkey_set (int key, unsigned int access_restrictions)
 {
   __set_errno (ENOSYS);
   return -1;
