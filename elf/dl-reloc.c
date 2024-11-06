@@ -220,8 +220,8 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
   int lazy = reloc_mode & RTLD_LAZY;
   int skip_ifunc = reloc_mode & __RTLD_NOIFUNC;
 
-#ifdef SHARED
   bool consider_symbind = false;
+#ifdef SHARED
   /* If we are auditing, install the same handlers we need for profiling.  */
   if ((reloc_mode & __RTLD_AUDIT) == 0)
     {
@@ -240,9 +240,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
     }
 #elif defined PROF
   /* Never use dynamic linker profiling for gprof profiling code.  */
-# define consider_profiling 0
-#else
-# define consider_symbind 0
+  consider_profiling = 0;
 #endif
 
   /* If DT_BIND_NOW is set relocate all references in this object.  We
@@ -300,7 +298,6 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 
     ELF_DYNAMIC_RELOCATE (l, scope, lazy, consider_profiling, skip_ifunc);
 
-#ifndef PROF
     if ((consider_profiling || consider_symbind)
 	&& l->l_info[DT_PLTRELSZ] != NULL)
       {
@@ -321,7 +318,6 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	    _dl_fatal_printf (errstring, RTLD_PROGNAME, l->l_name);
 	  }
       }
-#endif
   }
 
   /* Mark the object so we know this work has been done.  */
