@@ -202,12 +202,9 @@ resolve_map (lookup_t l, struct r_scope_elem *scope[], const ElfW(Sym) **ref,
 #include "dynamic-link.h"
 
 void
-_dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
-		     int reloc_mode, int consider_profiling)
+_dl_relocate_object_no_relro (struct link_map *l, struct r_scope_elem *scope[],
+			      int reloc_mode, int consider_profiling)
 {
-  if (l->l_relocated)
-    return;
-
   struct textrels
   {
     caddr_t start;
@@ -338,17 +335,24 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 
       textrels = textrels->next;
     }
-
-  /* In case we can protect the data now that the relocations are
-     done, do it.  */
-  if (l->l_relro_size != 0)
-    _dl_protect_relro (l);
 }
 
+void
+_dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
+		     int reloc_mode, int consider_profiling)
+{
+  if (l->l_relocated)
+    return;
+  _dl_relocate_object_no_relro (l, scope, reloc_mode, consider_profiling);
+  _dl_protect_relro (l);
+}
 
 void
 _dl_protect_relro (struct link_map *l)
 {
+  if (l->l_relro_size == 0)
+    return;
+
   ElfW(Addr) start = ALIGN_DOWN((l->l_addr
 				 + l->l_relro_addr),
 				GLRO(dl_pagesize));
