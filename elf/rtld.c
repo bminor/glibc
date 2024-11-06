@@ -2368,30 +2368,27 @@ dl_main (const ElfW(Phdr) *phdr,
   /* Make sure no new search directories have been added.  */
   assert (GLRO(dl_init_all_dirs) == GL(dl_all_dirs));
 
-  /* Re-relocate ourselves with user-controlled symbol definitions.
-
-     We must do this after TLS initialization in case after this
-     re-relocation, we might call a user-supplied function
-     (e.g. calloc from _dl_relocate_object) that uses TLS data.  */
-
   /* Set up the object lookup structures.  */
   _dl_find_object_init ();
 
-  /* The malloc implementation has been relocated, so resolving
-     its symbols (and potentially calling IFUNC resolvers) is safe
-     at this point.  */
-  __rtld_malloc_init_real (main_map);
-
   /* Likewise for the locking implementation.  */
   __rtld_mutex_init ();
+
+  /* Re-relocate ourselves with user-controlled symbol definitions.  */
 
   {
     RTLD_TIMING_VAR (start);
     rtld_timer_start (&start);
 
-    /* Mark the link map as not yet relocated again.  */
-    GL(dl_rtld_map).l_relocated = 0;
-    _dl_relocate_object (&GL(dl_rtld_map), main_map->l_scope, 0, 0);
+    _dl_relocate_object_no_relro (&GL(dl_rtld_map), main_map->l_scope, 0, 0);
+
+    /* The malloc implementation has been relocated, so resolving
+       its symbols (and potentially calling IFUNC resolvers) is safe
+       at this point.  */
+    __rtld_malloc_init_real (main_map);
+
+    if (GL(dl_rtld_map).l_relro_size != 0)
+      _dl_protect_relro (&GL(dl_rtld_map));
 
     rtld_timer_accum (&relocate_time, start);
   }

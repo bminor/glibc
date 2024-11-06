@@ -453,6 +453,9 @@ tests += \
   tst-recursive-tls \
   tst-relsort1 \
   tst-ro-dynamic \
+  tst-rtld-no-malloc \
+  tst-rtld-no-malloc-audit \
+  tst-rtld-no-malloc-preload \
   tst-rtld-run-static \
   tst-single_threaded \
   tst-single_threaded-pthread \
@@ -3142,3 +3145,9 @@ $(objpfx)tst-dlopen-sgid.out: $(objpfx)tst-dlopen-sgid-mod.so
 tst-dlopen-auditdup-ENV = LD_AUDIT=$(objpfx)tst-dlopen-auditdup-auditmod.so
 $(objpfx)tst-dlopen-auditdup.out: \
   $(objpfx)tst-dlopen-auditdupmod.so $(objpfx)tst-dlopen-auditdup-auditmod.so
+
+# Reuse an audit module which provides ample debug logging.
+tst-rtld-no-malloc-audit-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so
+
+# Any shared object should do.
+tst-rtld-no-malloc-preload-ENV = LD_PRELOAD=$(objpfx)tst-auditmod1.so
