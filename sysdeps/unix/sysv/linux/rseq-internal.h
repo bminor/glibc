@@ -51,11 +51,21 @@ rseq_register_current_thread (struct pthread *self, bool do_rseq)
         /* The initial implementation used only 20 bytes out of 32,
            but still expected size 32.  */
         size = RSEQ_AREA_SIZE_INITIAL;
+
+      /* Initialize the rseq fields that are read by the kernel on
+         registration, there is no guarantee that struct pthread is
+         cleared on all architectures.  */
+      THREAD_SETMEM (self, rseq_area.cpu_id, RSEQ_CPU_ID_UNINITIALIZED);
+      THREAD_SETMEM (self, rseq_area.rseq_cs, 0);
+      THREAD_SETMEM (self, rseq_area.flags, 0);
+
       int ret = INTERNAL_SYSCALL_CALL (rseq, &self->rseq_area,
                                        size, 0, RSEQ_SIG);
       if (!INTERNAL_SYSCALL_ERROR_P (ret))
         return true;
     }
+  /* When rseq is disabled by tunables or the registration fails, inform
+     userspace by setting 'cpu_id' to RSEQ_CPU_ID_REGISTRATION_FAILED.  */
   THREAD_SETMEM (self, rseq_area.cpu_id, RSEQ_CPU_ID_REGISTRATION_FAILED);
   return false;
 }
