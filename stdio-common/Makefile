@@ -23,7 +23,7 @@ subdir	:= stdio-common
 include ../Makeconfig
 
 # List of markers for printf family function tests.
-xprintf-funcs := p as
+xprintf-funcs := p as d
 
 # List of data types and formats for individual per-conversion printf tests.
 fmt-convs := double ldouble
