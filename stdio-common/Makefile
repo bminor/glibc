@@ -22,6 +22,34 @@ subdir	:= stdio-common
 
 include ../Makeconfig
 
+# List of markers for printf family function tests.
+xprintf-funcs := p
+
+# List of data types and formats for individual per-conversion printf tests.
+fmt-convs := double ldouble
+fmts := E e F f G g
+
+# List of data types grouping all conversions in single printf tests.
+nonfmt-convs := c char int llong long s short
+nonfmt-convs += uchar uint ullong ulong ushort
+
+convs := $(sort $(fmt-convs) $(nonfmt-convs))
+
+xprintf-srcs := \
+  $(foreach p,$(xprintf-funcs), \
+	    $(foreach c,$(convs),tst-printf-format-$(p)-$(c)))
+
+fmt-xprintf-stems := \
+  $(foreach f,$(fmts), \
+	    $(foreach p,$(xprintf-funcs), \
+		      $(foreach c,$(fmt-convs), \
+				tst-printf-format-$(p)-$(c)-$(f))))
+nonfmt-xprintf-stems := \
+  $(foreach p,$(xprintf-funcs), \
+	    $(foreach c,$(nonfmt-convs),tst-printf-format-$(p)-$(c)))
+
+xprintf-stems := $(sort $(fmt-xprintf-stems) $(nonfmt-xprintf-stems))
+
 headers := \
   bits/printf-ldbl.h \
   bits/stdio_lim.h \
@@ -317,6 +345,7 @@ tests-internal = \
   # tests-internal
 
 test-srcs = \
+  $(xprintf-srcs) \
   tst-printf \
   tst-printfsz-islongdouble \
   tst-unbputc \
@@ -324,6 +353,7 @@ test-srcs = \
 
 ifeq ($(run-built-tests),yes)
 tests-special += \
+  $(foreach f,$(xprintf-stems),$(objpfx)$(f).out) \
   $(objpfx)tst-printf.out \
   $(objpfx)tst-printfsz-islongdouble.out \
   $(objpfx)tst-setvbuf1-cmp.out \
@@ -333,6 +363,7 @@ tests-special += \
 ifeq (yes,$(build-shared))
 ifneq ($(PERL),no)
 tests-special += \
+  $(foreach f,$(xprintf-stems),$(objpfx)$(f)-mem.out) \
   $(objpfx)tst-freopen2-mem.out \
   $(objpfx)tst-freopen3-mem.out \
   $(objpfx)tst-freopen4-mem.out \
@@ -353,6 +384,8 @@ tests-special += \
   # tests-special
 
 generated += \
+  $(foreach f,$(xprintf-stems),$(f)-mem.out) \
+  $(foreach f,$(xprintf-stems),$(f).mtrace) \
   tst-freopen2-mem.out \
   tst-freopen2.mtrace \
   tst-freopen3-mem.out \
@@ -526,6 +559,21 @@ $(objpfx)tst-printf.out: tst-printf.sh $(objpfx)tst-printf
 	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'; \
 	$(evaluate-test)
 
+# We can't split a quoted recipe line, so do it via an auxiliary variable.
+make-tst-printf-format-out = \
+  AWK='$(AWK)' BASH='$(BASH)' \
+    $(BASH) $< $@ $(common-objpfx) \
+    '$(run-program-prefix-before-env) \
+     $(run-program-env) \
+     MALLOC_TRACE=$(@:.out=.mtrace) \
+     LD_PRELOAD=$(common-objpfx)malloc/libc_malloc_debug.so \
+     $(run-program-prefix-after-env)'
+$(objpfx)tst-printf-format-%.out: \
+  tst-printf-format.sh $(foreach c,$(convs),tst-printf-format-$(c).sh) \
+  $(foreach f,$(xprintf-srcs),$(objpfx)$(f)) tst-printf-format.awk
+	$(make-tst-printf-format-out) > $@; \
+	$(evaluate-test)
+
 $(objpfx)tst-printfsz-islongdouble.out: \
   tst-printfsz-islongdouble.sh $(objpfx)tst-printfsz-islongdouble
 	$(SHELL) $^ '$(test-program-prefix)' $@; \
@@ -538,6 +586,10 @@ $(objpfx)tst-printf-bz18872.c: tst-printf-bz18872.sh
 
 $(objpfx)tst-%-mem.out: $(objpfx)tst-%.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-$*.mtrace > $@; \
+	$(evaluate-test)
+$(objpfx)tst-printf-format-%-mem.out: $(objpfx)tst-printf-format-%.out
+	$(common-objpfx)malloc/mtrace \
+	  $(objpfx)tst-printf-format-$*.mtrace > $@; \
 	$(evaluate-test)
 
 errlist-h = $(firstword $(wildcard $(addsuffix /errlist.h,$(sysdirs) .)))
