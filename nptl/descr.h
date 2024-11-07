@@ -414,6 +414,8 @@ struct pthread
     {
       uint32_t cpu_id_start;
       uint32_t cpu_id;
+      uint64_t rseq_cs;
+      uint32_t flags;
     };
     char pad[32];		/* Original rseq area size.  */
   } rseq_area __attribute__ ((aligned (32)));
