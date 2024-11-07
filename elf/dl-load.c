@@ -1931,6 +1931,9 @@ _dl_map_object (struct link_map *loader, const char *name,
 		      : "\nfile=%s [%lu];  dynamically loaded by %s [%lu]\n",
 		      name, nsid, DSO_FILENAME (loader->l_name), loader->l_ns);
 
+  /* Will be true if we found a DSO which is of the other ELF class.  */
+  bool found_other_class = false;
+
 #ifdef SHARED
   /* Give the auditing libraries a chance to change the name before we
      try anything.  */
@@ -1947,9 +1950,6 @@ _dl_map_object (struct link_map *loader, const char *name,
 	origname = before;
     }
 #endif
-
-  /* Will be true if we found a DSO which is of the other ELF class.  */
-  bool found_other_class = false;
 
   if (strchr (name, '/') == NULL)
     {
