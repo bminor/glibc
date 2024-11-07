@@ -1,4 +1,5 @@
 /* Copyright (C) 1993-2024 Free Software Foundation, Inc.
+   Copyright The GNU Toolchain Authors.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -480,7 +481,7 @@ _IO_new_file_underflow (FILE *fp)
       /* Maybe we already have a push back pointer.  */
       if (fp->_IO_save_base != NULL)
 	{
-	  free (fp->_IO_save_base);
+	  _IO_free_backup_buf (fp, fp->_IO_save_base);
 	  fp->_flags &= ~_IO_IN_BACKUP;
 	}
       _IO_doallocbuf (fp);
@@ -932,7 +933,7 @@ _IO_new_file_seekoff (FILE *fp, off64_t offset, int dir, int mode)
       /* It could be that we already have a pushback buffer.  */
       if (fp->_IO_read_base != NULL)
 	{
-	  free (fp->_IO_read_base);
+	  _IO_free_backup_buf (fp, fp->_IO_read_base);
 	  fp->_flags &= ~_IO_IN_BACKUP;
 	}
       _IO_doallocbuf (fp);
@@ -1282,7 +1283,7 @@ _IO_file_xsgetn (FILE *fp, void *data, size_t n)
       /* Maybe we already have a push back pointer.  */
       if (fp->_IO_save_base != NULL)
 	{
-	  free (fp->_IO_save_base);
+	  _IO_free_backup_buf (fp, fp->_IO_save_base);
 	  fp->_flags &= ~_IO_IN_BACKUP;
 	}
       _IO_doallocbuf (fp);

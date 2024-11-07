@@ -1,4 +1,5 @@
 /* Copyright (C) 1993-2024 Free Software Foundation, Inc.
+   Copyright The GNU Toolchain Authors.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -212,7 +213,7 @@ _IO_free_backup_area (FILE *fp)
 {
   if (_IO_in_backup (fp))
     _IO_switch_to_main_get_area (fp);  /* Just in case. */
-  free (fp->_IO_save_base);
+  _IO_free_backup_buf (fp, fp->_IO_save_base);
   fp->_IO_save_base = NULL;
   fp->_IO_save_end = NULL;
   fp->_IO_backup_base = NULL;
@@ -260,7 +261,7 @@ save_for_backup (FILE *fp, char *end_p)
 	memcpy (new_buffer + avail,
 		fp->_IO_read_base + least_mark,
 		needed_size);
-      free (fp->_IO_save_base);
+      _IO_free_backup_buf (fp, fp->_IO_save_base);
       fp->_IO_save_base = new_buffer;
       fp->_IO_save_end = new_buffer + avail + needed_size;
     }
@@ -636,7 +637,7 @@ _IO_default_finish (FILE *fp, int dummy)
 
   if (fp->_IO_save_base)
     {
-      free (fp->_IO_save_base);
+      _IO_free_backup_buf (fp, fp->_IO_save_base);
       fp->_IO_save_base = NULL;
     }
 
@@ -998,11 +999,14 @@ _IO_default_pbackfail (FILE *fp, int c)
 	  else if (!_IO_have_backup (fp))
 	    {
 	      /* No backup buffer: allocate one. */
-	      /* Use nshort buffer, if unused? (probably not)  FIXME */
 	      int backup_size = 128;
 	      char *bbuf = (char *) malloc (backup_size);
 	      if (bbuf == NULL)
-		return EOF;
+		{
+		  /* Guarantee a 1-char pushback.  */
+		  bbuf = fp->_short_backupbuf;
+		  backup_size = 1;
+		}
 	      fp->_IO_save_base = bbuf;
 	      fp->_IO_save_end = fp->_IO_save_base + backup_size;
 	      fp->_IO_backup_base = fp->_IO_save_end;
@@ -1022,7 +1026,7 @@ _IO_default_pbackfail (FILE *fp, int c)
 	    return EOF;
 	  memcpy (new_buf + (new_size - old_size), fp->_IO_read_base,
 		  old_size);
-	  free (fp->_IO_read_base);
+	  _IO_free_backup_buf (fp, fp->_IO_read_base);
 	  _IO_setg (fp, new_buf, new_buf + (new_size - old_size),
 		    new_buf + new_size);
 	  fp->_IO_backup_base = fp->_IO_read_ptr;

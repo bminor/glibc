@@ -1,4 +1,5 @@
 # Copyright (C) 1991-2024 Free Software Foundation, Inc.
+# Copyright The GNU Toolchain Authors.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -303,6 +304,7 @@ tests := \
   tst-tmpnam \
   tst-ungetc \
   tst-ungetc-leak \
+  tst-ungetc-nomem \
   tst-unlockedio \
   tst-vfprintf-mbs-prec \
   tst-vfprintf-user-type \

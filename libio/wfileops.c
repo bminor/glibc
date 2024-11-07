@@ -1,4 +1,5 @@
 /* Copyright (C) 1993-2024 Free Software Foundation, Inc.
+   Copyright The GNU Toolchain Authors.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -175,7 +176,7 @@ _IO_wfile_underflow (FILE *fp)
       /* Maybe we already have a push back pointer.  */
       if (fp->_IO_save_base != NULL)
 	{
-	  free (fp->_IO_save_base);
+	  _IO_free_backup_buf (fp, fp->_IO_save_base);
 	  fp->_flags &= ~_IO_IN_BACKUP;
 	}
       _IO_doallocbuf (fp);
