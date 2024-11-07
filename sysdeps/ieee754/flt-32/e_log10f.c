@@ -37,9 +37,8 @@ as_special (float x)
     return x; /* +inf */
   uint32_t ax = ux << 1;
   if (ax == 0u)
-    { /* -0.0 */
-      __math_divzerof (1);
-    }
+    /* -0.0 */
+    return  __math_divzerof (1);
   if (ax > 0xff000000u)
     return x + x; /* nan */
   return __math_invalidf (x);
