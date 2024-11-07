@@ -228,7 +228,7 @@ ldouble: 3
 
 Function: Real part of "cacosh_upward":
 double: 4
-float: 3
+float: 4
 ldouble: 6
 
 Function: Imaginary part of "cacosh_upward":
@@ -720,6 +720,7 @@ float: 1
 ldouble: 1
 
 Function: Imaginary part of "csin":
+float: 1
 ldouble: 1
 
 Function: Real part of "csin_downward":
