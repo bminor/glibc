@@ -76,6 +76,7 @@ __sem_open (const char *name, int oflag, ...)
 	    goto try_create;
 
 	  /* Return.  errno is already set.  */
+	  result = SEM_FAILED;
 	}
       else
 	/* Check whether we already have this semaphore mapped and
