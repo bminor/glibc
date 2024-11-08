@@ -103,6 +103,7 @@ bench-math := \
   sinh \
   sqrt \
   tan \
+  tanf \
   tanh \
   tgamma \
   tgammaf \
