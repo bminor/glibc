@@ -45,7 +45,7 @@
 #  define VPCMPEQ	vpcmpeqd
 #  define CHAR_SIZE	4
 
-#  define REP_MOVS	rep movsd
+#  define REP_MOVS	rep movsl
 
 #  define USE_WIDE_CHAR
 # else
