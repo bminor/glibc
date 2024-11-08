@@ -501,12 +501,8 @@ Function: "sinh_towardzero":
 double: 3
 float: 2
 
-Function: "tan":
-float: 1
-
 Function: "tan_towardzero":
 double: 1
-float: 1
 
 Function: "tanh":
 double: 2

@@ -288,3 +288,9 @@ sysdeps/ieee754/flt-32/e_lgammaf_r.c:
   - remove the errno stuff (this is done by the wrapper)
   - replace 0x1p127f * 0x1p127f by math_narrow_eval (x * 0x1p127f)
   - add libm_alias_finite (__ieee754_lgammaf_r, __lgammaf_r) at the end
+sysdeps/ieee754/flt-32/s_tanf.c:
+  (src/binary32/tan/tanf.c in CORE-MATH)
+  - The code was adapted to use glibc code style and internal
+    functions to handle errno, overflow, and underflow.  It was changed
+    to use an internal wrapper for 128 bit unsigned integer operations
+    for ABIs that do not support the type natively.

@@ -259,9 +259,6 @@ Function: "sinh":
 double: 2
 float: 2
 
-Function: "tan":
-float: 1
-
 Function: "tanh":
 double: 2
 float: 2

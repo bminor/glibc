@@ -1561,7 +1561,6 @@ float: 3
 ldouble: 4
 
 Function: "tan":
-float: 1
 ldouble: 1
 
 Function: "tan_advsimd":
@@ -1570,7 +1569,6 @@ float: 2
 
 Function: "tan_downward":
 double: 1
-float: 2
 ldouble: 1
 
 Function: "tan_sve":
@@ -1579,12 +1577,10 @@ float: 2
 
 Function: "tan_towardzero":
 double: 1
-float: 1
 ldouble: 1
 
 Function: "tan_upward":
 double: 1
-float: 1
 ldouble: 1
 
 Function: "tanh":

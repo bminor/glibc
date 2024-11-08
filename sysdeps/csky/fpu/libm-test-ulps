@@ -1000,20 +1000,14 @@ Function: "sinh_upward":
 double: 3
 float: 3
 
-Function: "tan":
-float: 1
-
 Function: "tan_downward":
 double: 1
-float: 2
 
 Function: "tan_towardzero":
 double: 1
-float: 1
 
 Function: "tan_upward":
 double: 1
-float: 1
 
 Function: "tanh":
 double: 2

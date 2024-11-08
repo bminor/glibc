@@ -1349,22 +1349,18 @@ ldouble: 4
 
 Function: "tan":
 double: 1
-float: 1
 ldouble: 1
 
 Function: "tan_downward":
 double: 1
-float: 2
 ldouble: 1
 
 Function: "tan_towardzero":
 double: 1
-float: 1
 ldouble: 1
 
 Function: "tan_upward":
 double: 1
-float: 1
 ldouble: 1
 
 Function: "tanh":
