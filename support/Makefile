@@ -128,6 +128,7 @@ libsupport-routines = \
   xcopy_file_range \
   xdlfcn \
   xdlmopen \
+  xdup \
   xdup2 \
   xfchmod \
   xfclose \
