@@ -59,4 +59,9 @@ __ieee754_sqrtf128 (_Float128 __x)
 #define _GL_HAS_BUILTIN_ILOGB 0
 #endif
 
+#ifdef _ARCH_PWR6
+/* ISA 2.03 provides frin/round() and cntlzw/ctznll().  */
+# define ROUNDEVEN_INTRINSICS 0
+#endif
+
 #endif /* _PPC_MATH_PRIVATE_H_ */

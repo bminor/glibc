@@ -95,7 +95,7 @@ __expm1f (float x)
       return __math_oflowf (0);
     }
   double a = iln2 * z;
-  double ia = roundeven (a);
+  double ia = roundeven_finite (a);
   double h = a - ia;
   double h2 = h * h;
   uint64_t u = asuint64 (ia + big);

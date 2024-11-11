@@ -38,7 +38,7 @@ rltl (float z, int *q)
   double x = z;
   double idl = -0x1.b1bbead603d8bp-32 * x;
   double idh = 0x1.45f306ep-1 * x;
-  double id = roundeven (idh);
+  double id = roundeven_finite (idh);
   *q = (int64_t) id;
   return (idh - id) + idl;
 }

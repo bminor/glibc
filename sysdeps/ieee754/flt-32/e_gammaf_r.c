@@ -140,7 +140,7 @@ __ieee754_gammaf_r (float x, int *signgamp)
    };
 
   double m = z - 0x1.7p+1;
-  double i = roundeven (m);
+  double i = roundeven_finite (m);
   double step = copysign (1.0, i);
   double d = m - i, d2 = d * d, d4 = d2 * d2, d8 = d4 * d4;
   double f = (c[0] + d * c[1]) + d2 * (c[2] + d * c[3])
