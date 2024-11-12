@@ -43,7 +43,7 @@
 #  define VPTEST	vptestmd
 #  define CHAR_SIZE	4
 
-#  define REP_MOVS	rep movsd
+#  define REP_MOVS	rep movsl
 #  define REP_STOS	rep stosl
 
 #  define USE_WIDE_CHAR
