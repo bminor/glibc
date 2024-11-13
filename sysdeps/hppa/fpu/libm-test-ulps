@@ -587,6 +587,9 @@ Function: Real part of "csin":
 double: 1
 float: 1
 
+Function: Imaginary part of "csin":
+float: 1
+
 Function: Real part of "csin_downward":
 double: 3
 float: 3
