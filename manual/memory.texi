@@ -1413,7 +1413,7 @@ This is the total size of memory allocated with @code{sbrk} by
 
 @item size_t ordblks
 This is the number of chunks not in use.  (The memory allocator
-size_ternally gets chunks of memory from the operating system, and then
+internally gets chunks of memory from the operating system, and then
 carves them up to satisfy individual @code{malloc} requests;
 @pxref{The GNU Allocator}.)
 
