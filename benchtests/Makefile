@@ -29,6 +29,7 @@ bench-math := \
   acosh \
   acoshf \
   asin \
+  asinf \
   asinh \
   atan \
   atan2 \
