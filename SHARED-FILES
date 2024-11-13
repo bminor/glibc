@@ -302,3 +302,7 @@ sysdeps/ieee754/flt-32/e_acoshf.c:
   (src/binary32/acosh/acoshf.c in CORE-MATH)
   - The code was adapted to use glibc code style and internal
     functions to handle errno, overflow, and underflow.
+sysdeps/ieee754/flt-32/e_asinf.c:
+  (src/binary32/asin/asinf.c in CORE-MATH)
+  - The code was adapted to use glibc code style and internal
+    functions to handle errno, overflow, and underflow.

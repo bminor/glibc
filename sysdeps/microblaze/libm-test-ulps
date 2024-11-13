@@ -7,7 +7,6 @@ Function: "acosh":
 double: 2
 
 Function: "asin":
-float: 1
 
 Function: "asinh":
 double: 1

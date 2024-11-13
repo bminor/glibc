@@ -13,11 +13,9 @@ Function: "acosh_towardzero":
 double: 2
 
 Function: "asin":
-float: 1
 
 Function: "asin_towardzero":
 double: 1
-float: 1
 
 Function: "asinh":
 double: 2

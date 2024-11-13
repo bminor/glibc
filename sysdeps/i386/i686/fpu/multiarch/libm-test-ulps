@@ -80,7 +80,6 @@ ldouble: 1
 
 Function: "asin_upward":
 double: 1
-float: 1
 float128: 2
 ldouble: 1
 

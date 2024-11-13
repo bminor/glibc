@@ -9,7 +9,6 @@ double: 2
 
 Function: "asin":
 double: 1
-float: 1
 
 Function: "asinh":
 double: 2
