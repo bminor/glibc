@@ -25,6 +25,8 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include <setvmaname.h>
+#include <sys/uio.h>
+#include <intprops.h>
 
 
 extern const char *__progname;
@@ -87,8 +89,35 @@ __assert_fail_base (const char *fmt, const char *assertion, const char *file,
   else
     {
       /* At least print a minimal message.  */
-      static const char errstr[] = "Unexpected error.\n";
-      __libc_write (STDERR_FILENO, errstr, sizeof (errstr) - 1);
+      char linebuf[INT_STRLEN_BOUND (int) + sizeof ":: "];
+      struct iovec v[9];
+      int i = 0;
+
+#define WS(s) (v[i].iov_len = strlen (v[i].iov_base = (void *) (s)), i++)
+
+      if (__progname)
+	{
+	  WS (__progname);
+	  WS (": ");
+	}
+
+      WS (file);
+      v[i++] = (struct iovec) {.iov_base = linebuf,
+	.iov_len = sprintf (linebuf, ":%d: ", line)};
+
+      if (function)
+	{
+	  WS (function);
+	  WS (": ");
+	}
+
+      WS ("Assertion `");
+      WS (assertion);
+      /* We omit the '.' here so that the assert tests can tell when
+         this code path is taken.  */
+      WS ("' failed\n");
+
+      (void) writev (STDERR_FILENO, v, i);
     }
 
   abort ();

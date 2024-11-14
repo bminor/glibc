@@ -38,6 +38,7 @@ tests := \
   test-assert-perr \
   tst-assert-c++ \
   tst-assert-g++ \
+  test-assert-2 \
   # tests
 
 ifeq ($(have-cxx-thread_local),yes)
