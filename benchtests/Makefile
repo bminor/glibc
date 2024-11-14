@@ -34,6 +34,7 @@ bench-math := \
   asinhf \
   atan \
   atan2 \
+  atanf \
   atanh \
   cbrt \
   cbrtf \
