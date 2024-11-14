@@ -43,19 +43,15 @@ double: 1
 
 Function: "asinh":
 double: 2
-float: 2
 
 Function: "asinh_downward":
 double: 3
-float: 3
 
 Function: "asinh_towardzero":
 double: 2
-float: 2
 
 Function: "asinh_upward":
 double: 3
-float: 3
 
 Function: "asinpi":
 double: 1

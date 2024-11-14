@@ -34,22 +34,18 @@ float: 1
 
 Function: "asinh":
 double: 1
-float: 1
 ldouble: 1
 
 Function: "asinh_downward":
 double: 2
-float: 2
 ldouble: 2
 
 Function: "asinh_towardzero":
 double: 2
-float: 2
 ldouble: 2
 
 Function: "asinh_upward":
 double: 2
-float: 2
 ldouble: 3
 
 Function: "atan2":

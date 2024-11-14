@@ -10,7 +10,6 @@ Function: "asin":
 
 Function: "asinh":
 double: 1
-float: 1
 
 Function: "atan":
 float: 1
