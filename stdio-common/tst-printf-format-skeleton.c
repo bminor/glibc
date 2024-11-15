@@ -371,7 +371,7 @@ do_test (int argc, char *argv[])
 /* Interpose 'dladdr' with a stub to speed up malloc tracing.  */
 
 int
-dladdr (const void *, Dl_info *)
+dladdr (const void *addr, Dl_info *info)
 {
   return 0;
 }
