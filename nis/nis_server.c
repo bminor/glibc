@@ -29,7 +29,7 @@ nis_servstate (const nis_server *serv, const nis_tag *tags,
   nis_taglist taglist;
   nis_taglist tagres;
 
-  *result = 0;
+  *result = NULL;
   tagres.tags.tags_len = 0;
   tagres.tags.tags_val = NULL;
   taglist.tags.tags_len = numtags;

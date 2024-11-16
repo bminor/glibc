@@ -27,7 +27,7 @@ td_thr_setgregs (const td_thrhandle_t *th, prgregset_t gregs)
 
   LOG ("td_thr_setgregs");
 
-  if (th->th_unique == 0)
+  if (th->th_unique == NULL)
     /* Special case for the main thread before initialization.  */
     return ps_lsetregs (th->th_ta_p->ph, ps_getpid (th->th_ta_p->ph),
 			gregs) != PS_OK ? TD_ERR : TD_OK;

@@ -60,10 +60,10 @@ callrpc (const char *host, u_long prognum, u_long versnum, u_long procnum,
   enum clnt_stat clnt_stat;
   struct timeval timeout, tottimeout;
 
-  if (crp == 0)
+  if (crp == NULL)
     {
       crp = (struct callrpc_private_s *) calloc (1, sizeof (*crp));
-      if (crp == 0)
+      if (crp == NULL)
 	return 0;
       callrpc_private = crp;
     }

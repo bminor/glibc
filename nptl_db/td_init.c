@@ -32,7 +32,7 @@ td_init (void)
 bool
 __td_ta_rtld_global (td_thragent_t *ta)
 {
-  if (ta->ta_addr__rtld_global == 0)
+  if (ta->ta_addr__rtld_global == NULL)
     {
       psaddr_t rtldglobalp;
       if (DB_GET_VALUE (rtldglobalp, ta, __nptl_rtld_global, 0) == TD_OK)

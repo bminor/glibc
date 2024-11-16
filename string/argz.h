@@ -141,7 +141,7 @@ __NTH (__argz_next (const char *__argz, size_t __argz_len,
       return __entry >= __argz + __argz_len ? (char *) NULL : (char *) __entry;
     }
   else
-    return __argz_len > 0 ? (char *) __argz : 0;
+    return __argz_len > 0 ? (char *) __argz : NULL;
 }
 __extern_inline char *
 __NTH (argz_next (const char *__argz, size_t __argz_len,

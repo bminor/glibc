@@ -37,19 +37,19 @@ iterate_thread_list (td_thragent_t *ta, td_thr_iter_f *callback,
   if (err != TD_OK)
     return err;
 
-  if (next == 0 && fake_empty)
+  if (next == NULL && fake_empty)
     {
       /* __pthread_initialize_minimal has not run.  There is just the main
 	 thread to return.  We cannot rely on its thread register.  They
 	 sometimes contain garbage that would confuse us, left by the
 	 kernel at exec.  So if it looks like initialization is incomplete,
 	 we only fake a special descriptor for the initial thread.  */
-      td_thrhandle_t th = { ta, 0 };
+      td_thrhandle_t th = { ta, NULL };
       return callback (&th, cbdata_p) != 0 ? TD_DBERR : TD_OK;
     }
 
   /* Cache the offset from struct pthread to its list_t member.  */
-  err = DB_GET_FIELD_ADDRESS (ofs, ta, 0, pthread, list, 0);
+  err = DB_GET_FIELD_ADDRESS (ofs, ta, NULL, pthread, list, 0);
   if (err != TD_OK)
     return err;
 
@@ -66,7 +66,7 @@ iterate_thread_list (td_thragent_t *ta, td_thr_iter_f *callback,
       psaddr_t addr, schedpolicy, schedprio;
 
       addr = next - (ofs - (psaddr_t) 0);
-      if (next == 0 || addr == 0) /* Sanity check.  */
+      if (next == NULL || addr == NULL) /* Sanity check.  */
 	return TD_DBERR;
 
       /* Copy the whole descriptor in once so we can access the several
@@ -117,7 +117,7 @@ td_ta_thr_iter (const td_thragent_t *ta_arg, td_thr_iter_f *callback,
 {
   td_thragent_t *const ta = (td_thragent_t *) ta_arg;
   td_err_e err;
-  psaddr_t list = 0;
+  psaddr_t list = NULL;
 
   LOG ("td_ta_thr_iter");
 

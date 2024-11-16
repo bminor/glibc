@@ -239,7 +239,7 @@ static int create_thread (struct pthread *pd, const struct pthread_attr *attr,
      stopped since we have to set the scheduling parameters or set the
      affinity.  */
   bool need_setaffinity = (attr != NULL && attr->extension != NULL
-			   && attr->extension->cpuset != 0);
+			   && attr->extension->cpuset != NULL);
   if (attr != NULL
       && (__glibc_unlikely (need_setaffinity)
 	  || __glibc_unlikely ((attr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0)))

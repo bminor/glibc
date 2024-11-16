@@ -29,7 +29,7 @@ attribute_compat_text_section
 __IO_vfscanf (FILE *fp, const char *format, va_list ap, int *errp)
 {
   int rv = __vfscanf_internal (fp, format, ap, 0);
-  if (__glibc_unlikely (errp != 0))
+  if (__glibc_unlikely (errp != NULL))
     *errp = (rv == -1);
   return rv;
 }

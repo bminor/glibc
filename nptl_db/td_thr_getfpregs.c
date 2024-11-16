@@ -27,7 +27,7 @@ td_thr_getfpregs (const td_thrhandle_t *th, prfpregset_t *regset)
 
   LOG ("td_thr_getfpregs");
 
-  if (th->th_unique == 0)
+  if (th->th_unique == NULL)
     /* Special case for the main thread before initialization.  */
     return ps_lgetfpregs (th->th_ta_p->ph, ps_getpid (th->th_ta_p->ph),
 			  regset) != PS_OK ? TD_ERR : TD_OK;

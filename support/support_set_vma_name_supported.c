@@ -32,7 +32,7 @@ support_set_vma_name_supported (void)
   if (size == -1)
     FAIL_EXIT1 ("sysconf (_SC_PAGESIZE): %m\n");
 
-  void *vma = xmmap (0,
+  void *vma = xmmap (NULL,
 		     size,
 		     PROT_NONE,
 		     MAP_PRIVATE|MAP_ANONYMOUS|MAP_NORESERVE,

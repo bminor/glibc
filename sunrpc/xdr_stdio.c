@@ -89,7 +89,7 @@ xdrstdio_create (XDR *xdrs, FILE *file, enum xdr_op op)
   xdrs->x_ops = (struct xdr_ops *) &xdrstdio_ops;
   xdrs->x_private = (caddr_t) file;
   xdrs->x_handy = 0;
-  xdrs->x_base = 0;
+  xdrs->x_base = NULL;
 }
 
 /*

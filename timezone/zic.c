@@ -1950,7 +1950,7 @@ inzsub(char **fields, int nfields, bool iscont)
 	z.z_filenum = filenum;
 	z.z_linenum = linenum;
 	z.z_stdoff = gethms(fields[i_stdoff], _("invalid UT offset"));
-	if ((cp = strchr(fields[i_format], '%')) != 0) {
+	if ((cp = strchr(fields[i_format], '%')) != NULL) {
 		if ((*++cp != 's' && *cp != 'z') || strchr(cp, '%')
 		    || strchr(fields[i_format], '/')) {
 			error(_("invalid abbreviation format"));
@@ -2238,9 +2238,9 @@ rulesub(struct rule *rp, const char *loyearp, const char *hiyearp,
 		rp->r_wday = lp->l_value;
 		rp->r_dayofmonth = len_months[1][rp->r_month];
 	} else {
-		if ((ep = strchr(dp, '<')) != 0)
+		if ((ep = strchr(dp, '<')) != NULL)
 			rp->r_dycode = DC_DOWLEQ;
-		else if ((ep = strchr(dp, '>')) != 0)
+		else if ((ep = strchr(dp, '>')) != NULL)
 			rp->r_dycode = DC_DOWGEQ;
 		else {
 			ep = dp;

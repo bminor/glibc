@@ -37,14 +37,14 @@ dtv_slotinfo_list (td_thragent_t *ta,
     }
   else
     {
-      if (ta->ta_addr__dl_tls_dtv_slotinfo_list == 0
+      if (ta->ta_addr__dl_tls_dtv_slotinfo_list == NULL
 	  && td_mod_lookup (ta->ph, NULL, SYM__dl_tls_dtv_slotinfo_list,
 			    &ta->ta_addr__dl_tls_dtv_slotinfo_list) != PS_OK)
 	return TD_ERR;
 
       err = _td_fetch_value (ta, ta->ta_var__dl_tls_dtv_slotinfo_list,
-			     SYM_DESC__dl_tls_dtv_slotinfo_list,
-			     0, ta->ta_addr__dl_tls_dtv_slotinfo_list, &head);
+			     SYM_DESC__dl_tls_dtv_slotinfo_list, NULL,
+			     ta->ta_addr__dl_tls_dtv_slotinfo_list, &head);
       if (err != TD_OK)
 	return err;
     }
@@ -129,7 +129,7 @@ td_thr_tlsbase (const td_thrhandle_t *th,
     return TD_NOTLS;
 
   psaddr_t pd = th->th_unique;
-  if (pd == 0)
+  if (pd == NULL)
     {
       /* This is the fake handle for the main thread before libpthread
 	 initialization.  We are using 0 for its th_unique because we can't
@@ -145,7 +145,7 @@ td_thr_tlsbase (const td_thrhandle_t *th,
 				      &main_th);
       if (err == 0)
 	pd = main_th.th_unique;
-      if (pd == 0)
+      if (pd == NULL)
 	return TD_TLSDEFER;
     }
 

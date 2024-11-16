@@ -74,7 +74,7 @@ td_thr_event_getmsg (const td_thrhandle_t *th, td_event_msg_t *msg)
   if (err != TD_OK)
     return err;
 
-  while (thp != 0)
+  while (thp != NULL)
     {
       psaddr_t next;
       err = DB_GET_FIELD (next, th->th_ta_p, th->th_unique, pthread,
@@ -97,13 +97,13 @@ td_thr_event_getmsg (const td_thrhandle_t *th, td_event_msg_t *msg)
 
 	  err = _td_store_value (th->th_ta_p,
 				 th->th_ta_p->ta_var___nptl_last_event, -1,
-				 0, prevp, next);
+				 NULL, prevp, next);
 	  if (err != TD_OK)
 	    return err;
 
 	  /* Now clear this thread's own next pointer so it's not dangling
 	     when the thread resumes and then chains on for its next event.  */
-	  return DB_PUT_FIELD (th->th_ta_p, thp, pthread, nextevent, 0, 0);
+	  return DB_PUT_FIELD (th->th_ta_p, thp, pthread, nextevent, 0, NULL);
 	}
 
       err = DB_GET_FIELD_ADDRESS (prevp, th->th_ta_p, thp, pthread,

@@ -57,7 +57,7 @@ support_openpty (int *a_outer, int *a_inner, char **a_name,
                  const struct winsize *winp)
 {
   int outer = -1, inner = -1;
-  char *namebuf = 0;
+  char *namebuf = NULL;
 
   outer = posix_openpt (O_RDWR | O_NOCTTY);
   if (outer == -1)

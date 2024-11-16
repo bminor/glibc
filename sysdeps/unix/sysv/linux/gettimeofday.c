@@ -31,7 +31,7 @@
 static int
 __gettimeofday_syscall (struct timeval *restrict tv, void *restrict tz)
 {
-  if (__glibc_unlikely (tz != 0))
+  if (__glibc_unlikely (tz != NULL))
     memset (tz, 0, sizeof *tz);
   return INLINE_SYSCALL_CALL (gettimeofday, tv, tz);
 }
@@ -47,7 +47,7 @@ libc_ifunc (__gettimeofday,
 int
 __gettimeofday (struct timeval *restrict tv, void *restrict tz)
 {
-  if (__glibc_unlikely (tz != 0))
+  if (__glibc_unlikely (tz != NULL))
     memset (tz, 0, sizeof *tz);
 
   return INLINE_VSYSCALL (gettimeofday, 2, tv, tz);

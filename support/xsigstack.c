@@ -64,7 +64,7 @@ xfree_sigstack (void *stack)
 {
   struct sigstack_desc *desc = stack;
 
-  if (sigaltstack (&desc->old_stack, 0))
+  if (sigaltstack (&desc->old_stack, NULL))
     FAIL_EXIT1 ("sigaltstack (restore old stack: sp=%p, size=%zu, flags=%u): "
                 "%m\n", desc->old_stack.ss_sp, desc->old_stack.ss_size,
                 desc->old_stack.ss_flags);

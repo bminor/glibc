@@ -56,10 +56,10 @@ fixup_null_alloc (size_t n)
 {
   VOID *p;
 
-  p = 0;
+  p = NULL;
   if (n == 0)
     p = malloc ((size_t) 1);
-  if (p == 0)
+  if (p == NULL)
     error (xmalloc_exit_failure, 0, _("memory exhausted"));
   return p;
 }
@@ -72,7 +72,7 @@ xmalloc (size_t n)
   VOID *p;
 
   p = malloc (n);
-  if (p == 0)
+  if (p == NULL)
     p = fixup_null_alloc (n);
   return p;
 }
@@ -85,7 +85,7 @@ xcalloc (size_t n, size_t s)
   VOID *p;
 
   p = calloc (n, s);
-  if (p == 0)
+  if (p == NULL)
     p = fixup_null_alloc (n);
   return p;
 }
@@ -97,10 +97,10 @@ xcalloc (size_t n, size_t s)
 VOID *
 xrealloc (VOID *p, size_t n)
 {
-  if (p == 0)
+  if (p == NULL)
     return xmalloc (n);
   p = realloc (p, n);
-  if (p == 0)
+  if (p == NULL)
     p = fixup_null_alloc (n);
   return p;
 }

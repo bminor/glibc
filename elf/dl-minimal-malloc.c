@@ -34,7 +34,7 @@ static void *alloc_ptr, *alloc_end, *alloc_last_block;
 void *
 __minimal_malloc (size_t n)
 {
-  if (alloc_end == 0)
+  if (alloc_end == NULL)
     {
       /* Consume any unused space in the last page of our data segment.  */
       extern int _end attribute_hidden;
@@ -57,7 +57,7 @@ __minimal_malloc (size_t n)
       if (__glibc_unlikely (nup == 0 && n != 0))
 	return NULL;
       nup += GLRO(dl_pagesize);
-      page = __mmap (0, nup, PROT_READ|PROT_WRITE,
+      page = __mmap (NULL, nup, PROT_READ|PROT_WRITE,
 		     MAP_ANON|MAP_PRIVATE, -1, 0);
       if (page == MAP_FAILED)
 	return NULL;

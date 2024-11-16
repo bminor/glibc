@@ -220,7 +220,7 @@ _IO_new_file_fopen (FILE *fp, const char *filename, const char *mode,
   const char *last_recognized;
 
   if (_IO_file_is_open (fp))
-    return 0;
+    return NULL;
   switch (*mode)
     {
     case 'r':

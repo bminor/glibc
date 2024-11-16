@@ -489,8 +489,8 @@ _IO_default_setbuf (FILE *fp, char *p, ssize_t len)
 	fp->_flags &= ~_IO_UNBUFFERED;
 	_IO_setb (fp, p, p+len, 0);
       }
-    fp->_IO_write_base = fp->_IO_write_ptr = fp->_IO_write_end = 0;
-    fp->_IO_read_base = fp->_IO_read_ptr = fp->_IO_read_end = 0;
+    fp->_IO_write_base = fp->_IO_write_ptr = fp->_IO_write_end = NULL;
+    fp->_IO_read_base = fp->_IO_read_ptr = fp->_IO_read_end = NULL;
     return fp;
 }
 
@@ -971,7 +971,7 @@ _IO_unsave_markers (FILE *fp)
   struct _IO_marker *mark = fp->_markers;
   if (mark)
     {
-      fp->_markers = 0;
+      fp->_markers = NULL;
     }
 
   if (_IO_have_backup (fp))

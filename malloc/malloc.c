@@ -369,7 +369,7 @@
 #include "morecore.c"
 
 #define MORECORE         (*__glibc_morecore)
-#define MORECORE_FAILURE 0
+#define MORECORE_FAILURE  NULL
 
 /* Memory tagging.  */
 
@@ -2420,7 +2420,7 @@ sysmalloc_mmap (INTERNAL_SIZE_T nb, size_t pagesize, int extra_flags, mstate av)
   if ((unsigned long) (size) <= (unsigned long) (nb))
     return MAP_FAILED;
 
-  char *mm = (char *) MMAP (0, size,
+  char *mm = (char *) MMAP (NULL, size,
 			    mtag_mmap_flags | PROT_READ | PROT_WRITE,
 			    extra_flags);
   if (mm == MAP_FAILED)
@@ -2507,7 +2507,7 @@ sysmalloc_mmap_fallback (long int *s, INTERNAL_SIZE_T nb,
   if ((unsigned long) (size) <= (unsigned long) (nb))
     return MORECORE_FAILURE;
 
-  char *mbrk = (char *) (MMAP (0, size,
+  char *mbrk = (char *) (MMAP (NULL, size,
 			       mtag_mmap_flags | PROT_READ | PROT_WRITE,
 			       extra_flags));
   if (mbrk == MAP_FAILED)
@@ -2583,7 +2583,7 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
 
   /* There are no usable arenas and mmap also failed.  */
   if (av == NULL)
-    return 0;
+    return NULL;
 
   /* Record incoming configuration of top */
 
@@ -2743,7 +2743,7 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
 
       if (brk != (char *) (MORECORE_FAILURE))
         {
-          if (mp_.sbrk_base == 0)
+          if (mp_.sbrk_base == NULL)
             mp_.sbrk_base = brk;
           av->system_mem += size;
 
@@ -2942,7 +2942,7 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
 
   /* catch all failure paths */
   __set_errno (ENOMEM);
-  return 0;
+  return NULL;
 }
 
 
@@ -3080,7 +3080,7 @@ mremap_chunk (mchunkptr p, size_t new_size)
                           MREMAP_MAYMOVE);
 
   if (cp == MAP_FAILED)
-    return 0;
+    return NULL;
 
   madvise_thp (cp, new_size);
 
@@ -3295,7 +3295,7 @@ static void
 tcache_init(void)
 {
   mstate ar_ptr;
-  void *victim = 0;
+  void *victim = NULL;
   const size_t bytes = sizeof (tcache_perthread_struct);
 
   if (tcache_shutting_down)
@@ -3413,7 +3413,7 @@ __libc_free (void *mem)
   mstate ar_ptr;
   mchunkptr p;                          /* chunk corresponding to mem */
 
-  if (mem == 0)                              /* free(0) has no effect */
+  if (mem == NULL)                              /* free(0) has no effect */
     return;
 
   /* Quickly check that the freed pointer matches the tag for the memory.
@@ -3469,12 +3469,12 @@ __libc_realloc (void *oldmem, size_t bytes)
 #if REALLOC_ZERO_BYTES_FREES
   if (bytes == 0 && oldmem != NULL)
     {
-      __libc_free (oldmem); return 0;
+      __libc_free (oldmem); return NULL;
     }
 #endif
 
   /* realloc of null is supposed to be same as malloc */
-  if (oldmem == 0)
+  if (oldmem == NULL)
     return __libc_malloc (bytes);
 
   /* Perform a quick check to ensure that the pointer's tag matches the
@@ -3548,8 +3548,8 @@ __libc_realloc (void *oldmem, size_t bytes)
 
       /* Must alloc, copy, free. */
       newmem = __libc_malloc (bytes);
-      if (newmem == 0)
-        return 0;              /* propagate failure */
+      if (newmem == NULL)
+        return NULL;              /* propagate failure */
 
       memcpy (newmem, oldmem, oldsize - CHUNK_HDR_SZ);
       munmap_chunk (oldp);
@@ -3617,7 +3617,7 @@ aligned_alloc (size_t alignment, size_t bytes)
   if (!powerof2 (alignment) || alignment == 0)
     {
       __set_errno (EINVAL);
-      return 0;
+      return NULL;
     }
 
   void *address = RETURN_ADDRESS (0);
@@ -3643,7 +3643,7 @@ _mid_memalign (size_t alignment, size_t bytes, void *address)
   if (alignment > SIZE_MAX / 2 + 1)
     {
       __set_errno (EINVAL);
-      return 0;
+      return NULL;
     }
 
 
@@ -3740,7 +3740,7 @@ __libc_pvalloc (size_t bytes)
 						&rounded_bytes)))
     {
       __set_errno (ENOMEM);
-      return 0;
+      return NULL;
     }
   rounded_bytes = rounded_bytes & -(pagesize - 1);
 
@@ -3801,7 +3801,7 @@ __libc_calloc (size_t n, size_t elem_size)
   else
     {
       /* No usable arenas.  */
-      oldtop = 0;
+      oldtop = NULL;
       oldtopsize = 0;
     }
   mem = _int_malloc (av, sz);
@@ -3811,7 +3811,7 @@ __libc_calloc (size_t n, size_t elem_size)
 
   if (!SINGLE_THREAD_P)
     {
-      if (mem == 0 && av != NULL)
+      if (mem == NULL && av != NULL)
 	{
 	  LIBC_PROBE (memory_calloc_retry, 1, sz);
 	  av = arena_get_retry (av, sz);
@@ -3823,8 +3823,8 @@ __libc_calloc (size_t n, size_t elem_size)
     }
 
   /* Allocation failed even after a retry.  */
-  if (mem == 0)
-    return 0;
+  if (mem == NULL)
+    return NULL;
 
   mchunkptr p = mem2chunk (mem);
 
@@ -4056,7 +4056,7 @@ _int_malloc (mstate av, size_t bytes)
 	      while (tcache->counts[tc_idx] < mp_.tcache_count
 		     && (tc_victim = last (bin)) != bin)
 		{
-		  if (tc_victim != 0)
+		  if (tc_victim != NULL)
 		    {
 		      bck = tc_victim->bk;
 		      set_inuse_bit_at_offset (tc_victim, nb);
@@ -4876,7 +4876,7 @@ static void malloc_consolidate(mstate av)
   fb = &fastbin (av, 0);
   do {
     p = atomic_exchange_acquire (fb, NULL);
-    if (p != 0) {
+    if (p != NULL) {
       do {
 	{
 	  if (__glibc_unlikely (misaligned_chunk (p)))
@@ -4935,7 +4935,7 @@ static void malloc_consolidate(mstate av)
 	  av->top = p;
 	}
 
-      } while ( (p = nextp) != 0);
+      } while ( (p = nextp) != NULL);
 
     }
   } while (fb++ != maxfb);
@@ -5010,8 +5010,8 @@ _int_realloc (mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
       else
         {
           newmem = _int_malloc (av, nb - MALLOC_ALIGN_MASK);
-          if (newmem == 0)
-            return 0; /* propagate failure */
+          if (newmem == NULL)
+            return NULL; /* propagate failure */
 
           newp = mem2chunk (newmem);
           newsize = chunksize (newp);
@@ -5105,8 +5105,8 @@ _int_memalign (mstate av, size_t alignment, size_t bytes)
   /* Call malloc with worst case padding to hit alignment. */
   m = (char *) (_int_malloc (av, nb + alignment + MINSIZE));
 
-  if (m == 0)
-    return 0;           /* propagate failure */
+  if (m == NULL)
+    return NULL;           /* propagate failure */
 
   p = mem2chunk (m);
 
@@ -5318,7 +5318,7 @@ int_mallinfo (mstate av, struct mallinfo2 *m)
   for (i = 0; i < NFASTBINS; ++i)
     {
       for (p = fastbin (av, i);
-	   p != 0;
+	   p != NULL;
 	   p = REVEAL_PTR (p->fd))
         {
 	  if (__glibc_unlikely (misaligned_chunk (p)))

@@ -27,7 +27,7 @@ __libc_reallocarray (void *optr, size_t nmemb, size_t elem_size)
   if (__builtin_mul_overflow (nmemb, elem_size, &bytes))
     {
       __set_errno (ENOMEM);
-      return 0;
+      return NULL;
     }
   return realloc (optr, bytes);
 }

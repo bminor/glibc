@@ -33,7 +33,7 @@ argz_delete (char **argz, size_t *argz_len, char *entry)
       if (*argz_len == 0)
 	{
 	  free (*argz);
-	  *argz = 0;
+	  *argz = NULL;
 	}
     }
 }

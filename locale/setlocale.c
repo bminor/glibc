@@ -52,7 +52,7 @@ static char *const _nl_current_used[] =
 # undef	DEFINE_CATEGORY
   };
 
-# define CATEGORY_USED(category)	(_nl_current_used[category] != 0)
+# define CATEGORY_USED(category)	(_nl_current_used[category] != NULL)
 
 #else
 

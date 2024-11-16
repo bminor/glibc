@@ -38,7 +38,7 @@ td_ta_tsd_iter (const td_thragent_t *ta_arg, td_key_iter_f *callback,
     return TD_BADTA;
 
   /* This makes sure we have the size information on hand.  */
-  addr = 0;
+  addr = NULL;
   err = _td_locate_field (ta,
 			  ta->ta_var___pthread_keys, SYM_DESC___pthread_keys,
 			  (psaddr_t) 0 + 1, &addr);

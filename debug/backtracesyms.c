@@ -82,7 +82,7 @@ __backtrace_symbols (void *const *array, int size)
 		   relative to the file.  */
 		info[cnt].dli_saddr = info[cnt].dli_fbase;
 
-	      if (info[cnt].dli_sname == NULL && info[cnt].dli_saddr == 0)
+	      if (info[cnt].dli_sname == NULL && info[cnt].dli_saddr == NULL)
 		last += 1 + sprintf (last, "%s(%s) [%p]",
 				     info[cnt].dli_fname ?: "",
 				     info[cnt].dli_sname ?: "",

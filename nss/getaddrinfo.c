@@ -1144,8 +1144,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
   struct gaih_addrtuple *addrmem = NULL;
   int result = 0;
 
-  struct gaih_result res = {0};
-  struct gaih_addrtuple local_at[2] = {0};
+  struct gaih_result res = {};
+  struct gaih_addrtuple local_at[2] = {};
 
   res.at = local_at;
 

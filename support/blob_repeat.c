@@ -92,7 +92,7 @@ allocate_malloc (size_t total_size, const void *element, size_t element_size,
 {
   void *buffer = malloc (total_size);
   if (buffer == NULL)
-    return (struct support_blob_repeat) { 0 };
+    return (struct support_blob_repeat) {};
   fill (buffer, element, element_size, count);
   return (struct support_blob_repeat)
     {
@@ -136,7 +136,7 @@ allocate_big (size_t total_size, const void *element, size_t element_size,
   if (stride_size == 0)
     {
       errno = EOVERFLOW;
-      return (struct support_blob_repeat) { 0 };
+      return (struct support_blob_repeat) {};
     }
 
   /* Ensure that the stride size is at least maximum_small_size.  This
@@ -154,7 +154,7 @@ allocate_big (size_t total_size, const void *element, size_t element_size,
   void *target = mmap (NULL, total_size, PROT_NONE,
                        MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
   if (target == MAP_FAILED)
-    return (struct support_blob_repeat) { 0 };
+    return (struct support_blob_repeat) {};
 
   /* Create the backing file for the repeated mapping.  Call mkstemp
      directly to remove the resources backing the temporary file
@@ -191,7 +191,7 @@ allocate_big (size_t total_size, const void *element, size_t element_size,
         xmunmap (target, total_size);
         xclose (fd);
         errno = saved_errno;
-        return (struct support_blob_repeat) { 0 };
+        return (struct support_blob_repeat) {};
       }
     if (ptr != target)
       FAIL_EXIT1 ("mapping of %zu bytes moved from %p to %p",
@@ -235,7 +235,7 @@ allocate_big (size_t total_size, const void *element, size_t element_size,
             xmunmap (target, total_size);
             xclose (fd);
             errno = saved_errno;
-            return (struct support_blob_repeat) { 0 };
+            return (struct support_blob_repeat) {};
           }
         if (ptr != current)
           FAIL_EXIT1 ("MAP_PRIVATE mapping of %zu bytes moved from %p to %p",
@@ -263,7 +263,7 @@ repeat_allocate (const void *element, size_t element_size,
   if (__builtin_mul_overflow (element_size, count, &total_size))
     {
       errno = EOVERFLOW;
-      return (struct support_blob_repeat) { 0 };
+      return (struct support_blob_repeat) {};
     }
   if (total_size <= maximum_small_size)
     return allocate_malloc (total_size, element, element_size, count);
@@ -297,5 +297,5 @@ support_blob_repeat_free (struct support_blob_repeat *blob)
         xmunmap (blob->start, blob->size);
       errno = saved_errno;
     }
-  *blob = (struct support_blob_repeat) { 0 };
+  *blob = (struct support_blob_repeat) {};
 }

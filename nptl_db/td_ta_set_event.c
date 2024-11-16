@@ -25,7 +25,7 @@ td_ta_set_event (const td_thragent_t *ta_arg, td_thr_events_t *event)
 {
   td_thragent_t *const ta = (td_thragent_t *) ta_arg;
   td_err_e err;
-  psaddr_t eventmask = 0;
+  psaddr_t eventmask = NULL;
   void *copy = NULL;
 
   LOG ("td_ta_set_event");

@@ -39,7 +39,7 @@ __wctrans (const char *property)
     }
 
   if (names[0] == '\0')
-    return 0;
+    return NULL;
 
   i = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MAP_OFFSET) + cnt;
   return (wctrans_t) _NL_CURRENT_DATA (LC_CTYPE)->values[i].string;

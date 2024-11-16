@@ -601,7 +601,7 @@ _IO_unsave_wmarkers (FILE *fp)
   struct _IO_marker *mark = fp->_markers;
   if (mark)
     {
-      fp->_markers = 0;
+      fp->_markers = NULL;
     }
 
   if (_IO_have_backup (fp))

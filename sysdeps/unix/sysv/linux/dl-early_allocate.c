@@ -51,7 +51,7 @@ _dl_early_allocate (size_t size)
     {
       /* If brk has not been invoked, there is no need to update
          __curbrk.  The first call to brk will take care of that.  */
-      void *previous = __brk_call (0);
+      void *previous = __brk_call (NULL);
       result = __brk_call (previous + size);
       if (result == previous)
         result = NULL;

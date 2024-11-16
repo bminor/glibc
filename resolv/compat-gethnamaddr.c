@@ -804,7 +804,7 @@ _gethtbyname2 (const char *name, int af)
 			continue;
 		if (strcasecmp(p->h_name, name) == 0)
 			break;
-		for (cp = p->h_aliases; *cp != 0; cp++)
+		for (cp = p->h_aliases; *cp != NULL; cp++)
 			if (strcasecmp(*cp, name) == 0)
 				goto found;
 	}

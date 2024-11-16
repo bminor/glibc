@@ -179,7 +179,7 @@ rcmd: socket: All ports in use\n"));
 			else
 				__fxprintf(NULL, "rcmd: socket: %m\n");
 
-			__sigprocmask (SIG_SETMASK, &omask, 0);
+			__sigprocmask (SIG_SETMASK, &omask, NULL);
 			freeaddrinfo(res);
 			return -1;
 		}
@@ -209,7 +209,7 @@ rcmd: socket: All ports in use\n"));
 			    free (buf);
 			  }
 			__set_errno (oerrno);
-			perror(0);
+			perror(NULL);
 			ai = ai->ai_next;
 			getnameinfo(ai->ai_addr, ai->ai_addrlen,
 				    paddr, sizeof(paddr),
@@ -232,11 +232,11 @@ rcmd: socket: All ports in use\n"));
 		freeaddrinfo(res);
 		(void)__fxprintf(NULL, "%s: %s\n", *ahost,
 				 __strerror_r(errno, errbuf, sizeof (errbuf)));
-		__sigprocmask (SIG_SETMASK, &omask, 0);
+		__sigprocmask (SIG_SETMASK, &omask, NULL);
 		return -1;
 	}
 	lport--;
-	if (fd2p == 0) {
+	if (fd2p == NULL) {
 		__write(s, "", 1);
 		lport = 0;
 	} else {
@@ -344,7 +344,7 @@ socket: protocol failure in circuit setup\n")) >= 0)
 		}
 		goto bad2;
 	}
-	__sigprocmask (SIG_SETMASK, &omask, 0);
+	__sigprocmask (SIG_SETMASK, &omask, NULL);
 	freeaddrinfo(res);
 	return s;
 bad2:
@@ -352,7 +352,7 @@ bad2:
 		(void)__close(*fd2p);
 bad:
 	(void)__close(s);
-	__sigprocmask (SIG_SETMASK, &omask, 0);
+	__sigprocmask (SIG_SETMASK, &omask, NULL);
 	freeaddrinfo(res);
 	return -1;
 }

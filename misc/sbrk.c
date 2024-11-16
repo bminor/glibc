@@ -56,7 +56,7 @@ __sbrk (intptr_t increment)
 #endif
 
   if (update_brk)
-    if (__brk (0) < 0)		/* Initialize the break.  */
+    if (__brk (NULL) < 0)		/* Initialize the break.  */
       return (void *) -1;
 
   if (increment == 0)

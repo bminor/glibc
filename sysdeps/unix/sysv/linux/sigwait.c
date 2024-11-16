@@ -25,7 +25,7 @@ __sigwait (const sigset_t *set, int *sig)
   siginfo_t si;
   int ret;
   do
-    ret = __sigtimedwait (set, &si, 0);
+    ret = __sigtimedwait (set, &si, NULL);
   /* Applications do not expect sigwait to return with EINTR, and the
      error code is not specified by POSIX.  */
   while (ret < 0 && errno == EINTR);

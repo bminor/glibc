@@ -72,10 +72,10 @@ svcraw_create (void)
 {
   struct svcraw_private_s *srp = svcraw_private;
 
-  if (srp == 0)
+  if (srp == NULL)
     {
       srp = (struct svcraw_private_s *) calloc (1, sizeof (*srp));
-      if (srp == 0)
+      if (srp == NULL)
 	return NULL;
     }
   srp->server.xp_sock = 0;
@@ -99,7 +99,7 @@ svcraw_recv (SVCXPRT *xprt, struct rpc_msg *msg)
   struct svcraw_private_s *srp = svcraw_private;
   XDR *xdrs;
 
-  if (srp == 0)
+  if (srp == NULL)
     return FALSE;
   xdrs = &srp->xdr_stream;
   xdrs->x_op = XDR_DECODE;
@@ -115,7 +115,7 @@ svcraw_reply (SVCXPRT *xprt, struct rpc_msg *msg)
   struct svcraw_private_s *srp = svcraw_private;
   XDR *xdrs;
 
-  if (srp == 0)
+  if (srp == NULL)
     return FALSE;
   xdrs = &srp->xdr_stream;
   xdrs->x_op = XDR_ENCODE;
@@ -131,7 +131,7 @@ svcraw_getargs (SVCXPRT *xprt, xdrproc_t xdr_args, caddr_t args_ptr)
 {
   struct svcraw_private_s *srp = svcraw_private;
 
-  if (srp == 0)
+  if (srp == NULL)
     return FALSE;
   return (*xdr_args) (&srp->xdr_stream, args_ptr);
 }
@@ -142,7 +142,7 @@ svcraw_freeargs (SVCXPRT *xprt, xdrproc_t xdr_args, caddr_t args_ptr)
   struct svcraw_private_s *srp = svcraw_private;
   XDR *xdrs;
 
-  if (srp == 0)
+  if (srp == NULL)
     return FALSE;
   xdrs = &srp->xdr_stream;
   xdrs->x_op = XDR_FREE;

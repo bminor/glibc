@@ -861,6 +861,6 @@ _dl_find_object_freeres (void)
           seg = previous;
         }
       /* Stop searching in shared objects.  */
-      _dlfo_loaded_mappings[idx] = 0;
+      _dlfo_loaded_mappings[idx] = NULL;
     }
 }

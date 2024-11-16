@@ -107,7 +107,7 @@ int obstack_exit_failure = EXIT_FAILURE;
 /* A looong time ago (before 1994, anyway; we're not sure) this global variable
    was used by non-GNU-C macros to avoid multiple evaluation.  The GNU C
    library still exports it because somebody might use it.  */
-struct obstack *_obstack_compat = 0;
+struct obstack *_obstack_compat = NULL;
 compat_symbol (libc, _obstack_compat, _obstack, GLIBC_2_0);
 #  endif
 # endif
@@ -180,7 +180,7 @@ _obstack_begin (struct obstack *h,
 					       alignment - 1);
   h->chunk_limit = chunk->limit
     = (char *) chunk + h->chunk_size;
-  chunk->prev = 0;
+  chunk->prev = NULL;
   /* The initial chunk now contains no empty object.  */
   h->maybe_empty_object = 0;
   h->alloc_failed = 0;
@@ -228,7 +228,7 @@ _obstack_begin_1 (struct obstack *h, int size, int alignment,
 					       alignment - 1);
   h->chunk_limit = chunk->limit
     = (char *) chunk + h->chunk_size;
-  chunk->prev = 0;
+  chunk->prev = NULL;
   /* The initial chunk now contains no empty object.  */
   h->maybe_empty_object = 0;
   h->alloc_failed = 0;
@@ -328,12 +328,12 @@ _obstack_allocated_p (struct obstack *h, void *obj)
   /* We use >= rather than > since the object cannot be exactly at
      the beginning of the chunk but might be an empty object exactly
      at the end of an adjacent chunk.  */
-  while (lp != 0 && ((void *) lp >= obj || (void *) (lp)->limit < obj))
+  while (lp != NULL && ((void *) lp >= obj || (void *) (lp)->limit < obj))
     {
       plp = lp->prev;
       lp = plp;
     }
-  return lp != 0;
+  return lp != NULL;
 }
 
 /* Free objects in obstack H, including OBJ and everything allocate
@@ -351,7 +351,7 @@ __obstack_free (struct obstack *h, void *obj)
   /* We use >= because there cannot be an object at the beginning of a chunk.
      But there can be an empty object at that address
      at the end of another chunk.  */
-  while (lp != 0 && ((void *) lp >= obj || (void *) (lp)->limit < obj))
+  while (lp != NULL && ((void *) lp >= obj || (void *) (lp)->limit < obj))
     {
       plp = lp->prev;
       CALL_FREEFUN (h, lp);
@@ -366,7 +366,7 @@ __obstack_free (struct obstack *h, void *obj)
       h->chunk_limit = lp->limit;
       h->chunk = lp;
     }
-  else if (obj != 0)
+  else if (obj != NULL)
     /* obj is not in any of the chunks! */
     abort ();
 }
@@ -383,7 +383,7 @@ _obstack_memory_used (struct obstack *h)
   struct _obstack_chunk *lp;
   int nbytes = 0;
 
-  for (lp = h->chunk; lp != 0; lp = lp->prev)
+  for (lp = h->chunk; lp != NULL; lp = lp->prev)
     {
       nbytes += lp->limit - (char *) lp;
     }

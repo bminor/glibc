@@ -80,7 +80,7 @@ hesiod_init(void **context) {
 	char *cp;
 
 	ctx = malloc(sizeof(struct hesiod_p));
-	if (ctx == 0)
+	if (ctx == NULL)
 		return (-1);
 
 	ctx->LHS = NULL;
@@ -247,7 +247,7 @@ parse_config_file(struct hesiod_p *ctx, const char *filename) {
 	 */
 	free(ctx->RHS);
 	free(ctx->LHS);
-	ctx->RHS = ctx->LHS = 0;
+	ctx->RHS = ctx->LHS = NULL;
 	/* Set default query classes. */
 	ctx->classes[0] = C_IN;
 	ctx->classes[1] = C_HS;
@@ -316,7 +316,7 @@ parse_config_file(struct hesiod_p *ctx, const char *filename) {
 	fclose(fp);
 	free(ctx->RHS);
 	free(ctx->LHS);
-	ctx->RHS = ctx->LHS = 0;
+	ctx->RHS = ctx->LHS = NULL;
 	return (-1);
 }
 

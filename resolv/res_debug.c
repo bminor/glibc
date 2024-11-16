@@ -503,7 +503,7 @@ const struct res_sym __p_rcode_syms[] attribute_hidden = {
 
 int
 sym_ston(const struct res_sym *syms, const char *name, int *success) {
-	for ((void)NULL; syms->name != 0; syms++) {
+	for ((void)NULL; syms->name != NULL; syms++) {
 		if (strcasecmp (name, syms->name) == 0) {
 			if (success)
 				*success = 1;
@@ -519,7 +519,7 @@ const char *
 sym_ntos(const struct res_sym *syms, int number, int *success) {
 	static char unname[20];
 
-	for ((void)NULL; syms->name != 0; syms++) {
+	for ((void)NULL; syms->name != NULL; syms++) {
 		if (number == syms->number) {
 			if (success)
 				*success = 1;
@@ -538,7 +538,7 @@ const char *
 sym_ntop(const struct res_sym *syms, int number, int *success) {
 	static char unname[20];
 
-	for ((void)NULL; syms->name != 0; syms++) {
+	for ((void)NULL; syms->name != NULL; syms++) {
 		if (number == syms->number) {
 			if (success)
 				*success = 1;

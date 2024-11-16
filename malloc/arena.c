@@ -389,7 +389,7 @@ alloc_new_heap  (size_t size, size_t top_pad, size_t pagesize,
   else if (size + top_pad <= max_size)
     size += top_pad;
   else if (size > max_size)
-    return 0;
+    return NULL;
   else
     size = max_size;
   size = ALIGN_UP (size, pagesize);
@@ -411,7 +411,7 @@ alloc_new_heap  (size_t size, size_t top_pad, size_t pagesize,
     }
   if (p2 == MAP_FAILED)
     {
-      p1 = (char *) MMAP (0, max_size << 1, PROT_NONE, mmap_flags);
+      p1 = (char *) MMAP (NULL, max_size << 1, PROT_NONE, mmap_flags);
       if (p1 != MAP_FAILED)
         {
           p2 = (char *) (((uintptr_t) p1 + (max_size - 1))
@@ -427,21 +427,21 @@ alloc_new_heap  (size_t size, size_t top_pad, size_t pagesize,
         {
           /* Try to take the chance that an allocation of only max_size
              is already aligned. */
-          p2 = (char *) MMAP (0, max_size, PROT_NONE, mmap_flags);
+          p2 = (char *) MMAP (NULL, max_size, PROT_NONE, mmap_flags);
           if (p2 == MAP_FAILED)
-            return 0;
+            return NULL;
 
           if ((unsigned long) p2 & (max_size - 1))
             {
               __munmap (p2, max_size);
-              return 0;
+              return NULL;
             }
         }
     }
   if (__mprotect (p2, size, mtag_mmap_flags | PROT_READ | PROT_WRITE) != 0)
     {
       __munmap (p2, max_size);
-      return 0;
+      return NULL;
     }
 
   /* Only considere the actual usable range.  */
@@ -644,7 +644,7 @@ _int_new_arena (size_t size)
          to deal with the large request via mmap_chunk().  */
       h = new_heap (sizeof (*h) + sizeof (*a) + MALLOC_ALIGNMENT, mp_.top_pad);
       if (!h)
-        return 0;
+        return NULL;
     }
   a = h->ar_ptr = (mstate) (h + 1);
   malloc_init_state (a);

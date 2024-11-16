@@ -157,7 +157,7 @@ next:
 
 		case LOGIN:
 			if (token()) {
-				if (*aname == 0) {
+				if (*aname == NULL) {
 				  char *newp;
 				  newp = malloc((unsigned) strlen(tokval) + 1);
 				  if (newp == NULL)
@@ -180,7 +180,7 @@ next:
 	warnx(_("Remove 'password' line or make file unreadable by others."));
 				goto bad;
 			}
-			if (token() && *apass == 0) {
+			if (token() && *apass == NULL) {
 				char *newp;
 				newp = malloc((unsigned) strlen(tokval) + 1);
 				if (newp == NULL)

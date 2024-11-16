@@ -245,7 +245,7 @@ static void *
 realloc_check (void *oldmem, size_t bytes)
 {
   INTERNAL_SIZE_T chnb;
-  void *newmem = 0;
+  void *newmem = NULL;
   unsigned char *magic_p;
   size_t rb;
 
@@ -254,7 +254,7 @@ realloc_check (void *oldmem, size_t bytes)
       __set_errno (ENOMEM);
       return NULL;
     }
-  if (oldmem == 0)
+  if (oldmem == NULL)
     return malloc_check (bytes);
 
   if (bytes == 0)

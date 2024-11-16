@@ -416,7 +416,7 @@ _IO_wfile_overflow (FILE *f, wint_t wch)
       || f->_wide_data->_IO_write_base == NULL)
     {
       /* Allocate a buffer if needed. */
-      if (f->_wide_data->_IO_write_base == 0)
+      if (f->_wide_data->_IO_write_base == NULL)
 	{
 	  _IO_wdoallocbuf (f);
 	  _IO_free_wbackup_area (f);

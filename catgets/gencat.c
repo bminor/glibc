@@ -429,7 +429,7 @@ read_input_file (struct catalog *current, const char *fname)
 
 		      /* Test whether the identifier was already used.  */
 		      runp = current->all_sets;
-		      while (runp != 0)
+		      while (runp != NULL)
 			if (runp->symbol != NULL
 			    && strcmp (runp->symbol, symbol) == 0)
 			  break;

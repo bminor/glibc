@@ -89,7 +89,7 @@ x_inline (XDR *xdrs, u_int len)
       free (xdrs->x_private);
       if ((xdrs->x_private = (caddr_t) malloc (len)) == NULL)
 	{
-	  xdrs->x_base = 0;
+	  xdrs->x_base = NULL;
 	  return NULL;
 	}
       xdrs->x_base = (void *) (long) len;
@@ -109,7 +109,7 @@ static void
 x_destroy (XDR *xdrs)
 {
   xdrs->x_handy = 0;
-  xdrs->x_base = 0;
+  xdrs->x_base = NULL;
   if (xdrs->x_private)
     {
       free (xdrs->x_private);

@@ -50,7 +50,7 @@ envz_entry (const char *envz, size_t envz_len, const char *name)
 	envz++, envz_len--;	/* skip '\0' */
     }
 
-  return 0;
+  return NULL;
 }
 libc_hidden_def (envz_entry)
 
@@ -67,7 +67,7 @@ envz_get (const char *envz, size_t envz_len, const char *name)
       if (*entry)
 	entry++;
       else
-	entry = 0;		/* A null entry.  */
+	entry = NULL;		/* A null entry.  */
     }
   return entry;
 }

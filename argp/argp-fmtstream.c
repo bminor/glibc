@@ -74,7 +74,7 @@ __argp_make_fmtstream (FILE *stream,
       if (! fs->buf)
 	{
 	  free (fs);
-	  fs = 0;
+	  fs = NULL;
 	}
       else
 	{

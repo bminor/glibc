@@ -158,7 +158,7 @@ extern ps_err_e td_mod_lookup (struct ps_prochandle *ps, const char *modname,
 
 /* Store in psaddr_t VAR the address of inferior's symbol NAME.  */
 #define DB_GET_SYMBOL(var, ta, name)					      \
-  (((ta)->ta_addr_##name == 0						      \
+  (((ta)->ta_addr_##name == NULL					      \
     && td_lookup ((ta)->ph, SYM_##name, &(ta)->ta_addr_##name) != PS_OK)      \
    ? TD_ERR : ((var) = (ta)->ta_addr_##name, TD_OK))
 
@@ -199,7 +199,7 @@ extern td_err_e _td_locate_field (td_thragent_t *ta,
 /* Store in psaddr_t VAR the value of variable NAME[IDX] in the inferior.
    A target value smaller than psaddr_t is zero-extended.  */
 #define DB_GET_VALUE(var, ta, name, idx)				      \
-  (((ta)->ta_addr_##name == 0						      \
+  (((ta)->ta_addr_##name == NULL					      \
     && td_lookup ((ta)->ph, SYM_##name, &(ta)->ta_addr_##name) != PS_OK)      \
    ? TD_ERR								      \
    : _td_fetch_value ((ta), (ta)->ta_var_##name, SYM_DESC_##name, 	      \
@@ -231,7 +231,7 @@ extern td_err_e _td_fetch_value_local (td_thragent_t *ta,
 /* Store psaddr_t VALUE in variable NAME[IDX] in the inferior.
    A target field smaller than psaddr_t is zero-extended.  */
 #define DB_PUT_VALUE(ta, name, idx, value)				      \
-  (((ta)->ta_addr_##name == 0						      \
+  (((ta)->ta_addr_##name == NULL					      \
     && td_lookup ((ta)->ph, SYM_##name, &(ta)->ta_addr_##name) != PS_OK)      \
    ? TD_ERR								      \
    : _td_store_value ((ta), (ta)->ta_var_##name, SYM_DESC_##name, 	      \

@@ -58,7 +58,7 @@ support_stack_alloc (size_t size)
   /* Use MAP_NORESERVE so that RAM will not be wasted on the guard
      bands; touch all the pages of the actual stack before returning,
      so we know they are allocated.  */
-  void *alloc_base = xmmap (0,
+  void *alloc_base = xmmap (NULL,
                             alloc_size,
                             PROT_NONE,
                             MAP_PRIVATE|MAP_ANONYMOUS|MAP_NORESERVE|MAP_STACK,

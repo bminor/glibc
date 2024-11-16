@@ -93,7 +93,7 @@ _dl_make_tlsdesc_dynamic (struct link_map *map, size_t ti_offset)
     {
       ht = htab_create ();
       if (! ht)
-	return 0;
+	return NULL;
       map->l_mach.tlsdesc_table = ht;
     }
 
@@ -101,7 +101,7 @@ _dl_make_tlsdesc_dynamic (struct link_map *map, size_t ti_offset)
   test.tlsinfo.ti_offset = ti_offset;
   entry = htab_find_slot (ht, &test, 1, hash_tlsdesc, eq_tlsdesc);
   if (! entry)
-    return 0;
+    return NULL;
 
   if (*entry)
     {
@@ -111,7 +111,7 @@ _dl_make_tlsdesc_dynamic (struct link_map *map, size_t ti_offset)
 
   *entry = td = malloc (sizeof (struct tlsdesc_dynamic_arg));
   if (! td)
-    return 0;
+    return NULL;
   /* This may be higher than the map's generation, but it doesn't
      matter much.  Worst case, we'll have one extra DTV update per
      thread.  */

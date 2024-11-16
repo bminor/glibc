@@ -46,7 +46,7 @@ td_ta_event_getmsg (const td_thragent_t *ta_arg, td_event_msg_t *msg)
   if (err != TD_OK)
     return err;
 
-  if (thp == 0)
+  if (thp == NULL)
     /* Nothing waiting.  */
     return TD_NOMSG;
 
@@ -95,9 +95,9 @@ td_ta_event_getmsg (const td_thragent_t *ta_arg, td_event_msg_t *msg)
   if (err != TD_OK)
     return err;
 
-  if (next != 0)
+  if (next != NULL)
     /* Clear the next pointer in the current descriptor.  */
-    err = DB_PUT_FIELD (ta, thp, pthread, nextevent, 0, 0);
+    err = DB_PUT_FIELD (ta, thp, pthread, nextevent, 0, NULL);
 
   return err;
 }

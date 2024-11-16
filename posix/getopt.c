@@ -729,7 +729,7 @@ _getopt_internal (int argc, char **argv, const char *optstring,
   NAME (int argc, char *const *argv, const char *optstring)	\
   {								\
     return _getopt_internal (argc, (char **)argv, optstring,	\
-			     0, 0, 0, POSIXLY_CORRECT);		\
+			     NULL, NULL, 0, POSIXLY_CORRECT);	\
   }
 
 #ifdef _LIBC

@@ -74,7 +74,7 @@ __registerrpc (u_long prognum, u_long versnum, u_long procnum,
 	buf = NULL;
       goto err_out;
     }
-  if (transp == 0)
+  if (transp == NULL)
     {
       transp = svcudp_create (RPC_ANYSOCK);
       if (transp == NULL)

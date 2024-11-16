@@ -54,7 +54,7 @@ struct __pthread_mutex_s
 
 #ifdef __x86_64__
 # define __PTHREAD_MUTEX_INITIALIZER(__kind) \
-  0, 0, 0, 0, __kind, 0, 0, { 0, 0 }
+  0, 0, 0, 0, __kind, 0, 0, { NULL, NULL }
 #else
 # define __PTHREAD_MUTEX_INITIALIZER(__kind) \
   0, 0, 0, __kind, 0, { { 0, 0 } }

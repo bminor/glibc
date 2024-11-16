@@ -27,7 +27,7 @@ __td_ta_stack_user (td_thragent_t *ta, psaddr_t *plist)
 				 rtld_global, _dl_stack_user, 0);
   else
     {
-      if (ta->ta_addr__dl_stack_user == 0
+      if (ta->ta_addr__dl_stack_user == NULL
 	  && td_mod_lookup (ta->ph, NULL, SYM__dl_stack_user,
 			    &ta->ta_addr__dl_stack_user) != PS_OK)
 	return TD_ERR;
@@ -45,7 +45,7 @@ __td_ta_stack_used (td_thragent_t *ta, psaddr_t *plist)
 				 rtld_global, _dl_stack_used, 0);
   else
     {
-      if (ta->ta_addr__dl_stack_used == 0
+      if (ta->ta_addr__dl_stack_used == NULL
 	  && td_mod_lookup (ta->ph, NULL, SYM__dl_stack_used,
 			    &ta->ta_addr__dl_stack_used) != PS_OK)
 	return TD_ERR;
@@ -63,12 +63,12 @@ check_thread_list (const td_thrhandle_t *th, psaddr_t head, bool *uninit)
   err = DB_GET_FIELD (next, th->th_ta_p, head, list_t, next, 0);
   if (err == TD_OK)
     {
-      if (next == 0)
+      if (next == NULL)
 	{
 	  *uninit = true;
 	  return TD_NOTHR;
 	}
-      err = DB_GET_FIELD_ADDRESS (ofs, th->th_ta_p, 0, pthread, list, 0);
+      err = DB_GET_FIELD_ADDRESS (ofs, th->th_ta_p, NULL, pthread, list, 0);
     }
 
   while (err == TD_OK)
@@ -108,7 +108,7 @@ td_thr_validate (const td_thrhandle_t *th)
       if (err == TD_OK)
 	err = check_thread_list (th, list, &uninit);
 
-      if (err == TD_NOTHR && uninit && th->th_unique == 0)
+      if (err == TD_NOTHR && uninit && th->th_unique == NULL)
 	/* __pthread_initialize_minimal has not run yet.
 	   There is only the special case thread handle.  */
 	err = TD_OK;

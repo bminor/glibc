@@ -31,21 +31,21 @@ td_thr_get_info (const td_thrhandle_t *th, td_thrinfo_t *infop)
 
   LOG ("td_thr_get_info");
 
-  if (th->th_unique == 0)
+  if (th->th_unique == NULL)
     {
       /* Special case for the main thread before initialization.  */
       copy = NULL;
-      tls = 0;
-      cancelhandling = 0;
+      tls = NULL;
+      cancelhandling = NULL;
       schedpolicy = SCHED_OTHER;
-      schedprio = 0;
-      tid = 0;
+      schedprio = NULL;
+      tid = NULL;
 
       /* Ignore errors to obtain the __nptl_initial_report_events
 	 value because GDB no longer uses the events interface, and
 	 other libthread_db consumers hopefully can handle different
 	 libpthread/lds.o load orders.  */
-      report_events = 0;
+      report_events = NULL;
       (void) DB_GET_VALUE (report_events, th->th_ta_p,
 			   __nptl_initial_report_events, 0);
       err = TD_OK;
@@ -105,8 +105,8 @@ td_thr_get_info (const td_thrhandle_t *th, td_thrinfo_t *infop)
 
   /* Initialization which are the same in both cases.  */
   infop->ti_ta_p = th->th_ta_p;
-  infop->ti_lid = tid == 0 ? ps_getpid (th->th_ta_p->ph) : (uintptr_t) tid;
-  infop->ti_traceme = report_events != 0;
+  infop->ti_lid = tid == NULL ? ps_getpid (th->th_ta_p->ph) : (uintptr_t) tid;
+  infop->ti_traceme = report_events != NULL;
 
   if (copy != NULL)
     err = DB_GET_FIELD_LOCAL (infop->ti_startfunc, th->th_ta_p, copy, pthread,

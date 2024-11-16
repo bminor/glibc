@@ -103,7 +103,7 @@ retry:
 		perror(res0->ai_canonname);
 		goto bad;
 	}
-	if (fd2p == 0) {
+	if (fd2p == NULL) {
 		(void) __write(s, "", 1);
 		port = 0;
 	} else {

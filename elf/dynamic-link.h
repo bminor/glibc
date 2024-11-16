@@ -152,7 +152,7 @@ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
 
 # define ELF_DYNAMIC_DO_RELR(map)					      \
   do {									      \
-    ElfW(Addr) l_addr = (map)->l_addr, *where = 0;			      \
+    ElfW(Addr) l_addr = (map)->l_addr, *where = NULL;			      \
     const ElfW(Relr) *r, *end;						      \
     if ((map)->l_info[DT_RELR] == NULL)					      \
       break;								      \

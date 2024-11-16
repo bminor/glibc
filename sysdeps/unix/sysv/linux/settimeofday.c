@@ -26,9 +26,9 @@ int
 __settimeofday64 (const struct __timeval64 *tv, const struct timezone *tz)
 {
   /* Backwards compatibility for setting the UTC offset.  */
-  if (__glibc_unlikely (tz != 0))
+  if (__glibc_unlikely (tz != NULL))
     {
-      if (tv != 0)
+      if (tv != NULL)
 	{
 	  __set_errno (EINVAL);
 	  return -1;

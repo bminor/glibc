@@ -801,7 +801,7 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 	  _dl_exception_free (&exception);
 	}
       *ref = NULL;
-      return 0;
+      return NULL;
     }
 
   int protected = (*ref

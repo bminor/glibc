@@ -30,6 +30,6 @@ __argz_extract (const char *argz, size_t len, char **argv)
       argz += part_len + 1;
       len -= part_len + 1;
     }
-  *argv = 0;
+  *argv = NULL;
 }
 weak_alias (__argz_extract, argz_extract)

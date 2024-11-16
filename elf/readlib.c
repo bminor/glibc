@@ -107,7 +107,7 @@ process_file (const char *real_file_name, const char *file_name,
       return 1;
     }
 
-  file_contents = mmap (0, statbuf.st_size, PROT_READ, MAP_SHARED,
+  file_contents = mmap (NULL, statbuf.st_size, PROT_READ, MAP_SHARED,
 			fileno (file), 0);
   if (file_contents == MAP_FAILED)
     {

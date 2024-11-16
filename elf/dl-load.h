@@ -88,7 +88,7 @@ static __always_inline void
 _dl_postprocess_loadcmd (struct link_map *l, const ElfW(Ehdr) *header,
                          const struct loadcmd *c)
 {
-  if (l->l_phdr == 0
+  if (l->l_phdr == NULL
       && c->mapoff <= header->e_phoff
       && ((size_t) (c->mapend - c->mapstart + c->mapoff)
           >= header->e_phoff + header->e_phnum * sizeof (ElfW(Phdr))))

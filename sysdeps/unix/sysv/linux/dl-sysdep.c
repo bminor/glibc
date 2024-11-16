@@ -113,7 +113,7 @@ _dl_sysdep_start (void **start_argptr,
   /* Initialize DSO sorting algorithm after tunables.  */
   _dl_sort_maps_init ();
 
-  __brk (0);			/* Initialize the break.  */
+  __brk (NULL);			/* Initialize the break.  */
 
 #ifdef DL_PLATFORM_INIT
   DL_PLATFORM_INIT;

@@ -38,7 +38,7 @@ str_append (char **to, size_t *to_len, const char *buf, const size_t buf_len)
   else
     {
       free (*to);
-      *to = 0;
+      *to = NULL;
     }
 }
 
@@ -53,10 +53,10 @@ __argz_replace (char **argz, size_t *argz_len, const char *str, const char *with
 
   if (str && *str)
     {
-      char *arg = 0;
+      char *arg = NULL;
       char *src = *argz;
       size_t src_len = *argz_len;
-      char *dst = 0;
+      char *dst = NULL;
       size_t dst_len = 0;
       int delayed_copy = 1;	/* True while we've avoided copying anything.  */
       size_t str_len = strlen (str), with_len = strlen (with);
@@ -84,7 +84,7 @@ __argz_replace (char **argz, size_t *argz_len, const char *str, const char *with
 		      else
 			{
 			  str_append (&to, &to_len, from, strlen (from));
-			  from = 0;
+			  from = NULL;
 			}
 		    }
 		}

@@ -1215,7 +1215,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
       }
 
     /* This check recognizes most separate debuginfo files.  */
-    if (__glibc_unlikely ((l->l_ld == 0 && type == ET_DYN) || empty_dynamic))
+    if (__glibc_unlikely ((l->l_ld == NULL && type == ET_DYN) || empty_dynamic))
       {
 	errstring = N_("object file has no dynamic section");
 	goto lose;
@@ -1238,7 +1238,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
       }
   }
 
-  if (l->l_ld != 0)
+  if (l->l_ld != NULL)
     l->l_ld = (ElfW(Dyn) *) ((ElfW(Addr)) l->l_ld + l->l_addr);
 
   elf_get_dynamic_info (l, false, false);

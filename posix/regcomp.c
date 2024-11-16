@@ -674,7 +674,7 @@ re_comp (const char *s)
     {
       if (!re_comp_buf.buffer)
 	return gettext ("No previous regular expression");
-      return 0;
+      return NULL;
     }
 
   if (re_comp_buf.buffer)

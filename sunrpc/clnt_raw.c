@@ -90,11 +90,11 @@ clntraw_create (u_long prog, u_long vers)
   XDR *xdrs;
   CLIENT *client;
 
-  if (clp == 0)
+  if (clp == NULL)
     {
       clp = (struct clntraw_private_s *) calloc (1, sizeof (*clp));
-      if (clp == 0)
-	return (0);
+      if (clp == NULL)
+	return NULL;
       clntraw_private = clp;
     }
   xdrs = &clp->xdr_stream;

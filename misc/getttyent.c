@@ -126,7 +126,7 @@ __getttyent (void)
 			;
 	tty.ty_comment = p;
 	if (*p == 0)
-		tty.ty_comment = 0;
+		tty.ty_comment = NULL;
 	if ((p = strchr (p, '\n')))
 		*p = '\0';
 	return (&tty);

@@ -119,7 +119,7 @@ __td_ta_lookup_th_unique (const td_thragent_t *ta_arg,
       if (ps_lgetregs (ta->ph, lwpid, regs) != PS_OK)
 	return TD_ERR;
       terr = _td_fetch_value_local (ta, ta->ta_howto_data.reg, -1,
-				    0, regs, &addr);
+				    NULL, regs, &addr);
       if (terr != TD_OK)
 	return terr;
 
@@ -149,7 +149,7 @@ __td_ta_lookup_th_unique (const td_thragent_t *ta_arg,
       if (ps_lgetregs (ta->ph, lwpid, regs) != PS_OK)
 	return TD_ERR;
       terr = _td_fetch_value_local (ta, ta->ta_howto_data.reg_thread_area,
-				    -1, 0, regs, &addr);
+				    -1, NULL, regs, &addr);
       if (terr != TD_OK)
 	return terr;
       /* In this descriptor the nelem word is overloaded as scale factor.  */
@@ -195,12 +195,12 @@ td_ta_map_lwp2thr (const td_thragent_t *ta_arg,
   if (err != TD_OK)
     return err;
 
-  if (list == 0)
+  if (list == NULL)
     {
       if (ps_getpid (ta->ph) != lwpid)
 	return TD_ERR;
       th->th_ta_p = ta;
-      th->th_unique = 0;
+      th->th_unique = NULL;
       return TD_OK;
     }
 

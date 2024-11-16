@@ -195,7 +195,7 @@ xdrmem_setpos (XDR *xdrs, u_int pos)
 static int32_t *
 xdrmem_inline (XDR *xdrs, u_int len)
 {
-  int32_t *buf = 0;
+  int32_t *buf = NULL;
 
   if (xdrs->x_handy >= len)
     {

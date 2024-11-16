@@ -144,7 +144,7 @@ do_system (const char *line)
   __posix_spawnattr_setflags (&spawn_attr,
 			      POSIX_SPAWN_SETSIGDEF | POSIX_SPAWN_SETSIGMASK);
 
-  ret = __posix_spawn (&pid, SHELL_PATH, 0, &spawn_attr,
+  ret = __posix_spawn (&pid, SHELL_PATH, NULL, &spawn_attr,
 		       (char *const[]){ (char *) SHELL_NAME,
 					(char *) "-c",
 					(char *) "--",
