@@ -21,7 +21,6 @@
 
 #include <pthread.h>
 
-int __pthread_attr_destroy (pthread_attr_t *);
 int __pthread_attr_init (pthread_attr_t *);
 int __pthread_attr_setschedparam (pthread_attr_t *,
 				 const struct sched_param *);
@@ -64,7 +63,6 @@ int _cthreads_ftrylockfile (FILE *);
    so if possible avoid breaking it and append new hooks to the end.  */
 struct pthread_functions
 {
-  int (*ptr_pthread_attr_destroy) (pthread_attr_t *);
   int (*ptr_pthread_attr_init) (pthread_attr_t *);
   int (*ptr_pthread_attr_setschedparam) (pthread_attr_t *,
 					 const struct sched_param *);

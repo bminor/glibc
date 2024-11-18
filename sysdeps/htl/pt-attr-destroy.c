@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <pthread.h>
+#include <shlib-compat.h>
 #include <pt-internal.h>
 
 int
@@ -24,4 +25,8 @@ __pthread_attr_destroy (pthread_attr_t *attr)
 {
   return 0;
 }
-weak_alias (__pthread_attr_destroy, pthread_attr_destroy);
+versioned_symbol (libc, __pthread_attr_destroy, pthread_attr_destroy, GLIBC_2_21);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
+compat_symbol (libc, __pthread_attr_destroy, pthread_attr_destroy, GLIBC_2_12);
+#endif
