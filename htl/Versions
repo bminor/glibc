@@ -14,6 +14,7 @@ libc {
     pthread_getschedparam;
     pthread_setschedparam;
     pthread_attr_destroy;
+    pthread_attr_getguardsize;
   }
 
   GLIBC_2.21 {
@@ -42,6 +43,11 @@ libc {
   GLIBC_2.32 {
     thrd_current; thrd_equal; thrd_sleep; thrd_yield;
   }
+
+  GLIBC_2.41 {
+    pthread_attr_getguardsize;
+  }
+
 
   GLIBC_PRIVATE {
     __libc_alloca_cutoff;
@@ -79,7 +85,6 @@ libpthread {
 
     pthread_atfork;
 
-    pthread_attr_getguardsize;
     pthread_attr_getscope; pthread_attr_getstack; pthread_attr_getstackaddr;
     pthread_attr_getstacksize; pthread_attr_init;
     pthread_attr_setguardsize;

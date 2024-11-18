@@ -25,7 +25,6 @@ SYSDEPS := lockfile
 LCLHDRS :=
 
 libpthread-routines := \
-  pt-attr-getguardsize \
   pt-attr-getscope \
   pt-attr-getstack \
   pt-attr-getstackaddr \
@@ -200,6 +199,7 @@ routines := \
   pt-attr \
   pt-attr-destroy \
   pt-attr-getdetachstate \
+  pt-attr-getguardsize \
   pt-attr-getinheritsched \
   pt-attr-getschedparam \
   pt-attr-getschedpolicy \
