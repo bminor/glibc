@@ -89,6 +89,7 @@ int __pthread_attr_getstacksize (const pthread_attr_t *__restrict __attr,
 				 size_t *__restrict __stacksize);
 libc_hidden_proto (__pthread_attr_getstacksize)
 int __pthread_attr_setstacksize (pthread_attr_t *__attr, size_t __stacksize);
+libc_hidden_proto (__pthread_attr_setstacksize)
 int __pthread_attr_setstack (pthread_attr_t *__attr, void *__stackaddr,
 			     size_t __stacksize);
 int __pthread_attr_getstack (const pthread_attr_t *, void **, size_t *);

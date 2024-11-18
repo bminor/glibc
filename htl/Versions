@@ -19,6 +19,7 @@ libc {
     pthread_attr_getstacksize;
     pthread_attr_getstackaddr;
     pthread_attr_getstack;
+    pthread_attr_setstacksize;
   }
 
   GLIBC_2.21 {
@@ -53,6 +54,7 @@ libc {
     pthread_attr_getstacksize;
     pthread_attr_getstackaddr;
     pthread_attr_getstack;
+    pthread_attr_setstacksize;
   }
 
 
@@ -67,6 +69,7 @@ libc {
     __pthread_attr_getstacksize;
     __pthread_attr_getstackaddr;
     __pthread_attr_getstack;
+    __pthread_attr_setstacksize;
   }
 }
 
@@ -99,7 +102,6 @@ libpthread {
     pthread_attr_setguardsize;
     pthread_attr_setschedparam;
     pthread_attr_setscope; pthread_attr_setstack; pthread_attr_setstackaddr;
-    pthread_attr_setstacksize;
 
     pthread_barrier_destroy; pthread_barrier_init; pthread_barrier_wait;
     pthread_barrierattr_destroy; pthread_barrierattr_getpshared;
