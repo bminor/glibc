@@ -135,7 +135,6 @@ ldouble: 4
 
 Function: "atan":
 double: 1
-float: 1
 float128: 1
 ldouble: 1
 
@@ -188,19 +187,16 @@ ldouble: 4
 
 Function: "atan_downward":
 double: 1
-float: 2
 float128: 2
 ldouble: 1
 
 Function: "atan_towardzero":
 double: 1
-float: 1
 float128: 1
 ldouble: 1
 
 Function: "atan_upward":
 double: 1
-float: 2
 float128: 2
 ldouble: 2
 
@@ -242,7 +238,7 @@ ldouble: 1
 
 Function: "atanpi_towardzero":
 double: 1
-float: 1
+float: 2
 float128: 1
 ldouble: 3
 
@@ -298,7 +294,7 @@ ldouble: 8
 
 Function: Real part of "cacos_towardzero":
 double: 3
-float: 2
+float: 3
 float128: 3
 ldouble: 7
 
@@ -352,7 +348,7 @@ ldouble: 8
 
 Function: Imaginary part of "cacosh_towardzero":
 double: 3
-float: 2
+float: 3
 float128: 3
 ldouble: 7
 

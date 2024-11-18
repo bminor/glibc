@@ -67,7 +67,6 @@ ldouble: 4
 
 Function: "atan":
 double: 1
-float: 1
 ldouble: 1
 
 Function: "atan2":
@@ -91,17 +90,14 @@ ldouble: 2
 
 Function: "atan_downward":
 double: 1
-float: 2
 ldouble: 2
 
 Function: "atan_towardzero":
 double: 1
-float: 1
 ldouble: 1
 
 Function: "atan_upward":
 double: 1
-float: 2
 ldouble: 2
 
 Function: "atanh":

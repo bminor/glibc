@@ -24,7 +24,6 @@ Function: "asinh_towardzero":
 double: 2
 
 Function: "atan":
-float: 1
 
 Function: "atan2":
 float: 1
@@ -35,7 +34,6 @@ float: 2
 
 Function: "atan_towardzero":
 double: 1
-float: 1
 
 Function: "atanh":
 double: 2

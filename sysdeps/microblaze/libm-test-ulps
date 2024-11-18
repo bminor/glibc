@@ -12,7 +12,6 @@ Function: "asinh":
 double: 1
 
 Function: "atan":
-float: 1
 
 Function: "atan2":
 float: 1
