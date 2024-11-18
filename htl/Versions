@@ -19,6 +19,7 @@ libc {
     pthread_attr_getstacksize;
     pthread_attr_getstackaddr;
     pthread_attr_getstack;
+    pthread_attr_setguardsize;
     pthread_attr_setstacksize;
     pthread_attr_setstackaddr;
     pthread_attr_setstack;
@@ -61,6 +62,7 @@ libc {
     pthread_attr_setstacksize;
     pthread_attr_setstackaddr;
     pthread_attr_setstack;
+    pthread_attr_setguardsize;
   }
 
 
@@ -107,7 +109,6 @@ libpthread {
     pthread_atfork;
 
     pthread_attr_init;
-    pthread_attr_setguardsize;
 
     pthread_barrier_destroy; pthread_barrier_init; pthread_barrier_wait;
     pthread_barrierattr_destroy; pthread_barrierattr_getpshared;
