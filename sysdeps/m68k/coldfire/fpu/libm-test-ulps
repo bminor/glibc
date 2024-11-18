@@ -2,7 +2,6 @@
 
 # Maximal error of functions:
 Function: "atan2":
-float: 1
 
 Function: "atanh":
 float: 1

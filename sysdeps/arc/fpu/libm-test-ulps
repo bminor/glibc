@@ -54,19 +54,15 @@ double: 1
 
 Function: "atan2":
 double: 7
-float: 2
 
 Function: "atan2_downward":
 double: 5
-float: 2
 
 Function: "atan2_towardzero":
 double: 5
-float: 2
 
 Function: "atan2_upward":
 double: 8
-float: 2
 
 Function: "atan_downward":
 double: 1
@@ -173,19 +169,15 @@ float: 3
 
 Function: "carg":
 double: 7
-float: 2
 
 Function: "carg_downward":
 double: 5
-float: 2
 
 Function: "carg_towardzero":
 double: 5
-float: 2
 
 Function: "carg_upward":
 double: 8
-float: 2
 
 Function: Real part of "casin":
 double: 3

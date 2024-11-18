@@ -139,19 +139,16 @@ ldouble: 1
 
 Function: "atan2_downward":
 double: 1
-float: 1
 float128: 2
 ldouble: 1
 
 Function: "atan2_towardzero":
 double: 1
-float: 1
 float128: 3
 ldouble: 1
 
 Function: "atan2_upward":
 double: 1
-float: 1
 float128: 2
 ldouble: 1
 
@@ -163,19 +160,19 @@ ldouble: 1
 
 Function: "atan2pi_downward":
 double: 1
-float: 1
+float: 2
 float128: 2
 ldouble: 2
 
 Function: "atan2pi_towardzero":
 double: 1
-float: 1
+float: 2
 float128: 2
 ldouble: 2
 
 Function: "atan2pi_upward":
 double: 1
-float: 1
+float: 2
 float128: 2
 ldouble: 2
 
@@ -364,19 +361,16 @@ ldouble: 1
 
 Function: "carg_downward":
 double: 1
-float: 1
 float128: 2
 ldouble: 1
 
 Function: "carg_towardzero":
 double: 1
-float: 1
 float128: 3
 ldouble: 1
 
 Function: "carg_upward":
 double: 1
-float: 1
 float128: 2
 ldouble: 1
 
