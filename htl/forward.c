@@ -55,10 +55,6 @@ name decl								      \
 
 FORWARD (pthread_attr_init, (pthread_attr_t *attr), (attr), 0)
 
-FORWARD (pthread_attr_setschedparam,
-	 (pthread_attr_t *attr, const struct sched_param *param),
-	 (attr, param), 0)
-
 FORWARD (pthread_condattr_destroy, (pthread_condattr_t *attr), (attr), 0)
 FORWARD (pthread_condattr_init, (pthread_condattr_t *attr), (attr), 0)
 

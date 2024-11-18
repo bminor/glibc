@@ -27,7 +27,6 @@ LCLHDRS :=
 libpthread-routines := \
   pt-attr-init \
   pt-attr-setguardsize \
-  pt-attr-setschedparam \
   pt-barrier-destroy \
   pt-barrier-init \
   pt-barrier-wait \
@@ -201,6 +200,7 @@ routines := \
   pt-attr-getstacksize \
   pt-attr-setdetachstate \
   pt-attr-setinheritsched \
+  pt-attr-setschedparam \
   pt-attr-setschedpolicy \
   pt-attr-setscope \
   pt-attr-setstack \

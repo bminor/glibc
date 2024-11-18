@@ -22,8 +22,6 @@
 #include <pthread.h>
 
 int __pthread_attr_init (pthread_attr_t *);
-int __pthread_attr_setschedparam (pthread_attr_t *,
-				 const struct sched_param *);
 int __pthread_condattr_destroy (pthread_condattr_t *);
 int __pthread_condattr_init (pthread_condattr_t *);
 int __pthread_cond_broadcast (pthread_cond_t *);
@@ -62,8 +60,6 @@ int _cthreads_ftrylockfile (FILE *);
 struct pthread_functions
 {
   int (*ptr_pthread_attr_init) (pthread_attr_t *);
-  int (*ptr_pthread_attr_setschedparam) (pthread_attr_t *,
-					 const struct sched_param *);
   int (*ptr_pthread_condattr_destroy) (pthread_condattr_t *);
   int (*ptr_pthread_condattr_init) (pthread_condattr_t *);
   int (*ptr_pthread_cond_broadcast) (pthread_cond_t *);
