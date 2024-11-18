@@ -92,6 +92,7 @@ int __pthread_attr_setstacksize (pthread_attr_t *__attr, size_t __stacksize);
 int __pthread_attr_setstack (pthread_attr_t *__attr, void *__stackaddr,
 			     size_t __stacksize);
 int __pthread_attr_getstack (const pthread_attr_t *, void **, size_t *);
+libc_hidden_proto (__pthread_attr_getstack)
 void __pthread_testcancel (void);
 
 #define __pthread_raise_internal(__sig) raise (__sig)
