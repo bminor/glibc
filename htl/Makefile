@@ -25,7 +25,6 @@ SYSDEPS := lockfile
 LCLHDRS :=
 
 libpthread-routines := \
-  pt-attr \
   pt-attr-getguardsize \
   pt-attr-getscope \
   pt-attr-getstack \
@@ -198,6 +197,7 @@ routines := \
   forward \
   htlfreeres \
   libc_pthread_init \
+  pt-attr \
   pt-attr-destroy \
   pt-attr-getdetachstate \
   pt-attr-getinheritsched \

@@ -37,3 +37,4 @@ struct __pthread_attr __pthread_default_attr = {
   __contentionscope: PTHREAD_SCOPE_SYSTEM,
   __schedpolicy: SCHED_OTHER
 };
+libc_hidden_data_def (__pthread_default_attr)

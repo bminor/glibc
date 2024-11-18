@@ -319,6 +319,7 @@ extern int __pthread_mutex_checklocked (pthread_mutex_t *mtx);
 
 /* Default thread attributes.  */
 extern struct __pthread_attr __pthread_default_attr;
+libc_hidden_proto (__pthread_default_attr)
 
 /* Default barrier attributes.  */
 extern const struct __pthread_barrierattr __pthread_default_barrierattr;
