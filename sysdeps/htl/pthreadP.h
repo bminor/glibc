@@ -83,6 +83,7 @@ int __pthread_setcancelstate (int state, int *oldstate);
 int __pthread_getattr_np (pthread_t, pthread_attr_t *);
 int __pthread_attr_getstackaddr (const pthread_attr_t *__restrict __attr,
 				 void **__restrict __stackaddr);
+libc_hidden_proto (__pthread_attr_getstackaddr)
 int __pthread_attr_setstackaddr (pthread_attr_t *__attr, void *__stackaddr);
 int __pthread_attr_getstacksize (const pthread_attr_t *__restrict __attr,
 				 size_t *__restrict __stacksize);

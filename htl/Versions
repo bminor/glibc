@@ -17,6 +17,7 @@ libc {
     pthread_attr_getguardsize;
     pthread_attr_getscope;
     pthread_attr_getstacksize;
+    pthread_attr_getstackaddr;
   }
 
   GLIBC_2.21 {
@@ -49,6 +50,7 @@ libc {
   GLIBC_2.41 {
     pthread_attr_getguardsize;
     pthread_attr_getstacksize;
+    pthread_attr_getstackaddr;
   }
 
 
@@ -61,6 +63,7 @@ libc {
     __pthread_init_thread;
     __pthread_default_attr;
     __pthread_attr_getstacksize;
+    __pthread_attr_getstackaddr;
   }
 }
 
@@ -89,7 +92,7 @@ libpthread {
 
     pthread_atfork;
 
-    pthread_attr_getstack; pthread_attr_getstackaddr;
+    pthread_attr_getstack;
     pthread_attr_init;
     pthread_attr_setguardsize;
     pthread_attr_setschedparam;
