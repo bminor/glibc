@@ -25,6 +25,7 @@ libc {
     pthread_attr_setstack;
     pthread_attr_setscope;
     pthread_attr_setschedparam;
+    pthread_attr_init;
   }
 
   GLIBC_2.21 {
@@ -74,6 +75,7 @@ libc {
     ___pthread_self;
     __pthread_init_thread;
     __pthread_default_attr;
+    __pthread_attr_init;
     __pthread_attr_getstacksize;
     __pthread_attr_getstackaddr;
     __pthread_attr_getstack;
@@ -107,8 +109,6 @@ libpthread {
     flockfile; ftrylockfile; funlockfile;
 
     pthread_atfork;
-
-    pthread_attr_init;
 
     pthread_barrier_destroy; pthread_barrier_init; pthread_barrier_wait;
     pthread_barrierattr_destroy; pthread_barrierattr_getpshared;

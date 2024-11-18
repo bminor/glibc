@@ -25,7 +25,6 @@ SYSDEPS := lockfile
 LCLHDRS :=
 
 libpthread-routines := \
-  pt-attr-init \
   pt-barrier-destroy \
   pt-barrier-init \
   pt-barrier-wait \
@@ -197,6 +196,7 @@ routines := \
   pt-attr-getstack \
   pt-attr-getstackaddr \
   pt-attr-getstacksize \
+  pt-attr-init \
   pt-attr-setdetachstate \
   pt-attr-setguardsize \
   pt-attr-setinheritsched \

@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <pthread.h>
+#include <shlib-compat.h>
 #include <pt-internal.h>
 
 int
@@ -27,4 +28,9 @@ __pthread_attr_init (pthread_attr_t *attr)
   *attr = __pthread_default_attr;
   return 0;
 }
-weak_alias (__pthread_attr_init, pthread_attr_init);
+libc_hidden_def (__pthread_attr_init)
+versioned_symbol (libc, __pthread_attr_init, pthread_attr_init, GLIBC_2_21);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
+compat_symbol (libc, __pthread_attr_init, pthread_attr_init, GLIBC_2_12);
+#endif
