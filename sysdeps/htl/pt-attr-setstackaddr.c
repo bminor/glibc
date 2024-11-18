@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <pthread.h>
+#include <shlib-compat.h>
 #include <pt-internal.h>
 
 int
@@ -25,4 +26,9 @@ __pthread_attr_setstackaddr (pthread_attr_t *attr, void *stackaddr)
   attr->__stackaddr = stackaddr;
   return 0;
 }
-weak_alias (__pthread_attr_setstackaddr, pthread_attr_setstackaddr)
+libc_hidden_def (__pthread_attr_setstackaddr)
+versioned_symbol (libc, __pthread_attr_setstackaddr, pthread_attr_setstackaddr, GLIBC_2_41);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_41)
+compat_symbol (libpthread, __pthread_attr_setstackaddr,pthread_attr_setstackaddr, GLIBC_2_12);
+#endif

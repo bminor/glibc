@@ -85,6 +85,7 @@ int __pthread_attr_getstackaddr (const pthread_attr_t *__restrict __attr,
 				 void **__restrict __stackaddr);
 libc_hidden_proto (__pthread_attr_getstackaddr)
 int __pthread_attr_setstackaddr (pthread_attr_t *__attr, void *__stackaddr);
+libc_hidden_proto (__pthread_attr_setstackaddr)
 int __pthread_attr_getstacksize (const pthread_attr_t *__restrict __attr,
 				 size_t *__restrict __stacksize);
 libc_hidden_proto (__pthread_attr_getstacksize)
@@ -92,6 +93,7 @@ int __pthread_attr_setstacksize (pthread_attr_t *__attr, size_t __stacksize);
 libc_hidden_proto (__pthread_attr_setstacksize)
 int __pthread_attr_setstack (pthread_attr_t *__attr, void *__stackaddr,
 			     size_t __stacksize);
+libc_hidden_proto (__pthread_attr_setstack)
 int __pthread_attr_getstack (const pthread_attr_t *, void **, size_t *);
 libc_hidden_proto (__pthread_attr_getstack)
 void __pthread_testcancel (void);

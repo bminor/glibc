@@ -1527,6 +1527,8 @@ GLIBC_2.38 pthread_attr_setinheritsched F
 GLIBC_2.38 pthread_attr_setschedparam F
 GLIBC_2.38 pthread_attr_setschedpolicy F
 GLIBC_2.38 pthread_attr_setscope F
+GLIBC_2.38 pthread_attr_setstack F
+GLIBC_2.38 pthread_attr_setstackaddr F
 GLIBC_2.38 pthread_attr_setstacksize F
 GLIBC_2.38 pthread_cond_broadcast F
 GLIBC_2.38 pthread_cond_destroy F
@@ -2193,6 +2195,8 @@ GLIBC_2.41 pthread_attr_getguardsize F
 GLIBC_2.41 pthread_attr_getstack F
 GLIBC_2.41 pthread_attr_getstackaddr F
 GLIBC_2.41 pthread_attr_getstacksize F
+GLIBC_2.41 pthread_attr_setstack F
+GLIBC_2.41 pthread_attr_setstackaddr F
 GLIBC_2.41 pthread_attr_setstacksize F
 HURD_CTHREADS_0.3 __cthread_getspecific F
 HURD_CTHREADS_0.3 __cthread_keycreate F
