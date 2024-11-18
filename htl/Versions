@@ -22,6 +22,7 @@ libc {
     pthread_attr_setstacksize;
     pthread_attr_setstackaddr;
     pthread_attr_setstack;
+    pthread_attr_setscope;
   }
 
   GLIBC_2.21 {
@@ -107,7 +108,6 @@ libpthread {
     pthread_attr_init;
     pthread_attr_setguardsize;
     pthread_attr_setschedparam;
-    pthread_attr_setscope;
 
     pthread_barrier_destroy; pthread_barrier_init; pthread_barrier_wait;
     pthread_barrierattr_destroy; pthread_barrierattr_getpshared;

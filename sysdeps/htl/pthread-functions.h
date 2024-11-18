@@ -24,7 +24,6 @@
 int __pthread_attr_init (pthread_attr_t *);
 int __pthread_attr_setschedparam (pthread_attr_t *,
 				 const struct sched_param *);
-int __pthread_attr_setscope (pthread_attr_t *, int);
 int __pthread_condattr_destroy (pthread_condattr_t *);
 int __pthread_condattr_init (pthread_condattr_t *);
 int __pthread_cond_broadcast (pthread_cond_t *);
@@ -65,7 +64,6 @@ struct pthread_functions
   int (*ptr_pthread_attr_init) (pthread_attr_t *);
   int (*ptr_pthread_attr_setschedparam) (pthread_attr_t *,
 					 const struct sched_param *);
-  int (*ptr_pthread_attr_setscope) (pthread_attr_t *, int);
   int (*ptr_pthread_condattr_destroy) (pthread_condattr_t *);
   int (*ptr_pthread_condattr_init) (pthread_condattr_t *);
   int (*ptr_pthread_cond_broadcast) (pthread_cond_t *);

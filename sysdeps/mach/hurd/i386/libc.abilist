@@ -42,6 +42,7 @@ GLIBC_2.12 pthread_attr_getstacksize F
 GLIBC_2.12 pthread_attr_setdetachstate F
 GLIBC_2.12 pthread_attr_setinheritsched F
 GLIBC_2.12 pthread_attr_setschedpolicy F
+GLIBC_2.12 pthread_attr_setscope F
 GLIBC_2.12 pthread_attr_setstack F
 GLIBC_2.12 pthread_attr_setstackaddr F
 GLIBC_2.12 pthread_attr_setstacksize F

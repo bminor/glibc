@@ -28,7 +28,6 @@ libpthread-routines := \
   pt-attr-init \
   pt-attr-setguardsize \
   pt-attr-setschedparam \
-  pt-attr-setscope \
   pt-barrier-destroy \
   pt-barrier-init \
   pt-barrier-wait \
@@ -203,6 +202,7 @@ routines := \
   pt-attr-setdetachstate \
   pt-attr-setinheritsched \
   pt-attr-setschedpolicy \
+  pt-attr-setscope \
   pt-attr-setstack \
   pt-attr-setstackaddr \
   pt-attr-setstacksize \
