@@ -981,19 +981,15 @@ float: 2
 
 Function: "sinh":
 double: 2
-float: 2
 
 Function: "sinh_downward":
 double: 3
-float: 3
 
 Function: "sinh_towardzero":
 double: 2
-float: 2
 
 Function: "sinh_upward":
 double: 3
-float: 3
 
 Function: "tan_downward":
 double: 1

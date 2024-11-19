@@ -248,7 +248,6 @@ float: 1
 
 Function: "sinh":
 double: 2
-float: 2
 
 Function: "tanh":
 double: 2

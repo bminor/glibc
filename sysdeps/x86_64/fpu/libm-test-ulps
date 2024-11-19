@@ -2177,25 +2177,21 @@ float: 1
 
 Function: "sinh":
 double: 2
-float: 2
 float128: 2
 ldouble: 3
 
 Function: "sinh_downward":
 double: 3
-float: 3
 float128: 3
 ldouble: 5
 
 Function: "sinh_towardzero":
 double: 3
-float: 2
 float128: 3
 ldouble: 4
 
 Function: "sinh_upward":
 double: 3
-float: 3
 float128: 4
 ldouble: 5
 

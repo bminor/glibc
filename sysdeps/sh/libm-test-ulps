@@ -477,11 +477,9 @@ float: 1
 
 Function: "sinh":
 double: 2
-float: 2
 
 Function: "sinh_towardzero":
 double: 3
-float: 2
 
 Function: "tan_towardzero":
 double: 1
