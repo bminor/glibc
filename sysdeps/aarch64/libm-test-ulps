@@ -774,7 +774,6 @@ ldouble: 2
 
 Function: "cosh":
 double: 2
-float: 2
 ldouble: 2
 
 Function: "cosh_advsimd":
@@ -783,7 +782,6 @@ float: 2
 
 Function: "cosh_downward":
 double: 3
-float: 1
 ldouble: 3
 
 Function: "cosh_sve":
@@ -792,12 +790,10 @@ float: 2
 
 Function: "cosh_towardzero":
 double: 3
-float: 1
 ldouble: 3
 
 Function: "cosh_upward":
 double: 2
-float: 2
 ldouble: 3
 
 Function: "cospi":

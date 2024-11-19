@@ -505,19 +505,15 @@ float: 1
 
 Function: "cosh":
 double: 2
-float: 2
 
 Function: "cosh_downward":
 double: 2
-float: 1
 
 Function: "cosh_towardzero":
 double: 2
-float: 1
 
 Function: "cosh_upward":
 double: 2
-float: 2
 
 Function: "cospi":
 double: 1

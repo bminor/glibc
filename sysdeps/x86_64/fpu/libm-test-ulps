@@ -1026,25 +1026,21 @@ float: 1
 
 Function: "cosh":
 double: 2
-float: 2
 float128: 2
 ldouble: 3
 
 Function: "cosh_downward":
 double: 3
-float: 1
 float128: 3
 ldouble: 3
 
 Function: "cosh_towardzero":
 double: 3
-float: 1
 float128: 3
 ldouble: 3
 
 Function: "cosh_upward":
 double: 2
-float: 2
 float128: 3
 ldouble: 3
 
@@ -1342,7 +1338,7 @@ ldouble: 2
 
 Function: Real part of "ctanh_downward":
 double: 4
-float: 2
+float: 3
 float128: 5
 ldouble: 4
 

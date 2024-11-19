@@ -850,25 +850,21 @@ ldouble: 2
 
 Function: "cosh":
 double: 1
-float: 2
 float128: 2
 ldouble: 3
 
 Function: "cosh_downward":
 double: 3
-float: 1
 float128: 3
 ldouble: 3
 
 Function: "cosh_towardzero":
 double: 3
-float: 1
 float128: 3
 ldouble: 3
 
 Function: "cosh_upward":
 double: 4
-float: 2
 float128: 3
 ldouble: 3
 

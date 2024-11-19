@@ -241,11 +241,9 @@ float: 1
 
 Function: "cosh":
 double: 2
-float: 2
 
 Function: "cosh_towardzero":
 double: 3
-float: 1
 
 Function: Real part of "cpow":
 double: 2

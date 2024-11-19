@@ -84,8 +84,6 @@ float: 1
 Function: "atan":
 double: 1
 
-Function: "atan2":
-
 Function: "atan2_downward":
 double: 1
 
@@ -553,19 +551,15 @@ float: 2
 
 Function: "cosh":
 double: 2
-float: 2
 
 Function: "cosh_downward":
 double: 3
-float: 1
 
 Function: "cosh_towardzero":
 double: 3
-float: 1
 
 Function: "cosh_upward":
 double: 2
-float: 2
 
 Function: "cospi":
 double: 1
@@ -750,7 +744,7 @@ float: 2
 
 Function: Real part of "ctanh_downward":
 double: 4
-float: 2
+float: 3
 
 Function: Imaginary part of "ctanh_downward":
 double: 6

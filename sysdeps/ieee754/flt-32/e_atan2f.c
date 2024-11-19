@@ -130,9 +130,9 @@ __ieee754_atan2f (float y, float x)
       if (yinf & xinf)
 	{
 	  if (ux >> 31)
-	    return 0x1.2d97c7f3321d2p+1 * sgn[uy >> 31];
+	    return 0x1.2d97c7f3321d2p+1 * sgn[uy >> 31]; /* +/-3pi/4 */
 	  else
-	    return 0x1.921fb54442d18p-1 * sgn[uy >> 31];
+	    return 0x1.921fb54442d18p-1 * sgn[uy >> 31]; /* +/-pi/4 */
 	}
       if (xinf)
 	{
@@ -146,7 +146,7 @@ __ieee754_atan2f (float y, float x)
     }
   if (__glibc_unlikely (ay == 0))
     {
-      if (__glibc_unlikely (!(ay | ax)))
+      if (__glibc_unlikely (!ax))
 	{
 	  uint32_t i = (uy >> 31) * 4 + (ux >> 31) * 2;
 	  if (ux >> 31)
