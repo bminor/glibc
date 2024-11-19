@@ -109,6 +109,7 @@ bench-math := \
   sincosf \
   sinf \
   sinh \
+  sinhf \
   sqrt \
   tan \
   tanf \
