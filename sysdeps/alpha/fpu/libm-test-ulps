@@ -98,22 +98,18 @@ ldouble: 2
 
 Function: "atanh":
 double: 2
-float: 2
 ldouble: 4
 
 Function: "atanh_downward":
 double: 3
-float: 3
 ldouble: 4
 
 Function: "atanh_towardzero":
 double: 2
-float: 2
 ldouble: 2
 
 Function: "atanh_upward":
 double: 3
-float: 3
 ldouble: 4
 
 Function: "cabs":

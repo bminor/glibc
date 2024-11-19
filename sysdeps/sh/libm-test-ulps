@@ -35,11 +35,9 @@ double: 1
 
 Function: "atanh":
 double: 2
-float: 2
 
 Function: "atanh_towardzero":
 double: 2
-float: 2
 
 Function: "cabs":
 double: 1

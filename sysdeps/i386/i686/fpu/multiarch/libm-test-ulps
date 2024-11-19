@@ -198,19 +198,16 @@ ldouble: 3
 
 Function: "atanh_downward":
 double: 1
-float: 1
 float128: 4
 ldouble: 4
 
 Function: "atanh_towardzero":
 double: 1
-float: 1
 float128: 2
 ldouble: 3
 
 Function: "atanh_upward":
 double: 1
-float: 1
 float128: 4
 ldouble: 5
 

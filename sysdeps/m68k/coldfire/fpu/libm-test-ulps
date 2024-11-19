@@ -4,7 +4,6 @@
 Function: "atan2":
 
 Function: "atanh":
-float: 1
 
 Function: Imaginary part of "cacosh":
 float: 1

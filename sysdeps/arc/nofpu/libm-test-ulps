@@ -20,7 +20,6 @@ Function: "atan2":
 
 Function: "atanh":
 double: 2
-float: 2
 
 Function: "cabs":
 double: 1
