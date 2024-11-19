@@ -45,6 +45,7 @@ bench-math := \
   cos \
   cosf \
   cosh \
+  coshf \
   erf \
   erfc \
   erfcf \
