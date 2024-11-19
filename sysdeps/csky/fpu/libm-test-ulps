@@ -971,19 +971,15 @@ double: 1
 
 Function: "tanh":
 double: 2
-float: 2
 
 Function: "tanh_downward":
 double: 3
-float: 3
 
 Function: "tanh_towardzero":
 double: 2
-float: 2
 
 Function: "tanh_upward":
 double: 3
-float: 3
 
 Function: "tgamma":
 double: 9

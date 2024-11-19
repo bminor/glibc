@@ -251,7 +251,6 @@ double: 2
 
 Function: "tanh":
 double: 2
-float: 2
 
 Function: "tgamma":
 double: 9

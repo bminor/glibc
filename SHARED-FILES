@@ -330,3 +330,7 @@ sysdeps/ieee754/flt-32/e_sinhf.c:
   (src/binary32/sinh/sinhf.c in CORE-MATH)
   - the code was adapted to use glibc code style and internal
     functions to handle errno, overflow, and underflow.
+sysdeps/ieee754/flt-32/s_tanhf.c:
+  (src/binary32/tanh/tanhf.c in CORE-MATH)
+  - the code was adapted to use glibc code style and internal
+    functions to handle errno, overflow, and underflow.

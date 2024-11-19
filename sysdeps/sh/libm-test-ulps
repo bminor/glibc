@@ -486,11 +486,9 @@ double: 1
 
 Function: "tanh":
 double: 2
-float: 2
 
 Function: "tanh_towardzero":
 double: 2
-float: 2
 
 Function: "tgamma":
 double: 9

@@ -1861,25 +1861,21 @@ ldouble: 3
 
 Function: "tanh":
 double: 2
-float: 2
 float128: 2
 ldouble: 1
 
 Function: "tanh_downward":
 double: 3
-float: 3
 float128: 4
 ldouble: 4
 
 Function: "tanh_towardzero":
 double: 2
-float: 2
 float128: 3
 ldouble: 4
 
 Function: "tanh_upward":
 double: 3
-float: 3
 float128: 3
 ldouble: 6
 
