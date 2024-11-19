@@ -114,6 +114,7 @@ bench-math := \
   tan \
   tanf \
   tanh \
+  tanhf \
   tgamma \
   tgammaf \
   trunc \
