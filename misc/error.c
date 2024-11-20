@@ -212,7 +212,6 @@ error_tail (int status, int errnum, const char *message, va_list args,
 #else
   vfprintf (stderr, message, args);
 #endif
-  va_end (args);
 
   ++error_message_count;
   if (errnum)
