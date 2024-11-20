@@ -374,34 +374,7 @@ static const char *get_output_charset (struct binding *domainbinding);
 #ifdef HAVE_ALLOCA
 /* Nothing has to be done.  */
 # define freea(p) /* nothing */
-# define ADD_BLOCK(list, address) /* nothing */
-# define FREE_BLOCKS(list) /* nothing */
 #else
-struct block_list
-{
-  void *address;
-  struct block_list *next;
-};
-# define ADD_BLOCK(list, addr)						      \
-  do {									      \
-    struct block_list *newp = (struct block_list *) malloc (sizeof (*newp));  \
-    /* If we cannot get a free block we cannot add the new element to	      \
-       the list.  */							      \
-    if (newp != NULL) {							      \
-      newp->address = (addr);						      \
-      newp->next = (list);						      \
-      (list) = newp;							      \
-    }									      \
-  } while (0)
-# define FREE_BLOCKS(list)						      \
-  do {									      \
-    while (list != NULL) {						      \
-      struct block_list *old = list;					      \
-      list = list->next;						      \
-      free (old->address);						      \
-      free (old);							      \
-    }									      \
-  } while (0)
 # undef alloca
 # define alloca(size) (malloc (size))
 # define freea(p) free (p)
@@ -483,17 +456,14 @@ DCIGETTEXT (const char *domainname, const char *msgid1, const char *msgid2,
 	    int plural, unsigned long int n, int category)
 #endif
 {
-#ifndef HAVE_ALLOCA
-  struct block_list *block_list = NULL;
-#endif
   struct loaded_l10nfile *domain;
   struct binding *binding;
   const char *categoryname;
   const char *categoryvalue;
   const char *dirname;
   char *xdirname = NULL;
-  char *xdomainname;
-  char *single_locale;
+  char *xdomainname = NULL;
+  char *single_locale = NULL;
   char *retval;
   size_t retlen;
   int saved_errno;
@@ -648,18 +618,19 @@ DCIGETTEXT (const char *domainname, const char *msgid1, const char *msgid2,
 #endif
 
   domainname_len = strlen (domainname);
-  xdomainname = (char *) alloca (strlen (categoryname)
+  xdomainname = (char *) malloc (strlen (categoryname)
 				 + domainname_len + 5);
-  ADD_BLOCK (block_list, xdomainname);
+  if (xdomainname == NULL)
+    goto return_untranslated;
 
   stpcpy ((char *) mempcpy (stpcpy (stpcpy (xdomainname, categoryname), "/"),
 			    domainname, domainname_len),
 	  ".mo");
 
   /* Creating working area.  */
-  single_locale = (char *) alloca (strlen (categoryvalue) + 1);
-  ADD_BLOCK (block_list, single_locale);
-
+  single_locale = (char *) malloc (strlen (categoryvalue) + 1);
+  if (single_locale == NULL)
+    goto return_untranslated;
 
   /* Search for the given string.  This is a loop because we perhaps
      got an ordered list of languages to consider for the translation.  */
@@ -748,7 +719,8 @@ DCIGETTEXT (const char *domainname, const char *msgid1, const char *msgid2,
 	      /* Found the translation of MSGID1 in domain DOMAIN:
 		 starting at RETVAL, RETLEN bytes.  */
 	      free (xdirname);
-	      FREE_BLOCKS (block_list);
+	      free (xdomainname);
+	      free (single_locale);
 	      if (foundp == NULL)
 		{
 		  /* Create a new entry and add it to the search tree.  */
@@ -832,7 +804,8 @@ DCIGETTEXT (const char *domainname, const char *msgid1, const char *msgid2,
  return_untranslated:
   /* Return the untranslated MSGID.  */
   free (xdirname);
-  FREE_BLOCKS (block_list);
+  free (xdomainname);
+  free (single_locale);
   gl_rwlock_unlock (_nl_state_lock);
 #ifdef _LIBC
   __libc_rwlock_unlock (__libc_setlocale_lock);
