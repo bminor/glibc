@@ -29,8 +29,6 @@
 extern __typeof (__redirect_memmove) __libc_memmove;
 
 extern __typeof (__redirect_memmove) __memmove_generic attribute_hidden;
-extern __typeof (__redirect_memmove) __memmove_thunderx attribute_hidden;
-extern __typeof (__redirect_memmove) __memmove_thunderx2 attribute_hidden;
 extern __typeof (__redirect_memmove) __memmove_a64fx attribute_hidden;
 extern __typeof (__redirect_memmove) __memmove_sve attribute_hidden;
 extern __typeof (__redirect_memmove) __memmove_mops attribute_hidden;
@@ -49,12 +47,6 @@ select_memmove_ifunc (void)
 	return __memmove_a64fx;
       return prefer_sve_ifuncs ? __memmove_sve : __memmove_generic;
     }
-
-  if (IS_THUNDERX (midr))
-    return __memmove_thunderx;
-
-  if (IS_THUNDERX2 (midr) || IS_THUNDERX2PA (midr))
-    return __memmove_thunderx2;
 
   return __memmove_generic;
 }

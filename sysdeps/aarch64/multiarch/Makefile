@@ -7,8 +7,6 @@ sysdep_routines += \
   memcpy_mops \
   memcpy_oryon1 \
   memcpy_sve \
-  memcpy_thunderx \
-  memcpy_thunderx2 \
   memmove_mops \
   memset_a64fx \
   memset_emag \
