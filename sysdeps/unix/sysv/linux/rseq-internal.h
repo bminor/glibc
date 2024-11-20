@@ -56,6 +56,7 @@ rseq_register_current_thread (struct pthread *self, bool do_rseq)
          registration, there is no guarantee that struct pthread is
          cleared on all architectures.  */
       THREAD_SETMEM (self, rseq_area.cpu_id, RSEQ_CPU_ID_UNINITIALIZED);
+      THREAD_SETMEM (self, rseq_area.cpu_id_start, 0);
       THREAD_SETMEM (self, rseq_area.rseq_cs, 0);
       THREAD_SETMEM (self, rseq_area.flags, 0);
 
