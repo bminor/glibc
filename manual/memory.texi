@@ -3261,6 +3261,12 @@ the page protection flags are applied.  Otherwise, @var{access_restrictions} is
 a combination of the following flags:
 
 @vtable @code
+@item PKEY_DISABLE_READ
+@standards{Linux, sys/mman.h}
+Subsequent attempts to read from memory with the specified protection
+key will fault.  At present only AArch64 platforms with enabled Stage 1
+permission overlays feature support this type of restriction.
+
 @item PKEY_DISABLE_WRITE
 @standards{Linux, sys/mman.h}
 Subsequent attempts to write to memory with the specified protection
@@ -3269,7 +3275,15 @@ key will fault.
 @item PKEY_DISABLE_ACCESS
 @standards{Linux, sys/mman.h}
 Subsequent attempts to write to or read from memory with the specified
-protection key will fault.
+protection key will fault.  On AArch64 platforms with enabled Stage 1
+permission overlays feature this restriction value has the same effect
+as combination of @code{PKEY_DISABLE_READ} and @code{PKEY_DISABLE_WRITE}.
+
+@item PKEY_DISABLE_EXECUTE
+@standards{Linux, sys/mman.h}
+Subsequent attempts to execute from memory with the specified protection
+key will fault.  At present only AArch64 platforms with enabled Stage 1
+permission overlays feature support this type of restriction.
 @end vtable
 
 Operations not specified as flags are not restricted.  In particular,
