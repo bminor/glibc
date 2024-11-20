@@ -50,7 +50,7 @@
 /* Other flags.  */
 #define	MAP_FIXED	 0x0100	/* Map address must be exactly as requested. */
 #define MAP_NOEXTEND	 0x0200	/* For MAP_FILE, don't change file size.  */
-#define MAP_HASSEMPHORE 0x0400	/* Region may contain semaphores.  */
+#define MAP_HASSEMAPHORE 0x0400	/* Region may contain semaphores.  */
 #define MAP_INHERIT	 0x0800	/* Region is retained after exec.  */
 
 /* Advice to `madvise'.  */
