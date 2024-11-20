@@ -24,6 +24,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <sys/rseq.h>
+#include <ldsodefs.h>
 
 /* Minimum size of the rseq area allocation required by the syscall.  The
    actually used rseq feature size may be less (20 bytes initially).  */
@@ -52,19 +53,20 @@ extern unsigned int _rseq_size attribute_hidden;
    In .data.relro but not yet write-protected.  */
 extern ptrdiff_t _rseq_offset attribute_hidden;
 
+/* We want to use rtld_hidden_proto in order to call the internal aliases
+   of __rseq_size and __rseq_offset from ld.so.  This avoids dynamic symbol
+   binding at run time for both variables.  */
+rtld_hidden_proto (__rseq_size)
+rtld_hidden_proto (__rseq_offset)
+
 #ifdef RSEQ_SIG
 static inline bool
 rseq_register_current_thread (struct pthread *self, bool do_rseq)
 {
   if (do_rseq)
     {
-      unsigned int size;
-#if IS_IN (rtld)
-      /* Use the hidden symbol in ld.so.  */
-      size = _rseq_size;
-#else
-      size = __rseq_size;
-#endif
+      unsigned int size =  __rseq_size;
+
       if (size < RSEQ_AREA_SIZE_INITIAL)
         /* The initial implementation used only 20 bytes out of 32,
            but still expected size 32.  */

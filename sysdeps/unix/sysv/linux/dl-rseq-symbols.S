@@ -27,14 +27,18 @@
 /* Some targets define a macro to denote the zero register.  */
 #undef zero
 
-/* Define 2 symbols: '__rseq_size' is public const and '_rseq_size' (an
-   alias of '__rseq_size') is hidden and writable for internal use by the
-   dynamic linker which will initialize the value both symbols point to
-   before copy relocations take place. */
+/* Define 3 symbols: '__rseq_size' is public const and then '_rseq_size' and
+   '__GI___rseq_size' (both aliases of '__rseq_size') are hidden, '_rseq_size'
+   is writable for internal use by the dynamic linker which will initialize
+   the value the symbols point to before copy relocations take place.  */
 
 	.globl	__rseq_size
 	.type	__rseq_size, %object
 	.size	__rseq_size, 4
+	.hidden __GI___rseq_size
+	.globl	__GI___rseq_size
+	.type	__GI___rseq_size, %object
+	.size	__GI___rseq_size, 4
 	.hidden _rseq_size
 	.globl	_rseq_size
 	.type	_rseq_size, %object
@@ -42,17 +46,23 @@
 	.section .data.rel.ro
 	.balign 4
 __rseq_size:
+__GI___rseq_size:
 _rseq_size:
 	.zero	4
 
-/* Define 2 symbols: '__rseq_offset' is public const and '_rseq_offset' (an
-   alias of '__rseq_offset') is hidden and writable for internal use by the
-   dynamic linker which will initialize the value both symbols point to
-   before copy relocations take place. */
+/* Define 3 symbols: '__rseq_offset' is public const and then '_rseq_offset'
+   and '__GI___rseq_offset' (both aliases of '__rseq_offset') are hidden,
+   '_rseq_offset' is writable for internal use by the dynamic linker which will
+   initialize the value the symbols point to before copy relocations take
+   place.  */
 
 	.globl	__rseq_offset
 	.type	__rseq_offset, %object
 	.size	__rseq_offset, RSEQ_OFFSET_SIZE
+	.hidden __GI___rseq_offset
+	.globl	__GI___rseq_offset
+	.type	__GI___rseq_offset, %object
+	.size	__GI___rseq_offset, RSEQ_OFFSET_SIZE
 	.hidden _rseq_offset
 	.globl	_rseq_offset
 	.type	_rseq_offset, %object
@@ -60,5 +70,6 @@ _rseq_size:
 	.section .data.rel.ro
 	.balign RSEQ_OFFSET_SIZE
 __rseq_offset:
+__GI___rseq_offset:
 _rseq_offset:
 	.zero	RSEQ_OFFSET_SIZE
