@@ -31,8 +31,9 @@
 #define FRAME_TOC_SAVE		40
 #define FRAME_PARM_SAVE		48
 #else
+#define FRAME_ROP_SAVE		-8
 #define FRAME_MIN_SIZE		32
-#define FRAME_MIN_SIZE_PARM	96
+#define FRAME_MIN_SIZE_PARM	112 /* Includes space for the ROP save slot */
 #define FRAME_TOC_SAVE		24
 #define FRAME_PARM_SAVE		32
 #endif

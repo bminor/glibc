@@ -68,6 +68,9 @@ BODY_LABEL (_init):
 	LOCALENTRY(_init)
 	mflr 0
 	std 0, FRAME_LR_SAVE(r1)
+#ifdef	__ROP_PROTECT__
+	hashst 0, FRAME_ROP_SAVE(r1)
+#endif
 	stdu r1, -FRAME_MIN_SIZE_PARM(r1)
 #if PREINIT_FUNCTION_WEAK
 	addis r9, r2, .LC0@toc@ha
@@ -87,4 +90,7 @@ BODY_LABEL (_fini):
 	LOCALENTRY(_fini)
 	mflr 0
 	std 0, FRAME_LR_SAVE(r1)
+#ifdef	__ROP_PROTECT__
+	hashst 0, FRAME_ROP_SAVE(r1)
+#endif
 	stdu r1, -FRAME_MIN_SIZE_PARM(r1)

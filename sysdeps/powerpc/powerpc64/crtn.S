@@ -42,10 +42,16 @@
 	addi r1, r1, FRAME_MIN_SIZE_PARM
 	ld r0, FRAME_LR_SAVE(r1)
 	mtlr r0
+#ifdef	__ROP_PROTECT__
+	hashchk 0, FRAME_ROP_SAVE(r1)
+#endif
 	blr
 
 	.section .fini,"ax",@progbits
 	addi r1, r1, FRAME_MIN_SIZE_PARM
 	ld r0, FRAME_LR_SAVE(r1)
 	mtlr r0
+#ifdef	__ROP_PROTECT__
+	hashchk 0, FRAME_ROP_SAVE(r1)
+#endif
 	blr
