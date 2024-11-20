@@ -26,6 +26,14 @@
 #define PROT_BTI	0x10
 #define PROT_MTE	0x20
 
+#ifdef __USE_GNU
+# define PKEY_UNRESTRICTED 0x0
+# define PKEY_DISABLE_ACCESS 0x1
+# define PKEY_DISABLE_WRITE 0x2
+# define PKEY_DISABLE_EXECUTE 0x4
+# define PKEY_DISABLE_READ 0x8
+#endif
+
 #include <bits/mman-map-flags-generic.h>
 
 /* Include generic Linux declarations.  */

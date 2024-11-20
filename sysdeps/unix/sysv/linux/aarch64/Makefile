@@ -1,5 +1,8 @@
 ifeq ($(subdir),misc)
 sysdep_headers += sys/elf.h
+tests += \
+  tst-aarch64-pkey \
+  # tests
 endif
 
 ifeq ($(subdir),stdlib)
