@@ -515,6 +515,8 @@ asinpi -min
 asinpi min_subnorm
 asinpi -min_subnorm
 
+atan inf
+atan -inf
 atan 0
 atan -0
 atan max
