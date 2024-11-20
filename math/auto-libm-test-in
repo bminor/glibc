@@ -558,6 +558,56 @@ atan -min
 atan min_subnorm
 atan -min_subnorm
 
+# atan2 (y,inf) == +0 for finite y > 0 or +0
+atan2 1 inf
+atan2 0 inf
+atan2 min inf
+atan2 min_subnorm inf
+atan2 max inf
+# atan2 (y,inf) == -0 for finite y < 0 or -0
+atan2 -1 inf
+atan2 -0 inf
+atan2 -min inf
+atan2 -min_subnorm inf
+atan2 -max inf
+# atan2(+inf, x) == pi/2 for finite x
+atan2 inf 1
+atan2 inf 0
+atan2 inf min
+atan2 inf min_subnorm
+atan2 inf max
+atan2 inf -1
+atan2 inf -0
+atan2 inf -min
+atan2 inf -min_subnorm
+atan2 inf -max
+# atan2(-inf, x) == -pi/2 for finite x
+atan2 -inf 1
+atan2 -inf 0
+atan2 -inf min
+atan2 -inf min_subnorm
+atan2 -inf max
+atan2 -inf -1
+atan2 -inf -0
+atan2 -inf -min
+atan2 -inf -min_subnorm
+atan2 -inf -max
+# atan2 (y,-inf) == +pi for finite y > 0 or +0
+atan2 1 -inf
+atan2 0 -inf
+atan2 min -inf
+atan2 min_subnorm -inf
+atan2 max -inf
+# atan2 (y,-inf) == -pi for finite y < 0 or -0.
+atan2 -1 -inf
+atan2 -0 -inf
+atan2 -min -inf
+atan2 -min_subnorm -inf
+atan2 -max -inf
+atan2 inf inf
+atan2 -inf inf
+atan2 inf -inf
+atan2 -inf -inf
 # atan2 (0,x) == 0 for x > 0.
 atan2 0 1
 # atan2 (-0,x) == -0 for x > 0.

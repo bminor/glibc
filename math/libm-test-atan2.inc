@@ -20,62 +20,6 @@
 
 static const struct test_ff_f_data atan2_test_data[] =
   {
-    /* atan2 (y,inf) == +0 for finite y > 0 or +0.  */
-    TEST_ff_f (atan2, 1, plus_infty, 0, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, plus_zero, plus_infty, 0, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, min_value, plus_infty, 0, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, min_subnorm_value, plus_infty, 0, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, max_value, plus_infty, 0, ERRNO_UNCHANGED),
-
-    /* atan2 (y,inf) == -0 for finite y < 0 or -0.  */
-    TEST_ff_f (atan2, -1, plus_infty, minus_zero, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, minus_zero, plus_infty, minus_zero, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, -min_value, plus_infty, minus_zero, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, -min_subnorm_value, plus_infty, minus_zero, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, -max_value, plus_infty, minus_zero, ERRNO_UNCHANGED),
-
-    /* atan2(+inf, x) == pi/2 for finite x.  */
-    TEST_ff_f (atan2, plus_infty, 1, lit_pi_2_d, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, plus_infty, plus_zero, lit_pi_2_d, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, plus_infty, min_value, lit_pi_2_d, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, plus_infty, min_subnorm_value, lit_pi_2_d, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, plus_infty, max_value, lit_pi_2_d, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, plus_infty, -1, lit_pi_2_d, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, plus_infty, minus_zero, lit_pi_2_d, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, plus_infty, -min_value, lit_pi_2_d, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, plus_infty, -min_subnorm_value, lit_pi_2_d, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, plus_infty, -max_value, lit_pi_2_d, ERRNO_UNCHANGED),
-
-    /* atan2(-inf, x) == -pi/2 for finite x.  */
-    TEST_ff_f (atan2, minus_infty, 1, -lit_pi_2_d, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, minus_infty, plus_zero, -lit_pi_2_d, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, minus_infty, min_value, -lit_pi_2_d, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, minus_infty, min_subnorm_value, -lit_pi_2_d, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, minus_infty, max_value, -lit_pi_2_d, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, minus_infty, -1, -lit_pi_2_d, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, minus_infty, minus_zero, -lit_pi_2_d, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, minus_infty, -min_value, -lit_pi_2_d, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, minus_infty, -min_subnorm_value, -lit_pi_2_d, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, minus_infty, -max_value, -lit_pi_2_d, ERRNO_UNCHANGED),
-
-    /* atan2 (y,-inf) == +pi for finite y > 0 or +0.  */
-    TEST_ff_f (atan2, 1, minus_infty, lit_pi, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, plus_zero, minus_infty, lit_pi, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, min_value, minus_infty, lit_pi, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, min_subnorm_value, minus_infty, lit_pi, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, max_value, minus_infty, lit_pi, ERRNO_UNCHANGED),
-
-    /* atan2 (y,-inf) == -pi for finite y < 0 or -0.  */
-    TEST_ff_f (atan2, -1, minus_infty, -lit_pi, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, minus_zero, minus_infty, -lit_pi, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, -min_value, minus_infty, -lit_pi, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, -min_subnorm_value, minus_infty, -lit_pi, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, -max_value, minus_infty, -lit_pi, ERRNO_UNCHANGED),
-
-    TEST_ff_f (atan2, plus_infty, plus_infty, lit_pi_4_d, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, minus_infty, plus_infty, -lit_pi_4_d, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, plus_infty, minus_infty, lit_pi_3_m_4_d, ERRNO_UNCHANGED),
-    TEST_ff_f (atan2, minus_infty, minus_infty, -lit_pi_3_m_4_d, ERRNO_UNCHANGED),
     TEST_ff_f (atan2, qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (atan2, qnan_value, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (atan2, -qnan_value, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
