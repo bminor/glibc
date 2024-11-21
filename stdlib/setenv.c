@@ -19,6 +19,9 @@
 # include <config.h>
 #endif
 
+#include <assert.h>
+#include <setenv.h>
+
 /* Pacify GCC; see the commentary about VALLEN below.  This is needed
    at least through GCC 4.9.2.  Pacify GCC for the entire file, as
    there seems to be no way to pacify GCC selectively, only for the
@@ -100,25 +103,51 @@ static void *known_values;
 
 #endif
 
+/* Allocate a new environment array and put it o the
+   __environ_array_list.  Returns NULL on memory allocation
+   failure.  */
+static struct environ_array *
+__environ_new_array (size_t required_size)
+{
+  /* No backing array yet, or insufficient room.  */
+  size_t new_size;
+  if (__environ_array_list == NULL
+      || __environ_array_list->allocated * 2 < required_size)
+    /* Add some unused space for future growth.  */
+    new_size = required_size + 16;
+  else
+    new_size = __environ_array_list->allocated * 2;
 
-/* If this variable is not a null pointer we allocated the current
-   environment.  */
-static char **last_environ;
+  size_t new_size_in_bytes;
+  if (__builtin_mul_overflow (new_size, sizeof (char *),
+			      &new_size_in_bytes)
+      || __builtin_add_overflow (new_size_in_bytes,
+				 offsetof (struct environ_array,
+					   array),
+				 &new_size_in_bytes))
+    {
+      __set_errno (ENOMEM);
+      return NULL;
+    }
 
+  /* Zero-initialize everything, so that getenv can only
+     observe valid or null pointers.  */
+  struct environ_array *target_array = calloc (1, new_size_in_bytes);
+  if (target_array == NULL)
+    return NULL;
+  target_array->allocated = new_size;
+  assert (new_size >= target_array->allocated);
 
-/* This function is used by `setenv' and `putenv'.  The difference between
-   the two functions is that for the former must create a new string which
-   is then placed in the environment, while the argument of `putenv'
-   must be used directly.  This is all complicated by the fact that we try
-   to reuse values once generated for a `setenv' call since we can never
-   free the strings.  */
+  /* Put it onto the list.  */
+  target_array->next = __environ_array_list;
+  __environ_array_list = target_array;
+  return target_array;
+}
+
 int
 __add_to_environ (const char *name, const char *value, const char *combined,
 		  int replace)
 {
-  char **ep;
-  size_t size;
-
   /* Compute lengths before locking, so that the critical section is
      less of a performance bottleneck.  VALLEN is needed only if
      COMBINED is null (unfortunately GCC is not smart enough to deduce
@@ -133,45 +162,85 @@ __add_to_environ (const char *name, const char *value, const char *combined,
   LOCK;
 
   /* We have to get the pointer now that we have the lock and not earlier
-     since another thread might have created a new environment.  */
-  ep = __environ;
+     since another thread might have created a new environment.   */
+  char **start_environ = atomic_load_relaxed (&__environ);
+  char **ep = start_environ;
 
-  size = 0;
+  /* This gets written to __environ in the end.  */
+  char **result_environ = start_environ;
+
+  /* Size of the environment if *ep == NULL.  */
   if (ep != NULL)
-    {
-      for (; *ep != NULL; ++ep)
-	if (!strncmp (*ep, name, namelen) && (*ep)[namelen] == '=')
-	  break;
-	else
-	  ++size;
-    }
+    for (; *ep != NULL; ++ep)
+      if (strncmp (*ep, name, namelen) == 0 && (*ep)[namelen] == '=')
+	break;
 
-  if (ep == NULL || __builtin_expect (*ep == NULL, 1))
+  if (ep == NULL || __glibc_likely (*ep == NULL))
     {
-      char **new_environ;
+      /* The scanning loop above reached the end of the environment.
+	 Add a new string to it.  */
+      replace = true;
 
-      /* We allocated this space; we can extend it.  Avoid using the raw
-	 reallocated pointer to avoid GCC -Wuse-after-free.  */
-      uintptr_t ip_last_environ = (uintptr_t)last_environ;
-      new_environ = (char **) realloc (last_environ,
-				       (size + 2) * sizeof (char *));
-      if (new_environ == NULL)
+      /* + 2 for the new entry and the terminating NULL.  */
+      size_t required_size = (ep - start_environ) + 2;
+      if (__environ_is_from_array_list (start_environ)
+	  && required_size <= __environ_array_list->allocated)
+	/* The __environ array is ours, and we have room in it.  We
+	   can use ep as-is.  Add a null terminator in case current
+	   usage is less than previous usage.  */
+	ep[1] = NULL;
+      else
 	{
-	  UNLOCK;
-	  return -1;
+	  /* We cannot use __environ as is and need to copy over the
+	     __environ contents into an array managed via
+	     __environ_array_list.  */
+
+	  struct environ_array *target_array;
+	  if (__environ_array_list != NULL
+	      && required_size <= __environ_array_list->allocated)
+	    /* Existing array has enough room.  Contents is copied below.  */
+	    target_array = __environ_array_list;
+	  else
+	    {
+	      /* Allocate a new array.  */
+	      target_array = __environ_new_array (required_size);
+	      if (target_array == NULL)
+		{
+		  UNLOCK;
+		  return -1;
+		}
+	    }
+
+	  /* Copy over the __environ array contents.  This forward
+	     copy slides backwards part of the array if __environ
+	     points into target_array->array.  This happens if an
+	     application makes an assignment like:
+
+	       environ = &environ[1];
+
+	     The forward copy avoids clobbering values that still
+	     needing copying.  This code handles the case
+	     start_environ == ep == NULL, too.  */
+	  size_t i;
+	  for (i = 0; start_environ + i < ep; ++i)
+	    /* Regular store because unless there has been direct
+	       manipulation of the environment, target_array is still
+	       a private copy.  */
+	    target_array->array[i] = atomic_load_relaxed (start_environ + i);
+
+	  /* This is the new place where we should add the element.  */
+	  ep = target_array->array + i;
+
+	  /* Add the null terminator in case there was a pointer there
+	     previously.  */
+	  ep[1] = NULL;
+
+	  /* And __environ should be repointed to our array.  */
+	  result_environ = &target_array->array[0];
 	}
-
-      if ((uintptr_t)__environ != ip_last_environ)
-	memcpy ((char *) new_environ, (char *) __environ,
-		size * sizeof (char *));
-
-      new_environ[size] = NULL;
-      new_environ[size + 1] = NULL;
-      ep = new_environ + size;
-
-      last_environ = __environ = new_environ;
     }
-  if (*ep == NULL || replace)
+
+  if (replace || *ep == NULL)
     {
       char *np;
 
@@ -213,7 +282,12 @@ __add_to_environ (const char *name, const char *value, const char *combined,
 #endif
 	}
 
-      *ep = np;
+      /* Use release MO so that loads are sufficient to observe the
+	 pointer contents because the CPU carries the dependency for
+	 us.  This also acts as a thread fence, making getenv
+	 async-signal-safe.  */
+      atomic_store_release (ep, np);
+      atomic_store_release (&__environ, result_environ);
     }
 
   UNLOCK;
@@ -249,18 +323,40 @@ unsetenv (const char *name)
 
   LOCK;
 
-  ep = __environ;
+  ep = atomic_load_relaxed (&__environ);
   if (ep != NULL)
-    while (*ep != NULL)
+    while (true)
       {
-	if (!strncmp (*ep, name, len) && (*ep)[len] == '=')
+	char *entry = atomic_load_relaxed (ep);
+	if (entry == NULL)
+	  break;
+	if (strncmp (entry, name, len) == 0 && entry[len] == '=')
 	  {
 	    /* Found it.  Remove this pointer by moving later ones back.  */
 	    char **dp = ep;
 
-	    do
-		dp[0] = dp[1];
-	    while (*dp++);
+	    while (true)
+	      {
+		char *next_value = atomic_load_relaxed (dp + 1);
+		/* This store overwrites a value that has been
+		   removed, or that has already been written to a
+		   previous value.  Release MO so that this store does
+		   not get reordered before the counter update in the
+		   previous loop iteration.  */
+		atomic_store_release (dp, next_value);
+		/* Release store synchronizes with acquire loads in
+		   getenv.  Non-atomic update because there is just
+		   one writer due to the lock.
+
+		   See discussion of the counter check in getenv for
+		   an explanation why this is sufficient synchronization.  */
+		atomic_store_release (&__environ_counter,
+				      atomic_load_relaxed (&__environ_counter)
+				      + 1);
+		if (next_value == NULL)
+		  break;
+		++dp;
+	      }
 	    /* Continue the loop in case NAME appears again.  */
 	  }
 	else
@@ -279,17 +375,20 @@ int
 clearenv (void)
 {
   LOCK;
-
-  if (__environ == last_environ && __environ != NULL)
+  char **start_environ = atomic_load_relaxed (&__environ);
+  if (__environ_is_from_array_list (start_environ))
     {
-      /* We allocated this environment so we can free it.  */
-      free (__environ);
-      last_environ = NULL;
+      /* Store null pointers to avoid strange effects when the array
+	 is reused in setenv.  */
+      for (char **ep = start_environ; *ep != NULL; ++ep)
+	atomic_store_relaxed (ep, NULL);
+      /* Update the counter similar to unsetenv, so that the writes in
+	 setenv do not need to update the counter.  */
+      atomic_store_release (&__environ_counter,
+			    atomic_load_relaxed (&__environ_counter) + 1);
     }
 
-  /* Clear the environment pointer removes the whole environment.  */
-  __environ = NULL;
-
+  atomic_store_relaxed (&__environ, NULL);
   UNLOCK;
 
   return 0;
@@ -300,6 +399,14 @@ __libc_setenv_freemem (void)
 {
   /* Remove all traces.  */
   clearenv ();
+
+  /* Clear all backing arrays.  */
+  while (__environ_array_list != NULL)
+    {
+      void *ptr = __environ_array_list;
+      __environ_array_list = __environ_array_list->next;
+      free (ptr);
+    }
 
   /* Now remove the search tree.  */
   __tdestroy (known_values, free);

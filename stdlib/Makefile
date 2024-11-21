@@ -277,6 +277,9 @@ tests := \
   tst-concurrent-quick_exit \
   tst-cxa_atexit \
   tst-environ \
+  tst-getenv-signal \
+  tst-getenv-thread \
+  tst-getenv-unsetenv \
   tst-getrandom \
   tst-getrandom2 \
   tst-labs \
@@ -629,3 +632,6 @@ $(objpfx)tst-qsort5: $(libm)
 $(objpfx)tst-concurrent-exit: $(shared-thread-library)
 $(objpfx)tst-concurrent-quick_exit: $(shared-thread-library)
 $(objpfx)tst-getrandom2: $(shared-thread-library)
+$(objpfx)tst-getenv-signal: $(shared-thread-library)
+$(objpfx)tst-getenv-thread: $(shared-thread-library)
+$(objpfx)tst-getenv-unsetenv: $(shared-thread-library)

@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <libc-diag.h>
+#include <support/check.h>
 
 #define VAR "FOOBAR"
 
@@ -50,11 +51,7 @@ do_test (void)
 
   /* Getting this value should now be possible.  */
   valp = getenv (VAR);
-  if (valp == NULL || strcmp (valp, "one") != 0)
-    {
-      puts ("getenv #2 failed");
-      result = 1;
-    }
+  TEST_COMPARE_STRING (valp, "one");
 
   /* Try to replace without the replace flag set.  This should fail.  */
   if (setenv (VAR, "two", 0) != 0)
@@ -65,11 +62,7 @@ do_test (void)
 
   /* The value shouldn't have changed.  */
   valp = getenv (VAR);
-  if (valp == NULL || strcmp (valp, "one") != 0)
-    {
-      puts ("getenv #3 failed");
-      result = 1;
-    }
+  TEST_COMPARE_STRING (valp, "one");
 
   /* Now replace the value using putenv.  */
   if (putenv (putenv_val) != 0)
