@@ -181,12 +181,11 @@ __ieee754_lgammaf_r (float x, int *signgamp)
      Note that for a binary32 |x| >= 2^23, x is necessarily an integer,
      and we already dealed with negative integers, thus now:
      -2^23 < x < +Inf and x is not a negative integer nor 0, 1, 2. */
-  int k;
-  if (__builtin_expect (fx >= 0x1p31f, 0))
-    k = INT_MAX;
+  if (__glibc_unlikely (fx >= 0))
+    *signgamp = 1;
   else
-    k = fx;
-  *signgamp = 1 - (((k & (k >> 31)) & 1) << 1);
+    /* gamma(x) is negative in (-2n-1,-2n), thus when fx is odd.  */
+    *signgamp = 1 - ((((int) fx) & 1) << 1);
 
   double z = ax, f;
   if (__glibc_unlikely (ax < 0x1.52p-1f))
