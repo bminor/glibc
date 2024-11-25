@@ -18,9 +18,12 @@
 
 #include <setjmp.h>
 #include <signal.h>
+#include <stdio.h>
 #include <string.h>
 
-static char buf[SIGSTKSZ * 4];
+#include <support/support.h>
+
+static char *buf;
 static jmp_buf jb;
 
 static void
@@ -49,8 +52,10 @@ do_test (void)
   set_fortify_handler (handler);
 
   /* Create a valid signal stack and enable it.  */
+  size_t bufsize = SIGSTKSZ * 4;
+  buf = xmalloc (bufsize);
   ss.ss_sp = buf;
-  ss.ss_size = sizeof (buf);
+  ss.ss_size = bufsize;
   ss.ss_flags = 0;
   if (sigaltstack (&ss, NULL) < 0)
     {
@@ -65,8 +70,8 @@ do_test (void)
 
   /* Shrink the signal stack so the jmpbuf is now invalid.
      We adjust the start & end to handle stacks that grow up & down.  */
-  ss.ss_sp = buf + sizeof (buf) / 2;
-  ss.ss_size = sizeof (buf) / 4;
+  ss.ss_sp = buf + bufsize / 2;
+  ss.ss_size = bufsize / 4;
   if (sigaltstack (&ss, NULL) < 0)
     {
       printf ("second sigaltstack failed: %m\n");

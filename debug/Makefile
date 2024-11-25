@@ -283,6 +283,7 @@ tests = \
   tst-backtrace6 \
   tst-longjmp_chk \
   tst-longjmp_chk2 \
+  tst-longjmp_chk3 \
   tst-realpath-chk \
   tst-sprintf-fortify-unchecked \
   # tests
