@@ -81,26 +81,26 @@ ENTRY (FUNC_NAME, 4)
 	rlwinm	r9,r4,0,19,19
 
 	/* Save some non-volatile registers on the stack.  */
-	std	r26,-48(r1)
-	std	r27,-40(r1)
+	std	r26,-56(r1)
+	std	r27,-48(r1)
 
 	rlwinm	r8,r10,0,19,19
 
-	std	r28,-32(r1)
-	std	r29,-24(r1)
+	std	r28,-40(r1)
+	std	r29,-32(r1)
 
 	cmpld	cr7,r9,r8
 
-	std	r30,-16(r1)
-	std	r31,-8(r1)
+	std	r30,-24(r1)
+	std	r31,-16(r1)
 
 	/* Update CFI.  */
-	cfi_offset(r26, -48)
-	cfi_offset(r27, -40)
-	cfi_offset(r28, -32)
-	cfi_offset(r29, -24)
-	cfi_offset(r30, -16)
-	cfi_offset(r31, -8)
+	cfi_offset(r26, -56)
+	cfi_offset(r27, -48)
+	cfi_offset(r28, -40)
+	cfi_offset(r29, -32)
+	cfi_offset(r30, -24)
+	cfi_offset(r31, -16)
 
 	beq	cr7,L(unaligned_lt_16)
 	rldicl	r9,r4,0,61
@@ -205,12 +205,12 @@ L(short_path_loop_end_1):
 #endif
 L(short_path_loop_end):
 	/* Restore non-volatile registers.  */
-	ld	r26,-48(r1)
-	ld	r27,-40(r1)
-	ld	r28,-32(r1)
-	ld	r29,-24(r1)
-	ld	r30,-16(r1)
-	ld	r31,-8(r1)
+	ld	r26,-56(r1)
+	ld	r27,-48(r1)
+	ld	r28,-40(r1)
+	ld	r29,-32(r1)
+	ld	r30,-24(r1)
+	ld	r31,-16(r1)
 	blr
 
 	/* This code pads the remainder of dest with NULL bytes.  The algorithm
@@ -242,6 +242,9 @@ L(zero_pad_start_1):
 	mflr	r0
 	std	r0,16(r1)
 
+#ifdef __ROP_PROTECT__
+	hashst	0,FRAME_ROP_SAVE(r1)
+#endif
 	/* Create the stack frame.  */
 	stdu	r1,-FRAMESIZE(r1)
 	cfi_adjust_cfa_offset(FRAMESIZE)
@@ -261,18 +264,21 @@ L(zero_pad_start_1):
 #endif
 
 	/* Restore non-volatile registers and return.  */
-	ld	r26,FRAMESIZE-48(r1)
-	ld	r27,FRAMESIZE-40(r1)
-	ld	r28,FRAMESIZE-32(r1)
-	ld	r29,FRAMESIZE-24(r1)
-	ld	r30,FRAMESIZE-16(r1)
-	ld	r31,FRAMESIZE-8(r1)
+	ld	r26,FRAMESIZE-56(r1)
+	ld	r27,FRAMESIZE-48(r1)
+	ld	r28,FRAMESIZE-40(r1)
+	ld	r29,FRAMESIZE-32(r1)
+	ld	r30,FRAMESIZE-24(r1)
+	ld	r31,FRAMESIZE-16(r1)
 	/* Restore the stack frame.  */
 	addi	r1,r1,FRAMESIZE
 	cfi_adjust_cfa_offset(-FRAMESIZE)
 	/* Restore the link register.  */
 	mtlr	r0
 	cfi_restore(lr)
+#ifdef __ROP_PROTECT__
+	hashchk	0,FRAME_ROP_SAVE(r1)
+#endif
 	blr
 
 	/* The common case where [src]+16 will not cross a 4K page boundary.

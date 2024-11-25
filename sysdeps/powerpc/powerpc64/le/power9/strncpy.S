@@ -365,8 +365,8 @@ L(zero_padding_end):
 
 	.align	4
 L(zero_padding_memset):
-	std	r30,-8(r1)   /* Save r30 on the stack.  */
-	cfi_offset(r30, -8)
+	std	r30,-16(r1)  /* Save r30 on the stack.  */
+	cfi_offset(r30, -16)
 	mr	r30,r3       /* Save the return value of strncpy.  */
 	/* Prepare the call to memset.  */
 	mr	r3,r11       /* Pointer to the area to be zero-filled.  */
@@ -380,6 +380,9 @@ L(zero_padding_memset):
 	mflr	r0
 	std	r0,16(r1)
 
+#ifdef __ROP_PROTECT__
+	hashst	0,FRAME_ROP_SAVE(r1)
+#endif
 	/* Create the stack frame.  */
 	stdu	r1,-FRAMESIZE(r1)
 	cfi_adjust_cfa_offset(FRAMESIZE)
@@ -395,13 +398,16 @@ L(zero_padding_memset):
 	mr	r3,r30       /* Restore the return value of strncpy, i.e.:
 				dest.  For stpncpy, the return value is the
 				same as return value of memset.  */
-	ld	r30,FRAMESIZE-8(r1) /* Restore r30.  */
+	ld	r30,FRAMESIZE-16(r1) /* Restore r30.  */
 	/* Restore the stack frame.  */
 	addi	r1,r1,FRAMESIZE
 	cfi_adjust_cfa_offset(-FRAMESIZE)
 	/* Restore the link register.  */
 	mtlr	r0
 	cfi_restore(lr)
+#ifdef __ROP_PROTECT__
+	hashchk	0,FRAME_ROP_SAVE(r1)
+#endif
 	blr
 
 END (FUNC_NAME)
