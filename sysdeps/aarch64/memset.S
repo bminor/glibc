@@ -104,7 +104,7 @@ L(set_long):
 	mrs	zva_val, dczid_el0
 	and	zva_val, zva_val, 31
 	cmp	zva_val, 4		/* ZVA size is 64 bytes.  */
-	b.ne	L(zva_128)
+	b.ne	L(no_zva)
 #endif
 	stp	q0, q0, [dst, 32]
 	bic	dst, dstin, 63
@@ -136,29 +136,6 @@ L(no_zva_loop):
 	stp	q0, q0, [dstend, -64]
 	stp	q0, q0, [dstend, -32]
 	ret
-
-#ifndef ZVA64_ONLY
-	.p2align 4
-L(zva_128):
-	cmp	zva_val, 5		/* ZVA size is 128 bytes.  */
-	b.ne	L(no_zva)
-
-	stp	q0, q0, [dst, 32]
-	stp	q0, q0, [dst, 64]
-	stp	q0, q0, [dst, 96]
-	bic	dst, dst, 127
-	sub	count, dstend, dst	/* Count is now 128 too large.	*/
-	sub	count, count, 128 + 128	/* Adjust count and bias for loop.  */
-1:	add	dst, dst, 128
-	dc	zva, dst
-	subs	count, count, 128
-	b.hi	1b
-	stp	q0, q0, [dstend, -128]
-	stp	q0, q0, [dstend, -96]
-	stp	q0, q0, [dstend, -64]
-	stp	q0, q0, [dstend, -32]
-	ret
-#endif
 
 END (MEMSET)
 libc_hidden_builtin_def (MEMSET)
