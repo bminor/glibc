@@ -3755,8 +3755,6 @@ __libc_calloc (size_t n, size_t elem_size)
   INTERNAL_SIZE_T sz, oldtopsize;
   void *mem;
   unsigned long clearsize;
-  unsigned long nclears;
-  INTERNAL_SIZE_T *d;
   ptrdiff_t bytes;
 
   if (__glibc_unlikely (__builtin_mul_overflow (n, elem_size, &bytes)))
@@ -3853,40 +3851,8 @@ __libc_calloc (size_t n, size_t elem_size)
     }
 #endif
 
-  /* Unroll clear of <= 36 bytes (72 if 8byte sizes).  We know that
-     contents have an odd number of INTERNAL_SIZE_T-sized words;
-     minimally 3.  */
-  d = (INTERNAL_SIZE_T *) mem;
   clearsize = csz - SIZE_SZ;
-  nclears = clearsize / sizeof (INTERNAL_SIZE_T);
-  assert (nclears >= 3);
-
-  if (nclears > 9)
-    return memset (d, 0, clearsize);
-
-  else
-    {
-      *(d + 0) = 0;
-      *(d + 1) = 0;
-      *(d + 2) = 0;
-      if (nclears > 4)
-        {
-          *(d + 3) = 0;
-          *(d + 4) = 0;
-          if (nclears > 6)
-            {
-              *(d + 5) = 0;
-              *(d + 6) = 0;
-              if (nclears > 8)
-                {
-                  *(d + 7) = 0;
-                  *(d + 8) = 0;
-                }
-            }
-        }
-    }
-
-  return mem;
+  return clear_memory ((INTERNAL_SIZE_T *) mem, clearsize);
 }
 #endif /* IS_IN (libc) */
 
