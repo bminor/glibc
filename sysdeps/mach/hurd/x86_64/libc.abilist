@@ -1542,6 +1542,7 @@ GLIBC_2.38 pthread_condattr_getclock F
 GLIBC_2.38 pthread_condattr_getpshared F
 GLIBC_2.38 pthread_condattr_init F
 GLIBC_2.38 pthread_condattr_setclock F
+GLIBC_2.38 pthread_condattr_setpshared F
 GLIBC_2.38 pthread_equal F
 GLIBC_2.38 pthread_exit F
 GLIBC_2.38 pthread_getschedparam F
@@ -2206,6 +2207,7 @@ GLIBC_2.41 pthread_attr_setstacksize F
 GLIBC_2.41 pthread_condattr_getclock F
 GLIBC_2.41 pthread_condattr_getpshared F
 GLIBC_2.41 pthread_condattr_setclock F
+GLIBC_2.41 pthread_condattr_setpshared F
 HURD_CTHREADS_0.3 __cthread_getspecific F
 HURD_CTHREADS_0.3 __cthread_keycreate F
 HURD_CTHREADS_0.3 __cthread_setspecific F

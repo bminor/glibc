@@ -17,10 +17,11 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <pthread.h>
+#include <shlib-compat.h>
 #include <pt-internal.h>
 
 int
-pthread_condattr_setpshared (pthread_condattr_t *attr, int pshared)
+__pthread_condattr_setpshared (pthread_condattr_t *attr, int pshared)
 {
   switch (pshared)
     {
@@ -36,3 +37,8 @@ pthread_condattr_setpshared (pthread_condattr_t *attr, int pshared)
     }
 }
 stub_warning (pthread_condattr_setpshared)
+versioned_symbol (libc, __pthread_condattr_setpshared, pthread_condattr_setpshared, GLIBC_2_41);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_41)
+compat_symbol (libpthread, __pthread_condattr_setpshared, pthread_condattr_setpshared, GLIBC_2_12);
+#endif

@@ -54,6 +54,7 @@ GLIBC_2.12 pthread_condattr_getclock F
 GLIBC_2.12 pthread_condattr_getpshared F
 GLIBC_2.12 pthread_condattr_init F
 GLIBC_2.12 pthread_condattr_setclock F
+GLIBC_2.12 pthread_condattr_setpshared F
 GLIBC_2.12 pthread_equal F
 GLIBC_2.12 pthread_getschedparam F
 GLIBC_2.12 pthread_self F
@@ -2511,6 +2512,7 @@ GLIBC_2.41 pthread_attr_setstacksize F
 GLIBC_2.41 pthread_condattr_getclock F
 GLIBC_2.41 pthread_condattr_getpshared F
 GLIBC_2.41 pthread_condattr_setclock F
+GLIBC_2.41 pthread_condattr_setpshared F
 GLIBC_2.5 __readlinkat_chk F
 GLIBC_2.5 inet6_opt_append F
 GLIBC_2.5 inet6_opt_find F

@@ -36,7 +36,6 @@ GLIBC_2.12 pthread_cond_init F
 GLIBC_2.12 pthread_cond_signal F
 GLIBC_2.12 pthread_cond_timedwait F
 GLIBC_2.12 pthread_cond_wait F
-GLIBC_2.12 pthread_condattr_setpshared F
 GLIBC_2.12 pthread_create F
 GLIBC_2.12 pthread_detach F
 GLIBC_2.12 pthread_exit F
