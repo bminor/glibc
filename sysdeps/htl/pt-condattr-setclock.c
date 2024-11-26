@@ -17,10 +17,11 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <pthread.h>
+#include <shlib-compat.h>
 #include <pt-internal.h>
 
 int
-pthread_condattr_setclock (pthread_condattr_t *attr, clockid_t clock)
+__pthread_condattr_setclock (pthread_condattr_t *attr, clockid_t clock)
 {
   /* Only a few clocks are allowed.  CLOCK_REALTIME is always allowed.
      CLOCK_MONOTONIC only if the kernel has the necessary support.  */
@@ -34,7 +35,7 @@ pthread_condattr_setclock (pthread_condattr_t *attr, clockid_t clock)
 	  struct timespec ts;
 	  int res;
 
-	  res = clock_gettime (CLOCK_MONOTONIC, &ts);
+	  res = __clock_gettime (CLOCK_MONOTONIC, &ts);
 	  avail = res < 0 ? -1 : 1;
 	}
 
@@ -49,3 +50,8 @@ pthread_condattr_setclock (pthread_condattr_t *attr, clockid_t clock)
 
   return 0;
 }
+versioned_symbol (libc, __pthread_condattr_setclock, pthread_condattr_setclock, GLIBC_2_41);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_41)
+compat_symbol (libpthread, __pthread_condattr_setclock, pthread_condattr_setclock, GLIBC_2_12);
+#endif
