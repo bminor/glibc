@@ -17,6 +17,8 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include "tst-asm-helper.h"
+
 	.variant_pcs	vpcs_call
 	.global	vpcs_call
 	.type	vpcs_call, %function
@@ -121,7 +123,7 @@ vpcs_call_regs:
 	/* Emulate a BL using B, but save x30 before the branch.  */
 	adr	x30, .L_return_addr
 	stp	x30, x29, [x1, 240]
-	b	vpcs_call
+	bl	vpcs_call
 .L_return_addr:
 
 	/* Restore callee-saved registers.  */

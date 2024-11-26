@@ -3,14 +3,13 @@ SECTIONS
  . = SIZEOF_HEADERS;
  .dynamic : { *(.dynamic) } :text :dynamic
  .rodata : { *(.data*) *(.bss*) } :text
- /DISCARD/ : {
-  *(.note.gnu.property)
- }
- .note : { *(.note.*) } :text :note
+ .note : { *(.note) } :text :note
+ .note.gnu.property : { *(.note.gnu.property) } :text :gnu_property
 }
 PHDRS
 {
  text PT_LOAD FLAGS(5) FILEHDR PHDRS;
  dynamic PT_DYNAMIC FLAGS(4);
  note PT_NOTE FLAGS(4);
+ gnu_property PT_GNU_PROPERTY FLAGS(4);
 }

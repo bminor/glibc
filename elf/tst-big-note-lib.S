@@ -20,6 +20,8 @@
    On a typical Linux system with 8MiB "ulimit -s", that was enough
    to trigger stack overflow in open_verify.  */
 
+#include "tst-asm-helper.h"
+
 #define NOTE_SIZE 8*1024*1024
 
 .pushsection .note.big,"a"
