@@ -21,7 +21,6 @@
 
 #include <pthread.h>
 
-int __pthread_condattr_init (pthread_condattr_t *);
 int __pthread_cond_broadcast (pthread_cond_t *);
 int __pthread_cond_destroy (pthread_cond_t *);
 int __pthread_cond_init (pthread_cond_t *,
@@ -57,7 +56,6 @@ int _cthreads_ftrylockfile (FILE *);
    so if possible avoid breaking it and append new hooks to the end.  */
 struct pthread_functions
 {
-  int (*ptr_pthread_condattr_init) (pthread_condattr_t *);
   int (*ptr_pthread_cond_broadcast) (pthread_cond_t *);
   int (*ptr_pthread_cond_destroy) (pthread_cond_t *);
   int (*ptr_pthread_cond_init) (pthread_cond_t *,

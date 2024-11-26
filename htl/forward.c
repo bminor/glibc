@@ -53,9 +53,6 @@ name decl								      \
 #define FORWARD(name, decl, params, defretval) \
   FORWARD2 (name, int, decl, params, return defretval)
 
-FORWARD (pthread_condattr_init, (pthread_condattr_t *attr), (attr), 0)
-
-
 FORWARD (pthread_cond_broadcast, (pthread_cond_t *cond), (cond), 0)
 FORWARD (pthread_cond_destroy, (pthread_cond_t *cond), (cond), 0)
 FORWARD (pthread_cond_init,

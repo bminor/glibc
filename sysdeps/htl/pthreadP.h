@@ -98,11 +98,13 @@ int __pthread_attr_getstack (const pthread_attr_t *, void **, size_t *);
 libc_hidden_proto (__pthread_attr_getstack)
 void __pthread_testcancel (void);
 int __pthread_attr_init (pthread_attr_t *attr);
+int __pthread_condattr_init (pthread_condattr_t *attr);
 
 #define __pthread_raise_internal(__sig) raise (__sig)
 
 libc_hidden_proto (__pthread_self)
 libc_hidden_proto (__pthread_attr_init)
+libc_hidden_proto (__pthread_condattr_init)
 
 #if IS_IN (libpthread)
 hidden_proto (__pthread_create)

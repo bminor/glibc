@@ -52,6 +52,7 @@ GLIBC_2.12 pthread_attr_setstacksize F
 GLIBC_2.12 pthread_condattr_destroy F
 GLIBC_2.12 pthread_condattr_getclock F
 GLIBC_2.12 pthread_condattr_getpshared F
+GLIBC_2.12 pthread_condattr_init F
 GLIBC_2.12 pthread_equal F
 GLIBC_2.12 pthread_getschedparam F
 GLIBC_2.12 pthread_self F
