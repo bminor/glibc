@@ -93,7 +93,6 @@ libpthread-routines := \
   pt-rwlock-timedwrlock \
   pt-rwlock-unlock \
   pt-condattr-init \
-  pt-condattr-getpshared \
   pt-condattr-setclock \
   pt-condattr-setpshared \
   pt-cond-destroy \
@@ -206,6 +205,7 @@ routines := \
   pt-cond \
   pt-condattr-destroy \
   pt-condattr-getclock \
+  pt-condattr-getpshared \
   pt-getschedparam \
   pt-nthreads \
   pt-pthread_self \
