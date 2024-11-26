@@ -329,6 +329,7 @@ extern const struct __pthread_rwlockattr __pthread_default_rwlockattr;
 
 /* Default condition attributes.  */
 extern const struct __pthread_condattr __pthread_default_condattr;
+libc_hidden_proto (__pthread_default_condattr)
 
 /* Semaphore encoding.
    See nptl implementation for the details.  */

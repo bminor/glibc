@@ -83,6 +83,7 @@ libc {
     __pthread_attr_setstacksize;
     __pthread_attr_setstackaddr;
     __pthread_attr_setstack;
+    __pthread_default_condattr;
   }
 }
 
