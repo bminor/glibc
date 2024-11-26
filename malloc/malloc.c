@@ -4677,7 +4677,7 @@ _int_free_chunk (mstate av, mchunkptr p, INTERNAL_SIZE_T size, int have_lock)
    P has already been locked.  It will perform sanity check, then try the
    fast path to free into tcache.  If the attempt not success, free the
    chunk to arena.  */
-static void
+static inline void
 _int_free (mstate av, mchunkptr p, int have_lock)
 {
   INTERNAL_SIZE_T size;        /* its size */
