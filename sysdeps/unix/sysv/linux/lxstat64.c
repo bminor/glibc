@@ -69,7 +69,7 @@ ___lxstat64 (int vers, const char *name, struct stat64 *buf)
 #else
 # if STAT_IS_KERNEL_STAT
   /* New kABIs which uses generic pre 64-bit time Linux ABI,
-     e.g. csky, nios2  */
+     e.g. csky.  */
   if (vers == _STAT_VER_KERNEL)
     return INLINE_SYSCALL_CALL (fstatat64, AT_FDCWD, name, buf,
 				AT_SYMLINK_NOFOLLOW);

@@ -104,7 +104,7 @@ fstatat64_time64_stat (int fd, const char *file, struct __stat64_t64 *buf,
 #else
 # ifdef __NR_fstatat64
   /* All kABIs with non-LFS support and with old 32-bit time_t support
-     e.g. arm, csky, i386, hppa, m68k, microblaze, nios2, sh, powerpc32,
+     e.g. arm, csky, i386, hppa, m68k, microblaze, sh, powerpc32,
      and sparc32.  */
   struct stat64 st64;
   r = INTERNAL_SYSCALL_CALL (fstatat64, fd, file, &st64, flag);

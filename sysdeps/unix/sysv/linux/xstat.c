@@ -38,7 +38,7 @@ __xstat (int vers, const char *name, struct stat *buf)
       {
 # if STAT_IS_KERNEL_STAT
 	/* New kABIs which uses generic pre 64-bit time Linux ABI,
-	   e.g. csky, nios2  */
+	   e.g. csky.  */
 	int r = INLINE_SYSCALL_CALL (fstatat64, AT_FDCWD, name, buf, 0);
 	return r ?: stat_overflow (buf);
 # else

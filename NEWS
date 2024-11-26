@@ -47,6 +47,8 @@ Deprecated and removed features, and other changes affecting compatibility:
   to keep the old behavior, where the handler does not stop the process
   execution.
 
+* The nios2*-*-linux-gnu configurations are no longer supported.
+
 Changes to build and runtime requirements:
 
 * On recent Linux kernels with vDSO getrandom support, getrandom does not

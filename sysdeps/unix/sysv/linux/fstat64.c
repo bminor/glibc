@@ -30,7 +30,7 @@ __fstat64_time64 (int fd, struct __stat64_t64 *buf)
 {
 #if !FSTATAT_USE_STATX
 # if XSTAT_IS_XSTAT64
-  /* The __NR_stat macro is defined for all ABIs that also define 
+  /* The __NR_stat macro is defined for all ABIs that also define
      XSTAT_IS_STAT64, so to correctly identify alpha and sparc check
      __NR_newfstatat (similar to what fstatat64 does).  */
 #  ifdef __NR_newfstatat
@@ -60,7 +60,7 @@ __fstat64_time64 (int fd, struct __stat64_t64 *buf)
 # endif
 #else /* !FSTATAT_USE_STATX  */
   /* All kABIs with non-LFS support and with old 32-bit time_t support
-     e.g. arm, csky, i386, hppa, m68k, microblaze, nios2, sh, powerpc32,
+     e.g. arm, csky, i386, hppa, m68k, microblaze, sh, powerpc32,
      and sparc32.  */
   if (fd < 0)
     {

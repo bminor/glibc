@@ -354,9 +354,6 @@ class Context(object):
                                  'ccopts': '-mabi=32'},
                                 {'variant': 'n64',
                                  'ccopts': '-mabi=64'}])
-        self.add_config(arch='nios2',
-                        os_name='linux-gnu',
-                        gcc_cfg=['--enable-obsolete'])
         self.add_config(arch='or1k',
                         os_name='linux-gnu',
                         gcc_cfg=['--with-multilib-list=mcmov,mhard-float'],
@@ -1321,7 +1318,6 @@ def install_linux_headers(policy, cmdlist):
                 'm68k': 'm68k',
                 'microblaze': 'microblaze',
                 'mips': 'mips',
-                'nios2': 'nios2',
                 'or1k': 'openrisc',
                 'powerpc': 'powerpc',
                 's390': 's390',
