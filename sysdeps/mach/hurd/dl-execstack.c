@@ -47,4 +47,3 @@ _dl_make_stack_executable (void **stack_endp)
   return ENOSYS;
 #endif
 }
-rtld_hidden_def (_dl_make_stack_executable)

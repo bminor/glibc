@@ -360,7 +360,4 @@ ld {
     __rseq_offset;
     __rseq_size;
   }
-  GLIBC_PRIVATE {
-    __nptl_change_stack_perm;
-  }
 }

@@ -448,25 +448,6 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
 	  lll_unlock (GL (dl_stack_cache_lock), LLL_PRIVATE);
 
-
-	  /* There might have been a race.  Another thread might have
-	     caused the stacks to get exec permission while this new
-	     stack was prepared.  Detect if this was possible and
-	     change the permission if necessary.  */
-	  if (__builtin_expect ((GL(dl_stack_flags) & PF_X) != 0
-				&& (prot & PROT_EXEC) == 0, 0))
-	    {
-	      int err = __nptl_change_stack_perm (pd);
-	      if (err != 0)
-		{
-		  /* Free the stack memory we just allocated.  */
-		  (void) __munmap (mem, size);
-
-		  return err;
-		}
-	    }
-
-
 	  /* Note that all of the stack and the thread descriptor is
 	     zeroed.  This means we do not have to initialize fields
 	     with initial value zero.  This is specifically true for

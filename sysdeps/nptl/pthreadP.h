@@ -289,12 +289,6 @@ extern _Noreturn void __syscall_do_cancel (void) attribute_hidden;
 extern void __nptl_free_tcb (struct pthread *pd);
 libc_hidden_proto (__nptl_free_tcb)
 
-/* Change the permissions of a thread stack.  Called from
-   _dl_make_stacks_executable and pthread_create.  */
-int
-__nptl_change_stack_perm (struct pthread *pd);
-rtld_hidden_proto (__nptl_change_stack_perm)
-
 /* longjmp handling.  */
 extern void __pthread_cleanup_upto (__jmp_buf target, char *targetframe);
 libc_hidden_proto (__pthread_cleanup_upto)

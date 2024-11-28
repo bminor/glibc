@@ -61,11 +61,18 @@ ifeq ($(subdir),elf)
 # this test is expected to fail.
 ifneq ($(mips-has-gnustack),yes)
 test-xfail-check-execstack = yes
+CFLAGS-tst-execstack.c += -DDEFAULT_RWX_STACK=1
 endif
 endif
 
 ifeq ($(subdir),stdlib)
 gen-as-const-headers += ucontext_i.sym
+endif
+
+ifeq ($(subdir),nptl)
+ifeq ($(mips-force-execstack),yes)
+CFLAGS-tst-execstack-threads.c += -DDEFAULT_RWX_STACK=1
+endif
 endif
 
 ifeq ($(mips-force-execstack),yes)

@@ -178,10 +178,6 @@ size_t _dl_stack_cache_actsize;
 uintptr_t _dl_in_flight_stack;
 int _dl_stack_cache_lock;
 #else
-/* If loading a shared object requires that we make the stack executable
-   when it was not, we do it by calling this function.
-   It returns an errno code or zero on success.  */
-int (*_dl_make_stack_executable_hook) (void **) = _dl_make_stack_executable;
 void (*_dl_init_static_tls) (struct link_map *) = &_dl_nothread_init_static_tls;
 #endif
 struct dl_scope_free_list *_dl_scope_free_list;

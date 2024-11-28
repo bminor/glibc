@@ -73,6 +73,12 @@ Deprecated and removed features, and other changes affecting compatibility:
 
 * The nios2*-*-linux-gnu configurations are no longer supported.
 
+* dlopen and dlmopen no longer make the stack executable if a shared
+  library requires it, either implicitly because of a missing GNU_STACK ELF
+  header (and default ABI permission having the executable bit set) or
+  explicitly because of the executable bit in GNU_STACK, and the stack is
+  not already executable.  Instead, loading such objects will fail.
+
 Changes to build and runtime requirements:
 
 * On recent Linux kernels with vDSO getrandom support, getrandom does not

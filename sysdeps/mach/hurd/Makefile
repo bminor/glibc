@@ -300,6 +300,8 @@ ifeq ($(subdir),elf)
 check-execstack-xfail += ld.so libc.so libpthread.so
 # We always create a thread for signals
 test-xfail-tst-single_threaded-pthread-static = yes
+
+CFLAGS-tst-execstack.c += -DDEFAULT_RWX_STACK=1
 endif
 
 # For bug 30166

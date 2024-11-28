@@ -23,16 +23,33 @@
 #include <stackinfo.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdlib.h>
 #include <support/xdlfcn.h>
 #include <support/xthread.h>
 #include <support/check.h>
 #include <support/xstdio.h>
 
-static void deeper (void (*f) (void));
+/* The DEFAULT_RWX_STACK controls whether the toolchain enables an executable
+   stack for the testcase (which does not contain features that might require
+   an executable stack, such as nested function).
+   Some ABIs do require an executable stack, even if the toolchain supports
+   non-executable stack.  In this cases the DEFAULT_RWX_STACK can be
+   overridden.  */
+#ifndef DEFAULT_RWX_STACK
+# define DEFAULT_RWX_STACK 0
+#else
+static void
+deeper (void (*f) (void))
+{
+  char stack[1100 * 1024];
+  explicit_bzero (stack, sizeof stack);
+  (*f) ();
+  memfrob (stack, sizeof stack);
+}
+#endif
 
 #if USE_PTHREADS
-# include <pthread.h>
-
+# if DEFAULT_RWX_STACK
 static void *
 tryme_thread (void *f)
 {
@@ -40,16 +57,21 @@ tryme_thread (void *f)
 
   return 0;
 }
+# endif
 
 static pthread_barrier_t startup_barrier, go_barrier;
 static void *
 waiter_thread (void *arg)
 {
-  void **f = arg;
   xpthread_barrier_wait (&startup_barrier);
   xpthread_barrier_wait (&go_barrier);
 
+# if DEFAULT_RWX_STACK
+  void **f = arg;
   (*((void (*) (void)) *f)) ();
+# else
+  abort ();
+# endif
 
   return 0;
 }
@@ -91,7 +113,9 @@ do_test (void)
 
   printf ("executable stacks %sallowed\n", allow_execstack ? "" : "not ");
 
+#if USE_PTHREADS || DEFAULT_RWX_STACK
   static void *f;		/* Address of this is used in other threads. */
+#endif
 
 #if USE_PTHREADS
   /* Create some threads while stacks are nonexecutable.  */
@@ -108,7 +132,7 @@ do_test (void)
   puts ("threads waiting");
 #endif
 
-#if USE_PTHREADS
+#if USE_PTHREADS && DEFAULT_RWX_STACK
   void *old_stack_addr, *new_stack_addr;
   size_t stack_size;
   pthread_t me = pthread_self ();
@@ -130,11 +154,10 @@ do_test (void)
   const char *soname = "tst-execstack-mod.so";
 #endif
   void *h = dlopen (soname, RTLD_LAZY);
-  if (h == NULL)
-    {
-      printf ("cannot load: %s\n", dlerror ());
-      return allow_execstack;
-    }
+#if !DEFAULT_RWX_STACK
+  TEST_VERIFY_EXIT (h == NULL);
+#else
+  TEST_VERIFY_EXIT (h != NULL);
 
   f = xdlsym (h, "tryme");
 
@@ -150,9 +173,9 @@ do_test (void)
 
 # if _STACK_GROWS_DOWN
     new_stack_addr += stack_size;
-# else
+#  else
     new_stack_addr -= stack_size;
-# endif
+#  endif
 
   /* It is possible that the dlopen'd module may have been mmapped just below
      the stack.  The stack size is taken as MIN(stack rlimit size, end of last
@@ -164,12 +187,12 @@ do_test (void)
      should remain the same, which is computed as stackaddr + stacksize.  */
   TEST_VERIFY_EXIT (old_stack_addr == new_stack_addr);
   printf ("Stack address remains the same: %p\n", old_stack_addr);
-#endif
+# endif
 
   /* Test that growing the stack region gets new executable pages too.  */
   deeper ((void (*) (void)) f);
 
-#if USE_PTHREADS
+# if USE_PTHREADS
   /* Test that a fresh thread now gets an executable stack.  */
   xpthread_create (NULL, &tryme_thread, f);
 
@@ -179,19 +202,10 @@ do_test (void)
   xpthread_barrier_wait (&go_barrier);
 
   pthread_exit ((void *) (long int) (! allow_execstack));
+# endif
 #endif
 
   return ! allow_execstack;
 }
-
-static void
-deeper (void (*f) (void))
-{
-  char stack[1100 * 1024];
-  explicit_bzero (stack, sizeof stack);
-  (*f) ();
-  memfrob (stack, sizeof stack);
-}
-
 
 #include <support/test-driver.c>
