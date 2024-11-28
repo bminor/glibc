@@ -10,10 +10,6 @@ pthread_attr_[sg]etstack
 
   some more tests needed
 
-pthread_getcpuclockid
-
-  check that value is reset -> rt subdir
-
 pthread_getschedparam
 pthread_setschedparam
 

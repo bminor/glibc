@@ -1,5 +1,4 @@
-/* Smoke test to verify that pthread_getcpuclockid fails with ESRCH when the
-   thread in question has exited.
+/* pthread_getcpuclockid should fail with ESRCH when the thread exits.
    Copyright the GNU Toolchain Authors.
    This file is part of the GNU C Library.
 
@@ -16,6 +15,12 @@
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
+
+/* The input thread descriptor to pthread_getcpuclockid needs to be valid when
+   the function is called.  For the purposes of this test, this means that the
+   thread should not be detached, have exited, but not joined.  This should be
+   good enough to complete coverage for pthread_getcpuclockid alongside
+   tst-clock2.  */
 
 #include <errno.h>
 #include <pthread.h>
