@@ -567,6 +567,9 @@ tests-execstack-yes = \
   tst-execstack-needed \
   tst-execstack-prog \
   # tests-execstack-yes
+tests-execstack-static-yes = \
+  tst-execstack-prog-static
+  # tests-execstack-static-yes
 endif
 endif
 ifeq ($(have-depaudit),yes)
@@ -662,6 +665,7 @@ $(objpfx)tst-rtld-dash-dash.out: tst-rtld-dash-dash.sh $(objpfx)ld.so
 	$(evaluate-test)
 
 tests += $(tests-execstack-$(have-z-execstack))
+tests-static+= $(tests-execstack-static-$(have-z-execstack))
 ifeq ($(run-built-tests),yes)
 tests-special += \
   $(objpfx)tst-ldconfig-X.out \
@@ -1982,6 +1986,9 @@ LDFLAGS-tst-execstack-needed = -Wl,-z,noexecstack
 LDFLAGS-tst-execstack-prog = -Wl,-z,execstack
 CFLAGS-tst-execstack-prog.c += -Wno-trampolines
 CFLAGS-tst-execstack-mod.c += -Wno-trampolines
+
+LDFLAGS-tst-execstack-prog-static = -Wl,-z,execstack
+CFLAGS-tst-execstack-prog-static.c += -Wno-trampolines
 endif
 
 LDFLAGS-tst-array2 = -Wl,--no-as-needed
