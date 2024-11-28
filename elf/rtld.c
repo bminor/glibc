@@ -1645,6 +1645,10 @@ dl_main (const ElfW(Phdr) *phdr,
 
   bool has_interp = rtld_setup_main_map (main_map);
 
+  if ((__glibc_unlikely (GL(dl_stack_flags)) & PF_X)
+      && TUNABLE_GET (glibc, rtld, execstack, int32_t, NULL) == 0)
+    _dl_fatal_printf ("Fatal glibc error: executable stack is not allowed\n");
+
   /* If the current libname is different from the SONAME, add the
      latter as well.  */
   if (_dl_rtld_map.l_info[DT_SONAME] != NULL

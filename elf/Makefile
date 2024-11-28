@@ -570,6 +570,13 @@ tests-execstack-yes = \
 tests-execstack-static-yes = \
   tst-execstack-prog-static
   # tests-execstack-static-yes
+ifeq (yes,$(run-built-tests))
+tests-execstack-special-yes = \
+  $(objpfx)tst-execstack-needed-noexecstack.out \
+  $(objpfx)tst-execstack-prog-noexecstack.out \
+  $(objpfx)tst-execstack-prog-static-noexecstack.out \
+  # tests-execstack-special-yes
+endif # $(run-built-tests)
 endif
 endif
 ifeq ($(have-depaudit),yes)
@@ -666,6 +673,7 @@ $(objpfx)tst-rtld-dash-dash.out: tst-rtld-dash-dash.sh $(objpfx)ld.so
 
 tests += $(tests-execstack-$(have-z-execstack))
 tests-static+= $(tests-execstack-static-$(have-z-execstack))
+tests-special += $(tests-execstack-special-$(have-z-execstack))
 ifeq ($(run-built-tests),yes)
 tests-special += \
   $(objpfx)tst-ldconfig-X.out \
@@ -1989,6 +1997,42 @@ CFLAGS-tst-execstack-mod.c += -Wno-trampolines
 
 LDFLAGS-tst-execstack-prog-static = -Wl,-z,execstack
 CFLAGS-tst-execstack-prog-static.c += -Wno-trampolines
+
+ifeq (yes,$(build-hardcoded-path-in-tests))
+tst-execstack-prog-noexecstack-msg = "Fatal glibc error: executable stack is not allowed$$"
+else
+tst-execstack-prog-noexecstack-msg = "error while loading shared libraries:.*cannot enable executable stack as shared object requires:"
+endif
+
+$(objpfx)tst-execstack-prog-noexecstack.out: $(objpfx)tst-execstack-prog
+	$(test-program-cmd-before-env) \
+		$(run-program-env) \
+		GLIBC_TUNABLES=glibc.rtld.execstack=0 \
+		$(test-program-cmd-after-env) $< \
+		> $@ 2>&1; echo "status: $$?" >> $@; \
+	grep -q $(tst-execstack-prog-noexecstack-msg) $@ \
+	  && grep -q '^status: 127$$' $@; \
+	  $(evaluate-test)
+
+$(objpfx)tst-execstack-needed-noexecstack.out: $(objpfx)tst-execstack-needed
+	$(test-program-cmd-before-env) \
+		$(run-program-env) \
+		GLIBC_TUNABLES=glibc.rtld.execstack=0 \
+		$(test-program-cmd-after-env) $< \
+		> $@ 2>&1; echo "status: $$?" >> $@; \
+	grep -q 'error while loading shared libraries:.*cannot enable executable stack as shared object requires:' $@ \
+	  && grep -q '^status: 127$$' $@; \
+	  $(evaluate-test)
+
+$(objpfx)tst-execstack-prog-static-noexecstack.out: $(objpfx)tst-execstack-prog-static
+	$(test-program-cmd-before-env) \
+		$(run-program-env) \
+		GLIBC_TUNABLES=glibc.rtld.execstack=0 \
+		$< \
+		> $@ 2>&1; echo "status: $$?" >> $@; \
+	grep -q 'Fatal glibc error: executable stack is not allowed$$' $@ \
+	  && grep -q '^status: 127$$' $@; \
+	  $(evaluate-test)
 endif
 
 LDFLAGS-tst-array2 = -Wl,--no-as-needed

@@ -32,6 +32,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <gnu/lib-names.h>
+#include <dl-tunables.h>
 
 /* Type for the buffer we put the ELF header and hopefully the program
    header.  This buffer does not really have to be too large.  In most
@@ -1317,7 +1318,8 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
       /* The stack is presently not executable, but this module
 	 requires that it be executable.  Only tries to change the
 	 stack protection during process startup.  */
-      if ((mode & __RTLD_DLOPEN) == 0)
+      if ((mode & __RTLD_DLOPEN) == 0
+	  && TUNABLE_GET (glibc, rtld, execstack, int32_t, NULL) == 1)
 	errval = _dl_make_stack_executable (stack_endp);
       else
 	errval = EINVAL;

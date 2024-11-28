@@ -45,6 +45,7 @@
 #include <dl-find_object.h>
 #include <array_length.h>
 #include <dl-symbol-redir-ifunc.h>
+#include <dl-tunables.h>
 
 extern char *__progname;
 char **_dl_argv = &__progname;	/* This is checked for some error messages.  */
@@ -330,6 +331,10 @@ _dl_non_dynamic_init (void)
 	_dl_main_map.l_relro_size = ph->p_memsz;
 	break;
       }
+
+  if ((__glibc_unlikely (GL(dl_stack_flags)) & PF_X)
+      && TUNABLE_GET (glibc, rtld, execstack, int32_t, NULL) == 0)
+    _dl_fatal_printf ("Fatal glibc error: executable stack is not allowed\n");
 
   call_function_static_weak (_dl_find_object_init);
 

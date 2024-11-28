@@ -355,6 +355,34 @@ tests for @code{AT_SECURE} programs and not meant to be a security feature.
 The default value of this tunable is @samp{0}.
 @end deftp
 
+@deftp Tunable glibc.rtld.execstack
+@Theglibc{} will use either the default architecture ABI flags (that might
+contain the executable bit) or the value of @code{PT_GNU_STACK} (if present)
+to define whether to mark the stack non-executable and if the program or
+any shared library dependency requires an executable stack the loader will
+change the main stack permission if kernel starts with a non-executable stack.
+
+The @code{glibc.rtld.execstack} can be used to control whether an executable
+stack is allowed from the main program.  Setting the value to @code{0} disables
+the ABI auto-negotiation (meaning no executable stacks even if the ABI or ELF
+header requires it), while @code{1} enables auto-negotiation (although the
+program might not need an executable stack).
+
+When executable stacks are not allowed, and if the main program requires it,
+the loader will fail with an error message.
+
+Some systems do not have separate page protection flags at the hardware
+level for read access and execute access (sometimes called read-implies-exec).
+This mode can also be enabled on certain systems where the hardware supports
+separate protection flags.  The @theglibc{} tunable configuration is independent
+of hardware capabilities and kernel configuration.
+
+@strong{NB:} Trying to load a dynamic shared library with @code{dlopen} or
+@code{dlmopen} that requires an executable stack will always fail if the
+main program does not require an executable stack at loading time.  This
+is enforced regardless of the tunable value.
+@end deftp
+
 @node Elision Tunables
 @section Elision Tunables
 @cindex elision tunables

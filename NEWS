@@ -62,6 +62,11 @@ Major new features:
   asinf, asinhf, atanf, atan2f, atanhf, coshf, sinhf, and tanhf from CORE-MATH
   project <https://core-math.gitlabpages.inria.fr/>.
 
+* A new tunable, glibc.rtld.execstack, can be used to control whether a
+  executable stacks is allowed from the main program, either implicitly due
+  to a mising GNU_STACK ELF header or explicit explicitly because of the
+  executable bit in GNU_STACK.  The default is to allow executable stacks.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The big-endian ARC port (arceb-linux-gnu) has been removed.
