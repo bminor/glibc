@@ -4209,9 +4209,9 @@ _int_malloc (mstate av, size_t bytes)
 #endif
             }
 
-          /* place chunk in bin */
-
-          if (in_smallbin_range (size))
+          /* Place chunk in bin.  Only malloc_consolidate() and splitting can put
+             small chunks into the unsorted bin. */
+          if (__glibc_unlikely (in_smallbin_range (size)))
             {
               victim_index = smallbin_index (size);
               bck = bin_at (av, victim_index);
@@ -4760,23 +4760,39 @@ _int_free_create_chunk (mstate av, mchunkptr p, INTERNAL_SIZE_T size,
       } else
 	clear_inuse_bit_at_offset(nextchunk, 0);
 
-      /*
-	Place the chunk in unsorted chunk list. Chunks are
-	not placed into regular bins until after they have
-	been given one chance to be used in malloc.
-      */
+      mchunkptr bck, fwd;
 
-      mchunkptr bck = unsorted_chunks (av);
-      mchunkptr fwd = bck->fd;
-      if (__glibc_unlikely (fwd->bk != bck))
-	malloc_printerr ("free(): corrupted unsorted chunks");
-      p->fd = fwd;
+      if (!in_smallbin_range (size))
+        {
+          /* Place large chunks in unsorted chunk list.  Large chunks are
+             not placed into regular bins until after they have
+             been given one chance to be used in malloc.
+
+             This branch is first in the if-statement to help branch
+             prediction on consecutive adjacent frees. */
+          bck = unsorted_chunks (av);
+          fwd = bck->fd;
+          if (__glibc_unlikely (fwd->bk != bck))
+            malloc_printerr ("free(): corrupted unsorted chunks");
+          p->fd_nextsize = NULL;
+          p->bk_nextsize = NULL;
+        }
+      else
+        {
+          /* Place small chunks directly in their smallbin, so they
+             don't pollute the unsorted bin. */
+          int chunk_index = smallbin_index (size);
+          bck = bin_at (av, chunk_index);
+          fwd = bck->fd;
+
+          if (__glibc_unlikely (fwd->bk != bck))
+            malloc_printerr ("free(): chunks in smallbin corrupted");
+
+          mark_bin (av, chunk_index);
+        }
+
       p->bk = bck;
-      if (!in_smallbin_range(size))
-	{
-	  p->fd_nextsize = NULL;
-	  p->bk_nextsize = NULL;
-	}
+      p->fd = fwd;
       bck->fd = p;
       fwd->bk = p;
 
@@ -4785,7 +4801,6 @@ _int_free_create_chunk (mstate av, mchunkptr p, INTERNAL_SIZE_T size,
 
       check_free_chunk(av, p);
     }
-
   else
     {
       /* If the chunk borders the current high end of memory,
