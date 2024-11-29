@@ -253,7 +253,8 @@ tests := \
   tst-boost \
   tst-chmod \
   tst-cpucount \
-  tst-cpuset \
+  tst-cpuset-dynamic \
+  tst-cpuset-static \
   tst-dir \
   tst-execl1 \
   tst-execl2 \
