@@ -41,6 +41,11 @@ struct support_next_to_fault
    fault).  */
 struct support_next_to_fault support_next_to_fault_allocate (size_t size);
 
+/* Allocate a buffer of SIZE bytes just *after* a page which is mapped
+   with PROT_NONE (so that under-running the buffer will cause a
+   fault).  */
+struct support_next_to_fault support_next_to_fault_allocate_before (size_t size);
+
 /* Deallocate the memory region allocated by
    next_to_fault_allocate.  */
 void support_next_to_fault_free (struct support_next_to_fault *);
