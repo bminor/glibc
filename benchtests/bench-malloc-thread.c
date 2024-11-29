@@ -16,6 +16,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef TEST_FUNC
+# define TEST_FUNC(size) malloc(size)
+# define TEST_NAME "malloc"
+#endif
+
 #include <errno.h>
 #include <math.h>
 #include <pthread.h>
@@ -137,7 +142,7 @@ malloc_benchmark_loop (void **ptr_arr)
 
       free (ptr_arr[next_idx]);
 
-      ptr_arr[next_idx] = malloc (next_block);
+      ptr_arr[next_idx] = TEST_FUNC (next_block);
 
       iters++;
     }
@@ -256,7 +261,7 @@ main (int argc, char **argv)
 
   json_attr_object_begin (&json_ctx, "functions");
 
-  json_attr_object_begin (&json_ctx, "malloc");
+  json_attr_object_begin (&json_ctx, TEST_NAME);
 
   json_attr_object_begin (&json_ctx, "");
 
