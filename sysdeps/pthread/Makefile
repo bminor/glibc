@@ -257,6 +257,7 @@ tests += \
   tst-sem15 \
   tst-sem16 \
   tst-sem18 \
+  tst-sem19 \
   tst-setuid3 \
   tst-signal1 \
   tst-signal2 \
