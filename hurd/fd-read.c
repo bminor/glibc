@@ -38,13 +38,15 @@ _hurd_fd_read (struct hurd_fd *fd, void *buf, size_t *nbytes, loff_t offset)
   if (err = HURD_FD_PORT_USE_CANCEL (fd, _hurd_ctty_input (port, ctty, readfd)))
     return err;
 
+  if (__glibc_unlikely (nread > *nbytes))	/* Sanity check for bogus server.  */
+    {
+      if (data != buf)
+	__vm_deallocate (__mach_task_self (), (vm_address_t) data, nread);
+      return EGRATUITOUS;
+    }
+
   if (data != buf)
     {
-      if (nread > *nbytes)	/* Sanity check for bogus server.  */
-	{
-	  __vm_deallocate (__mach_task_self (), (vm_address_t) data, nread);
-	  return EGRATUITOUS;
-	}
       memcpy (buf, data, nread);
       __vm_deallocate (__mach_task_self (), (vm_address_t) data, nread);
     }
