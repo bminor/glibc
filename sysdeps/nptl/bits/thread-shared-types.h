@@ -95,8 +95,7 @@ struct __pthread_cond_s
 {
   __atomic_wide_counter __wseq;
   __atomic_wide_counter __g1_start;
-  unsigned int __g_refs[2] __LOCK_ALIGNMENT;
-  unsigned int __g_size[2];
+  unsigned int __g_size[2] __LOCK_ALIGNMENT;
   unsigned int __g1_orig_size;
   unsigned int __wrefs;
   unsigned int __g_signals[2];
