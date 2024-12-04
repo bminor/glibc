@@ -84,7 +84,7 @@ __condvar_cancel_waiting (pthread_cond_t *cond, uint64_t seq, unsigned int g,
      not hold a reference on the group.  */
   __condvar_acquire_lock (cond, private);
 
-  uint64_t g1_start = __condvar_load_g1_start_relaxed (cond) >> 1;
+  uint64_t g1_start = __condvar_load_g1_start_relaxed (cond);
   if (g1_start > seq)
     {
       /* Our group is closed, so someone provided enough signals for it.
@@ -259,7 +259,6 @@ __condvar_cleanup_waiting (void *arg)
      * Waiters fetch-add while having acquire the mutex associated with the
        condvar.  Signalers load it and fetch-xor it concurrently.
    __g1_start: Starting position of G1 (inclusive)
-     * LSB is index of current G2.
      * Modified by signalers while having acquired the condvar-internal lock
        and observed concurrently by waiters.
    __g1_orig_size: Initial size of G1
@@ -280,11 +279,9 @@ __condvar_cleanup_waiting (void *arg)
      * Reference count used by waiters concurrently with signalers that have
        acquired the condvar-internal lock.
    __g_signals: The number of signals that can still be consumed, relative to
-     the current g1_start.  (i.e. bits 31 to 1 of __g_signals are bits
-     31 to 1 of g1_start with the signal count added)
+     the current g1_start.  (i.e. g1_start with the signal count added)
      * Used as a futex word by waiters.  Used concurrently by waiters and
        signalers.
-     * LSB is currently reserved and 0.
    __g_size: Waiters remaining in this group (i.e., which have not been
      signaled yet.
      * Accessed by signalers and waiters that cancel waiting (both do so only
@@ -391,9 +388,8 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
          too.  */
       unsigned int signals = atomic_load_acquire (cond->__data.__g_signals + g);
       uint64_t g1_start = __condvar_load_g1_start_relaxed (cond);
-      unsigned int lowseq = (g1_start & 1) == g ? signals : g1_start & ~1U;
 
-      if (seq < (g1_start >> 1))
+      if (seq < g1_start)
         {
           /* If the group is closed already,
              then this waiter originally had enough extra signals to
@@ -406,13 +402,13 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
          by now, perhaps in the process of switching back to an older
          G2, but in either case we're allowed to consume the available
          signal and should not block anymore.  */
-      if ((int)(signals - lowseq) >= 2)
+      if ((int)(signals - (unsigned int)g1_start) > 0)
         {
 	  /* Try to grab a signal.  See above for MO.  (if we do another loop
 	     iteration we need to see the correct value of g1_start)  */
 	    if (atomic_compare_exchange_weak_acquire (
 			cond->__data.__g_signals + g,
-			&signals, signals - 2))
+			&signals, signals - 1))
 	      break;
 	    else
 	      continue;
