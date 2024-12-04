@@ -143,23 +143,6 @@ __condvar_cancel_waiting (pthread_cond_t *cond, uint64_t seq, unsigned int g,
     }
 }
 
-/* Wake up any signalers that might be waiting.  */
-static void
-__condvar_dec_grefs (pthread_cond_t *cond, unsigned int g, int private)
-{
-  /* Release MO to synchronize-with the acquire load in
-     __condvar_quiesce_and_switch_g1.  */
-  if (atomic_fetch_add_release (cond->__data.__g_refs + g, -2) == 3)
-    {
-      /* Clear the wake-up request flag before waking up.  We do not need more
-	 than relaxed MO and it doesn't matter if we apply this for an aliased
-	 group because we wake all futex waiters right after clearing the
-	 flag.  */
-      atomic_fetch_and_relaxed (cond->__data.__g_refs + g, ~(unsigned int) 1);
-      futex_wake (cond->__data.__g_refs + g, INT_MAX, private);
-    }
-}
-
 /* Clean-up for cancellation of waiters waiting for normal signals.  We cancel
    our registration as a waiter, confirm we have woken up, and re-acquire the
    mutex.  */
@@ -170,8 +153,6 @@ __condvar_cleanup_waiting (void *arg)
     (struct _condvar_cleanup_buffer *) arg;
   pthread_cond_t *cond = cbuffer->cond;
   unsigned g = cbuffer->wseq & 1;
-
-  __condvar_dec_grefs (cond, g, cbuffer->private);
 
   __condvar_cancel_waiting (cond, cbuffer->wseq >> 1, g, cbuffer->private);
   /* FIXME With the current cancellation implementation, it is possible that
@@ -327,15 +308,6 @@ __condvar_cleanup_waiting (void *arg)
    sufficient because if a waiter can see a sufficiently large value, it could
    have also consume a signal in the waiters group.
 
-   It is essential that the last field in pthread_cond_t is __g_signals[1]:
-   The previous condvar used a pointer-sized field in pthread_cond_t, so a
-   PTHREAD_COND_INITIALIZER from that condvar implementation might only
-   initialize 4 bytes to zero instead of the 8 bytes we need (i.e., 44 bytes
-   in total instead of the 48 we need).  __g_signals[1] is not accessed before
-   the first group switch (G2 starts at index 0), which will set its value to
-   zero after a harmless fetch-or whose return value is ignored.  This
-   effectively completes initialization.
-
 
    Limitations:
    * This condvar isn't designed to allow for more than
@@ -440,21 +412,6 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
 	  if ((int)(signals - lowseq) >= 2)
 	    break;
 
-	  /* No signals available after spinning, so prepare to block.
-	     We first acquire a group reference and use acquire MO for that so
-	     that we synchronize with the dummy read-modify-write in
-	     __condvar_quiesce_and_switch_g1 if we read from that.  In turn,
-	     in this case this will make us see the advancement of __g_signals
-	     to the upcoming new g1_start that occurs with a concurrent
-	     attempt to reuse the group's slot.
-	     We use acquire MO for the __g_signals check to make the
-	     __g1_start check work (see spinning above).
-	     Note that the group reference acquisition will not mask the
-	     release MO when decrementing the reference count because we use
-	     an atomic read-modify-write operation and thus extend the release
-	     sequence.  */
-	  atomic_fetch_add_acquire (cond->__data.__g_refs + g, 2);
-
 	  // Now block.
 	  struct _pthread_cleanup_buffer buffer;
 	  struct _condvar_cleanup_buffer cbuffer;
@@ -471,18 +428,11 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
 
 	  if (__glibc_unlikely (err == ETIMEDOUT || err == EOVERFLOW))
 	    {
-	      __condvar_dec_grefs (cond, g, private);
-	      /* If we timed out, we effectively cancel waiting.  Note that
-		 we have decremented __g_refs before cancellation, so that a
-		 deadlock between waiting for quiescence of our group in
-		 __condvar_quiesce_and_switch_g1 and us trying to acquire
-		 the lock during cancellation is not possible.  */
+	      /* If we timed out, we effectively cancel waiting.  */
 	      __condvar_cancel_waiting (cond, seq, g, private);
 	      result = err;
 	      goto done;
 	    }
-	  else
-	    __condvar_dec_grefs (cond, g, private);
 
 	  /* Reload signals.  See above for MO.  */
 	  signals = atomic_load_acquire (cond->__data.__g_signals + g);
