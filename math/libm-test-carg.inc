@@ -20,34 +20,6 @@
 
 static const struct test_c_f_data carg_test_data[] =
   {
-    /* carg (x + iy) is specified as atan2 (y, x) */
-
-    /* carg (inf + i y) == +0 for finite y > 0.  */
-    TEST_c_f (carg, plus_infty, 2.0, 0),
-
-    /* carg (inf + i y) == -0 for finite y < 0.  */
-    TEST_c_f (carg, plus_infty, -2.0, minus_zero),
-
-    /* carg(x + i inf) == pi/2 for finite x.  */
-    TEST_c_f (carg, 10.0, plus_infty, lit_pi_2_d),
-
-    /* carg(x - i inf) == -pi/2 for finite x.  */
-    TEST_c_f (carg, 10.0, minus_infty, -lit_pi_2_d),
-
-    /* carg (-inf + i y) == +pi for finite y > 0.  */
-    TEST_c_f (carg, minus_infty, 10.0, lit_pi),
-
-    /* carg (-inf + i y) == -pi for finite y < 0.  */
-    TEST_c_f (carg, minus_infty, -10.0, -lit_pi),
-
-    TEST_c_f (carg, plus_infty, plus_infty, lit_pi_4_d),
-
-    TEST_c_f (carg, plus_infty, minus_infty, -lit_pi_4_d),
-
-    TEST_c_f (carg, minus_infty, plus_infty, lit_pi_3_m_4_d),
-
-    TEST_c_f (carg, minus_infty, minus_infty, -lit_pi_3_m_4_d),
-
     TEST_c_f (carg, qnan_value, qnan_value, qnan_value),
 
     AUTO_TESTS_c_f (carg),

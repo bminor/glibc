@@ -2126,6 +2126,17 @@ cacosh -0x1p-112 -0.0
 cacosh 0.75 1.25
 cacosh -2 -3
 
+carg inf 2.0
+carg inf -2.0
+carg 10 inf
+carg 10 -inf
+carg -inf 10
+carg -inf -10
+carg inf inf
+carg inf -inf
+carg -inf inf
+carg -inf -inf
+
 # carg (x + i 0) == 0 for x > 0.
 carg 2.0 0
 # carg (x - i 0) == -0 for x > 0.
