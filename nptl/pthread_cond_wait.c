@@ -249,7 +249,7 @@ __condvar_cleanup_waiting (void *arg)
    figure out whether they are in a group that has already been completely
    signaled (i.e., if the current G1 starts at a later position that the
    waiter's position).  Waiters cannot determine whether they are currently
-   in G2 or G1 -- but they do not have too because all they are interested in
+   in G2 or G1 -- but they do not have to because all they are interested in
    is whether there are available signals, and they always start in G2 (whose
    group slot they know because of the bit in the waiter sequence.  Signalers
    will simply fill the right group until it is completely signaled and can
@@ -412,7 +412,7 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
     }
 
   /* Now wait until a signal is available in our group or it is closed.
-     Acquire MO so that if we observe a value of zero written after group
+     Acquire MO so that if we observe (signals == lowseq) after group
      switching in __condvar_quiesce_and_switch_g1, we synchronize with that
      store and will see the prior update of __g1_start done while switching
      groups too.  */
@@ -422,8 +422,8 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
     {
       while (1)
 	{
-          uint64_t g1_start = __condvar_load_g1_start_relaxed (cond);
-          unsigned int lowseq = (g1_start & 1) == g ? signals : g1_start & ~1U;
+	  uint64_t g1_start = __condvar_load_g1_start_relaxed (cond);
+	  unsigned int lowseq = (g1_start & 1) == g ? signals : g1_start & ~1U;
 
 	  /* Spin-wait first.
 	     Note that spinning first without checking whether a timeout
@@ -447,21 +447,21 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
 
 	      /* Reload signals.  See above for MO.  */
 	      signals = atomic_load_acquire (cond->__data.__g_signals + g);
-              g1_start = __condvar_load_g1_start_relaxed (cond);
-              lowseq = (g1_start & 1) == g ? signals : g1_start & ~1U;
+	      g1_start = __condvar_load_g1_start_relaxed (cond);
+	      lowseq = (g1_start & 1) == g ? signals : g1_start & ~1U;
 	      spin--;
 	    }
 
-          if (seq < (g1_start >> 1))
+	  if (seq < (g1_start >> 1))
 	    {
-              /* If the group is closed already,
+	      /* If the group is closed already,
 	         then this waiter originally had enough extra signals to
 	         consume, up until the time its group was closed.  */
 	       goto done;
-            }
+	    }
 
 	  /* If there is an available signal, don't block.
-             If __g1_start has advanced at all, then we must be in G1
+	     If __g1_start has advanced at all, then we must be in G1
 	     by now, perhaps in the process of switching back to an older
 	     G2, but in either case we're allowed to consume the available
 	     signal and should not block anymore.  */
@@ -483,22 +483,23 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
 	     sequence.  */
 	  atomic_fetch_add_acquire (cond->__data.__g_refs + g, 2);
 	  signals = atomic_load_acquire (cond->__data.__g_signals + g);
-          g1_start = __condvar_load_g1_start_relaxed (cond);
-          lowseq = (g1_start & 1) == g ? signals : g1_start & ~1U;
+	  g1_start = __condvar_load_g1_start_relaxed (cond);
+	  lowseq = (g1_start & 1) == g ? signals : g1_start & ~1U;
 
-          if (seq < (g1_start >> 1))
+	  if (seq < (g1_start >> 1))
 	    {
-              /* group is closed already, so don't block */
+	      /* group is closed already, so don't block */
 	      __condvar_dec_grefs (cond, g, private);
 	      goto done;
 	    }
 
 	  if ((int)(signals - lowseq) >= 2)
 	    {
-	      /* a signal showed up or G1/G2 switched after we grabbed the refcount */
+	      /* a signal showed up or G1/G2 switched after we grabbed the
+	         refcount */
 	      __condvar_dec_grefs (cond, g, private);
 	      break;
-            }
+	    }
 
 	  // Now block.
 	  struct _pthread_cleanup_buffer buffer;
@@ -536,10 +537,8 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
        if (seq < (__condvar_load_g1_start_relaxed (cond) >> 1))
 	 goto done;
     }
-  /* Try to grab a signal.  Use acquire MO so that we see an up-to-date value
-     of __g1_start below (see spinning above for a similar case).  In
-     particular, if we steal from a more recent group, we will also see a
-     more recent __g1_start below.  */
+  /* Try to grab a signal.  See above for MO.  (if we do another loop
+     iteration we need to see the correct value of g1_start)  */
   while (!atomic_compare_exchange_weak_acquire (cond->__data.__g_signals + g,
 						&signals, signals - 2));
 
