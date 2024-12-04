@@ -382,17 +382,15 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
       return err;
     }
 
-  /* Now wait until a signal is available in our group or it is closed.
-     Acquire MO so that if we observe (signals == lowseq) after group
-     switching in __condvar_quiesce_and_switch_g1, we synchronize with that
-     store and will see the prior update of __g1_start done while switching
-     groups too.  */
-  unsigned int signals = atomic_load_acquire (cond->__data.__g_signals + g);
 
-  do
-    {
       while (1)
 	{
+	  /* Now wait until a signal is available in our group or it is closed.
+	     Acquire MO so that if we observe (signals == lowseq) after group
+	     switching in __condvar_quiesce_and_switch_g1, we synchronize with that
+	     store and will see the prior update of __g1_start done while switching
+	     groups too.  */
+	  unsigned int signals = atomic_load_acquire (cond->__data.__g_signals + g);
 	  uint64_t g1_start = __condvar_load_g1_start_relaxed (cond);
 	  unsigned int lowseq = (g1_start & 1) == g ? signals : g1_start & ~1U;
 
@@ -401,7 +399,7 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
 	      /* If the group is closed already,
 	         then this waiter originally had enough extra signals to
 	         consume, up until the time its group was closed.  */
-	       goto done;
+	       break;
 	    }
 
 	  /* If there is an available signal, don't block.
@@ -410,7 +408,16 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
 	     G2, but in either case we're allowed to consume the available
 	     signal and should not block anymore.  */
 	  if ((int)(signals - lowseq) >= 2)
-	    break;
+	    {
+	      /* Try to grab a signal.  See above for MO.  (if we do another loop
+		 iteration we need to see the correct value of g1_start)  */
+		      if (atomic_compare_exchange_weak_acquire (
+		      		cond->__data.__g_signals + g,
+			&signals, signals - 2))
+		      	break;
+		      else
+		      	continue;
+	    }
 
 	  // Now block.
 	  struct _pthread_cleanup_buffer buffer;
@@ -431,19 +438,9 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
 	      /* If we timed out, we effectively cancel waiting.  */
 	      __condvar_cancel_waiting (cond, seq, g, private);
 	      result = err;
-	      goto done;
+	      break;
 	    }
-
-	  /* Reload signals.  See above for MO.  */
-	  signals = atomic_load_acquire (cond->__data.__g_signals + g);
 	}
-    }
-  /* Try to grab a signal.  See above for MO.  (if we do another loop
-     iteration we need to see the correct value of g1_start)  */
-  while (!atomic_compare_exchange_weak_acquire (cond->__data.__g_signals + g,
-						&signals, signals - 2));
-
- done:
 
   /* Confirm that we have been woken.  We do that before acquiring the mutex
      to allow for execution of pthread_cond_destroy while having acquired the
