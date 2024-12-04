@@ -57,7 +57,7 @@ ___pthread_cond_broadcast (pthread_cond_t *cond)
     {
       /* Add as many signals as the remaining size of the group.  */
       atomic_fetch_add_relaxed (cond->__data.__g_signals + g1,
-				cond->__data.__g_size[g1] << 1);
+				cond->__data.__g_size[g1]);
       cond->__data.__g_size[g1] = 0;
 
       /* We need to wake G1 waiters before we switch G1 below.  */
@@ -73,7 +73,7 @@ ___pthread_cond_broadcast (pthread_cond_t *cond)
     {
       /* Step (3): Send signals to all waiters in the old G2 / new G1.  */
       atomic_fetch_add_relaxed (cond->__data.__g_signals + g1,
-				cond->__data.__g_size[g1] << 1);
+				cond->__data.__g_size[g1]);
       cond->__data.__g_size[g1] = 0;
       /* TODO Only set it if there are indeed futex waiters.  */
       do_futex_wake = true;

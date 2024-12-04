@@ -80,7 +80,7 @@ ___pthread_cond_signal (pthread_cond_t *cond)
          release-MO store when initializing a group in __condvar_switch_g1
          because we use an atomic read-modify-write and thus extend that
          store's release sequence.  */
-      atomic_fetch_add_relaxed (cond->__data.__g_signals + g1, 2);
+      atomic_fetch_add_relaxed (cond->__data.__g_signals + g1, 1);
       cond->__data.__g_size[g1]--;
       /* TODO Only set it if there are indeed futex waiters.  */
       do_futex_wake = true;

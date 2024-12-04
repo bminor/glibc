@@ -208,9 +208,9 @@ __condvar_switch_g1 (pthread_cond_t *cond, uint64_t wseq,
      behavior.
      Note that this works correctly for a zero-initialized condvar too.  */
   unsigned int old_orig_size = __condvar_get_orig_size (cond);
-  uint64_t old_g1_start = __condvar_load_g1_start_relaxed (cond) >> 1;
-  if (((unsigned) (wseq - old_g1_start - old_orig_size)
-	  + cond->__data.__g_size[g1 ^ 1]) == 0)
+  uint64_t old_g1_start = __condvar_load_g1_start_relaxed (cond);
+  uint64_t new_g1_start = old_g1_start + old_orig_size;
+  if (((unsigned) (wseq - new_g1_start) + cond->__data.__g_size[g1 ^ 1]) == 0)
 	return false;
 
   /* We have to consider the following kinds of waiters:
@@ -221,16 +221,10 @@ __condvar_switch_g1 (pthread_cond_t *cond, uint64_t wseq,
        are not affected.
      * Waiters in G1 have already received a signal and been woken.  */
 
-  /* Update __g1_start, which closes this group.  The value we add will never
-     be negative because old_orig_size can only be zero when we switch groups
-     the first time after a condvar was initialized, in which case G1 will be
-     at index 1 and we will add a value of 1. Relaxed MO is fine because the
-     change comes with no additional constraints that others would have to
-     observe.  */
-  __condvar_add_g1_start_relaxed (cond,
-      (old_orig_size << 1) + (g1 == 1 ? 1 : - 1));
-
-  unsigned int lowseq = ((old_g1_start + old_orig_size) << 1) & ~1U;
+  /* Update __g1_start, which closes this group.  Relaxed MO is fine because
+     the change comes with no additional constraints that others would have
+     to observe.  */
+  __condvar_add_g1_start_relaxed (cond, old_orig_size);
 
   /* At this point, the old G1 is now a valid new G2 (but not in use yet).
      No old waiter can neither grab a signal nor acquire a reference without
@@ -242,13 +236,13 @@ __condvar_switch_g1 (pthread_cond_t *cond, uint64_t wseq,
   g1 ^= 1;
   *g1index ^= 1;
 
-  /* Now advance the new G1 g_signals to the new lowseq, giving it
+  /* Now advance the new G1 g_signals to the new g1_start, giving it
      an effective signal count of 0 to start.  */
-  atomic_store_release (cond->__data.__g_signals + g1, lowseq);
+  atomic_store_release (cond->__data.__g_signals + g1, (unsigned)new_g1_start);
 
   /* These values are just observed by signalers, and thus protected by the
      lock.  */
-  unsigned int orig_size = wseq - (old_g1_start + old_orig_size);
+  unsigned int orig_size = wseq - new_g1_start;
   __condvar_set_orig_size (cond, orig_size);
   /* Use and addition to not loose track of cancellations in what was
      previously G2.  */
