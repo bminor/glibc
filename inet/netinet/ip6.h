@@ -46,6 +46,17 @@ struct ip6_hdr
 #define ip6_hlim  ip6_ctlun.ip6_un1.ip6_un1_hlim
 #define ip6_hops  ip6_ctlun.ip6_un1.ip6_un1_hlim
 
+#define IPV6_VERSION       0x60
+#define IPV6_VERSION_MASK  0xf0
+
+#if __BYTE_ORDER == __BIG_ENDIAN
+#define IPV6_FLOWINFO_MASK   0x0fffffff  /* flow info (28 bits) */
+#define IPV6_FLOWLABEL_MASK  0x000fffff  /* flow label (20 bits) */
+#else   /* __BYTE_ORDER == __LITTLE_ENDIAN */
+#define IPV6_FLOWINFO_MASK   0xffffff0f  /* flow info (28 bits) */
+#define IPV6_FLOWLABEL_MASK  0xffff0f00  /* flow label (20 bits) */
+#endif
+
 /* Generic extension header.  */
 struct ip6_ext
   {
