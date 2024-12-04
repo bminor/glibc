@@ -366,7 +366,6 @@ static __always_inline int
 __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
     clockid_t clockid, const struct __timespec64 *abstime)
 {
-  const int maxspin = 0;
   int err;
   int result = 0;
 
@@ -425,33 +424,6 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
 	  uint64_t g1_start = __condvar_load_g1_start_relaxed (cond);
 	  unsigned int lowseq = (g1_start & 1) == g ? signals : g1_start & ~1U;
 
-	  /* Spin-wait first.
-	     Note that spinning first without checking whether a timeout
-	     passed might lead to what looks like a spurious wake-up even
-	     though we should return ETIMEDOUT (e.g., if the caller provides
-	     an absolute timeout that is clearly in the past).  However,
-	     (1) spurious wake-ups are allowed, (2) it seems unlikely that a
-	     user will (ab)use pthread_cond_wait as a check for whether a
-	     point in time is in the past, and (3) spinning first without
-	     having to compare against the current time seems to be the right
-	     choice from a performance perspective for most use cases.  */
-	  unsigned int spin = maxspin;
-	  while (spin > 0 && ((int)(signals - lowseq) < 2))
-	    {
-	      /* Check that we are not spinning on a group that's already
-		 closed.  */
-	      if (seq < (g1_start >> 1))
-		break;
-
-	      /* TODO Back off.  */
-
-	      /* Reload signals.  See above for MO.  */
-	      signals = atomic_load_acquire (cond->__data.__g_signals + g);
-	      g1_start = __condvar_load_g1_start_relaxed (cond);
-	      lowseq = (g1_start & 1) == g ? signals : g1_start & ~1U;
-	      spin--;
-	    }
-
 	  if (seq < (g1_start >> 1))
 	    {
 	      /* If the group is closed already,
@@ -482,24 +454,6 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
 	     an atomic read-modify-write operation and thus extend the release
 	     sequence.  */
 	  atomic_fetch_add_acquire (cond->__data.__g_refs + g, 2);
-	  signals = atomic_load_acquire (cond->__data.__g_signals + g);
-	  g1_start = __condvar_load_g1_start_relaxed (cond);
-	  lowseq = (g1_start & 1) == g ? signals : g1_start & ~1U;
-
-	  if (seq < (g1_start >> 1))
-	    {
-	      /* group is closed already, so don't block */
-	      __condvar_dec_grefs (cond, g, private);
-	      goto done;
-	    }
-
-	  if ((int)(signals - lowseq) >= 2)
-	    {
-	      /* a signal showed up or G1/G2 switched after we grabbed the
-	         refcount */
-	      __condvar_dec_grefs (cond, g, private);
-	      break;
-	    }
 
 	  // Now block.
 	  struct _pthread_cleanup_buffer buffer;
@@ -533,9 +487,6 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
 	  /* Reload signals.  See above for MO.  */
 	  signals = atomic_load_acquire (cond->__data.__g_signals + g);
 	}
-
-       if (seq < (__condvar_load_g1_start_relaxed (cond) >> 1))
-	 goto done;
     }
   /* Try to grab a signal.  See above for MO.  (if we do another loop
      iteration we need to see the correct value of g1_start)  */
