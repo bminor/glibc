@@ -135,6 +135,7 @@ gen-libm-calls = \
   s_nanF \
   s_nextdownF \
   s_significandF \
+  s_sinpiF \
   w_acosF \
   w_acoshF \
   w_asinF \
@@ -667,6 +668,7 @@ libm-test-funcs-auto = \
   sin \
   sincos \
   sinh \
+  sinpi \
   sqrt \
   tan \
   tanh \
@@ -998,6 +1000,7 @@ tgmath3-macros = \
   scalbn \
   sin \
   sinh \
+  sinpi \
   sqrt \
   tan \
   tanh \
@@ -1423,6 +1426,7 @@ CFLAGS-s_significand.c += -fno-builtin-significandl
 CFLAGS-s_sin.c += -fno-builtin-sinl
 CFLAGS-s_sincos.c += -fno-builtin-sincosl
 CFLAGS-w_sinh.c += -fno-builtin-sinhl
+CFLAGS-s_sinpi.c += -fno-builtin-sinpil
 CFLAGS-w_sqrt.c += -fno-builtin-sqrtl
 CFLAGS-s_tan.c += -fno-builtin-tanl
 CFLAGS-s_tanh.c += -fno-builtin-tanhl
@@ -1549,6 +1553,7 @@ CFLAGS-s_setpayloadsig.c += -fno-builtin-setpayloadsigf32x -fno-builtin-setpaylo
 CFLAGS-s_sin.c += -fno-builtin-sinf32x -fno-builtin-sinf64
 CFLAGS-s_sincos.c += -fno-builtin-sincosf32x -fno-builtin-sincosf64
 CFLAGS-w_sinh.c += -fno-builtin-sinhf32x -fno-builtin-sinhf64
+CFLAGS-s_sinpi.c += -fno-builtin-sinpif32x -fno-builtin-sinpif64
 CFLAGS-w_sqrt.c += -fno-builtin-sqrtf32x -fno-builtin-sqrtf64
 CFLAGS-s_tan.c += -fno-builtin-tanf32x -fno-builtin-tanf64
 CFLAGS-s_tanh.c += -fno-builtin-tanhf32x -fno-builtin-tanhf64
@@ -1668,6 +1673,7 @@ CFLAGS-s_setpayloadsigf.c += -fno-builtin-setpayloadsigf32
 CFLAGS-s_sinf.c += -fno-builtin-sinf32
 CFLAGS-s_sincosf.c += -fno-builtin-sincosf32
 CFLAGS-w_sinhf.c += -fno-builtin-sinhf32
+CFLAGS-s_sinpif.c += -fno-builtin-sinpif32
 CFLAGS-w_sqrtf.c += -fno-builtin-sqrtf32
 CFLAGS-s_tanf.c += -fno-builtin-tanf32
 CFLAGS-s_tanhf.c += -fno-builtin-tanhf32

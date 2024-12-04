@@ -187,6 +187,7 @@ libnldbl-calls = \
   sin \
   sincos \
   sinh \
+  sinpi \
   snprintf \
   snprintf_chk \
   sprintf \
@@ -378,6 +379,7 @@ CFLAGS-nldbl-significand.c = -fno-builtin-significandl
 CFLAGS-nldbl-sin.c = -fno-builtin-sinl
 CFLAGS-nldbl-sincos.c = -fno-builtin-sincosl
 CFLAGS-nldbl-sinh.c = -fno-builtin-sinhl
+CFLAGS-nldbl-sinpi.c = -fno-builtin-sinpi
 CFLAGS-nldbl-sqrt.c = -fno-builtin-sqrtl
 CFLAGS-nldbl-tan.c = -fno-builtin-tanl
 CFLAGS-nldbl-tanh.c = -fno-builtin-tanhl

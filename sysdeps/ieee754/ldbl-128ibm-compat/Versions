@@ -146,6 +146,7 @@ libm {
   }
   GLIBC_2.41 {
     __cospiieee128;
+    __sinpiieee128;
   }
 }
 libc {

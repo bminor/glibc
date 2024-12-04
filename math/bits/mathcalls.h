@@ -68,6 +68,8 @@ __MATHCALL_VEC (tan,, (_Mdouble_ __x));
 #if __GLIBC_USE (IEC_60559_FUNCS_EXT_C23)
 /* Cosine of pi * X.  */
 __MATHCALL (cospi,, (_Mdouble_ __x));
+/* Sine of pi * X.  */
+__MATHCALL (sinpi,, (_Mdouble_ __x));
 #endif
 
 /* Hyperbolic functions.  */

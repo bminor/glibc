@@ -240,6 +240,19 @@ All these functions, including the @code{_Float@var{N}} and
 should be prepared to cope with their absence.
 @end deftypefun
 
+@deftypefun double sinpi (double @var{x})
+@deftypefunx float sinpif (float @var{x})
+@deftypefunx {long double} sinpil (long double @var{x})
+@deftypefunx _FloatN sinpifN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx sinpifNx (_Float@var{N}x @var{x})
+@standards{TS 18661-4:2015, math.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions return the sine of pi multiplied by @var{x}.  The
+return value is in the range @code{-1} to @code{1}.
+
+The @code{sinpi} functions are from TS 18661-4:2015.
+@end deftypefun
+
 @deftypefun double cospi (double @var{x})
 @deftypefunx float cospif (float @var{x})
 @deftypefunx {long double} cospil (long double @var{x})

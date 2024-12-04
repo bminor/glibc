@@ -749,6 +749,7 @@ class Tests(object):
         self.add_tests('log2p1', 'r', ['r'])
         self.add_tests('log10p1', 'r', ['r'])
         self.add_tests('logp1', 'r', ['r'])
+        self.add_tests('sinpi', 'r', ['r'])
         # C23 functions.
         self.add_tests('fmaximum', 'r', ['r', 'r'])
         self.add_tests('fmaximum_mag', 'r', ['r', 'r'])

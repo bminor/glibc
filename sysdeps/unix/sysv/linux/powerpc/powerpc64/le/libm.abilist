@@ -1367,6 +1367,7 @@ GLIBC_2.40 logp1f64 F
 GLIBC_2.40 logp1f64x F
 GLIBC_2.40 logp1l F
 GLIBC_2.41 __cospiieee128 F
+GLIBC_2.41 __sinpiieee128 F
 GLIBC_2.41 cospi F
 GLIBC_2.41 cospif F
 GLIBC_2.41 cospif128 F
@@ -1375,3 +1376,11 @@ GLIBC_2.41 cospif32x F
 GLIBC_2.41 cospif64 F
 GLIBC_2.41 cospif64x F
 GLIBC_2.41 cospil F
+GLIBC_2.41 sinpi F
+GLIBC_2.41 sinpif F
+GLIBC_2.41 sinpif128 F
+GLIBC_2.41 sinpif32 F
+GLIBC_2.41 sinpif32x F
+GLIBC_2.41 sinpif64 F
+GLIBC_2.41 sinpif64x F
+GLIBC_2.41 sinpil F

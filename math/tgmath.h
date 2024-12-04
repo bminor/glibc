@@ -820,6 +820,8 @@
 #if __GLIBC_USE (IEC_60559_FUNCS_EXT_C23)
 /* Cosine of pi * X.  */
 # define cospi(Val) __TGMATH_UNARY_REAL_ONLY (Val, cospi)
+/* Sine of pi * X.  */
+# define sinpi(Val) __TGMATH_UNARY_REAL_ONLY (Val, sinpi)
 #endif
 
 /* Hyperbolic functions.  */

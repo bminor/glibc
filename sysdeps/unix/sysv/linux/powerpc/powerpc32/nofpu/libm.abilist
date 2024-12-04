@@ -1030,3 +1030,9 @@ GLIBC_2.41 cospif32 F
 GLIBC_2.41 cospif32x F
 GLIBC_2.41 cospif64 F
 GLIBC_2.41 cospil F
+GLIBC_2.41 sinpi F
+GLIBC_2.41 sinpif F
+GLIBC_2.41 sinpif32 F
+GLIBC_2.41 sinpif32x F
+GLIBC_2.41 sinpif64 F
+GLIBC_2.41 sinpil F
