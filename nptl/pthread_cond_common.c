@@ -221,8 +221,9 @@ __condvar_quiesce_and_switch_g1 (pthread_cond_t *cond, uint64_t wseq,
      * New waiters arriving concurrently with the group switching will all go
        into G2 until we atomically make the switch.  Waiters existing in G2
        are not affected.
-     * Waiters in G1 will be closed out immediately by the advancing of
-       __g_signals to the next "lowseq" (low 31 bits of the new g1_start),
+     * Waiters in G1 have already received a signal and been woken. If they
+       haven't woken yet, they will be closed out immediately by the advancing
+       of __g_signals to the next "lowseq" (low 31 bits of the new g1_start),
        which will prevent waiters from blocking using a futex on
        __g_signals since it provides enough signals for all possible
        remaining waiters.  As a result, they can each consume a signal
