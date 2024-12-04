@@ -105,6 +105,7 @@ gen-libm-calls = \
   s_cexpF \
   s_clog10F \
   s_clogF \
+  s_cospiF \
   s_cpowF \
   s_cprojF \
   s_csinF \
@@ -635,6 +636,7 @@ libm-test-funcs-auto = \
   clog10 \
   cos \
   cosh \
+  cospi \
   cpow \
   csin \
   csinh \
@@ -932,6 +934,7 @@ tgmath3-macros = \
   copysign \
   cos \
   cosh \
+  cospi \
   cproj \
   creal \
   erf \
@@ -1324,6 +1327,7 @@ CFLAGS-s_conj.c += -fno-builtin-conjl
 CFLAGS-s_copysign.c += -fno-builtin-copysignl
 CFLAGS-s_cos.c += -fno-builtin-cosl
 CFLAGS-w_cosh.c += -fno-builtin-coshl
+CFLAGS-s_cospi.c += -fno-builtin-cospil
 CFLAGS-s_cpow.c += -fno-builtin-cpowl
 CFLAGS-s_cproj.c += -fno-builtin-cprojl
 CFLAGS-s_creal.c += -fno-builtin-creall
@@ -1462,6 +1466,7 @@ CFLAGS-s_conj.c += -fno-builtin-conjf32x -fno-builtin-conjf64
 CFLAGS-s_copysign.c += -fno-builtin-copysignf32x -fno-builtin-copysignf64
 CFLAGS-s_cos.c += -fno-builtin-cosf32x -fno-builtin-cosf64
 CFLAGS-w_cosh.c += -fno-builtin-coshf32x -fno-builtin-coshf64
+CFLAGS-s_cospi.c += -fno-builtin-cospif32x -fno-builtin-cospif64
 CFLAGS-s_cpow.c += -fno-builtin-cpowf32x -fno-builtin-cpowf64
 CFLAGS-s_cproj.c += -fno-builtin-cprojf32x -fno-builtin-cprojf64
 CFLAGS-s_creal.c += -fno-builtin-crealf32x -fno-builtin-crealf64
@@ -1586,6 +1591,7 @@ CFLAGS-s_conjf.c += -fno-builtin-conjf32
 CFLAGS-s_copysignf.c += -fno-builtin-copysignf32
 CFLAGS-s_cosf.c += -fno-builtin-cosf32
 CFLAGS-w_coshf.c += -fno-builtin-coshf32
+CFLAGS-s_cospif.c += -fno-builtin-cospif32
 CFLAGS-s_cpowf.c += -fno-builtin-cpowf32
 CFLAGS-s_cprojf.c += -fno-builtin-cprojf32
 CFLAGS-s_crealf.c += -fno-builtin-crealf32

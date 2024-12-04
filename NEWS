@@ -31,6 +31,13 @@ Major new features:
 * The iconv program now supports converting files in place.  The program
   automatically uses a temporary file if required.
 
+* The following ISO C23 function families (introduced in TS
+  18661-4:2015) are now supported in <math.h>.  Each family includes
+  functions for float, double, long double, _FloatN and _FloatNx, and a
+  type-generic macro in <tgmath.h>.
+
+  - Trigonometric functions: cospi.
+
 * The GNU C Library now supports a feature test macro _ISOC2Y_SOURCE to
   enable features from the draft ISO C2Y standard.  Only some features from
   this draft standard are supported by the GNU C Library, and as the draft

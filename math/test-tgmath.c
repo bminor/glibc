@@ -48,7 +48,7 @@ volatile int count_cdouble;
 volatile int count_cfloat;
 volatile int count_cldouble;
 
-#define NCALLS     168
+#define NCALLS     170
 #define NCALLS_INT 4
 #define NCCALLS    47
 
@@ -232,6 +232,7 @@ F(compile_test) (void)
   uintmax_t um;
 
   a = cos (cos (x));
+  a = cospi (cospi (x));
   b = acos (acos (a));
   a = sin (sin (x));
   b = asin (asin (a));
@@ -350,6 +351,7 @@ F(compile_test) (void)
   if (0)
     {
       a = cos (y);
+      a = cospi (y);
       a = acos (y);
       a = sin (y);
       a = asin (y);
@@ -461,6 +463,14 @@ F(compile_test) (void)
 
 TYPE
 (F(cos)) (TYPE x)
+{
+  ++count;
+  P ();
+  return x;
+}
+
+TYPE
+(F(cospi)) (TYPE x)
 {
   ++count;
   P ();

@@ -817,6 +817,10 @@
 /* Tangent of X.  */
 #define tan(Val) __TGMATH_UNARY_REAL_IMAG (Val, tan, ctan)
 
+#if __GLIBC_USE (IEC_60559_FUNCS_EXT_C23)
+/* Cosine of pi * X.  */
+# define cospi(Val) __TGMATH_UNARY_REAL_ONLY (Val, cospi)
+#endif
 
 /* Hyperbolic functions.  */
 

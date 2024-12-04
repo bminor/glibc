@@ -553,6 +553,7 @@ static test_function test_functions[] =
     FUNC_mpc_c_c ("clog10", mpc_log10, false),
     FUNC_mpfr_f_f ("cos", mpfr_cos, false),
     FUNC_mpfr_f_f ("cosh", mpfr_cosh, false),
+    FUNC_mpfr_f_f ("cospi", mpfr_cospi, false),
     FUNC ("cpow", ARGS4 (type_fp, type_fp, type_fp, type_fp),
 	  RET2 (type_fp, type_fp), false, true, false,
 	  CALC (mpc_cc_c, mpc_pow)),

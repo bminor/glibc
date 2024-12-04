@@ -42,6 +42,7 @@ libnldbl-calls = \
   copysign \
   cos \
   cosh \
+  cospi \
   cpow \
   cproj \
   creal \
@@ -280,6 +281,7 @@ CFLAGS-nldbl-conj.c = -fno-builtin-conjl
 CFLAGS-nldbl-copysign.c = -fno-builtin-copysignl
 CFLAGS-nldbl-cos.c = -fno-builtin-cosl
 CFLAGS-nldbl-cosh.c = -fno-builtin-coshl
+CFLAGS-nldbl-cospi.c = -fno-builtin-cospi
 CFLAGS-nldbl-cpow.c = -fno-builtin-cpowl
 CFLAGS-nldbl-cproj.c = -fno-builtin-cprojl
 CFLAGS-nldbl-creal.c = -fno-builtin-creall

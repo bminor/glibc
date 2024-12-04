@@ -144,6 +144,9 @@ libm {
     __log10p1ieee128;
     __logp1ieee128;
   }
+  GLIBC_2.41 {
+    __cospiieee128;
+  }
 }
 libc {
   LDBL_IBM128_VERSION {
