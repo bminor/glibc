@@ -3208,6 +3208,18 @@ tcache_next (tcache_entry *e)
   return (tcache_entry *) REVEAL_PTR (e->next);
 }
 
+/* Check if tcache is available for alloc by corresponding tc_idx.  */
+static __always_inline bool
+tcache_available (size_t tc_idx)
+{
+  if (tc_idx < mp_.tcache_bins
+      && tcache != NULL
+      && tcache->counts[tc_idx] > 0)
+    return true;
+  else
+    return false;
+}
+
 /* Verify if the suspicious tcache_entry is double free.
    It's not expected to execute very often, mark it as noinline.  */
 static __attribute__ ((noinline)) void
@@ -3330,6 +3342,32 @@ tcache_init(void)
   if (__glibc_unlikely (tcache == NULL)) \
     tcache_init();
 
+/* Trying to alloc BYTES from tcache. If tcache is available, chunk
+   is allocated and stored to MEMPTR, otherwise, MEMPTR is NULL.
+   It returns true if error occurs, else false. */
+static __always_inline bool
+tcache_try_malloc (size_t bytes, void **memptr)
+{
+  /* int_free also calls request2size, be careful to not pad twice.  */
+  size_t tbytes = checked_request2size (bytes);
+  if (tbytes == 0)
+    {
+      __set_errno (ENOMEM);
+      return true;
+    }
+
+  size_t tc_idx = csize2tidx (tbytes);
+
+  MAYBE_INIT_TCACHE ();
+
+  if (tcache_available (tc_idx))
+    *memptr = tcache_get (tc_idx);
+  else
+    *memptr = NULL;
+
+  return false;
+}
+
 #else  /* !USE_TCACHE */
 # define MAYBE_INIT_TCACHE()
 
@@ -3354,26 +3392,13 @@ __libc_malloc (size_t bytes)
   if (!__malloc_initialized)
     ptmalloc_init ();
 #if USE_TCACHE
-  /* int_free also calls request2size, be careful to not pad twice.  */
-  size_t tbytes = checked_request2size (bytes);
-  if (tbytes == 0)
-    {
-      __set_errno (ENOMEM);
+  bool err = tcache_try_malloc (bytes, &victim);
+
+  if (err)
       return NULL;
-    }
-  size_t tc_idx = csize2tidx (tbytes);
 
-  MAYBE_INIT_TCACHE ();
-
-  DIAG_PUSH_NEEDS_COMMENT;
-  if (tc_idx < mp_.tcache_bins
-      && tcache != NULL
-      && tcache->counts[tc_idx] > 0)
-    {
-      victim = tcache_get (tc_idx);
+  if (victim)
       return tag_new_usable (victim);
-    }
-  DIAG_POP_NEEDS_COMMENT;
 #endif
 
   if (SINGLE_THREAD_P)
@@ -3667,9 +3692,7 @@ _mid_memalign (size_t alignment, size_t bytes, void *address)
       }
     size_t tc_idx = csize2tidx (tbytes);
 
-    if (tc_idx < mp_.tcache_bins
-	&& tcache != NULL
-	&& tcache->counts[tc_idx] > 0)
+    if (tcache_available (tc_idx))
       {
 	/* The tcache itself isn't encoded, but the chain is.  */
 	tcache_entry **tep = & tcache->entries[tc_idx];
@@ -3751,8 +3774,8 @@ void *
 __libc_calloc (size_t n, size_t elem_size)
 {
   mstate av;
-  mchunkptr oldtop;
-  INTERNAL_SIZE_T sz, oldtopsize;
+  mchunkptr oldtop, p;
+  INTERNAL_SIZE_T sz, oldtopsize, csz;
   void *mem;
   unsigned long clearsize;
   ptrdiff_t bytes;
@@ -3768,7 +3791,23 @@ __libc_calloc (size_t n, size_t elem_size)
   if (!__malloc_initialized)
     ptmalloc_init ();
 
-  MAYBE_INIT_TCACHE ();
+#if USE_TCACHE
+  bool err = tcache_try_malloc (bytes, &mem);
+
+  if (err)
+    return NULL;
+
+  if (mem)
+    {
+      p = mem2chunk (mem);
+      if (__glibc_unlikely (mtag_enabled))
+	return tag_new_zero_region (mem, memsize (p));
+
+      csz = chunksize (p);
+      clearsize = csz - SIZE_SZ;
+      return clear_memory ((INTERNAL_SIZE_T *) mem, clearsize);
+    }
+#endif
 
   if (SINGLE_THREAD_P)
     av = &main_arena;
@@ -3824,7 +3863,7 @@ __libc_calloc (size_t n, size_t elem_size)
   if (mem == NULL)
     return NULL;
 
-  mchunkptr p = mem2chunk (mem);
+  p = mem2chunk (mem);
 
   /* If we are using memory tagging, then we need to set the tags
      regardless of MORECORE_CLEARS, so we zero the whole block while
@@ -3832,7 +3871,7 @@ __libc_calloc (size_t n, size_t elem_size)
   if (__glibc_unlikely (mtag_enabled))
     return tag_new_zero_region (mem, memsize (p));
 
-  INTERNAL_SIZE_T csz = chunksize (p);
+  csz = chunksize (p);
 
   /* Two optional cases in which clearing not necessary */
   if (chunk_is_mmapped (p))
