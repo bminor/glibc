@@ -189,16 +189,15 @@ __condvar_get_private (int flags)
     return FUTEX_SHARED;
 }
 
-/* This closes G1 (whose index is in G1INDEX), waits for all futex waiters to
-   leave G1, converts G1 into a fresh G2, and then switches group roles so that
-   the former G2 becomes the new G1 ending at the current __wseq value when we
-   eventually make the switch (WSEQ is just an observation of __wseq by the
-   signaler).
+/* This closes G1 (whose index is in G1INDEX), converts G1 into a fresh G2,
+   and then switches group roles so that the former G2 becomes the new G1
+   ending at the current __wseq value when we eventually make the switch
+   (WSEQ is just an observation of __wseq by the signaler).
    If G2 is empty, it will not switch groups because then it would create an
    empty G1 which would require switching groups again on the next signal.
    Returns false iff groups were not switched because G2 was empty.  */
 static bool __attribute__ ((unused))
-__condvar_quiesce_and_switch_g1 (pthread_cond_t *cond, uint64_t wseq,
+__condvar_switch_g1 (pthread_cond_t *cond, uint64_t wseq,
     unsigned int *g1index, int private)
 {
   unsigned int g1 = *g1index;
@@ -214,8 +213,7 @@ __condvar_quiesce_and_switch_g1 (pthread_cond_t *cond, uint64_t wseq,
 	  + cond->__data.__g_size[g1 ^ 1]) == 0)
 	return false;
 
-  /* Now try to close and quiesce G1.  We have to consider the following kinds
-     of waiters:
+  /* We have to consider the following kinds of waiters:
      * Waiters from less recent groups than G1 are not affected because
        nothing will change for them apart from __g1_start getting larger.
      * New waiters arriving concurrently with the group switching will all go
@@ -223,12 +221,12 @@ __condvar_quiesce_and_switch_g1 (pthread_cond_t *cond, uint64_t wseq,
        are not affected.
      * Waiters in G1 have already received a signal and been woken.  */
 
-  /* Update __g1_start, which finishes closing this group.  The value we add
-     will never be negative because old_orig_size can only be zero when we
-     switch groups the first time after a condvar was initialized, in which
-     case G1 will be at index 1 and we will add a value of 1.
-     Relaxed MO is fine because the change comes with no additional
-     constraints that others would have to observe.  */
+  /* Update __g1_start, which closes this group.  The value we add will never
+     be negative because old_orig_size can only be zero when we switch groups
+     the first time after a condvar was initialized, in which case G1 will be
+     at index 1 and we will add a value of 1. Relaxed MO is fine because the
+     change comes with no additional constraints that others would have to
+     observe.  */
   __condvar_add_g1_start_relaxed (cond,
       (old_orig_size << 1) + (g1 == 1 ? 1 : - 1));
 

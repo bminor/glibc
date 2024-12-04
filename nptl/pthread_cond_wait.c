@@ -354,8 +354,7 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
      because we do not need to establish any happens-before relation with
      signalers (see __pthread_cond_signal); modification order alone
      establishes a total order of waiters/signals.  We do need acquire MO
-     to synchronize with group reinitialization in
-     __condvar_quiesce_and_switch_g1.  */
+     to synchronize with group reinitialization in __condvar_switch_g1.  */
   uint64_t wseq = __condvar_fetch_add_wseq_acquire (cond, 2);
   /* Find our group's index.  We always go into what was G2 when we acquired
      our position.  */
@@ -387,9 +386,9 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
     {
       /* Now wait until a signal is available in our group or it is closed.
          Acquire MO so that if we observe (signals == lowseq) after group
-         switching in __condvar_quiesce_and_switch_g1, we synchronize with that
-         store and will see the prior update of __g1_start done while switching
-         groups too.  */
+         switching in __condvar_switch_g1, we synchronize with that store and
+         will see the prior update of __g1_start done while switching groups
+         too.  */
       unsigned int signals = atomic_load_acquire (cond->__data.__g_signals + g);
       uint64_t g1_start = __condvar_load_g1_start_relaxed (cond);
       unsigned int lowseq = (g1_start & 1) == g ? signals : g1_start & ~1U;
