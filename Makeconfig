@@ -1166,10 +1166,6 @@ ASFLAGS := $(filter -g% -fdebug-prefix-map=%,$(CFLAGS))
 endif
 override ASFLAGS += -Werror=undef $(ASFLAGS-config) $(asflags-cpu)
 
-ifndef BUILD_CC
-BUILD_CC = $(CC)
-endif
-
 move-if-change = $(SHELL) $(..)scripts/move-if-change
 
 -include $(common-objpfx)sysd-sorted
