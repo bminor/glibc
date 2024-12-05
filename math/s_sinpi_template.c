@@ -31,7 +31,7 @@ M_DECL_FUNC (__sinpi) (FLOAT x)
     }
   if (__glibc_unlikely (isinf (x)))
     __set_errno (EDOM);
-  FLOAT y = x - M_MLIT (2.0) * M_SUF (round) (M_LIT (0.5) * x);
+  FLOAT y = x - M_LIT (2.0) * M_SUF (round) (M_LIT (0.5) * x);
   FLOAT absy = M_FABS (y);
   if (absy == M_LIT (0.0) || absy == M_LIT (1.0))
     return M_COPYSIGN (M_LIT (0.0), x);
