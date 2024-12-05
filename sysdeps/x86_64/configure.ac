@@ -2,11 +2,14 @@ GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/x86_64.
 
 dnl Check if -mprefer-vector-width=128 works.
-AC_CACHE_CHECK(-mprefer-vector-width=128, libc_cv_cc_mprefer_vector_width, [dnl
-LIBC_TRY_CC_OPTION([-mprefer-vector-width=128],
-		   [libc_cv_cc_mprefer_vector_width=yes],
-		   [libc_cv_cc_mprefer_vector_width=no])
-])
+LIBC_TRY_CC_AND_TEST_CC_OPTION([for -mprefer-vector-width=128],
+  [-mprefer-vector-width=128],
+  libc_cv_cc_mprefer_vector_width,
+  [libc_cv_cc_mprefer_vector_width=yes],
+  [libc_cv_cc_mprefer_vector_width=no],
+  libc_cv_test_cc_mprefer_vector_width,
+  [libc_cv_test_cc_mprefer_vector_width=yes],
+  [libc_cv_test_cc_mprefer_vector_width=no])
 LIBC_CONFIG_VAR([config-cflags-mprefer-vector-width],
 		[$libc_cv_cc_mprefer_vector_width])
 
@@ -18,21 +21,24 @@ if test x"$build_mathvec" = xnotset; then
   build_mathvec=yes
 fi
 
+test_enable_cet=$enable_cet
 if test $enable_cet != no; then
   # Check if CET can be enabled.
-  AC_CACHE_CHECK(whether CET can be enabled,
-		 libc_cv_x86_cet_available, [dnl
-cat > conftest.c <<EOF
+  conftest_code="
 #if !defined __CET__ || __CET__ != 3
-# error CET isn't available.
+# error CET is not available.
 #endif
-EOF
-		 if AC_TRY_COMMAND(${CC-cc} -c $CFLAGS -fcf-protection -include cet.h conftest.c 1>&AS_MESSAGE_LOG_FD); then
-		   libc_cv_x86_cet_available=yes
-		 else
-		   libc_cv_x86_cet_available=no
-		 fi
-		 rm -rf conftest*])
+"
+  LIBC_TRY_CC_AND_TEST_CC_COMMAND([whether CET can be enabled],
+    [$conftest_code],
+    [-c -fcf-protection -include cet.h],
+    libc_cv_x86_cet_available,
+    [libc_cv_x86_cet_available=yes],
+    [libc_cv_x86_cet_available=no],
+    libc_cv_test_x86_cet_available,
+    [libc_cv_test_x86_cet_available=yes],
+    [libc_cv_test_x86_cet_available=no])
+    test_enable_cet=$libc_cv_test_x86_cet_available
   if test $libc_cv_x86_cet_available != yes; then
     AC_MSG_ERROR([$CC doesn't support CET])
   fi
@@ -62,18 +68,26 @@ fi
 LIBC_CONFIG_VAR([enable-cet], [$enable_cet])
 
 # Check if -mamx-tile works properly.
-AC_CACHE_CHECK(whether -mamx-tile works properly,
-	       libc_cv_x86_have_amx_tile, [dnl
-cat > conftest.c <<EOF
+check_x86_have_amx_tile ()
+{
+  eval $1=no
+  if grep -q __builtin_ia32_ldtilecfg conftest; then
+    eval $1=yes
+  fi
+}
+
+conftest_code="
 #include <x86intrin.h>
-EOF
-	       libc_cv_x86_have_amx_tile=no
-	       if AC_TRY_COMMAND(${CC-cc} -E $CFLAGS -mamx-tile conftest.c > conftest.i); then
-		 if grep -q __builtin_ia32_ldtilecfg conftest.i; then
-		   libc_cv_x86_have_amx_tile=yes
-	         fi
-	       fi
-	       rm -rf conftest*])
+"
+LIBC_TRY_CC_AND_TEST_CC_COMMAND([whether -mamx-tile works properly],
+  [$conftest_code],
+  [-E -mamx-tile],
+  libc_cv_x86_have_amx_tile,
+  [check_x86_have_amx_tile libc_cv_x86_have_amx_tile],
+  [libc_cv_x86_have_amx_tile=no],
+  libc_cv_test_x86_have_amx_tile,
+  [check_x86_have_amx_tile libc_cv_test_x86_have_amx_tile],
+  [libc_cv_test_x86_have_amx_tile=no])
 LIBC_CONFIG_VAR([have-mamx-tile], [$libc_cv_x86_have_amx_tile])
 
 # Check if -mapxf is enabled.

@@ -46,6 +46,11 @@ AC_CONFIG_SUBDIRS()
 AC_CANONICAL_HOST
 
 AC_PROG_CC
+AC_ARG_VAR([TEST_CC],
+	   [C compiler for testing])
+if test -z "$TEST_CC"; then
+  TEST_CC="$CC"
+fi
 if test $host != $build; then
   AC_CHECK_PROGS(BUILD_CC, gcc cc)
 fi
@@ -70,6 +75,15 @@ AC_ARG_ENABLE([static-c++-link-check],
 
 # We need the C++ compiler only for testing.
 AC_PROG_CXX
+AC_ARG_VAR([TEST_CXX],
+	   [C++ compiler for testing])
+if test -z "$TEST_CXX"; then
+  saved_CXX=
+  TEST_CXX="$CXX"
+else
+  saved_CXX="$CXX"
+  CXX="$TEST_CXX"
+fi
 # It's useless to us if it can't link programs (e.g. missing -lstdc++).
 AC_CACHE_CHECK([whether $CXX can link programs], libc_cv_cxx_link_ok, [dnl
 AC_LANG_PUSH([C++])
@@ -97,6 +111,9 @@ main()
 fi
 AC_LANG_POP([C++])])
 AS_IF([test $libc_cv_cxx_link_ok != yes], [CXX=])
+if test -n "$saved_CXX"; then
+  CXX="$saved_CXX"
+fi
 
 if test "`cd $srcdir; pwd -P`" = "`pwd -P`"; then
   AC_MSG_ERROR([you must configure in a separate build directory])
@@ -1278,12 +1295,14 @@ LIBC_LINKER_FEATURE([--no-dynamic-linker],
 		    [libc_cv_no_dynamic_linker=no])
 LIBC_CONFIG_VAR([have-no-dynamic-linker], [$libc_cv_no_dynamic_linker])
 
-AC_CACHE_CHECK(for -static-pie, libc_cv_static_pie, [dnl
-LIBC_TRY_CC_OPTION([-static-pie],
-		   [libc_cv_static_pie=yes],
-		   [libc_cv_static_pie=no])
-])
+LIBC_TRY_CC_AND_TEST_CC_OPTION(for -static-pie, [-static-pie],
+  libc_cv_static_pie,
+  [libc_cv_static_pie=yes], [libc_cv_static_pie=no],
+  libc_cv_test_static_pie,
+  [libc_cv_test_static_pie=yes], [libc_cv_test_static_pie=no]
+)
 LIBC_CONFIG_VAR([have-static-pie], [$libc_cv_static_pie])
+AC_SUBST(libc_cv_test_static_pie)
 
 AC_CACHE_CHECK(for -fpie, libc_cv_fpie, [dnl
 LIBC_TRY_CC_OPTION([-fpie], [libc_cv_fpie=yes], [libc_cv_fpie=no])
@@ -1314,46 +1333,48 @@ fi
 rm -f conftest*])
 AC_SUBST(libc_cv_has_glob_dat)
 
-AC_CACHE_CHECK([for tls descriptor support], libc_cv_mtls_descriptor,
-[dnl
-cat > conftest.c <<EOF
+conftest_code="
 __thread int i;
 void foo (void)
 {
   i = 10;
 }
-EOF
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -fPIC -mtls-dialect=$mtls_descriptor -nostdlib -nostartfiles
-		   -shared conftest.c -o conftest 1>&AS_MESSAGE_LOG_FD])
-then
-  libc_cv_mtls_descriptor=$mtls_descriptor
-else
-  libc_cv_mtls_descriptor=no
-fi
-rm -f conftest*])
+"
+LIBC_TRY_CC_AND_TEST_CC_COMMAND([for tls descriptor support],
+  [$conftest_code],
+  [-fPIC -mtls-dialect=$mtls_descriptor -nostdlib -nostartfiles -shared],
+  libc_cv_mtls_descriptor,
+  [libc_cv_mtls_descriptor=$mtls_descriptor],
+  [libc_cv_mtls_descriptor=no],
+  libc_cv_test_mtls_descriptor,
+  [libc_cv_test_mtls_descriptor=$mtls_descriptor],
+  [libc_cv_test_mtls_descriptor=no])
 LIBC_CONFIG_VAR([have-mtls-descriptor], [$libc_cv_mtls_descriptor])
+AC_SUBST(libc_cv_test_mtls_descriptor)
 
 dnl clang emits an warning for a double alias redirection, to warn the
 dnl original symbol is sed even when weak definition overrides it.
 dnl It is a usual pattern for weak_alias, where multiple alias point to
 dnl same symbol.
-AC_CACHE_CHECK([if -Wno-ignored-attributes is required for aliases],
-	       libc_cv_wno_ignored_attributes, [dnl
-cat > conftest.c <<EOF
+conftest_code="
 void __foo (void)
 {
 }
 extern __typeof (__foo) foo __attribute__ ((weak, alias ("__foo")));
 extern __typeof (__foo) bar __attribute__ ((weak, alias ("foo")));
-EOF
-libc_cv_wno_ignored_attributes=""
-if ! AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -Werror -c conftest.c])
-then
-  libc_cv_wno_ignored_attributes="-Wno-ignored-attributes"
-fi
-rm -f conftest*])
+"
+LIBC_TRY_CC_AND_TEST_CC_COMMAND([if -Wno-ignored-attributes is required for aliases],
+  [$conftest_code],
+  [-c -Werror -Wno-ignored-attributes],
+  libc_cv_wno_ignored_attributes,
+  [libc_cv_wno_ignored_attributes="-Wno-ignored-attributes"],
+  [libc_cv_wno_ignored_attributes=],
+  libc_cv_test_wno_ignored_attributes,
+  [libc_cv_test_wno_ignored_attributes="-Wno-ignored-attributes"],
+  [libc_cv_test_wno_ignored_attributes=])
 LIBC_CONFIG_VAR([config-cflags-wno-ignored-attributes],
 		[$libc_cv_wno_ignored_attributes])
+AC_SUBST(libc_cv_test_wno_ignored_attributes)
 
 AC_CACHE_CHECK(whether cc puts quotes around section names,
 	       libc_cv_have_section_quotes,
@@ -1440,14 +1461,17 @@ fi
 AC_SUBST(libc_cv_cc_submachine)
 
 dnl Determine if compiler supports -fsignaling-nans
-AC_CACHE_CHECK([for compiler option that -fsignaling-nans],
-	       libc_cv_cc_signaling_nans, [dnl
-LIBC_TRY_CC_OPTION([-Werror -fsignaling-nans],
-		   [libc_cv_cc_signaling_nans=-fsignaling-nans],
-		   [libc_cv_cc_signaling_nans=])
-])
+LIBC_TRY_CC_AND_TEST_CC_OPTION([for compiler option that -fsignaling-nans],
+  [-Werror -fsignaling-nans],
+  libc_cv_cc_signaling_nans,
+  [libc_cv_cc_signaling_nans=-fsignaling-nans],
+  [libc_cv_cc_signaling_nans=],
+  libc_cv_test_cc_signaling_nans,
+  [libc_cv_test_cc_signaling_nans=-fsignaling-nans],
+  [libc_cv_test_cc_signaling_nans=])
 LIBC_CONFIG_VAR([config-cflags-signaling-nans],
 		[$libc_cv_cc_signaling_nans])
+AC_SUBST(libc_cv_test_cc_signaling_nans)
 
 AC_CACHE_CHECK(if $CC accepts -fno-tree-loop-distribute-patterns with \
 __attribute__ ((__optimize__)), libc_cv_cc_loop_to_function, [dnl
@@ -1467,14 +1491,17 @@ if test $libc_cv_cc_loop_to_function = yes; then
 fi
 AC_SUBST(libc_cv_cc_loop_to_function)
 
-AC_CACHE_CHECK([for -Wimplicit-fallthrough],
-	       libc_cv_cc_wimplicit_fallthrough, [dnl
-LIBC_TRY_CC_OPTION([-Werror -Wimplicit-fallthrough],
-		   [libc_cv_cc_wimplicit_fallthrough=-Wimplicit-fallthrough],
-		   [libc_cv_cc_wimplicit_fallthrough=])
-])
+LIBC_TRY_CC_AND_TEST_CC_OPTION([for -Wimplicit-fallthrough],
+  [-Werror -Wimplicit-fallthrough],
+  libc_cv_cc_wimplicit_fallthrough,
+  [libc_cv_cc_wimplicit_fallthrough=-Wimplicit-fallthrough],
+  [libc_cv_cc_wimplicit_fallthrough=-Wimplicit-fallthrough],
+  libc_cv_test_cc_wimplicit_fallthrough,
+  [libc_cv_test_cc_wimplicit_fallthrough=-Wimplicit-fallthrough],
+  [libc_cv_test_cc_wimplicit_fallthrough=])
 LIBC_CONFIG_VAR([cc-option-wimplicit-fallthrough],
 		[$libc_cv_cc_wimplicit_fallthrough])
+AC_SUBST(libc_cv_test_cc_wimplicit_fallthrough)
 
 dnl Check whether we have the gd library available.
 AC_MSG_CHECKING(for libgd)
@@ -1538,12 +1565,15 @@ dnl support it
 no_fortify_source="-U_FORTIFY_SOURCE"
 fortify_source="${no_fortify_source}"
 
-AC_CACHE_CHECK([for maximum supported _FORTIFY_SOURCE level],
-	       [libc_cv_supported_fortify_source], [
-    AC_LINK_IFELSE([AC_LANG_PROGRAM([], [__builtin_dynamic_object_size("", 0)])],
-        [libc_cv_supported_fortify_source=3],
-        [libc_cv_supported_fortify_source=2])
-])
+LIBC_TRY_CC_AND_TEST_LINK([for maximum supported _FORTIFY_SOURCE level],
+  [__builtin_dynamic_object_size("", 0)],
+  libc_cv_supported_fortify_source,
+  [libc_cv_supported_fortify_source=3],
+  [libc_cv_supported_fortify_source=2],
+  libc_cv_test_supported_fortify_source,
+  [libc_cv_test_supported_fortify_source=3],
+  [libc_cv_test_supported_fortify_source=2])
+AC_SUBST(libc_cv_test_supported_fortify_source)
 
 AS_CASE([$enable_fortify_source],
         [yes], [libc_cv_fortify_source=yes enable_fortify_source=$libc_cv_supported_fortify_source],
@@ -1834,6 +1864,11 @@ if test "$libc_cv_static_pie" = "yes"; then
   AC_DEFINE(ENABLE_STATIC_PIE)
 fi
 LIBC_CONFIG_VAR([enable-static-pie], [$libc_cv_static_pie])
+
+# Support configure.ac under sysdeps.
+AC_SUBST(libc_cv_test_cc_mprefer_vector_width)
+AC_SUBST(test_enable_cet)
+AC_SUBST(libc_cv_test_x86_have_amx_tile)
 
 # Set the `multidir' variable by grabbing the variable from the compiler.
 # We do it once and save the result in a generated makefile.

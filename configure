@@ -620,6 +620,9 @@ DEFINES
 static_nss
 profile
 libc_cv_multidir
+libc_cv_test_x86_have_amx_tile
+test_enable_cet
+libc_cv_test_cc_mprefer_vector_width
 shared
 static
 ldd_rewrite_script
@@ -641,15 +644,21 @@ fortify_source
 no_fortify_source
 libc_cv_fortify_source
 enable_fortify_source
+libc_cv_test_supported_fortify_source
 have_selinux
 have_libcap
 have_libaudit
 LIBGD
+libc_cv_test_cc_wimplicit_fallthrough
 libc_cv_cc_loop_to_function
+libc_cv_test_cc_signaling_nans
 libc_cv_cc_submachine
 libc_cv_cc_nofma
+libc_cv_test_wno_ignored_attributes
+libc_cv_test_mtls_descriptor
 libc_cv_has_glob_dat
 libc_cv_fpie
+libc_cv_test_static_pie
 libc_cv_z_execstack
 ASFLAGS_config
 libc_cv_cc_with_libunwind
@@ -704,12 +713,14 @@ man_pages_version
 rtld_early_cflags
 extra_nonshared_cflags
 sysheaders
+TEST_CXX
 ac_ct_CXX
 CXXFLAGS
 CXX
 CPP
 cross_compiling
 BUILD_CC
+TEST_CC
 OBJEXT
 ac_ct_CC
 CPPFLAGS
@@ -819,10 +830,12 @@ CFLAGS
 LDFLAGS
 LIBS
 CPPFLAGS
+TEST_CC
 CPP
 CXX
 CXXFLAGS
-CCC'
+CCC
+TEST_CXX'
 ac_subdirs_all=''
 
 # Initialize some variables set by options.
@@ -1523,9 +1536,11 @@ Some influential environment variables:
   LIBS        libraries to pass to the linker, e.g. -l<library>
   CPPFLAGS    (Objective) C/C++ preprocessor flags, e.g. -I<include dir> if
               you have headers in a nonstandard directory <include dir>
+  TEST_CC     C compiler for testing
   CPP         C preprocessor
   CXX         C++ compiler command
   CXXFLAGS    C++ compiler flags
+  TEST_CXX    C++ compiler for testing
 
 Use these variables to override the choices made by 'configure' or to help
 it to find libraries and programs with nonstandard names/locations.
@@ -3806,6 +3821,10 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
+
+if test -z "$TEST_CC"; then
+  TEST_CC="$CC"
+fi
 if test $host != $build; then
   for ac_prog in gcc cc
 do
@@ -4280,6 +4299,14 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
+
+if test -z "$TEST_CXX"; then
+  saved_CXX=
+  TEST_CXX="$CXX"
+else
+  saved_CXX="$CXX"
+  CXX="$TEST_CXX"
+fi
 # It's useless to us if it can't link programs (e.g. missing -lstdc++).
 
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether $CXX can link programs" >&5
@@ -4356,6 +4383,9 @@ printf "%s\n" "$libc_cv_cxx_link_ok" >&6; }
 if test $libc_cv_cxx_link_ok != yes
 then :
   CXX=
+fi
+if test -n "$saved_CXX"; then
+  CXX="$saved_CXX"
 fi
 
 if test "`cd $srcdir; pwd -P`" = "`pwd -P`"; then
@@ -7103,6 +7133,7 @@ printf "%s\n" "$libc_linker_feature" >&6; }
 config_vars="$config_vars
 have-no-dynamic-linker = $libc_cv_no_dynamic_linker"
 
+
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for -static-pie" >&5
 printf %s "checking for -static-pie... " >&6; }
 if test ${libc_cv_static_pie+y}
@@ -7120,14 +7151,48 @@ then :
 else case e in #(
   e) libc_cv_static_pie=no ;;
 esac
-fi
- ;;
+fi ;;
 esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_static_pie" >&5
 printf "%s\n" "$libc_cv_static_pie" >&6; }
+if test "$TEST_CC" = "$CC"; then
+  libc_cv_test_static_pie=$libc_cv_static_pie
+else
+
+saved_CC="$CC"
+CC="$TEST_CC"
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for -static-pie in testing" >&5
+printf %s "checking for -static-pie in testing... " >&6; }
+if test ${libc_cv_test_static_pie+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) if { ac_try='${CC-cc} -static-pie -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+then :
+  libc_cv_test_static_pie=yes
+else case e in #(
+  e) libc_cv_test_static_pie=no
+ ;;
+esac
+fi ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_test_static_pie" >&5
+printf "%s\n" "$libc_cv_test_static_pie" >&6; }
+
+CC="$saved_CC"
+
+fi
+
 config_vars="$config_vars
 have-static-pie = $libc_cv_static_pie"
+
 
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for -fpie" >&5
 printf %s "checking for -fpie... " >&6; }
@@ -7190,69 +7255,143 @@ fi
 printf "%s\n" "$libc_cv_has_glob_dat" >&6; }
 
 
+conftest_code="
+__thread int i;
+void foo (void)
+{
+  i = 10;
+}
+"
+
+cat > conftest.c <<EOF
+$conftest_code
+EOF
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for tls descriptor support" >&5
 printf %s "checking for tls descriptor support... " >&6; }
 if test ${libc_cv_mtls_descriptor+y}
 then :
   printf %s "(cached) " >&6
 else case e in #(
-  e) cat > conftest.c <<EOF
-__thread int i;
-void foo (void)
-{
-  i = 10;
-}
-EOF
-if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -fPIC -mtls-dialect=$mtls_descriptor -nostdlib -nostartfiles
-		   -shared conftest.c -o conftest 1>&5'
+  e)   if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -fPIC -mtls-dialect=$mtls_descriptor -nostdlib -nostartfiles -shared conftest.c -o conftest 1>&5'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
   printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; }
-then
-  libc_cv_mtls_descriptor=$mtls_descriptor
-else
-  libc_cv_mtls_descriptor=no
-fi
-rm -f conftest* ;;
+  then
+    libc_cv_mtls_descriptor=$mtls_descriptor
+  else
+    libc_cv_mtls_descriptor=no
+  fi
+ ;;
 esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_mtls_descriptor" >&5
 printf "%s\n" "$libc_cv_mtls_descriptor" >&6; }
+if test "$TEST_CC" = "$CC"; then
+  libc_cv_test_mtls_descriptor=$libc_cv_mtls_descriptor
+else
+
+saved_CC="$CC"
+CC="$TEST_CC"
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for tls descriptor support in testing" >&5
+printf %s "checking for tls descriptor support in testing... " >&6; }
+if test ${libc_cv_test_mtls_descriptor+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e)       if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -fPIC -mtls-dialect=$mtls_descriptor -nostdlib -nostartfiles -shared conftest.c -o conftest 1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+      then
+	libc_cv_test_mtls_descriptor=$mtls_descriptor
+      else
+	libc_cv_test_mtls_descriptor=no
+      fi ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_test_mtls_descriptor" >&5
+printf "%s\n" "$libc_cv_test_mtls_descriptor" >&6; }
+
+CC="$saved_CC"
+
+fi
+rm -f conftest*
 config_vars="$config_vars
 have-mtls-descriptor = $libc_cv_mtls_descriptor"
 
+
+conftest_code="
+void __foo (void)
+{
+}
+extern __typeof (__foo) foo __attribute__ ((weak, alias ("__foo")));
+extern __typeof (__foo) bar __attribute__ ((weak, alias ("foo")));
+"
+
+cat > conftest.c <<EOF
+$conftest_code
+EOF
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking if -Wno-ignored-attributes is required for aliases" >&5
 printf %s "checking if -Wno-ignored-attributes is required for aliases... " >&6; }
 if test ${libc_cv_wno_ignored_attributes+y}
 then :
   printf %s "(cached) " >&6
 else case e in #(
-  e) cat > conftest.c <<EOF
-void __foo (void)
-{
-}
-extern __typeof (__foo) foo __attribute__ ((weak, alias ("__foo")));
-extern __typeof (__foo) bar __attribute__ ((weak, alias ("foo")));
-EOF
-libc_cv_wno_ignored_attributes=""
-if ! { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -Werror -c conftest.c'
+  e)   if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -c -Werror -Wno-ignored-attributes conftest.c -o conftest 1>&5'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
   printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; }
-then
-  libc_cv_wno_ignored_attributes="-Wno-ignored-attributes"
-fi
-rm -f conftest* ;;
+  then
+    libc_cv_wno_ignored_attributes="-Wno-ignored-attributes"
+  else
+    libc_cv_wno_ignored_attributes=
+  fi
+ ;;
 esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_wno_ignored_attributes" >&5
 printf "%s\n" "$libc_cv_wno_ignored_attributes" >&6; }
+if test "$TEST_CC" = "$CC"; then
+  libc_cv_test_wno_ignored_attributes=$libc_cv_wno_ignored_attributes
+else
+
+saved_CC="$CC"
+CC="$TEST_CC"
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking if -Wno-ignored-attributes is required for aliases in testing" >&5
+printf %s "checking if -Wno-ignored-attributes is required for aliases in testing... " >&6; }
+if test ${libc_cv_test_wno_ignored_attributes+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e)       if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -c -Werror -Wno-ignored-attributes conftest.c -o conftest 1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+      then
+	libc_cv_test_wno_ignored_attributes="-Wno-ignored-attributes"
+      else
+	libc_cv_test_wno_ignored_attributes=
+      fi ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_test_wno_ignored_attributes" >&5
+printf "%s\n" "$libc_cv_test_wno_ignored_attributes" >&6; }
+
+CC="$saved_CC"
+
+fi
+rm -f conftest*
 config_vars="$config_vars
 config-cflags-wno-ignored-attributes = $libc_cv_wno_ignored_attributes"
+
 
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether cc puts quotes around section names" >&5
 printf %s "checking whether cc puts quotes around section names... " >&6; }
@@ -7405,6 +7544,7 @@ printf "%s\n" "$libc_cv_cc_submachine" >&6; }
 fi
 
 
+
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for compiler option that -fsignaling-nans" >&5
 printf %s "checking for compiler option that -fsignaling-nans... " >&6; }
 if test ${libc_cv_cc_signaling_nans+y}
@@ -7422,14 +7562,47 @@ then :
 else case e in #(
   e) libc_cv_cc_signaling_nans= ;;
 esac
-fi
- ;;
+fi ;;
 esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cc_signaling_nans" >&5
 printf "%s\n" "$libc_cv_cc_signaling_nans" >&6; }
+if test "$TEST_CC" = "$CC"; then
+  libc_cv_test_cc_signaling_nans=$libc_cv_cc_signaling_nans
+else
+
+saved_CC="$CC"
+CC="$TEST_CC"
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for compiler option that -fsignaling-nans in testing" >&5
+printf %s "checking for compiler option that -fsignaling-nans in testing... " >&6; }
+if test ${libc_cv_test_cc_signaling_nans+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) if { ac_try='${CC-cc} -Werror -fsignaling-nans -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+then :
+  libc_cv_test_cc_signaling_nans=-fsignaling-nans
+else case e in #(
+  e) libc_cv_test_cc_signaling_nans= ;;
+esac
+fi ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_test_cc_signaling_nans" >&5
+printf "%s\n" "$libc_cv_test_cc_signaling_nans" >&6; }
+
+CC="$saved_CC"
+
+fi
+
 config_vars="$config_vars
 config-cflags-signaling-nans = $libc_cv_cc_signaling_nans"
+
 
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking if $CC accepts -fno-tree-loop-distribute-patterns with \
 __attribute__ ((__optimize__))" >&5
@@ -7465,6 +7638,7 @@ if test $libc_cv_cc_loop_to_function = yes; then
 fi
 
 
+
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for -Wimplicit-fallthrough" >&5
 printf %s "checking for -Wimplicit-fallthrough... " >&6; }
 if test ${libc_cv_cc_wimplicit_fallthrough+y}
@@ -7480,16 +7654,49 @@ else case e in #(
 then :
   libc_cv_cc_wimplicit_fallthrough=-Wimplicit-fallthrough
 else case e in #(
-  e) libc_cv_cc_wimplicit_fallthrough= ;;
+  e) libc_cv_cc_wimplicit_fallthrough=-Wimplicit-fallthrough ;;
 esac
-fi
- ;;
+fi ;;
 esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cc_wimplicit_fallthrough" >&5
 printf "%s\n" "$libc_cv_cc_wimplicit_fallthrough" >&6; }
+if test "$TEST_CC" = "$CC"; then
+  libc_cv_test_cc_wimplicit_fallthrough=$libc_cv_cc_wimplicit_fallthrough
+else
+
+saved_CC="$CC"
+CC="$TEST_CC"
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for -Wimplicit-fallthrough in testing" >&5
+printf %s "checking for -Wimplicit-fallthrough in testing... " >&6; }
+if test ${libc_cv_test_cc_wimplicit_fallthrough+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) if { ac_try='${CC-cc} -Werror -Wimplicit-fallthrough -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+then :
+  libc_cv_test_cc_wimplicit_fallthrough=-Wimplicit-fallthrough
+else case e in #(
+  e) libc_cv_test_cc_wimplicit_fallthrough= ;;
+esac
+fi ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_test_cc_wimplicit_fallthrough" >&5
+printf "%s\n" "$libc_cv_test_cc_wimplicit_fallthrough" >&6; }
+
+CC="$saved_CC"
+
+fi
+
 config_vars="$config_vars
 cc-option-wimplicit-fallthrough = $libc_cv_cc_wimplicit_fallthrough"
+
 
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for libgd" >&5
 printf %s "checking for libgd... " >&6; }
@@ -7721,6 +7928,7 @@ fi
 no_fortify_source="-U_FORTIFY_SOURCE"
 fortify_source="${no_fortify_source}"
 
+
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for maximum supported _FORTIFY_SOURCE level" >&5
 printf %s "checking for maximum supported _FORTIFY_SOURCE level... " >&6; }
 if test ${libc_cv_supported_fortify_source+y}
@@ -7728,7 +7936,7 @@ then :
   printf %s "(cached) " >&6
 else case e in #(
   e)
-    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 int
@@ -7753,6 +7961,50 @@ esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_supported_fortify_source" >&5
 printf "%s\n" "$libc_cv_supported_fortify_source" >&6; }
+if test "$TEST_CC" = "$CC"; then
+  libc_cv_test_supported_fortify_source=$libc_cv_supported_fortify_source
+else
+
+saved_CC="$CC"
+CC="$TEST_CC"
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for maximum supported _FORTIFY_SOURCE level in testing" >&5
+printf %s "checking for maximum supported _FORTIFY_SOURCE level in testing... " >&6; }
+if test ${libc_cv_test_supported_fortify_source+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e)
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main (void)
+{
+__builtin_dynamic_object_size("", 0)
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  libc_cv_test_supported_fortify_source=3
+else case e in #(
+  e) libc_cv_test_supported_fortify_source=2 ;;
+esac
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+     ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_test_supported_fortify_source" >&5
+printf "%s\n" "$libc_cv_test_supported_fortify_source" >&6; }
+
+CC="$saved_CC"
+
+fi
+
+
 
 case $enable_fortify_source in #(
   yes) :
@@ -8243,6 +8495,11 @@ if test "$libc_cv_static_pie" = "yes"; then
 fi
 config_vars="$config_vars
 enable-static-pie = $libc_cv_static_pie"
+
+# Support configure.ac under sysdeps.
+
+
+
 
 # Set the `multidir' variable by grabbing the variable from the compiler.
 # We do it once and save the result in a generated makefile.

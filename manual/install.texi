@@ -75,6 +75,15 @@ and @theglibc{} cannot be compiled without optimization, so if
 $ ../glibc-@var{version}/configure CC="gcc -m32" CFLAGS="-O3"
 @end smallexample
 
+To test @theglibc{} with a different C compiler or a different C++
+compiler, @samp{TEST_CC=@var{compiler}} and
+@samp{TEST_CXX=@var{compiler}} arguments can be passed to
+@code{configure}.  For example:
+
+@smallexample
+$ ../glibc-@var{version}/configure TEST_CC="gcc-6.4.1" TEST_CXX="g++-6.4.1"
+@end smallexample
+
 The following list describes all of the available options for
  @code{configure}:
 

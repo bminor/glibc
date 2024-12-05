@@ -1,8 +1,9 @@
 # This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
  # Local configure fragment for sysdeps/x86_64.
 
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking -mprefer-vector-width=128" >&5
-printf %s "checking -mprefer-vector-width=128... " >&6; }
+
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for -mprefer-vector-width=128" >&5
+printf %s "checking for -mprefer-vector-width=128... " >&6; }
 if test ${libc_cv_cc_mprefer_vector_width+y}
 then :
   printf %s "(cached) " >&6
@@ -18,12 +19,44 @@ then :
 else case e in #(
   e) libc_cv_cc_mprefer_vector_width=no ;;
 esac
-fi
- ;;
+fi ;;
 esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cc_mprefer_vector_width" >&5
 printf "%s\n" "$libc_cv_cc_mprefer_vector_width" >&6; }
+if test "$TEST_CC" = "$CC"; then
+  libc_cv_test_cc_mprefer_vector_width=$libc_cv_cc_mprefer_vector_width
+else
+
+saved_CC="$CC"
+CC="$TEST_CC"
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for -mprefer-vector-width=128 in testing" >&5
+printf %s "checking for -mprefer-vector-width=128 in testing... " >&6; }
+if test ${libc_cv_test_cc_mprefer_vector_width+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) if { ac_try='${CC-cc} -mprefer-vector-width=128 -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+then :
+  libc_cv_test_cc_mprefer_vector_width=yes
+else case e in #(
+  e) libc_cv_test_cc_mprefer_vector_width=no ;;
+esac
+fi ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_test_cc_mprefer_vector_width" >&5
+printf "%s\n" "$libc_cv_test_cc_mprefer_vector_width" >&6; }
+
+CC="$saved_CC"
+
+fi
+
 config_vars="$config_vars
 config-cflags-mprefer-vector-width = $libc_cv_cc_mprefer_vector_width"
 
@@ -66,34 +99,73 @@ if test x"$build_mathvec" = xnotset; then
   build_mathvec=yes
 fi
 
+test_enable_cet=$enable_cet
 if test $enable_cet != no; then
   # Check if CET can be enabled.
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether CET can be enabled" >&5
+  conftest_code="
+#if !defined __CET__ || __CET__ != 3
+# error CET is not available.
+#endif
+"
+
+cat > conftest.c <<EOF
+$conftest_code
+EOF
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether CET can be enabled" >&5
 printf %s "checking whether CET can be enabled... " >&6; }
 if test ${libc_cv_x86_cet_available+y}
 then :
   printf %s "(cached) " >&6
 else case e in #(
-  e) cat > conftest.c <<EOF
-#if !defined __CET__ || __CET__ != 3
-# error CET isn't available.
-#endif
-EOF
-		 if { ac_try='${CC-cc} -c $CFLAGS -fcf-protection -include cet.h conftest.c 1>&5'
+  e)   if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -c -fcf-protection -include cet.h conftest.c -o conftest 1>&5'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
   printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then
-		   libc_cv_x86_cet_available=yes
-		 else
-		   libc_cv_x86_cet_available=no
-		 fi
-		 rm -rf conftest* ;;
+  test $ac_status = 0; }; }
+  then
+    libc_cv_x86_cet_available=yes
+  else
+    libc_cv_x86_cet_available=no
+  fi
+ ;;
 esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_x86_cet_available" >&5
 printf "%s\n" "$libc_cv_x86_cet_available" >&6; }
+if test "$TEST_CC" = "$CC"; then
+  libc_cv_test_x86_cet_available=$libc_cv_x86_cet_available
+else
+
+saved_CC="$CC"
+CC="$TEST_CC"
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether CET can be enabled in testing" >&5
+printf %s "checking whether CET can be enabled in testing... " >&6; }
+if test ${libc_cv_test_x86_cet_available+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e)       if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -c -fcf-protection -include cet.h conftest.c -o conftest 1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+      then
+	libc_cv_test_x86_cet_available=yes
+      else
+	libc_cv_test_x86_cet_available=no
+      fi ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_test_x86_cet_available" >&5
+printf "%s\n" "$libc_cv_test_x86_cet_available" >&6; }
+
+CC="$saved_CC"
+
+fi
+rm -f conftest*
+    test_enable_cet=$libc_cv_test_x86_cet_available
   if test $libc_cv_x86_cet_available != yes; then
     as_fn_error $? "$CC doesn't support CET" "$LINENO" 5
   fi
@@ -139,31 +211,75 @@ config_vars="$config_vars
 enable-cet = $enable_cet"
 
 # Check if -mamx-tile works properly.
+check_x86_have_amx_tile ()
+{
+  eval $1=no
+  if grep -q __builtin_ia32_ldtilecfg conftest; then
+    eval $1=yes
+  fi
+}
+
+conftest_code="
+#include <x86intrin.h>
+"
+
+cat > conftest.c <<EOF
+$conftest_code
+EOF
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether -mamx-tile works properly" >&5
 printf %s "checking whether -mamx-tile works properly... " >&6; }
 if test ${libc_cv_x86_have_amx_tile+y}
 then :
   printf %s "(cached) " >&6
 else case e in #(
-  e) cat > conftest.c <<EOF
-#include <x86intrin.h>
-EOF
-	       libc_cv_x86_have_amx_tile=no
-	       if { ac_try='${CC-cc} -E $CFLAGS -mamx-tile conftest.c > conftest.i'
+  e)   if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -E -mamx-tile conftest.c -o conftest 1>&5'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
   printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then
-		 if grep -q __builtin_ia32_ldtilecfg conftest.i; then
-		   libc_cv_x86_have_amx_tile=yes
-	         fi
-	       fi
-	       rm -rf conftest* ;;
+  test $ac_status = 0; }; }
+  then
+    check_x86_have_amx_tile libc_cv_x86_have_amx_tile
+  else
+    libc_cv_x86_have_amx_tile=no
+  fi
+ ;;
 esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_x86_have_amx_tile" >&5
 printf "%s\n" "$libc_cv_x86_have_amx_tile" >&6; }
+if test "$TEST_CC" = "$CC"; then
+  libc_cv_test_x86_have_amx_tile=$libc_cv_x86_have_amx_tile
+else
+
+saved_CC="$CC"
+CC="$TEST_CC"
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether -mamx-tile works properly in testing" >&5
+printf %s "checking whether -mamx-tile works properly in testing... " >&6; }
+if test ${libc_cv_test_x86_have_amx_tile+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e)       if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -E -mamx-tile conftest.c -o conftest 1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+      then
+	check_x86_have_amx_tile libc_cv_test_x86_have_amx_tile
+      else
+	libc_cv_test_x86_have_amx_tile=no
+      fi ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_test_x86_have_amx_tile" >&5
+printf "%s\n" "$libc_cv_test_x86_have_amx_tile" >&6; }
+
+CC="$saved_CC"
+
+fi
+rm -f conftest*
 config_vars="$config_vars
 have-mamx-tile = $libc_cv_x86_have_amx_tile"
 
