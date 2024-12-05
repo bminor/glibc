@@ -22,7 +22,7 @@ subdir	:= argp
 
 include ../Makeconfig
 
-headers	= \
+headers = \
   argp.h \
   bits/argp-ldbl.h \
   # headers

@@ -48,7 +48,7 @@ tests = \
   tst-duplocale \
   tst-locname \
   # tests
-tests-container	= \
+tests-container = \
   tst-localedef-path-norm \
   # tests-container
 categories = \

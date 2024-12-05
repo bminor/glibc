@@ -22,7 +22,7 @@ subdir	:= catgets
 
 include ../Makeconfig
 
-headers	= \
+headers = \
   nl_types.h \
   # headers
 routines = \

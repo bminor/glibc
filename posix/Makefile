@@ -360,7 +360,7 @@ tests-time64 := \
   tst-wait4-time64 \
   # tests-time64
 
-xtests	:= \
+xtests := \
   tst-sched_rr_get_interval \
   # xtests
 
@@ -405,7 +405,7 @@ install-bin := \
   getconf \
   # getconf
 
-install-others-programs	:= \
+install-others-programs := \
   $(inst_libexecdir)/getconf \
   # install-others-programs
 

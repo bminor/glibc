@@ -22,28 +22,28 @@ subdir		:= math
 include ../Makeconfig
 
 # Installed header files.
-headers	:= \
-  math.h \
-  bits/mathcalls.h \
-  fpu_control.h \
-  complex.h \
+headers := \
   bits/cmathcalls.h \
-  fenv.h \
   bits/fenv.h \
-  bits/mathdef.h \
-  tgmath.h \
-  bits/math-vector.h \
-  finclude/math-vector-fortran.h \
-  bits/libm-simd-decl-stubs.h \
-  bits/iscanonical.h \
+  bits/floatn-common.h \
+  bits/floatn.h \
   bits/flt-eval-method.h \
   bits/fp-fast.h \
   bits/fp-logb.h \
+  bits/iscanonical.h \
+  bits/libm-simd-decl-stubs.h \
   bits/long-double.h \
+  bits/math-vector.h \
   bits/mathcalls-helper-functions.h \
-  bits/floatn.h \
-  bits/floatn-common.h \
-  bits/mathcalls-narrow.h
+  bits/mathcalls-narrow.h \
+  bits/mathcalls.h \
+  bits/mathdef.h \
+  complex.h \
+  fenv.h \
+  finclude/math-vector-fortran.h \
+  fpu_control.h \
+  math.h \
+  tgmath.h \
   # headers
 
 # FPU support code.
