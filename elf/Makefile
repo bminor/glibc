@@ -487,6 +487,8 @@ tests += \
   tst-tls19 \
   tst-tls20 \
   tst-tls21 \
+  tst-tls22 \
+  tst-tls22-gnu2 \
   tst-tlsalign \
   tst-tlsalign-extern \
   tst-tlsgap \
@@ -688,9 +690,15 @@ tst-tls-many-dynamic-modules-dep-bad = \
 extra-test-objs += \
   $(tlsmod17a-modules:=.os) \
   $(tlsmod18a-modules:=.os) \
+  tst-tls22-mod1-vars.os \
+  tst-tls22-mod2-vars.os \
+  tst-tls22-vars.o \
   tst-tlsalign-vars.o \
   # extra-test-objs
 test-extras += \
+  tst-tls22-mod1-vars \
+  tst-tls22-mod2-vars \
+  tst-tls22-vars \
   tst-tlsalign-vars \
   tst-tlsmod17a \
   tst-tlsmod18a \
@@ -972,6 +980,10 @@ modules-names += \
   tst-tls19mod3 \
   tst-tls20mod-bad \
   tst-tls21mod \
+  tst-tls22-mod1 \
+  tst-tls22-mod1-gnu2 \
+  tst-tls22-mod2 \
+  tst-tls22-mod2-gnu2 \
   tst-tlsalign-lib \
   tst-tlsgap-mod0 \
   tst-tlsgap-mod1 \
@@ -3229,3 +3241,27 @@ $(objpfx)tst-hash-collision2-sysv: $(objpfx)tst-hash-collision2-mod1-sysv.so \
 LDFLAGS-tst-hash-collision3-mod.so = \
   -Wl,--version-script=tst-hash-collision3-mod.map
 $(objpfx)tst-hash-collision3: $(objpfx)tst-hash-collision3-mod.so
+
+$(objpfx)tst-tls22: $(objpfx)tst-tls22-vars.o $(objpfx)tst-tls22-mod1.so \
+  $(objpfx)tst-tls22-mod2.so $(shared-thread-library)
+$(objpfx)tst-tls22-mod1.so: $(objpfx)tst-tls22-mod1.os \
+  $(objpfx)tst-tls22-mod1-vars.os $(objpfx)tst-tls22-mod2.so
+$(objpfx)tst-tls22-mod2.so: $(objpfx)tst-tls22-mod2.os \
+  $(objpfx)tst-tls22-mod2-vars.os
+$(objpfx)tst-tls22-gnu2: $(objpfx)tst-tls22-vars.o \
+  $(objpfx)tst-tls22-mod1-gnu2.so $(objpfx)tst-tls22-mod2-gnu2.so \
+  $(shared-thread-library)
+$(objpfx)tst-tls22-mod1-gnu2.so: $(objpfx)tst-tls22-mod1-gnu2.os \
+  $(objpfx)tst-tls22-mod1-vars.os $(objpfx)tst-tls22-mod2-gnu2.so
+$(objpfx)tst-tls22-mod2-gnu2.so: $(objpfx)tst-tls22-mod2-gnu2.os \
+  $(objpfx)tst-tls22-mod2-vars.os
+ifneq (no,$(have-mtls-descriptor))
+CFLAGS-tst-tls22-gnu2.c += -mtls-dialect=$(have-mtls-descriptor)
+CFLAGS-tst-tls22-mod1-gnu2.c += -mtls-dialect=$(have-mtls-descriptor)
+CFLAGS-tst-tls22-mod2-gnu2.c += -mtls-dialect=$(have-mtls-descriptor)
+endif
+# These reference symbols from the main executable.
+tst-tls22-mod1.so-no-z-defs = yes
+tst-tls22-mod1-gnu2.so-no-z-defs = yes
+tst-tls22-mod2.so-no-z-defs = yes
+tst-tls22-mod2-gnu2.so-no-z-defs = yes
