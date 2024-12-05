@@ -4469,8 +4469,8 @@ cospi min
 cospi -min
 cospi min_subnorm
 cospi -min_subnorm
-cospi max
-cospi -max
+cospi max xfail-rounding:ibm128-libgcc
+cospi -max xfail-rounding:ibm128-libgcc
 cospi 1
 cospi -1
 cospi 2
@@ -4549,10 +4549,10 @@ cospi 0x1fffffffffffffff.6p0
 cospi -0x1fffffffffffffff.6p0
 cospi 0x1fffffffffffffff.ap0
 cospi -0x1fffffffffffffff.ap0
-cospi 0x3fffffffffffffffffffffffffff.6p0
-cospi -0x3fffffffffffffffffffffffffff.6p0
-cospi 0x3fffffffffffffffffffffffffff.ap0
-cospi -0x3fffffffffffffffffffffffffff.ap0
+cospi 0x3fffffffffffffffffffffffffff.6p0 xfail-rounding:ibm128-libgcc
+cospi -0x3fffffffffffffffffffffffffff.6p0 xfail-rounding:ibm128-libgcc
+cospi 0x3fffffffffffffffffffffffffff.ap0 xfail-rounding:ibm128-libgcc
+cospi -0x3fffffffffffffffffffffffffff.ap0 xfail-rounding:ibm128-libgcc
 
 cosh 0
 cosh -0
