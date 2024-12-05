@@ -136,6 +136,7 @@ gen-libm-calls = \
   s_nextdownF \
   s_significandF \
   s_sinpiF \
+  s_tanpiF \
   w_acosF \
   w_acoshF \
   w_asinF \
@@ -672,6 +673,7 @@ libm-test-funcs-auto = \
   sqrt \
   tan \
   tanh \
+  tanpi \
   tgamma \
   y0 \
   y1 \
@@ -1004,6 +1006,7 @@ tgmath3-macros = \
   sqrt \
   tan \
   tanh \
+  tanpi \
   tgamma \
   trunc \
   ufromfp \
@@ -1430,6 +1433,7 @@ CFLAGS-s_sinpi.c += -fno-builtin-sinpil
 CFLAGS-w_sqrt.c += -fno-builtin-sqrtl
 CFLAGS-s_tan.c += -fno-builtin-tanl
 CFLAGS-s_tanh.c += -fno-builtin-tanhl
+CFLAGS-s_tanpi.c += -fno-builtin-tanpil
 CFLAGS-w_tgamma.c += -fno-builtin-tgammal
 CFLAGS-s_totalorder.c += -fno-builtin-totalorderl
 CFLAGS-s_totalordermag.c += -fno-builtin-totalordermagl
@@ -1557,6 +1561,7 @@ CFLAGS-s_sinpi.c += -fno-builtin-sinpif32x -fno-builtin-sinpif64
 CFLAGS-w_sqrt.c += -fno-builtin-sqrtf32x -fno-builtin-sqrtf64
 CFLAGS-s_tan.c += -fno-builtin-tanf32x -fno-builtin-tanf64
 CFLAGS-s_tanh.c += -fno-builtin-tanhf32x -fno-builtin-tanhf64
+CFLAGS-s_tanpi.c += -fno-builtin-tanpif32x -fno-builtin-tanpif64
 CFLAGS-w_tgamma.c += -fno-builtin-tgammaf32x -fno-builtin-tgammaf64
 CFLAGS-s_totalorder.c += -fno-builtin-totalorderf32x -fno-builtin-totalorderf64
 CFLAGS-s_totalordermag.c += -fno-builtin-totalordermagf32x -fno-builtin-totalordermagf64
@@ -1677,6 +1682,7 @@ CFLAGS-s_sinpif.c += -fno-builtin-sinpif32
 CFLAGS-w_sqrtf.c += -fno-builtin-sqrtf32
 CFLAGS-s_tanf.c += -fno-builtin-tanf32
 CFLAGS-s_tanhf.c += -fno-builtin-tanhf32
+CFLAGS-s_tanpif.c += -fno-builtin-tanpif32
 CFLAGS-w_tgammaf.c += -fno-builtin-tgammaf32
 CFLAGS-s_totalorderf.c += -fno-builtin-totalorderf32
 CFLAGS-s_totalordermagf.c += -fno-builtin-totalordermagf32

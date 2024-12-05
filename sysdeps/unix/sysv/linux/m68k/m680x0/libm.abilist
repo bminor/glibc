@@ -926,3 +926,9 @@ GLIBC_2.41 sinpif32 F
 GLIBC_2.41 sinpif32x F
 GLIBC_2.41 sinpif64 F
 GLIBC_2.41 sinpil F
+GLIBC_2.41 tanpi F
+GLIBC_2.41 tanpif F
+GLIBC_2.41 tanpif32 F
+GLIBC_2.41 tanpif32x F
+GLIBC_2.41 tanpif64 F
+GLIBC_2.41 tanpil F

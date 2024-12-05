@@ -822,6 +822,8 @@
 # define cospi(Val) __TGMATH_UNARY_REAL_ONLY (Val, cospi)
 /* Sine of pi * X.  */
 # define sinpi(Val) __TGMATH_UNARY_REAL_ONLY (Val, sinpi)
+/* Tangent of pi * X.  */
+# define tanpi(Val) __TGMATH_UNARY_REAL_ONLY (Val, tanpi)
 #endif
 
 /* Hyperbolic functions.  */

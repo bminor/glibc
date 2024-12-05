@@ -36,7 +36,7 @@ Major new features:
   functions for float, double, long double, _FloatN and _FloatNx, and a
   type-generic macro in <tgmath.h>.
 
-  - Trigonometric functions: cospi, sinpi.
+  - Trigonometric functions: cospi, sinpi, tanpi.
 
 * The GNU C Library now supports a feature test macro _ISOC2Y_SOURCE to
   enable features from the draft ISO C2Y standard.  Only some features from

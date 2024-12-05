@@ -596,6 +596,7 @@ static test_function test_functions[] =
     FUNC_mpfr_f_f ("sqrt", mpfr_sqrt, true),
     FUNC_mpfr_f_f ("tan", mpfr_tan, false),
     FUNC_mpfr_f_f ("tanh", mpfr_tanh, false),
+    FUNC_mpfr_f_f ("tanpi", mpfr_tanpi, false),
     FUNC_mpfr_f_f ("tgamma", mpfr_gamma, false),
     FUNC_mpfr_f_f ("y0", mpfr_y0, false),
     FUNC_mpfr_f_f ("y1", mpfr_y1, false),

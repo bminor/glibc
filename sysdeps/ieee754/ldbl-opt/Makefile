@@ -207,6 +207,7 @@ libnldbl-calls = \
   syslog_chk \
   tan \
   tanh \
+  tanpi \
   tgamma \
   totalorder \
   totalordermag \
@@ -383,6 +384,7 @@ CFLAGS-nldbl-sinpi.c = -fno-builtin-sinpi
 CFLAGS-nldbl-sqrt.c = -fno-builtin-sqrtl
 CFLAGS-nldbl-tan.c = -fno-builtin-tanl
 CFLAGS-nldbl-tanh.c = -fno-builtin-tanhl
+CFLAGS-nldbl-tanpi.c = -fno-builtin-tanpi
 CFLAGS-nldbl-tgamma.c = -fno-builtin-tgammal
 CFLAGS-nldbl-totalorder.c = -fno-builtin-totalorderl
 CFLAGS-nldbl-totalordermag.c = -fno-builtin-totalordermagl
