@@ -10,6 +10,11 @@
 /* Now define the internal interfaces.  */
 extern int __signgam;
 
+# undef __MATHDECLX
+# define __MATHDECLX(type, function,suffix, args, attrib) \
+  __MATHDECL_1(type, function,suffix, args) __attribute__ (attrib); \
+  __MATHDECL_1(type, __CONCAT(__,function),suffix, args) __attribute__ (attrib)
+
 # if IS_IN (libc) || IS_IN (libm)
 hidden_proto (__finite)
 hidden_proto (__isinf)

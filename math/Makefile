@@ -35,6 +35,7 @@ headers := \
   bits/long-double.h \
   bits/math-vector.h \
   bits/mathcalls-helper-functions.h \
+  bits/mathcalls-macros.h \
   bits/mathcalls-narrow.h \
   bits/mathcalls.h \
   bits/mathdef.h \
