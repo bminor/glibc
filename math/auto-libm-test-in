@@ -7991,8 +7991,8 @@ sinpi min
 sinpi -min
 sinpi min_subnorm
 sinpi -min_subnorm
-sinpi max
-sinpi -max
+sinpi max xfail-rounding:ibm128-libgcc
+sinpi -max xfail-rounding:ibm128-libgcc
 sinpi 1
 sinpi -1
 sinpi 2
@@ -8073,8 +8073,8 @@ sinpi 0x1fffffffffffffff.ep0
 sinpi -0x1fffffffffffffff.ep0
 sinpi 0x3fffffffffffffffffffffffffff.2p0
 sinpi -0x3fffffffffffffffffffffffffff.2p0
-sinpi 0x3fffffffffffffffffffffffffff.ep0
-sinpi -0x3fffffffffffffffffffffffffff.ep0
+sinpi 0x3fffffffffffffffffffffffffff.ep0 xfail-rounding:ibm128-libgcc
+sinpi -0x3fffffffffffffffffffffffffff.ep0 xfail-rounding:ibm128-libgcc
 sinpi 0x1p-128
 sinpi -0x1p-128
 sinpi 0x1p-971
