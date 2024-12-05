@@ -130,7 +130,10 @@ fabsf128 (_Float128 x)
 }
 # endif
 
-# if !(defined __FINITE_MATH_ONLY__ && __FINITE_MATH_ONLY__ > 0)
+
+/* NB: Internal tests don't have access to internal symbols.  */
+# if !IS_IN (testsuite_internal) \
+     && !(defined __FINITE_MATH_ONLY__ && __FINITE_MATH_ONLY__ > 0)
 #  ifndef NO_MATH_REDIRECT
 /* Declare some functions for use within GLIBC.  Compilers typically
    inline those functions as a single instruction.  Use an asm to
