@@ -1313,7 +1313,7 @@ $(objpfx)$(1).generated-makefile: $(1)
 endef
 endif
 
-postclean-generated += $(objpfx)/dso-sort-tests-2.generated-makefile \
+postclean-generated += $(objpfx)/dso-sort-tests-1.generated-makefile \
 		       $(objpfx)/dso-sort-tests-2.generated-makefile
 
 # Generate from each testcase description file
