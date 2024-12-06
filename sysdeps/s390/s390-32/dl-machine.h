@@ -50,39 +50,22 @@ elf_machine_matches_host (const Elf32_Ehdr *ehdr)
 }
 
 
-/* Return the link-time address of _DYNAMIC.  Conveniently, this is the
-   first element of the GOT.  This must be inlined in a function which
-   uses global data.  */
-
-static inline Elf32_Addr
-elf_machine_dynamic (void)
-{
-  register Elf32_Addr *got;
-
-  __asm__( "        bras   %0,2f\n"
-	   "1:      .long  _GLOBAL_OFFSET_TABLE_-1b\n"
-	   "2:      al     %0,0(%0)"
-	   : "=&a" (got) : : "0" );
-
-  return *got;
-}
-
-
 /* Return the run-time load address of the shared object.  */
 static inline Elf32_Addr
 elf_machine_load_address (void)
 {
-  Elf32_Addr addr;
+  /* Starting from binutils-2.23, the linker will define the magic symbol
+     __ehdr_start to point to our own ELF header.  */
+  extern const ElfW(Ehdr) __ehdr_start attribute_hidden;
+  return (ElfW(Addr)) &__ehdr_start;
+}
 
-  __asm__( "   bras  1,2f\n"
-	   "1: .long _GLOBAL_OFFSET_TABLE_ - 1b\n"
-	   "   .long (_dl_start - 1b - 0x80000000) & 0x00000000ffffffff\n"
-	   "2: l     %0,4(1)\n"
-	   "   ar    %0,1\n"
-	   "   al    1,0(1)\n"
-	   "   sl    %0,_dl_start@GOT(1)"
-	   : "=&d" (addr) : : "1" );
-  return addr;
+/* Return the link-time address of _DYNAMIC.  */
+static inline Elf32_Addr
+elf_machine_dynamic (void)
+{
+  extern ElfW(Dyn) _DYNAMIC[] attribute_hidden;
+  return (ElfW(Addr)) _DYNAMIC - elf_machine_load_address ();
 }
 
 /* Set up the loaded object described by L so its unrelocated PLT
