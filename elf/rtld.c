@@ -1724,10 +1724,14 @@ dl_main (const ElfW(Phdr) *phdr,
   /* PT_GNU_RELRO is usually the last phdr.  */
   size_t cnt = rtld_ehdr->e_phnum;
   while (cnt-- > 0)
-    if (rtld_phdr[cnt].p_type == PT_GNU_RELRO)
+    switch (rtld_phdr[cnt].p_type)
       {
+      case PT_GNU_RELRO:
 	_dl_rtld_map.l_relro_addr = rtld_phdr[cnt].p_vaddr;
 	_dl_rtld_map.l_relro_size = rtld_phdr[cnt].p_memsz;
+	break;
+      case PT_GNU_PROPERTY:
+	_dl_process_pt_gnu_property (&_dl_rtld_map, -1, &rtld_phdr[cnt]);
 	break;
       }
 
