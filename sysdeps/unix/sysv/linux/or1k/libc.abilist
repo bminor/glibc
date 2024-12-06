@@ -2261,3 +2261,4 @@ GLIBC_2.40 setcontext F
 GLIBC_2.40 swapcontext F
 GLIBC_2.41 sched_getattr F
 GLIBC_2.41 sched_setattr F
+GLIBC_2.42 mseal F

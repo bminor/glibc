@@ -332,6 +332,9 @@ libc {
     sched_getattr;
     sched_setattr;
   }
+  GLIBC_2.42 {
+    mseal;
+  }
   GLIBC_PRIVATE {
     # functions used in other libraries
     __syscall_rt_sigqueueinfo;

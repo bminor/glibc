@@ -213,6 +213,8 @@ tests += \
   tst-misalign-clone \
   tst-mlock2 \
   tst-mount \
+  tst-mseal \
+  tst-mseal-pkey \
   tst-ntp_adjtime \
   tst-ntp_gettime \
   tst-ntp_gettimex \
