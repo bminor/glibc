@@ -52,6 +52,7 @@
 #include <dl-find_object.h>
 #include <dl-audit-check.h>
 #include <dl-call_tls_init_tp.h>
+#include <dl-mseal.h>
 
 #include <assert.h>
 
@@ -478,6 +479,7 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
   _dl_rtld_map.l_real = &_dl_rtld_map;
   _dl_rtld_map.l_map_start = (ElfW(Addr)) &__ehdr_start;
   _dl_rtld_map.l_map_end = (ElfW(Addr)) _end;
+  _dl_rtld_map.l_seal = lt_seal_dont;
   /* Copy the TLS related data if necessary.  */
 #ifndef DONT_USE_BOOTSTRAP_MAP
 # if NO_TLS_OFFSET != 0
@@ -1023,6 +1025,10 @@ ERROR: audit interface '%s' requires version %d (maximum supported version %d); 
 
   /* Mark the DSO as being used for auditing.  */
   dlmargs.map->l_auditing = 1;
+
+  /* Audit modules can not be loaded with RTLD_NODELETE, so apply the sealing
+     after after loading (including its dependencies)   */
+  _dl_mseal_map (dlmargs.map, true);
 }
 
 /* Load all audit modules.  */
@@ -1101,6 +1107,7 @@ rtld_setup_main_map (struct link_map *main_map)
   /* And it was opened directly.  */
   ++main_map->l_direct_opencount;
   main_map->l_contiguous = 1;
+  main_map->l_seal = lt_seal_dont;
 
   /* A PT_LOAD segment at an unexpected address will clear the
      l_contiguous flag.  The ELF specification says that PT_LOAD
@@ -1215,6 +1222,8 @@ rtld_setup_main_map (struct link_map *main_map)
 	_dl_process_pt_gnu_property (main_map, -1, &ph[-1]);
 	break;
       }
+
+  GLRO(dl_enable_seal) = main_map->l_seal == lt_seal_toseal;
 
   /* Adjust the address of the TLS initialization image in case
      the executable is actually an ET_DYN object.  */
@@ -2318,8 +2327,10 @@ dl_main (const ElfW(Phdr) *phdr,
       __rtld_malloc_init_real (main_map);
     }
 
-  /* All ld.so initialization is complete.  Apply RELRO.  */
+  /* All ld.so initialization is complete.  Apply RELRO and memory
+     sealing.  */
   _dl_protect_relro (&_dl_rtld_map);
+  _dl_mseal_map (&_dl_rtld_map, false);
 
   /* Relocation is complete.  Perform early libc initialization.  This
      is the initial libc, even if audit modules have been loaded with

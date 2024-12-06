@@ -642,6 +642,8 @@ struct rtld_global_ro
 
   EXTERN enum dso_sort_algorithm _dl_dso_sort_algo;
 
+  EXTERN bool _dl_enable_seal;
+
 #ifdef SHARED
   /* We add a function table to _rtld_global which is then used to
      call the function instead of going through the PLT.  The result
@@ -1020,6 +1022,14 @@ void _dl_relocate_object_no_relro (struct link_map *map,
 
 /* Protect PT_GNU_RELRO area.  */
 extern void _dl_protect_relro (struct link_map *map) attribute_hidden;
+
+/* Issue memory sealing for the link map MAP.  If MAP is contiguous the
+   whole region is sealed, otherwise iterate over the program headerrs and
+   seal each PT_LOAD segment.i
+   The DEP specify whether to seal the dependencies as well, and it is
+   used for the case where sealing is done after loading (for instance
+   for audit modules).  */
+extern void _dl_mseal_map (struct link_map *map, bool dep) attribute_hidden;
 
 /* Call _dl_signal_error with a message about an unhandled reloc type.
    TYPE is the result of ELFW(R_TYPE) (r_info), i.e. an R_<CPU>_* value.

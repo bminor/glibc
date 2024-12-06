@@ -214,6 +214,14 @@ struct link_map
 					       lt_library map.  */
     unsigned int l_tls_in_slotinfo:1; /* TLS slotinfo updated in dlopen.  */
 
+    enum			/* Memory sealing status.  */
+      {
+	lt_seal_dont = 0,	/* Do not seal the object.  */
+	lt_seal_dont_dlopen,    /* Do not seal from a dlopen.  */
+	lt_seal_toseal,		/* The library is marked to be sealed.  */
+	lt_seal_sealed		/* The library is sealed.  */
+      } l_seal:2;
+
     /* NODELETE status of the map.  Only valid for maps of type
        lt_loaded.  Lazy binding sets l_nodelete_active directly,
        potentially from signal handlers.  Initial loading of an

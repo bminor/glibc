@@ -66,6 +66,8 @@ setup_vdso (struct link_map *main_map __attribute__ ((unused)),
 
       /* The vDSO is always used.  */
       l->l_used = 1;
+      /* The PT_LOAD may not cover all the vdso mapping.  */
+      l->l_seal = lt_seal_dont;
 
       /* Initialize l_local_scope to contain just this map.  This allows
 	 the use of dl_lookup_symbol_x to resolve symbols within the vdso.

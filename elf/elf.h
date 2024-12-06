@@ -1359,6 +1359,8 @@ typedef struct
 #define GNU_PROPERTY_STACK_SIZE			1
 /* No copy relocation on protected data symbol.  */
 #define GNU_PROPERTY_NO_COPY_ON_PROTECTED	2
+/* No memory sealing.  */
+#define GNU_PROPERTY_MEMORY_SEAL		3
 
 /* A 4-byte unsigned integer property: A bit is set if it is set in all
    relocatable inputs.  */

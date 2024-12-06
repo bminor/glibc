@@ -19,6 +19,8 @@
 #ifndef _DL_PROP_H
 #define _DL_PROP_H
 
+#include <dl-prop-mseal.h>
+
 /* The following functions are used by the dynamic loader and the
    dlopen machinery to process PT_NOTE and PT_GNU_PROPERTY entries in
    the binary or shared object.  The notes can be used to change the
@@ -47,6 +49,9 @@ static inline int __attribute__ ((always_inline))
 _dl_process_gnu_property (struct link_map *l, int fd, uint32_t type,
 			  uint32_t datasz, void *data)
 {
+  if (_dl_process_gnu_property_seal (l, fd, type, datasz, data))
+    return 1;
+
   /* Continue until GNU_PROPERTY_1_NEEDED is found.  */
   if (type == GNU_PROPERTY_1_NEEDED)
     {

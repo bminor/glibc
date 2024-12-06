@@ -46,6 +46,7 @@
 #include <dl-symbol-redir-ifunc.h>
 #include <dl-tunables.h>
 #include <dl-prop.h>
+#include <dl-mseal.h>
 
 extern char *__progname;
 char **_dl_argv = &__progname;	/* This is checked for some error messages.  */
@@ -100,6 +101,7 @@ static struct link_map _dl_main_map =
     .l_used = 1,
     .l_tls_offset = NO_TLS_OFFSET,
     .l_serial = 1,
+    .l_seal = lt_seal_dont,
   };
 
 /* Namespace information.  */
@@ -163,6 +165,8 @@ uint64_t _dl_hwcap3;
 uint64_t _dl_hwcap4;
 
 enum dso_sort_algorithm _dl_dso_sort_algo;
+
+bool _dl_enable_seal;
 
 /* The value of the FPU control word the kernel will preset in hardware.  */
 fpu_control_t _dl_fpu_control = _FPU_DEFAULT;
@@ -344,6 +348,8 @@ _dl_non_dynamic_init (void)
 	break;
       }
 
+  GLRO(dl_enable_seal) = _dl_main_map.l_seal == lt_seal_toseal;
+
   if ((__glibc_unlikely (GL(dl_stack_flags)) & PF_X)
       && TUNABLE_GET (glibc, rtld, execstack, int32_t, NULL) == 0)
     _dl_fatal_printf ("Fatal glibc error: executable stack is not allowed\n");
@@ -352,6 +358,7 @@ _dl_non_dynamic_init (void)
 
   /* Setup relro on the binary itself.  */
   _dl_protect_relro (&_dl_main_map);
+  _dl_mseal_map (&_dl_main_map, false);
 }
 
 #ifdef DL_SYSINFO_IMPLEMENTATION

@@ -652,6 +652,10 @@ sysdep-rtld-routines += \
   dl-sbrk \
   # sysdep-rtld-routines
 
+dl-routines += \
+  dl-mseal \
+  # dl-routines
+
 others += \
   pldd \
   # others

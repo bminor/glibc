@@ -19,6 +19,7 @@
 
 #include <dl-load.h>
 #include <setvmaname.h>
+#include <dl-mseal.h>
 
 /* Map a segment and align it properly.  */
 
@@ -116,11 +117,15 @@ _dl_map_segments (struct link_map *l, int fd,
 	  if (__glibc_unlikely (loadcmds[nloadcmds - 1].mapstart <
 				c->mapend))
 	    return N_("ELF load command address/offset not page-aligned");
+
+	  caddr_t hole_start = (caddr_t) (l->l_addr + c->mapend);
+	  size_t hole_size = loadcmds[nloadcmds - 1].mapstart - c->mapend;
+
           if (__glibc_unlikely
-              (__mprotect ((caddr_t) (l->l_addr + c->mapend),
-                           loadcmds[nloadcmds - 1].mapstart - c->mapend,
-                           PROT_NONE) < 0))
+              (__mprotect (hole_start, hole_size, PROT_NONE) < 0))
             return DL_MAP_SEGMENTS_ERROR_MPROTECT;
+	  if (GLRO(dl_enable_seal) && l->l_seal == lt_seal_toseal)
+	    _dl_mseal (hole_start, hole_size, l->l_name);
         }
 
       l->l_contiguous = 1;
@@ -218,6 +223,12 @@ _dl_map_segments (struct link_map *l, int fd,
                     }
                   __set_vma_name ((void*)zeropage, zeroend - zeropage, bssname);
                 }
+
+	      /* We need to seal this here because it will not be part of
+		 the PT_LOAD segments, nor it is taken in RELRO
+		 calculation.  */
+	      if (GLRO(dl_enable_seal) && l->l_seal == lt_seal_toseal)
+		_dl_mseal (mapat, zeroend - zeropage, l->l_name);
             }
         }
 
