@@ -648,7 +648,6 @@ LIBGD
 libc_cv_cc_loop_to_function
 libc_cv_cc_submachine
 libc_cv_cc_nofma
-libc_cv_mtls_descriptor
 libc_cv_has_glob_dat
 libc_cv_fpie
 libc_cv_z_execstack
@@ -7221,7 +7220,6 @@ esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_mtls_descriptor" >&5
 printf "%s\n" "$libc_cv_mtls_descriptor" >&6; }
-
 config_vars="$config_vars
 have-mtls-descriptor = $libc_cv_mtls_descriptor"
 

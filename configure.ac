@@ -1331,7 +1331,6 @@ else
   libc_cv_mtls_descriptor=no
 fi
 rm -f conftest*])
-AC_SUBST(libc_cv_mtls_descriptor)
 LIBC_CONFIG_VAR([have-mtls-descriptor], [$libc_cv_mtls_descriptor])
 
 dnl clang emits an warning for a double alias redirection, to warn the
