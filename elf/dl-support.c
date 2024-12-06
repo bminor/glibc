@@ -45,6 +45,7 @@
 #include <array_length.h>
 #include <dl-symbol-redir-ifunc.h>
 #include <dl-tunables.h>
+#include <dl-prop.h>
 
 extern char *__progname;
 char **_dl_argv = &__progname;	/* This is checked for some error messages.  */
@@ -328,6 +329,18 @@ _dl_non_dynamic_init (void)
       case PT_GNU_RELRO:
 	_dl_main_map.l_relro_addr = ph->p_vaddr;
 	_dl_main_map.l_relro_size = ph->p_memsz;
+	break;
+      }
+  /* Process program headers again, but scan them backwards so
+     that PT_NOTE can be skipped if PT_GNU_PROPERTY exits.  */
+  for (const ElfW(Phdr) *ph = &_dl_phdr[_dl_phnum]; ph != _dl_phdr; --ph)
+    switch (ph[-1].p_type)
+      {
+      case PT_NOTE:
+	_dl_process_pt_note (&_dl_main_map, -1, &ph[-1]);
+	break;
+      case PT_GNU_PROPERTY:
+	_dl_process_pt_gnu_property (&_dl_main_map, -1, &ph[-1]);
 	break;
       }
 

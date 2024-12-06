@@ -34,17 +34,6 @@ aarch64_libc_setup_tls (void)
 {
   __libc_setup_tls ();
 
-  struct link_map *main_map = _dl_get_dl_main_map ();
-  const ElfW(Phdr) *phdr = GL(dl_phdr);
-  const ElfW(Phdr) *ph;
-  for (ph = phdr; ph < phdr + GL(dl_phnum); ph++)
-    if (ph->p_type == PT_GNU_PROPERTY)
-      {
-	_dl_process_pt_gnu_property (main_map, -1, ph);
-	_rtld_main_check (main_map, _dl_argv[0]);
-	break;
-      }
-
   if (GL(dl_aarch64_gcs) != 0)
     {
       int ret = INLINE_SYSCALL_CALL (prctl, PR_SET_SHADOW_STACK_STATUS,
