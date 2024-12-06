@@ -251,6 +251,12 @@ passed to 'configure'.  For example:
      Disable using 'scv' instruction for syscalls.  All syscalls will
      use 'sc' instead, even if the kernel supports 'scv'.  PowerPC only.
 
+'--enable-memory-sealing'
+     Build glibc libraries, programs, and the testsuite with memory
+     sealing support (GNU_PROPERTY_MEMORY_SEAL).  It does not disable
+     support for memory sealing, which will still be applied if the
+     program has the attribute.
+
 '--build=BUILD-SYSTEM'
 '--host=HOST-SYSTEM'
      These options are for cross-compiling.  If you specify both options

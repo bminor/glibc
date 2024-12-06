@@ -23,6 +23,9 @@ Major new features:
   memory sealing will not be applied for its dependencies (and even if the
   objects has the memory sealing attribute).
 
+* A new configure option, "--enable-memory-sealing", can be used to build
+  the GNU C Library libraries and programs with memory sealing.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
   [Add deprecations, removals and changes affecting compatibility here]
