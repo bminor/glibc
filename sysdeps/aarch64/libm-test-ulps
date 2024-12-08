@@ -1651,6 +1651,26 @@ double: 3
 float: 3
 ldouble: 3
 
+Function: "tanpi":
+double: 2
+float: 2
+ldouble: 2
+
+Function: "tanpi_downward":
+double: 2
+float: 3
+ldouble: 4
+
+Function: "tanpi_towardzero":
+double: 2
+float: 3
+ldouble: 4
+
+Function: "tanpi_upward":
+double: 2
+float: 4
+ldouble: 3
+
 Function: "tgamma":
 double: 9
 ldouble: 4
