@@ -43,6 +43,7 @@
 #include <unistd.h>
 #include <sys/param.h>
 
+#include "tst-malloc-aux.h"
 
 /* This function prepares for each 'too-large memory allocation' test by
    performing a small successful malloc/free and resetting errno prior to

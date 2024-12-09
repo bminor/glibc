@@ -25,6 +25,8 @@
 #include <libc-diag.h>
 #include <support/check.h>
 
+#include "tst-malloc-aux.h"
+
 static int
 do_test (void)
 {
