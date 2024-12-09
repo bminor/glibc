@@ -21,7 +21,6 @@
 #define AARCH64_FPU_V_EXPM1F_INLINE_H
 
 #include "v_math.h"
-#include "math_config.h"
 
 struct v_expm1f_data
 {
