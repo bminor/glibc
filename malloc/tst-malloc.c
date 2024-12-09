@@ -22,6 +22,8 @@
 #include <libc-diag.h>
 #include <time.h>
 
+#include "tst-malloc-aux.h"
+
 static int errors = 0;
 
 static void
