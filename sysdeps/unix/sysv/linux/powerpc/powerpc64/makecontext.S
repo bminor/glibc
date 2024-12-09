@@ -39,6 +39,9 @@ ENTRY (__makecontext)
   addi  r6,r1,FRAME_PARM_SAVE+24
   std   r0,FRAME_LR_SAVE(r1)
   cfi_offset (lr, FRAME_LR_SAVE)
+#ifdef __ROP_PROTECT__
+  hashst  r0,FRAME_ROP_SAVE(r1)
+#endif
   stdu  r1,-128(r1)
   cfi_adjust_cfa_offset (128)
 
@@ -181,6 +184,9 @@ L(gotexitcodeaddr):
   ld    r0,128+FRAME_LR_SAVE(r1)
   addi  r1,r1,128
   mtlr  r0
+#ifdef __ROP_PROTECT__
+  hashchk  r0,FRAME_ROP_SAVE(r1)
+#endif
   blr
 END(__makecontext)
 

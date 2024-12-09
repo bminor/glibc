@@ -40,8 +40,11 @@ ENTRY(__novec_swapcontext)
   std  r0,(SIGCONTEXT_GP_REGS+(PT_R0*8))(r3)
   std  r1,(SIGCONTEXT_GP_REGS+(PT_R1*8))(r3)
   mflr  r0
-  std   r31,-8(1)
-  cfi_offset(r31,-8)
+  std   r31,-16(1)
+  cfi_offset(r31,-16)
+#ifdef __ROP_PROTECT__
+  hashst  r0,FRAME_ROP_SAVE(r1)
+#endif
   std  r2,(SIGCONTEXT_GP_REGS+(PT_R2*8))(r3)
   std  r0,FRAME_LR_SAVE(r1)
   cfi_offset (lr, FRAME_LR_SAVE)
@@ -271,7 +274,10 @@ L(nv_error_exit):
   ld    r0,128+FRAME_LR_SAVE(r1)
   addi  r1,r1,128
   mtlr  r0
-  ld    r31,-8(r1)
+#ifdef __ROP_PROTECT__
+  hashchk  r0,FRAME_ROP_SAVE(r1)
+#endif
+  ld    r31,-16(r1)
   blr
 
 PSEUDO_END(__novec_swapcontext)
@@ -287,8 +293,11 @@ ENTRY(__swapcontext)
   std  r0,(SIGCONTEXT_GP_REGS+(PT_R0*8))(r3)
   std  r1,(SIGCONTEXT_GP_REGS+(PT_R1*8))(r3)
   mflr  r0
-  std   r31,-8(1)
-  cfi_offset(r31,-8)
+  std   r31,-16(1)
+  cfi_offset(r31,-16)
+#ifdef __ROP_PROTECT__
+  hashst  r0,FRAME_ROP_SAVE(r1)
+#endif
   std  r2,(SIGCONTEXT_GP_REGS+(PT_R2*8))(r3)
   std  r0,FRAME_LR_SAVE(r1)
   cfi_offset (lr, FRAME_LR_SAVE)
@@ -731,7 +740,10 @@ L(error_exit):
   ld    r0,128+FRAME_LR_SAVE(r1)
   addi  r1,r1,128
   mtlr  r0
-  ld    r31,-8(r1)
+#ifdef __ROP_PROTECT__
+  hashchk  r0,FRAME_ROP_SAVE(r1)
+#endif
+  ld    r31,-16(r1)
   blr
 
 PSEUDO_END(__swapcontext)

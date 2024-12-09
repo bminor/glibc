@@ -224,6 +224,9 @@ L(no_vmx):
 #else
 	mflr	r0
 	std	r0,FRAME_LR_SAVE(r1)
+#ifdef __ROP_PROTECT__
+	hashst	r0,FRAME_ROP_SAVE(r1)
+#endif
 	stdu	r1,-FRAME_MIN_SIZE(r1)
 	cfi_adjust_cfa_offset(FRAME_MIN_SIZE)
 	cfi_offset(lr,FRAME_LR_SAVE)
@@ -232,6 +235,9 @@ L(no_vmx):
 	ld	r0,FRAME_MIN_SIZE+FRAME_LR_SAVE(r1)
 	addi	r1,r1,FRAME_MIN_SIZE
 	mtlr	r0
+#ifdef __ROP_PROTECT__
+	hashchk	r0,FRAME_ROP_SAVE(r1)
+#endif
 	blr
 #endif
 END (__sigsetjmp_symbol)
