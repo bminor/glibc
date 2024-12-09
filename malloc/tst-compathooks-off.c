@@ -25,6 +25,8 @@
 #include <support/check.h>
 #include <support/support.h>
 
+#include "tst-malloc-aux.h"
+
 extern void (*volatile __free_hook) (void *, const void *);
 extern void *(*volatile __malloc_hook)(size_t, const void *);
 extern void *(*volatile __realloc_hook)(void *, size_t, const void *);
