@@ -671,6 +671,26 @@ double: 2
 float: 2
 ldouble: 3
 
+Function: "cospi":
+double: 1
+float: 1
+ldouble: 1
+
+Function: "cospi_downward":
+double: 1
+float: 1
+ldouble: 2
+
+Function: "cospi_towardzero":
+double: 1
+float: 1
+ldouble: 2
+
+Function: "cospi_upward":
+double: 1
+float: 1
+ldouble: 1
+
 Function: Real part of "cpow":
 double: 2
 float: 5
@@ -1345,6 +1365,26 @@ double: 3
 float: 3
 ldouble: 4
 
+Function: "sinpi":
+double: 1
+float: 1
+ldouble: 1
+
+Function: "sinpi_downward":
+double: 2
+float: 2
+ldouble: 2
+
+Function: "sinpi_towardzero":
+double: 2
+float: 1
+ldouble: 1
+
+Function: "sinpi_upward":
+double: 2
+float: 2
+ldouble: 2
+
 Function: "tan":
 ldouble: 1
 
@@ -1378,6 +1418,26 @@ ldouble: 3
 Function: "tanh_upward":
 double: 3
 float: 3
+ldouble: 3
+
+Function: "tanpi":
+double: 2
+float: 2
+ldouble: 2
+
+Function: "tanpi_downward":
+double: 2
+float: 3
+ldouble: 4
+
+Function: "tanpi_towardzero":
+double: 2
+float: 3
+ldouble: 4
+
+Function: "tanpi_upward":
+double: 2
+float: 4
 ldouble: 3
 
 Function: "tgamma":
