@@ -442,6 +442,23 @@ Logarithms}.)
 If both @var{x} and @var{y} are zero, @code{atan2} returns zero.
 @end deftypefun
 
+@deftypefun double acospi (double @var{x})
+@deftypefunx float acospif (float @var{x})
+@deftypefunx {long double} acospil (long double @var{x})
+@deftypefunx _FloatN acospifN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx acospifNx (_Float@var{N}x @var{x})
+@standards{TS 18661-4:2015, math.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions compute the arccosine of @var{x}, divided by pi.  The
+result is in the interval between @code{0} and @code{1} (inclusive).
+
+The arccosine function is defined mathematically only
+over the domain @code{-1} to @code{1}.  If @var{x} is outside the
+domain, @code{acospi} signals a domain error.
+
+The @code{acospi} functions are from TS 18661-4:2015.
+@end deftypefun
+
 @cindex inverse complex trigonometric functions
 @w{ISO C99} defines complex versions of the inverse trig functions.
 

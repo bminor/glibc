@@ -66,6 +66,9 @@ __MATHCALL_VEC (sin,, (_Mdouble_ __x));
 __MATHCALL_VEC (tan,, (_Mdouble_ __x));
 
 #if __GLIBC_USE (IEC_60559_FUNCS_EXT_C23)
+/* Arc cosine of X, divided by pi.  */
+__MATHCALL (acospi,, (_Mdouble_ __x));
+
 /* Cosine of pi * X.  */
 __MATHCALL (cospi,, (_Mdouble_ __x));
 /* Sine of pi * X.  */

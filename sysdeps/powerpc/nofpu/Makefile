@@ -41,6 +41,7 @@ CFLAGS-s_cospil.c += -fno-builtin-fabsl
 CFLAGS-s_csinl.c += -fno-builtin-fabsl $(config-cflags-signaling-nans)
 CFLAGS-s_csqrtl.c += -fno-builtin-fabsl $(config-cflags-signaling-nans)
 CFLAGS-w_acosl_compat.c += -fno-builtin-fabsl
+CFLAGS-s_acospil.c += -fno-builtin-fabsl
 CFLAGS-w_asinl_compat.c += -fno-builtin-fabsl
 CFLAGS-w_atanhl_compat.c += -fno-builtin-fabsl
 CFLAGS-w_j0l_compat.c += -fno-builtin-fabsl

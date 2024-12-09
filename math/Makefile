@@ -93,6 +93,7 @@ gen-libm-calls = \
   e_scalbF \
   k_casinhF \
   k_casinhF \
+  s_acospiF \
   s_cacosF  \
   s_cacoshF \
   s_canonicalizeF \
@@ -617,6 +618,7 @@ $(objpfx)libm-test-ulps.h: $(ulps-file) gen-libm-test.py
 libm-test-funcs-auto = \
   acos \
   acosh \
+  acospi \
   asin \
   asinh \
   atan \
@@ -925,6 +927,7 @@ tgmath3-macros = \
   $(tgmath3-narrow-macros) \
   acos \
   acosh \
+  acospi \
   asin \
   asinh \
   atan \
@@ -1307,6 +1310,7 @@ math-CPPFLAGS += -DNO_LONG_DOUBLE
 # functions.
 CFLAGS-w_acos.c += -fno-builtin-acosl
 CFLAGS-w_acosh.c += -fno-builtin-acoshl
+CFLAGS-s_acospi.c += -fno-builtin-acospil
 CFLAGS-w_asin.c += -fno-builtin-asinl
 CFLAGS-s_asinh.c += -fno-builtin-asinhl
 CFLAGS-s_atan.c += -fno-builtin-atanl
@@ -1448,6 +1452,7 @@ endif
 # Likewise, for _Float32x and _Float64 aliases.
 CFLAGS-w_acos.c += -fno-builtin-acosf32x -fno-builtin-acosf64
 CFLAGS-w_acosh.c += -fno-builtin-acoshf32x -fno-builtin-acoshf64
+CFLAGS-s_acospi.c += -fno-builtin-acospif32x -fno-builtin-acospif64
 CFLAGS-w_asin.c += -fno-builtin-asinf32x -fno-builtin-asinf64
 CFLAGS-s_asinh.c += -fno-builtin-asinhf32x -fno-builtin-asinhf64
 CFLAGS-s_atan.c += -fno-builtin-atanf32x -fno-builtin-atanf64
@@ -1575,6 +1580,7 @@ CFLAGS-s_yn.c += -fno-builtin-ynf32x -fno-builtin-ynf64
 # Likewise, for _Float32 aliases.
 CFLAGS-w_acosf.c += -fno-builtin-acosf32
 CFLAGS-w_acoshf.c += -fno-builtin-acoshf32
+CFLAGS-s_acospif.c += -fno-builtin-acospif32
 CFLAGS-w_asinf.c += -fno-builtin-asinf32
 CFLAGS-s_asinhf.c += -fno-builtin-asinhf32
 CFLAGS-s_atanf.c += -fno-builtin-atanf32

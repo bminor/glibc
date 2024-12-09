@@ -14,6 +14,7 @@ extra-libs += libnldbl
 libnldbl-calls = \
   acos \
   acosh \
+  acospi \
   asin \
   asinh \
   asprintf \
@@ -257,6 +258,7 @@ extra-objs += $(addsuffix .oS, $(libnldbl-routines))
 
 CFLAGS-nldbl-acos.c = -fno-builtin-acosl
 CFLAGS-nldbl-acosh.c = -fno-builtin-acoshl
+CFLAGS-nldbl-acospi.c = -fno-builtin-acospi
 CFLAGS-nldbl-asin.c = -fno-builtin-asinl
 CFLAGS-nldbl-asinh.c = -fno-builtin-asinhl
 CFLAGS-nldbl-atan.c = -fno-builtin-atanl

@@ -655,10 +655,12 @@ libm {
   }
   GLIBC_2.41 {
     # Functions not involving _Float64x or _Float128, for all configurations.
+    acospi; acospif; acospil; acospif32; acospif64; acospif32x;
     cospi; cospif; cospil; cospif32; cospif64; cospif32x;
     sinpi; sinpif; sinpil; sinpif32; sinpif64; sinpif32x;
     tanpi; tanpif; tanpil; tanpif32; tanpif64; tanpif32x;
     # Functions involving _Float64x or _Float128, for some configurations.
+    acospif64x; acospif128;
     cospif64x; cospif128;
     sinpif64x; sinpif128;
     tanpif64x; tanpif128;

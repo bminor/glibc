@@ -787,6 +787,12 @@ GLIBC_2.40 logp1f32 F
 GLIBC_2.40 logp1f32x F
 GLIBC_2.40 logp1f64 F
 GLIBC_2.40 logp1l F
+GLIBC_2.41 acospi F
+GLIBC_2.41 acospif F
+GLIBC_2.41 acospif32 F
+GLIBC_2.41 acospif32x F
+GLIBC_2.41 acospif64 F
+GLIBC_2.41 acospil F
 GLIBC_2.41 cospi F
 GLIBC_2.41 cospif F
 GLIBC_2.41 cospif32 F
