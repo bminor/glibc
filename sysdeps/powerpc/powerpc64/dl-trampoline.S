@@ -33,10 +33,8 @@
    a function that makes no calls except for __tls_get_addr and we
    might be here resolving the __tls_get_addr call.  */
 	.hidden _dl_runtime_resolve
-#define INT_PARMS FRAME_MIN_SIZE
+#define INT_PARMS FRAME_ROP_SAVE-64
 ENTRY (_dl_runtime_resolve, 4)
-	stdu	r1,-FRAME_SIZE(r1)
-	cfi_adjust_cfa_offset (FRAME_SIZE)
 	std	r3,INT_PARMS+0(r1)
 	mr	r3,r11
 	std	r4,INT_PARMS+8(r1)
@@ -49,16 +47,23 @@ ENTRY (_dl_runtime_resolve, 4)
 	mflr	r0
 	std	r8,INT_PARMS+40(r1)
 /* Store the LR in the LR Save area.  */
-	std	r0,FRAME_SIZE+FRAME_LR_SAVE(r1)
+	std	r0,FRAME_LR_SAVE(r1)
 	cfi_offset (lr, FRAME_LR_SAVE)
 	std	r9,INT_PARMS+48(r1)
 	std	r10,INT_PARMS+56(r1)
+#ifdef __ROP_PROTECT__
+	hashst	r0,FRAME_ROP_SAVE(r1)
+#endif
+	stdu	r1,-FRAME_SIZE(r1)
+	cfi_adjust_cfa_offset (FRAME_SIZE)
 	bl	JUMPTARGET(_dl_fixup)
 #ifndef SHARED
 	nop
 #endif
+/* Unwind the stack frame, and jump.  */
+	addi	r1,r1,FRAME_SIZE
 /* Put the registers back.  */
-	ld	r0,FRAME_SIZE+FRAME_LR_SAVE(r1)
+	ld	r0,FRAME_LR_SAVE(r1)
 	ld	r10,INT_PARMS+56(r1)
 	ld	r9,INT_PARMS+48(r1)
 	ld	r8,INT_PARMS+40(r1)
@@ -72,10 +77,11 @@ ENTRY (_dl_runtime_resolve, 4)
 	ld	r3,INT_PARMS+0(r1)
 #if _CALL_ELF == 2
 /* Restore the caller's TOC in case we jump to a local entry point.  */
-	ld	r2,FRAME_SIZE+FRAME_TOC_SAVE(r1)
+	ld	r2,FRAME_TOC_SAVE(r1)
 #endif
-/* Unwind the stack frame, and jump.  */
-	addi	r1,r1,FRAME_SIZE
+#ifdef __ROP_PROTECT__
+	hashchk	r0,FRAME_ROP_SAVE(r1)
+#endif
 	bctr
 END(_dl_runtime_resolve)
 #undef FRAME_SIZE
@@ -106,7 +112,7 @@ END(_dl_runtime_resolve)
 	  +520   r4			+520   r4
 	  +512   r3			+512   r3
 	   return values
-          +504   free
+	  +504   ROP save slot
 	  +496   stackframe
 	  +488   lr
 	  +480   r1
@@ -168,6 +174,8 @@ END(_dl_runtime_resolve)
 #if _CALL_ELF == 2
 # define FRAME_SIZE 752
 # define VR_RTN 608
+# undef FRAME_ROP_SAVE
+# define FRAME_ROP_SAVE 504-FRAME_SIZE	/* Override the default value.  */
 #else
 # define FRAME_SIZE 592
 # define VR_RTN 560
@@ -217,6 +225,10 @@ ENTRY (_dl_profile_resolve, 4)
 	std	r6,INT_PARMS+24(r1)
 	sldi	r4,r4,3		/* index * 24  == PLT offset */
 	mflr	r5
+#ifdef __ROP_PROTECT__
+	addi	r31,r1,FRAME_SIZE
+	hashst	r5,FRAME_ROP_SAVE(r31)
+#endif
 	std	r7,INT_PARMS+32(r1)
 	std	r8,INT_PARMS+40(r1)
 /* Store the LR in the LR Save area.  */
@@ -359,6 +371,9 @@ L(restoreFXR):
 	ld	r31,FRAME_SIZE-8(r1)
 	ld	r30,FRAME_SIZE-16(r1)
 	addi	r1,r1,FRAME_SIZE
+#ifdef __ROP_PROTECT__
+	hashchk r0,FRAME_ROP_SAVE(r1)
+#endif
 	bctr
 
 L(do_pltexit):
@@ -389,6 +404,10 @@ L(do_pltexit):
 	lvx	v13,r11,r9
 L(restoreFXR2):
 	ld	r0,FRAME_SIZE+FRAME_LR_SAVE(r1)
+#ifdef __ROP_PROTECT__
+	addi	r4,r1,FRAME_SIZE
+	hashchk	r0,FRAME_ROP_SAVE(r4)
+#endif
 	ld	r10,INT_PARMS+56(r1)
 	ld	r9,INT_PARMS+48(r1)
 	ld	r8,INT_PARMS+40(r1)
@@ -499,6 +518,9 @@ L(pltexitreturn):
 	ld	r30,FRAME_SIZE-16(r1)
 	mtlr	r0
 	ld	r1,0(r1)
+#ifdef __ROP_PROTECT__
+	hashchk	r0,FRAME_ROP_SAVE(r1)
+#endif
 	blr
 END(_dl_profile_resolve)
 #endif
