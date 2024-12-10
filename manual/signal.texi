@@ -1141,6 +1141,15 @@ This is used in the same way as the @var{action} argument to the
 @code{signal} function.  The value can be @code{SIG_DFL},
 @code{SIG_IGN}, or a function pointer.  @xref{Basic Signal Handling}.
 
+@item void (*sa_sigaction) (int @var{signum}, siginfo_t *@var{info}, void *@var{ucontext})
+This is an alternate to @code{sa_handler} that is used when the
+@code{sa_flags} includes the @code{flag SA_SIGINFO}.  Note that this
+and @code{sa_handler} overlap; only ever set one at a time.
+
+The contents of the @var{info} and @var{ucontext} structures are
+kernel and architecture dependent.  Please see
+@manpageurl{sigaction,2} for details.
+
 @item sigset_t sa_mask
 This specifies a set of signals to be blocked while the handler runs.
 Blocking is explained in @ref{Blocking for Handler}.  Note that the
@@ -1324,12 +1333,36 @@ delivered for both terminated children and stopped children.
 Setting this flag for a signal other than @code{SIGCHLD} has no effect.
 @end deftypevr
 
+@deftypevr Macro int SA_NOCLDWAIT
+This flag is meaningful only for the @code{SIGCHLD} signal.  When the
+flag is set, the terminated child will not wait for the parent to reap
+it, or become a zombie if not reaped.  The child will instead be
+reaped by the kernel immediately on termination, similar to setting
+SIGCHLD to SIG_IGN.
+
+Setting this flag for a signal other than @code{SIGCHLD} has no effect.
+@end deftypevr
+
+@deftypevr Macro int SA_NODEFER
+Normally a signal is added to the signal mask while running its own
+handler; this negates that, so that the same signal can be received
+while it's handler is running.  Note that if the signal is included in
+@code{sa_mask}, it is masked regardless of this flag.  Only useful when
+assigning a function as a signal handler.
+@end deftypevr
+
 @deftypevr Macro int SA_ONSTACK
 @standards{BSD, signal.h}
 If this flag is set for a particular signal number, the system uses the
 signal stack when delivering that kind of signal.  @xref{Signal Stack}.
 If a signal with this flag arrives and you have not set a signal stack,
 the normal user stack is used instead, as if the flag had not been set.
+@end deftypevr
+
+@deftypevr Macro int SA_RESETHAND
+Resets the handler for a signal to SIG_DFL, at the moment specified
+handler function begins.  I.e. the handler is called once, then the
+action resets.
 @end deftypevr
 
 @deftypevr Macro int SA_RESTART
@@ -1345,6 +1378,12 @@ particular kind of signal that was delivered.  If the flag is set,
 returning from a handler resumes the library function.  If the flag is
 clear, returning from a handler makes the function fail.
 @xref{Interrupted Primitives}.
+@end deftypevr
+
+@deftypevr Macro int SA_SIGINFO
+Indicates that the @code{sa_sigaction} three-argument form of the
+handler should be used in setting up a handler instead of the
+one-argument @code{sa_handler} form.
 @end deftypevr
 
 @node Initial Signal Actions
