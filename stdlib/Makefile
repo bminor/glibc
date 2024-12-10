@@ -300,6 +300,7 @@ tests := \
   tst-rand48-2 \
   tst-random \
   tst-random2 \
+  tst-random-bz30584 \
   tst-realpath \
   tst-realpath-toolong \
   tst-secure-getenv \
