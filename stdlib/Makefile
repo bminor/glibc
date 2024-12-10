@@ -281,6 +281,7 @@ tests := \
   tst-getenv-thread \
   tst-getenv-unsetenv \
   tst-getrandom \
+  tst-getrandom-errno \
   tst-getrandom2 \
   tst-labs \
   tst-limits \

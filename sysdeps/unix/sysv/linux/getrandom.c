@@ -20,6 +20,8 @@
 #include <errno.h>
 #include <unistd.h>
 #include <sysdep-cancel.h>
+#include <sysdep.h>
+#include <sysdep-vdso.h>
 
 static inline ssize_t
 getrandom_syscall (void *buffer, size_t length, unsigned int flags,
@@ -201,11 +203,12 @@ getrandom_vdso (void *buffer, size_t length, unsigned int flags, bool cancel)
      cancellation bridge (__syscall_cancel_arch), use GRND_NONBLOCK so there
      is no potential unbounded blocking in the kernel.  It should be a rare
      situation, only at system startup when RNG is not initialized.  */
-  ssize_t ret = GLRO (dl_vdso_getrandom) (buffer,
-					  length,
-					  flags | GRND_NONBLOCK,
-					  state,
-					  state_size);
+  long int ret = INTERNAL_VSYSCALL_CALL (GLRO (dl_vdso_getrandom), 5,
+					 buffer,
+					 length,
+					 flags | GRND_NONBLOCK,
+					 state,
+					 state_size);
   if (INTERNAL_SYSCALL_ERROR_P (ret))
     {
       /* Fallback to the syscall if the kernel would block.  */
@@ -241,7 +244,9 @@ __getrandom_early_init (_Bool initial)
 	uint32_t mmap_flags;
 	uint32_t reserved[13];
       } params;
-      if (GLRO(dl_vdso_getrandom) (NULL, 0, 0, &params, ~0UL) == 0)
+      long int ret = INTERNAL_VSYSCALL_CALL (GLRO(dl_vdso_getrandom),
+					     5, NULL, 0, 0, &params, ~0UL);
+      if (! INTERNAL_SYSCALL_ERROR_P (ret))
 	{
 	  /* Align each opaque state to L1 data cache size to avoid false
 	     sharing.  If the size can not be obtained, use the kernel
