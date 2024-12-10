@@ -535,6 +535,7 @@ static test_function test_functions[] =
     FUNC_mpfr_ff_f ("add", mpfr_add, true),
     FUNC_mpfr_f_f ("asin", mpfr_asin, false),
     FUNC_mpfr_f_f ("asinh", mpfr_asinh, false),
+    FUNC_mpfr_f_f ("asinpi", mpfr_asinpi, false),
     FUNC_mpfr_f_f ("atan", mpfr_atan, false),
     FUNC_mpfr_ff_f ("atan2", mpfr_atan2, false),
     FUNC_mpfr_f_f ("atanh", mpfr_atanh, false),

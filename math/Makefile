@@ -94,6 +94,7 @@ gen-libm-calls = \
   k_casinhF \
   k_casinhF \
   s_acospiF \
+  s_asinpiF \
   s_cacosF  \
   s_cacoshF \
   s_canonicalizeF \
@@ -621,6 +622,7 @@ libm-test-funcs-auto = \
   acospi \
   asin \
   asinh \
+  asinpi \
   atan \
   atan2 \
   atanh \
@@ -930,6 +932,7 @@ tgmath3-macros = \
   acospi \
   asin \
   asinh \
+  asinpi \
   atan \
   atan2 \
   atanh \
@@ -1313,6 +1316,7 @@ CFLAGS-w_acosh.c += -fno-builtin-acoshl
 CFLAGS-s_acospi.c += -fno-builtin-acospil
 CFLAGS-w_asin.c += -fno-builtin-asinl
 CFLAGS-s_asinh.c += -fno-builtin-asinhl
+CFLAGS-s_asinpi.c += -fno-builtin-asinpil
 CFLAGS-s_atan.c += -fno-builtin-atanl
 CFLAGS-w_atan2.c += -fno-builtin-atan2l
 CFLAGS-w_atanh.c += -fno-builtin-atanhl
@@ -1455,6 +1459,7 @@ CFLAGS-w_acosh.c += -fno-builtin-acoshf32x -fno-builtin-acoshf64
 CFLAGS-s_acospi.c += -fno-builtin-acospif32x -fno-builtin-acospif64
 CFLAGS-w_asin.c += -fno-builtin-asinf32x -fno-builtin-asinf64
 CFLAGS-s_asinh.c += -fno-builtin-asinhf32x -fno-builtin-asinhf64
+CFLAGS-s_asinpi.c += -fno-builtin-asinpif32x -fno-builtin-asinpif64
 CFLAGS-s_atan.c += -fno-builtin-atanf32x -fno-builtin-atanf64
 CFLAGS-w_atan2.c += -fno-builtin-atan2f32x -fno-builtin-atan2f64
 CFLAGS-w_atanh.c += -fno-builtin-atanhf32x -fno-builtin-atanhf64
@@ -1583,6 +1588,7 @@ CFLAGS-w_acoshf.c += -fno-builtin-acoshf32
 CFLAGS-s_acospif.c += -fno-builtin-acospif32
 CFLAGS-w_asinf.c += -fno-builtin-asinf32
 CFLAGS-s_asinhf.c += -fno-builtin-asinhf32
+CFLAGS-s_asinpif.c += -fno-builtin-asinpif32
 CFLAGS-s_atanf.c += -fno-builtin-atanf32
 CFLAGS-w_atan2f.c += -fno-builtin-atan2f32
 CFLAGS-w_atanhf.c += -fno-builtin-atanhf32

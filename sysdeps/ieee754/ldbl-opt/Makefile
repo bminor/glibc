@@ -17,6 +17,7 @@ libnldbl-calls = \
   acospi \
   asin \
   asinh \
+  asinpi \
   asprintf \
   asprintf_chk \
   atan \
@@ -261,6 +262,7 @@ CFLAGS-nldbl-acosh.c = -fno-builtin-acoshl
 CFLAGS-nldbl-acospi.c = -fno-builtin-acospi
 CFLAGS-nldbl-asin.c = -fno-builtin-asinl
 CFLAGS-nldbl-asinh.c = -fno-builtin-asinhl
+CFLAGS-nldbl-asinpi.c = -fno-builtin-asinpil
 CFLAGS-nldbl-atan.c = -fno-builtin-atanl
 CFLAGS-nldbl-atan2.c = -fno-builtin-atan2l
 CFLAGS-nldbl-atanh.c = -fno-builtin-atanhl

@@ -820,6 +820,8 @@
 #if __GLIBC_USE (IEC_60559_FUNCS_EXT_C23)
 /* Arc cosine of X, divided by pi..  */
 # define acospi(Val) __TGMATH_UNARY_REAL_ONLY (Val, acospi)
+/* Arc sine of X, divided by pi..  */
+# define asinpi(Val) __TGMATH_UNARY_REAL_ONLY (Val, asinpi)
 
 /* Cosine of pi * X.  */
 # define cospi(Val) __TGMATH_UNARY_REAL_ONLY (Val, cospi)
