@@ -966,7 +966,6 @@ scheduling policies.
 
 For additional information about scheduling policies, consult consult
 the manual pages @manpageurl{sched,7} and @manpageurl{sched_setattr,2}.
-@xref{Linux Kernel}.
 
 @strong{Note:} Calling the @code{sched_setattr} function is incompatible
 with support for @code{PTHREAD_PRIO_PROTECT} mutexes.
@@ -1000,7 +999,7 @@ Scheduling flags associated with the scheduling policy.
 
 In addition to the generic fields, policy-specific fields are available.
 For additional information, consult the manual page
-@manpageurl{sched_setattr,2}.  @xref{Linux Kernel}.
+@manpageurl{sched_setattr,2}.
 @end deftp
 
 @deftypefun int sched_setaddr (pid_t @var{tid}, struct sched_attr *@var{attr}, unsigned int flags)

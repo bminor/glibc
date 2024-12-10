@@ -966,12 +966,24 @@ functionality is available on commercial systems.
 
 @Theglibc{} includes by reference the Linux man-pages
 @value{man_pages_version} documentation to document the listed
-syscalls for the Linux kernel. For reference purposes only the latest
+syscalls for the Linux kernel. For reference purposes only, the latest
 @uref{https://www.kernel.org/doc/man-pages/,Linux man-pages Project}
 documentation can be accessed from the
 @uref{https://www.kernel.org,Linux kernel} website.  Where the syscall
 has more specific documentation in this manual that more specific
 documentation is considered authoritative.
+
+Throughout this manual, when we refer to a man page, for example:
+@quotation
+@manpageurl{sendmsg,2}
+@end quotation
+@noindent
+we are referring primarily to the specific version noted above (the
+``normative'' version), typically accessed by running (for example)
+@code{man 2 sendmsg} on a system with that version installed.  For
+convenience, we will also link to the online latest copy of the man
+pages, but keep in mind that version will almost always be newer than,
+and thus different than, the normative version noted above.
 
 Additional details on the Linux system call interface can be found in
 @xref{System Calls}.

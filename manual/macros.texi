@@ -282,14 +282,22 @@ cwd\comments\
 @macro standardsx {element, standard, header}
 @end macro
 
+@ifhtml
 @macro manpageurl {func, sec}
-@url{https://man7.org/linux/man-pages/man\sec\/\func\.\sec\.html}
+@url{https://man7.org/linux/man-pages/man\sec\/\func\.\sec\.html,,\func\(\sec\)}
+@xref{Linux Kernel}
 @end macro
+@end ifhtml
+@ifnothtml
+@macro manpageurl {func, sec}
+\func\(\sec\) (Latest, online: @url{https://man7.org/linux/man-pages/man\sec\/\func\.\sec\.html})
+@xref{Linux Kernel}
+@end macro
+@end ifnothtml
 
 @macro manpagefunctionstub {func,sec}
 This documentation is a stub.  For additional information on this
 function, consult the manual page @manpageurl{\func\,\sec\}.
-@xref{Linux Kernel}.
 @end macro
 
 @end ifclear
