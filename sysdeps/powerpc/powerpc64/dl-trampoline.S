@@ -33,7 +33,11 @@
    a function that makes no calls except for __tls_get_addr and we
    might be here resolving the __tls_get_addr call.  */
 	.hidden _dl_runtime_resolve
-#define INT_PARMS FRAME_ROP_SAVE-64
+#ifdef FRAME_ROP_SAVE
+# define INT_PARMS FRAME_ROP_SAVE-64
+#else
+# define INT_PARMS -64
+#endif
 ENTRY (_dl_runtime_resolve, 4)
 	std	r3,INT_PARMS+0(r1)
 	mr	r3,r11
