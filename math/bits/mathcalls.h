@@ -70,6 +70,8 @@ __MATHCALL_VEC (tan,, (_Mdouble_ __x));
 __MATHCALL (acospi,, (_Mdouble_ __x));
 /* Arc sine of X, divided by pi.  */
 __MATHCALL (asinpi,, (_Mdouble_ __x));
+/* Arc tangent of X, divided by pi.  */
+__MATHCALL (atanpi,, (_Mdouble_ __x));
 
 /* Cosine of pi * X.  */
 __MATHCALL (cospi,, (_Mdouble_ __x));

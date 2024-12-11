@@ -23,6 +23,7 @@ libnldbl-calls = \
   atan \
   atan2 \
   atanh \
+  atanpi \
   cabs \
   cacos \
   cacosh \
@@ -266,6 +267,7 @@ CFLAGS-nldbl-asinpi.c = -fno-builtin-asinpil
 CFLAGS-nldbl-atan.c = -fno-builtin-atanl
 CFLAGS-nldbl-atan2.c = -fno-builtin-atan2l
 CFLAGS-nldbl-atanh.c = -fno-builtin-atanhl
+CFLAGS-nldbl-atanpi.c = -fno-builtin-atanpil
 CFLAGS-nldbl-cabs.c = -fno-builtin-cabsl
 CFLAGS-nldbl-cacos.c = -fno-builtin-cacosl
 CFLAGS-nldbl-cacosh.c = -fno-builtin-cacoshl

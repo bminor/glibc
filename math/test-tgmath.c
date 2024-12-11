@@ -48,7 +48,7 @@ volatile int count_cdouble;
 volatile int count_cfloat;
 volatile int count_cldouble;
 
-#define NCALLS     178
+#define NCALLS     180
 #define NCALLS_INT 4
 #define NCCALLS    47
 
@@ -241,6 +241,7 @@ F(compile_test) (void)
   b = asin (asin (a));
   a = tan (tan (x));
   b = tanpi (tanpi (x));
+  b = atanpi (atanpi (a));
   b = atan (atan (a));
   c = atan2 (atan2 (a, c), atan2 (b, x));
   a = cosh (cosh (x));
@@ -365,6 +366,7 @@ F(compile_test) (void)
       a = tan (y);
       a = tanpi (y);
       a = atan (y);
+      a = atanpi (y);
       a = atan2 (y, y);
       a = cosh (y);
       a = acosh (y);
@@ -563,6 +565,14 @@ TYPE
   ++count;
   P ();
   return x + y;
+}
+
+TYPE
+(F(atanpi)) (TYPE x)
+{
+  ++count;
+  P ();
+  return x;
 }
 
 TYPE

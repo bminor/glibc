@@ -476,6 +476,20 @@ domain, @code{acospi} signals a domain error.
 The @code{acospi} functions are from TS 18661-4:2015.
 @end deftypefun
 
+@deftypefun double atanpi (double @var{x})
+@deftypefunx float atanpif (float @var{x})
+@deftypefunx {long double} atanpil (long double @var{x})
+@deftypefunx _FloatN atanpifN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx atanpifNx (_Float@var{N}x @var{x})
+@standards{TS 18661-4:2015, math.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions compute the arctangent of @var{x}, divided by pi.  The
+result is in the interval between @code{-0.5} and @code{0.5}
+(inclusive).
+
+The @code{atanpi} functions are from TS 18661-4:2015.
+@end deftypefun
+
 @cindex inverse complex trigonometric functions
 @w{ISO C99} defines complex versions of the inverse trig functions.
 

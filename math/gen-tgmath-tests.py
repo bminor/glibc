@@ -744,6 +744,7 @@ class Tests(object):
         # TS 18661-4 functions.
         self.add_tests('acospi', 'r', ['r'])
         self.add_tests('asinpi', 'r', ['r'])
+        self.add_tests('atanpi', 'r', ['r'])
         self.add_tests('cospi', 'r', ['r'])
         self.add_tests('exp10', 'r', ['r'])
         self.add_tests('exp2m1', 'r', ['r'])

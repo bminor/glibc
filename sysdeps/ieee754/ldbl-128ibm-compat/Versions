@@ -147,6 +147,7 @@ libm {
   GLIBC_2.41 {
     __acospiieee128;
     __asinpiieee128;
+    __atanpiieee128;
     __cospiieee128;
     __sinpiieee128;
     __tanpiieee128;
