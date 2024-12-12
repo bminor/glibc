@@ -80,7 +80,7 @@ sleep_and_check_sigchld (void *closure)
   sprintf (cmd, "sleep %lf" , *seconds);
   TEST_COMPARE (system (cmd), 0);
 
-  sigset_t blocked = {0};
+  sigset_t blocked = {{0}};
   TEST_COMPARE (sigprocmask (SIG_BLOCK, NULL, &blocked), 0);
   TEST_COMPARE (sigismember (&blocked, SIGCHLD), 0);
   return NULL;

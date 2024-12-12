@@ -59,7 +59,7 @@ send_fd (const int sock, const int fd)
     {
       struct cmsghdr hdr;
       char buf[CMSG_SPACE (sizeof (int))];
-    } cmsgbuf = {0};
+    } cmsgbuf = {{0}};
   struct cmsghdr *cmsg;
   struct iovec vec;
   char ch = 'A';
@@ -92,7 +92,7 @@ recv_fd (const int sock)
     {
       struct cmsghdr hdr;
       char buf[CMSG_SPACE(sizeof(int))];
-    } cmsgbuf = {0};
+    } cmsgbuf = {{0}};
   struct cmsghdr *cmsg;
   struct iovec vec;
   ssize_t n;

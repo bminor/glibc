@@ -62,7 +62,8 @@ do_test (void)
       it.it_interval.tv_usec = 20;
       TEST_COMPARE (setitimer (timers[i], &it, NULL), 0);
 
-      TEST_COMPARE (setitimer (timers[i], &(struct itimerval) { 0 }, &it_old),
+      TEST_COMPARE (setitimer (timers[i], &(struct itimerval) { { 0 } },
+			       &it_old),
 		    0);
       /* ITIMER_REAL returns { 0, 0 } for single-shot timers, while
 	 other timers returns setitimer value.  */
@@ -87,7 +88,8 @@ do_test (void)
       it.it_value.tv_usec = 40;
       TEST_COMPARE (setitimer (timers[i], &it, NULL), 0);
 
-      TEST_COMPARE (setitimer (timers[i], &(struct itimerval) { 0 }, &it_old),
+      TEST_COMPARE (setitimer (timers[i], &(struct itimerval) { { 0 } },
+			       &it_old),
 		    0);
       TEST_COMPARE (it.it_interval.tv_sec, it_old.it_interval.tv_sec);
       if (timers[i] == ITIMER_REAL)
@@ -107,7 +109,7 @@ do_test (void)
       if (support_itimer_support_time64())
 	{
 	  TEST_COMPARE (setitimer (timers[i], &it, NULL), 0);
-	  TEST_COMPARE (setitimer (timers[i], &(struct itimerval) { 0 },
+	  TEST_COMPARE (setitimer (timers[i], &(struct itimerval) { { 0 } },
 				   &it_old),
 			0);
 	  /* ITIMER_REAL returns { 0, 0 } for single-sort timers, while other
@@ -134,7 +136,7 @@ do_test (void)
 	{
 	  TEST_COMPARE (setitimer (timers[i], &it, NULL), 0);
 
-	  TEST_COMPARE (setitimer (timers[i], &(struct itimerval) { 0 },
+	  TEST_COMPARE (setitimer (timers[i], &(struct itimerval) { { 0 } },
 				   &it_old),
 			0);
 	  if (timers[i] == ITIMER_REAL)
@@ -169,7 +171,8 @@ do_test (void)
   TEST_COMPARE (setitimer (ITIMER_REAL, &it, NULL), 0);
   intr_sleep (1);
   TEST_COMPARE (cnt, 3);
-  TEST_COMPARE (setitimer (ITIMER_REAL, &(struct itimerval) { 0 }, NULL), 0);
+  TEST_COMPARE (setitimer (ITIMER_REAL, &(struct itimerval) { { 0 } },
+			   NULL), 0);
 
   return 0;
 }
