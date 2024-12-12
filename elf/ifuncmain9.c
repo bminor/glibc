@@ -20,9 +20,10 @@
 
 #include <config.h>
 
-# include <stdbool.h>
-# include <stdio.h>
+#include <stdbool.h>
+#include <stdio.h>
 
+#if __GNUC_PREREQ (5, 5)
 /* Do not use the test framework, so that the process setup is not
    disturbed.  */
 
@@ -90,3 +91,12 @@ main (void)
 
   return errors;
 }
+#else
+#include <support/test-driver.h>
+
+int
+main (void)
+{
+  return EXIT_UNSUPPORTED;
+}
+#endif
