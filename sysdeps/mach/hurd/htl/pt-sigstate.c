@@ -82,3 +82,4 @@ __pthread_sigstate (struct __pthread *thread, int how,
 
   return err;
 }
+libc_hidden_def (__pthread_sigstate)

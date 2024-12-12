@@ -118,7 +118,6 @@ libpthread-routines := \
   pt-machdep \
   pt-spin \
   pt-sigstate-init \
-  pt-sigstate \
   pt-kill \
   pt-getcpuclockid \
   pt-setschedprio \
@@ -210,6 +209,7 @@ routines := \
   pt-pthread_self \
   pt-self pt-equal \
   pt-setschedparam \
+  pt-sigstate \
   pt-sigstate-destroy \
   # routines
 shared-only-routines = forward
