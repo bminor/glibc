@@ -2,6 +2,8 @@
    glibc build.  IS_IN can only be used when _ISOMAC isn't defined.  */
 #ifdef _ISOMAC
 # include_next <bits/sigstksz.h>
-#elif IS_IN (libsupport)
-# include_next <bits/sigstksz.h>
+#else
+# if IS_IN (libsupport)
+#  include_next <bits/sigstksz.h>
+# endif
 #endif
