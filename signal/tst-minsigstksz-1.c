@@ -38,7 +38,7 @@
 /* We do not try to test atomic operations exhaustively, only a simple
    atomic counter increment.  This is only safe if atomic_[u]int is
    unconditionally lock-free.  */
-#ifdef __STDC_NO_ATOMICS__
+#if defined __STDC_NO_ATOMICS__ || !__GNUC_PREREQ (5, 0)
 # define TEST_ATOMIC_OPS 0
 #else
 # include <stdatomic.h>
