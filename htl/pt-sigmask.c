@@ -18,14 +18,20 @@
 
 #include <pthread.h>
 #include <signal.h>
-
+#include <shlib-compat.h>
 #include <pt-internal.h>
 
 int
-pthread_sigmask (int how, const sigset_t *set, sigset_t *oset)
+__pthread_sigmask (int how, const sigset_t *set, sigset_t *oset)
 {
   struct __pthread *self = _pthread_self ();
 
   /* Do not clear SELF's pending signals.  */
   return __pthread_sigstate (self, how, set, oset, 0);
 }
+libc_hidden_def (__pthread_sigmask)
+versioned_symbol (libc, __pthread_sigmask, pthread_sigmask, GLIBC_2_41);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_41)
+compat_symbol (libpthread, __pthread_sigmask, pthread_sigmask, GLIBC_2_12);
+#endif

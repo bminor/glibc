@@ -17,7 +17,7 @@
 
 #include <assert.h>
 #include <signal.h>
-#include <pthread.h>
+#include <pthreadP.h>
 
 #define gai_start_notify_thread __gai_start_notify_thread
 #define gai_create_helper_thread __gai_create_helper_thread
@@ -28,7 +28,7 @@ __gai_start_notify_thread (void)
   sigset_t ss;
   sigemptyset (&ss);
   int sigerr __attribute__ ((unused));
-  sigerr = pthread_sigmask (SIG_SETMASK, &ss, NULL);
+  sigerr = __pthread_sigmask (SIG_SETMASK, &ss, NULL);
   assert_perror (sigerr);
 }
 
@@ -51,13 +51,13 @@ __gai_create_helper_thread (pthread_t *threadp, void *(*tf) (void *),
   sigset_t oss;
   sigfillset (&ss);
   int sigerr __attribute__ ((unused));
-  sigerr = pthread_sigmask (SIG_SETMASK, &ss, &oss);
+  sigerr = __pthread_sigmask (SIG_SETMASK, &ss, &oss);
   assert_perror (sigerr);
 
   int ret = pthread_create (threadp, &attr, tf, arg);
 
   /* Restore the signal mask.  */
-  sigerr = pthread_sigmask (SIG_SETMASK, &oss, NULL);
+  sigerr = __pthread_sigmask (SIG_SETMASK, &oss, NULL);
   assert_perror (sigerr);
 
   (void) pthread_attr_destroy (&attr);

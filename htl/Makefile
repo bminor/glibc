@@ -48,7 +48,6 @@ libpthread-routines := \
   pt-exit \
   pt-initialize \
   pt-join \
-  pt-sigmask \
   pt-spin-inlines \
   pt-cleanup \
   pt-setcancelstate \
@@ -209,6 +208,7 @@ routines := \
   pt-pthread_self \
   pt-self pt-equal \
   pt-setschedparam \
+  pt-sigmask \
   pt-sigstate \
   pt-sigstate-destroy \
   # routines

@@ -1554,6 +1554,7 @@ GLIBC_2.38 pthread_self F
 GLIBC_2.38 pthread_setcancelstate F
 GLIBC_2.38 pthread_setcanceltype F
 GLIBC_2.38 pthread_setschedparam F
+GLIBC_2.38 pthread_sigmask F
 GLIBC_2.38 ptrace F
 GLIBC_2.38 ptsname F
 GLIBC_2.38 ptsname_r F
@@ -2208,6 +2209,7 @@ GLIBC_2.41 pthread_condattr_getclock F
 GLIBC_2.41 pthread_condattr_getpshared F
 GLIBC_2.41 pthread_condattr_setclock F
 GLIBC_2.41 pthread_condattr_setpshared F
+GLIBC_2.41 pthread_sigmask F
 HURD_CTHREADS_0.3 __cthread_getspecific F
 HURD_CTHREADS_0.3 __cthread_keycreate F
 HURD_CTHREADS_0.3 __cthread_setspecific F

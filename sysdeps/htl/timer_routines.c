@@ -18,7 +18,7 @@
 
 #include <assert.h>
 #include <errno.h>
-#include <pthread.h>
+#include <pthreadP.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
@@ -468,7 +468,7 @@ __timer_thread_start (struct thread_node *thread)
   thread->exists = 1;
 
   sigfillset (&set);
-  pthread_sigmask (SIG_SETMASK, &set, &oset);
+  __pthread_sigmask (SIG_SETMASK, &set, &oset);
 
   if (pthread_create (&thread->id, &thread->attr,
 		      (void *(*) (void *)) thread_func, thread) != 0)
@@ -477,7 +477,7 @@ __timer_thread_start (struct thread_node *thread)
       retval = -1;
     }
 
-  pthread_sigmask (SIG_SETMASK, &oset, NULL);
+  __pthread_sigmask (SIG_SETMASK, &oset, NULL);
 
   return retval;
 }
