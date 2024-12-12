@@ -412,7 +412,8 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 The sysdeps/ieee754/flt-32/e_gammaf_r.c file, taken from the CORE-MATH
-project, is distributed under the following license:
+project <https://core-math.gitlabpages.inria.fr/>, is distributed under
+the following license:
 
 Copyright (c) 2023-2024 Alexei Sibidanov.
 
