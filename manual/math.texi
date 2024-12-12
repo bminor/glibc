@@ -490,6 +490,20 @@ result is in the interval between @code{-0.5} and @code{0.5}
 The @code{atanpi} functions are from TS 18661-4:2015.
 @end deftypefun
 
+@deftypefun double atan2pi (double @var{y}, double @var{x})
+@deftypefunx float atan2pif (float @var{y}, float @var{x})
+@deftypefunx {long double} atan2pil (long double @var{y}, long double @var{x})
+@deftypefunx _FloatN atan2pifN (_Float@var{N} @var{y}, _Float@var{N} @var{x})
+@deftypefunx _FloatNx atan2pifNx (_Float@var{N}x @var{y}, _Float@var{N}x @var{x})
+@standards{TS 18661-4:2015, math.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These function computes the arctangent of @var{y}/@var{x}, divided by
+pi, with the signs of both arguments used to determine the quadrant of
+the result, as for @code{atan2}.
+
+The @code{atan2pi} functions are from TS 18661-4:2015.
+@end deftypefun
+
 @cindex inverse complex trigonometric functions
 @w{ISO C99} defines complex versions of the inverse trig functions.
 

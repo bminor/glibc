@@ -657,6 +657,7 @@ libm {
     # Functions not involving _Float64x or _Float128, for all configurations.
     acospi; acospif; acospil; acospif32; acospif64; acospif32x;
     asinpi; asinpif; asinpil; asinpif32; asinpif64; asinpif32x;
+    atan2pi; atan2pif; atan2pil; atan2pif32; atan2pif64; atan2pif32x;
     atanpi; atanpif; atanpil; atanpif32; atanpif64; atanpif32x;
     cospi; cospif; cospil; cospif32; cospif64; cospif32x;
     sinpi; sinpif; sinpil; sinpif32; sinpif64; sinpif32x;
@@ -664,6 +665,7 @@ libm {
     # Functions involving _Float64x or _Float128, for some configurations.
     acospif64x; acospif128;
     asinpif64x; asinpif128;
+    atan2pif64x; atan2pif128;
     atanpif64x; atanpif128;
     cospif64x; cospif128;
     sinpif64x; sinpif128;

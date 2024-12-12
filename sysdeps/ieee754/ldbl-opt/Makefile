@@ -22,6 +22,7 @@ libnldbl-calls = \
   asprintf_chk \
   atan \
   atan2 \
+  atan2pi \
   atanh \
   atanpi \
   cabs \
@@ -266,6 +267,7 @@ CFLAGS-nldbl-asinh.c = -fno-builtin-asinhl
 CFLAGS-nldbl-asinpi.c = -fno-builtin-asinpil
 CFLAGS-nldbl-atan.c = -fno-builtin-atanl
 CFLAGS-nldbl-atan2.c = -fno-builtin-atan2l
+CFLAGS-nldbl-atan2pi.c = -fno-builtin-atan2pil
 CFLAGS-nldbl-atanh.c = -fno-builtin-atanhl
 CFLAGS-nldbl-atanpi.c = -fno-builtin-atanpil
 CFLAGS-nldbl-cabs.c = -fno-builtin-cabsl

@@ -824,6 +824,8 @@
 # define asinpi(Val) __TGMATH_UNARY_REAL_ONLY (Val, asinpi)
 /* Arc tangent of X, divided by pi.  */
 # define atanpi(Val) __TGMATH_UNARY_REAL_ONLY (Val, atanpi)
+/* Arc tangent of Y/X, divided by pi.  */
+#define atan2pi(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, atan2pi)
 
 /* Cosine of pi * X.  */
 # define cospi(Val) __TGMATH_UNARY_REAL_ONLY (Val, cospi)

@@ -865,6 +865,12 @@ GLIBC_2.41 asinpif32 F
 GLIBC_2.41 asinpif32x F
 GLIBC_2.41 asinpif64 F
 GLIBC_2.41 asinpil F
+GLIBC_2.41 atan2pi F
+GLIBC_2.41 atan2pif F
+GLIBC_2.41 atan2pif32 F
+GLIBC_2.41 atan2pif32x F
+GLIBC_2.41 atan2pif64 F
+GLIBC_2.41 atan2pil F
 GLIBC_2.41 atanpi F
 GLIBC_2.41 atanpif F
 GLIBC_2.41 atanpif32 F
