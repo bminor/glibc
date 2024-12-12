@@ -4301,10 +4301,8 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 if test -z "$TEST_CXX"; then
-  saved_CXX=
   TEST_CXX="$CXX"
 else
-  saved_CXX="$CXX"
   CXX="$TEST_CXX"
 fi
 # It's useless to us if it can't link programs (e.g. missing -lstdc++).
@@ -4382,10 +4380,7 @@ fi
 printf "%s\n" "$libc_cv_cxx_link_ok" >&6; }
 if test $libc_cv_cxx_link_ok != yes
 then :
-  CXX=
-fi
-if test -n "$saved_CXX"; then
-  CXX="$saved_CXX"
+  CXX=; TEST_CXX=
 fi
 
 if test "`cd $srcdir; pwd -P`" = "`pwd -P`"; then

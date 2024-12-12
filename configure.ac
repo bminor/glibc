@@ -78,10 +78,8 @@ AC_PROG_CXX
 AC_ARG_VAR([TEST_CXX],
 	   [C++ compiler for testing])
 if test -z "$TEST_CXX"; then
-  saved_CXX=
   TEST_CXX="$CXX"
 else
-  saved_CXX="$CXX"
   CXX="$TEST_CXX"
 fi
 # It's useless to us if it can't link programs (e.g. missing -lstdc++).
@@ -110,10 +108,7 @@ main()
   LDFLAGS="$old_LDFLAGS"
 fi
 AC_LANG_POP([C++])])
-AS_IF([test $libc_cv_cxx_link_ok != yes], [CXX=])
-if test -n "$saved_CXX"; then
-  CXX="$saved_CXX"
-fi
+AS_IF([test $libc_cv_cxx_link_ok != yes], [CXX=; TEST_CXX=])
 
 if test "`cd $srcdir; pwd -P`" = "`pwd -P`"; then
   AC_MSG_ERROR([you must configure in a separate build directory])
