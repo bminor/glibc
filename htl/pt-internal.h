@@ -306,6 +306,7 @@ extern error_t __pthread_sigstate_init (struct __pthread *thread);
 /* Destroy the signal state data structures associated with thread
    *THREAD.  */
 extern void __pthread_sigstate_destroy (struct __pthread *thread);
+libc_hidden_proto (__pthread_sigstate_destroy)
 
 /* Modify thread *THREAD's signal state.  */
 extern error_t __pthread_sigstate (struct __pthread *__restrict thread, int how,

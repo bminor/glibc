@@ -26,3 +26,4 @@ __pthread_sigstate_destroy (struct __pthread *thread)
 {
   _hurd_sigstate_delete (thread->kernel_thread);
 }
+libc_hidden_def (__pthread_sigstate_destroy)
