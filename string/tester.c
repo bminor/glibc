@@ -55,7 +55,9 @@ DIAG_IGNORE_NEEDS_COMMENT (11, "-Wstringop-overread");
    are larger than the actual buffers, which result in various
    warnings.  */
 DIAG_IGNORE_NEEDS_COMMENT (8, "-Warray-bounds");
+#if __GNUC_PREREQ (5, 0)
 DIAG_IGNORE_NEEDS_COMMENT (5.0, "-Wmemset-transposed-args");
+#endif
 #if __GNUC_PREREQ (7, 0)
 DIAG_IGNORE_NEEDS_COMMENT (9, "-Wrestrict");
 DIAG_IGNORE_NEEDS_COMMENT (7, "-Wstringop-overflow=");
