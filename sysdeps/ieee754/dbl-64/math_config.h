@@ -134,10 +134,11 @@ check_uflow (double x)
 extern const struct exp_data
 {
   double invln2N;
-  double shift;
   double negln2hiN;
   double negln2loN;
   double poly[4]; /* Last four coefficients.  */
+  double shift;
+
   double exp2_shift;
   double exp2_poly[EXP2_POLY_ORDER];
   uint64_t tab[2*(1 << EXP_TABLE_BITS)];
