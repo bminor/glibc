@@ -33,6 +33,10 @@ Function: "acosh_upward":
 double: 2
 float: 2
 
+Function: "acospi":
+double: 1
+float: 1
+
 Function: "asin":
 double: 1
 float: 1
@@ -65,6 +69,10 @@ Function: "asinh_upward":
 double: 3
 float: 3
 
+Function: "asinpi":
+double: 1
+float: 1
+
 Function: "atan":
 double: 1
 float: 1
@@ -83,6 +91,10 @@ float: 2
 Function: "atan2_upward":
 double: 8
 float: 2
+
+Function: "atan2pi":
+double: 1
+float: 1
 
 Function: "atan_downward":
 double: 1
@@ -111,6 +123,10 @@ float: 2
 Function: "atanh_upward":
 double: 3
 float: 3
+
+Function: "atanpi":
+double: 1
+float: 1
 
 Function: "cabs":
 double: 1
