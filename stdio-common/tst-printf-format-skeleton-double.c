@@ -26,7 +26,7 @@
 #define PREC DBL_MANT_DIG
 typedef double type_t;
 static const type_t vals[] =
-  { -HUGE_VAL, -DBL_MAX, -DBL_MIN, copysign (0, -1), -NAN, NAN, 0, DBL_MIN,
+  { -HUGE_VAL, -DBL_MAX, -DBL_MIN, -0.0, -NAN, NAN, 0, DBL_MIN,
     DBL_MAX, HUGE_VAL };
 static const char length[] = "";
 
