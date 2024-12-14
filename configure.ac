@@ -73,10 +73,11 @@ AC_ARG_ENABLE([static-c++-link-check],
 	      [static_cxx_link_check=$enableval],
 	      [static_cxx_link_check=yes])
 
-# We need the C++ compiler only for testing.
+# We need the C++ compiler for testing and libsupport.
 AC_PROG_CXX
 AC_ARG_VAR([TEST_CXX],
 	   [C++ compiler for testing])
+saved_CXX="$CXX"
 if test -z "$TEST_CXX"; then
   TEST_CXX="$CXX"
 else
@@ -108,6 +109,7 @@ main()
   LDFLAGS="$old_LDFLAGS"
 fi
 AC_LANG_POP([C++])])
+CXX="$saved_CXX"
 AS_IF([test $libc_cv_cxx_link_ok != yes], [CXX=; TEST_CXX=])
 
 if test "`cd $srcdir; pwd -P`" = "`pwd -P`"; then
@@ -1077,7 +1079,9 @@ AC_SUBST(CXX_SYSINCLUDES)
 
 # Obtain some C++ header file paths.  This is used to make a local
 # copy of those headers in Makerules.
-if test -n "$CXX"; then
+if test -n "$TEST_CXX"; then
+  saved_CXX="$CXX"
+  CXX="$TEST_CXX"
   find_cxx_header () {
     echo "#include <$1>" | $CXX -H -fsyntax-only -x c++ - 2>&1 \
 	 | $AWK '$1 == "."{print $2}'
@@ -1085,6 +1089,7 @@ if test -n "$CXX"; then
   CXX_CSTDLIB_HEADER="$(find_cxx_header cstdlib)"
   CXX_CMATH_HEADER="$(find_cxx_header cmath)"
   CXX_BITS_STD_ABS_H="$(find_cxx_header bits/std_abs.h)"
+  CXX="$saved_CXX"
 fi
 AC_SUBST(CXX_CSTDLIB_HEADER)
 AC_SUBST(CXX_CMATH_HEADER)

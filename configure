@@ -3910,7 +3910,7 @@ esac
 fi
 
 
-# We need the C++ compiler only for testing.
+# We need the C++ compiler for testing and libsupport.
 
 
 
@@ -4300,6 +4300,7 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
+saved_CXX="$CXX"
 if test -z "$TEST_CXX"; then
   TEST_CXX="$CXX"
 else
@@ -4378,6 +4379,7 @@ esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cxx_link_ok" >&5
 printf "%s\n" "$libc_cv_cxx_link_ok" >&6; }
+CXX="$saved_CXX"
 if test $libc_cv_cxx_link_ok != yes
 then :
   CXX=; TEST_CXX=
@@ -6535,7 +6537,9 @@ fi
 
 # Obtain some C++ header file paths.  This is used to make a local
 # copy of those headers in Makerules.
-if test -n "$CXX"; then
+if test -n "$TEST_CXX"; then
+  saved_CXX="$CXX"
+  CXX="$TEST_CXX"
   find_cxx_header () {
     echo "#include <$1>" | $CXX -H -fsyntax-only -x c++ - 2>&1 \
 	 | $AWK '$1 == "."{print $2}'
@@ -6543,6 +6547,7 @@ if test -n "$CXX"; then
   CXX_CSTDLIB_HEADER="$(find_cxx_header cstdlib)"
   CXX_CMATH_HEADER="$(find_cxx_header cmath)"
   CXX_BITS_STD_ABS_H="$(find_cxx_header bits/std_abs.h)"
+  CXX="$saved_CXX"
 fi
 
 
