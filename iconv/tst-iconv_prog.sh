@@ -211,12 +211,13 @@ hangarray=(
 "\x00\x81;-c;WIN-SAMI-2;UTF-8//TRANSLIT//IGNORE"
 )
 
-# List of option combinations that *should* lead to an error
-errorarray=(
+# List of option combinations with their expected return code
+testarray=(
 # Converting from/to invalid character sets should cause error
-"\x00\x00;;INVALID;INVALID"
-"\x00\x00;;INVALID;UTF-8"
-"\x00\x00;;UTF-8;INVALID"
+"\x00\x00;;INVALID;INVALID;1"
+"\x00\x00;;INVALID;UTF-8;1"
+"\x00\x00;;UTF-8;INVALID;1"
+"\xc3\xa9;;UTF-8;ASCII//TRANSLIT;0"
 )
 
 # Requires $twobyte input, $c flag, $from, and $to to be set; sets $ret
@@ -264,7 +265,7 @@ done
 
 check_errtest_result ()
 {
-  if [ "$ret" -eq "1" ]; then # we errored out as expected
+  if [ "$ret" -eq "$eret" ]; then # we got the expected return code
     result="PASS"
   else
     result="FAIL"
@@ -277,11 +278,12 @@ check_errtest_result ()
   fi
 }
 
-for errorcommand in "${errorarray[@]}"; do
-  twobyte="$(echo "$errorcommand" | cut -d";" -f 1)"
-  c="$(echo "$errorcommand" | cut -d";" -f 2)"
-  from="$(echo "$errorcommand" | cut -d";" -f 3)"
-  to="$(echo "$errorcommand" | cut -d";" -f 4)"
+for testcommand in "${testarray[@]}"; do
+  twobyte="$(echo "$testcommand" | cut -d";" -f 1)"
+  c="$(echo "$testcommand" | cut -d";" -f 2)"
+  from="$(echo "$testcommand" | cut -d";" -f 3)"
+  to="$(echo "$testcommand" | cut -d";" -f 4)"
+  eret="$(echo "$testcommand" | cut -d";" -f 5)"
   execute_test
   check_errtest_result
 done
