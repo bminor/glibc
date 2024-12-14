@@ -17,6 +17,7 @@
 
 #include <array_length.h>
 #include <stdlib.h>
+#if __GNUC_PREREQ (5, 0)
 #include <string.h>
 #include <stringtable.h>
 #include <support/check.h>
@@ -179,3 +180,12 @@ do_test (void)
 #define _(arg) arg
 #include "stringtable.c"
 #include "stringtable_free.c"
+#else
+#include <support/test-driver.h>
+
+int
+main (void)
+{
+  return EXIT_UNSUPPORTED;
+}
+#endif

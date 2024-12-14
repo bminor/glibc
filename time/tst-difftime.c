@@ -19,6 +19,7 @@
 #include <time.h>
 #include <support/check.h>
 
+#if __GNUC_PREREQ (5, 0)
 static void
 test_difftime_helper (time_t t1, time_t t0, double exp_val)
 {
@@ -54,3 +55,12 @@ do_test (void)
 }
 
 #include <support/test-driver.c>
+#else
+#include <support/test-driver.h>
+
+int
+main ()
+{
+  return EXIT_UNSUPPORTED;
+}
+#endif

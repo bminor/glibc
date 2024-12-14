@@ -20,6 +20,7 @@
 #include <inttypes.h>
 #include <support/support.h>
 #include <support/temp_file.h>
+#include <support/test-driver.h>
 #include <stdio.h>
 
 static int temp_fd = -1;
@@ -72,6 +73,7 @@ do_test (void)
   for (int i = 0; i < array_length (tests); i++)
     {
       /* Check if we run on port with 32 bit time_t size.  */
+#if __GNUC_PREREQ (5, 0)
       time_t t;
       if (__builtin_add_overflow (tests[i].v1, 0, &t)
 	  || __builtin_add_overflow (tests[i].v2, 0, &t))
@@ -80,6 +82,9 @@ do_test (void)
 		  "time_t overflows\n", i, tests[i].v1, tests[i].v2);
 	  continue;
         }
+#else
+      return EXIT_UNSUPPORTED;
+#endif
 
       if (tests[i].v1 >= 0x100000000LL && !y2106)
 	{

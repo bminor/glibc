@@ -30,6 +30,7 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
+#if __GNUC_PREREQ (5, 0)
 /* Called by large_buffer_checks below.  */
 static void
 large_buffer_check (int fd, char *large_buffer, size_t large_buffer_size)
@@ -85,6 +86,12 @@ do_test_large_size (void)
 
   xclose (fd);
 }
+#else
+static void
+do_test_large_size (void)
+{
+}
+#endif
 
 static void
 do_test_by_size (size_t buffer_size)
