@@ -52,7 +52,7 @@ thread_handler (union sigval sv)
 static int
 do_test (void)
 {
-  struct sigevent sev = { 0 };
+  struct sigevent sev = { };
   sev.sigev_notify = SIGEV_THREAD;
   sev.sigev_notify_function = &thread_handler;
 
@@ -61,7 +61,7 @@ do_test (void)
 
   xpthread_barrier_init (&barrier, NULL, 2);
 
-  struct itimerspec trigger = { 0 };
+  struct itimerspec trigger = { };
   trigger.it_value.tv_nsec = 1000000;
   TEST_COMPARE (timer_settime (timerid, 0, &trigger, NULL), 0);
 

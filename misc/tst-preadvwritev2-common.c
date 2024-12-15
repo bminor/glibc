@@ -97,7 +97,7 @@ do_test_with_invalid_iov (void)
   {
     /* An invalid iovec buffer should trigger an invalid memory access
        or an error (Linux for instance returns EFAULT).  */
-    struct iovec iov[IOV_MAX+1] = { 0 };
+    struct iovec iov[IOV_MAX+1] = { };
 
     TEST_VERIFY (preadv2 (temp_fd, iov, IOV_MAX + 1, 0, RWF_HIPRI) == -1);
     TEST_VERIFY (errno == EINVAL || errno == ENOTSUP);

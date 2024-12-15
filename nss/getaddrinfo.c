@@ -1132,7 +1132,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	   unsigned int *naddrs, struct scratch_buffer *tmpbuf)
 {
   struct gaih_servtuple st[sizeof (gaih_inet_typeproto)
-			   / sizeof (struct gaih_typeproto)] = {0};
+			   / sizeof (struct gaih_typeproto)] = { };
 
   const char *orig_name = name;
 

@@ -114,7 +114,7 @@ do_test_signals (void)
   {
     /* Same as before, but set SIGUSR1 and SIGUSR2 to a handler different than
        SIG_IGN or SIG_DFL.  */
-    struct sigaction sa = { 0 };
+    struct sigaction sa = { };
     sa.sa_handler = dummy_sa_handler;
     xsigaction (SIGUSR1, &sa, NULL);
     xsigaction (SIGUSR2, &sa, NULL);
@@ -123,7 +123,7 @@ do_test_signals (void)
 
   {
     /* Check if SIG_IGN is keep as is.  */
-    struct sigaction sa = { 0 };
+    struct sigaction sa = { };
     sa.sa_handler = SIG_IGN;
     xsigaction (SIGUSR1, &sa, NULL);
     xsigaction (SIGUSR2, &sa, NULL);
