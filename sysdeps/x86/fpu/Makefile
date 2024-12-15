@@ -3,8 +3,13 @@ ifeq ($(subdir),math)
 CPPFLAGS += -I../soft-fp
 
 libm-support += powl_helper
-tests += test-fenv-sse test-fenv-clear-sse test-fenv-x87 test-fenv-sse-2 \
-	 test-flt-eval-method-387 test-flt-eval-method-sse
+tests += \
+  test-fenv-clear-sse \
+  test-fenv-sse \
+  test-fenv-x87 test-fenv-sse-2 \
+  test-flt-eval-method-387 \
+  test-flt-eval-method-sse \
+# tests
 CFLAGS-test-fenv-sse.c += -msse2 -mfpmath=sse
 CFLAGS-test-fenv-clear-sse.c += -msse2 -mfpmath=sse
 CFLAGS-test-fenv-sse-2.c += -msse2 -mfpmath=sse
