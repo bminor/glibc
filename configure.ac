@@ -1497,6 +1497,15 @@ LIBC_CONFIG_VAR([config-cflags-signaling-nans],
 		[$libc_cv_cc_signaling_nans])
 AC_SUBST(libc_cv_test_cc_signaling_nans)
 
+dnl Determine if TEST_CC supports -ffloat-store.
+LIBC_TRY_TEST_CC_OPTION([for -ffloat-store],
+  [-Werror -ffloat-store],
+  libc_cv_test_cc_float_store,
+  [libc_cv_test_cc_float_store="-ffloat-store"],
+  [libc_cv_test_cc_float_store=])
+LIBC_CONFIG_VAR([test-config-cflags-float-store],
+		[$libc_cv_test_cc_float_store])
+
 AC_CACHE_CHECK(if $CC accepts -fno-tree-loop-distribute-patterns with \
 __attribute__ ((__optimize__)), libc_cv_cc_loop_to_function, [dnl
 cat > conftest.c <<EOF
