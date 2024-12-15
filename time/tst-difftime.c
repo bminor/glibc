@@ -59,7 +59,7 @@ do_test (void)
 #include <support/test-driver.h>
 
 int
-main ()
+main (void)
 {
   return EXIT_UNSUPPORTED;
 }
