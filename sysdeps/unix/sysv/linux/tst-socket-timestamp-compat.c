@@ -76,7 +76,7 @@ do_recvmsg_ancillary (bool use_multi_call, struct mmsghdr *mmhdr,
 static void
 do_test_large_buffer (bool mc)
 {
-  struct mmsghdr mmhdr = { { 0 } };
+  struct mmsghdr mmhdr = { 0 };
   /* It should be large enough for either timeval/timespec and the
      64 time type as well.  */
 
@@ -147,7 +147,7 @@ do_test_large_buffer (bool mc)
 static void
 do_test_small_buffer (bool mc)
 {
-  struct mmsghdr mmhdr = { { 0 } };
+  struct mmsghdr mmhdr = { 0 };
 
   /* Enable 32 bit timeval precision and check if no 64 bit timeval stamp
      is created.  */
