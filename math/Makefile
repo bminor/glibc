@@ -1028,7 +1028,12 @@ tgmath3-macros = \
   ufromfpx \
   # tgmath3-macros
 tgmath3-macro-tests = $(addprefix test-tgmath3-,$(tgmath3-macros))
+ifneq ($(have-test-clang),yes)
+# NB: tgmath3-macro-tests won't compile with <float.h> and <tgmath.h>
+# from Clang due to missing C23 support:
+# https://github.com/llvm/llvm-project/issues/97335
 tests-tgmath += $(tgmath3-macro-tests)
+endif
 tests += $(tests-tgmath)
 
 generated += $(addsuffix .c,$(tgmath3-macro-tests))
