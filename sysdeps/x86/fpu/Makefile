@@ -6,7 +6,8 @@ libm-support += powl_helper
 tests += \
   test-fenv-clear-sse \
   test-fenv-sse \
-  test-fenv-x87 test-fenv-sse-2 \
+  test-fenv-sse-2 \
+  test-fenv-x87 \
   test-flt-eval-method-387 \
   test-flt-eval-method-sse \
 # tests
