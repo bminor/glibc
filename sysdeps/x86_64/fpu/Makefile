@@ -28,6 +28,9 @@ endif
 ifneq ($(multi-arch),no)
 # Variables for libmvec tests.
 ifeq ($(subdir)$(build-mathvec),mathyes)
+ifneq ($(have-test-clang),yes)
+# Clang 19 can't vectorize all test loops to test libmvec ABI:
+# https://github.com/llvm/llvm-project/issues/120868
 libmvec-tests += double-vlen2 double-vlen4 double-vlen4-avx2 \
 		 float-vlen4 float-vlen8 float-vlen8-avx2 \
 		 double-vlen8 float-vlen16
@@ -36,6 +39,7 @@ tests += \
   $(libmvec-abi-func-avx-tests) \
   $(libmvec-abi-func-avx2-tests) \
   $(libmvec-abi-func-avx512f-tests)
+endif
 
 double-vlen2-funcs = $(libmvec-funcs)
 double-vlen4-funcs = $(libmvec-funcs)
