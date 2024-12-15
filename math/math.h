@@ -87,20 +87,24 @@ __BEGIN_DECLS
 
 #ifdef __USE_ISOC99
 /* IEEE positive infinity.  */
-# if __GNUC_PREREQ (3, 3)
-#  define INFINITY (__builtin_inff ())
-# else
-#  define INFINITY HUGE_VALF
+# ifndef INFINITY
+#  if __GNUC_PREREQ (3, 3)
+#   define INFINITY (__builtin_inff ())
+#  else
+#   define INFINITY HUGE_VALF
+#  endif
 # endif
 
 /* IEEE Not A Number.  */
-# if __GNUC_PREREQ (3, 3)
-#  define NAN (__builtin_nanf (""))
-# else
+# ifndef NAN
+#  if __GNUC_PREREQ (3, 3)
+#   define NAN (__builtin_nanf (""))
+#  else
 /* This will raise an "invalid" exception outside static initializers,
    but is the best that can be done in ISO C while remaining a
    constant expression.  */
-#  define NAN (0.0f / 0.0f)
+#   define NAN (0.0f / 0.0f)
+#  endif
 # endif
 #endif /* __USE_ISOC99 */
 
