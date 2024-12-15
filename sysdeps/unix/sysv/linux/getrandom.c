@@ -246,7 +246,7 @@ __getrandom_early_init (_Bool initial)
       } params;
       long int ret = INTERNAL_VSYSCALL_CALL (GLRO(dl_vdso_getrandom),
 					     5, NULL, 0, 0, &params, ~0UL);
-      if (! INTERNAL_SYSCALL_ERROR_P (ret))
+      if (ret == 0)
 	{
 	  /* Align each opaque state to L1 data cache size to avoid false
 	     sharing.  If the size can not be obtained, use the kernel
