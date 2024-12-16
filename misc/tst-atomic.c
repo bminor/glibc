@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef __clang__
 #include <stdio.h>
 #include <atomic.h>
 
@@ -636,3 +637,12 @@ do_test (void)
 }
 
 #include <support/test-driver.c>
+#else
+#include <support/test-driver.h>
+
+int
+main (void)
+{
+  return EXIT_UNSUPPORTED;
+}
+#endif
