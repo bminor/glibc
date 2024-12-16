@@ -910,7 +910,8 @@ extern int _IO_vscanf (const char *, va_list) __THROW;
 # ifdef _IO_USE_OLD_IO_FILE
 #  define FILEBUF_LITERAL(CHAIN, FLAGS, FD, WDP) \
        { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
-	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (FILE *) CHAIN, FD, \
+	 NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, \
+	 NULL, NULL, (FILE *) CHAIN, FD, \
 	 0, _IO_pos_BAD, 0, 0, { 0 }, &_IO_stdfile_##FD##_lock }
 # else
 #  define FILEBUF_LITERAL(CHAIN, FLAGS, FD, WDP) \
@@ -924,14 +925,16 @@ extern int _IO_vscanf (const char *, va_list) __THROW;
 # ifdef _IO_USE_OLD_IO_FILE
 #  define FILEBUF_LITERAL(CHAIN, FLAGS, FD, WDP) \
        { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
-	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (FILE *) CHAIN, FD, \
+	 NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, \
+	 NULL, NULL, (FILE *) CHAIN, FD, \
 	 0, _IO_pos_BAD }
 # else
 #  define FILEBUF_LITERAL(CHAIN, FLAGS, FD, WDP) \
        { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
-	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (FILE *) CHAIN, FD, \
+	 NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, \
+	 NULL, NULL, (FILE *) CHAIN, FD, \
 	 0, _IO_pos_BAD, 0, 0, { 0 }, 0, _IO_pos_BAD, \
-	 NULL, WDP, 0 }
+	 NULL, WDP, NULL }
 # endif
 #endif
 
