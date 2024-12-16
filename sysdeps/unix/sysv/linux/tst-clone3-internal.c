@@ -54,7 +54,7 @@ f (void *a)
   } while (0)
 
 static inline int
-futex_wait (int *futexp, int val)
+futex_wait (_Atomic int *futexp, int val)
 {
 #ifdef __NR_futex
   return syscall (__NR_futex, futexp, FUTEX_WAIT, val);
@@ -75,7 +75,7 @@ do_test (void)
   /* Initialize with a known value.  ctid is set to zero by the kernel after the
      cloned thread has exited.  */
 #define CTID_INIT_VAL 1
-  pid_t ctid = CTID_INIT_VAL;
+  _Atomic pid_t ctid = CTID_INIT_VAL;
   pid_t tid;
 
   struct clone_args clone_args =
