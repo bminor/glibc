@@ -313,6 +313,7 @@ tests = \
   tst-mutexpi11 \
   tst-mutexpi12 \
   tst-once5 \
+  tst-pthread-affinity-inheritance \
   tst-pthread-attr-affinity \
   tst-pthread-attr-affinity-fail \
   tst-pthread-attr-sigmask \

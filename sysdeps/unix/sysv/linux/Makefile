@@ -226,6 +226,7 @@ tests += \
   tst-process_mrelease \
   tst-quota \
   tst-rlimit-infinity \
+  tst-sched-affinity-inheritance \
   tst-sched_setattr \
   tst-scm_rights \
   tst-sigtimedwait \
