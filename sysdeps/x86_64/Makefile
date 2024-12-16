@@ -354,8 +354,8 @@ CFLAGS-tst-cet-legacy-mod-6c.c += -fcf-protection
 CFLAGS-tst-cet-legacy-7.c += -fcf-protection=none
 CFLAGS-tst-cet-legacy-10.c += -mshstk
 CFLAGS-tst-cet-legacy-10-static.c += -mshstk
-CFLAGS-tst-cet-legacy-10a.c += -fcf-protection=none
-CFLAGS-tst-cet-legacy-10a-static.c += -fcf-protection=none
+CFLAGS-tst-cet-legacy-10a.c += -fcf-protection=none -mshstk
+CFLAGS-tst-cet-legacy-10a-static.c += -fcf-protection=none -mshstk
 
 tst-cet-legacy-4-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=SHSTK
 tst-cet-legacy-6-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=SHSTK
