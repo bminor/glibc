@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include "test-float-vlen8.h"
+#include <test-float-vlen8.h>
 #include "test-math-vector-sincos.h"
 #include <immintrin.h>
 
