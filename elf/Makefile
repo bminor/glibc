@@ -557,11 +557,13 @@ endif
 selinux-enabled := $(shell cat /selinux/enforce 2> /dev/null)
 
 ifneq ($(selinux-enabled),1)
+ifeq ($(have-test-cc-trampoline),yes)
 tests-execstack-yes = \
   tst-execstack \
   tst-execstack-needed \
   tst-execstack-prog \
   # tests-execstack-yes
+endif
 endif
 ifeq ($(have-depaudit),yes)
 tests += \
@@ -1146,7 +1148,9 @@ tests-pie += vismain
 CFLAGS-vismain.c += $(PIE-ccflag)
 endif
 endif
+ifeq ($(have-test-cc-trampoline),yes)
 modules-execstack-yes = tst-execstack-mod
+endif
 extra-test-objs += $(addsuffix .os,$(strip $(modules-names)))
 
 # filtmod1.so, tst-big-note-lib.so, tst-ro-dynamic-mod.so have special

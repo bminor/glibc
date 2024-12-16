@@ -1527,6 +1527,28 @@ LIBC_CONFIG_VAR([cc-option-wimplicit-fallthrough],
 		[$libc_cv_cc_wimplicit_fallthrough])
 AC_SUBST(libc_cv_test_cc_wimplicit_fallthrough)
 
+conftest_code="
+void bar (void (*callback) (void));
+int foo (void)
+{
+  int var = 0;
+  void callback (void) { var = 1; }
+  bar (callback);
+  return var;
+}
+"
+
+dnl Check if TEST_CC support trampolines.
+LIBC_TRY_TEST_CC_COMMAND([support for trampolines],
+  [$conftest_code],
+  [-c -Werror],
+  libc_cv_test_cc_trampolines,
+  [libc_cv_test_cc_trampolines=yes],
+  [libc_cv_test_cc_trampolines=no]
+)
+LIBC_CONFIG_VAR([have-test-cc-trampoline],
+		[$libc_cv_test_cc_trampolines])
+
 dnl Check if TEST_CC supports -finput-charset=ascii.
 LIBC_TRY_TEST_CC_OPTION([-finput-charset=ascii],
   [-c -Werror -finput-charset=ascii],

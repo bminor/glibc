@@ -474,7 +474,7 @@ tests-internal += \
   tst-tls3-malloc \
   tst-tls5 \
   # tests-internal
-ifeq ($(have-z-execstack),yes)
+ifeq ($(have-z-execstack)$(have-test-cc-trampoline),yesyes)
 tests += tst-execstack-threads
 endif
 endif
@@ -483,7 +483,6 @@ modules-names = \
   tst-audit-threads-mod1 \
   tst-audit-threads-mod2 \
   tst-compat-forwarder-mod \
-  tst-execstack-threads-mod \
   tst-stack4mod \
   tst-tls3mod \
   tst-tls5mod \
@@ -503,6 +502,12 @@ test-extras += \
   tst-cleanup4aux \
   tst-cleanupx4aux \
   # test-extras
+
+ifneq ($(have-test-clang),yes)
+modules-names += \
+  tst-execstack-threads-mod \
+  # modules-names
+endif
 
 # This test exercises compat symbols removed in glibc 2.34.
 ifdef have-GLIBC_2.33
