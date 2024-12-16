@@ -287,7 +287,7 @@ struct timespec_test_case check_cases[] = {
   {.expected = {.tv_sec = 0, .tv_nsec = 1},
    .observed = {.tv_sec = TIME_T_MAX / TIMESPEC_HZ,
 		.tv_nsec = TIMESPEC_HZ - 1},
-   .upper_bound = TIME_T_MAX, .lower_bound = 1, .result = 1,
+   .upper_bound = (double) TIME_T_MAX, .lower_bound = 1, .result = 1,
   },
 };
 
