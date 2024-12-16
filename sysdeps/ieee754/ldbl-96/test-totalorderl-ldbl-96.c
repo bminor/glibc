@@ -46,9 +46,9 @@ do_test (void)
 	SET_LDOUBLE_WORDS (ldy, 0x7fff,
 			   (tests[i] >> 32) | 0x80000000,
 			   tests[i] & 0xffffffffULL);
-	SET_LDOUBLE_WORDS (ldnx, 0xffff,
+	SET_LDOUBLE_WORDS (ldnx, -1,
 			   tests[i] >> 32, tests[i] & 0xffffffffULL);
-	SET_LDOUBLE_WORDS (ldny, 0xffff,
+	SET_LDOUBLE_WORDS (ldny, -1,
 			   (tests[i] >> 32) | 0x80000000,
 			   tests[i] & 0xffffffffULL);
 	bool to1 = totalorderl (&ldx, &ldy);
