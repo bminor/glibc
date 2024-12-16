@@ -3,6 +3,9 @@
 #include <cstdio>
 #include "../dlfcn/dlfcn.h"
 
+template<>
+int S<char>::i;
+
 int t = S<char>::i;
 
 int
