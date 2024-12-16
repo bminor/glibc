@@ -310,8 +310,8 @@ check_reverse (int af, int bits, int count)
   socklen_t addrlen;
   if (af == AF_INET)
     {
-      addr[0] = 192;
-      addr[1] = 168;
+      addr[0] = (char) 192;
+      addr[1] = (char) 168;
       addr[2] = count;
       addr[3] = bits;
       addrlen = 4;
