@@ -21,23 +21,27 @@
 
 static const struct data
 {
-  float32x4_t poly[5];
-  uint32x4_t exponent_bias;
+  float32x4_t c1, c3;
+  uint32x4_t exponent_bias, special_offset, special_bias;
 #if !WANT_SIMD_EXCEPT
-  float32x4_t special_bound, scale_thresh;
+  float32x4_t scale_thresh, special_bound;
 #endif
+  float c0, c2, c4, zero;
 } data = {
   /* maxerr: 1.962 ulp.  */
-  .poly = { V4 (0x1.59977ap-10f), V4 (0x1.3ce9e4p-7f), V4 (0x1.c6bd32p-5f),
-	    V4 (0x1.ebf9bcp-3f), V4 (0x1.62e422p-1f) },
+  .c0 = 0x1.59977ap-10f,
+  .c1 = V4 (0x1.3ce9e4p-7f),
+  .c2 = 0x1.c6bd32p-5f,
+  .c3 = V4 (0x1.ebf9bcp-3f),
+  .c4 = 0x1.62e422p-1f,
   .exponent_bias = V4 (0x3f800000),
+  .special_offset = V4 (0x82000000),
+  .special_bias = V4 (0x7f000000),
 #if !WANT_SIMD_EXCEPT
   .special_bound = V4 (126.0f),
   .scale_thresh = V4 (192.0f),
 #endif
 };
-
-#define C(i) d->poly[i]
 
 #if WANT_SIMD_EXCEPT
 
@@ -55,16 +59,13 @@ special_case (float32x4_t x, float32x4_t y, uint32x4_t cmp)
 
 #else
 
-# define SpecialOffset v_u32 (0x82000000)
-# define SpecialBias v_u32 (0x7f000000)
-
 static float32x4_t VPCS_ATTR NOINLINE
 special_case (float32x4_t poly, float32x4_t n, uint32x4_t e, uint32x4_t cmp1,
 	      float32x4_t scale, const struct data *d)
 {
   /* 2^n may overflow, break it up into s1*s2.  */
-  uint32x4_t b = vandq_u32 (vclezq_f32 (n), SpecialOffset);
-  float32x4_t s1 = vreinterpretq_f32_u32 (vaddq_u32 (b, SpecialBias));
+  uint32x4_t b = vandq_u32 (vclezq_f32 (n), d->special_offset);
+  float32x4_t s1 = vreinterpretq_f32_u32 (vaddq_u32 (b, d->special_bias));
   float32x4_t s2 = vreinterpretq_f32_u32 (vsubq_u32 (e, b));
   uint32x4_t cmp2 = vcagtq_f32 (n, d->scale_thresh);
   float32x4_t r2 = vmulq_f32 (s1, s1);
@@ -80,13 +81,11 @@ special_case (float32x4_t poly, float32x4_t n, uint32x4_t e, uint32x4_t cmp1,
 float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (exp2) (float32x4_t x)
 {
   const struct data *d = ptr_barrier (&data);
-  float32x4_t n, r, r2, scale, p, q, poly;
-  uint32x4_t cmp, e;
 
 #if WANT_SIMD_EXCEPT
   /* asuint(|x|) - TinyBound >= BigBound - TinyBound.  */
   uint32x4_t ia = vreinterpretq_u32_f32 (vabsq_f32 (x));
-  cmp = vcgeq_u32 (vsubq_u32 (ia, TinyBound), SpecialBound);
+  uint32x4_t cmp = vcgeq_u32 (vsubq_u32 (ia, TinyBound), SpecialBound);
   float32x4_t xm = x;
   /* If any lanes are special, mask them with 1 and retain a copy of x to allow
      special_case to fix special lanes later. This is only necessary if fenv
@@ -95,23 +94,24 @@ float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (exp2) (float32x4_t x)
     x = vbslq_f32 (cmp, v_f32 (1), x);
 #endif
 
-    /* exp2(x) = 2^n (1 + poly(r)), with 1 + poly(r) in [1/sqrt(2),sqrt(2)]
-       x = n + r, with r in [-1/2, 1/2].  */
-  n = vrndaq_f32 (x);
-  r = vsubq_f32 (x, n);
-  e = vshlq_n_u32 (vreinterpretq_u32_s32 (vcvtaq_s32_f32 (x)), 23);
-  scale = vreinterpretq_f32_u32 (vaddq_u32 (e, d->exponent_bias));
+  /* exp2(x) = 2^n (1 + poly(r)), with 1 + poly(r) in [1/sqrt(2),sqrt(2)]
+     x = n + r, with r in [-1/2, 1/2].  */
+  float32x4_t n = vrndaq_f32 (x);
+  float32x4_t r = vsubq_f32 (x, n);
+  uint32x4_t e = vshlq_n_u32 (vreinterpretq_u32_s32 (vcvtaq_s32_f32 (x)), 23);
+  float32x4_t scale = vreinterpretq_f32_u32 (vaddq_u32 (e, d->exponent_bias));
 
 #if !WANT_SIMD_EXCEPT
-  cmp = vcagtq_f32 (n, d->special_bound);
+  uint32x4_t cmp = vcagtq_f32 (n, d->special_bound);
 #endif
 
-  r2 = vmulq_f32 (r, r);
-  p = vfmaq_f32 (C (1), C (0), r);
-  q = vfmaq_f32 (C (3), C (2), r);
+  float32x4_t c024 = vld1q_f32 (&d->c0);
+  float32x4_t r2 = vmulq_f32 (r, r);
+  float32x4_t p = vfmaq_laneq_f32 (d->c1, r, c024, 0);
+  float32x4_t q = vfmaq_laneq_f32 (d->c3, r, c024, 1);
   q = vfmaq_f32 (q, p, r2);
-  p = vmulq_f32 (C (4), r);
-  poly = vfmaq_f32 (p, q, r2);
+  p = vmulq_laneq_f32 (r, c024, 2);
+  float32x4_t poly = vfmaq_f32 (p, q, r2);
 
   if (__glibc_unlikely (v_any_u32 (cmp)))
 #if WANT_SIMD_EXCEPT
