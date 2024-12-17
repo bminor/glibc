@@ -93,6 +93,7 @@ The following bugs are resolved with this release:
   [32052] Name space violation in fortify wrappers
   [32137] libio: Attempt wide backup free only for non-legacy code
   [32231] elf: Change ldconfig auxcache magic number
+  [32470] x86: Avoid integer truncation with large cache sizes
 
 Version 2.39
 
