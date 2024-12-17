@@ -129,40 +129,31 @@ struct priority_protection_data
 /* Thread descriptor data structure.  */
 struct pthread
 {
-  union
-  {
 #if !TLS_DTV_AT_TP
-    /* This overlaps the TCB as used for TLS without threads (see tls.h).  */
-    tcbhead_t header;
+  /* This overlaps the TCB as used for TLS without threads (see tls.h).  */
+  tcbhead_t header;
 #else
-    struct
-    {
-      /* multiple_threads is enabled either when the process has spawned at
-	 least one thread or when a single-threaded process cancels itself.
-	 This enables additional code to introduce locking before doing some
-	 compare_and_exchange operations and also enable cancellation points.
-	 The concepts of multiple threads and cancellation points ideally
-	 should be separate, since it is not necessary for multiple threads to
-	 have been created for cancellation points to be enabled, as is the
-	 case is when single-threaded process cancels itself.
+  struct
+  {
+    /* multiple_threads is enabled either when the process has spawned at
+       least one thread or when a single-threaded process cancels itself.
+       This enables additional code to introduce locking before doing some
+       compare_and_exchange operations and also enable cancellation points.
+       The concepts of multiple threads and cancellation points ideally
+       should be separate, since it is not necessary for multiple threads to
+       have been created for cancellation points to be enabled, as is the
+       case is when single-threaded process cancels itself.
 
-	 Since enabling multiple_threads enables additional code in
-	 cancellation points and compare_and_exchange operations, there is a
-	 potential for an unneeded performance hit when it is enabled in a
-	 single-threaded, self-canceling process.  This is OK though, since a
-	 single-threaded process will enable async cancellation only when it
-	 looks to cancel itself and is hence going to end anyway.  */
-      int multiple_threads;
-      int gscope_flag;
-    } header;
+       Since enabling multiple_threads enables additional code in
+       cancellation points and compare_and_exchange operations, there is a
+       potential for an unneeded performance hit when it is enabled in a
+       single-threaded, self-canceling process.  This is OK though, since a
+       single-threaded process will enable async cancellation only when it
+       looks to cancel itself and is hence going to end anyway.  */
+    int multiple_threads;
+    int gscope_flag;
+  } header;
 #endif
-
-    /* This extra padding has no special purpose, and this structure layout
-       is private and subject to change without affecting the official ABI.
-       We just have it here in case it might be convenient for some
-       implementation-specific instrumentation hack or suchlike.  */
-    void *__padding[24];
-  };
 
   /* This descriptor's link on the GL (dl_stack_used) or
      GL (dl_stack_user) list.  */
@@ -406,6 +397,9 @@ struct pthread
 
   /* getrandom vDSO per-thread opaque state.  */
   void *getrandom_buf;
+
+  /* Can be used for backports preserving internal TCB layout.  */
+  void *padding[8];
 
   /* rseq area registered with the kernel.  Use a custom definition
      here to isolate from kernel struct rseq changes.  The
