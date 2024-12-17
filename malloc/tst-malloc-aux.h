@@ -22,20 +22,35 @@
 
 #include <stddef.h>
 #include <stdlib.h>
+#include <malloc.h>
 
-static void *(*volatile aligned_alloc_indirect)(size_t, size_t) = aligned_alloc;
-static void *(*volatile calloc_indirect)(size_t, size_t) = calloc;
-static void *(*volatile malloc_indirect)(size_t) = malloc;
-static void *(*volatile realloc_indirect)(void*, size_t) = realloc;
+static __typeof (aligned_alloc) * volatile aligned_alloc_indirect
+  = aligned_alloc;
+static __typeof (calloc) * volatile calloc_indirect = calloc;
+static __typeof (malloc) * volatile malloc_indirect = malloc;
+static __typeof (memalign) * volatile memalign_indirect = memalign;
+static __typeof (posix_memalign) * volatile posix_memalign_indirect
+  = posix_memalign;
+static __typeof (pvalloc) * volatile pvalloc_indirect = pvalloc;
+static __typeof (realloc) * volatile realloc_indirect = realloc;
+static __typeof (valloc) * volatile valloc_indirect = valloc;
 
 #undef aligned_alloc
 #undef calloc
 #undef malloc
+#undef memalign
+#undef posix_memalign
+#undef pvalloc
 #undef realloc
+#undef valloc
 
 #define aligned_alloc aligned_alloc_indirect
 #define calloc calloc_indirect
 #define malloc malloc_indirect
+#define memalign memalign_indirect
+#define posix_memalign posix_memalign_indirect
+#define pvalloc pvalloc_indirect
 #define realloc realloc_indirect
+#define valloc valloc_indirect
 
 #endif /* TST_MALLOC_AUX_H */
