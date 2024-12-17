@@ -50,6 +50,15 @@ DIAG_IGNORE_NEEDS_COMMENT (11, "-Wstringop-overread");
 #include <strings.h>
 #include <fcntl.h>
 
+static __typeof (bzero) * volatile bzero_indirect = bzero;
+static __typeof (memset) * volatile memset_indirect = memset;
+
+#undef bzero
+#undef memset
+
+#define bzero bzero_indirect
+#define memset memset_indirect
+
 /* This file tests a range of corner cases of string functions,
    including cases where truncation occurs or where sizes specified
    are larger than the actual buffers, which result in various
