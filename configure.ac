@@ -641,6 +641,30 @@ fi
 rm -f conftest*])
 AC_SUBST(libc_cv_with_fp)
 
+conftest_code="
+#ifndef __clang__
+#error Not Clang!
+#endif
+"
+
+dnl Check if clang is used to test glibc.
+LIBC_TRY_TEST_CC_COMMAND([for clang],
+  [$conftest_code],
+  [-c],
+  libc_cv_test_clang,
+  [libc_cv_test_clang=yes], [libc_cv_test_clang=no],
+)
+LIBC_CONFIG_VAR([have-test-clang], [$libc_cv_test_clang])
+
+dnl Check if clang++ is used to test glibc.
+LIBC_TRY_TEST_CXX_COMMAND([for clang++],
+  [$conftest_code],
+  [-c],
+  libc_cv_test_clangxx,
+  [libc_cv_test_clangxx=yes], [libc_cv_test_clangxx=no],
+)
+LIBC_CONFIG_VAR([have-test-clangxx], [$libc_cv_test_clangxx])
+
 AC_CACHE_CHECK(for -fstack-protector, libc_cv_ssp, [dnl
 LIBC_TRY_CC_OPTION([$CFLAGS $CPPFLAGS -Werror -fstack-protector],
 		   [libc_cv_ssp=yes],

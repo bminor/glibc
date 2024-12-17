@@ -326,6 +326,16 @@ CC="$TEST_CC"
 CC="$saved_CC"
 ])
 
+dnl Run a test with TEST_CXX.
+dnl LIBC_CHECK_TEST_CXX([commands])
+AC_DEFUN([LIBC_CHECK_TEST_CXX],
+[
+saved_CXX="$CXX"
+CXX="$TEST_CXX"
+[$1]
+CXX="$saved_CXX"
+])
+
 dnl Test a CC and TEST_CC compiler option or options with an empty input
 dnl file.
 dnl LIBC_TRY_CC_AND_TEST_CC_OPTION([message], [options],
@@ -398,3 +408,42 @@ else
   )
 fi
 ])
+
+dnl Test a TEST_CC compiler option or options with an input file.
+dnl LIBC_TRY_TEST_CC_COMMAND([message], [code], [options],
+dnl   [TEST_CC-cache-id], [TEST_CC-action-if-true], [TEST_CC-action-if-false])
+AC_DEFUN([LIBC_TRY_TEST_CC_COMMAND],
+[
+cat > conftest.c <<EOF
+$2
+EOF
+LIBC_CHECK_TEST_CC(
+  AC_CACHE_CHECK([$1 in testing], $4, [dnl
+    if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $3 conftest.c -o conftest 1>&AS_MESSAGE_LOG_FD])
+    then
+      [$5]
+    else
+      [$6]
+    fi])
+)
+rm -f conftest*])
+
+dnl Test a TEST_CXX compiler option or options with an input file.
+dnl LIBC_TRY_TEST_CXX_COMMAND([message], [code], [options],
+dnl   [TEST_CXX-cache-id], [TEST_CXX-action-if-true],
+dnl   [TEST_CXX-action-if-false])
+AC_DEFUN([LIBC_TRY_TEST_CXX_COMMAND],
+[
+cat > conftest.cc <<EOF
+$2
+EOF
+LIBC_CHECK_TEST_CXX(
+  AC_CACHE_CHECK([$1 in testing], $4, [dnl
+    if AC_TRY_COMMAND([${CXX-c++} $CXXFLAGS $CPPFLAGS $3 conftest.cc -o conftest 1>&AS_MESSAGE_LOG_FD])
+    then
+      [$5]
+    else
+      [$6]
+    fi])
+)
+rm -f conftest*])
