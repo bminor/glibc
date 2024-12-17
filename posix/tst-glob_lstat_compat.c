@@ -173,7 +173,8 @@ my_readdir (void *gdir)
 
   dir->d.d_type = filesystem[dir->idx].type;
 
-  __strcpy_chk (dir->d.d_name, filesystem[dir->idx].name, NAME_MAX);
+  __builtin___strcpy_chk (dir->d.d_name, filesystem[dir->idx].name,
+			  NAME_MAX);
 
   ++dir->idx;
 
