@@ -18,21 +18,25 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include "v_math.h"
-#include "poly_advsimd_f32.h"
 
 static const struct data
 {
+  float32x4_t c0, c2, c4, c6, inv_ln10, ln2;
   uint32x4_t off, offset_lower_bound;
   uint16x8_t special_bound;
   uint32x4_t mantissa_mask;
-  float32x4_t poly[8];
-  float32x4_t inv_ln10, ln2;
+  float c1, c3, c5, c7;
 } data = {
   /* Use order 9 for log10(1+x), i.e. order 8 for log10(1+x)/x, with x in
       [-1/3, 1/3] (offset=2/3). Max. relative error: 0x1.068ee468p-25.  */
-  .poly = { V4 (-0x1.bcb79cp-3f), V4 (0x1.2879c8p-3f), V4 (-0x1.bcd472p-4f),
-	    V4 (0x1.6408f8p-4f), V4 (-0x1.246f8p-4f), V4 (0x1.f0e514p-5f),
-	    V4 (-0x1.0fc92cp-4f), V4 (0x1.f5f76ap-5f) },
+  .c0 = V4 (-0x1.bcb79cp-3f),
+  .c1 = 0x1.2879c8p-3f,
+  .c2 = V4 (-0x1.bcd472p-4f),
+  .c3 = 0x1.6408f8p-4f,
+  .c4 = V4 (-0x1.246f8p-4f),
+  .c5 = 0x1.f0e514p-5f,
+  .c6 = V4 (-0x1.0fc92cp-4f),
+  .c7 = 0x1.f5f76ap-5f,
   .ln2 = V4 (0x1.62e43p-1f),
   .inv_ln10 = V4 (0x1.bcb7b2p-2f),
   /* Lower bound is the smallest positive normal float 0x00800000. For
@@ -62,7 +66,7 @@ special_case (float32x4_t y, uint32x4_t u_off, float32x4_t p, float32x4_t r2,
 float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (log10) (float32x4_t x)
 {
   const struct data *d = ptr_barrier (&data);
-
+  float32x4_t c1357 = vld1q_f32 (&d->c1);
   /* To avoid having to mov x out of the way, keep u after offset has been
      applied, and recover x by adding the offset back in the special-case
      handler.  */
@@ -81,7 +85,16 @@ float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (log10) (float32x4_t x)
 
   /* y = log10(1+r) + n * log10(2).  */
   float32x4_t r2 = vmulq_f32 (r, r);
-  float32x4_t poly = v_pw_horner_7_f32 (r, r2, d->poly);
+
+  float32x4_t c01 = vfmaq_laneq_f32 (d->c0, r, c1357, 0);
+  float32x4_t c23 = vfmaq_laneq_f32 (d->c2, r, c1357, 1);
+  float32x4_t c45 = vfmaq_laneq_f32 (d->c4, r, c1357, 2);
+  float32x4_t c67 = vfmaq_laneq_f32 (d->c6, r, c1357, 3);
+
+  float32x4_t p47 = vfmaq_f32 (c45, r2, c67);
+  float32x4_t p27 = vfmaq_f32 (c23, r2, p47);
+  float32x4_t poly = vfmaq_f32 (c01, r2, p27);
+
   /* y = Log10(2) * n + poly * InvLn(10).  */
   float32x4_t y = vfmaq_f32 (r, d->ln2, n);
   y = vmulq_f32 (y, d->inv_ln10);
