@@ -23,6 +23,8 @@
 #include <stdlib.h>
 #include <support/check.h>
 
+#include "tst-malloc-aux.h"
+
 /* This is not specifically needed for the test, but (1) does
    something to the data so gcc doesn't optimize it away, and (2) may
    help when developing future tests.  */
