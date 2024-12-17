@@ -196,6 +196,9 @@ modules-names += \
 
 tst-plt-rewrite1-no-pie = yes
 LDFLAGS-tst-plt-rewrite1 = -Wl,-z,now
+ifeq ($(have-test-cc-cflags-fsemantic-interposition),yes)
+CFLAGS-tst-plt-rewritemod1.c += -fsemantic-interposition
+endif
 LDFLAGS-tst-plt-rewritemod1.so = -Wl,-z,now
 tst-plt-rewrite1-ENV = GLIBC_TUNABLES=glibc.cpu.plt_rewrite=1 LD_DEBUG=files:bindings
 $(objpfx)tst-plt-rewrite1: $(objpfx)tst-plt-rewritemod1.so

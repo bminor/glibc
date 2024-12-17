@@ -3293,3 +3293,23 @@ tst-tls22-mod1.so-no-z-defs = yes
 tst-tls22-mod1-gnu2.so-no-z-defs = yes
 tst-tls22-mod2.so-no-z-defs = yes
 tst-tls22-mod2-gnu2.so-no-z-defs = yes
+
+ifeq ($(have-test-cc-cflags-fsemantic-interposition),yes)
+# Compiler may default to -fno-semantic-interposition.  These modules
+# must be compiled with -fsemantic-interposition.
+modules-semantic-interposition = \
+  tst-dlclose-lazy-mod1 \
+  tst-dlclose-lazy-mod2 \
+  tst-piemod1 \
+  unload4mod1 \
+  unload4mod2 \
+  unload4mod3 \
+  unload4mod4 \
+# modules-semantic-interposition
+
+define enable-semantic-interposition
+CFLAGS-$(1).c += -fsemantic-interposition
+endef
+$(foreach m,$(modules-semantic-interposition),\
+  $(eval $(call enable-semantic-interposition,$(m))))
+endif

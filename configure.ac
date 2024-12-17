@@ -1504,6 +1504,16 @@ LIBC_CONFIG_VAR([config-cflags-signaling-nans],
 		[$libc_cv_cc_signaling_nans])
 AC_SUBST(libc_cv_test_cc_signaling_nans)
 
+dnl Check if TEST_CC supports -fsemantic-interposition.
+LIBC_TRY_TEST_CC_OPTION([-fsemantic-interposition],
+  [-c -Werror -fsemantic-interposition],
+  libc_cv_test_cc_cflags_fsemantic_interposition,
+  [libc_cv_test_cc_cflags_fsemantic_interposition=yes],
+  [libc_cv_test_cc_cflags_fsemantic_interposition=no]
+)
+LIBC_CONFIG_VAR(have-test-cc-cflags-fsemantic-interposition,
+		$libc_cv_test_cc_cflags_fsemantic_interposition)
+
 dnl Determine if TEST_CC supports -ffloat-store.
 LIBC_TRY_TEST_CC_OPTION([for -ffloat-store],
   [-Werror -ffloat-store],

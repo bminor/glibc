@@ -7722,6 +7722,40 @@ config-cflags-signaling-nans = $libc_cv_cc_signaling_nans"
 
 saved_CC="$CC"
 CC="$TEST_CC"
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking -fsemantic-interposition in testing" >&5
+printf %s "checking -fsemantic-interposition in testing... " >&6; }
+if test ${libc_cv_test_cc_cflags_fsemantic_interposition+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) if { ac_try='${CC-cc} -c -Werror -fsemantic-interposition -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+then :
+  libc_cv_test_cc_cflags_fsemantic_interposition=yes
+else case e in #(
+  e) libc_cv_test_cc_cflags_fsemantic_interposition=no
+ ;;
+esac
+fi ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_test_cc_cflags_fsemantic_interposition" >&5
+printf "%s\n" "$libc_cv_test_cc_cflags_fsemantic_interposition" >&6; }
+
+CC="$saved_CC"
+
+
+config_vars="$config_vars
+have-test-cc-cflags-fsemantic-interposition = $libc_cv_test_cc_cflags_fsemantic_interposition"
+
+
+
+saved_CC="$CC"
+CC="$TEST_CC"
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for -ffloat-store in testing" >&5
 printf %s "checking for -ffloat-store in testing... " >&6; }
 if test ${libc_cv_test_cc_float_store+y}
