@@ -28,7 +28,7 @@ enum
   x86_feature_1_shstk		= 1U << 1
 };
 
-static __inline__ _Bool
+static __inline__ bool
 x86_cpu_cet_active (unsigned int __index)
 {
 #ifdef __x86_64__

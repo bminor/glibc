@@ -30,7 +30,7 @@ __BEGIN_DECLS
 extern const struct cpuid_feature *__x86_get_cpuid_feature_leaf (unsigned int)
      __attribute__ ((pure));
 
-static __inline__ _Bool
+static __inline__ bool
 x86_cpu_present (unsigned int __index)
 {
   const struct cpuid_feature *__ptr = __x86_get_cpuid_feature_leaf
@@ -43,7 +43,7 @@ x86_cpu_present (unsigned int __index)
   return __ptr->cpuid_array[__reg] & (1 << __bit);
 }
 
-static __inline__ _Bool
+static __inline__ bool
 x86_cpu_active (unsigned int __index)
 {
   if (__index == x86_cpu_IBT || __index == x86_cpu_SHSTK)
