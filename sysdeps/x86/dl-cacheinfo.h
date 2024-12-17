@@ -961,11 +961,11 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
     non_temporal_threshold = maximum_non_temporal_threshold;
 
   /* NB: The REP MOVSB threshold must be greater than VEC_SIZE * 8.  */
-  unsigned int minimum_rep_movsb_threshold;
+  unsigned long int minimum_rep_movsb_threshold;
   /* NB: The default REP MOVSB threshold is 4096 * (VEC_SIZE / 16) for
      VEC_SIZE == 64 or 32.  For VEC_SIZE == 16, the default REP MOVSB
      threshold is 2048 * (VEC_SIZE / 16).  */
-  unsigned int rep_movsb_threshold;
+  unsigned long int rep_movsb_threshold;
   if (CPU_FEATURE_USABLE_P (cpu_features, AVX512F)
       && !CPU_FEATURE_PREFERRED_P (cpu_features, Prefer_No_AVX512))
     {
