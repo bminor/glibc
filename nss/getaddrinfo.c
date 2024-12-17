@@ -1865,6 +1865,22 @@ scopecmp (const void *p1, const void *p2)
   return 1;
 }
 
+/* Return true if PTR points to a valid decimal value string and
+   store the value in *VALUE_P.  Otherwise, return false.  */
+
+static bool
+valid_decimal_value (const char *str, unsigned long int *value_p)
+{
+  char *endp;
+  unsigned long int value = strtoul (str, &endp, 10);
+  if (str == endp
+      || *endp != '\0'
+      || (value == ULONG_MAX && errno == ERANGE))
+    return false;
+  *value_p = value;
+  return true;
+}
+
 static bool
 add_prefixlist (struct prefixlist **listp, size_t *lenp, bool *nullbitsp,
 		char *val1, char *val2, char **pos)
@@ -1872,7 +1888,6 @@ add_prefixlist (struct prefixlist **listp, size_t *lenp, bool *nullbitsp,
   struct in6_addr prefix;
   unsigned long int bits;
   unsigned long int val;
-  char *endp;
 
   bits = 128;
   __set_errno (0);
@@ -1881,14 +1896,9 @@ add_prefixlist (struct prefixlist **listp, size_t *lenp, bool *nullbitsp,
     *cp++ = '\0';
   *pos = cp;
   if (inet_pton (AF_INET6, val1, &prefix)
-      && (cp == NULL
-	  || (bits = strtoul (cp, &endp, 10)) != ULONG_MAX
-	  || errno != ERANGE)
-      && *endp == '\0'
+      && (cp == NULL || valid_decimal_value (cp, &bits))
       && bits <= 128
-      && ((val = strtoul (val2, &endp, 10)) != ULONG_MAX
-	  || errno != ERANGE)
-      && *endp == '\0'
+      && valid_decimal_value (val2, &val)
       && val <= INT_MAX)
     {
       struct prefixlist *newp = malloc (sizeof (*newp));
@@ -2031,7 +2041,6 @@ gaiconf_init (void)
 	      struct in6_addr prefix;
 	      unsigned long int bits;
 	      unsigned long int val;
-	      char *endp;
 
 	      bits = 32;
 	      __set_errno (0);
@@ -2042,15 +2051,10 @@ gaiconf_init (void)
 		{
 		  bits = 128;
 		  if (IN6_IS_ADDR_V4MAPPED (&prefix)
-		      && (cp == NULL
-			  || (bits = strtoul (cp, &endp, 10)) != ULONG_MAX
-			  || errno != ERANGE)
-		      && *endp == '\0'
+		      && (cp == NULL || valid_decimal_value (cp, &bits))
 		      && bits >= 96
 		      && bits <= 128
-		      && ((val = strtoul (val2, &endp, 10)) != ULONG_MAX
-			  || errno != ERANGE)
-		      && *endp == '\0'
+		      && valid_decimal_value (val2, &val)
 		      && val <= INT_MAX)
 		    {
 		      if (!add_scopelist (&scopelist, &nscopelist,
@@ -2064,14 +2068,9 @@ gaiconf_init (void)
 		    }
 		}
 	      else if (inet_pton (AF_INET, val1, &prefix.s6_addr32[3])
-		       && (cp == NULL
-			   || (bits = strtoul (cp, &endp, 10)) != ULONG_MAX
-			   || errno != ERANGE)
-		       && *endp == '\0'
+		       && (cp == NULL || valid_decimal_value (cp, &bits))
 		       && bits <= 32
-		       && ((val = strtoul (val2, &endp, 10)) != ULONG_MAX
-			   || errno != ERANGE)
-		       && *endp == '\0'
+		       && valid_decimal_value (val2, &val)
 		       && val <= INT_MAX)
 		{
 		  if (!add_scopelist (&scopelist, &nscopelist,
