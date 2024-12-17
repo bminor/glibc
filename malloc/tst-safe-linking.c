@@ -26,6 +26,8 @@
 #include <support/capture_subprocess.h>
 #include <support/check.h>
 
+#include "tst-malloc-aux.h"
+
 /* Run CALLBACK and check that the data on standard error equals
    EXPECTED.  */
 static void

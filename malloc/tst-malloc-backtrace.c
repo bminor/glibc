@@ -22,6 +22,8 @@
 #include <support/support.h>
 #include <libc-diag.h>
 
+#include "tst-malloc-aux.h"
+
 #define SIZE 4096
 
 /* Wrap free with a function to prevent gcc from optimizing it out.  */
