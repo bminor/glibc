@@ -933,7 +933,7 @@ extern int _IO_vscanf (const char *, va_list) __THROW;
        { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
 	 NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, \
 	 NULL, NULL, (FILE *) CHAIN, FD, \
-	 0, _IO_pos_BAD, 0, 0, { 0 }, 0, _IO_pos_BAD, \
+	 0, _IO_pos_BAD, 0, 0, { 0 }, NULL, _IO_pos_BAD, \
 	 NULL, WDP, NULL }
 # endif
 #endif
