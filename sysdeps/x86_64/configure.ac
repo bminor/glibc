@@ -68,27 +68,23 @@ fi
 LIBC_CONFIG_VAR([enable-cet], [$enable_cet])
 
 # Check if -mamx-tile works properly.
-check_x86_have_amx_tile ()
-{
-  eval $1=no
-  if grep -q __builtin_ia32_ldtilecfg conftest; then
-    eval $1=yes
-  fi
-}
-
-conftest_code="
-#include <x86intrin.h>
-"
-LIBC_TRY_CC_AND_TEST_CC_COMMAND([whether -mamx-tile works properly],
-  [$conftest_code],
+LIBC_TRY_TEST_CC_COMMAND([whether -mamx-tile works properly],
+  [#include <x86intrin.h>],
   [-E -mamx-tile],
-  libc_cv_x86_have_amx_tile,
-  [check_x86_have_amx_tile libc_cv_x86_have_amx_tile],
-  [libc_cv_x86_have_amx_tile=no],
   libc_cv_test_x86_have_amx_tile,
-  [check_x86_have_amx_tile libc_cv_test_x86_have_amx_tile],
+  [
+if test $libc_cv_test_clang = yes; then
+  libc_cv_test_x86_have_amx_tile=yes
+else
+  if grep -q __builtin_ia32_ldtilecfg conftest; then
+    libc_cv_test_x86_have_amx_tile=yes
+  else
+    libc_cv_test_x86_have_amx_tile=no
+  fi
+fi
+  ],
   [libc_cv_test_x86_have_amx_tile=no])
-LIBC_CONFIG_VAR([have-mamx-tile], [$libc_cv_x86_have_amx_tile])
+LIBC_CONFIG_VAR([have-mamx-tile], [$libc_cv_test_x86_have_amx_tile])
 
 # Check if -mapxf is enabled.
 AC_CACHE_CHECK(whether -mapxf is enabled,
