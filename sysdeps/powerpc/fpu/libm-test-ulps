@@ -49,6 +49,30 @@ float: 2
 float128: 3
 ldouble: 4
 
+Function: "acospi":
+double: 1
+float: 1
+float128: 1
+ldouble: 1
+
+Function: "acospi_downward":
+double: 1
+float: 2
+float128: 1
+ldouble: 4
+
+Function: "acospi_towardzero":
+double: 1
+float: 2
+float128: 1
+ldouble: 4
+
+Function: "acospi_upward":
+double: 2
+float: 1
+float128: 2
+ldouble: 4
+
 Function: "add_ldouble":
 double: 1
 float: 1
@@ -101,6 +125,30 @@ float: 3
 float128: 4
 ldouble: 7
 
+Function: "asinpi":
+double: 1
+float: 1
+float128: 1
+ldouble: 2
+
+Function: "asinpi_downward":
+double: 1
+float: 1
+float128: 1
+ldouble: 3
+
+Function: "asinpi_towardzero":
+double: 1
+float: 1
+float128: 1
+ldouble: 3
+
+Function: "asinpi_upward":
+double: 2
+float: 1
+float128: 2
+ldouble: 4
+
 Function: "atan":
 double: 1
 float: 1
@@ -129,6 +177,30 @@ double: 1
 float: 1
 float128: 2
 ldouble: 3
+
+Function: "atan2pi":
+double: 1
+float: 1
+float128: 2
+ldouble: 2
+
+Function: "atan2pi_downward":
+double: 1
+float: 2
+float128: 2
+ldouble: 4
+
+Function: "atan2pi_towardzero":
+double: 1
+float: 2
+float128: 2
+ldouble: 5
+
+Function: "atan2pi_upward":
+double: 1
+float: 2
+float128: 2
+ldouble: 4
 
 Function: "atan_downward":
 double: 1
@@ -171,6 +243,30 @@ double: 3
 float: 3
 float128: 4
 ldouble: 4
+
+Function: "atanpi":
+double: 1
+float: 1
+float128: 1
+ldouble: 1
+
+Function: "atanpi_downward":
+double: 1
+float: 2
+float128: 1
+ldouble: 1
+
+Function: "atanpi_towardzero":
+double: 1
+float: 1
+float128: 1
+ldouble: 3
+
+Function: "atanpi_upward":
+double: 1
+float: 1
+float128: 2
+ldouble: 2
 
 Function: "cabs":
 double: 1
@@ -1826,6 +1922,30 @@ double: 3
 float: 3
 float128: 3
 ldouble: 6
+
+Function: "tanpi":
+double: 2
+float: 2
+float128: 2
+ldouble: 2
+
+Function: "tanpi_downward":
+double: 2
+float: 3
+float128: 4
+ldouble: 8
+
+Function: "tanpi_towardzero":
+double: 2
+float: 3
+float128: 4
+ldouble: 8
+
+Function: "tanpi_upward":
+double: 2
+float: 4
+float128: 3
+ldouble: 8
 
 Function: "tgamma":
 double: 9
