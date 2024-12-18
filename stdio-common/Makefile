@@ -200,7 +200,6 @@ tests := \
   bug25 \
   bug26 \
   bug27 \
-  bug28 \
   bug29 \
   errnobug \
   scanf1 \
@@ -316,6 +315,16 @@ tests := \
   tstscanf \
   xbug \
   # tests
+
+# Clang 19 takes a very long time, it ran more than 27 minutes on Intel
+# Core i7-1195G7 before the process was killed, to compile bug28.c:
+# https://github.com/llvm/llvm-project/issues/120462
+# Exclude it when Clang is used for testing.
+ifneq ($(have-test-clang),yes)
+tests += \
+  bug28 \
+  # tests
+endif
 
 ifeq ($(run-built-tests),yes)
 ifeq (yes,$(build-shared))
