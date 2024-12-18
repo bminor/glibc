@@ -1031,7 +1031,8 @@ endif
 # current directory.
 +includes = -I$(..)include $(if $(subdir),$(objpfx:%/=-I%)) \
 	    $(+sysdep-includes) $(includes) \
-	    $(patsubst %/,-I%,$(..)) $(libio-include) -I. $(sysincludes)
+	    $(patsubst %/,-I%,$(..)) $(libio-include) \
+	    $(if $($(<F)-no-include-dot),,-I.) $(sysincludes)
 
 # Since libio has several internal header files, we use a -I instead
 # of many little headers in the include directory.

@@ -510,7 +510,6 @@ tests = \
   $(tests-static) \
   bug-nextafter \
   bug-nexttoward \
-  bug-tgmath1 \
   test-ceil-except-2 \
   test-femode \
   test-femode-traps \
@@ -548,15 +547,18 @@ tests = \
   test-signgam-ullong \
   test-signgam-ullong-init \
   test-snan \
-  test-tgmath \
-  test-tgmath-int \
-  test-tgmath-ret \
-  test-tgmath2 \
   test-trunc-except-2 \
   tst-CMPLX \
   tst-CMPLX2 \
   tst-definitions \
   # tests
+tests-tgmath = \
+  bug-tgmath1 \
+  test-tgmath \
+  test-tgmath-int \
+  test-tgmath-ret \
+  test-tgmath2 \
+  # tests-tgmath
 ifneq ($(config-cflags-signaling-nans),)
 tests += \
   test-fe-snans-always-signal \
@@ -1026,7 +1028,9 @@ tgmath3-macros = \
   ufromfpx \
   # tgmath3-macros
 tgmath3-macro-tests = $(addprefix test-tgmath3-,$(tgmath3-macros))
-tests += $(tgmath3-macro-tests)
+tests-tgmath += $(tgmath3-macro-tests)
+tests += $(tests-tgmath)
+
 generated += $(addsuffix .c,$(tgmath3-macro-tests))
 
 $(tgmath3-macro-tests:%=$(objpfx)%.o): CFLAGS += -fno-builtin
@@ -1042,6 +1046,14 @@ tests-special += $(objpfx)test-tgmath3-macro-list.out
 $(objpfx)test-tgmath3-macro-list.out: gen-tgmath-tests.py
 	$(PYTHON) $< check-list $(tgmath3-macros) > $@; \
 	$(evaluate-test)
+
+ifeq ($(have-test-clang),yes)
+# NB: Clang has its own <tgmath.h> and doesn't use <tgmath.h> from glibc.
+define no-include
+$(1).c-no-include-dot = yes
+endef
+$(foreach m,$(tests-tgmath),$(eval $(call no-include,$(m))))
+endif
 
 libm-test-fast-math-cflags = -fno-builtin -D__FAST_MATH__ -DTEST_FAST_MATH
 libm-test-vec-cflags = $(libm-test-fast-math-cflags) -fno-inline \
