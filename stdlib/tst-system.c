@@ -20,6 +20,7 @@
 #include <string.h>
 #include <signal.h>
 #include <paths.h>
+#include <sys/resource.h>
 
 #include <support/capture_subprocess.h>
 #include <support/check.h>
@@ -192,6 +193,26 @@ do_test (void)
                                                     &(double) { 0.1 });
     xpthread_join (short_sleep_thread);
     xpthread_join (long_sleep_thread);
+  }
+
+  {
+    struct rlimit rlimit_orig, rlimit_new;
+
+    if (getrlimit (RLIMIT_NPROC, &rlimit_orig) != 0)
+      FAIL_EXIT1 ("getrlimit (RLIMIT_NPROC) failed: %m");
+
+    /* Force failure for the system call */
+    rlimit_new.rlim_cur = 0;
+    rlimit_new.rlim_max = rlimit_orig.rlim_max;
+
+    if (setrlimit (RLIMIT_NPROC, &rlimit_new) != 0)
+      FAIL_EXIT1 ("setrlimit (RLIMIT_NPROC) failed: %m");
+
+    TEST_COMPARE (system (""), -1);
+
+    /* Restore NPROC limit */
+    if (setrlimit (RLIMIT_NPROC, &rlimit_orig) != 0)
+      FAIL_EXIT1 ("setrlimit (RLIMIT_NPROC) failed: %m");
   }
 
   TEST_COMPARE (system (""), 0);

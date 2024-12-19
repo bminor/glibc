@@ -175,10 +175,14 @@ do_system (const char *line)
       __libc_cleanup_region_end (0);
 #endif
     }
+  else if (ret == EAGAIN || ret == ENOMEM)
+    /* POSIX states that failure to create a child process should
+       return -1.  */
+    status = -1;
   else
-   /* POSIX states that failure to execute the shell should return
-      as if the shell had terminated using _exit(127).  */
-   status = W_EXITCODE (127, 0);
+    /* POSIX states that failure to execute the shell should return
+       as if the shell had terminated using _exit(127).  */
+    status = W_EXITCODE (127, 0);
 
   /* sigaction can not fail with SIGINT/SIGQUIT used with old
      disposition.  Same applies for sigprocmask.  */
