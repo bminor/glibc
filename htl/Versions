@@ -26,6 +26,7 @@ libc {
     pthread_attr_setscope;
     pthread_attr_setschedparam;
     pthread_attr_init;
+    pthread_cond_broadcast;
     pthread_cond_destroy;
     pthread_cond_init;
     pthread_condattr_getclock;
@@ -96,6 +97,7 @@ libc {
     __pthread_attr_setstacksize;
     __pthread_attr_setstackaddr;
     __pthread_attr_setstack;
+    __pthread_cond_broadcast;
     __pthread_cond_destroy;
     __pthread_cond_init;
     __pthread_condattr_init;
@@ -138,7 +140,6 @@ libpthread {
 
     pthread_cancel;
 
-    pthread_cond_broadcast;
     pthread_cond_signal; pthread_cond_timedwait; pthread_cond_wait;
 
     pthread_create; pthread_detach; pthread_exit;

@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <pthread.h>
-
+#include <shlib-compat.h>
 #include <pt-internal.h>
 
 /* Unblock all threads that are blocked on condition variable COND.  */
@@ -40,5 +40,9 @@ __pthread_cond_broadcast (pthread_cond_t *cond)
 
   return 0;
 }
+libc_hidden_def (__pthread_cond_broadcast)
+versioned_symbol (libc, __pthread_cond_broadcast, pthread_cond_broadcast, GLIBC_2_21);
 
-weak_alias (__pthread_cond_broadcast, pthread_cond_broadcast);
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
+compat_symbol (libc, __pthread_cond_broadcast, pthread_cond_broadcast, GLIBC_2_12);
+#endif

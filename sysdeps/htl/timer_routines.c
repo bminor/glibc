@@ -280,7 +280,7 @@ thread_cleanup (void *val)
       pthread_mutex_unlock (&__timer_mutex);
 
       /* Unblock potentially blocked timer_delete().  */
-      pthread_cond_broadcast (&thread->cond);
+      __pthread_cond_broadcast (&thread->cond);
     }
 }
 
@@ -338,7 +338,7 @@ thread_expire_timer (struct thread_node *self, struct timer_node *timer)
 
   self->current_timer = 0;
 
-  pthread_cond_broadcast (&self->cond);
+  __pthread_cond_broadcast (&self->cond);
 }
 
 
@@ -486,7 +486,7 @@ __timer_thread_start (struct thread_node *thread)
 void
 __timer_thread_wakeup (struct thread_node *thread)
 {
-  pthread_cond_broadcast (&thread->cond);
+  __pthread_cond_broadcast (&thread->cond);
 }
 
 

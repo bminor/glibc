@@ -91,7 +91,6 @@ libpthread-routines := \
   pt-rwlock-timedrdlock \
   pt-rwlock-timedwrlock \
   pt-rwlock-unlock \
-  pt-cond-brdcast \
   pt-cond-signal \
   pt-cond-wait \
   pt-cond-timedwait \
@@ -194,6 +193,7 @@ routines := \
   pt-attr-setstackaddr \
   pt-attr-setstacksize \
   pt-cond \
+  pt-cond-brdcast \
   pt-cond-destroy \
   pt-cond-init \
   pt-condattr-destroy \
