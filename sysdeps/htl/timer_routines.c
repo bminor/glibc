@@ -151,7 +151,7 @@ thread_init (struct thread_node *thread, const pthread_attr_t *attr, clockid_t c
 
   thread->exists = 0;
   INIT_LIST_HEAD (&thread->timer_queue);
-  pthread_cond_init (&thread->cond, 0);
+  __pthread_cond_init (&thread->cond, 0);
   thread->current_timer = 0;
   thread->captured = pthread_self ();
   thread->clock_id = clock_id;

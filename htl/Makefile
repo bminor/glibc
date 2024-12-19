@@ -92,7 +92,6 @@ libpthread-routines := \
   pt-rwlock-timedwrlock \
   pt-rwlock-unlock \
   pt-cond-destroy \
-  pt-cond-init \
   pt-cond-brdcast \
   pt-cond-signal \
   pt-cond-wait \
@@ -197,6 +196,7 @@ routines := \
   pt-attr-setstackaddr \
   pt-attr-setstacksize \
   pt-cond \
+  pt-cond-init \
   pt-condattr-destroy \
   pt-condattr-getclock \
   pt-condattr-getpshared \

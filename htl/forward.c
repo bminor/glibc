@@ -55,9 +55,6 @@ name decl								      \
 
 FORWARD (pthread_cond_broadcast, (pthread_cond_t *cond), (cond), 0)
 FORWARD (pthread_cond_destroy, (pthread_cond_t *cond), (cond), 0)
-FORWARD (pthread_cond_init,
-	 (pthread_cond_t *cond, const pthread_condattr_t *cond_attr),
-	 (cond, cond_attr), 0)
 FORWARD (pthread_cond_signal, (pthread_cond_t *cond), (cond), 0)
 FORWARD (pthread_cond_wait, (pthread_cond_t *cond, pthread_mutex_t *mutex),
 	 (cond, mutex), 0)

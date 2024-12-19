@@ -43,6 +43,7 @@ extern int __pthread_mutexattr_settype (pthread_mutexattr_t *attr, int kind);
 
 extern int __pthread_cond_init (pthread_cond_t *cond,
 				const pthread_condattr_t *cond_attr);
+libc_hidden_proto (__pthread_cond_init)
 extern int __pthread_cond_signal (pthread_cond_t *cond);
 extern int __pthread_cond_broadcast (pthread_cond_t *cond);
 extern int __pthread_cond_wait (pthread_cond_t *cond, pthread_mutex_t *mutex);

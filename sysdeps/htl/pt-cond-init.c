@@ -19,7 +19,7 @@
 #include <pthread.h>
 #include <assert.h>
 #include <string.h>
-
+#include <shlib-compat.h>
 #include <pt-internal.h>
 
 int
@@ -43,5 +43,9 @@ __pthread_cond_init (pthread_cond_t *cond, const pthread_condattr_t * attr)
   *cond->__attr = *attr;
   return 0;
 }
+libc_hidden_def (__pthread_cond_init)
+versioned_symbol (libc, __pthread_cond_init, pthread_cond_init, GLIBC_2_21);
 
-weak_alias (__pthread_cond_init, pthread_cond_init);
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
+compat_symbol (libc, __pthread_cond_init, pthread_cond_init, GLIBC_2_12);
+#endif

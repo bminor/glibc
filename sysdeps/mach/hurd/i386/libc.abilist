@@ -49,6 +49,7 @@ GLIBC_2.12 pthread_attr_setscope F
 GLIBC_2.12 pthread_attr_setstack F
 GLIBC_2.12 pthread_attr_setstackaddr F
 GLIBC_2.12 pthread_attr_setstacksize F
+GLIBC_2.12 pthread_cond_init F
 GLIBC_2.12 pthread_condattr_destroy F
 GLIBC_2.12 pthread_condattr_getclock F
 GLIBC_2.12 pthread_condattr_getpshared F

@@ -23,8 +23,6 @@
 
 int __pthread_cond_broadcast (pthread_cond_t *);
 int __pthread_cond_destroy (pthread_cond_t *);
-int __pthread_cond_init (pthread_cond_t *,
-		       const pthread_condattr_t *);
 int __pthread_cond_signal (pthread_cond_t *);
 int __pthread_cond_wait (pthread_cond_t *, pthread_mutex_t *);
 int __pthread_cond_timedwait (pthread_cond_t *, pthread_mutex_t *,
@@ -58,8 +56,6 @@ struct pthread_functions
 {
   int (*ptr_pthread_cond_broadcast) (pthread_cond_t *);
   int (*ptr_pthread_cond_destroy) (pthread_cond_t *);
-  int (*ptr_pthread_cond_init) (pthread_cond_t *,
-			       const pthread_condattr_t *);
   int (*ptr_pthread_cond_signal) (pthread_cond_t *);
   int (*ptr_pthread_cond_wait) (pthread_cond_t *, pthread_mutex_t *);
   int (*ptr_pthread_cond_timedwait) (pthread_cond_t *, pthread_mutex_t *,
