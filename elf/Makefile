@@ -1311,14 +1311,38 @@ $(objpfx)$(1).generated-makefile: $(1)
 	mv $$@T $$@
 -include $(objpfx)$(1).generated-makefile
 endef
+# Likewise, where the .def file itself is generated.
+define include_dsosort_tests_objpfx
+$(objpfx)$(1).generated-makefile: $(objpfx)$(1)
+	$(PYTHON) $(..)scripts/dso-ordering-test.py \
+	--description-file $$< --objpfx $(objpfx) --output-makefile $$@T
+	mv $$@T $$@
+-include $(objpfx)$(1).generated-makefile
+endef
 endif
 
 postclean-generated += $(objpfx)/dso-sort-tests-1.generated-makefile \
-		       $(objpfx)/dso-sort-tests-2.generated-makefile
+		       $(objpfx)/dso-sort-tests-2.generated-makefile \
+		       $(objpfx)/dso-sort-tests-all2.generated-makefile \
+		       $(objpfx)/dso-sort-tests-all3.generated-makefile \
+		       $(objpfx)/dso-sort-tests-all4.generated-makefile
 
 # Generate from each testcase description file
 $(eval $(call include_dsosort_tests,dso-sort-tests-1.def))
 $(eval $(call include_dsosort_tests,dso-sort-tests-2.def))
+
+$(objpfx)dso-sort-tests-all2.def: dso-sort-tests-all.py
+	$(PYTHON) $< 2 > $@
+
+$(objpfx)dso-sort-tests-all3.def: dso-sort-tests-all.py
+	$(PYTHON) $< 3 > $@
+
+$(objpfx)dso-sort-tests-all4.def: dso-sort-tests-all.py
+	$(PYTHON) $< 4 > $@
+
+$(eval $(call include_dsosort_tests_objpfx,dso-sort-tests-all2.def))
+$(eval $(call include_dsosort_tests_objpfx,dso-sort-tests-all3.def))
+$(eval $(call include_dsosort_tests_objpfx,dso-sort-tests-all4.def))
 
 # BZ15311 is intentionally underlinked.
 LDFLAGS-tst-bz15311-b.so += -Wl,-z,lazy
