@@ -25,7 +25,7 @@
    See BZ #27714.  */
 
 DIAG_PUSH_NEEDS_COMMENT;
-DIAG_IGNORE_NEEDS_COMMENT (6, "-Wmaybe-uninitialized");
+DIAG_IGNORE_NEEDS_COMMENT_GCC (6, "-Wmaybe-uninitialized");
 DIAG_IGNORE_NEEDS_COMMENT (6, "-Wuninitialized");
 
 static int
