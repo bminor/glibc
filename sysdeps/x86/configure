@@ -175,6 +175,40 @@ x86-isa-level-3-or-above = 3 4"
 config_vars="$config_vars
 enable-x86-isa-level = $libc_cv_include_x86_isa_level"
 
+
+
+saved_CC="$CC"
+CC="$TEST_CC"
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking if -mfpmath=387 works in testing" >&5
+printf %s "checking if -mfpmath=387 works in testing... " >&6; }
+if test ${libc_cv_have_test_cc_cflags_mfpmath_387+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) if { ac_try='${CC-cc} -c -Werror -mfpmath=387 -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+then :
+  libc_cv_have_test_cc_cflags_mfpmath_387=yes
+else case e in #(
+  e) libc_cv_have_test_cc_cflags_mfpmath_387=no
+ ;;
+esac
+fi ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_have_test_cc_cflags_mfpmath_387" >&5
+printf "%s\n" "$libc_cv_have_test_cc_cflags_mfpmath_387" >&6; }
+
+CC="$saved_CC"
+
+
+config_vars="$config_vars
+have-test-cc-cflags-mfpmath-387 = $libc_cv_have_test_cc_cflags_mfpmath_387"
+
 printf "%s\n" "#define SUPPORT_STATIC_PIE 1" >>confdefs.h
 
 
