@@ -53,12 +53,6 @@ name decl								      \
 #define FORWARD(name, decl, params, defretval) \
   FORWARD2 (name, int, decl, params, return defretval)
 
-FORWARD (pthread_cond_wait, (pthread_cond_t *cond, pthread_mutex_t *mutex),
-	 (cond, mutex), 0)
-FORWARD (pthread_cond_timedwait,
-	 (pthread_cond_t *cond, pthread_mutex_t *mutex,
-	  const struct timespec *abstime), (cond, mutex, abstime), 0)
-
 /* Use an alias to avoid warning, as pthread_exit is declared noreturn.  */
 FORWARD_NORETURN (__pthread_exit, void, (void *retval), (retval),
 		  exit (EXIT_SUCCESS))

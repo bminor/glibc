@@ -21,9 +21,6 @@
 
 #include <pthread.h>
 
-int __pthread_cond_wait (pthread_cond_t *, pthread_mutex_t *);
-int __pthread_cond_timedwait (pthread_cond_t *, pthread_mutex_t *,
-			     const struct timespec *);
 void __pthread_exit (void *) __attribute__ ((__noreturn__));
 int _pthread_mutex_destroy (pthread_mutex_t *);
 int _pthread_mutex_init (pthread_mutex_t *,
@@ -51,9 +48,6 @@ int _cthreads_ftrylockfile (FILE *);
    so if possible avoid breaking it and append new hooks to the end.  */
 struct pthread_functions
 {
-  int (*ptr_pthread_cond_wait) (pthread_cond_t *, pthread_mutex_t *);
-  int (*ptr_pthread_cond_timedwait) (pthread_cond_t *, pthread_mutex_t *,
-				     const struct timespec *);
   void (*ptr___pthread_exit) (void *) __attribute__ ((__noreturn__));
   int (*ptr_pthread_mutex_destroy) (pthread_mutex_t *);
   int (*ptr_pthread_mutex_init) (pthread_mutex_t *,

@@ -49,14 +49,17 @@ libc_hidden_proto (__pthread_cond_signal);
 extern int __pthread_cond_broadcast (pthread_cond_t *cond);
 libc_hidden_proto (__pthread_cond_broadcast);
 extern int __pthread_cond_wait (pthread_cond_t *cond, pthread_mutex_t *mutex);
+libc_hidden_proto (__pthread_cond_wait);
 extern int __pthread_cond_timedwait (pthread_cond_t *cond,
 				     pthread_mutex_t *mutex,
 				     const struct timespec *abstime);
+libc_hidden_proto (__pthread_cond_timedwait);
 extern int __pthread_cond_clockwait (pthread_cond_t *cond,
 				     pthread_mutex_t *mutex,
 				     clockid_t clockid,
 				     const struct timespec *abstime)
   __nonnull ((1, 2, 4));
+libc_hidden_proto (__pthread_cond_clockwait);
 extern int __pthread_cond_destroy (pthread_cond_t *cond);
 libc_hidden_proto (__pthread_cond_destroy);
 extern int __pthread_sigmask (int, const sigset_t *, sigset_t *);

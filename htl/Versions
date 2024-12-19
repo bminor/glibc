@@ -30,6 +30,8 @@ libc {
     pthread_cond_destroy;
     pthread_cond_init;
     pthread_cond_signal;
+    pthread_cond_timedwait;
+    pthread_cond_wait;
     pthread_condattr_getclock;
     pthread_condattr_init;
     pthread_condattr_destroy;
@@ -64,6 +66,8 @@ libc {
   # C11 thread symbols.
   GLIBC_2.32 {
     thrd_current; thrd_equal; thrd_sleep; thrd_yield;
+
+    pthread_cond_clockwait;
   }
 
   GLIBC_2.41 {
@@ -103,7 +107,10 @@ libc {
     __pthread_cond_broadcast;
     __pthread_cond_destroy;
     __pthread_cond_init;
+    __pthread_cond_clockwait;
     __pthread_cond_signal;
+    __pthread_cond_timedwait;
+    __pthread_cond_wait;
     __pthread_condattr_init;
     __pthread_default_condattr;
     __pthread_mutex_checklocked;
@@ -146,8 +153,6 @@ libpthread {
     pthread_barrierattr_init; pthread_barrierattr_setpshared;
 
     pthread_cancel;
-
-    pthread_cond_timedwait; pthread_cond_wait;
 
     pthread_create; pthread_detach; pthread_exit;
 
@@ -213,8 +218,6 @@ libpthread {
     call_once;
     cnd_broadcast; cnd_destroy; cnd_init; cnd_signal; cnd_timedwait; cnd_wait;
     tss_create; tss_delete; tss_get; tss_set;
-
-    pthread_cond_clockwait;
 
     pthread_mutexattr_getrobust; pthread_mutexattr_getrobust_np;
     pthread_mutexattr_setrobust; pthread_mutexattr_setrobust_np;

@@ -418,10 +418,10 @@ thread_func (void *arg)
 	 head of the queue must wake up the thread by broadcasting
 	 this condition variable.  */
       if (timer != NULL)
-	pthread_cond_timedwait (&self->cond, &__timer_mutex,
+	__pthread_cond_timedwait (&self->cond, &__timer_mutex,
 				&timer->expirytime);
       else
-	pthread_cond_wait (&self->cond, &__timer_mutex);
+	__pthread_cond_wait (&self->cond, &__timer_mutex);
     }
   /* This macro will never be executed since the while loop loops
      forever - but we have to add it for proper nesting.  */

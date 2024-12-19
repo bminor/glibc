@@ -90,8 +90,6 @@ libpthread-routines := \
   pt-rwlock-timedrdlock \
   pt-rwlock-timedwrlock \
   pt-rwlock-unlock \
-  pt-cond-wait \
-  pt-cond-timedwait \
   pt-hurd-cond-wait \
   pt-hurd-cond-timedwait \
   pt-stack-alloc \
@@ -193,6 +191,8 @@ routines := \
   pt-cond-destroy \
   pt-cond-init \
   pt-cond-signal \
+  pt-cond-timedwait \
+  pt-cond-wait \
   pt-condattr-destroy \
   pt-condattr-getclock \
   pt-condattr-getpshared \

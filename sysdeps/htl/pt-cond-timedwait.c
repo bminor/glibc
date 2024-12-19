@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <pthread.h>
-
+#include <shlib-compat.h>
 #include <pt-internal.h>
 #include <pthreadP.h>
 #include <time.h>
@@ -34,8 +34,12 @@ __pthread_cond_timedwait (pthread_cond_t *cond,
 {
   return __pthread_cond_timedwait_internal (cond, mutex, -1, abstime);
 }
+libc_hidden_def (__pthread_cond_timedwait)
+versioned_symbol (libc, __pthread_cond_timedwait, pthread_cond_timedwait, GLIBC_2_21);
 
-weak_alias (__pthread_cond_timedwait, pthread_cond_timedwait);
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
+compat_symbol (libc, __pthread_cond_timedwait, pthread_cond_timedwait, GLIBC_2_12);
+#endif
 
 int
 __pthread_cond_clockwait (pthread_cond_t *cond,
@@ -45,8 +49,8 @@ __pthread_cond_clockwait (pthread_cond_t *cond,
 {
   return __pthread_cond_timedwait_internal (cond, mutex, clockid, abstime);
 }
-
 weak_alias (__pthread_cond_clockwait, pthread_cond_clockwait);
+libc_hidden_def (__pthread_cond_clockwait)
 
 struct cancel_ctx
 {

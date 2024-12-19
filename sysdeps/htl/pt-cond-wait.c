@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <pthread.h>
-
+#include <shlib-compat.h>
 #include <pt-internal.h>
 
 /* Implemented in pt-cond-timedwait.c.  */
@@ -35,5 +35,9 @@ __pthread_cond_wait (pthread_cond_t *cond, pthread_mutex_t *mutex)
 {
   return __pthread_cond_timedwait_internal (cond, mutex, -1, 0);
 }
+libc_hidden_def (__pthread_cond_wait)
+versioned_symbol (libc, __pthread_cond_wait, pthread_cond_wait, GLIBC_2_21);
 
-weak_alias (__pthread_cond_wait, pthread_cond_wait);
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
+compat_symbol (libc, __pthread_cond_wait, pthread_cond_wait, GLIBC_2_12);
+#endif

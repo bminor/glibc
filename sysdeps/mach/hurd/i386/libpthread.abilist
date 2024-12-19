@@ -30,8 +30,6 @@ GLIBC_2.12 pthread_barrierattr_getpshared F
 GLIBC_2.12 pthread_barrierattr_init F
 GLIBC_2.12 pthread_barrierattr_setpshared F
 GLIBC_2.12 pthread_cancel F
-GLIBC_2.12 pthread_cond_timedwait F
-GLIBC_2.12 pthread_cond_wait F
 GLIBC_2.12 pthread_create F
 GLIBC_2.12 pthread_detach F
 GLIBC_2.12 pthread_exit F
@@ -119,7 +117,6 @@ GLIBC_2.32 mtx_timedlock F
 GLIBC_2.32 mtx_trylock F
 GLIBC_2.32 mtx_unlock F
 GLIBC_2.32 pthread_clockjoin_np F
-GLIBC_2.32 pthread_cond_clockwait F
 GLIBC_2.32 pthread_mutex_clocklock F
 GLIBC_2.32 pthread_mutex_consistent F
 GLIBC_2.32 pthread_mutex_consistent_np F

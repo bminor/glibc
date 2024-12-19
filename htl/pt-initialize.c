@@ -27,8 +27,6 @@
 
 #if IS_IN (libpthread)
 static const struct pthread_functions pthread_functions = {
-  .ptr_pthread_cond_wait = __pthread_cond_wait,
-  .ptr_pthread_cond_timedwait = __pthread_cond_timedwait,
   .ptr___pthread_exit = __pthread_exit,
   .ptr_pthread_mutex_destroy = __pthread_mutex_destroy,
   .ptr_pthread_mutex_init = __pthread_mutex_init,
