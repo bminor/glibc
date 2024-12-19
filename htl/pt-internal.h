@@ -283,7 +283,7 @@ extern error_t __pthread_timedblock_intr (struct __pthread *__restrict thread,
 
 /* Wakeup THREAD.  */
 extern void __pthread_wakeup (struct __pthread *thread);
-
+libc_hidden_proto (__pthread_wakeup)
 
 /* Perform a cancelation.  The CANCEL_LOCK member of the given thread must
    be locked before calling this function, which must unlock it.  */

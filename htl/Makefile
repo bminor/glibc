@@ -109,7 +109,6 @@ libpthread-routines := \
   pt-timedblock \
   pt-block-intr \
   pt-timedblock-intr \
-  pt-wakeup \
   pt-docancel \
   pt-sysdep \
   pt-setup \
@@ -211,6 +210,7 @@ routines := \
   pt-sigmask \
   pt-sigstate \
   pt-sigstate-destroy \
+  pt-wakeup \
   # routines
 shared-only-routines = forward
 

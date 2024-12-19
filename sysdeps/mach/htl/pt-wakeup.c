@@ -35,3 +35,4 @@ __pthread_wakeup (struct __pthread *thread)
 		    0, MACH_PORT_NULL);
   assert_perror (err);
 }
+libc_hidden_def (__pthread_wakeup)
