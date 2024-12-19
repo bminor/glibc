@@ -21,7 +21,6 @@
 
 #include <pthread.h>
 
-int __pthread_cond_signal (pthread_cond_t *);
 int __pthread_cond_wait (pthread_cond_t *, pthread_mutex_t *);
 int __pthread_cond_timedwait (pthread_cond_t *, pthread_mutex_t *,
 			     const struct timespec *);
@@ -52,7 +51,6 @@ int _cthreads_ftrylockfile (FILE *);
    so if possible avoid breaking it and append new hooks to the end.  */
 struct pthread_functions
 {
-  int (*ptr_pthread_cond_signal) (pthread_cond_t *);
   int (*ptr_pthread_cond_wait) (pthread_cond_t *, pthread_mutex_t *);
   int (*ptr_pthread_cond_timedwait) (pthread_cond_t *, pthread_mutex_t *,
 				     const struct timespec *);

@@ -49,7 +49,6 @@ GLIBC_2.38 pthread_barrierattr_setpshared F
 GLIBC_2.38 pthread_cancel F
 GLIBC_2.38 pthread_clockjoin_np F
 GLIBC_2.38 pthread_cond_clockwait F
-GLIBC_2.38 pthread_cond_signal F
 GLIBC_2.38 pthread_cond_timedwait F
 GLIBC_2.38 pthread_cond_wait F
 GLIBC_2.38 pthread_create F

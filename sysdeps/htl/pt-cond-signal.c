@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <pthread.h>
-
+#include <shlib-compat.h>
 #include <pt-internal.h>
 
 /* Unblock at least one of the threads that are blocked on condition
@@ -38,5 +38,9 @@ __pthread_cond_signal (pthread_cond_t *cond)
 
   return 0;
 }
+libc_hidden_def (__pthread_cond_signal)
+versioned_symbol (libc, __pthread_cond_signal, pthread_cond_signal, GLIBC_2_21);
 
-weak_alias (__pthread_cond_signal, pthread_cond_signal);
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
+compat_symbol (libc, __pthread_cond_signal, pthread_cond_signal, GLIBC_2_12);
+#endif
