@@ -139,6 +139,10 @@ ifeq ($(build-static-nss),yes)
 CFLAGS += -DSTATIC_NSS
 endif
 
+ifeq ($(have-test-clang),yes)
+CFLAGS-tst-deadline.c += -Wno-ignored-attributes
+endif
+
 # The test uses dlopen indirectly and would otherwise load system
 # objects.
 tst-idna_name_classify-ENV = \
