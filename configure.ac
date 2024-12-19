@@ -665,11 +665,14 @@ LIBC_TRY_TEST_CXX_COMMAND([for clang++],
 )
 LIBC_CONFIG_VAR([have-test-clangxx], [$libc_cv_test_clangxx])
 
-AC_CACHE_CHECK(for -fstack-protector, libc_cv_ssp, [dnl
-LIBC_TRY_CC_OPTION([$CFLAGS $CPPFLAGS -Werror -fstack-protector],
-		   [libc_cv_ssp=yes],
-		   [libc_cv_ssp=no])
-])
+LIBC_TRY_CC_AND_TEST_CC_OPTION([for -fstack-protector],
+  [-Werror -fstack-protector],
+  libc_cv_ssp,
+  [libc_cv_ssp=yes],
+  [libc_cv_ssp=no],
+  libc_cv_test_ssp,
+  [libc_cv_test_ssp=yes],
+  [libc_cv_test_ssp=no])
 
 AC_CACHE_CHECK(for -fstack-protector-strong, libc_cv_ssp_strong, [dnl
 LIBC_TRY_CC_OPTION([$CFLAGS $CPPFLAGS -Werror -fstack-protector-strong],
@@ -689,6 +692,10 @@ if test "$libc_cv_ssp" = yes; then
   no_stack_protector="-fno-stack-protector -DSTACK_PROTECTOR_LEVEL=0"
   AC_DEFINE(HAVE_CC_NO_STACK_PROTECTOR)
 fi
+if test "$libc_cv_test_ssp" = yes; then
+  AC_DEFINE(HAVE_TEST_CC_NO_STACK_PROTECTOR)
+fi
+
 
 if test "$enable_stack_protector" = yes && test "$libc_cv_ssp" = yes; then
   stack_protector="-fstack-protector"
@@ -1506,21 +1513,25 @@ LIBC_TRY_TEST_CC_OPTION([for -ffloat-store],
 LIBC_CONFIG_VAR([test-config-cflags-float-store],
 		[$libc_cv_test_cc_float_store])
 
-AC_CACHE_CHECK(if $CC accepts -fno-tree-loop-distribute-patterns with \
-__attribute__ ((__optimize__)), libc_cv_cc_loop_to_function, [dnl
-cat > conftest.c <<EOF
+conftest_code="
 void
-__attribute__ ((__optimize__ ("-fno-tree-loop-distribute-patterns")))
+__attribute__ ((__optimize__ (\"-fno-tree-loop-distribute-patterns\")))
 foo (void) {}
-EOF
-libc_cv_cc_loop_to_function=no
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -c conftest.c])
-then
-  libc_cv_cc_loop_to_function=yes
-fi
-rm -f conftest*])
+"
+LIBC_TRY_CC_AND_TEST_CC_COMMAND([if __attribute__ ((__optimize__("-fno-tree-loop-distribute-patterns"))) works],
+  [$conftest_code],
+  [-c -Werror],
+  libc_cv_cc_loop_to_function,
+  [libc_cv_cc_loop_to_function=yes],
+  [libc_cv_cc_loop_to_function=no],
+  libc_cv_test_cc_loop_to_function,
+  [libc_cv_test_cc_loop_to_function=yes],
+  [libc_cv_test_cc_loop_to_function=no])
 if test $libc_cv_cc_loop_to_function = yes; then
   AC_DEFINE(HAVE_CC_INHIBIT_LOOP_TO_LIBCALL)
+fi
+if test $libc_cv_test_cc_loop_to_function = yes; then
+  AC_DEFINE(HAVE_TEST_CC_INHIBIT_LOOP_TO_LIBCALL)
 fi
 AC_SUBST(libc_cv_cc_loop_to_function)
 

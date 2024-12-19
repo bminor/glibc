@@ -59,6 +59,8 @@
 # define IN_MODULE (-1)
 #endif
 
+#include <libc-misc.h>
+
 #ifndef _ISOMAC
 
 /* This is defined for the compilation of all C library code.  features.h
@@ -361,15 +363,6 @@ for linking")
 
 #define attribute_relro __attribute__ ((section (".data.rel.ro")))
 
-
-/* Used to disable stack protection in sensitive places, like ifunc
-   resolvers and early static TLS init.  */
-#ifdef HAVE_CC_NO_STACK_PROTECTOR
-# define inhibit_stack_protector \
-    __attribute__ ((__optimize__ ("-fno-stack-protector")))
-#else
-# define inhibit_stack_protector
-#endif
 
 /* The following macros are used for PLT bypassing within libc.so
    (and if needed other libraries similarly).
@@ -804,16 +797,6 @@ for linking")
 #define libm_ifunc_init()
 #define libm_ifunc(name, expr)				\
   __ifunc (name, name, expr, void, libm_ifunc_init)
-
-/* Add the compiler optimization to inhibit loop transformation to library
-   calls.  This is used to avoid recursive calls in memset and memmove
-   default implementations.  */
-#ifdef HAVE_CC_INHIBIT_LOOP_TO_LIBCALL
-# define inhibit_loop_to_libcall \
-    __attribute__ ((__optimize__ ("-fno-tree-loop-distribute-patterns")))
-#else
-# define inhibit_loop_to_libcall
-#endif
 
 /* These macros facilitate sharing source files with gnulib.
 

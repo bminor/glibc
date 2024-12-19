@@ -47,7 +47,7 @@ IMPL (memmove, 1)
 
 /* Naive implementation to verify results.  */
 char *
-inhibit_loop_to_libcall
+test_cc_inhibit_loop_to_libcall
 simple_memmove (char *dst, const char *src, size_t n)
 {
   char *ret = dst;

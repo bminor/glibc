@@ -64,7 +64,7 @@ IMPL (MEMSET, 1)
 
 /* Naive implementation to verify results.  */
 CHAR *
-inhibit_loop_to_libcall
+test_cc_inhibit_loop_to_libcall
 SIMPLE_MEMSET (CHAR *s, int c, size_t n)
 {
   CHAR *r = s, *end = s + n;

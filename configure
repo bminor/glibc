@@ -6069,13 +6069,14 @@ rm -f conftest*
 config_vars="$config_vars
 have-test-clangxx = $libc_cv_test_clangxx"
 
+
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for -fstack-protector" >&5
 printf %s "checking for -fstack-protector... " >&6; }
 if test ${libc_cv_ssp+y}
 then :
   printf %s "(cached) " >&6
 else case e in #(
-  e) if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -Werror -fstack-protector -xc /dev/null -S -o /dev/null'
+  e) if { ac_try='${CC-cc} -Werror -fstack-protector -xc /dev/null -S -o /dev/null'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -6086,12 +6087,44 @@ then :
 else case e in #(
   e) libc_cv_ssp=no ;;
 esac
-fi
- ;;
+fi ;;
 esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ssp" >&5
 printf "%s\n" "$libc_cv_ssp" >&6; }
+if test "$TEST_CC" = "$CC"; then
+  libc_cv_test_ssp=$libc_cv_ssp
+else
+
+saved_CC="$CC"
+CC="$TEST_CC"
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for -fstack-protector in testing" >&5
+printf %s "checking for -fstack-protector in testing... " >&6; }
+if test ${libc_cv_test_ssp+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) if { ac_try='${CC-cc} -Werror -fstack-protector -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+then :
+  libc_cv_test_ssp=yes
+else case e in #(
+  e) libc_cv_test_ssp=no ;;
+esac
+fi ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_test_ssp" >&5
+printf "%s\n" "$libc_cv_test_ssp" >&6; }
+
+CC="$saved_CC"
+
+fi
+
 
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for -fstack-protector-strong" >&5
 printf %s "checking for -fstack-protector-strong... " >&6; }
@@ -6148,6 +6181,11 @@ if test "$libc_cv_ssp" = yes; then
   printf "%s\n" "#define HAVE_CC_NO_STACK_PROTECTOR 1" >>confdefs.h
 
 fi
+if test "$libc_cv_test_ssp" = yes; then
+  printf "%s\n" "#define HAVE_TEST_CC_NO_STACK_PROTECTOR 1" >>confdefs.h
+
+fi
+
 
 if test "$enable_stack_protector" = yes && test "$libc_cv_ssp" = yes; then
   stack_protector="-fstack-protector"
@@ -7713,36 +7751,75 @@ CC="$saved_CC"
 config_vars="$config_vars
 test-config-cflags-float-store = $libc_cv_test_cc_float_store"
 
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking if $CC accepts -fno-tree-loop-distribute-patterns with \
-__attribute__ ((__optimize__))" >&5
-printf %s "checking if $CC accepts -fno-tree-loop-distribute-patterns with \
-__attribute__ ((__optimize__))... " >&6; }
+conftest_code="
+void
+__attribute__ ((__optimize__ (\"-fno-tree-loop-distribute-patterns\")))
+foo (void) {}
+"
+
+cat > conftest.c <<EOF
+$conftest_code
+EOF
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking if __attribute__ ((__optimize__(\"-fno-tree-loop-distribute-patterns\"))) works" >&5
+printf %s "checking if __attribute__ ((__optimize__(\"-fno-tree-loop-distribute-patterns\"))) works... " >&6; }
 if test ${libc_cv_cc_loop_to_function+y}
 then :
   printf %s "(cached) " >&6
 else case e in #(
-  e) cat > conftest.c <<EOF
-void
-__attribute__ ((__optimize__ ("-fno-tree-loop-distribute-patterns")))
-foo (void) {}
-EOF
-libc_cv_cc_loop_to_function=no
-if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -c conftest.c'
+  e)   if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -c -Werror conftest.c -o conftest 1>&5'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
   printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; }
-then
-  libc_cv_cc_loop_to_function=yes
-fi
-rm -f conftest* ;;
+  then
+    libc_cv_cc_loop_to_function=yes
+  else
+    libc_cv_cc_loop_to_function=no
+  fi
+ ;;
 esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cc_loop_to_function" >&5
 printf "%s\n" "$libc_cv_cc_loop_to_function" >&6; }
+if test "$TEST_CC" = "$CC"; then
+  libc_cv_test_cc_loop_to_function=$libc_cv_cc_loop_to_function
+else
+
+saved_CC="$CC"
+CC="$TEST_CC"
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking if __attribute__ ((__optimize__(\"-fno-tree-loop-distribute-patterns\"))) works in testing" >&5
+printf %s "checking if __attribute__ ((__optimize__(\"-fno-tree-loop-distribute-patterns\"))) works in testing... " >&6; }
+if test ${libc_cv_test_cc_loop_to_function+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e)       if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -c -Werror conftest.c -o conftest 1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+      then
+	libc_cv_test_cc_loop_to_function=yes
+      else
+	libc_cv_test_cc_loop_to_function=no
+      fi ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_test_cc_loop_to_function" >&5
+printf "%s\n" "$libc_cv_test_cc_loop_to_function" >&6; }
+
+CC="$saved_CC"
+
+fi
+rm -f conftest*
 if test $libc_cv_cc_loop_to_function = yes; then
   printf "%s\n" "#define HAVE_CC_INHIBIT_LOOP_TO_LIBCALL 1" >>confdefs.h
+
+fi
+if test $libc_cv_test_cc_loop_to_function = yes; then
+  printf "%s\n" "#define HAVE_TEST_CC_INHIBIT_LOOP_TO_LIBCALL 1" >>confdefs.h
 
 fi
 
