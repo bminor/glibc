@@ -75,9 +75,6 @@ int
 __utimensat64 (int fd, const char *file, const struct __timespec64 tsp64[2],
                int flags)
 {
-  if (file == NULL)
-    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
-
   return __utimensat64_helper (fd, file, &tsp64[0], flags);
 }
 

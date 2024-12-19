@@ -433,13 +433,13 @@ extern int mkfifoat (int __fd, const char *__path, __mode_t __mode)
 extern int utimensat (int __fd, const char *__path,
 		      const struct timespec __times[2],
 		      int __flags)
-     __THROW __nonnull ((2));
+     __THROW;
 # else
 #  ifdef __REDIRECT_NTH
 extern int __REDIRECT_NTH (utimensat, (int fd, const char *__path,
                                        const struct timespec __times[2],
                                        int flags),
-                           __utimensat64) __nonnull ((2));
+                           __utimensat64);
 #  else
 #   define utimensat __utimensat64
 #  endif

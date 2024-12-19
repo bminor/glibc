@@ -39,6 +39,38 @@ test_utimesat_helper (const char *testfile, int fd, const char *testlink,
     TEST_COMPARE (st.stx_mtime.tv_sec, ts[1].tv_sec);
   }
 
+  /* Alter the timestamp using a NULL path.  */
+  {
+    struct timespec ts1[2] = {ts[0], ts[1]};
+    ts1[0].tv_sec ^= 1;
+    ts1[1].tv_sec ^= 1;
+
+    TEST_VERIFY_EXIT (utimensat (fd, NULL, ts1, 0) == 0);
+
+    struct statx st;
+    xstatx (fd, "", AT_EMPTY_PATH, STATX_BASIC_STATS, &st);
+
+    /* Check if seconds for atime match */
+    TEST_COMPARE (st.stx_atime.tv_sec, ts[0].tv_sec ^ 1);
+
+    /* Check if seconds for mtime match */
+    TEST_COMPARE (st.stx_mtime.tv_sec, ts[1].tv_sec ^ 1);
+  }
+
+  /* And switch it back using a NULL path.  */
+  {
+    TEST_VERIFY_EXIT (utimensat (fd, NULL, ts, 0) == 0);
+
+    struct statx st;
+    xstatx (fd, "", AT_EMPTY_PATH, STATX_BASIC_STATS, &st);
+
+    /* Check if seconds for atime match */
+    TEST_COMPARE (st.stx_atime.tv_sec, ts[0].tv_sec);
+
+    /* Check if seconds for mtime match */
+    TEST_COMPARE (st.stx_mtime.tv_sec, ts[1].tv_sec);
+  }
+
   {
     struct statx stfile_orig;
     xstatx (AT_FDCWD, testfile, AT_SYMLINK_NOFOLLOW, STATX_BASIC_STATS,
