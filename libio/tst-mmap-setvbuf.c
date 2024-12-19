@@ -20,13 +20,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <libc-diag.h>
 
 int main (void)
 {
   char name[] = "/tmp/tst-mmap-setvbuf.XXXXXX";
   char buf[4096];
   const char * const test = "Let's see if mmap stdio works with setvbuf.\n";
+  DIAG_PUSH_NEEDS_COMMENT_CLANG;
+  DIAG_IGNORE_NEEDS_COMMENT_CLANG (3.4, "-Wgnu-folding-constant");
   char temp[strlen (test) + 1];
+  DIAG_POP_NEEDS_COMMENT_CLANG;
   int fd = mkstemp (name);
   FILE *f;
 
