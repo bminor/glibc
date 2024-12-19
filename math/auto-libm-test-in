@@ -8743,8 +8743,8 @@ tanpi min
 tanpi -min
 tanpi min_subnorm
 tanpi -min_subnorm
-tanpi max
-tanpi -max
+tanpi max xfail-rounding:ibm128-libgcc
+tanpi -max xfail-rounding:ibm128-libgcc
 tanpi 1
 tanpi -1
 tanpi 2
@@ -8807,8 +8807,8 @@ tanpi 0x1fffff.6p0
 tanpi -0x1fffff.6p0
 tanpi 0x1fffff.ap0
 tanpi -0x1fffff.ap0
-tanpi 0x3ffffffffffff.6p0
-tanpi -0x3ffffffffffff.6p0
+tanpi 0x3ffffffffffff.6p0 xfail-rounding:ibm128-libgcc
+tanpi -0x3ffffffffffff.6p0 xfail-rounding:ibm128-libgcc
 tanpi 0x3ffffffffffff.ap0
 tanpi -0x3ffffffffffff.ap0
 tanpi 0x1fffffffffffffff.6p0
@@ -8817,8 +8817,8 @@ tanpi 0x1fffffffffffffff.ap0
 tanpi -0x1fffffffffffffff.ap0
 tanpi 0x3fffffffffffffffffffffffffff.6p0
 tanpi -0x3fffffffffffffffffffffffffff.6p0
-tanpi 0x3fffffffffffffffffffffffffff.ap0
-tanpi -0x3fffffffffffffffffffffffffff.ap0
+tanpi 0x3fffffffffffffffffffffffffff.ap0 xfail-rounding:ibm128-libgcc
+tanpi -0x3fffffffffffffffffffffffffff.ap0 xfail-rounding:ibm128-libgcc
 
 tgamma 0.5
 tgamma -0.5

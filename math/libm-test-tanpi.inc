@@ -50,15 +50,15 @@ static const struct test_f_f_data tanpi_test_data[] =
 #endif
 #if MANT_DIG >= 64
     TEST_f_f (tanpi, 0xffffffffffffffffp-1, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
-    TEST_f_f (tanpi, 0xfffffffffffffffdp-1, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f (tanpi, 0xfffffffffffffffdp-1, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE|XFAIL_ROUNDING_IBM128_LIBGCC),
     TEST_f_f (tanpi, -0xffffffffffffffffp-1, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
-    TEST_f_f (tanpi, -0xfffffffffffffffdp-1, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f (tanpi, -0xfffffffffffffffdp-1, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE|XFAIL_ROUNDING_IBM128_LIBGCC),
 #endif
 #if MANT_DIG >= 106
     TEST_f_f (tanpi, 0x3ffffffffffffffffffffffffffp-1, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
-    TEST_f_f (tanpi, 0x3fffffffffffffffffffffffffdp-1, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f (tanpi, 0x3fffffffffffffffffffffffffdp-1, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE|XFAIL_ROUNDING_IBM128_LIBGCC),
     TEST_f_f (tanpi, -0x3ffffffffffffffffffffffffffp-1, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
-    TEST_f_f (tanpi, -0x3fffffffffffffffffffffffffdp-1, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
+    TEST_f_f (tanpi, -0x3fffffffffffffffffffffffffdp-1, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE|XFAIL_ROUNDING_IBM128_LIBGCC),
 #endif
 #if MANT_DIG >= 113
     TEST_f_f (tanpi, 0x1ffffffffffffffffffffffffffffp-1, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
