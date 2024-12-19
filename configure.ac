@@ -1599,6 +1599,40 @@ LIBC_TRY_TEST_CXX_OPTION([-finput-charset=ascii],
 LIBC_CONFIG_VAR(test-config-cxxflags-finput-charset-ascii,
 		$libc_cv_test_cxxflags_finput_charset_ascii)
 
+conftest_code="
+extern int not_exist (void);
+
+inline int make_unique (void)
+{
+  /* Static variables in inline functions and classes
+     generate STB_GNU_UNIQUE symbols.  */
+  static int unique;
+  return ++unique;
+}
+
+int foo (void)
+{
+  return make_unique () + not_exist ();
+}
+"
+
+dnl Check if TEST_CXX supports STB_GNU_UNIQUE.
+LIBC_TRY_TEST_CXX_COMMAND([for STB_GNU_UNIQUE],
+  [$conftest_code],
+  [-c],
+  libc_cv_test_stb_gnu_unique,
+  [
+if LC_ALL=C $READELF -sW conftest \
+   | grep -q "UNIQUE.* _ZZ11make_uniquevE6unique"; then
+  libc_cv_test_stb_gnu_unique=yes
+else
+  libc_cv_test_stb_gnu_unique=no
+fi
+  ],
+  [libc_cv_test_stb_gnu_unique=no],
+)
+LIBC_CONFIG_VAR([have-test-stb-gnu-unique], [$libc_cv_test_stb_gnu_unique])
+
 dnl Check whether we have the gd library available.
 AC_MSG_CHECKING(for libgd)
 if test "$with_gd" != "no"; then

@@ -8033,6 +8033,65 @@ CXX="$saved_CXX"
 config_vars="$config_vars
 test-config-cxxflags-finput-charset-ascii = $libc_cv_test_cxxflags_finput_charset_ascii"
 
+conftest_code="
+extern int not_exist (void);
+
+inline int make_unique (void)
+{
+  /* Static variables in inline functions and classes
+     generate STB_GNU_UNIQUE symbols.  */
+  static int unique;
+  return ++unique;
+}
+
+int foo (void)
+{
+  return make_unique () + not_exist ();
+}
+"
+
+
+cat > conftest.cc <<EOF
+$conftest_code
+EOF
+
+saved_CXX="$CXX"
+CXX="$TEST_CXX"
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for STB_GNU_UNIQUE in testing" >&5
+printf %s "checking for STB_GNU_UNIQUE in testing... " >&6; }
+if test ${libc_cv_test_stb_gnu_unique+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e)     if { ac_try='${CXX-c++} $CXXFLAGS $CPPFLAGS -c conftest.cc -o conftest 1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+    then
+
+if LC_ALL=C $READELF -sW conftest \
+   | grep -q "UNIQUE.* _ZZ11make_uniquevE6unique"; then
+  libc_cv_test_stb_gnu_unique=yes
+else
+  libc_cv_test_stb_gnu_unique=no
+fi
+
+    else
+      libc_cv_test_stb_gnu_unique=no
+    fi ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_test_stb_gnu_unique" >&5
+printf "%s\n" "$libc_cv_test_stb_gnu_unique" >&6; }
+
+CXX="$saved_CXX"
+
+rm -f conftest*
+config_vars="$config_vars
+have-test-stb-gnu-unique = $libc_cv_test_stb_gnu_unique"
+
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for libgd" >&5
 printf %s "checking for libgd... " >&6; }
 if test "$with_gd" != "no"; then

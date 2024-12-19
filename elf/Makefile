@@ -505,11 +505,15 @@ tests += \
   valgrind-test \
   # tests
 tests-cxx = \
-  tst-dlopen-nodelete-reloc \
   tst-nodelete \
   tst-unique3 \
   tst-unique4 \
   # tests-cxx
+ifeq ($(have-test-stb-gnu-unique), yes)
+tests-cxx += \
+  tst-dlopen-nodelete-reloc \
+  # tests-cxx
+endif
 
 tests += $(if $(CXX),$(tests-cxx))
 
@@ -1042,6 +1046,15 @@ modules-names += \
   # modules-names
 
 modules-names-cxx = \
+  tst-nodelete-rtldmod \
+  tst-nodelete-uniquemod \
+  tst-nodelete-zmod \
+  tst-unique3lib \
+  tst-unique3lib2 \
+  tst-unique4lib \
+  # modules-names-cxx
+ifeq ($(have-test-stb-gnu-unique), yes)
+modules-names-cxx += \
   tst-dlopen-nodelete-reloc-mod1 \
   tst-dlopen-nodelete-reloc-mod2 \
   tst-dlopen-nodelete-reloc-mod3 \
@@ -1059,13 +1072,8 @@ modules-names-cxx = \
   tst-dlopen-nodelete-reloc-mod15 \
   tst-dlopen-nodelete-reloc-mod16 \
   tst-dlopen-nodelete-reloc-mod17 \
-  tst-nodelete-rtldmod \
-  tst-nodelete-uniquemod \
-  tst-nodelete-zmod \
-  tst-unique3lib \
-  tst-unique3lib2 \
-  tst-unique4lib \
   # modules-names-cxx
+endif
 
 modules-names += \
   $(if $(CXX),$(modules-names-cxx)) \
