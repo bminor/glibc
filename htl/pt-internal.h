@@ -319,6 +319,7 @@ libc_hidden_proto (__pthread_sigstate)
 
 /* If supported, check that MUTEX is locked by the caller.  */
 extern int __pthread_mutex_checklocked (pthread_mutex_t *mtx);
+libc_hidden_proto (__pthread_mutex_checklocked)
 
 
 /* Default thread attributes.  */

@@ -68,7 +68,6 @@ libpthread-routines := \
   pt-mutexattr-setrobust \
   pt-mutex-init \
   pt-mutex-destroy \
-  pt-mutex-checklocked \
   pt-mutex-lock \
   pt-mutex-trylock \
   pt-mutex-timedlock \
@@ -201,6 +200,7 @@ routines := \
   pt-condattr-setclock \
   pt-condattr-setpshared \
   pt-getschedparam \
+  pt-mutex-checklocked \
   pt-nthreads \
   pt-pthread_self \
   pt-self pt-equal \

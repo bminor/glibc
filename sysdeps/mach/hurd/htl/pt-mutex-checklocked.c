@@ -22,6 +22,7 @@
 #include <pt-internal.h>
 #include "pt-mutex.h"
 #include <hurdlock.h>
+#include <unistd.h>
 
 int
 __pthread_mutex_checklocked (pthread_mutex_t *mtxp)
@@ -49,3 +50,4 @@ __pthread_mutex_checklocked (pthread_mutex_t *mtxp)
 
   return ret;
 }
+libc_hidden_def (__pthread_mutex_checklocked)

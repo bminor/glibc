@@ -85,6 +85,4 @@
 #define MTX_TYPE(mtxp)   \
   ((mtxp)->__type | ((mtxp)->__flags & PTHREAD_MUTEX_ROBUST))
 
-extern int __getpid (void) __attribute__ ((const));
-
 #endif /* pt-mutex.h */

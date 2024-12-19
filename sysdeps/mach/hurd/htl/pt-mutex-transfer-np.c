@@ -23,6 +23,7 @@
 #include <pt-internal.h>
 #include "pt-mutex.h"
 #include <hurdlock.h>
+#include <unistd.h>
 
 int
 __pthread_mutex_transfer_np (pthread_mutex_t *mtxp, pthread_t th)

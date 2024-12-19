@@ -22,6 +22,7 @@
 #include <pt-internal.h>
 #include "pt-mutex.h"
 #include <hurdlock.h>
+#include <unistd.h>
 
 int
 pthread_mutex_consistent (pthread_mutex_t *mtxp)
