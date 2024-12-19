@@ -400,12 +400,6 @@ struct rtld_global
   struct auditstate _dl_rtld_auditstate[DL_NNS];
 #endif
 
-#if !PTHREAD_IN_LIBC && defined SHARED \
-    && defined __rtld_lock_default_lock_recursive
-  EXTERN void (*_dl_rtld_lock_recursive) (void *);
-  EXTERN void (*_dl_rtld_unlock_recursive) (void *);
-#endif
-
   /* Get architecture specific definitions.  */
 #define PROCINFO_DECL
 #ifndef PROCINFO_CLASS
