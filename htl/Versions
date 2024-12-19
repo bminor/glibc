@@ -89,6 +89,8 @@ libc {
     __pthread_cleanup_stack;
     __pthread_total;
     ___pthread_self;
+    __pthread_block;
+    __pthread_block_intr;
     __pthread_init_thread;
     __pthread_default_attr;
     __pthread_attr_init;
@@ -107,6 +109,8 @@ libc {
     __pthread_sigstate;
     __pthread_sigstate_destroy;
     __pthread_sigmask;
+    __pthread_timedblock;
+    __pthread_timedblock_intr;
     __pthread_wakeup;
   }
 }

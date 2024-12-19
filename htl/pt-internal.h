@@ -267,20 +267,22 @@ extern void __pthread_startup (void);
 
 /* Block THREAD.  */
 extern void __pthread_block (struct __pthread *thread);
+libc_hidden_proto (__pthread_block)
 
 /* Block THREAD until *ABSTIME is reached.  */
 extern error_t __pthread_timedblock (struct __pthread *__restrict thread,
 				     const struct timespec *__restrict abstime,
 				     clockid_t clock_id);
-
+libc_hidden_proto (__pthread_timedblock)
 /* Block THREAD with interrupts.  */
 extern error_t __pthread_block_intr (struct __pthread *thread);
+libc_hidden_proto (__pthread_block_intr)
 
 /* Block THREAD until *ABSTIME is reached, with interrupts.  */
 extern error_t __pthread_timedblock_intr (struct __pthread *__restrict thread,
 					  const struct timespec *__restrict abstime,
 					  clockid_t clock_id);
-
+libc_hidden_proto (__pthread_timedblock_intr)
 /* Wakeup THREAD.  */
 extern void __pthread_wakeup (struct __pthread *thread);
 libc_hidden_proto (__pthread_wakeup)

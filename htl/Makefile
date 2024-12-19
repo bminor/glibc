@@ -102,10 +102,6 @@ libpthread-routines := \
   pt-startup \
   pt-getconcurrency \
   pt-setconcurrency \
-  pt-block \
-  pt-timedblock \
-  pt-block-intr \
-  pt-timedblock-intr \
   pt-docancel \
   pt-sysdep \
   pt-setup \
@@ -191,6 +187,8 @@ routines := \
   pt-attr-setstack \
   pt-attr-setstackaddr \
   pt-attr-setstacksize \
+  pt-block \
+  pt-block-intr \
   pt-cond \
   pt-cond-brdcast \
   pt-cond-destroy \
@@ -210,6 +208,8 @@ routines := \
   pt-sigmask \
   pt-sigstate \
   pt-sigstate-destroy \
+  pt-timedblock \
+  pt-timedblock-intr \
   pt-wakeup \
   # routines
 shared-only-routines = forward

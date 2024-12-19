@@ -69,3 +69,4 @@ __pthread_timedblock (struct __pthread *thread,
   assert_perror (err);
   return 0;
 }
+libc_hidden_def (__pthread_timedblock)

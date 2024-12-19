@@ -51,3 +51,4 @@ __pthread_block (struct __pthread *thread)
   assert_perror (err);
   RETURN(0);
 }
+libc_hidden_def (__pthread_block)
