@@ -34,6 +34,7 @@
 # define SCHED_ISO		4
 # define SCHED_IDLE		5
 # define SCHED_DEADLINE		6
+# define SCHED_EXT		7
 
 /* Flags that can be used in policy values.  */
 # define SCHED_RESET_ON_FORK	0x40000000
