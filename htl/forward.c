@@ -54,7 +54,6 @@ name decl								      \
   FORWARD2 (name, int, decl, params, return defretval)
 
 FORWARD (pthread_cond_broadcast, (pthread_cond_t *cond), (cond), 0)
-FORWARD (pthread_cond_destroy, (pthread_cond_t *cond), (cond), 0)
 FORWARD (pthread_cond_signal, (pthread_cond_t *cond), (cond), 0)
 FORWARD (pthread_cond_wait, (pthread_cond_t *cond, pthread_mutex_t *mutex),
 	 (cond, mutex), 0)

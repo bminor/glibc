@@ -211,7 +211,7 @@ static void
 thread_deinit (struct thread_node *thread)
 {
   assert (list_isempty (&thread->timer_queue));
-  pthread_cond_destroy (&thread->cond);
+  __pthread_cond_destroy (&thread->cond);
 }
 
 

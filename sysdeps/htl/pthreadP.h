@@ -56,6 +56,7 @@ extern int __pthread_cond_clockwait (pthread_cond_t *cond,
 				     const struct timespec *abstime)
   __nonnull ((1, 2, 4));
 extern int __pthread_cond_destroy (pthread_cond_t *cond);
+libc_hidden_proto (__pthread_cond_destroy);
 extern int __pthread_sigmask (int, const sigset_t *, sigset_t *);
 libc_hidden_proto (__pthread_sigmask);
 
