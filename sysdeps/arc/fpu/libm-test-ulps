@@ -123,19 +123,15 @@ double: 3
 
 Function: "atanpi":
 double: 2
-float: 1
 
 Function: "atanpi_downward":
 double: 1
-float: 2
 
 Function: "atanpi_towardzero":
 double: 1
-float: 2
 
 Function: "atanpi_upward":
 double: 1
-float: 1
 
 Function: "cabs":
 double: 1

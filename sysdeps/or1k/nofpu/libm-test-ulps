@@ -93,7 +93,6 @@ double: 3
 
 Function: "atanpi":
 double: 2
-float: 1
 
 Function: "cabs":
 double: 1

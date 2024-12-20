@@ -1061,6 +1061,31 @@ atanpi 0x1.626772p-1
 = atanpi tonearest ibm128 0xb.133b9p-4 : 0x3.156898f544dca52f89f818e127p-4 : inexact-ok
 = atanpi towardzero ibm128 0xb.133b9p-4 : 0x3.156898f544dca52f89f818e127p-4 : inexact-ok
 = atanpi upward ibm128 0xb.133b9p-4 : 0x3.156898f544dca52f89f818e128p-4 : inexact-ok
+atanpi 0x1p-126
+= atanpi downward binary32 0x4p-128 : 0x1.45f3p-128 : inexact-ok underflow errno-erange-ok
+= atanpi tonearest binary32 0x4p-128 : 0x1.45f308p-128 : inexact-ok underflow errno-erange-ok
+= atanpi towardzero binary32 0x4p-128 : 0x1.45f3p-128 : inexact-ok underflow errno-erange-ok
+= atanpi upward binary32 0x4p-128 : 0x1.45f308p-128 : inexact-ok underflow errno-erange-ok
+= atanpi downward binary64 0x4p-128 : 0x1.45f306dc9c882p-128 : inexact-ok
+= atanpi tonearest binary64 0x4p-128 : 0x1.45f306dc9c883p-128 : inexact-ok
+= atanpi towardzero binary64 0x4p-128 : 0x1.45f306dc9c882p-128 : inexact-ok
+= atanpi upward binary64 0x4p-128 : 0x1.45f306dc9c883p-128 : inexact-ok
+= atanpi downward intel96 0x4p-128 : 0x1.45f306dc9c882a52p-128 : inexact-ok
+= atanpi tonearest intel96 0x4p-128 : 0x1.45f306dc9c882a54p-128 : inexact-ok
+= atanpi towardzero intel96 0x4p-128 : 0x1.45f306dc9c882a52p-128 : inexact-ok
+= atanpi upward intel96 0x4p-128 : 0x1.45f306dc9c882a54p-128 : inexact-ok
+= atanpi downward m68k96 0x4p-128 : 0x1.45f306dc9c882a52p-128 : inexact-ok
+= atanpi tonearest m68k96 0x4p-128 : 0x1.45f306dc9c882a54p-128 : inexact-ok
+= atanpi towardzero m68k96 0x4p-128 : 0x1.45f306dc9c882a52p-128 : inexact-ok
+= atanpi upward m68k96 0x4p-128 : 0x1.45f306dc9c882a54p-128 : inexact-ok
+= atanpi downward binary128 0x4p-128 : 0x1.45f306dc9c882a53f84eafa3ea69p-128 : inexact-ok
+= atanpi tonearest binary128 0x4p-128 : 0x1.45f306dc9c882a53f84eafa3ea6ap-128 : inexact-ok
+= atanpi towardzero binary128 0x4p-128 : 0x1.45f306dc9c882a53f84eafa3ea69p-128 : inexact-ok
+= atanpi upward binary128 0x4p-128 : 0x1.45f306dc9c882a53f84eafa3ea6ap-128 : inexact-ok
+= atanpi downward ibm128 0x4p-128 : 0x1.45f306dc9c882a53f84eafa3eap-128 : inexact-ok
+= atanpi tonearest ibm128 0x4p-128 : 0x1.45f306dc9c882a53f84eafa3ea8p-128 : inexact-ok
+= atanpi towardzero ibm128 0x4p-128 : 0x1.45f306dc9c882a53f84eafa3eap-128 : inexact-ok
+= atanpi upward ibm128 0x4p-128 : 0x1.45f306dc9c882a53f84eafa3ea8p-128 : inexact-ok
 atanpi min
 = atanpi downward binary32 0x4p-128 : 0x1.45f3p-128 : inexact-ok underflow errno-erange-ok
 = atanpi tonearest binary32 0x4p-128 : 0x1.45f308p-128 : inexact-ok underflow errno-erange-ok

@@ -126,7 +126,6 @@ ldouble: 4
 
 Function: "atanpi":
 double: 2
-float: 1
 ldouble: 2
 
 Function: "cabs":

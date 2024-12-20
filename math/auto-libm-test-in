@@ -936,6 +936,7 @@ atanpi -0x3.eb8e18p+0
 atanpi 0x3.53c188p+0
 atanpi -0x1.58c83p+0
 atanpi 0x1.626772p-1
+atanpi 0x1p-126
 atanpi min
 atanpi -min
 atanpi min_subnorm

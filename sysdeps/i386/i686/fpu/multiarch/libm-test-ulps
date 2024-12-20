@@ -201,25 +201,21 @@ ldouble: 5
 
 Function: "atanpi":
 double: 1
-float: 1
 float128: 2
 ldouble: 2
 
 Function: "atanpi_downward":
 double: 2
-float: 2
 float128: 1
 ldouble: 2
 
 Function: "atanpi_towardzero":
 double: 1
-float: 2
 float128: 1
 ldouble: 2
 
 Function: "atanpi_upward":
 double: 2
-float: 1
 float128: 2
 ldouble: 1
 
