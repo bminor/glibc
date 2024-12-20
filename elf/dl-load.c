@@ -755,7 +755,7 @@ _dl_init_paths (const char *llp, const char *source,
   l = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
 #ifdef SHARED
   if (l == NULL)
-    l = &GL (dl_rtld_map);
+    l = &_dl_rtld_map;
 #endif
   assert (l->l_type != lt_loaded);
 
@@ -979,8 +979,8 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
   /* When loading into a namespace other than the base one we must
      avoid loading ld.so since there can only be one copy.  Ever.  */
   if (__glibc_unlikely (nsid != LM_ID_BASE)
-      && (_dl_file_id_match_p (&id, &GL(dl_rtld_map).l_file_id)
-	  || _dl_name_match_p (name, &GL(dl_rtld_map))))
+      && (_dl_file_id_match_p (&id, &_dl_rtld_map.l_file_id)
+	  || _dl_name_match_p (name, &_dl_rtld_map)))
     {
       /* This is indeed ld.so.  Create a new link_map which refers to
 	 the real one for almost everything.  */
@@ -989,7 +989,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 	goto fail_new;
 
       /* Refer to the real descriptor.  */
-      l->l_real = &GL(dl_rtld_map);
+      l->l_real = &_dl_rtld_map;
 
       /* Copy l_addr and l_ld to avoid a GDB warning with dlmopen().  */
       l->l_addr = l->l_real->l_addr;
@@ -2044,7 +2044,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 	      l = (loader
 		   ?: GL(dl_ns)[LM_ID_BASE]._ns_loaded
 # ifdef SHARED
-		   ?: &GL(dl_rtld_map)
+		   ?: &_dl_rtld_map
 # endif
 		  );
 

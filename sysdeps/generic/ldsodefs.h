@@ -392,14 +392,6 @@ struct rtld_global
   /* List of search directories.  */
   EXTERN struct r_search_path_elem *_dl_all_dirs;
 
-  /* Structure describing the dynamic linker itself.  */
-  EXTERN struct link_map _dl_rtld_map;
-#ifdef SHARED
-  /* Used to store the audit information for the link map of the
-     dynamic loader.  */
-  struct auditstate _dl_rtld_auditstate[DL_NNS];
-#endif
-
   /* Get architecture specific definitions.  */
 #define PROCINFO_DECL
 #ifndef PROCINFO_CLASS
@@ -1323,11 +1315,18 @@ rtld_active (void)
   return GLRO(dl_init_all_dirs) != NULL;
 }
 
+/* Pre-allocated link map for the dynamic linker itself.  */
+extern struct link_map _dl_rtld_map attribute_hidden;
+
+/* Used to store the audit information for the link map of the
+   dynamic loader.  */
+extern struct auditstate _dl_rtld_auditstate[DL_NNS] attribute_hidden;
+
 /* Returns true of L is the link map of the dynamic linker itself.  */
 static inline bool
 is_rtld_link_map (const struct link_map *l)
 {
-  return l == &GL(dl_rtld_map);
+  return l == &_dl_rtld_map;
 }
 
 static inline struct auditstate *
@@ -1335,7 +1334,7 @@ link_map_audit_state (struct link_map *l, size_t index)
 {
   if (is_rtld_link_map (l))
     /* The auditstate array is stored separately.  */
-    return &GL (dl_rtld_auditstate) [index];
+    return _dl_rtld_auditstate + index;
   else
     {
       /* The auditstate array follows the link map in memory.  */
