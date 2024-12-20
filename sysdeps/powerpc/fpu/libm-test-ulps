@@ -1857,25 +1857,21 @@ ldouble: 6
 
 Function: "tanpi":
 double: 3
-float: 3
 float128: 2
 ldouble: 2
 
 Function: "tanpi_downward":
 double: 2
-float: 3
 float128: 4
 ldouble: 8
 
 Function: "tanpi_towardzero":
 double: 2
-float: 3
 float128: 4
 ldouble: 8
 
 Function: "tanpi_upward":
 double: 2
-float: 4
 float128: 4
 ldouble: 8
 

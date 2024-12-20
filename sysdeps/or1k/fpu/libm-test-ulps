@@ -1115,19 +1115,15 @@ double: 3
 
 Function: "tanpi":
 double: 3
-float: 3
 
 Function: "tanpi_downward":
 double: 2
-float: 3
 
 Function: "tanpi_towardzero":
 double: 2
-float: 3
 
 Function: "tanpi_upward":
 double: 2
-float: 4
 
 Function: "tgamma":
 double: 9

@@ -84,6 +84,31 @@ roundeven_finite (double x)
 #endif
 }
 
+#ifndef ROUNDEVENF_INTRINSICS
+/* When set, roundevenf_finite will route to the internal roundevenf function.  */
+# define ROUNDEVENF_INTRINSICS 1
+#endif
+
+static inline float
+roundevenf_finite (float x)
+{
+  if (!isfinite (x))
+    __builtin_unreachable ();
+#if ROUNDEVENF_INTRINSICS
+  return roundevenf (x);
+#else
+  float y = roundf (x);
+  if (fabs (x - y) == 0.5)
+    {
+      union { float f; uint32_t i; } u = {y};
+      union { float f; uint32_t i; } v = {y - copysignf (1.0, x)};
+      if (__builtin_ctzl (v.i) > __builtin_ctzl (u.i))
+        y = v.f;
+    }
+  return y;
+#endif
+}
+
 static inline uint32_t
 asuint (float f)
 {

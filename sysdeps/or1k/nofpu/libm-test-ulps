@@ -1015,7 +1015,6 @@ double: 3
 
 Function: "tanpi":
 double: 3
-float: 3
 
 Function: "tgamma":
 double: 9
