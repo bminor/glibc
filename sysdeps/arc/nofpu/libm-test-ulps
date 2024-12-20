@@ -265,7 +265,6 @@ double: 2
 
 Function: "sinpi":
 double: 2
-float: 2
 
 Function: "tanh":
 double: 2

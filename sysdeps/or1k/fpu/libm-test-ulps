@@ -1082,19 +1082,15 @@ double: 3
 
 Function: "sinpi":
 double: 2
-float: 2
 
 Function: "sinpi_downward":
 double: 2
-float: 2
 
 Function: "sinpi_towardzero":
 double: 2
-float: 1
 
 Function: "sinpi_upward":
 double: 2
-float: 3
 
 Function: "tan_downward":
 double: 1

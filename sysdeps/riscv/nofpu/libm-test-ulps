@@ -1271,7 +1271,6 @@ ldouble: 4
 
 Function: "sinpi":
 double: 2
-float: 2
 ldouble: 2
 
 Function: "tan":
