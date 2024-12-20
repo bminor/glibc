@@ -69,7 +69,6 @@ double: 8
 
 Function: "atan2pi":
 double: 1
-float: 1
 
 Function: "atan_downward":
 double: 1

@@ -24,7 +24,6 @@ double: 1
 
 Function: "atan2pi":
 double: 1
-float: 1
 
 Function: "atanh":
 double: 2

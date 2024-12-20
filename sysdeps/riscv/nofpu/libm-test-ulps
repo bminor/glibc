@@ -94,7 +94,6 @@ ldouble: 2
 
 Function: "atan2pi":
 double: 1
-float: 1
 ldouble: 3
 
 Function: "atan_downward":

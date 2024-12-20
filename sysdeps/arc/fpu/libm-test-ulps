@@ -90,19 +90,15 @@ double: 8
 
 Function: "atan2pi":
 double: 1
-float: 1
 
 Function: "atan2pi_downward":
 double: 1
-float: 2
 
 Function: "atan2pi_towardzero":
 double: 1
-float: 2
 
 Function: "atan2pi_upward":
 double: 1
-float: 2
 
 Function: "atan_downward":
 double: 1
