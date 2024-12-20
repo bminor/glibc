@@ -11,6 +11,7 @@ float: 1
 
 Function: "acos_downward":
 double: 1
+float: 1
 ldouble: 1
 
 Function: "acos_sve":
@@ -19,6 +20,7 @@ float: 1
 
 Function: "acos_towardzero":
 double: 1
+float: 1
 ldouble: 1
 
 Function: "acos_upward":
