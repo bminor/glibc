@@ -650,7 +650,6 @@ ldouble: 3
 
 Function: "cospi":
 double: 2
-float: 2
 ldouble: 2
 
 Function: Real part of "cpow":

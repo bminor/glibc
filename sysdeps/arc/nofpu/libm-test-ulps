@@ -134,7 +134,6 @@ double: 2
 
 Function: "cospi":
 double: 2
-float: 2
 
 Function: Real part of "cpow":
 double: 2

@@ -701,22 +701,18 @@ ldouble: 3
 
 Function: "cospi":
 double: 2
-float: 2
 ldouble: 2
 
 Function: "cospi_downward":
 double: 1
-float: 2
 ldouble: 2
 
 Function: "cospi_towardzero":
 double: 1
-float: 1
 ldouble: 2
 
 Function: "cospi_upward":
 double: 1
-float: 2
 ldouble: 2
 
 Function: Real part of "cpow":
