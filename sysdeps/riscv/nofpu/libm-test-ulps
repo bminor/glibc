@@ -71,7 +71,6 @@ ldouble: 4
 
 Function: "asinpi":
 double: 1
-float: 1
 ldouble: 2
 
 Function: "atan":

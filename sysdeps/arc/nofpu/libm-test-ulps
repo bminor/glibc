@@ -18,7 +18,6 @@ double: 2
 
 Function: "asinpi":
 double: 1
-float: 1
 
 Function: "atan":
 double: 1
