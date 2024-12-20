@@ -77,8 +77,8 @@ dl_check_legacy_object (struct link_map *m,
       /* Skip check for ld.so since it has the features enabled.  The
          features will be disabled later if they are not enabled in
 	 executable.  */
-      if (l == &GL(dl_rtld_map)
-          || l->l_real == &GL(dl_rtld_map)
+      if (is_rtld_link_map (l)
+          || is_rtld_link_map (l->l_real)
           || (info->program != NULL && l == m))
          continue;
 #endif
