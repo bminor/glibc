@@ -157,6 +157,11 @@ acospi min
 acospi -min
 acospi min_subnorm
 acospi -min_subnorm
+# the next values generate larger error bounds on x86_64
+acospi -0x1.12462cp-1
+acospi 0x1.da0ea62dd7231p-1
+acospi 0xf.fec85670a4b0761p-4
+acospi 0xb.50b04f0a7917332097372387f018p-4
 
 acosh 1
 acosh 0x1.000002p0
@@ -514,6 +519,11 @@ asinpi min
 asinpi -min
 asinpi min_subnorm
 asinpi -min_subnorm
+# the next values generate larger error bounds on x86_64
+asinpi 0x1.f1c012p-1
+asinpi -0x1.8805060cb885cp-3
+asinpi 0x8.14d7e32b5c44642p-4
+asinpi -0xa.7ca6c96caefe80b9d757de58a578p-4
 
 atan inf
 atan -inf
@@ -793,6 +803,11 @@ atan2pi min -1
 atan2pi -min -1
 atan2pi min_subnorm -1
 atan2pi -min_subnorm -1
+# the next values generate larger error bounds on x86_64
+atan2pi -0x1.6dd242p-15 0x1.d6ecdcp-5
+atan2pi -0x1.fe856e7997f8p+381 0x1.90ece816f9a7cp+343
+atan2pi 0x4.8010e21a5d13ad38p+212 0x5.bb4879ec6325337p+10940
+atan2pi -0x2.c6994d7f40fae88117550b428404p+16040 0xe.181a2c7696ba5cf23a6eab680b2p+16040
 
 atanh 0
 atanh -0
@@ -925,6 +940,11 @@ atanpi min
 atanpi -min
 atanpi min_subnorm
 atanpi -min_subnorm
+# the next values generate larger error bounds on x86_64
+atanpi 0x1.717e3ap-1
+atanpi 0x1.9601b055fdf97p-3
+atanpi 0xc.916d8196a7d1bbfp-8
+atanpi 0x3.2d7177f38d6ee175de059ee6394p-4
 
 # cabs (x,y) == cabs (y,x).
 cabs 0.75 12.390625
@@ -4863,6 +4883,11 @@ cospi 0x3fffffffffffffffffffffffffff.6p0 xfail-rounding:ibm128-libgcc
 cospi -0x3fffffffffffffffffffffffffff.6p0 xfail-rounding:ibm128-libgcc
 cospi 0x3fffffffffffffffffffffffffff.ap0 xfail-rounding:ibm128-libgcc
 cospi -0x3fffffffffffffffffffffffffff.ap0 xfail-rounding:ibm128-libgcc
+# the next values generate larger error bounds on x86_64
+cospi 0x1.ae1126p-2
+cospi -0x1.1a0a2fa299b92p+6
+cospi 0x7.ae7df669ffba0068p-4
+cospi -0x2.5845a017ae769ea1c20e04c7e47cp+28
 
 cosh 0
 cosh -0
@@ -8395,6 +8420,11 @@ sinpi 0x1p-16384
 sinpi -0x1p-16384
 sinpi 0x1p-16385
 sinpi -0x1p-16385
+# the next values generate larger error bounds on x86_64
+sinpi 0x1.46949ap-5
+sinpi -0x1.45f3e53e1d707p-7
+sinpi 0x2.8bea50886e293398p-8
+sinpi -0x1.45f52c8be3999ba924f1f3e5a7b7p-8
 
 sub 0 0
 sub 0 -0
@@ -8819,6 +8849,11 @@ tanpi 0x3fffffffffffffffffffffffffff.6p0
 tanpi -0x3fffffffffffffffffffffffffff.6p0
 tanpi 0x3fffffffffffffffffffffffffff.ap0 xfail-rounding:ibm128-libgcc
 tanpi -0x3fffffffffffffffffffffffffff.ap0 xfail-rounding:ibm128-libgcc
+# the next values generate larger error bounds on x86_64
+tanpi 0x1.eb90dep-2
+tanpi -0x1.fae7d0ef22d4ep-2
+tanpi -0x3.a8c5dc49265fd13p+0
+tanpi -0x1.a8c117800f4a648c213cd0b6db1fp+0
 
 tgamma 0.5
 tgamma -0.5

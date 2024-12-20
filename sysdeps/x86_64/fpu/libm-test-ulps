@@ -84,10 +84,10 @@ Function: "acosh_vlen8_avx2":
 float: 2
 
 Function: "acospi":
-double: 1
+double: 2
 float: 1
-float128: 1
-ldouble: 1
+float128: 2
+ldouble: 3
 
 Function: "acospi_downward":
 double: 1
@@ -187,24 +187,24 @@ float: 1
 Function: "asinpi":
 double: 1
 float: 1
-float128: 1
+float128: 2
 ldouble: 2
 
 Function: "asinpi_downward":
 double: 1
 float: 1
-float128: 1
+float128: 2
 ldouble: 2
 
 Function: "asinpi_towardzero":
 double: 1
-float: 1
+float: 2
 float128: 1
 ldouble: 2
 
 Function: "asinpi_upward":
 double: 2
-float: 1
+float: 2
 float128: 2
 ldouble: 2
 
@@ -255,8 +255,8 @@ float: 2
 Function: "atan2pi":
 double: 1
 float: 1
-float128: 2
-ldouble: 1
+float128: 3
+ldouble: 2
 
 Function: "atan2pi_downward":
 double: 1
@@ -352,22 +352,22 @@ Function: "atanh_vlen8_avx2":
 float: 1
 
 Function: "atanpi":
-double: 1
+double: 2
 float: 1
-float128: 1
-ldouble: 1
+float128: 2
+ldouble: 2
 
 Function: "atanpi_downward":
 double: 1
 float: 2
 float128: 1
-ldouble: 1
+ldouble: 2
 
 Function: "atanpi_towardzero":
 double: 1
 float: 2
 float128: 1
-ldouble: 1
+ldouble: 2
 
 Function: "atanpi_upward":
 double: 1
@@ -1067,14 +1067,14 @@ Function: "cosh_vlen8_avx2":
 float: 2
 
 Function: "cospi":
-double: 1
-float: 1
-float128: 1
-ldouble: 1
+double: 2
+float: 2
+float128: 2
+ldouble: 2
 
 Function: "cospi_downward":
 double: 1
-float: 1
+float: 2
 float128: 2
 ldouble: 2
 
@@ -1086,9 +1086,9 @@ ldouble: 2
 
 Function: "cospi_upward":
 double: 1
-float: 1
-float128: 1
-ldouble: 1
+float: 2
+float128: 2
+ldouble: 2
 
 Function: Real part of "cpow":
 double: 2
@@ -2218,10 +2218,10 @@ Function: "sinh_vlen8_avx2":
 float: 1
 
 Function: "sinpi":
-double: 1
-float: 1
-float128: 1
-ldouble: 1
+double: 2
+float: 2
+float128: 2
+ldouble: 2
 
 Function: "sinpi_downward":
 double: 2
@@ -2232,12 +2232,12 @@ ldouble: 3
 Function: "sinpi_towardzero":
 double: 2
 float: 1
-float128: 1
+float128: 2
 ldouble: 2
 
 Function: "sinpi_upward":
 double: 2
-float: 2
+float: 3
 float128: 2
 ldouble: 2
 
@@ -2317,10 +2317,10 @@ Function: "tanh_vlen8":
 double: 1
 
 Function: "tanpi":
-double: 2
-float: 2
-float128: 2
-ldouble: 2
+double: 3
+float: 3
+float128: 3
+ldouble: 3
 
 Function: "tanpi_downward":
 double: 2
@@ -2337,7 +2337,7 @@ ldouble: 4
 Function: "tanpi_upward":
 double: 2
 float: 4
-float128: 3
+float128: 4
 ldouble: 4
 
 Function: "tgamma":
