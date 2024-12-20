@@ -35,7 +35,6 @@ ldouble: 2
 
 Function: "acospi":
 double: 2
-float: 1
 ldouble: 2
 
 Function: "asin":

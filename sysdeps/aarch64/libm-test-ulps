@@ -51,22 +51,18 @@ ldouble: 3
 
 Function: "acospi":
 double: 2
-float: 1
 ldouble: 2
 
 Function: "acospi_downward":
 double: 1
-float: 2
 ldouble: 1
 
 Function: "acospi_towardzero":
 double: 1
-float: 2
 ldouble: 1
 
 Function: "acospi_upward":
 double: 2
-float: 1
 ldouble: 2
 
 Function: "asin":

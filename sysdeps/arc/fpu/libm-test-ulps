@@ -27,19 +27,15 @@ double: 3
 
 Function: "acospi":
 double: 2
-float: 1
 
 Function: "acospi_downward":
 double: 1
-float: 2
 
 Function: "acospi_towardzero":
 double: 1
-float: 2
 
 Function: "acospi_upward":
 double: 2
-float: 1
 
 Function: "asin":
 double: 1

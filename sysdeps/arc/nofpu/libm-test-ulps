@@ -9,7 +9,6 @@ double: 2
 
 Function: "acospi":
 double: 2
-float: 1
 
 Function: "asin":
 double: 1
