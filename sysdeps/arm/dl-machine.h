@@ -351,16 +351,7 @@ elf_machine_rel (struct link_map *map, struct r_scope_elem *scope[],
 	  {
 	    ElfW(Addr) tmp;
 # ifndef RTLD_BOOTSTRAP
-	   /* This is defined in rtld.c, but nowhere in the static
-	      libc.a; make the reference weak so static programs can
-	      still link.  This declaration cannot be done when
-	      compiling rtld.c (i.e.  #ifdef RTLD_BOOTSTRAP) because
-	      rtld.c contains the common defn for _dl_rtld_map, which
-	      is incompatible with a weak decl in the same file.  */
-#  ifndef SHARED
-	    weak_extern (_dl_rtld_map);
-#  endif
-	    if (map == &GL(dl_rtld_map))
+	    if (is_rtld_link_map (map))
 	      /* Undo the relocation done here during bootstrapping.
 		 Now we will relocate it anew, possibly using a
 		 binding found in the user program or a loaded library

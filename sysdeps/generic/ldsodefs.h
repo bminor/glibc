@@ -1323,10 +1323,17 @@ rtld_active (void)
   return GLRO(dl_init_all_dirs) != NULL;
 }
 
+/* Returns true of L is the link map of the dynamic linker itself.  */
+static inline bool
+is_rtld_link_map (const struct link_map *l)
+{
+  return l == &GL(dl_rtld_map);
+}
+
 static inline struct auditstate *
 link_map_audit_state (struct link_map *l, size_t index)
 {
-  if (l == &GL (dl_rtld_map))
+  if (is_rtld_link_map (l))
     /* The auditstate array is stored separately.  */
     return &GL (dl_rtld_auditstate) [index];
   else
@@ -1389,6 +1396,13 @@ void DL_ARCH_FIXUP_ATTRIBUTE _dl_audit_pltexit (struct link_map *l,
   attribute_hidden;
 
 #else  /* !SHARED */
+/* No special dynamic linker link map in static builds.  */
+static inline bool
+is_rtld_link_map (const struct link_map *l)
+{
+  return false;
+}
+
 static inline void
 _dl_audit_objclose (struct link_map *l)
 {

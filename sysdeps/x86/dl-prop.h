@@ -46,7 +46,7 @@ dl_isa_level_check (struct link_map *m, const char *program)
 #ifdef SHARED
       /* Skip ISA level check for ld.so since ld.so won't run if its ISA
 	 level is higher than CPU.  */
-      if (l == &GL(dl_rtld_map) || l->l_real == &GL(dl_rtld_map))
+      if (is_rtld_link_map (l) || is_rtld_link_map (l->l_real))
 	continue;
 #endif
 

@@ -192,7 +192,7 @@ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
   do {									      \
     int edr_lazy = elf_machine_runtime_setup ((map), (scope), (lazy),	      \
 					      (consider_profile));	      \
-    if (((map) != &GL(dl_rtld_map) || DO_RTLD_BOOTSTRAP))		      \
+    if (!is_rtld_link_map (map) || DO_RTLD_BOOTSTRAP)			      \
       ELF_DYNAMIC_DO_RELR (map);					      \
     ELF_DYNAMIC_DO_REL ((map), (scope), edr_lazy, skip_ifunc);		      \
     ELF_DYNAMIC_DO_RELA ((map), (scope), edr_lazy, skip_ifunc);		      \

@@ -18,11 +18,6 @@
 
 #include "trusted-dirs.h"
 
-#ifdef SHARED
-# define IS_RTLD(l) (l) == &GL(dl_rtld_map)
-#else
-# define IS_RTLD(l) 0
-#endif
 /* Guess from the number of DSTs the length of the result string.  */
 #define DL_DST_REQUIRED(l, name, len, cnt) \
   ({									      \
@@ -44,7 +39,7 @@
 	   auditing, in ld.so.  */					      \
 	if ((l)->l_origin == NULL)					      \
 	  {								      \
-	    assert ((l)->l_name[0] == '\0' || IS_RTLD (l));		      \
+	    assert ((l)->l_name[0] == '\0' || is_rtld_link_map (l));	      \
 	    (l)->l_origin = _dl_get_origin ();				      \
 	    dst_len = ((l)->l_origin && (l)->l_origin != (char *) -1	      \
 			  ? strlen ((l)->l_origin) : 0);		      \

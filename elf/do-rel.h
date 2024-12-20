@@ -102,16 +102,7 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
   else
 #endif
     {
-      /* This is defined in rtld.c, but nowhere in the static libc.a; make
-	 the reference weak so static programs can still link.  This
-	 declaration cannot be done when compiling rtld.c (i.e. #ifdef
-	 RTLD_BOOTSTRAP) because rtld.c contains the common defn for
-	 _dl_rtld_map, which is incompatible with a weak decl in the same
-	 file.  */
-# ifndef SHARED
-      weak_extern (GL(dl_rtld_map));
-# endif
-      if (map != &GL(dl_rtld_map)) /* Already done in rtld itself.  */
+      if (!is_rtld_link_map (map)) /* Already done in rtld itself.  */
 # if !defined DO_RELA || defined ELF_MACHINE_REL_RELATIVE
 	/* Rela platforms get the offset from r_addend and this must
 	   be copied in the relocation address.  Therefore we can skip

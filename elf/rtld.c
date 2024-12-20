@@ -1960,7 +1960,7 @@ dl_main (const ElfW(Phdr) *phdr,
     GL(dl_rtld_map).l_next->l_prev = GL(dl_rtld_map).l_prev;
 
   for (i = 1; i < main_map->l_searchlist.r_nlist; ++i)
-    if (main_map->l_searchlist.r_list[i] == &GL(dl_rtld_map))
+    if (is_rtld_link_map (main_map->l_searchlist.r_list[i]))
       break;
 
   /* Insert the link map for the dynamic loader into the chain in
