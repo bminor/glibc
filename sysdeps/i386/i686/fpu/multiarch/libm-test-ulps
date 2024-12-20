@@ -7,10 +7,12 @@ float128: 1
 ldouble: 2
 
 Function: "acos_downward":
+float: 1
 float128: 1
 ldouble: 2
 
 Function: "acos_towardzero":
+float: 1
 float128: 1
 ldouble: 2
 
