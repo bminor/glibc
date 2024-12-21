@@ -35,10 +35,10 @@ routines := \
 
 tests := \
   test-assert \
+  test-assert-2 \
   test-assert-perr \
   tst-assert-c++ \
   tst-assert-g++ \
-  test-assert-2 \
   # tests
 
 ifeq ($(have-cxx-thread_local),yes)
