@@ -84,8 +84,6 @@
 # error "glibc must not be compiled with -ffast-math"
 #endif
 
-#include <config.h>
-
 /* Obtain the definition of symbol_version_reference.  */
 #include <libc-symver.h>
 

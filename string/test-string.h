@@ -40,7 +40,7 @@ extern impl_t __start_impls[], __stop_impls[];
 
 #undef __USE_STRING_INLINES
 
-#include "libc-misc.h"
+#include <libc-misc.h>
 #include <getopt.h>
 #include <stdint.h>
 #include <stdio.h>

@@ -60,7 +60,7 @@
 # ifdef HAVE_CC_NO_STACK_PROTECTOR
 #  define inhibit_stack_protector cc_inhibit_stack_protector
 # else
-#  define test_inhibit_stack_protector
+#  define inhibit_stack_protector
 # endif
 #endif
 
