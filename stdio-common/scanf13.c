@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
+#include <libc-diag.h>
 
 int
 main (void)
@@ -20,6 +21,9 @@ main (void)
   } while (0)
 
   setlocale (LC_ALL, "de_DE.UTF-8");
+  DIAG_PUSH_NEEDS_COMMENT_CLANG;
+  DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wformat-invalid-specifier");
+  DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wformat-extra-args");
   if (sscanf ("A  \xc3\x84-\t\t\xc3\x84-abcdefbcd\t\xc3\x84-B",
 	      "A%ms%10ms%4m[bcd]%4mcB", &sp1, &sp2, &sp3, &sp4) != 4)
     FAIL ();
@@ -57,6 +61,7 @@ main (void)
 	FAIL ();
       free (lsp4);
     }
+  DIAG_POP_NEEDS_COMMENT_CLANG;
 
   memset (buf, '/', sizeof (buf));
   buf[0] = '\t';
@@ -142,6 +147,9 @@ main (void)
 	FAIL ();
       free (lsp2);
     }
+  DIAG_PUSH_NEEDS_COMMENT_CLANG;
+  DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wformat-invalid-specifier");
+  DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wformat-extra-args");
   if (sscanf (buf, "%2048mls%mlc", &lsp3, &lsp4) != 2)
     FAIL ();
   else
@@ -182,6 +190,7 @@ main (void)
 	FAIL ();
       free (lsp4);
     }
+  DIAG_POP_NEEDS_COMMENT_CLANG;
 
   return result;
 }

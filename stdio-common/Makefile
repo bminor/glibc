@@ -646,6 +646,8 @@ CFLAGS-dprintf.c += $(config-cflags-wno-ignored-attributes)
 CFLAGS-_itoa.o = $(no-stack-protector)
 CFLAGS-_itoa.op = $(no-stack-protector)
 
+CFLAGS-scanf13.c += $(test-config-cflags-wno-fortify-source)
+
 # scanf18.c and scanf19.c test a deprecated extension which is no
 # longer visible under most conformance levels; see the source files
 # for more detail.
