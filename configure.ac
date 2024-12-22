@@ -1899,6 +1899,7 @@ cat > conftest.S <<EOF
 _start:
 .globl __start
 __start:
+	.byte 0
 EOF
 if test $libc_cv_cc_pie_default = yes; then
   pde_ld_flags="-no-pie"
