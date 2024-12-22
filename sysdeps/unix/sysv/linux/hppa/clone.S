@@ -90,6 +90,10 @@ ENTRY(__clone)
 	comib,=,n 0, %ret0, .LthreadStart
 	bv,n	%r0(%rp)
 
+.LerrorSanity:
+	/* Sanity checks failed, set errno to EINVAL.  */
+	ldi	-EINVAL, %ret0
+
 .LerrorRest:
 	/* Something bad happened -- no child created -- need a frame */
 	ldo	64(%sp),%sp
@@ -100,11 +104,6 @@ ENTRY(__clone)
 	/* Return after setting errno, ret0 is set to -1 by __syscall_error. */
 	bv	%r0(%rp)
 	ldo	-64(%sp), %sp
-
-.LerrorSanity:
-	/* Sanity checks failed, return -1, and set errno to EINVAL. */
-	b	.LerrorRest
-	ldi	-EINVAL, %ret0
 
 .LthreadStart:
 	/* Load up the arguments.  */
@@ -121,7 +120,7 @@ ENTRY(__clone)
 	ldi	__NR_exit, %r20
 
 	/* We should not return from exit.
-           We do not restore r4, or the stack state.  */
+           We do not restore the stack state.  */
 	iitlbp	%r0, (%sr0, %r0)
 
 PSEUDO_END(__clone)
