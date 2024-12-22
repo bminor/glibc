@@ -67,7 +67,7 @@ do_one_test (json_ctx_t *json_ctx, size_t len)
   json_element_object_end (json_ctx);
 }
 
-static void __attribute__ ((noinline, noclone))
+static void __attribute_optimization_barrier__
 do_rand_test (json_ctx_t *json_ctx)
 {
   size_t i, sz, offset;

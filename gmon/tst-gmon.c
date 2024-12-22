@@ -16,15 +16,17 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <sys/cdefs.h>
+
 /* This program does not use the test harness because we want tight
    control over the call graph.  */
 
-__attribute__ ((noinline, noclone, weak)) void
+__attribute__ ((weak)) __attribute_optimization_barrier__ void
 f1 (void)
 {
 }
 
-__attribute__ ((noinline, noclone, weak)) void
+__attribute__ ((weak)) __attribute_optimization_barrier__ void
 f2 (void)
 {
   f1 ();
@@ -32,7 +34,7 @@ f2 (void)
   asm volatile ("");
 }
 
-__attribute__ ((noinline, noclone, weak)) void
+__attribute__ ((weak)) __attribute_optimization_barrier__ void
 f3 (int count)
 {
   for (int i = 0; i < count; ++i)

@@ -29,7 +29,7 @@ const char *fmt2 = "\e[34m";
 #define handle_error(msg) \
   do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
-__attribute__((noinline, noclone))
+__attribute_optimization_barrier__
 static void
 func4(ucontext_t *uocp, ucontext_t *ucp, const char *str, const char *fmt)
 {
@@ -39,7 +39,7 @@ func4(ucontext_t *uocp, ucontext_t *ucp, const char *str, const char *fmt)
   printf("      %sfunc4: returning\e[0m\n", fmt);
 }
 
-__attribute__((noinline, noclone))
+__attribute_optimization_barrier__
 static void
 func3(ucontext_t *uocp, ucontext_t *ucp, const char *str, const char *fmt)
 {
@@ -48,7 +48,7 @@ func3(ucontext_t *uocp, ucontext_t *ucp, const char *str, const char *fmt)
   printf("    %sfunc3: returning\e[0m\n", fmt);
 }
 
-__attribute__((noinline, noclone))
+__attribute_optimization_barrier__
 static void
 func1(void)
 {
@@ -59,7 +59,7 @@ func1(void)
     }
 }
 
-__attribute__((noinline, noclone))
+__attribute_optimization_barrier__
 static void
 func2(void)
 {

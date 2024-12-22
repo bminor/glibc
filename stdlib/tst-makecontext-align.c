@@ -30,7 +30,7 @@ static const char *context;
 
 /* Check that ADDRESS is aligned to ALIGNMENT bytes, behind a compiler
    barrier.  */
-__attribute__ ((noinline, noclone, weak))
+__attribute__ ((weak)) __attribute_optimization_barrier__
 void
 check_align (void *address, size_t alignment)
 {
@@ -45,7 +45,7 @@ check_align (void *address, size_t alignment)
 
 /* Various alignment checking functions.  */
 
-__attribute__ ((noinline, noclone, weak))
+__attribute__ ((weak)) __attribute_optimization_barrier__
 void
 check_align_int (void)
 {
@@ -53,7 +53,7 @@ check_align_int (void)
   check_align (&a, __alignof__ (a));
 }
 
-__attribute__ ((noinline, noclone, weak))
+__attribute__ ((weak)) __attribute_optimization_barrier__
 void
 check_align_long (void)
 {
@@ -61,7 +61,7 @@ check_align_long (void)
   check_align (&a, __alignof__ (a));
 }
 
-__attribute__ ((noinline, noclone, weak))
+__attribute__ ((weak)) __attribute_optimization_barrier__
 void
 check_align_long_long (void)
 {
@@ -69,7 +69,7 @@ check_align_long_long (void)
   check_align (&a, __alignof__ (a));
 }
 
-__attribute__ ((noinline, noclone, weak))
+__attribute__ ((weak)) __attribute_optimization_barrier__
 void
 check_align_double (void)
 {
@@ -77,7 +77,7 @@ check_align_double (void)
   check_align (&a, __alignof__ (a));
 }
 
-__attribute__ ((noinline, noclone, weak))
+__attribute__ ((weak)) __attribute_optimization_barrier__
 void
 check_align_4 (void)
 {
@@ -85,7 +85,7 @@ check_align_4 (void)
   check_align (&a, 4);
 }
 
-__attribute__ ((noinline, noclone, weak))
+__attribute__ ((weak)) __attribute_optimization_barrier__
 void
 check_align_8 (void)
 {
@@ -93,7 +93,7 @@ check_align_8 (void)
   check_align (&a, 8);
 }
 
-__attribute__ ((noinline, noclone, weak))
+__attribute__ ((weak)) __attribute_optimization_barrier__
 void
 check_align_16 (void)
 {
@@ -105,7 +105,7 @@ check_align_16 (void)
   check_align (&a, 16);
 }
 
-__attribute__ ((noinline, noclone, weak))
+__attribute__ ((weak)) __attribute_optimization_barrier__
 void
 check_align_32 (void)
 {
@@ -120,7 +120,7 @@ check_align_32 (void)
 }
 
 /* Call all the alignment checking functions.  */
-__attribute__ ((noinline, noclone, weak))
+__attribute__ ((weak)) __attribute_optimization_barrier__
 void
 check_alignments (void)
 {

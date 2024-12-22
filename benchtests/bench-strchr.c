@@ -92,7 +92,7 @@ IMPL (generic_strchrnul, 0)
    branch coming we want to test the case where a potential branch in
    strchr can be used to skip a later mispredict because of the
    relationship between the two branches. */
-static void __attribute__ ((noinline, noclone))
+static void __attribute_optimization_barrier__
 do_one_rand_plus_branch_test (json_ctx_t *json_ctx, impl_t *impl,
                               const CHAR *s, const CHAR *c)
 {
@@ -117,7 +117,7 @@ do_one_rand_plus_branch_test (json_ctx_t *json_ctx, impl_t *impl,
   json_element_double (json_ctx, (double)cur / (double)iters);
 }
 
-static void __attribute__ ((noinline, noclone))
+static void __attribute_optimization_barrier__
 do_one_rand_test (json_ctx_t *json_ctx, impl_t *impl, const CHAR *s,
                   const CHAR *c)
 {

@@ -23,7 +23,7 @@
 char string1[STRING_SIZE];
 char string2[STRING_SIZE];
 
-__attribute__ ((noinline, noclone))
+__attribute_optimization_barrier__
 static int
 prepare (void)
 {
@@ -35,7 +35,7 @@ prepare (void)
     return EXIT_FAILURE;
 }
 
-__attribute__ ((noinline, noclone))
+__attribute_optimization_barrier__
 static int
 function (void)
 {

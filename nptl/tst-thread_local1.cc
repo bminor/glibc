@@ -53,27 +53,27 @@ to_string (const counter &c)
 template <counter *Counter>
 struct counting
 {
-  counting () __attribute__ ((noinline, noclone));
-  ~counting () __attribute__ ((noinline, noclone));
-  void operation () __attribute__ ((noinline, noclone));
+  counting () __attribute_optimization_barrier__;
+  ~counting () __attribute_optimization_barrier__;
+  void operation () __attribute_optimization_barrier__;
 };
 
 template<counter *Counter>
-__attribute__ ((noinline, noclone))
+__attribute_optimization_barrier__
 counting<Counter>::counting ()
 {
   ++Counter->constructed;
 }
 
 template<counter *Counter>
-__attribute__ ((noinline, noclone))
+__attribute_optimization_barrier__
 counting<Counter>::~counting ()
 {
   ++Counter->destructed;
 }
 
 template<counter *Counter>
-void __attribute__ ((noinline, noclone))
+void __attribute_optimization_barrier__
 counting<Counter>::operation ()
 {
   // Optimization barrier.

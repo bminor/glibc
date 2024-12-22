@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <sys/cdefs.h>
+
 /* Program with sufficiently complex, yet pointless, call graph
    that it will trigger an mcount overflow, when you set the
    minarcs/maxarcs tunables to very low values. */
@@ -31,12 +33,12 @@
 
 /* Defines 16 leaf functions named f1_0 to f1_15 */
 #define REP(n) \
-  __attribute__ ((noinline, noclone, weak)) void f1_##n (void) {};
+  __attribute__ ((weak)) __attribute_optimization_barrier__ void f1_##n (void) {};
 REPS
 #undef REP
 
 /* Calls all 16 leaf functions f1_* in succession */
-__attribute__ ((noinline, noclone, weak)) void
+__attribute__ ((weak)) __attribute_optimization_barrier__ void
 f2 (void)
 {
 # define REP(n) f1_##n();
@@ -47,12 +49,12 @@ f2 (void)
 
 /* Defines 16 functions named f2_0 to f2_15, which all just call f2 */
 #define REP(n) \
-  __attribute__ ((noinline, noclone, weak)) void \
+  __attribute__ ((weak)) __attribute_optimization_barrier__ void \
   f2_##n (void) { f2(); PREVENT_TAIL_CALL; };
 REPS
 #undef REP
 
-__attribute__ ((noinline, noclone, weak)) void
+__attribute__ ((weak)) __attribute_optimization_barrier__ void
 f3 (int count)
 {
   for (int i = 0; i < count; ++i)

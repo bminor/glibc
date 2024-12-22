@@ -23,7 +23,7 @@
 
 /* Fill the stack with non-zero values.  This makes a crash in
    snprintf more likely.  */
-static void __attribute__ ((noinline, noclone))
+static void __attribute_optimization_barrier__
 fill_stack (void)
 {
   char buffer[65536];

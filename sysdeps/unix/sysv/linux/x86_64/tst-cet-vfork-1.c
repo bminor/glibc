@@ -25,7 +25,7 @@
 #include <x86intrin.h>
 #include <support/test-driver.h>
 
-__attribute__ ((noclone, noinline))
+__attribute_optimization_barrier__
 static void
 do_test_1 (void)
 {

@@ -37,7 +37,7 @@ struct Array
 
 static int error_count;
 
-__attribute__ ((noclone, noinline))
+__attribute_optimization_barrier__
 struct Array
 allocate (size_t bytes)
 {
@@ -52,7 +52,7 @@ allocate (size_t bytes)
   return __extension__ (struct Array) {bytes, p};
 }
 
-__attribute__ ((noclone, noinline))
+__attribute_optimization_barrier__
 void
 deallocate (struct Array b)
 {
@@ -66,7 +66,7 @@ deallocate (struct Array b)
     }
 }
 
-__attribute__ ((noclone, noinline))
+__attribute_optimization_barrier__
 void *
 do_mmap (void *addr, size_t length)
 {
@@ -74,7 +74,7 @@ do_mmap (void *addr, size_t length)
 	       MAP_PRIVATE | MAP_ANON, -1, 0);
 }
 
-__attribute__ ((noclone, noinline))
+__attribute_optimization_barrier__
 void *
 reallocate (struct Array b)
 {
@@ -86,7 +86,7 @@ reallocate (struct Array b)
   return NULL;
 }
 
-__attribute__ ((noclone, noinline))
+__attribute_optimization_barrier__
 void
 protect (struct Array b)
 {
@@ -104,7 +104,7 @@ protect (struct Array b)
     }
 }
 
-__attribute__ ((noclone, noinline))
+__attribute_optimization_barrier__
 ssize_t
 do_read (int fd, void *ptr, struct Array b)
 {
@@ -116,7 +116,7 @@ do_read (int fd, void *ptr, struct Array b)
   return 0;
 }
 
-__attribute__ ((noclone, noinline))
+__attribute_optimization_barrier__
 ssize_t
 do_write (int fd, void *ptr, struct Array b)
 {

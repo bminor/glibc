@@ -25,7 +25,7 @@
 extern void bar (void);
 
 void
-__attribute__ ((noclone, noinline))
+__attribute_optimization_barrier__
 test (void (*func_p) (void))
 {
   func_p ();

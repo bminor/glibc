@@ -27,7 +27,7 @@ extern int arch_prctl (int, ...);
 #define X86_XSTATE_TILEDATA_ID	18
 
 /* Initialize tile config.  */
-__attribute__ ((noinline, noclone))
+__attribute_optimization_barrier__
 static void
 init_tile_config (__tilecfg *tileinfo)
 {

@@ -24,7 +24,7 @@
 #include <support/xthread.h>
 
 /* Throw a std::runtime_exception.  */
-__attribute__ ((noinline, noclone, weak))
+__attribute__ ((weak)) __attribute_optimization_barrier__
 void
 do_throw_exception ()
 {
@@ -38,17 +38,17 @@ struct class_with_destructor
   ~class_with_destructor ();
 };
 
-__attribute__ ((noinline, noclone, weak))
+__attribute__ ((weak)) __attribute_optimization_barrier__
 class_with_destructor::class_with_destructor ()
 {
 }
 
-__attribute__ ((noinline, noclone, weak))
+__attribute__ ((weak)) __attribute_optimization_barrier__
 class_with_destructor::~class_with_destructor ()
 {
 }
 
-__attribute__ ((noinline, noclone, weak))
+__attribute__ ((weak)) __attribute_optimization_barrier__
 void
 function_with_destructed_object ()
 {

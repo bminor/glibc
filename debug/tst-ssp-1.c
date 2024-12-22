@@ -21,7 +21,7 @@
 #include <signal.h>
 
 static void
-__attribute__ ((noinline, noclone))
+__attribute_optimization_barrier__
 test (char *foo)
 {
   int i;

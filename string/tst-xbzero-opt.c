@@ -97,7 +97,7 @@ static const unsigned char test_pattern[16] =
 
 static ucontext_t uc_main, uc_co;
 
-static __attribute__ ((noinline, noclone)) int
+static __attribute_optimization_barrier__ int
 use_test_buffer (unsigned char *buf)
 {
   unsigned int sum = 0;

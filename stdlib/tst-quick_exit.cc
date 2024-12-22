@@ -26,7 +26,7 @@ struct A
 thread_local A a;
 
 void
-__attribute__ ((noinline, noclone))
+__attribute_optimization_barrier__
 optimization_barrier (A &)
 {
 }

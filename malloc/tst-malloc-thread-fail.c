@@ -33,7 +33,7 @@
 
 /* Wrapper for calloc with an optimization barrier.  */
 static void *
-__attribute__ ((noinline, noclone))
+__attribute_optimization_barrier__
 allocate_zeroed (size_t a, size_t b)
 {
   return calloc (a, b);

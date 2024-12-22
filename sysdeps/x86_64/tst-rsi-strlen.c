@@ -44,7 +44,7 @@ typedef struct
 } parameter_t;
 
 size_t
-__attribute__ ((weak, noinline, noclone))
+__attribute__ ((weak)) __attribute_optimization_barrier__
 do_strlen (parameter_t *a, int zero, const CHAR *str)
 {
   return CALL (a, str);

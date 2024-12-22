@@ -30,7 +30,7 @@ thread_local A a1;
 thread_local A a2;
 
 void
-__attribute__ ((noinline, noclone))
+__attribute_optimization_barrier__
 optimization_barrier (A &)
 {
 }

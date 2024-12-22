@@ -33,7 +33,7 @@ volatile int x;
 
 /* Use this attribute to prevent inlining, so that all expected frames
    are present.  */
-#define NO_INLINE __attribute__ ((noinline, noclone, weak))
+#define NO_INLINE __attribute__ ((weak)) __attribute_optimization_barrier__
 
 /* Look for a match in SYM from backtrace_symbols to NAME, a fragment
    of a function name.  Ignore the filename before '(', but presume

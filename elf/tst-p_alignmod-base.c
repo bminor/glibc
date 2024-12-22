@@ -26,7 +26,7 @@
 int foo __attribute__ ((aligned (ALIGN))) = 1;
 
 bool
-__attribute__ ((weak, noclone, noinline))
+__attribute__ ((weak)) __attribute_optimization_barrier__
 is_aligned_p (void *p, int align)
 {
   return (((uintptr_t) p) & (align - 1)) == 0;

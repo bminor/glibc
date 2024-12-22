@@ -73,7 +73,7 @@ enum { no_check = -1 };
 
 /* Check that VALUE is the magic value for INDEX, behind a compiler
    barrier.  */
-__attribute__ ((noinline, noclone, weak))
+__attribute__ ((weak)) __attribute_optimization_barrier__
 void
 check_magic (int index, unsigned int value)
 {
@@ -103,7 +103,7 @@ check_magic (int index, unsigned int value)
 
 /* Check that VALUE is the magic value for INDEX, behind a compiler
    barrier.  Double variant.  */
-__attribute__ ((noinline, noclone, weak))
+__attribute__ ((weak)) __attribute_optimization_barrier__
 void
 check_magic (int index, double value)
 {
@@ -153,7 +153,7 @@ struct checker
    call_pthread_exit are used to call pthread_exit indirectly, with
    the intent of clobbering the register values.  */
 
-__attribute__ ((noinline, noclone, weak))
+__attribute__ ((weak)) __attribute_optimization_barrier__
 void
 call_pthread_exit_0 (const values<unsigned int> *pvalues)
 {
@@ -166,7 +166,7 @@ call_pthread_exit_0 (const values<unsigned int> *pvalues)
   pthread_exit (NULL);
 }
 
-__attribute__ ((noinline, noclone, weak))
+__attribute__ ((weak)) __attribute_optimization_barrier__
 void
 call_pthread_exit_1 (const values<double> *pvalues)
 {
@@ -180,7 +180,7 @@ call_pthread_exit_1 (const values<double> *pvalues)
   call_pthread_exit_0 (&other_values);
 }
 
-__attribute__ ((noinline, noclone, weak))
+__attribute__ ((weak)) __attribute_optimization_barrier__
 void
 call_pthread_exit ()
 {
@@ -192,7 +192,7 @@ call_pthread_exit ()
    pthread_exit.  If Nested is true, call pthread_exit indirectly via
    call_pthread_exit.  */
 template <class T, bool Nested>
-__attribute__ ((noinline, noclone, weak))
+__attribute__ ((weak)) __attribute_optimization_barrier__
 void *
 threadfunc (void *closure)
 {

@@ -54,7 +54,7 @@ f1 (int a0, int a1, int a2, int a3)
 }
 
 static void
-__attribute__ ((noinline, noclone))
+__attribute_optimization_barrier__
 call_longjmp (void)
 {
   longjmp_called = 1;

@@ -35,7 +35,7 @@
 #define PRIMITIVE_CAT(x, y) x ## y
 #define CAT(x, y) PRIMITIVE_CAT (x, y)
 
-static double __attribute__ ((noinline, noclone))
+static double __attribute_optimization_barrier__
 CAT (do_one_test_kernel, POSTFIX) (const char *s, size_t len)
 {
 
@@ -58,7 +58,7 @@ CAT (do_one_test_kernel, POSTFIX) (const char *s, size_t len)
   return (double) cur / (double) NFIXED_ITERS;
 }
 
-static double __attribute__ ((noinline, noclone))
+static double __attribute_optimization_barrier__
 CAT (do_rand_test_kernel, POSTFIX) (char const *bufs,
 				    unsigned int const *sizes)
 {
