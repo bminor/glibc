@@ -84,8 +84,6 @@ float: 1
 Function: "atan":
 double: 1
 
-Function: "atan2":
-
 Function: "atan2_downward":
 double: 1
 
@@ -142,7 +140,7 @@ float: 2
 
 Function: "atanpi_towardzero":
 double: 1
-float: 1
+float: 2
 
 Function: "atanpi_upward":
 double: 1
@@ -223,8 +221,6 @@ float: 4
 Function: Imaginary part of "cacosh_upward":
 double: 3
 float: 2
-
-Function: "carg":
 
 Function: "carg_downward":
 double: 1
