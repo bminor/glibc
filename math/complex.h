@@ -52,7 +52,8 @@ __BEGIN_DECLS
 #undef I
 #define I _Complex_I
 
-#if defined __USE_ISOC11 && __GNUC_PREREQ (4, 7)
+#if defined __USE_ISOC11 \
+    && (__GNUC_PREREQ (4, 7) || __glibc_clang_prereq (12, 0))
 /* Macros to expand into expression of specified complex type.  */
 # define CMPLX(x, y) __builtin_complex ((double) (x), (double) (y))
 # define CMPLXF(x, y) __builtin_complex ((float) (x), (float) (y))
