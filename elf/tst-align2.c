@@ -22,6 +22,7 @@
 #include <sys/wait.h>
 #include <tst-stack-align.h>
 #include <unistd.h>
+#include <libc-diag.h>
 
 static int res, fds[2], result;
 static bool test_destructors;
@@ -91,6 +92,8 @@ do_test (void)
   int des_seen = 0, dso_des_seen = 0;
   while ((len = TEMP_FAILURE_RETRY (read (fds[0], &c, 1))) > 0)
     {
+      DIAG_PUSH_NEEDS_COMMENT_CLANG;
+      DIAG_IGNORE_NEEDS_COMMENT_CLANG (3.2, "-Wimplicit-fallthrough");
       switch (c)
         {
         case 'B':
@@ -112,6 +115,7 @@ do_test (void)
           result = 1;
           break;
         }
+      DIAG_POP_NEEDS_COMMENT_CLANG;
     }
 
   close (fds[0]);

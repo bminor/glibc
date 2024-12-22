@@ -26,6 +26,7 @@
 #include <search.h>
 #include <tst-stack-align.h>
 #include <support/check.h>
+#include <libc-diag.h>
 
 #define SEED 0
 #define BALANCED 1
@@ -286,6 +287,8 @@ mangle_tree (enum order how, enum action what, void **root, int lag)
 	  abort ();
 	}
 
+      DIAG_PUSH_NEEDS_COMMENT_CLANG;
+      DIAG_IGNORE_NEEDS_COMMENT_CLANG (3.2, "-Wimplicit-fallthrough");
       switch (what)
 	{
 	case build_and_del:
@@ -331,6 +334,7 @@ mangle_tree (enum order how, enum action what, void **root, int lag)
 	  break;
 
 	}
+      DIAG_POP_NEEDS_COMMENT_CLANG;
     }
 }
 
