@@ -620,7 +620,7 @@ class HeaderTests(object):
         out_file = os.path.join(self.temp_dir, 'namespace-out')
         with open(c_file, 'w') as c_file_out:
             c_file_out.write('#include <%s>\n' % self.header)
-        cmd = ('%s %s -E %s -P -Wp,-dN > %s'
+        cmd = ('%s %s -E %s -P -Wp,-dD > %s'
                % (self.cc, self.cflags_namespace, c_file, out_file))
         subprocess.check_call(cmd, shell=True)
         bad_tokens = set()
@@ -639,11 +639,11 @@ class HeaderTests(object):
                     # macros defined by user code including the
                     # header.)
                     continue
-                match = re.match(r'#define (.*)', line)
+                match = re.match(r'#define (.*?[^\(\s]+)', line)
                 if match:
                     self.check_token(bad_tokens, match.group(1))
                     continue
-                match = re.match(r'#undef (.*)', line)
+                match = re.match(r'#undef (.*?[^\(\s]+)', line)
                 if match:
                     bad_tokens.discard(match.group(1))
                     continue
