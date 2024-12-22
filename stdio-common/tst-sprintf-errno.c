@@ -24,7 +24,7 @@
 
 /* GCC does not yet know about the %#m specifier.  */
 DIAG_PUSH_NEEDS_COMMENT;
-DIAG_IGNORE_NEEDS_COMMENT (11, "-Wformat=");
+DIAG_IGNORE_NEEDS_COMMENT_GCC (11, "-Wformat=");
 
 static int
 do_test (void)
