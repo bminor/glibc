@@ -27,6 +27,7 @@
 #include <dlfcn.h>
 #include <string.h>
 #include <signal.h>
+#include <unistd.h>
 
 #undef NDEBUG
 #include <assert.h>
