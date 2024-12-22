@@ -117,7 +117,7 @@ __assert_fail_base (const char *fmt, const char *assertion, const char *file,
          this code path is taken.  */
       WS ("' failed\n");
 
-      (void) writev (STDERR_FILENO, v, i);
+      (void) __writev (STDERR_FILENO, v, i);
     }
 
   abort ();
