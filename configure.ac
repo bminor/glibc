@@ -1527,6 +1527,26 @@ LIBC_CONFIG_VAR([cc-option-wimplicit-fallthrough],
 		[$libc_cv_cc_wimplicit_fallthrough])
 AC_SUBST(libc_cv_test_cc_wimplicit_fallthrough)
 
+dnl Check if TEST_CC supports -finput-charset=ascii.
+LIBC_TRY_TEST_CC_OPTION([-finput-charset=ascii],
+  [-c -Werror -finput-charset=ascii],
+  libc_cv_test_cflags_finput_charset_ascii,
+  [libc_cv_test_cflags_finput_charset_ascii="-finput-charset=ascii"],
+  [libc_cv_test_cflags_finput_charset_ascii=]
+)
+LIBC_CONFIG_VAR(test-config-cflags-finput-charset-ascii,
+		$libc_cv_test_cflags_finput_charset_ascii)
+
+dnl Check if TEST_CXX supports -finput-charset=ascii.
+LIBC_TRY_TEST_CXX_OPTION([-finput-charset=ascii],
+  [-c -Werror -finput-charset=ascii],
+  libc_cv_test_cxxflags_finput_charset_ascii,
+  [libc_cv_test_cxxflags_finput_charset_ascii="-finput-charset=ascii"],
+  [libc_cv_test_cxxflags_finput_charset_ascii=]
+)
+LIBC_CONFIG_VAR(test-config-cxxflags-finput-charset-ascii,
+		$libc_cv_test_cxxflags_finput_charset_ascii)
+
 dnl Check whether we have the gd library available.
 AC_MSG_CHECKING(for libgd)
 if test "$with_gd" != "no"; then

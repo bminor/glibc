@@ -167,6 +167,12 @@ AC_DEFUN([LIBC_TRY_CC_OPTION],
 [AS_IF([AC_TRY_COMMAND([${CC-cc} $1 -xc /dev/null -S -o /dev/null])],
 	[$2], [$3])])
 
+dnl Test a C++ compiler option or options with an empty input file.
+dnl LIBC_TRY_CXX_OPTION([options], [action-if-true], [action-if-false])
+AC_DEFUN([LIBC_TRY_CXX_OPTION],
+[AS_IF([AC_TRY_COMMAND([${CXX-c++} $1 -xc++ /dev/null -S -o /dev/null])],
+	[$2], [$3])])
+
 dnl Find and source sysdeps/*/preconfigure.
 dnl LIBC_PRECONFIGURE([$srcdir], [for])
 AC_DEFUN([LIBC_PRECONFIGURE], [dnl
@@ -447,3 +453,26 @@ LIBC_CHECK_TEST_CXX(
     fi])
 )
 rm -f conftest*])
+
+dnl Test a TEST_CC compiler option or options with an empty input file.
+dnl LIBC_TRY_TEST_CC_OPTION([message], [options],
+dnl   [TEST_CC-cache-id], [TEST_CC-action-if-true], [TEST_CC-action-if-false])
+AC_DEFUN([LIBC_TRY_TEST_CC_OPTION],
+[
+LIBC_CHECK_TEST_CC(
+  AC_CACHE_CHECK([$1 in testing], $3,
+    [LIBC_TRY_CC_OPTION([$2], [$4], [$5])])
+  )
+])
+
+dnl Test a TEST_CXX compiler option or options with an empty input file.
+dnl LIBC_TRY_TEST_CXX_OPTION([message], [options],
+dnl   [TEST_CXX-cache-id], [TEST_CXX-action-if-true],
+dnl   [TEST_CXX-action-if-false])
+AC_DEFUN([LIBC_TRY_TEST_CXX_OPTION],
+[
+LIBC_CHECK_TEST_CXX(
+  AC_CACHE_CHECK([$1 in testing], $3,
+    [LIBC_TRY_CXX_OPTION([$2], [$4], [$5])])
+  )
+])
