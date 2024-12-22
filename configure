@@ -8003,6 +8003,40 @@ test-config-cflags-wno-restrict = $libc_cv_test_cflags_wno_restrict"
 
 saved_CC="$CC"
 CC="$TEST_CC"
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking -Wno-fortify-source in testing" >&5
+printf %s "checking -Wno-fortify-source in testing... " >&6; }
+if test ${libc_cv_test_cflags_wno_fortify_source+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) if { ac_try='${CC-cc} -c -Werror -Wno-fortify-source -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+then :
+  libc_cv_test_cflags_wno_fortify_source=-Wno-fortify-source
+else case e in #(
+  e) libc_cv_test_cflags_wno_fortify_source=
+ ;;
+esac
+fi ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_test_cflags_wno_fortify_source" >&5
+printf "%s\n" "$libc_cv_test_cflags_wno_fortify_source" >&6; }
+
+CC="$saved_CC"
+
+
+config_vars="$config_vars
+test-config-cflags-wno-fortify-source = $libc_cv_test_cflags_wno_fortify_source"
+
+
+
+saved_CC="$CC"
+CC="$TEST_CC"
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking -finput-charset=ascii in testing" >&5
 printf %s "checking -finput-charset=ascii in testing... " >&6; }
 if test ${libc_cv_test_cflags_finput_charset_ascii+y}

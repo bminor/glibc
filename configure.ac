@@ -1589,6 +1589,16 @@ LIBC_TRY_TEST_CC_OPTION([-Wno-restrict],
 LIBC_CONFIG_VAR([test-config-cflags-wno-restrict],
 		[$libc_cv_test_cflags_wno_restrict])
 
+dnl Check if TEST_CC supports -Wno-fortify-source.
+LIBC_TRY_TEST_CC_OPTION([-Wno-fortify-source],
+  [-c -Werror -Wno-fortify-source],
+  libc_cv_test_cflags_wno_fortify_source,
+  [libc_cv_test_cflags_wno_fortify_source=-Wno-fortify-source],
+  [libc_cv_test_cflags_wno_fortify_source=]
+)
+LIBC_CONFIG_VAR([test-config-cflags-wno-fortify-source],
+		[$libc_cv_test_cflags_wno_fortify_source])
+
 dnl Check if TEST_CC supports -finput-charset=ascii.
 LIBC_TRY_TEST_CC_OPTION([-finput-charset=ascii],
   [-c -Werror -finput-charset=ascii],

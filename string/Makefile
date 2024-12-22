@@ -252,8 +252,11 @@ endif
 
 include ../Rules
 
-CFLAGS-inl-tester.c += -fno-builtin
-CFLAGS-noinl-tester.c += -fno-builtin
+CFLAGS-tester.c += $(test-config-cflags-wno-fortify-source)
+CFLAGS-inl-tester.c += -fno-builtin \
+		       $(test-config-cflags-wno-fortify-source)
+CFLAGS-noinl-tester.c += -fno-builtin \
+		       $(test-config-cflags-wno-fortify-source)
 CFLAGS-tst-strlen.c += -fno-builtin
 CFLAGS-stratcliff.c += -fno-builtin
 CFLAGS-test-ffs.c += -fno-builtin
