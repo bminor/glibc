@@ -42,6 +42,9 @@ __mprotect (void *addr, size_t len, int prot)
 			  (vm_address_t) addr, (vm_size_t) len,
 			  0, vmprot))
     {
+      if (err == KERN_PROTECTION_FAILURE)
+        err = EACCES;
+
       errno = err;
       return -1;
     }
