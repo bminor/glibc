@@ -23,4 +23,7 @@ libc {
   GLIBC_2.19 {
     fanotify_mark;
   }
+  GLIBC_2.41 {
+    cacheflush;
+  }
 }

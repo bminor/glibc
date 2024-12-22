@@ -15,6 +15,11 @@ test-xfail-check-wx-segment = *
 
 endif # $(subdir) == elf
 
+ifeq ($(subdir),misc)
+sysdep_routines += cacheflush
+sysdep_headers += sys/cachectl.h
+endif
+
 ifeq ($(subdir),debug)
 test-xfail-tst-ssp-1 = $(have-ssp)
 endif # $(subdir) == debug
