@@ -49,9 +49,9 @@ if 'CFLAGS' is specified it must enable optimization.  For example:
 
      $ ../glibc-VERSION/configure CC="gcc -m32" CFLAGS="-O3"
 
-   To test the GNU C Library with a different C compiler or a different
-C++ compiler, 'TEST_CC=COMPILER' and 'TEST_CXX=COMPILER' arguments can
-be passed to 'configure'.  For example:
+   To test the GNU C Library with a different set of C and C++
+compilers, 'TEST_CC=COMPILER' and 'TEST_CXX=COMPILER' arguments can be
+passed to 'configure'.  For example:
 
      $ ../glibc-VERSION/configure TEST_CC="gcc-6.4.1" TEST_CXX="g++-6.4.1"
 

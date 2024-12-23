@@ -9,6 +9,17 @@ Version 2.41
 
 Major new features:
 
+* Support testing glibc build with a different set of C and C++ compilers
+  from the C and C++ compilers used to build glibc with
+
+  $ ../configure TEST_CC="gcc-6.4.1" TEST_CXX="g++-6.4.1"
+
+  And support testing glibc build with Clang
+
+  $ ../configure TEST_CC="clang" TEST_CXX="clang++"
+
+  Some run-time failures with Clang are expected.
+
 * In /etc/resolv.conf and the RES_OPTIONS, option flags can now be
   prefixed with “-” to clear previously set flags.  For example, if
   /etc/resolv.conf contains “options no-aaaa”, a process running with
