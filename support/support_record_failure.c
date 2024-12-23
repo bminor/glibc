@@ -112,3 +112,13 @@ support_record_failure_is_failed (void)
      synchronization for reliable test error reporting anyway.  */
   return __atomic_load_n (&state->failed, __ATOMIC_RELAXED);
 }
+
+void
+support_record_failure_barrier (void)
+{
+  if (__atomic_load_n (&state->failed, __ATOMIC_RELAXED))
+    {
+      puts ("error: exiting due to previous errors");
+      exit (1);
+    }
+}
