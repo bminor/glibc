@@ -36,7 +36,7 @@ hidden_ver (___tls_get_addr, __tls_get_addr)
 /* Only handle slow paths for __tls_get_addr.  */
 attribute_hidden
 void *
-__tls_get_addr_slow (GET_ADDR_ARGS)
+__tls_get_addr_slow (tls_index *ti)
 {
   dtv_t *dtv = THREAD_DTV ();
 
@@ -44,10 +44,10 @@ __tls_get_addr_slow (GET_ADDR_ARGS)
   if (__glibc_unlikely (dtv[0].counter != gen)
       /* See comment in __tls_get_addr in elf/dl-tls.c.  */
       && !(_dl_tls_allocate_active ()
-           && GET_ADDR_MODULE < _dl_tls_initial_modid_limit))
-    return update_get_addr (GET_ADDR_PARAM, gen);
+           && ti->ti_module < _dl_tls_initial_modid_limit))
+    return update_get_addr (ti, gen);
 
-  return tls_get_addr_tail (GET_ADDR_PARAM, dtv, NULL);
+  return tls_get_addr_tail (ti, dtv, NULL);
 }
 #else
 

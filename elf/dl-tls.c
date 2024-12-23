@@ -695,23 +695,6 @@ rtld_hidden_def (_dl_deallocate_tls)
 
 
 #ifdef SHARED
-/* The __tls_get_addr function has two basic forms which differ in the
-   arguments.  The IA-64 form takes two parameters, the module ID and
-   offset.  The form used, among others, on IA-32 takes a reference to
-   a special structure which contain the same information.  The second
-   form seems to be more often used (in the moment) so we default to
-   it.  Users of the IA-64 form have to provide adequate definitions
-   of the following macros.  */
-# ifndef GET_ADDR_ARGS
-#  define GET_ADDR_ARGS tls_index *ti
-#  define GET_ADDR_PARAM ti
-# endif
-# ifndef GET_ADDR_MODULE
-#  define GET_ADDR_MODULE ti->ti_module
-# endif
-# ifndef GET_ADDR_OFFSET
-#  define GET_ADDR_OFFSET ti->ti_offset
-# endif
 
 /* Allocate one DTV entry.  */
 static struct dtv_pointer
@@ -910,13 +893,13 @@ _dl_update_slotinfo (unsigned long int req_modid, size_t new_gen)
 
 static void *
 __attribute_noinline__
-tls_get_addr_tail (GET_ADDR_ARGS, dtv_t *dtv, struct link_map *the_map)
+tls_get_addr_tail (tls_index *ti, dtv_t *dtv, struct link_map *the_map)
 {
   /* The allocation was deferred.  Do it now.  */
   if (the_map == NULL)
     {
       /* Find the link map for this module.  */
-      size_t idx = GET_ADDR_MODULE;
+      size_t idx = ti->ti_module;
       struct dtv_slotinfo_list *listp = GL(dl_tls_dtv_slotinfo_list);
 
       while (idx >= listp->len)
@@ -953,35 +936,35 @@ tls_get_addr_tail (GET_ADDR_ARGS, dtv_t *dtv, struct link_map *the_map)
 #endif
 	  __rtld_lock_unlock_recursive (GL(dl_load_tls_lock));
 
-	  dtv[GET_ADDR_MODULE].pointer.to_free = NULL;
-	  dtv[GET_ADDR_MODULE].pointer.val = p;
+	  dtv[ti->ti_module].pointer.to_free = NULL;
+	  dtv[ti->ti_module].pointer.val = p;
 
-	  return (char *) p + GET_ADDR_OFFSET;
+	  return (char *) p + ti->ti_offset;
 	}
       else
 	__rtld_lock_unlock_recursive (GL(dl_load_tls_lock));
     }
   struct dtv_pointer result = allocate_and_init (the_map);
-  dtv[GET_ADDR_MODULE].pointer = result;
+  dtv[ti->ti_module].pointer = result;
   assert (result.to_free != NULL);
 
-  return (char *) result.val + GET_ADDR_OFFSET;
+  return (char *) result.val + ti->ti_offset;
 }
 
 
 static struct link_map *
 __attribute_noinline__
-update_get_addr (GET_ADDR_ARGS, size_t gen)
+update_get_addr (tls_index *ti, size_t gen)
 {
-  struct link_map *the_map = _dl_update_slotinfo (GET_ADDR_MODULE, gen);
+  struct link_map *the_map = _dl_update_slotinfo (ti->ti_module, gen);
   dtv_t *dtv = THREAD_DTV ();
 
-  void *p = dtv[GET_ADDR_MODULE].pointer.val;
+  void *p = dtv[ti->ti_module].pointer.val;
 
   if (__glibc_unlikely (p == TLS_DTV_UNALLOCATED))
-    return tls_get_addr_tail (GET_ADDR_PARAM, dtv, the_map);
+    return tls_get_addr_tail (ti, dtv, the_map);
 
-  return (void *) p + GET_ADDR_OFFSET;
+  return (void *) p + ti->ti_offset;
 }
 
 /* For all machines that have a non-macro version of __tls_get_addr, we
@@ -990,7 +973,7 @@ update_get_addr (GET_ADDR_ARGS, size_t gen)
    in ld.so for __tls_get_addr.  */
 
 #ifndef __tls_get_addr
-extern void * __tls_get_addr (GET_ADDR_ARGS);
+extern void * __tls_get_addr (tls_index *ti);
 rtld_hidden_proto (__tls_get_addr)
 rtld_hidden_def (__tls_get_addr)
 #endif
@@ -998,7 +981,7 @@ rtld_hidden_def (__tls_get_addr)
 /* The generic dynamic and local dynamic model cannot be used in
    statically linked applications.  */
 void *
-__tls_get_addr (GET_ADDR_ARGS)
+__tls_get_addr (tls_index *ti)
 {
   dtv_t *dtv = THREAD_DTV ();
 
@@ -1010,7 +993,7 @@ __tls_get_addr (GET_ADDR_ARGS)
   if (__glibc_unlikely (dtv[0].counter != gen))
     {
       if (_dl_tls_allocate_active ()
-	  && GET_ADDR_MODULE < _dl_tls_initial_modid_limit)
+	  && ti->ti_module < _dl_tls_initial_modid_limit)
 	  /* This is a reentrant __tls_get_addr call, but we can
 	     satisfy it because it's an initially-loaded module ID.
 	     These TLS slotinfo slots do not change, so the
@@ -1023,16 +1006,16 @@ __tls_get_addr (GET_ADDR_ARGS)
 	  /* Update DTV up to the global generation, see CONCURRENCY NOTES
 	     in _dl_update_slotinfo.  */
 	  gen = atomic_load_acquire (&GL(dl_tls_generation));
-	  return update_get_addr (GET_ADDR_PARAM, gen);
+	  return update_get_addr (ti, gen);
 	}
     }
 
-  void *p = dtv[GET_ADDR_MODULE].pointer.val;
+  void *p = dtv[ti->ti_module].pointer.val;
 
   if (__glibc_unlikely (p == TLS_DTV_UNALLOCATED))
-    return tls_get_addr_tail (GET_ADDR_PARAM, dtv, NULL);
+    return tls_get_addr_tail (ti, dtv, NULL);
 
-  return (char *) p + GET_ADDR_OFFSET;
+  return (char *) p + ti->ti_offset;
 }
 #endif /* SHARED */
 
