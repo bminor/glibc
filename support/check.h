@@ -192,6 +192,9 @@ void support_record_failure_reset (void);
    failures or not.  */
 int support_record_failure_is_failed (void);
 
+/* Terminate the process if any failures have been encountered so far.  */
+void support_record_failure_barrier (void);
+
 __END_DECLS
 
 #endif /* SUPPORT_CHECK_H */
