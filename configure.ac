@@ -1610,7 +1610,7 @@ LIBC_CONFIG_VAR(test-config-cflags-finput-charset-ascii,
 		$libc_cv_test_cflags_finput_charset_ascii)
 
 dnl Check if TEST_CXX supports -finput-charset=ascii.
-LIBC_TRY_TEST_CXX_OPTION([-finput-charset=ascii],
+LIBC_TRY_TEST_CXX_OPTION([$CXX -finput-charset=ascii],
   [-c -Werror -finput-charset=ascii],
   libc_cv_test_cxxflags_finput_charset_ascii,
   [libc_cv_test_cxxflags_finput_charset_ascii="-finput-charset=ascii"],

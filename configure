@@ -8071,8 +8071,8 @@ test-config-cflags-finput-charset-ascii = $libc_cv_test_cflags_finput_charset_as
 
 saved_CXX="$CXX"
 CXX="$TEST_CXX"
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking -finput-charset=ascii in testing" >&5
-printf %s "checking -finput-charset=ascii in testing... " >&6; }
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking $CXX -finput-charset=ascii in testing" >&5
+printf %s "checking $CXX -finput-charset=ascii in testing... " >&6; }
 if test ${libc_cv_test_cxxflags_finput_charset_ascii+y}
 then :
   printf %s "(cached) " >&6
