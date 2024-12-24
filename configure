@@ -6069,6 +6069,48 @@ rm -f conftest*
 config_vars="$config_vars
 have-test-clangxx = $libc_cv_test_clangxx"
 
+if test "$libc_cv_test_clang" = "yes"; then
+  conftest_code="
+  #if __clang_major__ > 19
+  #error clang version > 19
+  #endif
+  "
+
+cat > conftest.c <<EOF
+$conftest_code
+EOF
+
+saved_CC="$CC"
+CC="$TEST_CC"
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for clang in testing" >&5
+printf %s "checking for clang in testing... " >&6; }
+if test ${libc_cv_test_clang_19_or_less+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e)     if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -c conftest.c -o conftest 1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+    then
+      libc_cv_test_clang_19_or_less=yes
+    else
+      libc_cv_test_clang_19_or_less=no
+    fi ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_test_clang_19_or_less" >&5
+printf "%s\n" "$libc_cv_test_clang_19_or_less" >&6; }
+
+CC="$saved_CC"
+
+rm -f conftest*
+fi
+config_vars="$config_vars
+have-test-clang-19-or-less = $libc_cv_test_clang_19_or_less"
+
 
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for -fstack-protector" >&5
 printf %s "checking for -fstack-protector... " >&6; }

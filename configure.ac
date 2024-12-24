@@ -665,6 +665,21 @@ LIBC_TRY_TEST_CXX_COMMAND([for clang++],
 )
 LIBC_CONFIG_VAR([have-test-clangxx], [$libc_cv_test_clangxx])
 
+if test "$libc_cv_test_clang" = "yes"; then
+  conftest_code="
+  #if __clang_major__ > 19
+  #error clang version > 19
+  #endif
+  "
+  LIBC_TRY_TEST_CC_COMMAND([for clang],
+    [$conftest_code],
+    [-c],
+    libc_cv_test_clang_19_or_less,
+    [libc_cv_test_clang_19_or_less=yes], [libc_cv_test_clang_19_or_less=no],
+  )
+fi
+LIBC_CONFIG_VAR([have-test-clang-19-or-less], [$libc_cv_test_clang_19_or_less])
+
 LIBC_TRY_CC_AND_TEST_CC_OPTION([for -fstack-protector],
   [-Werror -fstack-protector],
   libc_cv_ssp,

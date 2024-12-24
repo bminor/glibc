@@ -317,10 +317,10 @@ tests := \
   # tests
 
 # Clang 19 takes a very long time, it ran more than 27 minutes on Intel
-# Core i7-1195G7 before the process was killed, to compile bug28.c:
-# https://github.com/llvm/llvm-project/issues/120462
-# Exclude it when Clang is used for testing.
-ifneq ($(have-test-clang),yes)
+# Core i7-1195G7 before the process was killed, to compile bug28.c
+# The issue was fixed in upstream but check if clang has the version that has the fix
+# https://github.com/llvm/llvm-project/commit/99dddef340e566e9d303010f1219f7d7d6d37a11 .
+ifneq ($(have-test-clang-19-or-less),yes)
 tests += \
   bug28 \
   # tests
