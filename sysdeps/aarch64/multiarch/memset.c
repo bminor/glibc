@@ -34,6 +34,7 @@ extern __typeof (__redirect_memset) __memset_kunpeng attribute_hidden;
 extern __typeof (__redirect_memset) __memset_a64fx attribute_hidden;
 extern __typeof (__redirect_memset) __memset_generic attribute_hidden;
 extern __typeof (__redirect_memset) __memset_mops attribute_hidden;
+extern __typeof (__redirect_memset) __memset_sve_zva64 attribute_hidden;
 
 static inline __typeof (__redirect_memset) *
 select_memset_ifunc (void)
@@ -47,6 +48,9 @@ select_memset_ifunc (void)
     {
       if (IS_A64FX (midr) && zva_size == 256)
 	return __memset_a64fx;
+
+      if (zva_size == 64)
+	return __memset_sve_zva64;
     }
 
   if (IS_KUNPENG920 (midr))
