@@ -61,7 +61,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memset, 1, __memset_emag)
 	      IFUNC_IMPL_ADD (array, i, memset, 1, __memset_kunpeng)
 #if HAVE_AARCH64_SVE_ASM
-	      IFUNC_IMPL_ADD (array, i, memset, sve && zva_size == 256, __memset_a64fx)
+	      IFUNC_IMPL_ADD (array, i, memset, sve && !bti && zva_size == 256, __memset_a64fx)
+	      IFUNC_IMPL_ADD (array, i, memset, sve && zva_size == 64, __memset_sve_zva64)
 #endif
 	      IFUNC_IMPL_ADD (array, i, memset, mops, __memset_mops)
 	      IFUNC_IMPL_ADD (array, i, memset, 1, __memset_generic))
