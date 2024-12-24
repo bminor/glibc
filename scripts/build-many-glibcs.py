@@ -107,7 +107,7 @@ class Context(object):
     """The global state associated with builds in a given directory."""
 
     def __init__(self, topdir, parallelism, keep, replace_sources, strip,
-                 full_gcc, action, shallow=False):
+                 full_gcc, action, exclude, shallow=False):
         """Initialize the context."""
         self.topdir = topdir
         self.parallelism = parallelism
@@ -115,6 +115,7 @@ class Context(object):
         self.replace_sources = replace_sources
         self.strip = strip
         self.full_gcc = full_gcc
+        self.exclude = exclude
         self.shallow = shallow
         self.srcdir = os.path.join(topdir, 'src')
         self.versions_json = os.path.join(self.srcdir, 'versions.json')
@@ -502,6 +503,8 @@ class Context(object):
     def add_config(self, **args):
         """Add an individual build configuration."""
         cfg = Config(self, **args)
+        if self.exclude and cfg.name in self.exclude:
+            return
         if cfg.name in self.configs:
             print('error: duplicate config %s' % cfg.name)
             exit(1)
@@ -1884,6 +1887,8 @@ def get_parser():
                         help='Build GCC with all languages and libsanitizer')
     parser.add_argument('--shallow', action='store_true',
                         help='Do not download Git history during checkout')
+    parser.add_argument('--exclude', dest='exclude',
+                        help='Targets to be excluded', nargs='*')
     parser.add_argument('topdir',
                         help='Toplevel working directory')
     parser.add_argument('action',
@@ -1978,7 +1983,7 @@ def main(argv):
     opts = parser.parse_args(argv)
     topdir = os.path.abspath(opts.topdir)
     ctx = Context(topdir, opts.parallelism, opts.keep, opts.replace_sources,
-                  opts.strip, opts.full_gcc, opts.action,
+                  opts.strip, opts.full_gcc, opts.action, opts.exclude,
                   shallow=opts.shallow)
     ctx.run_builds(opts.action, opts.configs)
 
