@@ -14,6 +14,7 @@ sysdep_routines += \
   memset_kunpeng \
   memset_mops \
   memset_oryon1 \
+  memset_sve_zva64 \
   memset_zva64 \
   strlen_asimd \
   strlen_generic \
