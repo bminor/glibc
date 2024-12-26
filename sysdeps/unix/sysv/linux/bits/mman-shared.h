@@ -56,7 +56,8 @@ int memfd_create (const char *__name, unsigned int __flags) __THROW;
 
 /* Lock pages from ADDR (inclusive) to ADDR + LENGTH (exclusive) into
    memory.  FLAGS is a combination of the MLOCK_* flags above.  */
-int mlock2 (const void *__addr, size_t __length, unsigned int __flags) __THROW;
+int mlock2 (const void *__addr, size_t __length, unsigned int __flags) __THROW
+    __attr_access ((__none__, 1));
 
 /* Allocate a new protection key, with the PKEY_DISABLE_* bits
    specified in ACCESS_RESTRICTIONS.  The protection key mask for the
