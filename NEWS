@@ -57,6 +57,11 @@ Major new features:
   liable to change.  Features from C2Y are also enabled by _GNU_SOURCE, or
   by compiling with "gcc -std=gnu2y".
 
+* Optimized and correctly rounded exp10m1f, exp2m1f, expm1f, log10f, log2p1f,
+  log1pf, log10p1f, cbrtf, erff, erfcf, lgammaf, tgammaf, tanf, acosf, acoshf,
+  asinf, asinhf, atanf, atan2f, atanhf, coshf, sinhf, and tanhf from CORE-MATH
+  project <https://core-math.gitlabpages.inria.fr/>.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The big-endian ARC port (arceb-linux-gnu) has been removed.
