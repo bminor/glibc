@@ -33,17 +33,29 @@
 #undef ENTRY
 #undef ALIGN
 
+#ifndef __ASSEMBLER__
+void return_to_trampoline(intptr_t *sp, void *pc, intptr_t retval)
+    __attribute__((__noreturn__));
+#endif
+
+#define RETURN_TO return_to_trampoline
+
 #ifdef __x86_64__
-#define RETURN_TO(sp, pc, retval) \
-  asm volatile ("movq %0, %%rsp; jmp %*%1 # %2" \
-		: : "g" (sp), "r" (pc), "a" (retval))
+#define RETURN_TO_TRAMPOLINE() \
+  asm ("return_to_trampoline:\n" \
+       "movq %rdx, %rax\n" \
+       "movq %rdi, %rsp\n" \
+       "jmp *%rsi\n");
 /* This should be rearranged, but at the moment this file provides
    the most useful definitions for assembler syntax details.  */
 #include <sysdeps/unix/x86_64/sysdep.h>
 #else
-#define RETURN_TO(sp, pc, retval) \
-  asm volatile ("movl %0, %%esp; jmp %*%1 # %2" \
-		: : "g" (sp), "r" (pc), "a" (retval))
+#define RETURN_TO_TRAMPOLINE() \
+  asm ("return_to_trampoline:\n" \
+       "movl 12(%esp), %eax\n" \
+       "movl 8(%esp), %edx\n" \
+       "movl 4(%esp), %esp\n" \
+       "jmp *%edx\n");
 #include <sysdeps/unix/i386/sysdep.h>
 #endif
 

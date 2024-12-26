@@ -249,6 +249,8 @@ _hurd_stack_setup (void **argptr)
   _hurd_startup (argptr, &doinit);
   __builtin_unreachable ();
 }
+
+RETURN_TO_TRAMPOLINE();
 #endif
 
 

@@ -46,31 +46,32 @@ __sigreturn2 (struct hurd_sigstate *ss, uintptr_t *usp,
                                  MACH_PORT_RIGHT_RECEIVE, -1);
   THREAD_SETMEM (THREAD_SELF, reply_port, sc_reply_port);
 
-  asm volatile (
+  void sigreturn2_trampoline (uintptr_t *usp) __attribute__ ((__noreturn__));
+  sigreturn2_trampoline (usp);
+}
+
+asm("sigreturn2_trampoline:\n"
                 /* Point the stack to the register dump.  */
-                "movq %0, %%rsp\n"
+                "movq %rdi, %rsp\n"
                 /* Pop off the registers.  */
-                "popq %%r8\n"
-                "popq %%r9\n"
-                "popq %%r10\n"
-                "popq %%r11\n"
-                "popq %%r12\n"
-                "popq %%r13\n"
-                "popq %%r14\n"
-                "popq %%r15\n"
-                "popq %%rdi\n"
-                "popq %%rsi\n"
-                "popq %%rbp\n"
-                "popq %%rbx\n"
-                "popq %%rdx\n"
-                "popq %%rcx\n"
-                "popq %%rax\n"
+                "popq %r8\n"
+                "popq %r9\n"
+                "popq %r10\n"
+                "popq %r11\n"
+                "popq %r12\n"
+                "popq %r13\n"
+                "popq %r14\n"
+                "popq %r15\n"
+                "popq %rdi\n"
+                "popq %rsi\n"
+                "popq %rbp\n"
+                "popq %rbx\n"
+                "popq %rdx\n"
+                "popq %rcx\n"
+                "popq %rax\n"
                 "popfq\n"
                 /* Restore %rip and %rsp with a single instruction.  */
-                "retq $128" :
-                : "rm" (usp));
-  __builtin_unreachable ();
-}
+                "retq $128" );
 
 int
 __sigreturn (struct sigcontext *scp)
@@ -152,16 +153,18 @@ __sigreturn (struct sigcontext *scp)
   *--usp = scp->sc_r9;
   *--usp = scp->sc_r8;
 
-  /* Switch to the user's stack that we have just prepared, and call
-     __sigreturn2.  Clobber "memory" to make sure GCC flushes the stack
-     setup to actual memory.  We align the stack as per the ABI, but pass
-     the original usp to __sigreturn2 as an argument.  */
-  asm volatile ("movq %1, %%rsp\n"
-                "andq $-16, %%rsp\n"
-                "call __sigreturn2" :
-                : "D" (ss), "S" (usp), "d" (sc_reply_port)
-                : "memory");
-  __builtin_unreachable ();
+  void sigreturn_trampoline (struct hurd_sigstate *ss, uintptr_t *usp,
+                             mach_port_t sc_reply_port)
+                             __attribute__ ((__noreturn__));
+  sigreturn_trampoline (ss, usp, sc_reply_port);
 }
+
+asm("sigreturn_trampoline:\n"
+  /* Switch to the user's stack that we have just prepared, and call
+     __sigreturn2.  We align the stack as per the ABI, but pass
+     the original usp to __sigreturn2 as an argument.  */
+                "movq %rsi, %rsp\n"
+                "andq $-16, %rsp\n"
+                "call __sigreturn2");
 
 weak_alias (__sigreturn, sigreturn)

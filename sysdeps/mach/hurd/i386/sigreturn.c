@@ -15,8 +15,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-register int *sp asm ("%esp");
-
 #include <hurd.h>
 #include <hurd/signal.h>
 #include <hurd/msg.h>
@@ -54,28 +52,35 @@ __sigreturn2 (int *usp, struct sigcontext *scp)
                                  MACH_PORT_RIGHT_RECEIVE, -1);
   THREAD_SETMEM (THREAD_SELF, reply_port, scp->sc_reply_port);
 
-  sp = usp;
-#define A(line) asm volatile (#line)
-  /* The members in the sigcontext are arranged in this order
-     so we can pop them easily.  */
-
-  /* Pop the segment registers (except %cs and %ss, done last).  */
-  A (popl %gs);
-  A (popl %fs);
-  A (popl %es);
-  A (popl %ds);
-  /* Pop the general registers.  */
-  A (popa);
-  /* Pop the processor flags.  */
-  A (popf);
-  /* Return to the saved PC.  */
-  A (ret);
-
-  /* Firewall.  */
-  A (hlt);
-#undef A
-  __builtin_unreachable ();
+  void sigreturn2_trampoline (int *usp) __attribute__ ((__noreturn__));
+  sigreturn2_trampoline (usp);
 }
+
+asm("sigreturn2_trampoline:\n"
+
+    /* Restore thread stack */
+    "movl 4(%esp),%esp\n"
+
+    /* The members in the sigcontext are arranged in this order
+       so we can pop them easily.  */
+
+    /* Pop the segment registers (except %cs and %ss, done last).  */
+    "popl %gs\n"
+    "popl %fs\n"
+    "popl %es\n"
+    "popl %ds\n"
+
+    /* Pop the general registers.  */
+    "popa\n"
+
+    /* Pop the processor flags.  */
+    "popf\n"
+
+    /* Return to the saved PC.  */
+    "ret\n"
+
+    /* Firewall.  */
+    "hlt\n");
 
 int
 __sigreturn (struct sigcontext *scp)
@@ -142,16 +147,21 @@ __sigreturn (struct sigcontext *scp)
     *--usp = 0;
     *--usp = (int) __sigreturn2;
 
-    /* Restore thread stack */
-    sp = usp;
-    /* Return into __sigreturn2.  */
-    asm volatile ("ret");
-    /* Firewall.  */
-    asm volatile ("hlt");
-  }
 
-  /* NOTREACHED */
-  return -1;
+    void sigreturn_trampoline (int *usp) __attribute__ ((__noreturn__));
+    sigreturn_trampoline (usp);
+  }
 }
+
+asm("sigreturn_trampoline:\n"
+
+    /* Restore thread stack */
+    "movl 4(%esp),%esp\n"
+
+    /* Return into __sigreturn2.  */
+    "ret\n"
+
+    /* Firewall.  */
+    "hlt\n");
 
 weak_alias (__sigreturn, sigreturn)
