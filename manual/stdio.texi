@@ -2578,7 +2578,14 @@ Allocation}) to hold the output, instead of putting the output in a
 buffer you allocate in advance.  The @var{ptr} argument should be the
 address of a @code{char *} object, and a successful call to
 @code{asprintf} stores a pointer to the newly allocated string at that
-location.
+location.  Current and future versions of @theglibc{} write a null
+pointer to @samp{*@var{ptr}} upon failure.  To achieve similar
+behavior with previous versions, initialize @samp{*@var{ptr}} to a
+null pointer before calling @code{asprintf}.  (Specifications for
+@code{asprintf} only require a valid pointer value in
+@samp{*@var{ptr}} if @code{asprintf} succeeds, but no implementations
+are known which overwrite a null pointer with a pointer that cannot be
+freed on failure.)
 
 The return value is the number of characters allocated for the buffer, or
 less than zero if an error occurred.  Usually this means that the buffer

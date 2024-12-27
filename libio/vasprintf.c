@@ -92,7 +92,7 @@ __printf_buffer_flush_asprintf (struct __printf_buffer_asprintf *buf)
 
 
 int
-__vasprintf_internal (char **result_ptr, const char *format, va_list args,
+__vasprintf_internal (char **result, const char *format, va_list args,
 		      unsigned int mode_flags)
 {
   struct __printf_buffer_asprintf buf;
@@ -105,23 +105,23 @@ __vasprintf_internal (char **result_ptr, const char *format, va_list args,
     {
       if (buf.base.write_base != buf.direct)
 	free (buf.base.write_base);
+      *result = NULL;
       return done;
     }
 
   /* Transfer to the final buffer.  */
-  char *result;
   size_t size = buf.base.write_ptr - buf.base.write_base;
   if (buf.base.write_base == buf.direct)
     {
-      result = malloc (size + 1);
-      if (result == NULL)
+      *result = malloc (size + 1);
+      if (*result == NULL)
 	return -1;
-      memcpy (result, buf.direct, size);
+      memcpy (*result, buf.direct, size);
     }
   else
     {
-      result = realloc (buf.base.write_base, size + 1);
-      if (result == NULL)
+      *result = realloc (buf.base.write_base, size + 1);
+      if (*result == NULL)
 	{
 	  free (buf.base.write_base);
 	  return -1;
@@ -129,8 +129,7 @@ __vasprintf_internal (char **result_ptr, const char *format, va_list args,
     }
 
   /* Add NUL termination.  */
-  result[size] = '\0';
-  *result_ptr = result;
+  (*result)[size] = '\0';
 
   return done;
 }

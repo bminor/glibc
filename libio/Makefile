@@ -88,6 +88,7 @@ tests = \
   test-fmemopen \
   test-fputs-unbuffered-full \
   test-fputws-unbuffered-full \
+  tst-asprintf-null \
   tst-atime \
   tst-bz22415 \
   tst-bz24051 \
