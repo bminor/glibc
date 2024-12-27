@@ -559,6 +559,10 @@ build the GNU C Library:
      version 5.3.0 is the newest verified to work to build the GNU C
      Library.
 
+     Testing the GNU C Library requires 'gawk' to be compiled with
+     support for high precision arithmetic via the 'MPFR'
+     multiple-precision floating-point computation library.
+
    * GNU 'bison' 2.7 or later
 
      'bison' is used to generate the 'yacc' parser code in the 'intl'

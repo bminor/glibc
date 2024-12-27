@@ -79,6 +79,9 @@ Changes to build and runtime requirements:
   act as a "shall occur" cancellation point, in which case it might
   not issue a syscall or trigger a deferred cancellation event.
 
+* Testing the GNU C Library requires GNU awk to be compiled with support for
+  high precision arithmetic via the MPFR library.
+
 Security related changes:
 
 The following CVEs were fixed in this release, details of which can be

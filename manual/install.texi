@@ -602,6 +602,10 @@ function, which was introduced in version 3.1.2 of @code{gawk}.
 As of release time, @code{gawk} version 5.3.0 is the newest verified
 to work to build @theglibc{}.
 
+Testing the GNU C Library requires @code{gawk} to be compiled with
+support for high precision arithmetic via the @code{MPFR}
+multiple-precision floating-point computation library.
+
 @item
 GNU @code{bison} 2.7 or later
 
