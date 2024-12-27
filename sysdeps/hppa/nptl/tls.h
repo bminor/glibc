@@ -40,6 +40,8 @@
 /* Get the thread descriptor definition.  */
 # include <nptl/descr.h>
 
+# include <thread_pointer.h>
+
 typedef struct
 {
   dtv_t *dtv;
@@ -62,7 +64,7 @@ typedef struct
 
 /* Install new dtv for current thread.  */
 # define INSTALL_NEW_DTV(dtv) \
-  ({ tcbhead_t *__tcbp = (tcbhead_t *)__get_cr27();	\
+  ({ tcbhead_t *__tcbp = (tcbhead_t *)__thread_pointer();	\
 	__tcbp->dtv = dtv;				\
    })
 
@@ -74,21 +76,21 @@ typedef struct
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
 # define TLS_INIT_TP(tcbp) \
-  ({ __set_cr27(tcbp); true; })
+  ({ __set_thread_pointer((void *) tcbp); true; })
 
 /* Value passed to 'clone' for initialization of the thread register.  */
 # define TLS_DEFINE_INIT_TP(tp, pd) void *tp = (pd) + 1
 
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \
-  ({ tcbhead_t *__tcbp = (tcbhead_t *)__get_cr27();	\
+  ({ tcbhead_t *__tcbp = (tcbhead_t *)__thread_pointer();	\
 	__tcbp->dtv;					\
    })
 
 /* Return the thread descriptor for the current thread.  */
 # define THREAD_SELF \
   ({ struct pthread *__self;			\
-	__self = __get_cr27();			\
+	__self = (struct pthread *)__thread_pointer();	\
 	__self - 1;				\
    })
 
@@ -99,22 +101,6 @@ typedef struct
   REGISTER (32, 32, 53 * 4, -sizeof (struct pthread))
 
 # include <tcb-access.h>
-
-static inline struct pthread *__get_cr27(void)
-{
-  long cr27;
-  asm ("mfctl %%cr27, %0" : "=r" (cr27) : );
-  return (struct pthread *) cr27;
-}
-
-/* We write to cr27, clobber r26 as the input argument, and clobber
-   r31 as the link register.  */
-static inline void __set_cr27(struct pthread *cr27)
-{
-  asm ( "ble	0xe0(%%sr2, %%r0)\n\t"
-	"copy	%0, %%r26"
-	: : "r" (cr27) : "r26", "r31" );
-}
 
 /* Get and set the global scope generation counter in struct pthread.  */
 #define THREAD_GSCOPE_FLAG_UNUSED 0
