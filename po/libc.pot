@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.40.9000\n"
-"POT-Creation-Date: 2024-12-30 16:29-0300\n"
+"POT-Creation-Date: 2024-12-30 16:34-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -102,16 +102,12 @@ msgstr ""
 
 #: assert/assert-perr.c:35
 #, c-format
-msgid ""
-"%s%s%s:%u: %s%sUnexpected error: %s.\n"
-"%n"
+msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 msgstr ""
 
-#: assert/assert.c:132
+#: assert/assert.c:125
 #, c-format
-msgid ""
-"%s%s%s:%u: %s%sAssertion `%s' failed.\n"
-"%n"
+msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
 msgstr ""
 
 #: catgets/gencat.c:111

@@ -15,24 +15,17 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <assert.h>
-#include <atomic.h>
+#include <intprops.h>
 #include <ldsodefs.h>
 #include <libintl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sysdep.h>
-#include <unistd.h>
-#include <sys/mman.h>
+#include <libio/iolibio.h>
 #include <setvmaname.h>
 #include <sys/uio.h>
-#include <intprops.h>
+#include <unistd.h>
 
 
 extern const char *__progname;
 
-#include <wchar.h>
-#include <libio/iolibio.h>
 #define fflush(s) _IO_fflush (s)
 
 /* This function, when passed a string containing an asserted
@@ -56,12 +49,12 @@ __assert_fail_base (const char *fmt, const char *assertion, const char *file,
   FATAL_PREPARE;
 #endif
 
-  int total;
-  if (__asprintf (&str, fmt,
-		  __progname, __progname[0] ? ": " : "",
-		  file, line,
-		  function ? function : "", function ? ": " : "",
-		  assertion, &total) >= 0)
+  int total = __asprintf (&str, fmt,
+			  __progname, __progname[0] ? ": " : "",
+			  file, line,
+			  function ? function : "", function ? ": " : "",
+			  assertion);
+  if (total >= 0)
     {
       /* Print the message.  */
       (void) __fxprintf (NULL, "%s", str);
@@ -129,6 +122,6 @@ void
 __assert_fail (const char *assertion, const char *file, unsigned int line,
 	       const char *function)
 {
-  __assert_fail_base (_("%s%s%s:%u: %s%sAssertion `%s' failed.\n%n"),
+  __assert_fail_base (_("%s%s%s:%u: %s%sAssertion `%s' failed.\n"),
 		      assertion, file, line, function);
 }
