@@ -54,8 +54,6 @@ libpthread-routines := \
   pt-setcanceltype \
   pt-testcancel \
   pt-cancel \
-  pt-mutexattr-getprioceiling \
-  pt-mutexattr-setprioceiling \
   pt-mutex-init \
   pt-mutex-destroy \
   pt-mutex-lock \
@@ -192,11 +190,13 @@ routines := \
   pt-getschedparam \
   pt-mutex-checklocked \
   pt-mutexattr-destroy \
+  pt-mutexattr-getprioceiling \
   pt-mutexattr-getprotocol \
   pt-mutexattr-getpshared \
   pt-mutexattr-getrobust \
   pt-mutexattr-gettype \
   pt-mutexattr-init \
+  pt-mutexattr-setprioceiling \
   pt-mutexattr-setprotocol \
   pt-mutexattr-setpshared \
   pt-mutexattr-setrobust \

@@ -73,8 +73,6 @@ GLIBC_2.38 pthread_mutex_timedlock F
 GLIBC_2.38 pthread_mutex_transfer_np F
 GLIBC_2.38 pthread_mutex_trylock F
 GLIBC_2.38 pthread_mutex_unlock F
-GLIBC_2.38 pthread_mutexattr_getprioceiling F
-GLIBC_2.38 pthread_mutexattr_setprioceiling F
 GLIBC_2.38 pthread_once F
 GLIBC_2.38 pthread_rwlock_clockrdlock F
 GLIBC_2.38 pthread_rwlock_clockwrlock F

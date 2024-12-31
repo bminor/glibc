@@ -62,6 +62,13 @@ extern int __pthread_mutexattr_setrobust (pthread_mutexattr_t *__attr,
 					int __robustness);
 libc_hidden_proto (__pthread_mutexattr_setrobust)
 
+extern int __pthread_mutexattr_getprioceiling(const pthread_mutexattr_t *__restrict __attr,
+					    int *__restrict __prioceiling);
+libc_hidden_proto (__pthread_mutexattr_getprioceiling)
+extern int __pthread_mutexattr_setprioceiling(pthread_mutexattr_t *__attr,
+					    int __prioceiling);
+libc_hidden_proto (__pthread_mutexattr_setprioceiling)
+
 extern int __pthread_mutexattr_getprotocol(const pthread_mutexattr_t *__restrict __attr,
 					 int *__restrict __protocol);
 libc_hidden_proto (__pthread_mutexattr_getprotocol)
