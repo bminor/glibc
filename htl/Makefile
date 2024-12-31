@@ -55,7 +55,6 @@ libpthread-routines := \
   pt-testcancel \
   pt-cancel \
   pt-mutexattr-destroy \
-  pt-mutexattr-init \
   pt-mutexattr-getprioceiling \
   pt-mutexattr-getprotocol \
   pt-mutexattr-getpshared \
@@ -201,6 +200,7 @@ routines := \
   pt-condattr-setpshared \
   pt-getschedparam \
   pt-mutex-checklocked \
+  pt-mutexattr-init \
   pt-nthreads \
   pt-pthread_self \
   pt-self pt-equal \

@@ -38,4 +38,5 @@ __pthread_mutexattr_init (pthread_mutexattr_t *attrp)
   *attrp = dfl_attr;
   return 0;
 }
+hidden_def (__pthread_mutexattr_init)
 weak_alias (__pthread_mutexattr_init, pthread_mutexattr_init)
