@@ -2261,6 +2261,10 @@ GLIBC_2.32 __libc_single_threaded D 0x1
 GLIBC_2.32 mach_print F
 GLIBC_2.32 mremap F
 GLIBC_2.32 pthread_cond_clockwait F
+GLIBC_2.32 pthread_mutexattr_getrobust F
+GLIBC_2.32 pthread_mutexattr_getrobust_np F
+GLIBC_2.32 pthread_mutexattr_setrobust F
+GLIBC_2.32 pthread_mutexattr_setrobust_np F
 GLIBC_2.32 sigabbrev_np F
 GLIBC_2.32 sigdescr_np F
 GLIBC_2.32 strerrordesc_np F
@@ -2531,9 +2535,13 @@ GLIBC_2.41 pthread_condattr_setclock F
 GLIBC_2.41 pthread_condattr_setpshared F
 GLIBC_2.41 pthread_mutexattr_getprotocol F
 GLIBC_2.41 pthread_mutexattr_getpshared F
+GLIBC_2.41 pthread_mutexattr_getrobust F
+GLIBC_2.41 pthread_mutexattr_getrobust_np F
 GLIBC_2.41 pthread_mutexattr_gettype F
 GLIBC_2.41 pthread_mutexattr_setprotocol F
 GLIBC_2.41 pthread_mutexattr_setpshared F
+GLIBC_2.41 pthread_mutexattr_setrobust F
+GLIBC_2.41 pthread_mutexattr_setrobust_np F
 GLIBC_2.41 pthread_mutexattr_settype F
 GLIBC_2.41 pthread_sigmask F
 GLIBC_2.5 __readlinkat_chk F

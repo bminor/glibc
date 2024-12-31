@@ -46,6 +46,22 @@ extern int __pthread_mutexattr_setpshared(pthread_mutexattr_t *__attr,
 					int __pshared);
 libc_hidden_proto (__pthread_mutexattr_setpshared)
 
+/* Get the robustness flag of the mutex attribute ATTR.  */
+extern int __pthread_mutexattr_getrobust (const pthread_mutexattr_t *__attr,
+					int *__robustness);
+libc_hidden_proto (__pthread_mutexattr_getrobust)
+extern int __pthread_mutexattr_getrobust_np (const pthread_mutexattr_t *__attr,
+					   int *__robustness);
+libc_hidden_proto (__pthread_mutexattr_getrobust_np)
+extern int __pthread_mutexattr_setrobust_np (pthread_mutexattr_t *__attr,
+					   int __robustness);
+libc_hidden_proto (__pthread_mutexattr_setrobust_np)
+
+/* Set the robustness flag of the mutex attribute ATTR.  */
+extern int __pthread_mutexattr_setrobust (pthread_mutexattr_t *__attr,
+					int __robustness);
+libc_hidden_proto (__pthread_mutexattr_setrobust)
+
 extern int __pthread_mutexattr_getprotocol(const pthread_mutexattr_t *__restrict __attr,
 					 int *__restrict __protocol);
 libc_hidden_proto (__pthread_mutexattr_getprotocol)

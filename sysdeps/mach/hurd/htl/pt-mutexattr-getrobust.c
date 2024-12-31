@@ -16,19 +16,26 @@
    License along with the GNU C Library;  if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <pthread.h>
+#include <pthreadP.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <pt-internal.h>
 #include "pt-mutex.h"
 #include <hurdlock.h>
+#include <shlib-compat.h>
 
 int
-pthread_mutexattr_getrobust (const pthread_mutexattr_t *attrp, int *outp)
+__pthread_mutexattr_getrobust (const pthread_mutexattr_t *attrp, int *outp)
 {
   *outp = ((attrp->__prioceiling & PTHREAD_MUTEX_ROBUST)
 	   ? PTHREAD_MUTEX_ROBUST : PTHREAD_MUTEX_STALLED);
   return 0;
 }
+libc_hidden_def (__pthread_mutexattr_getrobust)
+versioned_symbol (libc, __pthread_mutexattr_getrobust, pthread_mutexattr_getrobust, GLIBC_2_41);
+versioned_symbol (libc, __pthread_mutexattr_getrobust, pthread_mutexattr_getrobust_np, GLIBC_2_41);
 
-weak_alias (pthread_mutexattr_getrobust, pthread_mutexattr_getrobust_np)
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_32, GLIBC_2_41)
+compat_symbol (libpthread, __pthread_mutexattr_getrobust,pthread_mutexattr_getrobust, GLIBC_2_32);
+compat_symbol (libpthread, __pthread_mutexattr_getrobust,pthread_mutexattr_getrobust_np, GLIBC_2_32);
+#endif
