@@ -36,10 +36,6 @@
 
         .text
 ENTRY(__clone3)
-	PTR_ARG (0)
-	PTR_ARG (1)
-	PTR_ARG (3)
-	PTR_ARG (4)
 	/* Save args for the child.  */
 	mov	x10, x0		/* cl_args  */
 	mov	x11, x2		/* func	 */

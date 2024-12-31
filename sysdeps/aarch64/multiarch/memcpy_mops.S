@@ -26,10 +26,6 @@
  */
 
 ENTRY (__memcpy_mops)
-	PTR_ARG (0)
-	PTR_ARG (1)
-	SIZE_ARG (2)
-
 	mov	x3, x0
 	.inst	0x19010443	/* cpyfp   [x3]!, [x1]!, x2!  */
 	.inst	0x19410443	/* cpyfm   [x3]!, [x1]!, x2!  */

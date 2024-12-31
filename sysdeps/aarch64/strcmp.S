@@ -62,8 +62,6 @@
    NUL too in big-endian, byte-reverse the data before the NUL check.  */
 
 ENTRY(strcmp)
-	PTR_ARG (0)
-	PTR_ARG (1)
 	sub	off2, src2, src1
 	mov	zeroones, REP8_01
 	and	tmp, src1, 7

@@ -63,10 +63,6 @@
 
 ENTRY (__memmove_oryon1)
 
-	PTR_ARG (0)
-	PTR_ARG (1)
-	SIZE_ARG (2)
-
 	sub	tmp1, dstin, src
 	cmp	count, 96
 	ccmp	tmp1, count, 2, hi
@@ -76,10 +72,6 @@ ENTRY (__memmove_oryon1)
 END (__memmove_oryon1)
 
 ENTRY (__memcpy_oryon1)
-
-	PTR_ARG (0)
-	PTR_ARG (1)
-	SIZE_ARG (2)
 
 	add	srcend, src, count
 	add	dstend, dstin, count

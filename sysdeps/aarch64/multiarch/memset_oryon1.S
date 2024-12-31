@@ -33,9 +33,6 @@
 
 ENTRY (__memset_oryon1)
 
-	PTR_ARG (0)
-	SIZE_ARG (2)
-
 	bfi	valw, valw, 8, 8
 	bfi	valw, valw, 16, 16
 	bfi	val, val, 32, 32

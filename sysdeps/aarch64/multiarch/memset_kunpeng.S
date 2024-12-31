@@ -33,9 +33,6 @@
 
 ENTRY (__memset_kunpeng)
 
-	PTR_ARG (0)
-	SIZE_ARG (2)
-
 	dup	v0.16B, valw
 	add	dstend, dstin, count
 

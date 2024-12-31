@@ -70,10 +70,6 @@
    from the end.  */
 
 ENTRY (MEMCPY)
-	PTR_ARG (0)
-	PTR_ARG (1)
-	SIZE_ARG (2)
-
 	add	srcend, src, count
 	add	dstend, dstin, count
 	cmp	count, 128
@@ -187,10 +183,6 @@ libc_hidden_builtin_def (MEMCPY)
 
 
 ENTRY (MEMMOVE)
-	PTR_ARG (0)
-	PTR_ARG (1)
-	SIZE_ARG (2)
-
 	add	srcend, src, count
 	add	dstend, dstin, count
 	cmp	count, 128

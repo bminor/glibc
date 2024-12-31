@@ -28,7 +28,6 @@ ENTRY (_start)
 
 	/* Load and relocate all library dependencies.  */
 	mov	x0, sp
-	PTR_ARG (0)
 	bl	_dl_start
 	/* Returns user entry point in x0.  */
 	mov	PTR_REG (21), PTR_REG (0)

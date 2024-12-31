@@ -55,8 +55,6 @@
    exactly which byte matched.  */
 
 ENTRY (__memrchr)
-	PTR_ARG (0)
-	SIZE_ARG (2)
 	add	end, srcin, cntin
 	sub	endm1, end, 1
 	bic	src, endm1, 15

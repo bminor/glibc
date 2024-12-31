@@ -60,9 +60,6 @@
 
 ENTRY (__memchr_nosimd)
 
-	PTR_ARG (0)
-	SIZE_ARG (2)
-
 	/* Do not dereference srcin if no bytes to compare. */
 	cbz	cntin, L(none_chr)
 

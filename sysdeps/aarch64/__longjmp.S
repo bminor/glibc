@@ -47,8 +47,6 @@ ENTRY (__longjmp)
 	cfi_offset(d14, JB_D14<<3)
 	cfi_offset(d15, JB_D15<<3)
 
-	PTR_ARG (0)
-
 #if IS_IN(libc)
 	/* Disable ZA state of SME in libc.a and libc.so, but not in ld.so.  */
 # if HAVE_AARCH64_PAC_RET

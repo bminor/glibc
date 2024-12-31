@@ -96,10 +96,6 @@
 
 ENTRY (__memcpy_a64fx)
 
-	PTR_ARG (0)
-	PTR_ARG (1)
-	SIZE_ARG (2)
-
 	cntb	vlen
 	cmp	n, vlen, lsl 1
 	b.hi	L(copy_small)
@@ -235,10 +231,6 @@ END (__memcpy_a64fx)
 
 
 ENTRY_ALIGN (__memmove_a64fx, 4)
-
-	PTR_ARG (0)
-	PTR_ARG (1)
-	SIZE_ARG (2)
 
 	/* Fast case for up to 2 vectors.  */
 	cntb	vlen

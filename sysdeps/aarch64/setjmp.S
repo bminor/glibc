@@ -34,8 +34,6 @@ END (_setjmp)
 libc_hidden_def (_setjmp)
 
 ENTRY (__sigsetjmp)
-	PTR_ARG (0)
-
 1:
 	stp	x19, x20, [x0, #JB_X19<<3]
 	stp	x21, x22, [x0, #JB_X21<<3]

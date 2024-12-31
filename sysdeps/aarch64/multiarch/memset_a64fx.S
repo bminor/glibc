@@ -55,8 +55,6 @@
 #define BTI_C
 
 ENTRY (__memset_a64fx)
-	PTR_ARG (0)
-	SIZE_ARG (2)
 
 	cntb	vector_length
 	dup	z0.b, valw

@@ -55,7 +55,6 @@
    if the relevant byte matched the NUL end of string.  */
 
 ENTRY (strrchr)
-	PTR_ARG (0)
 	bic	src, srcin, 15
 	dup	vrepchr.16b, chrin
 	movi	vrepmask.16b, 0x33

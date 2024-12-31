@@ -61,10 +61,6 @@
 	.arch armv8.2-a+sve
 
 ENTRY (__memcpy_sve)
-	PTR_ARG (0)
-	PTR_ARG (1)
-	SIZE_ARG (2)
-
 	cmp	count, 128
 	b.hi	L(copy_long)
 	cntb	vlen
@@ -144,10 +140,6 @@ END (__memcpy_sve)
 
 
 ENTRY (__memmove_sve)
-	PTR_ARG (0)
-	PTR_ARG (1)
-	SIZE_ARG (2)
-
 	cmp	count, 128
 	b.hi	L(move_long)
 	cntb	vlen
