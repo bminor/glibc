@@ -22,6 +22,7 @@
 #include <pt-internal.h>
 #include "pt-mutex.h"
 #include <hurdlock.h>
+#include <shlib-compat.h>
 
 int
 __pthread_mutexattr_settype (pthread_mutexattr_t *attrp, int type)
@@ -32,4 +33,9 @@ __pthread_mutexattr_settype (pthread_mutexattr_t *attrp, int type)
   attrp->__mutex_type = type;
   return 0;
 }
-weak_alias (__pthread_mutexattr_settype, pthread_mutexattr_settype)
+libc_hidden_def (__pthread_mutexattr_settype)
+versioned_symbol (libc, __pthread_mutexattr_settype, pthread_mutexattr_settype, GLIBC_2_41);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_41)
+compat_symbol (libpthread, __pthread_mutexattr_settype,pthread_mutexattr_settype, GLIBC_2_12);
+#endif

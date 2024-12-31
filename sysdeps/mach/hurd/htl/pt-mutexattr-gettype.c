@@ -16,16 +16,23 @@
    License along with the GNU C Library;  if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <pthread.h>
+#include <pthreadP.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <pt-internal.h>
 #include "pt-mutex.h"
 #include <hurdlock.h>
+#include <shlib-compat.h>
 
 int
-pthread_mutexattr_gettype (const pthread_mutexattr_t *attrp, int *outp)
+__pthread_mutexattr_gettype (const pthread_mutexattr_t *attrp, int *outp)
 {
   *outp = attrp->__mutex_type;
   return 0;
 }
+libc_hidden_def (__pthread_mutexattr_gettype)
+versioned_symbol (libc, __pthread_mutexattr_gettype, pthread_mutexattr_gettype, GLIBC_2_41);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_41)
+compat_symbol (libpthread, __pthread_mutexattr_gettype,pthread_mutexattr_gettype, GLIBC_2_12);
+#endif

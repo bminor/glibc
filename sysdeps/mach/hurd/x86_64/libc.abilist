@@ -1553,8 +1553,10 @@ GLIBC_2.38 pthread_mutex_lock F
 GLIBC_2.38 pthread_mutex_unlock F
 GLIBC_2.38 pthread_mutexattr_destroy F
 GLIBC_2.38 pthread_mutexattr_getprotocol F
+GLIBC_2.38 pthread_mutexattr_gettype F
 GLIBC_2.38 pthread_mutexattr_init F
 GLIBC_2.38 pthread_mutexattr_setprotocol F
+GLIBC_2.38 pthread_mutexattr_settype F
 GLIBC_2.38 pthread_self F
 GLIBC_2.38 pthread_setcancelstate F
 GLIBC_2.38 pthread_setcanceltype F
@@ -2215,6 +2217,7 @@ GLIBC_2.41 pthread_condattr_getpshared F
 GLIBC_2.41 pthread_condattr_setclock F
 GLIBC_2.41 pthread_condattr_setpshared F
 GLIBC_2.41 pthread_mutexattr_getprotocol F
+GLIBC_2.41 pthread_mutexattr_gettype F
 GLIBC_2.41 pthread_mutexattr_setprotocol F
 GLIBC_2.41 pthread_sigmask F
 HURD_CTHREADS_0.3 __cthread_getspecific F
