@@ -88,8 +88,8 @@ macro-int-constant UINTMAX_MAX {promoted:uintmax_t} >= 18446744073709551615ULL
 macro-int-constant PTRDIFF_MIN {promoted:__PTRDIFF_TYPE__} <= -65535
 macro-int-constant PTRDIFF_MAX {promoted:__PTRDIFF_TYPE__} >= 65535
 
-macro-int-constant SIG_ATOMIC_MIN {promoted:__SIG_ATOMIC_TYPE__}
-macro-int-constant SIG_ATOMIC_MAX {promoted:__SIG_ATOMIC_TYPE__} >= 127
+macro-int-constant SIG_ATOMIC_MIN {size:__SIG_ATOMIC_WIDTH__}
+macro-int-constant SIG_ATOMIC_MAX {size:__SIG_ATOMIC_WIDTH__} >= 127
 
 macro-int-constant SIZE_MAX {promoted:__SIZE_TYPE__} >= 65535
 

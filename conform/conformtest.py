@@ -172,6 +172,10 @@ class ConstantTest(object):
                 c_type = self.c_type[len('promoted:'):]
                 text = ('__typeof__ ((%s) 0 + (%s) 0) a2_%d;\n'
                         % (c_type, c_type, self.num))
+            elif self.c_type.startswith('size:'):
+                c_type = "int{}_t".format(self.c_type[len('size:'):])
+                text = ('__typeof__ ((%s) 0 + (%s) 0) a2_%d;\n'
+                        % (c_type, c_type, self.num))
             else:
                 text = '__typeof__ ((%s) 0) a2_%d;\n' % (self.c_type, self.num)
             text += 'extern __typeof__ (%s) a2_%d;\n' % (self.symbol, self.num)
