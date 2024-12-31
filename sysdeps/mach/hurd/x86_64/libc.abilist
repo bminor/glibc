@@ -1551,6 +1551,7 @@ GLIBC_2.38 pthread_mutex_destroy F
 GLIBC_2.38 pthread_mutex_init F
 GLIBC_2.38 pthread_mutex_lock F
 GLIBC_2.38 pthread_mutex_unlock F
+GLIBC_2.38 pthread_mutexattr_destroy F
 GLIBC_2.38 pthread_mutexattr_init F
 GLIBC_2.38 pthread_self F
 GLIBC_2.38 pthread_setcancelstate F
