@@ -39,6 +39,12 @@ extern int __pthread_mutex_timedlock (pthread_mutex_t *__mutex,
      const struct timespec *__abstime);
 extern int __pthread_mutex_unlock (pthread_mutex_t *__mutex);
 extern int __pthread_mutexattr_settype (pthread_mutexattr_t *attr, int kind);
+extern int __pthread_mutexattr_getpshared(const pthread_mutexattr_t *__restrict __attr,
+					int *__restrict __pshared);
+libc_hidden_proto (__pthread_mutexattr_getpshared)
+extern int __pthread_mutexattr_setpshared(pthread_mutexattr_t *__attr,
+					int __pshared);
+libc_hidden_proto (__pthread_mutexattr_setpshared)
 
 extern int __pthread_mutexattr_getprotocol(const pthread_mutexattr_t *__restrict __attr,
 					 int *__restrict __protocol);

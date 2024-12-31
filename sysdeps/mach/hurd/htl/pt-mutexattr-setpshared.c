@@ -16,15 +16,16 @@
    License along with the GNU C Library;  if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <pthread.h>
+#include <pthreadP.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <pt-internal.h>
 #include "pt-mutex.h"
 #include <hurdlock.h>
+#include <shlib-compat.h>
 
 int
-pthread_mutexattr_setpshared (pthread_mutexattr_t *attrp, int pshared)
+__pthread_mutexattr_setpshared (pthread_mutexattr_t *attrp, int pshared)
 {
   if (pshared != PTHREAD_PROCESS_PRIVATE && pshared != PTHREAD_PROCESS_SHARED)
     return EINVAL;
@@ -32,3 +33,10 @@ pthread_mutexattr_setpshared (pthread_mutexattr_t *attrp, int pshared)
   attrp->__pshared = pshared;
   return 0;
 }
+
+libc_hidden_def (__pthread_mutexattr_setpshared)
+versioned_symbol (libc, __pthread_mutexattr_setpshared, pthread_mutexattr_setpshared, GLIBC_2_41);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_41)
+compat_symbol (libpthread, __pthread_mutexattr_setpshared,pthread_mutexattr_setpshared, GLIBC_2_12);
+#endif
