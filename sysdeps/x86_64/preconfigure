@@ -11,8 +11,8 @@ printf %s "checking whether $CC compiles in -mx32 mode by default... " >&6; }
 if test ${libc_cv_x32+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+else case e in #(
+  e)   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #ifndef __ILP32__
 # error not x32
@@ -28,10 +28,12 @@ _ACEOF
 if ac_fn_c_try_compile "$LINENO"
 then :
   libc_cv_x32=yes
-else $as_nop
-  libc_cv_x32=no
+else case e in #(
+  e) libc_cv_x32=no ;;
+esac
 fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_x32" >&5
 printf "%s\n" "$libc_cv_x32" >&6; }

@@ -42,8 +42,9 @@ case "${machine}:${submachine}" in
     if test ${libc_cv_cc_submachine+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-  libc_cv_cc_submachine=""
+else case e in #(
+  e) libc_cv_cc_submachine="" ;;
+esac
 fi
 
     ;;
@@ -52,8 +53,9 @@ fi
     if test ${libc_cv_cc_submachine+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-  libc_cv_cc_submachine=""
+else case e in #(
+  e) libc_cv_cc_submachine="" ;;
+esac
 fi
 
     ;;
@@ -63,8 +65,9 @@ fi
     if test ${libc_cv_cc_submachine+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-  libc_cv_cc_submachine=""
+else case e in #(
+  e) libc_cv_cc_submachine="" ;;
+esac
 fi
 
     ;;
