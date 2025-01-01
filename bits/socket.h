@@ -221,17 +221,13 @@ struct cmsghdr
 				   of cmsghdr structure.  */
     int cmsg_level;		/* Originating protocol.  */
     int cmsg_type;		/* Protocol specific type.  */
-#if __glibc_c99_flexarr_available
-    __extension__ unsigned char __cmsg_data __flexarr; /* Ancillary data.  */
-#endif
+ /* This field is to be aligned with CMSG_ALIGN */
+ /* __extension__ unsigned char __cmsg_data __flexarr; */ /* Ancillary data.  */
   };
 
 /* Ancillary data object manipulation macros.  */
-#if __glibc_c99_flexarr_available
-# define CMSG_DATA(cmsg) ((cmsg)->__cmsg_data)
-#else
-# define CMSG_DATA(cmsg) ((unsigned char *) ((struct cmsghdr *) (cmsg) + 1))
-#endif
+#define CMSG_DATA(cmsg) \
+  ((unsigned char *) (cmsg) + CMSG_ALIGN (sizeof (struct cmsghdr)))
 
 #define CMSG_NXTHDR(mhdr, cmsg) __cmsg_nxthdr (mhdr, cmsg)
 
