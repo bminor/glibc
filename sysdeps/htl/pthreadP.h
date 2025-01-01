@@ -43,6 +43,10 @@ extern int __pthread_mutexattr_settype (pthread_mutexattr_t *attr, int kind);
 extern int __pthread_mutexattr_getprotocol(const pthread_mutexattr_t *__restrict __attr,
 					 int *__restrict __protocol);
 libc_hidden_proto (__pthread_mutexattr_getprotocol)
+extern int __pthread_mutexattr_setprotocol(pthread_mutexattr_t *__attr,
+					 int __protocol);
+libc_hidden_proto (__pthread_mutexattr_setprotocol)
+
 extern int __pthread_cond_init (pthread_cond_t *cond,
 				const pthread_condattr_t *cond_attr);
 libc_hidden_proto (__pthread_cond_init)

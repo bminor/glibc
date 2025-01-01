@@ -58,7 +58,6 @@ libpthread-routines := \
   pt-mutexattr-getpshared \
   pt-mutexattr-gettype \
   pt-mutexattr-setprioceiling \
-  pt-mutexattr-setprotocol \
   pt-mutexattr-setpshared \
   pt-mutexattr-settype \
   pt-mutexattr-getrobust \
@@ -201,6 +200,7 @@ routines := \
   pt-mutexattr-destroy \
   pt-mutexattr-getprotocol \
   pt-mutexattr-init \
+  pt-mutexattr-setprotocol \
   pt-nthreads \
   pt-pthread_self \
   pt-self pt-equal \

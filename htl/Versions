@@ -41,6 +41,7 @@ libc {
     pthread_mutexattr_destroy;
     pthread_mutexattr_getprotocol;
     pthread_mutexattr_init;
+    pthread_mutexattr_setprotocol;
     pthread_sigmask;
   }
 
@@ -87,6 +88,7 @@ libc {
     pthread_condattr_setclock;
     pthread_condattr_setpshared;
     pthread_mutexattr_getprotocol;
+    pthread_mutexattr_setprotocol;
     pthread_sigmask;
   }
 
@@ -183,7 +185,7 @@ libpthread {
     pthread_mutexattr_getprioceiling;
     pthread_mutexattr_getpshared;
     pthread_mutexattr_gettype;
-    pthread_mutexattr_setprioceiling; pthread_mutexattr_setprotocol;
+    pthread_mutexattr_setprioceiling;
     pthread_mutexattr_setpshared; pthread_mutexattr_settype;
 
     pthread_once;

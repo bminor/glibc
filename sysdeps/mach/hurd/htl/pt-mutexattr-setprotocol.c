@@ -16,15 +16,16 @@
    License along with the GNU C Library;  if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <pthread.h>
+#include <pthreadP.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <pt-internal.h>
 #include "pt-mutex.h"
 #include <hurdlock.h>
+#include <shlib-compat.h>
 
 int
-pthread_mutexattr_setprotocol (pthread_mutexattr_t *attrp, int proto)
+__pthread_mutexattr_setprotocol (pthread_mutexattr_t *attrp, int proto)
 {
   (void) attrp;
   return (proto == PTHREAD_PRIO_NONE
@@ -32,3 +33,9 @@ pthread_mutexattr_setprotocol (pthread_mutexattr_t *attrp, int proto)
 	  : (proto != PTHREAD_PRIO_INHERIT
 	     && proto != PTHREAD_PRIO_PROTECT) ? EINVAL : ENOTSUP);
 }
+libc_hidden_def (__pthread_mutexattr_setprotocol)
+versioned_symbol (libc, __pthread_mutexattr_setprotocol, pthread_mutexattr_setprotocol, GLIBC_2_41);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_41)
+compat_symbol (libpthread, __pthread_mutexattr_setprotocol,pthread_mutexattr_setprotocol, GLIBC_2_12);
+#endif
