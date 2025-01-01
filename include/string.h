@@ -175,7 +175,7 @@ extern __typeof (strnlen) strnlen attribute_hidden;
 extern __typeof (strsep) strsep attribute_hidden;
 #endif
 
-#if (!IS_IN (libc) || !defined SHARED) \
+#if IS_IN (libc) && !defined SHARED \
   && !defined NO_MEMPCPY_STPCPY_REDIRECT
 /* Redirect calls to __builtin_mempcpy and __builtin_stpcpy to call
    __mempcpy and __stpcpy if not inlined.  */
