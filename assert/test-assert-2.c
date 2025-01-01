@@ -123,7 +123,7 @@ check_posix (const char *buf, int rv, int line,
   TEST_VERIFY (strstr (buf, linestr) != NULL);
   TEST_VERIFY (strstr (buf, funcname) != NULL);
   TEST_VERIFY (strstr (buf, testarg) != NULL);
-  
+
 }
 
 static void
