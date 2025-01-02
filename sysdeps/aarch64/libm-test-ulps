@@ -52,9 +52,9 @@ double: 2
 ldouble: 3
 
 Function: "acospi":
-double: 1
+double: 2
 float: 1
-ldouble: 1
+ldouble: 2
 
 Function: "acospi_downward":
 double: 1
@@ -122,21 +122,21 @@ ldouble: 4
 Function: "asinpi":
 double: 1
 float: 1
-ldouble: 1
+ldouble: 2
 
 Function: "asinpi_downward":
 double: 1
 float: 1
-ldouble: 1
+ldouble: 2
 
 Function: "asinpi_towardzero":
 double: 1
-float: 1
+float: 2
 ldouble: 1
 
 Function: "asinpi_upward":
 double: 2
-float: 1
+float: 2
 ldouble: 2
 
 Function: "atan":
@@ -169,7 +169,7 @@ ldouble: 2
 Function: "atan2pi":
 double: 1
 float: 1
-ldouble: 2
+ldouble: 3
 
 Function: "atan2pi_downward":
 double: 1
@@ -231,9 +231,9 @@ double: 3
 ldouble: 4
 
 Function: "atanpi":
-double: 1
+double: 2
 float: 1
-ldouble: 1
+ldouble: 2
 
 Function: "atanpi_downward":
 double: 1
@@ -799,13 +799,13 @@ double: 2
 ldouble: 3
 
 Function: "cospi":
-double: 1
-float: 1
-ldouble: 1
+double: 2
+float: 2
+ldouble: 2
 
 Function: "cospi_downward":
 double: 1
-float: 1
+float: 2
 ldouble: 2
 
 Function: "cospi_towardzero":
@@ -815,8 +815,8 @@ ldouble: 2
 
 Function: "cospi_upward":
 double: 1
-float: 1
-ldouble: 1
+float: 2
+ldouble: 2
 
 Function: Real part of "cpow":
 double: 2
@@ -1623,9 +1623,9 @@ double: 3
 ldouble: 4
 
 Function: "sinpi":
-double: 1
-float: 1
-ldouble: 1
+double: 2
+float: 2
+ldouble: 2
 
 Function: "sinpi_downward":
 double: 2
@@ -1635,11 +1635,11 @@ ldouble: 2
 Function: "sinpi_towardzero":
 double: 2
 float: 1
-ldouble: 1
+ldouble: 2
 
 Function: "sinpi_upward":
 double: 2
-float: 2
+float: 3
 ldouble: 2
 
 Function: "tan":
@@ -1690,9 +1690,9 @@ double: 3
 ldouble: 3
 
 Function: "tanpi":
-double: 2
-float: 2
-ldouble: 2
+double: 3
+float: 3
+ldouble: 3
 
 Function: "tanpi_downward":
 double: 2
@@ -1707,7 +1707,7 @@ ldouble: 4
 Function: "tanpi_upward":
 double: 2
 float: 4
-ldouble: 3
+ldouble: 4
 
 Function: "tgamma":
 double: 9
