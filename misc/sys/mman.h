@@ -101,11 +101,11 @@ extern int posix_madvise (void *__addr, size_t __len, int __advice) __THROW;
 /* Guarantee all whole pages mapped by the range [ADDR,ADDR+LEN) to
    be memory resident.  */
 extern int mlock (const void *__addr, size_t __len) __THROW
-    __attr_access ((__none__, 1));
+    __attr_access_none (1);
 
 /* Unlock whole pages previously mapped by the range [ADDR,ADDR+LEN).  */
 extern int munlock (const void *__addr, size_t __len) __THROW
-    __attr_access ((__none__, 1));
+    __attr_access_none (1);
 
 /* Cause all currently mapped pages of the process to be memory resident
    until unlocked by a call to the `munlockall', until the process exits,
