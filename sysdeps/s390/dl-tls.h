@@ -24,6 +24,9 @@ typedef struct
   unsigned long int ti_offset;
 } tls_index;
 
+/* The DTV stores absolute addresses, but __tls_get_addr must return
+   TP-relative addresses.  */
+#define TLS_DTV_OFFSET (-(unsigned long int) __builtin_thread_pointer ())
 
 #ifdef SHARED
 
@@ -88,9 +91,6 @@ __tls_get_offset:\n\
 # else /* IS_IN (rtld) */
 extern void *__tls_get_addr_internal (tls_index *ti);
 # endif /* !IS_IN (rtld) */
-
-# define GET_ADDR_OFFSET \
-  (ti->ti_offset - (unsigned long) __builtin_thread_pointer ())
 
 /* Use the privately exported __tls_get_addr_internal instead of
    __tls_get_offset in order to avoid the __tls_get_offset special
