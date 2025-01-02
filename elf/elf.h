@@ -2906,19 +2906,6 @@ enum
 
 #define R_AARCH64_NONE            0	/* No relocation.  */
 
-/* ILP32 AArch64 relocs.  */
-#define R_AARCH64_P32_ABS32		  1	/* Direct 32 bit.  */
-#define R_AARCH64_P32_COPY		180	/* Copy symbol at runtime.  */
-#define R_AARCH64_P32_GLOB_DAT		181	/* Create GOT entry.  */
-#define R_AARCH64_P32_JUMP_SLOT		182	/* Create PLT entry.  */
-#define R_AARCH64_P32_RELATIVE		183	/* Adjust by program base.  */
-#define R_AARCH64_P32_TLS_DTPMOD	184	/* Module number, 32 bit.  */
-#define R_AARCH64_P32_TLS_DTPREL	185	/* Module-relative offset, 32 bit.  */
-#define R_AARCH64_P32_TLS_TPREL		186	/* TP-relative offset, 32 bit.  */
-#define R_AARCH64_P32_TLSDESC		187	/* TLS Descriptor.  */
-#define R_AARCH64_P32_IRELATIVE		188	/* STT_GNU_IFUNC relocation. */
-
-/* LP64 AArch64 relocs.  */
 #define R_AARCH64_ABS64         257	/* Direct 64 bit. */
 #define R_AARCH64_ABS32         258	/* Direct 32 bit.  */
 #define R_AARCH64_ABS16		259	/* Direct 16-bit.  */

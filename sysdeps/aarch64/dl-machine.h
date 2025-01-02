@@ -118,7 +118,7 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
      (type) == R_AARCH64_TLSDESC) * ELF_RTYPE_CLASS_PLT)		\
    | (((type) == R_AARCH64_COPY) * ELF_RTYPE_CLASS_COPY))
 
-#define ELF_MACHINE_JMP_SLOT	AARCH64_R(JUMP_SLOT)
+#define ELF_MACHINE_JMP_SLOT	R_AARCH64_JUMP_SLOT
 
 #define DL_PLATFORM_INIT dl_platform_init ()
 
@@ -174,7 +174,7 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
   ElfW(Addr) *const reloc_addr = reloc_addr_arg;
   const unsigned int r_type = ELFW (R_TYPE) (reloc->r_info);
 
-  if (__builtin_expect (r_type == AARCH64_R(RELATIVE), 0))
+  if (__builtin_expect (r_type == R_AARCH64_RELATIVE, 0))
       *reloc_addr = map->l_addr + reloc->r_addend;
   else if (__builtin_expect (r_type == R_AARCH64_NONE, 0))
       return;
@@ -195,19 +195,17 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 
       switch (r_type)
 	{
-	case AARCH64_R(GLOB_DAT):
-	case AARCH64_R(JUMP_SLOT):
+	case R_AARCH64_GLOB_DAT:
+	case R_AARCH64_JUMP_SLOT:
 	  *reloc_addr = value + reloc->r_addend;
 	  break;
 
 # ifndef RTLD_BOOTSTRAP
-	case AARCH64_R(ABS32):
-#  ifdef __LP64__
-	case AARCH64_R(ABS64):
-#  endif
+	case R_AARCH64_ABS32:
+	case R_AARCH64_ABS64:
 	  *reloc_addr = value + reloc->r_addend;
 	  break;
-	case AARCH64_R(COPY):
+	case R_AARCH64_COPY:
 	  if (sym == NULL)
 	      break;
 
@@ -226,7 +224,7 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 		  ? sym->st_size : refsym->st_size);
 	  break;
 
-	case AARCH64_R(TLSDESC):
+	case R_AARCH64_TLSDESC:
 	  {
 	    struct tlsdesc volatile *td =
 	      (struct tlsdesc volatile *)reloc_addr;
@@ -257,19 +255,19 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 	    break;
 	  }
 
-	case AARCH64_R(TLS_DTPMOD):
+	case R_AARCH64_TLS_DTPMOD:
 	  if (sym_map != NULL)
 	    {
 	      *reloc_addr = sym_map->l_tls_modid;
 	    }
 	  break;
 
-	case AARCH64_R(TLS_DTPREL):
+	case R_AARCH64_TLS_DTPREL:
 	  if (sym)
 	    *reloc_addr = sym->st_value + reloc->r_addend;
 	  break;
 
-	case AARCH64_R(TLS_TPREL):
+	case R_AARCH64_TLS_TPREL:
 	  if (sym)
 	    {
 	      CHECK_STATIC_TLS (map, sym_map);
@@ -278,7 +276,7 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 	    }
 	  break;
 
-	case AARCH64_R(IRELATIVE):
+	case R_AARCH64_IRELATIVE:
 	  value = map->l_addr + reloc->r_addend;
 	  if (__glibc_likely (!skip_ifunc))
 	    value = elf_ifunc_invoke (value);
@@ -313,7 +311,7 @@ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
   ElfW(Addr) *const reloc_addr = (void *) (l_addr + reloc->r_offset);
   const unsigned int r_type = ELFW (R_TYPE) (reloc->r_info);
   /* Check for unexpected PLT reloc type.  */
-  if (__builtin_expect (r_type == AARCH64_R(JUMP_SLOT), 1))
+  if (__builtin_expect (r_type == R_AARCH64_JUMP_SLOT, 1))
     {
       if (__glibc_unlikely (map->l_info[DT_AARCH64 (VARIANT_PCS)] != NULL))
 	{
@@ -343,7 +341,7 @@ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
       else
 	*reloc_addr = map->l_mach.plt;
     }
-  else if (__builtin_expect (r_type == AARCH64_R(TLSDESC), 1))
+  else if (__builtin_expect (r_type == R_AARCH64_TLSDESC, 1))
     {
       const Elf_Symndx symndx = ELFW (R_SYM) (reloc->r_info);
       const ElfW (Sym) *symtab = (const void *)D_PTR (map, l_info[DT_SYMTAB]);
@@ -362,7 +360,7 @@ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
       elf_machine_rela (map, scope, reloc, sym, version, reloc_addr,
 			skip_ifunc);
     }
-  else if (__glibc_unlikely (r_type == AARCH64_R(IRELATIVE)))
+  else if (__glibc_unlikely (r_type == R_AARCH64_IRELATIVE))
     {
       ElfW(Addr) value = map->l_addr + reloc->r_addend;
       if (__glibc_likely (!skip_ifunc))

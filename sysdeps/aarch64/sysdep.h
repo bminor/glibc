@@ -21,8 +21,6 @@
 
 #include <sysdeps/generic/sysdep.h>
 
-# define AARCH64_R(NAME)	R_AARCH64_ ## NAME
-
 #ifndef __ASSEMBLER__
 /* Strip pointer authentication code from pointer p.  */
 static inline void *
