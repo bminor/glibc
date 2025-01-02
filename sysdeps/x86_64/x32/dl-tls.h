@@ -1,4 +1,4 @@
-/* Thread-local storage handling in the ELF dynamic linker.  Alpha version.
+/* Thread-local storage handling in the ELF dynamic linker.  x86-64 version.
    Copyright (C) 2002-2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -13,15 +13,26 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _X86_64_DL_TLS_H
+#define _X86_64_DL_TLS_H
+
+#include <stdint.h>
 
 /* Type used for the representation of TLS information in the GOT.  */
-typedef struct
+typedef struct dl_tls_index
 {
-  unsigned long int ti_module;
-  unsigned long int ti_offset;
+  uint64_t ti_module;
+  uint64_t ti_offset;
 } tls_index;
 
+
 extern void *__tls_get_addr (tls_index *ti);
+
+/* Dynamic thread vector pointers point to the start of each
+   TLS block.  */
+#define TLS_DTV_OFFSET 0
+
+#endif /* _X86_64_DL_TLS_H */

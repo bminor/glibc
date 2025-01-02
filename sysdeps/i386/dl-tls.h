@@ -24,6 +24,9 @@ typedef struct dl_tls_index
   unsigned long int ti_offset;
 } tls_index;
 
+/* Dynamic thread vector pointers point to the start of each
+   TLS block.  */
+#define TLS_DTV_OFFSET 0
 
 #ifdef SHARED
 /* This is the prototype for the GNU version.  */
