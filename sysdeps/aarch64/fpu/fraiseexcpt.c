@@ -19,11 +19,12 @@
 #include <fenv.h>
 #include <fpu_control.h>
 #include <float.h>
+#include <stdint.h>
 
 int
 __feraiseexcept (int excepts)
 {
-  int fpsr;
+  uint64_t fpsr;
   const float fp_zero = 0.0;
   const float fp_one = 1.0;
   const float fp_max = FLT_MAX;

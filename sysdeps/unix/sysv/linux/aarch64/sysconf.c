@@ -27,7 +27,7 @@ static long int linux_sysconf (int name);
 long int
 __sysconf (int name)
 {
-  unsigned ctr;
+  uint64_t ctr;
 
   /* Unfortunately, the registers that contain the actual cache info
      (CCSIDR_EL1, CLIDR_EL1, and CSSELR_EL1) are protected by the Linux

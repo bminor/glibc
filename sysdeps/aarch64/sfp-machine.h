@@ -74,7 +74,7 @@ do {						\
     const float fp_1e32 = 1.0e32f;					\
     const float fp_zero = 0.0;						\
     const float fp_one = 1.0;						\
-    unsigned fpsr;							\
+    uint64_t fpsr;							\
     if (_fex & FP_EX_INVALID)						\
       {									\
         __asm__ __volatile__ ("fdiv\ts0, %s0, %s0"			\

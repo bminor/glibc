@@ -128,7 +128,7 @@ init_cpu_features (struct cpu_features *cpu_features)
   cpu_features->midr_el1 = midr;
 
   /* Check if ZVA is enabled.  */
-  unsigned dczid;
+  uint64_t dczid;
   asm volatile ("mrs %0, dczid_el0" : "=r"(dczid));
 
   if ((dczid & DCZID_DZP_MASK) == 0)
