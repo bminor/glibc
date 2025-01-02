@@ -41,7 +41,6 @@ typedef struct
 
 extern void *__tls_get_addr (tls_index *ti);
 
-#define GET_ADDR_OFFSET	(ti->ti_offset + TLS_DTV_OFFSET)
 #define __TLS_GET_ADDR(__ti)	(__tls_get_addr (__ti) - TLS_DTV_OFFSET)
 
 /* Value used for dtv entries for which the allocation is delayed.  */

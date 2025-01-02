@@ -28,5 +28,5 @@ void *
 __tls_get_addr (tls_index *ti)
 {
   dtv_t *dtv = THREAD_DTV ();
-  return (char *) dtv[1].pointer.val + GET_ADDR_OFFSET;
+  return (char *) dtv[1].pointer.val + ti->ti_offset + TLS_DTV_OFFSET;
 }
