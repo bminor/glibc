@@ -890,6 +890,18 @@ _dl_update_slotinfo (unsigned long int req_modid, size_t new_gen)
   return the_map;
 }
 
+/* Adjust the TLS variable pointer using the TLS descriptor offset and
+   the ABI-specific offset.  */
+static inline void *
+tls_get_addr_adjust (void *from_dtv, tls_index *ti)
+{
+  /* Perform arithmetic in uintptr_t to avoid pointer wraparound
+     issues.  The outer cast to uintptr_t suppresses a warning about
+     pointer/integer size mismatch on ILP32 targets with 64-bit
+     ti_offset.  */
+  return (void *) (uintptr_t) ((uintptr_t) from_dtv + ti->ti_offset
+			       + TLS_DTV_OFFSET);
+}
 
 static void *
 __attribute_noinline__
@@ -939,7 +951,7 @@ tls_get_addr_tail (tls_index *ti, dtv_t *dtv, struct link_map *the_map)
 	  dtv[ti->ti_module].pointer.to_free = NULL;
 	  dtv[ti->ti_module].pointer.val = p;
 
-	  return (char *) p + ti->ti_offset;
+	  return tls_get_addr_adjust (p, ti);
 	}
       else
 	__rtld_lock_unlock_recursive (GL(dl_load_tls_lock));
@@ -948,7 +960,7 @@ tls_get_addr_tail (tls_index *ti, dtv_t *dtv, struct link_map *the_map)
   dtv[ti->ti_module].pointer = result;
   assert (result.to_free != NULL);
 
-  return (char *) result.val + ti->ti_offset;
+  return tls_get_addr_adjust (result.val, ti);
 }
 
 
@@ -964,7 +976,7 @@ update_get_addr (tls_index *ti, size_t gen)
   if (__glibc_unlikely (p == TLS_DTV_UNALLOCATED))
     return tls_get_addr_tail (ti, dtv, the_map);
 
-  return (void *) p + ti->ti_offset;
+  return tls_get_addr_adjust (p, ti);
 }
 
 /* For all machines that have a non-macro version of __tls_get_addr, we
@@ -1015,7 +1027,7 @@ __tls_get_addr (tls_index *ti)
   if (__glibc_unlikely (p == TLS_DTV_UNALLOCATED))
     return tls_get_addr_tail (ti, dtv, NULL);
 
-  return (char *) p + ti->ti_offset;
+  return tls_get_addr_adjust (p, ti);
 }
 #endif /* SHARED */
 
