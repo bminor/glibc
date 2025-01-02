@@ -21,21 +21,7 @@
 
 #include <sysdeps/generic/sysdep.h>
 
-#ifdef __LP64__
 # define AARCH64_R(NAME)	R_AARCH64_ ## NAME
-# define PTR_REG(n)		x##n
-# define PTR_LOG_SIZE		3
-# define PTR_ARG(n)
-# define SIZE_ARG(n)
-#else
-# define AARCH64_R(NAME)	R_AARCH64_P32_ ## NAME
-# define PTR_REG(n)		w##n
-# define PTR_LOG_SIZE		2
-# define PTR_ARG(n)		mov     w##n, w##n
-# define SIZE_ARG(n)		mov     w##n, w##n
-#endif
-
-#define PTR_SIZE	(1<<PTR_LOG_SIZE)
 
 #ifndef __ASSEMBLER__
 /* Strip pointer authentication code from pointer p.  */
@@ -199,28 +185,14 @@ GNU_PROPERTY (FEATURE_1_AND, FEATURE_1_BTI|FEATURE_1_GCS)
    Note R and T are register numbers and not register names.  */
 #define LDST_PCREL(OP, R, T, EXPR)			\
 	adrp	x##T, EXPR;				\
-	OP	PTR_REG (R), [x##T, #:lo12:EXPR];	\
+	OP	x##R, [x##T, #:lo12:EXPR];	\
 
 /* Load or store to/from a got-relative EXPR into/from R, using T.
    Note R and T are register numbers and not register names.  */
 #define LDST_GLOBAL(OP, R, T,  EXPR)			\
 	adrp	x##T, :got:EXPR;			\
-	ldr	PTR_REG (T), [x##T, #:got_lo12:EXPR];	\
-	OP	PTR_REG (R), [x##T];
-
-/* Load an immediate into R.
-   Note R is a register number and not a register name.  */
-#ifdef __LP64__
-# define MOVL(R, NAME)					\
-	movz	PTR_REG (R), #:abs_g3:NAME;		\
-	movk	PTR_REG (R), #:abs_g2_nc:NAME;		\
-	movk	PTR_REG (R), #:abs_g1_nc:NAME;		\
-	movk	PTR_REG (R), #:abs_g0_nc:NAME;
-#else
-# define MOVL(R, NAME)					\
-	movz	PTR_REG (R), #:abs_g1:NAME;		\
-	movk	PTR_REG (R), #:abs_g0_nc:NAME;
-#endif
+	ldr	x##T, [x##T, #:got_lo12:EXPR];	\
+	OP	x##R, [x##T];
 
 /* Since C identifiers are not normally prefixed with an underscore
    on this system, the asm identifier `syscall_error' intrudes on the

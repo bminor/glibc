@@ -61,7 +61,7 @@
 	.type	call_weak_fn, %function
 call_weak_fn:
 	adrp	x0, :got:PREINIT_FUNCTION
-	ldr	PTR_REG (0), [x0, #:got_lo12:PREINIT_FUNCTION]
+	ldr	x0, [x0, #:got_lo12:PREINIT_FUNCTION]
 	cbz	x0, 1f
 	b	PREINIT_FUNCTION
 1:

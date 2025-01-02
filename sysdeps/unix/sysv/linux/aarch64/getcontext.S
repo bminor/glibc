@@ -105,7 +105,7 @@ L(gcs_done):
 
 	/* Grab the signal mask */
 	/* rt_sigprocmask (SIG_BLOCK, NULL, &ucp->uc_sigmask, _NSIG8) */
-	add	PTR_REG (2), PTR_REG (0), #UCONTEXT_SIGMASK
+	add	x2, x0, UCONTEXT_SIGMASK
 	mov	x0, SIG_BLOCK
 	mov	x1, 0
 	mov	x3, _NSIG8

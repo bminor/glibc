@@ -75,7 +75,7 @@
 	.align 2
 _dl_tlsdesc_return:
 	BTI_C
-	ldr	PTR_REG (0), [x0, #PTR_SIZE]
+	ldr	x0, [x0, 8]
 	RET
 	cfi_endproc
 	.size	_dl_tlsdesc_return, .-_dl_tlsdesc_return
@@ -98,9 +98,9 @@ _dl_tlsdesc_undefweak:
 	BTI_C
 	str	x1, [sp, #-16]!
 	cfi_adjust_cfa_offset (16)
-	ldr	PTR_REG (0), [x0, #PTR_SIZE]
+	ldr	x0, [x0, 8]
 	mrs	x1, tpidr_el0
-	sub	PTR_REG (0), PTR_REG (0), PTR_REG (1)
+	sub	x0, x0, x1
 	ldr	x1, [sp], #16
 	cfi_adjust_cfa_offset (-16)
 	RET
@@ -155,21 +155,21 @@ _dl_tlsdesc_dynamic:
 	cfi_rel_offset (x4, 24)
 
 	mrs	x4, tpidr_el0
-	ldr	PTR_REG (1), [x0,#TLSDESC_ARG]
-	ldr	PTR_REG (0), [x4,#TCBHEAD_DTV]
-	ldr	PTR_REG (3), [x1,#TLSDESC_GEN_COUNT]
-	ldr	PTR_REG (2), [x0,#DTV_COUNTER]
-	cmp	PTR_REG (3), PTR_REG (2)
+	ldr	x1, [x0, TLSDESC_ARG]
+	ldr	x0, [x4, TCBHEAD_DTV]
+	ldr	x3, [x1, TLSDESC_GEN_COUNT]
+	ldr	x2, [x0, DTV_COUNTER]
+	cmp	x3, x2
 	b.hi	2f
 	/* Load r2 = td->tlsinfo.ti_module and r3 = td->tlsinfo.ti_offset.  */
-	ldp	PTR_REG (2), PTR_REG (3), [x1,#TLSDESC_MODID]
-	add	PTR_REG (0), PTR_REG (0), PTR_REG (2), lsl #(PTR_LOG_SIZE + 1)
-	ldr	PTR_REG (0), [x0] /* Load val member of DTV entry.  */
-	cmp	PTR_REG (0), #TLS_DTV_UNALLOCATED
+	ldp	x2, x3, [x1, TLSDESC_MODID]
+	add	x0, x0, x2, lsl 4
+	ldr	x0, [x0] /* Load val member of DTV entry.  */
+	cmp	x0, TLS_DTV_UNALLOCATED
 	b.eq	2f
 	cfi_remember_state
-	sub	PTR_REG (3), PTR_REG (3), PTR_REG (4)
-	add	PTR_REG (0), PTR_REG (0), PTR_REG (3)
+	sub	x3, x3, x4
+	add	x0, x0, x3
 1:
 	ldp	 x3,  x4, [sp, #16]
 	ldp	 x1,  x2, [sp], #32
@@ -220,7 +220,7 @@ _dl_tlsdesc_dynamic:
 	bl	HIDDEN_JUMPTARGET(__tls_get_addr)
 
 	mrs	x1, tpidr_el0
-	sub	PTR_REG (0), PTR_REG (0), PTR_REG (1)
+	sub	x0, x0, x1
 
 	RESTORE_Q_REGISTERS
 

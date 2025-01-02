@@ -30,11 +30,11 @@ ENTRY (_start)
 	mov	x0, sp
 	bl	_dl_start
 	/* Returns user entry point in x0.  */
-	mov	PTR_REG (21), PTR_REG (0)
+	mov	x21, x0
 
 	/* Use GL(dl_aarch64_gcs) to set the shadow stack status.  */
 	adrp	x16, _rtld_local
-	add	PTR_REG (16), PTR_REG (16), :lo12:_rtld_local
+	add	x16, x16, :lo12:_rtld_local
 	ldr	x1, [x16, GL_DL_AARCH64_GCS_OFFSET]
 	cbz	x1, L(skip_gcs_enable)
 
@@ -56,18 +56,18 @@ L(skip_gcs_enable):
 .type _dl_start_user, %function
 _dl_start_user:
 	/* Get argc.  */
-	ldr	PTR_REG (1), [sp]
+	ldr	x1, [sp]
 	/* Get argv.  */
-	add	x2, sp, PTR_SIZE
+	add	x2, sp, 8
 	/* Compute envp.  */
-	add	PTR_REG (3), PTR_REG (2), PTR_REG (1), lsl PTR_LOG_SIZE
-	add	PTR_REG (3), PTR_REG (3), PTR_SIZE
+	add	x3, x2, x1, lsl 3
+	add	x3, x3, 8
 	/* Run the init functions of the loaded modules.  */
-	ldr	PTR_REG (0), [x16]
+	ldr	x0, [x16]
 	bl	_dl_init
 	/* Load the finalizer function.  */
 	adrp	x0, _dl_fini
-	add	PTR_REG (0), PTR_REG (0), :lo12:_dl_fini
+	add	x0, x0, :lo12:_dl_fini
 	/* Jump to the user's entry point.  */
 	mov	x16, x21
 	br	x16
