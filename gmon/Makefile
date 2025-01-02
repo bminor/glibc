@@ -42,7 +42,8 @@ tests = \
   tst-mcount-overflow \
   tst-sprofil \
   # tests
-ifeq ($(build-profile),yes)
+# clang does not support -profile to instruct linker to use lc_p
+ifeq ($(build-profile)$(have-test-clang),yesno)
 tests += tst-profile-static
 tests-static += tst-profile-static
 
