@@ -3,7 +3,7 @@
 Copyright (c) 2023-2024 Alexei Sibidanov.
 
 The original version of this file was copied from the CORE-MATH
-project (file src/binary32/acos/acosf.c, revision 61d7bef).
+project (file src/binary32/acos/acosf.c, revision 56dd347).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@ SOFTWARE.
 #include <math.h>
 #include <math_private.h>
 #include <libm-alias-finite.h>
+#include <math-barriers.h>
 #include "math_config.h"
 
 static __attribute__ ((noinline)) float
@@ -66,7 +67,7 @@ poly12 (double z, const double *c)
 float
 __ieee754_acosf (float x)
 {
-  const double pi2 = 0x1.921fb54442d18p+0;
+  double pi2 = 0x1.921fb54442d18p+0;
   static const double o[] = { 0, 0x1.921fb54442d18p+1 };
   double xs = x;
   double r;
@@ -87,7 +88,10 @@ __ieee754_acosf (float x)
 	};
       /* Avoid spurious underflow exception.  */
       if (__glibc_unlikely (ax <= 0x40000000u)) /* |x| < 2^-63 */
-	return (float) pi2;
+	/* GCC <= 11 wrongly assumes the rounding is to nearest and
+	   performs a constant folding here:
+	   https://gcc.gnu.org/bugzilla/show_bug.cgi?id=57245 */
+	return math_opt_barrier (pi2);
       double z = xs;
       double z2 = z * z;
       double z4 = z2 * z2;
