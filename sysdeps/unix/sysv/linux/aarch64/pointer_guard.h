@@ -24,18 +24,11 @@
      || (!defined SHARED && (IS_IN (libc) \
                              || IS_IN (libpthread))))
 # ifdef __ASSEMBLER__
-/* Note, dst, src, guard, and tmp are all register numbers rather than
-   register names so they will work with both ILP32 and LP64. */
-#  define PTR_MANGLE(dst, src, guard, tmp)                                \
-  LDST_PCREL (ldr, guard, tmp, C_SYMBOL_NAME(__pointer_chk_guard_local)); \
-  PTR_MANGLE2 (dst, src, guard)
-/* Use PTR_MANGLE2 for efficiency if guard is already loaded.  */
-#  define PTR_MANGLE2(dst, src, guard)\
-  eor x##dst, x##src, x##guard
-#  define PTR_DEMANGLE(dst, src, guard, tmp)\
-  PTR_MANGLE (dst, src, guard, tmp)
-#  define PTR_DEMANGLE2(dst, src, guard)\
-  PTR_MANGLE2 (dst, src, guard)
+#  define PTR_MANGLE(dst, src, tmp)					    \
+	adrp    tmp, C_SYMBOL_NAME(__pointer_chk_guard_local);		    \
+	ldr	tmp, [tmp, :lo12:C_SYMBOL_NAME(__pointer_chk_guard_local)]; \
+	eor	dst, src, tmp
+#  define PTR_DEMANGLE(dst, src, tmp) PTR_MANGLE (dst, src, tmp)
 # else
 extern uintptr_t __pointer_chk_guard_local attribute_relro attribute_hidden;
 #  define PTR_MANGLE(var) \
@@ -44,18 +37,12 @@ extern uintptr_t __pointer_chk_guard_local attribute_relro attribute_hidden;
 # endif
 #else
 # ifdef __ASSEMBLER__
-/* Note, dst, src, guard, and tmp are all register numbers rather than
-   register names so they will work with both ILP32 and LP64. */
-#  define PTR_MANGLE(dst, src, guard, tmp)                             \
-  LDST_GLOBAL (ldr, guard, tmp, C_SYMBOL_NAME(__pointer_chk_guard));   \
-  PTR_MANGLE2 (dst, src, guard)
-/* Use PTR_MANGLE2 for efficiency if guard is already loaded.  */
-#  define PTR_MANGLE2(dst, src, guard)\
-  eor x##dst, x##src, x##guard
-#  define PTR_DEMANGLE(dst, src, guard, tmp)\
-  PTR_MANGLE (dst, src, guard, tmp)
-#  define PTR_DEMANGLE2(dst, src, guard)\
-  PTR_MANGLE2 (dst, src, guard)
+#  define PTR_MANGLE(dst, src, tmp)					  \
+	adrp	tmp, :got:C_SYMBOL_NAME(__pointer_chk_guard);		  \
+	ldr	tmp, [tmp, :got_lo12:C_SYMBOL_NAME(__pointer_chk_guard)]; \
+	ldr	tmp, [tmp];						  \
+	eor	dst, src, tmp;
+#  define PTR_DEMANGLE(dst, src, tmp) PTR_MANGLE (dst, src, tmp)
 # else
 #  include <stdint.h>
 extern uintptr_t __pointer_chk_guard attribute_relro;

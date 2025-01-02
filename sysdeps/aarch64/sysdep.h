@@ -181,19 +181,6 @@ GNU_PROPERTY (FEATURE_1_AND, FEATURE_1_BTI|FEATURE_1_GCS)
 # define L(name)         .L##name
 #endif
 
-/* Load or store to/from a pc-relative EXPR into/from R, using T.
-   Note R and T are register numbers and not register names.  */
-#define LDST_PCREL(OP, R, T, EXPR)			\
-	adrp	x##T, EXPR;				\
-	OP	x##R, [x##T, #:lo12:EXPR];	\
-
-/* Load or store to/from a got-relative EXPR into/from R, using T.
-   Note R and T are register numbers and not register names.  */
-#define LDST_GLOBAL(OP, R, T,  EXPR)			\
-	adrp	x##T, :got:EXPR;			\
-	ldr	x##T, [x##T, #:got_lo12:EXPR];	\
-	OP	x##R, [x##T];
-
 /* Since C identifiers are not normally prefixed with an underscore
    on this system, the asm identifier `syscall_error' intrudes on the
    C name space.  Make sure we use an innocuous name.  */
