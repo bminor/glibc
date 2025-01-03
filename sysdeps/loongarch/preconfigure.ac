@@ -41,6 +41,7 @@ loongarch*)
     AC_DEFINE_UNQUOTED([LOONGARCH_ABI_FRLEN], [$abi_flen])
 
     base_machine=loongarch
+    mtls_descriptor=desc
     ;;
 esac
 
