@@ -63,5 +63,5 @@ svfloat32_t SV_NAME_F1 (sinh) (svfloat32_t x, const svbool_t pg)
   if (__glibc_unlikely (svptest_any (pg, special)))
     return special_case (x, svmul_x (pg, t, halfsign), special);
 
-  return svmul_x (pg, t, halfsign);
+  return svmul_x (svptrue_b32 (), t, halfsign);
 }
