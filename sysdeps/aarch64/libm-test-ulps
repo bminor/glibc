@@ -1316,7 +1316,7 @@ float: 2
 ldouble: 1
 
 Function: "log_sve":
-double: 1
+double: 2
 float: 3
 
 Function: "log_towardzero":
