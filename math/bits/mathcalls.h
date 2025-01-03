@@ -78,7 +78,7 @@ __MATHCALL (atan2pi,, (_Mdouble_ __y, _Mdouble_ __x));
 /* Cosine of pi * X.  */
 __MATHCALL (cospi,, (_Mdouble_ __x));
 /* Sine of pi * X.  */
-__MATHCALL (sinpi,, (_Mdouble_ __x));
+__MATHCALL_VEC (sinpi,, (_Mdouble_ __x));
 /* Tangent of pi * X.  */
 __MATHCALL (tanpi,, (_Mdouble_ __x));
 #endif

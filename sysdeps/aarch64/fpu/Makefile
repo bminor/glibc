@@ -22,6 +22,7 @@ libmvec-supported-funcs = acos \
                           pow \
                           sin \
                           sinh \
+                          sinpi \
                           tan \
                           tanh
 

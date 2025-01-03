@@ -340,4 +340,15 @@
 #define __DECL_SIMD_tanf32x
 #define __DECL_SIMD_tanf64x
 #define __DECL_SIMD_tanf128x
+
+#define __DECL_SIMD_sinpi
+#define __DECL_SIMD_sinpif
+#define __DECL_SIMD_sinpil
+#define __DECL_SIMD_sinpif16
+#define __DECL_SIMD_sinpif32
+#define __DECL_SIMD_sinpif64
+#define __DECL_SIMD_sinpif128
+#define __DECL_SIMD_sinpif32x
+#define __DECL_SIMD_sinpif64x
+#define __DECL_SIMD_sinpif128x
 #endif

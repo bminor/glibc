@@ -1627,10 +1627,18 @@ double: 2
 float: 2
 ldouble: 2
 
+Function: "sinpi_advsimd":
+double: 2
+float: 2
+
 Function: "sinpi_downward":
 double: 2
 float: 2
 ldouble: 2
+
+Function: "sinpi_sve":
+double: 2
+float: 2
 
 Function: "sinpi_towardzero":
 double: 2

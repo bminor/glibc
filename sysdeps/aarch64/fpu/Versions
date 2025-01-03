@@ -141,5 +141,10 @@ libmvec {
     _ZGVnN4v_logp1f;
     _ZGVsMxv_logp1;
     _ZGVsMxv_logp1f;
+    _ZGVnN2v_sinpi;
+    _ZGVnN2v_sinpif;
+    _ZGVnN4v_sinpif;
+    _ZGVsMxv_sinpi;
+    _ZGVsMxv_sinpif;
   }
 }
