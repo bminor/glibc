@@ -22,6 +22,7 @@
 
 #include <stdbool.h>
 #include <stdio.h>
+#include <libc-diag.h>
 
 #if __GNUC_PREREQ (5, 5)
 /* Do not use the test framework, so that the process setup is not
@@ -41,6 +42,8 @@ implementation (void)
   return random_constant;
 }
 
+DIAG_PUSH_NEEDS_COMMENT_CLANG;
+DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wunused-function");
 static __typeof__ (implementation) *
 inhibit_stack_protector
 resolver (void)
@@ -50,6 +53,7 @@ resolver (void)
 }
 
 static int magic (void) __attribute__ ((ifunc ("resolver")));
+DIAG_POP_NEEDS_COMMENT_CLANG;
 
 int
 main (void)
