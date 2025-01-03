@@ -1032,6 +1032,7 @@ ifneq ($(have-test-clang),yes)
 # NB: tgmath3-macro-tests won't compile with <float.h> and <tgmath.h>
 # from Clang due to missing C23 support:
 # https://github.com/llvm/llvm-project/issues/97335
+# https://github.com/llvm/llvm-project/issues/121536
 tests-tgmath += $(tgmath3-macro-tests)
 endif
 tests += $(tests-tgmath)
