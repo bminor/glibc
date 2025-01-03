@@ -64,6 +64,10 @@ GLIBC_2.12 pthread_condattr_setpshared F
 GLIBC_2.12 pthread_equal F
 GLIBC_2.12 pthread_getschedparam F
 GLIBC_2.12 pthread_mutex_init F
+GLIBC_2.12 pthread_mutex_lock F
+GLIBC_2.12 pthread_mutex_timedlock F
+GLIBC_2.12 pthread_mutex_trylock F
+GLIBC_2.12 pthread_mutex_unlock F
 GLIBC_2.12 pthread_mutexattr_destroy F
 GLIBC_2.12 pthread_mutexattr_getprioceiling F
 GLIBC_2.12 pthread_mutexattr_getprotocol F
@@ -2264,6 +2268,7 @@ GLIBC_2.32 __libc_single_threaded D 0x1
 GLIBC_2.32 mach_print F
 GLIBC_2.32 mremap F
 GLIBC_2.32 pthread_cond_clockwait F
+GLIBC_2.32 pthread_mutex_clocklock F
 GLIBC_2.32 pthread_mutexattr_getrobust F
 GLIBC_2.32 pthread_mutexattr_getrobust_np F
 GLIBC_2.32 pthread_mutexattr_setrobust F
@@ -2549,6 +2554,7 @@ GLIBC_2.41 pthread_mutexattr_setrobust F
 GLIBC_2.41 pthread_mutexattr_setrobust_np F
 GLIBC_2.41 pthread_mutexattr_settype F
 GLIBC_2.41 pthread_sigmask F
+GLIBC_2.42 pthread_mutex_trylock F
 GLIBC_2.5 __readlinkat_chk F
 GLIBC_2.5 inet6_opt_append F
 GLIBC_2.5 inet6_opt_find F

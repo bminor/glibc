@@ -33,12 +33,19 @@ extern void __pthread_init_static_tls (struct link_map *) attribute_hidden;
 
 extern int __pthread_mutex_init (pthread_mutex_t *__mutex, const pthread_mutexattr_t *__attr);
 libc_hidden_proto (__pthread_mutex_init)
+extern int __pthread_mutex_clocklock (pthread_mutex_t *__mutex, clockid_t __clockid,
+				    const struct timespec *__abstime);
+libc_hidden_proto (__pthread_mutex_clocklock)
 extern int __pthread_mutex_destroy (pthread_mutex_t *__mutex);
 extern int __pthread_mutex_lock (pthread_mutex_t *__mutex);
+libc_hidden_proto (__pthread_mutex_lock)
 extern int __pthread_mutex_trylock (pthread_mutex_t *_mutex);
+libc_hidden_proto (__pthread_mutex_trylock)
 extern int __pthread_mutex_timedlock (pthread_mutex_t *__mutex,
      const struct timespec *__abstime);
+libc_hidden_proto (__pthread_mutex_timedlock)
 extern int __pthread_mutex_unlock (pthread_mutex_t *__mutex);
+libc_hidden_proto (__pthread_mutex_unlock)
 extern int __pthread_mutexattr_getpshared(const pthread_mutexattr_t *__restrict __attr,
 					int *__restrict __pshared);
 libc_hidden_proto (__pthread_mutexattr_getpshared)
@@ -164,10 +171,6 @@ hidden_proto (__pthread_key_create)
 hidden_proto (__pthread_getspecific)
 hidden_proto (__pthread_setspecific)
 hidden_proto (__pthread_mutex_destroy)
-hidden_proto (__pthread_mutex_lock)
-hidden_proto (__pthread_mutex_trylock)
-hidden_proto (__pthread_mutex_unlock)
-hidden_proto (__pthread_mutex_timedlock)
 hidden_proto (__pthread_get_cleanup_stack)
 #endif
 

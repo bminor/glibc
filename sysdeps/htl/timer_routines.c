@@ -265,7 +265,7 @@ thread_cleanup (void *val)
       /* How did the signal thread get killed?  */
       assert (thread != &__timer_signal_thread_rclk);
 
-      pthread_mutex_lock (&__timer_mutex);
+      __pthread_mutex_lock (&__timer_mutex);
 
       thread->exists = 0;
 
@@ -277,7 +277,7 @@ thread_cleanup (void *val)
       else
 	(void) __timer_thread_start (thread);
 
-      pthread_mutex_unlock (&__timer_mutex);
+      __pthread_mutex_unlock (&__timer_mutex);
 
       /* Unblock potentially blocked timer_delete().  */
       __pthread_cond_broadcast (&thread->cond);
@@ -291,7 +291,7 @@ thread_expire_timer (struct thread_node *self, struct timer_node *timer)
 {
   self->current_timer = timer; /* Lets timer_delete know timer is running. */
 
-  pthread_mutex_unlock (&__timer_mutex);
+  __pthread_mutex_unlock (&__timer_mutex);
 
   switch (__builtin_expect (timer->event.sigev_notify, SIGEV_SIGNAL))
     {
@@ -334,7 +334,7 @@ thread_expire_timer (struct thread_node *self, struct timer_node *timer)
       break;
     }
 
-  pthread_mutex_lock (&__timer_mutex);
+  __pthread_mutex_lock (&__timer_mutex);
 
   self->current_timer = 0;
 
@@ -358,7 +358,7 @@ thread_func (void *arg)
 
   pthread_cleanup_push (thread_cleanup, self);
 
-  pthread_mutex_lock (&__timer_mutex);
+  __pthread_mutex_lock (&__timer_mutex);
 
   while (1)
     {
@@ -550,5 +550,5 @@ __timer_dealloc (struct timer_node *timer)
 void
 __timer_mutex_cancel_handler (void *arg)
 {
-  pthread_mutex_unlock (arg);
+  __pthread_mutex_unlock (arg);
 }

@@ -16,7 +16,7 @@
    License along with the GNU C Library;  if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <pthread.h>
+#include <pthreadP.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <pt-internal.h>
@@ -79,6 +79,7 @@ __pthread_mutex_clocklock (pthread_mutex_t *mtxp,
 
   return ret;
 }
+libc_hidden_def (__pthread_mutex_clocklock)
 weak_alias (__pthread_mutex_clocklock, pthread_mutex_clocklock)
 
 int
@@ -87,5 +88,5 @@ __pthread_mutex_timedlock (pthread_mutex_t *mutex,
 {
   return __pthread_mutex_clocklock (mutex, CLOCK_REALTIME, tsp);
 }
+libc_hidden_def (__pthread_mutex_timedlock)
 weak_alias (__pthread_mutex_timedlock, pthread_mutex_timedlock)
-hidden_def (__pthread_mutex_timedlock)

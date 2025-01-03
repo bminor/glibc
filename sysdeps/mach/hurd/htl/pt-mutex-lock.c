@@ -16,13 +16,14 @@
    License along with the GNU C Library;  if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <pthread.h>
+#include <pthreadP.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <pt-internal.h>
 #include "pt-mutex.h"
 #include <hurdlock.h>
 #include <unistd.h>
+#include <shlib-compat.h>
 
 int
 __pthread_mutex_lock (pthread_mutex_t *mtxp)
@@ -76,7 +77,9 @@ __pthread_mutex_lock (pthread_mutex_t *mtxp)
 
   return ret;
 }
+libc_hidden_def (__pthread_mutex_lock)
+versioned_symbol (libc, __pthread_mutex_lock, pthread_mutex_lock, GLIBC_2_21);
 
-hidden_def (__pthread_mutex_lock)
-strong_alias (__pthread_mutex_lock, _pthread_mutex_lock)
-weak_alias (__pthread_mutex_lock, pthread_mutex_lock)
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
+compat_symbol (libc, __pthread_mutex_lock, pthread_mutex_lock, GLIBC_2_12);
+#endif
