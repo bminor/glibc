@@ -21,15 +21,32 @@
 #include "poly_sve_f64.h"
 
 #define N (1 << V_LOG2_TABLE_BITS)
-#define Off 0x3fe6900900000000
 #define Max (0x7ff0000000000000)
 #define Min (0x0010000000000000)
 #define Thresh (0x7fe0000000000000) /* Max - Min.  */
 
-static svfloat64_t NOINLINE
-special_case (svfloat64_t x, svfloat64_t y, svbool_t cmp)
+static const struct data
 {
-  return sv_call_f64 (log2, x, y, cmp);
+  double c0, c2;
+  double c1, c3;
+  double invln2, c4;
+  uint64_t off;
+} data = {
+  .c0 = -0x1.71547652b83p-1,
+  .c1 = 0x1.ec709dc340953p-2,
+  .c2 = -0x1.71547651c8f35p-2,
+  .c3 = 0x1.2777ebe12dda5p-2,
+  .c4 = -0x1.ec738d616fe26p-3,
+  .invln2 = 0x1.71547652b82fep0,
+  .off = 0x3fe6900900000000,
+};
+
+static svfloat64_t NOINLINE
+special_case (svfloat64_t w, svuint64_t tmp, svfloat64_t y, svfloat64_t r2,
+	      svbool_t special, const struct data *d)
+{
+  svfloat64_t x = svreinterpret_f64 (svadd_x (svptrue_b64 (), tmp, d->off));
+  return sv_call_f64 (log2, x, svmla_x (svptrue_b64 (), w, r2, y), special);
 }
 
 /* Double-precision SVE log2 routine.
@@ -40,13 +57,15 @@ special_case (svfloat64_t x, svfloat64_t y, svbool_t cmp)
 					  want 0x1.fffb34198d9ddp-5.  */
 svfloat64_t SV_NAME_D1 (log2) (svfloat64_t x, const svbool_t pg)
 {
+  const struct data *d = ptr_barrier (&data);
+
   svuint64_t ix = svreinterpret_u64 (x);
   svbool_t special = svcmpge (pg, svsub_x (pg, ix, Min), Thresh);
 
   /* x = 2^k z; where z is in range [Off,2*Off) and exact.
      The range is split into N subintervals.
      The ith subinterval contains z and c is near its center.  */
-  svuint64_t tmp = svsub_x (pg, ix, Off);
+  svuint64_t tmp = svsub_x (pg, ix, d->off);
   svuint64_t i = svlsr_x (pg, tmp, 51 - V_LOG2_TABLE_BITS);
   i = svand_x (pg, i, (N - 1) << 1);
   svfloat64_t k = svcvt_f64_x (pg, svasr_x (pg, svreinterpret_s64 (tmp), 52));
@@ -59,15 +78,19 @@ svfloat64_t SV_NAME_D1 (log2) (svfloat64_t x, const svbool_t pg)
 
   /* log2(x) = log1p(z/c-1)/log(2) + log2(c) + k.  */
 
+  svfloat64_t invln2_and_c4 = svld1rq_f64 (svptrue_b64 (), &d->invln2);
   svfloat64_t r = svmad_x (pg, invc, z, -1.0);
-  svfloat64_t w = svmla_x (pg, log2c, r, __v_log2_data.invln2);
-
-  svfloat64_t r2 = svmul_x (pg, r, r);
-  svfloat64_t y = sv_pw_horner_4_f64_x (pg, r, r2, __v_log2_data.poly);
+  svfloat64_t w = svmla_lane_f64 (log2c, r, invln2_and_c4, 0);
   w = svadd_x (pg, k, w);
 
+  svfloat64_t odd_coeffs = svld1rq_f64 (svptrue_b64 (), &d->c1);
+  svfloat64_t r2 = svmul_x (svptrue_b64 (), r, r);
+  svfloat64_t y = svmla_lane_f64 (sv_f64 (d->c2), r, odd_coeffs, 1);
+  svfloat64_t p = svmla_lane_f64 (sv_f64 (d->c0), r, odd_coeffs, 0);
+  y = svmla_lane_f64 (y, r2, invln2_and_c4, 1);
+  y = svmla_x (pg, p, r2, y);
+
   if (__glibc_unlikely (svptest_any (pg, special)))
-    return special_case (x, svmla_x (svnot_z (pg, special), w, r2, y),
-			 special);
+    return special_case (w, tmp, y, r2, special, d);
   return svmla_x (pg, w, r2, y);
 }
