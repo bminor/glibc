@@ -96,8 +96,7 @@
    zero and infinite results should be ignored; "xfail" indicates the
    test is disabled as expected to produce incorrect results,
    "xfail-rounding" indicates the test is disabled only in rounding
-   modes other than round-to-nearest; "no-mathvec" indicates the test
-   is disabled in vector math libraries.  Otherwise, test flags are of
+   modes other than round-to-nearest.  Otherwise, test flags are of
    the form "spurious-<exception>" and "missing-<exception>", for any
    exception ("overflow", "underflow", "inexact", "invalid",
    "divbyzero"), "spurious-errno" and "missing-errno", to indicate
@@ -353,7 +352,6 @@ typedef enum
     flag_missing_overflow,
     flag_missing_underflow,
     flag_missing_errno,
-    flag_no_mathvec,
     num_input_flag_types,
     flag_first_flag = 0,
     flag_spurious_first = flag_spurious_divbyzero,
@@ -379,7 +377,6 @@ static const char *const input_flags[num_input_flag_types] =
     "missing-overflow",
     "missing-underflow",
     "missing-errno",
-    "no-mathvec",
   };
 
 /* An input flag, possibly conditional.  */
@@ -2052,7 +2049,6 @@ output_for_one_input_case (FILE *fp, const char *filename, test_function *tf,
 		  {
 		  case flag_ignore_zero_inf_sign:
 		  case flag_xfail:
-		  case flag_no_mathvec:
 		    if (fprintf (fp, " %s%s",
 				 input_flags[it->flags[i].type],
 				 (it->flags[i].cond
