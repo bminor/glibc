@@ -60,21 +60,16 @@ svfloat32_t SV_NAME_F1 (tan) (svfloat32_t x, const svbool_t pg)
 {
   const struct data *d = ptr_barrier (&data);
 
-  /* Determine whether input is too large to perform fast regression.  */
-  svbool_t cmp = svacge (pg, x, d->range_val);
-
   svfloat32_t odd_coeffs = svld1rq (svptrue_b32 (), &d->c1);
   svfloat32_t pi_vals = svld1rq (svptrue_b32 (), &d->pio2_1);
 
   /* n = rint(x/(pi/2)).  */
-  svfloat32_t q = svmla_lane (sv_f32 (d->shift), x, pi_vals, 3);
-  svfloat32_t n = svsub_x (pg, q, d->shift);
+  svfloat32_t n = svrintn_x (pg, svmul_lane (x, pi_vals, 3));
   /* n is already a signed integer, simply convert it.  */
   svint32_t in = svcvt_s32_x (pg, n);
   /* Determine if x lives in an interval, where |tan(x)| grows to infinity.  */
   svint32_t alt = svand_x (pg, in, 1);
   svbool_t pred_alt = svcmpne (pg, alt, 0);
-
   /* r = x - n * (pi/2)  (range reduction into 0 .. pi/4).  */
   svfloat32_t r;
   r = svmls_lane (x, n, pi_vals, 0);
@@ -93,7 +88,7 @@ svfloat32_t SV_NAME_F1 (tan) (svfloat32_t x, const svbool_t pg)
 
   /* Evaluate polynomial approximation of tangent on [-pi/4, pi/4],
      using Estrin on z^2.  */
-  svfloat32_t z2 = svmul_x (pg, z, z);
+  svfloat32_t z2 = svmul_x (svptrue_b32 (), r, r);
   svfloat32_t p01 = svmla_lane (sv_f32 (d->c0), z2, odd_coeffs, 0);
   svfloat32_t p23 = svmla_lane (sv_f32 (d->c2), z2, odd_coeffs, 1);
   svfloat32_t p45 = svmla_lane (sv_f32 (d->c4), z2, odd_coeffs, 2);
@@ -106,13 +101,14 @@ svfloat32_t SV_NAME_F1 (tan) (svfloat32_t x, const svbool_t pg)
 
   svfloat32_t y = svmla_x (pg, z, p, svmul_x (pg, z, z2));
 
-  /* Transform result back, if necessary.  */
-  svfloat32_t inv_y = svdivr_x (pg, y, 1.0f);
-
   /* No need to pass pg to specialcase here since cmp is a strict subset,
      guaranteed by the cmpge above.  */
-  if (__glibc_unlikely (svptest_any (pg, cmp)))
-    return special_case (x, svsel (pred_alt, inv_y, y), cmp);
 
+  /* Determine whether input is too large to perform fast regression.  */
+  svbool_t cmp = svacge (pg, x, d->range_val);
+  if (__glibc_unlikely (svptest_any (pg, cmp)))
+    return special_case (x, svdivr_x (pg, y, 1.0f), cmp);
+
+  svfloat32_t inv_y = svdivr_x (pg, y, 1.0f);
   return svsel (pred_alt, inv_y, y);
 }
