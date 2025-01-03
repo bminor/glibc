@@ -63,6 +63,7 @@ GLIBC_2.12 pthread_condattr_setclock F
 GLIBC_2.12 pthread_condattr_setpshared F
 GLIBC_2.12 pthread_equal F
 GLIBC_2.12 pthread_getschedparam F
+GLIBC_2.12 pthread_mutex_destroy F
 GLIBC_2.12 pthread_mutex_getprioceiling F
 GLIBC_2.12 pthread_mutex_init F
 GLIBC_2.12 pthread_mutex_lock F

@@ -28,7 +28,6 @@
 #if IS_IN (libpthread)
 static const struct pthread_functions pthread_functions = {
   .ptr___pthread_exit = __pthread_exit,
-  .ptr_pthread_mutex_destroy = __pthread_mutex_destroy,
   .ptr___pthread_setcancelstate = __pthread_setcancelstate,
   .ptr_pthread_setcanceltype = __pthread_setcanceltype,
   .ptr___pthread_get_cleanup_stack = __pthread_get_cleanup_stack,

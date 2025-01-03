@@ -38,6 +38,7 @@ libc {
     pthread_condattr_getpshared;
     pthread_condattr_setclock;
     pthread_condattr_setpshared;
+    pthread_mutex_destroy;
     pthread_mutex_getprioceiling;
     pthread_mutex_init;
     pthread_mutex_lock;
@@ -151,6 +152,7 @@ libc {
     __pthread_condattr_init;
     __pthread_default_condattr;
     __pthread_mutex_checklocked;
+    __pthread_mutex_destroy;
     __pthread_mutex_init;
     __pthread_mutex_lock;
     __pthread_mutex_timedlock;
@@ -214,7 +216,6 @@ libpthread {
     pthread_kill;
     __pthread_kill;
 
-    pthread_mutex_destroy;
     pthread_mutex_transfer_np;
 
     pthread_once;
@@ -283,7 +284,6 @@ libpthread {
     __pthread_getspecific;
     __pthread_setspecific;
     __pthread_getattr_np;
-    __pthread_mutex_destroy;
     __pthread_enable_asynccancel;
     __pthread_disable_asynccancel;
     _pthread_rwlock_destroy; _pthread_rwlock_init;

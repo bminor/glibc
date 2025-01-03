@@ -22,7 +22,6 @@
 #include <pthread.h>
 
 void __pthread_exit (void *) __attribute__ ((__noreturn__));
-int _pthread_mutex_destroy (pthread_mutex_t *);
 int __pthread_setcancelstate (int, int *);
 int __pthread_setcanceltype (int, int *);
 struct __pthread_cancelation_handler **__pthread_get_cleanup_stack (void);
@@ -44,7 +43,6 @@ int _cthreads_ftrylockfile (FILE *);
 struct pthread_functions
 {
   void (*ptr___pthread_exit) (void *) __attribute__ ((__noreturn__));
-  int (*ptr_pthread_mutex_destroy) (pthread_mutex_t *);
   int (*ptr___pthread_setcancelstate) (int, int *);
   int (*ptr_pthread_setcanceltype) (int, int *);
   struct __pthread_cancelation_handler **(*ptr___pthread_get_cleanup_stack) (void);

@@ -117,7 +117,6 @@ extern int __pthread_atfork (void (*__prepare) (void),
    single-threaded processes.  */
 #if !defined(__NO_WEAK_PTHREAD_ALIASES) && !IS_IN (libpthread)
 # ifdef weak_extern
-weak_extern (__pthread_mutex_destroy)
 weak_extern (__pthread_rwlock_init)
 weak_extern (__pthread_rwlock_destroy)
 weak_extern (__pthread_rwlock_rdlock)
@@ -133,7 +132,6 @@ weak_extern (__pthread_initialize)
 weak_extern (__pthread_atfork)
 weak_extern (__pthread_setcancelstate)
 # else
-#  pragma weak __pthread_mutex_destroy
 #  pragma weak __pthread_rwlock_destroy
 #  pragma weak __pthread_rwlock_rdlock
 #  pragma weak __pthread_rwlock_tryrdlock
