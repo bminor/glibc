@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <pthread.h>
-
+#include <shlib-compat.h>
 #include <pt-internal.h>
 
 int
@@ -42,5 +42,9 @@ __pthread_setcanceltype (int type, int *oldtype)
 
   return 0;
 }
+libc_hidden_def (__pthread_setcanceltype)
+versioned_symbol (libc, __pthread_setcanceltype, pthread_setcanceltype, GLIBC_2_21);
 
-weak_alias (__pthread_setcanceltype, pthread_setcanceltype);
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
+compat_symbol (libc, __pthread_setcanceltype, pthread_setcanceltype, GLIBC_2_12);
+#endif

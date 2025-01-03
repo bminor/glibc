@@ -56,6 +56,7 @@ libc {
     pthread_mutexattr_setprotocol;
     pthread_mutexattr_setpshared;
     pthread_mutexattr_settype;
+    pthread_setcanceltype;
     pthread_sigmask;
   }
 
@@ -231,7 +232,7 @@ libpthread {
     pthread_rwlockattr_destroy; pthread_rwlockattr_getpshared;
     pthread_rwlockattr_init; pthread_rwlockattr_setpshared;
 
-    pthread_setcancelstate; pthread_setcanceltype;
+    pthread_setcancelstate;
     pthread_setconcurrency;
     pthread_setschedprio; pthread_setspecific;
 

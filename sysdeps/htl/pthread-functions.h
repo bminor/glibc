@@ -23,7 +23,6 @@
 
 void __pthread_exit (void *) __attribute__ ((__noreturn__));
 int __pthread_setcancelstate (int, int *);
-int __pthread_setcanceltype (int, int *);
 struct __pthread_cancelation_handler **__pthread_get_cleanup_stack (void);
 int __pthread_once (pthread_once_t *, void (*) (void));
 int __pthread_rwlock_rdlock (pthread_rwlock_t *);
@@ -44,7 +43,6 @@ struct pthread_functions
 {
   void (*ptr___pthread_exit) (void *) __attribute__ ((__noreturn__));
   int (*ptr___pthread_setcancelstate) (int, int *);
-  int (*ptr_pthread_setcanceltype) (int, int *);
   struct __pthread_cancelation_handler **(*ptr___pthread_get_cleanup_stack) (void);
   int (*ptr_pthread_once) (pthread_once_t *, void (*) (void));
   int (*ptr_pthread_rwlock_rdlock) (pthread_rwlock_t *);

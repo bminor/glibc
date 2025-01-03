@@ -62,7 +62,5 @@ FORWARD (__pthread_setcancelstate, (int state, int *oldstate),
 	 (state, oldstate), 0)
 strong_alias (__pthread_setcancelstate, pthread_setcancelstate);
 
-FORWARD (pthread_setcanceltype, (int type, int *oldtype), (type, oldtype), 0)
-
 FORWARD2 (__pthread_get_cleanup_stack, struct __pthread_cancelation_handler **,
 	  (void), (), return &__pthread_cleanup_stack);

@@ -51,7 +51,6 @@ libpthread-routines := \
   pt-spin-inlines \
   pt-cleanup \
   pt-setcancelstate \
-  pt-setcanceltype \
   pt-testcancel \
   pt-cancel \
   pt-mutex-transfer-np \
@@ -204,6 +203,7 @@ routines := \
   pt-nthreads \
   pt-pthread_self \
   pt-self pt-equal \
+  pt-setcanceltype \
   pt-setschedparam \
   pt-sigmask \
   pt-sigstate \
