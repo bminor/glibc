@@ -13,15 +13,15 @@ $(objpfx)libgcc-stubs.a: $(objpfx)aeabi_unwind_cpp_pr1.os
 lib-noranlib: $(objpfx)libgcc-stubs.a
 
 ifeq ($(build-shared),yes)
-ifneq (no,$(have-mtls-descriptor))
+ifneq (no,$(have-test-mtls-descriptor))
 tests += tst-armtlsdescloc tst-armtlsdescextnow tst-armtlsdescextlazy
 modules-names += tst-armtlsdesclocmod
 modules-names += tst-armtlsdescextlazymod tst-armtlsdescextnowmod
 CPPFLAGS-tst-armtlsdescextnowmod.c += -Dstatic=
 CPPFLAGS-tst-armtlsdescextlazymod.c += -Dstatic=
-CFLAGS-tst-armtlsdesclocmod.c += -mtls-dialect=$(have-mtls-descriptor)
-CFLAGS-tst-armtlsdescextnowmod.c += -mtls-dialect=$(have-mtls-descriptor)
-CFLAGS-tst-armtlsdescextlazymod.c += -mtls-dialect=$(have-mtls-descriptor)
+CFLAGS-tst-armtlsdesclocmod.c += -mtls-dialect=$(have-test-mtls-descriptor)
+CFLAGS-tst-armtlsdescextnowmod.c += -mtls-dialect=$(have-test-mtls-descriptor)
+CFLAGS-tst-armtlsdescextlazymod.c += -mtls-dialect=$(have-test-mtls-descriptor)
 LDFLAGS-tst-armtlsdescextnowmod.so += -Wl,-z,now
 tst-armtlsdescloc-ENV = LD_BIND_NOW=1
 tst-armtlsdescextnow-ENV = LD_BIND_NOW=1

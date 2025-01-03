@@ -67,7 +67,7 @@ $(objpfx)libx86-64-isa-level.so: $(objpfx)libx86-64-isa-level-1.so
 	cp $< $@
 endif
 
-ifeq (yes,$(have-mamx-tile))
+ifeq (yesgnu2,$(have-mamx-tile)$(have-test-mtls-descriptor))
 tests += \
   tst-gnu2-tls2-amx \
 # tests

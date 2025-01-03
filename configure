@@ -655,7 +655,6 @@ libc_cv_test_cc_signaling_nans
 libc_cv_cc_submachine
 libc_cv_cc_nofma
 libc_cv_test_wno_ignored_attributes
-libc_cv_test_mtls_descriptor
 libc_cv_has_glob_dat
 libc_cv_fpie
 libc_cv_test_static_pie
@@ -7422,31 +7421,6 @@ void foo (void)
 cat > conftest.c <<EOF
 $conftest_code
 EOF
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for tls descriptor support" >&5
-printf %s "checking for tls descriptor support... " >&6; }
-if test ${libc_cv_mtls_descriptor+y}
-then :
-  printf %s "(cached) " >&6
-else case e in #(
-  e)   if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -fPIC -mtls-dialect=$mtls_descriptor -nostdlib -nostartfiles -shared conftest.c -o conftest 1>&5'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }
-  then
-    libc_cv_mtls_descriptor=$mtls_descriptor
-  else
-    libc_cv_mtls_descriptor=no
-  fi
- ;;
-esac
-fi
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_mtls_descriptor" >&5
-printf "%s\n" "$libc_cv_mtls_descriptor" >&6; }
-if test "$TEST_CC" = "$CC"; then
-  libc_cv_test_mtls_descriptor=$libc_cv_mtls_descriptor
-else
 
 saved_CC="$CC"
 CC="$TEST_CC"
@@ -7456,17 +7430,17 @@ if test ${libc_cv_test_mtls_descriptor+y}
 then :
   printf %s "(cached) " >&6
 else case e in #(
-  e)       if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -fPIC -mtls-dialect=$mtls_descriptor -nostdlib -nostartfiles -shared conftest.c -o conftest 1>&5'
+  e)     if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -fPIC -mtls-dialect=$mtls_descriptor -nostdlib -nostartfiles -shared conftest.c -o conftest 1>&5'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
   printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; }
-      then
-	libc_cv_test_mtls_descriptor=$mtls_descriptor
-      else
-	libc_cv_test_mtls_descriptor=no
-      fi ;;
+    then
+      libc_cv_test_mtls_descriptor=$mtls_descriptor
+    else
+      libc_cv_test_mtls_descriptor=no
+    fi ;;
 esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_test_mtls_descriptor" >&5
@@ -7474,11 +7448,9 @@ printf "%s\n" "$libc_cv_test_mtls_descriptor" >&6; }
 
 CC="$saved_CC"
 
-fi
 rm -f conftest*
 config_vars="$config_vars
-have-mtls-descriptor = $libc_cv_mtls_descriptor"
-
+have-test-mtls-descriptor = $libc_cv_test_mtls_descriptor"
 
 conftest_code="
 void __foo (void)

@@ -1386,17 +1386,15 @@ void foo (void)
   i = 10;
 }
 "
-LIBC_TRY_CC_AND_TEST_CC_COMMAND([for tls descriptor support],
+dnl Check if TEST_CC support tls descriptor.
+LIBC_TRY_TEST_CC_COMMAND([for tls descriptor support],
   [$conftest_code],
   [-fPIC -mtls-dialect=$mtls_descriptor -nostdlib -nostartfiles -shared],
-  libc_cv_mtls_descriptor,
-  [libc_cv_mtls_descriptor=$mtls_descriptor],
-  [libc_cv_mtls_descriptor=no],
   libc_cv_test_mtls_descriptor,
   [libc_cv_test_mtls_descriptor=$mtls_descriptor],
   [libc_cv_test_mtls_descriptor=no])
-LIBC_CONFIG_VAR([have-mtls-descriptor], [$libc_cv_mtls_descriptor])
-AC_SUBST(libc_cv_test_mtls_descriptor)
+LIBC_CONFIG_VAR([have-test-mtls-descriptor],
+		[$libc_cv_test_mtls_descriptor])
 
 dnl clang emits an warning for a double alias redirection, to warn the
 dnl original symbol is sed even when weak definition overrides it.

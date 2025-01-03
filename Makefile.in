@@ -8,7 +8,6 @@ test-config-cflags-signaling-nans = @libc_cv_test_cc_signaling_nans@
 test-config-cflags-wno-ignored-attributes = @libc_cv_test_wno_ignored_attributes@
 test-enable-cet = @test_enable_cet@
 test-have-mamx-tile = @libc_cv_test_x86_have_amx_tile@
-test-have-mtls-descriptor = @libc_cv_test_mtls_descriptor@
 test-have-static-pie = @libc_cv_test_static_pie@
 test-supported-fortify = @libc_cv_test_supported_fortify_source@
 
@@ -29,7 +28,6 @@ check xcheck test:
 		config-cflags-wno-ignored-attributes="$(test-config-cflags-wno-ignored-attributes)" \
 		enable-cet="$(test-enable-cet)" \
 		have-mamx-tile="$(test-have-mamx-tile)" \
-		have-mtls-descriptor="$(test-have-mtls-descriptor)" \
 		have-static-pie="$(test-have-static-pie)" \
 		supported-fortify="$(test-supported-fortify)" \
 		objdir=`pwd` $@
