@@ -5555,7 +5555,7 @@ exp2m1 -0x1p-1021
 exp2m1 -0x1p-16381
 
 expm1 0
-expm1 -0 no-mathvec
+expm1 -0
 expm1 1
 expm1 0.75
 expm1 2
@@ -5620,7 +5620,7 @@ expm1 -0x1p-100
 expm1 0x1p-600
 expm1 -0x1p-600
 expm1 0x1p-10000
-expm1 -0x1p-10000 no-mathvec
+expm1 -0x1p-10000
 expm1 0xe.4152ac57cd1ea7ap-60
 expm1 0x6.660247486aed8p-4
 expm1 0x6.289a78p-4
@@ -6835,7 +6835,7 @@ log10p1 -0x6.3fef3067427e43dfcde9e48f74bcp-4
 log10p1 0x6.af53d00fd2845d4772260ef5adc4p-4
 
 log1p 0
-log1p -0 no-mathvec
+log1p -0
 log1p e-1
 log1p -0.25
 log1p -0.875
@@ -7627,7 +7627,7 @@ pow 0x1.7ac7cp+5 23
 pow -0x1.7ac7cp+5 23
 
 sin 0
-sin -0 no-mathvec
+sin -0
 sin pi/6
 sin -pi/6
 sin pi/2
@@ -7964,7 +7964,7 @@ sqrt min
 sqrt min_subnorm
 
 tan 0
-tan -0 no-mathvec
+tan -0
 tan pi/4
 tan pi/2
 tan -pi/2
@@ -8056,7 +8056,7 @@ tan min_subnorm
 tan -min_subnorm
 
 tanh 0
-tanh -0 no-mathvec
+tanh -0
 tanh 0.75
 tanh -0.75
 tanh 1.0

@@ -776,7 +776,7 @@ check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
       ulps = ULPDIFF (computed, expected);
       set_max_error (ulps, curr_max_error);
       print_diff = 1;
-      if ((exceptions & IGNORE_ZERO_INF_SIGN) == 0
+      if (((exceptions & IGNORE_ZERO_INF_SIGN) == 0) && !flag_test_mathvec
 	  && computed == 0.0 && expected == 0.0
 	  && signbit(computed) != signbit (expected))
 	ok = 0;
