@@ -56,8 +56,6 @@ libpthread-routines := \
   pt-cancel \
   pt-mutex-destroy \
   pt-mutex-transfer-np \
-  pt-mutex-getprioceiling \
-  pt-mutex-setprioceiling \
   pt-mutex-consistent \
   pt-rwlock-attr \
   pt-rwlockattr-init \
@@ -184,8 +182,10 @@ routines := \
   pt-condattr-setpshared \
   pt-getschedparam \
   pt-mutex-checklocked \
+  pt-mutex-getprioceiling \
   pt-mutex-init \
   pt-mutex-lock \
+  pt-mutex-setprioceiling \
   pt-mutex-timedlock \
   pt-mutex-trylock \
   pt-mutex-unlock \

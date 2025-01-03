@@ -39,6 +39,12 @@ libc_hidden_proto (__pthread_mutex_clocklock)
 extern int __pthread_mutex_destroy (pthread_mutex_t *__mutex);
 extern int __pthread_mutex_lock (pthread_mutex_t *__mutex);
 libc_hidden_proto (__pthread_mutex_lock)
+extern int __pthread_mutex_getprioceiling (const pthread_mutex_t *__mutex,
+					 int *__prioceiling);
+libc_hidden_proto (__pthread_mutex_getprioceiling)
+extern int __pthread_mutex_setprioceiling (pthread_mutex_t *__mutex,
+					 int __prio, int *__oldprio);
+libc_hidden_proto (__pthread_mutex_setprioceiling)
 extern int __pthread_mutex_trylock (pthread_mutex_t *_mutex);
 libc_hidden_proto (__pthread_mutex_trylock)
 extern int __pthread_mutex_timedlock (pthread_mutex_t *__mutex,
