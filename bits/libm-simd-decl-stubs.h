@@ -351,4 +351,15 @@
 #define __DECL_SIMD_sinpif32x
 #define __DECL_SIMD_sinpif64x
 #define __DECL_SIMD_sinpif128x
+
+#define __DECL_SIMD_cospi
+#define __DECL_SIMD_cospif
+#define __DECL_SIMD_cospil
+#define __DECL_SIMD_cospif16
+#define __DECL_SIMD_cospif32
+#define __DECL_SIMD_cospif64
+#define __DECL_SIMD_cospif128
+#define __DECL_SIMD_cospif32x
+#define __DECL_SIMD_cospif64x
+#define __DECL_SIMD_cospif128x
 #endif

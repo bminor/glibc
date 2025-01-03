@@ -803,10 +803,18 @@ double: 2
 float: 2
 ldouble: 2
 
+Function: "cospi_advsimd":
+double: 2
+float: 1
+
 Function: "cospi_downward":
 double: 1
 float: 2
 ldouble: 2
+
+Function: "cospi_sve":
+double: 2
+float: 1
 
 Function: "cospi_towardzero":
 double: 1

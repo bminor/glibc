@@ -8,6 +8,7 @@ libmvec-supported-funcs = acos \
                           cbrt \
                           cos \
                           cosh \
+                          cospi \
                           erf \
                           erfc \
                           exp \
