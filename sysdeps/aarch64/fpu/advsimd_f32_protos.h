@@ -45,4 +45,5 @@ libmvec_hidden_proto (V_NAME_F1(sinh));
 libmvec_hidden_proto (V_NAME_F1(sinpi));
 libmvec_hidden_proto (V_NAME_F1(tan));
 libmvec_hidden_proto (V_NAME_F1(tanh));
+libmvec_hidden_proto (V_NAME_F1(tanpi));
 libmvec_hidden_proto (V_NAME_F2(atan2));

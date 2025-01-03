@@ -80,7 +80,7 @@ __MATHCALL_VEC (cospi,, (_Mdouble_ __x));
 /* Sine of pi * X.  */
 __MATHCALL_VEC (sinpi,, (_Mdouble_ __x));
 /* Tangent of pi * X.  */
-__MATHCALL (tanpi,, (_Mdouble_ __x));
+__MATHCALL_VEC (tanpi,, (_Mdouble_ __x));
 #endif
 
 /* Hyperbolic functions.  */

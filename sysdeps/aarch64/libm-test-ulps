@@ -1710,10 +1710,18 @@ double: 3
 float: 3
 ldouble: 3
 
+Function: "tanpi_advsimd":
+double: 2
+float: 2
+
 Function: "tanpi_downward":
 double: 2
 float: 3
 ldouble: 4
+
+Function: "tanpi_sve":
+double: 2
+float: 2
 
 Function: "tanpi_towardzero":
 double: 2

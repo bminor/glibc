@@ -145,6 +145,10 @@
 # define __DECL_SIMD_tanh __DECL_SIMD_aarch64
 # undef __DECL_SIMD_tanhf
 # define __DECL_SIMD_tanhf __DECL_SIMD_aarch64
+# undef __DECL_SIMD_tanpi
+# define __DECL_SIMD_tanpi __DECL_SIMD_aarch64
+# undef __DECL_SIMD_tanpif
+# define __DECL_SIMD_tanpif __DECL_SIMD_aarch64
 #endif
 
 #if __GNUC_PREREQ(9, 0)
@@ -200,6 +204,7 @@ __vpcs __f32x4_t _ZGVnN4v_sinhf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_sinpif (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_tanf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_tanhf (__f32x4_t);
+__vpcs __f32x4_t _ZGVnN4v_tanpif (__f32x4_t);
 
 __vpcs __f64x2_t _ZGVnN2vv_atan2 (__f64x2_t, __f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_acos (__f64x2_t);
@@ -230,6 +235,7 @@ __vpcs __f64x2_t _ZGVnN2v_sinh (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_sinpi (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_tan (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_tanh (__f64x2_t);
+__vpcs __f64x2_t _ZGVnN2v_tanpi (__f64x2_t);
 
 #  undef __ADVSIMD_VEC_MATH_SUPPORTED
 #endif /* __ADVSIMD_VEC_MATH_SUPPORTED */
@@ -265,6 +271,7 @@ __sv_f32_t _ZGVsMxv_sinhf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_sinpif (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_tanf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_tanhf (__sv_f32_t, __sv_bool_t);
+__sv_f32_t _ZGVsMxv_tanpif (__sv_f32_t, __sv_bool_t);
 
 __sv_f64_t _ZGVsMxvv_atan2 (__sv_f64_t, __sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_acos (__sv_f64_t, __sv_bool_t);
@@ -295,6 +302,7 @@ __sv_f64_t _ZGVsMxv_sinh (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_sinpi (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_tan (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_tanh (__sv_f64_t, __sv_bool_t);
+__sv_f64_t _ZGVsMxv_tanpi (__sv_f64_t, __sv_bool_t);
 
 #  undef __SVE_VEC_MATH_SUPPORTED
 #endif /* __SVE_VEC_MATH_SUPPORTED */

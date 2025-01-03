@@ -25,7 +25,8 @@ libmvec-supported-funcs = acos \
                           sinh \
                           sinpi \
                           tan \
-                          tanh
+                          tanh \
+                          tanpi
 
 float-advsimd-funcs = $(libmvec-supported-funcs)
 double-advsimd-funcs = $(libmvec-supported-funcs)
