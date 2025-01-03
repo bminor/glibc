@@ -208,5 +208,4 @@ L(INDEX):
     .dword          0x0706050403020100
     .dword          0x0f0e0d0c0b0a0908
 
-libc_hidden_builtin_def (STRCPY)
 #endif

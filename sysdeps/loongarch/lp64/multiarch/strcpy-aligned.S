@@ -198,5 +198,3 @@ L(un_out):
 #endif
     jr          ra
 END(STRCPY)
-
-libc_hidden_builtin_def (STRCPY)

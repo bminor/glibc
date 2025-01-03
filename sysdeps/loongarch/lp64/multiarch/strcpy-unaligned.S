@@ -134,5 +134,4 @@ L(page_cross):
     b           L(end)
 END(STRCPY)
 
-libc_hidden_builtin_def (STRCPY)
 #endif

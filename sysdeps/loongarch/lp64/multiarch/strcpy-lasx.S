@@ -211,5 +211,4 @@ L(zero_byte):
     jr              ra
 END(STRCPY)
 
-libc_hidden_builtin_def (STRCPY)
 #endif
