@@ -20,6 +20,7 @@
 # define STPCPY __stpcpy_aligned
 #else
 # define STPCPY __stpcpy
+weak_alias (__stpcpy, stpcpy)
 #endif
 
 #define USE_AS_STPCPY
