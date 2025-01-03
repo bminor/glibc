@@ -99,8 +99,6 @@ GLIBC_2.32 mtx_timedlock F
 GLIBC_2.32 mtx_trylock F
 GLIBC_2.32 mtx_unlock F
 GLIBC_2.32 pthread_clockjoin_np F
-GLIBC_2.32 pthread_mutex_consistent F
-GLIBC_2.32 pthread_mutex_consistent_np F
 GLIBC_2.32 pthread_rwlock_clockrdlock F
 GLIBC_2.32 pthread_rwlock_clockwrlock F
 GLIBC_2.32 pthread_timedjoin_np F

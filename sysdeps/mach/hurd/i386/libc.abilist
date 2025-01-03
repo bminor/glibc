@@ -2272,6 +2272,8 @@ GLIBC_2.32 mach_print F
 GLIBC_2.32 mremap F
 GLIBC_2.32 pthread_cond_clockwait F
 GLIBC_2.32 pthread_mutex_clocklock F
+GLIBC_2.32 pthread_mutex_consistent F
+GLIBC_2.32 pthread_mutex_consistent_np F
 GLIBC_2.32 pthread_mutexattr_getrobust F
 GLIBC_2.32 pthread_mutexattr_getrobust_np F
 GLIBC_2.32 pthread_mutexattr_setrobust F
@@ -2557,6 +2559,8 @@ GLIBC_2.41 pthread_mutexattr_setrobust F
 GLIBC_2.41 pthread_mutexattr_setrobust_np F
 GLIBC_2.41 pthread_mutexattr_settype F
 GLIBC_2.41 pthread_sigmask F
+GLIBC_2.42 pthread_mutex_consistent F
+GLIBC_2.42 pthread_mutex_consistent_np F
 GLIBC_2.42 pthread_mutex_getprioceiling F
 GLIBC_2.42 pthread_mutex_setprioceiling F
 GLIBC_2.42 pthread_mutex_trylock F

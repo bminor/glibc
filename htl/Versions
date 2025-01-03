@@ -89,6 +89,8 @@ libc {
 
     pthread_mutex_clocklock;
 
+    pthread_mutex_consistent; pthread_mutex_consistent_np;
+
     pthread_mutexattr_getrobust; pthread_mutexattr_getrobust_np;
     pthread_mutexattr_setrobust; pthread_mutexattr_setrobust_np;
   }
@@ -120,6 +122,7 @@ libc {
   }
 
   GLIBC_2.42 {
+    pthread_mutex_consistent; pthread_mutex_consistent_np;
     pthread_mutex_getprioceiling;
     pthread_mutex_setprioceiling;
     pthread_mutex_trylock;
@@ -256,8 +259,6 @@ libpthread {
     call_once;
     cnd_broadcast; cnd_destroy; cnd_init; cnd_signal; cnd_timedwait; cnd_wait;
     tss_create; tss_delete; tss_get; tss_set;
-
-    pthread_mutex_consistent; pthread_mutex_consistent_np;
 
     pthread_rwlock_clockrdlock; pthread_rwlock_clockwrlock;
 

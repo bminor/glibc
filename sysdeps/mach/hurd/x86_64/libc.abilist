@@ -1548,6 +1548,8 @@ GLIBC_2.38 pthread_equal F
 GLIBC_2.38 pthread_exit F
 GLIBC_2.38 pthread_getschedparam F
 GLIBC_2.38 pthread_mutex_clocklock F
+GLIBC_2.38 pthread_mutex_consistent F
+GLIBC_2.38 pthread_mutex_consistent_np F
 GLIBC_2.38 pthread_mutex_destroy F
 GLIBC_2.38 pthread_mutex_getprioceiling F
 GLIBC_2.38 pthread_mutex_init F
@@ -2242,6 +2244,8 @@ GLIBC_2.41 pthread_mutexattr_setrobust F
 GLIBC_2.41 pthread_mutexattr_setrobust_np F
 GLIBC_2.41 pthread_mutexattr_settype F
 GLIBC_2.41 pthread_sigmask F
+GLIBC_2.42 pthread_mutex_consistent F
+GLIBC_2.42 pthread_mutex_consistent_np F
 GLIBC_2.42 pthread_mutex_getprioceiling F
 GLIBC_2.42 pthread_mutex_setprioceiling F
 GLIBC_2.42 pthread_mutex_trylock F

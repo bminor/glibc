@@ -36,6 +36,8 @@ libc_hidden_proto (__pthread_mutex_init)
 extern int __pthread_mutex_clocklock (pthread_mutex_t *__mutex, clockid_t __clockid,
 				    const struct timespec *__abstime);
 libc_hidden_proto (__pthread_mutex_clocklock)
+extern int __pthread_mutex_consistent (pthread_mutex_t *__mtxp);
+libc_hidden_proto (__pthread_mutex_consistent)
 extern int __pthread_mutex_lock (pthread_mutex_t *__mutex);
 libc_hidden_proto (__pthread_mutex_lock)
 extern int __pthread_mutex_getprioceiling (const pthread_mutex_t *__mutex,
