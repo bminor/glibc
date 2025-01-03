@@ -43,7 +43,6 @@ GLIBC_2.12 pthread_key_delete F
 GLIBC_2.12 pthread_kill F
 GLIBC_2.12 pthread_mutex_destroy F
 GLIBC_2.12 pthread_mutex_getprioceiling F
-GLIBC_2.12 pthread_mutex_init F
 GLIBC_2.12 pthread_mutex_lock F
 GLIBC_2.12 pthread_mutex_setprioceiling F
 GLIBC_2.12 pthread_mutex_timedlock F

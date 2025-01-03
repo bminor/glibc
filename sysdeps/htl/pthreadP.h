@@ -32,6 +32,7 @@ extern void __pthread_init_static_tls (struct link_map *) attribute_hidden;
 /* These represent the interface used by glibc itself.  */
 
 extern int __pthread_mutex_init (pthread_mutex_t *__mutex, const pthread_mutexattr_t *__attr);
+libc_hidden_proto (__pthread_mutex_init)
 extern int __pthread_mutex_destroy (pthread_mutex_t *__mutex);
 extern int __pthread_mutex_lock (pthread_mutex_t *__mutex);
 extern int __pthread_mutex_trylock (pthread_mutex_t *_mutex);
@@ -162,7 +163,6 @@ hidden_proto (__pthread_detach)
 hidden_proto (__pthread_key_create)
 hidden_proto (__pthread_getspecific)
 hidden_proto (__pthread_setspecific)
-hidden_proto (__pthread_mutex_init)
 hidden_proto (__pthread_mutex_destroy)
 hidden_proto (__pthread_mutex_lock)
 hidden_proto (__pthread_mutex_trylock)

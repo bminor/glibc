@@ -23,8 +23,6 @@
 
 void __pthread_exit (void *) __attribute__ ((__noreturn__));
 int _pthread_mutex_destroy (pthread_mutex_t *);
-int _pthread_mutex_init (pthread_mutex_t *,
-			 const pthread_mutexattr_t *);
 int __pthread_mutex_lock (pthread_mutex_t *);
 int __pthread_mutex_trylock (pthread_mutex_t *);
 int __pthread_mutex_unlock (pthread_mutex_t *);
@@ -50,8 +48,6 @@ struct pthread_functions
 {
   void (*ptr___pthread_exit) (void *) __attribute__ ((__noreturn__));
   int (*ptr_pthread_mutex_destroy) (pthread_mutex_t *);
-  int (*ptr_pthread_mutex_init) (pthread_mutex_t *,
-				 const pthread_mutexattr_t *);
   int (*ptr_pthread_mutex_lock) (pthread_mutex_t *);
   int (*ptr_pthread_mutex_trylock) (pthread_mutex_t *);
   int (*ptr_pthread_mutex_unlock) (pthread_mutex_t *);

@@ -191,7 +191,7 @@ static void
 reinit_after_fork (void)
 {
   init_module ();
-  pthread_mutex_init (&__timer_mutex, 0);
+  __pthread_mutex_init (&__timer_mutex, 0);
 }
 
 

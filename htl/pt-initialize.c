@@ -29,7 +29,6 @@
 static const struct pthread_functions pthread_functions = {
   .ptr___pthread_exit = __pthread_exit,
   .ptr_pthread_mutex_destroy = __pthread_mutex_destroy,
-  .ptr_pthread_mutex_init = __pthread_mutex_init,
   .ptr_pthread_mutex_lock = __pthread_mutex_lock,
   .ptr_pthread_mutex_trylock = __pthread_mutex_trylock,
   .ptr_pthread_mutex_unlock = __pthread_mutex_unlock,

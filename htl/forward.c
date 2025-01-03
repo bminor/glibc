@@ -60,10 +60,6 @@ strong_alias (__pthread_exit, pthread_exit);
 
 FORWARD (pthread_mutex_destroy, (pthread_mutex_t *mutex), (mutex), 0)
 
-FORWARD (pthread_mutex_init,
-	 (pthread_mutex_t *mutex, const pthread_mutexattr_t *mutexattr),
-	 (mutex, mutexattr), 0)
-
 FORWARD (pthread_mutex_lock, (pthread_mutex_t *mutex), (mutex), 0)
 
 FORWARD (pthread_mutex_unlock, (pthread_mutex_t *mutex), (mutex), 0)
