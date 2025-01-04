@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.40.9000\n"
-"POT-Creation-Date: 2024-12-30 16:34-0300\n"
+"POT-Creation-Date: 2025-01-04 11:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -495,127 +495,127 @@ msgstr ""
 msgid "cannot create capability list"
 msgstr ""
 
-#: elf/dl-load.c:423
+#: elf/dl-load.c:424
 msgid "cannot allocate name record"
 msgstr ""
 
-#: elf/dl-load.c:509 elf/dl-load.c:622 elf/dl-load.c:716 elf/dl-load.c:813
+#: elf/dl-load.c:510 elf/dl-load.c:623 elf/dl-load.c:717 elf/dl-load.c:814
 msgid "cannot create cache for search path"
 msgstr ""
 
-#: elf/dl-load.c:605
+#: elf/dl-load.c:606
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr ""
 
-#: elf/dl-load.c:702
+#: elf/dl-load.c:703
 msgid "cannot create search path array"
 msgstr ""
 
-#: elf/dl-load.c:972
+#: elf/dl-load.c:973
 msgid "cannot stat shared object"
 msgstr ""
 
-#: elf/dl-load.c:1065 elf/dl-load.c:2152
+#: elf/dl-load.c:1066 elf/dl-load.c:2155
 msgid "cannot create shared object descriptor"
 msgstr ""
 
-#: elf/dl-load.c:1084 elf/dl-load.c:1601 elf/dl-load.c:1707
+#: elf/dl-load.c:1085 elf/dl-load.c:1604 elf/dl-load.c:1710
 msgid "cannot read file data"
 msgstr ""
 
-#: elf/dl-load.c:1137 elf/dl-map-segments.h:117
+#: elf/dl-load.c:1138 elf/dl-map-segments.h:117
 msgid "ELF load command address/offset not page-aligned"
 msgstr ""
 
-#: elf/dl-load.c:1229
+#: elf/dl-load.c:1230
 msgid "object file has no loadable segments"
 msgstr ""
 
-#: elf/dl-load.c:1246
+#: elf/dl-load.c:1247
 msgid "cannot dynamically load executable"
 msgstr ""
 
-#: elf/dl-load.c:1253
+#: elf/dl-load.c:1254
 msgid "object file has no dynamic section"
 msgstr ""
 
-#: elf/dl-load.c:1288
+#: elf/dl-load.c:1289
 msgid "cannot dynamically load position-independent executable"
 msgstr ""
 
-#: elf/dl-load.c:1290
+#: elf/dl-load.c:1291
 msgid "shared object cannot be dlopen()ed"
 msgstr ""
 
-#: elf/dl-load.c:1303
+#: elf/dl-load.c:1304
 msgid "cannot allocate memory for program header"
 msgstr ""
 
-#: elf/dl-load.c:1326
+#: elf/dl-load.c:1329
 msgid "cannot enable executable stack as shared object requires"
 msgstr ""
 
-#: elf/dl-load.c:1354
+#: elf/dl-load.c:1357
 msgid "cannot close file descriptor"
 msgstr ""
 
-#: elf/dl-load.c:1601
+#: elf/dl-load.c:1604
 msgid "file too short"
 msgstr ""
 
-#: elf/dl-load.c:1635
+#: elf/dl-load.c:1638
 msgid "invalid ELF header"
 msgstr ""
 
-#: elf/dl-load.c:1650
+#: elf/dl-load.c:1653
 msgid "ELF file data encoding not big-endian"
 msgstr ""
 
-#: elf/dl-load.c:1652
+#: elf/dl-load.c:1655
 msgid "ELF file data encoding not little-endian"
 msgstr ""
 
-#: elf/dl-load.c:1656
+#: elf/dl-load.c:1659
 msgid "ELF file version ident does not match current one"
 msgstr ""
 
-#: elf/dl-load.c:1660
+#: elf/dl-load.c:1663
 msgid "ELF file OS ABI invalid"
 msgstr ""
 
-#: elf/dl-load.c:1663
+#: elf/dl-load.c:1666
 msgid "ELF file ABI version invalid"
 msgstr ""
 
-#: elf/dl-load.c:1666
+#: elf/dl-load.c:1669
 msgid "nonzero padding in e_ident"
 msgstr ""
 
-#: elf/dl-load.c:1669
+#: elf/dl-load.c:1672
 msgid "internal error"
 msgstr ""
 
-#: elf/dl-load.c:1676
+#: elf/dl-load.c:1679
 msgid "ELF file version does not match current one"
 msgstr ""
 
-#: elf/dl-load.c:1688
+#: elf/dl-load.c:1691
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr ""
 
-#: elf/dl-load.c:1693
+#: elf/dl-load.c:1696
 msgid "ELF file's phentsize not the expected size"
 msgstr ""
 
-#: elf/dl-load.c:2171
+#: elf/dl-load.c:2174
 msgid "wrong ELF class: ELFCLASS64"
 msgstr ""
 
-#: elf/dl-load.c:2172
+#: elf/dl-load.c:2175
 msgid "wrong ELF class: ELFCLASS32"
 msgstr ""
 
-#: elf/dl-load.c:2175
+#: elf/dl-load.c:2178
 msgid "cannot open shared object file"
 msgstr ""
 
@@ -684,7 +684,7 @@ msgstr ""
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr ""
 
-#: elf/dl-tls.c:1151
+#: elf/dl-tls.c:1163
 msgid "cannot create TLS data structures"
 msgstr ""
 
