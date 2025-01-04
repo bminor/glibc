@@ -26,7 +26,7 @@ Function: "acosh_upward":
 double: 2
 
 Function: "acospi":
-double: 1
+double: 2
 float: 1
 
 Function: "acospi_downward":
@@ -75,11 +75,11 @@ float: 1
 
 Function: "asinpi_towardzero":
 double: 1
-float: 1
+float: 2
 
 Function: "asinpi_upward":
 double: 2
-float: 1
+float: 2
 
 Function: "atan":
 double: 1
@@ -131,7 +131,7 @@ Function: "atanh_upward":
 double: 3
 
 Function: "atanpi":
-double: 1
+double: 2
 float: 1
 
 Function: "atanpi_downward":
@@ -570,12 +570,12 @@ Function: "cosh_upward":
 double: 2
 
 Function: "cospi":
-double: 1
-float: 1
+double: 2
+float: 2
 
 Function: "cospi_downward":
 double: 1
-float: 1
+float: 2
 
 Function: "cospi_towardzero":
 double: 1
@@ -583,7 +583,7 @@ float: 1
 
 Function: "cospi_upward":
 double: 1
-float: 1
+float: 2
 
 Function: Real part of "cpow":
 double: 2
@@ -1142,8 +1142,8 @@ Function: "sinh_upward":
 double: 3
 
 Function: "sinpi":
-double: 1
-float: 1
+double: 2
+float: 2
 
 Function: "sinpi_downward":
 double: 2
@@ -1155,7 +1155,7 @@ float: 1
 
 Function: "sinpi_upward":
 double: 2
-float: 2
+float: 3
 
 Function: "tan":
 double: 1
@@ -1183,8 +1183,8 @@ Function: "tanh_upward":
 double: 3
 
 Function: "tanpi":
-double: 2
-float: 2
+double: 3
+float: 3
 
 Function: "tanpi_downward":
 double: 2
