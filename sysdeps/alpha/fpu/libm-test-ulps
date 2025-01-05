@@ -33,6 +33,18 @@ Function: "acosh_upward":
 double: 2
 ldouble: 3
 
+Function: "acospi":
+ldouble: 2
+
+Function: "acospi_downward":
+ldouble: 1
+
+Function: "acospi_towardzero":
+ldouble: 1
+
+Function: "acospi_upward":
+ldouble: 2
+
 Function: "asin":
 double: 1
 ldouble: 1
@@ -65,6 +77,18 @@ Function: "asinh_upward":
 double: 3
 ldouble: 4
 
+Function: "asinpi":
+ldouble: 2
+
+Function: "asinpi_downward":
+ldouble: 2
+
+Function: "asinpi_towardzero":
+ldouble: 1
+
+Function: "asinpi_upward":
+ldouble: 2
+
 Function: "atan":
 double: 1
 ldouble: 1
@@ -82,6 +106,18 @@ ldouble: 3
 
 Function: "atan2_upward":
 double: 1
+ldouble: 2
+
+Function: "atan2pi":
+ldouble: 3
+
+Function: "atan2pi_downward":
+ldouble: 2
+
+Function: "atan2pi_towardzero":
+ldouble: 2
+
+Function: "atan2pi_upward":
 ldouble: 2
 
 Function: "atan_downward":
@@ -111,6 +147,18 @@ ldouble: 2
 Function: "atanh_upward":
 double: 3
 ldouble: 4
+
+Function: "atanpi":
+ldouble: 2
+
+Function: "atanpi_downward":
+ldouble: 1
+
+Function: "atanpi_towardzero":
+ldouble: 1
+
+Function: "atanpi_upward":
+ldouble: 2
 
 Function: "cabs":
 double: 1
@@ -635,6 +683,18 @@ Function: "cosh_upward":
 double: 2
 ldouble: 3
 
+Function: "cospi":
+ldouble: 2
+
+Function: "cospi_downward":
+ldouble: 2
+
+Function: "cospi_towardzero":
+ldouble: 2
+
+Function: "cospi_upward":
+ldouble: 2
+
 Function: Real part of "cpow":
 double: 2
 float: 5
@@ -929,16 +989,16 @@ float: 1
 ldouble: 3
 
 Function: "exp10m1":
-ldouble: 1
+ldouble: 3
 
 Function: "exp10m1_downward":
-ldouble: 3
+ldouble: 6
 
 Function: "exp10m1_towardzero":
-ldouble: 3
+ldouble: 6
 
 Function: "exp10m1_upward":
-ldouble: 3
+ldouble: 6
 
 Function: "exp2":
 double: 1
@@ -961,16 +1021,16 @@ float: 1
 ldouble: 2
 
 Function: "exp2m1":
-ldouble: 1
+ldouble: 2
 
 Function: "exp2m1_downward":
-ldouble: 2
+ldouble: 3
 
 Function: "exp2m1_towardzero":
-ldouble: 2
+ldouble: 4
 
 Function: "exp2m1_upward":
-ldouble: 2
+ldouble: 5
 
 Function: "exp_downward":
 double: 1
@@ -1140,13 +1200,13 @@ Function: "log10p1":
 ldouble: 3
 
 Function: "log10p1_downward":
-ldouble: 2
+ldouble: 4
 
 Function: "log10p1_towardzero":
-ldouble: 2
+ldouble: 3
 
 Function: "log10p1_upward":
-ldouble: 3
+ldouble: 4
 
 Function: "log1p":
 double: 1
@@ -1194,7 +1254,7 @@ Function: "log2p1_towardzero":
 ldouble: 2
 
 Function: "log2p1_upward":
-ldouble: 2
+ldouble: 3
 
 Function: "log_downward":
 float: 2
@@ -1301,6 +1361,18 @@ Function: "sinh_upward":
 double: 3
 ldouble: 4
 
+Function: "sinpi":
+ldouble: 2
+
+Function: "sinpi_downward":
+ldouble: 2
+
+Function: "sinpi_towardzero":
+ldouble: 2
+
+Function: "sinpi_upward":
+ldouble: 2
+
 Function: "tan":
 ldouble: 1
 
@@ -1331,6 +1403,18 @@ ldouble: 3
 Function: "tanh_upward":
 double: 3
 ldouble: 3
+
+Function: "tanpi":
+ldouble: 3
+
+Function: "tanpi_downward":
+ldouble: 4
+
+Function: "tanpi_towardzero":
+ldouble: 4
+
+Function: "tanpi_upward":
+ldouble: 4
 
 Function: "tgamma":
 double: 9
