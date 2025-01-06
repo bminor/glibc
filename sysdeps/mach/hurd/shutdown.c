@@ -32,7 +32,12 @@ int
 shutdown (int fd, int how)
 {
   error_t err = HURD_DPORT_USE (fd, __socket_shutdown (port, how));
+
+  if (err == MIG_BAD_ID || err == EOPNOTSUPP)
+    /* The file did not grok the ifsock protocol.  */
+    err = ENOTSOCK;
   if (err)
     return __hurd_dfail (fd, err);
+
   return 0;
 }
