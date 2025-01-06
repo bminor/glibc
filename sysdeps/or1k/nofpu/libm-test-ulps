@@ -26,7 +26,7 @@ Function: "acosh_upward":
 double: 2
 
 Function: "acospi":
-double: 1
+double: 2
 float: 1
 
 Function: "asin":
@@ -59,8 +59,6 @@ float: 1
 
 Function: "atan":
 double: 1
-
-Function: "atan2":
 
 Function: "atan2_downward":
 double: 5
@@ -97,7 +95,7 @@ Function: "atanh_upward":
 double: 3
 
 Function: "atanpi":
-double: 1
+double: 2
 float: 1
 
 Function: "cabs":
@@ -175,8 +173,6 @@ float: 3
 Function: Imaginary part of "cacosh_upward":
 double: 3
 float: 2
-
-Function: "carg":
 
 Function: "carg_downward":
 double: 5
@@ -516,8 +512,8 @@ Function: "cosh_upward":
 double: 2
 
 Function: "cospi":
-double: 1
-float: 1
+double: 2
+float: 2
 
 Function: Real part of "cpow":
 double: 2
@@ -999,8 +995,8 @@ Function: "sinh_upward":
 double: 3
 
 Function: "sinpi":
-double: 1
-float: 1
+double: 2
+float: 2
 
 Function: "tan_downward":
 double: 1
@@ -1024,8 +1020,8 @@ Function: "tanh_upward":
 double: 3
 
 Function: "tanpi":
-double: 2
-float: 2
+double: 3
+float: 3
 
 Function: "tgamma":
 double: 9
