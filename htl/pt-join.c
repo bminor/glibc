@@ -49,12 +49,18 @@ __pthread_join_common (pthread_t thread, void **status, int try,
 
       /* Rely on pthread_cond_wait being a cancellation point to make
 	 pthread_join one too.  */
-      while (pthread->state == PTHREAD_JOINABLE && err != ETIMEDOUT)
+      while (pthread->state == PTHREAD_JOINABLE && err != ETIMEDOUT && err != EINVAL)
 	err = __pthread_cond_clockwait (&pthread->state_cond,
 					&pthread->state_lock,
 					clockid, abstime);
 
       pthread_cleanup_pop (0);
+
+      if (err == EINVAL)
+	{
+	  __pthread_mutex_unlock (&pthread->state_lock);
+	  return err;
+	}
     }
 
   switch (pthread->state)
