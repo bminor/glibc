@@ -33,13 +33,19 @@ utimensat (int fd, const char *file, const struct timespec tsp[2],
   error_t err;
   file_t port;
 
-  port = __file_name_lookup_at (fd, flags, file, 0, 0);
-  if (port == MACH_PORT_NULL)
-    return -1;
+  if (file)
+    {
+      port = __file_name_lookup_at (fd, flags, file, 0, 0);
+      if (port == MACH_PORT_NULL)
+	return -1;
 
-  err = hurd_futimens (port, tsp);
+      err = hurd_futimens (port, tsp);
 
-  __mach_port_deallocate (__mach_task_self (), port);
+      __mach_port_deallocate (__mach_task_self (), port);
+    }
+  else
+    err = HURD_DPORT_USE (fd, hurd_futimens (port, tsp));
+
   if (err)
     return __hurd_fail (err);
   return 0;
