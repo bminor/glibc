@@ -68,6 +68,7 @@ __clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
 		   struct timespec *rem)
 {
   if (clock_id != CLOCK_REALTIME
+      || req->tv_sec < 0
       || !valid_nanoseconds (req->tv_nsec)
       || (flags != 0 && flags != TIMER_ABSTIME))
     return EINVAL;
