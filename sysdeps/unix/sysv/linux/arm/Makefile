@@ -1,5 +1,8 @@
 ifeq ($(subdir),elf)
 sysdep-rtld-routines += aeabi_read_tp libc-do-syscall
+# The test uses INTERNAL_SYSCALL_CALL.  In thumb mode, this uses
+# an undefined reference to __libc_do_syscall.
+CFLAGS-tst-nolink-libc.c += -marm
 endif
 
 ifeq ($(subdir),misc)

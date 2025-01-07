@@ -2290,25 +2290,25 @@ dl_main (const ElfW(Phdr) *phdr,
 
   _rtld_main_check (main_map, _dl_argv[0]);
 
-  /* Now we have all the objects loaded.  Relocate them all except for
-     the dynamic linker itself.  We do this in reverse order so that copy
-     relocs of earlier objects overwrite the data written by later
-     objects.  We do not re-relocate the dynamic linker itself in this
-     loop because that could result in the GOT entries for functions we
-     call being changed, and that would break us.  It is safe to relocate
-     the dynamic linker out of order because it has no copy relocations.
-     Likewise for libc, which is relocated early to ensure that IFUNC
-     resolvers in libc work.  */
+  /* Now we have all the objects loaded.  */
 
   int consider_profiling = GLRO(dl_profile) != NULL;
 
   /* If we are profiling we also must do lazy reloaction.  */
   GLRO(dl_lazy) |= consider_profiling;
 
+  /* If libc.so has been loaded, relocate it early, after the dynamic
+     loader itself.  The initial self-relocation of ld.so should be
+     sufficient for IFUNC resolvers in libc.so.  */
   if (GL(dl_ns)[LM_ID_BASE].libc_map != NULL)
-    _dl_relocate_object (GL(dl_ns)[LM_ID_BASE].libc_map,
-			 GL(dl_ns)[LM_ID_BASE].libc_map->l_scope,
-			 GLRO(dl_lazy) ? RTLD_LAZY : 0, consider_profiling);
+    {
+      RTLD_TIMING_VAR (start);
+      rtld_timer_start (&start);
+      _dl_relocate_object (GL(dl_ns)[LM_ID_BASE].libc_map,
+			   GL(dl_ns)[LM_ID_BASE].libc_map->l_scope,
+			   GLRO(dl_lazy) ? RTLD_LAZY : 0, consider_profiling);
+      rtld_timer_accum (&relocate_time, start);
+  }
 
   RTLD_TIMING_VAR (start);
   rtld_timer_start (&start);
@@ -2331,9 +2331,8 @@ dl_main (const ElfW(Phdr) *phdr,
 	/* Also allocated with the fake malloc().  */
 	l->l_free_initfini = 0;
 
-	if (l != &GL(dl_rtld_map))
-	  _dl_relocate_object (l, l->l_scope, GLRO(dl_lazy) ? RTLD_LAZY : 0,
-			       consider_profiling);
+	_dl_relocate_object (l, l->l_scope, GLRO(dl_lazy) ? RTLD_LAZY : 0,
+			     consider_profiling);
 
 	/* Add object to slot information data if necessasy.  */
 	if (l->l_tls_blocksize != 0 && __rtld_tls_init_tp_called)
@@ -2371,27 +2370,22 @@ dl_main (const ElfW(Phdr) *phdr,
   /* Set up the object lookup structures.  */
   _dl_find_object_init ();
 
-  /* Likewise for the locking implementation.  */
-  __rtld_mutex_init ();
+  /* If libc.so was loaded, relocate ld.so against it.  Complete ld.so
+     initialization with mutex symbols from libc.so and malloc symbols
+     from the global scope.  */
+  if (GL(dl_ns)[LM_ID_BASE].libc_map != NULL)
+    {
+      RTLD_TIMING_VAR (start);
+      rtld_timer_start (&start);
+      _dl_relocate_object_no_relro (&GL(dl_rtld_map), main_map->l_scope, 0, 0);
+      rtld_timer_accum (&relocate_time, start);
 
-  /* Re-relocate ourselves with user-controlled symbol definitions.  */
+      __rtld_mutex_init ();
+      __rtld_malloc_init_real (main_map);
+    }
 
-  {
-    RTLD_TIMING_VAR (start);
-    rtld_timer_start (&start);
-
-    _dl_relocate_object_no_relro (&GL(dl_rtld_map), main_map->l_scope, 0, 0);
-
-    /* The malloc implementation has been relocated, so resolving
-       its symbols (and potentially calling IFUNC resolvers) is safe
-       at this point.  */
-    __rtld_malloc_init_real (main_map);
-
-    if (GL(dl_rtld_map).l_relro_size != 0)
-      _dl_protect_relro (&GL(dl_rtld_map));
-
-    rtld_timer_accum (&relocate_time, start);
-  }
+  /* All ld.so initialization is complete.  Apply RELRO.  */
+  _dl_protect_relro (&GL(dl_rtld_map));
 
   /* Relocation is complete.  Perform early libc initialization.  This
      is the initial libc, even if audit modules have been loaded with

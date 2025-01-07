@@ -637,7 +637,15 @@ install-bin += \
   # install-bin
 
 $(objpfx)pldd: $(objpfx)xmalloc.o
+
+test-internal-extras += tst-nolink-libc
+ifeq ($(run-built-tests),yes)
+tests-special += \
+  $(objpfx)tst-nolink-libc-1.out \
+  $(objpfx)tst-nolink-libc-2.out \
+  # tests-special
 endif
+endif # $(subdir) == elf
 
 ifeq ($(subdir),rt)
 CFLAGS-mq_send.c += -fexceptions

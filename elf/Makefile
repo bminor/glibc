@@ -3151,3 +3151,20 @@ tst-rtld-no-malloc-audit-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so
 
 # Any shared object should do.
 tst-rtld-no-malloc-preload-ENV = LD_PRELOAD=$(objpfx)tst-auditmod1.so
+
+# These rules link and run the special elf/tst-nolink-libc-* tests if
+# a port adds them to the tests variables.  Neither test variant is
+# linked against libc.so, but tst-nolink-libc-1 is linked against
+# ld.so.  The test is always run directly, not under the dynamic
+# linker.
+CFLAGS-tst-nolink-libc.c += $(no-stack-protector)
+$(objpfx)tst-nolink-libc-1: $(objpfx)tst-nolink-libc.o $(objpfx)ld.so
+	$(LINK.o) -nostdlib -nostartfiles -o $@ $< \
+	  -Wl,--dynamic-linker=$(objpfx)ld.so,--no-as-needed $(objpfx)ld.so
+$(objpfx)tst-nolink-libc-1.out: $(objpfx)tst-nolink-libc-1 $(objpfx)ld.so
+	$< > $@ 2>&1; $(evaluate-test)
+$(objpfx)tst-nolink-libc-2: $(objpfx)tst-nolink-libc.o
+	$(LINK.o) -nostdlib -nostartfiles -o $@ $< \
+	  -Wl,--dynamic-linker=$(objpfx)ld.so
+$(objpfx)tst-nolink-libc-2.out: $(objpfx)tst-nolink-libc-2 $(objpfx)ld.so
+	$< > $@ 2>&1; $(evaluate-test)
