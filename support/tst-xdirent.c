@@ -50,10 +50,14 @@ do_test (void)
 
   {
     DIR *d = xopendir (".");
-    struct dirent buf = { 0, };
-    TEST_VERIFY (xreaddir_r (d, &buf));
-    TEST_COMPARE_STRING (buf.d_name, ".");
-    while (xreaddir_r (d, &buf))
+    union
+      {
+	struct dirent d;
+	char b[offsetof (struct dirent, d_name) + NAME_MAX + 1];
+      } buf;
+    TEST_VERIFY (xreaddir_r (d, &buf.d));
+    TEST_COMPARE_STRING (buf.d.d_name, ".");
+    while (xreaddir_r (d, &buf.d))
       ;
     xclosedir (d);
   }
