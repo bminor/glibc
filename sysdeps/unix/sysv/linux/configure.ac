@@ -71,9 +71,7 @@ if test -n "$sysheaders"; then
   CPPFLAGS=$OLD_CPPFLAGS
 fi
 
-AC_PREFIX_DEFAULT([/usr])
-
-if test "$prefix" = "/usr/local" -o "$prefix" = "/usr/local/"; then
+if test "$prefix" = "/usr/local" -o "$prefix" = "/usr/local/" -o "$prefix" = "NONE"; then
   if test $enable_sanity = yes; then
     echo "\
 *** On GNU/Linux systems the GNU C Library should not be installed into
