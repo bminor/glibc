@@ -3377,8 +3377,10 @@ endif
 # a port adds them to the tests variables.  Neither test variant is
 # linked against libc.so, but tst-nolink-libc-1 is linked against
 # ld.so.  The test is always run directly, not under the dynamic
-# linker.
-CFLAGS-tst-nolink-libc.c += $(no-stack-protector)
+# linker.  It is necessary to minimize run-time dependencies, by
+# disabling stack protection and unwinding.
+CFLAGS-tst-nolink-libc.c += $(no-stack-protector) \
+ -fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables
 $(objpfx)tst-nolink-libc-1: $(objpfx)tst-nolink-libc.o $(objpfx)ld.so
 	$(LINK.o) -nostdlib -nostartfiles -o $@ $< \
 	  -Wl,--dynamic-linker=$(objpfx)ld.so,--no-as-needed $(objpfx)ld.so
