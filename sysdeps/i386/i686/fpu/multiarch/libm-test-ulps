@@ -45,7 +45,7 @@ Function: "acospi":
 double: 1
 float: 1
 float128: 2
-ldouble: 1
+ldouble: 3
 
 Function: "acospi_downward":
 double: 1
@@ -158,7 +158,7 @@ Function: "atan2pi":
 double: 1
 float: 1
 float128: 3
-ldouble: 1
+ldouble: 2
 
 Function: "atan2pi_downward":
 double: 2
@@ -217,7 +217,7 @@ Function: "atanpi":
 double: 1
 float: 1
 float128: 2
-ldouble: 1
+ldouble: 2
 
 Function: "atanpi_downward":
 double: 2
