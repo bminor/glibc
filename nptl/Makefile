@@ -289,6 +289,7 @@ tests = \
   tst-dlsym1 \
   tst-exec4 \
   tst-exec5 \
+  tst-guard1 \
   tst-initializers1 \
   tst-initializers1-c11 \
   tst-initializers1-c89 \

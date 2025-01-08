@@ -554,7 +554,7 @@ start_thread (void *arg)
      to avoid creating a new free-state block during thread release.  */
   __getrandom_vdso_release (pd);
 
-  if (!pd->user_stack)
+  if (pd->stack_mode != ALLOCATE_GUARD_USER)
     advise_stack_range (pd->stackblock, pd->stackblock_size, (uintptr_t) pd,
 			pd->guardsize);
 

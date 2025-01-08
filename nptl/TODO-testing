@@ -1,7 +1,3 @@
-pthread_attr_setguardsize
-
-  test effectiveness
-
 pthread_attr_[sg]etschedparam
 
   what to test?

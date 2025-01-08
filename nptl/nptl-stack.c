@@ -120,7 +120,7 @@ __nptl_deallocate_stack (struct pthread *pd)
      not reset the 'used' flag in the 'tid' field.  This is done by
      the kernel.  If no thread has been created yet this field is
      still zero.  */
-  if (__glibc_likely (! pd->user_stack))
+  if (__glibc_likely (pd->stack_mode != ALLOCATE_GUARD_USER))
     (void) queue_stack (pd);
   else
     /* Free the memory associated with the ELF TLS.  */

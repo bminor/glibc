@@ -155,7 +155,8 @@ reclaim_stacks (void)
   INIT_LIST_HEAD (&GL (dl_stack_used));
   INIT_LIST_HEAD (&GL (dl_stack_user));
 
-  if (__glibc_unlikely (THREAD_GETMEM (self, user_stack)))
+  if (__glibc_unlikely (THREAD_GETMEM (self, stack_mode)
+			== ALLOCATE_GUARD_USER))
     list_add (&self->list, &GL (dl_stack_user));
   else
     list_add (&self->list, &GL (dl_stack_used));

@@ -125,6 +125,12 @@ struct priority_protection_data
   unsigned int priomap[];
 };
 
+enum allocate_stack_mode_t
+{
+  ALLOCATE_GUARD_MADV_GUARD = 0,
+  ALLOCATE_GUARD_PROT_NONE = 1,
+  ALLOCATE_GUARD_USER = 2,
+};
 
 /* Thread descriptor data structure.  */
 struct pthread
@@ -324,7 +330,7 @@ struct pthread
   bool report_events;
 
   /* True if the user provided the stack.  */
-  bool user_stack;
+  enum allocate_stack_mode_t stack_mode;
 
   /* True if thread must stop at startup time.  */
   bool stopped_start;

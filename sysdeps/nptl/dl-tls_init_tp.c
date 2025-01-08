@@ -74,7 +74,7 @@ __tls_init_tp (void)
    /* Early initialization of the TCB.   */
    pd->tid = INTERNAL_SYSCALL_CALL (set_tid_address, &pd->tid);
    THREAD_SETMEM (pd, specific[0], &pd->specific_1stblock[0]);
-   THREAD_SETMEM (pd, user_stack, true);
+   THREAD_SETMEM (pd, stack_mode, ALLOCATE_GUARD_USER);
 
   /* Before initializing GL (dl_stack_user), the debugger could not
      find us and had to set __nptl_initial_report_events.  Propagate
