@@ -1562,7 +1562,7 @@ LIBC_TRY_CC_AND_TEST_CC_OPTION([for -Wimplicit-fallthrough],
   [-Werror -Wimplicit-fallthrough],
   libc_cv_cc_wimplicit_fallthrough,
   [libc_cv_cc_wimplicit_fallthrough=-Wimplicit-fallthrough],
-  [libc_cv_cc_wimplicit_fallthrough=-Wimplicit-fallthrough],
+  [libc_cv_cc_wimplicit_fallthrough=],
   libc_cv_test_cc_wimplicit_fallthrough,
   [libc_cv_test_cc_wimplicit_fallthrough=-Wimplicit-fallthrough],
   [libc_cv_test_cc_wimplicit_fallthrough=])

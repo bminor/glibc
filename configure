@@ -7888,7 +7888,7 @@ else case e in #(
 then :
   libc_cv_cc_wimplicit_fallthrough=-Wimplicit-fallthrough
 else case e in #(
-  e) libc_cv_cc_wimplicit_fallthrough=-Wimplicit-fallthrough ;;
+  e) libc_cv_cc_wimplicit_fallthrough= ;;
 esac
 fi ;;
 esac
