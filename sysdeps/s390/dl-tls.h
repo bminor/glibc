@@ -28,6 +28,9 @@ typedef struct
    TP-relative addresses.  */
 #define TLS_DTV_OFFSET (-(unsigned long int) __builtin_thread_pointer ())
 
+/* Static TLS offsets are relative to the unadjusted thread pointer.  */
+#define TLS_TP_OFFSET 0
+
 #ifdef SHARED
 
 extern unsigned long __tls_get_offset (unsigned long got_offset);

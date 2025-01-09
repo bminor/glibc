@@ -28,6 +28,9 @@ typedef struct dl_tls_index
    TLS block.  */
 #define TLS_DTV_OFFSET 0
 
+/* Static TLS offsets are relative to the unadjusted thread pointer.  */
+#define TLS_TP_OFFSET 0
+
 #ifdef SHARED
 /* This is the prototype for the GNU version.  */
 extern void *___tls_get_addr (tls_index *ti)

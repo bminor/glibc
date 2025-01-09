@@ -322,6 +322,7 @@ tests := \
 tests-internal := \
   $(tests-static-internal) \
   tst-tls1 \
+  tst-tls_tp_offset \
   # tests-internal
 
 tests-static := $(tests-static-normal) $(tests-static-internal)
