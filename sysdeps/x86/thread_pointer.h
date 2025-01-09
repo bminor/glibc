@@ -19,6 +19,8 @@
 #ifndef _SYS_THREAD_POINTER_H
 #define _SYS_THREAD_POINTER_H
 
+#include <features.h>
+
 static inline void *
 __thread_pointer (void)
 {
