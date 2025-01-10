@@ -16,6 +16,8 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _DL_TLS_H
+#define _DL_TLS_H
 
 /* Type used for the representation of TLS information in the GOT.  */
 typedef struct
@@ -45,3 +47,5 @@ extern void *__tls_get_addr (tls_index *ti);
 
 /* Value used for dtv entries for which the allocation is delayed.  */
 #define TLS_DTV_UNALLOCATED	((void *) -1l)
+
+#endif /* _DL_TLS_H */

@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _DL_TLS_H
+#define _DL_TLS_H
 
 /* Type used for the representation of TLS information in the GOT.  */
 typedef struct dl_tls_index
@@ -65,3 +67,5 @@ rtld_hidden_def (___tls_get_addr)
 
 # endif
 #endif
+
+#endif /* _DL_TLS_H */
