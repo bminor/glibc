@@ -42,6 +42,7 @@
 struct test_param
 {
   int nproc;
+  int nproc_configured;
   cpu_set_t *set;
   size_t size;
   bool entry;
@@ -70,7 +71,8 @@ child_test (void *arg)
   struct test_param *param = arg;
 
   printf ("%d:%d        child\n", getpid (), gettid ());
-  verify_my_affinity (param->nproc, param->size, param->set);
+  verify_my_affinity (param->nproc, param->nproc_configured, param->size,
+		      param->set);
   return NULL;
 }
 
@@ -93,7 +95,8 @@ do_one_test (void *arg)
   else
     {
       /* Verification for the first level.  */
-      verify_my_affinity (param->nproc, param->size, param->set);
+      verify_my_affinity (param->nproc, param->nproc_configured, param->size,
+			  param->set);
 
       /* Launch the second level test, launching CHILD_TEST as a subprocess and
 	 then as a subthread.  Use a different mask to see if it gets
@@ -129,13 +132,17 @@ do_one_test (void *arg)
 static int
 do_test (void)
 {
+  /* Large enough in case the kernel decides to return the larger mask.  This
+     seems to happen on some kernels for S390x.  */
+  int num_configured_cpus = get_nprocs_conf ();
   int num_cpus = get_nprocs ();
 
   struct test_param param =
     {
       .nproc = num_cpus,
-      .set = CPU_ALLOC (num_cpus),
-      .size = CPU_ALLOC_SIZE (num_cpus),
+      .nproc_configured = num_configured_cpus,
+      .set = CPU_ALLOC (num_configured_cpus),
+      .size = CPU_ALLOC_SIZE (num_configured_cpus),
       .entry = true,
     };
 

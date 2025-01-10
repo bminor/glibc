@@ -34,10 +34,11 @@ set_my_affinity (size_t size, const cpu_set_t *set)
 }
 
 static void
-verify_my_affinity (int nproc, size_t size, const cpu_set_t *expected_set)
+verify_my_affinity (int nproc, int nproc_configured, size_t size,
+		    const cpu_set_t *expected_set)
 {
-  cpu_set_t *set = CPU_ALLOC (nproc);
-  cpu_set_t *xor_set = CPU_ALLOC (nproc);
+  cpu_set_t *set = CPU_ALLOC (nproc_configured);
+  cpu_set_t *xor_set = CPU_ALLOC (nproc_configured);
 
   if (set == NULL || xor_set== NULL)
     FAIL_EXIT1 ("verify_my_affinity: Failed to allocate cpuset: %m\n");
