@@ -306,6 +306,15 @@ endif
 
 # For bug 30166
 # (missing RLIMIT_AS support)
+ifeq ($(subdir),elf)
+tests-unsupported += tst-tls-allocation-failure-static-patched
+endif
+ifeq ($(subdir),io)
+tests-unsupported += test-lfs
+endif
+ifeq ($(subdir),libio)
+tests-unsupported += tst-asprintf-null
+endif
 ifeq ($(subdir),malloc)
 tests-unsupported += tst-malloc-thread-fail
 tests-unsupported += tst-malloc-thread-fail-malloc-check
@@ -313,6 +322,19 @@ tests-unsupported += tst-malloc-thread-fail-mcheck
 tests-unsupported += tst-malloc-thread-fail-malloc-hugetlb1
 tests-unsupported += tst-malloc-thread-fail-malloc-hugetlb2
 tests-unsupported += tst-dynarray-fail
+endif
+ifeq ($(subdir),misc)
+tests-unsupported += bug18240
+endif
+ifeq ($(subdir),stdio-common)
+tests-unsupported += tst-getline-enomem
+tests-unsupported += tst-getline-enomem-mem
+endif
+ifeq ($(subdir),stdlib)
+tests-unsupported += test-bz22786 tst-strtod-overflow
+endif
+ifeq ($(subdir),timezone)
+tests-unsupported += tst-tzset
 endif
 
 # For bug 30167
