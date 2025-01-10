@@ -24,6 +24,7 @@ main (void)
   DIAG_PUSH_NEEDS_COMMENT_CLANG;
   DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wformat-invalid-specifier");
   DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wformat-extra-args");
+  DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wfortify-source");
   if (sscanf ("A  \xc3\x84-\t\t\xc3\x84-abcdefbcd\t\xc3\x84-B",
 	      "A%ms%10ms%4m[bcd]%4mcB", &sp1, &sp2, &sp3, &sp4) != 4)
     FAIL ();
@@ -91,6 +92,8 @@ main (void)
 	FAIL ();
       free (sp2);
     }
+  DIAG_PUSH_NEEDS_COMMENT_CLANG;
+  DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wfortify-source");
   if (sscanf (buf, "%2048ms%mc", &sp3, &sp4) != 2)
     FAIL ();
   else
@@ -131,6 +134,7 @@ main (void)
 	FAIL ();
       free (sp4);
     }
+  DIAG_POP_NEEDS_COMMENT_CLANG;
   if (sscanf (buf, "%mS%mC", &lsp1, &lsp2) != 2)
     FAIL ();
   else
@@ -150,6 +154,7 @@ main (void)
   DIAG_PUSH_NEEDS_COMMENT_CLANG;
   DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wformat-invalid-specifier");
   DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wformat-extra-args");
+  DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wfortify-source");
   if (sscanf (buf, "%2048mls%mlc", &lsp3, &lsp4) != 2)
     FAIL ();
   else
