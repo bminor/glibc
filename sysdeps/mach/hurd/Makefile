@@ -306,9 +306,6 @@ endif
 
 # For bug 30166
 # (missing RLIMIT_AS support)
-ifeq ($(subdir),elf)
-tests-unsupported += tst-tls-allocation-failure-static-patched
-endif
 ifeq ($(subdir),io)
 tests-unsupported += test-lfs
 endif
