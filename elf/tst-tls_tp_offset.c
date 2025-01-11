@@ -37,7 +37,7 @@ do_test (void)
   ptrdiff_t block_offset = ((struct link_map *) _r_debug.r_map)->l_tls_offset;
   printf ("main program TLS block offset: %td\n", block_offset);
 
-  if ((uintptr_t) &thread_var < (uintptr_t) pthread_self ())
+  if ((uintptr_t) &thread_var < (uintptr_t) THREAD_SELF)
     {
       puts("TLS variables are located before struct pthread.");
       TEST_COMPARE (((intptr_t) __thread_pointer () - block_offset)
