@@ -27,18 +27,18 @@
        asm volatile ("movb %%fs:%P2(%q3),%b0"				      \
 		     : "=q" (__value)					      \
 		     : "0" (0), "i" (offsetof (struct rseq_area, member)),    \
-		       "r" (__rseq_offset));				      \
+		       "r" ((long long int) __rseq_offset));		      \
      else if (sizeof (__value) == 4)					      \
        asm volatile ("movl %%fs:%P1(%q2),%0"				      \
 		     : "=r" (__value)					      \
 		     : "i" (offsetof (struct rseq_area, member)),	      \
-		       "r" (__rseq_offset));				      \
+		       "r" ((long long int) __rseq_offset));		      \
      else /* 8 */							      \
        {								      \
 	 asm volatile ("movq %%fs:%P1(%q2),%q0"				      \
 		       : "=r" (__value)					      \
 		       : "i" (offsetof (struct rseq_area, member)),	      \
-			 "r" (__rseq_offset));				      \
+		         "r" ((long long int) __rseq_offset));		      \
        }								      \
      __value; })
 
@@ -56,12 +56,12 @@
        asm volatile ("movb %b0,%%fs:%P1(%q2)" :				      \
 		     : "iq" (value),					      \
 		       "i" (offsetof (struct rseq_area, member)),	      \
-		       "r" (__rseq_offset));				      \
+		       "r" ((long long int) __rseq_offset));		      \
      else if (sizeof (RSEQ_SELF()->member) == 4)			      \
        asm volatile ("movl %0,%%fs:%P1(%q2)" :				      \
 		     : IMM_MODE (value),				      \
 		       "i" (offsetof (struct rseq_area, member)),	      \
-		       "r" (__rseq_offset));				      \
+		       "r" ((long long int) __rseq_offset));		      \
      else /* 8 */							      \
        {								      \
 	 /* Since movq takes a signed 32-bit immediate or a register source   \
@@ -70,7 +70,7 @@
 	 asm volatile ("movq %q0,%%fs:%P1(%q2)" :			      \
 		       : "er" ((uint64_t) cast_to_integer (value)),	      \
 			 "i" (offsetof (struct rseq_area, member)),	      \
-			 "r" (__rseq_offset));				      \
+		         "r" ((long long int) __rseq_offset));		      \
        }})
 
 /* Set member of the RSEQ area directly.  */
