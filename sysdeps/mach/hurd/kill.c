@@ -17,7 +17,9 @@
 
 #include <errno.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <signal.h>
+#include <unistd.h>
 #include <hurd.h>
 #include <hurd/port.h>
 #include <hurd/signal.h>
@@ -33,6 +35,14 @@ __kill (pid_t pid, int sig)
   error_t err;
   mach_port_t proc;
   struct hurd_userlink ulink;
+
+  if (pid == __getpid () && _hurd_msgport == MACH_PORT_NULL)
+    {
+      /* We are trying to kill ourself but we have not even initialized our own
+         msgport yet.  Abort by hand.  */
+      _exit (127);
+      /* NOTREACHED */
+    }
 
   void kill_pid (pid_t pid) /* Kill one PID.  */
     {
