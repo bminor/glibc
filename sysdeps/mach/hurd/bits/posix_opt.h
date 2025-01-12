@@ -163,7 +163,7 @@
 #define _POSIX_THREAD_PROCESS_SHARED	-1
 
 /* The monotonic clock might be available.  */
-#define _POSIX_MONOTONIC_CLOCK	0
+#define _POSIX_MONOTONIC_CLOCK	200809L
 
 /* The clock selection interfaces are available.  */
 #define _POSIX_CLOCK_SELECTION	200809L
