@@ -306,6 +306,9 @@ endif
 
 # For bug 30166
 # (missing RLIMIT_AS support)
+ifeq ($(subdir),htl)
+tests-unsupported += tst-basic7
+endif
 ifeq ($(subdir),io)
 tests-unsupported += test-lfs
 endif
@@ -326,6 +329,8 @@ endif
 ifeq ($(subdir),stdio-common)
 tests-unsupported += tst-getline-enomem
 tests-unsupported += tst-getline-enomem-mem
+tests-unsupported += tst-vfprintf-width-prec
+tests-unsupported += tst-vfprintf-width-prec-alloc
 endif
 ifeq ($(subdir),stdlib)
 tests-unsupported += test-bz22786 tst-strtod-overflow
