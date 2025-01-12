@@ -25,7 +25,7 @@
 #include <sysdep-cancel.h>
 
 static int
-nanosleep_call (const struct timespec *req, struct timespec *rem)
+nanosleep_call (clockid_t clock_id, const struct timespec *req, struct timespec *rem)
 {
   mach_port_t recv;
   struct timespec before;
@@ -38,7 +38,7 @@ nanosleep_call (const struct timespec *req, struct timespec *rem)
   recv = __mach_reply_port ();
 
   if (rem != NULL)
-    __clock_gettime (CLOCK_REALTIME, &before);
+    __clock_gettime (clock_id, &before);
 
   int cancel_oldtype = LIBC_CANCEL_ASYNC();
   err = __mach_msg (NULL, MACH_RCV_MSG|MACH_RCV_TIMEOUT|MACH_RCV_INTERRUPT,
@@ -52,7 +52,7 @@ nanosleep_call (const struct timespec *req, struct timespec *rem)
       if (rem != NULL)
 	{
 	  struct timespec after, elapsed;
-	  __clock_gettime (CLOCK_REALTIME, &after);
+	  __clock_gettime (clock_id, &after);
 	  timespec_sub (&elapsed, &after, &before);
 	  timespec_sub (rem, req, &elapsed);
 	}
@@ -67,7 +67,7 @@ int
 __clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
 		   struct timespec *rem)
 {
-  if (clock_id != CLOCK_REALTIME
+  if ((clock_id != CLOCK_REALTIME && clock_id != CLOCK_MONOTONIC)
       || req->tv_sec < 0
       || !valid_nanoseconds (req->tv_nsec)
       || (flags != 0 && flags != TIMER_ABSTIME))
@@ -105,7 +105,7 @@ __clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
       rem = NULL;
     }
 
-  return nanosleep_call (req, rem);
+  return nanosleep_call (clock_id, req, rem);
 }
 libc_hidden_def (__clock_nanosleep)
 versioned_symbol (libc, __clock_nanosleep, clock_nanosleep, GLIBC_2_17);
