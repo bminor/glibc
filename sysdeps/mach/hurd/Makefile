@@ -330,6 +330,7 @@ ifeq ($(subdir),stdio-common)
 tests-unsupported += tst-getline-enomem
 tests-unsupported += tst-getline-enomem-mem
 tests-unsupported += tst-vfprintf-width-prec
+tests-unsupported += tst-vfprintf-width-prec-mem
 tests-unsupported += tst-vfprintf-width-prec-alloc
 endif
 ifeq ($(subdir),stdlib)
