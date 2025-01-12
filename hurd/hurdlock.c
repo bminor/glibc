@@ -47,7 +47,7 @@ int
 __lll_abstimed_wait (void *ptr, int val,
   const struct timespec *tsp, int flags, int clk)
 {
-  if (clk != CLOCK_REALTIME)
+  if (clk != CLOCK_REALTIME && clk != CLOCK_MONOTONIC)
     return EINVAL;
 
   int mlsec = compute_reltime (tsp, clk);
@@ -58,7 +58,7 @@ int
 __lll_abstimed_wait_intr (void *ptr, int val,
   const struct timespec *tsp, int flags, int clk)
 {
-  if (clk != CLOCK_REALTIME)
+  if (clk != CLOCK_REALTIME && clk != CLOCK_MONOTONIC)
     return EINVAL;
 
   int mlsec = compute_reltime (tsp, clk);
@@ -69,7 +69,7 @@ int
 __lll_abstimed_xwait (void *ptr, int lo, int hi,
   const struct timespec *tsp, int flags, int clk)
 {
-  if (clk != CLOCK_REALTIME)
+  if (clk != CLOCK_REALTIME && clk != CLOCK_MONOTONIC)
     return EINVAL;
 
   int mlsec = compute_reltime (tsp, clk);
@@ -81,7 +81,7 @@ int
 __lll_abstimed_lock (void *ptr,
   const struct timespec *tsp, int flags, int clk)
 {
-  if (clk != CLOCK_REALTIME)
+  if (clk != CLOCK_REALTIME && clk != CLOCK_MONOTONIC)
     return EINVAL;
 
   if (__lll_trylock (ptr) == 0)
@@ -167,7 +167,7 @@ __lll_robust_abstimed_lock (void *ptr,
   int wait_time = 25;
   unsigned int val;
 
-  if (clk != CLOCK_REALTIME)
+  if (clk != CLOCK_REALTIME && clk != CLOCK_MONOTONIC)
     return EINVAL;
 
   while (1)
