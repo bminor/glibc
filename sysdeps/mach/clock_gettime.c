@@ -52,8 +52,8 @@ __clock_gettime (clockid_t clock_id, struct timespec *ts)
 	    return 0;
 	  }
       }
-      /* FALLTHROUGH */
 #endif
+      /* FALLTHROUGH */
 
     case CLOCK_REALTIME:
       {
