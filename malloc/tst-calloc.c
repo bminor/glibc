@@ -106,8 +106,8 @@ null_test (void)
   calloc (0, 0);
   calloc (0, max_size);
   calloc (max_size, 0);
-  calloc (0, ~((size_t) zero_size));
-  calloc (~((size_t) zero_size), 0);
+  calloc (0, ~zero_size);
+  calloc (~zero_size, 0);
   DIAG_POP_NEEDS_COMMENT;
 }
 
