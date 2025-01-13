@@ -67,6 +67,8 @@ ENTRY(__swapcontext)
 	add	#(oFPUL+4-124),r0
 	sts.l	fpul, @-r0
 	sts.l	fpscr, @-r0
+	mov	#0, r9
+	lds	r9, fpscr
 	frchg
 	fmov.s	fr15, @-r0
 	fmov.s	fr14, @-r0
