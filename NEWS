@@ -67,6 +67,13 @@ Major new features:
   to a mising GNU_STACK ELF header or explicit explicitly because of the
   executable bit in GNU_STACK.  The default is to allow executable stacks.
 
+* Support for the extensible rseq ABI introduced in the Linux kernel version
+  6.3 has been added.  The size and alignment of the rseq area is now
+  determined by auxiliary vector entries when provided by the running kernel.
+  This results in __rseq_size now exposing features past the original ABI
+  which currently include 'node_id' and 'mm_cid' and will also allow exposing
+  new features as they get added to future Linux kernels.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The big-endian ARC port (arceb-linux-gnu) has been removed.
