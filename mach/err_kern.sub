@@ -74,6 +74,11 @@ static char * err_codes_kern[] = {
 	"(os/kern) right exists",
 	"(os/kern) invalid host",
 	"(os/kern) memory present",
+	"(os/kern) write protection failure",
+	"(os/kern) Unknown error code: 25",
+	"(os/kern) object is terminated",
+	"(os/kern) operation timed out",
+	"(os/kern) operation was interrupted",
 };
 
 static char * err_codes_device[] = {
