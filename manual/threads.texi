@@ -554,6 +554,8 @@ This section describes the @glibcadj{} POSIX Threads implementation.
 @menu
 * Thread-specific Data::          Support for creating and
 				  managing thread-specific data
+* POSIX Semaphores::              Support for process and thread
+				  synchronization using semaphores
 * Non-POSIX Extensions::          Additional functions to extend
 				  POSIX Thread functionality
 @end menu
@@ -612,6 +614,86 @@ thread.
 @c  KEY_UNUSED ok
 @c  calloc dup @ascuheap @acsmem
 Associate the thread-specific @var{value} with @var{key} in the calling thread.
+@end deftypefun
+
+
+@node POSIX Semaphores
+@subsection POSIX Semaphores
+
+@deftypefun int sem_init (sem_t *@var{sem}, int @var{pshared}, unsigned int @var{value})
+@safety{@prelim{}@mtsafe{}@assafe{}@acunsafe{@acucorrupt{}}}
+@c Does not atomically update sem_t therefore AC-unsafe
+@c because it can leave sem_t partially initialized.
+@end deftypefun
+
+@deftypefun int sem_destroy (sem_t *@var{sem})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Function does nothing and is therefore always safe.
+@end deftypefun
+
+@deftypefun {sem_t *} sem_open (const char *@var{name}, int @var{oflag}, ...)
+@safety{@prelim{}@mtsafe{}@asunsafe{@asuinit{}}@acunsafe{@acuinit{}}}
+@c pthread_once asuinit
+@c
+@c We are AC-Unsafe because we use pthread_once to initialize
+@c a global variable that holds the location of the mounted
+@c shmfs on Linux.
+@end deftypefun
+
+@deftypefun int sem_close (sem_t *@var{sem})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
+@c lll_lock asulock aculock
+@c twalk mtsrace{:root}
+@c
+@c We are AS-unsafe because we take a non-recursive lock.
+@c We are AC-unsafe because several internal data structures
+@c are not updated atomically.
+@end deftypefun
+
+@deftypefun int sem_unlink (const char *@var{name})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asuinit{}}@acunsafe{@acucorrupt{}}}
+@c pthread_once asuinit acucorrupt aculock
+@c mempcpy acucorrupt
+@end deftypefun
+
+@deftypefun int sem_wait (sem_t *@var{sem})
+@safety{@prelim{}@mtsafe{}@assafe{}@acunsafe{@acucorrupt{}}}
+@c atomic_fetch_add_relaxed (nwaiters) acucorrupt
+@c
+@c Given the use atomic operations this function seems
+@c to be AS-safe.  It is AC-unsafe because there is still
+@c a window between atomic_fetch_add_relaxed and the pthread_push
+@c of the handler that undoes that operation.  A cancellation
+@c at that point would fail to remove the process from the
+@c waiters count.
+@end deftypefun
+
+@deftypefun int sem_timedwait (sem_t *@var{sem}, const struct timespec *@var{abstime})
+@safety{@prelim{}@mtsafe{}@assafe{}@acunsafe{@acucorrupt{}}}
+@c Same safety issues as sem_wait.
+@end deftypefun
+
+@deftypefun int sem_clockwait (sem_t *@var{sem}, clockid_t @var{clockid}, const struct timespec *@var{abstime})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
+Behaves like @code{sem_timedwait} except the time @var{abstime} is measured
+against the clock specified by @var{clockid} rather than
+@code{CLOCK_REALTIME}.  Currently, @var{clockid} must be either
+@code{CLOCK_MONOTONIC} or @code{CLOCK_REALTIME}.
+@end deftypefun
+
+@deftypefun int sem_trywait (sem_t *@var{sem})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c All atomic operations are safe in all contexts.
+@end deftypefun
+
+@deftypefun int sem_post (sem_t *@var{sem})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Same safety as sem_trywait.
+@end deftypefun
+
+@deftypefun int sem_getvalue (sem_t *@var{sem}, int *@var{sval})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Atomic write of a value is safe in all contexts.
 @end deftypefun
 
 
@@ -752,16 +834,6 @@ freed.
 @Theglibc{} provides several waiting functions that expect an explicit
 @code{clockid_t} argument.
 
-@comment semaphore.h
-@comment POSIX-proposed
-@deftypefun int sem_clockwait (sem_t *@var{sem}, clockid_t @var{clockid}, const struct timespec *@var{abstime})
-@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
-Behaves like @code{sem_timedwait} except the time @var{abstime} is measured
-against the clock specified by @var{clockid} rather than
-@code{CLOCK_REALTIME}.  Currently, @var{clockid} must be either
-@code{CLOCK_MONOTONIC} or @code{CLOCK_REALTIME}.
-@end deftypefun
-
 @comment pthread.h
 @comment POSIX-proposed
 @deftypefun int pthread_cond_clockwait (pthread_cond_t *@var{cond}, pthread_mutex_t *@var{mutex}, clockid_t @var{clockid}, const struct timespec *@var{abstime})
@@ -834,6 +906,9 @@ Behaves like @code{pthread_timedjoin_np} except that the absolute time in
 Currently, @var{clockid} must be either @code{CLOCK_MONOTONIC} or
 @code{CLOCK_REALTIME}.
 @end deftypefun
+
+The @code{sem_clockwait} function also works using a @code{clockid_t}
+argument.  @xref{POSIX Semaphores}.
 
 @node Single-Threaded
 @subsubsection Detecting Single-Threaded Execution
