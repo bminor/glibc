@@ -25,6 +25,22 @@ double: 2
 Function: "acosh_upward":
 double: 3
 
+Function: "acospi":
+double: 2
+float: 1
+
+Function: "acospi_downward":
+double: 1
+float: 2
+
+Function: "acospi_towardzero":
+double: 1
+float: 2
+
+Function: "acospi_upward":
+double: 2
+float: 1
+
 Function: "asin":
 double: 1
 
@@ -49,6 +65,22 @@ double: 2
 Function: "asinh_upward":
 double: 3
 
+Function: "asinpi":
+double: 1
+float: 1
+
+Function: "asinpi_downward":
+double: 1
+float: 1
+
+Function: "asinpi_towardzero":
+double: 1
+float: 2
+
+Function: "asinpi_upward":
+double: 2
+float: 2
+
 Function: "atan":
 double: 1
 
@@ -63,6 +95,22 @@ double: 5
 
 Function: "atan2_upward":
 double: 8
+
+Function: "atan2pi":
+double: 1
+float: 1
+
+Function: "atan2pi_downward":
+double: 1
+float: 2
+
+Function: "atan2pi_towardzero":
+double: 1
+float: 2
+
+Function: "atan2pi_upward":
+double: 1
+float: 2
 
 Function: "atan_downward":
 double: 1
@@ -84,6 +132,22 @@ double: 2
 
 Function: "atanh_upward":
 double: 3
+
+Function: "atanpi":
+double: 2
+float: 1
+
+Function: "atanpi_downward":
+double: 1
+float: 2
+
+Function: "atanpi_towardzero":
+double: 1
+float: 2
+
+Function: "atanpi_upward":
+double: 1
+float: 1
 
 Function: "cabs":
 double: 1
@@ -157,7 +221,7 @@ float: 2
 
 Function: Real part of "cacosh_upward":
 double: 5
-float: 3
+float: 4
 
 Function: Imaginary part of "cacosh_upward":
 double: 3
@@ -502,6 +566,22 @@ double: 3
 
 Function: "cosh_upward":
 double: 3
+
+Function: "cospi":
+double: 2
+float: 2
+
+Function: "cospi_downward":
+double: 1
+float: 2
+
+Function: "cospi_towardzero":
+double: 1
+float: 1
+
+Function: "cospi_upward":
+double: 1
+float: 2
 
 Function: Real part of "cpow":
 double: 9
@@ -1039,6 +1119,22 @@ double: 3
 Function: "sinh_upward":
 double: 3
 
+Function: "sinpi":
+double: 2
+float: 2
+
+Function: "sinpi_downward":
+double: 2
+float: 2
+
+Function: "sinpi_towardzero":
+double: 2
+float: 1
+
+Function: "sinpi_upward":
+double: 2
+float: 3
+
 Function: "tan":
 double: 1
 
@@ -1062,6 +1158,22 @@ double: 3
 
 Function: "tanh_upward":
 double: 3
+
+Function: "tanpi":
+double: 3
+float: 3
+
+Function: "tanpi_downward":
+double: 2
+float: 3
+
+Function: "tanpi_towardzero":
+double: 2
+float: 3
+
+Function: "tanpi_upward":
+double: 2
+float: 4
 
 Function: "tgamma":
 double: 9

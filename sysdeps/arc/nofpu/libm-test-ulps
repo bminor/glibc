@@ -7,19 +7,33 @@ double: 1
 Function: "acosh":
 double: 2
 
+Function: "acospi":
+double: 2
+float: 1
+
 Function: "asin":
 double: 1
 
 Function: "asinh":
 double: 2
 
+Function: "asinpi":
+double: 1
+float: 1
+
 Function: "atan":
 double: 1
 
-Function: "atan2":
+Function: "atan2pi":
+double: 1
+float: 1
 
 Function: "atanh":
 double: 2
+
+Function: "atanpi":
+double: 2
+float: 1
 
 Function: "cabs":
 double: 1
@@ -39,8 +53,6 @@ float: 2
 Function: Imaginary part of "cacosh":
 double: 1
 float: 2
-
-Function: "carg":
 
 Function: Real part of "casin":
 double: 1
@@ -124,6 +136,10 @@ float: 1
 Function: "cosh":
 double: 2
 
+Function: "cospi":
+double: 2
+float: 2
+
 Function: Real part of "cpow":
 double: 2
 float: 5
@@ -133,6 +149,9 @@ float: 2
 
 Function: Real part of "csin":
 double: 1
+float: 1
+
+Function: Imaginary part of "csin":
 float: 1
 
 Function: Real part of "csinh":
@@ -249,8 +268,16 @@ float: 1
 Function: "sinh":
 double: 2
 
+Function: "sinpi":
+double: 2
+float: 2
+
 Function: "tanh":
 double: 2
+
+Function: "tanpi":
+double: 3
+float: 3
 
 Function: "tgamma":
 double: 9
