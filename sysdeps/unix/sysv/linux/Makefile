@@ -660,6 +660,20 @@ install-bin += \
 
 $(objpfx)pldd: $(objpfx)xmalloc.o
 
+tests += tst-rseq-tls-range tst-rseq-tls-range-4096
+tests-static += tst-rseq-tls-range-static tst-rseq-tls-range-4096-static
+modules-names += tst-rseq-tls-range-mod
+CFLAGS-tst-rseq-tls-range.c += -DMAIN_TLS_ALIGN=4
+CFLAGS-tst-rseq-tls-range-4096.c += -DMAIN_TLS_ALIGN=4096
+CFLAGS-tst-rseq-tls-range-static.c += -DMAIN_TLS_ALIGN=4
+CFLAGS-tst-rseq-tls-range-4096-static.c += -DMAIN_TLS_ALIGN=4096
+$(objpfx)tst-rseq-tls-range.out: $(objpfx)tst-rseq-tls-range-mod.so
+$(objpfx)tst-rseq-tls-range-4096.out: $(objpfx)tst-rseq-tls-range-mod.so
+$(objpfx)tst-rseq-tls-range-static.out: $(objpfx)tst-rseq-tls-range-mod.so
+$(objpfx)tst-rseq-tls-range-4096-static.out: $(objpfx)tst-rseq-tls-range-mod.so
+tst-rseq-tls-range-static-ENV = LD_LIBRARY_PATH=$(objpfx):$(common-objpfx)
+tst-rseq-tls-range-4096-static-ENV = LD_LIBRARY_PATH=$(objpfx):$(common-objpfx)
+
 test-internal-extras += tst-nolink-libc
 ifeq ($(run-built-tests),yes)
 tests-special += \
