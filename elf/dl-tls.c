@@ -28,6 +28,7 @@
 #include <tls.h>
 #include <dl-tls.h>
 #include <ldsodefs.h>
+#include <dl-tls_block_align.h>
 
 #if PTHREAD_IN_LIBC
 # include <list.h>
@@ -237,7 +238,6 @@ _dl_count_modids (void)
 }
 
 
-#ifdef SHARED
 void
 _dl_determine_tlsoffset (void)
 {
@@ -446,7 +446,6 @@ _dl_determine_tlsoffset (void)
   /* The alignment requirement for the static TLS block.  */
   GLRO (dl_tls_static_align) = max_align;
 }
-#endif /* SHARED */
 
 static void *
 allocate_dtv (void *result)
@@ -508,55 +507,20 @@ tcb_to_pointer_to_free_location (void *tcb)
 void *
 _dl_allocate_tls_storage (void)
 {
-  void *result;
-  size_t size = GLRO (dl_tls_static_size);
+  size_t size = _dl_tls_block_size_with_pre ();
 
-#if TLS_DTV_AT_TP
-  /* Memory layout is:
-     [ TLS_PRE_TCB_SIZE ] [ TLS_TCB_SIZE ] [ TLS blocks ]
-			  ^ This should be returned.  */
-  size += TLS_PRE_TCB_SIZE;
-#endif
-
-  /* Reserve space for the required alignment and the pointer to the
-     original allocation.  */
-  size_t alignment = GLRO (dl_tls_static_align);
-
-  /* Perform the allocation.  */
+  /* Perform the allocation.  Reserve space for alignment storage of
+     the pointer that will have to be freed.  */
   _dl_tls_allocate_begin ();
-  void *allocated = malloc (size + alignment + sizeof (void *));
+  void *allocated = malloc (size + GLRO (dl_tls_static_align)
+			    + sizeof (void *));
   if (__glibc_unlikely (allocated == NULL))
     {
       _dl_tls_allocate_end ();
       return NULL;
     }
 
-  /* Perform alignment and allocate the DTV.  */
-#if TLS_TCB_AT_TP
-  /* The TCB follows the TLS blocks, which determine the alignment.
-     (TCB alignment requirements have been taken into account when
-     calculating GLRO (dl_tls_static_align).)  */
-  void *aligned = (void *) roundup ((uintptr_t) allocated, alignment);
-  result = aligned + size - TLS_TCB_SIZE;
-
-  /* Clear the TCB data structure.  We can't ask the caller (i.e.
-     libpthread) to do it, because we will initialize the DTV et al.  */
-  memset (result, '\0', TLS_TCB_SIZE);
-#elif TLS_DTV_AT_TP
-  /* Pre-TCB and TCB come before the TLS blocks.  The layout computed
-     in _dl_determine_tlsoffset assumes that the TCB is aligned to the
-     TLS block alignment, and not just the TLS blocks after it.  This
-     can leave an unused alignment gap between the TCB and the TLS
-     blocks.  */
-  result = (void *) roundup
-    (sizeof (void *) + TLS_PRE_TCB_SIZE + (uintptr_t) allocated,
-     alignment);
-
-  /* Clear the TCB data structure and TLS_PRE_TCB_SIZE bytes before
-     it.  We can't ask the caller (i.e. libpthread) to do it, because
-     we will initialize the DTV et al.  */
-  memset (result - TLS_PRE_TCB_SIZE, '\0', TLS_PRE_TCB_SIZE + TLS_TCB_SIZE);
-#endif
+  void *result = _dl_tls_block_align (size, allocated);
 
   /* Record the value of the original pointer for later
      deallocation.  */
