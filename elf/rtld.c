@@ -752,25 +752,8 @@ init_tls (size_t naudit)
   /* No need to check the return value.  If memory allocation failed
      the program would have been terminated.  */
 
-  struct dtv_slotinfo *slotinfo = GL(dl_tls_dtv_slotinfo_list)->slotinfo;
   GL(dl_tls_dtv_slotinfo_list)->len = nelem;
   GL(dl_tls_dtv_slotinfo_list)->next = NULL;
-
-  /* Fill in the information from the loaded modules.  No namespace
-     but the base one can be filled at this time.  */
-  assert (GL(dl_ns)[LM_ID_BASE + 1]._ns_loaded == NULL);
-  int i = 0;
-  for (struct link_map *l = GL(dl_ns)[LM_ID_BASE]._ns_loaded; l != NULL;
-       l = l->l_next)
-    if (l->l_tls_blocksize != 0)
-      {
-	/* This is a module with TLS data.  Store the map reference.
-	   The generation counter is zero.  */
-	slotinfo[i].map = l;
-	/* slotinfo[i].gen = 0; */
-	++i;
-      }
-  assert (i == GL(dl_tls_max_dtv_idx));
 
   /* Calculate the size of the static TLS surplus.  */
   _dl_tls_static_surplus_init (naudit);
@@ -787,8 +770,6 @@ init_tls (size_t naudit)
   if (tcbp == NULL)
     _dl_fatal_printf ("\
 cannot allocate TLS data structures for initial thread\n");
-
-  _dl_tls_initial_modid_limit_setup ();
 
   /* Store for detection of the special case by __tls_get_addr
      so it knows not to pass this dtv to the normal realloc.  */
@@ -2292,6 +2273,10 @@ dl_main (const ElfW(Phdr) *phdr,
       }
   }
   rtld_timer_stop (&relocate_time, start);
+
+  /* This call must come after the slotinfo array has been filled in
+     using _dl_add_to_slotinfo.  */
+  _dl_tls_initial_modid_limit_setup ();
 
   /* Now enable profiling if needed.  Like the previous call,
      this has to go here because the calls it makes should use the
