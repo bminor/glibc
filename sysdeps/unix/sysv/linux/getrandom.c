@@ -168,6 +168,11 @@ vgetrandom_get_state (void)
   if (grnd_alloc.len > 0 || vgetrandom_get_state_alloc ())
     state = grnd_alloc.states[--grnd_alloc.len];
 
+  /* Barrier needed by fork: The state must be gone from the array
+     through len update before it becomes visible in the TCB.  (There
+     is also a release barrier implied by the unlock, but issue a
+     stronger barrier to help fork.)  */
+  atomic_thread_fence_seq_cst ();
   __libc_lock_unlock (grnd_alloc.lock);
   internal_signal_restore_set (&set);
 
@@ -278,7 +283,10 @@ void
 __getrandom_reset_state (struct pthread *curp)
 {
 #ifdef HAVE_GETRANDOM_VSYSCALL
-  if (grnd_alloc.states == NULL || curp->getrandom_buf == NULL)
+  /* The pointer can be reserved if the fork happened during a
+     getrandom call.  */
+  void *buf = release_ptr (curp->getrandom_buf);
+  if (grnd_alloc.states == NULL || buf == NULL)
     return;
   assert (grnd_alloc.len < grnd_alloc.cap);
   grnd_alloc.states[grnd_alloc.len++] = release_ptr (curp->getrandom_buf);
@@ -294,11 +302,23 @@ void
 __getrandom_vdso_release (struct pthread *curp)
 {
 #ifdef HAVE_GETRANDOM_VSYSCALL
-  if (curp->getrandom_buf == NULL)
+  /* The pointer can be reserved if the thread was canceled in a
+     signal handler.  */
+  void *buf = release_ptr (curp->getrandom_buf);
+  if (buf == NULL)
     return;
 
   __libc_lock_lock (grnd_alloc.lock);
-  grnd_alloc.states[grnd_alloc.len++] = curp->getrandom_buf;
+
+  size_t len = grnd_alloc.len;
+  grnd_alloc.states[len] = curp->getrandom_buf;
+  curp->getrandom_buf = NULL;
+  /* Barrier needed by fork: The state must vanish from the TCB before
+     it becomes visible in the states array.  Also avoid exposing the
+     previous entry value at the same index in the states array (which
+     may be in use by another thread).  */
+  atomic_thread_fence_seq_cst ();
+  grnd_alloc.len = len + 1;
   __libc_lock_unlock (grnd_alloc.lock);
 #endif
 }
