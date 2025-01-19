@@ -47,8 +47,12 @@ __bind  (int fd, __CONST_SOCKADDR_ARG addrarg, socklen_t len)
       if (dir == MACH_PORT_NULL)
 	return -1;
 
-      /* Create a new, unlinked node in the target directory.  */
-      err = __dir_mkfile (dir, O_CREAT, 0666 & ~_hurd_umask, &node);
+      if (! *n)
+	/* Can't bind on the existing directory itself.  */
+	err = ENOTDIR;
+      else
+	/* Create a new, unlinked node in the target directory.  */
+	err = __dir_mkfile (dir, O_CREAT, 0666 & ~_hurd_umask, &node);
 
       if (! err)
 	{

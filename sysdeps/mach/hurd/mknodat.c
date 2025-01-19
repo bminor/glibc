@@ -88,8 +88,12 @@ __mknodat (int fd, const char *path, mode_t mode, dev_t dev)
   if (dir == MACH_PORT_NULL)
     return -1;
 
-  /* Create a new, unlinked node in the target directory.  */
-  errnode = err = __dir_mkfile (dir, O_WRITE, (mode & ~S_IFMT) & ~_hurd_umask, &node);
+  if (! *name)
+    /* Can't link to the existing directory itself.  */
+    errnode = err = ENOTDIR;
+  else
+    /* Create a new, unlinked node in the target directory.  */
+    errnode = err = __dir_mkfile (dir, O_WRITE, (mode & ~S_IFMT) & ~_hurd_umask, &node);
 
   if (! err && translator != NULL)
     /* Set the node's translator to make it a device.  */

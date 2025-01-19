@@ -45,8 +45,12 @@ __symlinkat (const char *from, int fd, const char *to)
   if (dir == MACH_PORT_NULL)
     return -1;
 
-  /* Create a new, unlinked node in the target directory.  */
-  err = __dir_mkfile (dir, O_WRITE, 0777 & ~_hurd_umask, &node);
+  if (! *name)
+    /* Can't link to the existing directory itself.  */
+    err = ENOTDIR;
+  else
+    /* Create a new, unlinked node in the target directory.  */
+    err = __dir_mkfile (dir, O_WRITE, 0777 & ~_hurd_umask, &node);
 
   if (! err)
     {
