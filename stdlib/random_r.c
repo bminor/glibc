@@ -390,9 +390,10 @@ __random_r (struct random_data *buf, int32_t *result)
       int32_t *end_ptr = buf->end_ptr;
       uint32_t val;
 
-      val = read_state (rptr, 0);
-      int32_t t = read_state (fptr, 0);
-      write_state (fptr, 0, t + val);
+      /* Avoid integer overflow with uint32_t arihmetic.  */
+      val = read_state (fptr, 0);
+      val += read_state (rptr, 0);
+      write_state (fptr, 0, val);
       /* Chucking least random bit.  */
       *result = val >> 1;
       ++fptr;
