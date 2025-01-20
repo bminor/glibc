@@ -11,5 +11,5 @@ PHDRS
  text PT_LOAD FLAGS(5) FILEHDR PHDRS;
  dynamic PT_DYNAMIC FLAGS(4);
  note PT_NOTE FLAGS(4);
- gnu_property PT_GNU_PROPERTY FLAGS(4);
+ gnu_property /* PT_GNU_PROPERTY */ 0x6474e553 FLAGS(4);
 }
