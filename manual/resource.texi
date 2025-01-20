@@ -1058,9 +1058,9 @@ available in the future.
 
 Upon success, @code{@var{attr}->size} contains the size of the structure
 version used by the kernel.  Fields with offsets greater or equal to
-@code{@var{attr}->size} are not updated by the kernel.  To obtain
-predictable values for unknown fields, use @code{memset} to set
-all @var{size} bytes to zero prior to calling @code{sched_getattr}.
+@code{@var{attr}->size} may not be overwritten by the kernel.  To obtain
+predictable values for unknown fields, use @code{memset} to set all
+@var{size} bytes to zero prior to calling @code{sched_getattr}.
 
 On failure, @code{sched_getattr} returns @math{-1} and sets @code{errno}.
 If @code{errno} is @code{E2BIG}, this means that the buffer is not large

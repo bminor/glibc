@@ -33,14 +33,6 @@ union
   unsigned char padding[4096];
 } u;
 
-static void
-check_unused (void)
-{
-  TEST_VERIFY (u.attr.size < sizeof (u));
-  for (unsigned int i = u.attr.size; i < sizeof (u); ++i)
-    TEST_COMPARE (u.padding[i], 0xcc);
-}
-
 static int
 do_test (void)
 {
@@ -53,7 +45,6 @@ do_test (void)
   /* Compiler barrier to bypass write access attribute.  */
   volatile unsigned int size = sizeof (u);
   TEST_COMPARE (sched_getattr (0, (struct sched_attr *) &u, size, 0), 0);
-  check_unused ();
   TEST_COMPARE (sched_setattr (0, &u.attr, 0), 0); /* Apply unchanged.  */
 
   /* Try to switch to the SCHED_OTHER policy.   */
@@ -81,14 +72,12 @@ do_test (void)
   memset (&u, 0xcc, sizeof (u));
   TEST_COMPARE (sched_getattr (0, (struct sched_attr *) &u, size, 0), 0);
   TEST_COMPARE (u.attr.sched_policy, SCHED_OTHER);
-  check_unused ();
 
   /* Raise the niceless level to 19 and observe its effect.  */
   TEST_COMPARE (nice (19), 19);
   TEST_COMPARE (sched_getattr (0, &u.attr, sizeof (u.attr), 0), 0);
   TEST_COMPARE (u.attr.sched_policy, SCHED_OTHER);
   TEST_COMPARE (u.attr.sched_nice, 19);
-  check_unused ();
 
   /* Invalid buffer arguments result in EINVAL (not EFAULT).  */
   {
