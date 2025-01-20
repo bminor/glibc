@@ -296,6 +296,7 @@ tests := \
   tst-qsort3 \
   tst-qsort6 \
   tst-quick_exit \
+  tst-rand-sequence \
   tst-rand48 \
   tst-rand48-2 \
   tst-random \
