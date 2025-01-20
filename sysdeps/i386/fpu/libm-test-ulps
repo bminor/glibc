@@ -58,7 +58,7 @@ float128: 1
 ldouble: 3
 
 Function: "acospi_upward":
-double: 1
+double: 2
 float: 1
 float128: 2
 ldouble: 2
@@ -110,7 +110,7 @@ float128: 2
 ldouble: 2
 
 Function: "asinpi_downward":
-double: 1
+double: 2
 float: 1
 float128: 2
 ldouble: 2
@@ -122,7 +122,7 @@ float128: 1
 ldouble: 2
 
 Function: "asinpi_upward":
-double: 1
+double: 2
 float: 2
 float128: 2
 ldouble: 2
@@ -159,7 +159,7 @@ float128: 3
 ldouble: 1
 
 Function: "atan2pi_downward":
-double: 1
+double: 2
 float: 2
 float128: 2
 ldouble: 2
@@ -171,7 +171,7 @@ float128: 2
 ldouble: 2
 
 Function: "atan2pi_upward":
-double: 1
+double: 2
 float: 2
 float128: 2
 ldouble: 2
@@ -218,7 +218,7 @@ float128: 2
 ldouble: 1
 
 Function: "atanpi_downward":
-double: 1
+double: 2
 float: 2
 float128: 1
 ldouble: 2
@@ -230,7 +230,7 @@ float128: 1
 ldouble: 2
 
 Function: "atanpi_upward":
-double: 1
+double: 2
 float: 1
 float128: 2
 ldouble: 1
@@ -869,7 +869,7 @@ float128: 3
 ldouble: 3
 
 Function: "cospi":
-double: 1
+double: 2
 float: 2
 float128: 2
 ldouble: 2
@@ -1773,7 +1773,7 @@ float128: 3
 ldouble: 4
 
 Function: "tanpi":
-double: 2
+double: 3
 float: 3
 float128: 3
 ldouble: 3
