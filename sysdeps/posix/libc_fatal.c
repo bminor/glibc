@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <ldsodefs.h>
+#include <libc-pointer-arith.h>
 #include <paths.h>
 #include <stdarg.h>
 #include <stdbool.h>
@@ -105,7 +106,8 @@ __libc_message_impl (const char *fmt, ...)
     {
       WRITEV_FOR_FATAL (fd, iov, iovcnt, total);
 
-      total = (total + 1 + GLRO(dl_pagesize) - 1) & ~(GLRO(dl_pagesize) - 1);
+      total = ALIGN_UP (total + sizeof (struct abort_msg_s) + 1,
+			GLRO(dl_pagesize));
       struct abort_msg_s *buf = __mmap (NULL, total,
 					PROT_READ | PROT_WRITE,
 					MAP_ANON | MAP_PRIVATE, -1, 0);
