@@ -74,6 +74,16 @@ Major new features:
   which currently include 'node_id' and 'mm_cid' and will also allow exposing
   new features as they get added to future Linux kernels.
 
+* The GNU C Library now supports Guarded Control Stack extension that allows
+  to use shadow stacks on AArch64 systems that support this extension.
+  Building the library with standard branch protection enabled while using
+  a toolchain that supports GCS (binutils 2.44 and GCC 15 or later), will
+  enable GCS support in glibc. There is no special configuration flag.
+  GCS-enabled glibc is compatible with all existing executables and shared
+  libraries and will run with and without GCS support in the system. GCS is
+  opt-in and can be controlled at runtime via the glibc.cpu.aarch64_gcs
+  tunable, By default GCS is disabled. Linux kernel supports this since 6.13.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The big-endian ARC port (arceb-linux-gnu) has been removed.
