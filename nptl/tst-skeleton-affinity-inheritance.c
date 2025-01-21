@@ -32,6 +32,7 @@
    they're both inherited.  */
 
 #include <errno.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <support/test-driver.h>
 #include <support/xthread.h>
