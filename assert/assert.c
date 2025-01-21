@@ -18,6 +18,7 @@
 #include <assert.h>
 #include <atomic.h>
 #include <ldsodefs.h>
+#include <libc-pointer-arith.h>
 #include <libintl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -65,7 +66,8 @@ __assert_fail_base (const char *fmt, const char *assertion, const char *file,
       (void) __fxprintf (NULL, "%s", str);
       (void) fflush (stderr);
 
-      total = (total + 1 + GLRO(dl_pagesize) - 1) & ~(GLRO(dl_pagesize) - 1);
+      total = ALIGN_UP (total + sizeof (struct abort_msg_s) + 1,
+			GLRO(dl_pagesize));
       struct abort_msg_s *buf = __mmap (NULL, total, PROT_READ | PROT_WRITE,
 					MAP_ANON | MAP_PRIVATE, -1, 0);
       if (__glibc_likely (buf != MAP_FAILED))
