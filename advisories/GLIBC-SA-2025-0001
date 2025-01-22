@@ -21,4 +21,5 @@ CVE-Id: CVE-2025-0395
 Public-Date: 2025-01-22
 Vulnerable-Commit: f8a3b5bf8fa1d0c43d2458e03cc109a04fdef194 (2.13-175)
 Fix-Commit: 68ee0f704cb81e9ad0a78c644a83e1e9cd2ee578 (2.41)
+Fix-Commit: 7d4b6bcae91f29d7b4daf15bab06b66cf1d2217c (2.40-66)
 Reported-By: Qualys Security Advisory
