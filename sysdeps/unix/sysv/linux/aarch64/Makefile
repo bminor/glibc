@@ -8,6 +8,11 @@ ifneq (no,$(findstring no,$(have-cc-gcs) $(have-test-cc-gcs) $(have-ld-gcs)))
 
 gcs-tests-dynamic = \
   tst-gcs-disabled \
+  tst-gcs-dlopen-disabled \
+  tst-gcs-dlopen-enforced \
+  tst-gcs-dlopen-optional-off \
+  tst-gcs-dlopen-optional-on \
+  tst-gcs-dlopen-override \
   tst-gcs-enforced \
   tst-gcs-enforced-abort \
   tst-gcs-optional-off \
@@ -99,6 +104,24 @@ tst-gcs-shared-disabled-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=0
 tst-gcs-shared-enforced-abort-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1
 tst-gcs-shared-optional-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=2
 tst-gcs-shared-override-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=3
+
+LDFLAGS-tst-gcs-dlopen-disabled = -Wl,-z gcs=always
+LDFLAGS-tst-gcs-dlopen-enforced = -Wl,-z gcs=always
+LDFLAGS-tst-gcs-dlopen-optional-on = -Wl,-z gcs=always
+LDFLAGS-tst-gcs-dlopen-optional-off = -Wl,-z gcs=never
+LDFLAGS-tst-gcs-dlopen-override = -Wl,-z gcs=always
+
+tst-gcs-dlopen-disabled-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=0
+tst-gcs-dlopen-enforced-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1
+tst-gcs-dlopen-optional-on-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=2
+tst-gcs-dlopen-optional-off-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=2
+tst-gcs-dlopen-override-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=3
+
+$(objpfx)tst-gcs-dlopen-disabled.out: $(objpfx)tst-gcs-mod2.so
+$(objpfx)tst-gcs-dlopen-enforced.out: $(objpfx)tst-gcs-mod2.so
+$(objpfx)tst-gcs-dlopen-optional-on.out: $(objpfx)tst-gcs-mod2.so
+$(objpfx)tst-gcs-dlopen-optional-off.out: $(objpfx)tst-gcs-mod2.so
+$(objpfx)tst-gcs-dlopen-override.out: $(objpfx)tst-gcs-mod2.so
 
 endif # ifeq ($(have-test-cc-gcs),yes)
 
