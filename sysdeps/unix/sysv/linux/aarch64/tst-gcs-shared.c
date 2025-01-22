@@ -18,6 +18,9 @@
 
 #include "tst-gcs-helper.h"
 
+int fun1 (void); // tst-gcs-mod1.c
+int fun3 (void); // tst-gcs-mod3.c
+
 static int
 do_test (void)
 {
@@ -27,17 +30,12 @@ do_test (void)
       puts ("kernel or CPU does not support GCS");
       return EXIT_UNSUPPORTED;
     }
-  bool gcs_enabled = __check_gcs_status ();
-  if (gcs_enabled)
-    puts ("GCS enabled");
-  else
-    puts ("GCS not enabled");
 #if TEST_GCS_EXPECT_ENABLED
-  TEST_VERIFY (gcs_enabled);
+  TEST_VERIFY (__check_gcs_status ());
 #else
-  TEST_VERIFY (!gcs_enabled);
+  TEST_VERIFY (!__check_gcs_status ());
 #endif
-  return 0;
+  return fun1 () + fun3 ();
 }
 
 #include <support/test-driver.c>

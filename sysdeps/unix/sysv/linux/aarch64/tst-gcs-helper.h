@@ -16,28 +16,24 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include "tst-gcs-helper.h"
+#ifndef TST_GCS_HELPER_H
+#define TST_GCS_HELPER_H
 
-static int
-do_test (void)
+#include <support/check.h>
+#include <support/support.h>
+#include <support/test-driver.h>
+
+#include <stdio.h>
+#include <sys/auxv.h>
+
+static bool __check_gcs_status (void)
 {
-  /* Check if GCS could possible by enabled.  */
-  if (!(getauxval (AT_HWCAP) & HWCAP_GCS))
-    {
-      puts ("kernel or CPU does not support GCS");
-      return EXIT_UNSUPPORTED;
-    }
-  bool gcs_enabled = __check_gcs_status ();
-  if (gcs_enabled)
-    puts ("GCS enabled");
-  else
-    puts ("GCS not enabled");
-#if TEST_GCS_EXPECT_ENABLED
-  TEST_VERIFY (gcs_enabled);
-#else
-  TEST_VERIFY (!gcs_enabled);
-#endif
-  return 0;
+  register unsigned long x16 asm ("x16");
+  asm volatile (
+    "mov	x16, #1 /* _CHKFEAT_GCS */\n"
+    "hint	40 /* CHKFEAT_X16 */\n"
+    : "=r" (x16));
+  return x16 ^ 1;
 }
 
-#include <support/test-driver.c>
+#endif // POINTER_GUARD_H

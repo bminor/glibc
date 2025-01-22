@@ -13,6 +13,10 @@ gcs-tests-dynamic = \
   tst-gcs-optional-off \
   tst-gcs-optional-on \
   tst-gcs-override \
+  tst-gcs-shared-disabled \
+  tst-gcs-shared-enforced-abort \
+  tst-gcs-shared-optional \
+  tst-gcs-shared-override \
   # gcs-tests-dynamic
 
 gcs-tests-static = \
@@ -70,6 +74,31 @@ tst-gcs-enforced-static-abort-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1
 tst-gcs-optional-static-on-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=2
 tst-gcs-optional-static-off-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=2
 tst-gcs-override-static-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=3
+
+# force one of the dependencies to be unmarked
+LDFLAGS-tst-gcs-mod2.so += -Wl,-z gcs=never
+
+LDFLAGS-tst-gcs-shared-disabled = -Wl,-z gcs=always
+LDFLAGS-tst-gcs-shared-enforced-abort = -Wl,-z gcs=always
+LDFLAGS-tst-gcs-shared-optional = -Wl,-z gcs=always
+LDFLAGS-tst-gcs-shared-override = -Wl,-z gcs=always
+
+modules-names += \
+  tst-gcs-mod1 \
+  tst-gcs-mod2 \
+  tst-gcs-mod3 \
+  # modules-names
+
+$(objpfx)tst-gcs-shared-disabled: $(objpfx)tst-gcs-mod1.so $(objpfx)tst-gcs-mod3.so
+$(objpfx)tst-gcs-shared-enforced-abort: $(objpfx)tst-gcs-mod1.so $(objpfx)tst-gcs-mod3.so
+$(objpfx)tst-gcs-shared-optional: $(objpfx)tst-gcs-mod1.so $(objpfx)tst-gcs-mod3.so
+$(objpfx)tst-gcs-shared-override: $(objpfx)tst-gcs-mod1.so $(objpfx)tst-gcs-mod3.so
+$(objpfx)tst-gcs-mod1.so: $(objpfx)tst-gcs-mod2.so
+
+tst-gcs-shared-disabled-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=0
+tst-gcs-shared-enforced-abort-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1
+tst-gcs-shared-optional-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=2
+tst-gcs-shared-override-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=3
 
 endif # ifeq ($(have-test-cc-gcs),yes)
 
