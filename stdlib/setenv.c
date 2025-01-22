@@ -191,52 +191,52 @@ __add_to_environ (const char *name, const char *value, const char *combined,
 	ep[1] = NULL;
       else
 	{
-	  /* We cannot use __environ as is and need to copy over the
-	     __environ contents into an array managed via
-	     __environ_array_list.  */
+	  /* We cannot use __environ as is and need a larger allocation.  */
 
-	  struct environ_array *target_array;
-	  if (__environ_array_list != NULL
-	      && required_size <= __environ_array_list->allocated)
-	    /* Existing array has enough room.  Contents is copied below.  */
-	    target_array = __environ_array_list;
+	  if (start_environ == __environ_startup
+	      || __environ_is_from_array_list (start_environ))
+	    {
+	      /* Allocate a new array, managed in the list.  */
+	      struct environ_array *target_array
+		= __environ_new_array (required_size);
+	      if (target_array == NULL)
+		{
+		  UNLOCK;
+		  return -1;
+		}
+	      result_environ = &target_array->array[0];
+
+	      /* Copy over the __environ array contents.  This code
+		 handles the case start_environ == ep == NULL, too.  */
+	      size_t i;
+	      for (i = 0; start_environ + i < ep; ++i)
+		/* Regular store because unless there has been direct
+		   manipulation of the environment, target_array is still
+		   a private copy.  */
+		result_environ[i] = atomic_load_relaxed (start_environ + i);
+	    }
 	  else
 	    {
-	      /* Allocate a new array.  */
-	      target_array = __environ_new_array (required_size);
-	      if (target_array == NULL)
+	      /* Otherwise the application installed its own pointer.
+		 Historically, this pointer was managed using realloc.
+		 Continue doing so.  This disables multi-threading
+		 support.  */
+	      result_environ = __libc_reallocarray (start_environ,
+						    required_size,
+						    sizeof (*result_environ));
+	      if (result_environ == NULL)
 		{
 		  UNLOCK;
 		  return -1;
 		}
 	    }
 
-	  /* Copy over the __environ array contents.  This forward
-	     copy slides backwards part of the array if __environ
-	     points into target_array->array.  This happens if an
-	     application makes an assignment like:
-
-	       environ = &environ[1];
-
-	     The forward copy avoids clobbering values that still
-	     needing copying.  This code handles the case
-	     start_environ == ep == NULL, too.  */
-	  size_t i;
-	  for (i = 0; start_environ + i < ep; ++i)
-	    /* Regular store because unless there has been direct
-	       manipulation of the environment, target_array is still
-	       a private copy.  */
-	    target_array->array[i] = atomic_load_relaxed (start_environ + i);
-
 	  /* This is the new place where we should add the element.  */
-	  ep = target_array->array + i;
+	  ep = result_environ + (required_size - 2);
 
 	  /* Add the null terminator in case there was a pointer there
 	     previously.  */
 	  ep[1] = NULL;
-
-	  /* And __environ should be repointed to our array.  */
-	  result_environ = &target_array->array[0];
 	}
     }
 

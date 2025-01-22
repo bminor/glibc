@@ -61,6 +61,7 @@ _init_first (int argc, char **argv, char **envp)
   __libc_argc = argc;
   __libc_argv = argv;
   __environ = envp;
+  __environ_startup = envp;
 
 #ifndef SHARED
   /* First the initialization which normally would be done by the

@@ -203,6 +203,9 @@ libc_hidden_proto (__tcsetpgrp)
 extern int __libc_enable_secure attribute_relro;
 rtld_hidden_proto (__libc_enable_secure)
 
+/* Original value of __environ.  Initialized by _init_first (dynamic)
+   or __libc_start_main (static).  */
+extern char **__environ_startup attribute_hidden;
 
 /* Various internal function.  */
 extern void __libc_check_standard_fds (void) attribute_hidden;
