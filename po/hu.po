@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.10.1\n"
-"POT-Creation-Date: 2024-07-21 00:32+0200\n"
+"POT-Creation-Date: 2025-01-04 11:03+0100\n"
 "PO-Revision-Date: 2009-08-04 02:23+0200\n"
 "Last-Translator: Gabor Kelemen <kelemeng@gnome.hu>\n"
 "Language-Team: Hungarian <translation-team-hu@lists.sourceforge.net>\n"
@@ -69,7 +69,7 @@ msgid "Give a short usage message"
 msgstr "Rövid használati utasítás"
 
 #: argp/argp-parse.c:88 catgets/gencat.c:110 catgets/gencat.c:114
-#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:106 nscd/nscd.c:110
+#: iconv/iconv_prog.c:61 iconv/iconv_prog.c:62 nscd/nscd.c:106 nscd/nscd.c:110
 #: nss/makedb.c:122
 msgid "NAME"
 msgstr "NÉV"
@@ -99,6 +99,16 @@ msgstr "%s: Túl sok argumentum\n"
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(PROGRAMHIBA) A kapcsolót ismerni kellene?"
 
+#: assert/assert-perr.c:35
+#, c-format
+msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
+msgstr "%s%s%s:%u: %s%s Váratlan hiba: %s.\n"
+
+#: assert/assert.c:125
+#, c-format
+msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
+msgstr "%s%s%s:%u: %s%sA(z) „%s” kijelentés meghiúsult.\n"
+
 #: catgets/gencat.c:111
 msgid "Create C header file NAME containing symbol definitions"
 msgstr "A szimbólumdefiníciókat tartalmazó NÉV nevű C fejlécfájl előállítása"
@@ -127,9 +137,9 @@ msgstr ""
 "-o KIMENETIFÁJL [BEMENETIFÁJL]...\n"
 "[KIMENETIFÁJL [BEMENETIFÁJL]...]"
 
-#: catgets/gencat.c:246 debug/pcprofiledump.c:224 debug/xtrace.sh:63
+#: catgets/gencat.c:246 debug/pcprofiledump.c:235 debug/xtrace.sh:63
 #: elf/ldconfig.c:233 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
-#: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
+#: elf/sprof.c:388 iconv/iconv_prog.c:391 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
 #: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:487
@@ -143,8 +153,8 @@ msgstr ""
 "Ez egy szabad szoftver, lásd a forrást a másolási feltételekért. NINCS\n"
 "garancia, még az ADOTT CÉLRE VALÓ ELADHATÓSÁGRA VAGY MEGFELELŐSÉGRE SEM.\n"
 
-#: catgets/gencat.c:251 debug/pcprofiledump.c:229 debug/xtrace.sh:67
-#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
+#: catgets/gencat.c:251 debug/pcprofiledump.c:240 debug/xtrace.sh:67
+#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:396
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
@@ -157,8 +167,8 @@ msgstr "Írta: %s.\n"
 msgid "*standard input*"
 msgstr "*szabványos bemenet*"
 
-#: catgets/gencat.c:288 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
-#: nss/makedb.c:248
+#: catgets/gencat.c:288 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:279
+#: iconv/iconv_prog.c:432 nss/makedb.c:248
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "a bemeneti fájl („%s”) nem nyitható meg"
@@ -249,17 +259,17 @@ msgstr "PC profilozással előállt információk kiírása"
 msgid "[FILE]"
 msgstr "[FÁJL]"
 
-#: debug/pcprofiledump.c:107
-#, c-format
-msgid "cannot open input file"
-msgstr "a bemeneti fájl nem nyitható meg"
-
-#: debug/pcprofiledump.c:114
+#: debug/pcprofiledump.c:97
 #, c-format
 msgid "cannot read header"
 msgstr "a fejléc nem olvasható"
 
-#: debug/pcprofiledump.c:178
+#: debug/pcprofiledump.c:145
+#, c-format
+msgid "cannot open input file"
+msgstr "a bemeneti fájl nem nyitható meg"
+
+#: debug/pcprofiledump.c:189
 #, c-format
 msgid "invalid pointer size"
 msgstr "érvénytelen mutatóméret"
@@ -377,11 +387,11 @@ msgstr "hiba a megosztott programkönyvtárak betöltésekor"
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr "HIBA A DINAMIKUS LINKELŐBEN!"
 
-#: elf/dl-close.c:357 elf/dl-open.c:298
+#: elf/dl-close.c:363 elf/dl-open.c:298
 msgid "cannot create scope list"
 msgstr "Nem hozható létre hatókörlista"
 
-#: elf/dl-close.c:790
+#: elf/dl-close.c:792
 msgid "shared object not open"
 msgstr "a megosztott objektum nincs megnyitva"
 
@@ -406,127 +416,115 @@ msgstr "nem foglalható le a függőségi lista"
 msgid "cannot allocate symbol search list"
 msgstr "nem foglalható le a szimbólumkeresési lista"
 
-#: elf/dl-fptr.c:88 sysdeps/hppa/dl-fptr.c:96
-msgid "cannot map pages for fdesc table"
-msgstr "nem képezhetők le a lapok az fdesc táblára"
-
-#: elf/dl-fptr.c:192 sysdeps/hppa/dl-fptr.c:214
-msgid "cannot map pages for fptr table"
-msgstr "nem képezhetők le a lapok az fptr táblára"
-
-#: elf/dl-fptr.c:221 sysdeps/hppa/dl-fptr.c:243
-msgid "internal error: symidx out of range of fptr table"
-msgstr "belső hiba: a symidx kívül van az fptr tábla tartományán"
-
-#: elf/dl-load.c:423
+#: elf/dl-load.c:424
 msgid "cannot allocate name record"
 msgstr "nem foglalható le névrekord"
 
-#: elf/dl-load.c:525 elf/dl-load.c:638 elf/dl-load.c:732 elf/dl-load.c:829
+#: elf/dl-load.c:510 elf/dl-load.c:623 elf/dl-load.c:717 elf/dl-load.c:814
 msgid "cannot create cache for search path"
 msgstr "nem hozható létre gyorsítótár a keresési útvonalhoz"
 
-#: elf/dl-load.c:621
+#: elf/dl-load.c:606
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "nem hozható létre RUNPATH/RPATH másolat"
 
-#: elf/dl-load.c:718
+#: elf/dl-load.c:703
 msgid "cannot create search path array"
 msgstr "nem hozható létre keresésiútvonal-tömb"
 
-#: elf/dl-load.c:957
+#: elf/dl-load.c:973
 msgid "cannot stat shared object"
 msgstr "nem érhető el a megosztott objektum"
 
-#: elf/dl-load.c:1048 elf/dl-load.c:2163
+#: elf/dl-load.c:1066 elf/dl-load.c:2155
 msgid "cannot create shared object descriptor"
 msgstr "nem hozható létre megosztott objektumleíró"
 
-#: elf/dl-load.c:1067 elf/dl-load.c:1610 elf/dl-load.c:1718
+#: elf/dl-load.c:1085 elf/dl-load.c:1604 elf/dl-load.c:1710
 msgid "cannot read file data"
 msgstr "nem olvashatók a fájladatok"
 
-#: elf/dl-load.c:1212
+#: elf/dl-load.c:1230
 msgid "object file has no loadable segments"
 msgstr "az objektumfájlnak nincsenek betölthető szakaszai"
 
-#: elf/dl-load.c:1229
+#: elf/dl-load.c:1247
 msgid "cannot dynamically load executable"
 msgstr "nem tölthető be dinamikusan a végrehajtható fájl"
 
-#: elf/dl-load.c:1236
+#: elf/dl-load.c:1254
 msgid "object file has no dynamic section"
 msgstr "az objektumfájlnak nincs dinamikus szakasza"
 
-#: elf/dl-load.c:1273
+#: elf/dl-load.c:1291
 msgid "shared object cannot be dlopen()ed"
 msgstr "megosztott objektumra nem hívható meg a dlopen()"
 
-#: elf/dl-load.c:1286
+#: elf/dl-load.c:1304
 msgid "cannot allocate memory for program header"
 msgstr "nem foglalható memória a program fejlécének"
 
-#: elf/dl-load.c:1309
+#: elf/dl-load.c:1329
 msgid "cannot enable executable stack as shared object requires"
 msgstr "nem engedélyezhető a végrehajtható verem, mint ahogy a megosztott objektum megköveteli"
 
-#: elf/dl-load.c:1337
+#: elf/dl-load.c:1357
 msgid "cannot close file descriptor"
 msgstr "nem zárható le a fájlleíró"
 
-#: elf/dl-load.c:1610
+#: elf/dl-load.c:1604
 msgid "file too short"
 msgstr "a fájl túl rövid"
 
-#: elf/dl-load.c:1646
+#: elf/dl-load.c:1638
 msgid "invalid ELF header"
 msgstr "érvénytelen ELF fejléc"
 
-#: elf/dl-load.c:1661
+#: elf/dl-load.c:1653
 msgid "ELF file data encoding not big-endian"
 msgstr "az ELF fájladatok kódolása nem big endian"
 
-#: elf/dl-load.c:1663
+#: elf/dl-load.c:1655
 msgid "ELF file data encoding not little-endian"
 msgstr "az ELF fájladatok kódolása nem little endian"
 
-#: elf/dl-load.c:1667
+#: elf/dl-load.c:1659
 msgid "ELF file version ident does not match current one"
 msgstr "az ELF fájlverzió azonosítója nem felel meg az aktuálisnak"
 
-#: elf/dl-load.c:1671
+#: elf/dl-load.c:1663
 msgid "ELF file OS ABI invalid"
 msgstr "az ELF fájl OS ABI-ja érvénytelen"
 
-#: elf/dl-load.c:1674
+#: elf/dl-load.c:1666
 msgid "ELF file ABI version invalid"
 msgstr "az ELF fájl ABI verziója érvénytelen"
 
-#: elf/dl-load.c:1680
+#: elf/dl-load.c:1672
 msgid "internal error"
 msgstr "belső hiba"
 
-#: elf/dl-load.c:1687
+#: elf/dl-load.c:1679
 msgid "ELF file version does not match current one"
 msgstr "az ELF fájlverzió nem felel meg az aktuálisnak"
 
-#: elf/dl-load.c:1699
+#: elf/dl-load.c:1691
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "csak az ET_DYN és ET_EXEC tölthető be"
 
-#: elf/dl-load.c:1704
+#: elf/dl-load.c:1696
 msgid "ELF file's phentsize not the expected size"
 msgstr "az ELF fájl phentsize értéke nem a várt méretű"
 
-#: elf/dl-load.c:2182
+#: elf/dl-load.c:2174
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "hibás ELF osztály: ELFCLASS64"
 
-#: elf/dl-load.c:2183
+#: elf/dl-load.c:2175
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "hibás ELF osztály: ELFCLASS32"
 
-#: elf/dl-load.c:2186
+#: elf/dl-load.c:2178
 msgid "cannot open shared object file"
 msgstr "nem nyitható meg a megosztott objektumfájl"
 
@@ -542,7 +540,7 @@ msgstr "a memóriavédelem nem módosítható"
 msgid "cannot map zero-fill pages"
 msgstr "nem képezhetők le a nullával kitöltött lapok"
 
-#: elf/dl-lookup.c:813
+#: elf/dl-lookup.c:800
 msgid "symbol lookup error"
 msgstr "szimbólumkikeresési hiba"
 
@@ -590,11 +588,11 @@ msgstr "ismeretlen kapcsoló"
 msgid "No such file or directory"
 msgstr "Nincs ilyen fájl vagy könyvtár"
 
-#: iconv/iconv_prog.c:73
+#: iconv/iconv_prog.c:78
 msgid "Convert encoding of given files from one encoding to another."
 msgstr "Megadott fájlok kódolásának átalakítása"
 
-#: iconv/iconv_prog.c:77
+#: iconv/iconv_prog.c:82
 msgid "[FILE...]"
 msgstr "[FÁJL…]"
 
@@ -791,7 +789,7 @@ msgstr "Ismeretlen gép"
 msgid "Host name lookup failure"
 msgstr "Gépnév keresése nem sikerült"
 
-#: stdio-common/psignal.c:44
+#: stdio-common/psignal.c:44 string/strsignal.c:57
 msgid "Unknown signal"
 msgstr "Ismeretlen szignál"
 
@@ -799,12 +797,12 @@ msgstr "Ismeretlen szignál"
 msgid "Unknown error "
 msgstr "Ismeretlen hiba "
 
-#: string/strsignal.c:39
+#: string/strsignal.c:42
 #, c-format
 msgid "Real-time signal %d"
 msgstr "Valós idejű szignál %d"
 
-#: string/strsignal.c:43
+#: string/strsignal.c:46
 #, c-format
 msgid "Unknown signal %d"
 msgstr "Ismeretlen szignál %d"
@@ -1782,6 +1780,18 @@ msgstr "?"
 #: sysdeps/gnu/errlist.h:798
 msgid "RPC program not available"
 msgstr "Az RPC program nem érhető el"
+
+#: sysdeps/hppa/dl-fptr.c:96
+msgid "cannot map pages for fdesc table"
+msgstr "nem képezhetők le a lapok az fdesc táblára"
+
+#: sysdeps/hppa/dl-fptr.c:214
+msgid "cannot map pages for fptr table"
+msgstr "nem képezhetők le a lapok az fptr táblára"
+
+#: sysdeps/hppa/dl-fptr.c:243
+msgid "internal error: symidx out of range of fptr table"
+msgstr "belső hiba: a symidx kívül van az fptr tábla tartományán"
 
 #: sysdeps/mach/_strerror.c:43 sysdeps/mach/xpg-strerror.c:55
 msgid "Error in unknown error system: "

@@ -48,7 +48,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.37.9000\n"
-"POT-Creation-Date: 2024-07-21 00:32+0200\n"
+"POT-Creation-Date: 2025-01-04 11:03+0100\n"
 "PO-Revision-Date: 2023-08-21 18:12+0200\n"
 "Last-Translator: Ivan Vilata i Balaguer <ivan@selidor.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
@@ -109,7 +109,7 @@ msgid "Give a short usage message"
 msgstr "Mostra un missatge breu amb la forma d’ús."
 
 #: argp/argp-parse.c:88 catgets/gencat.c:110 catgets/gencat.c:114
-#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:106 nscd/nscd.c:110
+#: iconv/iconv_prog.c:61 iconv/iconv_prog.c:62 nscd/nscd.c:106 nscd/nscd.c:110
 #: nss/makedb.c:122
 msgid "NAME"
 msgstr "NOM"
@@ -145,24 +145,6 @@ msgstr "%s: Sobren arguments\n"
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(ERROR DEL PROGRAMA) L’opció hauria d’haver estat reconeguda!?"
 
-#: assert/assert-perr.c:35
-#, c-format
-msgid ""
-"%s%s%s:%u: %s%sUnexpected error: %s.\n"
-"%n"
-msgstr ""
-"%s%s%s:%u: %s%sError inesperat: %s.\n"
-"%n"
-
-#: assert/assert.c:103
-#, c-format
-msgid ""
-"%s%s%s:%u: %s%sAssertion `%s' failed.\n"
-"%n"
-msgstr ""
-"%s%s%s:%u: %s%sL’asserció «%s» ha fallat.\n"
-"%n"
-
 # Més ajudes.  ivb
 #: catgets/gencat.c:111
 msgid "Create C header file NAME containing symbol definitions"
@@ -196,8 +178,8 @@ msgstr ""
 "[FITXER_EIXIDA [FITXER_ENTRADA]…]"
 
 # L’adreça es veu millor així.  ivb
-#: catgets/gencat.c:230 debug/pcprofiledump.c:208 elf/ldconfig.c:217
-#: elf/pldd.c:246 elf/sln.c:77 elf/sprof.c:371 iconv/iconv_prog.c:387
+#: catgets/gencat.c:230 debug/pcprofiledump.c:219 elf/ldconfig.c:217
+#: elf/pldd.c:246 elf/sln.c:77 elf/sprof.c:371 iconv/iconv_prog.c:374
 #: iconv/iconvconfig.c:380 locale/programs/locale.c:275
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:88
 #: malloc/memusagestat.c:564 nss/getent.c:961 nss/makedb.c:371
@@ -210,9 +192,9 @@ msgstr ""
 "Per a obtenir instruccions sobre com informar d’un error, vegeu\n"
 "<%s>.\n"
 
-#: catgets/gencat.c:246 debug/pcprofiledump.c:224 debug/xtrace.sh:63
+#: catgets/gencat.c:246 debug/pcprofiledump.c:235 debug/xtrace.sh:63
 #: elf/ldconfig.c:233 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
-#: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
+#: elf/sprof.c:388 iconv/iconv_prog.c:391 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
 #: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:487
@@ -227,8 +209,8 @@ msgstr ""
 "de còpia.  No hi ha CAP garantia; ni tan sols de COMERCIABILITAT o\n"
 "ADEQUACIÓ PER A UN PROPÒSIT PARTICULAR.\n"
 
-#: catgets/gencat.c:251 debug/pcprofiledump.c:229 debug/xtrace.sh:67
-#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
+#: catgets/gencat.c:251 debug/pcprofiledump.c:240 debug/xtrace.sh:67
+#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:396
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
@@ -241,8 +223,8 @@ msgstr "Escrit per %s.\n"
 msgid "*standard input*"
 msgstr "*entrada estàndard*"
 
-#: catgets/gencat.c:288 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
-#: nss/makedb.c:248
+#: catgets/gencat.c:288 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:279
+#: iconv/iconv_prog.c:432 nss/makedb.c:248
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "no s’ha pogut obrir el fitxer d’entrada «%s»"
@@ -342,17 +324,17 @@ msgstr "Bolca la informació generada en perfilar el comptador de programa."
 msgid "[FILE]"
 msgstr "[FITXER]"
 
-#: debug/pcprofiledump.c:107
-#, c-format
-msgid "cannot open input file"
-msgstr "no s’ha pogut obrir el fitxer d’entrada"
-
-#: debug/pcprofiledump.c:114
+#: debug/pcprofiledump.c:97
 #, c-format
 msgid "cannot read header"
 msgstr "no s’ha pogut llegir la capçalera"
 
-#: debug/pcprofiledump.c:178
+#: debug/pcprofiledump.c:145
+#, c-format
+msgid "cannot open input file"
+msgstr "no s’ha pogut obrir el fitxer d’entrada"
+
+#: debug/pcprofiledump.c:189
 #, c-format
 msgid "invalid pointer size"
 msgstr "la mida del punter no és vàlida"
@@ -522,11 +504,11 @@ msgstr "error en carregar les biblioteques dinàmiques"
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr "ERROR A L’ENLLAÇADOR DINÀMIC!!!"
 
-#: elf/dl-close.c:357 elf/dl-open.c:298
+#: elf/dl-close.c:363 elf/dl-open.c:298
 msgid "cannot create scope list"
 msgstr "no s’ha pogut crear la llista d’àmbits"
 
-#: elf/dl-close.c:790
+#: elf/dl-close.c:792
 msgid "shared object not open"
 msgstr "l’objecte compartit no és obert"
 
@@ -559,18 +541,6 @@ msgstr "no s’ha pogut reservar la llista de dependències"
 msgid "cannot allocate symbol search list"
 msgstr "no s’ha pogut reservar la llista de cerca de símbols"
 
-#: elf/dl-fptr.c:88 sysdeps/hppa/dl-fptr.c:96
-msgid "cannot map pages for fdesc table"
-msgstr "no s’han pogut mapar pàgines per a la taula «fdesc»"
-
-#: elf/dl-fptr.c:192 sysdeps/hppa/dl-fptr.c:214
-msgid "cannot map pages for fptr table"
-msgstr "no s’han pogut mapar pàgines per a la taula «fptr»"
-
-#: elf/dl-fptr.c:221 sysdeps/hppa/dl-fptr.c:243
-msgid "internal error: symidx out of range of fptr table"
-msgstr "error intern: «symidx» és fora de rang respecte a la taula «fptr»"
-
 #: elf/dl-hwcaps.c:104
 msgid "cannot create HWCAP priorities"
 msgstr "no s’han pogut crear les prioritats de «HWCAP»"
@@ -579,132 +549,132 @@ msgstr "no s’han pogut crear les prioritats de «HWCAP»"
 msgid "cannot create capability list"
 msgstr "no s’ha pogut crear la llista de capacitats"
 
-#: elf/dl-load.c:423
+#: elf/dl-load.c:424
 msgid "cannot allocate name record"
 msgstr "no s’ha pogut reservar el registre de nom"
 
-#: elf/dl-load.c:525 elf/dl-load.c:638 elf/dl-load.c:732 elf/dl-load.c:829
+#: elf/dl-load.c:510 elf/dl-load.c:623 elf/dl-load.c:717 elf/dl-load.c:814
 msgid "cannot create cache for search path"
 msgstr "no s’ha pogut crear la memòria cau dels camins de cerca"
 
-#: elf/dl-load.c:621
+#: elf/dl-load.c:606
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "no s’ha pogut crear una còpia de RUNPATH o RPATH"
 
-#: elf/dl-load.c:718
+#: elf/dl-load.c:703
 msgid "cannot create search path array"
 msgstr "no s’ha pogut crear el vector de camins de cerca"
 
-#: elf/dl-load.c:957
+#: elf/dl-load.c:973
 msgid "cannot stat shared object"
 msgstr "ha fallat stat() sobre l’objecte compartit"
 
-#: elf/dl-load.c:1048 elf/dl-load.c:2163
+#: elf/dl-load.c:1066 elf/dl-load.c:2155
 msgid "cannot create shared object descriptor"
 msgstr "no s’ha pogut crear el descriptor d’objecte compartit"
 
-#: elf/dl-load.c:1067 elf/dl-load.c:1610 elf/dl-load.c:1718
+#: elf/dl-load.c:1085 elf/dl-load.c:1604 elf/dl-load.c:1710
 msgid "cannot read file data"
 msgstr "no s’han pogut llegir les dades del fitxer"
 
-#: elf/dl-load.c:1120 elf/dl-map-segments.h:117
+#: elf/dl-load.c:1138 elf/dl-map-segments.h:117
 msgid "ELF load command address/offset not page-aligned"
 msgstr "l’adreça o desplaçament de l’ordre ELF de càrrega no està alineada amb la pàgina"
 
-#: elf/dl-load.c:1212
+#: elf/dl-load.c:1230
 msgid "object file has no loadable segments"
 msgstr "el fitxer d’objecte no té segments carregables"
 
-#: elf/dl-load.c:1229
+#: elf/dl-load.c:1247
 msgid "cannot dynamically load executable"
 msgstr "no s’ha pogut carregar dinàmicament l’executable"
 
-#: elf/dl-load.c:1236
+#: elf/dl-load.c:1254
 msgid "object file has no dynamic section"
 msgstr "el fitxer d’objecte no té secció dinàmica"
 
-#: elf/dl-load.c:1271
+#: elf/dl-load.c:1289
 msgid "cannot dynamically load position-independent executable"
 msgstr "no s’ha pogut carregar dinàmicament l’executable independent de la posició"
 
-#: elf/dl-load.c:1273
+#: elf/dl-load.c:1291
 msgid "shared object cannot be dlopen()ed"
 msgstr "ha fallat dlopen() sobre l’objecte compartit"
 
-#: elf/dl-load.c:1286
+#: elf/dl-load.c:1304
 msgid "cannot allocate memory for program header"
 msgstr "no s’ha pogut reservar memòria per a la capçalera del programa"
 
-#: elf/dl-load.c:1309
+#: elf/dl-load.c:1329
 msgid "cannot enable executable stack as shared object requires"
 msgstr "no s’ha pogut habilitar la pila executable a requeriment de l’objecte compartit"
 
-#: elf/dl-load.c:1337
+#: elf/dl-load.c:1357
 msgid "cannot close file descriptor"
 msgstr "no s’ha pogut tancar un descriptor de fitxer"
 
-#: elf/dl-load.c:1610
+#: elf/dl-load.c:1604
 msgid "file too short"
 msgstr "el fitxer és massa curt"
 
-#: elf/dl-load.c:1646
+#: elf/dl-load.c:1638
 msgid "invalid ELF header"
 msgstr "la capçalera ELF no és vàlida"
 
-#: elf/dl-load.c:1661
+#: elf/dl-load.c:1653
 msgid "ELF file data encoding not big-endian"
 msgstr "la codificació de les dades del fitxer ELF no és big‐endian"
 
-#: elf/dl-load.c:1663
+#: elf/dl-load.c:1655
 msgid "ELF file data encoding not little-endian"
 msgstr "la codificació de les dades del fitxer ELF no és little‐endian"
 
-#: elf/dl-load.c:1667
+#: elf/dl-load.c:1659
 msgid "ELF file version ident does not match current one"
 msgstr "la identificació de la versió del fitxer ELF no concorda amb l’actual"
 
 # ivb (2001/11(06)
 # ivb  ABI = Application Binary Interface (interfície binària d'aplicació)
-#: elf/dl-load.c:1671
+#: elf/dl-load.c:1663
 msgid "ELF file OS ABI invalid"
 msgstr "l’ABI de sistema operatiu del fitxer ELF no és vàlida"
 
-#: elf/dl-load.c:1674
+#: elf/dl-load.c:1666
 msgid "ELF file ABI version invalid"
 msgstr "la versió de l’ABI del fitxer ELF no és vàlida"
 
-#: elf/dl-load.c:1677
+#: elf/dl-load.c:1669
 msgid "nonzero padding in e_ident"
 msgstr "el replè de «e_ident» no conté només zeros"
 
-#: elf/dl-load.c:1680
+#: elf/dl-load.c:1672
 msgid "internal error"
 msgstr "error intern"
 
-#: elf/dl-load.c:1687
+#: elf/dl-load.c:1679
 msgid "ELF file version does not match current one"
 msgstr "la versió del fitxer ELF no concorda amb l’actual"
 
-#: elf/dl-load.c:1699
+#: elf/dl-load.c:1691
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "només es poden carregar els tipus ET_DYN i ET_EXEC"
 
 # ivb (2001/11/01)
 # ivb  La traducció completa de «phentsize» vindria a ser: mida d'entrada
 # ivb  de taula de la capçalera de programa.
-#: elf/dl-load.c:1704
+#: elf/dl-load.c:1696
 msgid "ELF file's phentsize not the expected size"
 msgstr "el valor de «phentsize» del fitxer ELF no és l’esperat"
 
-#: elf/dl-load.c:2182
+#: elf/dl-load.c:2174
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "la classe ELF no és vàlida: ELFCLASS64"
 
-#: elf/dl-load.c:2183
+#: elf/dl-load.c:2175
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "la classe ELF no és vàlida: ELFCLASS32"
 
-#: elf/dl-load.c:2186
+#: elf/dl-load.c:2178
 msgid "cannot open shared object file"
 msgstr "no s’ha pogut obrir el fitxer d’objecte compartit"
 
@@ -720,7 +690,7 @@ msgstr "no s’han pogut canviar les proteccions de memòria"
 msgid "cannot map zero-fill pages"
 msgstr "no s’han pogut mapar les pàgines plenes de zeros"
 
-#: elf/dl-lookup.c:813
+#: elf/dl-lookup.c:800
 msgid "symbol lookup error"
 msgstr "error en cercar el símbol"
 
@@ -730,23 +700,23 @@ msgstr "no s’ha pogut estendre l’àmbit global"
 
 # ivb (2002/10/29)
 # ivb  TLS = Thread Local Storage
-#: elf/dl-open.c:405
+#: elf/dl-open.c:382
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "El comptador de generació de TLS s’ha esgotat!  Per favor, informeu d’açò."
 
-#: elf/dl-open.c:758
+#: elf/dl-open.c:716
 msgid "cannot allocate address lookup data"
 msgstr "no s’han pogut reservar les dades de cerca d’adreces"
 
-#: elf/dl-open.c:848
+#: elf/dl-open.c:817
 msgid "invalid mode for dlopen()"
 msgstr "el mode de dlopen() no és vàlid"
 
-#: elf/dl-open.c:865
+#: elf/dl-open.c:834
 msgid "no more namespaces available for dlmopen()"
 msgstr "no resten espais de noms disponibles per a dlmopen()"
 
-#: elf/dl-open.c:890
+#: elf/dl-open.c:859
 msgid "invalid target namespace in dlmopen()"
 msgstr "l’espai de noms destí de dlmopen() no és vàlid"
 
@@ -754,16 +724,16 @@ msgstr "l’espai de noms destí de dlmopen() no és vàlid"
 msgid "cannot allocate memory in static TLS block"
 msgstr "no s’ha pogut reservar memòria al bloc TLS estàtic"
 
-#: elf/dl-reloc.c:288
+#: elf/dl-reloc.c:283
 msgid "cannot make segment writable for relocation"
 msgstr "no s’ha pogut fer escrivible el segment per a reubicar‐lo"
 
-#: elf/dl-reloc.c:319
+#: elf/dl-reloc.c:313
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: no resta memòria per a guardar els resultats de reubicar «%s»\n"
 
-#: elf/dl-reloc.c:335
+#: elf/dl-reloc.c:328
 msgid "cannot restore segment prot after reloc"
 msgstr "no s’ha pogut restaurar la protecció del segment després de reubicar‐lo"
 
@@ -775,7 +745,7 @@ msgstr "no s’ha pogut protegir la memòria després de reubicar"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "s’ha emprat RTLD_NEXT en un codi no carregat dinàmicament"
 
-#: elf/dl-tls.c:1136
+#: elf/dl-tls.c:1163
 msgid "cannot create TLS data structures"
 msgstr "no s’han pogut crear les estructures de dades TLS"
 
@@ -1476,12 +1446,12 @@ msgstr "la taula de cadenes té massa entrades"
 msgid "String table is too large"
 msgstr "la taula de cadenes és massa gran"
 
-#: iconv/iconv_charmap.c:146 iconv/iconv_prog.c:427
+#: iconv/iconv_charmap.c:146 iconv/iconv_prog.c:426
 #, c-format
 msgid "cannot open output file"
 msgstr "no s’ha pogut obrir el fitxer d’eixida"
 
-#: iconv/iconv_charmap.c:192 iconv/iconv_prog.c:290
+#: iconv/iconv_charmap.c:192
 #, c-format
 msgid "error while closing input `%s'"
 msgstr "error en tancar l’entrada «%s»"
@@ -1491,129 +1461,118 @@ msgstr "error en tancar l’entrada «%s»"
 msgid "illegal input sequence at position %zd"
 msgstr "hi ha una seqüència d’entrada no vàlida a la posició %zd"
 
-#: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:518
+#: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:728
 #, c-format
 msgid "incomplete character or shift sequence at end of buffer"
 msgstr "hi ha un caràcter o seqüència de desplaçament incompleta al final de la memòria intermèdia"
 
-#: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:543 iconv/iconv_prog.c:561
-#: iconv/iconv_prog.c:597
+#: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:543 iconv/iconv_prog.c:736
 #, c-format
 msgid "error while reading the input"
 msgstr "error en llegir l’entrada"
 
-#: iconv/iconv_charmap.c:525 iconv/iconv_prog.c:579
+#: iconv/iconv_charmap.c:525
 #, c-format
 msgid "unable to allocate buffer for input"
 msgstr "no s’ha pogut reservar memòria intermèdia per a l’entrada"
 
-#: iconv/iconv_prog.c:59
+#: iconv/iconv_prog.c:60
 msgid "Input/Output format specification:"
 msgstr "Especificació de format de l’entrada/eixida:"
 
 # Els següents són missatges d'ajuda.  ivb
-#: iconv/iconv_prog.c:60
+#: iconv/iconv_prog.c:61
 msgid "encoding of original text"
 msgstr "Codificació del text original."
 
-#: iconv/iconv_prog.c:61
+#: iconv/iconv_prog.c:62
 msgid "encoding for output"
 msgstr "Codificació de l’eixida."
 
-#: iconv/iconv_prog.c:62
+#: iconv/iconv_prog.c:63
 msgid "Information:"
 msgstr "Informació:"
 
-#: iconv/iconv_prog.c:63
+#: iconv/iconv_prog.c:64
 msgid "list all known coded character sets"
 msgstr "Llista tots els jocs de caràcters codificats coneguts."
 
-#: iconv/iconv_prog.c:64 locale/programs/localedef.c:123
+#: iconv/iconv_prog.c:65 locale/programs/localedef.c:123
 msgid "Output control:"
 msgstr "Control de l’eixida:"
 
-#: iconv/iconv_prog.c:65
+#: iconv/iconv_prog.c:66
 msgid "omit invalid characters from output"
 msgstr "Omet a l’eixida els caràcters no vàlids."
 
-#: iconv/iconv_prog.c:66 iconv/iconvconfig.c:128
+#: iconv/iconv_prog.c:67 iconv/iconvconfig.c:128
 #: locale/programs/localedef.c:116 locale/programs/localedef.c:118
 #: locale/programs/localedef.c:120 locale/programs/localedef.c:149
 #: malloc/memusagestat.c:56
 msgid "FILE"
 msgstr "FITXER"
 
-#: iconv/iconv_prog.c:66
+#: iconv/iconv_prog.c:67
 msgid "output file"
 msgstr "Fitxer d’eixida."
 
-#: iconv/iconv_prog.c:67
+#: iconv/iconv_prog.c:68
 msgid "suppress warnings"
 msgstr "Elimina els avisos."
 
-#: iconv/iconv_prog.c:68
+#: iconv/iconv_prog.c:69
 msgid "print progress information"
 msgstr "Mostra informació del progrés."
 
-#: iconv/iconv_prog.c:73
+#: iconv/iconv_prog.c:78
 msgid "Convert encoding of given files from one encoding to another."
 msgstr "Converteix els fitxers especificats d’una codificació a una altra."
 
-#: iconv/iconv_prog.c:77
+#: iconv/iconv_prog.c:82
 msgid "[FILE...]"
 msgstr "[FITXER…]"
 
-#: iconv/iconv_prog.c:176 iconv/iconv_prog.c:238
+#: iconv/iconv_prog.c:189 iconv/iconv_prog.c:251
 #, c-format
 msgid "failed to start conversion processing"
 msgstr "no s’ha pogut començar a processar la conversió"
 
-#: iconv/iconv_prog.c:212
+#: iconv/iconv_prog.c:225
 #, c-format
 msgid "conversions from `%s' and to `%s' are not supported"
 msgstr "les conversions de «%s» i a «%s» no estan implementades"
 
-#: iconv/iconv_prog.c:217
+#: iconv/iconv_prog.c:230
 #, c-format
 msgid "conversion from `%s' is not supported"
 msgstr "la conversió de «%s» no està implementada"
 
-#: iconv/iconv_prog.c:224
+#: iconv/iconv_prog.c:237
 #, c-format
 msgid "conversion to `%s' is not supported"
 msgstr "la conversió a «%s» no està implementada"
 
-#: iconv/iconv_prog.c:228
+#: iconv/iconv_prog.c:241
 #, c-format
 msgid "conversion from `%s' to `%s' is not supported"
 msgstr "la conversió de «%s» a «%s» no està implementada"
 
-#: iconv/iconv_prog.c:336
-#, c-format
-msgid "error while closing output file"
-msgstr "error en tancar el fitxer d’eixida"
-
-#: iconv/iconv_prog.c:437
+#: iconv/iconv_prog.c:540
 #, c-format
 msgid "conversion stopped due to problem in writing the output"
 msgstr "la conversió s’ha detingut a causa d’un problema en escriure l’eixida"
 
-#: iconv/iconv_prog.c:514
-#, c-format
-msgid "illegal input sequence at position %ld"
-msgstr "hi ha una seqüència d’entrada no vàlida a la posició %ld"
-
-#: iconv/iconv_prog.c:522
+#: iconv/iconv_prog.c:693
 #, c-format
 msgid "internal error (illegal descriptor)"
 msgstr "error intern (el descriptor no és vàlid)"
 
-#: iconv/iconv_prog.c:525
+#: iconv/iconv_prog.c:696
 #, c-format
 msgid "unknown iconv() error %d"
 msgstr "error desconegut %d a iconv()"
 
-#: iconv/iconv_prog.c:768
+#: iconv/iconv_prog.c:909
 msgid ""
 "The following list contains all the coded character sets known.  This does\n"
 "not necessarily mean that all combinations of these names can be used for\n"
@@ -5354,7 +5313,7 @@ msgstr "Senyal desconegut %d\n"
 msgid "%s%sUnknown signal %d\n"
 msgstr "%s%sSenyal desconegut %d\n"
 
-#: stdio-common/psignal.c:44
+#: stdio-common/psignal.c:44 string/strsignal.c:57
 msgid "Unknown signal"
 msgstr "Senyal desconegut"
 
@@ -5362,12 +5321,12 @@ msgstr "Senyal desconegut"
 msgid "Unknown error "
 msgstr "Error desconegut "
 
-#: string/strsignal.c:39
+#: string/strsignal.c:42
 #, c-format
 msgid "Real-time signal %d"
 msgstr "Senyal de temps real %d"
 
-#: string/strsignal.c:43
+#: string/strsignal.c:46
 #, c-format
 msgid "Unknown signal %d"
 msgstr "Senyal desconegut %d"
@@ -6646,6 +6605,18 @@ msgstr "?"
 msgid "RPC program not available"
 msgstr "El programa RPC no es troba disponible"
 
+#: sysdeps/hppa/dl-fptr.c:96
+msgid "cannot map pages for fdesc table"
+msgstr "no s’han pogut mapar pàgines per a la taula «fdesc»"
+
+#: sysdeps/hppa/dl-fptr.c:214
+msgid "cannot map pages for fptr table"
+msgstr "no s’han pogut mapar pàgines per a la taula «fptr»"
+
+#: sysdeps/hppa/dl-fptr.c:243
+msgid "internal error: symidx out of range of fptr table"
+msgstr "error intern: «symidx» és fora de rang respecte a la taula «fptr»"
+
 # ivb (2001/10/28)
 # ivb  Codi -> sembla que aquesta és la traducció correcta, ja que tracta
 # ivb  d'identificar l'error dins un vector de sistemes d'errors del mach. (?)
@@ -6996,7 +6967,7 @@ msgstr "cal una línia de continuació, però se’n troba cap"
 msgid "fractional seconds rejected by pre-2018 versions of zic"
 msgstr "les versions de «zic» anteriors a 2018 no admeten segons fraccionals"
 
-#: timezone/zic.c:1815 timezone/zic.c:3761
+#: timezone/zic.c:1815 timezone/zic.c:3760
 msgid "time overflow"
 msgstr "desbordament de l’hora"
 
@@ -7146,85 +7117,85 @@ msgid "%%z UT offset magnitude exceeds 99:59:59"
 msgstr "la magnitud «%%z» del desplaçament respecte a UTC excedeix 99:59:59"
 
 # L’enter és un any.  ivb
-#: timezone/zic.c:3187
+#: timezone/zic.c:3186
 #, c-format
 msgid "%s: pre-%d clients may mishandle distant timestamps"
 msgstr "%s: els clients anteriors a %d podrien processar malament les dates distants"
 
-#: timezone/zic.c:3316
+#: timezone/zic.c:3315
 msgid "two rules for same instant"
 msgstr "dues regles per al mateix instant"
 
-#: timezone/zic.c:3389
+#: timezone/zic.c:3388
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr "no s’ha pogut determinar l’abreviatura de zona horària a emprar just després de la data límit (until)"
 
 # Crec que queda més clar que «respecte al temps universal».  ivb
-#: timezone/zic.c:3490
+#: timezone/zic.c:3489
 msgid "UT offset out of range"
 msgstr "el desplaçament respecte a UTC és fora de rang"
 
-#: timezone/zic.c:3513
+#: timezone/zic.c:3512
 msgid "too many local time types"
 msgstr "hi ha massa tipus d’hora local"
 
-#: timezone/zic.c:3531
+#: timezone/zic.c:3530
 msgid "too many leap seconds"
 msgstr "hi ha massa segons intercalars"
 
-#: timezone/zic.c:3562
+#: timezone/zic.c:3561
 msgid "Leap seconds too close together"
 msgstr "els segons intercalars són massa propers"
 
 # Es refereix a directives del fitxer de segons intercalars.  ivb
-#: timezone/zic.c:3573
+#: timezone/zic.c:3572
 msgid "last Leap time does not precede Expires time"
 msgstr "el darrer temps de «Leap» no precedeix el temps d’«Expires»"
 
 # El primer és un prefix, masculí.  ivb
-#: timezone/zic.c:3680
+#: timezone/zic.c:3679
 #, c-format
 msgid "\"%s\" is undocumented; use \"last%s\" instead"
 msgstr "«%s» no està documentat; empreu «last%s» en el seu lloc"
 
 # Es refereix a una paraula.  ivb
-#: timezone/zic.c:3711
+#: timezone/zic.c:3710
 #, c-format
 msgid "\"%s\" is ambiguous in pre-2017c zic"
 msgstr "«%s» és ambígua en la versió «pre-2017c» de «zic»"
 
 # ivb (2001/10/30)
 # ivb  Es refereix a les cometes dobles «"».
-#: timezone/zic.c:3742
+#: timezone/zic.c:3741
 msgid "Odd number of quotation marks"
 msgstr "el nombre de cometes és senar"
 
-#: timezone/zic.c:3839
+#: timezone/zic.c:3838
 msgid "use of 2/29 in non leap-year"
 msgstr "s’ha emprat el dia 29 de febrer en un any no bixest"
 
-#: timezone/zic.c:3865
+#: timezone/zic.c:3864
 msgid "rule goes past start/end of month; will not work with pre-2004 versions of zic"
 msgstr "la regla va més enllà de l’inici o fi del mes; no funcionarà en les versions de «zic» anteriors a 2004"
 
-#: timezone/zic.c:3892
+#: timezone/zic.c:3891
 msgid "time zone abbreviation has fewer than 3 characters"
 msgstr "l’abreviatura de la zona horària té menys de 3 caràcters"
 
-#: timezone/zic.c:3894
+#: timezone/zic.c:3893
 msgid "time zone abbreviation has too many characters"
 msgstr "l’abreviatura de la zona horària té massa caràcters"
 
-#: timezone/zic.c:3896
+#: timezone/zic.c:3895
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr "l’abreviatura de la zona horària difereix de l’estàndard POSIX"
 
-#: timezone/zic.c:3902
+#: timezone/zic.c:3901
 msgid "too many, or too long, time zone abbreviations"
 msgstr "hi ha massa abreviatures de zona horària (o són massa llargues)"
 
 # No usa quote().  ivb
-#: timezone/zic.c:3953
+#: timezone/zic.c:3952
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: no s’ha pogut crear el directori «%s»: %s"

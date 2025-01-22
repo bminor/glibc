@@ -2,13 +2,13 @@
 # Copyright (C) 1996, 1997, 1998, 1999, 2002, 2003, 2004, 2005, 2006, 2007, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
 # Paweł Krawczyk <kravietz@ceti.pl>, 1996-1999.
-# Jakub Bogusz <qboosh@pld-linux.org>, 2002-2024.
+# Jakub Bogusz <qboosh@pld-linux.org>, 2002-2025.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.39.9000\n"
-"POT-Creation-Date: 2024-07-21 00:32+0200\n"
-"PO-Revision-Date: 2024-06-22 19:15+0200\n"
+"Project-Id-Version: libc 2.40.9000\n"
+"POT-Creation-Date: 2025-01-04 11:03+0100\n"
+"PO-Revision-Date: 2025-01-06 21:30+0100\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "Language: pl\n"
@@ -67,7 +67,7 @@ msgid "Give a short usage message"
 msgstr "Wyświetlenie krótkiej informacji o składni polecenia"
 
 #: argp/argp-parse.c:88 catgets/gencat.c:110 catgets/gencat.c:114
-#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:106 nscd/nscd.c:110
+#: iconv/iconv_prog.c:61 iconv/iconv_prog.c:62 nscd/nscd.c:106 nscd/nscd.c:110
 #: nss/makedb.c:122
 msgid "NAME"
 msgstr "NAZWA"
@@ -103,21 +103,13 @@ msgstr "(BŁĄD PROGRAMU) Opcja powinna zostać rozpoznana?!"
 
 #: assert/assert-perr.c:35
 #, c-format
-msgid ""
-"%s%s%s:%u: %s%sUnexpected error: %s.\n"
-"%n"
-msgstr ""
-"%s%s%s:%u %s%sNiespodziewany błąd: %s.\n"
-"%n"
+msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
+msgstr "%s%s%s:%u %s%sNiespodziewany błąd: %s.\n"
 
-#: assert/assert.c:103
+#: assert/assert.c:125
 #, c-format
-msgid ""
-"%s%s%s:%u: %s%sAssertion `%s' failed.\n"
-"%n"
-msgstr ""
-"%s%s%s:%u: %s%sWarunek zapewnienia `%s' nie został spełniony.\n"
-"%n"
+msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
+msgstr "%s%s%s:%u: %s%sWarunek zapewnienia `%s' nie został spełniony.\n"
 
 #: catgets/gencat.c:111
 msgid "Create C header file NAME containing symbol definitions"
@@ -147,8 +139,8 @@ msgstr ""
 "-o PLIK-WY [PLIK-WE]...\n"
 "[PLIK-WY [PLIK-WE]...]"
 
-#: catgets/gencat.c:230 debug/pcprofiledump.c:208 elf/ldconfig.c:217
-#: elf/pldd.c:246 elf/sln.c:77 elf/sprof.c:371 iconv/iconv_prog.c:387
+#: catgets/gencat.c:230 debug/pcprofiledump.c:219 elf/ldconfig.c:217
+#: elf/pldd.c:246 elf/sln.c:77 elf/sprof.c:371 iconv/iconv_prog.c:374
 #: iconv/iconvconfig.c:380 locale/programs/locale.c:275
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:88
 #: malloc/memusagestat.c:564 nss/getent.c:961 nss/makedb.c:371
@@ -161,9 +153,9 @@ msgstr ""
 "Instrukcje dotyczące zgłaszania błędów znajdują się pod adresem:\n"
 "%s.\n"
 
-#: catgets/gencat.c:246 debug/pcprofiledump.c:224 debug/xtrace.sh:63
+#: catgets/gencat.c:246 debug/pcprofiledump.c:235 debug/xtrace.sh:63
 #: elf/ldconfig.c:233 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
-#: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
+#: elf/sprof.c:388 iconv/iconv_prog.c:391 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
 #: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:487
@@ -179,8 +171,8 @@ msgstr ""
 "SPRZEDAŻY lub PRZYDATNOŚCI DO KONKRETNYCH ZASTOSOWAŃ.\n"
 
 # w %s wchodzi nazwisko autora danego programu/procedury -PK
-#: catgets/gencat.c:251 debug/pcprofiledump.c:229 debug/xtrace.sh:67
-#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
+#: catgets/gencat.c:251 debug/pcprofiledump.c:240 debug/xtrace.sh:67
+#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:396
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
@@ -193,8 +185,8 @@ msgstr "Autorem jest %s.\n"
 msgid "*standard input*"
 msgstr "*standardowe wejście*"
 
-#: catgets/gencat.c:288 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
-#: nss/makedb.c:248
+#: catgets/gencat.c:288 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:279
+#: iconv/iconv_prog.c:432 nss/makedb.c:248
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "nie można otworzyć pliku wejściowego `%s'"
@@ -290,17 +282,32 @@ msgstr "Zrzut informacji wygenerowanych przez profilowanie PC."
 msgid "[FILE]"
 msgstr "[PLIK]"
 
-#: debug/pcprofiledump.c:107
-#, c-format
-msgid "cannot open input file"
-msgstr "nie można otworzyć pliku wejściowego"
-
-#: debug/pcprofiledump.c:114
+#: debug/pcprofiledump.c:97
 #, c-format
 msgid "cannot read header"
 msgstr "nie można odczytać nagłówka"
 
-#: debug/pcprofiledump.c:178
+#: debug/pcprofiledump.c:99
+#, c-format
+msgid "cannot read pointer pair"
+msgstr "nie można odczytać pary wskaźników"
+
+#: debug/pcprofiledump.c:107
+#, c-format
+msgid "unexpected end of file in header"
+msgstr "niespodziewany koniec pliku wewnątrz nagłówka"
+
+#: debug/pcprofiledump.c:110
+#, c-format
+msgid "unexpected end of file in pointer pair"
+msgstr "niespodziewany koniec pliku wewnątrz pary wskaźników"
+
+#: debug/pcprofiledump.c:145
+#, c-format
+msgid "cannot open input file"
+msgstr "nie można otworzyć pliku wejściowego"
+
+#: debug/pcprofiledump.c:189
 #, c-format
 msgid "invalid pointer size"
 msgstr "nieprawidłowy rozmiar wskaźnika"
@@ -466,11 +473,11 @@ msgstr "błąd podczas wczytywania bibliotek dzielonych"
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr "BŁĄD DYNAMICZNEGO LINKERA!!!"
 
-#: elf/dl-close.c:357 elf/dl-open.c:298
+#: elf/dl-close.c:363 elf/dl-open.c:298
 msgid "cannot create scope list"
 msgstr "nie można utworzyć listy zakresów"
 
-#: elf/dl-close.c:790
+#: elf/dl-close.c:792
 msgid "shared object not open"
 msgstr "obiekt dzielony nie jest otwarty"
 
@@ -499,18 +506,6 @@ msgstr "nie można przydzielić pamięci dla listy zależności"
 msgid "cannot allocate symbol search list"
 msgstr "nie można przydzielić pamięci dla listy przeszukiwania symboli"
 
-#: elf/dl-fptr.c:88 sysdeps/hppa/dl-fptr.c:96
-msgid "cannot map pages for fdesc table"
-msgstr "nie można odwzorować stron dla tablicy fdesc"
-
-#: elf/dl-fptr.c:192 sysdeps/hppa/dl-fptr.c:214
-msgid "cannot map pages for fptr table"
-msgstr "nie można odwzorować stron dla tablicy fptr"
-
-#: elf/dl-fptr.c:221 sysdeps/hppa/dl-fptr.c:243
-msgid "internal error: symidx out of range of fptr table"
-msgstr "błąd wewnętrzny: symidx spoza zakresu tablicy fptr"
-
 #: elf/dl-hwcaps.c:104
 msgid "cannot create HWCAP priorities"
 msgstr "nie można utworzyć priorytetów HWCAP"
@@ -519,127 +514,127 @@ msgstr "nie można utworzyć priorytetów HWCAP"
 msgid "cannot create capability list"
 msgstr "nie można utworzyć listy uprawnień"
 
-#: elf/dl-load.c:423
+#: elf/dl-load.c:424
 msgid "cannot allocate name record"
 msgstr "nie można przydzielić pamięci dla rekordu nazwy"
 
-#: elf/dl-load.c:525 elf/dl-load.c:638 elf/dl-load.c:732 elf/dl-load.c:829
+#: elf/dl-load.c:510 elf/dl-load.c:623 elf/dl-load.c:717 elf/dl-load.c:814
 msgid "cannot create cache for search path"
 msgstr "nie można utworzyć pamięci podręcznej dla ścieżki przeszukiwania"
 
-#: elf/dl-load.c:621
+#: elf/dl-load.c:606
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "nie można utworzyć kopii RUNPATH/RPATH"
 
-#: elf/dl-load.c:718
+#: elf/dl-load.c:703
 msgid "cannot create search path array"
 msgstr "nie można utworzyć tablicy ścieżki przeszukiwania"
 
-#: elf/dl-load.c:957
+#: elf/dl-load.c:973
 msgid "cannot stat shared object"
 msgstr "nie można wykonać stat na obiekcie dzielonym"
 
-#: elf/dl-load.c:1048 elf/dl-load.c:2163
+#: elf/dl-load.c:1066 elf/dl-load.c:2155
 msgid "cannot create shared object descriptor"
 msgstr "nie można utworzyć deskryptora obiektu dzielonego"
 
-#: elf/dl-load.c:1067 elf/dl-load.c:1610 elf/dl-load.c:1718
+#: elf/dl-load.c:1085 elf/dl-load.c:1604 elf/dl-load.c:1710
 msgid "cannot read file data"
 msgstr "nie można odczytać danych z pliku"
 
-#: elf/dl-load.c:1120 elf/dl-map-segments.h:117
+#: elf/dl-load.c:1138 elf/dl-map-segments.h:117
 msgid "ELF load command address/offset not page-aligned"
 msgstr "adres/przesunięcie polecenia wczytania ELF nie wyrównane do strony"
 
-#: elf/dl-load.c:1212
+#: elf/dl-load.c:1230
 msgid "object file has no loadable segments"
 msgstr "plik obiektu nie ma segmentów ładowalnych"
 
-#: elf/dl-load.c:1229
+#: elf/dl-load.c:1247
 msgid "cannot dynamically load executable"
 msgstr "nie można dynamicznie załadować pliku wykonywalnego"
 
-#: elf/dl-load.c:1236
+#: elf/dl-load.c:1254
 msgid "object file has no dynamic section"
 msgstr "plik obiektu nie ma sekcji dynamicznej"
 
-#: elf/dl-load.c:1271
+#: elf/dl-load.c:1289
 msgid "cannot dynamically load position-independent executable"
 msgstr "nie można dynamicznie załadować pliku wykonywalnego niezależnego od położenia"
 
-#: elf/dl-load.c:1273
+#: elf/dl-load.c:1291
 msgid "shared object cannot be dlopen()ed"
 msgstr "obiekt dzielony nie może być otwarty przez dlopen()"
 
-#: elf/dl-load.c:1286
+#: elf/dl-load.c:1304
 msgid "cannot allocate memory for program header"
 msgstr "nie można przydzielić pamięci na nagłówek programu"
 
-#: elf/dl-load.c:1309
+#: elf/dl-load.c:1329
 msgid "cannot enable executable stack as shared object requires"
 msgstr "nie można włączyć wykonywalnego stosu wymaganego przez obiekt dzielony"
 
-#: elf/dl-load.c:1337
+#: elf/dl-load.c:1357
 msgid "cannot close file descriptor"
 msgstr "nie można zamknąć deskryptora pliku"
 
-#: elf/dl-load.c:1610
+#: elf/dl-load.c:1604
 msgid "file too short"
 msgstr "plik za krótki"
 
-#: elf/dl-load.c:1646
+#: elf/dl-load.c:1638
 msgid "invalid ELF header"
 msgstr "nieprawidłowy nagłówek ELF"
 
-#: elf/dl-load.c:1661
+#: elf/dl-load.c:1653
 msgid "ELF file data encoding not big-endian"
 msgstr "kodowanie danych w pliku ELF nie jest big-endian"
 
-#: elf/dl-load.c:1663
+#: elf/dl-load.c:1655
 msgid "ELF file data encoding not little-endian"
 msgstr "kodowanie danych w pliku ELF nie jest little-endian"
 
-#: elf/dl-load.c:1667
+#: elf/dl-load.c:1659
 msgid "ELF file version ident does not match current one"
 msgstr "identyfikator wersji pliku ELF nie zgadza się z aktualnym"
 
-#: elf/dl-load.c:1671
+#: elf/dl-load.c:1663
 msgid "ELF file OS ABI invalid"
 msgstr "niepoprawne ABI systemu w pliku ELF"
 
-#: elf/dl-load.c:1674
+#: elf/dl-load.c:1666
 msgid "ELF file ABI version invalid"
 msgstr "niepoprawna wersja ABI w pliku ELF"
 
-#: elf/dl-load.c:1677
+#: elf/dl-load.c:1669
 msgid "nonzero padding in e_ident"
 msgstr "niezerowe wypełnienie w e_ident"
 
-#: elf/dl-load.c:1680
+#: elf/dl-load.c:1672
 msgid "internal error"
 msgstr "błąd wewnętrzny"
 
-#: elf/dl-load.c:1687
+#: elf/dl-load.c:1679
 msgid "ELF file version does not match current one"
 msgstr "wersja pliku ELF nie zgadza się z aktualną"
 
-#: elf/dl-load.c:1699
+#: elf/dl-load.c:1691
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "tylko ET_DYN i ET_EXEC mogą być wczytane"
 
-#: elf/dl-load.c:1704
+#: elf/dl-load.c:1696
 msgid "ELF file's phentsize not the expected size"
 msgstr "phentsize w pliku ELF nie jest oczekiwanym rozmiarem"
 
-#: elf/dl-load.c:2182
+#: elf/dl-load.c:2174
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "niewłaściwa klasa ELF: ELFCLASS64"
 
-#: elf/dl-load.c:2183
+#: elf/dl-load.c:2175
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "niewłaściwa klasa ELF: ELFCLASS32"
 
-#: elf/dl-load.c:2186
+#: elf/dl-load.c:2178
 msgid "cannot open shared object file"
 msgstr "nie można otworzyć pliku obiektu dzielonego"
 
@@ -655,7 +650,7 @@ msgstr "nie można zmienić ochrony pamięci"
 msgid "cannot map zero-fill pages"
 msgstr "nie można odwzorować stron wypełnionych zerami"
 
-#: elf/dl-lookup.c:813
+#: elf/dl-lookup.c:800
 msgid "symbol lookup error"
 msgstr "błąd wyszukiwania symbolu"
 
@@ -663,23 +658,23 @@ msgstr "błąd wyszukiwania symbolu"
 msgid "cannot extend global scope"
 msgstr "nie można rozszerzyć zakresu globalnego"
 
-#: elf/dl-open.c:405
+#: elf/dl-open.c:382
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "Licznik generacji TLS przekręcił się! Proszę to zgłosić."
 
-#: elf/dl-open.c:758
+#: elf/dl-open.c:716
 msgid "cannot allocate address lookup data"
 msgstr "nie można przydzielić pamięci dla danych wyszukiwania adresów"
 
-#: elf/dl-open.c:848
+#: elf/dl-open.c:817
 msgid "invalid mode for dlopen()"
 msgstr "błędny typ dla dlopen()"
 
-#: elf/dl-open.c:865
+#: elf/dl-open.c:834
 msgid "no more namespaces available for dlmopen()"
 msgstr "nie ma więcej dostępnych przestrzeni nazw dla dlmopen()"
 
-#: elf/dl-open.c:890
+#: elf/dl-open.c:859
 msgid "invalid target namespace in dlmopen()"
 msgstr "błędna przestrzeń nazw dla celu w dlmopen()"
 
@@ -687,16 +682,16 @@ msgstr "błędna przestrzeń nazw dla celu w dlmopen()"
 msgid "cannot allocate memory in static TLS block"
 msgstr "nie można przydzielić pamięci w statycznym bloku TLS"
 
-#: elf/dl-reloc.c:288
+#: elf/dl-reloc.c:283
 msgid "cannot make segment writable for relocation"
 msgstr "nie można uczynić segmentu zapisywalnym w celu relokacji"
 
-#: elf/dl-reloc.c:319
+#: elf/dl-reloc.c:313
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: brak pamięci na zapisanie wyników relokacji dla %s\n"
 
-#: elf/dl-reloc.c:335
+#: elf/dl-reloc.c:328
 msgid "cannot restore segment prot after reloc"
 msgstr "nie można odtworzyć ochrony segmentu po relokacji"
 
@@ -708,7 +703,7 @@ msgstr "nie można nałożyć dodatkowej ochrony pamięci po relokacji"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT wystąpiło w kodzie nie ładowanym dynamicznie"
 
-#: elf/dl-tls.c:1136
+#: elf/dl-tls.c:1163
 msgid "cannot create TLS data structures"
 msgstr "nie można utworzyć struktur danych TLS"
 
@@ -1382,12 +1377,12 @@ msgstr "Tabela łańcuchów ma zbyt dużo wpisów"
 msgid "String table is too large"
 msgstr "Tabela łańcuchów jest zbyt duża"
 
-#: iconv/iconv_charmap.c:146 iconv/iconv_prog.c:427
+#: iconv/iconv_charmap.c:146 iconv/iconv_prog.c:426
 #, c-format
 msgid "cannot open output file"
 msgstr "nie można otworzyć pliku wyjściowego"
 
-#: iconv/iconv_charmap.c:192 iconv/iconv_prog.c:290
+#: iconv/iconv_charmap.c:192
 #, c-format
 msgid "error while closing input `%s'"
 msgstr "błąd podczas zamykania wejścia `%s'"
@@ -1397,128 +1392,135 @@ msgstr "błąd podczas zamykania wejścia `%s'"
 msgid "illegal input sequence at position %zd"
 msgstr "niedozwolona sekwencja wejściowa na pozycji %zd"
 
-#: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:518
+#: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:728
 #, c-format
 msgid "incomplete character or shift sequence at end of buffer"
 msgstr "niekompletny znak lub sekwencja sterująca na końcu bufora"
 
-#: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:543 iconv/iconv_prog.c:561
-#: iconv/iconv_prog.c:597
+#: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:543 iconv/iconv_prog.c:736
 #, c-format
 msgid "error while reading the input"
 msgstr "błąd podczas czytania danych wejściowych"
 
-#: iconv/iconv_charmap.c:525 iconv/iconv_prog.c:579
+#: iconv/iconv_charmap.c:525
 #, c-format
 msgid "unable to allocate buffer for input"
 msgstr "przydzielenie bufora dla danych wejściowych było niemożliwe"
 
-#: iconv/iconv_prog.c:59
+#: iconv/iconv_prog.c:60
 msgid "Input/Output format specification:"
 msgstr "Specyfikacja formatu wejścia/wyjścia:"
 
-#: iconv/iconv_prog.c:60
+#: iconv/iconv_prog.c:61
 msgid "encoding of original text"
 msgstr "kodowanie oryginalnego tekstu"
 
-#: iconv/iconv_prog.c:61
+#: iconv/iconv_prog.c:62
 msgid "encoding for output"
 msgstr "kodowanie wyników"
 
-#: iconv/iconv_prog.c:62
+#: iconv/iconv_prog.c:63
 msgid "Information:"
 msgstr "Informacje:"
 
-#: iconv/iconv_prog.c:63
+#: iconv/iconv_prog.c:64
 msgid "list all known coded character sets"
 msgstr "wyświetlenie wszystkich znanych zestawów znaków"
 
-#: iconv/iconv_prog.c:64 locale/programs/localedef.c:123
+#: iconv/iconv_prog.c:65 locale/programs/localedef.c:123
 msgid "Output control:"
 msgstr "Kontrola wyjścia:"
 
-#: iconv/iconv_prog.c:65
+#: iconv/iconv_prog.c:66
 msgid "omit invalid characters from output"
 msgstr "pominięcie nieprawidłowych znaków z wyjścia"
 
-#: iconv/iconv_prog.c:66 iconv/iconvconfig.c:128
+#: iconv/iconv_prog.c:67 iconv/iconvconfig.c:128
 #: locale/programs/localedef.c:116 locale/programs/localedef.c:118
 #: locale/programs/localedef.c:120 locale/programs/localedef.c:149
 #: malloc/memusagestat.c:56
 msgid "FILE"
 msgstr "PLIK"
 
-#: iconv/iconv_prog.c:66
+#: iconv/iconv_prog.c:67
 msgid "output file"
 msgstr "plik wynikowy"
 
-#: iconv/iconv_prog.c:67
+#: iconv/iconv_prog.c:68
 msgid "suppress warnings"
 msgstr "bez wypisywania ostrzeżeń"
 
-#: iconv/iconv_prog.c:68
+#: iconv/iconv_prog.c:69
 msgid "print progress information"
 msgstr "wyświetlanie informacji o postępie konwersji"
 
+#: iconv/iconv_prog.c:72
+msgid "BYTE-COUNT"
+msgstr "LICZBA-BAJTÓW"
+
 #: iconv/iconv_prog.c:73
+msgid "size of in-memory scratch buffer"
+msgstr "rozmiar bufora roboczego w pamięci"
+
+#: iconv/iconv_prog.c:78
 msgid "Convert encoding of given files from one encoding to another."
 msgstr "Konwersja podanych plików między różnymi metodami kodowania."
 
-#: iconv/iconv_prog.c:77
+#: iconv/iconv_prog.c:82
 msgid "[FILE...]"
 msgstr "[PLIK...]"
 
-#: iconv/iconv_prog.c:176 iconv/iconv_prog.c:238
+#: iconv/iconv_prog.c:189 iconv/iconv_prog.c:251
 #, c-format
 msgid "failed to start conversion processing"
 msgstr "nie udało się rozpocząć konwersji"
 
-#: iconv/iconv_prog.c:212
+#: iconv/iconv_prog.c:225
 #, c-format
 msgid "conversions from `%s' and to `%s' are not supported"
 msgstr "konwersje z `%s' oraz do `%s' nie są obsługiwane"
 
-#: iconv/iconv_prog.c:217
+#: iconv/iconv_prog.c:230
 #, c-format
 msgid "conversion from `%s' is not supported"
 msgstr "konwersja z `%s' nie jest obsługiwana"
 
-#: iconv/iconv_prog.c:224
+#: iconv/iconv_prog.c:237
 #, c-format
 msgid "conversion to `%s' is not supported"
 msgstr "konwersja do `%s' nie jest obsługiwana"
 
-#: iconv/iconv_prog.c:228
+#: iconv/iconv_prog.c:241
 #, c-format
 msgid "conversion from `%s' to `%s' is not supported"
 msgstr "konwersja z `%s' do `%s' nie jest obsługiwana"
 
-#: iconv/iconv_prog.c:336
+#: iconv/iconv_prog.c:349
 #, c-format
-msgid "error while closing output file"
-msgstr "błąd podczas zamykania pliku wyjściowego"
+msgid "invalid buffer size: %s"
+msgstr "nieprawidłowy rozmiar bufora: %s"
 
-#: iconv/iconv_prog.c:437
+#: iconv/iconv_prog.c:540
 #, c-format
 msgid "conversion stopped due to problem in writing the output"
 msgstr "konwersja przerwana z powodu problemu z zapisaniem wyników"
 
-#: iconv/iconv_prog.c:514
+#: iconv/iconv_prog.c:686
 #, c-format
-msgid "illegal input sequence at position %ld"
-msgstr "błędna sekwencja wejściowa na pozycji %ld"
+msgid "illegal input sequence at position %lld"
+msgstr "błędna sekwencja wejściowa na pozycji %lld"
 
-#: iconv/iconv_prog.c:522
+#: iconv/iconv_prog.c:693
 #, c-format
 msgid "internal error (illegal descriptor)"
 msgstr "błąd wewnętrzny (nieprawidłowy deskryptor)"
 
-#: iconv/iconv_prog.c:525
+#: iconv/iconv_prog.c:696
 #, c-format
 msgid "unknown iconv() error %d"
 msgstr "nieznany błąd iconv() %d"
 
-#: iconv/iconv_prog.c:768
+#: iconv/iconv_prog.c:909
 msgid ""
 "The following list contains all the coded character sets known.  This does\n"
 "not necessarily mean that all combinations of these names can be used for\n"
@@ -5160,7 +5162,7 @@ msgstr "Nieznany sygnał %d\n"
 msgid "%s%sUnknown signal %d\n"
 msgstr "%s%sNieznany sygnał %d\n"
 
-#: stdio-common/psignal.c:44
+#: stdio-common/psignal.c:44 string/strsignal.c:57
 msgid "Unknown signal"
 msgstr "Nieznany sygnał"
 
@@ -5168,12 +5170,12 @@ msgstr "Nieznany sygnał"
 msgid "Unknown error "
 msgstr "Nieznany błąd "
 
-#: string/strsignal.c:39
+#: string/strsignal.c:42
 #, c-format
 msgid "Real-time signal %d"
 msgstr "Sygnał czasu rzeczywistego %d"
 
-#: string/strsignal.c:43
+#: string/strsignal.c:46
 #, c-format
 msgid "Unknown signal %d"
 msgstr "Nieznany sygnał %d"
@@ -6432,9 +6434,25 @@ msgstr "?"
 msgid "RPC program not available"
 msgstr "Program RPC niedostępny"
 
+#: sysdeps/hppa/dl-fptr.c:96
+msgid "cannot map pages for fdesc table"
+msgstr "nie można odwzorować stron dla tablicy fdesc"
+
+#: sysdeps/hppa/dl-fptr.c:214
+msgid "cannot map pages for fptr table"
+msgstr "nie można odwzorować stron dla tablicy fptr"
+
+#: sysdeps/hppa/dl-fptr.c:243
+msgid "internal error: symidx out of range of fptr table"
+msgstr "błąd wewnętrzny: symidx spoza zakresu tablicy fptr"
+
 #: sysdeps/mach/_strerror.c:43 sysdeps/mach/xpg-strerror.c:55
 msgid "Error in unknown error system: "
 msgstr "Błąd w nieznanym systemie błędów: "
+
+#: sysdeps/mach/xpg-strerror.c:66 sysdeps/mach/xpg-strerror.c:74
+msgid "Unknown error code: "
+msgstr "Nieznany kod błędu: "
 
 #: sysdeps/posix/gai_strerror-strs.h:2
 msgid "Address family for hostname not supported"
@@ -6879,7 +6897,7 @@ msgstr "brak spodziewanej linii kontynuacji"
 msgid "fractional seconds rejected by pre-2018 versions of zic"
 msgstr "ułamki sekund są odrzucane przez wersje zic sprzed 2018 roku"
 
-#: timezone/zic.c:1815 timezone/zic.c:3761
+#: timezone/zic.c:1815 timezone/zic.c:3760
 msgid "time overflow"
 msgstr "przepełnienie czasu"
 
@@ -7051,90 +7069,90 @@ msgid "%%z UT offset magnitude exceeds 99:59:59"
 msgstr "wielkość przesunięcia %%z względem czasu uniwersalnego przekracza 99:59:59"
 
 #: timezone/zic.c:3180
-msgid "no POSIX.1-2017 environment variable for zone"
-msgstr "brak zmiennej środowiskowej POSIX.1-2017 dla strefy"
+msgid "no proleptic TZ string for zone"
+msgstr "brak wyprzedzającego łańcucha TZ dla strefy"
 
-#: timezone/zic.c:3187
+#: timezone/zic.c:3186
 #, c-format
 msgid "%s: pre-%d clients may mishandle distant timestamps"
 msgstr "%s: klienci sprzed wersji %d mogą źle obsługiwać odległe oznaczenia czasu"
 
-#: timezone/zic.c:3316
+#: timezone/zic.c:3315
 msgid "two rules for same instant"
 msgstr "dwie reguły dla tej samej chwili"
 
 # jak ladnie przetlumaczyc ten until time? -PK
-#: timezone/zic.c:3389
+#: timezone/zic.c:3388
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr "nie można określić skrótu strefy czasowej po końcu przedziału czasu"
 
-#: timezone/zic.c:3490
+#: timezone/zic.c:3489
 msgid "UT offset out of range"
 msgstr "przesunięcie względem UT poza zakresem"
 
-#: timezone/zic.c:3513
+#: timezone/zic.c:3512
 msgid "too many local time types"
 msgstr "za dużo lokalnych typów czasu"
 
-#: timezone/zic.c:3531
+#: timezone/zic.c:3530
 msgid "too many leap seconds"
 msgstr "za dużo sekund przestępnych"
 
-#: timezone/zic.c:3535
+#: timezone/zic.c:3534
 msgid "Rolling leap seconds not supported with -r"
 msgstr "Kroczące sekundy przestępne nie obsługiwane z -r"
 
-#: timezone/zic.c:3562
+#: timezone/zic.c:3561
 msgid "Leap seconds too close together"
 msgstr "Sekundy przestępne zbyt bliskie"
 
-#: timezone/zic.c:3573
+#: timezone/zic.c:3572
 msgid "last Leap time does not precede Expires time"
 msgstr "ostatni czas Leap nie poprzedza czasu Expires"
 
-#: timezone/zic.c:3680
+#: timezone/zic.c:3679
 #, c-format
 msgid "\"%s\" is undocumented; use \"last%s\" instead"
 msgstr "\"%s\" nie jest udokumentowane; zamiast tego należy używać \"last%s\""
 
-#: timezone/zic.c:3711
+#: timezone/zic.c:3710
 #, c-format
 msgid "\"%s\" is ambiguous in pre-2017c zic"
 msgstr "\"%s\" jest niejednoznaczne w zic sprzed wersji 2017c"
 
-#: timezone/zic.c:3742
+#: timezone/zic.c:3741
 msgid "Odd number of quotation marks"
 msgstr "Nieparzysta liczba cudzysłowów"
 
-#: timezone/zic.c:3750
+#: timezone/zic.c:3749
 msgid "Too many input fields"
 msgstr "Za dużo pól wejściowych"
 
-#: timezone/zic.c:3839
+#: timezone/zic.c:3838
 msgid "use of 2/29 in non leap-year"
 msgstr "użycie 2/29 w roku nieprzestępnym"
 
-#: timezone/zic.c:3865
+#: timezone/zic.c:3864
 msgid "rule goes past start/end of month; will not work with pre-2004 versions of zic"
 msgstr "reguła przekracza początek/koniec miesiąca; nie zadziała z wersjami zic sprzed 2004 roku"
 
-#: timezone/zic.c:3892
+#: timezone/zic.c:3891
 msgid "time zone abbreviation has fewer than 3 characters"
 msgstr "skrót nazwy strefy czasowej ma mniej niż 3 znaki"
 
-#: timezone/zic.c:3894
+#: timezone/zic.c:3893
 msgid "time zone abbreviation has too many characters"
 msgstr "skrót nazwy strefy czasowej ma zbyt dużo znaków"
 
-#: timezone/zic.c:3896
+#: timezone/zic.c:3895
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr "skrót nazwy strefy czasowej różni się od standardu POSIX"
 
-#: timezone/zic.c:3902
+#: timezone/zic.c:3901
 msgid "too many, or too long, time zone abbreviations"
 msgstr "za długie lub za dużo skrótów stref czasowych"
 
-#: timezone/zic.c:3953
+#: timezone/zic.c:3952
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: Nie można utworzyć katalogu %s: %s"

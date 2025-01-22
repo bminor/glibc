@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc-2.11.1\n"
-"POT-Creation-Date: 2024-07-21 00:32+0200\n"
+"POT-Creation-Date: 2025-01-04 11:03+0100\n"
 "PO-Revision-Date: 2010-11-01 10:37+0100\n"
 "Last-Translator: Keld Simonsen <keld@keldix.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
@@ -68,7 +68,7 @@ msgid "Give a short usage message"
 msgstr "Giv en kort brugsmeddelelse"
 
 #: argp/argp-parse.c:88 catgets/gencat.c:110 catgets/gencat.c:114
-#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:106 nscd/nscd.c:110
+#: iconv/iconv_prog.c:61 iconv/iconv_prog.c:62 nscd/nscd.c:106 nscd/nscd.c:110
 #: nss/makedb.c:122
 msgid "NAME"
 msgstr "NAVN"
@@ -98,6 +98,16 @@ msgstr "%s: For mange argumenter\n"
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(PROGRAMFEJL) Flag skulle have været genkendt!?"
 
+#: assert/assert-perr.c:35
+#, c-format
+msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
+msgstr "%s%s%s:%u: %s%sUventet fejl: %s.\n"
+
+#: assert/assert.c:125
+#, c-format
+msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
+msgstr "%s%s%s:%u: %s%sForudsætningen (assertion) '%s' fejlede.\n"
+
 #: catgets/gencat.c:111
 msgid "Create C header file NAME containing symbol definitions"
 msgstr "Opret C-headerfil NAVN som indeholder symboldefinitioner"
@@ -126,9 +136,9 @@ msgstr ""
 "-o UDFIL [INDFIL]...\n"
 "[UDFIL [INDFIL]...]"
 
-#: catgets/gencat.c:246 debug/pcprofiledump.c:224 debug/xtrace.sh:63
+#: catgets/gencat.c:246 debug/pcprofiledump.c:235 debug/xtrace.sh:63
 #: elf/ldconfig.c:233 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
-#: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
+#: elf/sprof.c:388 iconv/iconv_prog.c:391 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
 #: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:487
@@ -143,8 +153,8 @@ msgstr ""
 "Programmellet har ingen garanti, ikke en gang for SALGBARHED eller EGNETHED\n"
 "TIL NOGEN SPECIEL OPGAVE.\n"
 
-#: catgets/gencat.c:251 debug/pcprofiledump.c:229 debug/xtrace.sh:67
-#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
+#: catgets/gencat.c:251 debug/pcprofiledump.c:240 debug/xtrace.sh:67
+#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:396
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
@@ -157,8 +167,8 @@ msgstr "Skrevet af %s.\n"
 msgid "*standard input*"
 msgstr "*standard ind*"
 
-#: catgets/gencat.c:288 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
-#: nss/makedb.c:248
+#: catgets/gencat.c:288 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:279
+#: iconv/iconv_prog.c:432 nss/makedb.c:248
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "kan ikke åbne indfil '%s'"
@@ -249,17 +259,17 @@ msgstr "Gem information genereret af PC-profilering."
 msgid "[FILE]"
 msgstr "[FIL]"
 
-#: debug/pcprofiledump.c:107
-#, c-format
-msgid "cannot open input file"
-msgstr "kan ikke åbne indfil"
-
-#: debug/pcprofiledump.c:114
+#: debug/pcprofiledump.c:97
 #, c-format
 msgid "cannot read header"
 msgstr "kan ikke læse hoved"
 
-#: debug/pcprofiledump.c:178
+#: debug/pcprofiledump.c:145
+#, c-format
+msgid "cannot open input file"
+msgstr "kan ikke åbne indfil"
+
+#: debug/pcprofiledump.c:189
 #, c-format
 msgid "invalid pointer size"
 msgstr "ugyldig størrelse for pegere"
@@ -376,11 +386,11 @@ msgstr "fejl ved indlæsning af delte biblioteker"
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr "FEJL I DYNAMISK LÆNKER!!!"
 
-#: elf/dl-close.c:357 elf/dl-open.c:298
+#: elf/dl-close.c:363 elf/dl-open.c:298
 msgid "cannot create scope list"
 msgstr "kan ikke oprette omfangsliste"
 
-#: elf/dl-close.c:790
+#: elf/dl-close.c:792
 msgid "shared object not open"
 msgstr "delt objekt er ikke åbent"
 
@@ -407,131 +417,119 @@ msgstr "kan ikke allokere afhængighedsliste"
 msgid "cannot allocate symbol search list"
 msgstr "kan ikke allokere symbolsøgningsliste"
 
-#: elf/dl-fptr.c:88 sysdeps/hppa/dl-fptr.c:96
-msgid "cannot map pages for fdesc table"
-msgstr "kan ikke hukommelsesmappe sider for fdesc-tabel"
-
-#: elf/dl-fptr.c:192 sysdeps/hppa/dl-fptr.c:214
-msgid "cannot map pages for fptr table"
-msgstr "kan ikke hukommelsesmappe sider for fptr-tabel"
-
-#: elf/dl-fptr.c:221 sysdeps/hppa/dl-fptr.c:243
-msgid "internal error: symidx out of range of fptr table"
-msgstr "intern fejl: symidx er udenfor intervallet for fptr-tabellen"
-
 #: elf/dl-hwcaps.c:196
 msgid "cannot create capability list"
 msgstr "kan ikke oprette egenskabsliste"
 
-#: elf/dl-load.c:423
+#: elf/dl-load.c:424
 msgid "cannot allocate name record"
 msgstr "kan ikke allokere navnepost"
 
-#: elf/dl-load.c:525 elf/dl-load.c:638 elf/dl-load.c:732 elf/dl-load.c:829
+#: elf/dl-load.c:510 elf/dl-load.c:623 elf/dl-load.c:717 elf/dl-load.c:814
 msgid "cannot create cache for search path"
 msgstr "Kan ikke oprette buffer for søgesti"
 
-#: elf/dl-load.c:621
+#: elf/dl-load.c:606
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "kan ikke oprette kopi af RUNPATH/RPATH"
 
-#: elf/dl-load.c:718
+#: elf/dl-load.c:703
 msgid "cannot create search path array"
 msgstr "kan ikke oprette tabel over søgestier"
 
-#: elf/dl-load.c:957
+#: elf/dl-load.c:973
 msgid "cannot stat shared object"
 msgstr "kan ikke tage status på delt objekt"
 
-#: elf/dl-load.c:1048 elf/dl-load.c:2163
+#: elf/dl-load.c:1066 elf/dl-load.c:2155
 msgid "cannot create shared object descriptor"
 msgstr "kan ikke oprette delt objektbeskriver"
 
-#: elf/dl-load.c:1067 elf/dl-load.c:1610 elf/dl-load.c:1718
+#: elf/dl-load.c:1085 elf/dl-load.c:1604 elf/dl-load.c:1710
 msgid "cannot read file data"
 msgstr "kan ikke indlæse fildata"
 
-#: elf/dl-load.c:1212
+#: elf/dl-load.c:1230
 msgid "object file has no loadable segments"
 msgstr "objektfil har ingen indlæsbare segmenter"
 
-#: elf/dl-load.c:1229
+#: elf/dl-load.c:1247
 msgid "cannot dynamically load executable"
 msgstr "kan ikke indlæse udførbare programmer dynamisk"
 
-#: elf/dl-load.c:1236
+#: elf/dl-load.c:1254
 msgid "object file has no dynamic section"
 msgstr "objektfil har ingen dynamisk sektion"
 
-#: elf/dl-load.c:1273
+#: elf/dl-load.c:1291
 msgid "shared object cannot be dlopen()ed"
 msgstr "delt objekt kan ikke åbnes med dlopen()"
 
-#: elf/dl-load.c:1286
+#: elf/dl-load.c:1304
 msgid "cannot allocate memory for program header"
 msgstr "kan ikke allokere hukommelse til programhoved"
 
-#: elf/dl-load.c:1309
+#: elf/dl-load.c:1329
 msgid "cannot enable executable stack as shared object requires"
 msgstr "kan ikke oprette udførbar stak som kræves af delt objekt"
 
-#: elf/dl-load.c:1337
+#: elf/dl-load.c:1357
 msgid "cannot close file descriptor"
 msgstr "kan ikke lukke filbeskriver"
 
-#: elf/dl-load.c:1610
+#: elf/dl-load.c:1604
 msgid "file too short"
 msgstr "for kort fil"
 
-#: elf/dl-load.c:1646
+#: elf/dl-load.c:1638
 msgid "invalid ELF header"
 msgstr "ugyldigt ELF-hoved"
 
-#: elf/dl-load.c:1661
+#: elf/dl-load.c:1653
 msgid "ELF file data encoding not big-endian"
 msgstr "Kodning for ELF-fildata er ikke \"big-endian\""
 
-#: elf/dl-load.c:1663
+#: elf/dl-load.c:1655
 msgid "ELF file data encoding not little-endian"
 msgstr "Kodning for ELF-fildata er ikke \"little-endian\""
 
-#: elf/dl-load.c:1667
+#: elf/dl-load.c:1659
 msgid "ELF file version ident does not match current one"
 msgstr "ELF-filens version-identitet passer ikke med den aktuelle"
 
-#: elf/dl-load.c:1671
+#: elf/dl-load.c:1663
 msgid "ELF file OS ABI invalid"
 msgstr "ELF-filens OS ABI er ugyldigt"
 
-#: elf/dl-load.c:1674
+#: elf/dl-load.c:1666
 msgid "ELF file ABI version invalid"
 msgstr "ELF-filens ABI-version er ugyldig"
 
-#: elf/dl-load.c:1680
+#: elf/dl-load.c:1672
 msgid "internal error"
 msgstr "intern fejl"
 
-#: elf/dl-load.c:1687
+#: elf/dl-load.c:1679
 msgid "ELF file version does not match current one"
 msgstr "ELF-filens version passer ikke med den aktuelle"
 
-#: elf/dl-load.c:1699
+#: elf/dl-load.c:1691
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "kun ET_DYN og ET_EXEC kan indlæses"
 
-#: elf/dl-load.c:1704
+#: elf/dl-load.c:1696
 msgid "ELF file's phentsize not the expected size"
 msgstr "ELF-filens 'phentsize' er ikke den forventede størrelse"
 
-#: elf/dl-load.c:2182
+#: elf/dl-load.c:2174
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "forkert ELF-klasse: ELFCLASS64"
 
-#: elf/dl-load.c:2183
+#: elf/dl-load.c:2175
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "forkert ELF-klasse: ELFCLASS32"
 
-#: elf/dl-load.c:2186
+#: elf/dl-load.c:2178
 msgid "cannot open shared object file"
 msgstr "kan ikke åbne delt objektfil"
 
@@ -547,7 +545,7 @@ msgstr "kan ikke ændre hukommelsesbeskyttelser"
 msgid "cannot map zero-fill pages"
 msgstr "kan ikke mappe nulstil-sider"
 
-#: elf/dl-lookup.c:813
+#: elf/dl-lookup.c:800
 msgid "symbol lookup error"
 msgstr "fejl ved opslag af symbol"
 
@@ -555,19 +553,19 @@ msgstr "fejl ved opslag af symbol"
 msgid "cannot extend global scope"
 msgstr "kan ikke udvide globalt defineringområde"
 
-#: elf/dl-open.c:405
+#: elf/dl-open.c:382
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "Generationstæller for TLS tilbagestillet!  Vær sød at indsende fejlrapport."
 
-#: elf/dl-open.c:848
+#: elf/dl-open.c:817
 msgid "invalid mode for dlopen()"
 msgstr "ugyldig modus for dlopen()"
 
-#: elf/dl-open.c:865
+#: elf/dl-open.c:834
 msgid "no more namespaces available for dlmopen()"
 msgstr "ikke flere navnerum tilgængelige for dlmopen()"
 
-#: elf/dl-open.c:890
+#: elf/dl-open.c:859
 msgid "invalid target namespace in dlmopen()"
 msgstr "ugyldigt mål-navnerum for dlmopen()"
 
@@ -575,16 +573,16 @@ msgstr "ugyldigt mål-navnerum for dlmopen()"
 msgid "cannot allocate memory in static TLS block"
 msgstr "Kan ikke tildele hukommelse i statisk TLS-blok"
 
-#: elf/dl-reloc.c:288
+#: elf/dl-reloc.c:283
 msgid "cannot make segment writable for relocation"
 msgstr "kan ikke gøre segment skrivbart for relokering"
 
-#: elf/dl-reloc.c:319
+#: elf/dl-reloc.c:313
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: ikke mere hukommelse til at gemme relokeringsresultat for %s\n"
 
-#: elf/dl-reloc.c:335
+#: elf/dl-reloc.c:328
 msgid "cannot restore segment prot after reloc"
 msgstr "kan ikke genskabe segmentbeskyttelse efter flytning"
 
@@ -596,7 +594,7 @@ msgstr "kan ikke udføre yderligere hukommelsesbeskyttelser efter flytning"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT brugt i kode er ikke dynamisk indlæst"
 
-#: elf/dl-tls.c:1136
+#: elf/dl-tls.c:1163
 msgid "cannot create TLS data structures"
 msgstr "kan ikke oprette datastrukturer for TLS"
 
@@ -1043,126 +1041,115 @@ msgstr "'%s' er ikke korrekt profildatafil for '%s'"
 msgid "cannot allocate symbol data"
 msgstr "kan ikke allokere symboldata"
 
-#: iconv/iconv_charmap.c:146 iconv/iconv_prog.c:427
+#: iconv/iconv_charmap.c:146 iconv/iconv_prog.c:426
 #, c-format
 msgid "cannot open output file"
 msgstr "kan ikke åbne uddatafil"
 
-#: iconv/iconv_charmap.c:192 iconv/iconv_prog.c:290
+#: iconv/iconv_charmap.c:192
 #, c-format
 msgid "error while closing input `%s'"
 msgstr "fejl ved lukning af inddata '%s'"
 
-#: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:518
+#: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:728
 #, c-format
 msgid "incomplete character or shift sequence at end of buffer"
 msgstr "ufuldstændig tegn- eller skifte-sekvens ved slutningen af buffer"
 
-#: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:543 iconv/iconv_prog.c:561
-#: iconv/iconv_prog.c:597
+#: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:543 iconv/iconv_prog.c:736
 #, c-format
 msgid "error while reading the input"
 msgstr "fejl under læsning af inddata"
 
-#: iconv/iconv_charmap.c:525 iconv/iconv_prog.c:579
+#: iconv/iconv_charmap.c:525
 #, c-format
 msgid "unable to allocate buffer for input"
 msgstr "ikke i stand til at allokere buffer til inddata"
 
-#: iconv/iconv_prog.c:59
+#: iconv/iconv_prog.c:60
 msgid "Input/Output format specification:"
 msgstr "Inddata-/uddata-formatspecifikation:"
 
-#: iconv/iconv_prog.c:60
+#: iconv/iconv_prog.c:61
 msgid "encoding of original text"
 msgstr "indkodning af original tekst"
 
-#: iconv/iconv_prog.c:61
+#: iconv/iconv_prog.c:62
 msgid "encoding for output"
 msgstr "indkodning for uddata"
 
-#: iconv/iconv_prog.c:62
+#: iconv/iconv_prog.c:63
 msgid "Information:"
 msgstr "Information:"
 
-#: iconv/iconv_prog.c:63
+#: iconv/iconv_prog.c:64
 msgid "list all known coded character sets"
 msgstr "list alle kendte kodede tegnsæt"
 
-#: iconv/iconv_prog.c:64 locale/programs/localedef.c:123
+#: iconv/iconv_prog.c:65 locale/programs/localedef.c:123
 msgid "Output control:"
 msgstr "Udskriftskontrol:"
 
-#: iconv/iconv_prog.c:65
+#: iconv/iconv_prog.c:66
 msgid "omit invalid characters from output"
 msgstr "fjern ugyldige tegn fra uddata"
 
-#: iconv/iconv_prog.c:66
+#: iconv/iconv_prog.c:67
 msgid "output file"
 msgstr "uddatafil"
 
-#: iconv/iconv_prog.c:67
+#: iconv/iconv_prog.c:68
 msgid "suppress warnings"
 msgstr "undertryk advarsler"
 
-#: iconv/iconv_prog.c:68
+#: iconv/iconv_prog.c:69
 msgid "print progress information"
 msgstr "skriv fremdriftsinformation"
 
-#: iconv/iconv_prog.c:73
+#: iconv/iconv_prog.c:78
 msgid "Convert encoding of given files from one encoding to another."
 msgstr "Konvertér indkodning af givne filer fra en indkodning til en anden."
 
-#: iconv/iconv_prog.c:77
+#: iconv/iconv_prog.c:82
 msgid "[FILE...]"
 msgstr "[FIL...]"
 
-#: iconv/iconv_prog.c:176 iconv/iconv_prog.c:238
+#: iconv/iconv_prog.c:189 iconv/iconv_prog.c:251
 #, c-format
 msgid "failed to start conversion processing"
 msgstr "kunne ikke starte konverteringsprocessering"
 
-#: iconv/iconv_prog.c:212
+#: iconv/iconv_prog.c:225
 #, c-format
 msgid "conversions from `%s' and to `%s' are not supported"
 msgstr "konverteringer fra '%s' og til '%s' er ikke understøttet"
 
-#: iconv/iconv_prog.c:217
+#: iconv/iconv_prog.c:230
 #, c-format
 msgid "conversion from `%s' is not supported"
 msgstr "konvertering fra '%s' er ikke understøttet"
 
-#: iconv/iconv_prog.c:224
+#: iconv/iconv_prog.c:237
 #, c-format
 msgid "conversion to `%s' is not supported"
 msgstr "konvertering  til '%s' er ikke understøttet"
 
-#: iconv/iconv_prog.c:228
+#: iconv/iconv_prog.c:241
 #, c-format
 msgid "conversion from `%s' to `%s' is not supported"
 msgstr "konvertering fra '%s' til '%s' er ikke understøttet"
 
-#: iconv/iconv_prog.c:336
-#, c-format
-msgid "error while closing output file"
-msgstr "fejl ved lukning af uddatafil"
-
-#: iconv/iconv_prog.c:437
+#: iconv/iconv_prog.c:540
 #, c-format
 msgid "conversion stopped due to problem in writing the output"
 msgstr "konvertering stoppet på grund af problem ved skrivning af uddata"
 
-#: iconv/iconv_prog.c:514
-#, c-format
-msgid "illegal input sequence at position %ld"
-msgstr "ugyldig inddatasekvens ved position %ld"
-
-#: iconv/iconv_prog.c:522
+#: iconv/iconv_prog.c:693
 #, c-format
 msgid "internal error (illegal descriptor)"
 msgstr "intern fejl (ugyldig deskriptor)"
 
-#: iconv/iconv_prog.c:525
+#: iconv/iconv_prog.c:696
 #, c-format
 msgid "unknown iconv() error %d"
 msgstr "ukendt iconv()-fejl %d"
@@ -4064,7 +4051,7 @@ msgstr "%s: linje %d: ignorerer efterfølgende snavs '%s'\n"
 msgid "%s%sUnknown signal %d\n"
 msgstr "%s%sUkendt signal %d\n"
 
-#: stdio-common/psignal.c:44
+#: stdio-common/psignal.c:44 string/strsignal.c:57
 msgid "Unknown signal"
 msgstr "Ukendt signal"
 
@@ -4072,12 +4059,12 @@ msgstr "Ukendt signal"
 msgid "Unknown error "
 msgstr "Ukendt fejl "
 
-#: string/strsignal.c:39
+#: string/strsignal.c:42
 #, c-format
 msgid "Real-time signal %d"
 msgstr "Realtid-signal %d"
 
-#: string/strsignal.c:43
+#: string/strsignal.c:46
 #, c-format
 msgid "Unknown signal %d"
 msgstr "Ukendt signal %d"
@@ -5307,6 +5294,18 @@ msgstr "?"
 msgid "RPC program not available"
 msgstr "RPC-programmet er ikke tilgængeligt"
 
+#: sysdeps/hppa/dl-fptr.c:96
+msgid "cannot map pages for fdesc table"
+msgstr "kan ikke hukommelsesmappe sider for fdesc-tabel"
+
+#: sysdeps/hppa/dl-fptr.c:214
+msgid "cannot map pages for fptr table"
+msgstr "kan ikke hukommelsesmappe sider for fptr-tabel"
+
+#: sysdeps/hppa/dl-fptr.c:243
+msgid "internal error: symidx out of range of fptr table"
+msgstr "intern fejl: symidx er udenfor intervallet for fptr-tabellen"
+
 #: sysdeps/mach/_strerror.c:43 sysdeps/mach/xpg-strerror.c:55
 msgid "Error in unknown error system: "
 msgstr "Fejl i ukendt fejlsystem: "
@@ -5458,7 +5457,7 @@ msgstr "inddatalinje af ukendt type"
 msgid "expected continuation line not found"
 msgstr "forventet fortsættelseslinje ikke fundet"
 
-#: timezone/zic.c:1815 timezone/zic.c:3761
+#: timezone/zic.c:1815 timezone/zic.c:3760
 msgid "time overflow"
 msgstr "for stor tidsværdi"
 
@@ -5548,30 +5547,30 @@ msgstr "startår er højere end slutår"
 msgid "invalid weekday name"
 msgstr "ugyldigt ugedagsnavn"
 
-#: timezone/zic.c:3389
+#: timezone/zic.c:3388
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr "kan ikke afgøre tidszoneforkortelse for brug lige efter 'until'-tid"
 
-#: timezone/zic.c:3513
+#: timezone/zic.c:3512
 msgid "too many local time types"
 msgstr "for mange lokale tidstyper"
 
-#: timezone/zic.c:3531
+#: timezone/zic.c:3530
 msgid "too many leap seconds"
 msgstr "for mange skudsekunder"
 
-#: timezone/zic.c:3742
+#: timezone/zic.c:3741
 msgid "Odd number of quotation marks"
 msgstr "Ulige antal anførselstegn"
 
-#: timezone/zic.c:3839
+#: timezone/zic.c:3838
 msgid "use of 2/29 in non leap-year"
 msgstr "bruger 29/2 i ikke-skudår"
 
-#: timezone/zic.c:3896
+#: timezone/zic.c:3895
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr "tidszoneforkortelse afviger fra POSIX-standarden"
 
-#: timezone/zic.c:3902
+#: timezone/zic.c:3901
 msgid "too many, or too long, time zone abbreviations"
 msgstr "for mange eller for lange tidszoneforkortelser"

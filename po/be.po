@@ -3,12 +3,12 @@
 # This file is distributed under the same license as the glibc package.
 # Ales Nyakhaychyk <nab@mail.by>, 2002, 2003.
 # Viktar Siarheichyk <vics@eq.by>, 2014, 2016, 2017, 2018, 2019, 2020, 2023.
-# Viktar Siarhiejčyk <vics@eq.by>, 2023, 2024.
+# Viktar Siarhiejčyk <vics@eq.by>, 2023, 2024, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.38.9000\n"
-"POT-Creation-Date: 2024-07-21 00:32+0200\n"
-"PO-Revision-Date: 2024-02-05 20:42+0300\n"
+"Project-Id-Version: libc 2.40.9000\n"
+"POT-Creation-Date: 2025-01-04 11:03+0100\n"
+"PO-Revision-Date: 2025-01-08 11:17+0300\n"
 "Last-Translator: Viktar Siarhiejčyk <vics@eq.by>\n"
 "Language-Team: Belarusian <debian-l10n-belarusian@lists.debian.org>\n"
 "Language: be\n"
@@ -69,7 +69,7 @@ msgid "Give a short usage message"
 msgstr "Выдаць кароткае паведамленне аб выкарыстанні"
 
 #: argp/argp-parse.c:88 catgets/gencat.c:110 catgets/gencat.c:114
-#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:106 nscd/nscd.c:110
+#: iconv/iconv_prog.c:61 iconv/iconv_prog.c:62 nscd/nscd.c:106 nscd/nscd.c:110
 #: nss/makedb.c:122
 msgid "NAME"
 msgstr "НАЗВА"
@@ -103,24 +103,6 @@ msgstr "%s: Зашмат аргументаў\n"
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(ПАМЫЛКА ПРАГРАМЫ) Параметр мусіць распазнацца!?"
 
-#: assert/assert-perr.c:35
-#, c-format
-msgid ""
-"%s%s%s:%u: %s%sUnexpected error: %s.\n"
-"%n"
-msgstr ""
-"%s%s%s:%u: %s%sНечаканая памылка: %s.\n"
-"%n"
-
-#: assert/assert.c:103
-#, c-format
-msgid ""
-"%s%s%s:%u: %s%sAssertion `%s' failed.\n"
-"%n"
-msgstr ""
-"%s%s%s:%u: %s%sСцвярджэнне `%s' не спраўджана.\n"
-"%n"
-
 #: catgets/gencat.c:111
 msgid "Create C header file NAME containing symbol definitions"
 msgstr "Стварыць файл загалоўкаў НАЗВА з азначэннямі сімвалаў"
@@ -137,7 +119,7 @@ msgstr "Запісаць вывад у файл НАЗВА"
 msgid ""
 "Generate message catalog.\vIf INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
 "is -, output is written to standard output.\n"
-msgstr "Стварыць каталог паведамленняў.\\vКалі УВАХОДНЫ-ФАЙЛ ёсць -, чытаецца з стандартнага ўводу. Калі ВЫХОДНЫ-ФАЙЛ ёсць -, выводзіцца на стандартны вывад.\n"
+msgstr "Generate message catalog.\\vIf INPUT-FILE is -, input is read from standard input.  Калі OUTPUT-FILE роўна -, вывад запісваецца ў стандартны вывад.\n"
 
 #: catgets/gencat.c:124
 msgid ""
@@ -147,8 +129,8 @@ msgstr ""
 "-o ВЫХОДНЫ-ФАЙЛ [УВАХОДНЫ-ФАЙЛ]...\n"
 "[ВЫХОДНЫ-ФАЙЛ [УВАХОДНЫ-ФАЙЛ]...]"
 
-#: catgets/gencat.c:230 debug/pcprofiledump.c:208 elf/ldconfig.c:217
-#: elf/pldd.c:246 elf/sln.c:77 elf/sprof.c:371 iconv/iconv_prog.c:387
+#: catgets/gencat.c:230 debug/pcprofiledump.c:219 elf/ldconfig.c:217
+#: elf/pldd.c:246 elf/sln.c:77 elf/sprof.c:371 iconv/iconv_prog.c:374
 #: iconv/iconvconfig.c:380 locale/programs/locale.c:275
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:88
 #: malloc/memusagestat.c:564 nss/getent.c:961 nss/makedb.c:371
@@ -161,24 +143,8 @@ msgstr ""
 "Як рапартаваць аб памылках:\n"
 "%s.\n"
 
-#: catgets/gencat.c:246 debug/pcprofiledump.c:224 debug/xtrace.sh:63
-#: elf/ldconfig.c:233 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
-#: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
-#: locale/programs/locale.c:292 locale/programs/localedef.c:459
-#: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
-#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:487
-#, c-format
-msgid ""
-"Copyright (C) %s Free Software Foundation, Inc.\n"
-"This is free software; see the source for copying conditions.  There is NO\n"
-"warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
-msgstr ""
-"Copyright (C) %s Free Software Foundation, Inc.\n"
-"Гэта свабодная праграма; умовы распаўсюду ёсць у зыходным кодзе. Гарантый\n"
-" НІЯКІХ няма; у тым ліку працаздольнасці ці прыдатнасці для пэўнай мэты.\n"
-
-#: catgets/gencat.c:251 debug/pcprofiledump.c:229 debug/xtrace.sh:67
-#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
+#: catgets/gencat.c:251 debug/pcprofiledump.c:240 debug/xtrace.sh:67
+#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:396
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
@@ -191,8 +157,8 @@ msgstr "Аўтар — %s.\n"
 msgid "*standard input*"
 msgstr "*стандартны ўвод*"
 
-#: catgets/gencat.c:288 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
-#: nss/makedb.c:248
+#: catgets/gencat.c:288 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:279
+#: iconv/iconv_prog.c:432 nss/makedb.c:248
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "немагчыма адкрыць файл уводу `%s'"
@@ -288,24 +254,20 @@ msgstr "Скінуць інфармацыю, сабраную падчас пр�
 msgid "[FILE]"
 msgstr "[ФАЙЛ]"
 
-#: debug/pcprofiledump.c:107
-#, c-format
-msgid "cannot open input file"
-msgstr "немагчыма адкрыць файл уводу"
-
-#: debug/pcprofiledump.c:114
+#: debug/pcprofiledump.c:97
 #, c-format
 msgid "cannot read header"
 msgstr "немагчыма прачытаць загаловак"
 
-#: debug/pcprofiledump.c:178
+#: debug/pcprofiledump.c:145
+#, c-format
+msgid "cannot open input file"
+msgstr "немагчыма адкрыць файл уводу"
+
+#: debug/pcprofiledump.c:189
 #, c-format
 msgid "invalid pointer size"
 msgstr "няправільны памер указальніка"
-
-#: debug/xtrace.sh:25 debug/xtrace.sh:43
-msgid "Usage: xtrace [OPTION]... PROGRAM [PROGRAMOPTION]...\\n"
-msgstr "Выкарыстанне: xtrace [ОПЦЫЯ]... ПРАГРАМА [ОПЦЫЯ-ПРАГРАМЫ]...\\n"
 
 #: debug/xtrace.sh:31 elf/sotruss.sh:56 elf/sotruss.sh:67 elf/sotruss.sh:135
 #: malloc/memusage.sh:25
@@ -330,15 +292,16 @@ msgid ""
 "short options.\n"
 "\n"
 msgstr ""
-"Сачыць за выкананнем праграмы, друкуючы функцыі, якія зараз выконваюцца.\n"
+"Trace execution of program by printing currently executed function.\n"
 "\n"
-"     --data=ФАЙЛ          Не выконваць гэтую праграму, толькі друкаваць даныя з файла ФАЙЛ.\n"
+"     --data=FILE          Don't run the program, just print the data from FILE.\n"
 "\n"
-"   -?,--help              Надрукаваць гэтую дапамогу і выйсці\n"
-"      --usage             Даць кароткае паведамленне аб выкарыстанні\n"
-"   -V,--version           Надрукаваць звесткі аб версіі і выйсці\n"
+"   -?,--help              Print this help and exit\n"
+"      --usage             Give a short usage message\n"
+"   -V,--version           Print version information and exit\n"
 "\n"
-"Абавязковыя аргументы да доўгіх опцыяў з'яўляюцца абавязковымі для ўсіх адпаведных кароткіх опцыяў.\n"
+"Mandatory arguments to long options are also mandatory for any corresponding\n"
+"short options.\n"
 "\n"
 
 #: debug/xtrace.sh:56 elf/ldd.bash.in:55 elf/sotruss.sh:49
@@ -462,11 +425,11 @@ msgstr "памылка падчас загрузкі супольных бібл
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr "ПАМЫЛКА ДЫНАМІЧНАГА ЛІНКЕРА!!!"
 
-#: elf/dl-close.c:357 elf/dl-open.c:298
+#: elf/dl-close.c:363 elf/dl-open.c:298
 msgid "cannot create scope list"
 msgstr "не ўдалося стварыць спіс абшараў"
 
-#: elf/dl-close.c:790
+#: elf/dl-close.c:792
 msgid "shared object not open"
 msgstr "супольны аб'ект не адкрыты"
 
@@ -495,18 +458,6 @@ msgstr "не ўдалося выдзеліць памяць для спісу з
 msgid "cannot allocate symbol search list"
 msgstr "не ўдалося выдзеліць памяць для спісу пошуку сімвалаў"
 
-#: elf/dl-fptr.c:88 sysdeps/hppa/dl-fptr.c:96
-msgid "cannot map pages for fdesc table"
-msgstr "не ўдалося загрузіць старонкі для табліцы fdesc"
-
-#: elf/dl-fptr.c:192 sysdeps/hppa/dl-fptr.c:214
-msgid "cannot map pages for fptr table"
-msgstr "не ўдалося загрузіць старонкі для табліцы fptr"
-
-#: elf/dl-fptr.c:221 sysdeps/hppa/dl-fptr.c:243
-msgid "internal error: symidx out of range of fptr table"
-msgstr "унутраная памылка: symidx па-за дыяпазонам у табліцы fptr"
-
 #: elf/dl-hwcaps.c:104
 msgid "cannot create HWCAP priorities"
 msgstr "не ўдалося стварыць прыярытэты HWCAP"
@@ -515,127 +466,127 @@ msgstr "не ўдалося стварыць прыярытэты HWCAP"
 msgid "cannot create capability list"
 msgstr "не ўдалося стварыць спіс магчымасцяў"
 
-#: elf/dl-load.c:423
+#: elf/dl-load.c:424
 msgid "cannot allocate name record"
 msgstr "не ўдалося выдзеліць запіс для назвы"
 
-#: elf/dl-load.c:525 elf/dl-load.c:638 elf/dl-load.c:732 elf/dl-load.c:829
+#: elf/dl-load.c:510 elf/dl-load.c:623 elf/dl-load.c:717 elf/dl-load.c:814
 msgid "cannot create cache for search path"
 msgstr "немагчыма стварыць кэш для шляху пошуку"
 
-#: elf/dl-load.c:621
+#: elf/dl-load.c:606
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "немагчыма стварыць RUNPATH/RPATH копію"
 
-#: elf/dl-load.c:718
+#: elf/dl-load.c:703
 msgid "cannot create search path array"
 msgstr "не ўдалося стварыць табліцу шляхоў пошуку"
 
-#: elf/dl-load.c:957
+#: elf/dl-load.c:973
 msgid "cannot stat shared object"
 msgstr "не ўдалося выканаць stat для супольнага аб'екта"
 
-#: elf/dl-load.c:1048 elf/dl-load.c:2163
+#: elf/dl-load.c:1066 elf/dl-load.c:2155
 msgid "cannot create shared object descriptor"
 msgstr "не ўдалося стварыць дэскрыптар супольнага аб'екта"
 
-#: elf/dl-load.c:1067 elf/dl-load.c:1610 elf/dl-load.c:1718
+#: elf/dl-load.c:1085 elf/dl-load.c:1604 elf/dl-load.c:1710
 msgid "cannot read file data"
 msgstr "не ўдалося прачытаць даныя файла"
 
-#: elf/dl-load.c:1120 elf/dl-map-segments.h:117
+#: elf/dl-load.c:1138 elf/dl-map-segments.h:117
 msgid "ELF load command address/offset not page-aligned"
 msgstr "Адрас/зрушэнне каманды загрузкі ELF не выраўнаваны па старонцы"
 
-#: elf/dl-load.c:1212
+#: elf/dl-load.c:1230
 msgid "object file has no loadable segments"
 msgstr "аб'ектны файл не мае сегментаў для загрузкі"
 
-#: elf/dl-load.c:1229
+#: elf/dl-load.c:1247
 msgid "cannot dynamically load executable"
 msgstr "не ўдалося дынамічна загрузіць выканальны файл"
 
-#: elf/dl-load.c:1236
+#: elf/dl-load.c:1254
 msgid "object file has no dynamic section"
 msgstr "аб'ектны файл не мае дынамічнай секцыі"
 
-#: elf/dl-load.c:1271
+#: elf/dl-load.c:1289
 msgid "cannot dynamically load position-independent executable"
 msgstr "немагчыма загрузіць пазіцыйна-незалежную праграму ў дынамічным рэжыме"
 
-#: elf/dl-load.c:1273
+#: elf/dl-load.c:1291
 msgid "shared object cannot be dlopen()ed"
 msgstr "супольны аб'ект немагчыма адкрыць праз dlopen()"
 
-#: elf/dl-load.c:1286
+#: elf/dl-load.c:1304
 msgid "cannot allocate memory for program header"
 msgstr "немагчыма выдзеліць памяць для загалоўку праграмы"
 
-#: elf/dl-load.c:1309
+#: elf/dl-load.c:1329
 msgid "cannot enable executable stack as shared object requires"
 msgstr "не ўдалося ўключыць выканальны стэк, як патрабуе супольны аб'ект"
 
-#: elf/dl-load.c:1337
+#: elf/dl-load.c:1357
 msgid "cannot close file descriptor"
 msgstr "немагчыма закрыць дэскрыптар файла"
 
-#: elf/dl-load.c:1610
+#: elf/dl-load.c:1604
 msgid "file too short"
 msgstr "файл закароткі"
 
-#: elf/dl-load.c:1646
+#: elf/dl-load.c:1638
 msgid "invalid ELF header"
 msgstr "няправільны загаловак ELF"
 
-#: elf/dl-load.c:1661
+#: elf/dl-load.c:1653
 msgid "ELF file data encoding not big-endian"
 msgstr "кадаванне даных файла ELF не big-endian"
 
-#: elf/dl-load.c:1663
+#: elf/dl-load.c:1655
 msgid "ELF file data encoding not little-endian"
 msgstr "кадаванне даных файла ELF не little-endian"
 
-#: elf/dl-load.c:1667
+#: elf/dl-load.c:1659
 msgid "ELF file version ident does not match current one"
 msgstr "ідэнтыфікатар версіі файла ELF не адпавядае актуальнай версіі"
 
-#: elf/dl-load.c:1671
+#: elf/dl-load.c:1663
 msgid "ELF file OS ABI invalid"
 msgstr "няправільны ABI сістэмы файла ELF"
 
-#: elf/dl-load.c:1674
+#: elf/dl-load.c:1666
 msgid "ELF file ABI version invalid"
 msgstr "Няправільная версія ABI ELF файла"
 
-#: elf/dl-load.c:1677
+#: elf/dl-load.c:1669
 msgid "nonzero padding in e_ident"
 msgstr "дапаўненне ў e_ident ненулявое"
 
-#: elf/dl-load.c:1680
+#: elf/dl-load.c:1672
 msgid "internal error"
 msgstr "унутраная памылка"
 
-#: elf/dl-load.c:1687
+#: elf/dl-load.c:1679
 msgid "ELF file version does not match current one"
 msgstr "версія файла ELF не адпавядае актуальнай версіі"
 
-#: elf/dl-load.c:1699
+#: elf/dl-load.c:1691
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "можна загрузіць толькі ET_DYN і ET_EXEC"
 
-#: elf/dl-load.c:1704
+#: elf/dl-load.c:1696
 msgid "ELF file's phentsize not the expected size"
 msgstr "phentsize файла ELF нечаканага памеру"
 
-#: elf/dl-load.c:2182
+#: elf/dl-load.c:2174
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "няправільны клас ELF: ELFCLASS64"
 
-#: elf/dl-load.c:2183
+#: elf/dl-load.c:2175
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "няправільны клас ELF: ELFCLASS32"
 
-#: elf/dl-load.c:2186
+#: elf/dl-load.c:2178
 msgid "cannot open shared object file"
 msgstr "не ўдалося адкрыць супольны аб'ектны файл"
 
@@ -651,7 +602,7 @@ msgstr "не ўдалося змяніць абарону памяці"
 msgid "cannot map zero-fill pages"
 msgstr "запоўненыя нулямі старонкі нельга адлюстроўваць"
 
-#: elf/dl-lookup.c:813
+#: elf/dl-lookup.c:800
 msgid "symbol lookup error"
 msgstr "памылка пошуку сімвалу"
 
@@ -659,23 +610,19 @@ msgstr "памылка пошуку сімвалу"
 msgid "cannot extend global scope"
 msgstr "не ўдалося пашырыць глабальную прастору"
 
-#: elf/dl-open.c:405
-msgid "TLS generation counter wrapped!  Please report this."
-msgstr "лічыльнік генерацыі TLS перапоўніўся! Паведаміце пра гэта."
-
-#: elf/dl-open.c:758
+#: elf/dl-open.c:716
 msgid "cannot allocate address lookup data"
 msgstr "не ўдалося размясціць даныя пошуку адрасоў"
 
-#: elf/dl-open.c:848
+#: elf/dl-open.c:817
 msgid "invalid mode for dlopen()"
 msgstr "няправільны рэжым для dlopen()"
 
-#: elf/dl-open.c:865
+#: elf/dl-open.c:834
 msgid "no more namespaces available for dlmopen()"
 msgstr "для dlmopen() больш няма прастораў назваў"
 
-#: elf/dl-open.c:890
+#: elf/dl-open.c:859
 msgid "invalid target namespace in dlmopen()"
 msgstr "няправільная прастора назваў прызначэння ў dlmopen()"
 
@@ -683,16 +630,16 @@ msgstr "няправільная прастора назваў прызначэ�
 msgid "cannot allocate memory in static TLS block"
 msgstr "немагчыма размеркаваць памяць ў статычным блоку TLS"
 
-#: elf/dl-reloc.c:288
+#: elf/dl-reloc.c:283
 msgid "cannot make segment writable for relocation"
 msgstr "нельга зрабіць сегмент запісвальным для рэлакацыі"
 
-#: elf/dl-reloc.c:319
+#: elf/dl-reloc.c:313
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: недастаткова памяці, каб захаваць вынікі рэлакацыі для %s\n"
 
-#: elf/dl-reloc.c:335
+#: elf/dl-reloc.c:328
 msgid "cannot restore segment prot after reloc"
 msgstr "не ўдалося аднавіць ахову сегмента пасля перамяшчэння"
 
@@ -704,7 +651,7 @@ msgstr "не ўдалося ўжыць дадатковую ахову памя�
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT выкарыстаны ў кодзе, які не загружаны дынамічна"
 
-#: elf/dl-tls.c:1136
+#: elf/dl-tls.c:1163
 msgid "cannot create TLS data structures"
 msgstr "немагчыма стварыць структуры даных TLS"
 
@@ -759,10 +706,6 @@ msgstr "КАНФ"
 #: elf/ldconfig.c:131
 msgid "Use CONF as configuration file"
 msgstr "Ужыць КАНФ у якасці канфігурацыйнага файла"
-
-#: elf/ldconfig.c:132
-msgid "Only process directories specified on the command line.  Don't build cache."
-msgstr "Апрацаваць толькі каталогі ў камандным радку. Не ствараць кэш."
 
 #: elf/ldconfig.c:133
 msgid "Manually link individual libraries."
@@ -937,24 +880,6 @@ msgstr "Немагчыма адкрыць каталог кэш-файла %s\n"
 #: elf/ldd.bash.in:42
 msgid "Written by %s and %s.\n"
 msgstr "Аўтары: %s і %s.\n"
-
-#: elf/ldd.bash.in:47
-msgid ""
-"Usage: ldd [OPTION]... FILE...\n"
-"      --help              print this help and exit\n"
-"      --version           print version information and exit\n"
-"  -d, --data-relocs       process data relocations\n"
-"  -r, --function-relocs   process data and function relocations\n"
-"  -u, --unused            print unused direct dependencies\n"
-"  -v, --verbose           print all information\n"
-msgstr ""
-"Выкарыстанне: ldd [ОПЦЫЯ]... ФАЙЛ...\n"
-"      --help              надрукаваць гэтую даведку і выйсці\n"
-"      --version           надрукаваць звесткі аб версіі і выйсці\n"
-"  -d, --data-relocs       апрацаваць перамяшчэнні даных\n"
-"  -r, --function-relocs   апрацаваць перамяшчэнні даных і функцыяў\n"
-"  -u, --unused            надрукаваць нескарыстаныя простыя залежнасці\n"
-"  -v, --verbose           надрукаваць усю інфармацыю\n"
 
 #: elf/ldd.bash.in:80
 msgid "ldd: option \\`$1' is ambiguous"
@@ -1187,35 +1112,6 @@ msgstr "%s: няправільнае прызначэнне: %s\n"
 msgid "Invalid link from \"%s\" to \"%s\": %s\n"
 msgstr "Няправільная сувязь \"%s\" на \"%s\": %s\n"
 
-#: elf/sotruss.sh:32
-#, sh-format
-msgid ""
-"Usage: sotruss [OPTION...] [--] EXECUTABLE [EXECUTABLE-OPTION...]\n"
-"  -F, --from FROMLIST     Trace calls from objects on FROMLIST\n"
-"  -T, --to TOLIST         Trace calls to objects on TOLIST\n"
-"\n"
-"  -e, --exit              Also show exits from the function calls\n"
-"  -f, --follow            Trace child processes\n"
-"  -o, --output FILENAME   Write output to FILENAME (or FILENAME.$PID in case\n"
-"\t\t\t  -f is also used) instead of standard error\n"
-"\n"
-"  -?, --help              Give this help list\n"
-"      --usage             Give a short usage message\n"
-"      --version           Print program version"
-msgstr ""
-"Выкарыстанне: sotruss [ОПЦЫЯ...] [--] ПРАГРАМА [ОПЦЫЯ-ПРАГРАМЫ...]\n"
-"  -F, --from СПІС-АД       Сачыць за выклікамі ад аб'ектаў з спісу СПІС-АД\n"
-"  -T, --to СПІС-ДА         Сачыць за выклікамі да аб'ектаў з спісу СПІС-ДА\n"
-"\n"
-"  -e, --exit               Таксама паказаць выхады з гэтых функцыяў\n"
-"  -f, --follow             Сачыць за працэсамі-нашчадкамі\n"
-"  -o, --output НАЗВА-ФАЙЛА Запісаць вывад у файл НАЗВА-ФАЙЛА (ці НАЗВА-ФАЙЛА.$PID, калі\n"
-"\t\t\t   таксама ўжыты -f) замест стандартнага патоку памылак\n"
-"\n"
-"  -?, --help               Даць гэты спіс выкарыстання\n"
-"      --usage              Даць кароткае паведамленне аб выкарыстанні\n"
-"      --version            Надрукаваць версію праграмы"
-
 #: elf/sotruss.sh:46
 msgid "Mandatory arguments to long options are also mandatory for any corresponding\\nshort options.\\n"
 msgstr "Абавязковыя аргументы для доўгіх опцыяў з'яўляюцца абавязковымі і для адпаведных\\nкароткіх опцыяў.\\n"
@@ -1372,12 +1268,12 @@ msgstr "У табліцы радкоў занадта шмат запісаў"
 msgid "String table is too large"
 msgstr "Табліца радкоў занадта вялікая"
 
-#: iconv/iconv_charmap.c:146 iconv/iconv_prog.c:427
+#: iconv/iconv_charmap.c:146 iconv/iconv_prog.c:426
 #, c-format
 msgid "cannot open output file"
 msgstr "немагчыма адчыніць файл вываду"
 
-#: iconv/iconv_charmap.c:192 iconv/iconv_prog.c:290
+#: iconv/iconv_charmap.c:192
 #, c-format
 msgid "error while closing input `%s'"
 msgstr "памылка пад час зачыненьня ўводу \"%s\""
@@ -1387,139 +1283,115 @@ msgstr "памылка пад час зачыненьня ўводу \"%s\""
 msgid "illegal input sequence at position %zd"
 msgstr "недазволеная паслядоўнасць уводу ў пазіцыі %zd"
 
-#: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:518
+#: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:728
 #, c-format
 msgid "incomplete character or shift sequence at end of buffer"
 msgstr "няпоўны знак альбо shift-паслядоўнасць у канцы буфера"
 
-#: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:543 iconv/iconv_prog.c:561
-#: iconv/iconv_prog.c:597
+#: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:543 iconv/iconv_prog.c:736
 #, c-format
 msgid "error while reading the input"
 msgstr "памылка пад час чытання ўводу"
 
-#: iconv/iconv_charmap.c:525 iconv/iconv_prog.c:579
+#: iconv/iconv_charmap.c:525
 #, c-format
 msgid "unable to allocate buffer for input"
 msgstr "немагчыма разьмеркаваць буфер для ўводу"
 
-#: iconv/iconv_prog.c:59
+#: iconv/iconv_prog.c:60
 msgid "Input/Output format specification:"
 msgstr "Пагадненне аб фармаце ўводу-вываду:"
 
-#: iconv/iconv_prog.c:60
+#: iconv/iconv_prog.c:61
 msgid "encoding of original text"
 msgstr "кадаванне зыходнага тэксту"
 
-#: iconv/iconv_prog.c:61
+#: iconv/iconv_prog.c:62
 msgid "encoding for output"
 msgstr "кадаванне для вываду"
 
-#: iconv/iconv_prog.c:62
+#: iconv/iconv_prog.c:63
 msgid "Information:"
 msgstr "Звесткі:"
 
-#: iconv/iconv_prog.c:63
+#: iconv/iconv_prog.c:64
 msgid "list all known coded character sets"
 msgstr "пералічыць усе вядомыя знаказборы"
 
-#: iconv/iconv_prog.c:64 locale/programs/localedef.c:123
+#: iconv/iconv_prog.c:65 locale/programs/localedef.c:123
 msgid "Output control:"
 msgstr "Кіраванне вывадам:"
 
-#: iconv/iconv_prog.c:65
+#: iconv/iconv_prog.c:66
 msgid "omit invalid characters from output"
 msgstr "прапусціць у вывадзе некарэктныя знакі"
 
-#: iconv/iconv_prog.c:66 iconv/iconvconfig.c:128
+#: iconv/iconv_prog.c:67 iconv/iconvconfig.c:128
 #: locale/programs/localedef.c:116 locale/programs/localedef.c:118
 #: locale/programs/localedef.c:120 locale/programs/localedef.c:149
 #: malloc/memusagestat.c:56
 msgid "FILE"
 msgstr "ФАЙЛ"
 
-#: iconv/iconv_prog.c:66
+#: iconv/iconv_prog.c:67
 msgid "output file"
 msgstr "файл вываду"
 
-#: iconv/iconv_prog.c:67
+#: iconv/iconv_prog.c:68
 msgid "suppress warnings"
 msgstr "без папярэджанняў"
 
-#: iconv/iconv_prog.c:68
+#: iconv/iconv_prog.c:69
 msgid "print progress information"
 msgstr "друкаваць зьвесткі пра посьпех"
 
-#: iconv/iconv_prog.c:73
+#: iconv/iconv_prog.c:78
 msgid "Convert encoding of given files from one encoding to another."
 msgstr "Пераўтварае знакі атрыманых файлаў з аднаго набору ў іншы."
 
-#: iconv/iconv_prog.c:77
+#: iconv/iconv_prog.c:82
 msgid "[FILE...]"
 msgstr "[ФАЙЛ...]"
 
-#: iconv/iconv_prog.c:176 iconv/iconv_prog.c:238
+#: iconv/iconv_prog.c:189 iconv/iconv_prog.c:251
 #, c-format
 msgid "failed to start conversion processing"
 msgstr "не атрымалася пачаць апрацоўку заменаў"
 
-#: iconv/iconv_prog.c:212
+#: iconv/iconv_prog.c:225
 #, c-format
 msgid "conversions from `%s' and to `%s' are not supported"
 msgstr "замены з `%s' і ў `%s' немагчымыя"
 
-#: iconv/iconv_prog.c:217
+#: iconv/iconv_prog.c:230
 #, c-format
 msgid "conversion from `%s' is not supported"
 msgstr "замена з \"%s\" немагчымае"
 
-#: iconv/iconv_prog.c:224
+#: iconv/iconv_prog.c:237
 #, c-format
 msgid "conversion to `%s' is not supported"
 msgstr "замена ў `%s' немагчымая"
 
-#: iconv/iconv_prog.c:228
+#: iconv/iconv_prog.c:241
 #, c-format
 msgid "conversion from `%s' to `%s' is not supported"
 msgstr "замена з `%s' у `%s' немагчымая"
 
-#: iconv/iconv_prog.c:336
-#, c-format
-msgid "error while closing output file"
-msgstr "памылка падчас закрыцця выходнага файла"
-
-#: iconv/iconv_prog.c:437
+#: iconv/iconv_prog.c:540
 #, c-format
 msgid "conversion stopped due to problem in writing the output"
 msgstr "замена спыненая з-за праблемы з запісам вываду"
 
-#: iconv/iconv_prog.c:514
-#, c-format
-msgid "illegal input sequence at position %ld"
-msgstr "некарэктная ўваходная паслядоўнасць у пазіцыі %ld"
-
-#: iconv/iconv_prog.c:522
+#: iconv/iconv_prog.c:693
 #, c-format
 msgid "internal error (illegal descriptor)"
 msgstr "унутраная памылка (забаронены дэскрыптар)"
 
-#: iconv/iconv_prog.c:525
+#: iconv/iconv_prog.c:696
 #, c-format
 msgid "unknown iconv() error %d"
 msgstr "невядомая памылка iconv() %d"
-
-#: iconv/iconv_prog.c:768
-msgid ""
-"The following list contains all the coded character sets known.  This does\n"
-"not necessarily mean that all combinations of these names can be used for\n"
-"the FROM and TO command line parameters.  One coded character set can be\n"
-"listed with several different names (aliases).\n"
-"\n"
-"  "
-msgstr ""
-"Наступны спіс змяшчае ўсе вядомыя знаказборы. Не ўсе камбінацыі гэтых назваў можна ўжыць у параметрах каманднага радка АД і ДА. Адзін знаказбор можа мець некалькі адрозных назваў (псеўданімаў).\n"
-"\n"
-"  "
 
 #: iconv/iconvconfig.c:109
 msgid "Create fastloading iconv module configuration file."
@@ -2085,7 +1957,7 @@ msgstr "%s: паўторная дэкларацыя секцыі `%s'"
 #: locale/programs/ld-collate.c:2896
 #, c-format
 msgid "%s: unknown character in collating symbol name"
-msgstr "%s: невядомы знак у назве сімвала упарадкавання"
+msgstr "%s: невядомы знак у назве сімвала ўпарадкавання"
 
 #: locale/programs/ld-collate.c:3025
 #, c-format
@@ -2130,6 +2002,27 @@ msgstr "%s: памылковая колькасць правілаў сарта�
 #, c-format
 msgid "%s: multiple order definitions for unnamed section"
 msgstr "%s: некалькі вызначэнняў парадку для секцыі без назвы"
+
+#: locale/programs/ld-collate.c:3280 locale/programs/ld-collate.c:3410
+#: locale/programs/ld-collate.c:3775
+#, c-format
+msgid "%s: missing `order_end' keyword"
+msgstr "%s: адсутнічае ключавое слова `order_end'"
+
+#: locale/programs/ld-collate.c:3343
+#, c-format
+msgid "%s: order for collating symbol %.*s not yet defined"
+msgstr "%s: парадак сартавання сімвала %.*s яшчэ не вызначаны"
+
+#: locale/programs/ld-collate.c:3361
+#, c-format
+msgid "%s: order for collating element %.*s not yet defined"
+msgstr "%s: парадак сартавання элемента %.*s яшчэ не вызначаны"
+
+#: locale/programs/ld-collate.c:3372
+#, c-format
+msgid "%s: cannot reorder after %.*s: symbol not known"
+msgstr "%s: немагчыма змяніць парадак пасля %.*s: сімвал невядомы"
 
 #: locale/programs/linereader.c:531
 msgid "unterminated symbolic name"
@@ -2539,22 +2432,6 @@ msgstr "не ўдалося захаваць новую табліцу рэпе�
 msgid "repertoire map file `%s' not found"
 msgstr "файл табліцы рэпертуару `%s' не знойдзены"
 
-#: login/programs/pt_chown.c:78
-#, c-format
-msgid "Set the owner, group and access permission of the slave pseudo terminal corresponding to the master pseudo terminal passed on file descriptor `%d'.  This is the helper program for the `grantpt' function.  It is not intended to be run directly from the command line.\n"
-msgstr "Усталяванне ўладальніка, групы і дазволу доступу падлеглага псеўдатэрмінала, адпаведнага галоўнаму псеўдатэрміналу, пададзенаму файлавым дэскрыптарам `%d'. Гэта дапаможная праграма для функцыі `grantpt'. Яна не прызначаная для запуску проста з каманднага радку.\n"
-
-#: login/programs/pt_chown.c:92
-#, c-format
-msgid ""
-"The owner is set to the current user, the group is set to `%s', and the access permission is set to `%o'.\n"
-"\n"
-"%s"
-msgstr ""
-"Уладальнікам назначаны цяперашні карыстальнік, групай ўсталявана `%s', а правамі доступу - `%o'.\n"
-"\n"
-"%s"
-
 #: login/programs/pt_chown.c:203
 #, c-format
 msgid "too many arguments"
@@ -2729,11 +2606,6 @@ msgstr ""
 msgid "Creation Time : %s"
 msgstr "Час стварэньня : %s"
 
-#: nis/nis_print.c:334
-#, c-format
-msgid "Mod. Time     : %s"
-msgstr "Час зьмян.     : %s"
-
 #: nis/nis_print.c:355
 #, c-format
 msgid "    Data Length = %u\n"
@@ -2880,7 +2752,7 @@ msgstr "%s%sНевядомы сыгнал %d\n"
 msgid "Unknown error "
 msgstr "Невядомая памылка "
 
-#: string/strsignal.c:43
+#: string/strsignal.c:46
 #, c-format
 msgid "Unknown signal %d"
 msgstr "Невядомы сыгнал %d"
@@ -3162,6 +3034,18 @@ msgstr "Дэскрыптар файлу ў дрэнным стане"
 #: sysdeps/gnu/errlist.h:666
 msgid "Wrong medium type"
 msgstr "Ня той від носьбіта"
+
+#: sysdeps/hppa/dl-fptr.c:96
+msgid "cannot map pages for fdesc table"
+msgstr "не ўдалося загрузіць старонкі для табліцы fdesc"
+
+#: sysdeps/hppa/dl-fptr.c:214
+msgid "cannot map pages for fptr table"
+msgstr "не ўдалося загрузіць старонкі для табліцы fptr"
+
+#: sysdeps/hppa/dl-fptr.c:243
+msgid "internal error: symidx out of range of fptr table"
+msgstr "унутраная памылка: symidx па-за дыяпазонам у табліцы fptr"
 
 #: sysdeps/mach/_strerror.c:43 sysdeps/mach/xpg-strerror.c:55
 msgid "Error in unknown error system: "

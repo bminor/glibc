@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.2.3\n"
-"POT-Creation-Date: 2024-07-21 00:32+0200\n"
+"POT-Creation-Date: 2025-01-04 11:03+0100\n"
 "PO-Revision-Date: 2001-05-21 19:20:31+0000\n"
 "Last-Translator: Nikos Mavroyanopoulos <nmav@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -66,7 +66,7 @@ msgid "Give a short usage message"
 msgstr "Να δωθεί σύντομο μήνυμα χρήσης"
 
 #: argp/argp-parse.c:88 catgets/gencat.c:110 catgets/gencat.c:114
-#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:106 nscd/nscd.c:110
+#: iconv/iconv_prog.c:61 iconv/iconv_prog.c:62 nscd/nscd.c:106 nscd/nscd.c:110
 #: nss/makedb.c:122
 msgid "NAME"
 msgstr "ΟΝΟΜΑ"
@@ -96,6 +96,16 @@ msgstr "%s: Πάρα πολλά ορίσματα\n"
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(ΣΦΑΛΜΑ ΠΡΟΓΡΑΜΜΑΤΟΣ) Η επιλογή θα έπρεπε να είχε αναγνωριστεί!;"
 
+#: assert/assert-perr.c:35
+#, c-format
+msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
+msgstr "%s%s%s:%u: %s%sΜη αναμενόμενο σφάλμα: %s.\n"
+
+#: assert/assert.c:125
+#, c-format
+msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
+msgstr "%s%s%s:%u: %s%sΟ ισχυρισμός %s' απέτυχε.\n"
+
 #: catgets/gencat.c:111
 msgid "Create C header file NAME containing symbol definitions"
 msgstr "Δημιουργία ΟΝΟΜΑΤΟΣ αρχείου κεφαλίδας C με ορισμούς συμβόλων"
@@ -116,9 +126,9 @@ msgstr ""
 "-o ΑΡΧΕΙΟ-ΕΞΟΔΟΥ [ΑΡΧΕΙΟ-ΕΙΣΟΔΟΥ]...\n"
 "[ΑΡΧΕΙΟ-ΕΞΟΔΟΥ [ΑΡΧΕΙΟ-ΕΙΣΟΔΟΥ]...]"
 
-#: catgets/gencat.c:246 debug/pcprofiledump.c:224 debug/xtrace.sh:63
+#: catgets/gencat.c:246 debug/pcprofiledump.c:235 debug/xtrace.sh:63
 #: elf/ldconfig.c:233 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
-#: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
+#: elf/sprof.c:388 iconv/iconv_prog.c:391 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
 #: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:487
@@ -133,8 +143,8 @@ msgstr ""
 "ΔΕΝ υπάρχει εγγύηση ούτε ακόμη για ΛΕΙΤΟΥΡΓIΚΟΤΗΤΑΣ ή ΚΑΤΑΛΛΗΛΟΤΗΤΑ ΓΙΑ\n"
 "ΚΑΠΟΙΟ ΣΥΓΚΕΚΡΙΜΕΝΟ ΣΚΟΠΟ.\n"
 
-#: catgets/gencat.c:251 debug/pcprofiledump.c:229 debug/xtrace.sh:67
-#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
+#: catgets/gencat.c:251 debug/pcprofiledump.c:240 debug/xtrace.sh:67
+#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:396
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
@@ -147,8 +157,8 @@ msgstr "Εγγράφηκε από %s.\n"
 msgid "*standard input*"
 msgstr "*κανονική είσοδος*"
 
-#: catgets/gencat.c:288 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
-#: nss/makedb.c:248
+#: catgets/gencat.c:288 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:279
+#: iconv/iconv_prog.c:432 nss/makedb.c:248
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "αδυναμία ανοίγματος αρχείου εισόδου `%s'"
@@ -201,7 +211,7 @@ msgstr "μη τερματιζόμενο μήνυμα"
 msgid "while opening old catalog file"
 msgstr "κατά το άνοιγμα παλιού αρχείου καταλόγου"
 
-#: elf/dl-open.c:848
+#: elf/dl-open.c:817
 msgid "invalid mode for dlopen()"
 msgstr "μη έγκυρη κατάσταση για την dlopen()"
 
@@ -321,98 +331,87 @@ msgstr "Το `%s' δεν είναι το σωστό αρχείο δεδομέν�
 msgid "cannot allocate symbol data"
 msgstr "αδυναμία δέσμευσης δεδομένων συμβόλων"
 
-#: iconv/iconv_charmap.c:146 iconv/iconv_prog.c:427
+#: iconv/iconv_charmap.c:146 iconv/iconv_prog.c:426
 #, c-format
 msgid "cannot open output file"
 msgstr "αδυναμία ανοίγματος αρχείου εξόδου"
 
-#: iconv/iconv_charmap.c:192 iconv/iconv_prog.c:290
+#: iconv/iconv_charmap.c:192
 #, c-format
 msgid "error while closing input `%s'"
 msgstr "σφάλμα κατά το κλείσιμο της εισόδου `%s'"
 
-#: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:518
+#: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:728
 #, c-format
 msgid "incomplete character or shift sequence at end of buffer"
 msgstr "μη πλήρης χαρακτήρας ή μετατόπιση ακολουθίας στο τέλος του ενταμιευτή"
 
-#: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:543 iconv/iconv_prog.c:561
-#: iconv/iconv_prog.c:597
+#: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:543 iconv/iconv_prog.c:736
 #, c-format
 msgid "error while reading the input"
 msgstr "σφάλμα κατά την ανάγνωση της εισόδου"
 
-#: iconv/iconv_charmap.c:525 iconv/iconv_prog.c:579
+#: iconv/iconv_charmap.c:525
 #, c-format
 msgid "unable to allocate buffer for input"
 msgstr "αδύνατη η εκχώρηση ενταμιευτή για την είσοδο"
 
-#: iconv/iconv_prog.c:59
+#: iconv/iconv_prog.c:60
 msgid "Input/Output format specification:"
 msgstr "Καθορισμός μορφής Εισόδου/Εξόδου:"
 
-#: iconv/iconv_prog.c:60
+#: iconv/iconv_prog.c:61
 msgid "encoding of original text"
 msgstr "κωδικοποίηση για το αρχικό κείμενο"
 
-#: iconv/iconv_prog.c:61
+#: iconv/iconv_prog.c:62
 msgid "encoding for output"
 msgstr "κωδικοποίηση για έξοδο"
 
-#: iconv/iconv_prog.c:62
+#: iconv/iconv_prog.c:63
 msgid "Information:"
 msgstr "Πληροφορία:"
 
-#: iconv/iconv_prog.c:63
+#: iconv/iconv_prog.c:64
 msgid "list all known coded character sets"
 msgstr "λίστα με όλα τα γνωστά σύνολα χαρακτήρων"
 
-#: iconv/iconv_prog.c:64 locale/programs/localedef.c:123
+#: iconv/iconv_prog.c:65 locale/programs/localedef.c:123
 msgid "Output control:"
 msgstr "Έλεγχος εξόδου:"
 
-#: iconv/iconv_prog.c:66
+#: iconv/iconv_prog.c:67
 msgid "output file"
 msgstr "αρχείο εξόδου"
 
-#: iconv/iconv_prog.c:68
+#: iconv/iconv_prog.c:69
 msgid "print progress information"
 msgstr "εμφάνιση πληροφοριών προόδου"
 
-#: iconv/iconv_prog.c:73
+#: iconv/iconv_prog.c:78
 msgid "Convert encoding of given files from one encoding to another."
 msgstr "Μετατροπή της κωδικοποίησης δοθέντων αρχείων από μια κωδικοποίηση σε άλλη."
 
-#: iconv/iconv_prog.c:77
+#: iconv/iconv_prog.c:82
 msgid "[FILE...]"
 msgstr "[ΑΡΧΕΙΟ...]"
 
-#: iconv/iconv_prog.c:176 iconv/iconv_prog.c:238
+#: iconv/iconv_prog.c:189 iconv/iconv_prog.c:251
 #, c-format
 msgid "failed to start conversion processing"
 msgstr "αποτυχία στην έναρξη της επεξεργασίας μετατροπής"
 
-#: iconv/iconv_prog.c:336
-#, c-format
-msgid "error while closing output file"
-msgstr "σφάλμα κατά το κλείσιμο του αρχείου εξόδου"
-
-#: iconv/iconv_prog.c:437
+#: iconv/iconv_prog.c:540
 #, c-format
 msgid "conversion stopped due to problem in writing the output"
 msgstr "η μετατροπή διακόπηκε λόγω προβλήματος στην εγγραφή της εξόδου"
 
-#: iconv/iconv_prog.c:514
-#, c-format
-msgid "illegal input sequence at position %ld"
-msgstr "μη έγκυρη ακολουθία εισόδου στη θέση %ld"
-
-#: iconv/iconv_prog.c:522
+#: iconv/iconv_prog.c:693
 #, c-format
 msgid "internal error (illegal descriptor)"
 msgstr "εσωτερικό σφάλμα (ακατάλληλος περιγραφέας)"
 
-#: iconv/iconv_prog.c:525
+#: iconv/iconv_prog.c:696
 #, c-format
 msgid "unknown iconv() error %d"
 msgstr "άγνωστο σφάλμα iconv() %d"
@@ -1769,12 +1768,12 @@ msgstr "%s%sΆγνωστο σήμα %d\n"
 msgid "Unknown error "
 msgstr "Άγνωστο σφάλμα "
 
-#: string/strsignal.c:39
+#: string/strsignal.c:42
 #, c-format
 msgid "Real-time signal %d"
 msgstr "Σήμα πραγματικού-χρόνου %d"
 
-#: string/strsignal.c:43
+#: string/strsignal.c:46
 #, c-format
 msgid "Unknown signal %d"
 msgstr "Άγνωστο σήμα %d"
@@ -3036,7 +3035,7 @@ msgstr "γραμμή εισαγωγής αγνώστου τύπου"
 msgid "expected continuation line not found"
 msgstr "αναμενόταν γραμμή παράτασης και δεν βρέθηκε"
 
-#: timezone/zic.c:1815 timezone/zic.c:3761
+#: timezone/zic.c:1815 timezone/zic.c:3760
 msgid "time overflow"
 msgstr "υπερχείλιση ώρας"
 
@@ -3114,28 +3113,28 @@ msgstr "το έτος έναρξης είναι μεγαλύτερος το έτ
 msgid "invalid weekday name"
 msgstr "μη έγκυρο όνομα εβδομάδας"
 
-#: timezone/zic.c:3389
+#: timezone/zic.c:3388
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr ""
 "δεν είναι δυνατόν να καθοριστεί η συντόμευση της ζώνης ώρας για\n"
 "να χρησιμοποιηθεί αμέσως μετά το 'until time'"
 
-#: timezone/zic.c:3513
+#: timezone/zic.c:3512
 msgid "too many local time types"
 msgstr "υπορβολικά πολλοί τύποι τοπικής ώρας"
 
-#: timezone/zic.c:3531
+#: timezone/zic.c:3530
 msgid "too many leap seconds"
 msgstr "υπερβολικά πολλά δευτερόλεπτα αναπήδησης"
 
-#: timezone/zic.c:3742
+#: timezone/zic.c:3741
 msgid "Odd number of quotation marks"
 msgstr "Περιττός αριθμός εισαγωγικών"
 
-#: timezone/zic.c:3839
+#: timezone/zic.c:3838
 msgid "use of 2/29 in non leap-year"
 msgstr "χρήση του 2/29 σε χρόνο μη δίσεκτο"
 
-#: timezone/zic.c:3902
+#: timezone/zic.c:3901
 msgid "too many, or too long, time zone abbreviations"
 msgstr "υπερβολικά πολλές, ή πολύ μακρές, συντομεύσεις ζώνης ώρας"

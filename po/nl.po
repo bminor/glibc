@@ -1,20 +1,20 @@
 # Dutch translations for GNU libc.
-# Copyright (C) 2023 Free Software Foundation, Inc.
+# Copyright (C) 2025 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
 #
-# "When du ein Fehler machst, hast du keine Zahnschmerzen mehr."
+# "You don't get rich by treating other people well."
 #
 # Elros Cyriatan <cyriatan@fastmail.fm>, 2004.
 # Erwin Poeze <erwin.poeze@gmail.com>, 2009.
-# Benno Schulenberg <benno@vertaalt.nl>, 2006, 2007, 2008, 2010, 2011, 2012
+# Benno Schulenberg <benno@vertaalt.nl>, 2006, 2007, 2008, 2010, 2011, 2012.
 # Benno Schulenberg <benno@vertaalt.nl>, 2013, 2014, 2015, 2017, 2018, 2019.
-# Benno Schulenberg <benno@vertaalt.nl>, 2020, 2021, 2022, 2023.
+# Benno Schulenberg <benno@vertaalt.nl>, 2020, 2021, 2022, 2023, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: libc-2.37.9000\n"
+"Project-Id-Version: libc-2.40.9000\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-21 00:32+0200\n"
-"PO-Revision-Date: 2023-07-24 09:34+0200\n"
+"POT-Creation-Date: 2025-01-04 11:03+0100\n"
+"PO-Revision-Date: 2025-01-06 15:44+0100\n"
 "Last-Translator: Benno Schulenberg <vertaling@coevern.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "Language: nl\n"
@@ -78,7 +78,7 @@ msgid "Give a short usage message"
 msgstr "een korte gebruikssamenvatting tonen"
 
 #: argp/argp-parse.c:88 catgets/gencat.c:110 catgets/gencat.c:114
-#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:106 nscd/nscd.c:110
+#: iconv/iconv_prog.c:61 iconv/iconv_prog.c:62 nscd/nscd.c:106 nscd/nscd.c:110
 #: nss/makedb.c:122
 msgid "NAME"
 msgstr "NAAM"
@@ -114,21 +114,13 @@ msgstr "**Interne programmafout**: optie had herkend moeten worden!?"
 
 #: assert/assert-perr.c:35
 #, c-format
-msgid ""
-"%s%s%s:%u: %s%sUnexpected error: %s.\n"
-"%n"
-msgstr ""
-"%s%s%s:%u: %s%sOnverwachte fout: %s.\n"
-"%n"
+msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
+msgstr "%s%s%s:%u: %s%sOnverwachte fout: %s.\n"
 
-#: assert/assert.c:103
+#: assert/assert.c:125
 #, c-format
-msgid ""
-"%s%s%s:%u: %s%sAssertion `%s' failed.\n"
-"%n"
-msgstr ""
-"%s%s%s:%u: %s%sControletest '%s' faalt.\n"
-"%n"
+msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
+msgstr "%s%s%s:%u: %s%sControletest '%s' faalt.\n"
 
 #: catgets/gencat.c:111
 msgid "Create C header file NAME containing symbol definitions"
@@ -159,8 +151,8 @@ msgstr ""
 "-o UITVOERBESTAND [INVOERBESTAND...]\n"
 "[UITVOERBESTAND [INVOERBESTAND...]]"
 
-#: catgets/gencat.c:230 debug/pcprofiledump.c:208 elf/ldconfig.c:217
-#: elf/pldd.c:246 elf/sln.c:77 elf/sprof.c:371 iconv/iconv_prog.c:387
+#: catgets/gencat.c:230 debug/pcprofiledump.c:219 elf/ldconfig.c:217
+#: elf/pldd.c:246 elf/sln.c:77 elf/sprof.c:371 iconv/iconv_prog.c:374
 #: iconv/iconvconfig.c:380 locale/programs/locale.c:275
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:88
 #: malloc/memusagestat.c:564 nss/getent.c:961 nss/makedb.c:371
@@ -173,9 +165,9 @@ msgstr ""
 "Voor het rapporteren van programmafouten, zie:\n"
 "  %s.\n"
 
-#: catgets/gencat.c:246 debug/pcprofiledump.c:224 debug/xtrace.sh:63
+#: catgets/gencat.c:246 debug/pcprofiledump.c:235 debug/xtrace.sh:63
 #: elf/ldconfig.c:233 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
-#: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
+#: elf/sprof.c:388 iconv/iconv_prog.c:391 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
 #: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:487
@@ -190,8 +182,8 @@ msgstr ""
 "Er is GEEN garantie, zelfs niet voor VERKOOPBAARHEID of GESCHIKTHEID\n"
 "VOOR EEN BEPAALD DOEL.\n"
 
-#: catgets/gencat.c:251 debug/pcprofiledump.c:229 debug/xtrace.sh:67
-#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
+#: catgets/gencat.c:251 debug/pcprofiledump.c:240 debug/xtrace.sh:67
+#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:396
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
@@ -204,8 +196,8 @@ msgstr "Geschreven door %s.\n"
 msgid "*standard input*"
 msgstr "*standaardinvoer*"
 
-#: catgets/gencat.c:288 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
-#: nss/makedb.c:248
+#: catgets/gencat.c:288 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:279
+#: iconv/iconv_prog.c:432 nss/makedb.c:248
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "kan invoerbestand '%s' niet openen"
@@ -256,6 +248,11 @@ msgstr "ongeldige regel"
 msgid "malformed line ignored"
 msgstr "ongeldige regel is genegeerd"
 
+#: catgets/gencat.c:939 catgets/gencat.c:947
+#, c-format
+msgid "cannot allocate memory"
+msgstr "kan geen geheugen reserveren"
+
 #: catgets/gencat.c:1000 catgets/gencat.c:1045
 #, c-format
 msgid "cannot open output file `%s'"
@@ -298,17 +295,32 @@ msgstr ""
 msgid "[FILE]"
 msgstr "[BESTAND]"
 
+#: debug/pcprofiledump.c:97
+#, c-format
+msgid "cannot read header"
+msgstr "kan kop niet lezen"
+
+#: debug/pcprofiledump.c:99
+#, c-format
+msgid "cannot read pointer pair"
+msgstr "kan pointer-paar niet lezen"
+
 #: debug/pcprofiledump.c:107
+#, c-format
+msgid "unexpected end of file in header"
+msgstr "onverwacht einde van bestand in kop"
+
+#: debug/pcprofiledump.c:110
+#, c-format
+msgid "unexpected end of file in pointer pair"
+msgstr "onverwacht einde van bestand in pointer-paar"
+
+#: debug/pcprofiledump.c:145
 #, c-format
 msgid "cannot open input file"
 msgstr "kan invoerbestand niet openen"
 
-#: debug/pcprofiledump.c:114
-#, c-format
-msgid "cannot read header"
-msgstr "kan kop van bestand niet lezen"
-
-#: debug/pcprofiledump.c:178
+#: debug/pcprofiledump.c:189
 #, c-format
 msgid "invalid pointer size"
 msgstr "ongeldige pointergrootte"
@@ -471,11 +483,11 @@ msgstr "fout bij laden van gedeelde bibliotheken"
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr "FOUT IN DYNAMISCHE LINKER!!!"
 
-#: elf/dl-close.c:357 elf/dl-open.c:298
+#: elf/dl-close.c:363 elf/dl-open.c:298
 msgid "cannot create scope list"
 msgstr "kan lijst voor geldigheidsbereik niet aanmaken"
 
-#: elf/dl-close.c:790
+#: elf/dl-close.c:792
 msgid "shared object not open"
 msgstr "gedeeld object is niet open"
 
@@ -504,18 +516,6 @@ msgstr "kan geen geheugen reserveren voor afhankelijkhedenlijst"
 msgid "cannot allocate symbol search list"
 msgstr "kan geen geheugen reserveren voor symbolenzoeklijst"
 
-#: elf/dl-fptr.c:88 sysdeps/hppa/dl-fptr.c:96
-msgid "cannot map pages for fdesc table"
-msgstr "kan pagina's voor 'fdesc'-tabel niet in het geheugen plaatsen"
-
-#: elf/dl-fptr.c:192 sysdeps/hppa/dl-fptr.c:214
-msgid "cannot map pages for fptr table"
-msgstr "kan pagina's voor 'fptr'-tabel niet in het geheugen plaatsen"
-
-#: elf/dl-fptr.c:221 sysdeps/hppa/dl-fptr.c:243
-msgid "internal error: symidx out of range of fptr table"
-msgstr "**interne fout**: 'symidx' buiten bereik van 'fptr'-tabel"
-
 #: elf/dl-hwcaps.c:104
 msgid "cannot create HWCAP priorities"
 msgstr "kan HWCAP-prioriteiten niet aanmaken"
@@ -524,127 +524,127 @@ msgstr "kan HWCAP-prioriteiten niet aanmaken"
 msgid "cannot create capability list"
 msgstr "kan privilegeslijst niet aanmaken"
 
-#: elf/dl-load.c:423
+#: elf/dl-load.c:424
 msgid "cannot allocate name record"
 msgstr "kan geen geheugen reserveren voor naamrecord"
 
-#: elf/dl-load.c:525 elf/dl-load.c:638 elf/dl-load.c:732 elf/dl-load.c:829
+#: elf/dl-load.c:510 elf/dl-load.c:623 elf/dl-load.c:717 elf/dl-load.c:814
 msgid "cannot create cache for search path"
 msgstr "kan cache voor zoekpad niet aanmaken"
 
-#: elf/dl-load.c:621
+#: elf/dl-load.c:606
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "kan geen kopie van RUNPATH/RPATH maken"
 
-#: elf/dl-load.c:718
+#: elf/dl-load.c:703
 msgid "cannot create search path array"
 msgstr "kan zoekpad-array niet aanmaken"
 
-#: elf/dl-load.c:957
+#: elf/dl-load.c:973
 msgid "cannot stat shared object"
 msgstr "kan gedeeld object niet vinden"
 
-#: elf/dl-load.c:1048 elf/dl-load.c:2163
+#: elf/dl-load.c:1066 elf/dl-load.c:2155
 msgid "cannot create shared object descriptor"
 msgstr "kan descriptor voor gedeeld object niet aanmaken"
 
-#: elf/dl-load.c:1067 elf/dl-load.c:1610 elf/dl-load.c:1718
+#: elf/dl-load.c:1085 elf/dl-load.c:1604 elf/dl-load.c:1710
 msgid "cannot read file data"
 msgstr "kan bestandsgegevens niet lezen"
 
-#: elf/dl-load.c:1120 elf/dl-map-segments.h:117
+#: elf/dl-load.c:1138 elf/dl-map-segments.h:117
 msgid "ELF load command address/offset not page-aligned"
 msgstr "adres/positie in ELF-laadopdracht is niet pagina-uitgelijnd"
 
-#: elf/dl-load.c:1212
+#: elf/dl-load.c:1230
 msgid "object file has no loadable segments"
 msgstr "objectbestand heeft geen laadbare segmenten"
 
-#: elf/dl-load.c:1229
+#: elf/dl-load.c:1247
 msgid "cannot dynamically load executable"
 msgstr "kan uitvoerbaar bestand niet dynamisch laden"
 
-#: elf/dl-load.c:1236
+#: elf/dl-load.c:1254
 msgid "object file has no dynamic section"
 msgstr "objectbestand heeft geen dynamische sectie"
 
-#: elf/dl-load.c:1271
+#: elf/dl-load.c:1289
 msgid "cannot dynamically load position-independent executable"
 msgstr "kan positie-onafhankelijk uitvoerbaar bestand niet dynamisch laden"
 
-#: elf/dl-load.c:1273
+#: elf/dl-load.c:1291
 msgid "shared object cannot be dlopen()ed"
 msgstr "gedeeld object kan niet met dlopen() geopend worden -- heeft DF_1_NOOPEN-vlag"
 
-#: elf/dl-load.c:1286
+#: elf/dl-load.c:1304
 msgid "cannot allocate memory for program header"
 msgstr "kan geen geheugen reserveren voor programmakop"
 
-#: elf/dl-load.c:1309
+#: elf/dl-load.c:1329
 msgid "cannot enable executable stack as shared object requires"
 msgstr "kan uitvoerbare stack niet aanzetten zoals gedeeld object vereist"
 
-#: elf/dl-load.c:1337
+#: elf/dl-load.c:1357
 msgid "cannot close file descriptor"
 msgstr "kan bestandsdescriptor niet sluiten"
 
-#: elf/dl-load.c:1610
+#: elf/dl-load.c:1604
 msgid "file too short"
 msgstr "bestand is te kort"
 
-#: elf/dl-load.c:1646
+#: elf/dl-load.c:1638
 msgid "invalid ELF header"
 msgstr "ongeldige ELF-header"
 
-#: elf/dl-load.c:1661
+#: elf/dl-load.c:1653
 msgid "ELF file data encoding not big-endian"
 msgstr "gegevenscodering van ELF-bestand is niet big-endian"
 
-#: elf/dl-load.c:1663
+#: elf/dl-load.c:1655
 msgid "ELF file data encoding not little-endian"
 msgstr "gegevenscodering van ELF-bestand is niet little-endian"
 
-#: elf/dl-load.c:1667
+#: elf/dl-load.c:1659
 msgid "ELF file version ident does not match current one"
 msgstr "ELF-bestands-identversie komt niet overeen met huidige"
 
-#: elf/dl-load.c:1671
+#: elf/dl-load.c:1663
 msgid "ELF file OS ABI invalid"
 msgstr "OS-ABI van ELF-bestand is ongeldig"
 
-#: elf/dl-load.c:1674
+#: elf/dl-load.c:1666
 msgid "ELF file ABI version invalid"
 msgstr "ABI-versie van ELF-bestand is ongeldig"
 
-#: elf/dl-load.c:1677
+#: elf/dl-load.c:1669
 msgid "nonzero padding in e_ident"
 msgstr "opvulling met niet-nullen in e_ident()"
 
-#: elf/dl-load.c:1680
+#: elf/dl-load.c:1672
 msgid "internal error"
 msgstr "**interne fout**"
 
-#: elf/dl-load.c:1687
+#: elf/dl-load.c:1679
 msgid "ELF file version does not match current one"
 msgstr "ELF-bestandsversie komt niet overeen met huidige"
 
-#: elf/dl-load.c:1699
+#: elf/dl-load.c:1691
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "alleen ET_DYN en ET_EXEC kunnen worden geladen"
 
-#: elf/dl-load.c:1704
+#: elf/dl-load.c:1696
 msgid "ELF file's phentsize not the expected size"
 msgstr "'phentsize' van ELF-bestand heeft niet de verwachte grootte"
 
-#: elf/dl-load.c:2182
+#: elf/dl-load.c:2174
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "verkeerde ELF-klasse: ELFCLASS64"
 
-#: elf/dl-load.c:2183
+#: elf/dl-load.c:2175
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "verkeerde ELF-klasse: ELFCLASS32"
 
-#: elf/dl-load.c:2186
+#: elf/dl-load.c:2178
 msgid "cannot open shared object file"
 msgstr "kan gedeeld objectbestand niet openen"
 
@@ -660,7 +660,7 @@ msgstr "kan geheugenbeschermingen niet veranderen"
 msgid "cannot map zero-fill pages"
 msgstr "kan nul-gevulde pagina's niet in het geheugen plaatsen"
 
-#: elf/dl-lookup.c:813
+#: elf/dl-lookup.c:800
 msgid "symbol lookup error"
 msgstr "opzoekfout voor symbool"
 
@@ -668,25 +668,25 @@ msgstr "opzoekfout voor symbool"
 msgid "cannot extend global scope"
 msgstr "kan globaal geldigheidsbereik niet uitbreiden"
 
-#: elf/dl-open.c:405
+#: elf/dl-open.c:382
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr ""
 "De TLS-generatieteller is opnieuw bij nul begonnen!\n"
 "Dit is een **programmafout**.  Graag rapporteren."
 
-#: elf/dl-open.c:758
+#: elf/dl-open.c:716
 msgid "cannot allocate address lookup data"
 msgstr "kan geen geheugen reserveren voor adresopzoekgegevens"
 
-#: elf/dl-open.c:848
+#: elf/dl-open.c:817
 msgid "invalid mode for dlopen()"
 msgstr "ongeldige modus voor dlopen()"
 
-#: elf/dl-open.c:865
+#: elf/dl-open.c:834
 msgid "no more namespaces available for dlmopen()"
 msgstr "geen naamsruimten meer beschikbaar voor dlmopen()"
 
-#: elf/dl-open.c:890
+#: elf/dl-open.c:859
 msgid "invalid target namespace in dlmopen()"
 msgstr "ongeldige doelnaamsruimte in dlmopen()"
 
@@ -694,16 +694,16 @@ msgstr "ongeldige doelnaamsruimte in dlmopen()"
 msgid "cannot allocate memory in static TLS block"
 msgstr "kan geen geheugen reserveren binnen statisch TLS-blok"
 
-#: elf/dl-reloc.c:288
+#: elf/dl-reloc.c:283
 msgid "cannot make segment writable for relocation"
 msgstr "kan segment niet schrijfbaar maken voor verplaatsing"
 
-#: elf/dl-reloc.c:319
+#: elf/dl-reloc.c:313
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: onvoldoende geheugen om verplaatsingsresultaten van %s op te slaan\n"
 
-#: elf/dl-reloc.c:335
+#: elf/dl-reloc.c:328
 msgid "cannot restore segment prot after reloc"
 msgstr "kan segmentbescherming niet herstellen na verplaatsing"
 
@@ -715,7 +715,7 @@ msgstr "kan extra geheugenbescherming niet toepassen na verplaatsing"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT is gebruikt in code die niet dynamisch geladen is"
 
-#: elf/dl-tls.c:1136
+#: elf/dl-tls.c:1163
 msgid "cannot create TLS data structures"
 msgstr "kan TLS-gegevensstructuren niet aanmaken"
 
@@ -1396,12 +1396,12 @@ msgstr "Tekenreekstabel heeft te veel items"
 msgid "String table is too large"
 msgstr "Tekenreekstabel is te groot"
 
-#: iconv/iconv_charmap.c:146 iconv/iconv_prog.c:427
+#: iconv/iconv_charmap.c:146 iconv/iconv_prog.c:426
 #, c-format
 msgid "cannot open output file"
 msgstr "kan uitvoerbestand niet openen"
 
-#: iconv/iconv_charmap.c:192 iconv/iconv_prog.c:290
+#: iconv/iconv_charmap.c:192
 #, c-format
 msgid "error while closing input `%s'"
 msgstr "fout bij sluiten van invoer '%s'"
@@ -1411,130 +1411,137 @@ msgstr "fout bij sluiten van invoer '%s'"
 msgid "illegal input sequence at position %zd"
 msgstr "ongeldige invoerreeks op positie %zd"
 
-#: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:518
+#: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:728
 #, c-format
 msgid "incomplete character or shift sequence at end of buffer"
 msgstr "onvolledige teken- of schuifreeks aan einde van buffer"
 
-#: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:543 iconv/iconv_prog.c:561
-#: iconv/iconv_prog.c:597
+#: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:543 iconv/iconv_prog.c:736
 #, c-format
 msgid "error while reading the input"
 msgstr "fout bij lezen van de invoer"
 
-#: iconv/iconv_charmap.c:525 iconv/iconv_prog.c:579
+#: iconv/iconv_charmap.c:525
 #, c-format
 msgid "unable to allocate buffer for input"
 msgstr "kan geen geheugen reserveren voor invoerbuffer"
 
-#: iconv/iconv_prog.c:59
+#: iconv/iconv_prog.c:60
 msgid "Input/Output format specification:"
 msgstr "Specificatie van in- en uitvoercodering:"
 
-#: iconv/iconv_prog.c:60
+#: iconv/iconv_prog.c:61
 msgid "encoding of original text"
 msgstr "codering van oorspronkelijke tekst"
 
-#: iconv/iconv_prog.c:61
+#: iconv/iconv_prog.c:62
 msgid "encoding for output"
 msgstr "codering van uitvoer"
 
-#: iconv/iconv_prog.c:62
+#: iconv/iconv_prog.c:63
 msgid "Information:"
 msgstr "Informatie:"
 
-#: iconv/iconv_prog.c:63
+#: iconv/iconv_prog.c:64
 msgid "list all known coded character sets"
 msgstr "alle bekende gecodeerde tekensets opsommen"
 
-#: iconv/iconv_prog.c:64 locale/programs/localedef.c:123
+#: iconv/iconv_prog.c:65 locale/programs/localedef.c:123
 msgid "Output control:"
 msgstr "Uitvoerbeheer:"
 
-#: iconv/iconv_prog.c:65
+#: iconv/iconv_prog.c:66
 msgid "omit invalid characters from output"
 msgstr "ongeldige tekens in uitvoer overslaan"
 
-#: iconv/iconv_prog.c:66 iconv/iconvconfig.c:128
+#: iconv/iconv_prog.c:67 iconv/iconvconfig.c:128
 #: locale/programs/localedef.c:116 locale/programs/localedef.c:118
 #: locale/programs/localedef.c:120 locale/programs/localedef.c:149
 #: malloc/memusagestat.c:56
 msgid "FILE"
 msgstr "BESTAND"
 
-#: iconv/iconv_prog.c:66
+#: iconv/iconv_prog.c:67
 msgid "output file"
 msgstr "uitvoerbestand"
 
-#: iconv/iconv_prog.c:67
+#: iconv/iconv_prog.c:68
 msgid "suppress warnings"
 msgstr "waarschuwingen onderdrukken"
 
-#: iconv/iconv_prog.c:68
+#: iconv/iconv_prog.c:69
 msgid "print progress information"
 msgstr "voortgangsinformatie tonen"
 
+#: iconv/iconv_prog.c:72
+msgid "BYTE-COUNT"
+msgstr "AANTAL BYTES"
+
 #: iconv/iconv_prog.c:73
+msgid "size of in-memory scratch buffer"
+msgstr "grootte van kladbuffer in geheugen"
+
+#: iconv/iconv_prog.c:78
 msgid "Convert encoding of given files from one encoding to another."
 msgstr ""
 "  \n"
-"Bestanden converteren van ene codering naar andere."
+"Converteert bestanden van de ene codering naar een andere."
 
-#: iconv/iconv_prog.c:77
+#: iconv/iconv_prog.c:82
 msgid "[FILE...]"
 msgstr "[BESTAND...]"
 
-#: iconv/iconv_prog.c:176 iconv/iconv_prog.c:238
+#: iconv/iconv_prog.c:189 iconv/iconv_prog.c:251
 #, c-format
 msgid "failed to start conversion processing"
 msgstr "beginnen van conversieproces is mislukt"
 
-#: iconv/iconv_prog.c:212
+#: iconv/iconv_prog.c:225
 #, c-format
 msgid "conversions from `%s' and to `%s' are not supported"
 msgstr "conversie vanuit '%s' en conversie naar '%s' worden niet ondersteund"
 
-#: iconv/iconv_prog.c:217
+#: iconv/iconv_prog.c:230
 #, c-format
 msgid "conversion from `%s' is not supported"
 msgstr "conversie vanuit '%s' wordt niet ondersteund"
 
-#: iconv/iconv_prog.c:224
+#: iconv/iconv_prog.c:237
 #, c-format
 msgid "conversion to `%s' is not supported"
 msgstr "conversie naar '%s' wordt niet ondersteund"
 
-#: iconv/iconv_prog.c:228
+#: iconv/iconv_prog.c:241
 #, c-format
 msgid "conversion from `%s' to `%s' is not supported"
 msgstr "conversie van '%s' naar '%s' wordt niet ondersteund"
 
-#: iconv/iconv_prog.c:336
+#: iconv/iconv_prog.c:349
 #, c-format
-msgid "error while closing output file"
-msgstr "fout bij sluiten van uitvoerbestand"
+msgid "invalid buffer size: %s"
+msgstr "ongeldige buffergrootte: %s"
 
-#: iconv/iconv_prog.c:437
+#: iconv/iconv_prog.c:540
 #, c-format
 msgid "conversion stopped due to problem in writing the output"
 msgstr "conversie is gestopt vanwege probleem bij schrijven van de uitvoer"
 
-#: iconv/iconv_prog.c:514
+#: iconv/iconv_prog.c:686
 #, c-format
-msgid "illegal input sequence at position %ld"
-msgstr "ongeldige invoerreeks op positie %ld"
+msgid "illegal input sequence at position %lld"
+msgstr "ongeldige invoerreeks op positie %lld"
 
-#: iconv/iconv_prog.c:522
+#: iconv/iconv_prog.c:693
 #, c-format
 msgid "internal error (illegal descriptor)"
 msgstr "**interne fout**: ongeldige descriptor"
 
-#: iconv/iconv_prog.c:525
+#: iconv/iconv_prog.c:696
 #, c-format
 msgid "unknown iconv() error %d"
 msgstr "onbekende iconv()-fout %d"
 
-#: iconv/iconv_prog.c:768
+#: iconv/iconv_prog.c:909
 msgid ""
 "The following list contains all the coded character sets known.  This does\n"
 "not necessarily mean that all combinations of these names can be used for\n"
@@ -4762,6 +4769,11 @@ msgstr "dubbele sleutel"
 msgid "problems while reading `%s'"
 msgstr "problemen tijdens lezen van '%s'"
 
+#: nss/makedb.c:748
+#, c-format
+msgid "failed to allocate memory"
+msgstr "reserveren van geheugen is mislukt"
+
 #: nss/makedb.c:814
 #, c-format
 msgid "failed to write new database file"
@@ -5187,7 +5199,7 @@ msgstr "Onbekend signaal %d\n"
 msgid "%s%sUnknown signal %d\n"
 msgstr "%s%sOnbekend signaal %d\n"
 
-#: stdio-common/psignal.c:44
+#: stdio-common/psignal.c:44 string/strsignal.c:57
 msgid "Unknown signal"
 msgstr "Onbekend signaal"
 
@@ -5195,12 +5207,12 @@ msgstr "Onbekend signaal"
 msgid "Unknown error "
 msgstr "Onbekende fout "
 
-#: string/strsignal.c:39
+#: string/strsignal.c:42
 #, c-format
 msgid "Real-time signal %d"
 msgstr "Realtime-signaal %d"
 
-#: string/strsignal.c:43
+#: string/strsignal.c:46
 #, c-format
 msgid "Unknown signal %d"
 msgstr "Onbekend signaal %d"
@@ -6458,9 +6470,25 @@ msgstr "?"
 msgid "RPC program not available"
 msgstr "RPC-programma is niet beschikbaar"
 
+#: sysdeps/hppa/dl-fptr.c:96
+msgid "cannot map pages for fdesc table"
+msgstr "kan pagina's voor 'fdesc'-tabel niet in het geheugen plaatsen"
+
+#: sysdeps/hppa/dl-fptr.c:214
+msgid "cannot map pages for fptr table"
+msgstr "kan pagina's voor 'fptr'-tabel niet in het geheugen plaatsen"
+
+#: sysdeps/hppa/dl-fptr.c:243
+msgid "internal error: symidx out of range of fptr table"
+msgstr "**interne fout**: 'symidx' buiten bereik van 'fptr'-tabel"
+
 #: sysdeps/mach/_strerror.c:43 sysdeps/mach/xpg-strerror.c:55
 msgid "Error in unknown error system: "
 msgstr "Fout in systeem voor onbekende fouten: "
+
+#: sysdeps/mach/xpg-strerror.c:66 sysdeps/mach/xpg-strerror.c:74
+msgid "Unknown error code: "
+msgstr "Onbekende foutcode: "
 
 #: sysdeps/posix/gai_strerror-strs.h:2
 msgid "Address family for hostname not supported"
@@ -6551,6 +6579,34 @@ msgstr "hercompileer het gedeeld object met IBT-ondersteuning"
 msgid "rebuild shared object with SHSTK support enabled"
 msgstr "hercompileer het gedeeld object met SHSTK-ondersteuning"
 
+#: sysdeps/x86_64/dl-cet.c:251
+msgid "can't disable IBT"
+msgstr "kan IBT niet uitschakelen"
+
+#: sysdeps/x86_64/dl-cet.c:253
+msgid "can't disable SHSTK"
+msgstr "kan SHSTK niet uitschakelen"
+
+#: timezone/zdump.c:131
+#, c-format
+msgid "%s: size overflow\n"
+msgstr "%s: grootteoverloop\n"
+
+#: timezone/zdump.c:170
+#, c-format
+msgid "%s: Memory exhausted\n"
+msgstr "%s: Onvoldoende geheugen beschikbaar\n"
+
+#: timezone/zdump.c:257
+#, c-format
+msgid "%s: setenv: %s\n"
+msgstr "%s: setenv: %s\n"
+
+#: timezone/zdump.c:337 timezone/zdump.c:604
+#, c-format
+msgid "%s: unknown timezone '%s': %s\n"
+msgstr "%s: onbekende tijdzone '%s': %s\n"
+
 #: timezone/zdump.c:402
 msgid "has characters other than ASCII alphanumerics, '-' or '+'"
 msgstr "bevat andere tekens dan ASCII-letters en -cijfers en '+' en '-'"
@@ -6607,6 +6663,16 @@ msgstr "%s: extra argument %s bij optie -c\n"
 msgid "%s: wild -t argument %s\n"
 msgstr "%s: extra argument %s bij optie -t\n"
 
+#: timezone/zdump.c:857
+#, c-format
+msgid " (gmtime failed)"
+msgstr " ('gmtime' is mislukt)"
+
+#: timezone/zdump.c:867
+#, c-format
+msgid " (localtime failed)"
+msgstr " ('localtime' is mislukt)"
+
 #: timezone/zic.c:463
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
@@ -6647,10 +6713,49 @@ msgstr " (voorschrift uit \"%s\", regel %<PRIdMAX>)"
 msgid "warning: "
 msgstr "waarschuwing: "
 
+#: timezone/zic.c:669
+#, c-format
+msgid ""
+"%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
+"\t[ -b {slim|fat} ] [ -d directory ] [ -l localtime ] [ -L leapseconds ] \\\n"
+"\t[ -p posixrules ] [ -r '[@lo][/@hi]' ] [ -R '@hi' ] \\\n"
+"\t[ -t localtime-link ] \\\n"
+"\t[ filename ... ]\n"
+"\n"
+"Report bugs to %s.\n"
+msgstr ""
+"Gebruik:  %s [-v] [-b {slim|fat}] [-d map] [-l lokaletijdzone]\n"
+"                [-L schrikkelsecondenbestand] [-p posixvoorschriftenzone]\n"
+"                [-r '[@lo][/@hi]'] [-R '@hi'] [-t lokaletijdlink]  [bestand...]\n"
+"     of:  %s [--version] [--help]\n"
+"\n"
+"Rapporteer gebreken in het programma aan %s;\n"
+"meld fouten in de vertaling aan <vertaling@vrijschrift.nl>.\n"
+
 #: timezone/zic.c:695
 #, c-format
 msgid "%s: Can't chdir to %s: %s\n"
 msgstr "%s: Kan huidige map niet wijzigen naar %s: %s\n"
+
+#: timezone/zic.c:786
+#, c-format
+msgid "\"Link %s %s\" is part of a link cycle"
+msgstr "\"Koppeling %s %s\" is deel van een koppelingslus"
+
+#: timezone/zic.c:797
+#, c-format
+msgid "link %s targets itself"
+msgstr "koppeling %s wijst naar zichzelf"
+
+#: timezone/zic.c:817
+#, c-format
+msgid "link %s targeting link %s mishandled by pre-2023 zic"
+msgstr "koppeling %s verwijzend naar koppeling %s wordt onjuist behandeld door 'zic' van voor 2023"
+
+#: timezone/zic.c:821
+#, c-format
+msgid "link %s targeting link %s"
+msgstr "koppeling %s verwijzend naar koppeling %s"
 
 #: timezone/zic.c:992
 msgid "wild compilation-time specification of zic_t"
@@ -6685,6 +6790,10 @@ msgstr "%s: Optie -p is meermaals gegeven\n"
 msgid "%s: More than one -t option specified\n"
 msgstr "%s: Optie -t is meermaals gegeven\n"
 
+#: timezone/zic.c:1064
+msgid "-y ignored"
+msgstr "optie '-y' is genegeerd"
+
 #: timezone/zic.c:1071
 #, c-format
 msgid "%s: More than one -L option specified\n"
@@ -6700,9 +6809,19 @@ msgstr "%s: Optie -r is meermaals gegeven\n"
 msgid "%s: invalid time range: %s\n"
 msgstr "%s: ongeldig tijdsbereik: %s\n"
 
+#: timezone/zic.c:1098
+#, c-format
+msgid "%s: invalid time: %s\n"
+msgstr "%s: ongeldige tijd: %s\n"
+
 #: timezone/zic.c:1104
 msgid "-s ignored"
 msgstr "optie '-s' is genegeerd"
+
+#: timezone/zic.c:1110
+#, c-format
+msgid "%s: -R time exceeds -r cutoff\n"
+msgstr "%s: de '-R'-tijd overschrijdt de '-r'-drempel\n"
 
 #: timezone/zic.c:1171
 msgid "empty file name"
@@ -6743,10 +6862,20 @@ msgstr "bestandsnaam '%s' bevat byte '\\%o'"
 msgid "%s: Can't create %s/%s: %s\n"
 msgstr "%s: Kan %s/%s niet aanmaken: %s\n"
 
+#: timezone/zic.c:1388
+#, c-format
+msgid "%s: rename to %s/%s: %s\n"
+msgstr "%s: hernoemen naar %s/%s: %s\n"
+
 #: timezone/zic.c:1463
 #, c-format
 msgid "%s: Can't remove %s/%s: %s\n"
 msgstr "%s: Kan %s/%s niet verwijderen: %s\n"
+
+#: timezone/zic.c:1507
+#, c-format
+msgid "%s: Can't link %s/%s to %s/%s: %s\n"
+msgstr "%s: Kan %s/%s niet koppelen aan %s/%s: %s\n"
 
 #: timezone/zic.c:1536
 #, c-format
@@ -6777,6 +6906,18 @@ msgstr "dezelfde voorschriftnaam in meerdere bestanden"
 msgid "%s in ruleless zone"
 msgstr "%s in voorschriftloze zone"
 
+#: timezone/zic.c:1674
+msgid "input error"
+msgstr "invoerfout"
+
+#: timezone/zic.c:1679
+msgid "unterminated line"
+msgstr "onafgesloten regel"
+
+#: timezone/zic.c:1683
+msgid "NUL input byte"
+msgstr "NUL-teken als invoerbyte"
+
 #: timezone/zic.c:1688
 msgid "line too long"
 msgstr "regel is te lang"
@@ -6798,7 +6939,7 @@ msgstr "verwachte regelcontinuering is niet gevonden"
 msgid "fractional seconds rejected by pre-2018 versions of zic"
 msgstr "fractionele seconden worden geweigerd door versies van 'zic' van voor 2018"
 
-#: timezone/zic.c:1815 timezone/zic.c:3761
+#: timezone/zic.c:1815 timezone/zic.c:3760
 msgid "time overflow"
 msgstr "tijdsoverloop"
 
@@ -6911,6 +7052,15 @@ msgstr "meerdere 'Expires'-regels"
 msgid "wrong number of fields on Link line"
 msgstr "verkeerd aantal velden op 'Link'-regel"
 
+#: timezone/zic.c:2129
+msgid "blank TARGET field on Link line"
+msgstr "leeg TARGET-veld op 'Link'-regel"
+
+#: timezone/zic.c:2192
+#, c-format
+msgid "FROM year \"%s\" is obsolete; treated as %d"
+msgstr "FROM-jaar \"%s\" is verouderd; wordt behandeld als %d"
+
 #: timezone/zic.c:2199
 msgid "invalid starting year"
 msgstr "ongeldig beginjaar"
@@ -6922,6 +7072,11 @@ msgstr "ongeldig eindjaar"
 #: timezone/zic.c:2218
 msgid "starting year greater than ending year"
 msgstr "beginjaar is groter dan eindjaar"
+
+#: timezone/zic.c:2222
+#, c-format
+msgid "year type \"%s\" is unsupported; use \"-\" instead"
+msgstr "jaartype \"%s\" wordt niet ondersteund; gebruik \"-\""
 
 #: timezone/zic.c:2257
 msgid "invalid weekday name"
@@ -6945,80 +7100,88 @@ msgstr "te veel overgangstijden"
 msgid "%%z UT offset magnitude exceeds 99:59:59"
 msgstr "verschuiving %%z t.o.v. UT is groter dan 99:59:59"
 
-#: timezone/zic.c:3187
+#: timezone/zic.c:3186
 #, c-format
 msgid "%s: pre-%d clients may mishandle distant timestamps"
 msgstr "%s: clients van voor %d zouden verre tijdsstempels onjuist kunnen behandelen"
 
-#: timezone/zic.c:3316
+#: timezone/zic.c:3315
 msgid "two rules for same instant"
 msgstr "twee voorschriften voor hetzelfde moment"
 
-#: timezone/zic.c:3389
+#: timezone/zic.c:3388
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr "kan tijdzone-afkorting voor gebruik na een tot-tijd niet bepalen"
 
-#: timezone/zic.c:3490
+#: timezone/zic.c:3489
 msgid "UT offset out of range"
 msgstr "verschuiving ten opzichte van UTC valt buiten bereik"
 
-#: timezone/zic.c:3513
+#: timezone/zic.c:3512
 msgid "too many local time types"
 msgstr "te veel soorten lokale tijd"
 
-#: timezone/zic.c:3531
+#: timezone/zic.c:3530
 msgid "too many leap seconds"
 msgstr "te veel schrikkelseconden"
 
-#: timezone/zic.c:3562
+#: timezone/zic.c:3534
+msgid "Rolling leap seconds not supported with -r"
+msgstr "Rollende schrikkelseconden worden niet ondersteund met '-r'"
+
+#: timezone/zic.c:3561
 msgid "Leap seconds too close together"
 msgstr "schrikkelseconden liggen te dicht bij elkaar"
 
-#: timezone/zic.c:3573
+#: timezone/zic.c:3572
 msgid "last Leap time does not precede Expires time"
 msgstr "laatste 'Leap'-tijd is niet vóór 'Expires'-tijd"
 
-#: timezone/zic.c:3680
+#: timezone/zic.c:3679
 #, c-format
 msgid "\"%s\" is undocumented; use \"last%s\" instead"
 msgstr "\"%s\" is ongedocumenteerd; gebruik hiervoor in de plaats \"last%s\""
 
-#: timezone/zic.c:3711
+#: timezone/zic.c:3710
 #, c-format
 msgid "\"%s\" is ambiguous in pre-2017c zic"
 msgstr "\"%s\" is niet eenduidig in 'zic' van voor 2017"
 
-#: timezone/zic.c:3742
+#: timezone/zic.c:3741
 msgid "Odd number of quotation marks"
 msgstr "Oneven aantal aanhalingstekens"
 
-#: timezone/zic.c:3839
+#: timezone/zic.c:3749
+msgid "Too many input fields"
+msgstr "Te veel invoervelden"
+
+#: timezone/zic.c:3838
 msgid "use of 2/29 in non leap-year"
 msgstr "'29-2' gebruikt in een niet-schrikkeljaar"
 
-#: timezone/zic.c:3865
+#: timezone/zic.c:3864
 msgid "rule goes past start/end of month; will not work with pre-2004 versions of zic"
 msgstr ""
 "voorschrift gaat voorbij begin of einde van maand --\n"
 "dit zal niet werken met versies van 'zic' van voor 2004"
 
-#: timezone/zic.c:3892
+#: timezone/zic.c:3891
 msgid "time zone abbreviation has fewer than 3 characters"
 msgstr "tijdzone-afkorting heeft minder dan drie tekens"
 
-#: timezone/zic.c:3894
+#: timezone/zic.c:3893
 msgid "time zone abbreviation has too many characters"
 msgstr "tijdzone-afkorting heeft te veel tekens"
 
-#: timezone/zic.c:3896
+#: timezone/zic.c:3895
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr "tijdzone-afkorting verschilt van de POSIX-standaard"
 
-#: timezone/zic.c:3902
+#: timezone/zic.c:3901
 msgid "too many, or too long, time zone abbreviations"
 msgstr "te veel of te lange tijdzone-afkortingen"
 
-#: timezone/zic.c:3953
+#: timezone/zic.c:3952
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: Kan map %s niet aanmaken: %s"

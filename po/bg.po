@@ -3,16 +3,16 @@
 # This file is distributed under the same license as the glibc package.
 #
 # Anton Zinoviev <zinoviev@debian.org>, 2007
-# Roumen Petrov <transl@roumenpetrov.info>, 2008,2009,2011,2012,2017,2018,2019,2020,2021,2022,2023,2024
+# Roumen Petrov <transl@roumenpetrov.info>, 2008,2009,2011,2012,2017,2018,2019,2020,2021,2022,2023,2024,2025
 #
 # Abbreviations:
 #  CET - Control-Flow Enforcement Technology
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.39.9000\n"
-"POT-Creation-Date: 2024-07-21 00:32+0200\n"
-"PO-Revision-Date: 2024-07-01 08:04+0300\n"
+"Project-Id-Version: libc 2.40.9000\n"
+"POT-Creation-Date: 2025-01-04 11:03+0100\n"
+"PO-Revision-Date: 2025-01-08 21:29+0200\n"
 "Last-Translator: Roumen Petrov <transl@roumenpetrov.info>\n"
 "Language-Team: Bulgarian <dict@ludost.net>\n"
 "Language: bg\n"
@@ -72,7 +72,7 @@ msgid "Give a short usage message"
 msgstr "Извеждане на лаконичен съвет за използване"
 
 #: argp/argp-parse.c:88 catgets/gencat.c:110 catgets/gencat.c:114
-#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:106 nscd/nscd.c:110
+#: iconv/iconv_prog.c:61 iconv/iconv_prog.c:62 nscd/nscd.c:106 nscd/nscd.c:110
 #: nss/makedb.c:122
 msgid "NAME"
 msgstr "ИМЕ"
@@ -108,21 +108,13 @@ msgstr "(ПРОГРАМНА ГРЕШКА) Опцията трябва да е р
 
 #: assert/assert-perr.c:35
 #, c-format
-msgid ""
-"%s%s%s:%u: %s%sUnexpected error: %s.\n"
-"%n"
-msgstr ""
-"%s%s%s:%u: %s%sНеочаквана грешка: %s.\n"
-"%n"
+msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
+msgstr "%s%s%s:%u: %s%sНеочаквана грешка: %s.\n"
 
-#: assert/assert.c:103
+#: assert/assert.c:125
 #, c-format
-msgid ""
-"%s%s%s:%u: %s%sAssertion `%s' failed.\n"
-"%n"
-msgstr ""
-"%s%s%s:%u: %s%sПропадна проверката за истина - '%s'.\n"
-"%n"
+msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
+msgstr "%s%s%s:%u: %s%sПропадна проверката за истина - '%s'.\n"
 
 #: catgets/gencat.c:111
 msgid "Create C header file NAME containing symbol definitions"
@@ -153,8 +145,8 @@ msgstr ""
 "-o ИЗХОДЕН-ФАЙЛ [ВХОДЕН_ФАЙЛ]...\n"
 "[ИЗХОДЕН-ФАЙЛ [ВХОДЕН_ФАЙЛ]...]"
 
-#: catgets/gencat.c:230 debug/pcprofiledump.c:208 elf/ldconfig.c:217
-#: elf/pldd.c:246 elf/sln.c:77 elf/sprof.c:371 iconv/iconv_prog.c:387
+#: catgets/gencat.c:230 debug/pcprofiledump.c:219 elf/ldconfig.c:217
+#: elf/pldd.c:246 elf/sln.c:77 elf/sprof.c:371 iconv/iconv_prog.c:374
 #: iconv/iconvconfig.c:380 locale/programs/locale.c:275
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:88
 #: malloc/memusagestat.c:564 nss/getent.c:961 nss/makedb.c:371
@@ -167,9 +159,9 @@ msgstr ""
 "За подаване на доклад за грешка, моля, вижте:\n"
 "%s.\n"
 
-#: catgets/gencat.c:246 debug/pcprofiledump.c:224 debug/xtrace.sh:63
+#: catgets/gencat.c:246 debug/pcprofiledump.c:235 debug/xtrace.sh:63
 #: elf/ldconfig.c:233 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
-#: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
+#: elf/sprof.c:388 iconv/iconv_prog.c:391 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
 #: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:487
@@ -183,8 +175,8 @@ msgstr ""
 "Това е свободен софтуер.  Вижте изходния код за условията за копиране. НЯМА\n"
 "ГАРАНЦИИ, включително без предполагаемите гаранции за полезност и пригодност.\n"
 
-#: catgets/gencat.c:251 debug/pcprofiledump.c:229 debug/xtrace.sh:67
-#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
+#: catgets/gencat.c:251 debug/pcprofiledump.c:240 debug/xtrace.sh:67
+#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:396
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
@@ -197,8 +189,8 @@ msgstr "Автори: %s.\n"
 msgid "*standard input*"
 msgstr "*стандартен изход*"
 
-#: catgets/gencat.c:288 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
-#: nss/makedb.c:248
+#: catgets/gencat.c:288 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:279
+#: iconv/iconv_prog.c:432 nss/makedb.c:248
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "не може да се отвори входния файл `%s'"
@@ -294,17 +286,32 @@ msgstr "Разстоварване на сведения събрани при �
 msgid "[FILE]"
 msgstr "[ФАЙЛ]"
 
-#: debug/pcprofiledump.c:107
-#, c-format
-msgid "cannot open input file"
-msgstr "не може да се отвори входният файл"
-
-#: debug/pcprofiledump.c:114
+#: debug/pcprofiledump.c:97
 #, c-format
 msgid "cannot read header"
 msgstr "не може да се прочете заглавието"
 
-#: debug/pcprofiledump.c:178
+#: debug/pcprofiledump.c:99
+#, c-format
+msgid "cannot read pointer pair"
+msgstr "не може да се прочете двойката указатели"
+
+#: debug/pcprofiledump.c:107
+#, c-format
+msgid "unexpected end of file in header"
+msgstr "неочакван край на файл в заглавието"
+
+#: debug/pcprofiledump.c:110
+#, c-format
+msgid "unexpected end of file in pointer pair"
+msgstr "неочакван край на файл в двойката указатели"
+
+#: debug/pcprofiledump.c:145
+#, c-format
+msgid "cannot open input file"
+msgstr "не може да се отвори входният файл"
+
+#: debug/pcprofiledump.c:189
 #, c-format
 msgid "invalid pointer size"
 msgstr "неправилен размер на указател"
@@ -469,11 +476,11 @@ msgstr "грешка при свързване на споделени библ�
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr "ДЕФЕКТ В ПРОГРАМАТА ЗА ДИНАМИЧНО СВЪРЗВАНЕ!!!"
 
-#: elf/dl-close.c:357 elf/dl-open.c:298
+#: elf/dl-close.c:363 elf/dl-open.c:298
 msgid "cannot create scope list"
 msgstr "не може да се създаде списък на обхватът"
 
-#: elf/dl-close.c:790
+#: elf/dl-close.c:792
 msgid "shared object not open"
 msgstr "не е отворен споделеният обект"
 
@@ -502,18 +509,6 @@ msgstr "не може да се задели памет за списък със
 msgid "cannot allocate symbol search list"
 msgstr "не може да се задели памет за списък със символи за търсене"
 
-#: elf/dl-fptr.c:88 sysdeps/hppa/dl-fptr.c:96
-msgid "cannot map pages for fdesc table"
-msgstr "не може да се изобразят страници за таблицата fdesc(описание на функциите)"
-
-#: elf/dl-fptr.c:192 sysdeps/hppa/dl-fptr.c:214
-msgid "cannot map pages for fptr table"
-msgstr "не може да се изобразят страници за таблицата fptr"
-
-#: elf/dl-fptr.c:221 sysdeps/hppa/dl-fptr.c:243
-msgid "internal error: symidx out of range of fptr table"
-msgstr "вътрешна грешка: symidx е извън границите на таблицата fptr"
-
 #: elf/dl-hwcaps.c:104
 msgid "cannot create HWCAP priorities"
 msgstr "не може да се създадат HWCAP предимства"
@@ -522,127 +517,127 @@ msgstr "не може да се създадат HWCAP предимства"
 msgid "cannot create capability list"
 msgstr "не може да се създаде списък за възможности"
 
-#: elf/dl-load.c:423
+#: elf/dl-load.c:424
 msgid "cannot allocate name record"
 msgstr "не може да се задели памет за записите с имена"
 
-#: elf/dl-load.c:525 elf/dl-load.c:638 elf/dl-load.c:732 elf/dl-load.c:829
+#: elf/dl-load.c:510 elf/dl-load.c:623 elf/dl-load.c:717 elf/dl-load.c:814
 msgid "cannot create cache for search path"
 msgstr "не може да се създаде склад на директориите за търсене"
 
-#: elf/dl-load.c:621
+#: elf/dl-load.c:606
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "не може да се създаде копие на RUNPATH/RPATH"
 
-#: elf/dl-load.c:718
+#: elf/dl-load.c:703
 msgid "cannot create search path array"
 msgstr "не може да се създаде масив на директориите за търсене"
 
-#: elf/dl-load.c:957
+#: elf/dl-load.c:973
 msgid "cannot stat shared object"
 msgstr "не може да се определят атрибутите на споделен обект"
 
-#: elf/dl-load.c:1048 elf/dl-load.c:2163
+#: elf/dl-load.c:1066 elf/dl-load.c:2155
 msgid "cannot create shared object descriptor"
 msgstr "не може да се създаде описание за споделен обект"
 
-#: elf/dl-load.c:1067 elf/dl-load.c:1610 elf/dl-load.c:1718
+#: elf/dl-load.c:1085 elf/dl-load.c:1604 elf/dl-load.c:1710
 msgid "cannot read file data"
 msgstr "не може да се прочетат данни от файлът"
 
-#: elf/dl-load.c:1120 elf/dl-map-segments.h:117
+#: elf/dl-load.c:1138 elf/dl-map-segments.h:117
 msgid "ELF load command address/offset not page-aligned"
 msgstr "адресът или отместването, в командата за зареждане на ELF, не е подравнен на страница"
 
-#: elf/dl-load.c:1212
+#: elf/dl-load.c:1230
 msgid "object file has no loadable segments"
 msgstr "обектният файл е без дялове за свързване"
 
-#: elf/dl-load.c:1229
+#: elf/dl-load.c:1247
 msgid "cannot dynamically load executable"
 msgstr "изпълнимият файл не може да се свърже динамично"
 
-#: elf/dl-load.c:1236
+#: elf/dl-load.c:1254
 msgid "object file has no dynamic section"
 msgstr "обектният файл е без дял за динамично свързване"
 
-#: elf/dl-load.c:1271
+#: elf/dl-load.c:1289
 msgid "cannot dynamically load position-independent executable"
 msgstr "не може да се зареди изпълним файл независим от местоположение"
 
-#: elf/dl-load.c:1273
+#: elf/dl-load.c:1291
 msgid "shared object cannot be dlopen()ed"
 msgstr "не е възможно dlopen() за споделеният обект"
 
-#: elf/dl-load.c:1286
+#: elf/dl-load.c:1304
 msgid "cannot allocate memory for program header"
 msgstr "не може да се задели памет за заглавието на програмата"
 
-#: elf/dl-load.c:1309
+#: elf/dl-load.c:1329
 msgid "cannot enable executable stack as shared object requires"
 msgstr "стекът не може да се разреши за изпълнение, както е поискано от споделения обект"
 
-#: elf/dl-load.c:1337
+#: elf/dl-load.c:1357
 msgid "cannot close file descriptor"
 msgstr "не може да се затвори описанието на файлът"
 
-#: elf/dl-load.c:1610
+#: elf/dl-load.c:1604
 msgid "file too short"
 msgstr "файлът е твърде къс"
 
-#: elf/dl-load.c:1646
+#: elf/dl-load.c:1638
 msgid "invalid ELF header"
 msgstr "неправилен ELF заглавен блок"
 
-#: elf/dl-load.c:1661
+#: elf/dl-load.c:1653
 msgid "ELF file data encoding not big-endian"
 msgstr "данните от ELF файлът не са кодирани със старши байт първи(big-endian)"
 
-#: elf/dl-load.c:1663
+#: elf/dl-load.c:1655
 msgid "ELF file data encoding not little-endian"
 msgstr "данните от ELF файлът не са кодирани с младши байт първи(little-endian)"
 
-#: elf/dl-load.c:1667
+#: elf/dl-load.c:1659
 msgid "ELF file version ident does not match current one"
 msgstr "номерът на версия от ELF-файла не съответства на текущата"
 
-#: elf/dl-load.c:1671
+#: elf/dl-load.c:1663
 msgid "ELF file OS ABI invalid"
 msgstr "ELF файлът е с неправилен номер на ДПИ(ABI-двоичен програмен интерфейс) за ОС "
 
-#: elf/dl-load.c:1674
+#: elf/dl-load.c:1666
 msgid "ELF file ABI version invalid"
 msgstr "ELF файлът е с неправилна версия за ДПИ(двоичен програмен интерфейс)"
 
-#: elf/dl-load.c:1677
+#: elf/dl-load.c:1669
 msgid "nonzero padding in e_ident"
 msgstr "ненулево допълване при e_ident"
 
-#: elf/dl-load.c:1680
+#: elf/dl-load.c:1672
 msgid "internal error"
 msgstr "вътрешна грешка"
 
-#: elf/dl-load.c:1687
+#: elf/dl-load.c:1679
 msgid "ELF file version does not match current one"
 msgstr "версията, на ELF файлът, не съответства на текущата"
 
-#: elf/dl-load.c:1699
+#: elf/dl-load.c:1691
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "само ET_DYN и ET_EXEC могат да се свържат"
 
-#: elf/dl-load.c:1704
+#: elf/dl-load.c:1696
 msgid "ELF file's phentsize not the expected size"
 msgstr "неочакван размер на елемент(phentsize) в заглавието на ELF файл"
 
-#: elf/dl-load.c:2182
+#: elf/dl-load.c:2174
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "неправилен ELF клас: ELFCLASS64"
 
-#: elf/dl-load.c:2183
+#: elf/dl-load.c:2175
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "неправилен ELF клас: ELFCLASS32"
 
-#: elf/dl-load.c:2186
+#: elf/dl-load.c:2178
 msgid "cannot open shared object file"
 msgstr "не може да се отвори файлът със споделения обект"
 
@@ -658,7 +653,7 @@ msgstr "не може да се промени защитата на памет�
 msgid "cannot map zero-fill pages"
 msgstr "не може да се изобразят страници запълнени с нули"
 
-#: elf/dl-lookup.c:813
+#: elf/dl-lookup.c:800
 msgid "symbol lookup error"
 msgstr "грешка при търсене на символ"
 
@@ -666,23 +661,23 @@ msgstr "грешка при търсене на символ"
 msgid "cannot extend global scope"
 msgstr "не може да се увеличи общата област"
 
-#: elf/dl-open.c:405
+#: elf/dl-open.c:382
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "Превъртян брояч за пораждане на TLS! Моля докладвайте го."
 
-#: elf/dl-open.c:758
+#: elf/dl-open.c:716
 msgid "cannot allocate address lookup data"
 msgstr "не може да се задели памет за търсене на адреси"
 
-#: elf/dl-open.c:848
+#: elf/dl-open.c:817
 msgid "invalid mode for dlopen()"
 msgstr "неправилен режим за dlopen()"
 
-#: elf/dl-open.c:865
+#: elf/dl-open.c:834
 msgid "no more namespaces available for dlmopen()"
 msgstr "не са налични повече именувани пространства за dlmopen()"
 
-#: elf/dl-open.c:890
+#: elf/dl-open.c:859
 msgid "invalid target namespace in dlmopen()"
 msgstr "неправилно именувано целево пространство в dlmopen()"
 
@@ -690,16 +685,16 @@ msgstr "неправилно именувано целево пространс�
 msgid "cannot allocate memory in static TLS block"
 msgstr "не може да се задели памет в статичен TSL блок"
 
-#: elf/dl-reloc.c:288
+#: elf/dl-reloc.c:283
 msgid "cannot make segment writable for relocation"
 msgstr "дялът не може да се маркира като записваем за \"преместваем код\""
 
-#: elf/dl-reloc.c:319
+#: elf/dl-reloc.c:313
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: недостиг на памет за съхраняване на резултата за \"преместваем код\" на %s\n"
 
-#: elf/dl-reloc.c:335
+#: elf/dl-reloc.c:328
 msgid "cannot restore segment prot after reloc"
 msgstr "не може да се възстанови защитата на дяла след преместване"
 
@@ -711,7 +706,7 @@ msgstr "след преместването не може да се постав
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT е използван в код, който не е за динамично свързване"
 
-#: elf/dl-tls.c:1136
+#: elf/dl-tls.c:1163
 msgid "cannot create TLS data structures"
 msgstr "не може да се създадат структури за TLS данни"
 
@@ -1383,12 +1378,12 @@ msgstr "Таблицата за низове има твърде много за
 msgid "String table is too large"
 msgstr "Таблицата за низове е твърде голяма"
 
-#: iconv/iconv_charmap.c:146 iconv/iconv_prog.c:427
+#: iconv/iconv_charmap.c:146 iconv/iconv_prog.c:426
 #, c-format
 msgid "cannot open output file"
 msgstr "не може да се отвори изходният файл"
 
-#: iconv/iconv_charmap.c:192 iconv/iconv_prog.c:290
+#: iconv/iconv_charmap.c:192
 #, c-format
 msgid "error while closing input `%s'"
 msgstr "грешка при затваряне на входа \"%s\""
@@ -1398,128 +1393,135 @@ msgstr "грешка при затваряне на входа \"%s\""
 msgid "illegal input sequence at position %zd"
 msgstr "незаконна входна последователност на позиция %zd"
 
-#: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:518
+#: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:728
 #, c-format
 msgid "incomplete character or shift sequence at end of buffer"
 msgstr "непълен знак или изместваща последователност в края на буфера"
 
-#: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:543 iconv/iconv_prog.c:561
-#: iconv/iconv_prog.c:597
+#: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:543 iconv/iconv_prog.c:736
 #, c-format
 msgid "error while reading the input"
 msgstr "грешка при прочитането на входа"
 
-#: iconv/iconv_charmap.c:525 iconv/iconv_prog.c:579
+#: iconv/iconv_charmap.c:525
 #, c-format
 msgid "unable to allocate buffer for input"
 msgstr "не може да се задели входен буфер"
 
-#: iconv/iconv_prog.c:59
+#: iconv/iconv_prog.c:60
 msgid "Input/Output format specification:"
 msgstr "Уточняване на входно-изходния формат:"
 
-#: iconv/iconv_prog.c:60
+#: iconv/iconv_prog.c:61
 msgid "encoding of original text"
 msgstr "кодиране на оригиналния текст"
 
-#: iconv/iconv_prog.c:61
+#: iconv/iconv_prog.c:62
 msgid "encoding for output"
 msgstr "кодиране на изходните данни"
 
-#: iconv/iconv_prog.c:62
+#: iconv/iconv_prog.c:63
 msgid "Information:"
 msgstr "Сведение:"
 
-#: iconv/iconv_prog.c:63
+#: iconv/iconv_prog.c:64
 msgid "list all known coded character sets"
 msgstr "изброяване на всички познати кодирани знакови множества"
 
-#: iconv/iconv_prog.c:64 locale/programs/localedef.c:123
+#: iconv/iconv_prog.c:65 locale/programs/localedef.c:123
 msgid "Output control:"
 msgstr "Управление на изхода:"
 
-#: iconv/iconv_prog.c:65
+#: iconv/iconv_prog.c:66
 msgid "omit invalid characters from output"
 msgstr "изпускане на неправилни знаци при извеждане"
 
-#: iconv/iconv_prog.c:66 iconv/iconvconfig.c:128
+#: iconv/iconv_prog.c:67 iconv/iconvconfig.c:128
 #: locale/programs/localedef.c:116 locale/programs/localedef.c:118
 #: locale/programs/localedef.c:120 locale/programs/localedef.c:149
 #: malloc/memusagestat.c:56
 msgid "FILE"
 msgstr "ФАЙЛ"
 
-#: iconv/iconv_prog.c:66
+#: iconv/iconv_prog.c:67
 msgid "output file"
 msgstr "изходен файл"
 
-#: iconv/iconv_prog.c:67
+#: iconv/iconv_prog.c:68
 msgid "suppress warnings"
 msgstr "подтискане на предупрежденията"
 
-#: iconv/iconv_prog.c:68
+#: iconv/iconv_prog.c:69
 msgid "print progress information"
 msgstr "извеждане на сведения за състоянието на изпълнението"
 
+#: iconv/iconv_prog.c:72
+msgid "BYTE-COUNT"
+msgstr "БРОЙ–БАЙТ"
+
 #: iconv/iconv_prog.c:73
+msgid "size of in-memory scratch buffer"
+msgstr "размер на буфер в паметта"
+
+#: iconv/iconv_prog.c:78
 msgid "Convert encoding of given files from one encoding to another."
 msgstr "Преобразува кодирането на зададените файлове от едно в друго."
 
-#: iconv/iconv_prog.c:77
+#: iconv/iconv_prog.c:82
 msgid "[FILE...]"
 msgstr "[ФАЙЛ...]"
 
-#: iconv/iconv_prog.c:176 iconv/iconv_prog.c:238
+#: iconv/iconv_prog.c:189 iconv/iconv_prog.c:251
 #, c-format
 msgid "failed to start conversion processing"
 msgstr "не може да започне процеса за преобразуване"
 
-#: iconv/iconv_prog.c:212
+#: iconv/iconv_prog.c:225
 #, c-format
 msgid "conversions from `%s' and to `%s' are not supported"
 msgstr "не се поддържа преобразуване от \"%s\" и към \"%s\""
 
-#: iconv/iconv_prog.c:217
+#: iconv/iconv_prog.c:230
 #, c-format
 msgid "conversion from `%s' is not supported"
 msgstr "не се поддържа преобразуване от \"%s\""
 
-#: iconv/iconv_prog.c:224
+#: iconv/iconv_prog.c:237
 #, c-format
 msgid "conversion to `%s' is not supported"
 msgstr "не се поддържа преобразуване към \"%s\""
 
-#: iconv/iconv_prog.c:228
+#: iconv/iconv_prog.c:241
 #, c-format
 msgid "conversion from `%s' to `%s' is not supported"
 msgstr "не се поддържа преобразуване от \"%s\" към \"%s\""
 
-#: iconv/iconv_prog.c:336
+#: iconv/iconv_prog.c:349
 #, c-format
-msgid "error while closing output file"
-msgstr "грешка при затваряне на изходния файл"
+msgid "invalid buffer size: %s"
+msgstr "неправилен размер на буфер: %s"
 
-#: iconv/iconv_prog.c:437
+#: iconv/iconv_prog.c:540
 #, c-format
 msgid "conversion stopped due to problem in writing the output"
 msgstr "поради проблем при записването на изхода, преобразуването е спряно"
 
-#: iconv/iconv_prog.c:514
+#: iconv/iconv_prog.c:686
 #, c-format
-msgid "illegal input sequence at position %ld"
-msgstr "незаконна входна последователност на позиция %ld"
+msgid "illegal input sequence at position %lld"
+msgstr "незаконна входна последователност на позиция %lld"
 
-#: iconv/iconv_prog.c:522
+#: iconv/iconv_prog.c:693
 #, c-format
 msgid "internal error (illegal descriptor)"
 msgstr "вътрешна грешка(незаконен описател)"
 
-#: iconv/iconv_prog.c:525
+#: iconv/iconv_prog.c:696
 #, c-format
 msgid "unknown iconv() error %d"
 msgstr "неизвестна iconv() грешка %d"
 
-#: iconv/iconv_prog.c:768
+#: iconv/iconv_prog.c:909
 msgid ""
 "The following list contains all the coded character sets known.  This does\n"
 "not necessarily mean that all combinations of these names can be used for\n"
@@ -5159,7 +5161,7 @@ msgstr "Неизвестен сигнал %d\n"
 msgid "%s%sUnknown signal %d\n"
 msgstr "%s%sНеизвестен сигнал %d\n"
 
-#: stdio-common/psignal.c:44
+#: stdio-common/psignal.c:44 string/strsignal.c:57
 msgid "Unknown signal"
 msgstr "Неизвестен сигнал"
 
@@ -5167,12 +5169,12 @@ msgstr "Неизвестен сигнал"
 msgid "Unknown error "
 msgstr "Неизвестна грешка "
 
-#: string/strsignal.c:39
+#: string/strsignal.c:42
 #, c-format
 msgid "Real-time signal %d"
 msgstr "Сигнал %d при реално време"
 
-#: string/strsignal.c:43
+#: string/strsignal.c:46
 #, c-format
 msgid "Unknown signal %d"
 msgstr "Неизвестен сигнал %d"
@@ -6444,9 +6446,25 @@ msgstr "?"
 msgid "RPC program not available"
 msgstr "Недостъпна RPC-програма"
 
+#: sysdeps/hppa/dl-fptr.c:96
+msgid "cannot map pages for fdesc table"
+msgstr "не може да се изобразят страници за таблицата fdesc(описание на функциите)"
+
+#: sysdeps/hppa/dl-fptr.c:214
+msgid "cannot map pages for fptr table"
+msgstr "не може да се изобразят страници за таблицата fptr"
+
+#: sysdeps/hppa/dl-fptr.c:243
+msgid "internal error: symidx out of range of fptr table"
+msgstr "вътрешна грешка: symidx е извън границите на таблицата fptr"
+
 #: sysdeps/mach/_strerror.c:43 sysdeps/mach/xpg-strerror.c:55
 msgid "Error in unknown error system: "
 msgstr "Грешка за неизвестна системна грешка: "
+
+#: sysdeps/mach/xpg-strerror.c:66 sysdeps/mach/xpg-strerror.c:74
+msgid "Unknown error code: "
+msgstr "Неизвестен код за грешка"
 
 #: sysdeps/posix/gai_strerror-strs.h:2
 msgid "Address family for hostname not supported"
@@ -6891,7 +6909,7 @@ msgstr "липсва ред за продължение"
 msgid "fractional seconds rejected by pre-2018 versions of zic"
 msgstr "версиите на zic, преди 2018, отказват дробни секунди"
 
-#: timezone/zic.c:1815 timezone/zic.c:3761
+#: timezone/zic.c:1815 timezone/zic.c:3760
 msgid "time overflow"
 msgstr "препълване на стойността за време"
 
@@ -7063,89 +7081,89 @@ msgid "%%z UT offset magnitude exceeds 99:59:59"
 msgstr "%%z Отместването спрямо универсалноте време превишава 99:59:59"
 
 #: timezone/zic.c:3180
-msgid "no POSIX.1-2017 environment variable for zone"
-msgstr "в обкръжението, липсва POSIX.1-2017 променлива за зона"
+msgid "no proleptic TZ string for zone"
+msgstr "без предшестващи значения във времевата зона"
 
-#: timezone/zic.c:3187
+#: timezone/zic.c:3186
 #, c-format
 msgid "%s: pre-%d clients may mishandle distant timestamps"
 msgstr "%s: клиенти, преди %d, може да не се справят с отдалечени времеви печати"
 
-#: timezone/zic.c:3316
+#: timezone/zic.c:3315
 msgid "two rules for same instant"
 msgstr "две правила за едно и също време"
 
-#: timezone/zic.c:3389
+#: timezone/zic.c:3388
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr "не може да се определи съкращението за часова зона, което да се ползва, веднага след крайното време"
 
-#: timezone/zic.c:3490
+#: timezone/zic.c:3489
 msgid "UT offset out of range"
 msgstr "Отместването спрямо \"Универсалното време\" е извън обхват"
 
-#: timezone/zic.c:3513
+#: timezone/zic.c:3512
 msgid "too many local time types"
 msgstr "твърде много типове за местно време"
 
-#: timezone/zic.c:3531
+#: timezone/zic.c:3530
 msgid "too many leap seconds"
 msgstr "твърде много високосни секунди"
 
-#: timezone/zic.c:3535
+#: timezone/zic.c:3534
 msgid "Rolling leap seconds not supported with -r"
 msgstr "Претълкалване на дълга секунда не се поддръжа с -r"
 
-#: timezone/zic.c:3562
+#: timezone/zic.c:3561
 msgid "Leap seconds too close together"
 msgstr "твърде близки високосни секунди"
 
-#: timezone/zic.c:3573
+#: timezone/zic.c:3572
 msgid "last Leap time does not precede Expires time"
 msgstr "последното високосно време не предшества срока на изтичане"
 
-#: timezone/zic.c:3680
+#: timezone/zic.c:3679
 #, c-format
 msgid "\"%s\" is undocumented; use \"last%s\" instead"
 msgstr "\"%s\" не е описано, затова да се използва \"last%s\""
 
-#: timezone/zic.c:3711
+#: timezone/zic.c:3710
 #, c-format
 msgid "\"%s\" is ambiguous in pre-2017c zic"
 msgstr "\"%s\" е двусмислен за zic от преди 2017c"
 
-#: timezone/zic.c:3742
+#: timezone/zic.c:3741
 msgid "Odd number of quotation marks"
 msgstr "Неочакван брой кавички"
 
-#: timezone/zic.c:3750
+#: timezone/zic.c:3749
 msgid "Too many input fields"
 msgstr "Твърде много входящи полета"
 
-#: timezone/zic.c:3839
+#: timezone/zic.c:3838
 msgid "use of 2/29 in non leap-year"
 msgstr "използване на 29.2 за невисокосна година"
 
-#: timezone/zic.c:3865
+#: timezone/zic.c:3864
 msgid "rule goes past start/end of month; will not work with pre-2004 versions of zic"
 msgstr "правилото прехвърля началото/края на месеца - няма да работи с версия на zic от преди 2004"
 
-#: timezone/zic.c:3892
+#: timezone/zic.c:3891
 msgid "time zone abbreviation has fewer than 3 characters"
 msgstr "съкращението за часова зона е по-кратко от три букви"
 
-#: timezone/zic.c:3894
+#: timezone/zic.c:3893
 msgid "time zone abbreviation has too many characters"
 msgstr "съкращението за часова зона е с твърде много букви"
 
-#: timezone/zic.c:3896
+#: timezone/zic.c:3895
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr "съкращението за часова зона се различава от стандарта POSIX"
 
-#: timezone/zic.c:3902
+#: timezone/zic.c:3901
 msgid "too many, or too long, time zone abbreviations"
 msgstr "твърде много или твърде дълго съкращение за часова зона"
 
-#: timezone/zic.c:3953
+#: timezone/zic.c:3952
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: Не може да се създаде директория %s: %s"

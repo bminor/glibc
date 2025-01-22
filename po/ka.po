@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.36.9000\n"
-"POT-Creation-Date: 2024-07-21 00:32+0200\n"
+"POT-Creation-Date: 2025-01-04 11:03+0100\n"
 "PO-Revision-Date: 2023-02-05 14:40+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <(nothing)>\n"
@@ -68,7 +68,7 @@ msgid "Give a short usage message"
 msgstr "გამოყენების მოკლე შეტყობინების მიღება"
 
 #: argp/argp-parse.c:88 catgets/gencat.c:110 catgets/gencat.c:114
-#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:106 nscd/nscd.c:110
+#: iconv/iconv_prog.c:61 iconv/iconv_prog.c:62 nscd/nscd.c:106 nscd/nscd.c:110
 #: nss/makedb.c:122
 msgid "NAME"
 msgstr "სახელი"
@@ -102,24 +102,6 @@ msgstr "%s: მეტისმეტად ბევრი არგუმენ
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(PROGRAM ERROR) პარამეტრი ნაცნობი უნდა ყოფილიყო!?"
 
-#: assert/assert-perr.c:35
-#, c-format
-msgid ""
-"%s%s%s:%u: %s%sUnexpected error: %s.\n"
-"%n"
-msgstr ""
-"%s%s%s:%u: %s%sმოულოდნელი: %s.\n"
-"%n"
-
-#: assert/assert.c:103
-#, c-format
-msgid ""
-"%s%s%s:%u: %s%sAssertion `%s' failed.\n"
-"%n"
-msgstr ""
-"%s%s%s:%u: %s%sდამტკიცების `%s' შეცდომა.\n"
-"%n"
-
 #: catgets/gencat.c:111
 msgid "Create C header file NAME containing symbol definitions"
 msgstr "შექმენით C-ის თავსართის ფაილი \"სახელით\", რომელიც სიმბოლოების აღწერას შეიცავს"
@@ -149,8 +131,8 @@ msgstr ""
 "-o გამოტანის-ფაილი [შეტანის-ფაილი]...\n"
 "[გამოტანის-ფაილი [შეტანის-ფაილი]..]"
 
-#: catgets/gencat.c:230 debug/pcprofiledump.c:208 elf/ldconfig.c:217
-#: elf/pldd.c:246 elf/sln.c:77 elf/sprof.c:371 iconv/iconv_prog.c:387
+#: catgets/gencat.c:230 debug/pcprofiledump.c:219 elf/ldconfig.c:217
+#: elf/pldd.c:246 elf/sln.c:77 elf/sprof.c:371 iconv/iconv_prog.c:374
 #: iconv/iconvconfig.c:380 locale/programs/locale.c:275
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:88
 #: malloc/memusagestat.c:564 nss/getent.c:961 nss/makedb.c:371
@@ -163,9 +145,9 @@ msgstr ""
 "შეცდომების პატაკის ინსტრუქციებისთვის იხილეთ:\n"
 "%s.\n"
 
-#: catgets/gencat.c:246 debug/pcprofiledump.c:224 debug/xtrace.sh:63
+#: catgets/gencat.c:246 debug/pcprofiledump.c:235 debug/xtrace.sh:63
 #: elf/ldconfig.c:233 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
-#: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
+#: elf/sprof.c:388 iconv/iconv_prog.c:391 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
 #: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:487
@@ -179,8 +161,8 @@ msgstr ""
 "This is free software; see the source for copying conditions.  There is NO\n"
 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
 
-#: catgets/gencat.c:251 debug/pcprofiledump.c:229 debug/xtrace.sh:67
-#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
+#: catgets/gencat.c:251 debug/pcprofiledump.c:240 debug/xtrace.sh:67
+#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:396
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
@@ -193,8 +175,8 @@ msgstr "ავტორი: %s.\n"
 msgid "*standard input*"
 msgstr "*სტანდარტული შეტანა*"
 
-#: catgets/gencat.c:288 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
-#: nss/makedb.c:248
+#: catgets/gencat.c:288 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:279
+#: iconv/iconv_prog.c:432 nss/makedb.c:248
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "შესატანი ფაილის (\"%s\") გახსნის შეცდომა"
@@ -285,17 +267,17 @@ msgstr "PC-ის პროფილირების მიერ გენე
 msgid "[FILE]"
 msgstr "[ფაილი]"
 
-#: debug/pcprofiledump.c:107
-#, c-format
-msgid "cannot open input file"
-msgstr "შეტანის ფაილის გახსნის შეცდომა"
-
-#: debug/pcprofiledump.c:114
+#: debug/pcprofiledump.c:97
 #, c-format
 msgid "cannot read header"
 msgstr "თავსართის წაკითხვის შეცდომა"
 
-#: debug/pcprofiledump.c:178
+#: debug/pcprofiledump.c:145
+#, c-format
+msgid "cannot open input file"
+msgstr "შეტანის ფაილის გახსნის შეცდომა"
+
+#: debug/pcprofiledump.c:189
 #, c-format
 msgid "invalid pointer size"
 msgstr "მაჩვენებლის არასწორი ზომა"
@@ -434,11 +416,11 @@ msgstr "გაზიარებული ბიბლიოთეკები�
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr "დინამიკური მიმბმელის შეცდომა!!!"
 
-#: elf/dl-close.c:357 elf/dl-open.c:298
+#: elf/dl-close.c:363 elf/dl-open.c:298
 msgid "cannot create scope list"
 msgstr "დიაპაზონების სიის შექმნა შეუძლებელია"
 
-#: elf/dl-close.c:790
+#: elf/dl-close.c:792
 msgid "shared object not open"
 msgstr "გაზიარებული ობიექტი ღია არაა"
 
@@ -467,18 +449,6 @@ msgstr "დამოკიდებულების სიის გამო�
 msgid "cannot allocate symbol search list"
 msgstr "სიმბოლოების საძებნი სიის გამოყოფის შეცდომა"
 
-#: elf/dl-fptr.c:88 sysdeps/hppa/dl-fptr.c:96
-msgid "cannot map pages for fdesc table"
-msgstr "fdesc ცხრილისთვის გვერდების მიბმის შეცდომა"
-
-#: elf/dl-fptr.c:192 sysdeps/hppa/dl-fptr.c:214
-msgid "cannot map pages for fptr table"
-msgstr "fptr ცხრილისთვის გვერდების მიბმის შეცდომა"
-
-#: elf/dl-fptr.c:221 sysdeps/hppa/dl-fptr.c:243
-msgid "internal error: symidx out of range of fptr table"
-msgstr "შიდა შეცდომა: symidx-ი fptr ცხრილის დიაპაზონს გარეთაა"
-
 #: elf/dl-hwcaps.c:104
 msgid "cannot create HWCAP priorities"
 msgstr "შეცდომა HWCAP პრიორიტეტების შექმნისას"
@@ -487,119 +457,119 @@ msgstr "შეცდომა HWCAP პრიორიტეტების შ�
 msgid "cannot create capability list"
 msgstr "შესაძლებლობების სიის შექმნის შეცდომა"
 
-#: elf/dl-load.c:423
+#: elf/dl-load.c:424
 msgid "cannot allocate name record"
 msgstr "სახელის ჩანაწერის გამოყოფის შეცდომა"
 
-#: elf/dl-load.c:525 elf/dl-load.c:638 elf/dl-load.c:732 elf/dl-load.c:829
+#: elf/dl-load.c:510 elf/dl-load.c:623 elf/dl-load.c:717 elf/dl-load.c:814
 msgid "cannot create cache for search path"
 msgstr "ძებნის ბილიკის კეშის გამოყოფის შეცდომა"
 
-#: elf/dl-load.c:621
+#: elf/dl-load.c:606
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "შეცდომა RUNPATH/RPATH-ის ასლის შექმნისას"
 
-#: elf/dl-load.c:718
+#: elf/dl-load.c:703
 msgid "cannot create search path array"
 msgstr "ძებნის ბილიკის მასივის გამოყოფის შეცდომა"
 
-#: elf/dl-load.c:957
+#: elf/dl-load.c:973
 msgid "cannot stat shared object"
 msgstr "გაზიარებული ობიექტი აღმოჩენილი არაა"
 
-#: elf/dl-load.c:1048 elf/dl-load.c:2163
+#: elf/dl-load.c:1066 elf/dl-load.c:2155
 msgid "cannot create shared object descriptor"
 msgstr "გაზიარებული ობიექტის დესკრიპტორის ძებნის შეცდომა"
 
-#: elf/dl-load.c:1067 elf/dl-load.c:1610 elf/dl-load.c:1718
+#: elf/dl-load.c:1085 elf/dl-load.c:1604 elf/dl-load.c:1710
 msgid "cannot read file data"
 msgstr "ფაილის მონაცემების წაკითხვის შეცდომა"
 
-#: elf/dl-load.c:1212
+#: elf/dl-load.c:1230
 msgid "object file has no loadable segments"
 msgstr "ობიექტის ფაილს ჩატვირთვადი სეგმენტები არ გააჩნია"
 
-#: elf/dl-load.c:1229
+#: elf/dl-load.c:1247
 msgid "cannot dynamically load executable"
 msgstr "გამშვები ფაილის დინამიკურად ჩატვირთვა შეუძლებელია"
 
-#: elf/dl-load.c:1236
+#: elf/dl-load.c:1254
 msgid "object file has no dynamic section"
 msgstr "ობიექტის ფაილს დინამიკური სექცია არ გააჩნია"
 
-#: elf/dl-load.c:1271
+#: elf/dl-load.c:1289
 msgid "cannot dynamically load position-independent executable"
 msgstr "პოზიცია-დამოუკიდებელი გამშვების დინამიკური ჩატვირთვა შეუძლებელია"
 
-#: elf/dl-load.c:1273
+#: elf/dl-load.c:1291
 msgid "shared object cannot be dlopen()ed"
 msgstr "გაზიარებული ობიექტის dlopen() შეუძლებელია"
 
-#: elf/dl-load.c:1286
+#: elf/dl-load.c:1304
 msgid "cannot allocate memory for program header"
 msgstr "პროგრამის თავსართისათვის მეხსიერების გამოყოფის შეცდომა"
 
-#: elf/dl-load.c:1309
+#: elf/dl-load.c:1329
 msgid "cannot enable executable stack as shared object requires"
 msgstr "გაშვებადი სტეკის ჩართვა, როგორც ამას გაზიარებული ობიექტი მოითხოვს, შეუძლებელია"
 
-#: elf/dl-load.c:1337
+#: elf/dl-load.c:1357
 msgid "cannot close file descriptor"
 msgstr "ფაილის დესკრიპტორის დახურვის შეცდომა"
 
-#: elf/dl-load.c:1610
+#: elf/dl-load.c:1604
 msgid "file too short"
 msgstr "ფაილი ძალიან მოკლეა"
 
-#: elf/dl-load.c:1646
+#: elf/dl-load.c:1638
 msgid "invalid ELF header"
 msgstr "elf-ის არასწორი თავსართი"
 
-#: elf/dl-load.c:1661
+#: elf/dl-load.c:1653
 msgid "ELF file data encoding not big-endian"
 msgstr "ELF-ფაილების მონაცემების კოდირება არ წარმოადგენს დიდ-ბოლოს"
 
-#: elf/dl-load.c:1663
+#: elf/dl-load.c:1655
 msgid "ELF file data encoding not little-endian"
 msgstr "ELF-ფაილების მონაცემების კოდირება არ წარმოადგენს მცირე-ბოლოს"
 
-#: elf/dl-load.c:1667
+#: elf/dl-load.c:1659
 msgid "ELF file version ident does not match current one"
 msgstr "ELF ფაილის ვერსიის იდენტაცია მიმდინარეს არ ემთხვევა"
 
-#: elf/dl-load.c:1671
+#: elf/dl-load.c:1663
 msgid "ELF file OS ABI invalid"
 msgstr "ELF-ფაილის ოს-ის ABI არასწორია"
 
-#: elf/dl-load.c:1674
+#: elf/dl-load.c:1666
 msgid "ELF file ABI version invalid"
 msgstr "ELF-ფაილის ოს-ის ABI-ის ვერსია არასწორია"
 
-#: elf/dl-load.c:1680
+#: elf/dl-load.c:1672
 msgid "internal error"
 msgstr "შიდა შეცდომა"
 
-#: elf/dl-load.c:1687
+#: elf/dl-load.c:1679
 msgid "ELF file version does not match current one"
 msgstr "ELF ფაილის ვერსია მიმდინარეს არ ემთხვევა"
 
-#: elf/dl-load.c:1699
+#: elf/dl-load.c:1691
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "შესაძლებელია მხოლოდ ET_DYN და ET_EXEC-ის ჩატვირთვა"
 
-#: elf/dl-load.c:1704
+#: elf/dl-load.c:1696
 msgid "ELF file's phentsize not the expected size"
 msgstr "ELF ფაილის phentsize მოსალოდნელს არ უდრის"
 
-#: elf/dl-load.c:2182
+#: elf/dl-load.c:2174
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "elf-ის არასწორი კლასი: ELFCLASS64"
 
-#: elf/dl-load.c:2183
+#: elf/dl-load.c:2175
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "elf-ის არასწორი კლასი: ELFCLASS32"
 
-#: elf/dl-load.c:2186
+#: elf/dl-load.c:2178
 msgid "cannot open shared object file"
 msgstr "გაზიარებული ობიექტების ფაილის გახსნა შეუძლებელია"
 
@@ -615,27 +585,27 @@ msgstr "მეხსიერების დაცვების შეცვ�
 msgid "cannot map zero-fill pages"
 msgstr "ნულებით შევსებული გვერდების მიბმის შეცდომა"
 
-#: elf/dl-lookup.c:813
+#: elf/dl-lookup.c:800
 msgid "symbol lookup error"
 msgstr "სიმბოლოს მოძებნის შეცდომა"
 
-#: elf/dl-open.c:405
+#: elf/dl-open.c:382
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "TLS-ის გენერაციის მთვლელი გადატანილია! გთხოვთ შეგვატყობინოთ."
 
-#: elf/dl-open.c:758
+#: elf/dl-open.c:716
 msgid "cannot allocate address lookup data"
 msgstr "მისამართების ძებნის მონაცემების გამოყოფის შეცდომა"
 
-#: elf/dl-open.c:848
+#: elf/dl-open.c:817
 msgid "invalid mode for dlopen()"
 msgstr "dlopen()-ის არასწორი რეჟიმი"
 
-#: elf/dl-open.c:865
+#: elf/dl-open.c:834
 msgid "no more namespaces available for dlmopen()"
 msgstr "dlmopen()-სთვის მეტი სახელების სივრცე მიუწვდომელია"
 
-#: elf/dl-open.c:890
+#: elf/dl-open.c:859
 msgid "invalid target namespace in dlmopen()"
 msgstr "dlmopen()-ში სამიზნე სახელების სივრცე არასწორია"
 
@@ -643,11 +613,11 @@ msgstr "dlmopen()-ში სამიზნე სახელების ს�
 msgid "cannot allocate memory in static TLS block"
 msgstr "სტატიკური TLS ბლოკისთვის მეხსიერების გამოყოფის შეცდომა"
 
-#: elf/dl-reloc.c:288
+#: elf/dl-reloc.c:283
 msgid "cannot make segment writable for relocation"
 msgstr "გადატანის მიზნით სეგმენის ჩაწერადად გადაკეთების შეცდომა"
 
-#: elf/dl-reloc.c:335
+#: elf/dl-reloc.c:328
 msgid "cannot restore segment prot after reloc"
 msgstr "reloc-ის შემდეგ სეგმენტის prot-ის აღდგენა შეუძლებელია"
 
@@ -655,7 +625,7 @@ msgstr "reloc-ის შემდეგ სეგმენტის prot-ის 
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "კოდში გამოყენებული RTLD_NEXT დინამიკურად არ იტვირთება"
 
-#: elf/dl-tls.c:1136
+#: elf/dl-tls.c:1163
 msgid "cannot create TLS data structures"
 msgstr "შეცდომა TLS-ის მონაცემების სტრუქტურის შექმნისას"
 
@@ -1155,95 +1125,89 @@ msgstr "სტრიქონების ცხრილში მეტის�
 msgid "String table is too large"
 msgstr "სტრიქონების ცხრილი ძალიან დიდია"
 
-#: iconv/iconv_charmap.c:146 iconv/iconv_prog.c:427
+#: iconv/iconv_charmap.c:146 iconv/iconv_prog.c:426
 #, c-format
 msgid "cannot open output file"
 msgstr "გამოსატანი ფაილის გახსნა შეუძლებელია"
 
-#: iconv/iconv_charmap.c:192 iconv/iconv_prog.c:290
+#: iconv/iconv_charmap.c:192
 #, c-format
 msgid "error while closing input `%s'"
 msgstr "შეცდომა შეყვანის დახურვისას: '%s'"
 
-#: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:543 iconv/iconv_prog.c:561
-#: iconv/iconv_prog.c:597
+#: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:543 iconv/iconv_prog.c:736
 #, c-format
 msgid "error while reading the input"
 msgstr "შეცდომა შეყვანის კითხვისას"
 
-#: iconv/iconv_charmap.c:525 iconv/iconv_prog.c:579
+#: iconv/iconv_charmap.c:525
 #, c-format
 msgid "unable to allocate buffer for input"
 msgstr "შეყვანის ბუფერის გამოყოფის შეცდომა"
 
-#: iconv/iconv_prog.c:59
+#: iconv/iconv_prog.c:60
 msgid "Input/Output format specification:"
 msgstr "შეყვანა/გამოყვანის ფორმატის სპეფიციკაცია:"
 
-#: iconv/iconv_prog.c:60
+#: iconv/iconv_prog.c:61
 msgid "encoding of original text"
 msgstr "საწყისი ტექსტის კოდირება"
 
-#: iconv/iconv_prog.c:61
+#: iconv/iconv_prog.c:62
 msgid "encoding for output"
 msgstr "გამოტანის კოდირება"
 
-#: iconv/iconv_prog.c:62
+#: iconv/iconv_prog.c:63
 msgid "Information:"
 msgstr "ინფორმაცია:"
 
-#: iconv/iconv_prog.c:63
+#: iconv/iconv_prog.c:64
 msgid "list all known coded character sets"
 msgstr "ცნობილი კოდირებული სიმბოლოების ნაკრებების სია"
 
-#: iconv/iconv_prog.c:64 locale/programs/localedef.c:123
+#: iconv/iconv_prog.c:65 locale/programs/localedef.c:123
 msgid "Output control:"
 msgstr "გამოტანის კონტროლი:"
 
-#: iconv/iconv_prog.c:66 iconv/iconvconfig.c:128
+#: iconv/iconv_prog.c:67 iconv/iconvconfig.c:128
 #: locale/programs/localedef.c:116 locale/programs/localedef.c:118
 #: locale/programs/localedef.c:120 locale/programs/localedef.c:149
 #: malloc/memusagestat.c:56
 msgid "FILE"
 msgstr "FILE"
 
-#: iconv/iconv_prog.c:66
+#: iconv/iconv_prog.c:67
 msgid "output file"
 msgstr "გამოსატანი ფაილი"
 
-#: iconv/iconv_prog.c:67
+#: iconv/iconv_prog.c:68
 msgid "suppress warnings"
 msgstr "გაფრთხილებების ჩაჩუმება"
 
-#: iconv/iconv_prog.c:68
+#: iconv/iconv_prog.c:69
 msgid "print progress information"
 msgstr "მიმდინარეობის დაბეჭდვა"
 
-#: iconv/iconv_prog.c:77
+#: iconv/iconv_prog.c:82
 msgid "[FILE...]"
 msgstr "[FILE...]"
 
-#: iconv/iconv_prog.c:176 iconv/iconv_prog.c:238
+#: iconv/iconv_prog.c:189 iconv/iconv_prog.c:251
 #, c-format
 msgid "failed to start conversion processing"
 msgstr "გადაყვანის დამუშავების დაწყების შეცდომა"
 
-#: iconv/iconv_prog.c:217
+#: iconv/iconv_prog.c:230
 #, c-format
 msgid "conversion from `%s' is not supported"
 msgstr "%s-დან გადაყვანა მხარდაუჭერელია"
 
-#: iconv/iconv_prog.c:336
-#, c-format
-msgid "error while closing output file"
-msgstr "შეცდომა გამოტანის ფაილის დახურვისას"
-
-#: iconv/iconv_prog.c:522
+#: iconv/iconv_prog.c:693
 #, c-format
 msgid "internal error (illegal descriptor)"
 msgstr "შიდა შეცდომა (დაუშვებელი დესკრიპტორი)"
 
-#: iconv/iconv_prog.c:525
+#: iconv/iconv_prog.c:696
 #, c-format
 msgid "unknown iconv() error %d"
 msgstr "iconv()-ის უცნობი შეცდომა: %d"
@@ -2829,7 +2793,7 @@ msgstr "უცნობი სიგნალი %d\n"
 msgid "%s%sUnknown signal %d\n"
 msgstr "%s%sუცნობი სიგნალი %d\n"
 
-#: stdio-common/psignal.c:44
+#: stdio-common/psignal.c:44 string/strsignal.c:57
 msgid "Unknown signal"
 msgstr "უცნობი სიგნალი"
 
@@ -2837,12 +2801,12 @@ msgstr "უცნობი სიგნალი"
 msgid "Unknown error "
 msgstr "უცნობი შეცდომა "
 
-#: string/strsignal.c:39
+#: string/strsignal.c:42
 #, c-format
 msgid "Real-time signal %d"
 msgstr "რეალური-დროის სიგნალი %d"
 
-#: string/strsignal.c:43
+#: string/strsignal.c:46
 #, c-format
 msgid "Unknown signal %d"
 msgstr "უცნობი სიგნალი %d"
@@ -3672,6 +3636,18 @@ msgstr "?"
 msgid "RPC program not available"
 msgstr "RPC პროგრამა ხელმიუწვდომელია"
 
+#: sysdeps/hppa/dl-fptr.c:96
+msgid "cannot map pages for fdesc table"
+msgstr "fdesc ცხრილისთვის გვერდების მიბმის შეცდომა"
+
+#: sysdeps/hppa/dl-fptr.c:214
+msgid "cannot map pages for fptr table"
+msgstr "fptr ცხრილისთვის გვერდების მიბმის შეცდომა"
+
+#: sysdeps/hppa/dl-fptr.c:243
+msgid "internal error: symidx out of range of fptr table"
+msgstr "შიდა შეცდომა: symidx-ი fptr ცხრილის დიაპაზონს გარეთაა"
+
 #: sysdeps/mach/_strerror.c:43 sysdeps/mach/xpg-strerror.c:55
 msgid "Error in unknown error system: "
 msgstr "შეცდომა უცნობ სისტემურ შეცდომაში: "
@@ -3859,7 +3835,7 @@ msgstr "%s: გახსნა შეუძლებელია %s: %s\n"
 msgid "input line of unknown type"
 msgstr "შეყვანის ხაზის უცნობი ტიპი"
 
-#: timezone/zic.c:1815 timezone/zic.c:3761
+#: timezone/zic.c:1815 timezone/zic.c:3760
 msgid "time overflow"
 msgstr "დროის გადავსება"
 
@@ -3903,7 +3879,7 @@ msgstr "საწყისი წელი საბოლოომდეა"
 msgid "invalid weekday name"
 msgstr "კვირის დღის არასწორი სახელი"
 
-#: timezone/zic.c:3953
+#: timezone/zic.c:3952
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: შეცდომა საქაღალდის შექმნისას %s: %s"

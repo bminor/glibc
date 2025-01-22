@@ -1,9 +1,9 @@
 # Romanian translation for glibc.
 # Mesajele în limba română pentru pachetul glibc.
-# Copyright © 2023, 2024 Free Software Foundation, Inc.
+# Copyright © 2023, 2024, 2025 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
 #
-# Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>, 2023, 2024.
+# Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>, 2023, 2024, 2025.
 #
 # Cronologia traducerii fișierului „libc”:
 # Traducerea inițială, făcută de R-GC, pentru versiunea libc 2.36.9000.
@@ -11,13 +11,14 @@
 # Corectare un „typo” (Aargument) + reformularea unui mesaj de „seek” pentru versiunea 2.37.9000, făcută de R-GC, oct-2023.
 # Actualizare a traducerii pentru versiunea 2.38.9000, făcută de R-GC, ian-2024.
 # Actualizare a traducerii pentru versiunea 2.39.9000, făcută de R-GC, iun-2024.
+# Actualizare a traducerii pentru versiunea 2.40.9000, făcută de R-GC, ian-2025.
 # Actualizare a traducerii pentru versiunea Y, făcută de X, Z(luna-anul).
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.39.9000\n"
-"POT-Creation-Date: 2024-07-21 00:32+0200\n"
-"PO-Revision-Date: 2024-06-22 19:05+0200\n"
+"Project-Id-Version: libc 2.40.9000\n"
+"POT-Creation-Date: 2025-01-04 11:03+0100\n"
+"PO-Revision-Date: 2025-01-06 19:25+0100\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
 "Language: ro\n"
@@ -26,7 +27,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
-"X-Generator: Poedit 3.4.3\n"
+"X-Generator: Poedit 3.5\n"
 
 #: argp/argp-help.c:229
 #, c-format
@@ -78,7 +79,7 @@ msgid "Give a short usage message"
 msgstr "Oferă un mesaj scurt de utilizare"
 
 #: argp/argp-parse.c:88 catgets/gencat.c:110 catgets/gencat.c:114
-#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:106 nscd/nscd.c:110
+#: iconv/iconv_prog.c:61 iconv/iconv_prog.c:62 nscd/nscd.c:106 nscd/nscd.c:110
 #: nss/makedb.c:122
 msgid "NAME"
 msgstr "NUME"
@@ -114,21 +115,13 @@ msgstr "(EROARE DE PROGRAM) Opțiunea ar fi trebuit să fie recunoscută!?"
 
 #: assert/assert-perr.c:35
 #, c-format
-msgid ""
-"%s%s%s:%u: %s%sUnexpected error: %s.\n"
-"%n"
-msgstr ""
-"%s%s%s:%u: %s%sEroare neașteptată: %s.\n"
-"%n"
+msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
+msgstr "%s%s%s:%u: %s%sEroare neașteptată: %s.\n"
 
-#: assert/assert.c:103
+#: assert/assert.c:125
 #, c-format
-msgid ""
-"%s%s%s:%u: %s%sAssertion `%s' failed.\n"
-"%n"
-msgstr ""
-"%s%s%s:%u: %s%sAserțiunea „%s” a eșuat.\n"
-"%n"
+msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
+msgstr "%s%s%s:%u: %s%sAserțiunea „%s” a eșuat.\n"
 
 #: catgets/gencat.c:111
 msgid "Create C header file NAME containing symbol definitions"
@@ -158,8 +151,8 @@ msgstr ""
 "-o FIȘIER-IEȘIRE [FIȘIER-INTRARE]...\n"
 "[FIȘIER-IEȘIRE [FIȘIER-INTRARE]...]"
 
-#: catgets/gencat.c:230 debug/pcprofiledump.c:208 elf/ldconfig.c:217
-#: elf/pldd.c:246 elf/sln.c:77 elf/sprof.c:371 iconv/iconv_prog.c:387
+#: catgets/gencat.c:230 debug/pcprofiledump.c:219 elf/ldconfig.c:217
+#: elf/pldd.c:246 elf/sln.c:77 elf/sprof.c:371 iconv/iconv_prog.c:374
 #: iconv/iconvconfig.c:380 locale/programs/locale.c:275
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:88
 #: malloc/memusagestat.c:564 nss/getent.c:961 nss/makedb.c:371
@@ -172,9 +165,9 @@ msgstr ""
 "Pentru instrucțiuni de raportare a erorilor, consultați:\n"
 "%s.\n"
 
-#: catgets/gencat.c:246 debug/pcprofiledump.c:224 debug/xtrace.sh:63
+#: catgets/gencat.c:246 debug/pcprofiledump.c:235 debug/xtrace.sh:63
 #: elf/ldconfig.c:233 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
-#: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
+#: elf/sprof.c:388 iconv/iconv_prog.c:391 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
 #: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:387 posix/getconf.c:487
@@ -188,8 +181,8 @@ msgstr ""
 "Acesta este software liber; consultați sursa pentru condițiile de copiere. NU există\n"
 "garanție; nici măcar pentru COMERCIALIZARE sau POTRIVIRE PENTRU UN ANUMIT SCOP.\n"
 
-#: catgets/gencat.c:251 debug/pcprofiledump.c:229 debug/xtrace.sh:67
-#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
+#: catgets/gencat.c:251 debug/pcprofiledump.c:240 debug/xtrace.sh:67
+#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:396
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
@@ -202,8 +195,8 @@ msgstr "Scris de %s.\n"
 msgid "*standard input*"
 msgstr "*intrare standard*"
 
-#: catgets/gencat.c:288 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
-#: nss/makedb.c:248
+#: catgets/gencat.c:288 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:279
+#: iconv/iconv_prog.c:432 nss/makedb.c:248
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "nu se poate deschide fișierul de intrare „%s”"
@@ -306,17 +299,32 @@ msgstr "Afișează informațiile generate de analiza performanței."
 msgid "[FILE]"
 msgstr "[FIȘIER]"
 
-#: debug/pcprofiledump.c:107
-#, c-format
-msgid "cannot open input file"
-msgstr "nu se poate deschide fișierul de intrare"
-
-#: debug/pcprofiledump.c:114
+#: debug/pcprofiledump.c:97
 #, c-format
 msgid "cannot read header"
 msgstr "nu se poate citi antetul"
 
-#: debug/pcprofiledump.c:178
+#: debug/pcprofiledump.c:99
+#, c-format
+msgid "cannot read pointer pair"
+msgstr "nu se poate citi perechea de indicatori"
+
+#: debug/pcprofiledump.c:107
+#, c-format
+msgid "unexpected end of file in header"
+msgstr "sfârșit neașteptat de fișier în antet"
+
+#: debug/pcprofiledump.c:110
+#, c-format
+msgid "unexpected end of file in pointer pair"
+msgstr "sfârșitul neașteptat al fișierului în perechea de indicatori"
+
+#: debug/pcprofiledump.c:145
+#, c-format
+msgid "cannot open input file"
+msgstr "nu se poate deschide fișierul de intrare"
+
+#: debug/pcprofiledump.c:189
 #, c-format
 msgid "invalid pointer size"
 msgstr "dimensiunea indicatorului nevalidă"
@@ -481,11 +489,11 @@ msgstr "eroare la încărcarea bibliotecilor partajate"
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr "EROARE ÎN EDITORUL/VINCULATORUL DE LEGĂTURI DINAMICE!!!"
 
-#: elf/dl-close.c:357 elf/dl-open.c:298
+#: elf/dl-close.c:363 elf/dl-open.c:298
 msgid "cannot create scope list"
 msgstr "nu s-a putut crea lista de domenii"
 
-#: elf/dl-close.c:790
+#: elf/dl-close.c:792
 msgid "shared object not open"
 msgstr "obiectul partajat nu este deschis"
 
@@ -516,18 +524,6 @@ msgstr "nu se poate aloca lista de dependențe"
 msgid "cannot allocate symbol search list"
 msgstr "nu se poate aloca lista de căutare a simbolurilor"
 
-#: elf/dl-fptr.c:88 sysdeps/hppa/dl-fptr.c:96
-msgid "cannot map pages for fdesc table"
-msgstr "nu s-au putut asocia pagini(în memorie) pentru tabelul fdesc"
-
-#: elf/dl-fptr.c:192 sysdeps/hppa/dl-fptr.c:214
-msgid "cannot map pages for fptr table"
-msgstr "nu s-au putut asocia pagini(în memorie) pentru tabelul fptr"
-
-#: elf/dl-fptr.c:221 sysdeps/hppa/dl-fptr.c:243
-msgid "internal error: symidx out of range of fptr table"
-msgstr "eroare internă: symidx în afara intervalului tabelului fptr"
-
 #: elf/dl-hwcaps.c:104
 msgid "cannot create HWCAP priorities"
 msgstr "nu se pot crea priorități HWCAP"
@@ -536,127 +532,127 @@ msgstr "nu se pot crea priorități HWCAP"
 msgid "cannot create capability list"
 msgstr "nu se poate crea lista de capacităț/iproprietăți"
 
-#: elf/dl-load.c:423
+#: elf/dl-load.c:424
 msgid "cannot allocate name record"
 msgstr "nu se poate aloca înregistrarea de nume"
 
-#: elf/dl-load.c:525 elf/dl-load.c:638 elf/dl-load.c:732 elf/dl-load.c:829
+#: elf/dl-load.c:510 elf/dl-load.c:623 elf/dl-load.c:717 elf/dl-load.c:814
 msgid "cannot create cache for search path"
 msgstr "nu se poate crea spațiul de prestocare(cache) pentru ruta de căutare"
 
-#: elf/dl-load.c:621
+#: elf/dl-load.c:606
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "nu se poate crea o copie RUNPATH/RPATH"
 
-#: elf/dl-load.c:718
+#: elf/dl-load.c:703
 msgid "cannot create search path array"
 msgstr "nu se poate crea matricea de rute de căutare"
 
-#: elf/dl-load.c:957
+#: elf/dl-load.c:973
 msgid "cannot stat shared object"
 msgstr "nu s-a putut obține starea obiectului partajat"
 
-#: elf/dl-load.c:1048 elf/dl-load.c:2163
+#: elf/dl-load.c:1066 elf/dl-load.c:2155
 msgid "cannot create shared object descriptor"
 msgstr "nu se poate crea un descriptor de obiect partajat"
 
-#: elf/dl-load.c:1067 elf/dl-load.c:1610 elf/dl-load.c:1718
+#: elf/dl-load.c:1085 elf/dl-load.c:1604 elf/dl-load.c:1710
 msgid "cannot read file data"
 msgstr "nu se pot citi datele fișierului"
 
-#: elf/dl-load.c:1120 elf/dl-map-segments.h:117
+#: elf/dl-load.c:1138 elf/dl-map-segments.h:117
 msgid "ELF load command address/offset not page-aligned"
 msgstr "Adresa/poziția comenzii de încărcare ELF nu este aliniată în pagină"
 
-#: elf/dl-load.c:1212
+#: elf/dl-load.c:1230
 msgid "object file has no loadable segments"
 msgstr "fișierul obiect nu are segmente încărcabile"
 
-#: elf/dl-load.c:1229
+#: elf/dl-load.c:1247
 msgid "cannot dynamically load executable"
 msgstr "nu se poate încărca în mod dinamic executabilul"
 
-#: elf/dl-load.c:1236
+#: elf/dl-load.c:1254
 msgid "object file has no dynamic section"
 msgstr "fișierul obiect nu are secțiune dinamică"
 
-#: elf/dl-load.c:1271
+#: elf/dl-load.c:1289
 msgid "cannot dynamically load position-independent executable"
 msgstr "nu poate încărca dinamic executabilul independent de poziție"
 
-#: elf/dl-load.c:1273
+#: elf/dl-load.c:1291
 msgid "shared object cannot be dlopen()ed"
 msgstr "obiectul partajat nu poate fi deschis cu dlopen()"
 
-#: elf/dl-load.c:1286
+#: elf/dl-load.c:1304
 msgid "cannot allocate memory for program header"
 msgstr "nu se poate aloca memorie pentru antetul programului"
 
-#: elf/dl-load.c:1309
+#: elf/dl-load.c:1329
 msgid "cannot enable executable stack as shared object requires"
 msgstr "nu se poate activa stiva executabilă așa cum necesită obiectul partajat"
 
-#: elf/dl-load.c:1337
+#: elf/dl-load.c:1357
 msgid "cannot close file descriptor"
 msgstr "nu se poate închide descriptorul de fișier"
 
-#: elf/dl-load.c:1610
+#: elf/dl-load.c:1604
 msgid "file too short"
 msgstr "fișier prea scurt"
 
-#: elf/dl-load.c:1646
+#: elf/dl-load.c:1638
 msgid "invalid ELF header"
 msgstr "antet ELF nevalid"
 
-#: elf/dl-load.c:1661
+#: elf/dl-load.c:1653
 msgid "ELF file data encoding not big-endian"
 msgstr "codificarea datelor fișierului ELF nu este de tipul big-endian"
 
-#: elf/dl-load.c:1663
+#: elf/dl-load.c:1655
 msgid "ELF file data encoding not little-endian"
 msgstr "codificarea datelor fișierului ELF nu este de tipul little-endian"
 
-#: elf/dl-load.c:1667
+#: elf/dl-load.c:1659
 msgid "ELF file version ident does not match current one"
 msgstr "versiunea de identificare a fișierului ELF nu se potrivește cu cea actuală"
 
-#: elf/dl-load.c:1671
+#: elf/dl-load.c:1663
 msgid "ELF file OS ABI invalid"
 msgstr "ABI(interfața) SO(sistemului operațional) a fișierului ELF nu este validă"
 
-#: elf/dl-load.c:1674
+#: elf/dl-load.c:1666
 msgid "ELF file ABI version invalid"
 msgstr "versiunea ABI a fișierului ELF nu este validă"
 
-#: elf/dl-load.c:1677
+#: elf/dl-load.c:1669
 msgid "nonzero padding in e_ident"
 msgstr "umplutură diferită de zero în e_ident"
 
-#: elf/dl-load.c:1680
+#: elf/dl-load.c:1672
 msgid "internal error"
 msgstr "eroare internă"
 
-#: elf/dl-load.c:1687
+#: elf/dl-load.c:1679
 msgid "ELF file version does not match current one"
 msgstr "versiunea fișierului ELF nu se potrivește cu cea actuală"
 
-#: elf/dl-load.c:1699
+#: elf/dl-load.c:1691
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "numai ET_DYN și ET_EXEC pot fi încărcate"
 
-#: elf/dl-load.c:1704
+#: elf/dl-load.c:1696
 msgid "ELF file's phentsize not the expected size"
 msgstr "„phentsize” a fișierului ELF nu are dimensiunea așteptată"
 
-#: elf/dl-load.c:2182
+#: elf/dl-load.c:2174
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "clasă ELF greșită: ELFCLASS64"
 
-#: elf/dl-load.c:2183
+#: elf/dl-load.c:2175
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "clasă ELF greșită: ELFCLASS32"
 
-#: elf/dl-load.c:2186
+#: elf/dl-load.c:2178
 msgid "cannot open shared object file"
 msgstr "nu se poate deschide fișierul obiect partajat"
 
@@ -672,7 +668,7 @@ msgstr "nu se pot modifica protecțiile memoriei"
 msgid "cannot map zero-fill pages"
 msgstr "nu se pot memora pagini umplute cu zerouri"
 
-#: elf/dl-lookup.c:813
+#: elf/dl-lookup.c:800
 msgid "symbol lookup error"
 msgstr "eroare de căutare a simbolului"
 
@@ -680,23 +676,23 @@ msgstr "eroare de căutare a simbolului"
 msgid "cannot extend global scope"
 msgstr "nu se poate extinde domeniul global"
 
-#: elf/dl-open.c:405
+#: elf/dl-open.c:382
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "Contorul de generare TLS a intrat în buclă! Raportați acest lucru!"
 
-#: elf/dl-open.c:758
+#: elf/dl-open.c:716
 msgid "cannot allocate address lookup data"
 msgstr "nu s-au putut aloca datele de căutare a adresei"
 
-#: elf/dl-open.c:848
+#: elf/dl-open.c:817
 msgid "invalid mode for dlopen()"
 msgstr "mod nevalid pentru dlopen()"
 
-#: elf/dl-open.c:865
+#: elf/dl-open.c:834
 msgid "no more namespaces available for dlmopen()"
 msgstr "nu mai sunt spații de nume disponibile pentru dlmopen()"
 
-#: elf/dl-open.c:890
+#: elf/dl-open.c:859
 msgid "invalid target namespace in dlmopen()"
 msgstr "spațiu de nume țintă nevalid în dlmopen()"
 
@@ -704,16 +700,16 @@ msgstr "spațiu de nume țintă nevalid în dlmopen()"
 msgid "cannot allocate memory in static TLS block"
 msgstr "nu se poate aloca memorie în bloc TLS static"
 
-#: elf/dl-reloc.c:288
+#: elf/dl-reloc.c:283
 msgid "cannot make segment writable for relocation"
 msgstr "nu se poate face segmentul inscriptibil pentru realocare"
 
-#: elf/dl-reloc.c:319
+#: elf/dl-reloc.c:313
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: memorie insuficientă pentru stocarea rezultatelor realocării pentru %s\n"
 
-#: elf/dl-reloc.c:335
+#: elf/dl-reloc.c:328
 msgid "cannot restore segment prot after reloc"
 msgstr "nu se poate restabili segmentul de protecție după realocare"
 
@@ -725,7 +721,7 @@ msgstr "nu se poate aplica protecția suplimentară de memorie după realocare"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT utilizat în cod nu s-a încărcat dinamic"
 
-#: elf/dl-tls.c:1136
+#: elf/dl-tls.c:1163
 msgid "cannot create TLS data structures"
 msgstr "nu se pot crea structurile de date TLS"
 
@@ -1076,7 +1072,7 @@ msgstr "Este necesar exact un parametru cu ID-ul procesului.\n"
 #: elf/pldd.c:102
 #, c-format
 msgid "invalid process ID '%s'"
-msgstr "ID de proces nevalid „%s”"
+msgstr "ID nevalid al procesului „%s”"
 
 #: elf/pldd.c:110
 #, c-format
@@ -1398,12 +1394,12 @@ msgstr "Tabelul de șiruri are prea multe intrări"
 msgid "String table is too large"
 msgstr "Tabelul de șiruri este prea mare"
 
-#: iconv/iconv_charmap.c:146 iconv/iconv_prog.c:427
+#: iconv/iconv_charmap.c:146 iconv/iconv_prog.c:426
 #, c-format
 msgid "cannot open output file"
 msgstr "nu se poate deschide fișierul de ieșire"
 
-#: iconv/iconv_charmap.c:192 iconv/iconv_prog.c:290
+#: iconv/iconv_charmap.c:192
 #, c-format
 msgid "error while closing input `%s'"
 msgstr "eroare la închiderea intrării „%s”"
@@ -1413,128 +1409,135 @@ msgstr "eroare la închiderea intrării „%s”"
 msgid "illegal input sequence at position %zd"
 msgstr "secvență de intrare ilegală la poziția %zd"
 
-#: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:518
+#: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:728
 #, c-format
 msgid "incomplete character or shift sequence at end of buffer"
 msgstr "caracter incomplet sau secvență de schimbare la sfârșitul memoriei tampon"
 
-#: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:543 iconv/iconv_prog.c:561
-#: iconv/iconv_prog.c:597
+#: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:543 iconv/iconv_prog.c:736
 #, c-format
 msgid "error while reading the input"
 msgstr "eroare la citirea intrării"
 
-#: iconv/iconv_charmap.c:525 iconv/iconv_prog.c:579
+#: iconv/iconv_charmap.c:525
 #, c-format
 msgid "unable to allocate buffer for input"
 msgstr "nu se poate aloca memorie tampon pentru intrare"
 
-#: iconv/iconv_prog.c:59
+#: iconv/iconv_prog.c:60
 msgid "Input/Output format specification:"
 msgstr "Specificație format de intrare/ieșire:"
 
-#: iconv/iconv_prog.c:60
+#: iconv/iconv_prog.c:61
 msgid "encoding of original text"
 msgstr "codificarea textului original"
 
-#: iconv/iconv_prog.c:61
+#: iconv/iconv_prog.c:62
 msgid "encoding for output"
 msgstr "codificarea pentru ieșire"
 
-#: iconv/iconv_prog.c:62
+#: iconv/iconv_prog.c:63
 msgid "Information:"
 msgstr "Informații:"
 
-#: iconv/iconv_prog.c:63
+#: iconv/iconv_prog.c:64
 msgid "list all known coded character sets"
 msgstr "listează toate seturile de caractere codificate cunoscute"
 
-#: iconv/iconv_prog.c:64 locale/programs/localedef.c:123
+#: iconv/iconv_prog.c:65 locale/programs/localedef.c:123
 msgid "Output control:"
 msgstr "Control ieșire:"
 
-#: iconv/iconv_prog.c:65
+#: iconv/iconv_prog.c:66
 msgid "omit invalid characters from output"
 msgstr "omite caracterele nevalide de la ieșire"
 
-#: iconv/iconv_prog.c:66 iconv/iconvconfig.c:128
+#: iconv/iconv_prog.c:67 iconv/iconvconfig.c:128
 #: locale/programs/localedef.c:116 locale/programs/localedef.c:118
 #: locale/programs/localedef.c:120 locale/programs/localedef.c:149
 #: malloc/memusagestat.c:56
 msgid "FILE"
 msgstr "FIȘIER"
 
-#: iconv/iconv_prog.c:66
+#: iconv/iconv_prog.c:67
 msgid "output file"
 msgstr "fișier de ieșire"
 
-#: iconv/iconv_prog.c:67
+#: iconv/iconv_prog.c:68
 msgid "suppress warnings"
 msgstr "suprimă avertismentele"
 
-#: iconv/iconv_prog.c:68
+#: iconv/iconv_prog.c:69
 msgid "print progress information"
 msgstr "afișează informațiile despre progres"
 
+#: iconv/iconv_prog.c:72
+msgid "BYTE-COUNT"
+msgstr "NUMĂR-OCTEȚI"
+
 #: iconv/iconv_prog.c:73
+msgid "size of in-memory scratch buffer"
+msgstr "dimensiunea tamponului de scriere din memorie"
+
+#: iconv/iconv_prog.c:78
 msgid "Convert encoding of given files from one encoding to another."
 msgstr "Convertește codificarea fișierelor date de la o codificare la alta."
 
-#: iconv/iconv_prog.c:77
+#: iconv/iconv_prog.c:82
 msgid "[FILE...]"
 msgstr "[FIȘIER...]"
 
-#: iconv/iconv_prog.c:176 iconv/iconv_prog.c:238
+#: iconv/iconv_prog.c:189 iconv/iconv_prog.c:251
 #, c-format
 msgid "failed to start conversion processing"
 msgstr "nu s-a putut începe procesarea conversiei"
 
-#: iconv/iconv_prog.c:212
+#: iconv/iconv_prog.c:225
 #, c-format
 msgid "conversions from `%s' and to `%s' are not supported"
 msgstr "conversiile de la „%s” și la „%s” nu sunt acceptate"
 
-#: iconv/iconv_prog.c:217
+#: iconv/iconv_prog.c:230
 #, c-format
 msgid "conversion from `%s' is not supported"
 msgstr "conversia de la „%s” nu este acceptată"
 
-#: iconv/iconv_prog.c:224
+#: iconv/iconv_prog.c:237
 #, c-format
 msgid "conversion to `%s' is not supported"
 msgstr "conversia la „%s” nu este acceptată"
 
-#: iconv/iconv_prog.c:228
+#: iconv/iconv_prog.c:241
 #, c-format
 msgid "conversion from `%s' to `%s' is not supported"
 msgstr "conversia de la „%s” la „%s” nu este acceptată"
 
-#: iconv/iconv_prog.c:336
+#: iconv/iconv_prog.c:349
 #, c-format
-msgid "error while closing output file"
-msgstr "eroare la închiderea fișierului de ieșire"
+msgid "invalid buffer size: %s"
+msgstr "dimensiunea memoriei tampon nu este validă: %s"
 
-#: iconv/iconv_prog.c:437
+#: iconv/iconv_prog.c:540
 #, c-format
 msgid "conversion stopped due to problem in writing the output"
 msgstr "conversia a fost oprită din cauza unei probleme la scrierea ieșirii"
 
-#: iconv/iconv_prog.c:514
+#: iconv/iconv_prog.c:686
 #, c-format
-msgid "illegal input sequence at position %ld"
-msgstr "secvență de intrare ilegală la poziția %ld"
+msgid "illegal input sequence at position %lld"
+msgstr "secvență de intrare ilegală la poziția %lld"
 
-#: iconv/iconv_prog.c:522
+#: iconv/iconv_prog.c:693
 #, c-format
 msgid "internal error (illegal descriptor)"
 msgstr "eroare internă (descriptor ilegal)"
 
-#: iconv/iconv_prog.c:525
+#: iconv/iconv_prog.c:696
 #, c-format
 msgid "unknown iconv() error %d"
 msgstr "eroare iconv() necunoscută %d"
 
-#: iconv/iconv_prog.c:768
+#: iconv/iconv_prog.c:909
 msgid ""
 "The following list contains all the coded character sets known.  This does\n"
 "not necessarily mean that all combinations of these names can be used for\n"
@@ -5181,7 +5184,7 @@ msgstr "Semnal necunoscut %d\n"
 msgid "%s%sUnknown signal %d\n"
 msgstr "%s%sSemnal necunoscut %d\n"
 
-#: stdio-common/psignal.c:44
+#: stdio-common/psignal.c:44 string/strsignal.c:57
 msgid "Unknown signal"
 msgstr "Semnal necunoscut"
 
@@ -5189,12 +5192,12 @@ msgstr "Semnal necunoscut"
 msgid "Unknown error "
 msgstr "Eroare necunoscută "
 
-#: string/strsignal.c:39
+#: string/strsignal.c:42
 #, c-format
 msgid "Real-time signal %d"
 msgstr "Semnal în timp real %d"
 
-#: string/strsignal.c:43
+#: string/strsignal.c:46
 #, c-format
 msgid "Unknown signal %d"
 msgstr "Semnal necunoscut %d"
@@ -6457,9 +6460,25 @@ msgstr "?"
 msgid "RPC program not available"
 msgstr "Programul RPC nu este disponibil"
 
+#: sysdeps/hppa/dl-fptr.c:96
+msgid "cannot map pages for fdesc table"
+msgstr "nu s-au putut asocia pagini(în memorie) pentru tabelul fdesc"
+
+#: sysdeps/hppa/dl-fptr.c:214
+msgid "cannot map pages for fptr table"
+msgstr "nu s-au putut asocia pagini(în memorie) pentru tabelul fptr"
+
+#: sysdeps/hppa/dl-fptr.c:243
+msgid "internal error: symidx out of range of fptr table"
+msgstr "eroare internă: symidx în afara intervalului tabelului fptr"
+
 #: sysdeps/mach/_strerror.c:43 sysdeps/mach/xpg-strerror.c:55
 msgid "Error in unknown error system: "
 msgstr "Eroare provenită de la o eroare de sistem necunoscută: "
+
+#: sysdeps/mach/xpg-strerror.c:66 sysdeps/mach/xpg-strerror.c:74
+msgid "Unknown error code: "
+msgstr "Cod de eroare necunoscut: "
 
 #: sysdeps/posix/gai_strerror-strs.h:2
 msgid "Address family for hostname not supported"
@@ -6906,7 +6925,7 @@ msgstr "linia de continuare așteptată nu a fost găsită"
 msgid "fractional seconds rejected by pre-2018 versions of zic"
 msgstr "fracții de secunde respinse de versiunile anterioare de 2018 ale «zic»"
 
-#: timezone/zic.c:1815 timezone/zic.c:3761
+#: timezone/zic.c:1815 timezone/zic.c:3760
 msgid "time overflow"
 msgstr "debordare orară"
 
@@ -7078,89 +7097,89 @@ msgid "%%z UT offset magnitude exceeds 99:59:59"
 msgstr "Mărimea decalajului UTC %%z depășește 99:59:59"
 
 #: timezone/zic.c:3180
-msgid "no POSIX.1-2017 environment variable for zone"
-msgstr "nicio variabilă de mediu POSIX.1-2017 pentru zonă(fusul orar)"
+msgid "no proleptic TZ string for zone"
+msgstr "niciun șir TZ proleptic pentru zonă(fusul orar)"
 
-#: timezone/zic.c:3187
+#: timezone/zic.c:3186
 #, c-format
 msgid "%s: pre-%d clients may mishandle distant timestamps"
 msgstr "%s: clienții dinainte de %d pot gestiona greșit marcajele de timp îndepărtate"
 
-#: timezone/zic.c:3316
+#: timezone/zic.c:3315
 msgid "two rules for same instant"
 msgstr "două reguli pentru același moment"
 
-#: timezone/zic.c:3389
+#: timezone/zic.c:3388
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr "nu se poate determina abrevierea fusului orar de utilizat imediat după această dată"
 
-#: timezone/zic.c:3490
+#: timezone/zic.c:3489
 msgid "UT offset out of range"
 msgstr "Decalaj UTC în afara intervalului"
 
-#: timezone/zic.c:3513
+#: timezone/zic.c:3512
 msgid "too many local time types"
 msgstr "prea multe tipuri de oră locală"
 
-#: timezone/zic.c:3531
+#: timezone/zic.c:3530
 msgid "too many leap seconds"
 msgstr "prea multe secunde intercalate (de an bisect)"
 
-#: timezone/zic.c:3535
+#: timezone/zic.c:3534
 msgid "Rolling leap seconds not supported with -r"
 msgstr "Secundele bisecte nu sunt acceptate cu opțiunea „-r”"
 
-#: timezone/zic.c:3562
+#: timezone/zic.c:3561
 msgid "Leap seconds too close together"
 msgstr "Secundele intercalate (de an bisect) sunt prea apropiate una de cealaltă"
 
-#: timezone/zic.c:3573
+#: timezone/zic.c:3572
 msgid "last Leap time does not precede Expires time"
 msgstr "ultimul timp „Leap” nu este înainte de timpul „Expires”"
 
-#: timezone/zic.c:3680
+#: timezone/zic.c:3679
 #, c-format
 msgid "\"%s\" is undocumented; use \"last%s\" instead"
 msgstr "„%s” este nedocumentat; utilizați în schimb „last%s”"
 
-#: timezone/zic.c:3711
+#: timezone/zic.c:3710
 #, c-format
 msgid "\"%s\" is ambiguous in pre-2017c zic"
 msgstr "„%s” este ambiguu în «zic» de dinainte de 2017c"
 
-#: timezone/zic.c:3742
+#: timezone/zic.c:3741
 msgid "Odd number of quotation marks"
 msgstr "Număr impar de ghilimele"
 
-#: timezone/zic.c:3750
+#: timezone/zic.c:3749
 msgid "Too many input fields"
 msgstr "Prea multe câmpuri de intrare"
 
-#: timezone/zic.c:3839
+#: timezone/zic.c:3838
 msgid "use of 2/29 in non leap-year"
 msgstr "utilizare a 2/29 în an non-bisect"
 
-#: timezone/zic.c:3865
+#: timezone/zic.c:3864
 msgid "rule goes past start/end of month; will not work with pre-2004 versions of zic"
 msgstr "regula depășește începutul/sfârșitul lunii; nu va funcționa cu versiunile anterioare de anul 2004 ale «zic»"
 
-#: timezone/zic.c:3892
+#: timezone/zic.c:3891
 msgid "time zone abbreviation has fewer than 3 characters"
 msgstr "abrevierea fusului orar are mai puțin de 3 caractere"
 
-#: timezone/zic.c:3894
+#: timezone/zic.c:3893
 msgid "time zone abbreviation has too many characters"
 msgstr "abrevierea fusului orar are prea multe caractere"
 
-#: timezone/zic.c:3896
+#: timezone/zic.c:3895
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr "abrevierea fusului orar diferă de standardul POSIX"
 
-#: timezone/zic.c:3902
+#: timezone/zic.c:3901
 msgid "too many, or too long, time zone abbreviations"
 msgstr "prea multe sau prea lungi abrevieri de fus orar"
 
-#: timezone/zic.c:3953
+#: timezone/zic.c:3952
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: Nu se poate crea directorul %s: %s"
