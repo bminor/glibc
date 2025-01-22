@@ -375,11 +375,11 @@ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-The sysdeps/ieee754/flt-32/e_gammaf_r.c file, taken from the CORE-MATH
-project <https://core-math.gitlabpages.inria.fr/>, is distributed under
-the following license:
+Various files in sysdeps/ieee754/flt-32, taken from the CORE-MATH project
+<https://core-math.gitlabpages.inria.fr/>, are distributed under the
+following license:
 
-Copyright (c) 2023-2024 Alexei Sibidanov.
+Copyright (c) 2022-2024 Alexei Sibidanov. Paul Zimmermann.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
