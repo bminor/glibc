@@ -740,7 +740,7 @@ main (int argc, char **argv)
   char *command_basename;
   char *so_base;
   int do_postclean = 0;
-  bool do_ldconfig = false;
+  bool do_ldconfig = true;
   char *change_cwd = NULL;
 
   int pipes[2];
