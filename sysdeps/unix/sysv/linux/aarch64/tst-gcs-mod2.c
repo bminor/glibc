@@ -1,4 +1,4 @@
-/* AArch64 tests for GCS.
+/* DSO for testing GCS.
    Copyright (C) 2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,28 +16,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include "tst-gcs-helper.h"
+#include <stdio.h>
 
-static int
-do_test (void)
+int fun2 (void)
 {
-  /* Check if GCS could possible by enabled.  */
-  if (!(getauxval (AT_HWCAP) & HWCAP_GCS))
-    {
-      puts ("kernel or CPU does not support GCS");
-      return EXIT_UNSUPPORTED;
-    }
-  bool gcs_enabled = __check_gcs_status ();
-  if (gcs_enabled)
-    puts ("GCS enabled");
-  else
-    puts ("GCS not enabled");
-#if TEST_GCS_EXPECT_ENABLED
-  TEST_VERIFY (gcs_enabled);
-#else
-  TEST_VERIFY (!gcs_enabled);
-#endif
+  puts ("called function fun2");
   return 0;
 }
-
-#include <support/test-driver.c>
