@@ -115,6 +115,7 @@ bench-math := \
   sinf \
   sinh \
   sinhf \
+  sinpif \
   sqrt \
   tan \
   tanf \
