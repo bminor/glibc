@@ -41,6 +41,7 @@ bench-math := \
   atanf \
   atanh \
   atanhf \
+  atanpif \
   cbrt \
   cbrtf \
   ceil \
