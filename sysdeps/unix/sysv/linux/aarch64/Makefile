@@ -15,6 +15,7 @@ gcs-tests-dynamic = \
   tst-gcs-dlopen-override \
   tst-gcs-enforced \
   tst-gcs-enforced-abort \
+  tst-gcs-noreturn \
   tst-gcs-optional-off \
   tst-gcs-optional-on \
   tst-gcs-override \
@@ -122,6 +123,10 @@ $(objpfx)tst-gcs-dlopen-enforced.out: $(objpfx)tst-gcs-mod2.so
 $(objpfx)tst-gcs-dlopen-optional-on.out: $(objpfx)tst-gcs-mod2.so
 $(objpfx)tst-gcs-dlopen-optional-off.out: $(objpfx)tst-gcs-mod2.so
 $(objpfx)tst-gcs-dlopen-override.out: $(objpfx)tst-gcs-mod2.so
+
+LDFLAGS-tst-gcs-noreturn = -Wl,-z gcs=always
+
+tst-gcs-noreturn-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=0
 
 endif # ifeq ($(have-test-cc-gcs),yes)
 
