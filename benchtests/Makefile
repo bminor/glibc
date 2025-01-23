@@ -121,6 +121,7 @@ bench-math := \
   tanf \
   tanh \
   tanhf \
+  tanpif \
   tgamma \
   tgammaf \
   trunc \
