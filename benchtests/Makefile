@@ -50,6 +50,7 @@ bench-math := \
   cosf \
   cosh \
   coshf \
+  cospif \
   erf \
   erfc \
   erfcf \
