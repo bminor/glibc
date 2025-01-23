@@ -154,6 +154,7 @@ tests += \
   tst-exit3 \
   tst-flock1 \
   tst-flock2 \
+  tst-fopen-threaded \
   tst-fork1 \
   tst-fork2 \
   tst-fork3 \

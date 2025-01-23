@@ -244,6 +244,7 @@ tests := \
   tst-fmemopen2 \
   tst-fmemopen3 \
   tst-fmemopen4 \
+  tst-fopen \
   tst-fphex \
   tst-fphex-wide \
   tst-fread \
