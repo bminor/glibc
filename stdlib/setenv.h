@@ -29,9 +29,18 @@
    of environment values used before.  */
 struct environ_array
 {
-  struct environ_array *next;   /* Previously used environment array.  */
+  /* The actual environment array.  Use a separate allocation (and not
+     a flexible array member) so that calls like free (environ) that
+     have been encountered in some applications do not crash
+     immediately.  With such a call, if the application restores the
+     original environ pointer at process start and does not modify the
+     environment again, a use-after-free situation only occurs during
+     __libc_freeres, which is only called during memory debugging.
+     With subsequent setenv calls, there is still heap corruption, but
+     that happened with the old realloc-based implementation, too.  */
+  char **array;
   size_t allocated;             /* Number of allocated array elments.  */
-  char *array[];               /* The actual environment array.  */
+  struct environ_array *next;   /* Previously used environment array.  */
 };
 
 /* After initialization, and until the user resets environ (perhaps by
@@ -44,7 +53,7 @@ static inline bool
 __environ_is_from_array_list (char **ep)
 {
   struct environ_array *eal = atomic_load_relaxed (&__environ_array_list);
-  return eal != NULL && &eal->array[0] == ep;
+  return eal != NULL && eal->array == ep;
 }
 
 /* Counter for detecting concurrent modification in unsetenv.

@@ -277,6 +277,10 @@ tests := \
   tst-concurrent-quick_exit \
   tst-cxa_atexit \
   tst-environ \
+  tst-environ-change-1 \
+  tst-environ-change-2 \
+  tst-environ-change-3 \
+  tst-environ-change-4 \
   tst-getenv-signal \
   tst-getenv-thread \
   tst-getenv-unsetenv \

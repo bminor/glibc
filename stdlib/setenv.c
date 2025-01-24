@@ -118,24 +118,21 @@ __environ_new_array (size_t required_size)
   else
     new_size = __environ_array_list->allocated * 2;
 
-  size_t new_size_in_bytes;
-  if (__builtin_mul_overflow (new_size, sizeof (char *),
-			      &new_size_in_bytes)
-      || __builtin_add_overflow (new_size_in_bytes,
-				 offsetof (struct environ_array,
-					   array),
-				 &new_size_in_bytes))
+  /* Zero-initialize everything, so that getenv can only
+     observe valid or null pointers.  */
+  char **new_array = calloc (new_size, sizeof (*new_array));
+  if (new_array == NULL)
+    return NULL;
+
+  struct environ_array *target_array = malloc (sizeof (*target_array));
+  if (target_array == NULL)
     {
-      __set_errno (ENOMEM);
+      free (new_array);
       return NULL;
     }
 
-  /* Zero-initialize everything, so that getenv can only
-     observe valid or null pointers.  */
-  struct environ_array *target_array = calloc (1, new_size_in_bytes);
-  if (target_array == NULL)
-    return NULL;
   target_array->allocated = new_size;
+  target_array->array = new_array;
   assert (new_size >= target_array->allocated);
 
   /* Put it onto the list.  */
@@ -236,7 +233,7 @@ __add_to_environ (const char *name, const char *value, const char *combined,
 	  ep[1] = NULL;
 
 	  /* And __environ should be repointed to our array.  */
-	  result_environ = &target_array->array[0];
+	  result_environ = target_array->array;
 	}
     }
 
@@ -403,6 +400,7 @@ __libc_setenv_freemem (void)
   /* Clear all backing arrays.  */
   while (__environ_array_list != NULL)
     {
+      free (__environ_array_list->array);
       void *ptr = __environ_array_list;
       __environ_array_list = __environ_array_list->next;
       free (ptr);
