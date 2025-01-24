@@ -320,6 +320,7 @@ tests := \
   tst-setcontext9 \
   tst-setcontext10 \
   tst-setcontext11 \
+  tst-setenv-environ \
   tst-stdbit-Wconversion \
   tst-stdbit-builtins \
   tst-stdc_bit_ceil \
