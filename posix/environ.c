@@ -10,5 +10,3 @@ weak_alias (__environ, environ)
 /* The SVR4 ABI says `_environ' will be the name to use
    in case the user overrides the weak alias `environ'.  */
 weak_alias (__environ, _environ)
-
-char **__environ_startup;

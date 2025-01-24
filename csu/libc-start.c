@@ -244,7 +244,6 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
   char **ev = &argv[argc + 1];
 
   __environ = ev;
-  __environ_startup = ev;
 
   /* Store the lowest stack address.  This is done in ld.so if this is
      the code for the DSO.  */
