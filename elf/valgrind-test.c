@@ -1,5 +1,5 @@
 /* This is the simple test intended to be called by
-   tst-valgrind-smoke to perform vagrind smoke test.
+   tst-valgrind-smoke to perform valgrind smoke test.
    Copyright (C) 2022-2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
