@@ -599,8 +599,11 @@ $(objpfx)tst-%-mem.out: $(objpfx)tst-%.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-$*.mtrace > $@; \
 	$(evaluate-test)
 $(objpfx)tst-printf-format-%-mem.out: $(objpfx)tst-printf-format-%.out
-	$(common-objpfx)malloc/mtrace \
-	  $(objpfx)tst-printf-format-$*.mtrace > $@; \
+	{ test -r $(objpfx)tst-printf-format-$*.mtrace \
+	|| ( echo "$(objpfx)tst-printf-format-$*.mtrace does not exist"; \
+	     exit 77; ) \
+	&& $(common-objpfx)malloc/mtrace \
+	  $(objpfx)tst-printf-format-$*.mtrace; } > $@; \
 	$(evaluate-test)
 
 errlist-h = $(firstword $(wildcard $(addsuffix /errlist.h,$(sysdirs) .)))
