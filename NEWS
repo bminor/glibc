@@ -9,22 +9,23 @@ Version 2.41
 
 Major new features:
 
-* Support testing glibc build with a different set of C and C++ compilers
-  from the C and C++ compilers used to build glibc with
+* Support for testing a glibc build with a different set of C and C++
+  compilers from the C and C++ compilers used to build glibc has been
+  added:
 
   $ ../configure TEST_CC="gcc-6.4.1" TEST_CXX="g++-6.4.1"
 
-  And support testing glibc build with Clang
+  This includes support for testing the glibc build with Clang, e.g.,
 
   $ ../configure TEST_CC="clang" TEST_CXX="clang++"
 
   Some run-time failures with Clang are expected.
 
-* In /etc/resolv.conf and the RES_OPTIONS, option flags can now be
-  prefixed with “-” to clear previously set flags.  For example, if
-  /etc/resolv.conf contains “options no-aaaa”, a process running with
-  the RES_OPTIONS=-no-aaaa environment variable performs AAAA DNS
-  queries when the glibc DNS stub resolver is used.
+* In /etc/resolv.conf and the RES_OPTIONS environment variable, option
+  flags can now be prefixed with “-” to clear previously set flags.
+  For example, if /etc/resolv.conf contains “options no-aaaa”, a
+  process running with the RES_OPTIONS=-no-aaaa environment variable
+  performs AAAA DNS queries when the glibc DNS stub resolver is used.
 
 * The DNS stub resolver now supports the strict-error option.  If
   activated, getaddrinfo for the AF_UNSPEC address family (with dual
@@ -36,8 +37,9 @@ Major new features:
   which is why this mode is not enabled by default.  A future version
   of the library may turn it on by default, however.
 
-* On Linux, the sched_setattr and sched_getattr have been added, for
-  supporting parameterized scheduling policies such as SCHED_DEADLINE.
+* On Linux, the sched_setattr and sched_getattr functions have been
+  added, for supporting parameterized scheduling policies such as
+  SCHED_DEADLINE.
 
 * The iconv program now supports converting files in place.  The program
   automatically uses a temporary file if required.
@@ -51,64 +53,70 @@ Major new features:
     sinpi, tanpi.
 
 * The GNU C Library now supports a feature test macro _ISOC2Y_SOURCE to
-  enable features from the draft ISO C2Y standard.  Only some features from
-  this draft standard are supported by the GNU C Library, and as the draft
-  is under active development, the set of features enabled by this macro is
-  liable to change.  Features from C2Y are also enabled by _GNU_SOURCE, or
-  by compiling with "gcc -std=gnu2y".
+  enable features from the draft ISO C2Y standard.  Only some features
+  from this draft standard are supported by the GNU C Library, and as
+  the draft is under active development, the set of features enabled by
+  this macro is liable to change.  Features from C2Y are also enabled
+  by _GNU_SOURCE, or by compiling with "gcc -std=gnu2y".
 
-* Optimized and correctly rounded exp10m1f, exp2m1f, expm1f, log10f, log2p1f,
-  log1pf, log10p1f, cbrtf, erff, erfcf, lgammaf, tgammaf, tanf, acosf, acoshf,
-  asinf, asinhf, atanf, atan2f, atanhf, coshf, sinhf, and tanhf from CORE-MATH
+* Optimized and correctly rounded exp10m1f, exp2m1f, expm1f, log10f,
+  log2p1f, log1pf, log10p1f, cbrtf, erff, erfcf, lgammaf, tgammaf,
+  tanf, acosf, acoshf, asinf, asinhf, atanf, atan2f, atanhf, coshf,
+  sinhf, and tanhf functions have been added from the CORE-MATH
   project <https://core-math.gitlabpages.inria.fr/>.
 
-* A new tunable, glibc.rtld.execstack, can be used to control whether a
-  executable stacks is allowed from the main program, either implicitly due
-  to a mising GNU_STACK ELF header or explicit explicitly because of the
-  executable bit in GNU_STACK.  The default is to allow executable stacks.
+* A new tunable, glibc.rtld.execstack, can be used to control whether an
+  executable stack is allowed from the main program, either implicitly
+  due to a mising GNU_STACK ELF header or explicit explicitly because
+  of the executable bit in GNU_STACK.  The default is to allow
+  executable stacks.
 
-* Support for the extensible rseq ABI introduced in the Linux kernel version
-  6.3 has been added.  The size and alignment of the rseq area is now
-  determined by auxiliary vector entries when provided by the running kernel.
-  This results in __rseq_size now exposing features past the original ABI
-  which currently include 'node_id' and 'mm_cid' and will also allow exposing
-  new features as they get added to future Linux kernels.
+* Support for the extensible rseq ABI introduced in the Linux kernel
+  version 6.3 has been added.  The size and alignment of the rseq area
+  is now determined by auxiliary vector entries when provided by the
+  running kernel.  This results in __rseq_size now exposing features
+  past the original ABI which currently include 'node_id' and 'mm_cid'
+  and will also allow exposing new features as they get added to future
+  Linux kernels.
 
-* The GNU C Library now supports Guarded Control Stack extension that allows
-  to use shadow stacks on AArch64 systems that support this extension.
-  Building the library with standard branch protection enabled while using
-  a toolchain that supports GCS (binutils 2.44 and GCC 15 or later), will
-  enable GCS support in glibc. There is no special configuration flag.
-  GCS-enabled glibc is compatible with all existing executables and shared
-  libraries and will run with and without GCS support in the system. GCS is
-  opt-in and can be controlled at runtime via the glibc.cpu.aarch64_gcs
-  tunable, By default GCS is disabled. Linux kernel supports this since 6.13.
+* The GNU C Library now supports the Guarded Control Stack extension
+  that allows to use shadow stacks on AArch64 systems that support this
+  extension.  Building the library with standard branch protection
+  enabled while using a toolchain that supports GCS (binutils 2.44 and
+  GCC 15 or later) will enable GCS support in glibc.  There is no
+  special configuration flag.  GCS-enabled glibc is compatible with all
+  existing executables and shared libraries and will run with and
+  without GCS support in the system.  GCS is opt-in and can be
+  controlled at runtime via the glibc.cpu.aarch64_gcs tunable. By
+  default GCS is disabled.  Linux kernel supports this since 6.13.
 
-Deprecated and removed features, and other changes affecting compatibility:
+Deprecated and removed features, and other changes affecting
+compatibility:
 
 * The big-endian ARC port (arceb-linux-gnu) has been removed.
 
-* The abort is now async-signal-safe and its implementation makes longjmp
-  from the SIGABRT handler always abort if set up with setjmp.  Use sigsetjmp
-  to keep the old behavior, where the handler does not stop the process
-  execution.
+* abort is now async-signal-safe and its implementation makes longjmp
+  from the SIGABRT handler always abort if set up with setjmp.  Use
+  sigsetjmp to keep the old behavior, where the handler does not stop
+  the process execution.
 
 * The nios2*-*-linux-gnu configurations are no longer supported.
 
 * dlopen and dlmopen no longer make the stack executable if a shared
-  library requires it, either implicitly because of a missing GNU_STACK ELF
-  header (and default ABI permission having the executable bit set) or
-  explicitly because of the executable bit in GNU_STACK, and the stack is
-  not already executable.  Instead, loading such objects will fail.
+  library requires it, either implicitly because of a missing GNU_STACK
+  ELF header (and default ABI permission having the executable bit set)
+  or explicitly because of the executable bit in GNU_STACK, and the
+  stack is not already executable.  Instead, loading such objects will
+  fail.
 
 Changes to build and runtime requirements:
 
-* On recent Linux kernels with vDSO getrandom support, getrandom does not
-  act as a "shall occur" cancellation point, in which case it might
+* On recent Linux kernels with vDSO getrandom support, getrandom does
+  not act as a "shall occur" cancellation point, in which case it might
   not issue a syscall or trigger a deferred cancellation event.
 
-* Testing the GNU C Library requires GNU awk to be compiled with support for
-  high precision arithmetic via the MPFR library.
+* Testing the GNU C Library requires GNU awk to be compiled with support
+  for high precision arithmetic via the MPFR library.
 
 Security related changes:
 
