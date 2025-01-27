@@ -402,7 +402,7 @@ function and writing the @file{tar.h} header.
 Lukasz Majewski for Y2038 related fixes.
 
 @item
-Miguel Martín for contributed tests.
+Miguel Mart@'in for contributed tests.
 
 @item
 Manjunath Matti for contributions to the PowerPC port.
@@ -763,6 +763,7 @@ details.
 @item
 Code for trigonometric, exponential and related functions in the
 @file{sysdeps/ieee754/flt-32} subdirectory is shared with the
-@code{CORE-MATH} project, see again the file @file{LICENSES}.
+@code{CORE-MATH} project with main developers Paul Zimmermann and
+Alexei Sibidanov, see again the file @file{LICENSES}.
 
 @end itemize
