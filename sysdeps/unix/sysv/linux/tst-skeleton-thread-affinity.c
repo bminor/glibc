@@ -45,10 +45,14 @@ static int still_running;
 /* 0 if no scheduling failures, 1 if failures are encountered.  */
 static int failed;
 
+/* Used to synchronize the threads.  */
+static pthread_barrier_t barrier;
+
 static void *
 thread_burn_one_cpu (void *closure)
 {
   int cpu = (uintptr_t) closure;
+  xpthread_barrier_wait (&barrier);
   while (__atomic_load_n (&still_running, __ATOMIC_RELAXED) == 0)
     {
       int current = sched_getcpu ();
@@ -60,6 +64,11 @@ thread_burn_one_cpu (void *closure)
 	  /* Terminate early.  */
 	  __atomic_store_n (&still_running, 1, __ATOMIC_RELAXED);
 	}
+    }
+  if (sched_yield () != 0)
+    {
+      printf ("error: sched_yield() failed for cpu %d\n", cpu);
+      __atomic_store_n (&failed, 1, __ATOMIC_RELAXED);
     }
   return NULL;
 }
@@ -78,6 +87,7 @@ thread_burn_any_cpu (void *closure)
 {
   struct burn_thread *param = closure;
 
+  xpthread_barrier_wait (&barrier);
   /* Schedule this thread around a bit to see if it lands on another
      CPU.  Run this for 2 seconds, once with sched_yield, once
      without.  */
@@ -99,7 +109,11 @@ thread_burn_any_cpu (void *closure)
 	  CPU_SET_S (cpu, CPU_ALLOC_SIZE (param->conf->set_size),
 		     param->seen_set);
 	  if (pass == 1)
-	    sched_yield ();
+	    if (sched_yield () != 0)
+	      {
+		printf ("error: sched_yield() failed for cpu %d\n", cpu);
+		__atomic_store_n (&failed, 1, __ATOMIC_RELAXED);
+	      }
 	}
     }
   return NULL;
@@ -156,6 +170,7 @@ early_test (struct conf *conf)
     = calloc (conf->last_cpu + 1, sizeof (*other_threads));
   cpu_set_t *initial_set = CPU_ALLOC (conf->set_size);
   cpu_set_t *scratch_set = CPU_ALLOC (conf->set_size);
+  int num_available_cpus = 0;
 
   if (pinned_threads == NULL || other_threads == NULL
       || initial_set == NULL || scratch_set == NULL)
@@ -172,6 +187,7 @@ early_test (struct conf *conf)
     {
       if (!CPU_ISSET_S (cpu, CPU_ALLOC_SIZE (conf->set_size), initial_set))
 	continue;
+      num_available_cpus ++;
       other_threads[cpu].conf = conf;
       other_threads[cpu].initial_set = initial_set;
       other_threads[cpu].thread = cpu;
@@ -193,6 +209,15 @@ early_test (struct conf *conf)
       return false;
     }
   support_set_small_thread_stack_size (&attr);
+
+  /* This count assumes that all the threads below are created
+     successfully, and call pthread_barrier_wait().  If any threads
+     fail to be created, this function will return FALSE (failure) and
+     the waiting threads will eventually time out the whole test.
+     This is acceptable because we're not testing thread creation and
+     assume all threads will be created, and failure here implies a
+     failure outside the test's scope.  */
+  xpthread_barrier_init (&barrier, NULL, num_available_cpus * 2 + 1);
 
   /* Spawn a thread pinned to each available CPU.  */
   for (int cpu = 0; cpu <= conf->last_cpu; ++cpu)
@@ -243,6 +268,15 @@ early_test (struct conf *conf)
 				 other_threads, other_threads + cpu);
 	  return false;
 	}
+    }
+
+  /* Test that sched_yield() works correctly in the main thread.  This
+     also gives the kernel an opportunity to run the other threads,
+     randomizing thread startup a bit.  */
+  if (sched_yield () != 0)
+    {
+      printf ("error: sched_yield() failed for main thread\n");
+      __atomic_store_n (&failed, 1, __ATOMIC_RELAXED);
     }
 
   /* Main thread.  */

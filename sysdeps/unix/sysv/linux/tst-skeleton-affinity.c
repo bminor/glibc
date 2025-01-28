@@ -38,6 +38,7 @@
 #include <sched.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <support/test-driver.h>
 
 /* CPU set configuration determined.  Can be used from early_test.  */
 struct conf
@@ -253,12 +254,12 @@ do_test (void)
     if (getaffinity (sizeof (set), &set) < 0 && errno == ENOSYS)
       {
 	puts ("warning: getaffinity not supported, test cannot run");
-	return 0;
+	return EXIT_UNSUPPORTED;
       }
     if (sched_getcpu () < 0 && errno == ENOSYS)
       {
 	puts ("warning: sched_getcpu not supported, test cannot run");
-	return 0;
+	return EXIT_UNSUPPORTED;
       }
   }
 
