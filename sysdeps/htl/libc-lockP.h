@@ -91,9 +91,6 @@ libc_hidden_proto (__pthread_mutexattr_init)
 extern int __pthread_mutexattr_destroy (pthread_mutexattr_t *__attr);
 libc_hidden_proto (__pthread_mutexattr_destroy)
 
-extern int __pthread_mutexattr_settype (pthread_mutexattr_t *__attr,
-					int __kind);
-
 extern int __pthread_rwlock_init (pthread_rwlock_t *__rwlock,
 				  const pthread_rwlockattr_t *__attr);
 
@@ -125,7 +122,6 @@ weak_extern (__pthread_mutex_destroy)
 weak_extern (__pthread_mutex_lock)
 weak_extern (__pthread_mutex_trylock)
 weak_extern (__pthread_mutex_unlock)
-weak_extern (__pthread_mutexattr_settype)
 weak_extern (__pthread_rwlock_init)
 weak_extern (__pthread_rwlock_destroy)
 weak_extern (__pthread_rwlock_rdlock)
@@ -146,7 +142,6 @@ weak_extern (__pthread_setcancelstate)
 #  pragma weak __pthread_mutex_lock
 #  pragma weak __pthread_mutex_trylock
 #  pragma weak __pthread_mutex_unlock
-#  pragma weak __pthread_mutexattr_settype
 #  pragma weak __pthread_rwlock_destroy
 #  pragma weak __pthread_rwlock_rdlock
 #  pragma weak __pthread_rwlock_tryrdlock
