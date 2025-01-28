@@ -18,6 +18,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <dl-load.h>
+#include <setvmaname.h>
 
 /* Map a segment and align it properly.  */
 
@@ -182,12 +183,41 @@ _dl_map_segments (struct link_map *l, int fd,
           if (zeroend > zeropage)
             {
               /* Map the remaining zero pages in from the zero fill FD.  */
+              char bssname[ANON_VMA_NAME_MAX_LEN] = " glibc: .bss";
+
               caddr_t mapat;
               mapat = __mmap ((caddr_t) zeropage, zeroend - zeropage,
                               c->prot, MAP_ANON|MAP_PRIVATE|MAP_FIXED,
                               -1, 0);
               if (__glibc_unlikely (mapat == MAP_FAILED))
                 return DL_MAP_SEGMENTS_ERROR_MAP_ZERO_FILL;
+              if (__is_decorate_maps_enabled ())
+                {
+                  if (l->l_name != NULL && *l->l_name != '\0')
+                    {
+                      int i = strlen (bssname), j = 0;
+                      int namelen = strlen (l->l_name);
+
+                      bssname[i++] = ' ';
+                      if (namelen > sizeof (bssname) - i - 1)
+                        for (j = namelen - 1; j > 0; j--)
+                          if (l->l_name[j - 1] == '/')
+                            break;
+
+                      for (; l->l_name[j] != '\0' && i < sizeof (bssname) - 1;
+                           i++, j++)
+                        {
+                          char ch = l->l_name[j];
+                          /* Replace non-printable characters and
+                             \, `, $, [ and ].  */
+                          if (ch <= 0x1f || ch >= 0x7f || strchr("\\`$[]", ch))
+                            ch = '!';
+                          bssname[i] = ch;
+                        }
+                      bssname[i] = 0;
+                    }
+                  __set_vma_name ((void*)zeropage, zeroend - zeropage, bssname);
+                }
             }
         }
 

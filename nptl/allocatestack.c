@@ -638,10 +638,6 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
   return 0;
 }
 
-/* Maximum supported name from initial kernel support, not exported
-   by user API.  */
-#define ANON_VMA_NAME_MAX_LEN 80
-
 #define SET_STACK_NAME(__prefix, __stack, __stacksize, __tid)		\
   ({									\
      char __stack_name[sizeof (__prefix) +				\

@@ -22,6 +22,33 @@
 #include <sysdep.h>
 #include <elf/dl-tunables.h>
 
+static enum {
+  decorate_unknown = -1,
+  decorate_off,
+  decorate_on
+} decorate_maps = decorate_unknown;
+
+bool
+__is_decorate_maps_enabled (void)
+{
+  switch (atomic_load_relaxed (&decorate_maps))
+    {
+    case decorate_unknown:
+      if (TUNABLE_GET (glibc, mem, decorate_maps, int32_t, NULL) != 0)
+        {
+          atomic_store_relaxed (&decorate_maps, decorate_on);
+          return true;
+        }
+      atomic_store_relaxed (&decorate_maps, decorate_off);
+      return false;
+    case decorate_off:
+      return false;
+    case decorate_on:
+      return true;
+    }
+  __builtin_unreachable ();
+}
+
 /* If PR_SET_VMA_ANON_NAME is not supported by the kernel, prctl returns
    EINVAL.  However, it also returns the same error for invalid argument.
    Since it is an internal-only API, it assumes well formatted input:
@@ -31,19 +58,13 @@
 void
 __set_vma_name (void *start, size_t len, const char *name)
 {
-  static int prctl_supported = 1;
-  if (atomic_load_relaxed (&prctl_supported) == 0)
-    return;
-
-  /* Set the prctl as not supported to avoid checking the tunable on every
-     call.  */
-  if (TUNABLE_GET (glibc, mem, decorate_maps, int32_t, NULL) != 0)
+  if (__is_decorate_maps_enabled ())
     {
       int r = INTERNAL_SYSCALL_CALL (prctl, PR_SET_VMA, PR_SET_VMA_ANON_NAME,
-				     start, len, name);
-      if (r == 0 || r != -EINVAL)
-	return;
+                                     start, len, name);
+
+      /* Disable further attempts if not supported by the kernel.  */
+      if (r == -EINVAL)
+        atomic_store_relaxed (&decorate_maps, decorate_off);
     }
-  atomic_store_relaxed (&prctl_supported, 0);
-  return;
 }
