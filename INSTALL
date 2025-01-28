@@ -493,7 +493,7 @@ build the GNU C Library:
      GCC 6.2 or higher is required.  In general it is recommended to use
      the newest version of the compiler that is known to work for
      building the GNU C Library, as newer compilers usually produce
-     better code.  As of release time, GCC 14.1 is the newest compiler
+     better code.  As of release time, GCC 14.2.1 is the newest compiler
      verified to work to build the GNU C Library.
 
      For PowerPC 64-bits little-endian (powerpc64le), a GCC version with
@@ -532,7 +532,7 @@ build the GNU C Library:
 
      You must use GNU 'binutils' (as and ld) to build the GNU C Library.
      No other assembler or linker has the necessary functionality at the
-     moment.  As of release time, GNU 'binutils' 2.42 is the newest
+     moment.  As of release time, GNU 'binutils' 2.43.1 is the newest
      verified to work to build the GNU C Library.
 
      For PowerPC 64-bits little-endian (powerpc64le), 'objcopy' is
@@ -548,7 +548,7 @@ build the GNU C Library:
      need this version of the 'texinfo' package.  Earlier versions do
      not understand all the tags used in the document, and the
      installation mechanism for the info files is not present or works
-     differently.  As of release time, 'texinfo' 7.1 is the newest
+     differently.  As of release time, 'texinfo' 7.2 is the newest
      verified to work to build the GNU C Library.
 
    * GNU 'awk' 3.1.2, or higher
@@ -556,7 +556,7 @@ build the GNU C Library:
      'awk' is used in several places to generate files.  Some 'gawk'
      extensions are used, including the 'asorti' function, which was
      introduced in version 3.1.2 of 'gawk'.  As of release time, 'gawk'
-     version 5.3.0 is the newest verified to work to build the GNU C
+     version 5.3.1 is the newest verified to work to build the GNU C
      Library.
 
      Testing the GNU C Library requires 'gawk' to be compiled with
@@ -585,8 +585,8 @@ build the GNU C Library:
    * Python 3.4 or later
 
      Python is required to build the GNU C Library.  As of release time,
-     Python 3.12 is the newest verified to work for building and testing
-     the GNU C Library.
+     Python 3.12.8 is the newest verified to work for building and
+     testing the GNU C Library.
 
    * PExpect 4.0
 
@@ -625,7 +625,7 @@ and if you change any of the message translation files you will need
 
    * GNU 'gettext' 0.10.36 or later
 
-     As of release time, GNU 'gettext' version 0.22.4 is the newest
+     As of release time, GNU 'gettext' version 0.23 is the newest
      version verified to work to build the GNU C Library.
 
 You may also need these packages if you upgrade your source tree using
@@ -671,7 +671,7 @@ components of the GNU C Library installation to be in '/lib' and some in
 Library with '--prefix=/usr'.  If you set some other prefix or allow it
 to default to '/usr/local', then all the components are installed there.
 
-   As of release time, Linux version 6.6 is the newest stable version
+   As of release time, Linux version 6.12 is the newest stable version
 verified to work to build the GNU C Library.
 
 Reporting Bugs
