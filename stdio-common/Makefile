@@ -305,6 +305,7 @@ tests := \
   tst-swscanf \
   tst-tmpnam \
   tst-ungetc \
+  tst-ungetc-fflush \
   tst-ungetc-leak \
   tst-ungetc-nomem \
   tst-unlockedio \

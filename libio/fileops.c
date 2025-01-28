@@ -800,6 +800,11 @@ _IO_new_file_sync (FILE *fp)
   if (fp->_IO_write_ptr > fp->_IO_write_base)
     if (_IO_do_flush(fp)) return EOF;
   delta = fp->_IO_read_ptr - fp->_IO_read_end;
+  if (_IO_in_backup (fp))
+    {
+      _IO_switch_to_main_get_area (fp);
+      delta += fp->_IO_read_ptr - fp->_IO_read_end;
+    }
   if (delta != 0)
     {
       off64_t new_pos = _IO_SYSSEEK (fp, delta, 1);
