@@ -730,6 +730,13 @@ _IO_flush_all (void)
 	   )
 	  && _IO_OVERFLOW (fp, EOF) == EOF)
 	result = EOF;
+      if (_IO_fileno (fp) >= 0
+	  && ((fp->_mode <= 0 && fp->_IO_read_ptr < fp->_IO_read_end)
+	      || (_IO_vtable_offset (fp) == 0
+		  && fp->_mode > 0 && (fp->_wide_data->_IO_read_ptr
+				       < fp->_wide_data->_IO_read_end)))
+	  && _IO_SYNC (fp) != 0)
+	result = EOF;
 
       _IO_funlockfile (fp);
       run_fp = NULL;
