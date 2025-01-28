@@ -12,7 +12,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.38.9000\n"
-"POT-Creation-Date: 2025-01-04 11:03+0100\n"
+"POT-Creation-Date: 2025-01-28 12:35+0100\n"
 "PO-Revision-Date: 2024-06-07 18:04+0300\n"
 "Last-Translator: Yuri Kozlov <yuray@komyakino.ru>\n"
 "Language-Team: Russian <gnu@d07.ru>\n"
@@ -684,7 +684,7 @@ msgstr "невозможно применить дополнительную з�
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT использовано в не динамически загруженном коде"
 
-#: elf/dl-tls.c:1163
+#: elf/dl-tls.c:1196
 msgid "cannot create TLS data structures"
 msgstr "невозможно создать структуры данных TLS"
 

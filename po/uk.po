@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.40.9000\n"
-"POT-Creation-Date: 2025-01-04 11:03+0100\n"
+"POT-Creation-Date: 2025-01-28 12:35+0100\n"
 "PO-Revision-Date: 2025-01-06 18:51+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -108,7 +108,7 @@ msgstr "(ПОМИЛКА ПРОГРАМИ) Параметр має розпізн
 msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 msgstr "%s%s%s:%u: %s%sНеочікувана помилка: %s.\n"
 
-#: assert/assert.c:125
+#: assert/assert.c:127
 #, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
 msgstr "%s%s%s:%u: %s%sНе пройдено перевірку «%s».\n"
@@ -701,7 +701,7 @@ msgstr "не вдалося застосувати додатковий захи
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "Використаний у коді символ RTLD_NEXT не завантажується динамічно"
 
-#: elf/dl-tls.c:1163
+#: elf/dl-tls.c:1196
 msgid "cannot create TLS data structures"
 msgstr "не вдалося створити структури даних TLS"
 

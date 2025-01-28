@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU libc 2.19.90\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-04 11:03+0100\n"
+"POT-Creation-Date: 2025-01-28 12:35+0100\n"
 "PO-Revision-Date: 2014-08-25 16:18-0700\n"
 "Last-Translator: Santiago Vila Doncel <sanvila@unex.es>\n"
 "Language-Team: Spanish <es@tp.org.es>\n"
@@ -653,7 +653,7 @@ msgstr "no se pueden aplicar protecciones de memoria adicionales después de rel
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "Se ha usado RTLD_NEXT en una parte del código que no se cargó dinámicamente"
 
-#: elf/dl-tls.c:1163
+#: elf/dl-tls.c:1196
 msgid "cannot create TLS data structures"
 msgstr "no se pueden crear las estructuras de datos TLS"
 

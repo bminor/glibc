@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc-2.40.9000\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-04 11:03+0100\n"
+"POT-Creation-Date: 2025-01-28 12:35+0100\n"
 "PO-Revision-Date: 2025-01-06 15:44+0100\n"
 "Last-Translator: Benno Schulenberg <vertaling@coevern.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
@@ -117,7 +117,7 @@ msgstr "**Interne programmafout**: optie had herkend moeten worden!?"
 msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 msgstr "%s%s%s:%u: %s%sOnverwachte fout: %s.\n"
 
-#: assert/assert.c:125
+#: assert/assert.c:127
 #, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
 msgstr "%s%s%s:%u: %s%sControletest '%s' faalt.\n"
@@ -715,7 +715,7 @@ msgstr "kan extra geheugenbescherming niet toepassen na verplaatsing"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT is gebruikt in code die niet dynamisch geladen is"
 
-#: elf/dl-tls.c:1163
+#: elf/dl-tls.c:1196
 msgid "cannot create TLS data structures"
 msgstr "kan TLS-gegevensstructuren niet aanmaken"
 

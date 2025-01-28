@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.33.9000\n"
-"POT-Creation-Date: 2025-01-04 11:03+0100\n"
+"POT-Creation-Date: 2025-01-28 12:35+0100\n"
 "PO-Revision-Date: 2021-08-26 04:41-0300\n"
 "Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
 "Language-Team: Brazilian Portuguese <ldpbr-translation@lists.sourceforge.net>\n"
@@ -666,7 +666,7 @@ msgstr "não foi possível aplicar proteção de memória adicional após realoc
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT usado em código não dinamicamente carregado"
 
-#: elf/dl-tls.c:1163
+#: elf/dl-tls.c:1196
 msgid "cannot create TLS data structures"
 msgstr "não é possível criar estruturas de dados TLS"
 

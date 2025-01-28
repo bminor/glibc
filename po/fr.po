@@ -9,7 +9,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc-2.37.9000\n"
-"POT-Creation-Date: 2025-01-04 11:03+0100\n"
+"POT-Creation-Date: 2025-01-28 12:35+0100\n"
 "PO-Revision-Date: 2023-11-22 20:08+0100\n"
 "Last-Translator: Stéphane Aulery <lkppo@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -665,7 +665,7 @@ msgstr "ne peut appliquer les protections additionnelle de mémoire après la r�
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT est utilisé dans du code qui n'est pas chargé dynamiquement"
 
-#: elf/dl-tls.c:1163
+#: elf/dl-tls.c:1196
 msgid "cannot create TLS data structures"
 msgstr "ne peut créer les structures de données TLS"
 

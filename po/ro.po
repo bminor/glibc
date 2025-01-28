@@ -17,7 +17,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.40.9000\n"
-"POT-Creation-Date: 2025-01-04 11:03+0100\n"
+"POT-Creation-Date: 2025-01-28 12:35+0100\n"
 "PO-Revision-Date: 2025-01-06 19:25+0100\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
@@ -118,7 +118,7 @@ msgstr "(EROARE DE PROGRAM) Opțiunea ar fi trebuit să fie recunoscută!?"
 msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 msgstr "%s%s%s:%u: %s%sEroare neașteptată: %s.\n"
 
-#: assert/assert.c:125
+#: assert/assert.c:127
 #, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
 msgstr "%s%s%s:%u: %s%sAserțiunea „%s” a eșuat.\n"
@@ -721,7 +721,7 @@ msgstr "nu se poate aplica protecția suplimentară de memorie după realocare"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT utilizat în cod nu s-a încărcat dinamic"
 
-#: elf/dl-tls.c:1163
+#: elf/dl-tls.c:1196
 msgid "cannot create TLS data structures"
 msgstr "nu se pot crea structurile de date TLS"
 

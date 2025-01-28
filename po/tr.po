@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.33.9000\n"
-"POT-Creation-Date: 2025-01-04 11:03+0100\n"
+"POT-Creation-Date: 2025-01-28 12:35+0100\n"
 "PO-Revision-Date: 2021-07-29 13:23+0300\n"
 "Last-Translator: Mehmet Kececi <mkececi@mehmetkececi.com>\n"
 "Language-Team: Turkish <gnome-turk@gnome.org>\n"
@@ -663,7 +663,7 @@ msgstr "yeniden ayırma işleminden sonra ek bellek koruması uygulanamaz"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT kullanılan kod dinamik olarak yüklenmedi"
 
-#: elf/dl-tls.c:1163
+#: elf/dl-tls.c:1196
 msgid "cannot create TLS data structures"
 msgstr "veri yapıları TLS oluşturulamıyor"
 

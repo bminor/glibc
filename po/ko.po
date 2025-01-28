@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GNU libc 2.40.9000\n"
-"POT-Creation-Date: 2025-01-04 11:03+0100\n"
+"POT-Creation-Date: 2025-01-28 12:35+0100\n"
 "PO-Revision-Date: 2025-01-08 09:33+0900\n"
 "Last-Translator: Changwoo Ryu <cwryu@debian.org>\n"
 "Language-Team: Korean <translation-team-ko@googlegroups.com>\n"
@@ -106,7 +106,7 @@ msgstr "(프로그램 오류) 옵션을 알 수 있어야 합니다!?"
 msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 msgstr "%s%s%s:%u: %s%s예기치 못한 오류: %s.\n"
 
-#: assert/assert.c:125
+#: assert/assert.c:127
 #, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
 msgstr "%s%s%s:%u: %s%sassertion `%s' 실패.\n"
@@ -705,7 +705,7 @@ msgstr "리로케이션 뒤에 추가로 메모리 보호를 적용할 수 없�
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "동적으로 적재하지 않은 코드에 RTLD_NEXT를 사용함"
 
-#: elf/dl-tls.c:1163
+#: elf/dl-tls.c:1196
 msgid "cannot create TLS data structures"
 msgstr "TLS 데이터 구조를 만들 수 없습니다"
 

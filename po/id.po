@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.10.1\n"
-"POT-Creation-Date: 2025-01-04 11:03+0100\n"
+"POT-Creation-Date: 2025-01-28 12:35+0100\n"
 "PO-Revision-Date: 2009-06-23 12:30+0700\n"
 "Last-Translator: Arif E. Nugroho <arif_endro@yahoo.com>\n"
 "Language-Team: Indonesian <translation-team-id@lists.sourceforge.net>\n"
@@ -101,7 +101,7 @@ msgstr "(APLIKASI ERROR) Pilihan seharusnya telah dikenal!?"
 msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 msgstr "%s%s%s:%u: %s%sError tidak terduga: %s.\n"
 
-#: assert/assert.c:125
+#: assert/assert.c:127
 #, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
 msgstr "%s%s%s:%u: %s%sAssertion `%s' gagal.\n"
@@ -591,7 +591,7 @@ msgstr "tidak dapat mengaplikasikan proteksi memori tambahan setelah relokasi"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT digunakan dalam kode yang tidak secara dinamis diangkut"
 
-#: elf/dl-tls.c:1163
+#: elf/dl-tls.c:1196
 msgid "cannot create TLS data structures"
 msgstr "tidak dapat membuat struktur data TLS"
 

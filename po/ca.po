@@ -48,7 +48,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.37.9000\n"
-"POT-Creation-Date: 2025-01-04 11:03+0100\n"
+"POT-Creation-Date: 2025-01-28 12:35+0100\n"
 "PO-Revision-Date: 2023-08-21 18:12+0200\n"
 "Last-Translator: Ivan Vilata i Balaguer <ivan@selidor.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
@@ -745,7 +745,7 @@ msgstr "no s’ha pogut protegir la memòria després de reubicar"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "s’ha emprat RTLD_NEXT en un codi no carregat dinàmicament"
 
-#: elf/dl-tls.c:1163
+#: elf/dl-tls.c:1196
 msgid "cannot create TLS data structures"
 msgstr "no s’han pogut crear les estructures de dades TLS"
 

@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.40.9000\n"
-"POT-Creation-Date: 2025-01-04 11:03+0100\n"
+"POT-Creation-Date: 2025-01-28 12:35+0100\n"
 "PO-Revision-Date: 2025-01-07 09:05+0800\n"
 "Last-Translator: Wenbin Lv <wenbin816@gmail.com>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
@@ -116,7 +116,7 @@ msgstr "（程序错误）选项应该可识别！？"
 msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 msgstr "%s%s%s:%u: %s%s意外的错误：%s。\n"
 
-#: assert/assert.c:125
+#: assert/assert.c:127
 #, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
 msgstr "%s%s%s:%u: %s%s断言 \"%s\" 失败。\n"
@@ -710,7 +710,7 @@ msgstr "无法在重定位后应用额外的内存保护"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "代码所使用的 RTLD_NEXT 没有动态加载"
 
-#: elf/dl-tls.c:1163
+#: elf/dl-tls.c:1196
 msgid "cannot create TLS data structures"
 msgstr "无法创建 TLS 数据结构"
 

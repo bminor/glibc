@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.40.9000\n"
-"POT-Creation-Date: 2025-01-04 11:03+0100\n"
+"POT-Creation-Date: 2025-01-28 12:35+0100\n"
 "PO-Revision-Date: 2025-01-06 21:30+0100\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -106,7 +106,7 @@ msgstr "(BŁĄD PROGRAMU) Opcja powinna zostać rozpoznana?!"
 msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 msgstr "%s%s%s:%u %s%sNiespodziewany błąd: %s.\n"
 
-#: assert/assert.c:125
+#: assert/assert.c:127
 #, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
 msgstr "%s%s%s:%u: %s%sWarunek zapewnienia `%s' nie został spełniony.\n"
@@ -703,7 +703,7 @@ msgstr "nie można nałożyć dodatkowej ochrony pamięci po relokacji"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT wystąpiło w kodzie nie ładowanym dynamicznie"
 
-#: elf/dl-tls.c:1163
+#: elf/dl-tls.c:1196
 msgid "cannot create TLS data structures"
 msgstr "nie można utworzyć struktur danych TLS"
 

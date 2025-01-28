@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.40.9000\n"
-"POT-Creation-Date: 2025-01-04 11:03+0100\n"
+"POT-Creation-Date: 2025-01-28 12:35+0100\n"
 "PO-Revision-Date: 2025-01-08 21:29+0200\n"
 "Last-Translator: Roumen Petrov <transl@roumenpetrov.info>\n"
 "Language-Team: Bulgarian <dict@ludost.net>\n"
@@ -111,7 +111,7 @@ msgstr "(ПРОГРАМНА ГРЕШКА) Опцията трябва да е р
 msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 msgstr "%s%s%s:%u: %s%sНеочаквана грешка: %s.\n"
 
-#: assert/assert.c:125
+#: assert/assert.c:127
 #, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
 msgstr "%s%s%s:%u: %s%sПропадна проверката за истина - '%s'.\n"
@@ -706,7 +706,7 @@ msgstr "след преместването не може да се постав
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT е използван в код, който не е за динамично свързване"
 
-#: elf/dl-tls.c:1163
+#: elf/dl-tls.c:1196
 msgid "cannot create TLS data structures"
 msgstr "не може да се създадат структури за TLS данни"
 

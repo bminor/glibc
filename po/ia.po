@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.17-pre1\n"
-"POT-Creation-Date: 2025-01-04 11:03+0100\n"
+"POT-Creation-Date: 2025-01-28 12:35+0100\n"
 "PO-Revision-Date: 2013-04-26 04:10+0400\n"
 "Last-Translator: Nik Kalach <nik.kalach@inbox.ru>\n"
 "Language-Team: Interlingua <translation-team-ia@lists.sourceforge.net>\n"
@@ -618,7 +618,7 @@ msgstr "impossibile de applicar le protection de memoria additional post le relo
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT usate in le codice non cargate dynamicamente"
 
-#: elf/dl-tls.c:1163
+#: elf/dl-tls.c:1196
 msgid "cannot create TLS data structures"
 msgstr "impossibile de crear structuras de datos TLS"
 

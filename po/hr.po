@@ -9,7 +9,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc-2.40.9000\n"
-"POT-Creation-Date: 2025-01-04 11:03+0100\n"
+"POT-Creation-Date: 2025-01-28 12:35+0100\n"
 "PO-Revision-Date: 2025-01-07 18:25-0800\n"
 "Last-Translator: Božidar Putanec <bozidarp@yahoo.com>\n"
 "Language-Team: Croatian <lokalizacija@linux.hr>\n"
@@ -113,7 +113,7 @@ msgstr "(**INTERNA GREŠKA PROGRAMA**) Opcije su trebale biti prepoznate!?"
 msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 msgstr "%s%s%s:%u: %s%sNeočekivana greška: %s.\n"
 
-#: assert/assert.c:125
+#: assert/assert.c:127
 #, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
 msgstr "%s%s%s:%u: %s%sKontrolni test „%s“ nije uspio.\n"
@@ -709,7 +709,7 @@ msgstr "nije moguće primijeniti dodatnu zaštitu memorije nakon premještanja"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT korišten u kodu nije dinamički učitan"
 
-#: elf/dl-tls.c:1163
+#: elf/dl-tls.c:1196
 msgid "cannot create TLS data structures"
 msgstr "nije moguće stvoriti TLS podatkovne strukture"
 

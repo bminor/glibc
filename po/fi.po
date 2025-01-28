@@ -25,7 +25,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.30.9000\n"
-"POT-Creation-Date: 2025-01-04 11:03+0100\n"
+"POT-Creation-Date: 2025-01-28 12:35+0100\n"
 "PO-Revision-Date: 2020-01-10 23:26+0200\n"
 "Last-Translator: Lauri Nurmi <lanurmi@iki.fi>\n"
 "Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
@@ -597,7 +597,7 @@ msgstr "segmentin suojausta ei voi palauttaa uudelleensijoituksen jälkeen"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT:iä käytetty koodissa, jota ei ole ladattu dynaamisesti"
 
-#: elf/dl-tls.c:1163
+#: elf/dl-tls.c:1196
 msgid "cannot create TLS data structures"
 msgstr "TLS-tietorakenteita ei voi luoda"
 

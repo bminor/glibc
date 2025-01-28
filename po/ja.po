@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.36.9000\n"
-"POT-Creation-Date: 2025-01-04 11:03+0100\n"
+"POT-Creation-Date: 2025-01-28 12:35+0100\n"
 "PO-Revision-Date: 2023-05-09 08:02+0900\n"
 "Last-Translator: Takeshi Hamasaki <hmatrjp@users.sourceforge.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
@@ -602,7 +602,7 @@ msgstr "再配置後に追加のメモリ保護を適用できません"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "コード内で使用されている RTLD_NEXT を動的にロード出来ません"
 
-#: elf/dl-tls.c:1163
+#: elf/dl-tls.c:1196
 msgid "cannot create TLS data structures"
 msgstr "TLS データ構造体を作成できません"
 

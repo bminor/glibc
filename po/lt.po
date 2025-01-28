@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc-2.7\n"
-"POT-Creation-Date: 2025-01-04 11:03+0100\n"
+"POT-Creation-Date: 2025-01-28 12:35+0100\n"
 "PO-Revision-Date: 2009-02-12 05:24+0200\n"
 "Last-Translator: Gintautas Miliauskas <gintas@akl.lt>\n"
 "Language-Team: Lithuanian <komp_lt@konferencijos.lt>\n"
@@ -98,7 +98,7 @@ msgstr "(PROGRAM ERROR) Parametras turėjo būti atpažintas!?"
 msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 msgstr "%s%s%s:%u: %s%sNetikėta klaida: %s.\n"
 
-#: assert/assert.c:125
+#: assert/assert.c:127
 #, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
 msgstr "%s%s%s:%u: %s%sPrielaida „%s“ pažeista.\n"
@@ -330,7 +330,7 @@ msgstr "TLS kartų skaitiklis persivertė!  Prašytume apie tai pranešti."
 msgid "invalid mode for dlopen()"
 msgstr "netaisyklinga veiksena dlopen()"
 
-#: elf/dl-tls.c:1163
+#: elf/dl-tls.c:1196
 msgid "cannot create TLS data structures"
 msgstr "nepavyko sukurti TLS duomenų struktūrų"
 

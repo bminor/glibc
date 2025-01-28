@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.36.9000\n"
-"POT-Creation-Date: 2025-01-04 11:03+0100\n"
+"POT-Creation-Date: 2025-01-28 12:35+0100\n"
 "PO-Revision-Date: 2023-02-05 14:40+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <(nothing)>\n"
@@ -625,7 +625,7 @@ msgstr "reloc-ის შემდეგ სეგმენტის prot-ის 
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "კოდში გამოყენებული RTLD_NEXT დინამიკურად არ იტვირთება"
 
-#: elf/dl-tls.c:1163
+#: elf/dl-tls.c:1196
 msgid "cannot create TLS data structures"
 msgstr "შეცდომა TLS-ის მონაცემების სტრუქტურის შექმნისას"
 
