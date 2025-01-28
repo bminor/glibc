@@ -263,6 +263,7 @@ tests := \
   tst-fwrite \
   tst-fwrite-memstrm \
   tst-fwrite-overflow \
+  tst-fwrite-pipe \
   tst-fwrite-ro \
   tst-getline \
   tst-getline-enomem \
@@ -358,6 +359,7 @@ tests-internal = \
 
 test-srcs = \
   $(xprintf-srcs) \
+  tst-fwrite-bz29459 \
   tst-printf \
   tst-printfsz-islongdouble \
   tst-unbputc \
@@ -366,6 +368,7 @@ test-srcs = \
 ifeq ($(run-built-tests),yes)
 tests-special += \
   $(foreach f,$(xprintf-stems),$(objpfx)$(f).out) \
+  $(objpfx)tst-fwrite-bz29459.out \
   $(objpfx)tst-printf.out \
   $(objpfx)tst-printfsz-islongdouble.out \
   $(objpfx)tst-setvbuf1-cmp.out \
@@ -562,6 +565,10 @@ tst-freopen6-ENV = \
 tst-freopen64-6-ENV = \
   MALLOC_TRACE=$(objpfx)tst-freopen64-6.mtrace \
   LD_PRELOAD=$(common-objpfx)malloc/libc_malloc_debug.so
+
+$(objpfx)tst-fwrite-bz29459.out: tst-fwrite-bz29459.sh $(objpfx)tst-fwrite-bz29459
+	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'; \
+	$(evaluate-test)
 
 $(objpfx)tst-unbputc.out: tst-unbputc.sh $(objpfx)tst-unbputc
 	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'; \

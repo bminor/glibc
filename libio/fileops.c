@@ -113,6 +113,7 @@ _IO_new_file_init_internal (struct _IO_FILE_plus *fp)
 
   _IO_link_in (fp);
   fp->file._fileno = -1;
+  fp->file._total_written = 0;
 }
 
 /* External version of _IO_new_file_init_internal which switches off
@@ -1185,6 +1186,7 @@ _IO_new_file_write (FILE *f, const void *data, ssize_t n)
 	  f->_flags |= _IO_ERR_SEEN;
 	  break;
 	}
+      f->_total_written += count;
       to_do -= count;
       data = (void *) ((char *) data + count);
     }

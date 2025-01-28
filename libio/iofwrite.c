@@ -36,13 +36,42 @@ _IO_fwrite (const void *buf, size_t size, size_t count, FILE *fp)
     return 0;
   _IO_acquire_lock (fp);
   if (_IO_vtable_offset (fp) != 0 || _IO_fwide (fp, -1) == -1)
-    written = _IO_sputn (fp, (const char *) buf, request);
+    {
+      /* Compute actually written bytes plus pending buffer
+         contents.  */
+      uint64_t original_total_written
+        = fp->_total_written + (fp->_IO_write_ptr - fp->_IO_write_base);
+      written = _IO_sputn (fp, (const char *) buf, request);
+      if (written == EOF)
+        {
+          /* An error happened and we need to find the appropriate return
+             value.  There 3 possible scenarios:
+             1. If the number of bytes written is between 0..[buffer content],
+                we need to return 0 because none of the bytes from this
+                request have been written;
+             2. If the number of bytes written is between
+                [buffer content]+1..request-1, that means we managed to write
+                data requested in this fwrite call;
+             3. We might have written all the requested data and got an error
+                anyway.  We can't return success, which means we still have to
+                return less than request.  */
+          if (fp->_total_written > original_total_written)
+            {
+              written = fp->_total_written - original_total_written;
+              /* If everything was reported as written and somehow an
+                 error occurred afterwards, avoid reporting success.  */
+              if (written == request)
+                --written;
+            }
+          else
+            /* Only already-pending buffer contents was written.  */
+            written = 0;
+        }
+    }
   _IO_release_lock (fp);
   /* We have written all of the input in case the return value indicates
-     this or EOF is returned.  The latter is a special case where we
-     simply did not manage to flush the buffer.  But the data is in the
-     buffer and therefore written as far as fwrite is concerned.  */
-  if (written == request || written == EOF)
+     this.  */
+  if (written == request)
     return count;
   else
     return written / size;
