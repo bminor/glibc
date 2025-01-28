@@ -264,6 +264,7 @@ tests := \
   tst-fwrite-memstrm \
   tst-fwrite-overflow \
   tst-fwrite-pipe \
+  tst-fwrite-pos \
   tst-fwrite-ro \
   tst-getline \
   tst-getline-enomem \
