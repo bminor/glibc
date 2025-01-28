@@ -595,6 +595,7 @@ Systems may support more than just this @w{ISO C} clock.
 
 @deftypefun int timespec_get (struct timespec *@var{ts}, int @var{base})
 @standards{ISO, time.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Store into @code{*@var{ts}} the current time according to the @w{ISO
 C} time @var{base}.
 
@@ -603,6 +604,7 @@ The return value is @var{base} on success and @code{0} on failure.
 
 @deftypefun int timespec_getres (struct timespec *@var{res}, int @var{base})
 @standards{ISO, time.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 If @var{ts} is non-null, store into @code{*@var{ts}} the resolution of
 the time provided by @code{timespec_get} function for the @w{ISO C}
 time @var{base}.
