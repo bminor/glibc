@@ -128,15 +128,48 @@ _IO_new_file_init (struct _IO_FILE_plus *fp)
 int
 _IO_new_file_close_it (FILE *fp)
 {
-  int write_status;
+  int flush_status = 0;
   if (!_IO_file_is_open (fp))
     return EOF;
 
   if ((fp->_flags & _IO_NO_WRITES) == 0
       && (fp->_flags & _IO_CURRENTLY_PUTTING) != 0)
-    write_status = _IO_do_flush (fp);
-  else
-    write_status = 0;
+    flush_status = _IO_do_flush (fp);
+  else if (fp->_fileno >= 0
+	   /* If this is the active handle, we must seek the
+	      underlying open file description (possibly shared with
+	      other file descriptors that remain open) to the correct
+	      offset.  But if this stream is in a state such that some
+	      other handle might have become the active handle, then
+	      (a) at the time it entered that state, the underlying
+	      open file description had the correct offset, and (b)
+	      seeking the underlying open file description, even to
+	      its newly determined current offset, is not safe because
+	      it can race with operations on a different active
+	      handle.  So check here for cases where it is necessary
+	      to seek, while avoiding seeking in cases where it is
+	      unsafe to do so.  */
+	   && (_IO_in_backup (fp)
+	       || (fp->_mode <= 0 && fp->_IO_read_ptr < fp->_IO_read_end)
+	       || (_IO_vtable_offset (fp) == 0
+		   && fp->_mode > 0 && (fp->_wide_data->_IO_read_ptr
+					< fp->_wide_data->_IO_read_end))))
+    {
+      off64_t o = _IO_SEEKOFF (fp, 0, _IO_seek_cur, 0);
+      if (o == EOF)
+	{
+	  if (errno != ESPIPE)
+	    flush_status = EOF;
+	}
+      else
+	{
+	  if (_IO_in_backup (fp))
+	    o -= fp->_IO_save_end - fp->_IO_save_base;
+	  flush_status = (_IO_SYSSEEK (fp, o, SEEK_SET) < 0 && errno != ESPIPE
+			  ? EOF
+			  : 0);
+	}
+    }
 
   _IO_unsave_markers (fp);
 
@@ -161,7 +194,7 @@ _IO_new_file_close_it (FILE *fp)
   fp->_fileno = -1;
   fp->_offset = _IO_pos_BAD;
 
-  return close_status ? close_status : write_status;
+  return close_status ? close_status : flush_status;
 }
 libc_hidden_ver (_IO_new_file_close_it, _IO_file_close_it)
 
