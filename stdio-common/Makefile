@@ -239,6 +239,7 @@ tests := \
   tst-fdopen2 \
   tst-ferror \
   tst-fflush-all-input \
+  tst-fflush-mmap \
   tst-fgets \
   tst-fgets2 \
   tst-fileno \

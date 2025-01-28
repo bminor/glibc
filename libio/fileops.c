@@ -859,17 +859,21 @@ libc_hidden_ver (_IO_new_file_sync, _IO_file_sync)
 int
 _IO_file_sync_mmap (FILE *fp)
 {
+  off64_t o = fp->_offset - (fp->_IO_read_end - fp->_IO_read_ptr);
   if (fp->_IO_read_ptr != fp->_IO_read_end)
     {
-      if (__lseek64 (fp->_fileno, fp->_IO_read_ptr - fp->_IO_buf_base,
-		     SEEK_SET)
-	  != fp->_IO_read_ptr - fp->_IO_buf_base)
+      if (_IO_in_backup (fp))
+	{
+	  _IO_switch_to_main_get_area (fp);
+	  o -= fp->_IO_read_end - fp->_IO_read_base;
+	}
+      if (__lseek64 (fp->_fileno, o, SEEK_SET) != o)
 	{
 	  fp->_flags |= _IO_ERR_SEEN;
 	  return EOF;
 	}
     }
-  fp->_offset = fp->_IO_read_ptr - fp->_IO_buf_base;
+  fp->_offset = o;
   fp->_IO_read_end = fp->_IO_read_ptr = fp->_IO_read_base;
   return 0;
 }
