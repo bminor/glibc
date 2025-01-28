@@ -288,6 +288,7 @@ tests := \
   tst-printf-round \
   tst-printfsz \
   tst-put-error \
+  tst-read-offset \
   tst-renameat2 \
   tst-rndseek \
   tst-scanf-binary-c11 \
