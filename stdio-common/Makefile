@@ -262,6 +262,7 @@ tests := \
   tst-freopen64-7 \
   tst-freopen7 \
   tst-fseek \
+  tst-fseek-mmap \
   tst-fwrite \
   tst-fwrite-memstrm \
   tst-fwrite-overflow \

@@ -1107,11 +1107,18 @@ _IO_file_seekoff_mmap (FILE *fp, off64_t offset, int dir, int mode)
   if (mode == 0)
     return fp->_offset - (fp->_IO_read_end - fp->_IO_read_ptr);
 
+  if (_IO_in_backup (fp))
+    {
+      if (dir == _IO_seek_cur)
+	offset += fp->_IO_read_ptr - fp->_IO_read_end;
+      _IO_switch_to_main_get_area (fp);
+    }
+
   switch (dir)
     {
     case _IO_seek_cur:
       /* Adjust for read-ahead (bytes is buffer). */
-      offset += fp->_IO_read_ptr - fp->_IO_read_base;
+      offset += fp->_offset - (fp->_IO_read_end - fp->_IO_read_ptr);
       break;
     case _IO_seek_set:
       break;
