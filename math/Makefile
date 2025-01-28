@@ -621,11 +621,13 @@ libm-vec-test-wrappers = $(addsuffix -wrappers, $(libm-vec-tests))
 test-extras += $(libm-vec-test-wrappers)
 extra-test-objs += $(addsuffix .o, $(libm-vec-test-wrappers))
 
-ulps-file = $(firstword $(wildcard $(sysdirs:%=%/libm-test-ulps)))
+ulps-file = $(wildcard $(sysdirs:%=%/libm-test-ulps))
+
+space := $(subst ,, )
 
 $(objpfx)libm-test-ulps.h: $(ulps-file) gen-libm-test.py
 	$(make-target-directory)
-	$(PYTHON) gen-libm-test.py -u $< -H $@
+	$(PYTHON) gen-libm-test.py -u $(subst $(space),:,$(ulps-file)) -H $@
 
 libm-test-funcs-auto = \
   acos \
@@ -1300,29 +1302,6 @@ $(objpfx)libm-test-support-$(o).o: CFLAGS += $(libm-test-no-inline-cflags)
 endef
 object-suffixes-left := $(test-types)
 include $(o-iterator)
-
-# Run the math programs to automatically generate ULPs files.
-.PHONY: regen-ulps
-
-run-regen-ulps = $(test-wrapper-env) \
-	    $(run-program-env) \
-	    $($*-ENV) $(rtld-prefix) $(objpfx)$${run}
-
-regen-ulps: $(addprefix $(objpfx),$(libm-tests))
-	rm -f $(objpfx)ULPs; rm -f $(objpfx)NewUlps; \
-	cp $(ulps-file) $(objpfx)libm-test-ulps; \
-	for run in $(libm-tests); do \
-	  echo "Regenerating ULPs for $${run}"; \
-	  $(run-regen-ulps) -u -o $(objpfx); \
-	  cat $(objpfx)ULPs >> $(objpfx)libm-test-ulps; \
-	  rm $(objpfx)ULPs; \
-	done; \
-	$(PYTHON) gen-libm-test.py -n $(objpfx)NewUlps \
-				   -u $(objpfx)libm-test-ulps; \
-	echo "Automatic regeneration of ULPs complete."; \
-	echo "Difference between the current baseline and the new baseline is:";\
-	diff -urN $(ulps-file) $(objpfx)NewUlps; \
-	echo "Copy $(objpfx)NewUlps to $(ulps-file) (relative to source)."
 
 # The generated sysd-rules file defines rules like this for sources
 # coming from sysdeps/ directories.  These rules find the generic sources.

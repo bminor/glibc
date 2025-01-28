@@ -80,7 +80,7 @@ aarch64, alpha, loongarch, mips64, riscv, s390 and sparc.
 * Exponents and Logarithms::    Also pow and sqrt.
 * Hyperbolic Functions::        sinh, cosh, tanh, etc.
 * Special Functions::           Bessel, gamma, erf.
-* Errors in Math Functions::    Known Maximum Errors in Math Functions.
+* Errors in Math Functions::    Remarks in Errors in Math Functions.
 * Pseudo-Random Numbers::       Functions for generating pseudo-random
 				 numbers.
 * FP Function Optimizations::   Fast code or small code.
@@ -1461,12 +1461,11 @@ extensions.
 @end deftypefun
 
 @node Errors in Math Functions
-@section Known Maximum Errors in Math Functions
+@section Errors in Math Functions
 @cindex math errors
 @cindex ulps
 
-This section lists the known errors of the functions in the math
-library.  Errors are measured in ``units of the last place''.  This is a
+Errors are measured in ``units of the last place''.  This is a
 measure for the relative error.  For a number @math{z} with the
 representation @math{d.d@dots{}d@mul{}2^e} (we assume IEEE
 floating-point numbers with base 2) the ULP is represented by
@@ -1576,22 +1575,25 @@ functions.
 @end itemize
 
 Therefore many of the functions in the math library have errors.  The
-table lists the maximum error for each function which is exposed by one
-of the existing tests in the test suite.  The table tries to cover as much
-as possible and list the actual maximum error (or at least a ballpark
-figure) but this is often not achieved due to the large search space.
+math testsuite only flags results larger than 9ulp (or 16 for IBM
+@code{long double} format) as errors; although most of the implementations
+show errors smaller than the limit.
 
-The table lists the ULP values for different architectures.  Different
-architectures have different results since their hardware support for
-floating-point operations varies and also the existing hardware support
-is different.  Only the round-to-nearest rounding mode is covered by
-this table.  Functions not listed do not have known errors.  Vector
-versions of functions in the x86_64 libmvec library have a maximum error
-of 4 ulps.
+A more comprehensive analysis of @theglibc{} math functions precision could
+be found in 'Accuracy of Mathematical Functions in Single, Double, Double
+Extended, and Quadruple Precision'; Brian Gladman, Vincenzo Innocente,
+John Mather, and Paul Zimmermann at
+@url{<https://inria.hal.science/hal-03141101>}.  It does not cover complex
+functions, nor @code{jn}/@code{yn}, and it is only for x86_64, and for
+rounding to nearest, and does not cover any architecture variations (in
+particular IBM @code{long double} is out of scope).
 
-@page
-@c This multitable does not fit on a single page
-@include libm-err.texi
+For complex functions, some analysis of @theglibc{} math functions can be
+found in 'Accuracy of Complex Mathematical Operations and Functions in Single
+and Double Precision'; Paul Caprioli, Vincenzo Innocente, Paul Zimmermann
+at @url{https://inria.hal.science/hal-04714173}.  It only covers @code{float}
+and @code{double}, only for x86_64, and for rounding to nearest, and does not
+cover any architecture variations.
 
 @node Pseudo-Random Numbers
 @section Pseudo-Random Numbers

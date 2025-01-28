@@ -38,7 +38,3 @@ install:
 
 bench bench-clean bench-build:
 	$(MAKE) -C $(srcdir)/benchtests $(PARALLELMFLAGS) objdir=`pwd` $@
-
-# Convenience target to rebuild ULPs for all math tests.
-regen-ulps:
-	$(MAKE) -C $(srcdir)/math $(PARALLELMFLAGS) objdir=`pwd` $@

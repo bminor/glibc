@@ -55,7 +55,7 @@ examples = $(filter %.c.texi, $(texis))
 
 # Generated files directly included from libc.texinfo.
 libc-texi-generated = chapters.texi top-menu.texi dir-add.texi \
-		      libm-err.texi version.texi pkgvers.texi
+		      version.texi pkgvers.texi
 
 # Add path to build dir for generated files
 texis-path := $(filter-out $(libc-texi-generated) summary.texi $(examples), \
@@ -110,16 +110,6 @@ $(objpfx)dir-add.texi: xtract-typefun.awk $(texis-path)
 	 $(AWK) -f $^ | sort;						\
 	 echo "@end direntry") > $@.new
 	mv -f $@.new $@
-
-# The table with the math errors is generated.
-$(objpfx)libm-err.texi: $(objpfx)stamp-libm-err
-$(objpfx)stamp-libm-err: $(..)math/gen-libm-test.py \
-			 $(wildcard $(foreach dir,$(sysdirs),\
-						  $(dir)/libm-test-ulps))
-	pwd=`pwd`; \
-	$(PYTHON) $< -s $$pwd/.. -m $(objpfx)libm-err-tmp
-	$(move-if-change) $(objpfx)libm-err-tmp $(objpfx)libm-err.texi
-	touch $@
 
 # Package version and bug reporting URL.
 $(objpfx)pkgvers.texi: $(objpfx)stamp-pkgvers ;

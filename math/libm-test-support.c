@@ -109,10 +109,12 @@
 
 #include "libm-test-support.h"
 
+#include <array_length.h>
 #include <argp.h>
 #include <errno.h>
 #include <string.h>
 #include <assert.h>
+#include <stdbool.h>
 
 /* This header defines func_ulps, func_real_ulps and func_imag_ulps
    arrays.  */
@@ -145,6 +147,8 @@ static FLOAT max_error, real_max_error, imag_max_error;
 static FLOAT prev_max_error, prev_real_max_error, prev_imag_max_error;
 
 static FLOAT max_valid_error;
+
+static bool is_complex = false;
 
 /* Sufficient numbers of digits to represent any floating-point value
    unambiguously (for any choice of the number of bits in the first
@@ -186,6 +190,20 @@ fmt_ftostr (char *dest, size_t size, int precision, const char *conversion,
   FTOSTR (dest, size, format, value);
 }
 
+
+static FLOAT
+default_max_valid_error (int exact, int testing_ibm128)
+{
+  if (testing_ibm128)
+    /* The documented accuracy of IBM long double division is 3ulp
+       (see libgcc/config/rs6000/ibm-ldouble-format), so do not
+       require better accuracy for libm functions that are exactly
+       defined for other formats.  */
+    return max_valid_error = exact ? 3 : 16;
+  else
+    return max_valid_error = exact ? 0 : 9;
+}
+
 /* Compare KEY (a string, with the name of a function) with ULP (a
    pointer to a struct ulp_data structure), returning a value less
    than, equal to or greater than zero for use in bsearch.  */
@@ -204,14 +222,17 @@ static const int ulp_idx = ULP_IDX;
    no ulps listed.  */
 
 static FLOAT
-find_ulps (const char *name, const struct ulp_data *data, size_t nmemb)
+find_ulps (const char *name, const struct ulp_data *data, size_t nmemb,
+	   int exact, int testing_ibm128)
 {
   const struct ulp_data *entry = bsearch (name, data, nmemb, sizeof (*data),
 					  compare_ulp_data);
   if (entry == NULL)
-    return 0;
+    return default_max_valid_error (exact, testing_ibm128);
   else
-    return entry->max_ulp[ulp_idx];
+    return entry->max_ulp[ulp_idx] == -1
+	   ? default_max_valid_error (exact, testing_ibm128)
+	   : entry->max_ulp[ulp_idx];
 }
 
 void
@@ -221,22 +242,15 @@ init_max_error (const char *name, int exact, int testing_ibm128)
   real_max_error = 0;
   imag_max_error = 0;
   test_ibm128 = testing_ibm128;
-  prev_max_error = find_ulps (name, func_ulps,
-			      sizeof (func_ulps) / sizeof (func_ulps[0]));
+  prev_max_error = find_ulps (name, func_ulps, array_length (func_ulps),
+			      exact, testing_ibm128);
   prev_real_max_error = find_ulps (name, func_real_ulps,
-				   (sizeof (func_real_ulps)
-				    / sizeof (func_real_ulps[0])));
+				   array_length (func_real_ulps), exact,
+				   testing_ibm128);
   prev_imag_max_error = find_ulps (name, func_imag_ulps,
-				   (sizeof (func_imag_ulps)
-				    / sizeof (func_imag_ulps[0])));
-  if (testing_ibm128)
-    /* The documented accuracy of IBM long double division is 3ulp
-       (see libgcc/config/rs6000/ibm-ldouble-format), so do not
-       require better accuracy for libm functions that are exactly
-       defined for other formats.  */
-    max_valid_error = exact ? 3 : 16;
-  else
-    max_valid_error = exact ? 0 : 9;
+				   array_length (func_imag_ulps),
+				   exact, testing_ibm128);
+  max_valid_error = default_max_valid_error (exact, testing_ibm128);
   prev_max_error = (prev_max_error <= max_valid_error
 		    ? prev_max_error
 		    : max_valid_error);
@@ -476,6 +490,8 @@ check_complex_max_error (const char *func_name)
 
   update_stats (ok, TEST_MAXERROR);
   print_test_end (thisTest, func_name, TEST_MAXERROR);
+
+  is_complex = true;
 }
 
 
@@ -1322,6 +1338,22 @@ libm_test_finish (void)
     fclose (ulps_file);
 
   printf ("\nTest suite completed:\n");
+  printf ("  Maximum error found of ");
+  if (is_complex)
+    {
+      char rmestr[FSTR_MAX];
+      char imestr[FSTR_MAX];
+      FTOSTR (rmestr, FSTR_MAX, "%.0f", FUNC (ceil) (real_max_error));
+      FTOSTR (imestr, FSTR_MAX, "%.0f", FUNC (ceil) (imag_max_error));
+      printf ("`%s' ulp for real part and `%s' ulp for imaginary part\n",
+	      rmestr, imestr);
+    }
+  else
+    {
+      char mestr[FSTR_MAX];
+      FTOSTR (mestr, FSTR_MAX, "%.0f", FUNC (ceil) (max_error));
+      printf ("`%s' ulp\n", mestr);
+    }
   printf ("  %d max error test cases,\n", noMaxErrorTests);
   printf ("  %d input tests,\n", noTests);
   printf ("  - with %d tests for exception flags,\n", noExcTests);

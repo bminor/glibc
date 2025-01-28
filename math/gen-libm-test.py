@@ -121,19 +121,20 @@ class Ulps(object):
         """Initialize an Ulps object."""
         # normal[function][float_type] is the ulps value, and likewise
         # for real and imag.
-        self.normal = defaultdict(lambda: defaultdict(lambda: 0))
-        self.real = defaultdict(lambda: defaultdict(lambda: 0))
-        self.imag = defaultdict(lambda: defaultdict(lambda: 0))
+        self.normal = defaultdict(lambda: defaultdict(lambda: -1))
+        self.real = defaultdict(lambda: defaultdict(lambda: -1))
+        self.imag = defaultdict(lambda: defaultdict(lambda: -1))
         # List of ulps kinds, in the order in which they appear in
         # sorted ulps files.
         self.ulps_kinds = (('Real part of ', self.real),
                            ('Imaginary part of ', self.imag),
                            ('', self.normal))
+        self.ulps_file = []
         self
 
     def read(self, ulps_file):
         """Read ulps from a file into an Ulps object."""
-        self.ulps_file = ulps_file
+        self.ulps_file.append(ulps_file)
         with open(ulps_file, 'r') as f:
             ulps_dict = None
             ulps_fn = None
@@ -165,10 +166,7 @@ class Ulps(object):
                     if line_first not in ALL_FLOATS:
                         raise ValueError('bad ulps line: %s' % line)
                     ulps_val = int(line_second)
-                    if ulps_val > 0:
-                        ulps_dict[ulps_fn][line_first] = max(
-                            ulps_dict[ulps_fn][line_first],
-                            ulps_val)
+                    ulps_dict[ulps_fn][line_first] = ulps_val
 
     def all_functions(self):
         """Return the set of functions with ulps and whether they are
@@ -180,27 +178,6 @@ class Ulps(object):
                 funcs.add(f)
                 complex[f] = True if k_prefix else False
         return funcs, complex
-
-    def write(self, ulps_file):
-        """Write ulps back out as a sorted ulps file."""
-        # Output is sorted first by function name, then by (real,
-        # imag, normal), then by float type.
-        out_data = {}
-        for order, (prefix, d) in enumerate(self.ulps_kinds):
-            for fn in d.keys():
-                fn_data = ['%s: %d' % (f, d[fn][f])
-                           for f in sorted(d[fn].keys())]
-                fn_text = 'Function: %s"%s":\n%s' % (prefix, fn,
-                                                     '\n'.join(fn_data))
-                out_data[(fn, order)] = fn_text
-        out_list = [out_data[fn_order] for fn_order in sorted(out_data.keys())]
-        out_text = ('# Begin of automatic generation\n\n'
-                    '# Maximal error of functions:\n'
-                    '%s\n\n'
-                    '# end of automatic generation\n'
-                    % '\n\n'.join(out_list))
-        with open(ulps_file, 'w') as f:
-            f.write(out_text)
 
     @staticmethod
     def ulps_table(name, ulps_dict):
@@ -227,7 +204,7 @@ class Ulps(object):
                          '  const char *name;\n'
                          '  FLOAT max_ulp[%d];\n'
                          '};'
-                         % (self.ulps_file, len(ALL_FLOATS)))
+                         % (', '.join(self.ulps_file), len(ALL_FLOATS)))
         macro_list = []
         for i, f in enumerate(ALL_FLOATS):
             if f.startswith('i'):
@@ -249,18 +226,6 @@ class Ulps(object):
                           self.ulps_table('func_imag_ulps', self.imag)))
         with open(ulps_header, 'w') as f:
             f.write(header_text)
-
-
-def read_all_ulps(srcdir):
-    """Read all platforms' libm-test-ulps files."""
-    all_ulps = {}
-    for dirpath, dirnames, filenames in os.walk(srcdir):
-        if 'libm-test-ulps' in filenames:
-            with open(os.path.join(dirpath, 'libm-test-ulps-name')) as f:
-                name = f.read().rstrip()
-            all_ulps[name] = Ulps()
-            all_ulps[name].read(os.path.join(dirpath, 'libm-test-ulps'))
-    return all_ulps
 
 
 def read_auto_tests(test_file):
@@ -653,12 +618,8 @@ def main():
                         help='input file with automatically generated tests')
     parser.add_argument('-c', dest='inc_input', metavar='FILE',
                         help='input file .inc file with tests')
-    parser.add_argument('-u', dest='ulps_file', metavar='FILE',
-                        help='input file with ulps')
-    parser.add_argument('-s', dest='srcdir', metavar='DIR',
-                        help='input source directory with all ulps')
-    parser.add_argument('-n', dest='ulps_output', metavar='FILE',
-                        help='generate sorted ulps file FILE')
+    parser.add_argument('-u', dest='ulps_file', metavar='list',
+                        help='input files with ulps (multiple input separated by colon')
     parser.add_argument('-C', dest='c_output', metavar='FILE',
                         help='generate output C file FILE from .inc file')
     parser.add_argument('-H', dest='ulps_header', metavar='FILE',
@@ -668,12 +629,11 @@ def main():
     args = parser.parse_args()
     ulps = Ulps()
     if args.ulps_file is not None:
-        ulps.read(args.ulps_file)
+        # Iterate in reverse order so arch specific definitions can override
+        # the generic ones.
+        for ulp_file in reversed(args.ulps_file.split(':')):
+            ulps.read(ulp_file)
     auto_tests = read_auto_tests(args.auto_input)
-    if args.srcdir is not None:
-        all_ulps = read_all_ulps(args.srcdir)
-    if args.ulps_output is not None:
-        ulps.write(args.ulps_output)
     if args.ulps_header is not None:
         ulps.write_header(args.ulps_header)
     if args.c_output is not None:
