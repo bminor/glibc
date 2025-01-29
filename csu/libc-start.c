@@ -36,6 +36,7 @@
 #include <stdbool.h>
 #include <elf-initfini.h>
 #include <shlib-compat.h>
+#include <libc-prop.h>
 
 #include <elf/dl-tunables.h>
 
@@ -275,6 +276,9 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 
   /* Perform IREL{,A} relocations.  */
   ARCH_SETUP_IREL ();
+
+  /* Process notes: PT_NOTE / PT_GNU_PROPERTY.  */
+  __libc_process_gnu_attributes ();
 
   /* The stack guard goes into the TCB, so initialize it early.  */
   ARCH_SETUP_TLS ();

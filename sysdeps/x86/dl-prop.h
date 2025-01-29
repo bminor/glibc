@@ -66,9 +66,11 @@ dl_isa_level_check (struct link_map *m, const char *program)
 static inline void __attribute__ ((always_inline))
 _rtld_main_check (struct link_map *m, const char *program)
 {
+#ifdef SAHRED
   dl_isa_level_check (m, program);
-#if CET_ENABLED
+# if CET_ENABLED
   _dl_cet_check (m, program);
+# endif
 #endif
 }
 
