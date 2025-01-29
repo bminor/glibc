@@ -4347,6 +4347,18 @@ terminating newline character).
 @cindex lines (in a text file)
 
 @item
+If the system does not use POSIX-style in-band signalling to indicate
+line termination, it can be impossibe to write anything to a text stream
+without adding a line terminator.  As a result, flushing a text stream
+(by calling @code{fflush}, for example) may produce a logical line
+terminator even if no @code{'\n'} character was written by the program.
+
+@item
+Text files may contain lines that embed @code{'\n'} characters that are
+not treated as line terminators by the system.  C programs cannot read
+such text files reliably using the @file{stdio.h} facilities.
+
+@item
 On some systems, text files can contain only printing characters,
 horizontal tab characters, and newlines, and so text streams may not
 support other characters.  However, binary streams can handle any
@@ -4837,12 +4849,6 @@ currently opened.
 
 This function is declared in the @file{stdio_ext.h} header.
 @end deftypefun
-
-@strong{Compatibility Note:} Some brain-damaged operating systems have
-been known to be so thoroughly fixated on line-oriented input and output
-that flushing a line buffered stream causes a newline to be written!
-Fortunately, this ``feature'' seems to be becoming less common.  You do
-not need to worry about this with @theglibc{}.
 
 In some situations it might be useful to not flush the output pending
 for a stream but instead simply forget it.  If transmission is costly
