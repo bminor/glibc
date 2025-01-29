@@ -145,9 +145,9 @@ __pthread_getattr_np (pthread_t thread_id, pthread_attr_t *attr)
 			  > (size_t) iattr->stackaddr - last_to)
 			iattr->stacksize = (size_t) iattr->stackaddr - last_to;
 #else
-		      /* The limit might be too high.  */
+		      /* The limit might be too low.  */
 		      if ((size_t) iattr->stacksize
-			  > to - (size_t) iattr->stackaddr)
+			  < to - (size_t) iattr->stackaddr)
 			iattr->stacksize = to - (size_t) iattr->stackaddr;
 #endif
 		      /* We succeed and no need to look further.  */
