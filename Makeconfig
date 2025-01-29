@@ -389,6 +389,21 @@ dt-relr-ldflag =
 no-dt-relr-ldflag =
 endif
 
+# Linker options to enable and disable memory sealing (GNU_PROPERTY_MEMORY_SEAL),
+# if --disable-default-memory-sealing is used explicit disable memory sealing for
+# the case linker defaults to it.
+ifeq ($(have-z-memory-seal),yes)
+no-memory-seal-ldflag = -Wl,-z,nomemory-seal
+ifeq ($(default-memory-seal),yes)
+memory-seal-ldflag = -Wl,-z,memory-seal
+else
+memory-seal-ldflag = $(no-memory-seal-ldflag)
+endif
+else
+memory-seal-ldflag =
+no-memory-seal-ldflag =
+endif
+
 ifeq (no,$(build-pie-default))
 pie-default = $(no-pie-ccflag)
 else # build-pie-default
@@ -433,6 +448,7 @@ link-extra-libs-tests = $(libsupport)
 ifndef +link-pie
 +link-pie-before-inputs = $(if $($(@F)-no-pie),$(no-pie-ldflag),-pie) \
 	     $(if $($(@F)-no-dt-relr),$(no-dt-relr-ldflag),$(dt-relr-ldflag)) \
+	     $(if $($(@F)-no-memory-seal),$(no-memory-seal-ldflag),$(memory-seal-ldflag)) \
 	     -Wl,-O1 -nostdlib -nostartfiles \
 	     $(sysdep-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F)) \
 	     $(relro-LDFLAGS) $(hashstyle-LDFLAGS) \
@@ -466,6 +482,7 @@ ifndef +link-static
 +link-static-before-inputs = -nostdlib -nostartfiles -static \
 	      $(if $($(@F)-no-pie),$(no-pie-ldflag),$(static-pie-ldflag)) \
 	      $(if $($(@F)-no-dt-relr),$(no-dt-relr-ldflag),$(static-pie-dt-relr-ldflag)) \
+	      $(if $($(@F)-no-memory-seal),$(no-memory-seal-ldflag),$(memory-seal-ldflag)) \
 	      $(sysdep-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F))  \
 	      $(firstword $(CRT-$(@F)) $(csu-objpfx)$(real-static-start-installed-name)) \
 	      $(+preinit) $(+prectorT)
@@ -542,7 +559,7 @@ endif  # +link
 # Command for linking test programs with crt1.o from glibc 2.0.
 +link-2.0-before-inputs = -nostdlib -nostartfiles $(no-pie-ldflag) \
 	      $(sysdep-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F)) \
-	      $(relro-LDFLAGS) $(hashstyle-LDFLAGS) \
+	      $(relro-LDFLAGS) $(memory-seal-ldflag) $(hashstyle-LDFLAGS) \
 	      $(firstword $(CRT-$(@F)) $(csu-objpfx)$(start-name-2.0)) \
 	      $(+preinit) $(+prector)
 +link-2.0-before-libc = -o $@ $(+link-2.0-before-inputs) \

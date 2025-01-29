@@ -19,6 +19,10 @@ Major new features:
   the binary, any preload and audit modules, and aby library loaded with
   RTLD_NODELETE.
 
+* All libraries, programs, and the testsuite in glibc are now build with
+  memory sealing by default if the toochain supports it.  A new configure
+  option, --disable-default-memory-seal, disables it.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
   [Add deprecations, removals and changes affecting compatibility here]

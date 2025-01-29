@@ -440,6 +440,12 @@ case "$enable_fortify_source" in
 *) AC_MSG_ERROR([Not a valid argument for --enable-fortify-source: "$enable_fortify_source"]);;
 esac
 
+AC_ARG_ENABLE([default-memory-sealing],
+	      AS_HELP_STRING([--disable-default-memory-sealing],
+			     [Do not build glibc libraries, programs, and the testsuite with memory sealing @<:@default=no@:>@]),
+	      [default_memory_sealing=$enableval],
+	      [default_memory_sealing=yes])
+
 # We keep the original values in `$config_*' and never modify them, so we
 # can write them unchanged into config.make.  Everything else uses
 # $machine, $vendor, and $os, and changes them whenever convenient.
@@ -1355,6 +1361,20 @@ LIBC_TRY_CC_OPTION([-fpie], [libc_cv_fpie=yes], [libc_cv_fpie=no])
 ])
 
 AC_SUBST(libc_cv_fpie)
+
+
+LIBC_LINKER_FEATURE([-z memory-seal],
+		    [-Wl,-z,memory-seal],
+		    [libc_cv_z_memory_seal=yes],
+		    [libc_cv_z_memory_seal=no])
+# Enable memory-sealing iff it is available and glibc is not configured
+# with --disable-defautl-memory-sealing
+if test "$libc_cv_z_memory_seal" = no; then
+  default_memory_sealing=no
+fi
+LIBC_CONFIG_VAR([have-z-memory-seal], [$libc_cv_z_memory_seal])
+LIBC_CONFIG_VAR([default-memory-seal], [$default_memory_sealing])
+
 
 AC_CACHE_CHECK(for GLOB_DAT reloc,
 	       libc_cv_has_glob_dat, [dnl

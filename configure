@@ -819,6 +819,7 @@ enable_mathvec
 enable_cet
 enable_scv
 enable_fortify_source
+enable_default_memory_sealing
 with_cpu
 '
       ac_precious_vars='build_alias
@@ -1504,6 +1505,9 @@ Optional Features:
                           Use -D_FORTIFY_SOURCE=[1|2|3] to control code
                           hardening, defaults to highest possible value
                           supported by the build compiler.
+  --disable-default-memory-sealing
+                          Do not build glibc libraries, programs, and the
+                          testsuite with memory sealing [default=no]
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -4882,6 +4886,16 @@ case "$enable_fortify_source" in
 *) as_fn_error $? "Not a valid argument for --enable-fortify-source: \"$enable_fortify_source\"" "$LINENO" 5;;
 esac
 
+# Check whether --enable-default-memory-sealing was given.
+if test ${enable_default_memory_sealing+y}
+then :
+  enableval=$enable_default_memory_sealing; default_memory_sealing=$enableval
+else case e in #(
+  e) default_memory_sealing=yes ;;
+esac
+fi
+
+
 # We keep the original values in `$config_*' and never modify them, so we
 # can write them unchanged into config.make.  Everything else uses
 # $machine, $vendor, and $os, and changes them whenever convenient.
@@ -7373,6 +7387,50 @@ fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_fpie" >&5
 printf "%s\n" "$libc_cv_fpie" >&6; }
 
+
+
+
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for linker that supports -z memory-seal" >&5
+printf %s "checking for linker that supports -z memory-seal... " >&6; }
+libc_linker_feature=no
+cat > conftest.c <<EOF
+int _start (void) { return 42; }
+EOF
+if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp
+		  -Wl,-z,memory-seal -nostdlib -nostartfiles
+		  -fPIC -shared -o conftest.so conftest.c
+		  1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+then
+  if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp -Wl,-z,memory-seal -nostdlib \
+      -nostartfiles -fPIC -shared -o conftest.so conftest.c 2>&1 \
+      | grep "warning: -z memory-seal ignored" > /dev/null 2>&1; then
+    true
+  else
+    libc_linker_feature=yes
+  fi
+fi
+rm -f conftest*
+if test $libc_linker_feature = yes; then
+  libc_cv_z_memory_seal=yes
+else
+  libc_cv_z_memory_seal=no
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_linker_feature" >&5
+printf "%s\n" "$libc_linker_feature" >&6; }
+# Enable memory-sealing iff it is available and glibc is not configured
+# with --disable-defautl-memory-sealing
+if test "$libc_cv_z_memory_seal" = no; then
+  default_memory_sealing=no
+fi
+config_vars="$config_vars
+have-z-memory-seal = $libc_cv_z_memory_seal"
+config_vars="$config_vars
+default-memory-seal = $default_memory_sealing"
 
 
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for GLOB_DAT reloc" >&5

@@ -1496,6 +1496,7 @@ $(objpfx)ld.so: $(objpfx)librtld.os $(ld-map)
 	$(LINK.o) -nostdlib -nostartfiles -shared -o $@.new		\
 		  $(LDFLAGS-rtld) -Wl,-z,defs $(z-now-$(bind-now))	\
 		  $(dt-relr-ldflag) \
+		  $(memory-seal-ldflag) \
 		  $(filter-out $(map-file),$^) $(load-map-file)		\
 		  -Wl,-soname=$(rtld-installed-name)
 	$(call after-link,$@.new)
@@ -1836,6 +1837,7 @@ $(objpfx)nodlopen2.out: $(objpfx)nodlopenmod2.so
 $(objpfx)filtmod1.so: $(objpfx)filtmod1.os $(objpfx)filtmod2.so
 	$(LINK.o) -shared -o $@ -B$(csu-objpfx) $(LDFLAGS.so) \
 		  $(dt-relr-ldflag) \
+		  $(memory-seal-ldflag) \
 		  -L$(subst :, -L,$(rpath-link)) \
 		  -Wl,-rpath-link=$(rpath-link) \
 		  $< -Wl,-F,$(objpfx)filtmod2.so
@@ -2453,6 +2455,7 @@ $(objpfx)tst-audit17.out: $(objpfx)tst-auditmod17.so
 # intended, so it uses an explicit link rule.
 $(objpfx)tst-auditmod17.so: $(objpfx)tst-auditmod17.os
 	$(CC) -nostdlib -nostartfiles -shared -o $@.new \
+	$(memory-seal-ldflag) \
 	$(filter-out $(map-file),$^)
 	$(call after-link,$@.new)
 	mv -f $@.new $@
@@ -2513,12 +2516,13 @@ $(objpfx)tst-audit24bmod1: $(objpfx)tst-audit24bmod2.so
 # against libc.so.
 $(objpfx)tst-audit24bmod1.so: $(objpfx)tst-audit24bmod1.os
 	$(CC) -nostdlib -nostartfiles -shared -o $@.new $(objpfx)tst-audit24bmod1.os \
-	  -Wl,-z,now
+	  -Wl,-z,now $(memory-seal-ldflag)
 	$(call after-link,$@.new)
 	mv -f $@.new $@
 CFLAGS-.os += $(call elide-stack-protector,.os,tst-audit24bmod1)
 $(objpfx)tst-audit24bmod2.so: $(objpfx)tst-audit24bmod2.os
-	$(CC) -nostdlib -nostartfiles -shared -o $@.new $(objpfx)tst-audit24bmod2.os
+	$(CC) -nostdlib -nostartfiles -shared -o $@.new $(objpfx)tst-audit24bmod2.os \
+	  $(memory-seal-ldflag)
 	$(call after-link,$@.new)
 	mv -f $@.new $@
 CFLAGS-.os += $(call elide-stack-protector,.os,tst-audit24bmod2)
@@ -2678,7 +2682,7 @@ $(objpfx)tst-big-note: $(objpfx)tst-big-note-lib.so
 # artificial, large note in tst-big-note-lib.o and invalidate the
 # test.
 $(objpfx)tst-big-note-lib.so: $(objpfx)tst-big-note-lib.o
-	$(LINK.o) -shared -o $@ $(LDFLAGS.so) $(dt-relr-ldflag) $<
+	$(LINK.o) -shared -o $@ $(LDFLAGS.so) $(dt-relr-ldflag) $(memory-seal-ldflag) $<
 
 $(objpfx)tst-unwind-ctor: $(objpfx)tst-unwind-ctor-lib.so
 
@@ -2985,6 +2989,7 @@ $(objpfx)tst-ro-dynamic-mod.so: $(objpfx)tst-ro-dynamic-mod.os \
   tst-ro-dynamic-mod.map
 	$(LINK.o) -nostdlib -nostartfiles -shared -o $@ \
 		$(dt-relr-ldflag) \
+		$(memory-seal-ldflag) \
 		-Wl,--script=tst-ro-dynamic-mod.map \
 		$(objpfx)tst-ro-dynamic-mod.os
 
@@ -3075,6 +3080,7 @@ $(objpfx)tst-relr2: $(objpfx)tst-relr-mod2.so
 $(objpfx)tst-relr-mod2.so: $(objpfx)tst-relr-mod2.os
 	$(LINK.o) -nostdlib -nostartfiles -Wl,-z,pack-relative-relocs \
 	$(LDFLAGS-soname-fname) \
+	$(memory-seal-ldflag) \
 	-shared -o $@.new $(filter-out $(map-file),$^)
 	$(call after-link,$@.new)
 	mv -f $@.new $@
@@ -3085,6 +3091,7 @@ $(objpfx)tst-relr3: $(objpfx)tst-relr-mod3a.so
 $(objpfx)tst-relr-mod3b.so: $(objpfx)tst-relr-mod3b.os
 	$(LINK.o) -nostdlib -nostartfiles -Wl,-z,pack-relative-relocs \
 	$(LDFLAGS-soname-fname) \
+	$(memory-seal-ldflag) \
 	-shared -o $@.new $(filter-out $(map-file),$^)
 	$(call after-link,$@.new)
 	mv -f $@.new $@
@@ -3093,6 +3100,7 @@ $(objpfx)tst-relr-mod3a.so: $(objpfx)tst-relr-mod3a.os \
   $(objpfx)tst-relr-mod3b.so
 	$(LINK.o) -nostdlib -nostartfiles -Wl,-z,pack-relative-relocs \
 	$(LDFLAGS-soname-fname) $(LDFLAGS-rpath-ORIGIN) \
+	$(memory-seal-ldflag) \
 	-shared -o $@.new $(filter-out $(map-file),$^)
 	$(call after-link,$@.new)
 	mv -f $@.new $@
@@ -3103,6 +3111,7 @@ $(objpfx)tst-relr4: $(objpfx)tst-relr-mod4a.so
 $(objpfx)tst-relr-mod4b.so: $(objpfx)tst-relr-mod4b.os
 	$(LINK.o) -nostdlib -nostartfiles -Wl,-z,pack-relative-relocs \
 	$(LDFLAGS-soname-fname) \
+	$(memory-seal-ldflag) \
 	-Wl,--version-script=tst-relr-mod4b.map \
 	-shared -o $@.new $(filter-out $(map-file),$^)
 	$(call after-link,$@.new)
@@ -3111,6 +3120,7 @@ $(objpfx)tst-relr-mod4b.so: $(objpfx)tst-relr-mod4b.os
 $(objpfx)tst-relr-mod4a.so: $(objpfx)tst-relr-mod4a.os \
   $(objpfx)tst-relr-mod4b.so
 	$(LINK.o) -nostdlib -nostartfiles -Wl,-z,pack-relative-relocs \
+	$(memory-seal-ldflag) \
 	$(LDFLAGS-soname-fname) $(LDFLAGS-rpath-ORIGIN) \
 	-shared -o $@.new $(filter-out $(map-file),$^)
 	$(call after-link,$@.new)
@@ -3232,7 +3242,7 @@ $(objpfx)tst-env-setuid-static.out: $(objpfx)tst-sonamemove-runmod1.so
 # We do not use $(link-test-modules-rpath-link) since the object has no
 # DT_NEEDED.
 $(objpfx)tst-nodeps1-mod.so: $(objpfx)tst-nodeps1-mod.os
-	$(LINK.o) -nostartfiles -nostdlib -shared -o $@ $^
+	$(LINK.o) -nostartfiles -nostdlib -shared $(memory-seal-ldflag) -o $@ $^
 tst-nodeps1.so-no-z-defs = yes
 # Link libc.so before the test module with the IFUNC resolver reference.
 LDFLAGS-tst-nodeps1 = $(common-objpfx)libc.so $(objpfx)tst-nodeps1-mod.so
@@ -3384,6 +3394,7 @@ CFLAGS-tst-nolink-libc.c += $(no-stack-protector) \
  -fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables
 $(objpfx)tst-nolink-libc-1: $(objpfx)tst-nolink-libc.o $(objpfx)ld.so
 	$(LINK.o) -nostdlib -nostartfiles -o $@ $< \
+	  $(memory-seal-ldflag) \
 	  -Wl,--dynamic-linker=$(objpfx)ld.so,--no-as-needed $(objpfx)ld.so
 $(objpfx)tst-nolink-libc-1.out: $(objpfx)tst-nolink-libc-1 $(objpfx)ld.so
 	$< > $@ 2>&1; $(evaluate-test)

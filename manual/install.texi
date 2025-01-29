@@ -280,6 +280,11 @@ C++ libraries.
 Disable using @code{scv} instruction for syscalls. All syscalls will use
 @code{sc} instead, even if the kernel supports @code{scv}. PowerPC only.
 
+@item --disable-default-memory-seal
+Don't build glibc libraries, programs, and the testsuite with
+memory sealing support (@code{GNU_PROPERTY_MEMORY_SEAL}).  By default,
+memory sealing is enabled if toolchain suports the linker option.
+
 @item --build=@var{build-system}
 @itemx --host=@var{host-system}
 These options are for cross-compiling.  If you specify both options and
