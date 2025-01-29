@@ -19,6 +19,8 @@
 #ifndef _DL_PROP_H
 #define _DL_PROP_H
 
+#include <dl-prop-mseal.h>
+
 extern void _dl_bti_protect (struct link_map *, int) attribute_hidden;
 
 extern void _dl_bti_check (struct link_map *, const char *)
@@ -50,6 +52,9 @@ static inline int
 _dl_process_gnu_property (struct link_map *l, int fd, uint32_t type,
 			  uint32_t datasz, void *data)
 {
+  if (_dl_process_gnu_property_seal (l, fd, type, datasz, data))
+    return 0;
+
   if (type == GNU_PROPERTY_AARCH64_FEATURE_1_AND)
     {
       /* Stop if the property note is ill-formed.  */

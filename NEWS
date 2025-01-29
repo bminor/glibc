@@ -13,6 +13,12 @@ Major new features:
   mappings to avoid further change during process execution such as protection
   permissions, unmapping, moving to another location, or shrinking the size.
 
+* The loader will memory seal all libraries that contains the new gnu
+  attribute GNU_PROPERTY_MEMORY_SEAL.  The memory sealing uses the new Linux
+  mseal syscall, and it will be applied to all shared libraries dependencies,
+  the binary, any preload and audit modules, and aby library loaded with
+  RTLD_NODELETE.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
   [Add deprecations, removals and changes affecting compatibility here]

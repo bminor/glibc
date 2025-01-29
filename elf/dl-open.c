@@ -807,6 +807,10 @@ dl_open_worker (void *a)
   if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_FILES))
     _dl_debug_printf ("opening file=%s [%lu]; direct_opencount=%u\n\n",
 		      new->l_name, new->l_ns, new->l_direct_opencount);
+
+  /* The seal flag is set only for NEW, however its dependencies could not be
+     unloaded and thus can also be sealed.  */
+  _dl_mseal_map (new, true, false);
 }
 
 void *
