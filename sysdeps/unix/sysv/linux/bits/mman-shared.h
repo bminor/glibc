@@ -81,6 +81,14 @@ int pkey_free (int __key) __THROW;
    range.  */
 int pkey_mprotect (void *__addr, size_t __len, int __prot, int __pkey) __THROW;
 
+/* Seal the address range to avoid further modifications, such as remmap to
+   shrink or expand the VMA, change protection permission with mprotect,
+   unmap with munmap, destructive semantic such madvise with MADV_DONTNEED.
+   The address range must be valid VMA, withouth any gap (unallocated memory)
+   between start and end, and ADDR much be page aligned (LEN will be page
+   aligned implicitly).  */
+int mseal (void *__addr, size_t __len, unsigned long flags) __THROW;
+
 __END_DECLS
 
 #endif /* __USE_GNU */

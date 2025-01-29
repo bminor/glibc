@@ -3072,6 +3072,72 @@ process memory, no matter how it was allocated.  However, portable use
 of the function requires that it is only used with memory regions
 returned by @code{mmap} or @code{mmap64}.
 
+@deftypefun int mseal (void *@var{address}, size_t @var{length}, unsigned long @var{flags})
+@standards{Linux, sys/mman.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+
+A successful call to the @code {mseal} function seals the memory range of
+@var{length} bytes, starting at @var{address}.  The sealed memory is
+protection against further modifictions such as:
+
+@itemize @bullet
+@item
+Unmapping, moving to another location, extending or shrinking the size,
+via @code{munmap} and @code{mremap}.
+
+@item
+Moving or expanding a different VMA into the current location, via
+@code{mremap}.
+
+@item
+Modifying the memory range with @code{mmap} along with flag @code{MAP_FIXED}.
+
+@item
+Expanding the size with @code{mremap}.
+
+@item
+Change the protection flags with @code{mprotect} or @code{pkey_mprotect}.
+
+@item
+Destructive behaviors on anonymous memory, such as @code{madvice} with
+@code{MADV_DONTNEED}.
+@end itemize
+
+The @var{address} must be an allocated virtual memory done by @code{mmap}
+or @code{mremap}, and it must be page aligned.  The end address (@var{address}
+plus @var{length}) must be within an allocated virtual memory range.  There
+should be no unallocated memory between the start and end of address range.
+
+The @var{flags} is currently ununsed.
+
+The @code{mseal} function returns @math{0} on sucess and @math{-1} on
+failure.
+
+The following @code{errno} error conditions are defined for this
+function:
+
+@table @code
+@item EPERM
+The system blocked the operation, and the given address is unmodified
+without partion update.  This error is also returned when @code{mseal}
+is issued on a 32 bit CPUs (the sealing is currently supported only on
+64-bit CPUs, although 32 bit binaries running on 64 bit kernel is
+supported).
+
+@item ENOMEM
+Either the @var{address} is not allocated, or the end address is not
+allocation, or there is an unallocated memory between start and end address.
+
+@item ENOSYS
+The kernel does not support the @code{mseal} syscall.
+
+@strong{NB:} The memory sealing changes the lifetime of a mapping, where the
+sealing memory could not be unmapped until the process terminates or starts
+another one through @code{execve} function.
+
+@end table
+@end deftypefun
+
 @subsection Memory Protection Keys
 
 @cindex memory protection key

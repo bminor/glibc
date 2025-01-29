@@ -9,7 +9,9 @@ Version 2.42
 
 Major new features:
 
-  [Add new features here]
+* On Linux, the mseal function has been added.  It allows to seal memory
+  mappings to avoid further change during process execution such as protection
+  permissions, unmapping, moving to another location, or shrinking the size.
 
 Deprecated and removed features, and other changes affecting compatibility:
 

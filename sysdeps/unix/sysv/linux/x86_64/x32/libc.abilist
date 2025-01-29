@@ -2765,3 +2765,4 @@ GLIBC_2.39 stdc_trailing_zeros_ull F
 GLIBC_2.39 stdc_trailing_zeros_us F
 GLIBC_2.41 sched_getattr F
 GLIBC_2.41 sched_setattr F
+GLIBC_2.42 mseal F

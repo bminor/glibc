@@ -2917,6 +2917,7 @@ GLIBC_2.4 unlinkat F
 GLIBC_2.4 unshare F
 GLIBC_2.41 sched_getattr F
 GLIBC_2.41 sched_setattr F
+GLIBC_2.42 mseal F
 GLIBC_2.5 __readlinkat_chk F
 GLIBC_2.5 inet6_opt_append F
 GLIBC_2.5 inet6_opt_find F

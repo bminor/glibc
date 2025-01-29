@@ -39,6 +39,7 @@ mlockall	-	mlockall	i:i	mlockall
 mount		EXTRA	mount		i:sssUp	__mount	mount
 mount_setattr	EXTRA	mount_setattr	i:isUpU	mount_setattr
 move_mount	EXTRA	move_mount	i:isisU	move_mount
+mseal		EXTRA	mseal		i:bUU	__mseal	mseal
 munlock		-	munlock		i:aU	munlock
 munlockall	-	munlockall	i:	munlockall
 nfsservctl	EXTRA	nfsservctl	i:ipp	__compat_nfsservctl	nfsservctl@GLIBC_2.0:GLIBC_2.28
