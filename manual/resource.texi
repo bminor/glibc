@@ -929,18 +929,31 @@ function, so there are no specific @code{errno} values.
 @c Direct syscall on Linux; alias to swtch on HURD.
 
 This function voluntarily gives up the task's claim on the CPU.
+Depending on the scheduling policy in effect and the tasks ready to run
+on the system, another task may be scheduled to run instead.
 
-Technically, @code{sched_yield} causes the calling task to be made
-immediately ready to run (as opposed to running, which is what it was
-before).  This means that if it has absolute priority higher than 0, it
-gets pushed onto the tail of the queue of tasks that share its
+A call to @code{sched_yield} does not guarantee that a different task
+from the calling task is scheduled as a result; it depends on the
+scheduling policy used on the target system.  It is possible that the
+call may not result in any visible effect, i.e., the same task gets
+scheduled again.
+
+For example on Linux systems, when a simple priority-based FIFO
+scheduling policy (@code{SCHED_FIFO}) is in effect, the calling task is
+made immediately ready to run (as opposed to running, which is what it
+was before).  This means that if it has absolute priority higher than 0,
+it gets pushed onto the tail of the queue of tasks that share its
 absolute priority and are ready to run, and it will run again when its
 turn next arrives.  If its absolute priority is 0, it is more
 complicated, but still has the effect of yielding the CPU to other
-tasks.
+tasks.  If there are no other tasks that share the calling task's
+absolute priority, it will be scheduled again as if @code{sched_yield}
+was never called.
 
-If there are no other tasks that share the calling task's absolute
-priority, this function doesn't have any effect.
+Another example could be a time slice based preemptive round-robin
+policy, such as the @code{SCHED_RR} policy on Linux.  It is possible
+with this policy that the calling task is scheduled again because it
+still has time left in its slice.
 
 To the extent that the containing program is oblivious to what other
 processes in the system are doing and how fast it executes, this
