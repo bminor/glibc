@@ -32,6 +32,7 @@
 #endif
 
 #include <bits/types.h>
+#include <bits/wordsize.h>
 
 struct _IO_FILE;
 struct _IO_marker;
@@ -97,11 +98,11 @@ struct _IO_FILE_complete
   void *_freeres_buf;
   struct _IO_FILE **_prevchain;
   int _mode;
-#ifdef __LP64__
+#if __WORDSIZE == 64
   int _unused3;
 #endif
   __uint64_t _total_written;
-#ifndef __LP64__
+#if __WORDSIZE == 32
   int _unused3;
 #endif
   /* Make sure we don't get into trouble again.  */
