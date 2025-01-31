@@ -611,6 +611,7 @@ _IO_no_init (FILE *fp, int flags, int orientation,
        stream.  */
     fp->_wide_data = (struct _IO_wide_data *) -1L;
   fp->_freeres_list = NULL;
+  fp->_total_written = 0;
 }
 
 int

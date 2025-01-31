@@ -113,7 +113,6 @@ _IO_new_file_init_internal (struct _IO_FILE_plus *fp)
 
   _IO_link_in (fp);
   fp->file._fileno = -1;
-  fp->file._total_written = 0;
 }
 
 /* External version of _IO_new_file_init_internal which switches off
