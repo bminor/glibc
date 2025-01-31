@@ -2115,6 +2115,31 @@ sinh -0x6.9bbb6df7c5d08p-4
 = sinh tonearest ibm128 -0x6.9bbb6df7c5d08p-4 : -0x6.cc3ddf003dcda77f8f9e892e36p-4 : inexact-ok
 = sinh towardzero ibm128 -0x6.9bbb6df7c5d08p-4 : -0x6.cc3ddf003dcda77f8f9e892e36p-4 : inexact-ok
 = sinh upward ibm128 -0x6.9bbb6df7c5d08p-4 : -0x6.cc3ddf003dcda77f8f9e892e36p-4 : inexact-ok
+sinh 0x1.250bfep-11
+= sinh downward binary32 0x2.4a17fcp-12 : 0x2.4a17fcp-12 : inexact-ok
+= sinh tonearest binary32 0x2.4a17fcp-12 : 0x2.4a17fcp-12 : inexact-ok
+= sinh towardzero binary32 0x2.4a17fcp-12 : 0x2.4a17fcp-12 : inexact-ok
+= sinh upward binary32 0x2.4a17fcp-12 : 0x2.4a18p-12 : inexact-ok
+= sinh downward binary64 0x2.4a17fcp-12 : 0x2.4a17fdffffffep-12 : inexact-ok
+= sinh tonearest binary64 0x2.4a17fcp-12 : 0x2.4a17fep-12 : inexact-ok
+= sinh towardzero binary64 0x2.4a17fcp-12 : 0x2.4a17fdffffffep-12 : inexact-ok
+= sinh upward binary64 0x2.4a17fcp-12 : 0x2.4a17fep-12 : inexact-ok
+= sinh downward intel96 0x2.4a17fcp-12 : 0x2.4a17fdfffffff87cp-12 : inexact-ok
+= sinh tonearest intel96 0x2.4a17fcp-12 : 0x2.4a17fdfffffff88p-12 : inexact-ok
+= sinh towardzero intel96 0x2.4a17fcp-12 : 0x2.4a17fdfffffff87cp-12 : inexact-ok
+= sinh upward intel96 0x2.4a17fcp-12 : 0x2.4a17fdfffffff88p-12 : inexact-ok
+= sinh downward m68k96 0x2.4a17fcp-12 : 0x2.4a17fdfffffff87cp-12 : inexact-ok
+= sinh tonearest m68k96 0x2.4a17fcp-12 : 0x2.4a17fdfffffff88p-12 : inexact-ok
+= sinh towardzero m68k96 0x2.4a17fcp-12 : 0x2.4a17fdfffffff87cp-12 : inexact-ok
+= sinh upward m68k96 0x2.4a17fcp-12 : 0x2.4a17fdfffffff88p-12 : inexact-ok
+= sinh downward binary128 0x2.4a17fcp-12 : 0x2.4a17fdfffffff87e8d322786ec88p-12 : inexact-ok
+= sinh tonearest binary128 0x2.4a17fcp-12 : 0x2.4a17fdfffffff87e8d322786ec8ap-12 : inexact-ok
+= sinh towardzero binary128 0x2.4a17fcp-12 : 0x2.4a17fdfffffff87e8d322786ec88p-12 : inexact-ok
+= sinh upward binary128 0x2.4a17fcp-12 : 0x2.4a17fdfffffff87e8d322786ec8ap-12 : inexact-ok
+= sinh downward ibm128 0x2.4a17fcp-12 : 0x2.4a17fdfffffff87e8d322786ecp-12 : inexact-ok
+= sinh tonearest ibm128 0x2.4a17fcp-12 : 0x2.4a17fdfffffff87e8d322786edp-12 : inexact-ok
+= sinh towardzero ibm128 0x2.4a17fcp-12 : 0x2.4a17fdfffffff87e8d322786ecp-12 : inexact-ok
+= sinh upward ibm128 0x2.4a17fcp-12 : 0x2.4a17fdfffffff87e8d322786edp-12 : inexact-ok
 sinh 0x2.c5d376167f4052f4p+12
 = sinh downward binary32 0x2.c5d378p+12 : 0xf.fffffp+124 : inexact-ok overflow errno-erange-ok
 = sinh tonearest binary32 0x2.c5d378p+12 : plus_infty : inexact-ok overflow errno-erange

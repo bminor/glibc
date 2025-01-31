@@ -83,7 +83,7 @@ __ieee754_sinhf (float x)
 	{					   /* |x| <= 0x1.250bfep-11 */
 	  if (__glibc_unlikely (ux < 0x66000000u)) /* |x| < 0x1p-24 */
 	    return fmaf (x, fabsf (x), x);
-	  if (__glibc_unlikely (st.uarg == asuint (ux)))
+	  if (__glibc_unlikely (st.uarg == ux))
 	    {
 	      float sgn = copysignf (1.0f, x);
 	      return sgn * st.rh + sgn * st.rl;
