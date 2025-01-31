@@ -15,8 +15,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-
 /* Default stack size.  */
 #define ARCH_STACK_DEFAULT_SIZE	(2 * 1024 * 1024)
 
