@@ -7291,6 +7291,8 @@ log10p1 -0x1p-125
 log10p1 -0x1p-1021
 log10p1 -0x1p-16381
 
+log10p1 0x1.27f7dap-17
+
 log10p1 0x7.2a4368p-4
 log10p1 0x6.d3a118p-4
 log10p1 0x5.03f228p+0
