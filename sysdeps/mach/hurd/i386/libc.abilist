@@ -82,6 +82,7 @@ GLIBC_2.12 pthread_mutexattr_setprotocol F
 GLIBC_2.12 pthread_mutexattr_setpshared F
 GLIBC_2.12 pthread_mutexattr_settype F
 GLIBC_2.12 pthread_self F
+GLIBC_2.12 pthread_setcancelstate F
 GLIBC_2.12 pthread_setcanceltype F
 GLIBC_2.12 pthread_setschedparam F
 GLIBC_2.12 pthread_sigmask F

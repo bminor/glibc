@@ -146,8 +146,6 @@ int __pthread_setspecific (pthread_key_t key, const void *value);
 int __pthread_key_delete (pthread_key_t key);
 int __pthread_once (pthread_once_t *once_control, void (*init_routine) (void));
 
-int __pthread_setcancelstate (int state, int *oldstate);
-
 int __pthread_getattr_np (pthread_t, pthread_attr_t *);
 int __pthread_attr_getstackaddr (const pthread_attr_t *__restrict __attr,
 				 void **__restrict __stackaddr);

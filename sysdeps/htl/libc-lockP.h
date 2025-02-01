@@ -75,7 +75,6 @@
 
 extern int __pthread_mutex_init (pthread_mutex_t *__mutex,
 				 const pthread_mutexattr_t *__mutex_attr);
-
 extern int __pthread_mutex_destroy (pthread_mutex_t *__mutex);
 libc_hidden_proto (__pthread_mutex_destroy)
 
@@ -113,6 +112,8 @@ extern int __pthread_atfork (void (*__prepare) (void),
 			     void (*__parent) (void),
 			     void (*__child) (void));
 
+extern int __pthread_setcancelstate (int state, int *oldstate);
+libc_hidden_proto (__pthread_setcancelstate)
 /* Make the pthread functions weak so that we can elide them from
    single-threaded processes.  */
 #if !defined(__NO_WEAK_PTHREAD_ALIASES) && !IS_IN (libpthread)
@@ -130,7 +131,6 @@ weak_extern (__pthread_getspecific)
 weak_extern (__pthread_once)
 weak_extern (__pthread_initialize)
 weak_extern (__pthread_atfork)
-weak_extern (__pthread_setcancelstate)
 # else
 #  pragma weak __pthread_rwlock_destroy
 #  pragma weak __pthread_rwlock_rdlock
@@ -144,7 +144,6 @@ weak_extern (__pthread_setcancelstate)
 #  pragma weak __pthread_once
 #  pragma weak __pthread_initialize
 #  pragma weak __pthread_atfork
-#  pragma weak __pthread_setcancelstate
 # endif
 #endif
 
