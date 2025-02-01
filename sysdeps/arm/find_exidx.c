@@ -15,6 +15,7 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <ldsodefs.h>
 #include <link.h>
 
 /* Find the exception index table containing PC.  */
@@ -23,7 +24,7 @@ _Unwind_Ptr
 __gnu_Unwind_Find_exidx (_Unwind_Ptr pc, int * pcount)
 {
   struct dl_find_object data;
-  if (__dl_find_object ((void *) pc, &data) < 0)
+  if (GLRO(dl_find_object) ((void *) pc, &data) < 0)
     return 0;
   *pcount = data.dlfo_eh_count;
   return (_Unwind_Ptr) data.dlfo_eh_frame;
