@@ -34,7 +34,6 @@ routines = \
   dl-addr \
   dl-addr-obj \
   dl-early_allocate \
-  dl-find_object \
   dl-iteratephdr \
   dl-libc \
   dl-origin \
@@ -62,6 +61,7 @@ dl-routines = \
   dl-exception \
   dl-execstack \
   dl-execstack-tunable \
+  dl-find_object \
   dl-fini \
   dl-init \
   dl-load \
