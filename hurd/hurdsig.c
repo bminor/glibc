@@ -1611,28 +1611,53 @@ _hurdsig_init (const int *intarray, size_t intarraysize)
 static void
 reauth_proc (mach_port_t new)
 {
-  mach_port_t ref, ignore;
+  error_t err;
+  mach_port_t ref, newproc;
 
   ref = __mach_reply_port ();
-  if (! HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
+  err = HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
 		       __proc_reauthenticate (port, ref,
-					      MACH_MSG_TYPE_MAKE_SEND)
-		       || __auth_user_authenticate (new, ref,
-						    MACH_MSG_TYPE_MAKE_SEND,
-						    &ignore))
-      && ignore != MACH_PORT_NULL)
-    __mach_port_deallocate (__mach_task_self (), ignore);
-  __mach_port_destroy (__mach_task_self (), ref);
+					      MACH_MSG_TYPE_MAKE_SEND));
+  if (err)
+    {
+      __mach_port_destroy (__mach_task_self (), ref);
+      return;
+    }
 
-  /* Set the owner of the process here too. */
-  __mutex_lock (&_hurd_id.lock);
-  if (!_hurd_check_ids ())
-    HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
-		   __proc_setowner (port,
-				    (_hurd_id.gen.nuids
-				     ? _hurd_id.gen.uids[0] : 0),
-				    !_hurd_id.gen.nuids));
-  __mutex_unlock (&_hurd_id.lock);
+  err = __auth_user_authenticate (new, ref,
+                                  MACH_MSG_TYPE_MAKE_SEND,
+                                  &newproc);
+  __mach_port_destroy (__mach_task_self (), ref);
+  if (err)
+    return;
+
+  if (newproc == MACH_PORT_NULL)
+    {
+      /* Old versions of the proc server did not recreate the process
+         port when reauthenticating, and passed MACH_PORT_NULL through
+         the auth server.  That must be what we're dealing with.  */
+
+      /* Set the owner of the process here too. */
+      __mutex_lock (&_hurd_id.lock);
+      if (!_hurd_check_ids ())
+	HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
+		       __proc_setowner (port,
+					(_hurd_id.gen.nuids
+					 ? _hurd_id.gen.uids[0] : 0),
+					!_hurd_id.gen.nuids));
+      __mutex_unlock (&_hurd_id.lock);
+
+      return;
+    }
+
+  err = __proc_reauthenticate_complete (newproc);
+  if (err)
+    {
+      __mach_port_deallocate (__mach_task_self (), newproc);
+      return;
+    }
+
+  _hurd_port_set (&_hurd_ports[INIT_PORT_PROC], newproc);
 
   (void) &reauth_proc;		/* Silence compiler warning.  */
 }
