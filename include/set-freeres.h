@@ -38,7 +38,6 @@
    Each free routines must be explicit listed below.  */
 
 /* From libc.so.  */
-extern void __dl_libc_freemem (void) attribute_hidden;
 extern void __hdestroy (void) attribute_hidden;
 extern void __gconv_cache_freemem (void) attribute_hidden;
 extern void __gconv_conf_freemem (void) attribute_hidden;
