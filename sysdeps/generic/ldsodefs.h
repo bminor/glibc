@@ -885,6 +885,11 @@ int _dl_catch_exception (struct dl_exception *exception,
 			 void (*operate) (void *), void *args);
 rtld_hidden_proto (_dl_catch_exception)
 
+/* Search NSID for a map with NAME.  If no such map is already loaded,
+   return NULL.  */
+struct link_map *_dl_lookup_map (Lmid_t nsid, const char *name)
+   attribute_hidden;
+
 /* Open the shared object NAME and map in its segments.
    LOADER's DT_RPATH is used in searching for NAME.
    If the object is already opened, returns its existing map.  */
@@ -892,6 +897,14 @@ extern struct link_map *_dl_map_object (struct link_map *loader,
 					const char *name,
 					int type, int trace_mode, int mode,
 					Lmid_t nsid) attribute_hidden;
+
+/* Like _dl_map_object, but assumes that NAME has not been loaded yet
+   (_dl_lookup_map returned NULL).  */
+struct link_map *_dl_map_new_object (struct link_map *loader,
+				     const char *name,
+				     int type, int trace_mode, int mode,
+					     Lmid_t nsid) attribute_hidden;
+
 
 /* Call _dl_map_object on the dependencies of MAP, and set up
    MAP->l_searchlist.  PRELOADS points to a vector of NPRELOADS previously
