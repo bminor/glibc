@@ -30,6 +30,7 @@
 #include <dl-extra_tls.h>
 #include <array_length.h>
 #include <elf/dl-tls_block_align.h>
+#include <dl-symbol-redir-ifunc.h>
 
 #ifdef SHARED
  #error makefile bug, this file is for static only

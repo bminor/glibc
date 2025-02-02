@@ -39,6 +39,12 @@
 
 #include <dl-extra_tls.h>
 
+/* This code is used during early startup when statically linked,
+   via __libc_setup_tls in csu/libc-tls.c.  */
+#ifndef SHARED
+# include <dl-symbol-redir-ifunc.h>
+#endif
+
 /* Surplus static TLS, GLRO(dl_tls_static_surplus), is used for
 
    - IE TLS in libc.so for all dlmopen namespaces except in the initial
