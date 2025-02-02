@@ -49,8 +49,7 @@ struct dl_open_args
 {
   const char *file;
   int mode;
-  /* This is the caller of the dlopen() function.  */
-  const void *caller_dlopen;
+  struct link_map *caller_map; /* Derived from the caller address.  */
   struct link_map *map;
   /* Namespace ID.  */
   Lmid_t nsid;
@@ -499,30 +498,6 @@ dl_open_worker_begin (void *a)
   struct dl_open_args *args = a;
   const char *file = args->file;
   int mode = args->mode;
-  struct link_map *call_map = NULL;
-
-  /* Determine the caller's map if necessary.  This is needed in case
-     we have a DST, when we don't know the namespace ID we have to put
-     the new object in, or when the file name has no path in which
-     case we need to look along the RUNPATH/RPATH of the caller.  */
-  const char *dst = strchr (file, '$');
-  if (dst != NULL || args->nsid == __LM_ID_CALLER
-      || strchr (file, '/') == NULL)
-    {
-      const void *caller_dlopen = args->caller_dlopen;
-
-      /* We have to find out from which object the caller is calling.
-	 By default we assume this is the main application.  */
-      call_map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
-
-      struct link_map *l = _dl_find_dso_for_object ((ElfW(Addr)) caller_dlopen);
-
-      if (l)
-	call_map = l;
-
-      if (args->nsid == __LM_ID_CALLER)
-	args->nsid = call_map->l_ns;
-    }
 
   /* The namespace ID is now known.  Keep track of whether libc.so was
      already loaded, to determine whether it is necessary to call the
@@ -539,7 +514,7 @@ dl_open_worker_begin (void *a)
 
   /* Load the named object.  */
   struct link_map *new;
-  args->map = new = _dl_map_object (call_map, file, lt_loaded, 0,
+  args->map = new = _dl_map_object (args->caller_map, file, lt_loaded, 0,
 				    mode | __RTLD_CALLMAP, args->nsid);
 
   /* If the pointer returned is NULL this means the RTLD_NOLOAD flag is
@@ -859,7 +834,6 @@ no more namespaces available for dlmopen()"));
   struct dl_open_args args;
   args.file = file;
   args.mode = mode;
-  args.caller_dlopen = caller_dlopen;
   args.map = NULL;
   args.nsid = nsid;
   /* args.libc_already_loaded is always assigned by dl_open_worker
@@ -867,6 +841,23 @@ no more namespaces available for dlmopen()"));
   args.argc = argc;
   args.argv = argv;
   args.env = env;
+
+  /* Determine the caller's map if necessary.  This is needed when we
+     don't know the namespace ID in which we have to put the new object,
+     in case we have a DST, or when the file name has no path in
+     which case we need to look along the RUNPATH/RPATH of the caller.  */
+  if (nsid == __LM_ID_CALLER || strchr (file, '$') != NULL
+      || strchr (file, '/') == NULL)
+    {
+      args.caller_map = _dl_find_dso_for_object ((ElfW(Addr)) caller_dlopen);
+      if (args.caller_map == NULL)
+	/* By default we assume this is the main application.  */
+	args.caller_map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
+      if (args.nsid == __LM_ID_CALLER)
+	args.nsid = args.caller_map->l_ns;
+    }
+  else
+    args.caller_map = NULL;
 
   struct dl_exception exception;
   int errcode = _dl_catch_exception (&exception, dl_open_worker, &args);
