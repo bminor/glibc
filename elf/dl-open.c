@@ -866,8 +866,10 @@ no more namespaces available for dlmopen()"));
   if (nsid == __LM_ID_CALLER || strchr (file, '$') != NULL
       || strchr (file, '/') == NULL)
     {
-      args.caller_map = _dl_find_dso_for_object ((ElfW(Addr)) caller_dlopen);
-      if (args.caller_map == NULL)
+      struct dl_find_object dlfo;
+      if (_dl_find_object ((void *) caller_dlopen, &dlfo) == 0)
+	args.caller_map = dlfo.dlfo_link_map;
+      else
 	/* By default we assume this is the main application.  */
 	args.caller_map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
       if (args.nsid == __LM_ID_CALLER)
