@@ -2532,6 +2532,31 @@ tan -1.57079697
 = tan tonearest ibm128 -0x1.921fc00ece4f02f278ade6ad9fp+0 : 0x1.7b91a0851bbbafa14cf21c2b5c8p+20 : inexact-ok
 = tan towardzero ibm128 -0x1.921fc00ece4f02f278ade6ad9fp+0 : 0x1.7b91a0851bbbafa14cf21c2b5cp+20 : inexact-ok
 = tan upward ibm128 -0x1.921fc00ece4f02f278ade6ad9fp+0 : 0x1.7b91a0851bbbafa14cf21c2b5c8p+20 : inexact-ok
+tan 0x1.ada6aap+27
+= tan downward binary32 0xd.6d355p+24 : 0x3.d00608p-4 : inexact-ok
+= tan tonearest binary32 0xd.6d355p+24 : 0x3.d00608p-4 : inexact-ok
+= tan towardzero binary32 0xd.6d355p+24 : 0x3.d00608p-4 : inexact-ok
+= tan upward binary32 0xd.6d355p+24 : 0x3.d0060cp-4 : inexact-ok
+= tan downward binary64 0xd.6d355p+24 : 0x3.d00608p-4 : inexact-ok
+= tan tonearest binary64 0xd.6d355p+24 : 0x3.d00608p-4 : inexact-ok
+= tan towardzero binary64 0xd.6d355p+24 : 0x3.d00608p-4 : inexact-ok
+= tan upward binary64 0xd.6d355p+24 : 0x3.d006080000002p-4 : inexact-ok
+= tan downward intel96 0xd.6d355p+24 : 0x3.d006080000000504p-4 : inexact-ok
+= tan tonearest intel96 0xd.6d355p+24 : 0x3.d006080000000508p-4 : inexact-ok
+= tan towardzero intel96 0xd.6d355p+24 : 0x3.d006080000000504p-4 : inexact-ok
+= tan upward intel96 0xd.6d355p+24 : 0x3.d006080000000508p-4 : inexact-ok
+= tan downward m68k96 0xd.6d355p+24 : 0x3.d006080000000504p-4 : inexact-ok
+= tan tonearest m68k96 0xd.6d355p+24 : 0x3.d006080000000508p-4 : inexact-ok
+= tan towardzero m68k96 0xd.6d355p+24 : 0x3.d006080000000504p-4 : inexact-ok
+= tan upward m68k96 0xd.6d355p+24 : 0x3.d006080000000508p-4 : inexact-ok
+= tan downward binary128 0xd.6d355p+24 : 0x3.d0060800000005067d16c1c9c15ap-4 : inexact-ok
+= tan tonearest binary128 0xd.6d355p+24 : 0x3.d0060800000005067d16c1c9c15ap-4 : inexact-ok
+= tan towardzero binary128 0xd.6d355p+24 : 0x3.d0060800000005067d16c1c9c15ap-4 : inexact-ok
+= tan upward binary128 0xd.6d355p+24 : 0x3.d0060800000005067d16c1c9c15cp-4 : inexact-ok
+= tan downward ibm128 0xd.6d355p+24 : 0x3.d0060800000005067d16c1c9c1p-4 : inexact-ok
+= tan tonearest ibm128 0xd.6d355p+24 : 0x3.d0060800000005067d16c1c9c1p-4 : inexact-ok
+= tan towardzero ibm128 0xd.6d355p+24 : 0x3.d0060800000005067d16c1c9c1p-4 : inexact-ok
+= tan upward ibm128 0xd.6d355p+24 : 0x3.d0060800000005067d16c1c9c2p-4 : inexact-ok
 tan 0x1p-5
 = tan downward binary32 0x8p-8 : 0x8.00aabp-8 : inexact-ok
 = tan tonearest binary32 0x8p-8 : 0x8.00aacp-8 : inexact-ok

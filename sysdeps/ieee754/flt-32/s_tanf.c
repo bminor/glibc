@@ -166,7 +166,7 @@ __tanf (float x)
       uint32_t sgn = t >> 31;
       for (int j = 0; j < array_length (st); j++)
 	{
-	  if (__glibc_unlikely (asfloat (st[j].arg) == ax))
+	  if (__glibc_unlikely (asuint (st[j].arg) == ax))
 	    {
 	      if (sgn)
 		return -st[j].rh - st[j].rl;
