@@ -1421,10 +1421,8 @@ cannot enable executable stack as shared object requires");
 
   /* When we profile the SONAME might be needed for something else but
      loading.  Add it right away.  */
-  if (__glibc_unlikely (GLRO(dl_profile) != NULL)
-      && l->l_info[DT_SONAME] != NULL)
-    add_name_to_object (l, ((const char *) D_PTR (l, l_info[DT_STRTAB])
-			    + l->l_info[DT_SONAME]->d_un.d_val));
+  if (__glibc_unlikely (GLRO(dl_profile) != NULL) && l_soname (l) != NULL)
+    add_name_to_object (l, l_soname (l));
 #else
   /* Audit modules only exist when linking is dynamic so ORIGNAME
      cannot be non-NULL.  */
@@ -1434,9 +1432,7 @@ cannot enable executable stack as shared object requires");
   /* If we have newly loaded libc.so, update the namespace
      description.  */
   if (GL(dl_ns)[nsid].libc_map == NULL
-      && l->l_info[DT_SONAME] != NULL
-      && strcmp (((const char *) D_PTR (l, l_info[DT_STRTAB])
-		  + l->l_info[DT_SONAME]->d_un.d_val), LIBC_SO) == 0)
+      && l_soname (l) != NULL && strcmp (l_soname(l), LIBC_SO) == 0)
     GL(dl_ns)[nsid].libc_map = l;
 
   /* _dl_close can only eventually undo the module ID assignment (via
@@ -1903,19 +1899,12 @@ _dl_lookup_map (Lmid_t nsid, const char *name)
 	continue;
       if (!_dl_name_match_p (name, l))
 	{
-	  const char *soname;
-
-	  if (__glibc_likely (l->l_soname_added)
-	      || l->l_info[DT_SONAME] == NULL)
-	    continue;
-
-	  soname = ((const char *) D_PTR (l, l_info[DT_STRTAB])
-		    + l->l_info[DT_SONAME]->d_un.d_val);
-	  if (strcmp (name, soname) != 0)
+	  if (__glibc_likely (l->l_soname_added) || l_soname (l) == NULL
+	      || strcmp (name, l_soname (l)) != 0)
 	    continue;
 
 	  /* We have a match on a new name -- cache it.  */
-	  add_name_to_object (l, soname);
+	  add_name_to_object (l, l_soname (l));
 	  l->l_soname_added = 1;
 	}
 

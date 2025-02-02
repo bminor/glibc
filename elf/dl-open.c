@@ -617,9 +617,7 @@ dl_open_worker_begin (void *a)
 	   Perform partial initialization in this case.  This must
 	   come after the symbol versioning initialization in
 	   _dl_check_map_versions.  */
-	if (map->l_info[DT_SONAME] != NULL
-	    && strcmp (((const char *) D_PTR (map, l_info[DT_STRTAB])
-			+ map->l_info[DT_SONAME]->d_un.d_val), LD_SO) == 0)
+	if (l_soname (map) != NULL && strcmp (l_soname (map), LD_SO) == 0)
 	  __rtld_static_init (map);
 #endif
       }

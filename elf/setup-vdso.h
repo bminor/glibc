@@ -76,13 +76,14 @@ setup_vdso (struct link_map *main_map __attribute__ ((unused)),
 
       /* Now that we have the info handy, use the DSO image's soname
 	 so this object can be looked up by name.  */
-      if (l->l_info[DT_SONAME] != NULL)
-	{
-	  char *dsoname = ((char *) D_PTR (l, l_info[DT_STRTAB])
-			   + l->l_info[DT_SONAME]->d_un.d_val);
-	  l->l_libname->name = dsoname;
-	  l->l_name = dsoname;
-	}
+      {
+	const char *dsoname = l_soname (l);
+	if (dsoname != NULL)
+	  {
+	    l->l_libname->name = dsoname;
+	    l->l_name = (char *) dsoname;
+	  }
+      }
 
       /* Add the vDSO to the object list.  */
       _dl_add_to_namespace_list (l, LM_ID_BASE);

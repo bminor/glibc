@@ -88,6 +88,18 @@ dl_relocate_ld (const struct link_map *l)
 #define D_PTR(map, i) \
   ((map)->i->d_un.d_ptr + (dl_relocate_ld (map) ? 0 : (map)->l_addr))
 
+/* Returns the soname string if the link map has a DT_SONAME tag, or
+   NULL if it does not.  */
+static inline const char *
+l_soname (const struct link_map *l)
+{
+  if (l->l_info[DT_SONAME] == NULL)
+    return NULL;
+  else
+    return ((const char *) D_PTR (l, l_info[DT_STRTAB])
+	    + l->l_info[DT_SONAME]->d_un.d_val);
+}
+
 /* Result of the lookup functions and how to retrieve the base address.  */
 typedef struct link_map *lookup_t;
 #define LOOKUP_VALUE(map) map

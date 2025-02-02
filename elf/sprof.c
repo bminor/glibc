@@ -530,10 +530,7 @@ load_shobj (const char *name)
     printf ("string table: %p\n", result->dynstrtab);
 
   /* Determine the soname.  */
-  if (map->l_info[DT_SONAME] == NULL)
-    result->soname = NULL;
-  else
-    result->soname = result->dynstrtab + map->l_info[DT_SONAME]->d_un.d_val;
+  result->soname = l_soname (map);
   if (do_test && result->soname != NULL)
     printf ("soname: %s\n", result->soname);
 
