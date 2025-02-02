@@ -492,6 +492,23 @@ call_dl_init (void *closure)
   _dl_init (args->map, args->argc, args->argv, args->env);
 }
 
+/* Return true if the object does not need any processing beyond the
+   l_direct_opencount update.  Needs to be kept in sync with the logic
+   in dl_open_worker_begin after the l->l_searchlist.r_list != NULL check.
+   MODE is the dlopen mode argument.  */
+static bool
+is_already_fully_open (struct link_map *map, int mode)
+{
+  return (map != NULL		/* An existing map was found.  */
+	  /* dlopen completed initialization of this map.  Maps with
+	     l_type == lt_library start out as partially initialized.  */
+	  && map->l_searchlist.r_list != NULL
+	  /* The object is already in the global scope if requested.  */
+	  && (!(mode & RTLD_GLOBAL) || map->l_global)
+	  /* The object is already NODELETE if requested.  */
+	  && (!(mode & RTLD_NODELETE) || map->l_nodelete_active));
+}
+
 static void
 dl_open_worker_begin (void *a)
 {
@@ -513,9 +530,10 @@ dl_open_worker_begin (void *a)
   _dl_debug_initialize (0, args->nsid);
 
   /* Load the named object.  */
-  struct link_map *new;
-  args->map = new = _dl_map_object (args->caller_map, file, lt_loaded, 0,
-				    mode | __RTLD_CALLMAP, args->nsid);
+  struct link_map *new = args->map;
+  if (new == NULL)
+    args->map = new = _dl_map_new_object (args->caller_map, file, lt_loaded, 0,
+					  mode | __RTLD_CALLMAP, args->nsid);
 
   /* If the pointer returned is NULL this means the RTLD_NOLOAD flag is
      set and the object is not already loaded.  */
@@ -532,7 +550,7 @@ dl_open_worker_begin (void *a)
   /* This object is directly loaded.  */
   ++new->l_direct_opencount;
 
-  /* It was already open.  */
+  /* It was already open.  See is_already_fully_open above.  */
   if (__glibc_unlikely (new->l_searchlist.r_list != NULL))
     {
       /* Let the user know about the opencount.  */
@@ -834,7 +852,6 @@ no more namespaces available for dlmopen()"));
   struct dl_open_args args;
   args.file = file;
   args.mode = mode;
-  args.map = NULL;
   args.nsid = nsid;
   /* args.libc_already_loaded is always assigned by dl_open_worker
      (before any explicit/non-local returns).  */
@@ -858,6 +875,15 @@ no more namespaces available for dlmopen()"));
     }
   else
     args.caller_map = NULL;
+
+  args.map = _dl_lookup_map (args.nsid, file);
+  if (is_already_fully_open (args.map, mode))
+    {
+      /* We can use the fast path.  */
+      ++args.map->l_direct_opencount;
+      __rtld_lock_unlock_recursive (GL(dl_load_lock));
+      return args.map;
+    }
 
   struct dl_exception exception;
   int errcode = _dl_catch_exception (&exception, dl_open_worker, &args);
