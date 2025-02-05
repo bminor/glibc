@@ -32,7 +32,7 @@
 /* Usually this test reproduces in a few iterations.  However, keep a high
    number of iterations in order to avoid return false-positives due to an
    overwhelmed/slow system.  */
-#define ITERATIONS 5000
+#define ITERATIONS 500000
 
 /* The goal of this test is to use fwrite () on a redirected and closed
    stdout.  A script will guarantee that stdout is redirected to another
@@ -50,7 +50,7 @@ main (void)
   size_t rc;
   /* Ensure the string we send has a new line because we're dealing
      with a lined-buffered stream.  */
-  const char *s = "hello\n";
+  const char *s = "hello world\n";
   const size_t len = strlen(s);
 
   /* Ensure that fwrite buffers the output before writing to stdout.  */
