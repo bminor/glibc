@@ -186,6 +186,9 @@ __statfs_link_max (int result, const struct statfs *fsbuf, const char *file,
     case LUSTRE_SUPER_MAGIC:
       return LUSTRE_LINK_MAX;
 
+    case BTRFS_SUPER_MAGIC:
+      return BTRFS_LINK_MAX;
+
     default:
       return LINUX_LINK_MAX;
     }

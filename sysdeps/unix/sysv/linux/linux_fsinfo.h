@@ -251,6 +251,7 @@
 #define XFS_SUPER_MAGIC		0x58465342
 
 /* Maximum link counts.  */
+#define BTRFS_LINK_MAX		65535
 #define COH_LINK_MAX		10000
 #define EXT2_LINK_MAX		32000
 #define EXT4_LINK_MAX		65000
