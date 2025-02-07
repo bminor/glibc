@@ -273,11 +273,6 @@ __condvar_cleanup_waiting (void *arg)
      (If the format of __wrefs is changed, update nptl_lock_constants.pysym
       and the pretty printers.)
    For each of the two groups, we have:
-   __g_refs: Futex waiter reference count.
-     * LSB is true if waiters should run futex_wake when they remove the
-       last reference.
-     * Reference count used by waiters concurrently with signalers that have
-       acquired the condvar-internal lock.
    __g_signals: The number of signals that can still be consumed, relative to
      the current g1_start.  (i.e. g1_start with the signal count added)
      * Used as a futex word by waiters.  Used concurrently by waiters and
