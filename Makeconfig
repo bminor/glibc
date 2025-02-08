@@ -639,7 +639,7 @@ link-libc-printers-tests = $(link-libc-rpath) \
 # This is how to find at build-time things that will be installed there.
 rpath-dirs = math elf dlfcn nss nis rt resolv mathvec support misc debug
 rpath-link = \
-$(common-objdir):$(subst $(empty) ,:,$(patsubst ../$(subdir),.,$(rpath-dirs:%=$(common-objpfx)%)))
+$(common-objdir):$(subst $(empty) ,:,$(patsubst ../$(subdir),.,$(rpath-dirs:%=$(common-objpfx)%))):$(gnulib-extralibdir)
 else  # build-static
 link-libc = $(common-objpfx)libc.a $(otherlibs) $(gnulib) $(common-objpfx)libc.a $(gnulib)
 link-libc-tests = $(common-objpfx)libc.a $(otherlibs) $(gnulib-tests) $(common-objpfx)libc.a $(gnulib-tests)
@@ -696,6 +696,11 @@ link-libc-static-tests = -Wl,--start-group $(common-objpfx)libc.a $(static-gnuli
 # some cases and it is preferable to link with libgcc_eh or libgcc_s
 # so that the testing is as similar as possible to how programs will
 # be built with the installed glibc.
+# This leads to moderate difficulties, also since distributions may
+# install libgcc_s.so in directories only found via ld.so.conf, e.g.
+# to be able to switch between gcc versions. We need to add the
+# corresponding directory to the library search path to make sure
+# our test programs can find it.
 #
 # Some architectures have architecture-specific systems for exception
 # handling that may involve undefined references to
@@ -713,6 +718,7 @@ libgcc_eh := -Wl,--as-needed -lgcc_s $(libunwind) -Wl,--no-as-needed
 gnulib-arch =
 gnulib = -lgcc $(gnulib-arch)
 gnulib-tests := -lgcc $(libgcc_eh)
+gnulib-extralibdir := $(shell dirname $$($(CC) -print-file-name=libgcc_s.so$(libgcc_s.so-version)))
 static-gnulib-arch =
 # By default, elf/static-stubs.o, instead of -lgcc_eh, is used to
 # statically link programs.  When --disable-shared is used, we use
@@ -785,10 +791,12 @@ endif
 
 # How to run a program we just linked with our library.
 # The program binary is assumed to be $(word 2,$^).
+# We may require additional libraries from gcc (e.g. libgcc_s.so for exception
+# handling), which unfortunately somewhat breaks the isolation.
 built-program-file = $(dir $(word 2,$^))$(notdir $(word 2,$^))
 rtld-prefix = $(elf-objpfx)$(rtld-installed-name)			      \
 	      --library-path						      \
-	      $(rpath-link)$(patsubst %,:%,$(sysdep-library-path))
+	      $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)):$(gnulib-extralibdir)
 ifeq (yes,$(build-shared))
 comma = ,
 sysdep-library-path = \
