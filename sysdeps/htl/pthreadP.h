@@ -33,8 +33,14 @@ extern void __pthread_init_static_tls (struct link_map *) attribute_hidden;
 
 extern int __pthread_barrierattr_destroy (pthread_barrierattr_t *__attr);
 libc_hidden_proto (__pthread_barrierattr_destroy)
+extern int __pthread_barrierattr_getpshared (const pthread_barrierattr_t *__attr,
+					   int *__pshared);
+libc_hidden_proto (__pthread_barrierattr_getpshared)
 extern int __pthread_barrierattr_init (pthread_barrierattr_t *__attr);
 libc_hidden_proto (__pthread_barrierattr_init)
+extern int __pthread_barrierattr_setpshared (pthread_barrierattr_t *__attr,
+					   int __pshared);
+libc_hidden_proto (__pthread_barrierattr_setpshared)
 extern int __pthread_mutex_init (pthread_mutex_t *__mutex, const pthread_mutexattr_t *__attr);
 libc_hidden_proto (__pthread_mutex_init)
 extern int __pthread_mutex_clocklock (pthread_mutex_t *__mutex, clockid_t __clockid,

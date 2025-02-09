@@ -18,11 +18,18 @@
 
 #include <pthread.h>
 #include <pt-internal.h>
+#include <shlib-compat.h>
 
 int
-pthread_barrierattr_getpshared (const pthread_barrierattr_t *attr,
+__pthread_barrierattr_getpshared (const pthread_barrierattr_t *attr,
 				int *pshared)
 {
   *pshared = attr->__pshared;
   return 0;
 }
+libc_hidden_def (__pthread_barrierattr_getpshared)
+versioned_symbol (libc, __pthread_barrierattr_getpshared, pthread_barrierattr_getpshared, GLIBC_2_42);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_42)
+compat_symbol (libpthread, __pthread_barrierattr_getpshared, pthread_barrierattr_getpshared, GLIBC_2_12);
+#endif

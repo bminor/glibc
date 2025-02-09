@@ -28,8 +28,6 @@ libpthread-routines := \
   pt-barrier-destroy \
   pt-barrier-init \
   pt-barrier-wait \
-  pt-barrierattr-getpshared \
-  pt-barrierattr-setpshared \
   pt-destroy-specific \
   pt-init-specific \
   pt-key-create \
@@ -160,7 +158,9 @@ routines := \
   pt-attr-setstacksize \
   pt-barrier \
   pt-barrierattr-destroy \
+  pt-barrierattr-getpshared \
   pt-barrierattr-init \
+  pt-barrierattr-setpshared \
   pt-block \
   pt-block-intr \
   pt-cond \
