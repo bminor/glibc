@@ -31,6 +31,8 @@ extern void __pthread_init_static_tls (struct link_map *) attribute_hidden;
 
 /* These represent the interface used by glibc itself.  */
 
+extern int __pthread_barrier_destroy (pthread_barrier_t *__barrier);
+libc_hidden_proto (__pthread_barrier_destroy)
 extern int __pthread_barrierattr_destroy (pthread_barrierattr_t *__attr);
 libc_hidden_proto (__pthread_barrierattr_destroy)
 extern int __pthread_barrierattr_getpshared (const pthread_barrierattr_t *__attr,

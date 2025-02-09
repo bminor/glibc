@@ -26,6 +26,7 @@ libc {
     pthread_attr_setscope;
     pthread_attr_setschedparam;
     pthread_attr_init;
+    pthread_barrier_destroy;
     pthread_barrierattr_destroy;
     pthread_barrierattr_getpshared;
     pthread_barrierattr_init;
@@ -128,6 +129,7 @@ libc {
   }
 
   GLIBC_2.42 {
+    pthread_barrier_destroy;
     pthread_barrierattr_destroy;
     pthread_barrierattr_getpshared;
     pthread_barrierattr_init;
@@ -210,7 +212,7 @@ libpthread {
 
     pthread_atfork;
 
-    pthread_barrier_destroy; pthread_barrier_init; pthread_barrier_wait;
+    pthread_barrier_init; pthread_barrier_wait;
 
     pthread_cancel;
 
