@@ -19,11 +19,11 @@
 #include <pthread.h>
 #include <string.h>
 #include <assert.h>
-
+#include <shlib-compat.h>
 #include <pt-internal.h>
 
 int
-pthread_barrier_init (pthread_barrier_t *barrier,
+__pthread_barrier_init (pthread_barrier_t *barrier,
 		      const pthread_barrierattr_t *attr, unsigned count)
 {
   ASSERT_TYPE_SIZE (pthread_barrier_t, __SIZEOF_PTHREAD_BARRIER_T);
@@ -51,3 +51,9 @@ pthread_barrier_init (pthread_barrier_t *barrier,
   *barrier->__attr = *attr;
   return 0;
 }
+libc_hidden_def (__pthread_barrier_init)
+versioned_symbol (libc, __pthread_barrier_init, pthread_barrier_init, GLIBC_2_42);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_42)
+compat_symbol (libpthread, __pthread_barrier_init, pthread_barrier_init, GLIBC_2_12);
+#endif
