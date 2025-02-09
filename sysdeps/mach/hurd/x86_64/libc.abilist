@@ -1531,6 +1531,7 @@ GLIBC_2.38 pthread_attr_setscope F
 GLIBC_2.38 pthread_attr_setstack F
 GLIBC_2.38 pthread_attr_setstackaddr F
 GLIBC_2.38 pthread_attr_setstacksize F
+GLIBC_2.38 pthread_barrierattr_destroy F
 GLIBC_2.38 pthread_cond_broadcast F
 GLIBC_2.38 pthread_cond_clockwait F
 GLIBC_2.38 pthread_cond_destroy F
@@ -2244,6 +2245,7 @@ GLIBC_2.41 pthread_mutexattr_setrobust F
 GLIBC_2.41 pthread_mutexattr_setrobust_np F
 GLIBC_2.41 pthread_mutexattr_settype F
 GLIBC_2.41 pthread_sigmask F
+GLIBC_2.42 pthread_barrierattr_destroy F
 GLIBC_2.42 pthread_mutex_consistent F
 GLIBC_2.42 pthread_mutex_consistent_np F
 GLIBC_2.42 pthread_mutex_getprioceiling F

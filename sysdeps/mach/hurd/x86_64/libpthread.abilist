@@ -42,7 +42,6 @@ GLIBC_2.38 mtx_unlock F
 GLIBC_2.38 pthread_barrier_destroy F
 GLIBC_2.38 pthread_barrier_init F
 GLIBC_2.38 pthread_barrier_wait F
-GLIBC_2.38 pthread_barrierattr_destroy F
 GLIBC_2.38 pthread_barrierattr_getpshared F
 GLIBC_2.38 pthread_barrierattr_init F
 GLIBC_2.38 pthread_barrierattr_setpshared F

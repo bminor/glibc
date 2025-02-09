@@ -25,7 +25,6 @@ GLIBC_2.12 pthread_atfork F
 GLIBC_2.12 pthread_barrier_destroy F
 GLIBC_2.12 pthread_barrier_init F
 GLIBC_2.12 pthread_barrier_wait F
-GLIBC_2.12 pthread_barrierattr_destroy F
 GLIBC_2.12 pthread_barrierattr_getpshared F
 GLIBC_2.12 pthread_barrierattr_init F
 GLIBC_2.12 pthread_barrierattr_setpshared F
