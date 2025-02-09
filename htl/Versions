@@ -147,6 +147,7 @@ libc {
     __pthread_attr_setstacksize;
     __pthread_attr_setstackaddr;
     __pthread_attr_setstack;
+    __pthread_default_barrierattr;
     __pthread_setcancelstate;
     __pthread_cond_broadcast;
     __pthread_cond_destroy;
