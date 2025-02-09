@@ -25,7 +25,6 @@ SYSDEPS := lockfile
 LCLHDRS :=
 
 libpthread-routines := \
-  pt-barrier-wait \
   pt-destroy-specific \
   pt-init-specific \
   pt-key-create \
@@ -157,6 +156,7 @@ routines := \
   pt-barrier \
   pt-barrier-destroy \
   pt-barrier-init \
+  pt-barrier-wait \
   pt-barrierattr-destroy \
   pt-barrierattr-getpshared \
   pt-barrierattr-init \
