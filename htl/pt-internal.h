@@ -328,7 +328,6 @@ libc_hidden_proto (__pthread_default_attr)
 
 /* Default barrier attributes.  */
 extern const struct __pthread_barrierattr __pthread_default_barrierattr;
-libc_hidden_proto (__pthread_default_barrierattr)
 
 /* Default rdlock attributes.  */
 extern const struct __pthread_rwlockattr __pthread_default_rwlockattr;
