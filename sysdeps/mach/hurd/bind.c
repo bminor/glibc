@@ -66,7 +66,7 @@ __bind  (int fd, __CONST_SOCKADDR_ARG addrarg, socklen_t len)
 	  if (! err)
 	    {
 	      enum retry_type doretry;
-	      char retryname[1024];
+	      string_t retryname;
 	      /* Get a port to the ifsock translator.  */
 	      err = __dir_lookup (node, "", 0, 0, &doretry, retryname, &ifsock);
 	      if (! err && (doretry != FS_RETRY_NORMAL || retryname[0] != '\0'))

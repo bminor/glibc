@@ -27,7 +27,7 @@ char *
 ttyname (int fd)
 {
   error_t err;
-  static char nodename[1024];	/* XXX */
+  static string_t nodename;
 
   if (err = HURD_DPORT_USE (fd, __term_get_nodename (port, nodename)))
     {

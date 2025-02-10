@@ -25,7 +25,7 @@
 char *
 getlogin (void)
 {
-  static char login[1024];	/* XXX */
+  static string_t login;
   error_t err;
 
   if (err = __USEPORT (PROC, __proc_getlogin (port, login)))

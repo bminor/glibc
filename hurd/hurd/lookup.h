@@ -138,7 +138,7 @@ error_t __hurd_file_name_lookup_retry (error_t (*use_init_port)
 					  string_t retry_name,
 					  mach_port_t *result),
 				       enum retry_type doretry,
-				       char retryname[1024],
+				       string_t retryname,
 				       int flags, mode_t mode,
 				       file_t *result);
 error_t hurd_file_name_lookup_retry (error_t (*use_init_port)
@@ -152,7 +152,7 @@ error_t hurd_file_name_lookup_retry (error_t (*use_init_port)
 					string_t retry_name,
 					mach_port_t *result),
 				     enum retry_type doretry,
-				     char retryname[1024],
+				     string_t retryname,
 				     int flags, mode_t mode,
 				     file_t *result);
 

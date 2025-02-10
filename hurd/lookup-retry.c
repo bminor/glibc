@@ -53,7 +53,7 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 				  retry_type *do_retry, string_t retry_name,
 				  mach_port_t *result),
 			       enum retry_type doretry,
-			       char retryname[1024],
+			       string_t retryname,
 			       int flags, mode_t mode,
 			       file_t *result)
 {

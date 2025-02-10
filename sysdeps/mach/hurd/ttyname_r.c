@@ -28,7 +28,7 @@ int
 __ttyname_r (int fd, char *buf, size_t buflen)
 {
   error_t err;
-  char nodename[1024];	/* XXX */
+  string_t nodename;
   size_t len;
 
   if (err = HURD_DPORT_USE (fd, __term_get_nodename (port, nodename)))

@@ -32,7 +32,7 @@ __readlinkat (int fd, const char *file_name, char *buf, size_t len)
   file_t file_stat;
   struct stat64 st;
   enum retry_type doretry;
-  char retryname[1024];
+  string_t retryname;
   file_t file;
   char *rbuf = buf;
   mach_msg_type_number_t nread = len;
