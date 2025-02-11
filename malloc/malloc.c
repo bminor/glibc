@@ -4005,6 +4005,9 @@ _int_malloc (mstate av, size_t bytes)
 		    {
 		      if (__glibc_unlikely (misaligned_chunk (tc_victim)))
 			malloc_printerr ("malloc(): unaligned fastbin chunk detected 3");
+		      size_t victim_tc_idx = csize2tidx (chunksize (tc_victim));
+		      if (__glibc_unlikely (tc_idx != victim_tc_idx))
+			malloc_printerr ("malloc(): chunk size mismatch in fastbin");
 		      if (SINGLE_THREAD_P)
 			*fb = REVEAL_PTR (tc_victim->fd);
 		      else
