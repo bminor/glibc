@@ -5764,6 +5764,7 @@ if test $ac_verc_fail = yes; then
 fi
 
 
+# Require GCC 12.1 to build.
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking if $CC is sufficient to build libc" >&5
 printf %s "checking if $CC is sufficient to build libc... " >&6; }
 if test ${libc_cv_compiler_ok+y}
@@ -5778,7 +5779,7 @@ int
 main (void)
 {
 
-#if !defined __GNUC__ || __GNUC__ < 6 || (__GNUC__ == 6 && __GNUC_MINOR__ < 2)
+#if !defined __GNUC__ || __GNUC__ < 12 || (__GNUC__ == 12 && __GNUC_MINOR__ < 1)
 #error insufficient compiler
 #endif
   ;
