@@ -42,7 +42,8 @@ LINE_PARSER
 
    STRING_FIELD (addr, isspace, 1);
    /* 'inet_network' does not add zeroes at the end if the network number
-      does not four byte values.  We add them ourselves if necessary.  */
+      does not contain four byte values.  We shift result ourselves if
+      necessary.  */
    cp = strchr (addr, '.');
    if (cp != NULL)
      {
@@ -56,20 +57,11 @@ LINE_PARSER
 	     ++n;
 	 }
      }
-   if (n < 4)
-     {
-       char *newp = (char *) alloca (strlen (addr) + (4 - n) * 2 + 1);
-       cp = stpcpy (newp, addr);
-       do
-	 {
-	   *cp++ = '.';
-	   *cp++ = '0';
-	 }
-       while (++n < 4);
-       *cp = '\0';
-       addr = newp;
-     }
    result->n_net = __inet_network (addr);
+   if (result->n_net == INADDR_NONE)
+     return 0;
+   if (n < 4)
+     result->n_net <<= 8 * (4 - n);
    result->n_addrtype = AF_INET;
 
  })

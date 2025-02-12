@@ -75,6 +75,7 @@ struct support_chroot_configuration
   const char *hosts;            /* /etc/hosts.  */
   const char *host_conf;        /* /etc/host.conf.  */
   const char *aliases;          /* /etc/aliases.  */
+  const char *networks;         /* /etc/networks.  */
 };
 
 /* The result of the creation of a chroot.  */
@@ -92,6 +93,7 @@ struct support_chroot
   char *path_hosts;             /* /etc/hosts.  */
   char *path_host_conf;         /* /etc/host.conf.  */
   char *path_aliases;           /* /etc/aliases.  */
+  char *path_networks;          /* /etc/networks.  */
 };
 
 /* Create a chroot environment.  The returned data should be freed

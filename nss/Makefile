@@ -367,6 +367,7 @@ tests += tst-nss-files-hosts-multi
 tests += tst-nss-files-hosts-getent
 tests += tst-nss-files-alias-leak
 tests += tst-nss-files-alias-truncated
+tests += tst-nss-files-network
 # tst_fgetgrent currently only works with shared libraries
 test-srcs :=  tst_fgetgrent
 ifeq ($(run-built-tests),yes)

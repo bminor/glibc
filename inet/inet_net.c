@@ -69,6 +69,8 @@ again:
 	if (*cp == 'x' || *cp == 'X')
 		digit = 0, base = 16, cp++;
 	while ((c = *cp) != 0) {
+		if (val > 0xff)
+			return (INADDR_NONE);
 		if (isdigit(c)) {
 			if (base == 8 && (c == '8' || c == '9'))
 				return (INADDR_NONE);
