@@ -61,7 +61,7 @@ expf_inline (svfloat32_t x, const svbool_t pg, const struct sv_expf_data *d)
   /* scale = 2^(n/N).  */
   svfloat32_t scale = svexpa (svreinterpret_u32 (z));
 
-  /* y = exp(r) - 1 ~= r + C0 r^2 + C1 r^3 + C2 r^4 + C3 r^5 + C4 r^6.  */
+  /* poly(r) = exp(r) - 1 ~= C0 r + C1 r^2 + C2 r^3 + C3 r^4 + C4 r^5.  */
   svfloat32_t p12 = svmla_lane (sv_f32 (d->c1), r, lane_consts, 2);
   svfloat32_t p34 = svmla_lane (sv_f32 (d->c3), r, lane_consts, 3);
   svfloat32_t r2 = svmul_x (svptrue_b32 (), r, r);
@@ -71,5 +71,4 @@ expf_inline (svfloat32_t x, const svbool_t pg, const struct sv_expf_data *d)
 
   return svmla_x (pg, scale, scale, poly);
 }
-
 #endif
