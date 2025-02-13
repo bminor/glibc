@@ -560,6 +560,13 @@ _dl_resize_dtv (dtv_t *dtv, size_t max_modid)
       if (newp == NULL)
 	oom ();
       memcpy (newp, &dtv[-1], (2 + oldsize) * sizeof (dtv_t));
+#ifdef SHARED
+      /* Auditors can trigger a DTV resize event while the full malloc
+	 is not yet in use.  Mark the new DTV allocation as the
+	 initial allocation.  */
+      if (!__rtld_malloc_is_complete ())
+	GL(dl_initial_dtv) = &newp[1];
+#endif
     }
   else
     {
