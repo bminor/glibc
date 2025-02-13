@@ -76,7 +76,7 @@ svfloat32_t SV_NAME_F1 (erfc) (svfloat32_t x, const svbool_t pg)
   svuint32_t i = svqadd (svreinterpret_u32 (z), dat->off_idx);
 
   /* Lookup erfc(r) and 2/sqrt(pi)*exp(-r^2) in tables.  */
-  i = svmul_x (pg, i, 2);
+  i = svlsl_x (svptrue_b32 (), i, 1);
   const float32_t *p = &__v_erfcf_data.tab[0].erfc - 2 * dat->off_arr;
   svfloat32_t erfcr = svld1_gather_index (pg, p, i);
   svfloat32_t scale = svld1_gather_index (pg, p + 1, i);
@@ -84,15 +84,15 @@ svfloat32_t SV_NAME_F1 (erfc) (svfloat32_t x, const svbool_t pg)
   /* erfc(x) ~ erfc(r) - scale * d * poly(r, d).  */
   svfloat32_t r = svsub_x (pg, z, shift);
   svfloat32_t d = svsub_x (pg, a, r);
-  svfloat32_t d2 = svmul_x (pg, d, d);
-  svfloat32_t r2 = svmul_x (pg, r, r);
+  svfloat32_t d2 = svmul_x (svptrue_b32 (), d, d);
+  svfloat32_t r2 = svmul_x (svptrue_b32 (), r, r);
 
   svfloat32_t coeffs = svld1rq (svptrue_b32 (), &dat->third);
-  svfloat32_t third = svdup_lane (coeffs, 0);
 
   svfloat32_t p1 = r;
-  svfloat32_t p2 = svmls_lane (third, r2, coeffs, 1);
-  svfloat32_t p3 = svmul_x (pg, r, svmla_lane (sv_f32 (-0.5), r2, coeffs, 0));
+  svfloat32_t p2 = svmls_lane (sv_f32 (dat->third), r2, coeffs, 1);
+  svfloat32_t p3
+      = svmul_x (svptrue_b32 (), r, svmla_lane (sv_f32 (-0.5), r2, coeffs, 0));
   svfloat32_t p4 = svmla_lane (sv_f32 (dat->two_over_five), r2, coeffs, 2);
   p4 = svmls_x (pg, sv_f32 (dat->tenth), r2, p4);
 
