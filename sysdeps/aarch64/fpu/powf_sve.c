@@ -26,7 +26,6 @@
 #define Tlogc __v_powf_data.logc
 #define Texp __v_powf_data.scale
 #define SignBias (1 << (V_POWF_EXP2_TABLE_BITS + 11))
-#define Shift 0x1.8p52
 #define Norm 0x1p23f /* 0x4b000000.  */
 
 /* Overall ULP error bound for pow is 2.6 ulp
@@ -36,7 +35,7 @@ static const struct data
   double log_poly[4];
   double exp_poly[3];
   float uflow_bound, oflow_bound, small_bound;
-  uint32_t sign_bias, sign_mask, subnormal_bias, off;
+  uint32_t sign_bias, subnormal_bias, off;
 } data = {
   /* rel err: 1.5 * 2^-30. Each coefficients is multiplied the value of
      V_POWF_EXP2_N.  */
@@ -53,7 +52,6 @@ static const struct data
   .small_bound = 0x1p-126f,
   .off = 0x3f35d000,
   .sign_bias = SignBias,
-  .sign_mask = 0x80000000,
   .subnormal_bias = 0x0b800000, /* 23 << 23.  */
 };
 
@@ -86,7 +84,7 @@ svisodd (svbool_t pg, svfloat32_t x)
 static inline svbool_t
 sv_zeroinfnan (svbool_t pg, svuint32_t i)
 {
-  return svcmpge (pg, svsub_x (pg, svmul_x (pg, i, 2u), 1),
+  return svcmpge (pg, svsub_x (pg, svadd_x (pg, i, i), 1),
 		  2u * 0x7f800000 - 1);
 }
 
@@ -150,9 +148,14 @@ powf_specialcase (float x, float y, float z)
 }
 
 /* Scalar fallback for special case routines with custom signature.  */
-static inline svfloat32_t
-sv_call_powf_sc (svfloat32_t x1, svfloat32_t x2, svfloat32_t y, svbool_t cmp)
+static svfloat32_t NOINLINE
+sv_call_powf_sc (svfloat32_t x1, svfloat32_t x2, svfloat32_t y)
 {
+  /* Special cases of x or y: zero, inf and nan.  */
+  svbool_t xspecial = sv_zeroinfnan (svptrue_b32 (), svreinterpret_u32 (x1));
+  svbool_t yspecial = sv_zeroinfnan (svptrue_b32 (), svreinterpret_u32 (x2));
+  svbool_t cmp = svorr_z (svptrue_b32 (), xspecial, yspecial);
+
   svbool_t p = svpfirst (cmp, svpfalse ());
   while (svptest_any (cmp, p))
     {
@@ -182,30 +185,30 @@ sv_powf_core_ext (const svbool_t pg, svuint64_t i, svfloat64_t z, svint64_t k,
 
   /* Polynomial to approximate log1p(r)/ln2.  */
   svfloat64_t logx = A (0);
-  logx = svmla_x (pg, A (1), r, logx);
-  logx = svmla_x (pg, A (2), r, logx);
-  logx = svmla_x (pg, A (3), r, logx);
-  logx = svmla_x (pg, y0, r, logx);
+  logx = svmad_x (pg, r, logx, A (1));
+  logx = svmad_x (pg, r, logx, A (2));
+  logx = svmad_x (pg, r, logx, A (3));
+  logx = svmad_x (pg, r, logx, y0);
   *pylogx = svmul_x (pg, y, logx);
 
   /* z - kd is in [-1, 1] in non-nearest rounding modes.  */
-  svfloat64_t kd = svadd_x (pg, *pylogx, Shift);
-  svuint64_t ki = svreinterpret_u64 (kd);
-  kd = svsub_x (pg, kd, Shift);
+  svfloat64_t kd = svrinta_x (svptrue_b64 (), *pylogx);
+  svuint64_t ki = svreinterpret_u64 (svcvt_s64_x (svptrue_b64 (), kd));
 
   r = svsub_x (pg, *pylogx, kd);
 
   /* exp2(x) = 2^(k/N) * 2^r ~= s * (C0*r^3 + C1*r^2 + C2*r + 1).  */
-  svuint64_t t
-      = svld1_gather_index (pg, Texp, svand_x (pg, ki, V_POWF_EXP2_N - 1));
-  svuint64_t ski = svadd_x (pg, ki, sign_bias);
-  t = svadd_x (pg, t, svlsl_x (pg, ski, 52 - V_POWF_EXP2_TABLE_BITS));
+  svuint64_t t = svld1_gather_index (
+      svptrue_b64 (), Texp, svand_x (svptrue_b64 (), ki, V_POWF_EXP2_N - 1));
+  svuint64_t ski = svadd_x (svptrue_b64 (), ki, sign_bias);
+  t = svadd_x (svptrue_b64 (), t,
+	       svlsl_x (svptrue_b64 (), ski, 52 - V_POWF_EXP2_TABLE_BITS));
   svfloat64_t s = svreinterpret_f64 (t);
 
   svfloat64_t p = C (0);
   p = svmla_x (pg, C (1), p, r);
   p = svmla_x (pg, C (2), p, r);
-  p = svmla_x (pg, s, p, svmul_x (pg, s, r));
+  p = svmla_x (pg, s, p, svmul_x (svptrue_b64 (), s, r));
 
   return p;
 }
@@ -219,19 +222,16 @@ sv_powf_core (const svbool_t pg, svuint32_t i, svuint32_t iz, svint32_t k,
 {
   const svbool_t ptrue = svptrue_b64 ();
 
-  /* Unpack and promote input vectors (pg, y, z, i, k and sign_bias) into two in
-     order to perform core computation in double precision.  */
+  /* Unpack and promote input vectors (pg, y, z, i, k and sign_bias) into two
+   * in order to perform core computation in double precision.  */
   const svbool_t pg_lo = svunpklo (pg);
   const svbool_t pg_hi = svunpkhi (pg);
-  svfloat64_t y_lo = svcvt_f64_x (
-      ptrue, svreinterpret_f32 (svunpklo (svreinterpret_u32 (y))));
-  svfloat64_t y_hi = svcvt_f64_x (
-      ptrue, svreinterpret_f32 (svunpkhi (svreinterpret_u32 (y))));
-  svfloat32_t z = svreinterpret_f32 (iz);
-  svfloat64_t z_lo = svcvt_f64_x (
-      ptrue, svreinterpret_f32 (svunpklo (svreinterpret_u32 (z))));
-  svfloat64_t z_hi = svcvt_f64_x (
-      ptrue, svreinterpret_f32 (svunpkhi (svreinterpret_u32 (z))));
+  svfloat64_t y_lo
+      = svcvt_f64_x (pg, svreinterpret_f32 (svunpklo (svreinterpret_u32 (y))));
+  svfloat64_t y_hi
+      = svcvt_f64_x (pg, svreinterpret_f32 (svunpkhi (svreinterpret_u32 (y))));
+  svfloat64_t z_lo = svcvt_f64_x (pg, svreinterpret_f32 (svunpklo (iz)));
+  svfloat64_t z_hi = svcvt_f64_x (pg, svreinterpret_f32 (svunpkhi (iz)));
   svuint64_t i_lo = svunpklo (i);
   svuint64_t i_hi = svunpkhi (i);
   svint64_t k_lo = svunpklo (k);
@@ -258,9 +258,9 @@ sv_powf_core (const svbool_t pg, svuint32_t i, svuint32_t iz, svint32_t k,
 /* Implementation of SVE powf.
    Provides the same accuracy as AdvSIMD powf, since it relies on the same
    algorithm. The theoretical maximum error is under 2.60 ULPs.
-   Maximum measured error is 2.56 ULPs:
-   SV_NAME_F2 (pow) (0x1.004118p+0, 0x1.5d14a4p+16) got 0x1.fd4bp+127
-						   want 0x1.fd4b06p+127.  */
+   Maximum measured error is 2.57 ULPs:
+   SV_NAME_F2 (pow) (0x1.031706p+0, 0x1.ce2ec2p+12) got 0x1.fff868p+127
+						   want 0x1.fff862p+127.  */
 svfloat32_t SV_NAME_F2 (pow) (svfloat32_t x, svfloat32_t y, const svbool_t pg)
 {
   const struct data *d = ptr_barrier (&data);
@@ -269,21 +269,19 @@ svfloat32_t SV_NAME_F2 (pow) (svfloat32_t x, svfloat32_t y, const svbool_t pg)
   svuint32_t viy0 = svreinterpret_u32 (y);
 
   /* Negative x cases.  */
-  svuint32_t sign_bit = svand_m (pg, vix0, d->sign_mask);
-  svbool_t xisneg = svcmpeq (pg, sign_bit, d->sign_mask);
+  svbool_t xisneg = svcmplt (pg, x, sv_f32 (0));
 
   /* Set sign_bias and ix depending on sign of x and nature of y.  */
-  svbool_t yisnotint_xisneg = svpfalse_b ();
+  svbool_t yint_or_xpos = pg;
   svuint32_t sign_bias = sv_u32 (0);
   svuint32_t vix = vix0;
   if (__glibc_unlikely (svptest_any (pg, xisneg)))
     {
       /* Determine nature of y.  */
-      yisnotint_xisneg = svisnotint (xisneg, y);
-      svbool_t yisint_xisneg = svisint (xisneg, y);
+      yint_or_xpos = svisint (xisneg, y);
       svbool_t yisodd_xisneg = svisodd (xisneg, y);
       /* ix set to abs(ix) if y is integer.  */
-      vix = svand_m (yisint_xisneg, vix0, 0x7fffffff);
+      vix = svand_m (yint_or_xpos, vix0, 0x7fffffff);
       /* Set to SignBias if x is negative and y is odd.  */
       sign_bias = svsel (yisodd_xisneg, sv_u32 (d->sign_bias), sv_u32 (0));
     }
@@ -294,8 +292,8 @@ svfloat32_t SV_NAME_F2 (pow) (svfloat32_t x, svfloat32_t y, const svbool_t pg)
   svbool_t cmp = svorr_z (pg, xspecial, yspecial);
 
   /* Small cases of x: |x| < 0x1p-126.  */
-  svbool_t xsmall = svaclt (pg, x, d->small_bound);
-  if (__glibc_unlikely (svptest_any (pg, xsmall)))
+  svbool_t xsmall = svaclt (yint_or_xpos, x, d->small_bound);
+  if (__glibc_unlikely (svptest_any (yint_or_xpos, xsmall)))
     {
       /* Normalize subnormal x so exponent becomes negative.  */
       svuint32_t vix_norm = svreinterpret_u32 (svmul_x (xsmall, x, Norm));
@@ -304,32 +302,35 @@ svfloat32_t SV_NAME_F2 (pow) (svfloat32_t x, svfloat32_t y, const svbool_t pg)
       vix = svsel (xsmall, vix_norm, vix);
     }
   /* Part of core computation carried in working precision.  */
-  svuint32_t tmp = svsub_x (pg, vix, d->off);
-  svuint32_t i = svand_x (pg, svlsr_x (pg, tmp, (23 - V_POWF_LOG2_TABLE_BITS)),
-			  V_POWF_LOG2_N - 1);
-  svuint32_t top = svand_x (pg, tmp, 0xff800000);
-  svuint32_t iz = svsub_x (pg, vix, top);
-  svint32_t k
-      = svasr_x (pg, svreinterpret_s32 (top), (23 - V_POWF_EXP2_TABLE_BITS));
+  svuint32_t tmp = svsub_x (yint_or_xpos, vix, d->off);
+  svuint32_t i = svand_x (
+      yint_or_xpos, svlsr_x (yint_or_xpos, tmp, (23 - V_POWF_LOG2_TABLE_BITS)),
+      V_POWF_LOG2_N - 1);
+  svuint32_t top = svand_x (yint_or_xpos, tmp, 0xff800000);
+  svuint32_t iz = svsub_x (yint_or_xpos, vix, top);
+  svint32_t k = svasr_x (yint_or_xpos, svreinterpret_s32 (top),
+			 (23 - V_POWF_EXP2_TABLE_BITS));
 
-  /* Compute core in extended precision and return intermediate ylogx results to
-      handle cases of underflow and underflow in exp.  */
+  /* Compute core in extended precision and return intermediate ylogx results
+   * to handle cases of underflow and underflow in exp.  */
   svfloat32_t ylogx;
-  svfloat32_t ret = sv_powf_core (pg, i, iz, k, y, sign_bias, &ylogx, d);
+  svfloat32_t ret
+      = sv_powf_core (yint_or_xpos, i, iz, k, y, sign_bias, &ylogx, d);
 
   /* Handle exp special cases of underflow and overflow.  */
-  svuint32_t sign = svlsl_x (pg, sign_bias, 20 - V_POWF_EXP2_TABLE_BITS);
+  svuint32_t sign
+      = svlsl_x (yint_or_xpos, sign_bias, 20 - V_POWF_EXP2_TABLE_BITS);
   svfloat32_t ret_oflow
-      = svreinterpret_f32 (svorr_x (pg, sign, asuint (INFINITY)));
+      = svreinterpret_f32 (svorr_x (yint_or_xpos, sign, asuint (INFINITY)));
   svfloat32_t ret_uflow = svreinterpret_f32 (sign);
-  ret = svsel (svcmple (pg, ylogx, d->uflow_bound), ret_uflow, ret);
-  ret = svsel (svcmpgt (pg, ylogx, d->oflow_bound), ret_oflow, ret);
+  ret = svsel (svcmple (yint_or_xpos, ylogx, d->uflow_bound), ret_uflow, ret);
+  ret = svsel (svcmpgt (yint_or_xpos, ylogx, d->oflow_bound), ret_oflow, ret);
 
   /* Cases of finite y and finite negative x.  */
-  ret = svsel (yisnotint_xisneg, sv_f32 (__builtin_nanf ("")), ret);
+  ret = svsel (yint_or_xpos, ret, sv_f32 (__builtin_nanf ("")));
 
-  if (__glibc_unlikely (svptest_any (pg, cmp)))
-    return sv_call_powf_sc (x, y, ret, cmp);
+  if (__glibc_unlikely (svptest_any (cmp, cmp)))
+    return sv_call_powf_sc (x, y, ret);
 
   return ret;
 }
