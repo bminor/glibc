@@ -23,7 +23,7 @@ static const struct data
 {
   float64_t poly[3];
   float64_t inv_ln2, ln2_hi, ln2_lo, shift, thres;
-  uint64_t index_mask, special_bound;
+  uint64_t special_bound;
 } data = {
   .poly = { 0x1.fffffffffffd4p-2, 0x1.5555571d6b68cp-3,
 	    0x1.5555576a59599p-5, },
@@ -35,14 +35,16 @@ static const struct data
   .shift = 0x1.8p+52,
   .thres = 704.0,
 
-  .index_mask = 0xff,
   /* 0x1.6p9, above which exp overflows.  */
   .special_bound = 0x4086000000000000,
 };
 
 static svfloat64_t NOINLINE
-special_case (svfloat64_t x, svfloat64_t y, svbool_t special)
+special_case (svfloat64_t x, svbool_t pg, svfloat64_t t, svbool_t special)
 {
+  svfloat64_t half_t = svmul_x (svptrue_b64 (), t, 0.5);
+  svfloat64_t half_over_t = svdivr_x (pg, t, 0.5);
+  svfloat64_t y = svadd_x (pg, half_t, half_over_t);
   return sv_call_f64 (cosh, x, y, special);
 }
 
@@ -60,12 +62,12 @@ exp_inline (svfloat64_t x, const svbool_t pg, const struct data *d)
 
   svuint64_t u = svreinterpret_u64 (z);
   svuint64_t e = svlsl_x (pg, u, 52 - V_EXP_TAIL_TABLE_BITS);
-  svuint64_t i = svand_x (pg, u, d->index_mask);
+  svuint64_t i = svand_x (svptrue_b64 (), u, 0xff);
 
   svfloat64_t y = svmla_x (pg, sv_f64 (d->poly[1]), r, d->poly[2]);
   y = svmla_x (pg, sv_f64 (d->poly[0]), r, y);
   y = svmla_x (pg, sv_f64 (1.0), r, y);
-  y = svmul_x (pg, r, y);
+  y = svmul_x (svptrue_b64 (), r, y);
 
   /* s = 2^(n/N).  */
   u = svld1_gather_index (pg, __v_exp_tail_data, i);
@@ -94,12 +96,12 @@ svfloat64_t SV_NAME_D1 (cosh) (svfloat64_t x, const svbool_t pg)
   /* Up to the point that exp overflows, we can use it to calculate cosh by
      exp(|x|) / 2 + 1 / (2 * exp(|x|)).  */
   svfloat64_t t = exp_inline (ax, pg, d);
-  svfloat64_t half_t = svmul_x (pg, t, 0.5);
-  svfloat64_t half_over_t = svdivr_x (pg, t, 0.5);
 
   /* Fall back to scalar for any special cases.  */
   if (__glibc_unlikely (svptest_any (pg, special)))
-    return special_case (x, svadd_x (pg, half_t, half_over_t), special);
+    return special_case (x, pg, t, special);
 
+  svfloat64_t half_t = svmul_x (svptrue_b64 (), t, 0.5);
+  svfloat64_t half_over_t = svdivr_x (pg, t, 0.5);
   return svadd_x (pg, half_t, half_over_t);
 }
