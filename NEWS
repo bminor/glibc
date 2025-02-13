@@ -23,7 +23,9 @@ Major new features:
 
 Deprecated and removed features, and other changes affecting compatibility:
 
-  [Add deprecations, removals and changes affecting compatibility here]
+* The glibc.rtld.execstack now supports a compatibility mode to allow
+  programs that require an executable stack through dynamic loaded
+  shared libraries.
 
 Changes to build and runtime requirements:
 

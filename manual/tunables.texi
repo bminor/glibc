@@ -365,8 +365,11 @@ change the main stack permission if kernel starts with a non-executable stack.
 The @code{glibc.rtld.execstack} can be used to control whether an executable
 stack is allowed from the main program.  Setting the value to @code{0} disables
 the ABI auto-negotiation (meaning no executable stacks even if the ABI or ELF
-header requires it), while @code{1} enables auto-negotiation (although the
-program might not need an executable stack).
+header requires it), @code{1} enables auto-negotiation (although the program
+might not need an executable stack), while @code{2} forces an executable
+stack at process start.  Tthis is provided for compatibility reasons, when
+the program dynamically loads modules with @code{dlopen} which require
+an executable stack.
 
 When executable stacks are not allowed, and if the main program requires it,
 the loader will fail with an error message.
@@ -380,7 +383,8 @@ of hardware capabilities and kernel configuration.
 @strong{NB:} Trying to load a dynamic shared library with @code{dlopen} or
 @code{dlmopen} that requires an executable stack will always fail if the
 main program does not require an executable stack at loading time.  This
-is enforced regardless of the tunable value.
+can be worked around by setting the tunable to @code{2}, where the stack is
+always executable.
 @end deftp
 
 @node Elision Tunables

@@ -138,7 +138,7 @@ glibc {
     execstack {
       type: INT_32
       minval: 0
-      maxval: 1
+      maxval: 2
       default: 1
     }
   }

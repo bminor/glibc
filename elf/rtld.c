@@ -1622,9 +1622,9 @@ dl_main (const ElfW(Phdr) *phdr,
 
   bool has_interp = rtld_setup_main_map (main_map);
 
-  if ((__glibc_unlikely (GL(dl_stack_flags)) & PF_X)
-      && TUNABLE_GET (glibc, rtld, execstack, int32_t, NULL) == 0)
-    _dl_fatal_printf ("Fatal glibc error: executable stack is not allowed\n");
+  /* Handle this after PT_GNU_STACK parse, because it updates dl_stack_flags
+     if required.  */
+  _dl_handle_execstack_tunable ();
 
   /* If the current libname is different from the SONAME, add the
      latter as well.  */
