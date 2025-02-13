@@ -695,6 +695,19 @@ extern const ElfW(Phdr) *_dl_phdr;
 extern size_t _dl_phnum;
 #endif
 
+/* Possible values for the glibc.rtld.execstack tunable.  */
+enum stack_tunable_mode
+  {
+    /* Do not allow executable stacks, even if program requires it.  */
+    stack_tunable_mode_disable = 0,
+    /* Follows either ABI requirement, or the PT_GNU_STACK value.  */
+    stack_tunable_mode_enable = 1,
+    /* Always enable an executable stack.  */
+    stack_tunable_mode_force = 2
+  };
+
+void _dl_handle_execstack_tunable (void) attribute_hidden;
+
 /* This function changes the permission of the memory region pointed
    by STACK_ENDP to executable and update the internal memory protection
    flags for future thread stack creation.  */
