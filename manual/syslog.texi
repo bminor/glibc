@@ -498,10 +498,7 @@ The symbols referred to in this section are declared in the file
 
 @deftypefun int setlogmask (int @var{mask})
 @standards{BSD, syslog.h}
-@safety{@prelim{}@mtunsafe{@mtasurace{:LogMask}}@asunsafe{}@acsafe{}}
-@c Read and modify are not guarded by syslog_lock, so concurrent changes
-@c or even uses are undefined.  This should use an atomic swap instead,
-@c at least for modifications.
+@safety{@prelim{}@mtsafe{}@asunsafe{}@acsafe{}}
 
 @code{setlogmask} sets a mask (the ``logmask'') that determines which
 future @code{syslog} calls shall be ignored.  If a program has not
