@@ -23,6 +23,7 @@
 #include <tls.h>
 #include <rseq-internal.h>
 #include <thread_pointer.h>
+#include <dl-symbol-redir-ifunc.h>
 
 #define TUNABLE_NAMESPACE pthread
 #include <dl-tunables.h>
