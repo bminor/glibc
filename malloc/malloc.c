@@ -4244,6 +4244,9 @@ _int_malloc (mstate av, size_t bytes)
                       fwd = bck;
                       bck = bck->bk;
 
+                      if (__glibc_unlikely (fwd->fd->bk_nextsize->fd_nextsize != fwd->fd))
+                        malloc_printerr ("malloc(): largebin double linked list corrupted (nextsize)");
+
                       victim->fd_nextsize = fwd->fd;
                       victim->bk_nextsize = fwd->fd->bk_nextsize;
                       fwd->fd->bk_nextsize = victim->bk_nextsize->fd_nextsize = victim;
