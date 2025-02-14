@@ -108,13 +108,12 @@ rseq_register_current_thread (struct pthread *self, bool do_rseq)
       if (size < RSEQ_AREA_SIZE_INITIAL)
         size = RSEQ_AREA_SIZE_INITIAL;
 
-      /* Initialize the rseq fields that are read by the kernel on
-         registration, there is no guarantee that struct pthread is
-         cleared on all architectures.  */
+      /* Initialize the whole rseq area to zero prior to registration.  */
+      memset (RSEQ_SELF (), 0, size);
+
+      /* Set the cpu_id field to RSEQ_CPU_ID_UNINITIALIZED, this is checked by
+         the kernel at registration when CONFIG_DEBUG_RSEQ is enabled.  */
       RSEQ_SETMEM (cpu_id, RSEQ_CPU_ID_UNINITIALIZED);
-      RSEQ_SETMEM (cpu_id_start, 0);
-      RSEQ_SETMEM (rseq_cs, 0);
-      RSEQ_SETMEM (flags, 0);
 
       int ret = INTERNAL_SYSCALL_CALL (rseq, RSEQ_SELF (), size, 0, RSEQ_SIG);
       if (!INTERNAL_SYSCALL_ERROR_P (ret))
