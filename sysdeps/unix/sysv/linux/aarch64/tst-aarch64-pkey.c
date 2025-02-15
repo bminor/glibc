@@ -55,6 +55,10 @@ do_test (void)
       if (errno == ENOSYS || errno == EINVAL)
         FAIL_UNSUPPORTED
           ("kernel or CPU does not support memory protection keys");
+      if (errno == ENOSPC)
+        FAIL_UNSUPPORTED
+          ("no keys available or kernel does not support memory"
+           " protection keys");
       FAIL_EXIT1 ("pkey_alloc: %m");
     }
 
