@@ -22,3 +22,4 @@
 const struct __pthread_rwlockattr __pthread_default_rwlockattr = {
   __pshared: PTHREAD_PROCESS_PRIVATE
 };
+libc_hidden_data_def (__pthread_default_rwlockattr)

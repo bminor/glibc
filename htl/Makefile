@@ -45,7 +45,6 @@ libpthread-routines := \
   pt-testcancel \
   pt-cancel \
   pt-mutex-transfer-np \
-  pt-rwlock-attr \
   pt-rwlockattr-init \
   pt-rwlockattr-destroy \
   pt-rwlockattr-getpshared \
@@ -201,6 +200,7 @@ routines := \
   pt-mutexattr-settype \
   pt-nthreads \
   pt-pthread_self \
+  pt-rwlock-attr \
   pt-self pt-equal \
   pt-setcancelstate \
   pt-setcanceltype \

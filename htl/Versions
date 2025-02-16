@@ -171,6 +171,7 @@ libc {
     __pthread_cond_wait;
     __pthread_condattr_init;
     __pthread_default_condattr;
+    __pthread_default_rwlockattr;
     __pthread_mutex_checklocked;
     __pthread_mutex_destroy;
     __pthread_mutex_init;

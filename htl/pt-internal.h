@@ -331,6 +331,7 @@ extern const struct __pthread_barrierattr __pthread_default_barrierattr;
 
 /* Default rdlock attributes.  */
 extern const struct __pthread_rwlockattr __pthread_default_rwlockattr;
+libc_hidden_proto (__pthread_default_rwlockattr)
 
 /* Default condition attributes.  */
 extern const struct __pthread_condattr __pthread_default_condattr;
