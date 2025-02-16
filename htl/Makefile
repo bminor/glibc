@@ -51,7 +51,6 @@ libpthread-routines := \
   pt-rwlock-wrlock \
   pt-rwlock-timedrdlock \
   pt-rwlock-timedwrlock \
-  pt-rwlock-unlock \
   pt-hurd-cond-wait \
   pt-hurd-cond-timedwait \
   pt-stack-alloc \
@@ -197,6 +196,7 @@ routines := \
   pt-rwlock-attr \
   pt-rwlock-tryrdlock \
   pt-rwlock-trywrlock \
+  pt-rwlock-unlock \
   pt-rwlockattr-destroy \
   pt-rwlockattr-getpshared \
   pt-rwlockattr-init \

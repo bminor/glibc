@@ -41,7 +41,6 @@ GLIBC_2.12 pthread_rwlock_init F
 GLIBC_2.12 pthread_rwlock_rdlock F
 GLIBC_2.12 pthread_rwlock_timedrdlock F
 GLIBC_2.12 pthread_rwlock_timedwrlock F
-GLIBC_2.12 pthread_rwlock_unlock F
 GLIBC_2.12 pthread_rwlock_wrlock F
 GLIBC_2.12 pthread_setconcurrency F
 GLIBC_2.12 pthread_setschedprio F

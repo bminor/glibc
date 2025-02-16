@@ -19,6 +19,7 @@
 #include <pthread.h>
 
 #include <pt-internal.h>
+#include <shlib-compat.h>
 
 /* Unlock *RWLOCK, rescheduling a waiting writer thread or, if there
    are no threads waiting for a write lock, rescheduling the reader
@@ -95,4 +96,9 @@ __pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
   __pthread_spin_unlock (&rwlock->__lock);
   return 0;
 }
-weak_alias (__pthread_rwlock_unlock, pthread_rwlock_unlock);
+libc_hidden_def (__pthread_rwlock_unlock)
+versioned_symbol (libc, __pthread_rwlock_unlock, pthread_rwlock_unlock, GLIBC_2_42);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_42)
+compat_symbol (libpthread, __pthread_rwlock_unlock, pthread_rwlock_unlock, GLIBC_2_12);
+#endif

@@ -32,7 +32,6 @@ static const struct pthread_functions pthread_functions = {
   .ptr_pthread_once = __pthread_once,
   .ptr_pthread_rwlock_rdlock = __pthread_rwlock_rdlock,
   .ptr_pthread_rwlock_wrlock = __pthread_rwlock_wrlock,
-  .ptr_pthread_rwlock_unlock = __pthread_rwlock_unlock,
   .ptr___pthread_key_create = __pthread_key_create,
   .ptr___pthread_getspecific = __pthread_getspecific,
   .ptr___pthread_setspecific = __pthread_setspecific,

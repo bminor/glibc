@@ -106,6 +106,7 @@ extern int __pthread_rwlock_trywrlock (pthread_rwlock_t *__rwlock);
 libc_hidden_proto (__pthread_rwlock_trywrlock)
 
 extern int __pthread_rwlock_unlock (pthread_rwlock_t *__rwlock);
+libc_hidden_proto (__pthread_rwlock_unlock)
 
 extern int __pthread_once (pthread_once_t *__once_control,
 			   void (*__init_routine) (void));
@@ -124,7 +125,6 @@ weak_extern (__pthread_rwlock_init)
 weak_extern (__pthread_rwlock_destroy)
 weak_extern (__pthread_rwlock_rdlock)
 weak_extern (__pthread_rwlock_wrlock)
-weak_extern (__pthread_rwlock_unlock)
 weak_extern (__pthread_key_create)
 weak_extern (__pthread_setspecific)
 weak_extern (__pthread_getspecific)
@@ -135,7 +135,6 @@ weak_extern (__pthread_atfork)
 #  pragma weak __pthread_rwlock_destroy
 #  pragma weak __pthread_rwlock_rdlock
 #  pragma weak __pthread_rwlock_wrlock
-#  pragma weak __pthread_rwlock_unlock
 #  pragma weak __pthread_key_create
 #  pragma weak __pthread_setspecific
 #  pragma weak __pthread_getspecific
