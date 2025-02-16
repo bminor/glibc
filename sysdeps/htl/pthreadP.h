@@ -114,6 +114,18 @@ libc_hidden_proto (__pthread_mutexattr_gettype)
 extern int __pthread_mutexattr_settype(pthread_mutexattr_t *__attr,
 				     int __type);
 libc_hidden_proto (__pthread_mutexattr_settype)
+extern int __pthread_rwlock_clockrdlock (pthread_rwlock_t *__rwlock,
+				       clockid_t __clockid, const struct timespec *__abstime);
+libc_hidden_proto (__pthread_rwlock_clockrdlock)
+extern int __pthread_rwlock_clockwrlock (pthread_rwlock_t *__rwlock,
+				       clockid_t __clockid, const struct timespec *__abstime);
+libc_hidden_proto (__pthread_rwlock_clockwrlock)
+extern int __pthread_rwlock_timedrdlock (struct __pthread_rwlock *__rwlock,
+				       const struct timespec *__abstime);
+libc_hidden_proto (__pthread_rwlock_timedrdlock)
+extern int __pthread_rwlock_timedwrlock (struct __pthread_rwlock *__rwlock,
+				       const struct timespec *__abstime);
+libc_hidden_proto (__pthread_rwlock_timedwrlock)
 extern int __pthread_rwlockattr_destroy (pthread_rwlockattr_t *__attr);
 libc_hidden_proto (__pthread_rwlockattr_destroy)
 extern int __pthread_rwlockattr_getpshared (const pthread_rwlockattr_t *__attr,

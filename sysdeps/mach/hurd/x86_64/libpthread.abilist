@@ -56,14 +56,8 @@ GLIBC_2.38 pthread_key_delete F
 GLIBC_2.38 pthread_kill F
 GLIBC_2.38 pthread_mutex_transfer_np F
 GLIBC_2.38 pthread_once F
-GLIBC_2.38 pthread_rwlock_clockrdlock F
-GLIBC_2.38 pthread_rwlock_clockwrlock F
 GLIBC_2.38 pthread_rwlock_destroy F
 GLIBC_2.38 pthread_rwlock_init F
-GLIBC_2.38 pthread_rwlock_rdlock F
-GLIBC_2.38 pthread_rwlock_timedrdlock F
-GLIBC_2.38 pthread_rwlock_timedwrlock F
-GLIBC_2.38 pthread_rwlock_wrlock F
 GLIBC_2.38 pthread_setconcurrency F
 GLIBC_2.38 pthread_setschedprio F
 GLIBC_2.38 pthread_setspecific F

@@ -63,9 +63,13 @@ libc {
     pthread_mutexattr_setprotocol;
     pthread_mutexattr_setpshared;
     pthread_mutexattr_settype;
+    pthread_rwlock_rdlock;
+    pthread_rwlock_timedrdlock;
+    pthread_rwlock_timedwrlock;
     pthread_rwlock_tryrdlock;
     pthread_rwlock_trywrlock;
     pthread_rwlock_unlock;
+    pthread_rwlock_wrlock;
     pthread_rwlockattr_destroy;
     pthread_rwlockattr_getpshared;
     pthread_rwlockattr_init;
@@ -109,6 +113,8 @@ libc {
 
     pthread_mutexattr_getrobust; pthread_mutexattr_getrobust_np;
     pthread_mutexattr_setrobust; pthread_mutexattr_setrobust_np;
+
+    pthread_rwlock_clockrdlock; pthread_rwlock_clockwrlock;
   }
 
   GLIBC_2.41 {
@@ -149,6 +155,12 @@ libc {
     pthread_mutex_getprioceiling;
     pthread_mutex_setprioceiling;
     pthread_mutex_trylock;
+    pthread_rwlock_clockrdlock;
+    pthread_rwlock_clockwrlock;
+    pthread_rwlock_rdlock;
+    pthread_rwlock_timedrdlock;
+    pthread_rwlock_timedwrlock;
+    pthread_rwlock_wrlock;
     pthread_rwlock_tryrdlock;
     pthread_rwlock_trywrlock;
     pthread_rwlock_unlock;
@@ -251,9 +263,7 @@ libpthread {
 
     pthread_once;
 
-    pthread_rwlock_destroy; pthread_rwlock_init; pthread_rwlock_rdlock;
-    pthread_rwlock_timedrdlock; pthread_rwlock_timedwrlock;
-    pthread_rwlock_wrlock;
+    pthread_rwlock_destroy; pthread_rwlock_init;
 
     pthread_setconcurrency;
     pthread_setschedprio; pthread_setspecific;
@@ -282,8 +292,6 @@ libpthread {
     call_once;
     cnd_broadcast; cnd_destroy; cnd_init; cnd_signal; cnd_timedwait; cnd_wait;
     tss_create; tss_delete; tss_get; tss_set;
-
-    pthread_rwlock_clockrdlock; pthread_rwlock_clockwrlock;
 
     pthread_tryjoin_np; pthread_timedjoin_np; pthread_clockjoin_np;
 

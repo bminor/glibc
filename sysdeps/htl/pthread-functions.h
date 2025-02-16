@@ -24,8 +24,6 @@
 void __pthread_exit (void *) __attribute__ ((__noreturn__));
 struct __pthread_cancelation_handler **__pthread_get_cleanup_stack (void);
 int __pthread_once (pthread_once_t *, void (*) (void));
-int __pthread_rwlock_rdlock (pthread_rwlock_t *);
-int __pthread_rwlock_wrlock (pthread_rwlock_t *);
 int __pthread_key_create (pthread_key_t *, void (*) (void *));
 void *__pthread_getspecific (pthread_key_t);
 int __pthread_setspecific (pthread_key_t, const void *);
@@ -42,8 +40,6 @@ struct pthread_functions
   void (*ptr___pthread_exit) (void *) __attribute__ ((__noreturn__));
   struct __pthread_cancelation_handler **(*ptr___pthread_get_cleanup_stack) (void);
   int (*ptr_pthread_once) (pthread_once_t *, void (*) (void));
-  int (*ptr_pthread_rwlock_rdlock) (pthread_rwlock_t *);
-  int (*ptr_pthread_rwlock_wrlock) (pthread_rwlock_t *);
   int (*ptr___pthread_key_create) (pthread_key_t *, void (*) (void *));
   void *(*ptr___pthread_getspecific) (pthread_key_t);
   int (*ptr___pthread_setspecific) (pthread_key_t, const void *);

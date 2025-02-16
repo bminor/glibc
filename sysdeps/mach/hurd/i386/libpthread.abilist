@@ -38,10 +38,6 @@ GLIBC_2.12 pthread_mutex_transfer_np F
 GLIBC_2.12 pthread_once F
 GLIBC_2.12 pthread_rwlock_destroy F
 GLIBC_2.12 pthread_rwlock_init F
-GLIBC_2.12 pthread_rwlock_rdlock F
-GLIBC_2.12 pthread_rwlock_timedrdlock F
-GLIBC_2.12 pthread_rwlock_timedwrlock F
-GLIBC_2.12 pthread_rwlock_wrlock F
 GLIBC_2.12 pthread_setconcurrency F
 GLIBC_2.12 pthread_setschedprio F
 GLIBC_2.12 pthread_setspecific F
@@ -83,8 +79,6 @@ GLIBC_2.32 mtx_timedlock F
 GLIBC_2.32 mtx_trylock F
 GLIBC_2.32 mtx_unlock F
 GLIBC_2.32 pthread_clockjoin_np F
-GLIBC_2.32 pthread_rwlock_clockrdlock F
-GLIBC_2.32 pthread_rwlock_clockwrlock F
 GLIBC_2.32 pthread_timedjoin_np F
 GLIBC_2.32 pthread_tryjoin_np F
 GLIBC_2.32 sem_clockwait F
