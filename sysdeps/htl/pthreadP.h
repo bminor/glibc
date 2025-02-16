@@ -114,6 +114,8 @@ libc_hidden_proto (__pthread_mutexattr_gettype)
 extern int __pthread_mutexattr_settype(pthread_mutexattr_t *__attr,
 				     int __type);
 libc_hidden_proto (__pthread_mutexattr_settype)
+extern int __pthread_rwlockattr_init (pthread_rwlockattr_t *__attr);
+libc_hidden_proto (__pthread_rwlockattr_init)
 
 extern int __pthread_cond_init (pthread_cond_t *cond,
 				const pthread_condattr_t *cond_attr);

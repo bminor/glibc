@@ -1579,6 +1579,7 @@ GLIBC_2.38 pthread_mutexattr_setpshared F
 GLIBC_2.38 pthread_mutexattr_setrobust F
 GLIBC_2.38 pthread_mutexattr_setrobust_np F
 GLIBC_2.38 pthread_mutexattr_settype F
+GLIBC_2.38 pthread_rwlockattr_init F
 GLIBC_2.38 pthread_self F
 GLIBC_2.38 pthread_setcancelstate F
 GLIBC_2.38 pthread_setcanceltype F
@@ -2263,6 +2264,7 @@ GLIBC_2.42 pthread_mutex_consistent_np F
 GLIBC_2.42 pthread_mutex_getprioceiling F
 GLIBC_2.42 pthread_mutex_setprioceiling F
 GLIBC_2.42 pthread_mutex_trylock F
+GLIBC_2.42 pthread_rwlockattr_init F
 HURD_CTHREADS_0.3 __cthread_getspecific F
 HURD_CTHREADS_0.3 __cthread_keycreate F
 HURD_CTHREADS_0.3 __cthread_setspecific F

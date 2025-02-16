@@ -69,7 +69,6 @@ GLIBC_2.38 pthread_rwlock_unlock F
 GLIBC_2.38 pthread_rwlock_wrlock F
 GLIBC_2.38 pthread_rwlockattr_destroy F
 GLIBC_2.38 pthread_rwlockattr_getpshared F
-GLIBC_2.38 pthread_rwlockattr_init F
 GLIBC_2.38 pthread_rwlockattr_setpshared F
 GLIBC_2.38 pthread_setconcurrency F
 GLIBC_2.38 pthread_setschedprio F
