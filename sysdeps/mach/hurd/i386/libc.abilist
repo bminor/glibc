@@ -89,6 +89,7 @@ GLIBC_2.12 pthread_mutexattr_setprotocol F
 GLIBC_2.12 pthread_mutexattr_setpshared F
 GLIBC_2.12 pthread_mutexattr_settype F
 GLIBC_2.12 pthread_rwlock_destroy F
+GLIBC_2.12 pthread_rwlock_init F
 GLIBC_2.12 pthread_rwlock_rdlock F
 GLIBC_2.12 pthread_rwlock_timedrdlock F
 GLIBC_2.12 pthread_rwlock_timedwrlock F
@@ -2597,6 +2598,7 @@ GLIBC_2.42 pthread_mutex_trylock F
 GLIBC_2.42 pthread_rwlock_clockrdlock F
 GLIBC_2.42 pthread_rwlock_clockwrlock F
 GLIBC_2.42 pthread_rwlock_destroy F
+GLIBC_2.42 pthread_rwlock_init F
 GLIBC_2.42 pthread_rwlock_rdlock F
 GLIBC_2.42 pthread_rwlock_timedrdlock F
 GLIBC_2.42 pthread_rwlock_timedwrlock F

@@ -19,9 +19,10 @@
 #include <pthread.h>
 #include <string.h>
 #include <pt-internal.h>
+#include <shlib-compat.h>
 
 int
-_pthread_rwlock_init (pthread_rwlock_t *rwlock,
+__pthread_rwlock_init (pthread_rwlock_t *rwlock,
 		      const pthread_rwlockattr_t *attr)
 {
   ASSERT_TYPE_SIZE (pthread_rwlock_t, __SIZEOF_PTHREAD_RWLOCK_T);
@@ -42,5 +43,9 @@ _pthread_rwlock_init (pthread_rwlock_t *rwlock,
   *rwlock->__attr = *attr;
   return 0;
 }
+libc_hidden_def (__pthread_rwlock_init)
+versioned_symbol (libc, __pthread_rwlock_init, pthread_rwlock_init, GLIBC_2_42);
 
-strong_alias (_pthread_rwlock_init, pthread_rwlock_init);
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_42)
+compat_symbol (libpthread, __pthread_rwlock_init, pthread_rwlock_init, GLIBC_2_12);
+#endif
