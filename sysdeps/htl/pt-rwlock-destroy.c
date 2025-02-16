@@ -18,11 +18,16 @@
 
 #include <pthread.h>
 #include <pt-internal.h>
+#include <shlib-compat.h>
 
 int
-_pthread_rwlock_destroy (pthread_rwlock_t *rwlock)
+__pthread_rwlock_destroy (pthread_rwlock_t *rwlock)
 {
   return 0;
 }
+libc_hidden_def (__pthread_rwlock_destroy)
+versioned_symbol (libc, __pthread_rwlock_destroy, pthread_rwlock_destroy, GLIBC_2_42);
 
-strong_alias (_pthread_rwlock_destroy, pthread_rwlock_destroy);
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_42)
+compat_symbol (libpthread, __pthread_rwlock_destroy, pthread_rwlock_destroy, GLIBC_2_12);
+#endif

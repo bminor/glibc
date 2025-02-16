@@ -63,6 +63,7 @@ libc {
     pthread_mutexattr_setprotocol;
     pthread_mutexattr_setpshared;
     pthread_mutexattr_settype;
+    pthread_rwlock_destroy;
     pthread_rwlock_rdlock;
     pthread_rwlock_timedrdlock;
     pthread_rwlock_timedwrlock;
@@ -154,6 +155,7 @@ libc {
     pthread_mutex_consistent; pthread_mutex_consistent_np;
     pthread_mutex_getprioceiling;
     pthread_mutex_setprioceiling;
+    pthread_rwlock_destroy;
     pthread_mutex_trylock;
     pthread_rwlock_clockrdlock;
     pthread_rwlock_clockwrlock;
@@ -263,7 +265,7 @@ libpthread {
 
     pthread_once;
 
-    pthread_rwlock_destroy; pthread_rwlock_init;
+    pthread_rwlock_init;
 
     pthread_setconcurrency;
     pthread_setschedprio; pthread_setspecific;
@@ -318,6 +320,6 @@ libpthread {
     __pthread_getattr_np;
     __pthread_enable_asynccancel;
     __pthread_disable_asynccancel;
-    _pthread_rwlock_destroy; _pthread_rwlock_init;
+    _pthread_rwlock_init;
   }
 }

@@ -46,7 +46,6 @@ libpthread-routines := \
   pt-cancel \
   pt-mutex-transfer-np \
   pt-rwlock-init \
-  pt-rwlock-destroy \
   pt-hurd-cond-wait \
   pt-hurd-cond-timedwait \
   pt-stack-alloc \
@@ -190,6 +189,7 @@ routines := \
   pt-nthreads \
   pt-pthread_self \
   pt-rwlock-attr \
+  pt-rwlock-destroy \
   pt-rwlock-rdlock \
   pt-rwlock-timedrdlock \
   pt-rwlock-timedwrlock \

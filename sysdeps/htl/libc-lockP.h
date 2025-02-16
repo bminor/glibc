@@ -94,6 +94,7 @@ extern int __pthread_rwlock_init (pthread_rwlock_t *__rwlock,
 				  const pthread_rwlockattr_t *__attr);
 
 extern int __pthread_rwlock_destroy (pthread_rwlock_t *__rwlock);
+libc_hidden_proto (__pthread_rwlock_destroy)
 
 extern int __pthread_rwlock_rdlock (pthread_rwlock_t *__rwlock);
 libc_hidden_proto (__pthread_rwlock_rdlock)
@@ -124,7 +125,6 @@ libc_hidden_proto (__pthread_setcancelstate)
 #if !defined(__NO_WEAK_PTHREAD_ALIASES) && !IS_IN (libpthread)
 # ifdef weak_extern
 weak_extern (__pthread_rwlock_init)
-weak_extern (__pthread_rwlock_destroy)
 weak_extern (__pthread_key_create)
 weak_extern (__pthread_setspecific)
 weak_extern (__pthread_getspecific)
@@ -132,7 +132,6 @@ weak_extern (__pthread_once)
 weak_extern (__pthread_initialize)
 weak_extern (__pthread_atfork)
 # else
-#  pragma weak __pthread_rwlock_destroy
 #  pragma weak __pthread_key_create
 #  pragma weak __pthread_setspecific
 #  pragma weak __pthread_getspecific
