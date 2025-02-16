@@ -1579,6 +1579,8 @@ GLIBC_2.38 pthread_mutexattr_setpshared F
 GLIBC_2.38 pthread_mutexattr_setrobust F
 GLIBC_2.38 pthread_mutexattr_setrobust_np F
 GLIBC_2.38 pthread_mutexattr_settype F
+GLIBC_2.38 pthread_rwlock_tryrdlock F
+GLIBC_2.38 pthread_rwlock_trywrlock F
 GLIBC_2.38 pthread_rwlockattr_destroy F
 GLIBC_2.38 pthread_rwlockattr_getpshared F
 GLIBC_2.38 pthread_rwlockattr_init F
@@ -2267,6 +2269,8 @@ GLIBC_2.42 pthread_mutex_consistent_np F
 GLIBC_2.42 pthread_mutex_getprioceiling F
 GLIBC_2.42 pthread_mutex_setprioceiling F
 GLIBC_2.42 pthread_mutex_trylock F
+GLIBC_2.42 pthread_rwlock_tryrdlock F
+GLIBC_2.42 pthread_rwlock_trywrlock F
 GLIBC_2.42 pthread_rwlockattr_destroy F
 GLIBC_2.42 pthread_rwlockattr_getpshared F
 GLIBC_2.42 pthread_rwlockattr_init F

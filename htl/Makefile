@@ -48,8 +48,6 @@ libpthread-routines := \
   pt-rwlock-init \
   pt-rwlock-destroy \
   pt-rwlock-rdlock \
-  pt-rwlock-tryrdlock \
-  pt-rwlock-trywrlock \
   pt-rwlock-wrlock \
   pt-rwlock-timedrdlock \
   pt-rwlock-timedwrlock \
@@ -197,6 +195,8 @@ routines := \
   pt-nthreads \
   pt-pthread_self \
   pt-rwlock-attr \
+  pt-rwlock-tryrdlock \
+  pt-rwlock-trywrlock \
   pt-rwlockattr-destroy \
   pt-rwlockattr-getpshared \
   pt-rwlockattr-init \

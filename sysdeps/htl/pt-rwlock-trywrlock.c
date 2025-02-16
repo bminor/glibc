@@ -18,12 +18,12 @@
 
 #include <pthread.h>
 #include <assert.h>
-
 #include <pt-internal.h>
+#include <shlib-compat.h>
 
 /* Try to acquire RWLOCK for writing.  */
 int
-pthread_rwlock_trywrlock (struct __pthread_rwlock *rwlock)
+__pthread_rwlock_trywrlock (struct __pthread_rwlock *rwlock)
 {
   __pthread_spin_wait (&rwlock->__lock);
   if (__pthread_spin_trylock (&rwlock->__held) == 0)
@@ -43,3 +43,9 @@ pthread_rwlock_trywrlock (struct __pthread_rwlock *rwlock)
 
   return EBUSY;
 }
+libc_hidden_def (__pthread_rwlock_trywrlock)
+versioned_symbol (libc, __pthread_rwlock_trywrlock, pthread_rwlock_trywrlock, GLIBC_2_42);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_42)
+compat_symbol (libpthread, __pthread_rwlock_trywrlock, pthread_rwlock_trywrlock, GLIBC_2_12);
+#endif
