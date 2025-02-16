@@ -45,8 +45,6 @@ GLIBC_2.12 pthread_rwlock_tryrdlock F
 GLIBC_2.12 pthread_rwlock_trywrlock F
 GLIBC_2.12 pthread_rwlock_unlock F
 GLIBC_2.12 pthread_rwlock_wrlock F
-GLIBC_2.12 pthread_rwlockattr_getpshared F
-GLIBC_2.12 pthread_rwlockattr_setpshared F
 GLIBC_2.12 pthread_setconcurrency F
 GLIBC_2.12 pthread_setschedprio F
 GLIBC_2.12 pthread_setspecific F

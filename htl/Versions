@@ -64,7 +64,9 @@ libc {
     pthread_mutexattr_setpshared;
     pthread_mutexattr_settype;
     pthread_rwlockattr_destroy;
+    pthread_rwlockattr_getpshared;
     pthread_rwlockattr_init;
+    pthread_rwlockattr_setpshared;
     pthread_setcancelstate;
     pthread_setcanceltype;
     pthread_sigmask;
@@ -145,7 +147,9 @@ libc {
     pthread_mutex_setprioceiling;
     pthread_mutex_trylock;
     pthread_rwlockattr_destroy;
+    pthread_rwlockattr_getpshared;
     pthread_rwlockattr_init;
+    pthread_rwlockattr_setpshared;
   }
 
   GLIBC_PRIVATE {
@@ -245,9 +249,6 @@ libpthread {
     pthread_rwlock_timedrdlock; pthread_rwlock_timedwrlock;
     pthread_rwlock_tryrdlock; pthread_rwlock_trywrlock;
     pthread_rwlock_unlock; pthread_rwlock_wrlock;
-
-    pthread_rwlockattr_getpshared;
-    pthread_rwlockattr_setpshared;
 
     pthread_setconcurrency;
     pthread_setschedprio; pthread_setspecific;
