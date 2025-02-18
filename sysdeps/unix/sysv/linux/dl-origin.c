@@ -21,6 +21,7 @@
 #include <fcntl.h>
 #include <ldsodefs.h>
 #include <sysdep.h>
+#include <fd_to_filename.h>
 
 /* On Linux >= 2.1 systems which have the dcache implementation we can get
    the path of the application from the /proc/self/exe symlink.  Try this
@@ -71,4 +72,24 @@ _dl_get_origin (void)
     }
 
   return result;
+}
+
+/* On Linux, readlink on the magic symlinks in /proc/self/fd also has
+   the same behavior of returning the canonical path from the dcache.
+   If it does not work, we do not bother to canonicalize. */
+
+char *
+_dl_canonicalize (int fd)
+{
+  struct fd_to_filename fdfilename;
+  char canonical[PATH_MAX];
+  char *path = __fd_to_filename (fd, &fdfilename);
+  int size = INTERNAL_SYSCALL_CALL (readlinkat, AT_FDCWD, path,
+                                    canonical, PATH_MAX - 1);
+  if (size >= 0)
+    {
+      canonical[size] = '\0';
+      return __strdup (canonical);
+    }
+  return NULL;
 }

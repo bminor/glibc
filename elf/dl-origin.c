@@ -47,3 +47,9 @@ _dl_get_origin (void)
 
   return result;
 }
+
+char *
+_dl_canonicalize (int fd)
+{
+  return NULL;
+}

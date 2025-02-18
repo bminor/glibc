@@ -455,6 +455,7 @@ tests += \
   tst-noload \
   tst-non-directory-path \
   tst-null-argv \
+  tst-origin \
   tst-p_align1 \
   tst-p_align2 \
   tst-p_align3 \
@@ -761,6 +762,7 @@ modules-names += \
   libmarkermod5-3 \
   libmarkermod5-4 \
   libmarkermod5-5 \
+  liborigin-mod \
   libtracemod1-1 \
   libtracemod2-1 \
   libtracemod3-1 \
@@ -3397,3 +3399,24 @@ $(objpfx)tst-nolink-libc-2: $(objpfx)tst-nolink-libc.o
 	  -Wl,--dynamic-linker=$(objpfx)ld.so
 $(objpfx)tst-nolink-libc-2.out: $(objpfx)tst-nolink-libc-2 $(objpfx)ld.so
 	$< > $@ 2>&1; $(evaluate-test)
+
+
+$(objpfx)tst-origin: $(objpfx)tst-origin.o $(objpfx)liborigin-mod.so
+	$(LINK.o) -o $@ -B$(csu-objpfx) $(LDFLAGS.so) $< \
+		-Wl,-rpath,\$$ORIGIN \
+		-L$(subst :, -L,$(rpath-link)) -Wl,--no-as-needed -lorigin-mod
+$(objpfx)liborigin-mod.so: $(objpfx)liborigin-mod.os
+	$(LINK.o) -shared -o $@ -B$(csu-objpfx) $(LDFLAGS.so) \
+		$(LDFLAGS-soname-fname) \
+		$<
+$(objpfx)tst-origin.out: tst-origin.sh $(objpfx)tst-origin
+	$(SHELL) \
+		$< \
+		'$(common-objpfx)' \
+		'$(test-wrapper-env)' \
+		'$(run-program-env)' \
+		'$(rpath-link)' \
+		tst-origin \
+		liborigin-mod.so \
+		> $@; \
+	$(evaluate-test)
