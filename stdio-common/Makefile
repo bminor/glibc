@@ -59,6 +59,7 @@ headers := \
   # headers
 
 routines := \
+  _fitoa_word \
   _itoa \
   _itowa \
   asprintf \
@@ -663,6 +664,8 @@ CFLAGS-dprintf.c += $(config-cflags-wno-ignored-attributes)
 # off for non-shared builds.
 CFLAGS-_itoa.o = $(no-stack-protector)
 CFLAGS-_itoa.op = $(no-stack-protector)
+CFLAGS-_fitoa_word.o = $(no-stack-protector)
+CFLAGS-_fitoa_word.op = $(no-stack-protector)
 
 CFLAGS-scanf13.c += $(test-config-cflags-wno-fortify-source)
 

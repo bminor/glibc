@@ -1223,6 +1223,10 @@ extern struct link_map * _dl_get_dl_main_map (void) attribute_hidden;
 /* Find origin of the executable.  */
 extern const char *_dl_get_origin (void) attribute_hidden;
 
+/* Return the canonalized path name from the opened file descriptor FD,
+   or NULL otherwise.  */
+extern char * _dl_canonicalize (int fd) attribute_hidden;
+
 /* Count DSTs.  */
 extern size_t _dl_dst_count (const char *name) attribute_hidden;
 

@@ -3442,3 +3442,27 @@ $(objpfx)tst-dlopen-constructor-null: \
   $(objpfx)tst-dlopen-constructor-null-mod2.so
 $(objpfx)tst-dlopen-constructor-null-mod2.so: \
   $(objpfx)tst-dlopen-constructor-null-mod1.so
+
+ifeq ($(run-built-tests),yes)
+tests-special += $(objpfx)tst-origin.out
+endif
+CFLAGS-tst-origin.c += $(no-stack-protector)
+$(objpfx)tst-origin: $(objpfx)tst-origin.o $(objpfx)liborigin-mod.so
+	$(LINK.o) -o $@ -B$(csu-objpfx) $(LDFLAGS.so) $< \
+		-Wl,-rpath,\$$ORIGIN \
+		-L$(subst :, -L,$(rpath-link)) -Wl,--no-as-needed -lorigin-mod
+$(objpfx)liborigin-mod.so: $(objpfx)liborigin-mod.os
+	$(LINK.o) -shared -o $@ -B$(csu-objpfx) $(LDFLAGS.so) \
+		$(LDFLAGS-soname-fname) \
+		$<
+$(objpfx)tst-origin.out: tst-origin.sh $(objpfx)tst-origin
+	$(SHELL) \
+		$< \
+		'$(common-objpfx)' \
+		'$(test-wrapper-env)' \
+		'$(run-program-env)' \
+		'$(rpath-link)' \
+		tst-origin \
+		liborigin-mod.so \
+		> $@; \
+	$(evaluate-test)

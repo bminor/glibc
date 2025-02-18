@@ -162,38 +162,6 @@ const struct base_table_t _itoa_base_table[] attribute_hidden =
 };
 #endif
 
-#if IS_IN (libc)
-char *
-_itoa_word (_ITOA_WORD_TYPE value, char *buflim,
-	    unsigned int base, int upper_case)
-{
-  const char *digits = (upper_case
-			? _itoa_upper_digits
-			: _itoa_lower_digits);
-
-  switch (base)
-    {
-#define SPECIAL(Base)							      \
-    case Base:								      \
-      do								      \
-	*--buflim = digits[value % Base];				      \
-      while ((value /= Base) != 0);					      \
-      break
-
-      SPECIAL (10);
-      SPECIAL (16);
-      SPECIAL (8);
-    default:
-      do
-	*--buflim = digits[value % base];
-      while ((value /= base) != 0);
-    }
-  return buflim;
-}
-#undef SPECIAL
-#endif /* IS_IN (libc) */
-
-
 #if _ITOA_NEEDED
 char *
 _itoa (unsigned long long int value, char *buflim, unsigned int base,
@@ -459,17 +427,6 @@ _itoa (unsigned long long int value, char *buflim, unsigned int base,
   return buflim;
 }
 #endif
-
-char *
-_fitoa_word (_ITOA_WORD_TYPE value, char *buf, unsigned int base,
-	     int upper_case)
-{
-  char tmpbuf[sizeof (value) * 4];	      /* Worst case length: base 2.  */
-  char *cp = _itoa_word (value, tmpbuf + sizeof (value) * 4, base, upper_case);
-  while (cp < tmpbuf + sizeof (value) * 4)
-    *buf++ = *cp++;
-  return buf;
-}
 
 #if _ITOA_NEEDED
 char *
