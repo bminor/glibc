@@ -53,6 +53,7 @@ c++-bits-std_abs-h = @CXX_BITS_STD_ABS_H@
 enable-werror = @enable_werror@
 
 have-z-execstack = @libc_cv_z_execstack@
+have-no-error-execstack = @libc_cv_no_error_execstack@
 have-protected-data = @libc_cv_protected_data@
 have-insert = @libc_cv_insert@
 have-glob-dat-reloc = @libc_cv_has_glob_dat@

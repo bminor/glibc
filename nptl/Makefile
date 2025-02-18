@@ -701,6 +701,9 @@ $(objpfx)tst-execstack-threads.out: $(objpfx)tst-execstack-threads-mod.so
 LDFLAGS-tst-execstack-threads = -Wl,-z,noexecstack
 LDFLAGS-tst-execstack-threads-mod.so = -Wl,-z,execstack
 CFLAGS-tst-execstack-threads-mod.c += -Wno-trampolines
+ifeq ($(have-no-error-execstack),yes)
+LDFLAGS-tst-execstack-threads-mod.so += -Wl,--no-error-execstack
+endif
 
 tst-stackguard1-ARGS = --command "$(host-test-program-cmd) --child"
 tst-stackguard1-static-ARGS = --command "$(objpfx)tst-stackguard1-static --child"
