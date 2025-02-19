@@ -25,11 +25,15 @@
    floating-point type with the IEEE 754 binary128 format, and this
    glibc includes corresponding *f128 interfaces for it.  The required
    libgcc support was added some time after the basic compiler
-   support, for x86_64 and x86.  */
+   support, for x86_64 and x86.  Intel SYCL compiler doesn't support
+   _Float128: https://github.com/intel/llvm/issues/16903
+  */
 #if (defined __x86_64__							\
      ? __GNUC_PREREQ (4, 3)						\
      : (defined __GNU__ ? __GNUC_PREREQ (4, 5) : __GNUC_PREREQ (4, 4))) \
-    || __glibc_clang_prereq (3, 4)
+    || (__glibc_clang_prereq (3, 4)					\
+	&& (!defined __INTEL_LLVM_COMPILER				\
+	    || !defined SYCL_LANGUAGE_VERSION))
 # define __HAVE_FLOAT128 1
 #else
 # define __HAVE_FLOAT128 0
