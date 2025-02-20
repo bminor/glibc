@@ -498,7 +498,7 @@ The symbols referred to in this section are declared in the file
 
 @deftypefun int setlogmask (int @var{mask})
 @standards{BSD, syslog.h}
-@safety{@prelim{}@mtsafe{}@asunsafe{}@acsafe{}}
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 
 @code{setlogmask} sets a mask (the ``logmask'') that determines which
 future @code{syslog} calls shall be ignored.  If a program has not
