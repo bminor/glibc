@@ -1256,7 +1256,7 @@ It is a POSIX extension.
 
 @deftypefun void perror (const char *@var{message})
 @standards{ISO, stdio.h}
-@safety{@prelim{}@mtsafe{@mtasurace{:stderr}}@asunsafe{@asucorrupt{} @ascuintl{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
+@safety{@prelim{}@mtunsafe{@mtasurace{:stderr}}@asunsafe{@asucorrupt{} @ascuintl{} @ascuheap{} @asulock{}}@acunsafe{@acucorrupt{} @aculock{} @acsmem{} @acsfd{}}}
 @c Besides strerror_r's and some of fprintf's issues, if stderr is not
 @c oriented yet, create a new stream with a dup of stderr's fd and write
 @c to that instead of stderr, to avoid orienting it.
