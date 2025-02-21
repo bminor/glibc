@@ -1220,6 +1220,11 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 	  l->l_relro_addr = ph->p_vaddr;
 	  l->l_relro_size = ph->p_memsz;
 	  break;
+
+	case PT_GNU_MUTABLE:
+	  l->l_mutable_addr = ph->p_vaddr;
+	  l->l_mutable_size = ph->p_memsz;
+	  break;
 	}
 
     if (__glibc_unlikely (nloadcmds == 0))

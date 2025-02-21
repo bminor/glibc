@@ -37,7 +37,6 @@
 # define bump_num_cache_relocations() ((void) 0)
 #endif
 
-
 /* We are trying to perform a static TLS relocation in MAP, but it was
    dynamically loaded.  This can only work if there is enough surplus in
    the static TLS area already allocated for each running thread.  If this
@@ -372,6 +371,29 @@ cannot apply additional memory protection after relocation");
 }
 
 static void
+_dl_mseal_map_2 (const struct link_map *l, ElfW(Addr) map_start,
+		 ElfW(Addr) map_end)
+{
+  ElfW(Addr) mutable_start = 0, mutable_end = 0;
+  if (l->l_mutable_size != 0)
+    {
+      mutable_start = l->l_addr + l->l_mutable_addr;
+      mutable_end = mutable_start + l->l_mutable_size;
+    }
+
+  if (mutable_start >= map_start && mutable_end < map_end)
+    {
+      size_t seg1_size = mutable_start - map_start;
+      size_t seg2_size = map_end - mutable_end;
+      _dl_mseal ((void *) map_start, seg1_size, l->l_name);
+      if (seg2_size != 0)
+	_dl_mseal ((void *) mutable_end, seg2_size, l->l_name);
+    }
+  else
+    _dl_mseal ((void *) map_start, map_end - map_start, l->l_name);
+}
+
+static void
 _dl_mseal_map_1 (struct link_map *l, bool dep)
 {
   if (!GLRO(dl_enable_seal))
@@ -388,8 +410,7 @@ _dl_mseal_map_1 (struct link_map *l, bool dep)
     return;
 
   if (l->l_contiguous)
-     _dl_mseal ((void *) l->l_map_start, l->l_map_end - l->l_map_start,
-		l->l_name);
+    _dl_mseal_map_2 (l, l->l_map_start, l->l_map_end);
   else
     {
       /* We can use the PT_LOAD segments because even if relro splits the
@@ -404,7 +425,7 @@ _dl_mseal_map_1 (struct link_map *l, bool dep)
 	      ElfW(Addr) mapstart = l->l_addr
 		  + (ph->p_vaddr & ~(GLRO(dl_pagesize) - 1));
 	      ElfW(Addr) allocend = l->l_addr + ph->p_vaddr + ph->p_memsz;
-	      _dl_mseal ((void *) mapstart, allocend - mapstart, l->l_name);
+	      _dl_mseal_map_2 (l, mapstart, allocend);
 	    }
 	    break;
 	}

@@ -1209,6 +1209,11 @@ rtld_setup_main_map (struct link_map *main_map)
 	main_map->l_relro_addr = ph->p_vaddr;
 	main_map->l_relro_size = ph->p_memsz;
 	break;
+
+      case PT_GNU_MUTABLE:
+	main_map->l_mutable_addr = ph->p_vaddr;
+	main_map->l_mutable_size = ph->p_memsz;
+	break;
       }
   /* Process program headers again, but scan them backwards so
      that PT_NOTE can be skipped if PT_GNU_PROPERTY exits.  */

@@ -729,6 +729,7 @@ typedef struct
 #define PT_GNU_RELRO	0x6474e552	/* Read-only after relocation */
 #define PT_GNU_PROPERTY	0x6474e553	/* GNU property */
 #define PT_GNU_SFRAME	0x6474e554	/* SFrame segment.  */
+#define PT_GNU_MUTABLE	0x6474f555	/* Like bss, but not immutable.  */
 #define PT_LOSUNW	0x6ffffffa
 #define PT_SUNWBSS	0x6ffffffa	/* Sun Specific segment */
 #define PT_SUNWSTACK	0x6ffffffb	/* Stack segment */
@@ -1352,6 +1353,7 @@ typedef struct
 
 /* Note section name of program property.   */
 #define NOTE_GNU_PROPERTY_SECTION_NAME ".note.gnu.property"
+#define GNU_MUTABLE_SECTION_NAME       ".gnu.mutable"
 
 /* Values used in GNU .note.gnu.property notes (NT_GNU_PROPERTY_TYPE_0).  */
 

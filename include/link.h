@@ -353,6 +353,10 @@ struct link_map
     ElfW(Addr) l_relro_addr;
     size_t l_relro_size;
 
+    /* Information used to not memory seal after relocations are done.  */
+    ElfW(Addr) l_mutable_addr;
+    size_t l_mutable_size;
+
     unsigned long long int l_serial;
   };
 

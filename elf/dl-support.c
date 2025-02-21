@@ -334,6 +334,11 @@ _dl_non_dynamic_init (void)
 	_dl_main_map.l_relro_addr = ph->p_vaddr;
 	_dl_main_map.l_relro_size = ph->p_memsz;
 	break;
+
+      case PT_GNU_MUTABLE:
+	_dl_main_map.l_mutable_addr = ph->p_vaddr;
+	_dl_main_map.l_mutable_size = ph->p_memsz;
+	break;
       }
   /* Process program headers again, but scan them backwards so
      that PT_NOTE can be skipped if PT_GNU_PROPERTY exits.  */
