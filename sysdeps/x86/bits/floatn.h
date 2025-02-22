@@ -31,7 +31,7 @@
 #if (defined __x86_64__							\
      ? __GNUC_PREREQ (4, 3)						\
      : (defined __GNU__ ? __GNUC_PREREQ (4, 5) : __GNUC_PREREQ (4, 4))) \
-    || (__glibc_clang_prereq (3, 4)					\
+    || (__glibc_clang_prereq (3, 9)					\
 	&& (!defined __INTEL_LLVM_COMPILER				\
 	    || !defined SYCL_LANGUAGE_VERSION))
 # define __HAVE_FLOAT128 1
@@ -93,7 +93,7 @@ typedef _Complex float __cfloat128 __attribute__ ((__mode__ (__TC__)));
 /* The type _Float128 exists only since GCC 7.0.  */
 #  if !__GNUC_PREREQ (7, 0) \
       || (defined __cplusplus && !__GNUC_PREREQ (13, 0)) \
-      || __glibc_clang_prereq (3, 4)
+      || __glibc_clang_prereq (3, 9)
 typedef __float128 _Float128;
 #  endif
 
