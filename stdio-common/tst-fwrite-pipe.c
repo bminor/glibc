@@ -27,7 +27,7 @@
 /* Usually this test reproduces in a few iterations.  However, keep a high
    number of iterations in order to avoid return false-positives due to an
    overwhelmed/slow system.  */
-#define ITERATIONS 5000
+#define ITERATIONS 500000
 
 #define BUFFERSIZE 20
 
@@ -71,7 +71,7 @@ do_test (void)
     {
       /* Ensure the string we send has a new line because we're dealing
          with a lined-buffered stream.  */
-      const char *s = "hello\n";
+      const char *s = "hello world\n";
       size_t len = strlen (s);
       int i;
 
