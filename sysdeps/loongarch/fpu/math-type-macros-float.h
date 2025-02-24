@@ -1,5 +1,6 @@
-/* fminimum().  LoongArch version.
-   Copyright (C) 2022-2025 Free Software Foundation, Inc.
+/* Helper macros for float variants of type generic functions of libm,
+   LoongArch version.
+   Copyright (C) 2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,25 +17,5 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define NO_MATH_REDIRECT
-#include <math.h>
-#include <libm-alias-double.h>
-#include <fpu_control.h>
-
-double
-__fminimum (double x, double y)
-{
-  int x_cond;
-  int y_cond;
-  asm volatile ("fclass.d \t%0, %1" : "=f" (x_cond) : "f" (x));
-  asm volatile ("fclass.d \t%0, %1" : "=f" (y_cond) : "f" (y));
-
-  if (__glibc_unlikely((x_cond | y_cond) & _FCLASS_NAN))
-      return x * y;
-  else
-    {
-      asm volatile ("fmin.d \t%0, %1, %2" : "=f" (x) : "f" (x), "f" (y));
-      return x;
-    }
-}
-libm_alias_double (__fminimum, fminimum)
+#include_next <math-type-macros-float.h>
+#define INSN_FMT "s"
