@@ -173,6 +173,10 @@ static const struct test_ff_f_data remainder_test_data[] =
     TEST_ff_f (remainder, 2, -1, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (remainder, -2, 1, minus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_ff_f (remainder, -2, -1, minus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+
+    TEST_ff_f (remainder, 0x1.08001cp-2, 0x1p-24, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|XFAIL_ROUNDING_IBM128_LIBGCC),
+    TEST_ff_f (remainder, -0x1.003ffep-126, -0x1.8p-148, minus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|XFAIL_ROUNDING_IBM128_LIBGCC),
+    TEST_ff_f (remainder, 0x1.2c3224p+17, 0x1p-5, plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED|XFAIL_ROUNDING_IBM128_LIBGCC),
   };
 
 static void

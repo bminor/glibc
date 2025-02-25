@@ -56,6 +56,9 @@ __ieee754_remainderf(float x, float p)
 	    }
 	}
 	GET_FLOAT_WORD(hx,x);
+	/* Make sure x is not -0. This can occur only when x = p
+	   and rounding direction is towards negative infinity. */
+	if (hx==0x80000000) hx = 0;
 	SET_FLOAT_WORD(x,hx^sx);
 	return x;
 }
