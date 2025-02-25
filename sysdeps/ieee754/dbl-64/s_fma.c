@@ -244,6 +244,9 @@ __fma (double x, double y, double z)
   /* Reset rounding mode and test for inexact simultaneously.  */
   int j = libc_feupdateenv_test (&env, FE_INEXACT) != 0;
 
+  /* Ensure value of a1 + u.d is not reused.  */
+  a1 = math_opt_barrier (a1);
+
   if (__glibc_likely (adjust == 0))
     {
       if ((u.ieee.mantissa1 & 1) == 0 && u.ieee.exponent != 0x7ff)
