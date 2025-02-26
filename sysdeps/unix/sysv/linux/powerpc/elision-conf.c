@@ -21,6 +21,7 @@
 #include <elision-conf.h>
 #include <unistd.h>
 #include <dl-procinfo.h>
+#include <ldsodefs.h>
 
 #define TUNABLE_NAMESPACE elision
 #include <elf/dl-tunables.h>

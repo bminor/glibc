@@ -101,6 +101,8 @@ typedef struct
   dtv_t *dtv;
 } tcbhead_t;
 
+extern tcbhead_t __tcb attribute_hidden;
+
 # include <hwcapinfo.h>
 
 /* This is the size of the initial TCB.  */

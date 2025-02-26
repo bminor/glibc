@@ -28,9 +28,10 @@
 
 #include <sys/auxv.h>
 
-#include <dl-procinfo.h>
+#include <hwcapinfo.h>
 
 #ifndef STATIC_TST_HWCAP
+#include <cpu-features.h>
 #undef PROCINFO_DECL
 #include <dl-procinfo.c>
 #endif

@@ -24,6 +24,7 @@
 #include <dl-hwcap-info.h>
 #include <unistd.h>
 #include <string.h>
+#include <ldsodefs.h>
 
 static void set_hwcap_bit (unsigned long int *hwcap, bool disable,
 			   unsigned long int tcb_value, unsigned int value)
