@@ -19,7 +19,6 @@
 #include <fenv.h>
 #include <unistd.h>
 #include <ldsodefs.h>
-#include <dl-procinfo.h>
 
 int
 __feholdexcept (fenv_t *envp)

@@ -18,7 +18,6 @@
 
 #include <fenv.h>
 #include <unistd.h>
-#include <dl-procinfo.h>
 #include <ldsodefs.h>
 
 int

@@ -21,7 +21,6 @@
 #include <dl-auxv.h>
 #include <dl-osinfo.h>
 #include <dl-parse_auxv.h>
-#include <dl-procinfo.h>
 #include <dl-tunables.h>
 #include <elf.h>
 #include <errno.h>
@@ -221,10 +220,6 @@ _dl_show_auxv (void)
 
       assert (AT_NULL == 0);
       assert (AT_IGNORE == 1);
-
-      /* Some entries are handled in a special way per platform.  */
-      if (_dl_procinfo (av->a_type, av->a_un.a_val) == 0)
-	continue;
 
       if (idx < sizeof (auxvars) / sizeof (auxvars[0])
 	  && auxvars[idx].form != unknown)

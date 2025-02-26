@@ -141,7 +141,6 @@ END {
   print "# error \"Do not include this file directly.\""
   print "# error \"Include tunables.h instead.\""
   print "#endif"
-  print "#include <dl-procinfo.h>\n"
 
   # Now, the enum names
   print "\ntypedef enum"

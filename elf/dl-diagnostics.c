@@ -24,7 +24,6 @@
 #include <dl-diagnostics.h>
 #include <dl-hwcaps.h>
 #include <dl-main.h>
-#include <dl-procinfo.h>
 #include <dl-sysdep.h>
 #include <ldsodefs.h>
 #include "trusted-dirs.h"

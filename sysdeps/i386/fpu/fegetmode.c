@@ -20,7 +20,6 @@
 #include <fpu_control.h>
 #include <unistd.h>
 #include <ldsodefs.h>
-#include <dl-procinfo.h>
 
 int
 fegetmode (femode_t *modep)

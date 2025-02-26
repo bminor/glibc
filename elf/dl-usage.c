@@ -22,7 +22,6 @@
 #include <unistd.h>
 #include "version.h"
 
-#include <dl-procinfo.h>
 #include <dl-hwcaps.h>
 
 void

@@ -23,7 +23,6 @@
 #include <unistd.h>
 #include <ldsodefs.h>
 
-#include <dl-procinfo.h>
 #include <dl-hwcaps.h>
 
 /* This is the result of counting the substrings in a colon-separated

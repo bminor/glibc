@@ -25,7 +25,4 @@ enum
   HWCAP_X86_AVX512_1		= 1 << 2
 };
 
-/* We cannot provide a general printing function.  */
-#define _dl_procinfo(type, word) -1
-
 #endif /* dl-hwcap.h */

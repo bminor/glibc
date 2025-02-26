@@ -35,7 +35,6 @@
 #include <dl-machine.h>
 #include <libc-lock.h>
 #include <dl-cache.h>
-#include <dl-procinfo.h>
 #include <unsecvars.h>
 #include <hp-timing.h>
 #include <stackinfo.h>

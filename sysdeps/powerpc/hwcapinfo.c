@@ -18,7 +18,6 @@
 
 #include <unistd.h>
 #include <shlib-compat.h>
-#include <dl-procinfo.h>
 #include <cpu-features.c>
 
 tcbhead_t __tcb __attribute__ ((visibility ("hidden")));

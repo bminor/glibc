@@ -35,7 +35,6 @@
 #include <unsecvars.h>
 #include <dl-cache.h>
 #include <dl-osinfo.h>
-#include <dl-procinfo.h>
 #include <dl-prop.h>
 #include <dl-vdso.h>
 #include <dl-vdso-setup.h>

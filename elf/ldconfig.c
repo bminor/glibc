@@ -45,7 +45,6 @@
 #include <dl-hwcaps.h>
 #include <dl-is_dso.h>
 
-#include <dl-procinfo.h>
 
 #ifndef LD_SO_CONF
 # define LD_SO_CONF SYSCONFDIR "/ld.so.conf"

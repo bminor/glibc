@@ -43,7 +43,6 @@
 
 #include <entry.h>
 #include <dl-machine.h>
-#include <dl-procinfo.h>
 
 #include <dl-tunables.h>
 #include <not-errno.h>

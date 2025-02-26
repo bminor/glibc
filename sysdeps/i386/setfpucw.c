@@ -21,7 +21,6 @@
 #include <fenv.h>
 #include <unistd.h>
 #include <ldsodefs.h>
-#include <dl-procinfo.h>
 
 void
 __setfpucw (fpu_control_t set)

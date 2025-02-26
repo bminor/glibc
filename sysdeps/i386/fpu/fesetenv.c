@@ -21,7 +21,6 @@
 #include <assert.h>
 #include <unistd.h>
 #include <ldsodefs.h>
-#include <dl-procinfo.h>
 
 
 /* All exceptions, including the x86-specific "denormal operand"
