@@ -13,6 +13,10 @@ gen-as-const-headers += ucontext_i.sym
 endif
 
 ifeq ($(subdir),elf)
+dl-routines += \
+  dl-hwcap-info \
+  # dl-routines
+
 # Otherwise tst-tls-dlinfo fails due to tst-tlsmod2.so using static tls.
 ifeq ($(have-tls-get-addr-optimize),yes)
 LDFLAGS-tst-tlsmod2.so += -Wl,--no-tls-get-addr-optimize

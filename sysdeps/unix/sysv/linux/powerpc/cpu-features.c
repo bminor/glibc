@@ -21,8 +21,18 @@
 #include <cpu-features.h>
 #include <elf/dl-tunables.h>
 #include <dl-tunables-parse.h>
+#include <dl-hwcap-info.h>
 #include <unistd.h>
 #include <string.h>
+
+static void set_hwcap_bit (unsigned long int *hwcap, bool disable,
+			   unsigned long int tcb_value, unsigned int value)
+{
+  if (disable)
+    *hwcap &= ~value;
+  else
+    *hwcap |= tcb_value & value;
+}
 
 static void
 TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
@@ -55,32 +65,27 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
 	continue;
 
       size_t offset = 0;
-      for (int i = 0; i < array_length (hwcap_tunables); ++i)
+      for (int i = 0; i < __dl_hwcap_info_size; ++i)
 	{
-	  const char *hwcap_name = hwcap_names + offset;
+	  const char *hwcap_name = __dl_hwcap_names + offset;
 	  size_t hwcap_name_len = strlen (hwcap_name);
 	  /* Check the tunable name on the supported list.  */
 	  if (tunable_str_comma_strcmp (&t, hwcap_name, hwcap_name_len))
 	    {
-	      /* Update the hwcap and hwcap2 bits.  */
-	      if (t.disable)
+	      switch (__dl_hwcap_info[i].hwcap)
 		{
-		  /* Id is 1 for hwcap2 tunable.  */
-		  if (hwcap_tunables[i].id)
-		    cpu_features->hwcap2 &= ~(hwcap_tunables[i].mask);
-		  else
-		    cpu_features->hwcap &= ~(hwcap_tunables[i].mask);
+		case AT_HWCAP:
+		  set_hwcap_bit (&cpu_features->hwcap, t.disable, tcbv_hwcap,
+				 __dl_hwcap_info[i].value);
+		  break;
+
+		case AT_HWCAP2:
+		  set_hwcap_bit (&cpu_features->hwcap2, t.disable, tcbv_hwcap2,
+				 __dl_hwcap_info[i].value);
+		  break;
+
+		/* Ignore unknown values.  */
 		}
-	      else
-		{
-		  /* Enable the features and also check that no unsupported
-		     features were enabled by user.  */
-		  if (hwcap_tunables[i].id)
-		    cpu_features->hwcap2 |= (tcbv_hwcap2 & hwcap_tunables[i].mask);
-		  else
-		    cpu_features->hwcap |= (tcbv_hwcap & hwcap_tunables[i].mask);
-		}
-	      break;
 	    }
 	  offset += hwcap_name_len + 1;
 	}

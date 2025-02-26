@@ -1,4 +1,4 @@
-/* Initialize cpu feature data.  PowerPC version.
+/* HWCAP string information.  PowerPC version.
    Copyright (C) 2017-2025 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,19 +15,20 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef __CPU_FEATURES_POWERPC_H
-# define __CPU_FEATURES_POWERPC_H
+#ifndef _DL_HWCAP_INFO_H
+#define _DL_HWCAP_INFO_H
 
-#include <stdbool.h>
+#include <stddef.h>
 #include <sys/auxv.h>
 
-struct cpu_features
-{
-  bool use_cached_memopt;
-  unsigned long int hwcap;
-  unsigned long int hwcap2;
-  unsigned long int hwcap3;
-  unsigned long int hwcap4;
-};
+extern const char __dl_hwcap_names[] attribute_hidden;
 
-#endif /* __CPU_FEATURES_H  */
+struct hwcap_info_t
+{
+  unsigned int value;
+  int hwcap;
+};
+extern const struct hwcap_info_t __dl_hwcap_info[] attribute_hidden;
+extern size_t __dl_hwcap_info_size attribute_hidden;
+
+#endif
