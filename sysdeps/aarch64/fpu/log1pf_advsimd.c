@@ -93,6 +93,3 @@ VPCS_ATTR float32x4_t V_NAME_F1 (log1p) (float32x4_t x)
 
 libmvec_hidden_def (V_NAME_F1 (log1p))
 HALF_WIDTH_ALIAS_F1 (log1p)
-strong_alias (V_NAME_F1 (log1p), V_NAME_F1 (logp1))
-libmvec_hidden_def (V_NAME_F1 (logp1))
-HALF_WIDTH_ALIAS_F1 (logp1)

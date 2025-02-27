@@ -135,11 +135,4 @@ libmvec {
     _ZGVsMxv_tanh;
     _ZGVsMxv_tanhf;
   }
-  GLIBC_2.41 {
-    _ZGVnN2v_logp1;
-    _ZGVnN2v_logp1f;
-    _ZGVnN4v_logp1f;
-    _ZGVsMxv_logp1;
-    _ZGVsMxv_logp1f;
-  }
 }

@@ -128,8 +128,3 @@ GLIBC_2.40 _ZGVsMxvv_hypot F
 GLIBC_2.40 _ZGVsMxvv_hypotf F
 GLIBC_2.40 _ZGVsMxvv_pow F
 GLIBC_2.40 _ZGVsMxvv_powf F
-GLIBC_2.41 _ZGVnN2v_logp1 F
-GLIBC_2.41 _ZGVnN2v_logp1f F
-GLIBC_2.41 _ZGVnN4v_logp1f F
-GLIBC_2.41 _ZGVsMxv_logp1 F
-GLIBC_2.41 _ZGVsMxv_logp1f F

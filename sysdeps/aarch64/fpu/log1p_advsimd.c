@@ -58,5 +58,3 @@ VPCS_ATTR float64x2_t V_NAME_D1 (log1p) (float64x2_t x)
 
   return log1p_inline (x, &d->d);
 }
-
-strong_alias (V_NAME_D1 (log1p), V_NAME_D1 (logp1))

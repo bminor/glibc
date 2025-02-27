@@ -116,5 +116,3 @@ svfloat64_t SV_NAME_D1 (log1p) (svfloat64_t x, svbool_t pg)
 
   return y;
 }
-
-strong_alias (SV_NAME_D1 (log1p), SV_NAME_D1 (logp1))
