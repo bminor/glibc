@@ -51,7 +51,7 @@ select_memset_ifunc (void)
       if (IS_A64FX (midr) && zva_size == 256)
 	return __memset_a64fx;
 
-      if (zva_size == 64)
+      if (prefer_sve_ifuncs && zva_size == 64)
 	return __memset_sve_zva64;
     }
 
