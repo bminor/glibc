@@ -17,8 +17,9 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <unistd.h>
-#include <dl-procinfo.h>
 #include <cpu-features.h>
+#include <ldsodefs.h>
+#include <sys/auxv.h>
 
 static long int linux_sysconf (int name);
 

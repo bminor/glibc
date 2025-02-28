@@ -16,9 +16,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* The hwcap and platform strings are now in
-   sysdeps/s390/dl-procinfo-s390.c.  */
-
 /* Needed by sysdeps/unix/sysv/linux/dl-vdso-setup.c (as included from
    sysdeps/generic/ldsodefs.h).  */
 

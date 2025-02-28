@@ -25,7 +25,6 @@
 #include <sys/param.h>
 #include <string.h>
 #include <link.h>
-#include <sysdeps/s390/dl-procinfo.h>
 #include <dl-irel.h>
 #include <dl-static-tls.h>
 #include <dl-machine-rel.h>

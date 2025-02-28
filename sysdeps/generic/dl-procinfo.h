@@ -22,10 +22,4 @@
 /* We cannot provide a general printing function.  */
 #define _dl_procinfo(type, word) -1
 
-/* There are no hardware capabilities defined.  */
-#define _dl_hwcap_string(idx) ""
-
-/* We don't have any hardware capabilities.  */
-#define _DL_HWCAP_COUNT 0
-
 #endif /* dl-procinfo.h */

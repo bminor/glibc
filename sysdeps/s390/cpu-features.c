@@ -17,7 +17,8 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <cpu-features.h>
-
+#include <ldsodefs.h>
+#include <sys/auxv.h>
 #include <elf/dl-tunables.h>
 #include <ifunc-memcmp.h>
 #include <string.h>

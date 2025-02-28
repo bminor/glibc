@@ -18,6 +18,7 @@
 
 #include <dl-hwcaps.h>
 #include <ldsodefs.h>
+#include <sys/auxv.h>
 
 const char _dl_hwcaps_subdirs[] = "z16:z15:z14:z13";
 enum { subdirs_count = 4 }; /* Number of components in _dl_hwcaps_subdirs.  */

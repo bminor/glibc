@@ -25,13 +25,6 @@ enum
   HWCAP_X86_AVX512_1		= 1 << 2
 };
 
-static inline const char *
-__attribute__ ((unused))
-_dl_hwcap_string (int idx)
-{
-  return GLRO(dl_x86_hwcap_flags)[idx];
-};
-
 /* We cannot provide a general printing function.  */
 #define _dl_procinfo(type, word) -1
 

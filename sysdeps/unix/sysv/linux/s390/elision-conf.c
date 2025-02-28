@@ -20,7 +20,8 @@
 #include <pthreadP.h>
 #include <elision-conf.h>
 #include <unistd.h>
-#include <dl-procinfo.h>
+#include <ldsodefs.h>
+#include <sys/auxv.h>
 
 #define TUNABLE_NAMESPACE elision
 #include <elf/dl-tunables.h>
