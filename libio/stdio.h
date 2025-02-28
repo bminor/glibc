@@ -604,9 +604,6 @@ extern int fgetc_unlocked (FILE *__stream) __nonnull ((1));
 /* Write a character to STREAM.
 
    These functions are possible cancellation points and therefore not
-   marked with __THROW.
-
-   These functions is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern int fputc (int __c, FILE *__stream) __nonnull ((2));
 extern int putc (int __c, FILE *__stream) __nonnull ((2));
