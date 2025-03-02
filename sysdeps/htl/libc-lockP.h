@@ -114,6 +114,7 @@ libc_hidden_proto (__pthread_rwlock_unlock)
 
 extern int __pthread_once (pthread_once_t *__once_control,
 			   void (*__init_routine) (void));
+libc_hidden_proto (__pthread_once);
 
 extern int __pthread_atfork (void (*__prepare) (void),
 			     void (*__parent) (void),
@@ -128,14 +129,12 @@ libc_hidden_proto (__pthread_setcancelstate)
 weak_extern (__pthread_key_create)
 weak_extern (__pthread_setspecific)
 weak_extern (__pthread_getspecific)
-weak_extern (__pthread_once)
 weak_extern (__pthread_initialize)
 weak_extern (__pthread_atfork)
 # else
 #  pragma weak __pthread_key_create
 #  pragma weak __pthread_setspecific
 #  pragma weak __pthread_getspecific
-#  pragma weak __pthread_once
 #  pragma weak __pthread_initialize
 #  pragma weak __pthread_atfork
 # endif

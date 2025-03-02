@@ -31,7 +31,6 @@ libpthread-routines := \
   pt-key-delete \
   pt-getspecific \
   pt-setspecific \
-  pt-once \
   pt-alloc \
   pt-create \
   pt-getattr \
@@ -186,6 +185,7 @@ routines := \
   pt-mutexattr-setrobust \
   pt-mutexattr-settype \
   pt-nthreads \
+  pt-once \
   pt-pthread_self \
   pt-rwlock-attr \
   pt-rwlock-destroy \

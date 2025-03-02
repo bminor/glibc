@@ -20,6 +20,7 @@
 #include <atomic.h>
 
 #include <pt-internal.h>
+#include <shlib-compat.h>
 
 static void
 clear_once_control (void *arg)
@@ -53,4 +54,9 @@ __pthread_once (pthread_once_t *once_control, void (*init_routine) (void))
 
   return 0;
 }
-weak_alias (__pthread_once, pthread_once);
+libc_hidden_def (__pthread_once)
+versioned_symbol (libc, __pthread_once, pthread_once, GLIBC_2_42);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_42)
+compat_symbol (libpthread, __pthread_once, pthread_once, GLIBC_2_12);
+#endif
