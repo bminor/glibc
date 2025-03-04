@@ -1,4 +1,4 @@
-/* Threshold at which to diagnose ELOOP.  Hurd version.
+/* Minimum threshold at which to diagnose ELOOP.  Hurd version.
    Copyright (C) 2012-2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,8 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _ELOOP_THRESHOLD_H
-#define _ELOOP_THRESHOLD_H      1
+#ifndef _MIN_ELOOP_THRESHOLD_H
+#define _MIN_ELOOP_THRESHOLD_H      1
 
 /* Return the maximum number of symlink traversals to permit
    before diagnosing ELOOP.
@@ -28,10 +28,6 @@
    but instead use sysconf and the number can be changed here to
    affect sysconf's result.  */
 
-static inline unsigned int __attribute__ ((const))
-__eloop_threshold (void)
-{
-  return 32;
-}
+#define MIN_ELOOP_THRESHOLD 32
 
-#endif  /* eloop-threshold.h */
+#endif

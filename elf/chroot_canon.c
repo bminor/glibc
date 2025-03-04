@@ -23,8 +23,7 @@
 #include <errno.h>
 #include <stddef.h>
 #include <stdint.h>
-
-#include <eloop-threshold.h>
+#include <min-eloop-threshold.h>
 #include <ldconfig.h>
 
 #ifndef PATH_MAX
@@ -126,7 +125,7 @@ chroot_canon (const char *chroot, const char *name)
 	      char *buf = alloca (PATH_MAX);
 	      size_t len;
 
-	      if (++num_links > __eloop_threshold ())
+	      if (++num_links > MIN_ELOOP_THRESHOLD)
 		{
 		  __set_errno (ELOOP);
 		  goto error;

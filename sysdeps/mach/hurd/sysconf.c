@@ -19,8 +19,8 @@
 #include <limits.h>
 #include <unistd.h>
 
-#include <eloop-threshold.h>
+#include <min-eloop-threshold.h>
 
-#define SYMLOOP_MAX     (__eloop_threshold ())
+#define SYMLOOP_MAX     MIN_ELOOP_THRESHOLD
 
 #include <sysdeps/posix/sysconf.c>
