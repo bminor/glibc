@@ -1137,12 +1137,14 @@ tests += \
   tst-dlopen-pie \
   tst-dlopen-self-pie \
   tst-dlopen-tlsmodid-pie \
+  tst-pie-bss \
   tst-pie1 \
   tst-pie2 \
   # tests
 tests-pie += \
   tst-dlopen-self-pie \
   tst-dlopen-tlsmodid-pie \
+  tst-pie-bss \
   tst-pie1 \
   tst-pie2 \
   # tests-pie
@@ -1157,9 +1159,11 @@ LDFLAGS-tst-pie-address += $(load-address-ldflag)=$(pde-load-address)
 ifeq (yes,$(enable-static-pie))
 tests += \
   tst-pie-address-static \
+  tst-pie-bss-static \
   # tests
 tests-static += \
   tst-pie-address-static \
+  tst-pie-bss-static \
   # tests-static
 LDFLAGS-tst-pie-address-static += \
   $(load-address-ldflag)=$(pde-load-address)
@@ -2082,6 +2086,7 @@ $(objpfx)tst-array5-static-cmp.out: tst-array5-static.exp \
 
 CFLAGS-tst-pie1.c += $(pie-ccflag)
 CFLAGS-tst-pie2.c += $(pie-ccflag)
+CFLAGS-tst-pie-bss.c += $(pie-ccflag)
 CFLAGS-tst-pie-address.c += $(pie-ccflag)
 
 $(objpfx)tst-piemod1.so: $(libsupport)
