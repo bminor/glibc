@@ -131,6 +131,7 @@ sig = \
   longjmp-ts \
   preempt-sig \
   siginfo \
+  sigthreadmask \
   sigunwind \
   thread-cancel \
   thread-self \

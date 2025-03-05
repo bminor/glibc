@@ -10,6 +10,10 @@ libc_hidden_proto (_hurd_self_sigstate)
 
 #ifndef _ISOMAC
 
+#include <bits/types/error_t.h>
+extern error_t __sigthreadmask (struct hurd_sigstate *ss, int how,
+				const sigset_t *set, sigset_t *oset, int clear_pending);
+
 #if defined __USE_EXTERN_INLINES
 # if IS_IN (libc) || IS_IN (libpthread)
 #  include <sigsetops.h>

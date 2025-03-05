@@ -27,56 +27,7 @@
 int
 __sigprocmask (int how, const sigset_t *set, sigset_t *oset)
 {
-  struct hurd_sigstate *ss;
-  sigset_t old, new;
-  sigset_t pending;
-
-  if (set != NULL)
-    new = *set;
-
-  ss = _hurd_self_sigstate ();
-
-  _hurd_sigstate_lock (ss);
-
-  old = ss->blocked;
-
-  if (set != NULL)
-    {
-      switch (how)
-	{
-	case SIG_BLOCK:
-	  __sigorset (&ss->blocked, &ss->blocked, &new);
-	  break;
-
-	case SIG_UNBLOCK:
-	  ss->blocked &= ~new;
-	  break;
-
-	case SIG_SETMASK:
-	  ss->blocked = new;
-	  break;
-
-	default:
-	  _hurd_sigstate_unlock (ss);
-	  return __hurd_fail (EINVAL);
-	}
-
-      ss->blocked &= ~_SIG_CANT_MASK;
-    }
-
-  pending = _hurd_sigstate_pending (ss) & ~ss->blocked;
-
-  _hurd_sigstate_unlock (ss);
-
-  if (oset != NULL)
-    *oset = old;
-
-  if (pending)
-    /* Send a message to the signal thread so it
-       will wake up and check for pending signals.  */
-    __msg_sig_post (_hurd_msgport, 0, 0, __mach_task_self ());
-
-  return 0;
+  return __hurd_fail (__sigthreadmask (_hurd_self_sigstate (), how, set, oset, 0));
 }
 
 libc_hidden_def (__sigprocmask)
