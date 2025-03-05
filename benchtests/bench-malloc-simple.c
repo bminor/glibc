@@ -35,7 +35,7 @@
    multi-threaded using thread-arena, and main arena with SINGLE_THREAD_P
    false.  */
 
-#define NUM_ITERS 200000
+#define NUM_ITERS 5000000
 #define NUM_ALLOCS 4
 #define MAX_ALLOCS 1600
 
