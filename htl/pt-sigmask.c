@@ -19,15 +19,14 @@
 #include <pthread.h>
 #include <signal.h>
 #include <shlib-compat.h>
+#include <hurd/signal.h>
 #include <pt-internal.h>
 
 int
 __pthread_sigmask (int how, const sigset_t *set, sigset_t *oset)
 {
-  struct __pthread *self = _pthread_self ();
-
   /* Do not clear SELF's pending signals.  */
-  return __pthread_sigstate (self, how, set, oset, 0);
+  return __sigthreadmask (_hurd_self_sigstate (), how, set, oset, 0);
 }
 libc_hidden_def (__pthread_sigmask)
 versioned_symbol (libc, __pthread_sigmask, pthread_sigmask, GLIBC_2_41);

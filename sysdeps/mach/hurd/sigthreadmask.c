@@ -36,6 +36,8 @@ __sigthreadmask (struct hurd_sigstate *ss, int how,
     new = *set;
 
   assert (ss);
+  /* We are not supposed to change the global blocked state */
+  assert (ss != _hurd_global_sigstate);
 
   _hurd_sigstate_lock (ss);
 
