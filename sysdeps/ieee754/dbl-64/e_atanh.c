@@ -44,6 +44,11 @@
 
 static const double huge = 1e300;
 
+#ifndef SECTION
+# define SECTION
+#endif
+
+SECTION
 double
 __ieee754_atanh (double x)
 {
@@ -73,4 +78,7 @@ __ieee754_atanh (double x)
 
   return copysign (t, x);
 }
+
+#ifndef __ieee754_atanh
 libm_alias_finite (__ieee754_atanh, __atanh)
+#endif
