@@ -1,6 +1,7 @@
 ifeq ($(subdir),math)
 CFLAGS-e_asin-fma.c = -mfma -mavx2
 CFLAGS-e_atan2-fma.c = -mfma -mavx2
+CFLAGS-e_atanh-fma.c = -mfma -mavx2
 CFLAGS-e_exp-fma.c = -mfma -mavx2
 CFLAGS-e_log-fma.c = -mfma -mavx2
 CFLAGS-e_log2-fma.c = -mfma -mavx2
@@ -57,6 +58,7 @@ libm-sysdep_routines += \
   e_asin-fma \
   e_atan2-avx \
   e_atan2-fma \
+  e_atanh-fma \
   e_exp-avx \
   e_exp-fma \
   e_exp2f-fma \
