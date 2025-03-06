@@ -1,6 +1,7 @@
 ## args: double
 ## ret: double
 ## includes: math.h
+## name: workload-random
 0x1.5a2730bacd94ap-1
 -0x1.b57eb40fc048ep-21
 -0x1.c0b185fb450e2p-17
