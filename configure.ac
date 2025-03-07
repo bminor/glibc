@@ -1318,7 +1318,7 @@ if test $libc_cv_as_noexecstack = yes; then
 fi
 AC_SUBST(ASFLAGS_config)
 
-LIBC_LINKER_FEATURE([--no-error-execstack], [-Wl,-no-error-execstack],
+LIBC_LINKER_FEATURE([--no-error-execstack], [-Wl,--no-error-execstack],
 		    [libc_cv_no_error_execstack=yes], [libc_cv_no_error_execstack=no])
 AC_SUBST(libc_cv_no_error_execstack)
 
