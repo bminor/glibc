@@ -282,6 +282,7 @@ tests := \
   tst-environ-change-3 \
   tst-environ-change-4 \
   tst-getenv-signal \
+  tst-getenv-static \
   tst-getenv-thread \
   tst-getenv-unsetenv \
   tst-getrandom \
@@ -377,6 +378,7 @@ tests-internal := \
   # tests-internal
 
 tests-static := \
+  tst-getenv-static \
   tst-secure-getenv \
   # tests-static
 
