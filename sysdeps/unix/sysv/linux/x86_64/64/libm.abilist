@@ -1278,3 +1278,11 @@ GLIBC_2.41 tanpif32x F
 GLIBC_2.41 tanpif64 F
 GLIBC_2.41 tanpif64x F
 GLIBC_2.41 tanpil F
+GLIBC_2.42 rsqrt F
+GLIBC_2.42 rsqrtf F
+GLIBC_2.42 rsqrtf128 F
+GLIBC_2.42 rsqrtf32 F
+GLIBC_2.42 rsqrtf32x F
+GLIBC_2.42 rsqrtf64 F
+GLIBC_2.42 rsqrtf64x F
+GLIBC_2.42 rsqrtl F

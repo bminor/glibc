@@ -753,6 +753,7 @@ class Tests(object):
         self.add_tests('log2p1', 'r', ['r'])
         self.add_tests('log10p1', 'r', ['r'])
         self.add_tests('logp1', 'r', ['r'])
+        self.add_tests('rsqrt', 'r', ['r'])
         self.add_tests('sinpi', 'r', ['r'])
         self.add_tests('tanpi', 'r', ['r'])
         # C23 functions.

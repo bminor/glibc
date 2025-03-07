@@ -923,6 +923,10 @@
 /* Return the cube root of X.  */
 #define cbrt(Val) __TGMATH_UNARY_REAL_ONLY (Val, cbrt)
 
+#if __GLIBC_USE (IEC_60559_FUNCS_EXT_C23)
+# define rsqrt(Val) __TGMATH_UNARY_REAL_ONLY (Val, rsqrt)
+#endif
+
 
 /* Nearest integer, absolute value, and remainder functions.  */
 

@@ -671,4 +671,10 @@ libm {
     sinpif64x; sinpif128;
     tanpif64x; tanpif128;
   }
+  GLIBC_2.42 {
+    # Functions not involving _Float64x or _Float128, for all configurations.
+    rsqrt; rsqrtf; rsqrtl; rsqrtf32; rsqrtf64; rsqrtf32x;
+    # Functions involving _Float64x or _Float128, for some configurations.
+    rsqrtf64x; rsqrtf128;
+  }
 }

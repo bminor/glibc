@@ -153,6 +153,9 @@ libm {
     __sinpiieee128;
     __tanpiieee128;
   }
+  GLIBC_2.42 {
+    __rsqrtieee128;
+  }
 }
 libc {
   LDBL_IBM128_VERSION {

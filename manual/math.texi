@@ -790,6 +790,19 @@ If @var{x} is negative, @code{sqrt} signals a domain error.
 Mathematically, it should return a complex number.
 @end deftypefun
 
+@deftypefun double rsqrt (double @var{x})
+@deftypefunx float rsqrtf (float @var{x})
+@deftypefunx {long double} rsqrtl (long double @var{x})
+@deftypefunx _FloatN rsqrtfN (_Float@var{N} @var{x})
+@deftypefunx _FloatNx rsqrtfNx (_Float@var{N}x @var{x})
+@standards{TS 18661-4:2015, math.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions return the reciprocal of the nonnegative square root of @var{x}.
+If @var{x} is negative, @code{rsqrt} signals a domain error.
+
+The @code{rsqrt} functions are from TS 18661-4:2015.
+@end deftypefun
+
 @cindex cube root function
 @deftypefun double cbrt (double @var{x})
 @deftypefunx float cbrtf (float @var{x})

@@ -9,7 +9,12 @@ Version 2.42
 
 Major new features:
 
-  [Add new features here]
+* The following ISO C23 function families (introduced in TS
+  18661-4:2015) are now supported in <math.h>.  Each family includes
+  functions for float, double, long double, _FloatN and _FloatNx, and a
+  type-generic macro in <tgmath.h>.
+
+  - Power and absolute-value functions: rsqrt.
 
 Deprecated and removed features, and other changes affecting compatibility:
 

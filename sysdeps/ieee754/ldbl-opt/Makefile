@@ -180,6 +180,7 @@ libnldbl-calls = \
   rint \
   round \
   roundeven \
+  rsqrt \
   scalb \
   scalbln \
   scalbn \
@@ -379,6 +380,7 @@ CFLAGS-nldbl-remquo.c = -fno-builtin-remquol
 CFLAGS-nldbl-rint.c = -fno-builtin-rintl
 CFLAGS-nldbl-round.c = -fno-builtin-roundl
 CFLAGS-nldbl-roundeven.c = -fno-builtin-roundevenl
+CFLAGS-nldbl-rsqrt.c = -fno-builtin-rsqrtl
 CFLAGS-nldbl-scalb.c = -fno-builtin-scalbl
 CFLAGS-nldbl-scalbln.c = -fno-builtin-scalblnl
 CFLAGS-nldbl-scalbn.c = -fno-builtin-scalbnl
