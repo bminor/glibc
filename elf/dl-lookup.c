@@ -113,12 +113,22 @@ check_match (const char *const undef_name,
 	  /* We can match the version information or use the
 	     default one if it is not hidden.  */
 	  ElfW(Half) ndx = verstab[symidx] & 0x7fff;
-	  if ((map->l_versions[ndx].hash != version->hash
-	       || strcmp (map->l_versions[ndx].name, version->name))
-	      && (version->hidden || map->l_versions[ndx].hash
-		  || (verstab[symidx] & 0x8000)))
-	    /* It's not the version we want.  */
-	    return NULL;
+	  if (map->l_versions[ndx].hash == version->hash
+	      && strcmp (map->l_versions[ndx].name, version->name) == 0)
+	    /* This is an exact version match.  Return the symbol below.  */
+	    ;
+	  else
+	    {
+	      if (!version->hidden
+		  && map->l_versions[ndx].name[0] == '\0'
+		  && (verstab[symidx] & 0x8000) == 0
+		  && (*num_versions)++ == 0)
+		/* This is the global default version.  Store it as a
+		   fallback match.  */
+		*versioned_sym = sym;
+
+	      return NULL;
+	    }
 	}
     }
   else
