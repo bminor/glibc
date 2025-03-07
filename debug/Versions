@@ -64,6 +64,9 @@ libc {
     __wcslcat_chk;
     __wcslcpy_chk;
   }
+  GLIBC_2.42 {
+    __inet_ntop_chk;
+  }
   GLIBC_PRIVATE {
     __fortify_fail;
   }

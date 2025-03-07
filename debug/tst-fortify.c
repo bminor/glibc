@@ -23,6 +23,7 @@
 
 #include <assert.h>
 #include <fcntl.h>
+#include <arpa/inet.h>
 #include <limits.h>
 #include <locale.h>
 #include <obstack.h>
@@ -1830,6 +1831,26 @@ do_test (void)
   ppoll (fds, l0 + 2, NULL, NULL);
   CHK_FAIL_END
 # endif
+#endif
+
+  struct in6_addr addr6 = {};
+  struct in_addr addr = {};
+  char addrstr6[INET6_ADDRSTRLEN];
+  char addrstr[INET_ADDRSTRLEN];
+
+  if (inet_ntop (AF_INET6, &addr6, addrstr6, sizeof (addrstr6)) == NULL)
+    FAIL ();
+  if (inet_ntop (AF_INET, &addr, addrstr, sizeof (addrstr)) == NULL)
+    FAIL ();
+
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  inet_ntop (AF_INET6, &addr6, buf, INET6_ADDRSTRLEN);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  inet_ntop (AF_INET, &addr, buf, INET_ADDRSTRLEN);
+  CHK_FAIL_END
 #endif
 
   return ret;

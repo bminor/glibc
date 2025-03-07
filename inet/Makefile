@@ -25,6 +25,8 @@ include ../Makeconfig
 headers := \
   $(wildcard arpa/*.h protocols/*.h) \
   bits/in.h \
+  bits/inet-fortified-decl.h \
+  bits/inet-fortified.h \
   ifaddrs.h \
   netinet/ether.h \
   netinet/icmp6.h \

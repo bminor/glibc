@@ -55,6 +55,7 @@ routines = \
   gethostname_chk \
   gets_chk \
   getwd_chk \
+  inet_ntop_chk \
   longjmp_chk \
   mbsnrtowcs_chk \
   mbsrtowcs_chk \
