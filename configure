@@ -8678,6 +8678,35 @@ if test $libc_cv_builtin_trap = yes; then
 
 fi
 
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether the compiler supports __attribute__ ((aligned (65536)))" >&5
+printf %s "checking whether the compiler supports __attribute__ ((aligned (65536)))... " >&6; }
+if test ${libc_cv_aligned_65536+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e)
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+char bss0xb5dce8 __attribute__ ((aligned (65536)));
+
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"
+then :
+  libc_cv_aligned_65536=yes
+else case e in #(
+  e) libc_cv_aligned_65536=no ;;
+esac
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+ ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_aligned_65536" >&5
+printf "%s\n" "$libc_cv_aligned_65536" >&6; }
+config_vars="$config_vars
+aligned-65536 = $libc_cv_aligned_65536"
+
 ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
 ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
@@ -8944,7 +8973,6 @@ config_vars="$config_vars
 load-address-ldflag = $libc_cv_load_address_ldflag"
 
 # Check if compilers support GCS in branch protection:
-
 
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking if compiler supports -mbranch-protection=gcs" >&5
 printf %s "checking if compiler supports -mbranch-protection=gcs... " >&6; }

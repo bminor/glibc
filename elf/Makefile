@@ -1135,17 +1135,19 @@ tests += \
   tst-dlopen-pie \
   tst-dlopen-self-pie \
   tst-dlopen-tlsmodid-pie \
-  tst-pie-bss \
   tst-pie1 \
   tst-pie2 \
   # tests
 tests-pie += \
   tst-dlopen-self-pie \
   tst-dlopen-tlsmodid-pie \
-  tst-pie-bss \
   tst-pie1 \
   tst-pie2 \
   # tests-pie
+ifeq (yes,$(aligned-65536))
+tests += tst-pie-bss
+tests-pie += tst-pie-bss
+endif
 ifneq (,$(load-address-ldflag))
 tests += \
   tst-pie-address \
@@ -1157,12 +1159,14 @@ LDFLAGS-tst-pie-address += $(load-address-ldflag)=$(pde-load-address)
 ifeq (yes,$(enable-static-pie))
 tests += \
   tst-pie-address-static \
-  tst-pie-bss-static \
   # tests
 tests-static += \
   tst-pie-address-static \
-  tst-pie-bss-static \
   # tests-static
+ifeq (yes,$(aligned-65536))
+tests += tst-pie-bss-static
+tests-static += tst-pie-bss-static
+endif
 LDFLAGS-tst-pie-address-static += \
   $(load-address-ldflag)=$(pde-load-address)
 endif

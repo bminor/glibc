@@ -1824,6 +1824,17 @@ if test $libc_cv_builtin_trap = yes; then
   AC_DEFINE([HAVE_BUILTIN_TRAP])
 fi
 
+dnl Check if
+AC_CACHE_CHECK([whether the compiler supports __attribute__ ((aligned (65536)))],
+	       libc_cv_aligned_65536, [
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([
+char bss[0xb5dce8] __attribute__ ((aligned (65536)));
+])],
+	       [libc_cv_aligned_65536=yes],
+	       [libc_cv_aligned_65536=no])
+])
+LIBC_CONFIG_VAR([aligned-65536], [$libc_cv_aligned_65536])
+
 dnl C++ feature tests.
 AC_LANG_PUSH([C++])
 
