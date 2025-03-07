@@ -503,6 +503,7 @@ tests += \
   tst-unique2 \
   tst-unwind-ctor \
   tst-unwind-main \
+  tst-version-hash-zero \
   unload3 \
   unload4 \
   unload5 \
@@ -1049,6 +1050,9 @@ modules-names += \
   tst-unique2mod1 \
   tst-unique2mod2 \
   tst-unwind-ctor-lib \
+  tst-version-hash-zero-linkmod \
+  tst-version-hash-zero-mod \
+  tst-version-hash-zero-refmod \
   unload2dep \
   unload2mod \
   unload3mod1 \
@@ -3443,3 +3447,20 @@ $(objpfx)tst-nolink-libc-2.out: $(objpfx)tst-nolink-libc-2 $(objpfx)ld.so
 	$< > $@ 2>&1; $(evaluate-test)
 
 $(objpfx)tst-dlopen-sgid.out: $(objpfx)tst-dlopen-sgid-mod.so
+
+$(objpfx)tst-version-hash-zero.out: \
+  $(objpfx)tst-version-hash-zero-mod.so \
+  $(objpfx)tst-version-hash-zero-refmod.so
+LDFLAGS-tst-version-hash-zero-mod.so = \
+  -Wl,--version-script=tst-version-hash-zero-mod.map
+# The run-time test module tst-version-hash-zero-refmod.so is linked
+# to a stub module, tst-version-hash-zero-linkmod.so, to produce an
+# expected relocation error.
+$(objpfx)tst-version-hash-zero-refmod.so: \
+  $(objpfx)tst-version-hash-zero-linkmod.so
+LDFLAGS-tst-version-hash-zero-linkmod.so = \
+  -Wl,--version-script=tst-version-hash-zero-linkmod.map \
+  -Wl,--soname=tst-version-hash-zero-mod.so
+$(objpfx)tst-version-hash-zero-refmod.so: \
+  $(objpfx)tst-version-hash-zero-linkmod.so
+tst-version-hash-zero-refmod.so-no-z-defs = yes

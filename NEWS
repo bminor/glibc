@@ -16,6 +16,7 @@ Deprecated and removed features, and other changes affecting compatibility:
 The following bugs were resolved with this release:
 
   [19341] ctype: Fallback initialization of TLS using relocations
+  [29190] Fix handling of symbol versions which hash to zero
   [31943] _dl_find_object can fail if ld.so contains gaps between load segments
   [32483] ctype macros segfault in multithreaded programs with multiple libc.so
   [32269] RISC-V IFUNC resolver cannot access gp pointer
