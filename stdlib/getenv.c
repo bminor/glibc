@@ -20,9 +20,6 @@
 #include <string.h>
 #include <unistd.h>
 
-struct environ_array *__environ_array_list;
-environ_counter __environ_counter;
-
 char *
 getenv (const char *name)
 {
