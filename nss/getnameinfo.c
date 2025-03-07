@@ -338,7 +338,7 @@ gni_host_inet_numeric (struct scratch_buffer *tmpbuf,
   if (sa->sa_family == AF_INET6)
     {
       const struct sockaddr_in6 *sin6p = (const struct sockaddr_in6 *) sa;
-      if (inet_ntop (AF_INET6, &sin6p->sin6_addr, host, hostlen) == NULL)
+      if (__inet_ntop (AF_INET6, &sin6p->sin6_addr, host, hostlen) == NULL)
 	return EAI_OVERFLOW;
 
       uint32_t scopeid = sin6p->sin6_scope_id;
@@ -365,7 +365,7 @@ gni_host_inet_numeric (struct scratch_buffer *tmpbuf,
   else
     {
       const struct sockaddr_in *sinp = (const struct sockaddr_in *) sa;
-      if (inet_ntop (AF_INET, &sinp->sin_addr, host, hostlen) == NULL)
+      if (__inet_ntop (AF_INET, &sinp->sin_addr, host, hostlen) == NULL)
 	return EAI_OVERFLOW;
     }
   return 0;

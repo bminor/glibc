@@ -42,7 +42,7 @@ static const char *inet_ntop4 (const u_char *src, char *dst, socklen_t size);
 static const char *inet_ntop6 (const u_char *src, char *dst, socklen_t size);
 
 /* char *
- * inet_ntop(af, src, dst, size)
+ * __inet_ntop(af, src, dst, size)
  *	convert a network format address to presentation format.
  * return:
  *	pointer to presentation format address (`dst'), or NULL (see errno).
@@ -50,7 +50,7 @@ static const char *inet_ntop6 (const u_char *src, char *dst, socklen_t size);
  *	Paul Vixie, 1996.
  */
 const char *
-inet_ntop (int af, const void *src, char *dst, socklen_t size)
+__inet_ntop (int af, const void *src, char *dst, socklen_t size)
 {
 	switch (af) {
 	case AF_INET:
@@ -63,7 +63,8 @@ inet_ntop (int af, const void *src, char *dst, socklen_t size)
 	}
 	/* NOTREACHED */
 }
-libc_hidden_def (inet_ntop)
+libc_hidden_def (__inet_ntop)
+weak_alias (__inet_ntop, inet_ntop)
 
 /* const char *
  * inet_ntop4(src, dst, size)
