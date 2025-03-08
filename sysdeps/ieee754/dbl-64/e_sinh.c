@@ -41,6 +41,11 @@ static char rcsid[] = "$NetBSD: e_sinh.c,v 1.7 1995/05/10 20:46:13 jtc Exp $";
 
 static const double one = 1.0, shuge = 1.0e307;
 
+#ifndef SECTION
+# define SECTION
+#endif
+
+SECTION
 double
 __ieee754_sinh (double x)
 {
@@ -90,4 +95,7 @@ __ieee754_sinh (double x)
   /* |x| > overflowthresold, sinh(x) overflow */
   return math_narrow_eval (x * shuge);
 }
+
+#ifndef __ieee754_sinh
 libm_alias_finite (__ieee754_sinh, __sinh)
+#endif
