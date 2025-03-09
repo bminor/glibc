@@ -195,8 +195,9 @@ ___aio_suspend_time64 (const struct aiocb *const list[], int nent,
       result = do_aio_misc_wait (&cntr, timeout == NULL ? NULL : &ts);
 #else
       struct timespec ts32 = valid_timespec64_to_timespec (ts);
-      result = pthread_cond_timedwait (&cond, &__aio_requests_mutex,
-				       timeout == NULL ? NULL : &ts32);
+      result = __pthread_cond_clockwait (&cond, &__aio_requests_mutex,
+					 CLOCK_MONOTONIC,
+					 timeout == NULL ? NULL : &ts32);
 #endif
 
 #if PTHREAD_IN_LIBC

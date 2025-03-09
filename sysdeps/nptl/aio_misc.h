@@ -50,7 +50,7 @@
 		FUTEX_PRIVATE);						      \
 	    else							      \
 	      status = __futex_abstimed_wait64 ((unsigned int *) futexaddr,   \
-		oldval, CLOCK_REALTIME, timeout, FUTEX_PRIVATE); 	      \
+		oldval, CLOCK_MONOTONIC, timeout, FUTEX_PRIVATE); 	      \
 	    if (status != EAGAIN)					      \
 	      break;							      \
 									      \
