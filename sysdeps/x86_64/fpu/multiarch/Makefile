@@ -10,6 +10,7 @@ CFLAGS-s_expm1-fma.c = -mfma -mavx2
 CFLAGS-s_log1p-fma.c = -mfma -mavx2
 CFLAGS-s_sin-fma.c = -mfma -mavx2
 CFLAGS-s_tan-fma.c = -mfma -mavx2
+CFLAGS-s_tanh-fma.c = -mfma -mavx2
 CFLAGS-s_sincos-fma.c = -mfma -mavx2
 CFLAGS-s_exp10m1f-fma.c = -mfma -mavx2
 CFLAGS-s_exp2m1f-fma.c = -mfma -mavx2
@@ -96,6 +97,7 @@ libm-sysdep_routines += \
   s_sinf-sse2 \
   s_tan-avx \
   s_tan-fma \
+  s_tanh-fma \
   s_trunc-sse4_1 \
   s_truncf-sse4_1 \
 # libm-sysdep_routines
