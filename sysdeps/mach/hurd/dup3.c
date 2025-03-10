@@ -69,6 +69,7 @@ __dup3 (int fd, int fd2, int flags)
 	{
 	  /* Get a hold of the destination descriptor.  */
 	  struct hurd_fd *d2;
+	  error_t err;
 
 	  __mutex_lock (&_hurd_dtable_lock);
 
@@ -107,22 +108,51 @@ __dup3 (int fd, int fd2, int flags)
 	    }
 	  else
 	    {
-	      /* Give the ports each a user ref for the new descriptor.  */
-	      __mach_port_mod_refs (__mach_task_self (), port,
-				    MACH_PORT_RIGHT_SEND, 1);
-	      if (ctty != MACH_PORT_NULL)
-		__mach_port_mod_refs (__mach_task_self (), ctty,
-				      MACH_PORT_RIGHT_SEND, 1);
+	      /* Give the io server port a user ref for the new descriptor.  */
+	      err = __mach_port_mod_refs (__mach_task_self (), port,
+					  MACH_PORT_RIGHT_SEND, 1);
 
-	      /* Install the ports and flags in the new descriptor slot.  */
-	      __spin_lock (&d2->port.lock);
-	      if (flags & O_CLOEXEC)
-		d2->flags = d_flags | FD_CLOEXEC;
-	      else
-		/* dup clears FD_CLOEXEC.  */
-		d2->flags = d_flags & ~FD_CLOEXEC;
-	      _hurd_port_set (&d2->ctty, ctty);
-	      _hurd_port_locked_set (&d2->port, port); /* Unlocks D2.  */
+	      if (err == KERN_UREFS_OVERFLOW)
+		fd2 = __hurd_fail (EMFILE);
+	      else if (err)
+		fd2 = __hurd_fail (EINVAL);
+	      else if (ctty != MACH_PORT_NULL)
+		{
+		  /* We have confirmed the io server port has got a user ref
+		     count, now give ctty port a user ref for the new
+		     descriptor.  */
+		  err = __mach_port_mod_refs (__mach_task_self (), ctty,
+					      MACH_PORT_RIGHT_SEND, 1);
+
+		  if (err)
+		    {
+		      /* In this case the io server port has got a ref count
+		         but the ctty port failed to get one, so we need to
+			 clean the ref count we just assigned.  */
+		      __mach_port_mod_refs (__mach_task_self (), port,
+					    MACH_PORT_RIGHT_SEND, -1);
+
+		      if (err == KERN_UREFS_OVERFLOW)
+			fd2 = __hurd_fail (EMFILE);
+		      else
+			fd2 = __hurd_fail (EINVAL);
+		    }
+		}
+
+	      if (!err)
+	        {
+		  /* The ref counts of the ports are incremented
+		     successfully.  */
+		  /* Install the ports and flags in the new descriptor slot.  */
+		  __spin_lock (&d2->port.lock);
+		  if (flags & O_CLOEXEC)
+		    d2->flags = d_flags | FD_CLOEXEC;
+		  else
+		    /* dup clears FD_CLOEXEC.  */
+		    d2->flags = d_flags & ~FD_CLOEXEC;
+		  _hurd_port_set (&d2->ctty, ctty);
+		  _hurd_port_locked_set (&d2->port, port); /* Unlocks D2.  */
+		}
 	    }
 	}
 
