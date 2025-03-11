@@ -1,3 +1,5 @@
+#ifndef _ARPA_INET_H
+/* Note: _ARPA_INET_H is defined by inet/arpa/inet.h below.  */
 #include <inet/arpa/inet.h>
 
 #ifndef _ISOMAC
@@ -16,4 +18,5 @@ libc_hidden_proto (__inet_makeaddr)
 libc_hidden_proto (inet_netof)
 extern __typeof (inet_network) __inet_network;
 libc_hidden_proto (__inet_network)
+#endif
 #endif
