@@ -144,6 +144,9 @@ static const struct gaih_typeproto gaih_inet_typeproto[] =
   { SOCK_STREAM, IPPROTO_SCTP, 0, false, "sctp" },
   { SOCK_SEQPACKET, IPPROTO_SCTP, 0, false, "sctp" },
 #endif
+#ifdef IPPROTO_MPTCP
+  { SOCK_STREAM, IPPROTO_MPTCP, 0, false, "mptcp" },
+#endif
   { SOCK_RAW, 0, GAI_PROTO_PROTOANY|GAI_PROTO_NOSERVICE, true, "raw" },
   { 0, 0, 0, false, "" }
 };

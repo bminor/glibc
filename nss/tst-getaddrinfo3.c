@@ -144,6 +144,32 @@ getaddrinfo test %d return address of family %d, expected %d\n",	      \
   hints.ai_socktype = SOCK_STREAM;
   T (10, 0, "::ffff:127.0.0.1", AF_INET6, "::ffff:127.0.0.1");
 
+#ifdef IPPROTO_MPTCP
+  memset (&hints, '\0', sizeof (hints));
+  hints.ai_family = AF_UNSPEC;
+  hints.ai_socktype = SOCK_STREAM;
+  hints.ai_protocol = IPPROTO_MPTCP;
+  T (11, 0, "127.0.0.1", AF_INET, "127.0.0.1");
+
+  memset (&hints, '\0', sizeof (hints));
+  hints.ai_family = AF_INET;
+  hints.ai_socktype = SOCK_STREAM;
+  hints.ai_protocol = IPPROTO_MPTCP;
+  T (12, 0, "127.0.0.1", AF_INET, "127.0.0.1");
+
+  memset (&hints, '\0', sizeof (hints));
+  hints.ai_family = AF_INET6;
+  hints.ai_socktype = SOCK_STREAM;
+  hints.ai_protocol = IPPROTO_MPTCP;
+  T (13, 0, "::ffff:127.0.0.1", AF_INET6, "::ffff:127.0.0.1");
+
+  memset (&hints, '\0', sizeof (hints));
+  hints.ai_family = AF_INET6;
+  hints.ai_socktype = SOCK_STREAM;
+  hints.ai_protocol = IPPROTO_MPTCP;
+  T (14, 0, "::ffff:127.0.0.1", AF_INET6, "::ffff:127.0.0.1");
+#endif
+
   return result;
 }
 
