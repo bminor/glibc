@@ -422,6 +422,7 @@ tests += \
   tst-dlmopen4-nonpic \
   tst-dlmopen4-pic \
   tst-dlopen-auditdup \
+  tst-dlopen-constructor-null \
   tst-dlopen-self \
   tst-dlopen-tlsmodid \
   tst-dlopen-tlsreinit1 \
@@ -921,6 +922,8 @@ modules-names += \
   tst-dlmopen1mod \
   tst-dlopen-auditdup-auditmod \
   tst-dlopen-auditdupmod \
+  tst-dlopen-constructor-null-mod1 \
+  tst-dlopen-constructor-null-mod2 \
   tst-dlopen-sgid-mod \
   tst-dlopen-tlsreinitmod1 \
   tst-dlopen-tlsreinitmod2 \
@@ -3464,3 +3467,9 @@ LDFLAGS-tst-version-hash-zero-linkmod.so = \
 $(objpfx)tst-version-hash-zero-refmod.so: \
   $(objpfx)tst-version-hash-zero-linkmod.so
 tst-version-hash-zero-refmod.so-no-z-defs = yes
+
+$(objpfx)tst-dlopen-constructor-null: \
+  $(objpfx)tst-dlopen-constructor-null-mod1.so \
+  $(objpfx)tst-dlopen-constructor-null-mod2.so
+$(objpfx)tst-dlopen-constructor-null-mod2.so: \
+  $(objpfx)tst-dlopen-constructor-null-mod1.so
