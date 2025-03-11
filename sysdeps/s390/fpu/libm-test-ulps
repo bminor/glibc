@@ -1330,6 +1330,26 @@ double: 1
 float: 1
 ldouble: 2
 
+Function: "rsqrt":
+double: 1
+float: 1
+ldouble: 1
+
+Function: "rsqrt_downward":
+double: 2
+float: 2
+ldouble: 2
+
+Function: "rsqrt_towardzero":
+double: 2
+float: 2
+ldouble: 2
+
+Function: "rsqrt_upward":
+double: 2
+float: 2
+ldouble: 2
+
 Function: "sin":
 double: 1
 float: 1
