@@ -228,6 +228,7 @@ tests += \
   tst-rlimit-infinity \
   tst-sched-affinity-inheritance \
   tst-sched_setattr \
+  tst-sched_setattr-thread \
   tst-scm_rights \
   tst-sigtimedwait \
   tst-sync_file_range \
