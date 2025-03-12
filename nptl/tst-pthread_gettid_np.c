@@ -20,6 +20,7 @@
 #include <pthread.h>
 #include <sched.h>
 #include <signal.h>
+#include <stdbool.h>
 #include <support/check.h>
 #include <support/xthread.h>
 #include <unistd.h>
