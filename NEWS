@@ -16,6 +16,8 @@ Major new features:
 
   - Power and absolute-value functions: rsqrt.
 
+* On Linux, the pthread_gettid_np function has been added.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
   [Add deprecations, removals and changes affecting compatibility here]

@@ -239,6 +239,24 @@ especially regarding reuse of the IDs of threads which have exited.
 This function is specific to Linux.
 @end deftypefun
 
+@deftypefun pid_t pthread_gettid_np (pthread_t @var{thread})
+@standards{Linux, pthread.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This function returns the same value that @code{gettid} would return if
+executed on the running thread @var{thread}.
+
+If @var{thread} is no longer running but it is joinable, it is
+unspecified whether this function returns @minus{}1, or if it returns
+the thread ID of the thread while it was running.  If @var{thread} is
+not running and is not joinable, the behavior is undefined.
+
+@strong{Portability Note:} Linux thread IDs can be reused rather quickly,
+so this function differs from the @code{pthread_getunique_np} function
+found on other systems.
+
+This function is specific to Linux.
+@end deftypefun
+
 @node Creating a Process
 @section Creating a Process
 
