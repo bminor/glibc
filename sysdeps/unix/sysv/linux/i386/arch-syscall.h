@@ -140,6 +140,7 @@
 #define __NR_getuid 24
 #define __NR_getuid32 199
 #define __NR_getxattr 229
+#define __NR_getxattrat 464
 #define __NR_gtty 32
 #define __NR_idle 112
 #define __NR_init_module 128
@@ -178,6 +179,7 @@
 #define __NR_listen 363
 #define __NR_listmount 458
 #define __NR_listxattr 232
+#define __NR_listxattrat 465
 #define __NR_llistxattr 233
 #define __NR_lock 53
 #define __NR_lookup_dcookie 253
@@ -294,6 +296,7 @@
 #define __NR_recvmsg 372
 #define __NR_remap_file_pages 257
 #define __NR_removexattr 235
+#define __NR_removexattrat 466
 #define __NR_rename 38
 #define __NR_renameat 302
 #define __NR_renameat2 353
@@ -367,6 +370,7 @@
 #define __NR_setuid 23
 #define __NR_setuid32 213
 #define __NR_setxattr 226
+#define __NR_setxattrat 463
 #define __NR_sgetmask 68
 #define __NR_shmat 397
 #define __NR_shmctl 396

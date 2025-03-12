@@ -21,8 +21,8 @@
 # This file can list all potential system calls.  The names are only
 # used if the installed kernel headers also provide them.
 
-# The list of system calls is current as of Linux 6.12.
-kernel 6.12
+# The list of system calls is current as of Linux 6.13.
+kernel 6.13
 
 FAST_atomic_update
 FAST_cmpxchg
@@ -198,6 +198,7 @@ getuid
 getuid32
 getunwind
 getxattr
+getxattrat
 getxgid
 getxpid
 getxuid
@@ -241,6 +242,7 @@ linkat
 listen
 listmount
 listxattr
+listxattrat
 llistxattr
 llseek
 lock
@@ -482,6 +484,7 @@ recvmmsg_time64
 recvmsg
 remap_file_pages
 removexattr
+removexattrat
 rename
 renameat
 renameat2
@@ -572,6 +575,7 @@ settimeofday
 setuid
 setuid32
 setxattr
+setxattrat
 sgetmask
 shmat
 shmctl

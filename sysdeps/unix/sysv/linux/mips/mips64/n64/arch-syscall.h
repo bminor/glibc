@@ -116,6 +116,7 @@
 #define __NR_gettimeofday 5094
 #define __NR_getuid 5100
 #define __NR_getxattr 5183
+#define __NR_getxattrat 5464
 #define __NR_init_module 5168
 #define __NR_inotify_add_watch 5244
 #define __NR_inotify_init 5243
@@ -147,6 +148,7 @@
 #define __NR_listen 5049
 #define __NR_listmount 5458
 #define __NR_listxattr 5186
+#define __NR_listxattrat 5465
 #define __NR_llistxattr 5187
 #define __NR_lookup_dcookie 5206
 #define __NR_lremovexattr 5190
@@ -244,6 +246,7 @@
 #define __NR_recvmsg 5046
 #define __NR_remap_file_pages 5210
 #define __NR_removexattr 5189
+#define __NR_removexattrat 5466
 #define __NR_rename 5080
 #define __NR_renameat 5254
 #define __NR_renameat2 5311
@@ -305,6 +308,7 @@
 #define __NR_settimeofday 5159
 #define __NR_setuid 5103
 #define __NR_setxattr 5180
+#define __NR_setxattrat 5463
 #define __NR_shmat 5029
 #define __NR_shmctl 5030
 #define __NR_shmdt 5065
