@@ -41,15 +41,17 @@ sigcancel_handler (int sig, siginfo_t *si, void *ctx)
       || si->si_code != SI_TKILL)
     return;
 
-  /* Check if asynchronous cancellation mode is set or if interrupted
-     instruction pointer falls within the cancellable syscall bridge.  For
-     interruptable syscalls with external side-effects (i.e. partial reads),
-     the kernel  will set the IP to after __syscall_cancel_arch_end, thus
-     disabling the cancellation and allowing the process to handle such
+  /* Check if asynchronous cancellation mode is set and cancellation is not
+     already in progress, or if interrupted instruction pointer falls within
+     the cancellable syscall bridge.
+     For interruptable syscalls with external side-effects (i.e. partial
+     reads), the kernel will set the IP to after __syscall_cancel_arch_end,
+     thus disabling the cancellation and allowing the process to handle such
      conditions.  */
   struct pthread *self = THREAD_SELF;
   int oldval = atomic_load_relaxed (&self->cancelhandling);
-  if (cancel_async_enabled (oldval) || cancellation_pc_check (ctx))
+  if (cancel_enabled_and_canceled_and_async (oldval)
+      || cancellation_pc_check (ctx))
     __syscall_do_cancel ();
 }
 

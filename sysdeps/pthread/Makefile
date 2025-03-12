@@ -106,6 +106,7 @@ tests += \
   tst-cancel28 \
   tst-cancel29 \
   tst-cancel30 \
+  tst-cancel32 \
   tst-cleanup0 \
   tst-cleanup1 \
   tst-cleanup2 \
