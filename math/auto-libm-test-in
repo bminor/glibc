@@ -8525,6 +8525,22 @@ rsqrt 0x1.fffffffffffffp-1
 rsqrt max
 rsqrt min
 rsqrt min_subnorm
+# the next values generate large error bounds on x86_64 (binary32)
+rsqrt 0x1.019566p-126
+rsqrt 0x1.000004p-126
+rsqrt 0x1.002d3ep-126
+# the next values generate large error bounds on x86_64 (binary64)
+rsqrt 0x1.0000b89bb2fe7p-620
+rsqrt 0x1.0000000000002p-926
+rsqrt 0x1.0000007ffffffp-62
+# the next values generate large error bounds on x86_64 (ldbl-96)
+rsqrt 0x4.000a373be92fd79p+12296
+rsqrt 0x4.000000000000001p-3876
+rsqrt 0x1.00000002d413cccep+5732
+# the next values generate large error bounds on x86_64 (binary128)
+rsqrt 0x4.000c6aa9b1f6e0ff6654b438c3c8p-15316
+rsqrt 0x4.00063ebd3bd57609d74c632661ap-13232
+rsqrt 0x4.00010d8b28120c3d1972d4a4526cp-16384
 
 sin 0
 sin -0
