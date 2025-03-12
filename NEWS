@@ -14,6 +14,7 @@ The following bugs were resolved with this release:
   [32627] math: math: sinhf is not correctly rounded
   [32630] math: math: tanf is not correctly rounded for all rounding
     modes
+  [32781] Linux: Remove attribute access from sched_getattr
 
 Version 2.41
 
