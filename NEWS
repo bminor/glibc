@@ -15,6 +15,7 @@ The following bugs were resolved with this release:
   [32630] math: math: tanf is not correctly rounded for all rounding
     modes
   [32781] Linux: Remove attribute access from sched_getattr
+  [32786] nptl: PTHREAD_COND_INITIALIZER compatibility with pre-2.41 versions
 
 Version 2.41
 
