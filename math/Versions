@@ -673,8 +673,10 @@ libm {
   }
   GLIBC_2.42 {
     # Functions not involving _Float64x or _Float128, for all configurations.
+    powr; powrf; powrl; powrf32; powrf64; powrf32x;
     rsqrt; rsqrtf; rsqrtl; rsqrtf32; rsqrtf64; rsqrtf32x;
     # Functions involving _Float64x or _Float128, for some configurations.
+    powrf64x; powrf128;
     rsqrtf64x; rsqrtf128;
   }
 }

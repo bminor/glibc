@@ -8151,6 +8151,313 @@ pow 0x1.059c76p+0 0x1.ff80bep+11
 pow 0x1.7ac7cp+5 23
 pow -0x1.7ac7cp+5 23
 
+powr 10 0
+powr 10 -0
+
+powr 1 1
+powr 1 -1
+powr 1 1.25
+powr 1 -1.25
+powr 1 0x1p62
+powr 1 0x1p63
+powr 1 0x1p64
+powr 1 0x1p72
+powr 1 min_subnorm
+powr 1 -min_subnorm
+
+# powr (x, +-0) == 1.
+powr 32.75 0
+powr 32.75 -0
+powr 0x1p72 0
+powr 0x1p72 -0
+powr 0x1p-72 0
+powr 0x1p-72 -0
+
+powr 0x1p72 0x1p72
+powr 10 -0x1p72
+powr max max
+powr 10 -max
+
+powr 0 1
+powr 0 11
+
+powr -0 1
+powr -0 11
+
+powr 0 2
+powr 0 11.1
+
+powr -0 2
+powr -0 11.1
+
+# powr (+0, y) == +0 for y an odd integer > 0.
+powr 0.0 27
+powr 0.0 0xffffff
+powr 0.0 0x1.fffffffffffffp+52
+powr 0.0 0x1.fffffffffffffffep+63
+powr 0.0 0x1.ffffffffffffffffffffffffff8p+105
+powr 0.0 0x1.ffffffffffffffffffffffffffffp+112
+
+# powr (-0, y) == +0 (unlike pow) for y an odd integer > 0.
+powr -0 27
+powr -0 0xffffff
+powr -0 0x1fffffe
+powr -0 0x1.fffffffffffffp+52
+powr -0 0x1.fffffffffffffp+53
+powr -0 0x1.fffffffffffffffep+63
+powr -0 0x1.fffffffffffffffep+64 xfail-rounding:ibm128-libgcc
+powr -0 0x1.ffffffffffffffffffffffffff8p+105 xfail-rounding:ibm128-libgcc
+powr -0 0x1.ffffffffffffffffffffffffff8p+106 xfail-rounding:ibm128-libgcc
+powr -0 0x1.ffffffffffffffffffffffffffffp+112 xfail-rounding:ibm128-libgcc
+powr -0 0x1.ffffffffffffffffffffffffffffp+113 xfail-rounding:ibm128-libgcc
+
+# powr (+0, y) == +0 for y > 0 and not an odd integer.
+powr 0.0 4
+powr 0.0 0x1p24
+powr 0.0 0x1p127
+powr 0.0 max
+powr 0.0 min_subnorm
+
+# powr (-0, y) == +0 for y > 0 and not an odd integer.
+powr -0 0.5
+powr -0 4
+powr -0 0x1p24
+powr -0 0x1p127
+powr -0 max
+powr -0 min_subnorm
+
+powr 16 0.25
+powr 0x1p64 0.125
+powr 2 4
+powr 256 8
+
+powr 0.75 1.25
+
+powr 0x0.ffffffp0 10
+powr 0x0.ffffffp0 100
+powr 0x0.ffffffp0 1000
+powr 0x0.ffffffp0 0x1p24
+powr 0x0.ffffffp0 0x1p30
+powr 0x0.ffffffp0 0x1.234566p30
+powr 0x0.ffffffp0 -10
+powr 0x0.ffffffp0 -100
+powr 0x0.ffffffp0 -1000
+powr 0x0.ffffffp0 -0x1p24
+powr 0x0.ffffffp0 -0x1p30
+powr 0x0.ffffffp0 -0x1.234566p30
+powr 0x1.000002p0 0x1p24
+powr 0x1.000002p0 0x1.234566p29
+powr 0x1.000002p0 -0x1.234566p29
+
+powr 0x0.fffffffffffff8p0 0x1.23456789abcdfp62
+powr 0x0.fffffffffffff8p0 -0x1.23456789abcdfp62
+powr 0x1.0000000000001p0 0x1.23456789abcdfp61
+powr 0x1.0000000000001p0 -0x1.23456789abcdfp61
+
+powr 0x0.ffffffffffffffffp0 0x1.23456789abcdef0ep77
+powr 0x0.ffffffffffffffffp0 -0x1.23456789abcdef0ep77
+powr 0x1.0000000000000002p0 0x1.23456789abcdef0ep76
+powr 0x1.0000000000000002p0 -0x1.23456789abcdef0ep76
+
+powr 0x0.ffffffffffffffffffffffffffff8p0 0x1.23456789abcdef0123456789abcdp126
+powr 0x0.ffffffffffffffffffffffffffff8p0 -0x1.23456789abcdef0123456789abcdp126
+powr 0x1.0000000000000000000000000001p0 0x1.23456789abcdef0123456789abcdp125
+powr 0x1.0000000000000000000000000001p0 -0x1.23456789abcdef0123456789abcdp125
+
+powr 0x1.000002p0 0x1p30
+powr 0x1.000002p0 max
+powr 0x1.00000ep0 0x1p30
+powr 0x1.00000ep0 max
+
+powr 1e4932 0.75
+powr 1e4928 0.75
+powr 1e4924 0.75
+powr 1e4920 0.75
+powr 10.0 4932.0
+powr 10.0 4931.0
+powr 10.0 4930.0
+powr 10.0 4929.0
+powr 10.0 -4931.0
+powr 10.0 -4930.0
+powr 10.0 -4929.0
+powr 1e27 182.0
+powr 1e27 -182.0
+
+powr min_subnorm min_subnorm
+powr min_subnorm -min_subnorm
+powr max min_subnorm
+powr max -min_subnorm
+powr 0.99 min_subnorm
+powr 0.99 -min_subnorm
+powr 1.01 min_subnorm
+powr 1.01 -min_subnorm
+
+powr 2.0 -100000.0
+
+powr 2 -126.125
+powr 2 -126.25
+powr 2 -126.375
+powr 2 -126.5
+powr 2 -126.625
+powr 2 -126.75
+powr 2 -126.875
+powr 2 -969.125
+powr 2 -969.25
+powr 2 -969.375
+powr 2 -969.5
+powr 2 -969.625
+powr 2 -969.75
+powr 2 -969.875
+powr 2 -1022.125
+powr 2 -1022.25
+powr 2 -1022.375
+powr 2 -1022.5
+powr 2 -1022.625
+powr 2 -1022.75
+powr 2 -1022.875
+powr 2 -16382.125
+powr 2 -16382.25
+powr 2 -16382.375
+powr 2 -16382.5
+powr 2 -16382.625
+powr 2 -16382.75
+powr 2 -16382.875
+powr 2 -16383.125
+powr 2 -16383.25
+powr 2 -16383.375
+powr 2 -16383.5
+powr 2 -16383.625
+powr 2 -16383.75
+powr 2 -16383.875
+powr 0.5 126.125
+powr 0.5 126.25
+powr 0.5 126.375
+powr 0.5 126.5
+powr 0.5 126.625
+powr 0.5 126.75
+powr 0.5 126.875
+powr 0.5 969.125
+powr 0.5 969.25
+powr 0.5 969.375
+powr 0.5 969.5
+powr 0.5 969.625
+powr 0.5 969.75
+powr 0.5 969.875
+powr 0.5 1022.125
+powr 0.5 1022.25
+powr 0.5 1022.375
+powr 0.5 1022.5
+powr 0.5 1022.625
+powr 0.5 1022.75
+powr 0.5 1022.875
+powr 0.5 16382.125
+powr 0.5 16382.25
+powr 0.5 16382.375
+powr 0.5 16382.5
+powr 0.5 16382.625
+powr 0.5 16382.75
+powr 0.5 16382.875
+powr 0.5 16383.125
+powr 0.5 16383.25
+powr 0.5 16383.375
+powr 0.5 16383.5
+powr 0.5 16383.625
+powr 0.5 16383.75
+powr 0.5 16383.875
+powr 0x1.00001p1 -126
+powr 0x1.00003p1 -126
+powr 0x1.00005p1 -126
+powr 0x1.00007p1 -126
+powr 0x1.00001p1 -969
+powr 0x1.00003p1 -969
+powr 0x1.00005p1 -969
+powr 0x1.00007p1 -969
+powr 0x1.00001p1 -1022
+powr 0x1.00003p1 -1022
+powr 0x1.00005p1 -1022
+powr 0x1.00007p1 -1022
+powr 0x1.00001p1 -16382
+powr 0x1.00003p1 -16382
+powr 0x1.00005p1 -16382
+powr 0x1.00007p1 -16382
+powr 0x1.00001p1 -16383
+powr 0x1.00003p1 -16383
+powr 0x1.00005p1 -16383
+powr 0x1.00007p1 -16383
+powr 0x0.ffff1p-1 126
+powr 0x0.ffff3p-1 126
+powr 0x0.ffff5p-1 126
+powr 0x0.ffff7p-1 126
+powr 0x0.ffff1p-1 969
+powr 0x0.ffff3p-1 969
+powr 0x0.ffff5p-1 969
+powr 0x0.ffff7p-1 969
+powr 0x0.ffff1p-1 1022
+powr 0x0.ffff3p-1 1022
+powr 0x0.ffff5p-1 1022
+powr 0x0.ffff7p-1 1022
+powr 0x0.ffff1p-1 16382
+powr 0x0.ffff3p-1 16382
+powr 0x0.ffff5p-1 16382
+powr 0x0.ffff7p-1 16382
+powr 0x0.ffff1p-1 16383
+powr 0x0.ffff3p-1 16383
+powr 0x0.ffff5p-1 16383
+powr 0x0.ffff7p-1 16383
+powr 0x2.000b3p0 -1022
+powr 0x2.000582p0 -1022
+powr 2 -0x3.fe513p+8
+powr 2 -0x3.fe4e8p+8
+
+powr 10 -1
+powr 10 -2
+powr 10 -3
+powr 10 -4
+powr 10 -5
+powr 10 -6
+powr 10 -7
+
+powr 0x0.ffffffffffffffffp0 1
+powr 0x0.ffffffffffffffffp0 2
+powr 0x0.ffffffffffffffffp0 3
+powr 0x0.ffffffffffffffffp0 4
+powr 0x0.ffffffffffffffffp0 5
+powr 0x0.ffffffffffffffffp0 6
+powr 0x0.ffffffffffffffffp0 7
+powr 0x0.ffffffffffffffffp0 -1
+powr 0x0.ffffffffffffffffp0 -2
+powr 0x0.ffffffffffffffffp0 -3
+powr 0x0.ffffffffffffffffp0 -4
+powr 0x0.ffffffffffffffffp0 -5
+powr 0x0.ffffffffffffffffp0 -6
+powr 0x0.ffffffffffffffffp0 -7
+
+powr 0x1.0000000000000002p0 1
+powr 0x1.0000000000000002p0 2
+powr 0x1.0000000000000002p0 3
+powr 0x1.0000000000000002p0 4
+powr 0x1.0000000000000002p0 5
+powr 0x1.0000000000000002p0 6
+powr 0x1.0000000000000002p0 7
+powr 0x1.0000000000000002p0 -1
+powr 0x1.0000000000000002p0 -2
+powr 0x1.0000000000000002p0 -3
+powr 0x1.0000000000000002p0 -4
+powr 0x1.0000000000000002p0 -5
+powr 0x1.0000000000000002p0 -6
+powr 0x1.0000000000000002p0 -7
+
+powr 1.0625 1.125
+powr 1.5 1.03125
+powr 0x1.7d1a0a6f2p+681 1.5
+powr 0x1.ce78f2p+0 -0x2.7f1f78p+4
+powr 0xf.fffffp+124 -0x5.b5b648p+0
+powr 0x1.430d4cp+0 0x5.0e462p+4
+powr 0x9.8b82ap-4 -0x1.99907ap+12
+powr 0xd.73035p-4 -0x1.47bb8p+8
+powr 0x1.059c76p+0 0x1.ff80bep+11
+powr 0x1.7ac7cp+5 23
+
 rsqrt 2209
 rsqrt 4
 rsqrt 2

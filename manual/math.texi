@@ -774,6 +774,21 @@ do that, so instead it signals a domain error. @code{pow} may also
 underflow or overflow the destination type.
 @end deftypefun
 
+@deftypefun double powr (double @var{base}, double @var{power})
+@deftypefunx float powrf (float @var{base}, float @var{power})
+@deftypefunx {long double} powrl (long double @var{base}, long double @var{power})
+@deftypefunx _FloatN powrfN (_Float@var{N} @var{base}, _Float@var{N} @var{power})
+@deftypefunx _FloatNx powrfNx (_Float@var{N}x @var{base}, _Float@var{N}x @var{power})
+@standards{TS 18661-4:2015, math.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These return @var{base} raised to @var{power}, but with special cases
+based on @code{exp (power * log (base))}.  For example, if @var{base}
+is negative, the @code{powr} functions always signal a domain error,
+but this is valid for @code{pow} if @var{power} is an integer.
+
+The @code{powr} functions are from TS 18661-4:2015.
+@end deftypefun
+
 @cindex square root function
 @deftypefun double sqrt (double @var{x})
 @deftypefunx float sqrtf (float @var{x})

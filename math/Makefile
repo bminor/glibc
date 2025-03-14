@@ -139,6 +139,7 @@ gen-libm-calls = \
   s_log2p1F \
   s_nanF \
   s_nextdownF \
+  s_powrF \
   s_rsqrtF \
   s_significandF \
   s_sinpiF \
@@ -685,6 +686,7 @@ libm-test-funcs-auto = \
   log1p \
   log2p1 \
   pow \
+  powr \
   rsqrt \
   sin \
   sincos \
@@ -1016,6 +1018,7 @@ tgmath3-macros = \
   nexttoward \
   nextup \
   pow \
+  powr \
   remainder \
   remquo \
   rint \
@@ -1439,6 +1442,7 @@ CFLAGS-s_nexttoward.c += -fno-builtin-nexttoward -fno-builtin-nexttowardl
 CFLAGS-s_nexttowardf.c += -fno-builtin-nexttowardf
 CFLAGS-s_nextup.c += -fno-builtin-nextupl
 CFLAGS-e_pow.c += -fno-builtin-powl
+CFLAGS-s_powr.c += -fno-builtin-powrl
 CFLAGS-w_remainder.c += -fno-builtin-remainderl -fno-builtin-dreml
 CFLAGS-s_remquo.c += -fno-builtin-remquol
 CFLAGS-s_rint.c += -fno-builtin-rintl
@@ -1574,6 +1578,7 @@ CFLAGS-s_nextafter.c += -fno-builtin-nextafterf32x -fno-builtin-nextafterf64
 CFLAGS-s_nextdown.c += -fno-builtin-nextdownf32x -fno-builtin-nextdownf64
 CFLAGS-s_nextup.c += -fno-builtin-nextupf32x -fno-builtin-nextupf64
 CFLAGS-e_pow.c += -fno-builtin-powf32x -fno-builtin-powf64
+CFLAGS-s_powr.c += -fno-builtin-powrf32x -fno-builtin-powrf64
 CFLAGS-w_remainder.c += -fno-builtin-remainderf32x -fno-builtin-remainderf64
 CFLAGS-s_remquo.c += -fno-builtin-remquof32x -fno-builtin-remquof64
 CFLAGS-s_rint.c += -fno-builtin-rintf32x -fno-builtin-rintf64
@@ -1700,6 +1705,7 @@ CFLAGS-s_nextafterf.c += -fno-builtin-nextafterf32
 CFLAGS-s_nextdownf.c += -fno-builtin-nextdownf32
 CFLAGS-s_nextupf.c += -fno-builtin-nextupf32
 CFLAGS-e_powf.c += -fno-builtin-powf32
+CFLAGS-s_powrf.c += -fno-builtin-powrf32
 CFLAGS-w_remainderf.c += -fno-builtin-remainderf32
 CFLAGS-s_remquof.c += -fno-builtin-remquof32
 CFLAGS-s_rintf.c += -fno-builtin-rintf32
