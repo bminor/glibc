@@ -633,7 +633,7 @@ link-libc-printers-tests = $(link-libc-rpath) \
 			   $(link-libc-tests-after-rpath-link)
 
 # This is how to find at build-time things that will be installed there.
-rpath-dirs = math elf dlfcn nss nis rt resolv mathvec support misc
+rpath-dirs = math elf dlfcn nss nis rt resolv mathvec support misc debug
 rpath-link = \
 $(common-objdir):$(subst $(empty) ,:,$(patsubst ../$(subdir),.,$(rpath-dirs:%=$(common-objpfx)%)))
 else  # build-static

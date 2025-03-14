@@ -16,18 +16,19 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <stdlib.h>
+#include <ldsodefs.h>
 
-/* Return 1 if the whole area PTR .. PTR+SIZE is not writable.
-   Return -1 if it is writable.  */
-
-int
+enum readonly_error_type
 __readonly_area (const void *ptr, size_t size)
 {
-  /* We cannot determine in general whether memory is writable or not.
-     This must be handled in a system-dependent manner.  to not
-     unconditionally break code we need to return here a positive
-     answer.  This disables this security measure but that is the
-     price people have to pay for using systems without a real
-     implementation of this interface.  */
-  return 1;
+  switch (GLRO(dl_readonly_area (ptr, size)))
+    {
+    case dl_readonly_area_rdonly:
+      return readonly_noerror;
+    case dl_readonly_area_writable:
+      return readonly_area_writable;
+    default:
+      break;
+    }
+  return __readonly_area_fallback (ptr, size);
 }

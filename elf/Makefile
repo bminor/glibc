@@ -72,6 +72,7 @@ dl-routines = \
   dl-open \
   dl-origin \
   dl-printf \
+  dl-readonly-area \
   dl-reloc \
   dl-runtime \
   dl-scope \

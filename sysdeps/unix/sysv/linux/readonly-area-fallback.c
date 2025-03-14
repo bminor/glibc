@@ -23,11 +23,8 @@
 #include <string.h>
 #include "libio/libioP.h"
 
-/* Return 1 if the whole area PTR .. PTR+SIZE is not writable.
-   Return -1 if it is writable.  */
-
-int
-__readonly_area (const char *ptr, size_t size)
+enum readonly_error_type
+__readonly_area_fallback (const void *ptr, size_t size)
 {
   const void *ptr_end = ptr + size;
 
@@ -42,11 +39,11 @@ __readonly_area (const char *ptr, size_t size)
 	     to the /proc filesystem if it is set[ug]id.  There has
 	     been no willingness to change this in the kernel so
 	     far.  */
-	  || errno == EACCES
-	  /* Process has reached the maximum number of open files.  */
-	  || errno == EMFILE)
-	return 1;
-      return -1;
+	  || errno == EACCES)
+	return readonly_procfs_inaccessible;
+      /* Process has reached the maximum number of open files or another
+	 unusual error.  */
+      return readonly_procfs_open_fail;
     }
 
   /* We need no locking.  */
@@ -98,7 +95,5 @@ __readonly_area (const char *ptr, size_t size)
   fclose (fp);
   free (line);
 
-  /* If the whole area between ptr and ptr_end is covered by read-only
-     VMAs, return 1.  Otherwise return -1.  */
-  return size == 0 ? 1 : -1;
+  return size == 0 ? readonly_noerror : readonly_area_writable;
 }

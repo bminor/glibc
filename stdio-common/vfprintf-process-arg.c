@@ -324,16 +324,24 @@ LABEL (form_pointer):
 LABEL (form_number):
   if ((mode_flags & PRINTF_FORTIFY) != 0)
     {
-      if (! readonly_format)
-        {
-          extern int __readonly_area (const void *, size_t)
-            attribute_hidden;
-          readonly_format
-            = __readonly_area (format, ((STR_LEN (format) + 1)
-                                        * sizeof (CHAR_T)));
-        }
-      if (readonly_format < 0)
-        __libc_fatal ("*** %n in writable segment detected ***\n");
+      if (readonly_format == readonly_noerror)
+	readonly_format = __readonly_area (format, ((STR_LEN (format) + 1)
+						    * sizeof (CHAR_T)));
+      switch (readonly_format)
+	{
+	case readonly_area_writable:
+          __libc_fatal ("*** %n in writable segments detected ***\n");
+	/* The format is not within ELF segments and opening /proc/self/maps
+	   failed because there are too many files.  */
+	case readonly_procfs_open_fail:
+	  __libc_fatal ("*** procfs could not open ***\n");
+	/* The /proc/self/maps can not be opened either because it is not
+	   available or the process does not have the right permission.  Since
+	   it should not be attacker-controlled we can avoid failure.  */
+	case readonly_procfs_inaccessible:
+	case readonly_noerror:
+	  break;
+	}
     }
   /* Answer the count of characters written.  */
   void *ptrptr = process_arg_pointer ();

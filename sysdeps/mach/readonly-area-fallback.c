@@ -20,11 +20,8 @@
 #include <stdint.h>
 #include <mach.h>
 
-/* Return 1 if the whole area PTR .. PTR+SIZE is not writable.
-   Return -1 if it is writable.  */
-
-int
-__readonly_area (const char *ptr, size_t size)
+enum readonly_error_type
+__readonly_area_fallback (const void *ptr, size_t size)
 {
   vm_address_t region_address = (uintptr_t) ptr;
   vm_size_t region_length = size;
@@ -46,11 +43,11 @@ __readonly_area (const char *ptr, size_t size)
 	continue;
 
       if (protection & VM_PROT_WRITE)
-	return -1;
+	return readonly_area_writable;
 
       if (region_address - (uintptr_t) ptr >= size)
 	break;
     }
 
-  return 1;
+  return readonly_noerror;
 }

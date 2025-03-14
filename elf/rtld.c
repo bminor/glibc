@@ -371,6 +371,7 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
     ._dl_error_free = _dl_error_free,
     ._dl_tls_get_addr_soft = _dl_tls_get_addr_soft,
     ._dl_libc_freeres = __rtld_libc_freeres,
+    ._dl_readonly_area = _dl_readonly_area,
   };
 /* If we would use strong_alias here the compiler would see a
    non-hidden definition.  This would undo the effect of the previous
