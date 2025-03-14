@@ -64,19 +64,27 @@ threadReadRoutine (void *argv)
   /* Wait for all threads to be ready to read.  */
   xpthread_barrier_wait (&barrier);
 
-  ret =
-    fread (&read_buffer, sizeof (char), sizeof (read_buffer), my_data->fd);
-  if (feof (my_data->fd) != 0)
+  ret = fread (&read_buffer, 1, sizeof (read_buffer), my_data->fd);
+  /* If no data is returned (we read only 1 byte, so there's no short read
+     situation here), look for EOF flag and record it in MY_DATA.  The EOF flag
+     is not cleared because that could result in a test failure being masked
+     when two threads fail to read and one of them clears error/EOF flags
+     before the second one has the chance to observe it.
+
+     Successful readers could still see the EOF if they fall behind the failing
+     read when calling feof(), which could result in a false test failure.  To
+     avoid this race, we only make the failing reader check for EOF or
+     error.  */
+  if (ret == 0)
     {
-      clearerr (my_data->fd);
-      my_data->eof = true;
+      if (feof (my_data->fd) != 0)
+	my_data->eof = true;
+      else
+	FAIL_EXIT1 ("fread failed (ferror: %d): %m", ferror (my_data->fd));
     }
   else
-    {
-      TEST_COMPARE (ret, 1);
-      /* Save the read value.  */
-      my_data->value = read_buffer;
-    }
+    /* Save the read value.  */
+    my_data->value = read_buffer;
   TEST_COMPARE (ferror (my_data->fd), 0);
   return NULL;
 }
