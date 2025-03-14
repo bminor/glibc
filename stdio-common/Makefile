@@ -378,7 +378,9 @@ endif
 endif
 
 tests-container += \
-  tst-popen3
+  tst-popen3 \
+  tst-setvbuf2 \
+  tst-setvbuf2-ind
   # tests-container
 
 generated += \
@@ -390,6 +392,8 @@ generated += \
 
 tests-internal = \
   tst-grouping_iterator \
+  tst-setvbuf2 \
+  tst-setvbuf2-ind \
   # tests-internal
 
 test-srcs = \
@@ -761,6 +765,10 @@ $(objpfx)tst-setvbuf1.out: /dev/null $(objpfx)tst-setvbuf1
 $(objpfx)tst-setvbuf1-cmp.out: tst-setvbuf1.expect $(objpfx)tst-setvbuf1.out
 	cmp $^ > $@; \
 	$(evaluate-test)
+
+CFLAGS-tst-setvbuf2.c += -DIND_PROC=\"$(objpfx)tst-setvbuf2-ind\"
+$(objpfx)tst-setvbuf2-ind : $(objpfx)tst-setvbuf2-ind.o
+$(objpfx)tst-setvbuf2.out: $(objpfx)tst-setvbuf2-ind
 
 $(objpfx)tst-printf-round: $(libm)
 $(objpfx)tst-scanf-round: $(libm)
