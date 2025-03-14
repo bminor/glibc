@@ -1151,6 +1151,9 @@ main (int argc, char **argv)
   devmount (new_root_path, "null");
   devmount (new_root_path, "zero");
   devmount (new_root_path, "urandom");
+#ifdef __linux__
+  devmount (new_root_path, "ptmx");
+#endif
 
   /* We're done with the "old" root, switch to the new one.  */
   if (chroot (new_root_path) < 0)
@@ -1216,6 +1219,14 @@ main (int argc, char **argv)
   setenv ("PID_OUTSIDE_CONTAINER", pid_buf, 0);
 
   maybe_xmkdir ("/tmp", 0755);
+
+#ifdef __linux__
+  maybe_xmkdir ("/dev/pts", 0777);
+  if (mount ("/dev/pts", "/dev/pts", "devpts", 0, "newinstance,ptmxmode=0666,mode=0666") < 0)
+    FAIL_EXIT1 ("can't mount /dev/pts: %m\n");
+  if (mount ("/dev/pts/ptmx", "/dev/ptmx", "", MS_BIND | MS_REC, NULL) < 0)
+    FAIL_EXIT1 ("can't mount /dev/ptmx\n");
+#endif
 
   if (require_pidns)
     {

@@ -330,6 +330,7 @@ tests = \
   README-testing \
   tst-support-namespace \
   tst-support-open-dev-null-range \
+  tst-support-openpty \
   tst-support-process_state \
   tst-support_blob_repeat \
   tst-support_capture_subprocess \
@@ -350,6 +351,10 @@ tests = \
   tst-xreadlink \
   tst-xsigstack \
   # tests
+
+tests-container = \
+  tst-support-openpty-c \
+  # tests-container
 
 ifeq ($(run-built-tests),yes)
 tests-special = \
