@@ -24,6 +24,7 @@ int
 __pthread_setcanceltype (int type, int *oldtype)
 {
   struct __pthread *p = _pthread_self ();
+  int cancelled;
 
   switch (type)
     {
@@ -38,7 +39,11 @@ __pthread_setcanceltype (int type, int *oldtype)
   if (oldtype != NULL)
     *oldtype = p->cancel_type;
   p->cancel_type = type;
+  cancelled = (p->cancel_state == PTHREAD_CANCEL_ENABLE) && p->cancel_pending && (p->cancel_type == PTHREAD_CANCEL_ASYNCHRONOUS);
   __pthread_mutex_unlock (&p->cancel_lock);
+
+  if (cancelled && __pthread_exit)
+    __pthread_exit (PTHREAD_CANCELED);
 
   return 0;
 }

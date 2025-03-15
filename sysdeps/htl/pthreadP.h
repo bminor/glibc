@@ -221,6 +221,14 @@ hidden_proto (__pthread_setspecific)
 hidden_proto (__pthread_get_cleanup_stack)
 #endif
 
+#if !defined(__NO_WEAK_PTHREAD_ALIASES) && !IS_IN (libpthread)
+# ifdef weak_extern
+weak_extern (__pthread_exit)
+# else
+#  pragma weak __pthread_exit
+# endif
+#endif
+
 #define ASSERT_TYPE_SIZE(type, size) 					\
   _Static_assert (sizeof (type) == size,				\
 		  "sizeof (" #type ") != " #size)
