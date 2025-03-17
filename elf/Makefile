@@ -763,6 +763,7 @@ modules-names += \
   libmarkermod5-3 \
   libmarkermod5-4 \
   libmarkermod5-5 \
+  liborigin-mod \
   libtracemod1-1 \
   libtracemod2-1 \
   libtracemod3-1 \
@@ -1194,6 +1195,7 @@ extra-test-objs += $(addsuffix .os,$(strip $(modules-names)))
 # filtmod1.so, tst-big-note-lib.so, tst-ro-dynamic-mod.so have special
 # rules.
 modules-names-nobuild += \
+  liborigin-mod \
   filtmod1 \
   tst-audit24bmod1 \
   tst-audit24bmod2 \
@@ -1419,6 +1421,10 @@ tests-internal += tst-_dl_addr_inside_object
 tests-pie += tst-_dl_addr_inside_object
 $(objpfx)tst-_dl_addr_inside_object: $(objpfx)dl-addr-obj.os
 CFLAGS-tst-_dl_addr_inside_object.c += $(PIE-ccflag)
+endif
+
+ifeq ($(run-built-tests),yes)
+tests-special += $(objpfx)tst-origin.out
 endif
 
 include ../Rules
@@ -3443,10 +3449,8 @@ $(objpfx)tst-dlopen-constructor-null: \
 $(objpfx)tst-dlopen-constructor-null-mod2.so: \
   $(objpfx)tst-dlopen-constructor-null-mod1.so
 
-ifeq ($(run-built-tests),yes)
-tests-special += $(objpfx)tst-origin.out
-endif
 CFLAGS-tst-origin.c += $(no-stack-protector)
+CFLAGS-liborigin-mod.c += $(no-stack-protector)
 $(objpfx)tst-origin: $(objpfx)tst-origin.o $(objpfx)liborigin-mod.so
 	$(LINK.o) -o $@ -B$(csu-objpfx) $(LDFLAGS.so) $< \
 		-Wl,-rpath,\$$ORIGIN \
