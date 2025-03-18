@@ -915,7 +915,7 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 
 	      break;
 	    }
-	  /* FALLTHROUGH */
+	  __atribute_fallthrough__;
 	case L_('C'):
 	  if (width == -1)
 	    width = 1;
@@ -1258,7 +1258,7 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 		}
 	      break;
 	    }
-	  /* FALLTHROUGH */
+	  __atribute_fallthrough__;
 
 	case L_('S'):
 	  {

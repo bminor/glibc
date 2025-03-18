@@ -552,7 +552,7 @@ __strptime_internal (const char *rp, const char *fmt, struct tm *tmp,
 	      s.decided = raw;
 	    }
 #endif
-	  /* Fall through.  */
+	  __atribute_fallthrough__;
 	case 'D':
 	  /* Match standard day format.  */
 	  if (!recursive (HERE_D_FMT))
@@ -706,7 +706,7 @@ __strptime_internal (const char *rp, const char *fmt, struct tm *tmp,
 	      s.decided = raw;
 	    }
 #endif
-	  /* Fall through.  */
+	  __atribute_fallthrough__;
 	case 'T':
 	  if (!recursive (HERE_T_FMT))
 	    return NULL;

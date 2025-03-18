@@ -20,6 +20,7 @@
 #define _AARCH64_FPU_CONTROL_H
 
 #include <features.h>
+#include <sys/types.h>
 
 /* Macros for accessing the FPCR and FPSR.  */
 

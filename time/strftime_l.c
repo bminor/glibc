@@ -1093,7 +1093,7 @@ __strftime_internal (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 #if !defined _NL_CURRENT && HAVE_STRFTIME
 	  format_char = L_('p');
 #endif
-	  /* FALLTHROUGH */
+	  __atribute_fallthrough__;
 
 	case L_('p'):
 	  if (change_case)
@@ -1433,7 +1433,7 @@ __strftime_internal (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 
 	case L_('\0'):		/* GNU extension: % at end of format.  */
 	    --f;
-	    /* Fall through.  */
+	    __atribute_fallthrough__;
 	default:
 	  /* Unknown format; output the format, including the '%',
 	     since this is most likely the right thing to do if a

@@ -883,4 +883,14 @@ _Static_assert (0, "IEEE 128-bits long double requires redirection on this platf
 # define __attribute_struct_may_alias__
 #endif
 
+/* Annotate fall-through switch labels to avoid error with
+   -Wimplicit-fallthrough.  */
+#ifndef FALLTHROUGH
+# if (__GNUC__ >= 7) || (__clang_major__ >= 10)
+#  define __atribute_fallthrough__  __attribute__ ((__fallthrough__))
+# else
+#  define __atribute_fallthrough__  ((void) 0)
+# endif
+#endif
+
 #endif	 /* sys/cdefs.h */

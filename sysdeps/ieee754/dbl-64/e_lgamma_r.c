@@ -282,11 +282,11 @@ __ieee754_lgamma_r(double x, int *signgamp)
 	    r = half*y+p/q;
 	    z = one;	/* lgamma(1+s) = log(s) + lgamma(s) */
 	    switch(i) {
-	    case 7: z *= (y+6.0);	/* FALLTHRU */
-	    case 6: z *= (y+5.0);	/* FALLTHRU */
-	    case 5: z *= (y+4.0);	/* FALLTHRU */
-	    case 4: z *= (y+3.0);	/* FALLTHRU */
-	    case 3: z *= (y+2.0);	/* FALLTHRU */
+	    case 7: z *= (y+6.0);	__atribute_fallthrough__;
+	    case 6: z *= (y+5.0);	__atribute_fallthrough__;
+	    case 5: z *= (y+4.0);	__atribute_fallthrough__;
+	    case 4: z *= (y+3.0);	__atribute_fallthrough__;
+	    case 3: z *= (y+2.0);
 		    r += __ieee754_log(z); break;
 	    }
     /* 8.0 <= x < 2**58 */
