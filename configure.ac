@@ -1428,8 +1428,8 @@ conftest_code="
 void __foo (void)
 {
 }
-extern __typeof (__foo) foo __attribute__ ((weak, alias ("__foo")));
-extern __typeof (__foo) bar __attribute__ ((weak, alias ("foo")));
+extern __typeof (__foo) foo __attribute__ ((weak, alias (\"__foo\")));
+extern __typeof (__foo) bar __attribute__ ((weak, alias (\"foo\")));
 "
 LIBC_TRY_CC_AND_TEST_CC_COMMAND([if -Wno-ignored-attributes is required for aliases],
   [$conftest_code],
