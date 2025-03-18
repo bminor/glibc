@@ -39,9 +39,9 @@ special_case (svfloat32_t x, svfloat32_t half_e, svfloat32_t half_over_e,
 }
 
 /* Single-precision vector cosh, using vector expf.
-   Maximum error is 2.77 ULP:
-   _ZGVsMxv_coshf(-0x1.5b38f4p+1) got 0x1.e45946p+2
-				 want 0x1.e4594cp+2.  */
+   Maximum error is 2.56 +0.5 ULP:
+   _ZGVsMxv_coshf(-0x1.5b40f4p+1) got 0x1.e47748p+2
+				 want 0x1.e4774ep+2.  */
 svfloat32_t SV_NAME_F1 (cosh) (svfloat32_t x, svbool_t pg)
 {
   const struct data *d = ptr_barrier (&data);
