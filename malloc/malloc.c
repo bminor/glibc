@@ -298,7 +298,7 @@
 # define tidx2usize(idx)	(((size_t) idx) * MALLOC_ALIGNMENT + MINSIZE - SIZE_SZ)
 
 /* When "x" is from chunksize().  */
-# define csize2tidx(x) (((x) - MINSIZE + MALLOC_ALIGNMENT - 1) / MALLOC_ALIGNMENT)
+# define csize2tidx(x) (((x) - MINSIZE) / MALLOC_ALIGNMENT)
 /* When "x" is a user-provided size.  */
 # define usize2tidx(x) csize2tidx (request2size (x))
 
