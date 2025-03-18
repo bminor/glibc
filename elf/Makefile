@@ -456,6 +456,7 @@ tests += \
   tst-noload \
   tst-non-directory-path \
   tst-null-argv \
+  tst-origin \
   tst-p_align1 \
   tst-p_align2 \
   tst-p_align3 \
@@ -1195,7 +1196,6 @@ extra-test-objs += $(addsuffix .os,$(strip $(modules-names)))
 # filtmod1.so, tst-big-note-lib.so, tst-ro-dynamic-mod.so have special
 # rules.
 modules-names-nobuild += \
-  liborigin-mod \
   filtmod1 \
   tst-audit24bmod1 \
   tst-audit24bmod2 \
@@ -3451,15 +3451,8 @@ $(objpfx)tst-dlopen-constructor-null-mod2.so: \
 
 CFLAGS-tst-origin.c += $(no-stack-protector)
 CFLAGS-liborigin-mod.c += $(no-stack-protector)
-$(objpfx)tst-origin: $(objpfx)tst-origin.o $(objpfx)liborigin-mod.so
-	$(LINK.o) -o $@ -B$(csu-objpfx) $(LDFLAGS.so) $< \
-		-Wl,-rpath,\$$ORIGIN \
-		-L$(subst :, -L,$(rpath-link)) -Wl,--no-as-needed -lorigin-mod
-$(objpfx)liborigin-mod.so: $(objpfx)liborigin-mod.os
-	$(LINK.o) -shared -o $@ -B$(csu-objpfx) $(LDFLAGS.so) \
-		$(LDFLAGS-soname-fname) \
-		$<
-$(objpfx)tst-origin.out: tst-origin.sh $(objpfx)tst-origin
+LDFLAGS-tst-origin += -Wl,-rpath,\$$ORIGIN -L$(subst :, -L,$(rpath-link)) -lorigin-mod
+$(objpfx)tst-origin.out: tst-origin.sh $(objpfx)liborigin-mod.so $(objpfx)tst-origin
 	$(SHELL) \
 		$< \
 		'$(common-objpfx)' \
