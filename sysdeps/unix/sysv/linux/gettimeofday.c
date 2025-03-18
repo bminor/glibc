@@ -41,7 +41,7 @@ __gettimeofday_syscall (struct timeval *restrict tv, void *restrict tz)
 libc_ifunc (__gettimeofday,
 	    GLRO(dl_vdso_gettimeofday) != NULL
 	    ? VDSO_IFUNC_RET (GLRO(dl_vdso_gettimeofday))
-	    : (void *) __gettimeofday_syscall)
+	    : __gettimeofday_syscall)
 
 # else
 int
