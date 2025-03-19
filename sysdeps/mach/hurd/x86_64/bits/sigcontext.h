@@ -96,6 +96,8 @@ struct sigcontext
     struct i386_fp_save sc_fpsave;
     struct i386_fp_regs sc_fpregs;
     int sc_fpexcsr;		/* FPSR including exception bits.  */
+
+    struct i386_xfloat_state *xstate;
   };
 
 /* Traditional BSD names for some members.  */

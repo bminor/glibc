@@ -21,6 +21,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <cpuid.h>
+
 /* This is run on the thread stack after restoring it, to be able to
    unlock SS off sigstack.  */
 static void
@@ -123,10 +125,32 @@ __sigreturn (struct sigcontext *scp)
   if (scp->sc_onstack)
     ss->sigaltstack.ss_flags &= ~SS_ONSTACK;
 
-  if (scp->sc_fpused)
-    /* Restore the FPU state.  Mach conveniently stores the state
-       in the format the i387 `frstor' instruction uses to restore it.  */
-    asm volatile ("frstor %0" : : "m" (scp->sc_fpsave));
+#ifdef i386_XFLOAT_STATE
+  if ((scp->xstate) && (scp->xstate->initialized))
+    {
+      unsigned eax, ebx, ecx, edx;
+      __cpuid_count(0xd, 0, eax, ebx, ecx, edx);
+      switch (scp->xstate->fp_save_kind)
+        {
+        case 0: // FNSAVE
+          asm volatile("frstor %0" : : "m" (scp->xstate->hw_state));
+          break;
+        case 1: // FXSAVE
+          asm volatile("fxrstor %0" : : "m" (scp->xstate->hw_state),    \
+                       "a" (eax), "d" (edx));
+          break;
+        default: // XSAVE, XSAVEOPT, XSAVEC, XSAVES
+          asm volatile("xrstor %0" : : "m" (scp->xstate->hw_state),     \
+                       "a" (eax), "d" (edx));
+          break;
+        }
+    }
+  else
+#endif
+    if (scp->sc_fpused)
+      /* Restore the FPU state.  Mach conveniently stores the state
+         in the format the i387 `frstor' instruction uses to restore it.  */
+      asm volatile ("frstor %0" : : "m" (scp->sc_fpsave));
 
   {
     /* There are convenient instructions to pop state off the stack, so we

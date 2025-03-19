@@ -19,6 +19,11 @@ subdir := hurd
 
 include ../Makeconfig
 
+tests := test-sig-xstate \
+	test-sig-rpc-interrupted
+$(objpfx)test-sig-xstate: $(shared-thread-library)
+$(objpfx)test-sig-rpc-interrupted: $(shared-thread-library) $(objdir)/hurd/libhurduser.so
+
 headers = \
   $(interface-headers) \
   hurd.h \

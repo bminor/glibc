@@ -26,7 +26,11 @@
 #include "hurdfault.h"
 #include <intr-msg.h>
 #include <sys/ucontext.h>
-
+#ifdef __x86_64__
+#include <mach/x86_64/mach_i386.h>
+#else
+#include <mach/i386/mach_i386.h>
+#endif
 
 /* Fill in a siginfo_t structure for SA_SIGINFO-enabled handlers.  */
 static void fill_siginfo (siginfo_t *si, int signo,
@@ -106,6 +110,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, const struct sigaction *action
   void firewall (void);
   void *sigsp;
   struct sigcontext *scp;
+  vm_size_t xstate_size;
   struct
     {
       union
@@ -145,6 +150,14 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, const struct sigaction *action
       struct hurd_userlink link;
       ucontext_t ucontext;
       siginfo_t siginfo;
+#ifdef __x86_64__
+      char _pad2[56];
+#else
+      char _pad2[20];
+#endif
+      char xstate[];
+      /* Don't add anything after xstate, as it's dynamically
+         sized. */
     } *stackframe;
 
 #ifdef __x86_64__
@@ -169,6 +182,17 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, const struct sigaction *action
 
   if (! machine_get_basic_state (ss->thread, state))
     return NULL;
+
+  /* Initialize the size of the CPU extended state, to be saved during
+   * signal handling */
+#ifdef i386_XFLOAT_STATE
+  _Static_assert ((sizeof(*stackframe) + sizeof(struct i386_xfloat_state)) % 64 == 0,
+                  "stackframe size must be multiple of 64-byte minus "
+                  "sizeof(struct i386_xfloat_state), please adjust _pad2");
+
+  if (__i386_get_xstate_size(__mach_host_self(), &xstate_size))
+#endif
+    xstate_size = 0;
 
   /* Save the original SP in the gratuitous `esp' slot.
      We may need to reset the SP (the `uesp' slot) to avoid clobbering an
@@ -196,14 +220,21 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, const struct sigaction *action
 #endif
     }
 
-  /* Push the arguments to call `trampoline' on the stack.  */
-  sigsp -= sizeof (*stackframe);
-#ifdef __x86_64__
-  /* Align SP at 16 bytes.  Coupled with the fact that sigreturn_addr is
-     16-byte aligned within the stackframe struct, this ensures that it ends
-     up on a 16-byte aligned address, as required by the ABI.  */
-  sigsp = (void *) ((uintptr_t) sigsp & ~15UL);
-#endif
+  /* Push the arguments to call `trampoline' on the stack.
+   * The extended state might have a variable size depending on the platform,
+   * so we dynamically allocate it on the stack frame.*/
+  sigsp -= sizeof (*stackframe) + xstate_size;
+
+  /* Align SP at 64 bytes. This is needed for two reasons:
+   * - sigreturn_addr is 16-byte aligned within the stackframe
+   *   struct, and this ensures that it ends up on a 16-byte aligned
+   *   address, as required by the ABI.
+   * - the XSAVE state needs to be aligned at 64 bytes (on both i386 and
+   *   x86_64), so we align the stackframe also at 64 bytes and add the
+   *   required padding at the end, see the _pad2 field.
+   */
+  sigsp = (void *) ((uintptr_t) sigsp & ~63UL);
+
   stackframe = sigsp;
 
   if (_hurdsig_catch_memory_fault (stackframe))
@@ -248,14 +279,40 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, const struct sigaction *action
       memcpy (&scp->sc_i386_thread_state,
 	      &state->basic, sizeof (state->basic));
 
-      /* struct sigcontext is laid out so that starting at sc_fpkind mimics
-	 a struct i386_float_state.  */
-      _Static_assert (offsetof (struct sigcontext, sc_i386_float_state)
-		      % __alignof__ (struct i386_float_state) == 0,
-		      "sc_i386_float_state layout mismatch");
-      ok = machine_get_state (ss->thread, state, i386_FLOAT_STATE,
-			      &state->fpu, &scp->sc_i386_float_state,
-			      sizeof (state->fpu));
+      scp->xstate = NULL;
+#ifdef i386_XFLOAT_STATE
+      if (xstate_size > 0)
+        {
+          mach_msg_type_number_t got = (xstate_size / sizeof (int));
+
+          ok = (! __thread_get_state (ss->thread, i386_XFLOAT_STATE,
+                                      (thread_state_t) stackframe->xstate, &got)
+                && got == (xstate_size / sizeof (int)));
+
+	  if (((struct i386_xfloat_state*) stackframe->xstate)->fp_save_kind > 5)
+	    /* We support up to XSAVES */
+	    ok = 0;
+
+          if (ok)
+	    {
+	      scp->xstate = (struct i386_xfloat_state*) stackframe->xstate;
+	      assert((uintptr_t)scp->xstate->hw_state % 64 == 0);
+	    }
+        }
+      else
+#endif
+        ok = 0;
+      if (!ok)
+        {
+          /* struct sigcontext is laid out so that starting at sc_fpkind mimics
+            a struct i386_float_state.  */
+          _Static_assert (offsetof (struct sigcontext, sc_i386_float_state)
+                         % __alignof__ (struct i386_float_state) == 0,
+                         "sc_i386_float_state layout mismatch");
+          ok = machine_get_state (ss->thread, state, i386_FLOAT_STATE,
+                                 &state->fpu, &scp->sc_i386_float_state,
+                                 sizeof (state->fpu));
+        }
 
       /* Set up the arguments for the signal handler.  */
       stackframe->signo = signo;
