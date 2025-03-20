@@ -2646,7 +2646,7 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
 			CHUNK_HDR_SZ | PREV_INUSE);
               set_foot (chunk_at_offset (old_top, old_size), CHUNK_HDR_SZ);
               set_head (old_top, old_size | PREV_INUSE | NON_MAIN_ARENA);
-              _int_free (av, old_top, 1);
+              _int_free_chunk (av, old_top, chunksize (old_top), 1);
             }
           else
             {
@@ -2912,7 +2912,7 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
                       /* If possible, release the rest. */
                       if (old_size >= MINSIZE)
                         {
-                          _int_free (av, old_top, 1);
+                          _int_free_chunk (av, old_top, chunksize (old_top), 1);
                         }
                     }
                 }
@@ -3530,10 +3530,7 @@ __libc_realloc (void *oldmem, size_t bytes)
   if (chunk_is_mmapped (oldp))
     ar_ptr = NULL;
   else
-    {
-      MAYBE_INIT_TCACHE ();
-      ar_ptr = arena_for_chunk (oldp);
-    }
+    ar_ptr = arena_for_chunk (oldp);
 
   /* Little security check which won't hurt performance: the allocator
      never wraps around at the end of the address space.  Therefore
@@ -3608,7 +3605,7 @@ __libc_realloc (void *oldmem, size_t bytes)
 	  size_t sz = memsize (oldp);
 	  memcpy (newp, oldmem, sz);
 	  (void) tag_region (chunk2mem (oldp), sz);
-          _int_free (ar_ptr, oldp, 0);
+          _int_free_chunk (ar_ptr, oldp, chunksize (oldp), 0);
         }
     }
 
@@ -5059,7 +5056,7 @@ _int_realloc (mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
 	      (void) tag_region (oldmem, sz);
 	      newmem = tag_new_usable (newmem);
 	      memcpy (newmem, oldmem, sz);
-	      _int_free (av, oldp, 1);
+	      _int_free_chunk (av, oldp, chunksize (oldp), 1);
 	      check_inuse_chunk (av, newp);
 	      return newmem;
             }
@@ -5087,7 +5084,7 @@ _int_realloc (mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
                 (av != &main_arena ? NON_MAIN_ARENA : 0));
       /* Mark remainder as inuse so free() won't complain */
       set_inuse_bit_at_offset (remainder, remainder_size);
-      _int_free (av, remainder, 1);
+      _int_free_chunk (av, remainder, chunksize (remainder), 1);
     }
 
   check_inuse_chunk (av, newp);
