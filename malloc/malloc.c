@@ -1325,6 +1325,9 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 static __always_inline size_t
 checked_request2size (size_t req) __nonnull (1)
 {
+  _Static_assert (PTRDIFF_MAX <= SIZE_MAX / 2,
+                  "PTRDIFF_MAX is not more than half of SIZE_MAX");
+
   if (__glibc_unlikely (req > PTRDIFF_MAX))
     return 0;
 
@@ -3380,26 +3383,17 @@ tcache_thread_shutdown (void)
 #endif /* !USE_TCACHE  */
 
 #if IS_IN (libc)
-void *
-__libc_malloc (size_t bytes)
+
+static void * __attribute_noinline__
+__libc_malloc2 (size_t bytes)
 {
   mstate ar_ptr;
   void *victim;
 
-  _Static_assert (PTRDIFF_MAX <= SIZE_MAX / 2,
-                  "PTRDIFF_MAX is not more than half of SIZE_MAX");
-
   if (!__malloc_initialized)
     ptmalloc_init ();
-#if USE_TCACHE
-  bool err = tcache_try_malloc (bytes, &victim);
 
-  if (err)
-      return NULL;
-
-  if (victim)
-      return tag_new_usable (victim);
-#endif
+  MAYBE_INIT_TCACHE ();
 
   if (SINGLE_THREAD_P)
     {
@@ -3429,6 +3423,19 @@ __libc_malloc (size_t bytes)
   assert (!victim || chunk_is_mmapped (mem2chunk (victim)) ||
           ar_ptr == arena_for_chunk (mem2chunk (victim)));
   return victim;
+}
+
+void *
+__libc_malloc (size_t bytes)
+{
+#if USE_TCACHE
+  size_t tc_idx = csize2tidx (checked_request2size (bytes));
+
+  if (tcache_available (tc_idx))
+    return tag_new_usable (tcache_get (tc_idx));
+#endif
+
+  return __libc_malloc2 (bytes);
 }
 libc_hidden_def (__libc_malloc)
 
