@@ -1322,7 +1322,7 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    value is less than PTRDIFF_T.  Returns the requested size or
    MINSIZE in case the value is less than MINSIZE, or 0 if any of the
    previous checks fail.  */
-static inline size_t
+static __always_inline size_t
 checked_request2size (size_t req) __nonnull (1)
 {
   if (__glibc_unlikely (req > PTRDIFF_MAX))
@@ -1782,7 +1782,7 @@ static uint8_t global_max_fast;
   global_max_fast = (((size_t) (s) <= MALLOC_ALIGN_MASK - SIZE_SZ)	\
                      ? MIN_CHUNK_SIZE / 2 : ((s + SIZE_SZ) & ~MALLOC_ALIGN_MASK))
 
-static inline INTERNAL_SIZE_T
+static __always_inline INTERNAL_SIZE_T
 get_max_fast (void)
 {
   /* Tell the GCC optimizers that global_max_fast is never larger
@@ -3245,7 +3245,7 @@ tcache_double_free_verify (tcache_entry *e, size_t tc_idx)
 
 /* Try to free chunk to the tcache, if success return true.
    Caller must ensure that chunk and size are valid.  */
-static inline bool
+static __always_inline bool
 tcache_free (mchunkptr p, INTERNAL_SIZE_T size)
 {
   bool done = false;
@@ -4553,7 +4553,7 @@ _int_malloc (mstate av, size_t bytes)
    ------------------------------ free ------------------------------
  */
 
-static inline void
+static __always_inline void
 _int_free_check (mstate av, mchunkptr p, INTERNAL_SIZE_T size)
 {
   /* Little security check which won't hurt performance: the
@@ -4687,7 +4687,7 @@ _int_free_chunk (mstate av, mchunkptr p, INTERNAL_SIZE_T size, int have_lock)
    P has already been locked.  It will perform sanity check, then try the
    fast path to free into tcache.  If the attempt not success, free the
    chunk to arena.  */
-static inline void
+static __always_inline void
 _int_free (mstate av, mchunkptr p, int have_lock)
 {
   INTERNAL_SIZE_T size;        /* its size */
