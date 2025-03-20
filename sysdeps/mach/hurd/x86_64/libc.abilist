@@ -2268,6 +2268,7 @@ GLIBC_2.41 pthread_mutexattr_setrobust_np F
 GLIBC_2.41 pthread_mutexattr_settype F
 GLIBC_2.41 pthread_sigmask F
 GLIBC_2.42 __inet_ntop_chk F
+GLIBC_2.42 __inet_pton_chk F
 GLIBC_2.42 pthread_barrier_destroy F
 GLIBC_2.42 pthread_barrier_init F
 GLIBC_2.42 pthread_barrier_wait F

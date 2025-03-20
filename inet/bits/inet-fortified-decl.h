@@ -32,4 +32,11 @@ extern const char *__REDIRECT_NTH (__inet_ntop_chk_warn,
      __warnattr ("inet_ntop called with bigger length than "
 		 "size of destination buffer");
 
+extern int __inet_pton_chk (int, const char *, void *, size_t);
+
+extern int __REDIRECT_FORTIFY_NTH (__inet_pton_alias,
+				   (int, const char *, void *), inet_pton);
+extern int __REDIRECT_NTH (__inet_pton_chk_warn,
+			   (int, const char *, void *, size_t), __inet_pton_chk)
+     __warnattr ("inet_pton called with a destination buffer size too small");
 #endif /* bits/inet-fortified-decl.h.  */

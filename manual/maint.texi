@@ -305,6 +305,8 @@ The following functions and macros are fortified in @theglibc{}:
 
 @item @code{inet_ntop}
 
+@item @code{inet_pton}
+
 @item @code{longjmp}
 
 @item @code{mbsnrtowcs}

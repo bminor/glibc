@@ -56,6 +56,7 @@ routines = \
   gets_chk \
   getwd_chk \
   inet_ntop_chk \
+  inet_pton_chk \
   longjmp_chk \
   mbsnrtowcs_chk \
   mbsrtowcs_chk \

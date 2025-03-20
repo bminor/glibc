@@ -1853,6 +1853,30 @@ do_test (void)
   CHK_FAIL_END
 #endif
 
+  const char *ipv4str = "127.0.0.1";
+  const char *ipv6str = "::1";
+
+  if (inet_pton (AF_INET, ipv4str, (void *) &addr) != 1)
+    FAIL ();
+  if (inet_pton (AF_INET6, ipv6str, (void *) &addr6) != 1)
+    FAIL ();
+
+#if __USE_FORTIFY_LEVEL >= 1
+  char smallbuf[2];
+
+  CHK_FAIL_START
+  inet_pton (AF_INET, ipv4str, (void *) smallbuf);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  inet_pton (AF_INET6, ipv6str, (void *) smallbuf);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  inet_pton (AF_INET6, ipv6str, (void *) &addr);
+  CHK_FAIL_END
+#endif
+
   return ret;
 }
 

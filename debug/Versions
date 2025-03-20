@@ -66,6 +66,7 @@ libc {
   }
   GLIBC_2.42 {
     __inet_ntop_chk;
+    __inet_pton_chk;
   }
   GLIBC_PRIVATE {
     __fortify_fail;
