@@ -38,6 +38,7 @@ routines := \
   inet_addr \
   inet_ntop \
   inet_pton \
+  inet_pton_length \
   ns_makecanon \
   ns_name_compress \
   ns_name_length_uncompressed \
@@ -72,6 +73,11 @@ routines := \
   resolv_conf \
   resolv_context \
   # routines
+
+# Exclude fortified routines from being built with _FORTIFY_SOURCE
+routines_no_fortify += \
+  inet_pton \
+  # routines_no_fortify
 
 tests = tst-aton tst-leaks tst-inet_ntop
 tests-container = tst-leaks2
