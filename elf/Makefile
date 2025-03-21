@@ -3452,8 +3452,11 @@ $(objpfx)tst-dlopen-constructor-null-mod2.so: \
 
 CFLAGS-tst-origin.c += $(no-stack-protector)
 CFLAGS-liborigin-mod.c += $(no-stack-protector)
+# Link tst-origin with liborigin-mod.so, but without a full path.
 LDFLAGS-tst-origin += -Wl,-rpath,\$$ORIGIN -L$(subst :, -L,$(rpath-link)) -lorigin-mod
-$(objpfx)tst-origin.out: tst-origin.sh $(objpfx)liborigin-mod.so $(objpfx)tst-origin
+$(objpfx)tst-origin: +nolink-deps += $(objpfx)liborigin-mod.so
+$(objpfx)tst-origin: $(objpfx)liborigin-mod.so
+$(objpfx)tst-origin.out: tst-origin.sh $(objpfx)tst-origin
 	$(SHELL) \
 		$< \
 		'$(common-objpfx)' \
