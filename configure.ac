@@ -2061,6 +2061,18 @@ if test "$libc_cv_static_pie" = "yes"; then
 fi
 LIBC_CONFIG_VAR([enable-static-pie], [$libc_cv_static_pie])
 
+# Check if we can link support functionality against libgcc_s.
+# Must not be used for linking installed binaries, to produce the
+# same binaries for bootstrapped and bootstrapping builds (the latter
+# with a GCC that does not build libgcc_s).
+AC_CACHE_CHECK([whether $CC can link against -lgcc_s], libc_cv_have_libgcc_s, [dnl
+  old_LIBS="$LIBS"
+  LIBS="$LIBS -lgcc_s"
+  AC_LINK_IFELSE([AC_LANG_PROGRAM([[]], [[]])],
+		 [libc_cv_have_libgcc_s=yes], [libc_cv_have_libgcc_s=no])
+  LIBS="$old_LIBS"])
+LIBC_CONFIG_VAR([have-libgcc_s], [$libc_cv_have_libgcc_s])
+
 # Support configure.ac under sysdeps.
 AC_SUBST(libc_cv_test_cc_mprefer_vector_width)
 AC_SUBST(test_enable_cet)

@@ -9135,6 +9135,46 @@ fi
 config_vars="$config_vars
 enable-static-pie = $libc_cv_static_pie"
 
+# Check if we can link support functionality against libgcc_s.
+# Must not be used for linking installed binaries, to produce the
+# same binaries for bootstrapped and bootstrapping builds (the latter
+# with a GCC that does not build libgcc_s).
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether $CC can link against -lgcc_s" >&5
+printf %s "checking whether $CC can link against -lgcc_s... " >&6; }
+if test ${libc_cv_have_libgcc_s+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e)   old_LIBS="$LIBS"
+  LIBS="$LIBS -lgcc_s"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main (void)
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  libc_cv_have_libgcc_s=yes
+else case e in #(
+  e) libc_cv_have_libgcc_s=no ;;
+esac
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+  LIBS="$old_LIBS" ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_have_libgcc_s" >&5
+printf "%s\n" "$libc_cv_have_libgcc_s" >&6; }
+config_vars="$config_vars
+have-libgcc_s = $libc_cv_have_libgcc_s"
+
 # Support configure.ac under sysdeps.
 
 
