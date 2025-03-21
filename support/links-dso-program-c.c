@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <dlfcn.h>
 
 /* makedb needs selinux dso's.  */
 #ifdef HAVE_SELINUX
@@ -13,6 +14,20 @@
    such dependencies.
 */
 
+/* Use attribute cleanup to force linking against libgcc_s.  */
+static void
+cleanup_function (int *ignored)
+{
+  puts ("cleanup performed");
+}
+
+void
+invoke_callback (void (*callback) (int *))
+{
+  __attribute__ ((cleanup (cleanup_function))) int i = 0;
+  callback (&i);
+}
+
 int
 main (int argc, char **argv)
 {
@@ -22,5 +37,10 @@ main (int argc, char **argv)
   /* This exists to force libselinux.so to be required.  */
   printf ("selinux %d\n", is_selinux_enabled ());
 #endif
+  /* Prevent invoke_callback from being optimized away.  */
+  {
+    Dl_info dli;
+    dladdr (invoke_callback, &dli);
+  }
   return 0;
 }
