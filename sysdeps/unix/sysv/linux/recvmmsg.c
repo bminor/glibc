@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sys/socket.h>
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include <socketcall.h>
 
 static int

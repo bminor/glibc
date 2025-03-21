@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sys/epoll.h>
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 
 int
 __epoll_pwait2_time64 (int fd, struct epoll_event *ev, int maxev,

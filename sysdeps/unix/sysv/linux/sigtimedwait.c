@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <signal.h>
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 
 int
 __sigtimedwait64 (const sigset_t *set, siginfo_t *info,

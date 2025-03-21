@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include <time.h>
 #include <futex-internal.h>
 #include <kernel-features.h>

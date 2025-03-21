@@ -18,7 +18,7 @@
 
 #include <kernel-features.h>
 #include <errno.h>
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include <futex-internal.h>
 #include <internaltypes.h>
 #include <semaphore.h>

@@ -154,42 +154,31 @@
 # define __SYSCALL_CANCEL7_ARG7
 # define __SYSCALL_CANCEL7_ARCH_ARG7
 #endif
-long int __internal_syscall_cancel (__syscall_arg_t a1, __syscall_arg_t a2,
-				    __syscall_arg_t a3, __syscall_arg_t a4,
-				    __syscall_arg_t a5, __syscall_arg_t a6,
-				    __SYSCALL_CANCEL7_ARG_DEF
-				    __syscall_arg_t nr) attribute_hidden;
-
-long int __syscall_cancel (__syscall_arg_t arg1, __syscall_arg_t arg2,
-			   __syscall_arg_t arg3, __syscall_arg_t arg4,
-			   __syscall_arg_t arg5, __syscall_arg_t arg6,
-			   __SYSCALL_CANCEL7_ARG_DEF
-			   __syscall_arg_t nr) attribute_hidden;
 
 #define __SYSCALL_CANCEL0(name)						\
-  __syscall_cancel (0, 0, 0, 0, 0, 0, __SYSCALL_CANCEL7_ARG __NR_##name)
+  syscall_cancel (0, 0, 0, 0, 0, 0, __SYSCALL_CANCEL7_ARG __NR_##name)
 #define __SYSCALL_CANCEL1(name, a1)					\
-  __syscall_cancel (__SSC (a1), 0, 0, 0, 0, 0,				\
-		    __SYSCALL_CANCEL7_ARG __NR_##name)
+  syscall_cancel (__SSC (a1), 0, 0, 0, 0, 0,				\
+		  __SYSCALL_CANCEL7_ARG __NR_##name)
 #define __SYSCALL_CANCEL2(name, a1, a2) \
-  __syscall_cancel (__SSC (a1), __SSC (a2), 0, 0, 0, 0,			\
-		    __SYSCALL_CANCEL7_ARG __NR_##name)
+  syscall_cancel (__SSC (a1), __SSC (a2), 0, 0, 0, 0,			\
+		  __SYSCALL_CANCEL7_ARG __NR_##name)
 #define __SYSCALL_CANCEL3(name, a1, a2, a3) \
-  __syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3), 0, 0, 0,	\
-		    __SYSCALL_CANCEL7_ARG __NR_##name)
+  syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3), 0, 0, 0,	\
+		  __SYSCALL_CANCEL7_ARG __NR_##name)
 #define __SYSCALL_CANCEL4(name, a1, a2, a3, a4) \
-  __syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3),			\
-		    __SSC(a4), 0, 0, __SYSCALL_CANCEL7_ARG __NR_##name)
+  syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3),			\
+		  __SSC(a4), 0, 0, __SYSCALL_CANCEL7_ARG __NR_##name)
 #define __SYSCALL_CANCEL5(name, a1, a2, a3, a4, a5) \
-  __syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3), __SSC(a4),	\
-		    __SSC (a5), 0, __SYSCALL_CANCEL7_ARG __NR_##name)
+  syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3), __SSC(a4),	\
+		  __SSC (a5), 0, __SYSCALL_CANCEL7_ARG __NR_##name)
 #define __SYSCALL_CANCEL6(name, a1, a2, a3, a4, a5, a6) \
-  __syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3), __SSC (a4),	\
-		    __SSC (a5), __SSC (a6), __SYSCALL_CANCEL7_ARG	\
-		    __NR_##name)
+  syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3), __SSC (a4),	\
+		  __SSC (a5), __SSC (a6), __SYSCALL_CANCEL7_ARG	\
+		  __NR_##name)
 #define __SYSCALL_CANCEL7(name, a1, a2, a3, a4, a5, a6, a7)		\
-  __syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3), __SSC (a4),	\
-		    __SSC (a5), __SSC (a6), __SSC (a7), __NR_##name)
+  syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3), __SSC (a4),	\
+		  __SSC (a5), __SSC (a6), __SSC (a7), __NR_##name)
 
 #define __SYSCALL_CANCEL_NARGS_X(a,b,c,d,e,f,g,h,n,...) n
 #define __SYSCALL_CANCEL_NARGS(...) \
@@ -206,33 +195,33 @@ long int __syscall_cancel (__syscall_arg_t arg1, __syscall_arg_t arg2,
   __SYSCALL_CANCEL_DISP (__SYSCALL_CANCEL, __VA_ARGS__)
 
 #define __INTERNAL_SYSCALL_CANCEL0(name)				\
-  __internal_syscall_cancel (0, 0, 0, 0, 0, 0, __SYSCALL_CANCEL7_ARG	\
+  internal_syscall_cancel (0, 0, 0, 0, 0, 0, __SYSCALL_CANCEL7_ARG	\
 			     __NR_##name)
 #define __INTERNAL_SYSCALL_CANCEL1(name, a1)				\
-  __internal_syscall_cancel (__SSC (a1), 0, 0, 0, 0, 0,			\
-			     __SYSCALL_CANCEL7_ARG __NR_##name)
+  internal_syscall_cancel (__SSC (a1), 0, 0, 0, 0, 0,			\
+			   __SYSCALL_CANCEL7_ARG __NR_##name)
 #define __INTERNAL_SYSCALL_CANCEL2(name, a1, a2)			\
-  __internal_syscall_cancel (__SSC (a1), __SSC (a2), 0, 0, 0, 0,	\
-			     __SYSCALL_CANCEL7_ARG __NR_##name)
+  internal_syscall_cancel (__SSC (a1), __SSC (a2), 0, 0, 0, 0,	\
+			   __SYSCALL_CANCEL7_ARG __NR_##name)
 #define __INTERNAL_SYSCALL_CANCEL3(name, a1, a2, a3)			\
-  __internal_syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3), 0,	\
-			     0, 0, __SYSCALL_CANCEL7_ARG __NR_##name)
+  internal_syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3), 0,	\
+			   0, 0, __SYSCALL_CANCEL7_ARG __NR_##name)
 #define __INTERNAL_SYSCALL_CANCEL4(name, a1, a2, a3, a4)		\
-  __internal_syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3),	\
-			     __SSC(a4), 0, 0,				\
-			     __SYSCALL_CANCEL7_ARG __NR_##name)
+  internal_syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3),	\
+			   __SSC(a4), 0, 0,				\
+			   __SYSCALL_CANCEL7_ARG __NR_##name)
 #define __INTERNAL_SYSCALL_CANCEL5(name, a1, a2, a3, a4, a5)		\
-  __internal_syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3),	\
-			     __SSC(a4), __SSC (a5), 0,			\
-			     __SYSCALL_CANCEL7_ARG __NR_##name)
+  internal_syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3),	\
+			   __SSC(a4), __SSC (a5), 0,			\
+			   __SYSCALL_CANCEL7_ARG __NR_##name)
 #define __INTERNAL_SYSCALL_CANCEL6(name, a1, a2, a3, a4, a5, a6)	\
-  __internal_syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3),	\
-			     __SSC (a4), __SSC (a5), __SSC (a6),	\
-			     __SYSCALL_CANCEL7_ARG __NR_##name)
+  internal_syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3),	\
+			   __SSC (a4), __SSC (a5), __SSC (a6),	\
+			   __SYSCALL_CANCEL7_ARG __NR_##name)
 #define __INTERNAL_SYSCALL_CANCEL7(name, a1, a2, a3, a4, a5, a6, a7) \
-  __internal_syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3),     \
-			     __SSC (a4), __SSC (a5), __SSC (a6),     \
-			     __SSC (a7), __NR_##name)
+  internal_syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3),     \
+			   __SSC (a4), __SSC (a5), __SSC (a6),     \
+			   __SSC (a7), __NR_##name)
 
 /* Issue a cancellable syscall defined by syscall number NAME plus any other
    argument required.  If an error occurs its value is returned as an negative
