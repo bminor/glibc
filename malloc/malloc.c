@@ -3692,6 +3692,8 @@ _mid_memalign (size_t alignment, size_t bytes, void *address)
       }
     size_t tc_idx = csize2tidx (tbytes);
 
+    MAYBE_INIT_TCACHE ();
+
     if (tcache_available (tc_idx))
       {
 	/* The tcache itself isn't encoded, but the chain is.  */
