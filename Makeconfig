@@ -442,7 +442,8 @@ ifndef +link-pie
 	     $(filter-out $(addprefix $(csu-objpfx),start.o \
 						    S$(start-installed-name))\
 			  $(+preinit) $(link-extra-libs) \
-			  $(common-objpfx)libc% $(+postinit),$^) \
+			  $(common-objpfx)libc% $(+postinit) \
+			  $(+nolink-deps),$^) \
 	     $(link-extra-libs)
 +link-pie-after-libc = $(+postctorS) $(+postinit)
 define +link-pie
@@ -473,7 +474,8 @@ ifndef +link-static
 	      $(filter-out $(addprefix $(csu-objpfx),start.o \
 						     $(start-installed-name))\
 			   $(+preinit) $(link-extra-libs-static) \
-			   $(common-objpfx)libc% $(+postinit),$^) \
+			   $(common-objpfx)libc% $(+postinit) \
+			   $(+nolink-deps), $^) \
 	      $(link-extra-libs-static)
 +link-static-after-libc = $(+postctorT) $(+postinit)
 define +link-static
@@ -509,7 +511,8 @@ else  # not build-pie-default
 	      $(filter-out $(addprefix $(csu-objpfx),start.o \
 						     $(start-installed-name))\
 			   $(+preinit) $(link-extra-libs) \
-			   $(common-objpfx)libc% $(+postinit),$^) \
+			   $(common-objpfx)libc% $(+postinit) \
+			   $(+nolink-deps),$^) \
 	      $(link-extra-libs)
 +link-after-libc = $(+postctor) $(+postinit)
 define +link
@@ -549,7 +552,8 @@ endif  # +link
 	      $(filter-out $(addprefix $(csu-objpfx),start.o \
 						     $(start-name-2.0))\
 			   $(+preinit) $(link-extra-libs) \
-			   $(common-objpfx)libc% $(+postinit),$^) \
+			   $(common-objpfx)libc% $(+postinit) \
+			   $(+nolink-deps),$^) \
 	      $(link-extra-libs)
 +link-after-libc = $(+postctor) $(+postinit)
 define +link-2.0-tests
