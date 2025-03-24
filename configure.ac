@@ -1853,6 +1853,23 @@ AS_IF([test "$libc_cv_compiler_default_time_bits" = yes],
 AC_SUBST(no_time_bits_source)
 LIBC_CONFIG_VAR([no-time-bits-source], [$no_time_bits_source])
 
+dnl Check if linker sets --no-undefined-version by default
+AC_CACHE_CHECK([whether the linker sets --no-undefined-version by default],
+	       [libc_cv_undefined_version],
+	       [dnl
+cat > conftest.script << EOF
+VERSION_1.0 { global: bar; };
+EOF
+old_LDFLAGS="$LDFLAGS"
+LDFLAGS="-Wl,--version-script=conftest.script -shared"
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[extern int und (void);]],
+                                [[int foo (void) { return und (); }]])],
+                                [libc_cv_undefined_version=],
+                                [libc_cv_undefined_version=-Wl,--undefined-version])
+LDFLAGS="$old_LDFLAGS"
+rm conftest.*])
+LIBC_CONFIG_VAR([undefined-version], [$libc_cv_undefined_version])
+
 dnl Starting with binutils 2.35, GAS can attach multiple symbol versions
 dnl to one symbol (PR 23840).
 AC_CACHE_CHECK(whether the assembler requires one version per symbol,

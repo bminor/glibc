@@ -8839,6 +8839,46 @@ fi
 config_vars="$config_vars
 no-time-bits-source = $no_time_bits_source"
 
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether the linker sets --no-undefined-version by default" >&5
+printf %s "checking whether the linker sets --no-undefined-version by default... " >&6; }
+if test ${libc_cv_undefined_version+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) cat > conftest.script << EOF
+VERSION_1.0 { global: bar; };
+EOF
+old_LDFLAGS="$LDFLAGS"
+LDFLAGS="-Wl,--version-script=conftest.script -shared"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+extern int und (void);
+int
+main (void)
+{
+int foo (void) { return und (); }
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  libc_cv_undefined_version=
+else case e in #(
+  e) libc_cv_undefined_version=-Wl,--undefined-version ;;
+esac
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+LDFLAGS="$old_LDFLAGS"
+rm conftest.* ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_undefined_version" >&5
+printf "%s\n" "$libc_cv_undefined_version" >&6; }
+config_vars="$config_vars
+undefined-version = $libc_cv_undefined_version"
+
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether the assembler requires one version per symbol" >&5
 printf %s "checking whether the assembler requires one version per symbol... " >&6; }
 if test ${libc_cv_symver_needs_alias+y}
