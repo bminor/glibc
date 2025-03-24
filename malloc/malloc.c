@@ -3316,6 +3316,14 @@ tcache_init(void)
   if (tcache_shutting_down)
     return;
 
+  /* Check minimum mmap chunk is larger than max tcache size.  This means
+     mmap chunks with their different layout are never added to tcache.  */
+  if (MAX_TCACHE_SIZE >= GLRO (dl_pagesize) / 2)
+    malloc_printerr ("max tcache size too large");
+
+  /* Preserve errno when called from free() - _int_malloc may corrupt it.  */
+  int err = errno;
+
   arena_get (ar_ptr, bytes);
   victim = _int_malloc (ar_ptr, bytes);
   if (!victim && ar_ptr != NULL)
@@ -3327,6 +3335,8 @@ tcache_init(void)
 
   if (ar_ptr != NULL)
     __libc_lock_unlock (ar_ptr->mutex);
+
+  __set_errno (err);
 
   /* In a low memory situation, we may not be able to allocate memory
      - in which case, we just keep trying later.  However, we
@@ -3453,37 +3463,15 @@ __libc_free (void *mem)
   if (__glibc_unlikely (mtag_enabled))
     *(volatile char *)mem;
 
-  int err = errno;
-
   p = mem2chunk (mem);
 
-  if (chunk_is_mmapped (p))                       /* release mmapped memory. */
-    {
-      /* See if the dynamic brk/mmap threshold needs adjusting.
-	 Dumped fake mmapped chunks do not affect the threshold.  */
-      if (!mp_.no_dyn_threshold
-          && chunksize_nomask (p) > mp_.mmap_threshold
-          && chunksize_nomask (p) <= DEFAULT_MMAP_THRESHOLD_MAX)
-        {
-          mp_.mmap_threshold = chunksize (p);
-          mp_.trim_threshold = 2 * mp_.mmap_threshold;
-          LIBC_PROBE (memory_mallopt_free_dyn_thresholds, 2,
-                      mp_.mmap_threshold, mp_.trim_threshold);
-        }
-      munmap_chunk (p);
-    }
-  else
-    {
-      MAYBE_INIT_TCACHE ();
+  MAYBE_INIT_TCACHE ();
 
-      /* Mark the chunk as belonging to the library again.  */
-      (void)tag_region (chunk2mem (p), memsize (p));
+  /* Mark the chunk as belonging to the library again.  */
+  tag_region (chunk2mem (p), memsize (p));
 
-      ar_ptr = arena_for_chunk (p);
-      _int_free (ar_ptr, p, 0);
-    }
-
-  __set_errno (err);
+  ar_ptr = arena_for_chunk (p);
+  _int_free (ar_ptr, p, 0);
 }
 libc_hidden_def (__libc_free)
 
@@ -4570,9 +4558,8 @@ _int_free_check (mstate av, mchunkptr p, INTERNAL_SIZE_T size)
   if (__builtin_expect ((uintptr_t) p > (uintptr_t) -size, 0)
       || __builtin_expect (misaligned_chunk (p), 0))
     malloc_printerr ("free(): invalid pointer");
-  /* We know that each chunk is at least MINSIZE bytes in size or a
-     multiple of MALLOC_ALIGNMENT.  */
-  if (__glibc_unlikely (size < MINSIZE || !aligned_OK (size)))
+  /* We know that each chunk is at least MINSIZE bytes.  */
+  if (__glibc_unlikely (size < MINSIZE))
     malloc_printerr ("free(): invalid size");
 
   check_inuse_chunk (av, p);
@@ -4669,6 +4656,9 @@ _int_free_chunk (mstate av, mchunkptr p, INTERNAL_SIZE_T size, int have_lock)
 
   else if (!chunk_is_mmapped(p)) {
 
+    /* Preserve errno in case block merging results in munmap.  */
+    int err = errno;
+
     /* If we're single-threaded, don't lock the arena.  */
     if (SINGLE_THREAD_P)
       have_lock = true;
@@ -4680,13 +4670,33 @@ _int_free_chunk (mstate av, mchunkptr p, INTERNAL_SIZE_T size, int have_lock)
 
     if (!have_lock)
       __libc_lock_unlock (av->mutex);
+
+    __set_errno (err);
   }
   /*
     If the chunk was allocated via mmap, release via munmap().
   */
 
   else {
+
+    /* Preserve errno in case munmap sets it.  */
+    int err = errno;
+
+    /* See if the dynamic brk/mmap threshold needs adjusting.
+       Dumped fake mmapped chunks do not affect the threshold.  */
+    if (!mp_.no_dyn_threshold
+        && chunksize_nomask (p) > mp_.mmap_threshold
+        && chunksize_nomask (p) <= DEFAULT_MMAP_THRESHOLD_MAX)
+      {
+        mp_.mmap_threshold = chunksize (p);
+        mp_.trim_threshold = 2 * mp_.mmap_threshold;
+        LIBC_PROBE (memory_mallopt_free_dyn_thresholds, 2,
+		    mp_.mmap_threshold, mp_.trim_threshold);
+      }
+
     munmap_chunk (p);
+
+    __set_errno (err);
   }
 }
 
