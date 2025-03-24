@@ -57,6 +57,26 @@ __clock_gettime (clockid_t clock_id, struct timespec *ts)
 
     case CLOCK_REALTIME:
       {
+#ifdef HAVE_HOST_GET_TIME64
+	time_value64_t tv_64;
+	err = __host_get_time64 (__mach_host_self (), &tv_64);
+
+	/* If err is MIG_BAD_ID, it means an old gnumach which does not
+	   support __host_get_time64 is running against the new gnumach
+	   headers which has the signature of __host_get_time64. In that
+	   case, we fall back to __host_get_time.  */
+	if (err != MIG_BAD_ID)
+	  {
+	    if (err)
+	      {
+		__set_errno (err);
+		return -1;
+	      }
+
+	    TIME_VALUE64_TO_TIMESPEC (&tv_64, ts);
+	    return 0;
+	  }
+#endif
 	/* __host_get_time can only fail if passed an invalid host_t.
 	   __mach_host_self could theoretically fail (producing an
 	   invalid host_t) due to resource exhaustion, but we assume

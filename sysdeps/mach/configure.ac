@@ -94,6 +94,8 @@ mach_RPC_CHECK(mach_host.defs, host_page_size,
 	       HAVE_HOST_PAGE_SIZE)
 mach_RPC_CHECK(mach_host.defs, host_get_uptime64,
 	       HAVE_HOST_GET_UPTIME64)
+mach_RPC_CHECK(mach_host.defs, host_get_time64,
+	       HAVE_HOST_GET_TIME64)
 mach_RPC_CHECK(gnumach.defs, thread_set_name,
 	       HAVE_MACH_THREAD_SET_NAME)
 mach_RPC_CHECK(gnumach.defs, thread_get_name,

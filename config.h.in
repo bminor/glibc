@@ -166,6 +166,9 @@
 /* Mach specific: define if the `host_get_uptime64' RPC is available.  */
 #undef	HAVE_HOST_GET_UPTIME64
 
+/* Mach specific: define if the `host_get_time64' RPC is available.  */
+#undef	HAVE_HOST_GET_TIME64
+
 /* Mach specific: define if the `thread_set_name' RPC is available.  */
 #undef  HAVE_MACH_THREAD_SET_NAME
 

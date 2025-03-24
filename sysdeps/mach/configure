@@ -491,6 +491,36 @@ if test $libc_cv_mach_rpc_host_get_uptime64 = yes; then
 
 fi
 
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for host_get_time64 in mach_host.defs" >&5
+printf %s "checking for host_get_time64 in mach_host.defs... " >&6; }
+if test ${libc_cv_mach_rpc_host_get_time64+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <mach/mach_host.defs>
+
+_ACEOF
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  $EGREP_TRADITIONAL "host_get_time64" >/dev/null 2>&1
+then :
+  libc_cv_mach_rpc_host_get_time64=yes
+else case e in #(
+  e) libc_cv_mach_rpc_host_get_time64=no ;;
+esac
+fi
+rm -rf conftest*
+ ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_mach_rpc_host_get_time64" >&5
+printf "%s\n" "$libc_cv_mach_rpc_host_get_time64" >&6; }
+if test $libc_cv_mach_rpc_host_get_time64 = yes; then
+  printf "%s\n" "#define HAVE_HOST_GET_TIME64 1" >>confdefs.h
+
+fi
+
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for thread_set_name in gnumach.defs" >&5
 printf %s "checking for thread_set_name in gnumach.defs... " >&6; }
 if test ${libc_cv_mach_rpc_thread_set_name+y}
