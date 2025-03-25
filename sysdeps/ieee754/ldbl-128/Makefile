@@ -126,3 +126,7 @@ CFLAGS-s_y0l.c += -fno-builtin-y0f64x -fno-builtin-y0f128
 CFLAGS-s_y1l.c += -fno-builtin-y1f64x -fno-builtin-y1f128
 CFLAGS-s_ynl.c += -fno-builtin-ynf64x -fno-builtin-ynf128
 endif
+
+ifeq ($(subdir),stdio-common)
+fmt-xscanf-real-convs += ldouble
+endif
