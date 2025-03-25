@@ -1188,6 +1188,9 @@ check: tests
 .PHONY: xcheck
 xcheck: xtests
 
+# Also handle test inputs in sysdeps.
+vpath %.input $(sysdirs)
+
 # Handle tests-time64 and xtests-time64 that should built with LFS
 # and 64-bit time support.
 include $(o-iterator)
