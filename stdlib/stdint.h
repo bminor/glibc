@@ -91,6 +91,8 @@ typedef __intmax_t		intmax_t;
 typedef __uintmax_t		uintmax_t;
 
 
+# undef __INT64_C
+# undef __UINT64_C
 # if __WORDSIZE == 64
 #  define __INT64_C(c)	c ## L
 #  define __UINT64_C(c)	c ## UL
