@@ -66,23 +66,23 @@ main (int argc, char **argv)
 	  break;
 
 	case 'a':
-	  puts ("option -a\n");
+	  puts ("option -a");
 	  break;
 
 	case 'b':
-	  puts ("option -b\n");
+	  puts ("option -b");
 	  break;
 
 	case 'c':
-	  printf ("option -c with value `%s'\n", optarg);
+	  printf ("option -c with value '%s'\n", optarg);
 	  break;
 
 	case 'd':
-	  printf ("option -d with value `%s'\n", optarg);
+	  printf ("option -d with value '%s'\n", optarg);
 	  break;
 
 	case 'f':
-	  printf ("option -f with value `%s'\n", optarg);
+	  printf ("option -f with value '%s'\n", optarg);
 	  break;
 
 	case '?':
