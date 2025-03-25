@@ -6,6 +6,15 @@ asm ("memmove = __GI_memmove");
 asm ("memset = __GI_memset");
 asm ("memcpy = __GI_memcpy");
 
+#ifdef __clang__
+/* clang might generate an abort call when cleanup functions (set by
+   __attribute__ ((cleanup)) calls functions not marked as nothrow.
+   We can mitigate by marking some internal functions as __THROW,
+   but it is not possible for functions that issue used-provided
+   callbacks (for instance pthread_once).  */
+asm ("abort = __GI_abort");
+#endif
+
 /* Some targets do not use __stack_chk_fail_local.  In libc.so,
    redirect __stack_chk_fail to a hidden reference
    __stack_chk_fail_local, to avoid the PLT reference.
