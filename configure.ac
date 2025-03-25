@@ -1453,6 +1453,15 @@ AC_CACHE_CHECK([for -Wno-maybe-uninitialized],
 LIBC_CONFIG_VAR([config-cflags-wno-maybe-uninitialized],
 		[$libc_cv_wno_maybe_uninitialized])
 
+AC_CACHE_CHECK([for -Wno-unused-command-line-argument],
+                libc_cv_wno_unused_command_line_argument, [dnl
+		LIBC_TRY_CC_OPTION([-Werror -Wunused-command-line-argument],
+				   [libc_cv_wno_unused_command_line_argument=-Wno-unused-command-line-argument],
+				   [libc_cv_wno_unused_command_line_argument=])
+])
+LIBC_CONFIG_VAR([config-cflags-wno-unused-command-line-arguments],
+		[$libc_cv_wno_unused_command_line_argument])
+
 AC_CACHE_CHECK(whether cc puts quotes around section names,
 	       libc_cv_have_section_quotes,
 	       [cat > conftest.c <<EOF
