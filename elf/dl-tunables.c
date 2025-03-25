@@ -37,6 +37,16 @@
 #define TUNABLES_INTERNAL 1
 #include "dl-tunables.h"
 
+/* The function might be called before the process is self-relocated.  */
+static size_t
+__attribute_optimization_barrier__
+_dl_strlen (const char *s)
+{
+  const char *p = s;
+  for (; *s != '\0'; s++);
+  return s - p;
+}
+
 static char **
 get_next_env (char **envp, char **name, char **val, char ***prev_envp)
 {
@@ -324,9 +334,8 @@ __tunables_init (char **envp)
 
 	  if (tunable_is_name (name, envname))
 	    {
-	      size_t envvallen = 0;
 	      /* The environment variable is always null-terminated.  */
-	      for (const char *p = envval; *p != '\0'; p++, envvallen++);
+	      size_t envvallen = _dl_strlen (envval);
 
 	      tunables_env_alias[i] =
 		(struct tunable_toset_t) { cur, envval, envvallen };
