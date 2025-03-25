@@ -17,6 +17,16 @@ ifeq ($(subdir),math)
 tests += $(ldbl-tests)
 endif
 
+ifeq ($(subdir),stdio-common)
+fmt-xscanf-real-convs += ldouble
+
+# Use the IBM format for long double scanf format tests.
+$(foreach suf,$(all-object-suffixes), \
+	  $(foreach p,$(xscanf-funcs), \
+		    $(objpfx)tst-scanf-format-$(p)-ldouble$(suf))): \
+  sysdep-CFLAGS += $(type-ldouble-CFLAGS)
+endif
+
 # Long double files may need extra CFLAGS.
 ldbl-128ibm-routines = s_nexttoward s_nexttowardf \
 		       $(type-ldouble-routines) \

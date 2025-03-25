@@ -78,6 +78,55 @@ CFLAGS-vfwprintf-internal.c += -mfloat128 -mabi=ibmlongdouble
 CFLAGS-vfscanf-internal.c += -mfloat128 -mabi=ibmlongdouble
 CFLAGS-vfwscanf-internal.c += -mfloat128 -mabi=ibmlongdouble
 
+ifeq ($(subdir),stdio-common)
+# We already have the long double conversion defined with our common rules
+# for the IBM format, so define these special rules to build and run extra
+# executables for the IEEE binary128 format, reusing the same sources and
+# inputs.
+define tst-scanf-format-128ibm-compat-tests
+test-srcs += \
+  tst-scanf-format-$(1)-ldouble-128ibm-compat \
+  # test-srcs
+
+$$(objpfx)tst-scanf-format-$(1)-ldouble-128ibm-compat.o: \
+	tst-scanf-format-$(1)-ldouble.c $$(before-compile)
+	$$(compile-command.c)
+$$(objpfx)tst-scanf-format-$(1)-ldouble-128ibm-compat: $$(libm)
+endef
+$(foreach p,$(xscanf-funcs), \
+  $(eval $(call tst-scanf-format-128ibm-compat-tests,$(p))))
+
+ifeq ($(run-built-tests),yes)
+define tst-scanf-format-128ibm-compat-rule
+tests-special += \
+  $$(objpfx)tst-scanf-format-$(1)-ldouble-128ibm-compat-$(2).out \
+  # tests-special
+
+$$(objpfx)tst-scanf-format-$(1)-ldouble-128ibm-compat-$(2).out: \
+	../sysdeps/ieee754/ldbl-128/tst-scanf-format-ldouble-$(2).input \
+	$$(objpfx)tst-scanf-format-$(1)-ldouble-128ibm-compat
+	$$(make-tst-scanf-format-out) > $$@ < $$<; \
+	$$(evaluate-test)
+
+ifeq (yes,$(build-shared))
+ifneq ($(PERL),no)
+tests-special += \
+  $$(objpfx)tst-scanf-format-$(1)-ldouble-128ibm-compat-$(2)-mem.out \
+  # tests-special
+
+generated += \
+  $$(objpfx)tst-scanf-format-$(1)-ldouble-128ibm-compat-$(2)-mem.out \
+  $$(objpfx)tst-scanf-format-$(1)-ldouble-128ibm-compat-$(2).mtrace \
+  # generated
+endif
+endif
+endef
+$(foreach f,$(fmts-xscanf-real), \
+  $(foreach p,$(xscanf-funcs), \
+    $(eval $(call tst-scanf-format-128ibm-compat-rule,$(p),$(f)))))
+endif # $(run-built-tests) == yes
+endif # $(subdir) == stdio-common
+
 # Basic tests for the implementation of long double with IEEE binary128
 # format and for the related redirections in installed headers.
 tests-internal += test-printf-ieee128 test-printf-ibm128
