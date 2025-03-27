@@ -30,6 +30,8 @@
 /* GNU extension float constant macros.  */
 #define M_MLIT(c) c ## f
 
+#define M_SET_RESTORE_ROUND(RM) SET_RESTORE_ROUNDF (RM)
+
 #include <libm-alias-float.h>
 #include <math-nan-payload-float.h>
 

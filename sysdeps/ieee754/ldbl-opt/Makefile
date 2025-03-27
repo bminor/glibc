@@ -166,6 +166,7 @@ libnldbl-calls = \
   obstack_vprintf \
   obstack_vprintf_chk \
   pow \
+  pown \
   powr \
   printf \
   printf_chk \
@@ -376,6 +377,7 @@ CFLAGS-nldbl-nexttoward.c = -fno-builtin-nexttoward -fno-builtin-nexttowardl
 CFLAGS-nldbl-nexttowardf.c = -fno-builtin-nexttowardf
 CFLAGS-nldbl-nextup.c = -fno-builtin-nextupl
 CFLAGS-nldbl-pow.c = -fno-builtin-powl
+CFLAGS-nldbl-pown.c = -fno-builtin-pownl
 CFLAGS-nldbl-powr.c = -fno-builtin-powrl
 CFLAGS-nldbl-remainder.c = -fno-builtin-remainderl -fno-builtin-dreml
 CFLAGS-nldbl-remquo.c = -fno-builtin-remquol

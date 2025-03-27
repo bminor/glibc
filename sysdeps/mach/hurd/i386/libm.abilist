@@ -1277,6 +1277,14 @@ GLIBC_2.41 tanpif32x F
 GLIBC_2.41 tanpif64 F
 GLIBC_2.41 tanpif64x F
 GLIBC_2.41 tanpil F
+GLIBC_2.42 pown F
+GLIBC_2.42 pownf F
+GLIBC_2.42 pownf128 F
+GLIBC_2.42 pownf32 F
+GLIBC_2.42 pownf32x F
+GLIBC_2.42 pownf64 F
+GLIBC_2.42 pownf64x F
+GLIBC_2.42 pownl F
 GLIBC_2.42 powr F
 GLIBC_2.42 powrf F
 GLIBC_2.42 powrf128 F

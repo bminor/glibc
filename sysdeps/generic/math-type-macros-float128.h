@@ -19,6 +19,8 @@
 #ifndef _MATH_TYPE_MACROS_FLOAT128
 #define _MATH_TYPE_MACROS_FLOAT128
 
+#include <fenv_private.h>
+
 #define M_LIT(c) __f128 (c)
 #define M_PFX FLT128
 #define M_SUF(c) c ## f128
@@ -29,6 +31,13 @@
 #define CFLOAT __CFLOAT128
 
 #define M_MLIT(c) c ## f128
+
+/* fenv_private.h may not define SET_RESTORE_ROUNDF128.  */
+#ifdef SET_RESTORE_ROUNDF128
+# define M_SET_RESTORE_ROUND(RM) SET_RESTORE_ROUNDF128 (RM)
+#else
+# define M_SET_RESTORE_ROUND(RM) SET_RESTORE_ROUNDL (RM)
+#endif
 
 #include <libm-alias-float128.h>
 #include <math-nan-payload-float128.h>

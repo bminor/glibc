@@ -187,6 +187,9 @@ __MATHCALL_VEC (cbrt,, (_Mdouble_ __x));
 
 #if __GLIBC_USE (IEC_60559_FUNCS_EXT_C23)
 /* Return X to the Y power.  */
+__MATHCALL (pown,, (_Mdouble_ __x, long long int __y));
+
+/* Return X to the Y power.  */
 __MATHCALL (powr,, (_Mdouble_ __x, _Mdouble_ __y));
 
 /* Return the reciprocal of the square root of X.  */

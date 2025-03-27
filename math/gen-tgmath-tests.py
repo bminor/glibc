@@ -753,6 +753,7 @@ class Tests(object):
         self.add_tests('log2p1', 'r', ['r'])
         self.add_tests('log10p1', 'r', ['r'])
         self.add_tests('logp1', 'r', ['r'])
+        self.add_tests('pown', 'r', ['r', 'long long int'])
         self.add_tests('powr', 'r', ['r', 'r'])
         self.add_tests('rsqrt', 'r', ['r'])
         self.add_tests('sinpi', 'r', ['r'])

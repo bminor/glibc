@@ -925,6 +925,9 @@
 
 #if __GLIBC_USE (IEC_60559_FUNCS_EXT_C23)
 /* Return X to the Y power.  */
+# define pown(Val1, Val2) __TGMATH_BINARY_FIRST_REAL_ONLY (Val1, Val2, pown)
+
+/* Return X to the Y power.  */
 # define powr(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, powr)
 
 /* Return 1/sqrt(X).  */

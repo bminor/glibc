@@ -428,6 +428,9 @@ typedef enum
     /* MPFR function with integer and floating-point arguments and one
        result.  */
     mpfr_if_f,
+    /* MPFR function with floating-point and integer arguments and one
+       result.  */
+    mpfr_fi_f,
     /* MPFR function with a single argument and two floating-point
        results.  */
     mpfr_f_11,
@@ -456,6 +459,7 @@ typedef struct
 		       mpfr_rnd_t);
     int (*mpfr_f_f1) (mpfr_t, int *, const mpfr_t, mpfr_rnd_t);
     int (*mpfr_if_f) (mpfr_t, long, const mpfr_t, mpfr_rnd_t);
+    int (*mpfr_fi_f) (mpfr_t, const mpfr_t, long, mpfr_rnd_t);
     int (*mpfr_f_11) (mpfr_t, mpfr_t, const mpfr_t, mpfr_rnd_t);
     int (*mpc_c_f) (mpfr_t, const mpc_t, mpfr_rnd_t);
     int (*mpc_c_c) (mpc_t, const mpc_t, mpc_rnd_t);
@@ -517,6 +521,9 @@ typedef struct
 #define FUNC_mpfr_if_f(NAME, MPFR_FUNC, EXACT)				\
   FUNC (NAME, ARGS2 (type_int, type_fp), RET1 (type_fp), EXACT, false,	\
 	false, CALC (mpfr_if_f, MPFR_FUNC))
+#define FUNC_mpfr_fL_f(NAME, MPFR_FUNC, EXACT)				\
+  FUNC (NAME, ARGS2 (type_fp, type_long_long), RET1 (type_fp), EXACT,	\
+	false, false, CALC (mpfr_fi_f, MPFR_FUNC))
 #define FUNC_mpc_c_f(NAME, MPFR_FUNC, EXACT)				\
   FUNC (NAME, ARGS2 (type_fp, type_fp), RET1 (type_fp), EXACT, true,	\
 	false, CALC (mpc_c_f, MPFR_FUNC))
@@ -589,6 +596,7 @@ static test_function test_functions[] =
     FUNC_mpfr_f_f ("log2p1", mpfr_log2p1, false),
     FUNC_mpfr_ff_f ("mul", mpfr_mul, true),
     FUNC_mpfr_ff_f ("pow", mpfr_pow, false),
+    FUNC_mpfr_fL_f ("pown", mpfr_pow_si, false),
     FUNC_mpfr_ff_f ("powr", mpfr_powr, false),
     /* mpfr_rec_sqrt differs from rsqrt on -0, but gen-auto-libm-tests
        does not handle results that are exact infinities anyway.  */
@@ -1552,6 +1560,20 @@ calc_generic_results (generic_value *outputs, generic_value *inputs,
       long l = mpz_get_si (inputs[0].value.i);
       inexact = calc->func.mpfr_if_f (outputs[0].value.f, l,
 				      inputs[1].value.f, mode_mpfr);
+      if (mode != rm_towardzero)
+	assert (!inexact && mpfr_zero_p (outputs[0].value.f));
+      adjust_real (outputs[0].value.f, inexact);
+      break;
+
+    case mpfr_fi_f:
+      assert (inputs[0].type == gtype_fp);
+      assert (inputs[1].type == gtype_int);
+      outputs[0].type = gtype_fp;
+      mpfr_init (outputs[0].value.f);
+      assert (mpz_fits_slong_p (inputs[1].value.i));
+      l = mpz_get_si (inputs[1].value.i);
+      inexact = calc->func.mpfr_fi_f (outputs[0].value.f,
+				      inputs[0].value.f, l, mode_mpfr);
       if (mode != rm_towardzero)
 	assert (!inexact && mpfr_zero_p (outputs[0].value.f));
       adjust_real (outputs[0].value.f, inexact);

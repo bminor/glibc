@@ -789,6 +789,20 @@ but this is valid for @code{pow} if @var{power} is an integer.
 The @code{powr} functions are from TS 18661-4:2015.
 @end deftypefun
 
+@deftypefun double pown (double @var{base}, long long int @var{power})
+@deftypefunx float pownf (float @var{base}, long long int @var{power})
+@deftypefunx {long double} pownl (long double @var{base}, long long int @var{power})
+@deftypefunx _FloatN pownfN (_Float@var{N} @var{base}, long long int @var{power})
+@deftypefunx _FloatNx pownfNx (_Float@var{N}x @var{base}, long long int @var{power})
+@standards{TS 18661-4:2015, math.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These return @var{base} raised to @var{power} (an integer).
+
+The @code{pown} functions are from TS 18661-4:2015 (which used
+@code{intmax_t} as the type of @var{power}; the type changed to
+@code{long long int} in C23).
+@end deftypefun
+
 @cindex square root function
 @deftypefun double sqrt (double @var{x})
 @deftypefunx float sqrtf (float @var{x})

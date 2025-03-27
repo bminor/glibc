@@ -28,6 +28,8 @@
 #define M_STRTO_NAN __strtold_nan
 #define M_USE_BUILTIN(c) USE_ ##c ##L_BUILTIN
 
+#define M_SET_RESTORE_ROUND(RM) SET_RESTORE_ROUNDL (RM)
+
 #include <libm-alias-ldouble.h>
 #include <math-nan-payload-ldouble.h>
 

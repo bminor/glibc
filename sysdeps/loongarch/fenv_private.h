@@ -16,11 +16,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef LOONGARCH_MATH_PRIVATE_H
-#define LOONGARCH_MATH_PRIVATE_H 1
+#ifndef LOONGARCH_FENV_PRIVATE_H
+#define LOONGARCH_FENV_PRIVATE_H 1
 
 /* Inline functions to speed up the math library implementation.  The
-   default versions of these routines are in generic/math_private.h
+   default versions of these routines are in generic/fenv_private.h
    and call fesetround, feholdexcept, etc.  These routines use inlined
    code instead.  */
 
@@ -243,6 +243,6 @@ libc_feholdsetround_loongarch_ctx (struct rm_ctx *ctx, int round)
 
 #endif
 
-#include_next <math_private.h>
+#include_next <fenv_private.h>
 
 #endif
