@@ -337,6 +337,9 @@ tests-unsupported += tst-vfprintf-width-prec-alloc
 endif
 ifeq ($(subdir),stdlib)
 tests-unsupported += test-bz22786 tst-strtod-overflow
+# pthread_cleanup_combined_push/pthread_cleanup_combined_pop requires cleanup
+# support (BZ 32058).
+test-xfail-tst-qsortx7 = yes
 endif
 ifeq ($(subdir),timezone)
 tests-unsupported += tst-tzset

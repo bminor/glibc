@@ -23,6 +23,7 @@
 
 #include <pthread.h>
 #include <link.h>
+#include <bits/cancelation.h>
 
 /* Attribute to indicate thread creation was issued from C11 thrd_create.  */
 #define ATTR_C11_THREAD ((void*)(uintptr_t)-1)
@@ -232,5 +233,19 @@ weak_extern (__pthread_exit)
 #define ASSERT_TYPE_SIZE(type, size) 					\
   _Static_assert (sizeof (type) == size,				\
 		  "sizeof (" #type ") != " #size)
+
+ /* Special cleanup macros which register cleanup both using
+    __pthread_cleanup_{push,pop} and using cleanup attribute.  This is needed
+    for qsort, so that it supports both throwing exceptions from the caller
+    sort function callback (only cleanup  attribute works there) and
+    cancellation of the thread running the callback if the callback or some
+    routines it calls don't have unwind information.
+    TODO: add support for cleanup routines.  */
+#ifndef pthread_cleanup_combined_push
+# define pthread_cleanup_combined_push  __pthread_cleanup_push
+#endif
+#ifndef pthread_cleanup_combined_pop
+# define pthread_cleanup_combined_pop   __pthread_cleanup_pop
+#endif
 
 #endif	/* pthreadP.h */

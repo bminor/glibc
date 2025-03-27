@@ -16,6 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#undef pthread_cleanup_combined_push
+#define pthread_cleanup_combined_push(routine, arg)
+#undef pthread_cleanup_combined_pop
+#define pthread_cleanup_combined_pop(execute)
 #include "qsort.c"
 
 #include <stdio.h>

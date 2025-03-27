@@ -300,6 +300,8 @@ tests := \
   tst-qsort2 \
   tst-qsort3 \
   tst-qsort6 \
+  tst-qsort7 \
+  tst-qsortx7 \
   tst-quick_exit \
   tst-rand-sequence \
   tst-rand48 \
@@ -553,7 +555,19 @@ tests-special += $(objpfx)isomac.out
 
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-fmtmsg.out
-endif
+ifeq ($(build-shared),yes)
+ifneq ($(PERL),no)
+generated += \
+  tst-qsort7.mtrace \
+  tst-qsortx7.mtrace \
+  # generated
+tests-special += \
+  $(objpfx)tst-qsort7-mem.out \
+  $(objpfx)tst-qsortx7-mem.out \
+  # tests-special
+endif # $(build-shared) == yes
+endif # $(PERL) == yes
+endif # $(run-built-tests) == yes
 
 include ../Rules
 
@@ -647,3 +661,19 @@ $(objpfx)tst-getrandom2: $(shared-thread-library)
 $(objpfx)tst-getenv-signal: $(shared-thread-library)
 $(objpfx)tst-getenv-thread: $(shared-thread-library)
 $(objpfx)tst-getenv-unsetenv: $(shared-thread-library)
+
+CFLAGS-tst-qsort7.c += -fno-exceptions -fno-asynchronous-unwind-tables
+LDLIBS-tst-qsort7 = $(shared-thread-library)
+tst-qsort7-ENV = MALLOC_TRACE=$(objpfx)tst-qsort7.mtrace \
+		 LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
+$(objpfx)tst-qsort7-mem.out: $(objpfx)tst-qsort7.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-qsort7.mtrace > $@; \
+	$(evaluate-test)
+
+CFLAGS-tst-qsortx7.c += -fexceptions
+LDLIBS-tst-qsortx7 = $(shared-thread-library)
+tst-qsortx7-ENV = MALLOC_TRACE=$(objpfx)tst-qsortx7.mtrace \
+		  LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
+$(objpfx)tst-qsortx7-mem.out: $(objpfx)tst-qsortx7.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-qsortx7.mtrace > $@; \
+	$(evaluate-test)

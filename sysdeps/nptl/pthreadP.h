@@ -588,10 +588,10 @@ struct __pthread_cleanup_combined_frame
 
 /* Special cleanup macros which register cleanup both using
    __pthread_cleanup_{push,pop} and using cleanup attribute.  This is needed
-   for pthread_once, so that it supports both throwing exceptions from the
-   pthread_once callback (only cleanup attribute works there) and cancellation
-   of the thread running the callback if the callback or some routines it
-   calls don't have unwind information.  */
+   for pthread_once and qsort, so that it supports both throwing exceptions
+   from the pthread_once or caller sort function callback (only cleanup
+   attribute works there) and cancellation of the thread running the callback
+   if the callback or some routines it calls don't have unwind information.  */
 
 static __always_inline void
 __pthread_cleanup_combined_routine (struct __pthread_cleanup_combined_frame

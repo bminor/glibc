@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include "pthreadP.h"
 
 /* Swap SIZE bytes between addresses A and B.  These helpers are provided
    along the generic one as an optimization.  */
@@ -338,36 +339,10 @@ indirect_msort_with_tmp (const struct msort_param *p, void *b, size_t n,
       }
 }
 
-void
-__qsort_r (void *const pbase, size_t total_elems, size_t size,
-	   __compar_d_fn_t cmp, void *arg)
+static void
+qsort_r_mergesort (void *const pbase, size_t total_elems, size_t size,
+		   __compar_d_fn_t cmp, void *arg, void *buf)
 {
-  if (total_elems <= 1)
-    return;
-
-  /* Align to the maximum size used by the swap optimization.  */
-  _Alignas (uint64_t) char tmp[QSORT_STACK_SIZE];
-  size_t total_size = total_elems * size;
-  char *buf;
-
-  if (size > INDIRECT_SORT_SIZE_THRES)
-    total_size = 2 * total_elems * sizeof (void *) + size;
-
-  if (total_size <= sizeof tmp)
-    buf = tmp;
-  else
-    {
-      int save = errno;
-      buf = malloc (total_size);
-      __set_errno (save);
-      if (buf == NULL)
-	{
-	  /* Fallback to heapsort in case of memory failure.  */
-	  heapsort_r (pbase, total_elems - 1, size, cmp, arg);
-	  return;
-	}
-    }
-
   if (size > INDIRECT_SORT_SIZE_THRES)
     {
       const struct msort_param msort_param =
@@ -392,9 +367,53 @@ __qsort_r (void *const pbase, size_t total_elems, size_t size,
 	};
       msort_with_tmp (&msort_param, pbase, total_elems);
     }
+}
 
-  if (buf != tmp)
-    free (buf);
+static bool
+qsort_r_malloc (void *const pbase, size_t total_elems, size_t size,
+		__compar_d_fn_t cmp, void *arg, size_t total_size)
+{
+  int save = errno;
+  char *buf = malloc (total_size);
+  __set_errno (save);
+  if (buf == NULL)
+    return false;
+
+  /* Deallocate the auxiliary buffer if the callback function throws
+     or if the thread is cancelled.  */
+  pthread_cleanup_combined_push (free, buf);
+  qsort_r_mergesort (pbase, total_elems, size, cmp, arg, buf);
+  pthread_cleanup_combined_pop (0);
+
+  free (buf);
+
+  return true;
+}
+
+void
+__qsort_r (void *const pbase, size_t total_elems, size_t size,
+	   __compar_d_fn_t cmp, void *arg)
+{
+  if (total_elems <= 1)
+    return;
+
+  /* Align to the maximum size used by the swap optimization.  */
+  size_t total_size = total_elems * size;
+
+  if (size > INDIRECT_SORT_SIZE_THRES)
+    total_size = 2 * total_elems * sizeof (void *) + size;
+
+  if (total_size <= QSORT_STACK_SIZE)
+    {
+      _Alignas (uint64_t) char tmp[QSORT_STACK_SIZE];
+      qsort_r_mergesort (pbase, total_elems, size, cmp, arg, tmp);
+    }
+  else
+    {
+      if (!qsort_r_malloc (pbase, total_elems, size, cmp, arg, total_size))
+	/* Fallback to heapsort in case of memory failure.  */
+	heapsort_r (pbase, total_elems - 1, size, cmp, arg);
+    }
 }
 libc_hidden_def (__qsort_r)
 weak_alias (__qsort_r, qsort_r)
