@@ -1693,6 +1693,8 @@ existing map is unmapped.
 @c Which is which?
 @item MAP_ANONYMOUS
 @itemx MAP_ANON
+@standards{POSIX.1-2024, sys/mman.h}
+@standardsx{MAP_ANON, POSIX.1-2024, sys/mman.h}
 This flag tells the system to create an anonymous mapping, not connected
 to a file.  @var{filedes} and @var{offset} are ignored, and the region is
 initialized with zeros.
@@ -3639,11 +3641,14 @@ duplicate of @var{old}.
 @end deftypefun
 
 @deftypefun int dup3 (int @var{old}, int @var{new}, int @var{flags})
-@standards{Linux, unistd.h}
+@standards{POSIX.1-2024, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function is the same as @code{dup2} but creates the new
 descriptor as if it had been opened with flags @var{flags}.  The only
 allowed flag is @code{O_CLOEXEC}.
+
+This function was originally a Linux extension, but was added in
+POSIX.1-2024.
 @end deftypefun
 
 @deftypevr Macro int F_DUPFD

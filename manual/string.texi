@@ -1081,7 +1081,7 @@ issues.  @xref{Concatenating Strings}.
 @end deftypefun
 
 @deftypefun size_t strlcpy (char *restrict @var{to}, const char *restrict @var{from}, size_t @var{size})
-@standards{BSD, string.h}
+@standards{POSIX-1.2024, string.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function copies the string @var{from} to the destination array
 @var{to}, limiting the result's size (including the null terminator)
@@ -1114,21 +1114,23 @@ processing strings.  Also, this function has a performance issue,
 as its time cost is proportional to the length of @var{from}
 even when @var{size} is small.
 
-This function is derived from OpenBSD 2.4.
+This function was originally derived from OpenBSD 2.4, but was added in
+POSIX.1-2024.
 @end deftypefun
 
 @deftypefun size_t wcslcpy (wchar_t *restrict @var{to}, const wchar_t *restrict @var{from}, size_t @var{size})
-@standards{BSD, string.h}
+@standards{POSIX.1-2024, string.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function is a variant of @code{strlcpy} for wide strings.
 The  @var{size} argument counts the length of the destination buffer in
 wide characters (and not bytes).
 
-This function is derived from BSD.
+This function was originally a BSD extension, but was added in
+POSIX.1-2024.
 @end deftypefun
 
 @deftypefun size_t strlcat (char *restrict @var{to}, const char *restrict @var{from}, size_t @var{size})
-@standards{BSD, string.h}
+@standards{POSIX-1.2024, string.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function appends the string @var{from} to the
 string @var{to}, limiting the result's total size (including the null
@@ -1156,17 +1158,19 @@ As noted below, this function is generally a poor choice for
 processing strings.  Also, this function has significant performance
 issues.  @xref{Concatenating Strings}.
 
-This function is derived from OpenBSD 2.4.
+This function was originally derived from OpenBSD 2.4, but was added in
+POSIX.1-2024.
 @end deftypefun
 
 @deftypefun size_t wcslcat (wchar_t *restrict @var{to}, const wchar_t *restrict @var{from}, size_t @var{size})
-@standards{BSD, string.h}
+@standards{POSIX.1-2024, string.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function is a variant of @code{strlcat} for wide strings.
 The  @var{size} argument counts the length of the destination buffer in
 wide characters (and not bytes).
 
-This function is derived from BSD.
+This function was originally a BSD extension, but was added in
+POSIX.1-2024.
 @end deftypefun
 
 Because these functions can abruptly truncate strings or wide strings,
@@ -2008,14 +2012,15 @@ strcasestr ("hello, World", "wo")
 
 
 @deftypefun {void *} memmem (const void *@var{haystack}, size_t @var{haystack-len},@*const void *@var{needle}, size_t @var{needle-len})
-@standards{GNU, string.h}
+@standards{POSIX.1-2024, string.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This is like @code{strstr}, but @var{needle} and @var{haystack} are byte
 arrays rather than strings.  @var{needle-len} is the
 length of @var{needle} and @var{haystack-len} is the length of
 @var{haystack}.
 
-This function is a GNU extension.
+This function was originally a GNU extension, but was added in
+POSIX.1-2024.
 @end deftypefun
 
 @deftypefun size_t strspn (const char *@var{string}, const char *@var{skipset})

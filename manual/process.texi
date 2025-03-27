@@ -338,7 +338,7 @@ signals and signal actions from the parent process.)
 @end itemize
 
 @deftypefun pid_t _Fork (void)
-@standards{GNU, unistd.h}
+@standards{POSIX.1-2024, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{_Fork} function is similar to @code{fork}, but it does not invoke
 any callbacks registered with @code{pthread_atfork}, nor does it reset
@@ -347,8 +347,9 @@ new subprocess, only async-signal-safe functions may be called, such as
 @code{dup2} or @code{execve}.
 
 The @code{_Fork} function is an async-signal-safe replacement of @code{fork}.
-It is a GNU extension.
 
+This function was originally a GNU extension, but was added in
+POSIX.1-2024.
 @end deftypefun
 
 @deftypefun pid_t vfork (void)
@@ -835,10 +836,13 @@ signal number of the signal that terminated the child process.
 @end deftypefn
 
 @deftypefn Macro int WCOREDUMP (int @var{status})
-@standards{BSD, sys/wait.h}
+@standards{POSIX.1-2024, sys/wait.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This macro returns a nonzero value if the child process terminated
 and produced a core dump.
+
+This macro was originally a BSD extension, but was added in
+POSIX.1-2024.
 @end deftypefn
 
 @deftypefn Macro int WIFSTOPPED (int @var{status})

@@ -337,7 +337,7 @@ pointer.
 @end deftypefun
 
 @deftypefun {char *} secure_getenv (const char *@var{name})
-@standards{GNU, stdlib.h}
+@standards{POSIX.1-2024, stdlib.h}
 @safety{@prelim{}@mtsafe{@mtsenv{}}@assafe{}@acsafe{}}
 @c Calls getenv unless secure mode is enabled.
 This function is similar to @code{getenv}, but it returns a null
@@ -346,7 +346,8 @@ program file has SUID or SGID bits set.  General-purpose libraries
 should always prefer this function over @code{getenv} to avoid
 vulnerabilities if the library is referenced from a SUID/SGID program.
 
-This function is a GNU extension.
+This function was originally a GNU extension, but was added in
+POSIX.1-2024.
 @end deftypefun
 
 

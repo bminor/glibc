@@ -2107,7 +2107,7 @@ might be overwritten by subsequent calls to @code{ptsname}.
 @end deftypefun
 
 @deftypefun int ptsname_r (int @var{filedes}, char *@var{buf}, size_t @var{len})
-@standards{GNU, stdlib.h}
+@standards{POSIX.1-2024, stdlib.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{/bsd}}@acunsafe{@acsmem{} @acsfd{}}}
 @c ptsname_r @ascuheap/bsd @acsmem @acsfd
 @c /hurd
@@ -2143,7 +2143,8 @@ The @code{ptsname_r} function is similar to the @code{ptsname} function
 except that it places its result into the user-specified buffer starting
 at @var{buf} with length @var{len}.
 
-This function is a GNU extension.
+This function was originally a GNU extension, but was added in
+POSIX.1-2024.
 @end deftypefun
 
 Typical usage of these functions is illustrated by the following example:

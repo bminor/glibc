@@ -554,6 +554,8 @@ This section describes the @glibcadj{} POSIX Threads implementation.
 @menu
 * Thread-specific Data::          Support for creating and
 				  managing thread-specific data
+* Waiting with Explicit Clocks::  Functions for waiting with an
+                                  explicit clock specification.
 * POSIX Semaphores::              Support for process and thread
 				  synchronization using semaphores
 * Non-POSIX Extensions::          Additional functions to extend
@@ -614,6 +616,55 @@ thread.
 @c  KEY_UNUSED ok
 @c  calloc dup @ascuheap @acsmem
 Associate the thread-specific @var{value} with @var{key} in the calling thread.
+@end deftypefun
+
+
+@node Waiting with Explicit Clocks
+@subsection Functions for Waiting According to a Specific Clock
+
+@Theglibc{} provides several waiting functions that expect an explicit
+@code{clockid_t} argument.  These functions were all adopted by
+POSIX.1-2024.
+
+@comment pthread.h
+@deftypefun int pthread_cond_clockwait (pthread_cond_t *@var{cond}, pthread_mutex_t *@var{mutex}, clockid_t @var{clockid}, const struct timespec *@var{abstime})
+@standards{POSIX-1.2024, pthread.h}
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
+@c If exactly the same function with arguments is called from a signal
+@c handler that interrupts between the mutex unlock and sleep then it
+@c will unlock the mutex twice resulting in undefined behaviour.  Keep
+@c in mind that the unlock and sleep are only atomic with respect to other
+@c threads (really a happens-after relationship for pthread_cond_broadcast
+@c and pthread_cond_signal).
+@c In the AC case we would cancel the thread and the mutex would remain
+@c locked and we can't recover from that.
+Behaves like @code{pthread_cond_timedwait} except the time @var{abstime} is
+measured against the clock specified by @var{clockid} rather than the clock
+specified or defaulted when @code{pthread_cond_init} was called.  Currently,
+@var{clockid} must be either @code{CLOCK_MONOTONIC} or
+@code{CLOCK_REALTIME}.
+@end deftypefun
+
+@comment pthread.h
+@deftypefun int pthread_rwlock_clockrdlock (pthread_rwlock_t *@var{rwlock}, clockid_t @var{clockid}, const struct timespec *@var{abstime})
+@standards{POSIX-1.2024, pthread.h}
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
+Behaves like @code{pthread_rwlock_timedrdlock} except the time
+@var{abstime} is measured against the clock specified by @var{clockid}
+rather than @code{CLOCK_REALTIME}.  Currently, @var{clockid} must be either
+@code{CLOCK_MONOTONIC} or @code{CLOCK_REALTIME}, otherwise @code{EINVAL} is
+returned.
+@end deftypefun
+
+@comment pthread.h
+@deftypefun int pthread_rwlock_clockwrlock (pthread_rwlock_t *@var{rwlock}, clockid_t @var{clockid}, const struct timespec *@var{abstime})
+@standards{POSIX-1.2024, pthread.h}
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
+Behaves like @code{pthread_rwlock_timedwrlock} except the time
+@var{abstime} is measured against the clock specified by @var{clockid}
+rather than @code{CLOCK_REALTIME}.  Currently, @var{clockid} must be either
+@code{CLOCK_MONOTONIC} or @code{CLOCK_REALTIME}, otherwise @code{EINVAL} is
+returned.
 @end deftypefun
 
 
@@ -729,8 +780,7 @@ the standard.
 * Default Thread Attributes::             Setting default attributes for
 					  threads in a process.
 * Initial Thread Signal Mask::            Setting the initial mask of threads.
-* Waiting with Explicit Clocks::          Functions for waiting with an
-                                          explicit clock specification.
+* Joining Threads::                       Wait for a thread to terminate.
 * Single-Threaded::                       Detecting single-threaded execution.
 * Restartable Sequences::                 Linux-specific restartable sequences
                                           integration.
@@ -849,52 +899,11 @@ signal mask and use @code{pthread_sigmask} to apply it to the thread.
 If the signal mask was copied to a heap allocation, the copy should be
 freed.
 
-@node Waiting with Explicit Clocks
-@subsubsection Functions for Waiting According to a Specific Clock
+@node Joining Threads
+@subsubsection Wait for a thread to terminate
 
-@Theglibc{} provides several waiting functions that expect an explicit
-@code{clockid_t} argument.
-
-@comment pthread.h
-@comment POSIX-proposed
-@deftypefun int pthread_cond_clockwait (pthread_cond_t *@var{cond}, pthread_mutex_t *@var{mutex}, clockid_t @var{clockid}, const struct timespec *@var{abstime})
-@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
-@c If exactly the same function with arguments is called from a signal
-@c handler that interrupts between the mutex unlock and sleep then it
-@c will unlock the mutex twice resulting in undefined behaviour.  Keep
-@c in mind that the unlock and sleep are only atomic with respect to other
-@c threads (really a happens-after relationship for pthread_cond_broadcast
-@c and pthread_cond_signal).
-@c In the AC case we would cancel the thread and the mutex would remain
-@c locked and we can't recover from that.
-Behaves like @code{pthread_cond_timedwait} except the time @var{abstime} is
-measured against the clock specified by @var{clockid} rather than the clock
-specified or defaulted when @code{pthread_cond_init} was called.  Currently,
-@var{clockid} must be either @code{CLOCK_MONOTONIC} or
-@code{CLOCK_REALTIME}.
-@end deftypefun
-
-@comment pthread.h
-@comment POSIX-proposed
-@deftypefun int pthread_rwlock_clockrdlock (pthread_rwlock_t *@var{rwlock}, clockid_t @var{clockid}, const struct timespec *@var{abstime})
-@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
-Behaves like @code{pthread_rwlock_timedrdlock} except the time
-@var{abstime} is measured against the clock specified by @var{clockid}
-rather than @code{CLOCK_REALTIME}.  Currently, @var{clockid} must be either
-@code{CLOCK_MONOTONIC} or @code{CLOCK_REALTIME}, otherwise @code{EINVAL} is
-returned.
-@end deftypefun
-
-@comment pthread.h
-@comment POSIX-proposed
-@deftypefun int pthread_rwlock_clockwrlock (pthread_rwlock_t *@var{rwlock}, clockid_t @var{clockid}, const struct timespec *@var{abstime})
-@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
-Behaves like @code{pthread_rwlock_timedwrlock} except the time
-@var{abstime} is measured against the clock specified by @var{clockid}
-rather than @code{CLOCK_REALTIME}.  Currently, @var{clockid} must be either
-@code{CLOCK_MONOTONIC} or @code{CLOCK_REALTIME}, otherwise @code{EINVAL} is
-returned.
-@end deftypefun
+@Theglibc{} provides several extensions to the @code{pthread_join}
+function.
 
 @comment pthread.h
 @comment GNU extension

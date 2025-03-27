@@ -119,8 +119,11 @@ If this flag is set, either @samp{foo*} or @samp{foobar} as a pattern
 would match the string @samp{foobar/frobozz}.
 
 @item FNM_CASEFOLD
-@standards{GNU, fnmatch.h}
+@standards{POSIX.1-2024, fnmatch.h}
 Ignore case in comparing @var{string} to @var{pattern}.
+
+This macro was originally a GNU extension, but was added in
+POSIX.1-2024.
 
 @item FNM_EXTMATCH
 @standards{GNU, fnmatch.h}

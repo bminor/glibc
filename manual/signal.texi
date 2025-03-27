@@ -803,7 +803,7 @@ The default action is to terminate the process.
 @end deftypevr
 
 @deftypevr Macro int SIGWINCH
-@standards{BSD, signal.h}
+@standards{POSIX.1-2024, signal.h}
 Window size change.  This is generated on some systems (including GNU)
 when the terminal driver's record of the number of rows and columns on
 the screen is changed.  The default action is to ignore it.
@@ -811,6 +811,9 @@ the screen is changed.  The default action is to ignore it.
 If a program does full-screen display, it should handle @code{SIGWINCH}.
 When the signal arrives, it should fetch the new screen size and
 reformat its display accordingly.
+
+This macro was originally a BSD extension, but was added in
+POSIX.1-2024.
 @end deftypevr
 
 @deftypevr Macro int SIGINFO

@@ -842,8 +842,8 @@ is left undisturbed.
 @end deftypefun
 
 @deftypefun {void *} reallocarray (void *@var{ptr}, size_t @var{nmemb}, size_t @var{size})
-@standards{BSD, malloc.h}
-@standards{BSD, stdlib.h}
+@standards{POSIX.1-2024, malloc.h}
+@standards{POSIX.1-2024, stdlib.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{} @acsmem{}}}
 
 The @code{reallocarray} function changes the size of the block whose address
@@ -856,8 +856,8 @@ returning a null pointer, and leaving the original block unchanged.
 @code{reallocarray} should be used instead of @code{realloc} when the new size
 of the allocated block is the result of a multiplication that might overflow.
 
-@strong{Portability Note:} This function is not part of any standard.  It was
-first introduced in OpenBSD 5.6.
+This function was originally derived from OpenBSD 5.6, but was added in
+POSIX.1-2024.
 @end deftypefun
 
 Like @code{malloc}, @code{realloc} and @code{reallocarray} may return a null
