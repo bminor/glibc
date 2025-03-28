@@ -52,7 +52,7 @@ nonfmt-xprintf-stems := \
 xprintf-stems := $(sort $(fmt-xprintf-stems) $(nonfmt-xprintf-stems))
 
 # List of markers for scanf family function tests.
-xscanf-funcs := s f ss
+xscanf-funcs := s f ss v
 
 # List of data types and formats for individual per-conversion scanf tests.
 # Further conversions are provided by sysdeps.
