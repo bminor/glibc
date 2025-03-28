@@ -935,8 +935,6 @@ struct cpu_features
   /* The full state size for XSAVE when XSAVEC is disabled by
 
      GLIBC_TUNABLES=glibc.cpu.hwcaps=-XSAVEC
-
-     and the AMX state size when XSAVEC is available.
    */
   unsigned int xsave_state_full_size;
   /* Data cache size for use in memory and string routines, typically
@@ -989,6 +987,13 @@ extern const struct cpu_features *_dl_x86_get_cpu_features (void)
      __attribute__ ((pure));
 
 #define __get_cpu_features() _dl_x86_get_cpu_features()
+
+#if IS_IN (rtld) || IS_IN (libc)
+/* XSAVE/XSAVEC state size used by TLS descriptors.  Compared to
+   xsave_state_size from struct cpu_features, this includes additional
+   registers.  */
+extern unsigned long int _dl_x86_features_tlsdesc_state_size attribute_hidden;
+#endif
 
 #if defined (_LIBC) && !IS_IN (nonlib)
 /* Unused for x86.  */
