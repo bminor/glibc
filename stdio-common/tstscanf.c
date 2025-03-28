@@ -151,7 +151,7 @@ main (int argc, char **argv)
       { 2, -12.8F, "degrees", "" },
       { 0, 0.0F, "", "" },
       { 3, 10.0F, "LBS", "fertilizer" },
-      { 3, 100.0F, "rgs", "energy" },
+      { 0, 0.0F, "", "" },
       { -1, 0.0F, "", "" }};
     size_t rounds = 0;
     float quant;

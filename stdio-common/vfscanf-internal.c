@@ -2204,6 +2204,7 @@ digits_extended_fail:
 		{
 		  char_buffer_add (&charbuf, exp_char);
 		  got_e = got_dot = 1;
+		  got_digit = 0;
 		}
 	      else
 		{
@@ -2553,11 +2554,13 @@ digits_extended_fail:
 
 	  /* Have we read any character?  If we try to read a number
 	     in hexadecimal notation and we have read only the `0x'
-	     prefix this is an error.  */
+	     prefix this is an error.  Also it is an error where we
+	     have read no digits after the exponent character.  */
 	  if (__glibc_unlikely (char_buffer_size (&charbuf) == got_sign
 				|| ((flags & HEXA_FLOAT)
 				    && (char_buffer_size (&charbuf)
-					== 2 + got_sign))))
+					== 2 + got_sign)))
+				|| (got_e && !got_digit))
 	    conv_error ();
 
 	scan_float:
