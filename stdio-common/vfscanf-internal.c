@@ -2155,8 +2155,13 @@ digits_extended_fail:
 	      c = inchar ();
 	      if (width > 0)
 		--width;
-	      if (width != 0 && TOLOWER (c) == L_('x'))
+	      if (TOLOWER (c) == L_('x'))
 		{
+		  /* If we try to read a number in hexadecimal notation
+		     and we have only the `0x' prefix, this is an error.  */
+		  if (width == 0)
+		    conv_error ();
+
 		  /* It is a number in hexadecimal format.  */
 		  char_buffer_add (&charbuf, c);
 

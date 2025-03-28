@@ -148,20 +148,20 @@
 %*2la:nan():0:-1:
 %2la:nan(09A_Zaz):0:-1:
 %*2la:nan(09A_Zaz):0:-1:
-# BZ12701 %2la:0x0p0:0:-1:
-# BZ12701 %*2la:0x0p0:0:-1:
-# BZ12701 %2la:0x0p+0:0:-1:
-# BZ12701 %*2la:0x0p+0:0:-1:
-# BZ12701 %2la:0x8p-1025:0:-1:
-# BZ12701 %*2la:0x8p-1025:0:-1:
-# BZ12701 %2la:0x2.3456789abcdfep0123:0:-1:
-# BZ12701 %*2la:0x2.3456789abcdfep0123:0:-1:
-# BZ12701 %2la:0x2.3456789abcdfep+123:0:-1:
-# BZ12701 %*2la:0x2.3456789abcdfep+123:0:-1:
-# BZ12701 %2la:0x7.ffffffffffffcp1021:0:-1:
-# BZ12701 %*2la:0x7.ffffffffffffcp1021:0:-1:
-# BZ12701 %2la:0xf.ffffffffffff8p+1020:0:-1:
-# BZ12701 %*2la:0xf.ffffffffffff8p+1020:0:-1:
+%2la:0x0p0:0:-1:
+%*2la:0x0p0:0:-1:
+%2la:0x0p+0:0:-1:
+%*2la:0x0p+0:0:-1:
+%2la:0x8p-1025:0:-1:
+%*2la:0x8p-1025:0:-1:
+%2la:0x2.3456789abcdfep0123:0:-1:
+%*2la:0x2.3456789abcdfep0123:0:-1:
+%2la:0x2.3456789abcdfep+123:0:-1:
+%*2la:0x2.3456789abcdfep+123:0:-1:
+%2la:0x7.ffffffffffffcp1021:0:-1:
+%*2la:0x7.ffffffffffffcp1021:0:-1:
+%2la:0xf.ffffffffffff8p+1020:0:-1:
+%*2la:0xf.ffffffffffff8p+1020:0:-1:
 %2la:infinity:0:-1:
 %*2la:infinity:0:-1:
 %2la:+nan():0:-1:
@@ -188,20 +188,20 @@
 %*3la::0:-1:
 %3la:-infinity:0:-1:
 %*3la:-infinity:0:-1:
-# BZ12701 %3la:-0xf.ffffffffffff8p+1020:0:-1:
-# BZ12701 %*3la:-0xf.ffffffffffff8p+1020:0:-1:
-# BZ12701 %3la:-0x7.ffffffffffffcp1021:0:-1:
-# BZ12701 %*3la:-0x7.ffffffffffffcp1021:0:-1:
-# BZ12701 %3la:-0x2.3456789abcdfep+123:0:-1:
-# BZ12701 %*3la:-0x2.3456789abcdfep+123:0:-1:
-# BZ12701 %3la:-0x2.3456789abcdfep0123:0:-1:
-# BZ12701 %*3la:-0x2.3456789abcdfep0123:0:-1:
-# BZ12701 %3la:-0x8p-1025:0:-1:
-# BZ12701 %*3la:-0x8p-1025:0:-1:
-# BZ12701 %3la:-0x0p+0:0:-1:
-# BZ12701 %*3la:-0x0p+0:0:-1:
-# BZ12701 %3la:-0x0p0:0:-1:
-# BZ12701 %*3la:-0x0p0:0:-1:
+%3la:-0xf.ffffffffffff8p+1020:0:-1:
+%*3la:-0xf.ffffffffffff8p+1020:0:-1:
+%3la:-0x7.ffffffffffffcp1021:0:-1:
+%*3la:-0x7.ffffffffffffcp1021:0:-1:
+%3la:-0x2.3456789abcdfep+123:0:-1:
+%*3la:-0x2.3456789abcdfep+123:0:-1:
+%3la:-0x2.3456789abcdfep0123:0:-1:
+%*3la:-0x2.3456789abcdfep0123:0:-1:
+%3la:-0x8p-1025:0:-1:
+%*3la:-0x8p-1025:0:-1:
+%3la:-0x0p+0:0:-1:
+%*3la:-0x0p+0:0:-1:
+%3la:-0x0p0:0:-1:
+%*3la:-0x0p0:0:-1:
 %3la:-nan(09A_Zaz):0:-1:
 %*3la:-nan(09A_Zaz):0:-1:
 %3la:-nan():0:-1:
@@ -230,20 +230,20 @@
 %*3la:+nan():0:-1:
 %3la:+nan(09A_Zaz):0:-1:
 %*3la:+nan(09A_Zaz):0:-1:
-# BZ12701 %3la:+0x0p0:0:-1:
-# BZ12701 %*3la:+0x0p0:0:-1:
-# BZ12701 %3la:+0x0p+0:0:-1:
-# BZ12701 %*3la:+0x0p+0:0:-1:
-# BZ12701 %3la:+0x8p-1025:0:-1:
-# BZ12701 %*3la:+0x8p-1025:0:-1:
-# BZ12701 %3la:+0x2.3456789abcdfep0123:0:-1:
-# BZ12701 %*3la:+0x2.3456789abcdfep0123:0:-1:
-# BZ12701 %3la:+0x2.3456789abcdfep+123:0:-1:
-# BZ12701 %*3la:+0x2.3456789abcdfep+123:0:-1:
-# BZ12701 %3la:+0x7.ffffffffffffcp1021:0:-1:
-# BZ12701 %*3la:+0x7.ffffffffffffcp1021:0:-1:
-# BZ12701 %3la:+0xf.ffffffffffff8p+1020:0:-1:
-# BZ12701 %*3la:+0xf.ffffffffffff8p+1020:0:-1:
+%3la:+0x0p0:0:-1:
+%*3la:+0x0p0:0:-1:
+%3la:+0x0p+0:0:-1:
+%*3la:+0x0p+0:0:-1:
+%3la:+0x8p-1025:0:-1:
+%*3la:+0x8p-1025:0:-1:
+%3la:+0x2.3456789abcdfep0123:0:-1:
+%*3la:+0x2.3456789abcdfep0123:0:-1:
+%3la:+0x2.3456789abcdfep+123:0:-1:
+%*3la:+0x2.3456789abcdfep+123:0:-1:
+%3la:+0x7.ffffffffffffcp1021:0:-1:
+%*3la:+0x7.ffffffffffffcp1021:0:-1:
+%3la:+0xf.ffffffffffff8p+1020:0:-1:
+%*3la:+0xf.ffffffffffff8p+1020:0:-1:
 %3la:+infinity:0:-1:
 %*3la:+infinity:0:-1:
 %4la::0:-1:

@@ -148,20 +148,20 @@
 %*2La:nan():0:-1:
 %2La:nan(09A_Zaz):0:-1:
 %*2La:nan(09A_Zaz):0:-1:
-# BZ12701 %2La:0x0p0:0:-1:
-# BZ12701 %*2La:0x0p0:0:-1:
-# BZ12701 %2La:0x0p+0:0:-1:
-# BZ12701 %*2La:0x0p+0:0:-1:
-# BZ12701 %2La:0x8p-16385:0:-1:
-# BZ12701 %*2La:0x8p-16385:0:-1:
-# BZ12701 %2La:0x2.3456789abcdef0123456789abcdep012345:0:-1:
-# BZ12701 %*2La:0x2.3456789abcdef0123456789abcdep012345:0:-1:
-# BZ12701 %2La:0x2.3456789abcdef0123456789abcdep+12345:0:-1:
-# BZ12701 %*2La:0x2.3456789abcdef0123456789abcdep+12345:0:-1:
-# BZ12701 %2La:0x7.fffffffffffffffffffffffffffcp16381:0:-1:
-# BZ12701 %*2La:0x7.fffffffffffffffffffffffffffcp16381:0:-1:
-# BZ12701 %2La:0xf.fffffffffffffffffffffffffff8p+16380:0:-1:
-# BZ12701 %*2La:0xf.fffffffffffffffffffffffffff8p+16380:0:-1:
+%2La:0x0p0:0:-1:
+%*2La:0x0p0:0:-1:
+%2La:0x0p+0:0:-1:
+%*2La:0x0p+0:0:-1:
+%2La:0x8p-16385:0:-1:
+%*2La:0x8p-16385:0:-1:
+%2La:0x2.3456789abcdef0123456789abcdep012345:0:-1:
+%*2La:0x2.3456789abcdef0123456789abcdep012345:0:-1:
+%2La:0x2.3456789abcdef0123456789abcdep+12345:0:-1:
+%*2La:0x2.3456789abcdef0123456789abcdep+12345:0:-1:
+%2La:0x7.fffffffffffffffffffffffffffcp16381:0:-1:
+%*2La:0x7.fffffffffffffffffffffffffffcp16381:0:-1:
+%2La:0xf.fffffffffffffffffffffffffff8p+16380:0:-1:
+%*2La:0xf.fffffffffffffffffffffffffff8p+16380:0:-1:
 %2La:infinity:0:-1:
 %*2La:infinity:0:-1:
 %2La:+nan():0:-1:
@@ -188,20 +188,20 @@
 %*3La::0:-1:
 %3La:-infinity:0:-1:
 %*3La:-infinity:0:-1:
-# BZ12701 %3La:-0xf.fffffffffffffffffffffffffff8p+16380:0:-1:
-# BZ12701 %*3La:-0xf.fffffffffffffffffffffffffff8p+16380:0:-1:
-# BZ12701 %3La:-0x7.fffffffffffffffffffffffffffcp16381:0:-1:
-# BZ12701 %*3La:-0x7.fffffffffffffffffffffffffffcp16381:0:-1:
-# BZ12701 %3La:-0x2.3456789abcdef0123456789abcdep+12345:0:-1:
-# BZ12701 %*3La:-0x2.3456789abcdef0123456789abcdep+12345:0:-1:
-# BZ12701 %3La:-0x2.3456789abcdef0123456789abcdep012345:0:-1:
-# BZ12701 %*3La:-0x2.3456789abcdef0123456789abcdep012345:0:-1:
-# BZ12701 %3La:-0x8p-16385:0:-1:
-# BZ12701 %*3La:-0x8p-16385:0:-1:
-# BZ12701 %3La:-0x0p+0:0:-1:
-# BZ12701 %*3La:-0x0p+0:0:-1:
-# BZ12701 %3La:-0x0p0:0:-1:
-# BZ12701 %*3La:-0x0p0:0:-1:
+%3La:-0xf.fffffffffffffffffffffffffff8p+16380:0:-1:
+%*3La:-0xf.fffffffffffffffffffffffffff8p+16380:0:-1:
+%3La:-0x7.fffffffffffffffffffffffffffcp16381:0:-1:
+%*3La:-0x7.fffffffffffffffffffffffffffcp16381:0:-1:
+%3La:-0x2.3456789abcdef0123456789abcdep+12345:0:-1:
+%*3La:-0x2.3456789abcdef0123456789abcdep+12345:0:-1:
+%3La:-0x2.3456789abcdef0123456789abcdep012345:0:-1:
+%*3La:-0x2.3456789abcdef0123456789abcdep012345:0:-1:
+%3La:-0x8p-16385:0:-1:
+%*3La:-0x8p-16385:0:-1:
+%3La:-0x0p+0:0:-1:
+%*3La:-0x0p+0:0:-1:
+%3La:-0x0p0:0:-1:
+%*3La:-0x0p0:0:-1:
 %3La:-nan(09A_Zaz):0:-1:
 %*3La:-nan(09A_Zaz):0:-1:
 %3La:-nan():0:-1:
@@ -230,20 +230,20 @@
 %*3La:+nan():0:-1:
 %3La:+nan(09A_Zaz):0:-1:
 %*3La:+nan(09A_Zaz):0:-1:
-# BZ12701 %3La:+0x0p0:0:-1:
-# BZ12701 %*3La:+0x0p0:0:-1:
-# BZ12701 %3La:+0x0p+0:0:-1:
-# BZ12701 %*3La:+0x0p+0:0:-1:
-# BZ12701 %3La:+0x8p-16385:0:-1:
-# BZ12701 %*3La:+0x8p-16385:0:-1:
-# BZ12701 %3La:+0x2.3456789abcdef0123456789abcdep012345:0:-1:
-# BZ12701 %*3La:+0x2.3456789abcdef0123456789abcdep012345:0:-1:
-# BZ12701 %3La:+0x2.3456789abcdef0123456789abcdep+12345:0:-1:
-# BZ12701 %*3La:+0x2.3456789abcdef0123456789abcdep+12345:0:-1:
-# BZ12701 %3La:+0x7.fffffffffffffffffffffffffffcp16381:0:-1:
-# BZ12701 %*3La:+0x7.fffffffffffffffffffffffffffcp16381:0:-1:
-# BZ12701 %3La:+0xf.fffffffffffffffffffffffffff8p+16380:0:-1:
-# BZ12701 %*3La:+0xf.fffffffffffffffffffffffffff8p+16380:0:-1:
+%3La:+0x0p0:0:-1:
+%*3La:+0x0p0:0:-1:
+%3La:+0x0p+0:0:-1:
+%*3La:+0x0p+0:0:-1:
+%3La:+0x8p-16385:0:-1:
+%*3La:+0x8p-16385:0:-1:
+%3La:+0x2.3456789abcdef0123456789abcdep012345:0:-1:
+%*3La:+0x2.3456789abcdef0123456789abcdep012345:0:-1:
+%3La:+0x2.3456789abcdef0123456789abcdep+12345:0:-1:
+%*3La:+0x2.3456789abcdef0123456789abcdep+12345:0:-1:
+%3La:+0x7.fffffffffffffffffffffffffffcp16381:0:-1:
+%*3La:+0x7.fffffffffffffffffffffffffffcp16381:0:-1:
+%3La:+0xf.fffffffffffffffffffffffffff8p+16380:0:-1:
+%*3La:+0xf.fffffffffffffffffffffffffff8p+16380:0:-1:
 %3La:+infinity:0:-1:
 %*3La:+infinity:0:-1:
 %4La::0:-1:
