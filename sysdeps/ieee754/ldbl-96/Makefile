@@ -148,3 +148,7 @@ CFLAGS-s_y1l.c += -fno-builtin-y1f64x
 CFLAGS-s_ynl.c += -fno-builtin-ynf64x
 
 endif # $(subdir) == math
+
+ifeq ($(subdir),stdio-common)
+fmt-xscanf-real-convs += ldouble
+endif
