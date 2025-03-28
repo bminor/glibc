@@ -62,6 +62,8 @@ extern void TUNABLE_CALLBACK (set_x86_shstk) (tunable_val_t *)
 # include <dl-cet.h>
 #endif
 
+unsigned long int _dl_x86_features_tlsdesc_state_size;
+
 static void
 update_active (struct cpu_features *cpu_features)
 {
@@ -271,6 +273,7 @@ update_active (struct cpu_features *cpu_features)
 		= xsave_state_full_size;
 	      cpu_features->xsave_state_full_size
 		= xsave_state_full_size;
+	      _dl_x86_features_tlsdesc_state_size = xsave_state_full_size;
 
 	      /* Check if XSAVEC is available.  */
 	      if (CPU_FEATURES_CPU_P (cpu_features, XSAVEC))
@@ -359,11 +362,9 @@ update_active (struct cpu_features *cpu_features)
 			= ALIGN_UP ((amx_size
 				     + TLSDESC_CALL_REGISTER_SAVE_AREA),
 				    64);
-		      /* Set xsave_state_full_size to the compact AMX
-			 state size for XSAVEC.  NB: xsave_state_full_size
-			 is only used in _dl_tlsdesc_dynamic_xsave and
-			 _dl_tlsdesc_dynamic_xsavec.  */
-		      cpu_features->xsave_state_full_size = amx_size;
+		      /* Set TLSDESC state size to the compact AMX
+			 state size for XSAVEC.  */
+		      _dl_x86_features_tlsdesc_state_size = amx_size;
 #endif
 		      cpu_features->xsave_state_size
 			= ALIGN_UP (size + TLSDESC_CALL_REGISTER_SAVE_AREA,

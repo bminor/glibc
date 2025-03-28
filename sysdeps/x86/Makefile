@@ -21,6 +21,9 @@ tests += \
   tst-cpu-features-supports-static \
   tst-get-cpu-features \
   tst-get-cpu-features-static \
+  tst-gnu2-tls2-x86-noxsave \
+  tst-gnu2-tls2-x86-noxsavec \
+  tst-gnu2-tls2-x86-noxsavexsavec \
 # tests
 tests-static += \
   tst-cpu-features-cpuinfo-static \
@@ -89,6 +92,22 @@ CFLAGS-tst-gnu2-tls2.c += -msse
 CFLAGS-tst-gnu2-tls2mod0.c += -msse2 -mtune=haswell
 CFLAGS-tst-gnu2-tls2mod1.c += -msse2 -mtune=haswell
 CFLAGS-tst-gnu2-tls2mod2.c += -msse2 -mtune=haswell
+
+LDFLAGS-tst-gnu2-tls2-x86-noxsave += -Wl,-z,lazy
+LDFLAGS-tst-gnu2-tls2-x86-noxsavec += -Wl,-z,lazy
+LDFLAGS-tst-gnu2-tls2-x86-noxsavexsavec += -Wl,-z,lazy
+
+# Test for bug 32810: incorrect XSAVE state size if XSAVEC is disabled
+# via tunable.
+tst-gnu2-tls2-x86-noxsave-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-XSAVE
+tst-gnu2-tls2-x86-noxsavec-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-XSAVEC
+tst-gnu2-tls2-x86-noxsavexsavec-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-XSAVE,-XSAVEC
+$(objpfx)tst-gnu2-tls2-x86-noxsave.out \
+$(objpfx)tst-gnu2-tls2-x86-noxsavec.out \
+$(objpfx)tst-gnu2-tls2-x86-noxsavexsavec.out: \
+  $(objpfx)tst-gnu2-tls2mod0.so \
+  $(objpfx)tst-gnu2-tls2mod1.so \
+  $(objpfx)tst-gnu2-tls2mod2.so
 endif
 
 ifeq ($(subdir),math)
