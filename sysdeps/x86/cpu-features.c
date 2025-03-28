@@ -24,6 +24,7 @@
 #include <dl-cacheinfo.h>
 #include <dl-minsigstacksize.h>
 #include <dl-hwcap2.h>
+#include <gcc-macros.h>
 
 extern void TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *)
   attribute_hidden;
@@ -1119,6 +1120,9 @@ no_cpuid:
 	       TUNABLE_CALLBACK (set_prefer_map_32bit_exec));
 #endif
 
+  /* Do not add the logic to disable XSAVE/XSAVEC if this glibc build
+     requires AVX and therefore XSAVE or XSAVEC support.  */
+#ifndef GCCMACRO__AVX__
   bool disable_xsave_features = false;
 
   if (!CPU_FEATURE_USABLE_P (cpu_features, OSXSAVE))
@@ -1172,6 +1176,7 @@ no_cpuid:
 
       CPU_FEATURE_UNSET (cpu_features, FMA4);
     }
+#endif
 
 #ifdef __x86_64__
   GLRO(dl_hwcap) = HWCAP_X86_64;
