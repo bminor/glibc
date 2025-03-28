@@ -1,3 +1,16 @@
+ifeq ($(subdir),elf)
+tests += \
+  tst-tlsdesc-pac \
+  # tests
+modules-names += \
+  tst-tlsdesc-pac-mod \
+  # modules-names
+
+LDFLAGS-tst-tlsdesc-pac = -rdynamic
+
+$(objpfx)tst-tlsdesc-pac.out: $(objpfx)tst-tlsdesc-pac-mod.so
+endif
+
 ifeq ($(subdir),misc)
 sysdep_headers += sys/elf.h
 tests += \

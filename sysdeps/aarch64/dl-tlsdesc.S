@@ -119,20 +119,19 @@ _dl_tlsdesc_undefweak:
 	   object referenced by the argument.
 
 	   ptrdiff_t
-	   __attribute__ ((__regparm__ (1)))
 	   _dl_tlsdesc_dynamic (struct tlsdesc *tdp)
 	   {
 	     struct tlsdesc_dynamic_arg *td = tdp->arg;
-	     dtv_t *dtv = *(dtv_t **)((char *)__thread_pointer + TCBHEAD_DTV);
+	     dtv_t *dtv = *(dtv_t **)((char *)__thread_pointer() + TCBHEAD_DTV);
 	     if (__builtin_expect (td->gen_count <= dtv[0].counter
 		&& (dtv[td->tlsinfo.ti_module].pointer.val
 		    != TLS_DTV_UNALLOCATED),
 		1))
 	       return dtv[td->tlsinfo.ti_module].pointer.val
 		+ td->tlsinfo.ti_offset
-		- __thread_pointer;
+		- __thread_pointer();
 
-	     return ___tls_get_addr (&td->tlsinfo) - __thread_pointer;
+	     return __tls_get_addr (&td->tlsinfo) - __thread_pointer();
 	   }
 	 */
 
@@ -142,7 +141,12 @@ _dl_tlsdesc_undefweak:
 	cfi_startproc
 	.align 2
 _dl_tlsdesc_dynamic:
+# if HAVE_AARCH64_PAC_RET
+	PACIASP
+	cfi_window_save
+# else
 	BTI_C
+# endif
 
 	/* Save just enough registers to support fast path, if we fall
 	   into slow path we will save additional registers.  */
@@ -173,6 +177,10 @@ _dl_tlsdesc_dynamic:
 1:
 	ldp	 x3,  x4, [sp, #16]
 	ldp	 x1,  x2, [sp], #32
+# if HAVE_AARCH64_PAC_RET
+	AUTIASP
+	cfi_window_save
+# endif
 	cfi_adjust_cfa_offset (-32)
 	RET
 2:
@@ -182,10 +190,6 @@ _dl_tlsdesc_dynamic:
 
 	/* Save the remaining registers that we must treat as caller save.  */
 	cfi_restore_state
-# if HAVE_AARCH64_PAC_RET
-	PACIASP
-	cfi_window_save
-# endif
 # define NSAVEXREGPAIRS 8
 	stp	x29, x30, [sp,#-16*NSAVEXREGPAIRS]!
 	cfi_adjust_cfa_offset (16*NSAVEXREGPAIRS)
@@ -236,10 +240,6 @@ _dl_tlsdesc_dynamic:
 	cfi_adjust_cfa_offset (-16*NSAVEXREGPAIRS)
 	cfi_restore (x29)
 	cfi_restore (x30)
-# if HAVE_AARCH64_PAC_RET
-	AUTIASP
-	cfi_window_save
-# endif
 	b	1b
 	cfi_endproc
 	.size	_dl_tlsdesc_dynamic, .-_dl_tlsdesc_dynamic
