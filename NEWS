@@ -22,6 +22,7 @@ The following bugs are resolved with this release:
   [32231] elf: Change ldconfig auxcache magic number
   [32245] glibc -Wstringop-overflow= build failure on hppa
   [32470] x86: Avoid integer truncation with large cache sizes
+  [32810] Crash on x86-64 if XSAVEC disable via tunable
 
 Version 2.40
 
