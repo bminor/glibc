@@ -164,6 +164,8 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
 		  /* Update xsave_state_size to XSAVE state size.  */
 		  cpu_features->xsave_state_size
 		    = cpu_features->xsave_state_full_size;
+		  _dl_x86_features_tlsdesc_state_size
+		    = cpu_features->xsave_state_full_size;
 		  CPU_FEATURE_UNSET (cpu_features, XSAVEC);
 		}
 	    }

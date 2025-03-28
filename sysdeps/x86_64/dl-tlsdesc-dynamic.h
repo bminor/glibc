@@ -99,7 +99,7 @@ _dl_tlsdesc_dynamic:
 # endif
 #else
 	/* Allocate stack space of the required size to save the state.  */
-	sub	_rtld_local_ro+RTLD_GLOBAL_RO_DL_X86_CPU_FEATURES_OFFSET+XSAVE_STATE_FULL_SIZE_OFFSET(%rip), %RSP_LP
+	sub	_dl_x86_features_tlsdesc_state_size(%rip), %RSP_LP
 #endif
 	/* Besides rdi and rsi, saved above, save rcx, rdx, r8, r9,
 	   r10 and r11.  */
