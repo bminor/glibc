@@ -2409,7 +2409,7 @@ digits_extended_fail:
 		      if (got_e && charbuf.current[-1] == exp_char
 			  && (c == L_('-') || c == L_('+')))
 			char_buffer_add (&charbuf, c);
-		      else if (char_buffer_size (&charbuf) > got_sign && !got_e
+		      else if (got_digit && !got_e
 			       && (CHAR_T) TOLOWER (c) == exp_char)
 			{
 			  char_buffer_add (&charbuf, exp_char);
@@ -2426,7 +2426,10 @@ digits_extended_fail:
 			      if (c == wcdigits[n])
 				{
 				  if (n < 10)
-				    char_buffer_add (&charbuf, L_('0') + n);
+				    {
+				      char_buffer_add (&charbuf, L_('0') + n);
+				      got_digit = 1;
+				    }
 				  else if (n == 11 && !got_dot)
 				    {
 				      char_buffer_add (&charbuf, decimal);
@@ -2461,7 +2464,10 @@ digits_extended_fail:
 				    width = avail;
 
 				  if (n < 10)
-				    char_buffer_add (&charbuf, L_('0') + n);
+				    {
+				      char_buffer_add (&charbuf, L_('0') + n);
+				      got_digit = 1;
+				    }
 				  else if (n == 11 && !got_dot)
 				    {
 				      /* Add all the characters.  */
