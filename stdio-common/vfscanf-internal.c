@@ -1463,22 +1463,24 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 	  /* Look for a leading indication of base.  */
 	  if (width != 0 && c == L_('0'))
 	    {
+	      WINT_T ctmp = c;
+
 	      if (width > 0)
 		--width;
-
-	      char_buffer_add (&charbuf, c);
 	      c = inchar ();
 
-	      if (width != 0 && TOLOWER (c) == L_('x'))
+	      if (width != 0
+		  && TOLOWER (c) == L_('x')
+		  && (base == 0 || base == 16))
 		{
-		  if (base == 0)
-		    base = 16;
-		  if (base == 16)
-		    {
-		      if (width > 0)
-			--width;
-		      c = inchar ();
-		    }
+		  base = 16;
+		  if (width > 0)
+		    --width;
+		  /* If we try to read a number in hexadecimal notation
+		     and we have only the `0x' prefix, this is an error.  */
+		  if (width == 0)
+		    conv_error ();
+		  c = inchar ();
 		}
 	      else if (width != 0
 		       && TOLOWER (c) == L_('b')
@@ -1489,10 +1491,18 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 		  base = 2;
 		  if (width > 0)
 		    --width;
+		  /* If we try to read a number in binary notation and
+		     we have only the `0b' prefix, this is an error.  */
+		  if (width == 0)
+		    conv_error ();
 		  c = inchar ();
 		}
-	      else if (base == 0)
-		base = 8;
+	      else
+		{
+		  if (base == 0)
+		    base = 8;
+		  char_buffer_add (&charbuf, ctmp);
+		}
 	    }
 
 	  if (base == 0)
