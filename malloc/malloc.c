@@ -3468,16 +3468,8 @@ __libc_free (void *mem)
 
   INTERNAL_SIZE_T size = chunksize (p);
 
-  /* Little security check which won't hurt performance: the
-     allocator never wraps around at the end of the address space.
-     Therefore we can exclude some size values which might appear
-     here by accident or by "design" from some intruder.  */
-  if (__glibc_unlikely ((uintptr_t) p > (uintptr_t) -size
-      || misaligned_chunk (p)))
+  if (__glibc_unlikely (misaligned_chunk (p)))
     malloc_printerr ("free(): invalid pointer");
-  /* We know that each chunk is at least MINSIZE bytes.  */
-  if (__glibc_unlikely (size < MINSIZE))
-    malloc_printerr ("free(): invalid size");
 
   check_inuse_chunk (arena_for_chunk (p), p);
 
@@ -3485,6 +3477,11 @@ __libc_free (void *mem)
   if (tcache_free (p, size))
     return;
 #endif
+
+  /* Check size >= MINSIZE and p + size does not overflow.  */
+  if (__glibc_unlikely (__builtin_add_overflow_p ((uintptr_t) p, size - MINSIZE,
+						  (uintptr_t) 0)))
+    malloc_printerr ("free(): invalid size");
 
   _int_free_chunk (arena_for_chunk (p), p, size, 0);
 }
