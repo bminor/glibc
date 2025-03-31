@@ -102,6 +102,9 @@ LDFLAGS-tst-gnu2-tls2-x86-noxsavexsavec += -Wl,-z,lazy
 tst-gnu2-tls2-x86-noxsave-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-XSAVE
 tst-gnu2-tls2-x86-noxsavec-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-XSAVEC
 tst-gnu2-tls2-x86-noxsavexsavec-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-XSAVE,-XSAVEC
+$(objpfx)tst-gnu2-tls2-x86-noxsave: $(shared-thread-library)
+$(objpfx)tst-gnu2-tls2-x86-noxsavec: $(shared-thread-library)
+$(objpfx)tst-gnu2-tls2-x86-noxsavexsavec: $(shared-thread-library)
 $(objpfx)tst-gnu2-tls2-x86-noxsave.out \
 $(objpfx)tst-gnu2-tls2-x86-noxsavec.out \
 $(objpfx)tst-gnu2-tls2-x86-noxsavexsavec.out: \
