@@ -1086,7 +1086,6 @@ typedef struct malloc_chunk* mchunkptr;
 /* Internal routines.  */
 
 static void*  _int_malloc(mstate, size_t);
-static void _int_free (mstate, mchunkptr, int);
 static void _int_free_check (mstate, mchunkptr, INTERNAL_SIZE_T);
 static void _int_free_chunk (mstate, mchunkptr, INTERNAL_SIZE_T, int);
 static void _int_free_merge_chunk (mstate, mchunkptr, INTERNAL_SIZE_T);
@@ -1273,7 +1272,6 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
       sysmalloc: Returns untagged memory.
       _int_malloc: Returns untagged memory.
-      _int_free: Takes untagged memory.
       _int_memalign: Returns untagged memory.
       _int_memalign: Returns untagged memory.
       _mid_memalign: Returns tagged memory.
@@ -3163,7 +3161,7 @@ tcache_put (mchunkptr chunk, size_t tc_idx)
 {
   tcache_entry *e = (tcache_entry *) chunk2mem (chunk);
 
-  /* Mark this chunk as "in the tcache" so the test in _int_free will
+  /* Mark this chunk as "in the tcache" so the test in __libc_free will
      detect a double free.  */
   e->key = tcache_key;
 
@@ -3452,7 +3450,6 @@ libc_hidden_def (__libc_malloc)
 void
 __libc_free (void *mem)
 {
-  mstate ar_ptr;
   mchunkptr p;                          /* chunk corresponding to mem */
 
   if (mem == NULL)                              /* free(0) has no effect */
@@ -3470,8 +3467,16 @@ __libc_free (void *mem)
   /* Mark the chunk as belonging to the library again.  */
   tag_region (chunk2mem (p), memsize (p));
 
-  ar_ptr = arena_for_chunk (p);
-  _int_free (ar_ptr, p, 0);
+  INTERNAL_SIZE_T size = chunksize (p);
+
+  _int_free_check (arena_for_chunk (p), p, size);
+
+#if USE_TCACHE
+  if (tcache_free (p, size))
+    return;
+#endif
+
+  _int_free_chunk (arena_for_chunk (p), p, size, 0);
 }
 libc_hidden_def (__libc_free)
 
@@ -4698,27 +4703,6 @@ _int_free_chunk (mstate av, mchunkptr p, INTERNAL_SIZE_T size, int have_lock)
 
     __set_errno (err);
   }
-}
-
-/* Free chunk P to its arena AV.  HAVE_LOCK indicates where the arena for
-   P has already been locked.  It will perform sanity check, then try the
-   fast path to free into tcache.  If the attempt not success, free the
-   chunk to arena.  */
-static __always_inline void
-_int_free (mstate av, mchunkptr p, int have_lock)
-{
-  INTERNAL_SIZE_T size;        /* its size */
-
-  size = chunksize (p);
-
-  _int_free_check (av, p, size);
-
-#if USE_TCACHE
-  if (tcache_free (p, size))
-    return;
-#endif
-
-  _int_free_chunk (av, p, size, have_lock);
 }
 
 /* Try to merge chunk P of SIZE bytes with its neighbors.  Put the

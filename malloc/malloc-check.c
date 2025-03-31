@@ -235,7 +235,7 @@ free_check (void *mem)
     {
       /* Mark the chunk as belonging to the library again.  */
       (void)tag_region (chunk2mem (p), memsize (p));
-      _int_free (&main_arena, p, 1);
+      _int_free_chunk (&main_arena, p, chunksize (p), 1);
       __libc_lock_unlock (main_arena.mutex);
     }
   __set_errno (err);
