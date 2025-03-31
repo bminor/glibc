@@ -1099,6 +1099,9 @@ static void*  _int_memalign(mstate, size_t, size_t);
 static void*  _mid_memalign(size_t, size_t, void *);
 #endif
 
+#if USE_TCACHE
+static void malloc_printerr_tail(const char *str);
+#endif
 static void malloc_printerr(const char *str) __attribute__ ((noreturn));
 
 static void munmap_chunk(mchunkptr p);
@@ -3238,9 +3241,12 @@ tcache_double_free_verify (tcache_entry *e, size_t tc_idx)
 	malloc_printerr ("free(): unaligned chunk detected in tcache 2");
       if (tmp == e)
 	malloc_printerr ("free(): double free detected in tcache 2");
-      /* If we get here, it was a coincidence.  We've wasted a
-	 few cycles, but don't abort.  */
     }
+  /* No double free detected - it might be in a tcache of another thread,
+     or user data that happens to match the key.  Since we are not sure,
+     clear the key and retry freeing it.  */
+  e->key = 0;
+  __libc_free (e);
 }
 
 static void
@@ -3433,15 +3439,13 @@ __libc_free (void *mem)
 
   p = mem2chunk (mem);
 
-  MAYBE_INIT_TCACHE ();
-
   /* Mark the chunk as belonging to the library again.  */
   tag_region (chunk2mem (p), memsize (p));
 
   INTERNAL_SIZE_T size = chunksize (p);
 
   if (__glibc_unlikely (misaligned_chunk (p)))
-    malloc_printerr ("free(): invalid pointer");
+    return malloc_printerr_tail ("free(): invalid pointer");
 
   check_inuse_chunk (arena_for_chunk (p), p);
 
@@ -3455,7 +3459,7 @@ __libc_free (void *mem)
 
       /* Check for double free - verify if the key matches.  */
       if (__glibc_unlikely (e->key == tcache_key))
-        tcache_double_free_verify (e, tc_idx);
+        return tcache_double_free_verify (e, tc_idx);
 
       if (__glibc_likely (tcache->counts[tc_idx] < mp_.tcache_count))
         return tcache_put (p, tc_idx);
@@ -3465,7 +3469,7 @@ __libc_free (void *mem)
   /* Check size >= MINSIZE and p + size does not overflow.  */
   if (__glibc_unlikely (__builtin_add_overflow_p ((uintptr_t) p, size - MINSIZE,
 						  (uintptr_t) 0)))
-    malloc_printerr ("free(): invalid size");
+    return malloc_printerr_tail ("free(): invalid size");
 
   _int_free_chunk (arena_for_chunk (p), p, size, 0);
 }
@@ -4551,6 +4555,8 @@ static void
 _int_free_chunk (mstate av, mchunkptr p, INTERNAL_SIZE_T size, int have_lock)
 {
   mfastbinptr *fb;             /* associated fastbin */
+
+  MAYBE_INIT_TCACHE ();
 
   /*
     If eligible, place chunk on a fastbin so it can be found
@@ -5812,6 +5818,17 @@ malloc_printerr (const char *str)
 #endif
   __builtin_unreachable ();
 }
+
+#if USE_TCACHE
+static __attribute_noinline__ void
+malloc_printerr_tail (const char *str)
+{
+  /* Ensure this cannot be a no-return function.  */
+  if (!__malloc_initialized)
+    return;
+  malloc_printerr (str);
+}
+#endif
 
 #if IS_IN (libc)
 /* We need a wrapper function for one of the additions of POSIX.  */
