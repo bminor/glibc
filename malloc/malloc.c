@@ -1086,7 +1086,6 @@ typedef struct malloc_chunk* mchunkptr;
 /* Internal routines.  */
 
 static void*  _int_malloc(mstate, size_t);
-static void _int_free_check (mstate, mchunkptr, INTERNAL_SIZE_T);
 static void _int_free_chunk (mstate, mchunkptr, INTERNAL_SIZE_T, int);
 static void _int_free_merge_chunk (mstate, mchunkptr, INTERNAL_SIZE_T);
 static INTERNAL_SIZE_T _int_free_create_chunk (mstate,
@@ -3469,7 +3468,18 @@ __libc_free (void *mem)
 
   INTERNAL_SIZE_T size = chunksize (p);
 
-  _int_free_check (arena_for_chunk (p), p, size);
+  /* Little security check which won't hurt performance: the
+     allocator never wraps around at the end of the address space.
+     Therefore we can exclude some size values which might appear
+     here by accident or by "design" from some intruder.  */
+  if (__glibc_unlikely ((uintptr_t) p > (uintptr_t) -size
+      || misaligned_chunk (p)))
+    malloc_printerr ("free(): invalid pointer");
+  /* We know that each chunk is at least MINSIZE bytes.  */
+  if (__glibc_unlikely (size < MINSIZE))
+    malloc_printerr ("free(): invalid size");
+
+  check_inuse_chunk (arena_for_chunk (p), p);
 
 #if USE_TCACHE
   if (tcache_free (p, size))
@@ -4552,23 +4562,6 @@ _int_malloc (mstate av, size_t bytes)
 /*
    ------------------------------ free ------------------------------
  */
-
-static __always_inline void
-_int_free_check (mstate av, mchunkptr p, INTERNAL_SIZE_T size)
-{
-  /* Little security check which won't hurt performance: the
-     allocator never wraps around at the end of the address space.
-     Therefore we can exclude some size values which might appear
-     here by accident or by "design" from some intruder.  */
-  if (__builtin_expect ((uintptr_t) p > (uintptr_t) -size, 0)
-      || __builtin_expect (misaligned_chunk (p), 0))
-    malloc_printerr ("free(): invalid pointer");
-  /* We know that each chunk is at least MINSIZE bytes.  */
-  if (__glibc_unlikely (size < MINSIZE))
-    malloc_printerr ("free(): invalid size");
-
-  check_inuse_chunk (av, p);
-}
 
 /* Free chunk P of SIZE bytes to the arena.  HAVE_LOCK indicates where
    the arena for P has already been locked.  Caller must ensure chunk
