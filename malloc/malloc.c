@@ -3243,34 +3243,6 @@ tcache_double_free_verify (tcache_entry *e, size_t tc_idx)
     }
 }
 
-/* Try to free chunk to the tcache, if success return true.
-   Caller must ensure that chunk and size are valid.  */
-static __always_inline bool
-tcache_free (mchunkptr p, INTERNAL_SIZE_T size)
-{
-  bool done = false;
-  size_t tc_idx = csize2tidx (size);
-  if (tcache != NULL && tc_idx < mp_.tcache_bins)
-    {
-      /* Check to see if it's already in the tcache.  */
-      tcache_entry *e = (tcache_entry *) chunk2mem (p);
-
-      /* This test succeeds on double free.  However, we don't 100%
-	 trust it (it also matches random payload data at a 1 in
-	 2^<size_t> chance), so verify it's not an unlikely
-	 coincidence before aborting.  */
-      if (__glibc_unlikely (e->key == tcache_key))
-	tcache_double_free_verify (e, tc_idx);
-
-      if (tcache->counts[tc_idx] < mp_.tcache_count)
-	{
-	  tcache_put (p, tc_idx);
-	  done = true;
-	}
-    }
-  return done;
-}
-
 static void
 tcache_thread_shutdown (void)
 {
@@ -3474,8 +3446,20 @@ __libc_free (void *mem)
   check_inuse_chunk (arena_for_chunk (p), p);
 
 #if USE_TCACHE
-  if (tcache_free (p, size))
-    return;
+  size_t tc_idx = csize2tidx (size);
+
+  if (__glibc_likely (tcache != NULL && tc_idx < mp_.tcache_bins))
+    {
+      /* Check to see if it's already in the tcache.  */
+      tcache_entry *e = (tcache_entry *) chunk2mem (p);
+
+      /* Check for double free - verify if the key matches.  */
+      if (__glibc_unlikely (e->key == tcache_key))
+        tcache_double_free_verify (e, tc_idx);
+
+      if (__glibc_likely (tcache->counts[tc_idx] < mp_.tcache_count))
+        return tcache_put (p, tc_idx);
+    }
 #endif
 
   /* Check size >= MINSIZE and p + size does not overflow.  */
