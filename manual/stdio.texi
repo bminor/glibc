@@ -1231,17 +1231,18 @@ convenient to have functions to read a line of text from a stream.
 
 Standard C has functions to do this, but they aren't very safe: null
 characters and even (for @code{gets}) long lines can confuse them.  So
-@theglibc{} provides the nonstandard @code{getline} function that
-makes it easy to read lines reliably.
+@theglibc{} provides the @code{getline} function that makes it easy to
+read lines reliably.
 
-Another GNU extension, @code{getdelim}, generalizes @code{getline}.  It
-reads a delimited record, defined as everything through the next
-occurrence of a specified delimiter character.
+The @code{getdelim} function is a generalized version of @code{getline}.
+It reads a delimited record, defined as everything through the next
+occurrence of a specified delimiter character.  These functions were
+both GNU extensions until standardized by POSIX.1-2008.
 
 All these functions are declared in @file{stdio.h}.
 
-@deftypefun ssize_t getline (char **@var{lineptr}, size_t *@var{n}, FILE *@var{stream})
-@standards{GNU, stdio.h}
+@deftypefun ssize_t getline (char **restrict @var{lineptr}, size_t *restrict @var{n}, FILE *restrict @var{stream})
+@standards{POSIX.1-2008, stdio.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@aculock{} @acucorrupt{} @acsmem{}}}
 @c Besides the usual possibility of getting an inconsistent stream in a
 @c signal handler or leaving it inconsistent in case of cancellation,
@@ -1274,15 +1275,15 @@ read (including the newline, but not including the terminating null).
 This value enables you to distinguish null characters that are part of
 the line from the null character inserted as a terminator.
 
-This function is a GNU extension, but it is the recommended way to read
-lines from a stream.  The alternative standard functions are unreliable.
+This function was originally a GNU extension, but was added in
+POSIX.1-2008.
 
 If an error occurs or end of file is reached without any bytes read,
 @code{getline} returns @code{-1}.
 @end deftypefun
 
-@deftypefun ssize_t getdelim (char **@var{lineptr}, size_t *@var{n}, int @var{delimiter}, FILE *@var{stream})
-@standards{GNU, stdio.h}
+@deftypefun ssize_t getdelim (char **restrict @var{lineptr}, size_t *restrict @var{n}, int @var{delimiter}, FILE *restrict @var{stream})
+@standards{POSIX.1-2008, stdio.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@aculock{} @acucorrupt{} @acsmem{}}}
 @c See the getline @acucorrupt note.
 This function is like @code{getline} except that the character which
@@ -1293,6 +1294,9 @@ reading until it sees that character (or end of file).
 The text is stored in @var{lineptr}, including the delimiter character
 and a terminating null.  Like @code{getline}, @code{getdelim} makes
 @var{lineptr} bigger if it isn't big enough.
+
+This function was originally a GNU extension, but was added in
+POSIX.1-2008.
 
 @code{getline} is in fact implemented in terms of @code{getdelim}, just
 like this:
