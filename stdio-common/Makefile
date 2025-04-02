@@ -767,8 +767,9 @@ $(objpfx)tst-setvbuf1-cmp.out: tst-setvbuf1.expect $(objpfx)tst-setvbuf1.out
 	$(evaluate-test)
 
 CFLAGS-tst-setvbuf2.c += -DIND_PROC=\"$(objpfx)tst-setvbuf2-ind\"
-$(objpfx)tst-setvbuf2-ind : $(objpfx)tst-setvbuf2-ind.o
+$(objpfx)tst-setvbuf2-ind : $(objpfx)tst-setvbuf2-ind.o $(shared-thread-library)
 $(objpfx)tst-setvbuf2.out: $(objpfx)tst-setvbuf2-ind
+$(objpfx)tst-setvbuf2 : $(shared-thread-library)
 
 $(objpfx)tst-printf-round: $(libm)
 $(objpfx)tst-scanf-round: $(libm)
