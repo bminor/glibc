@@ -24,7 +24,7 @@ Deprecated and removed features, and other changes affecting compatibility:
 
 Changes to build and runtime requirements:
 
-  [Add changes to build and runtime requirements here]
+* GCC 12.1 or later is now required to build the GNU C Library.
 
 Security related changes:
 
