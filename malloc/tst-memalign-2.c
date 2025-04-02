@@ -25,6 +25,8 @@
 #include <libc-pointer-arith.h>
 #include <support/check.h>
 
+#include "tst-malloc-aux.h"
+
 typedef struct TestCase {
   size_t size;
   size_t alignment;

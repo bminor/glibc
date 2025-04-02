@@ -34,6 +34,7 @@ static __typeof (posix_memalign) * volatile posix_memalign_indirect
 static __typeof (pvalloc) * volatile pvalloc_indirect = pvalloc;
 static __typeof (realloc) * volatile realloc_indirect = realloc;
 static __typeof (valloc) * volatile valloc_indirect = valloc;
+static __typeof (reallocarray) * volatile reallocarray_indirect = reallocarray;
 
 #undef aligned_alloc
 #undef calloc
@@ -43,6 +44,7 @@ static __typeof (valloc) * volatile valloc_indirect = valloc;
 #undef pvalloc
 #undef realloc
 #undef valloc
+#undef reallocarray
 
 #define aligned_alloc aligned_alloc_indirect
 #define calloc calloc_indirect
@@ -52,5 +54,6 @@ static __typeof (valloc) * volatile valloc_indirect = valloc;
 #define pvalloc pvalloc_indirect
 #define realloc realloc_indirect
 #define valloc valloc_indirect
+#define reallocarray reallocarray_indirect
 
 #endif /* TST_MALLOC_AUX_H */
