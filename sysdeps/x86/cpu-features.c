@@ -325,13 +325,8 @@ update_active (struct cpu_features *cpu_features)
 	      /* Check if XSAVEC is available.  */
 	      if (CPU_FEATURES_CPU_P (cpu_features, XSAVEC))
 		{
-		  unsigned int xstate_comp_offsets[32];
-		  unsigned int xstate_comp_sizes[32];
-#ifdef __x86_64__
-		  unsigned int xstate_amx_comp_offsets[32];
-		  unsigned int xstate_amx_comp_sizes[32];
-		  unsigned int amx_ecx;
-#endif
+		  unsigned int xstate_comp_offsets[X86_XSTATE_MAX_ID + 1];
+		  unsigned int xstate_comp_sizes[X86_XSTATE_MAX_ID + 1];
 		  unsigned int i;
 
 		  xstate_comp_offsets[0] = 0;
@@ -339,39 +334,16 @@ update_active (struct cpu_features *cpu_features)
 		  xstate_comp_offsets[2] = 576;
 		  xstate_comp_sizes[0] = 160;
 		  xstate_comp_sizes[1] = 256;
-#ifdef __x86_64__
-		  xstate_amx_comp_offsets[0] = 0;
-		  xstate_amx_comp_offsets[1] = 160;
-		  xstate_amx_comp_offsets[2] = 576;
-		  xstate_amx_comp_sizes[0] = 160;
-		  xstate_amx_comp_sizes[1] = 256;
-#endif
 
-		  for (i = 2; i < 32; i++)
+		  for (i = 2; i <= X86_XSTATE_MAX_ID; i++)
 		    {
 		      if ((FULL_STATE_SAVE_MASK & (1 << i)) != 0)
 			{
 			  __cpuid_count (0xd, i, eax, ebx, ecx, edx);
-#ifdef __x86_64__
-			  /* Include this in xsave_state_full_size.  */
-			  amx_ecx = ecx;
-			  xstate_amx_comp_sizes[i] = eax;
-			  if ((AMX_STATE_SAVE_MASK & (1 << i)) != 0)
-			    {
-			      /* Exclude this from xsave_state_size.  */
-			      ecx = 0;
-			      xstate_comp_sizes[i] = 0;
-			    }
-			  else
-#endif
-			    xstate_comp_sizes[i] = eax;
+			  xstate_comp_sizes[i] = eax;
 			}
 		      else
 			{
-#ifdef __x86_64__
-			  amx_ecx = 0;
-			  xstate_amx_comp_sizes[i] = 0;
-#endif
 			  ecx = 0;
 			  xstate_comp_sizes[i] = 0;
 			}
@@ -380,42 +352,32 @@ update_active (struct cpu_features *cpu_features)
 			{
 			  xstate_comp_offsets[i]
 			    = (xstate_comp_offsets[i - 1]
-			       + xstate_comp_sizes[i -1]);
+			       + xstate_comp_sizes[i - 1]);
 			  if ((ecx & (1 << 1)) != 0)
 			    xstate_comp_offsets[i]
 			      = ALIGN_UP (xstate_comp_offsets[i], 64);
-#ifdef __x86_64__
-			  xstate_amx_comp_offsets[i]
-			    = (xstate_amx_comp_offsets[i - 1]
-			       + xstate_amx_comp_sizes[i - 1]);
-			  if ((amx_ecx & (1 << 1)) != 0)
-			    xstate_amx_comp_offsets[i]
-			      = ALIGN_UP (xstate_amx_comp_offsets[i],
-					  64);
-#endif
 			}
 		    }
 
 		  /* Use XSAVEC.  */
 		  unsigned int size
-		    = xstate_comp_offsets[31] + xstate_comp_sizes[31];
+		    = (xstate_comp_offsets[X86_XSTATE_MAX_ID]
+		       + xstate_comp_sizes[X86_XSTATE_MAX_ID]);
 		  if (size)
 		    {
+		      size = ALIGN_UP (size + TLSDESC_CALL_REGISTER_SAVE_AREA,
+				       64);
 #ifdef __x86_64__
-		      unsigned int amx_size
-			= (xstate_amx_comp_offsets[31]
-			   + xstate_amx_comp_sizes[31]);
-		      amx_size
-			= ALIGN_UP ((amx_size
-				     + TLSDESC_CALL_REGISTER_SAVE_AREA),
-				    64);
-		      /* Set TLSDESC state size to the compact AMX
-			 state size for XSAVEC.  */
-		      _dl_x86_features_tlsdesc_state_size = amx_size;
+		      _dl_x86_features_tlsdesc_state_size = size;
+		      /* Exclude the AMX space from the start of TILECFG
+			 space to the end of TILEDATA space.  If CPU
+			 doesn't support AMX, TILECFG offset is the same
+			 as TILEDATA + 1 offset.  Otherwise, they are
+			 multiples of 64.  */
+		      size -= (xstate_comp_offsets[X86_XSTATE_TILEDATA_ID + 1]
+			       - xstate_comp_offsets[X86_XSTATE_TILECFG_ID]);
 #endif
-		      cpu_features->xsave_state_size
-			= ALIGN_UP (size + TLSDESC_CALL_REGISTER_SAVE_AREA,
-				    64);
+		      cpu_features->xsave_state_size = size;
 		      CPU_FEATURE_SET (cpu_features, XSAVEC);
 		    }
 		}
