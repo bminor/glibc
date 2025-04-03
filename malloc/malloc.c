@@ -590,7 +590,7 @@ tag_at (void *ptr)
   differs across systems, but is in all cases less than the maximum
   representable value of a size_t.
 */
-void*  __libc_malloc(size_t);
+void *__libc_malloc (size_t);
 libc_hidden_proto (__libc_malloc)
 
 static void *__libc_calloc2 (size_t);
@@ -3374,13 +3374,11 @@ tcache_thread_shutdown (void)
   __libc_free (tcache_tmp);
 }
 
+/* Initialize tcache.  In the rare case there isn't any memory available,
+   later calls will retry initialization.  */
 static void
-tcache_init(void)
+tcache_init (void)
 {
-  mstate ar_ptr;
-  void *victim = NULL;
-  const size_t bytes = sizeof (tcache_perthread_struct);
-
   if (tcache_shutting_down)
     return;
 
@@ -3389,31 +3387,15 @@ tcache_init(void)
   if (MAX_TCACHE_SMALL_SIZE >= GLRO (dl_pagesize) / 2)
     malloc_printerr ("max tcache size too large");
 
-  arena_get (ar_ptr, bytes);
-  victim = _int_malloc (ar_ptr, bytes);
-  if (!victim && ar_ptr != NULL)
+  size_t bytes = sizeof (tcache_perthread_struct);
+  tcache = (tcache_perthread_struct *) __libc_malloc2 (bytes);
+
+  if (tcache != NULL)
     {
-      ar_ptr = arena_get_retry (ar_ptr, bytes);
-      victim = _int_malloc (ar_ptr, bytes);
-    }
-
-
-  if (ar_ptr != NULL)
-    __libc_lock_unlock (ar_ptr->mutex);
-
-  /* In a low memory situation, we may not be able to allocate memory
-     - in which case, we just keep trying later.  However, we
-     typically do this very early, so either there is sufficient
-     memory, or there isn't enough memory to do non-trivial
-     allocations anyway.  */
-  if (victim)
-    {
-      tcache = (tcache_perthread_struct *) victim;
-      memset (tcache, 0, sizeof (tcache_perthread_struct));
+      memset (tcache, 0, bytes);
       for (int i = 0; i < TCACHE_MAX_BINS; i++)
 	tcache->num_slots[i] = mp_.tcache_count;
     }
-
 }
 
 static void * __attribute_noinline__
