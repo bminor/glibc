@@ -148,7 +148,8 @@ and pass them to the functions that convert them to broken-down time
 On POSIX-conformant systems, @code{time_t} is an integer type and its
 values represent the number of seconds elapsed since the @dfn{POSIX Epoch},
 which is January 1, 1970, at 00:00:00 Coordinated Universal Time (UTC)@.
-The count of seconds ignores leap seconds.
+The count of seconds ignores leap seconds.  Additionally, POSIX.1-2024
+added the requirement that @code{time_t} be at least 64 bits wide.
 
 @Theglibc{} additionally guarantees that @code{time_t} is a signed
 type, and that all of its functions operate correctly on negative
