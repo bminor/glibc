@@ -3293,6 +3293,7 @@ static void
 tcache_thread_shutdown (void)
 {
   int i;
+  mchunkptr p;
   tcache_perthread_struct *tcache_tmp = tcache;
 
   tcache_shutting_down = true;
@@ -3314,11 +3315,14 @@ tcache_thread_shutdown (void)
 	    malloc_printerr ("tcache_thread_shutdown(): "
 			     "unaligned tcache chunk detected");
 	  tcache_tmp->entries[i] = REVEAL_PTR (e->next);
-	  __libc_free (e);
+	  e->key = 0;
+	  p = mem2chunk (e);
+	  _int_free_chunk (arena_for_chunk (p), p, chunksize (p), 0);
 	}
     }
 
-  __libc_free (tcache_tmp);
+  p = mem2chunk (tcache_tmp);
+  _int_free_chunk (arena_for_chunk (p), p, chunksize (p), 0);
 }
 
 /* Initialize tcache.  In the rare case there isn't any memory available,
