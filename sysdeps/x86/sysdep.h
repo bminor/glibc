@@ -102,6 +102,9 @@
    | (1 << X86_XSTATE_ZMM_ID)		\
    | (1 << X86_XSTATE_APX_F_ID))
 
+/* The maximum supported xstate ID.  */
+# define X86_XSTATE_MAX_ID	X86_XSTATE_APX_F_ID
+
 /* AMX state mask.  */
 # define AMX_STATE_SAVE_MASK		\
   ((1 << X86_XSTATE_TILECFG_ID) | (1 << X86_XSTATE_TILEDATA_ID))
@@ -122,6 +125,9 @@
    | (1 << X86_XSTATE_BNDREGS_ID)	\
    | (1 << X86_XSTATE_K_ID)		\
    | (1 << X86_XSTATE_ZMM_H_ID))
+
+/* The maximum supported xstate ID.  */
+# define X86_XSTATE_MAX_ID	X86_XSTATE_ZMM_H_ID
 
 /* States to be included in xsave_state_size.  */
 # define FULL_STATE_SAVE_MASK		STATE_SAVE_MASK
