@@ -512,6 +512,7 @@ enum
   INTEL_ATOM_GOLDMONT,
   INTEL_ATOM_GOLDMONT_PLUS,
   INTEL_ATOM_SIERRAFOREST,
+  INTEL_ATOM_CLEARWATERFOREST,
   INTEL_ATOM_GRANDRIDGE,
   INTEL_ATOM_TREMONT,
 
@@ -539,6 +540,7 @@ enum
   INTEL_BIGCORE_METEORLAKE,
   INTEL_BIGCORE_LUNARLAKE,
   INTEL_BIGCORE_ARROWLAKE,
+  INTEL_BIGCORE_PANTHERLAKE,
   INTEL_BIGCORE_GRANITERAPIDS,
 
   /* Mixed (bigcore + atom SOC).  */
@@ -584,6 +586,8 @@ intel_get_fam6_microarch (unsigned int model,
       return INTEL_ATOM_GOLDMONT_PLUS;
     case 0xAF:
       return INTEL_ATOM_SIERRAFOREST;
+    case 0xDD:
+      return INTEL_ATOM_CLEARWATERFOREST;
     case 0xB6:
       return INTEL_ATOM_GRANDRIDGE;
     case 0x86:
@@ -691,8 +695,12 @@ intel_get_fam6_microarch (unsigned int model,
       return INTEL_BIGCORE_METEORLAKE;
     case 0xbd:
       return INTEL_BIGCORE_LUNARLAKE;
+    case 0xb5:
+    case 0xc5:
     case 0xc6:
       return INTEL_BIGCORE_ARROWLAKE;
+    case 0xCC:
+      return INTEL_BIGCORE_PANTHERLAKE;
     case 0xAD:
     case 0xAE:
       return INTEL_BIGCORE_GRANITERAPIDS;
@@ -808,6 +816,7 @@ init_cpu_features (struct cpu_features *cpu_features)
 	    Default tuned atom microarch.
 	    case INTEL_ATOM_SIERRAFOREST:
 	    case INTEL_ATOM_GRANDRIDGE:
+	    case INTEL_ATOM_CLEARWATERFOREST:
 	   */
 
 	      /* Bigcore/Default Tuning.  */
@@ -865,6 +874,7 @@ init_cpu_features (struct cpu_features *cpu_features)
 	    case INTEL_BIGCORE_METEORLAKE:
 	    case INTEL_BIGCORE_LUNARLAKE:
 	    case INTEL_BIGCORE_ARROWLAKE:
+	    case INTEL_BIGCORE_PANTHERLAKE:
 	    case INTEL_BIGCORE_SAPPHIRERAPIDS:
 	    case INTEL_BIGCORE_EMERALDRAPIDS:
 	    case INTEL_BIGCORE_GRANITERAPIDS:
