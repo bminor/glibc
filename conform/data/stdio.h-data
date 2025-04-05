@@ -6,7 +6,7 @@ macro-int-constant _IOFBF
 macro-int-constant _IOLBF
 macro-int-constant _IONBF
 
-#if !defined ISO && !defined ISO99 && !defined ISO11
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined ISO23
 constant L_ctermid
 # if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
 #  ifdef POSIX
@@ -28,7 +28,7 @@ macro-int-constant EOF < 0
 
 macro-constant NULL == 0
 
-#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX && !defined POSIX2008
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined ISO23 && !defined POSIX && !defined POSIX2008
 constant P_tmpdir
 #endif
 
@@ -38,7 +38,7 @@ macro stderr {FILE *}
 
 type FILE
 type fpos_t
-#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined ISO23 && !defined POSIX
 type va_list
 #else
 #define va_list __gnuc_va_list
@@ -50,7 +50,7 @@ type ssize_t
 #endif
 
 function void clearerr (FILE*)
-#if !defined ISO && !defined ISO99 && !defined ISO11
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined ISO23
 function {char*} ctermid (char*)
 # if defined XPG4 || defined XPG42 || defined UNIX98
 function {char*} cuserid (char*)
@@ -60,7 +60,7 @@ function {char*} cuserid (char*)
 function int dprintf (int, const char*, ...)
 #endif
 function int fclose (FILE*)
-#if !defined ISO && !defined ISO99 && !defined ISO11
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined ISO23
 function {FILE*} fdopen (int, const char*)
 #endif
 function int feof (FILE*)
@@ -69,7 +69,7 @@ function int fflush (FILE*)
 function int fgetc (FILE*)
 function int fgetpos (FILE*, fpos_t*)
 function {char*} fgets (char*, int, FILE*)
-#if !defined ISO && !defined ISO99 && !defined ISO11
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined ISO23
 function int fileno (FILE*)
 #endif
 #if defined POSIX || defined UNIX98 || defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
@@ -112,7 +112,7 @@ function ssize_t getline (char**, size_t*, FILE*)
 #if defined XPG4 || defined XPG42 || defined UNIX98
 function int getopt (int, char *const[], const char *)
 #endif
-#if !defined ISO11
+#if !defined ISO11 && !defined ISO23
 function {char*} gets (char*)
 #endif
 #if defined XPG4 || defined XPG42 || defined UNIX98
@@ -121,11 +121,11 @@ function int getw (FILE*)
 #if defined XOPEN2K8 || defined POSIX2008
 function {FILE*} open_memstream (char**, size_t*)
 #endif
-#if !defined ISO && !defined ISO99 && !defined ISO11
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined ISO23
 function int pclose (FILE*)
 #endif
 function void perror (const char*)
-#if !defined ISO && !defined ISO99 && !defined ISO11
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined ISO23
 function {FILE*} popen (const char*, const char*)
 #endif
 function int printf (const char*, ...)
@@ -178,7 +178,7 @@ function int vsprintf (char*, const char*, va_list)
 function int vsscanf (const char*, const char*, va_list)
 #endif
 
-#if !defined ISO && !defined ISO99 && !defined ISO11
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined ISO23
 #if !defined POSIX && !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
 variable {char*} optarg
 variable int opterr

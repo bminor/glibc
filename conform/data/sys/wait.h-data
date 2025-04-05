@@ -1,4 +1,4 @@
-#if !defined ISO && !defined ISO99 && !defined ISO11
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined ISO23
 #ifdef  POSIX
 # define pid_t __pid_t
 #endif

@@ -43,7 +43,7 @@ macro-int-constant DECIMAL_DIG >= 10
 macro-int-constant FLT_EVAL_METHOD
 #endif
 
-#if defined ISO11
+#if defined ISO11 || defined ISO23
 macro-int-constant DBL_HAS_SUBNORM
 macro-int-constant FLT_HAS_SUBNORM
 macro-int-constant LDBL_HAS_SUBNORM
@@ -57,6 +57,6 @@ macro-constant FLT_TRUE_MIN <= 1E-37
 macro-constant LDBL_TRUE_MIN <= 1E-37
 #endif
 
-#if !defined ISO && !defined ISO99 && !defined ISO11
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined ISO23
 allow *_t
 #endif

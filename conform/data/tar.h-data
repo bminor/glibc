@@ -1,4 +1,4 @@
-#if !defined ISO && !defined ISO99 && !defined ISO11
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined ISO23
 macro-str TMAGIC "ustar"
 macro-int-constant TMAGLEN {int} == 6
 macro-str TVERSION "00"

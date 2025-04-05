@@ -5,7 +5,7 @@ type size_t
 type locale_t
 #endif
 
-#if !defined ISO && !defined ISO99 & !defined ISO11 && !defined POSIX && !defined POSIX2008
+#if !defined ISO && !defined ISO99 & !defined ISO11 && !defined ISO23 && !defined POSIX && !defined POSIX2008
 function {void*} memccpy (void*, const void*, int, size_t)
 #endif
 function {void*} memchr (const void*, int, size_t)
@@ -27,7 +27,7 @@ function int strcoll_l (const char*, const char*, locale_t)
 #endif
 function {char*} strcpy (char*, const char*)
 function size_t strcspn (const char*, const char*)
-#if !defined ISO && !defined ISO99 & !defined ISO11 && !defined XPG4 && !defined POSIX && !defined POSIX2008
+#if !defined ISO && !defined ISO99 & !defined ISO11 && !defined ISO23 && !defined XPG4 && !defined POSIX && !defined POSIX2008
 function {char*} strdup (const char*)
 #endif
 function {char*} strerror (int)
@@ -61,13 +61,13 @@ function size_t strxfrm (char*, const char*, size_t)
 function size_t strxfrm_l (char*, const char*, size_t, locale_t)
 #endif
 
-#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined ISO23 && !defined POSIX
 allow-header stddef.h
 #endif
 
 allow str[abcdefghijklmnopqrstuvwxyz]*
 allow mem[abcdefghijklmnopqrstuvwxyz]*
 allow wcs[abcdefghijklmnopqrstuvwxyz]*
-#if !defined ISO && !defined ISO99 && !defined ISO11
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined ISO23
 allow *_t
 #endif

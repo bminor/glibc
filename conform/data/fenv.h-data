@@ -30,7 +30,7 @@ function int feholdexcept (fenv_t*)
 function int fesetenv (const fenv_t*)
 function int feupdateenv (const fenv_t *)
 
-#if !defined ISO && !defined ISO99 && !defined ISO11
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined ISO23
 allow *_t
 #endif
 #endif

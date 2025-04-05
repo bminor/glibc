@@ -21,7 +21,7 @@ type double_t
 function int isnan (double)
 # endif
 
-# if !defined ISO99 && !defined ISO11 && !defined POSIX2008
+# if !defined ISO99 && !defined ISO11 && !defined ISO23 && !defined POSIX2008
 constant M_E
 constant M_LOG2E
 constant M_LOG10E
@@ -104,7 +104,7 @@ function double gamma (double)
 #endif
 #if !defined ISO && !defined POSIX
 function double hypot (double, double)
-# if !defined ISO99 && !defined ISO11 && !defined POSIX && !defined POSIX2008
+# if !defined ISO99 && !defined ISO11 && !defined ISO23 && !defined POSIX && !defined POSIX2008
 function double j0 (double)
 function double j1 (double)
 function double jn (int, double)
@@ -113,7 +113,7 @@ function double lgamma (double)
 # if !defined XPG4 && !defined XPG42 && !defined UNIX98
 function double tgamma (double)
 # endif
-# if !defined ISO99 && !defined ISO11 && !defined POSIX && !defined POSIX2008
+# if !defined ISO99 && !defined ISO11 && !defined ISO23 && !defined POSIX && !defined POSIX2008
 function double y0 (double)
 function double y1 (double)
 function double yn (int, double)
@@ -157,7 +157,7 @@ function double nan (const char*)
 #  endif
 # endif
 
-# if !defined ISO99 && !defined ISO11 && !defined POSIX && !defined POSIX2008
+# if !defined ISO99 && !defined ISO11 && !defined ISO23 && !defined POSIX && !defined POSIX2008
 // variable signgam
 allow signgam
 # endif
@@ -327,7 +327,7 @@ allow tanl
 allow tanhl
 #endif
 
-#if !defined ISO && !defined ISO99 && !defined ISO11
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined ISO23
 allow *_t
 #endif
 #if !defined ISO && !defined POSIX && !defined XPG4 && !defined XPG42 && !defined UNIX98

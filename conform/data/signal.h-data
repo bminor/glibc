@@ -1,15 +1,15 @@
 macro-constant SIG_DFL {void(*)(int)}
 macro-constant SIG_ERR {void(*)(int)}
-#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX && !defined POSIX2008
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined ISO23 && !defined POSIX && !defined POSIX2008
 macro-constant SIG_HOLD {void(*)(int)}
 #endif
 macro-constant SIG_IGN {void(*)(int)}
 
 type sig_atomic_t
-#if !defined ISO && !defined ISO99 && !defined ISO11
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined ISO23
 type sigset_t
 #endif
-#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined ISO23 && !defined POSIX
 type pid_t
 #elif defined POSIX
 # define pid_t __pid_t
@@ -68,7 +68,7 @@ macro-int-constant SIGTERM {int} > 0
 function void (*signal (int, void(*)(int)))(int)
 function int raise (int)
 
-#if !defined ISO && !defined ISO99 && !defined ISO11
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined ISO23
 macro-int-constant SIGALRM {int} > 0
 macro-int-constant SIGHUP {int} > 0
 macro-int-constant SIGKILL {int} > 0

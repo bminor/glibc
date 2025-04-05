@@ -7,7 +7,7 @@ macro-int-constant ERANGE {int} > 0
 // variable int errno
 allow errno
 
-#if !defined ISO && !defined ISO99 && !defined ISO11
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined ISO23
 macro-int-constant E2BIG {int} > 0
 macro-int-constant EACCES {int} > 0
 # if !defined POSIX

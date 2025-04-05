@@ -20,13 +20,13 @@ macro-int-constant UINT_MAX {unsigned int} >= 4294967295U
 macro-int-constant LONG_MAX {long int} >= 2147483647L
 macro-int-constant LONG_MIN {long int} <= -2147483647L
 macro-int-constant ULONG_MAX {unsigned long int} >= 4294967295UL
-#if defined ISO99 || defined ISO11 || defined XOPEN2K8 || defined POSIX2008
+#if defined ISO99 || defined ISO11 || defined ISO23 || defined XOPEN2K8 || defined POSIX2008
 macro-int-constant LLONG_MIN {long long int} <= -9223372036854775807ll
 macro-int-constant LLONG_MAX {long long int} >= 9223372036854775807ll
 macro-int-constant ULLONG_MAX {unsigned long long int} >= 18446744073709551615ull
 #endif
 
-#if !defined ISO && !defined ISO99 && !defined ISO11
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined ISO23
 // if these values exist, we should check the minimal value
 allow AIO_LISTIO_MAX
 allow AIO_MAX

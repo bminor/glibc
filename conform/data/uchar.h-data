@@ -1,4 +1,4 @@
-#if defined ISO11
+#if defined ISO11 || defined ISO23
 type mbstate_t
 type size_t
 type char16_t

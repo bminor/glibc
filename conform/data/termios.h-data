@@ -1,4 +1,4 @@
-#if !defined ISO && !defined ISO99 && !defined ISO11
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined ISO23
 type cc_t
 type speed_t
 type tcflag_t

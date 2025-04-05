@@ -74,7 +74,7 @@ function {long double complex} csqrtl (long double complex)
 function {long double complex} ctanhl (long double complex)
 function {long double complex} ctanl (long double complex)
 
-# if defined ISO11
+# if defined ISO11 || defined ISO23
 macro-function {double complex} CMPLX (double, double)
 macro-function {float complex} CMPLXF (float, float)
 macro-function {long double complex} CMPLXL (long double, long double)

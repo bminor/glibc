@@ -1,11 +1,11 @@
 #if !defined ISO && !defined POSIX && !defined XPG4 && !defined XPG42
 type wchar_t
 type wint_t
-# if !defined ISO99 && !defined ISO11 && !defined POSIX2008
+# if !defined ISO99 && !defined ISO11 && !defined ISO23 && !defined POSIX2008
 type wctype_t
 # endif
 type mbstate_t
-# if !defined ISO99 && !defined ISO11
+# if !defined ISO99 && !defined ISO11 && !defined ISO23
 type FILE
 # else
 #  define FILE __FILE
@@ -15,7 +15,7 @@ type size_t
 type locale_t
 # endif
 tag {struct tm}
-# if !defined ISO99 && !defined ISO11 && !defined UNIX98
+# if !defined ISO99 && !defined ISO11 && !defined ISO23 && !defined UNIX98
 type va_list
 # else
 #  define va_list __gnuc_va_list
@@ -24,7 +24,7 @@ type va_list
 function wint_t btowc (int)
 function int fwprintf (FILE*, const wchar_t*, ...)
 function int fwscanf (FILE*, const wchar_t*, ...)
-# if !defined ISO99 && !defined ISO11 && !defined POSIX2008
+# if !defined ISO99 && !defined ISO11 && !defined ISO23 && !defined POSIX2008
 function int iswalnum (wint_t)
 function int iswalpha (wint_t)
 function int iswcntrl (wint_t)
@@ -59,7 +59,7 @@ function wint_t putwc (wchar_t, FILE*)
 function wint_t putwchar (wchar_t)
 function int swprintf (wchar_t*, size_t, const wchar_t*, ...)
 function int swscanf (const wchar_t*, const wchar_t*, ...)
-# if !defined ISO99 && !defined ISO11 && !defined POSIX2008
+# if !defined ISO99 && !defined ISO11 && !defined ISO23 && !defined POSIX2008
 function wint_t towlower (wint_t)
 function wint_t towupper (wint_t)
 # endif
@@ -132,7 +132,7 @@ function {unsigned long long int} wcstoull (const wchar_t*, wchar_t**, int)
 # if defined UNIX98 || defined XOPEN2K
 function {wchar_t*} wcswcs (const wchar_t*, const wchar_t*)
 # endif
-# if !defined ISO99 && !defined ISO11 && !defined POSIX && !defined POSIX2008
+# if !defined ISO99 && !defined ISO11 && !defined ISO23 && !defined POSIX && !defined POSIX2008
 function int wcswidth (const wchar_t*, size_t)
 # endif
 function size_t wcsxfrm (wchar_t*, const wchar_t*, size_t)
@@ -140,7 +140,7 @@ function size_t wcsxfrm (wchar_t*, const wchar_t*, size_t)
 function size_t wcsxfrm_l (wchar_t*, const wchar_t*, size_t, locale_t)
 # endif
 function int wctob (wint_t)
-# if !defined ISO99 && !defined ISO11 && !defined POSIX2008
+# if !defined ISO99 && !defined ISO11 && !defined ISO23 && !defined POSIX2008
 function wctype_t wctype (const char*)
 function int wcwidth (wchar_t)
 # endif
@@ -157,7 +157,7 @@ macro-int-constant WCHAR_MAX {promoted:wchar_t} >= 127
 macro-constant WEOF {wint_t}
 macro-constant NULL == 0
 
-#if !defined ISO && !defined ISO99 && !defined ISO11
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined ISO23
 allow-header ctype.h
 allow-header stdio.h
 allow-header stdarg.h
@@ -168,7 +168,7 @@ allow-header time.h
 #endif
 
 allow wcs[abcdefghijklmnopqrstuvwxyz]*
-#if !defined ISO && !defined ISO99 && !defined ISO11
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined ISO23
 allow *_t
 #endif
 #endif

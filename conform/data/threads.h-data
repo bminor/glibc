@@ -1,4 +1,4 @@
-#if defined ISO11
+#if defined ISO11 || defined ISO23
 
 macro ONCE_FLAG_INIT
 macro thread_local
