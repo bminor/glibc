@@ -18,6 +18,9 @@ Major new features:
 
 * On Linux, the pthread_gettid_np function has been added.
 
+* The ISO C2Y family of unsigned abs functions, i.e.
+  uabs, ulabs, ullabs and uimaxabs, are now supported.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
   [Add deprecations, removals and changes affecting compatibility here]

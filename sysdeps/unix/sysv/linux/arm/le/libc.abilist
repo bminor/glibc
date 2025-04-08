@@ -2803,6 +2803,10 @@ GLIBC_2.41 sched_setattr F
 GLIBC_2.42 __inet_ntop_chk F
 GLIBC_2.42 __inet_pton_chk F
 GLIBC_2.42 pthread_gettid_np F
+GLIBC_2.42 uabs F
+GLIBC_2.42 uimaxabs F
+GLIBC_2.42 ulabs F
+GLIBC_2.42 ullabs F
 GLIBC_2.5 __readlinkat_chk F
 GLIBC_2.5 inet6_opt_append F
 GLIBC_2.5 inet6_opt_find F

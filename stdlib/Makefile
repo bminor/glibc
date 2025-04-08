@@ -211,6 +211,9 @@ routines := \
   strtoull_l \
   swapcontext \
   system \
+  uabs \
+  ulabs \
+  ullabs \
   wcstombs \
   wctomb  \
   xpg_basename \
@@ -363,6 +366,10 @@ tests := \
   tst-swapcontext2 \
   tst-thread-quick_exit \
   tst-tininess \
+  tst-uabs \
+  tst-uimaxabs \
+  tst-ulabs \
+  tst-ullabs \
   tst-unsetenv1 \
   tst-width \
   tst-width-stdint \
@@ -411,6 +418,11 @@ LDLIBS-test-dlclose-exit-race-helper.so = $(libsupport) $(shared-thread-library)
 CFLAGS-tst-abs.c += -fno-builtin
 CFLAGS-tst-labs.c += -fno-builtin
 CFLAGS-tst-llabs.c += -fno-builtin
+
+CFLAGS-tst-uabs.c += -fno-builtin
+CFLAGS-tst-uimaxabs.c += -fno-builtin
+CFLAGS-tst-ulabs.c += -fno-builtin
+CFLAGS-tst-ullabs.c += -fno-builtin
 
 CFLAGS-tst-stdbit-Wconversion.c += -Wconversion -Werror
 CFLAGS-tst-stdc_trailing_zeros.c += -fno-builtin

@@ -2297,6 +2297,10 @@ GLIBC_2.42 pthread_rwlockattr_destroy F
 GLIBC_2.42 pthread_rwlockattr_getpshared F
 GLIBC_2.42 pthread_rwlockattr_init F
 GLIBC_2.42 pthread_rwlockattr_setpshared F
+GLIBC_2.42 uabs F
+GLIBC_2.42 uimaxabs F
+GLIBC_2.42 ulabs F
+GLIBC_2.42 ullabs F
 HURD_CTHREADS_0.3 __cthread_getspecific F
 HURD_CTHREADS_0.3 __cthread_keycreate F
 HURD_CTHREADS_0.3 __cthread_setspecific F
