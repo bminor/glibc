@@ -928,6 +928,16 @@ do_ftell (FILE *fp)
   if (result == EOF)
     return result;
 
+  if (result == 0 && offset < 0)
+    {
+      /* This happens for some character devices that always report
+	 file offset 0 even after some data has been read (instead of
+	 failing with ESPIPE).  The fclose path ignores this
+	 error.  */
+      __set_errno (ESPIPE);
+      return EOF;
+    }
+
   result += offset;
 
   if (result < 0)
