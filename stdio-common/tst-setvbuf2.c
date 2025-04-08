@@ -240,6 +240,21 @@ typedef struct {
 /* It's OK if this is static, we only run one at a time.  */
 ThreadData thread_data;
 
+static void
+end_thread (pthread_t *ptid)
+{
+  if (*ptid)
+    {
+      pthread_cancel (*ptid);
+      xpthread_join (*ptid);
+      /* The descriptor was passed in, or the helper thread made
+	 sufficient progress and opened the file.  */
+      if (thread_data.fd >= 0)
+	xclose (thread_data.fd);
+      *ptid = 0;
+    }
+}
+
 static void *
 writer_thread_proc (void *closure)
 {
@@ -306,7 +321,7 @@ static void
 start_writer_thread_n (const char *fname)
 {
   debug;
-  thread_data.fd = 0;
+  thread_data.fd = -1;
   thread_data.fname = fname;
   writer_thread_tid = xpthread_create (NULL, writer_thread_proc,
 				       (void *)&thread_data);
@@ -316,13 +331,7 @@ static void
 end_writer_thread (void)
 {
   debug;
-  if (writer_thread_tid)
-    {
-      pthread_cancel (writer_thread_tid);
-      xpthread_join (writer_thread_tid);
-      xclose (thread_data.fd);
-      writer_thread_tid = 0;
-    }
+  end_thread (&writer_thread_tid);
 }
 
 static void
@@ -339,7 +348,7 @@ static void
 start_reader_thread_n (const char *fname)
 {
   debug;
-  thread_data.fd = 0;
+  thread_data.fd = -1;
   thread_data.fname = fname;
   reader_thread_tid = xpthread_create (NULL, reader_thread_proc,
 				       (void *)&thread_data);
@@ -349,13 +358,7 @@ static void
 end_reader_thread (void)
 {
   debug;
-  if (reader_thread_tid)
-    {
-      pthread_cancel (reader_thread_tid);
-      xpthread_join (reader_thread_tid);
-      xclose (thread_data.fd);
-      reader_thread_tid = 0;
-    }
+  end_thread (&reader_thread_tid);
 }
 
 /*------------------------------------------------------------*/
@@ -852,7 +855,7 @@ do_second_part (FILE *fp,
     }
 
 
-  fclose (fp);
+  xfclose (fp);
   return rv;
 }
 
@@ -939,7 +942,7 @@ recurse (FILE *fp,
       break;
 
     default: /* parent */
-      fclose (fp);
+      xfclose (fp);
       xwaitpid (pid, &status, 0);
       if (WIFEXITED (status)
 	  && WEXITSTATUS (status) == 0)
