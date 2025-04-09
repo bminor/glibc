@@ -313,7 +313,7 @@
 # define TCACHE_FILL_COUNT 7
 
 /* Maximum chunks in tcache bins for tunables.  This value must fit the range
-   of tcache->counts[] entries, else they may overflow.  */
+   of tcache->num_slots[] entries, else they may overflow.  */
 # define MAX_TCACHE_COUNT UINT16_MAX
 #endif
 
@@ -3119,12 +3119,13 @@ typedef struct tcache_entry
 
 /* There is one of these for each thread, which contains the
    per-thread cache (hence "tcache_perthread_struct").  Keeping
-   overall size low is mildly important.  Note that COUNTS and ENTRIES
-   are redundant (we could have just counted the linked list each
-   time), this is for performance reasons.  */
+   overall size low is mildly important.  The 'entries' field is linked list of
+   free blocks, while 'num_slots' contains the number of free blocks that can
+   be added.  Each bin may allow a different maximum number of free blocks,
+   and can be disabled by initializing 'num_slots' to zero.  */
 typedef struct tcache_perthread_struct
 {
-  uint16_t counts[TCACHE_MAX_BINS];
+  uint16_t num_slots[TCACHE_MAX_BINS];
   tcache_entry *entries[TCACHE_MAX_BINS];
 } tcache_perthread_struct;
 
@@ -3171,7 +3172,7 @@ tcache_put (mchunkptr chunk, size_t tc_idx)
 
   e->next = PROTECT_PTR (&e->next, tcache->entries[tc_idx]);
   tcache->entries[tc_idx] = e;
-  ++(tcache->counts[tc_idx]);
+  --(tcache->num_slots[tc_idx]);
 }
 
 /* Caller must ensure that we know tc_idx is valid and there's
@@ -3194,7 +3195,7 @@ tcache_get_n (size_t tc_idx, tcache_entry **ep)
   else
     *ep = PROTECT_PTR (ep, REVEAL_PTR (e->next));
 
-  --(tcache->counts[tc_idx]);
+  ++(tcache->num_slots[tc_idx]);
   e->key = 0;
   return (void *) e;
 }
@@ -3219,7 +3220,7 @@ tcache_available (size_t tc_idx)
 {
   if (tc_idx < mp_.tcache_bins
       && tcache != NULL
-      && tcache->counts[tc_idx] > 0)
+      && tcache->entries[tc_idx] != NULL)
     return true;
   else
     return false;
@@ -3322,6 +3323,8 @@ tcache_init(void)
     {
       tcache = (tcache_perthread_struct *) victim;
       memset (tcache, 0, sizeof (tcache_perthread_struct));
+      for (int i = 0; i < TCACHE_MAX_BINS; i++)
+	tcache->num_slots[i] = mp_.tcache_count;
     }
 
 }
@@ -3439,7 +3442,7 @@ __libc_free (void *mem)
       if (__glibc_unlikely (e->key == tcache_key))
         return tcache_double_free_verify (e);
 
-      if (__glibc_likely (tcache->counts[tc_idx] < mp_.tcache_count))
+      if (__glibc_likely (tcache->num_slots[tc_idx] != 0))
         return tcache_put (p, tc_idx);
     }
 #endif
@@ -3951,8 +3954,7 @@ _int_malloc (mstate av, size_t bytes)
 		  mchunkptr tc_victim;
 
 		  /* While bin not empty and tcache not full, copy chunks.  */
-		  while (tcache->counts[tc_idx] < mp_.tcache_count
-			 && (tc_victim = *fb) != NULL)
+		  while (tcache->num_slots[tc_idx] != 0 && (tc_victim = *fb) != NULL)
 		    {
 		      if (__glibc_unlikely (misaligned_chunk (tc_victim)))
 			malloc_printerr ("malloc(): unaligned fastbin chunk detected 3");
@@ -4012,7 +4014,7 @@ _int_malloc (mstate av, size_t bytes)
 	      mchunkptr tc_victim;
 
 	      /* While bin not empty and tcache not full, copy chunks over.  */
-	      while (tcache->counts[tc_idx] < mp_.tcache_count
+	      while (tcache->num_slots[tc_idx] != 0
 		     && (tc_victim = last (bin)) != bin)
 		{
 		  if (tc_victim != NULL)
@@ -4149,8 +4151,7 @@ _int_malloc (mstate av, size_t bytes)
 #if USE_TCACHE
 	      /* Fill cache first, return to user only if cache fills.
 		 We may return one of these chunks later.  */
-	      if (tcache_nb > 0
-		  && tcache->counts[tc_idx] < mp_.tcache_count)
+	      if (tcache_nb > 0 && tcache->num_slots[tc_idx] != 0)
 		{
 		  tcache_put (victim, tc_idx);
 		  return_cached = 1;
