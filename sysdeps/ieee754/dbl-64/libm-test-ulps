@@ -1,0 +1,12 @@
+# Maximal error of functions:
+Function: "acospi":
+double: 0
+
+Function: "acospi_downward":
+double: 0
+
+Function: "acospi_towardzero":
+double: 0
+
+Function: "acospi_upward":
+double: 0
