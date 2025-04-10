@@ -15,10 +15,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <time.h>
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <support/check.h>
+#include <time.h>
 
 /* Test that we can use a truncated timezone-file, where the time-type
    at index 0 is not indexed by the transition-types array (and the
@@ -28,19 +29,24 @@
 static int
 do_test (void)
 {
-  if (setenv ("TZ", "XT5", 1))
-    {
-      puts ("setenv failed.");
-      return 1;
-    }
+  if (setenv ("TZ", "XT5", 1) != 0)
+    FAIL_EXIT1 ("setenv: %m");
 
+  errno = 0;
   tzset ();
+  if (errno != 0)
+    /* This is not a test failure because checking errno this way is
+       not a documented way for determining tzset success.  We do this
+       only to gather additional diagnostics.  */
+    printf ("warning: tzset set errno to %d (%m)", errno);
 
-  return
-    /* Sanity-check that we got the right abbreviation for DST.  For
-       normal time, we're likely to get "-00" (the "unspecified" marker),
-       even though the POSIX timezone string says "-04".  Let's not test
-       that.  */
-    !(strcmp (tzname[1], "-03") == 0);
+  /* Sanity-check that we got the right abbreviation for DST.  For
+     normal time, we're likely to get "-00" (the "unspecified" marker),
+     even though the POSIX timezone string says "-04".  Let's not test
+     that.  */
+  TEST_COMPARE_STRING (tzname[1], "-03");
+
+  return 0;
 }
+
 #include <support/test-driver.c>
