@@ -363,7 +363,6 @@ elf_machine_runtime_setup (struct link_map *map, struct r_scope_elem *scope[],
 				    / sizeof (Elf64_Rela));
       Elf64_Addr l_addr = map->l_addr;
       Elf64_Dyn **info = map->l_info;
-      char *p;
 
       extern void _dl_runtime_resolve (void);
       extern void _dl_profile_resolve (void);
@@ -435,20 +434,6 @@ elf_machine_runtime_setup (struct link_map *map, struct r_scope_elem *scope[],
 	      offset += PLT_ENTRY_WORDS;
 	      glink_offset += GLINK_ENTRY_WORDS (i);
 	    }
-
-	  /* Now, we've modified data.  We need to write the changes from
-	     the data cache to a second-level unified cache, then make
-	     sure that stale data in the instruction cache is removed.
-	     (In a multiprocessor system, the effect is more complex.)
-	     Most of the PLT shouldn't be in the instruction cache, but
-	     there may be a little overlap at the start and the end.
-
-	     Assumes that dcbst and icbi apply to lines of 16 bytes or
-	     more.  Current known line sizes are 16, 32, and 128 bytes.  */
-
-	  for (p = (char *) plt; p < (char *) &plt[offset]; p += 16)
-	    PPC_DCBST (p);
-	  PPC_SYNC;
 	}
     }
   return lazy;
