@@ -502,8 +502,8 @@ _Static_assert (((index_arch_Fast_Unaligned_Load
 		"Incorrect index_arch_Fast_Unaligned_Load");
 
 
-/* Intel Family-6 microarch list.  */
-enum
+/* Intel microarch list.  */
+enum intel_microarch
 {
   /* Atom processors.  */
   INTEL_ATOM_BONNELL,
@@ -555,7 +555,7 @@ enum
   INTEL_UNKNOWN,
 };
 
-static unsigned int
+static enum intel_microarch
 intel_get_fam6_microarch (unsigned int model,
 			  __attribute__ ((unused)) unsigned int stepping)
 {
@@ -764,135 +764,20 @@ init_cpu_features (struct cpu_features *cpu_features)
       cpu_features->preferred[index_arch_Avoid_Non_Temporal_Memset]
 	  &= ~bit_arch_Avoid_Non_Temporal_Memset;
 
+      enum intel_microarch microarch = INTEL_UNKNOWN;
       if (family == 0x06)
 	{
 	  model += extended_model;
-	  unsigned int microarch
-	      = intel_get_fam6_microarch (model, stepping);
+	  microarch = intel_get_fam6_microarch (model, stepping);
 
+	  /* Disable TSX on some processors to avoid TSX on kernels that
+	     weren't updated with the latest microcode package (which
+	     disables broken feature by default).  */
 	  switch (microarch)
 	    {
-	      /* Atom / KNL tuning.  */
-	    case INTEL_ATOM_BONNELL:
-	      /* BSF is slow on Bonnell.  */
-	      cpu_features->preferred[index_arch_Slow_BSF]
-		  |= bit_arch_Slow_BSF;
-	      break;
-
-	      /* Unaligned load versions are faster than SSSE3
-		     on Airmont, Silvermont, Goldmont, and Goldmont Plus.  */
-	    case INTEL_ATOM_AIRMONT:
-	    case INTEL_ATOM_SILVERMONT:
-	    case INTEL_ATOM_GOLDMONT:
-	    case INTEL_ATOM_GOLDMONT_PLUS:
-
-          /* Knights Landing.  Enable Silvermont optimizations.  */
-	    case INTEL_KNIGHTS_LANDING:
-
-	      cpu_features->preferred[index_arch_Fast_Unaligned_Load]
-		  |= (bit_arch_Fast_Unaligned_Load
-		      | bit_arch_Fast_Unaligned_Copy
-		      | bit_arch_Prefer_PMINUB_for_stringop
-		      | bit_arch_Slow_SSE4_2);
-	      break;
-
-	    case INTEL_ATOM_TREMONT:
-	      /* Enable rep string instructions, unaligned load, unaligned
-		 copy, pminub and avoid SSE 4.2 on Tremont.  */
-	      cpu_features->preferred[index_arch_Fast_Rep_String]
-		  |= (bit_arch_Fast_Rep_String
-		      | bit_arch_Fast_Unaligned_Load
-		      | bit_arch_Fast_Unaligned_Copy
-		      | bit_arch_Prefer_PMINUB_for_stringop
-		      | bit_arch_Slow_SSE4_2);
-	      break;
-
-	   /*
-	    Default tuned Knights microarch.
-	    case INTEL_KNIGHTS_MILL:
-        */
-
-	   /*
-	    Default tuned atom microarch.
-	    case INTEL_ATOM_SIERRAFOREST:
-	    case INTEL_ATOM_GRANDRIDGE:
-	    case INTEL_ATOM_CLEARWATERFOREST:
-	   */
-
-	      /* Bigcore/Default Tuning.  */
 	    default:
-	    default_tuning:
-	      /* Unknown family 0x06 processors.  Assuming this is one
-		 of Core i3/i5/i7 processors if AVX is available.  */
-	      if (!CPU_FEATURES_CPU_P (cpu_features, AVX))
-		break;
-
-	    enable_modern_features:
-	      /* Rep string instructions, unaligned load, unaligned copy,
-		 and pminub are fast on Intel Core i3, i5 and i7.  */
-	      cpu_features->preferred[index_arch_Fast_Rep_String]
-		  |= (bit_arch_Fast_Rep_String
-		      | bit_arch_Fast_Unaligned_Load
-		      | bit_arch_Fast_Unaligned_Copy
-		      | bit_arch_Prefer_PMINUB_for_stringop);
 	      break;
 
-	    case INTEL_BIGCORE_NEHALEM:
-	    case INTEL_BIGCORE_WESTMERE:
-	      /* Older CPUs prefer non-temporal stores at lower threshold.  */
-	      cpu_features->cachesize_non_temporal_divisor = 8;
-	      goto enable_modern_features;
-
-	      /* Older Bigcore microarch (smaller non-temporal store
-		 threshold).  */
-	    case INTEL_BIGCORE_SANDYBRIDGE:
-	    case INTEL_BIGCORE_IVYBRIDGE:
-	    case INTEL_BIGCORE_HASWELL:
-	    case INTEL_BIGCORE_BROADWELL:
-	      cpu_features->cachesize_non_temporal_divisor = 8;
-	      goto default_tuning;
-
-	      /* Newer Bigcore microarch (larger non-temporal store
-		 threshold).  */
-	    case INTEL_BIGCORE_SKYLAKE_AVX512:
-	    case INTEL_BIGCORE_CANNONLAKE:
-	      /* Benchmarks indicate non-temporal memset is not
-		     necessarily profitable on SKX (and in some cases much
-		     worse). This is likely unique to SKX due its it unique
-		     mesh interconnect (not present on ICX or BWD). Disable
-		     non-temporal on all Skylake servers. */
-	      cpu_features->preferred[index_arch_Avoid_Non_Temporal_Memset]
-		  |= bit_arch_Avoid_Non_Temporal_Memset;
-	      /* fallthrough */
-	    case INTEL_BIGCORE_COMETLAKE:
-	    case INTEL_BIGCORE_SKYLAKE:
-	    case INTEL_BIGCORE_KABYLAKE:
-	    case INTEL_BIGCORE_ICELAKE:
-	    case INTEL_BIGCORE_TIGERLAKE:
-	    case INTEL_BIGCORE_ROCKETLAKE:
-	    case INTEL_BIGCORE_RAPTORLAKE:
-	    case INTEL_BIGCORE_METEORLAKE:
-	    case INTEL_BIGCORE_LUNARLAKE:
-	    case INTEL_BIGCORE_ARROWLAKE:
-	    case INTEL_BIGCORE_PANTHERLAKE:
-	    case INTEL_BIGCORE_SAPPHIRERAPIDS:
-	    case INTEL_BIGCORE_EMERALDRAPIDS:
-	    case INTEL_BIGCORE_GRANITERAPIDS:
-	      cpu_features->cachesize_non_temporal_divisor = 2;
-	      goto default_tuning;
-
-	      /* Default tuned Mixed (bigcore + atom SOC). */
-	    case INTEL_MIXED_LAKEFIELD:
-	    case INTEL_MIXED_ALDERLAKE:
-	      cpu_features->cachesize_non_temporal_divisor = 2;
-	      goto default_tuning;
-	    }
-
-	      /* Disable TSX on some processors to avoid TSX on kernels that
-		 weren't updated with the latest microcode package (which
-		 disables broken feature by default).  */
-	  switch (microarch)
-	    {
 	    case INTEL_BIGCORE_SKYLAKE_AVX512:
 	      /* 0x55 (Skylake-avx512) && stepping <= 5 disable TSX. */
 	      if (stepping <= 5)
@@ -901,38 +786,152 @@ init_cpu_features (struct cpu_features *cpu_features)
 
 	    case INTEL_BIGCORE_KABYLAKE:
 	      /* NB: Although the errata documents that for model == 0x8e
-		     (kabylake skylake client), only 0xb stepping or lower are
-		     impacted, the intention of the errata was to disable TSX on
-		     all client processors on all steppings.  Include 0xc
-		     stepping which is an Intel Core i7-8665U, a client mobile
-		     processor.  */
+		 (kabylake skylake client), only 0xb stepping or lower are
+		 impacted, the intention of the errata was to disable TSX on
+		 all client processors on all steppings.  Include 0xc
+		 stepping which is an Intel Core i7-8665U, a client mobile
+		 processor.  */
 	      if (stepping > 0xc)
 		break;
 	      /* Fall through.  */
 	    case INTEL_BIGCORE_SKYLAKE:
-		/* Disable Intel TSX and enable RTM_ALWAYS_ABORT for
-		   processors listed in:
+	      /* Disable Intel TSX and enable RTM_ALWAYS_ABORT for
+		 processors listed in:
 
-https://www.intel.com/content/www/us/en/support/articles/000059422/processors.html
-		 */
-	    disable_tsx:
-		CPU_FEATURE_UNSET (cpu_features, HLE);
-		CPU_FEATURE_UNSET (cpu_features, RTM);
-		CPU_FEATURE_SET (cpu_features, RTM_ALWAYS_ABORT);
-		break;
+		 https://www.intel.com/content/www/us/en/support/articles/000059422/processors.html
+	       */
+disable_tsx:
+	      CPU_FEATURE_UNSET (cpu_features, HLE);
+	      CPU_FEATURE_UNSET (cpu_features, RTM);
+	      CPU_FEATURE_SET (cpu_features, RTM_ALWAYS_ABORT);
+	      break;
 
 	    case INTEL_BIGCORE_HASWELL:
-		/* Xeon E7 v3 (model == 0x3f) with stepping >= 4 has working
-		   TSX.  Haswell also include other model numbers that have
-		   working TSX.  */
-		if (model == 0x3f && stepping >= 4)
+	      /* Xeon E7 v3 (model == 0x3f) with stepping >= 4 has working
+		 TSX.  Haswell also includes other model numbers that have
+		 working TSX.  */
+	      if (model == 0x3f && stepping >= 4)
 		break;
 
-		CPU_FEATURE_UNSET (cpu_features, RTM);
-		break;
+	      CPU_FEATURE_UNSET (cpu_features, RTM);
+	      break;
 	    }
 	}
 
+      switch (microarch)
+	{
+	  /* Atom / KNL tuning.  */
+	case INTEL_ATOM_BONNELL:
+	  /* BSF is slow on Bonnell.  */
+	  cpu_features->preferred[index_arch_Slow_BSF]
+	    |= bit_arch_Slow_BSF;
+	  break;
+
+	  /* Unaligned load versions are faster than SSSE3
+	     on Airmont, Silvermont, Goldmont, and Goldmont Plus.  */
+	case INTEL_ATOM_AIRMONT:
+	case INTEL_ATOM_SILVERMONT:
+	case INTEL_ATOM_GOLDMONT:
+	case INTEL_ATOM_GOLDMONT_PLUS:
+
+	  /* Knights Landing.  Enable Silvermont optimizations.  */
+	case INTEL_KNIGHTS_LANDING:
+
+	  cpu_features->preferred[index_arch_Fast_Unaligned_Load]
+	    |= (bit_arch_Fast_Unaligned_Load
+		| bit_arch_Fast_Unaligned_Copy
+		| bit_arch_Prefer_PMINUB_for_stringop
+		| bit_arch_Slow_SSE4_2);
+	  break;
+
+	case INTEL_ATOM_TREMONT:
+	  /* Enable rep string instructions, unaligned load, unaligned
+	     copy, pminub and avoid SSE 4.2 on Tremont.  */
+	  cpu_features->preferred[index_arch_Fast_Rep_String]
+	    |= (bit_arch_Fast_Rep_String
+		| bit_arch_Fast_Unaligned_Load
+		| bit_arch_Fast_Unaligned_Copy
+		| bit_arch_Prefer_PMINUB_for_stringop
+		| bit_arch_Slow_SSE4_2);
+	  break;
+
+	  /*
+	     Default tuned Knights microarch.
+	     case INTEL_KNIGHTS_MILL:
+	     */
+
+	  /*
+	     Default tuned atom microarch.
+	     case INTEL_ATOM_SIERRAFOREST:
+	     case INTEL_ATOM_GRANDRIDGE:
+	     case INTEL_ATOM_CLEARWATERFOREST:
+	     */
+
+	  /* Bigcore/Default Tuning.  */
+	default:
+	default_tuning:
+	  /* Unknown Intel processors.  Assuming this is one of Core
+	     i3/i5/i7 processors if AVX is available.  */
+	  if (!CPU_FEATURES_CPU_P (cpu_features, AVX))
+	    break;
+
+	enable_modern_features:
+	  /* Rep string instructions, unaligned load, unaligned copy,
+	     and pminub are fast on Intel Core i3, i5 and i7.  */
+	  cpu_features->preferred[index_arch_Fast_Rep_String]
+	    |= (bit_arch_Fast_Rep_String
+		| bit_arch_Fast_Unaligned_Load
+		| bit_arch_Fast_Unaligned_Copy
+		| bit_arch_Prefer_PMINUB_for_stringop);
+	  break;
+
+	case INTEL_BIGCORE_NEHALEM:
+	case INTEL_BIGCORE_WESTMERE:
+	  /* Older CPUs prefer non-temporal stores at lower threshold.  */
+	  cpu_features->cachesize_non_temporal_divisor = 8;
+	  goto enable_modern_features;
+
+	  /* Older Bigcore microarch (smaller non-temporal store
+	     threshold).  */
+	case INTEL_BIGCORE_SANDYBRIDGE:
+	case INTEL_BIGCORE_IVYBRIDGE:
+	case INTEL_BIGCORE_HASWELL:
+	case INTEL_BIGCORE_BROADWELL:
+	  cpu_features->cachesize_non_temporal_divisor = 8;
+	  goto default_tuning;
+
+	  /* Newer Bigcore microarch (larger non-temporal store
+	     threshold).  */
+	case INTEL_BIGCORE_SKYLAKE_AVX512:
+	case INTEL_BIGCORE_CANNONLAKE:
+	  /* Benchmarks indicate non-temporal memset is not
+	     necessarily profitable on SKX (and in some cases much
+	     worse). This is likely unique to SKX due to its unique
+	     mesh interconnect (not present on ICX or BWD). Disable
+	     non-temporal on all Skylake servers. */
+	  cpu_features->preferred[index_arch_Avoid_Non_Temporal_Memset]
+	    |= bit_arch_Avoid_Non_Temporal_Memset;
+	  /* fallthrough */
+	case INTEL_BIGCORE_COMETLAKE:
+	case INTEL_BIGCORE_SKYLAKE:
+	case INTEL_BIGCORE_KABYLAKE:
+	case INTEL_BIGCORE_ICELAKE:
+	case INTEL_BIGCORE_TIGERLAKE:
+	case INTEL_BIGCORE_ROCKETLAKE:
+	case INTEL_BIGCORE_RAPTORLAKE:
+	case INTEL_BIGCORE_METEORLAKE:
+	case INTEL_BIGCORE_LUNARLAKE:
+	case INTEL_BIGCORE_ARROWLAKE:
+	case INTEL_BIGCORE_PANTHERLAKE:
+	case INTEL_BIGCORE_SAPPHIRERAPIDS:
+	case INTEL_BIGCORE_EMERALDRAPIDS:
+	case INTEL_BIGCORE_GRANITERAPIDS:
+	  /* Default tuned Mixed (bigcore + atom SOC). */
+	case INTEL_MIXED_LAKEFIELD:
+	case INTEL_MIXED_ALDERLAKE:
+	  cpu_features->cachesize_non_temporal_divisor = 2;
+	  goto default_tuning;
+	}
 
       /* Since AVX512ER is unique to Xeon Phi, set Prefer_No_VZEROUPPER
          if AVX512ER is available.  Don't use AVX512 to avoid lower CPU
