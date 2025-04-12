@@ -542,6 +542,7 @@ enum intel_microarch
   INTEL_BIGCORE_ARROWLAKE,
   INTEL_BIGCORE_PANTHERLAKE,
   INTEL_BIGCORE_GRANITERAPIDS,
+  INTEL_BIGCORE_DIAMONDRAPIDS,
 
   /* Mixed (bigcore + atom SOC).  */
   INTEL_MIXED_LAKEFIELD,
@@ -817,6 +818,16 @@ disable_tsx:
 	      break;
 	    }
 	}
+      else if (family == 19)
+	switch (model)
+	  {
+	  case 0x01:
+	    microarch = INTEL_BIGCORE_DIAMONDRAPIDS;
+	    break;
+
+	  default:
+	    break;
+	  }
 
       switch (microarch)
 	{
@@ -926,6 +937,7 @@ disable_tsx:
 	case INTEL_BIGCORE_SAPPHIRERAPIDS:
 	case INTEL_BIGCORE_EMERALDRAPIDS:
 	case INTEL_BIGCORE_GRANITERAPIDS:
+	case INTEL_BIGCORE_DIAMONDRAPIDS:
 	  /* Default tuned Mixed (bigcore + atom SOC). */
 	case INTEL_MIXED_LAKEFIELD:
 	case INTEL_MIXED_ALDERLAKE:
