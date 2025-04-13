@@ -367,7 +367,7 @@ stack is allowed from the main program.  Setting the value to @code{0} disables
 the ABI auto-negotiation (meaning no executable stacks even if the ABI or ELF
 header requires it), @code{1} enables auto-negotiation (although the program
 might not need an executable stack), while @code{2} forces an executable
-stack at process start.  Tthis is provided for compatibility reasons, when
+stack at process start.  This is provided for compatibility reasons, when
 the program dynamically loads modules with @code{dlopen} which require
 an executable stack.
 
