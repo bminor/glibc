@@ -72,7 +72,7 @@ do_test (void)
 
   _Static_assert (!(EXCEPTION_SET_FORCES_TRAP && !EXCEPTION_TESTS(float)),
 		  "EXCEPTION_SET_FORCES_TRAP only makes sense if the "
-		  "architecture suports exceptions");
+		  "architecture supports exceptions");
   {
     int exc_before = fegetexcept ();
     ret = fesetexceptflag (&saved, FE_ALL_EXCEPT);
