@@ -36,7 +36,7 @@ static int temp_fd;
 static void
 do_prepare (void)
 {
-  temp_fd = create_temp_file ("tst-trucate.", &temp_filename);
+  temp_fd = create_temp_file ("tst-truncate.", &temp_filename);
   if (temp_fd == -1)
     {
       printf ("cannot create temporary file: %m\n");
