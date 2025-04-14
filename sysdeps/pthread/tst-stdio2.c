@@ -75,7 +75,7 @@ do_test (void)
       exit (1);
     }
 
-  puts ("join returned succsefully");
+  puts ("join returned successfully");
 
   return 0;
 }
