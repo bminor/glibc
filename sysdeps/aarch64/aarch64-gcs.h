@@ -23,6 +23,21 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-void *__alloc_gcs (size_t, void **, size_t *) attribute_hidden;
+struct gcs_record
+{
+  void *gcs_base;
+  void *gcs_token;
+  size_t gcs_size;
+};
+
+void *__alloc_gcs (size_t, struct gcs_record *) attribute_hidden;
+
+static inline bool
+has_gcs (void)
+{
+  register unsigned long x16 asm ("x16") = 1;
+  asm ("hint	40" /* chkfeat x16 */ : "+r" (x16));
+  return x16 == 0;
+}
 
 #endif

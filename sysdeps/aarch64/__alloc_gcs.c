@@ -15,6 +15,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include "aarch64-gcs.h"
+
 #include <sysdep.h>
 #include <unistd.h>
 #include <sys/mman.h>
@@ -34,7 +36,7 @@ map_shadow_stack (void *addr, size_t size, unsigned long flags)
 #define GCS_ALTSTACK_RESERVE 160
 
 void *
-__alloc_gcs (size_t stack_size, void **ss_base, size_t *ss_size)
+__alloc_gcs (size_t stack_size, struct gcs_record *gcs)
 {
   size_t size = (stack_size / 2 + GCS_ALTSTACK_RESERVE) & -8UL;
   if (size > GCS_MAX_SIZE)
@@ -44,9 +46,6 @@ __alloc_gcs (size_t stack_size, void **ss_base, size_t *ss_size)
   void *base = map_shadow_stack (NULL, size, flags);
   if (base == MAP_FAILED)
     return NULL;
-
-  *ss_base = base;
-  *ss_size = size;
 
   uint64_t *gcsp = (uint64_t *) ((char *) base + size);
   /* Skip end of GCS token.  */
@@ -58,6 +57,14 @@ __alloc_gcs (size_t stack_size, void **ss_base, size_t *ss_size)
       __munmap (base, size);
       return NULL;
     }
+
+  if (gcs != NULL)
+    {
+      gcs->gcs_base = base;
+      gcs->gcs_token = gcsp;
+      gcs->gcs_size = size;
+    }
+
   /* Return the target GCS pointer for context switch.  */
   return gcsp + 1;
 }
