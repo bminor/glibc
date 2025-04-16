@@ -3296,9 +3296,6 @@ tcache_init(void)
   if (MAX_TCACHE_SIZE >= GLRO (dl_pagesize) / 2)
     malloc_printerr ("max tcache size too large");
 
-  /* Preserve errno when called from free() - _int_malloc may corrupt it.  */
-  int err = errno;
-
   arena_get (ar_ptr, bytes);
   victim = _int_malloc (ar_ptr, bytes);
   if (!victim && ar_ptr != NULL)
@@ -3310,8 +3307,6 @@ tcache_init(void)
 
   if (ar_ptr != NULL)
     __libc_lock_unlock (ar_ptr->mutex);
-
-  __set_errno (err);
 
   /* In a low memory situation, we may not be able to allocate memory
      - in which case, we just keep trying later.  However, we
@@ -3346,13 +3341,15 @@ tcache_try_malloc (size_t bytes, void **memptr)
 
   size_t tc_idx = csize2tidx (tbytes);
 
-  MAYBE_INIT_TCACHE ();
-
   if (tcache_available (tc_idx))
-    *memptr = tcache_get (tc_idx);
+    {
+      *memptr = tcache_get (tc_idx);
+      return false;
+    }
   else
     *memptr = NULL;
 
+  MAYBE_INIT_TCACHE ();
   return false;
 }
 
@@ -3684,8 +3681,6 @@ _mid_memalign (size_t alignment, size_t bytes, void *address)
       }
     size_t tc_idx = csize2tidx (tbytes);
 
-    MAYBE_INIT_TCACHE ();
-
     if (tcache_available (tc_idx))
       {
 	/* The tcache itself isn't encoded, but the chain is.  */
@@ -3702,6 +3697,7 @@ _mid_memalign (size_t alignment, size_t bytes, void *address)
 	    return tag_new_usable (victim);
 	  }
       }
+    MAYBE_INIT_TCACHE ();
   }
 #endif
 
@@ -4555,8 +4551,6 @@ static void
 _int_free_chunk (mstate av, mchunkptr p, INTERNAL_SIZE_T size, int have_lock)
 {
   mfastbinptr *fb;             /* associated fastbin */
-
-  MAYBE_INIT_TCACHE ();
 
   /*
     If eligible, place chunk on a fastbin so it can be found
