@@ -124,7 +124,8 @@ extern void end_locale_structure (struct locale_file *file);
 extern void start_locale_prelude (struct locale_file *file);
 extern void end_locale_prelude (struct locale_file *file);
 extern void write_locale_data (const char *output_path, int catidx,
-			       const char *category, struct locale_file *file);
+			       const char *category, struct locale_file *file)
+     __attribute__ ((nonnull (1, 3, 4)));
 
 
 /* Entrypoints for the parsers of the individual categories.  */

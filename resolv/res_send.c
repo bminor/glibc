@@ -801,7 +801,7 @@ reopen (res_state statp, int *terrno, int ns)
 {
 	if (EXT(statp).nssocks[ns] == -1) {
 		struct sockaddr *nsap = __res_get_nsaddr (statp, ns);
-		socklen_t slen;
+		socklen_t slen = 0;
 
 		/* only try IPv6 if IPv6 NS and if not failed before */
 		if (nsap->sa_family == AF_INET6 && !statp->ipv6_unavail) {
@@ -845,16 +845,7 @@ reopen (res_state statp, int *terrno, int ns)
 		 * error message is received.  We can thus detect
 		 * the absence of a nameserver without timing out.
 		 */
-		/* With GCC 5.3 when compiling with -Os the compiler
-		   emits a warning that slen may be used uninitialized,
-		   but that is never true.  Both slen and
-		   EXT(statp).nssocks[ns] are initialized together or
-		   the function return -1 before control flow reaches
-		   the call to connect with slen.  */
-		DIAG_PUSH_NEEDS_COMMENT;
-		DIAG_IGNORE_Os_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
 		if (__connect (EXT (statp).nssocks[ns], nsap, slen) < 0) {
-		DIAG_POP_NEEDS_COMMENT;
 			__res_iclose(statp, false);
 			return (0);
 		}

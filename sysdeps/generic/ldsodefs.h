@@ -27,6 +27,7 @@
 #include <stddef.h>
 #include <string.h>
 #include <stdint.h>
+#include <stdarg.h>
 
 #include <elf.h>
 #include <dlfcn.h>
@@ -773,6 +774,8 @@ extern void _dl_debug_printf (const char *fmt, ...)
 extern void _dl_debug_printf_c (const char *fmt, ...)
      __attribute__ ((__format__ (__printf__, 1, 2))) attribute_hidden;
 
+extern void _dl_debug_vprintf_c (const char *fmt, va_list ap)
+     __attribute__ ((__format__ (__printf__, 1, 0))) attribute_hidden;
 
 /* Write a message on the specified descriptor FD.  The parameters are
    interpreted as for a `printf' call.  */

@@ -63,4 +63,10 @@ rtld_hidden_proto (__chk_fail)
 # define __attribute_optimization_barrier__ __attribute__ ((noinline, noclone))
 #endif
 
+#ifdef ENABLE_UBSAN
+# define __attribute_disable_ubsan__ __attribute__((no_sanitize("undefined")))
+#else
+# define __attribute_disable_ubsan__
+#endif
+
 #endif

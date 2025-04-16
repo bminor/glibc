@@ -41,6 +41,9 @@
 
 #include <support/support.h>
 
+#define assume(R) ((R) ? (void) 0 : __builtin_unreachable ())
+#define assume_nonnull(x) assume ((x) != NULL)
+
 /*
   The following define is necessary for glibc 2.0.6
 */
@@ -180,6 +183,9 @@ test_hosts (void)
       namelen += 2;		/* tiny increments to test a lot */
       name = xrealloc (name, namelen);
     }
+
+  assume_nonnull (name);
+
   if (gethostname (name, namelen) == 0)
     {
       printf ("Hostname: %s\n", name);

@@ -31,6 +31,11 @@ $(objpfx)tst-armtlsdescextnow: $(objpfx)tst-armtlsdescextnowmod.so
 $(objpfx)tst-armtlsdescextlazy: $(objpfx)tst-armtlsdescextlazymod.so
 endif
 endif
+
+ifeq ($(enable-ubsan),yes)
+# aeabi_unwind_cpp_pr1 is built as rtld module
+CFLAGS-aeabi_unwind_cpp_pr1.c += -DDISABLE_USAN_INTERNAL_REDIR
+endif
 endif
 
 ifeq ($(subdir),csu)

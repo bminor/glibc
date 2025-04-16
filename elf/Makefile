@@ -48,9 +48,35 @@ routines = \
   rtld_static_init \
   # routines
 
+ifeq (yes,$(enable-ubsan))
+ubsan-routines = \
+  ubsan_error \
+  ubsan_handle_add_overflow \
+  ubsan_handle_builtin_unreachable \
+  ubsan_handle_divrem_overflow \
+  ubsan_handle_dynamic_type_cache_miss \
+  ubsan_handle_invalid_builtin \
+  ubsan_handle_load_invalid_value \
+  ubsan_handle_mul_overflow \
+  ubsan_handle_negate_overflow \
+  ubsan_handle_nonnull_arg \
+  ubsan_handle_nonnull_return_v1 \
+  ubsan_handle_out_of_bounds \
+  ubsan_handle_overflow \
+  ubsan_handle_pointer_overflow \
+  ubsan_handle_shift_out_of_bounds \
+  ubsan_handle_sub_overflow \
+  ubsan_handle_type_mismatch_v1 \
+  ubsan_handle_vla_bound_not_positive \
+  ubsan_val_to_string \
+  ubsan_vptr_type_cache \
+  # ubsan-routines
+endif
+
 # The core dynamic linking functions are in libc for the static and
 # profiled libraries.
 dl-routines = \
+  $(ubsan-routines) \
   dl-call-libc-early-init \
   dl-call_fini \
   dl-catch \
@@ -101,6 +127,8 @@ endif
 ifeq (yes,$(have-loop-to-function))
 CFLAGS-dl-tunables.c += -fno-tree-loop-distribute-patterns
 endif
+
+CFLAGS-ubsan_handle_builtin_unreachable.c += -fno-builtin
 
 all-dl-routines = $(dl-routines) $(sysdep-dl-routines)
 # But they are absent from the shared libc, because that code is in ld.so.
@@ -160,7 +188,7 @@ CFLAGS-dl-minimal-malloc.op = $(no-stack-protector)
 # On targets without __builtin_memset, rtld.c uses a hand-coded loop
 # in _dl_start.  Make sure this isn't turned into a call to regular memset.
 ifeq (yes,$(have-loop-to-function))
-CFLAGS-rtld.c += -fno-tree-loop-distribute-patterns
+CFLAGS-rtld.c += -fno-tree-loop-distribute-patterns $(cflags-disable-ubsan)
 endif
 
 # Compile rtld itself without stack protection.
@@ -3434,7 +3462,7 @@ endif
 # ld.so.  The test is always run directly, not under the dynamic
 # linker.  It is necessary to minimize run-time dependencies, by
 # disabling stack protection and unwinding.
-CFLAGS-tst-nolink-libc.c += $(no-stack-protector) \
+CFLAGS-tst-nolink-libc.c += $(no-stack-protector) $(cflags-disable-ubsan) \
  -fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables
 $(objpfx)tst-nolink-libc-1: $(objpfx)tst-nolink-libc.o $(objpfx)ld.so
 	$(LINK.o) -nostdlib -nostartfiles -o $@ $< \

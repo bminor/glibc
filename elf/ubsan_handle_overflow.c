@@ -1,5 +1,5 @@
-/* Default stpncpy implementation for PowerPC64.
-   Copyright (C) 2014-2025 Free Software Foundation, Inc.
+/* Undefined Behavior Sanitizer support.
+   Copyright (C) 2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,12 +16,24 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define STPNCPY __stpncpy_ppc
-#ifdef SHARED
-#undef libc_hidden_def
-#define libc_hidden_def(name) \
-  __hidden_ver1 (__stpncpy_ppc, __GI___stpncpy, __stpncpy_ppc); \
-  weak_alias (__stpncpy_ppc, __stpncpy)
-#endif
+#include "ubsan.h"
 
-#include <string/stpncpy.c>
+void
+__ubsan_handle_overflow (const struct overflow_data * data, void *lhs,
+			 void *rhs, const char *op)
+{
+  char lhs_str[UBSAN_VAL_STR_LEN];
+  char rhs_str[UBSAN_VAL_STR_LEN];
+
+  __ubsan_val_to_string (lhs_str, data->type, lhs);
+  __ubsan_val_to_string (rhs_str, data->type, rhs);
+
+  __ubsan_error (&data->location,
+		 "%s integer overflow: %s %s %s cannot be represened in "
+		 "type %s\n",
+		 ubsan_type_is_signed (data->type) ? "signed" : "unsigned",
+		 lhs_str,
+		 op,
+		 rhs_str,
+		 data->type->type_name);
+}

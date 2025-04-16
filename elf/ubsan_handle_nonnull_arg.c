@@ -1,5 +1,5 @@
-/* Default stpncpy implementation for PowerPC64.
-   Copyright (C) 2014-2025 Free Software Foundation, Inc.
+/* Undefined Behavior Sanitizer support.
+   Copyright (C) 2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,12 +16,19 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define STPNCPY __stpncpy_ppc
-#ifdef SHARED
-#undef libc_hidden_def
-#define libc_hidden_def(name) \
-  __hidden_ver1 (__stpncpy_ppc, __GI___stpncpy, __stpncpy_ppc); \
-  weak_alias (__stpncpy_ppc, __stpncpy)
-#endif
+#include "ubsan.h"
 
-#include <string/stpncpy.c>
+void
+__ubsan_handle_nonnull_arg (void *_data)
+{
+  struct nonnull_arg_data *data = _data;
+
+  __ubsan_error (&data->location,
+		 "null pointer passed as argument %u, nonnull attribute "
+		 "declared at %s:%u:%u\n",
+		 data->arg_index,
+		 get_source_location_file_name (&data->attr_location),
+		 get_source_location_line (&data->attr_location),
+		 get_source_location_column (&data->attr_location));
+}
+rtld_hidden_def (__ubsan_handle_nonnull_arg)

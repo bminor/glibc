@@ -22,6 +22,9 @@
 
 #include <support/next_to_fault.h>
 
+#define assume(R) ((R) ? (void) 0 : __builtin_unreachable ())
+#define assume_nonnull(x) assume ((x) != NULL)
+
 #define SPRINTF_BUFFER_SIZE 65536
 
 static struct support_next_to_fault ntf;
@@ -43,6 +46,7 @@ static int
 printf_under_test (const char *restrict fmt, ...)
 {
   char *str = ntf.buffer;
+  assume_nonnull (str);
   va_list ap;
   int result;
 

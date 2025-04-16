@@ -292,6 +292,15 @@ passed to 'configure'.  For example:
 
      Default is to disable fortification.
 
+'--enable-ubsan'
+     Build the GNU C library with, along with tests, with the
+     -fsanitize=undefined compiler option.  The compiler runtime is not
+     used, instead UBSAN functions called by the compiler instrumentation
+     is provided by glibc itself.
+
+     This is a debug/development option and the default is to disable
+     the instrumentation.
+
    To build the library and related programs, type 'make'.  This will
 produce a lot of output, some of which may look like errors from 'make'
 but aren't.  Look for error messages from 'make' containing '***'.

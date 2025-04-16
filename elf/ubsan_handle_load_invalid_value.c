@@ -1,5 +1,5 @@
-/* Default stpncpy implementation for PowerPC64.
-   Copyright (C) 2014-2025 Free Software Foundation, Inc.
+/* Undefined Behavior Sanitizer support.
+   Copyright (C) 2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,12 +16,18 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define STPNCPY __stpncpy_ppc
-#ifdef SHARED
-#undef libc_hidden_def
-#define libc_hidden_def(name) \
-  __hidden_ver1 (__stpncpy_ppc, __GI___stpncpy, __stpncpy_ppc); \
-  weak_alias (__stpncpy_ppc, __stpncpy)
-#endif
+#include "ubsan.h"
 
-#include <string/stpncpy.c>
+void
+__ubsan_handle_load_invalid_value (void *_data, void *val)
+{
+  struct invalid_value_data *data = _data;
+  char val_str[UBSAN_VAL_STR_LEN];
+
+  __ubsan_val_to_string (val_str, data->type, val);
+  __ubsan_error (&data->location,
+		 "load of value %s is not a valid value for type %s\n",
+		 val_str,
+		 data->type->type_name);
+}
+rtld_hidden_def (__ubsan_handle_load_invalid_value)

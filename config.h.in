@@ -227,6 +227,9 @@
 /* An integer used to scale the timeout of test programs.  */
 #define TIMEOUTFACTOR 1
 
+/* Define if glibc should be build with -fsanitize=undefined.  */
+#undef ENABLE_UBSAN
+
 /*
  */
 

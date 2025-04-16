@@ -24,6 +24,18 @@
 
 extern int _dl_addr_inside_object (struct link_map *l, const ElfW(Addr) addr);
 
+#ifdef ENABLE_UBSAN
+void __GI___ubsan_handle_pointer_overflow (void *d, void *v, void *r)
+{
+  return __ubsan_handle_pointer_overflow (d, v, r);
+}
+
+void __GI___ubsan_handle_type_mismatch_v1 (void *d, void *p)
+{
+  return __ubsan_handle_type_mismatch_v1 (d, p);
+}
+#endif
+
 static int
 do_test (void)
 {

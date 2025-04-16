@@ -84,7 +84,8 @@ extern int search_aux_cache (struct stat *stat_buf, int *flags,
 extern void add_to_aux_cache (struct stat *stat_buf, int flags,
 			      unsigned int isa_level, const char *soname);
 
-extern void save_aux_cache (const char *aux_cache_name);
+extern void save_aux_cache (const char *aux_cache_name)
+  __attribute__((nonnull (1)));
 
 /* Declared in readlib.c.  */
 extern int process_file (const char *real_file_name, const char *file_name,

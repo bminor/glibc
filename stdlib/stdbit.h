@@ -44,13 +44,8 @@ __BEGIN_DECLS
 /* Use __pacify_uint16 (N) instead of (uint16_t) (N) when the cast is helpful
    only to pacify older GCC (e.g., GCC 10 -Wconversion) or non-GCC (e.g
    clang -Wimplicit-int-conversion).  */
-#if __GNUC_PREREQ (11, 0)
-# define __pacify_uint8(n)  (n)
-# define __pacify_uint16(n) (n)
-#else
-# define __pacify_uint8(n)  ((uint8_t) (n))
-# define __pacify_uint16(n) ((uint16_t) (n))
-#endif
+#define __pacify_uint8(n)  ((uint8_t) (n))
+#define __pacify_uint16(n) ((uint16_t) (n))
 
 /* Count leading zeros.  */
 extern unsigned int stdc_leading_zeros_uc (unsigned char __x)

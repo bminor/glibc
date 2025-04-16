@@ -65,5 +65,8 @@ libc_hidden_proto (_libc_intl_domainname)
 # undef N_
 # define N_(msgid)	msgid
 
+# undef gettext
+# define gettext(msgid) (dgettext (NULL, msgid) ?: (char *)msgid)
+
 # endif /* !_ISOMAC */
 #endif

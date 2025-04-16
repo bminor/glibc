@@ -1019,11 +1019,14 @@ write_output (void)
   /* Open the output file.  */
   if (output_file == NULL)
     {
-      assert (GCONV_MODULES_CACHE[0] == '/');
-      strcpy (stpcpy (mempcpy (tmpfname, prefix, prefix_len),
-		      GCONV_MODULES_CACHE),
-	      ".XXXXXX");
-      strcpy (mempcpy (finalname, prefix, prefix_len), GCONV_MODULES_CACHE);
+      snprintf (tmpfname, sizeof tmpfname, "%.*s%s.XXXXXX",
+		(int) prefix_len,
+		prefix,
+		GCONV_MODULES_CACHE);
+      snprintf (finalname, sizeof finalname, "%.*s%s",
+		(int) prefix_len,
+		prefix,
+		GCONV_MODULES_CACHE);
     }
   else
     strcpy (mempcpy (tmpfname, output_file, output_file_len), ".XXXXXX");

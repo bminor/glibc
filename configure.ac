@@ -440,6 +440,24 @@ case "$enable_fortify_source" in
 *) AC_MSG_ERROR([Not a valid argument for --enable-fortify-source: "$enable_fortify_source"]);;
 esac
 
+cflags_enable_ubsan=
+cflags_disable_ubsan=
+AC_ARG_ENABLE(ubsan,
+	      AS_HELP_STRING([--enable-ubsan],
+			     [Build glibc with -fsanitize=undefined]),
+	      [enable_ubsan=$enableval],
+	      [enable_ubsan=no])
+LIBC_CONFIG_VAR([enable-ubsan], [$enable_ubsan])
+if test "$enable_ubsan" = yes; then
+  AC_DEFINE(ENABLE_UBSAN)
+  cflags_enable_ubsan="-fsanitize=undefined"
+  cflags_disable_ubsan="-fno-sanitize=undefined"
+fi
+AC_SUBST(cflags_enable_ubsan)
+AC_SUBST(cflags_disable_ubsan)
+LIBC_CONFIG_VAR([cflags-enable-ubsan], [$cflags_enable_ubsan])
+LIBC_CONFIG_VAR([cflags-disable-ubsan], [$cflags_disable_ubsan])
+
 # We keep the original values in `$config_*' and never modify them, so we
 # can write them unchanged into config.make.  Everything else uses
 # $machine, $vendor, and $os, and changes them whenever convenient.

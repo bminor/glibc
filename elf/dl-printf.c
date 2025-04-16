@@ -269,6 +269,12 @@ _dl_debug_printf_c (const char *fmt, ...)
 }
 
 
+void
+_dl_debug_vprintf_c (const char *fmt, va_list ap)
+{
+  _dl_debug_vdprintf (GLRO(dl_debug_fd), -1, fmt, ap);
+}
+
 /* Write the given file descriptor.  */
 void
 _dl_dprintf (int fd, const char *fmt, ...)

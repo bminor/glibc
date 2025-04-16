@@ -320,6 +320,14 @@ If not provided, @option{LEVEL} defaults to highest possible value supported by
 the build compiler.
 
 Default is to disable fortification.
+
+@item --enable-ubsan
+Build @theglibc{}, along with tests, with the @code{-fsanitize=undefined}
+compiler option.  The compiler runtime is not used, instead UBSAN functions
+called by the compiler instrumentation is provided by glibc itself.
+
+This is a debug/development option and the default is to disable
+the instrumentation.
 @end table
 
 To build the library and related programs, type @code{make}.  This will

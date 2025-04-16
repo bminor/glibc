@@ -1397,9 +1397,10 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
                         if (s.length < need
                             && !scratch_buffer_set_array_size (&s, need, 1))
                           goto memory_error;
-                        char *p = mempcpy (s.data, directory, dirlen);
+                        char *pdata = s.data;
+                        char *p = mempcpy (pdata, directory, dirlen);
                         *p = '/';
-                        p += p[-1] != '/';
+                        p += pdata[p - pdata - 1] != '/';
                         memcpy (p, d.name, namelen + 1);
                         if (! is_dir (s.data, flags, pglob))
                           continue;

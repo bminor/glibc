@@ -177,4 +177,13 @@ glibc {
       default: 1048576
     }
   }
+
+  ubsan {
+    halt_on_errors {
+      type: INT_32
+      minval: 0
+      maxval: 1
+      default: 1
+    }
+  }
 }

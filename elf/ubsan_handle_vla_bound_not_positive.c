@@ -1,5 +1,5 @@
-/* Default stpncpy implementation for PowerPC64.
-   Copyright (C) 2014-2025 Free Software Foundation, Inc.
+/* Undefined Behavior Sanitizer support.
+   Copyright (C) 2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,12 +16,19 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define STPNCPY __stpncpy_ppc
-#ifdef SHARED
-#undef libc_hidden_def
-#define libc_hidden_def(name) \
-  __hidden_ver1 (__stpncpy_ppc, __GI___stpncpy, __stpncpy_ppc); \
-  weak_alias (__stpncpy_ppc, __stpncpy)
-#endif
+#include <ubsan.h>
 
-#include <string/stpncpy.c>
+void
+__ubsan_handle_vla_bound_not_positive (void *_data, void *bound)
+{
+  struct vla_bound_not_positive_data *data = _data;
+  char bound_str[UBSAN_VAL_STR_LEN];
+
+  __ubsan_val_to_string (bound_str, data->type, bound);
+
+  __ubsan_error (&data->location,
+		 "variable length array bound evaluates to "
+		 "non-positive value %s\n",
+		 bound_str);
+}
+rtld_hidden_def (__ubsan_handle_vla_bound_not_positive)
