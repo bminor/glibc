@@ -300,7 +300,7 @@
 /* When "x" is from chunksize().  */
 # define csize2tidx(x) (((x) - MINSIZE) / MALLOC_ALIGNMENT)
 /* When "x" is a user-provided size.  */
-# define usize2tidx(x) csize2tidx (request2size (x))
+# define usize2tidx(x) csize2tidx (checked_request2size (x))
 
 /* With rounding and alignment, the bins are...
    idx 0   bytes 0..24 (64-bit) or 0..12 (32-bit)
@@ -3325,34 +3325,6 @@ tcache_init(void)
   if (__glibc_unlikely (tcache == NULL)) \
     tcache_init();
 
-/* Trying to alloc BYTES from tcache. If tcache is available, chunk
-   is allocated and stored to MEMPTR, otherwise, MEMPTR is NULL.
-   It returns true if error occurs, else false. */
-static __always_inline bool
-tcache_try_malloc (size_t bytes, void **memptr)
-{
-  /* int_free also calls request2size, be careful to not pad twice.  */
-  size_t tbytes = checked_request2size (bytes);
-  if (tbytes == 0)
-    {
-      __set_errno (ENOMEM);
-      return true;
-    }
-
-  size_t tc_idx = csize2tidx (tbytes);
-
-  if (tcache_available (tc_idx))
-    {
-      *memptr = tcache_get (tc_idx);
-      return false;
-    }
-  else
-    *memptr = NULL;
-
-  MAYBE_INIT_TCACHE ();
-  return false;
-}
-
 #else  /* !USE_TCACHE */
 # define MAYBE_INIT_TCACHE()
 
@@ -3411,7 +3383,7 @@ void *
 __libc_malloc (size_t bytes)
 {
 #if USE_TCACHE
-  size_t tc_idx = csize2tidx (checked_request2size (bytes));
+  size_t tc_idx = usize2tidx (bytes);
 
   if (tcache_available (tc_idx))
     return tag_new_usable (tcache_get (tc_idx));
@@ -3672,14 +3644,7 @@ _mid_memalign (size_t alignment, size_t bytes, void *address)
 
 #if USE_TCACHE
   {
-    size_t tbytes;
-    tbytes = checked_request2size (bytes);
-    if (tbytes == 0)
-      {
-	__set_errno (ENOMEM);
-	return NULL;
-      }
-    size_t tc_idx = csize2tidx (tbytes);
+    size_t tc_idx = usize2tidx (bytes);
 
     if (tcache_available (tc_idx))
       {
@@ -3782,13 +3747,10 @@ __libc_calloc (size_t n, size_t elem_size)
     ptmalloc_init ();
 
 #if USE_TCACHE
-  bool err = tcache_try_malloc (bytes, &mem);
-
-  if (err)
-    return NULL;
-
-  if (mem)
+  size_t tc_idx = usize2tidx (bytes);
+  if (tcache_available (tc_idx))
     {
+      mem = tcache_get (tc_idx);
       p = mem2chunk (mem);
       if (__glibc_unlikely (mtag_enabled))
 	return tag_new_zero_region (mem, memsize (p));
@@ -3797,6 +3759,7 @@ __libc_calloc (size_t n, size_t elem_size)
       clearsize = csz - SIZE_SZ;
       return clear_memory ((INTERNAL_SIZE_T *) mem, clearsize);
     }
+  MAYBE_INIT_TCACHE ();
 #endif
 
   if (SINGLE_THREAD_P)
