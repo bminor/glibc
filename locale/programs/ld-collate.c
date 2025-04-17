@@ -1554,7 +1554,7 @@ collate_finish (struct localedef_t *locale, const struct charmap_t *charmap)
      The multibyte case is easy.  We simply sort into an array with
      256 elements.  */
   struct locale_collate_t *collate = locale->categories[LC_COLLATE].collate;
-  int mbact[nrules];
+  int mbact[sizeof (((struct element_t *)0)->used_in_level) * 8];
   int wcact;
   int mbseqact;
   int wcseqact;
