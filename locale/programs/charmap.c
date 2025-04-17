@@ -904,9 +904,9 @@ number of bytes for byte sequence of beginning and end of range not the same: %d
 	(struct width_rule *) obstack_alloc (&result->mem_pool,
 					     (new_size
 					      * sizeof (struct width_rule)));
-
-      memcpy (new_rules, result->width_rules,
-	      result->nwidth_rules_max * sizeof (struct width_rule));
+      if (result->width_rules != NULL)
+	memcpy (new_rules, result->width_rules,
+		result->nwidth_rules_max * sizeof (struct width_rule));
 
       result->width_rules = new_rules;
       result->nwidth_rules_max = new_size;
