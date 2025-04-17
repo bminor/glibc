@@ -995,7 +995,7 @@ typedef struct
    range.  Be compatible.  */
 #define DT_AUXILIARY    0x7ffffffd      /* Shared object to load before self */
 #define DT_FILTER       0x7fffffff      /* Shared object to get values from */
-#define DT_EXTRATAGIDX(tag)	((Elf32_Word)-((Elf32_Sword) (tag) <<1>>1)-1)
+#define DT_EXTRATAGIDX(tag)  (-((Elf32_Sword)((Elf32_Word)(tag) * 2) / 2 + 1))
 #define DT_EXTRANUM	3
 
 /* Values of `d_un.d_val' in the DT_FLAGS entry.  */
