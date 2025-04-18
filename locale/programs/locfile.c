@@ -641,6 +641,8 @@ add_locale_uint32_array (struct locale_file *file,
 {
   align_locale_data (file, LOCFILE_ALIGN);
   record_offset (file);
+  if (n_elems == 0)
+    return;
   obstack_grow (&file->data, data, n_elems * sizeof (uint32_t));
   maybe_swap_uint32_obstack (&file->data, n_elems);
 }
