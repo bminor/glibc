@@ -202,7 +202,7 @@ __debug_free (void *mem)
   if (__is_malloc_debug_enabled (MALLOC_MCHECK_HOOK))
     mem = free_mcheck (mem);
 
-  if (DUMPED_MAIN_ARENA_CHUNK (mem2chunk (mem)))
+  if (mem != NULL && DUMPED_MAIN_ARENA_CHUNK (mem2chunk (mem)))
     /* Do nothing.  */;
   else if (__is_malloc_debug_enabled (MALLOC_CHECK_HOOK))
     free_check (mem);
@@ -227,7 +227,7 @@ __debug_realloc (void *oldmem, size_t bytes)
   if ((!__is_malloc_debug_enabled (MALLOC_MCHECK_HOOK)
        || !realloc_mcheck_before (&oldmem, &bytes, &oldsize, &victim)))
     {
-      mchunkptr oldp = mem2chunk (oldmem);
+      mchunkptr oldp = oldmem != NULL ? mem2chunk (oldmem) : NULL;
 
       /* If this is a faked mmapped chunk from the dumped main arena,
 	 always make a copy (and do not free the old chunk).  */
