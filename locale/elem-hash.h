@@ -24,7 +24,7 @@ elem_hash (const char *str, int32_t n)
 
   while (n-- > 0)
     {
-      result <<= 3;
+      result = (uint32_t)result << 3;
       result += *str++;
     }
 
