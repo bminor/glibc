@@ -40,7 +40,7 @@ x86_cpu_present (unsigned int __index)
   unsigned int __bit = __reg & (8 * sizeof (unsigned int) - 1);
   __reg /= 8 * sizeof (unsigned int);
 
-  return __ptr->cpuid_array[__reg] & (1 << __bit);
+  return __ptr->cpuid_array[__reg] & (1U << __bit);
 }
 
 static __inline__ bool
@@ -56,7 +56,7 @@ x86_cpu_active (unsigned int __index)
   unsigned int __bit = __reg & (8 * sizeof (unsigned int) - 1);
   __reg /= 8 * sizeof (unsigned int);
 
-  return __ptr->active_array[__reg] & (1 << __bit);
+  return __ptr->active_array[__reg] & (1U << __bit);
 }
 
 /* CPU_FEATURE_PRESENT evaluates to true if CPU supports the feature.  */
