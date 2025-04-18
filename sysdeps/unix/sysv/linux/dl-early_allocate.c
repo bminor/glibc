@@ -39,6 +39,9 @@ _dl_early_allocate (size_t size)
 {
   void *result;
 
+  if (__glibc_unlikely (size > PTRDIFF_MAX))
+    return NULL;
+
   if (__curbrk != NULL)
     /* If the break has been initialized, brk must have run before,
        so just call it once more.  */
