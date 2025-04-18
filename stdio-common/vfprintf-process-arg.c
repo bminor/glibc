@@ -55,7 +55,8 @@ LABEL (form_integer):
         signed_number = (short int) process_arg_unsigned_int ();
 
       is_negative = signed_number < 0;
-      number.word = is_negative ? (- signed_number) : signed_number;
+      number.word = is_negative ? (- (unsigned long) signed_number)
+				: signed_number;
 
       goto LABEL (number);
     }
