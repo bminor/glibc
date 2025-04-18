@@ -858,7 +858,8 @@ insert_weights (struct linereader *ldfile, struct element_t *elem,
 		  max += 10;
 		  newp = (struct element_t **)
 		    alloca (max * sizeof (struct element_t *));
-		  memcpy (newp, weights, cnt * sizeof (struct element_t *));
+		  if (weights != NULL)
+		    memcpy (newp, weights, cnt * sizeof (struct element_t *));
 		  weights = newp;
 		}
 	      weights[cnt++] = charelem;
