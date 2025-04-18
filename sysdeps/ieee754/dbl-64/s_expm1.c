@@ -239,7 +239,7 @@ __expm1 (double x)
 	  uint32_t high;
 	  y = one - (e - x);
 	  GET_HIGH_WORD (high, y);
-	  SET_HIGH_WORD (y, high + (k << 20));  /* add k to y's exponent */
+	  SET_HIGH_WORD (y, high + ((uint32_t)k << 20));  /* add k to y's exponent */
 	  return y - one;
 	}
       t = one;
