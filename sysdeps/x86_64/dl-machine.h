@@ -633,7 +633,7 @@ x86_64_rewrite_plt (struct link_map *map, ElfW(Addr) plt_rewrite)
 
 	    /* Write out direct branch.  */
 	    *(uint8_t *) branch_start = JMP32_INSN_OPCODE;
-	    *(uint32_t *) (branch_start + 1) = disp;
+	    memcpy ((void *)(branch_start + 1), &disp, sizeof (uint32_t));
 	  }
 	else
 	  {
