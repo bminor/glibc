@@ -142,7 +142,6 @@ CFLAGS-tst-avxmod.c += $(AVX-CFLAGS)
 AVX512-CFLAGS = -mavx512f
 CFLAGS-tst-audit10-aux.c += $(AVX512-CFLAGS)
 CFLAGS-tst-auditmod10a.c += $(AVX512-CFLAGS)
-CFLAGS-tst-auditmod10b.c += $(AVX512-CFLAGS)
 CFLAGS-tst-avx512-aux.c += $(AVX512-CFLAGS)
 CFLAGS-tst-avx512mod.c += $(AVX512-CFLAGS)
 

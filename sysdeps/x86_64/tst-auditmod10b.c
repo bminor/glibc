@@ -125,7 +125,6 @@ la_symbind64 (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
 
 #include <tst-audit.h>
 
-#ifdef __AVX512F__
 #include <immintrin.h>
 #include <cpuid.h>
 
@@ -148,9 +147,37 @@ check_avx512 (void)
   return (eax & 0xe6) == 0xe6;
 }
 
-#else
-#include <emmintrin.h>
-#endif
+void
+__attribute__ ((target ("avx512f")))
+pltenter_avx512f (La_regs *regs, long int *framesizep)
+{
+  __m512i zero = _mm512_setzero_si512 ();
+  if (memcmp (&regs->lr_vector[0], &zero, sizeof (zero))
+      || memcmp (&regs->lr_vector[1], &zero, sizeof (zero))
+      || memcmp (&regs->lr_vector[2], &zero, sizeof (zero))
+      || memcmp (&regs->lr_vector[3], &zero, sizeof (zero))
+      || memcmp (&regs->lr_vector[4], &zero, sizeof (zero))
+      || memcmp (&regs->lr_vector[5], &zero, sizeof (zero))
+      || memcmp (&regs->lr_vector[6], &zero, sizeof (zero))
+      || memcmp (&regs->lr_vector[7], &zero, sizeof (zero)))
+    abort ();
+
+  for (int i = 0; i < 8; i++)
+    regs->lr_vector[i].zmm[0]
+      = (La_x86_64_zmm) _mm512_set1_epi64 (i + 1);
+
+  __m512i zmm = _mm512_set1_epi64 (-1);
+  asm volatile ("vmovdqa64 %0, %%zmm0" : : "x" (zmm) : "xmm0" );
+  asm volatile ("vmovdqa64 %0, %%zmm1" : : "x" (zmm) : "xmm1" );
+  asm volatile ("vmovdqa64 %0, %%zmm2" : : "x" (zmm) : "xmm2" );
+  asm volatile ("vmovdqa64 %0, %%zmm3" : : "x" (zmm) : "xmm3" );
+  asm volatile ("vmovdqa64 %0, %%zmm4" : : "x" (zmm) : "xmm4" );
+  asm volatile ("vmovdqa64 %0, %%zmm5" : : "x" (zmm) : "xmm5" );
+  asm volatile ("vmovdqa64 %0, %%zmm6" : : "x" (zmm) : "xmm6" );
+  asm volatile ("vmovdqa64 %0, %%zmm7" : : "x" (zmm) : "xmm7" );
+
+  *framesizep = 1024;
+}
 
 ElfW(Addr)
 pltenter (ElfW(Sym) *sym, unsigned int ndx, uintptr_t *refcook,
@@ -160,39 +187,33 @@ pltenter (ElfW(Sym) *sym, unsigned int ndx, uintptr_t *refcook,
   printf ("pltenter: symname=%s, st_value=%#lx, ndx=%u, flags=%u\n",
 	  symname, (long int) sym->st_value, ndx, *flags);
 
-#ifdef __AVX512F__
   if (check_avx512 () && strcmp (symname, "audit_test") == 0)
-    {
-      __m512i zero = _mm512_setzero_si512 ();
-      if (memcmp (&regs->lr_vector[0], &zero, sizeof (zero))
-	  || memcmp (&regs->lr_vector[1], &zero, sizeof (zero))
-	  || memcmp (&regs->lr_vector[2], &zero, sizeof (zero))
-	  || memcmp (&regs->lr_vector[3], &zero, sizeof (zero))
-	  || memcmp (&regs->lr_vector[4], &zero, sizeof (zero))
-	  || memcmp (&regs->lr_vector[5], &zero, sizeof (zero))
-	  || memcmp (&regs->lr_vector[6], &zero, sizeof (zero))
-	  || memcmp (&regs->lr_vector[7], &zero, sizeof (zero)))
-	abort ();
-
-      for (int i = 0; i < 8; i++)
-	regs->lr_vector[i].zmm[0]
-	  = (La_x86_64_zmm) _mm512_set1_epi64 (i + 1);
-
-      __m512i zmm = _mm512_set1_epi64 (-1);
-      asm volatile ("vmovdqa64 %0, %%zmm0" : : "x" (zmm) : "xmm0" );
-      asm volatile ("vmovdqa64 %0, %%zmm1" : : "x" (zmm) : "xmm1" );
-      asm volatile ("vmovdqa64 %0, %%zmm2" : : "x" (zmm) : "xmm2" );
-      asm volatile ("vmovdqa64 %0, %%zmm3" : : "x" (zmm) : "xmm3" );
-      asm volatile ("vmovdqa64 %0, %%zmm4" : : "x" (zmm) : "xmm4" );
-      asm volatile ("vmovdqa64 %0, %%zmm5" : : "x" (zmm) : "xmm5" );
-      asm volatile ("vmovdqa64 %0, %%zmm6" : : "x" (zmm) : "xmm6" );
-      asm volatile ("vmovdqa64 %0, %%zmm7" : : "x" (zmm) : "xmm7" );
-
-      *framesizep = 1024;
-    }
-#endif
+    pltenter_avx512f (regs, framesizep);
 
   return sym->st_value;
+}
+
+void
+__attribute__ ((target ("avx512f")))
+pltexit_avx512f (const La_regs *inregs, La_retval *outregs)
+{
+  __m512i zero = _mm512_setzero_si512 ();
+  if (memcmp (&outregs->lrv_vector0, &zero, sizeof (zero)))
+    abort ();
+
+  for (int i = 0; i < 8; i++)
+    {
+      __m512i zmm = _mm512_set1_epi64 (i + 1);
+      if (memcmp (&inregs->lr_vector[i], &zmm, sizeof (zmm)) != 0)
+        abort ();
+    }
+
+  outregs->lrv_vector0.zmm[0]
+    = (La_x86_64_zmm) _mm512_set1_epi64 (0x12349876);
+
+  __m512i zmm = _mm512_set1_epi64 (-1);
+  asm volatile ("vmovdqa64 %0, %%zmm0" : : "x" (zmm) : "xmm0" );
+  asm volatile ("vmovdqa64 %0, %%zmm1" : : "x" (zmm) : "xmm1" );
 }
 
 unsigned int
@@ -204,28 +225,8 @@ pltexit (ElfW(Sym) *sym, unsigned int ndx, uintptr_t *refcook,
 	  symname, (long int) sym->st_value, ndx,
 	  (ptrdiff_t) outregs->int_retval);
 
-#ifdef __AVX512F__
   if (check_avx512 () && strcmp (symname, "audit_test") == 0)
-    {
-      __m512i zero = _mm512_setzero_si512 ();
-      if (memcmp (&outregs->lrv_vector0, &zero, sizeof (zero)))
-	abort ();
-
-      for (int i = 0; i < 8; i++)
-	{
-	  __m512i zmm = _mm512_set1_epi64 (i + 1);
-	  if (memcmp (&inregs->lr_vector[i], &zmm, sizeof (zmm)) != 0)
-	    abort ();
-	}
-
-      outregs->lrv_vector0.zmm[0]
-	= (La_x86_64_zmm) _mm512_set1_epi64 (0x12349876);
-
-      __m512i zmm = _mm512_set1_epi64 (-1);
-      asm volatile ("vmovdqa64 %0, %%zmm0" : : "x" (zmm) : "xmm0" );
-      asm volatile ("vmovdqa64 %0, %%zmm1" : : "x" (zmm) : "xmm1" );
-    }
-#endif
+    pltexit_avx512f (inregs, outregs);
 
   return 0;
 }
