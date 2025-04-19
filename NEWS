@@ -26,6 +26,7 @@ The following bugs were resolved with this release:
   [32782] nptl: Race conditions in pthread cancellation causing crash
   [32786] nptl: PTHREAD_COND_INITIALIZER compatibility with pre-2.41 versions
   [32810] Crash on x86-64 if XSAVEC disable via tunable
+  [32882] tst-audit10 fails with SIGILL on CPUs without AVX
 
 Version 2.41
 
