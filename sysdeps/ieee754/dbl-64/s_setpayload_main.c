@@ -37,7 +37,9 @@ FUNC (double *x, double payload)
      except for 0 when allowed; (c) not an integer.  */
   if (exponent >= BIAS + PAYLOAD_DIG
       || (exponent < BIAS && !(SET_HIGH_BIT && ix == 0))
-      || (ix & ((1ULL << (BIAS + EXPLICIT_MANT_DIG - exponent)) - 1)) != 0)
+      || ((BIAS + EXPLICIT_MANT_DIG - exponent) < 64
+	  && (ix & ((1ULL << (BIAS + EXPLICIT_MANT_DIG - exponent)) - 1))
+	  != 0))
     {
       INSERT_WORDS64 (*x, 0);
       return 1;
