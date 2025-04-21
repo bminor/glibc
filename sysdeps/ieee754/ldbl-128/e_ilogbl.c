@@ -25,11 +25,12 @@ static char rcsid[] = "$NetBSD: $";
 
 #include <limits.h>
 #include <math.h>
+#include <stdbit.h>
 #include <math_private.h>
 
 int __ieee754_ilogbl (_Float128 x)
 {
-	int64_t hx,lx;
+	uint64_t hx,lx;
 	int ix;
 
 	GET_LDOUBLE_WORDS64(hx,lx,x);
@@ -39,9 +40,9 @@ int __ieee754_ilogbl (_Float128 x)
 		return FP_ILOGB0;	/* ilogbl(0) = FP_ILOGB0 */
 	    else			/* subnormal x */
 		if(hx==0) {
-		    for (ix = -16431; lx>0; lx<<=1) ix -=1;
+		    return -16431 - stdc_leading_zeros (lx);
 		} else {
-		    for (ix = -16382, hx<<=15; hx>0; hx<<=1) ix -=1;
+		    return -16382 - stdc_leading_zeros (hx << 15);
 		}
 	    return ix;
 	}
