@@ -595,6 +595,8 @@ void
 add_locale_raw_data (struct locale_file *file, const void *data, size_t size)
 {
   record_offset (file);
+  if (size == 0)
+    return;
   obstack_grow (&file->data, data, size);
 }
 
