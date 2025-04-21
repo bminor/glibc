@@ -461,7 +461,10 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, const struct sigaction *action
    - in gdb: gdb/i386-gnu-tdep.c gnu_sigtramp_code.  */
 
 #ifdef __x86_64__
-asm ("rpc_wait_trampoline:\n"
+asm ("trampoline:\n"
+     "fnclex\n"			/* Clear any pending exception.  */
+     "jmp _trampoline\n"
+     "rpc_wait_trampoline:\n"
   /* This is the entry point when we have an RPC reply message to receive
      before running the handler.  The MACH_MSG_SEND bit has already been
      cleared in the OPTION argument in our %rsi.  The interrupted user
@@ -480,7 +483,7 @@ asm ("rpc_wait_trampoline:\n"
      /* Switch to the signal stack.  */
      "movq %rbx, %rsp\n"
 
-     "trampoline:\n"
+     "_trampoline:\n"
      /* Entry point for running the handler normally.  The arguments to the
         handler function are on the top of the stack, same as in the i386
         version:
@@ -506,7 +509,10 @@ asm ("rpc_wait_trampoline:\n"
      "movq 16(%rsp), %rdi\n"
      "ret");
 #else
-asm ("rpc_wait_trampoline:\n");
+asm ("trampoline:\n"
+     "fnclex\n"			/* Clear any pending exception.  */
+     "jmp _trampoline\n"
+     "rpc_wait_trampoline:\n");
   /* This is the entry point when we have an RPC reply message to receive
      before running the handler.  The MACH_MSG_SEND bit has already been
      cleared in the OPTION argument on our stack.  The interrupted user
@@ -526,7 +532,7 @@ asm (/* Retry the interrupted mach_msg system call.  */
      /* Switch to the signal stack.  */
      "movl %ebx, %esp\n");
 
- asm ("trampoline:\n");
+asm ("_trampoline:\n");
   /* Entry point for running the handler normally.  The arguments to the
      handler function are already on the top of the stack:
 
