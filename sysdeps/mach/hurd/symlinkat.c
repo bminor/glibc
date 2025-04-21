@@ -47,7 +47,7 @@ __symlinkat (const char *from, int fd, const char *to)
 
   if (! *name)
     /* Can't link to the existing directory itself.  */
-    err = ENOTDIR;
+    err = EEXIST;
   else
     /* Create a new, unlinked node in the target directory.  */
     err = __dir_mkfile (dir, O_WRITE, 0777 & ~_hurd_umask, &node);
