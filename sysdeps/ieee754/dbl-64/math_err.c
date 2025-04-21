@@ -29,8 +29,24 @@ with_errno (double y, int e)
   errno = e;
   return y;
 }
+
+NOINLINE static int
+with_errno_i (int y, int e)
+{
+  errno = e;
+  return y;
+}
+
+NOINLINE static long int
+with_errno_li (long int y, int e)
+{
+  errno = e;
+  return y;
+}
 #else
 #define with_errno(x, e) (x)
+#define with_errno_i(x, e) (x)
+#define with_errno_li(x, e) (x)
 #endif
 
 attribute_hidden double
@@ -81,6 +97,22 @@ __math_invalid (double x)
 {
   double y = (x - x) / (x - x);
   return isnan (x) ? y : with_errno (y, EDOM);
+}
+
+attribute_hidden int
+__math_invalid_i (int r)
+{
+  double y = 0.0 / 0.0;
+  math_force_eval (y);
+  return with_errno_i (r, EDOM);
+}
+
+attribute_hidden long int
+__math_invalid_li (long int r)
+{
+  double y = 0.0 / 0.0;
+  math_force_eval (y);
+  return with_errno_li (r, EDOM);
 }
 
 /* Check result and set errno if necessary.  */
