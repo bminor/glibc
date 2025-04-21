@@ -289,7 +289,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, const struct sigaction *action
                                       (thread_state_t) stackframe->xstate, &got)
                 && got == (xstate_size / sizeof (int)));
 
-	  if (((struct i386_xfloat_state*) stackframe->xstate)->fp_save_kind > 5)
+	  if (ok && ((struct i386_xfloat_state*) stackframe->xstate)->fp_save_kind > 5)
 	    /* We support up to XSAVES */
 	    ok = 0;
 
