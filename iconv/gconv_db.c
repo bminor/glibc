@@ -28,6 +28,7 @@
 #include <dlfcn.h>
 #include <gconv_int.h>
 #include <pointer_guard.h>
+#include <intprops.h>
 
 
 /* Simple data structure for alias mapping.  We have two names, `from'
@@ -507,8 +508,10 @@ find_derivation (const char *toset, const char *toset_expand,
 		  const char *result_set = (strcmp (runp->to_string, "-") == 0
 					    ? (toset_expand ?: toset)
 					    : runp->to_string);
-		  int cost_hi = runp->cost_hi + current->cost_hi;
-		  int cost_lo = runp->cost_lo + current->cost_lo;
+		  int cost_hi, cost_lo;
+		  INT_ADD_WRAPV (runp->cost_hi, current->cost_hi, &cost_hi);
+		  INT_ADD_WRAPV (runp->cost_lo, current->cost_lo, &cost_lo);
+
 		  struct derivation_step *step;
 
 		  /* We managed to find a derivation.  First see whether
