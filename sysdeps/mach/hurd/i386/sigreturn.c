@@ -126,24 +126,27 @@ __sigreturn (struct sigcontext *scp)
     ss->sigaltstack.ss_flags &= ~SS_ONSTACK;
 
 #ifdef i386_XFLOAT_STATE
-  if ((scp->xstate) && (scp->xstate->initialized))
+  if (scp->xstate)
     {
-      unsigned eax, ebx, ecx, edx;
-      __cpuid_count(0xd, 0, eax, ebx, ecx, edx);
-      switch (scp->xstate->fp_save_kind)
-        {
-        case 0: // FNSAVE
-          asm volatile("frstor %0" : : "m" (scp->xstate->hw_state));
-          break;
-        case 1: // FXSAVE
-          asm volatile("fxrstor %0" : : "m" (scp->xstate->hw_state),    \
-                       "a" (eax), "d" (edx));
-          break;
-        default: // XSAVE, XSAVEOPT, XSAVEC, XSAVES
-          asm volatile("xrstor %0" : : "m" (scp->xstate->hw_state),     \
-                       "a" (eax), "d" (edx));
-          break;
-        }
+      if (scp->xstate->initialized)
+	{
+	  unsigned eax, ebx, ecx, edx;
+	  __cpuid_count(0xd, 0, eax, ebx, ecx, edx);
+	  switch (scp->xstate->fp_save_kind)
+	    {
+	    case 0: // FNSAVE
+	      asm volatile("frstor %0" : : "m" (scp->xstate->hw_state));
+	      break;
+	    case 1: // FXSAVE
+	      asm volatile("fxrstor %0" : : "m" (scp->xstate->hw_state),    \
+			   "a" (eax), "d" (edx));
+	      break;
+	    default: // XSAVE, XSAVEOPT, XSAVEC, XSAVES
+	      asm volatile("xrstor %0" : : "m" (scp->xstate->hw_state),     \
+			   "a" (eax), "d" (edx));
+	      break;
+	    }
+	}
     }
   else
 #endif
