@@ -150,9 +150,11 @@ extern FLOAT MPN2FLOAT (mp_srcptr mpn, int exponent, int negative);
 #if	BITS_PER_MP_LIMB == 32
 # define MAX_DIG_PER_LIMB	9
 # define MAX_FAC_PER_LIMB	1000000000UL
+# define SHIFT_CTE(N)		N # U
 #elif	BITS_PER_MP_LIMB == 64
 # define MAX_DIG_PER_LIMB	19
 # define MAX_FAC_PER_LIMB	10000000000000000000ULL
+# define SHIFT_CTE(N)		N ## UL
 #else
 # error "mp_limb_t size " BITS_PER_MP_LIMB "not accounted for"
 #endif
@@ -1572,12 +1574,13 @@ ____STRTOF_INTERNAL (const STRING_TYPE *nptr, STRING_TYPE **endptr, int group,
 		    {
 		      if (bits + BITS_PER_MP_LIMB <= MANT_DIG)
 			__mpn_lshift_1 (retval, RETURN_LIMB_SIZE,
-					BITS_PER_MP_LIMB, 0);
+					BITS_PER_MP_LIMB, SHIFT_CTE (0));
 		      else
 			{
 			  used = MANT_DIG - bits;
 			  if (used > 0)
-			    __mpn_lshift_1 (retval, RETURN_LIMB_SIZE, used, 0);
+			    __mpn_lshift_1 (retval, RETURN_LIMB_SIZE, used,
+					    SHIFT_CTE (0));
 			}
 		      bits += BITS_PER_MP_LIMB;
 		    }
