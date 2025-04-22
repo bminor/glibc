@@ -212,57 +212,63 @@ static void
 CONCAT(add_locale_,TABLE) (struct locale_file *file, struct TABLE *t)
 {
   size_t i, j, k;
-  uint32_t reorder3[t->level3_size];
-  uint32_t reorder2[t->level2_size];
   uint32_t level2_offset, level3_offset, last_offset;
 
   /* Uniquify level3 blocks.  */
   k = 0;
-  for (j = 0; j < t->level3_size; j++)
+  if (t->level3_size > 0)
     {
-      for (i = 0; i < k; i++)
-	if (memcmp (&t->level3[i << t->p], &t->level3[j << t->p],
-		    (1 << t->p) * sizeof (ELEMENT)) == 0)
-	  break;
-      /* Relocate block j to block i.  */
-      reorder3[j] = i;
-      if (i == k)
+      uint32_t reorder3[t->level3_size];
+      for (j = 0; j < t->level3_size; j++)
 	{
-	  if (i != j)
-	    memcpy (&t->level3[i << t->p], &t->level3[j << t->p],
-		    (1 << t->p) * sizeof (ELEMENT));
-	  k++;
+	  for (i = 0; i < k; i++)
+	    if (memcmp (&t->level3[i << t->p], &t->level3[j << t->p],
+			(1 << t->p) * sizeof (ELEMENT)) == 0)
+	      break;
+	  /* Relocate block j to block i.  */
+	  reorder3[j] = i;
+	  if (i == k)
+	    {
+	      if (i != j)
+		memcpy (&t->level3[i << t->p], &t->level3[j << t->p],
+			(1 << t->p) * sizeof (ELEMENT));
+	      k++;
+	    }
 	}
+
+      for (i = 0; i < (t->level2_size << t->q); i++)
+	if (t->level2[i] != EMPTY)
+	  t->level2[i] = reorder3[t->level2[i]];
     }
   t->level3_size = k;
 
-  for (i = 0; i < (t->level2_size << t->q); i++)
-    if (t->level2[i] != EMPTY)
-      t->level2[i] = reorder3[t->level2[i]];
-
   /* Uniquify level2 blocks.  */
   k = 0;
-  for (j = 0; j < t->level2_size; j++)
+  if (t->level2_size > 0)
     {
-      for (i = 0; i < k; i++)
-	if (memcmp (&t->level2[i << t->q], &t->level2[j << t->q],
-		    (1 << t->q) * sizeof (uint32_t)) == 0)
-	  break;
-      /* Relocate block j to block i.  */
-      reorder2[j] = i;
-      if (i == k)
+      uint32_t reorder2[t->level2_size];
+      for (j = 0; j < t->level2_size; j++)
 	{
-	  if (i != j)
-	    memcpy (&t->level2[i << t->q], &t->level2[j << t->q],
-		    (1 << t->q) * sizeof (uint32_t));
-	  k++;
+	  for (i = 0; i < k; i++)
+	    if (memcmp (&t->level2[i << t->q], &t->level2[j << t->q],
+			(1 << t->q) * sizeof (uint32_t)) == 0)
+	      break;
+	  /* Relocate block j to block i.  */
+	  reorder2[j] = i;
+	  if (i == k)
+	    {
+	      if (i != j)
+		memcpy (&t->level2[i << t->q], &t->level2[j << t->q],
+			(1 << t->q) * sizeof (uint32_t));
+	      k++;
+	    }
 	}
+
+      for (i = 0; i < t->level1_size; i++)
+	if (t->level1[i] != EMPTY)
+	  t->level1[i] = reorder2[t->level1[i]];
     }
   t->level2_size = k;
-
-  for (i = 0; i < t->level1_size; i++)
-    if (t->level1[i] != EMPTY)
-      t->level1[i] = reorder2[t->level1[i]];
 
   /* Create and fill the resulting compressed representation.  */
   last_offset =
