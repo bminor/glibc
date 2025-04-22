@@ -26,7 +26,7 @@ __jrand48_r (unsigned short int xsubi[3], struct drand48_data *buffer,
     return -1;
 
   /* Store the result.  */
-  *result = (int32_t) ((xsubi[2] << 16) | xsubi[1]);
+  *result = (int32_t) (((uint32_t)xsubi[2] << 16) | (uint32_t)xsubi[1]);
 
   return 0;
 }

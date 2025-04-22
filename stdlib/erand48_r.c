@@ -36,7 +36,8 @@ __erand48_r (unsigned short int xsubi[3], struct drand48_data *buffer,
   temp.ieee.negative = 0;
   temp.ieee.exponent = IEEE754_DOUBLE_BIAS;
   temp.ieee.mantissa0 = (xsubi[2] << 4) | (xsubi[1] >> 12);
-  temp.ieee.mantissa1 = ((xsubi[1] & 0xfff) << 20) | (xsubi[0] << 4);
+  temp.ieee.mantissa1 = (((uint32_t)xsubi[1] & 0xfff) << 20)
+    | ((uint32_t)xsubi[0] << 4);
 
   /* Please note the lower 4 bits of mantissa1 are always 0.  */
   *result = temp.d - 1.0;
