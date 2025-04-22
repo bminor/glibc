@@ -1,37 +1,34 @@
-/* s_isnanl.c -- long double version of s_isnan.c.
- */
+/* Return is number is Not a Number.
+   Copyright (C) 2002-2025 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: $";
-#endif
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-/*
- * isnanl(x) returns 1 is x is nan, else 0;
- * no branching!
- */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <stdbit.h>
 #include <math_private.h>
 
-int __isnanl(_Float128 x)
+int
+__isnanl (_Float128 x)
 {
-	int64_t hx,lx;
-	GET_LDOUBLE_WORDS64(hx,lx,x);
-	hx &= 0x7fffffffffffffffLL;
-	hx |= (uint64_t)(lx|(-lx))>>63;
-	hx = 0x7fff000000000000LL - hx;
-	return (int)((uint64_t)hx>>63);
+  uint64_t hx,lx;
+  GET_LDOUBLE_WORDS64 (hx,lx,x);
+  hx &= 0x7fffffffffffffffULL;
+  /* NaN - exponent == 0x7fff and non-zero significand.  */
+  return hx >> 48 == 0x7fff
+    && ((hx & ~0xffff000000000000ULL) != 0 || lx != 0);
 }
 mathx_hidden_def (__isnanl)
 weak_alias (__isnanl, isnanl)
