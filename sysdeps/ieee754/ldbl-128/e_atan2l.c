@@ -65,7 +65,7 @@ __ieee754_atan2l(_Float128 y, _Float128 x)
 	if(((ix|((lx|-lx)>>63))>0x7fff000000000000LL)||
 	   ((iy|((ly|-ly)>>63))>0x7fff000000000000LL))	/* x or y is NaN */
 	   return x+y;
-	if(((hx-0x3fff000000000000LL)|lx)==0) return __atanl(y);   /* x=1.0L */
+	if((((uint64_t)hx-0x3fff000000000000LL)|lx)==0) return __atanl(y);   /* x=1.0L */
 	m = ((hy>>63)&1)|((hx>>62)&2);	/* 2*sign(x)+sign(y) */
 
     /* when y = 0 */
