@@ -88,7 +88,7 @@ stpcpy_unaligned_loop (op_t *restrict dst, const op_t *restrict src,
 	}
 
       /* Align the final partial of P2.  */
-      w2 = MERGE (w2b, sh_1, 0, sh_2);
+      w2 = MERGE (w2b, sh_1, 0UL, sh_2);
     }
 
 out:
