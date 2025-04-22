@@ -95,7 +95,8 @@ do_test (void)
     {
       long double ld;
       SET_LDOUBLE_WORDS (ld, tests[i].exponent | (tests[i].sign << 15),
-			 (tests[i].mantissa >> 32) | (tests[i].high << 31),
+			 (tests[i].mantissa >> 32)
+			 | ((uint32_t)tests[i].high << 31),
 			 tests[i].mantissa & 0xffffffffULL);
       bool canonical = iscanonical (ld);
       if (canonical == tests[i].canonical)
