@@ -228,6 +228,9 @@ __libio_codecvt_length (struct _IO_codecvt *codecvt, __mbstate_t *statep,
 			const char *from_start, const char *from_end,
 			size_t max)
 {
+  if (max == 0)
+    return 0;
+
   int result;
   const unsigned char *cp = (const unsigned char *) from_start;
   wchar_t to_buf[max];
