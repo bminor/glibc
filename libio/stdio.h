@@ -168,8 +168,11 @@ extern int renameat (int __oldfd, const char *__old, int __newfd,
 #ifdef __USE_GNU
 /* Flags for renameat2.  */
 # define RENAME_NOREPLACE (1 << 0)
+# define AT_RENAME_NOREPLACE RENAME_NOREPLACE
 # define RENAME_EXCHANGE (1 << 1)
+# define AT_RENAME_EXCHANGE RENAME_EXCHANGE
 # define RENAME_WHITEOUT (1 << 2)
+# define AT_RENAME_WHITEOUT RENAME_WHITEOUT
 
 /* Rename file OLD relative to OLDFD to NEW relative to NEWFD, with
    additional flags.  */
