@@ -61,7 +61,7 @@ __libc_message_impl (const char *fmt, ...)
   if (fd == -1)
     fd = STDERR_FILENO;
 
-  struct iovec iov[LIBC_MESSAGE_MAX_ARGS * 2 - 1];
+  struct iovec iov[LIBC_MESSAGE_MAX_ARGS * 2 + 1];
   int iovcnt = 0;
   ssize_t total = 0;
 
