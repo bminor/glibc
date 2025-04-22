@@ -19,27 +19,10 @@
 #ifndef _STRING_FZI_H
 #define _STRING_FZI_H 1
 
+#include <stdbit.h>
 #include <limits.h>
 #include <endian.h>
 #include <string-fza.h>
-
-static __always_inline int
-clz (find_t c)
-{
-  if (sizeof (find_t) == sizeof (unsigned long))
-    return __builtin_clzl (c);
-  else
-    return __builtin_clzll (c);
-}
-
-static __always_inline int
-ctz (find_t c)
-{
-  if (sizeof (find_t) == sizeof (unsigned long))
-    return __builtin_ctzl (c);
-  else
-    return __builtin_ctzll (c);
-}
 
 /* A subroutine for the index_zero functions.  Given a test word C, return
    the (memory order) index of the first byte (in memory order) that is
@@ -49,9 +32,9 @@ index_first (find_t c)
 {
   int r;
   if (__BYTE_ORDER == __LITTLE_ENDIAN)
-    r = ctz (c);
+    r = stdc_trailing_zeros (c);
   else
-    r = clz (c);
+    r = stdc_leading_zeros (c);
   return r / CHAR_BIT;
 }
 
@@ -62,9 +45,9 @@ index_last (find_t c)
 {
   int r;
   if (__BYTE_ORDER == __LITTLE_ENDIAN)
-    r = clz (c);
+    r = stdc_leading_zeros (c);
   else
-    r = ctz (c);
+    r = stdc_trailing_zeros (c);
   return sizeof (find_t) - 1 - (r / CHAR_BIT);
 }
 
