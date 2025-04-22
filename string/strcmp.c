@@ -89,7 +89,7 @@ strcmp_unaligned_loop (const op_t *x1, const op_t *x2, op_t w1, uintptr_t ofs)
 
       /* Load the final word of P1 and align the final partial of P2.  */
       w1 = *x1++;
-      w2 = MERGE (w2b, sh_1, 0, sh_2);
+      w2 = MERGE (w2b, sh_1, 0UL, sh_2);
     }
 
   return final_cmp (w1, w2);
