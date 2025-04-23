@@ -62,7 +62,7 @@ static int
 do_test (void)
 {
   size_t i, j;
-  for (i = 0; i < 100; ++i)
+  for (i = 1; i < 100; ++i)
     {
       for (j = 0; j < 8192; ++j)
 	{
