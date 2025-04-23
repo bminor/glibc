@@ -53,23 +53,23 @@ f1 (int a00, int a01, int a02, int a03, int a04, int a05, int a06, int a07,
 	  a24, a25, a26, a27, a28, a29, a30, a31,
 	  a32, flag);
 
-  if (a00 != (0x00000001 << flag) || a01 != (0x00000004 << flag)
-      || a02 != (0x00000012 << flag) || a03 != (0x00000048 << flag)
-      || a04 != (0x00000123 << flag) || a05 != (0x0000048d << flag)
-      || a06 != (0x00001234 << flag) || a07 != (0x000048d1 << flag)
-      || a08 != (0x00012345 << flag) || a09 != (0x00048d15 << flag)
-      || a10 != (0x00123456 << flag) || a11 != (0x0048d159 << flag)
-      || a12 != (0x01234567 << flag) || a13 != (0x048d159e << flag)
-      || a14 != (0x12345678 << flag) || a15 != (0x48d159e2 << flag)
-      || a16 != (0x23456789 << flag) || a17 != (0x8d159e26 << flag)
-      || a18 != (0x3456789a << flag) || a19 != (0xd159e26a << flag)
-      || a20 != (0x456789ab << flag) || a21 != (0x159e26af << flag)
-      || a22 != (0x56789abc << flag) || a23 != (0x59e26af3 << flag)
-      || a24 != (0x6789abcd << flag) || a25 != (0x9e26af37 << flag)
-      || a26 != (0x789abcde << flag) || a27 != (0xe26af37b << flag)
-      || a28 != (0x89abcdef << flag) || a29 != (0x26af37bc << flag)
-      || a30 != (0x9abcdef0 << flag) || a31 != (0x6af37bc3 << flag)
-      || a32 != (0xabcdef0f << flag))
+  if (a00 != (0x00000001u << flag) || a01 != (0x00000004u << flag)
+      || a02 != (0x00000012u << flag) || a03 != (0x00000048u << flag)
+      || a04 != (0x00000123u << flag) || a05 != (0x0000048du << flag)
+      || a06 != (0x00001234u << flag) || a07 != (0x000048d1u << flag)
+      || a08 != (0x00012345u << flag) || a09 != (0x00048d15u << flag)
+      || a10 != (0x00123456u << flag) || a11 != (0x0048d159u << flag)
+      || a12 != (0x01234567u << flag) || a13 != (0x048d159eu << flag)
+      || a14 != (0x12345678u << flag) || a15 != (0x48d159e2u << flag)
+      || a16 != (0x23456789u << flag) || a17 != (0x8d159e26u << flag)
+      || a18 != (0x3456789au << flag) || a19 != (0xd159e26au << flag)
+      || a20 != (0x456789abu << flag) || a21 != (0x159e26afu << flag)
+      || a22 != (0x56789abcu << flag) || a23 != (0x59e26af3u << flag)
+      || a24 != (0x6789abcdu << flag) || a25 != (0x9e26af37u << flag)
+      || a26 != (0x789abcdeu << flag) || a27 != (0xe26af37bu << flag)
+      || a28 != (0x89abcdefu << flag) || a29 != (0x26af37bcu << flag)
+      || a30 != (0x9abcdef0u << flag) || a31 != (0x6af37bc3u << flag)
+      || a32 != (0xabcdef0fu << flag))
     {
       puts ("arg mismatch");
       exit (-1);
@@ -146,23 +146,23 @@ main (void)
   ctx[1].uc_link = &ctx[0];
   errno = 0;
   makecontext (&ctx[1], (void (*) (void)) f1, 33,
-	       0x00000001 << flag, 0x00000004 << flag,
-	       0x00000012 << flag, 0x00000048 << flag,
-	       0x00000123 << flag, 0x0000048d << flag,
-	       0x00001234 << flag, 0x000048d1 << flag,
-	       0x00012345 << flag, 0x00048d15 << flag,
-	       0x00123456 << flag, 0x0048d159 << flag,
-	       0x01234567 << flag, 0x048d159e << flag,
-	       0x12345678 << flag, 0x48d159e2 << flag,
-	       0x23456789 << flag, 0x8d159e26 << flag,
-	       0x3456789a << flag, 0xd159e26a << flag,
-	       0x456789ab << flag, 0x159e26af << flag,
-	       0x56789abc << flag, 0x59e26af3 << flag,
-	       0x6789abcd << flag, 0x9e26af37 << flag,
-	       0x789abcde << flag, 0xe26af37b << flag,
-	       0x89abcdef << flag, 0x26af37bc << flag,
-	       0x9abcdef0 << flag, 0x6af37bc3 << flag,
-	       0xabcdef0f << flag);
+	       0x00000001u << flag, 0x00000004u << flag,
+	       0x00000012u << flag, 0x00000048u << flag,
+	       0x00000123u << flag, 0x0000048du << flag,
+	       0x00001234u << flag, 0x000048d1u << flag,
+	       0x00012345u << flag, 0x00048d15u << flag,
+	       0x00123456u << flag, 0x0048d159u << flag,
+	       0x01234567u << flag, 0x048d159eu << flag,
+	       0x12345678u << flag, 0x48d159e2u << flag,
+	       0x23456789u << flag, 0x8d159e26u << flag,
+	       0x3456789au << flag, 0xd159e26au << flag,
+	       0x456789abu << flag, 0x159e26afu << flag,
+	       0x56789abcu << flag, 0x59e26af3u << flag,
+	       0x6789abcdu << flag, 0x9e26af37u << flag,
+	       0x789abcdeu << flag, 0xe26af37bu << flag,
+	       0x89abcdefu << flag, 0x26af37bcu << flag,
+	       0x9abcdef0u << flag, 0x6af37bc3u << flag,
+	       0xabcdef0fu << flag);
 
   /* Without this check, a stub makecontext can make us spin forever.  */
   if (errno == ENOSYS)
