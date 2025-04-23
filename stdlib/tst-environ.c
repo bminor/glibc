@@ -27,6 +27,24 @@
 char putenv_val[100] = VAR "=some longer value";
 
 static int
+__attribute_disable_ubsan__
+check_null_argument (void)
+{
+  /* This deliberately tests supplying a null pointer to a function whose
+     argument is marked __attribute__ ((nonnull)). */
+  DIAG_PUSH_NEEDS_COMMENT;
+  DIAG_IGNORE_NEEDS_COMMENT(5, "-Wnonnull");
+  errno = 0;
+  if (unsetenv (NULL) >= 0 || errno != EINVAL)
+    {
+      puts ("unsetenv #1 failed");
+      return 1;
+    }
+  DIAG_POP_NEEDS_COMMENT;
+  return 0;
+}
+
+static int
 do_test (void)
 {
   int result = 0;
@@ -189,17 +207,7 @@ do_test (void)
       result = 1;
     }
 
-  /* This deliberately tests supplying a null pointer to a function whose
-     argument is marked __attribute__ ((nonnull)). */
-  DIAG_PUSH_NEEDS_COMMENT;
-  DIAG_IGNORE_NEEDS_COMMENT(5, "-Wnonnull");
-  errno = 0;
-  if (unsetenv (NULL) >= 0 || errno != EINVAL)
-    {
-      puts ("unsetenv #1 failed");
-      result = 1;
-    }
-  DIAG_POP_NEEDS_COMMENT;
+  result = check_null_argument ();
 
   errno = 0;
   if (unsetenv ("") >= 0 || errno != EINVAL)
