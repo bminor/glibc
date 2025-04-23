@@ -15,6 +15,14 @@ bitval (int bits)
   return val;
 }
 
+static unsigned long long int
+ubitval (int bits)
+{
+  unsigned long long int val = 0;
+  while (bits-- > 0)
+    val |= 1ull << bits;
+  return val;
+}
 
 static int
 do_test (void)
@@ -41,19 +49,19 @@ do_test (void)
   TEST (INT_MIN, "d", (int) -bitval (sizeof (int) * CHAR_BIT - 1) - 1);
   TEST (INT_MAX, "d", (int) bitval (sizeof (int) * CHAR_BIT - 1));
   TEST (UINT_MAX, "u",
-	(unsigned int) bitval (sizeof (unsigned int) * CHAR_BIT));
+	(unsigned int) ubitval (sizeof (unsigned int) * CHAR_BIT));
 
   TEST (LONG_MIN, "ld",
 	(long int) -bitval (sizeof (long int) * CHAR_BIT - 1) - 1);
   TEST (LONG_MAX, "ld", (long int) bitval (sizeof (long int) * CHAR_BIT - 1));
   TEST (ULONG_MAX, "lu",
-	(unsigned long int) bitval (sizeof (unsigned long int) * CHAR_BIT));
+	(unsigned long int) ubitval (sizeof (unsigned long int) * CHAR_BIT));
 
   TEST (LLONG_MIN, "lld", -bitval (sizeof (long long int) * CHAR_BIT - 1) - 1);
   TEST (LLONG_MAX, "lld", bitval (sizeof (long long int) * CHAR_BIT - 1));
   TEST (ULLONG_MAX, "llu",
-	(unsigned long long int) bitval (sizeof (unsigned long long int)
-					 * CHAR_BIT));
+	(unsigned long long int) ubitval (sizeof (unsigned long long int)
+					  * CHAR_BIT));
 
   /* Values from POSIX and Unix.  */
 #ifdef PAGESIZE
