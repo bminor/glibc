@@ -178,6 +178,9 @@ test_hosts (void)
   hptr1 = gethostbyname2 ("localhost", AF_INET);
   output_hostent ("gethostbyname2 (\"localhost\", AF_INET)", hptr1);
 
+  name = xmalloc (2);
+  namelen += 2;
+
   while (gethostname (name, namelen) < 0 && errno == ENAMETOOLONG)
     {
       namelen += 2;		/* tiny increments to test a lot */
