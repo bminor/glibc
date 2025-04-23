@@ -150,7 +150,7 @@ extern FLOAT MPN2FLOAT (mp_srcptr mpn, int exponent, int negative);
 #if	BITS_PER_MP_LIMB == 32
 # define MAX_DIG_PER_LIMB	9
 # define MAX_FAC_PER_LIMB	1000000000UL
-# define SHIFT_CTE(N)		N # U
+# define SHIFT_CTE(N)		N ## U
 #elif	BITS_PER_MP_LIMB == 64
 # define MAX_DIG_PER_LIMB	19
 # define MAX_FAC_PER_LIMB	10000000000000000000ULL
