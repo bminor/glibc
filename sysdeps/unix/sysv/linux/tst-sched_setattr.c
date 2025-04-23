@@ -33,6 +33,20 @@ union
   unsigned char padding[4096];
 } u;
 
+static void
+__attribute_disable_ubsan__
+check_null_argument (volatile unsigned int size)
+{
+  /* Invalid buffer arguments result in EINVAL (not EFAULT).  */
+  errno = 0;
+  void *volatile null_pointer = NULL; /* compiler barrier.  */
+  TEST_COMPARE (sched_setattr (0, null_pointer, 0), -1);
+  TEST_COMPARE (errno, EINVAL);
+  errno = 0;
+  TEST_COMPARE (sched_getattr (0, null_pointer, size, 0), -1);
+  TEST_COMPARE (errno, EINVAL);
+}
+
 static int
 do_test (void)
 {
@@ -79,16 +93,7 @@ do_test (void)
   TEST_COMPARE (u.attr.sched_policy, SCHED_OTHER);
   TEST_COMPARE (u.attr.sched_nice, 19);
 
-  /* Invalid buffer arguments result in EINVAL (not EFAULT).  */
-  {
-    errno = 0;
-    void *volatile null_pointer = NULL; /* compiler barrier.  */
-    TEST_COMPARE (sched_setattr (0, null_pointer, 0), -1);
-    TEST_COMPARE (errno, EINVAL);
-    errno = 0;
-    TEST_COMPARE (sched_getattr (0, null_pointer, size, 0), -1);
-    TEST_COMPARE (errno, EINVAL);
-  }
+  check_null_argument (size);
 
   return 0;
 }
