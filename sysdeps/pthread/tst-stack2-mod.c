@@ -1,5 +1,6 @@
-/* Stack executability handling for GNU dynamic linker.  Linux version.
-   Copyright (C) 2003-2025 Free Software Foundation, Inc.
+/* Check if pthread_getattr_np works within modules with non-exectuble
+   stacks (BZ 32897).
+   Copyright (C) 2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,27 +17,23 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <ldsodefs.h>
+#include <pthread.h>
+
+bool init_result;
+
+void
+__attribute__ ((constructor))
+init (void)
+{
+  pthread_t me = pthread_self ();
+  pthread_attr_t attr;
+  init_result = pthread_getattr_np (me, &attr) == 0;
+}
 
 int
-_dl_make_stack_executable (const void *stack_endp)
+mod_func (void)
 {
-  /* This gives us the highest/lowest page that needs to be changed.  */
-  uintptr_t page = ((uintptr_t) stack_endp
-		    & -(intptr_t) GLRO(dl_pagesize));
-
-  if (__mprotect ((void *) page, GLRO(dl_pagesize),
-		  PROT_READ | PROT_WRITE | PROT_EXEC
-#if _STACK_GROWS_DOWN
-		  | PROT_GROWSDOWN
-#elif _STACK_GROWS_UP
-		  | PROT_GROWSUP
-#endif
-		  ) != 0)
-    return errno;
-
-  /* Remember that we changed the permission.  */
-  GL(dl_stack_flags) |= PF_X;
-
-  return 0;
+  pthread_t me = pthread_self ();
+  pthread_attr_t attr;
+  return pthread_getattr_np (me, &attr);
 }

@@ -945,7 +945,7 @@ struct link_map *
 _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 			struct filebuf *fbp, char *realname,
 			struct link_map *loader, int l_type, int mode,
-			void **stack_endp, Lmid_t nsid)
+			const void *stack_endp, Lmid_t nsid)
 {
   struct link_map *l = NULL;
   const ElfW(Ehdr) *header;
@@ -2180,7 +2180,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 
   void *stack_end = __libc_stack_end;
   return _dl_map_object_from_fd (name, origname, fd, &fb, realname, loader,
-				 type, mode, &stack_end, nsid);
+				 type, mode, stack_end, nsid);
 }
 
 struct add_path_state

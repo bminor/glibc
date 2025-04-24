@@ -711,7 +711,7 @@ void _dl_handle_execstack_tunable (void) attribute_hidden;
 /* This function changes the permission of the memory region pointed
    by STACK_ENDP to executable and update the internal memory protection
    flags for future thread stack creation.  */
-int _dl_make_stack_executable (void **stack_endp) attribute_hidden;
+int _dl_make_stack_executable (const void *stack_endp) attribute_hidden;
 
 /* Variable pointing to the end of the stack (or close to it).  This value
    must be constant over the runtime of the application.  Some programs
