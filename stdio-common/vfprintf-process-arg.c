@@ -38,7 +38,8 @@ LABEL (form_integer):
     {
       long long int signed_number = process_arg_long_long_int ();
       is_negative = signed_number < 0;
-      number.longlong = is_negative ? (- signed_number) : signed_number;
+      number.longlong = is_negative ? (- (unsigned long long) signed_number)
+				    : signed_number;
 
       goto LABEL (longlong_number);
     }
