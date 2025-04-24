@@ -41,7 +41,12 @@ gen-as-const-headers += \
   dl-link.sym \
   rtld-global-offsets.sym
 
-tests-internal += tst-ifunc-arg-1 tst-ifunc-arg-2
+tests-internal += \
+  tst-ifunc-arg-1 \
+  tst-ifunc-arg-2 \
+  tst-ifunc-arg-3 \
+  tst-ifunc-arg-4 \
+  #tests-internal
 
 tests += tst-vpcs
 modules-names += tst-vpcs-mod
