@@ -31,7 +31,7 @@ _dl_handle_execstack_tunable (void)
       break;
 
     case stack_tunable_mode_force:
-      if (_dl_make_stack_executable (&__libc_stack_end) != 0)
+      if (_dl_make_stack_executable (__libc_stack_end) != 0)
 	_dl_fatal_printf (
 "Fatal glibc error: cannot enable executable stack as tunable requires");
       break;

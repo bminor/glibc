@@ -273,6 +273,7 @@ tests += \
   tst-spin4 \
   tst-spin5 \
   tst-stack1 \
+  tst-stack2 \
   tst-stdio1 \
   tst-stdio2 \
   tst-thrd-detach \
@@ -368,6 +369,7 @@ modules-names += \
   tst-atfork4mod \
   tst-create1mod \
   tst-fini1mod \
+  tst-stack2-mod \
   tst-tls4moda \
   tst-tls4modb \
   # modules-names
@@ -540,5 +542,12 @@ CFLAGS-tst-unwind-thread.c += -funwind-tables
 LDFLAGS-tst-create1 = -Wl,-export-dynamic
 $(objpfx)tst-create1: $(shared-thread-library)
 $(objpfx)tst-create1.out: $(objpfx)tst-create1mod.so
+
+$(objpfx)tst-stack2.out: $(objpfx)tst-stack2-mod.so
+LDFLAGS-tst-stack2-mod.so = -Wl,-z,execstack
+ifeq ($(have-no-error-execstack),yes)
+LDFLAGS-tst-stack2-mod.so += -Wl,--no-error-execstack
+endif
+tst-stack2-ENV = GLIBC_TUNABLES=glibc.rtld.execstack=2
 
 endif
