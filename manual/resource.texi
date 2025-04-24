@@ -1362,26 +1362,73 @@ extent the Linux kernel interface.
 @standards{GNU, sched.h}
 This data set is a bitset where each bit represents a CPU.  How the
 system's CPUs are mapped to bits in the bitset is system dependent.
-The data type has a fixed size; in the unlikely case that the number
-of bits are not sufficient to describe the CPUs of the system a
-different interface has to be used.
+The data type has a fixed size; it is strongly recommended to allocate
+a dynamically sized set based on the actual number of CPUs detected,
+such as via @code{get_nprocs_conf()}, and use the @code{CPU_*_S}
+variants instead of the fixed-size ones.
 
 This type is a GNU extension and is defined in @file{sched.h}.
 @end deftp
 
-To manipulate the bitset, to set and reset bits, a number of macros are
-defined.  Some of the macros take a CPU number as a parameter.  Here
-it is important to never exceed the size of the bitset.  The following
-macro specifies the number of bits in the @code{cpu_set_t} bitset.
+To manipulate the bitset, to set and reset bits, and thus add and
+remove CPUs from the sets, a number of macros are defined.  Some of
+the macros take a CPU number as a parameter.  Here it is important to
+never exceed the size of the bitset, either @code{CPU_SETSIZE} for
+fixed sets or the allocated size for dynamic sets.  For each macro
+there is a fixed-size version (documented below) and a dynamic-sized
+version (with a @code{_S} suffix).
 
 @deftypevr Macro int CPU_SETSIZE
 @standards{GNU, sched.h}
 The value of this macro is the maximum number of CPUs which can be
-handled with a @code{cpu_set_t} object.
+handled with a fixed @code{cpu_set_t} object.
 @end deftypevr
 
+For applications that require CPU sets larger than the built-in size,
+a set of macros that support dynamically-sized sets are defined.
+
+@deftypefn Macro size_t CPU_ALLOC_SIZE (size_t @var{count})
+@standards{GNU, sched.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c CPU_ALLOC_SIZE ok
+@c  __CPU_ALLOC_SIZE ok
+Given a count of CPUs to hold, returns the size of the set to
+allocate.  This return value is appropriate to be used in the *_S macros.
+
+This macro is a GNU extension and is defined in @file{sched.h}.
+@end deftypefn
+
+@deftypefn Macro {cpu_set_t *} CPU_ALLOC (size_t @var{count})
+@standards{GNU, sched.h}
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{} @acsmem{}}}
+@c CPU_ALLOC
+@c  __CPU_ALLOC
+@c   __sched_cpualloc
+@c    malloc
+Given the count of CPUs to hold, returns a set large enough to hold
+them; that is, the resulting set will be valid for CPUs numbered 0
+through @var{count}-1, inclusive.  This set must be freed via
+@code{CPU_FREE} to avoid memory leaks.  Warning: the argument is the
+CPU @emph{count} and not the size returned by @code{CPU_ALLOC_SIZE}.
+
+This macro is a GNU extension and is defined in @file{sched.h}.
+@end deftypefn
+
+@deftypefn Macro void CPU_FREE (cpu_set_t *@var{set})
+@standards{GNU, sched.h}
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{} @acsmem{}}}
+@c CPU_FREE
+@c  __CPU_FREE
+@c   __sched_cpufree
+@c    free
+Frees a CPU set previously allocated by @code{CPU_ALLOC}.
+
+This macro is a GNU extension and is defined in @file{sched.h}.
+@end deftypefn
+
 The type @code{cpu_set_t} should be considered opaque; all
-manipulation should happen via the next four macros.
+manipulation should happen via the @code{CPU_*} macros described
+below.
 
 @deftypefn Macro void CPU_ZERO (cpu_set_t *@var{set})
 @standards{GNU, sched.h}
@@ -1424,6 +1471,39 @@ evaluated more than once.
 This macro is a GNU extension and is defined in @file{sched.h}.
 @end deftypefn
 
+@deftypefn Macro {cpu_set_t *} CPU_AND (cpu_set_t *@var{dest}, cpu_set_t *@var{src1}, cpu_set_t *@var{src2})
+@standards{GNU, sched.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c CPU_AND ok
+@c  __CPU_OP_S ok
+This macro populates @var{dest} with only those CPUs included in both
+@var{src1} and @var{src2}.  Its value is @var{dest}.
+
+This macro is a GNU extension and is defined in @file{sched.h}.
+@end deftypefn
+
+@deftypefn Macro {cpu_set_t *} CPU_OR (cpu_set_t *@var{dest}, cpu_set_t *@var{src1}, cpu_set_t *@var{src2})
+@standards{GNU, sched.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c CPU_OR ok
+@c  __CPU_OP_S ok
+This macro populates @var{dest} with those CPUs included in either
+@var{src1} or @var{src2}.  Its value is @var{dest}.
+
+This macro is a GNU extension and is defined in @file{sched.h}.
+@end deftypefn
+
+@deftypefn Macro {cpu_set_t *} CPU_XOR (cpu_set_t *@var{dest}, cpu_set_t *@var{src1}, cpu_set_t *@var{src2})
+@standards{GNU, sched.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c CPU_XOR ok
+@c  __CPU_OP_S ok
+This macro populates @var{dest} with those CPUs included in either
+@var{src1} or @var{src2}, but not both.  Its value is @var{dest}.
+
+This macro is a GNU extension and is defined in @file{sched.h}.
+@end deftypefn
+
 @deftypefn Macro int CPU_ISSET (int @var{cpu}, const cpu_set_t *@var{set})
 @standards{GNU, sched.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
@@ -1440,6 +1520,54 @@ evaluated more than once.
 This macro is a GNU extension and is defined in @file{sched.h}.
 @end deftypefn
 
+@deftypefn Macro int CPU_COUNT (const cpu_set_t *@var{set})
+@standards{GNU, sched.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c CPU_COUNT ok
+@c  __CPU_COUNT_S ok
+@c   __sched_cpucount ok
+@c    countbits ok
+This macro returns the count of CPUs (bits) set in @var{set}.
+
+This macro is a GNU extension and is defined in @file{sched.h}.
+@end deftypefn
+
+@deftypefn Macro int CPU_EQUAL (cpu_set_t *@var{src1}, cpu_set_t *@var{src2})
+@standards{GNU, sched.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c CPU_EQUAL ok
+@c  __CPU_EQUAL_S ok
+@c   memcmp ok
+This macro returns nonzero if the two sets @var{set1} and @var{set2}
+have the same contents; that is, the set of CPUs represented by both
+sets is identical.
+
+This macro is a GNU extension and is defined in @file{sched.h}.
+@end deftypefn
+
+@deftypefn Macro void CPU_ZERO_S (size_t @var{size}, cpu_set_t *@var{set})
+@end deftypefn
+@deftypefn Macro void CPU_SET_S (int @var{cpu}, size_t @var{size}, cpu_set_t *@var{set})
+@end deftypefn
+@deftypefn Macro void CPU_CLR_S (int @var{cpu}, size_t @var{size}, cpu_set_t *@var{set})
+@end deftypefn
+@deftypefn Macro {cpu_set_t *} CPU_AND_S (size_t @var{size}, cpu_set_t *@var{dest}, cpu_set_t *@var{src1}, cpu_set_t *@var{src2})
+@end deftypefn
+@deftypefn Macro {cpu_set_t *} CPU_OR_S (size_t @var{size}, cpu_set_t *@var{dest}, cpu_set_t *@var{src1}, cpu_set_t *@var{src2})
+@end deftypefn
+@deftypefn Macro {cpu_set_t *} CPU_XOR_S (size_t @var{size}, cpu_set_t *@var{dest}, cpu_set_t *@var{src1}, cpu_set_t *@var{src2})
+@end deftypefn
+@deftypefn Macro int CPU_ISSET_S (int @var{cpu}, size_t @var{size}, const cpu_set_t *@var{set})
+@end deftypefn
+@deftypefn Macro int CPU_COUNT_S (size_t @var{size}, const cpu_set_t *@var{set})
+@end deftypefn
+@deftypefn Macro int CPU_EQUAL_S (size_t @var{size}, cpu_set_t *@var{src1}, cpu_set_t *@var{src2})
+@end deftypefn
+
+Each of these macros performs the same action as its non-@code{_S} variant,
+but takes a @var{size} argument to specify the set size.  This
+@var{size} argument is as returned by the @code{CPU_ALLOC_SIZE} macro,
+defined above.
 
 CPU bitsets can be constructed from scratch or the currently installed
 affinity mask can be retrieved from the system.
@@ -1524,6 +1652,37 @@ The operating system does not support this function.
 
 This function is Linux-specific and is declared in @file{sched.h}.
 @end deftypefun
+
+Here's an example of how to use most of the above to limit the number
+of CPUs a process runs on, not including error handling or good logic
+on CPU choices:
+
+@example
+#define _GNU_SOURCE
+#include <sched.h>
+#include <sys/sysinfo.h>
+#include <unistd.h>
+void
+limit_cpus (void)
+@{
+  unsigned int mycpu;
+  size_t nproc, cssz, cpu;
+  cpu_set_t *cs;
+  getcpu (&mycpu, NULL);
+  nproc = get_nprocs_conf ();
+  cssz = CPU_ALLOC_SIZE (nproc);
+  cs = CPU_ALLOC (nproc);
+  sched_getaffinity (0, cssz, cs);
+  if (CPU_COUNT_S (cssz, cs) > nproc / 2)
+    @{
+      for (cpu = nproc / 2; cpu < nproc; cpu ++)
+        if (cpu != mycpu)
+          CPU_CLR_S (cpu, cssz, cs);
+      sched_setaffinity (0, cssz, cs);
+    @}
+  CPU_FREE (cs);
+@}
+@end example
 
 @node Memory Resources
 @section Querying memory available resources
