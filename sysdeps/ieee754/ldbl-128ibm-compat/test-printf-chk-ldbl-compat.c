@@ -27,6 +27,7 @@
 #include <support/check.h>
 
 static void
+__attribute_disable_ubsan__
 do_test_call_varg (FILE *stream, const char *format, ...)
 {
   char *buffer = NULL;
@@ -83,6 +84,7 @@ do_test_call_varg (FILE *stream, const char *format, ...)
 }
 
 static void
+__attribute_disable_ubsan__
 do_test_call_rarg (FILE *stream, const char *format, long double ld,
 		   double d)
 {
