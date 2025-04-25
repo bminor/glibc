@@ -506,12 +506,6 @@ sysdep_headers += \
   # sysdep_headers
 endif
 
-ifeq ($(subdir),termios)
-sysdep_headers += \
-  termio.h \
-  # sysdep_headers
-endif
-
 ifeq ($(subdir),posix)
 sysdep_headers += \
   bits/initspin.h \

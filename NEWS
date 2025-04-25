@@ -27,6 +27,11 @@ Deprecated and removed features, and other changes affecting compatibility:
   programs that require an executable stack through dynamic loaded
   shared libraries.
 
+* On Linux, the <termio.h> header and the definition of struct termio
+  in <sys/ioctl.h> have been removed. The termio interface has been
+  obsolete since the very first version of POSIX.1 in 1988, replaced
+  with <termios.h>.
+
 Changes to build and runtime requirements:
 
 * GCC 12.1 or later is now required to build the GNU C Library.
