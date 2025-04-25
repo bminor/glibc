@@ -3,7 +3,7 @@
 Copyright (c) 2022-2025 Alexei Sibidanov.
 
 The original version of this file was copied from the CORE-MATH
-project (src/binary32/sinpi/sinpif.c, revision f786e13).
+project (src/binary32/sinpi/sinpif.c, revision bbfabd99.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -51,7 +51,7 @@ __sinpif (float x)
     {
       if (__glibc_unlikely (s < -6))
 	return copysignf (0.0f, x);
-      int32_t iq = m << (-s - 1);
+      int32_t iq = (uint32_t)m << (-s - 1);
       iq &= 127;
       if (iq == 0 || iq == 64)
 	return copysignf (0.0f, x);
@@ -63,10 +63,10 @@ __sinpif (float x)
       return z * (0x1.921fb54442d18p+1 + z2 * (-0x1.4abbce625be53p+2));
     }
   int32_t si = 25 - s;
-  if (__glibc_unlikely (si >= 0 && (m << si) == 0))
+  if (__glibc_unlikely (si >= 0 && ((uint32_t)m << si) == 0))
     return copysignf (0.0f, x);
 
-  int32_t k = m << (31 - s);
+  int32_t k = (uint32_t)m << (31 - s);
   double z = k, z2 = z * z;
   double fs = SN[0] + z2 * (SN[1] + z2 * SN[2]);
   double fc = CN[0] + z2 * (CN[1] + z2 * CN[2]);
