@@ -3,7 +3,7 @@
 Copyright (c) 2022-2024 Alexei Sibidanov.
 
 The original version of this file was copied from the CORE-MATH
-project (file src/binary32/cosh/coshf.c, revision 5c58ea1).
+project (file src/binary32/cosh/coshf.c, revision de59ecfb).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -69,8 +69,8 @@ __ieee754_coshf (float x)
   double h2 = h * h;
   int64_t jp = asuint64 (ia + 0x1.8p52);
   int64_t jm = -jp;
-  double sp = asdouble (TB[jp & 31] + ((jp >> 5) << 52));
-  double sm = asdouble (TB[jm & 31] + ((jm >> 5) << 52));
+  double sp = asdouble (TB[jp & 31] + ((uint64_t)(jp >> 5) << 52));
+  double sm = asdouble (TB[jm & 31] + ((uint64_t)(jm >> 5) << 52));
   double te = C[0] + h2 * C[2];
   double to = (C[1] + h2 * C[3]);
   double rp = sp * (te + h * to);
