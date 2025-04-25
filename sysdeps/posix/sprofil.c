@@ -269,7 +269,6 @@ int
 __sprofil (struct prof *profp, int profcnt, struct timeval *tvp,
 	   unsigned int flags)
 {
-  struct prof *p[profcnt];
   struct itimerval timer;
   struct sigaction act;
   int i;
@@ -295,6 +294,7 @@ __sprofil (struct prof *profp, int profcnt, struct timeval *tvp,
       return 0;
     }
 
+  struct prof *p[profcnt];
   prof_info.num_regions = 0;
   prof_info.region = NULL;
   prof_info.overflow = &default_overflow_region;
