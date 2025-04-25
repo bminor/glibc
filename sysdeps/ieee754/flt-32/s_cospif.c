@@ -3,7 +3,7 @@
 Copyright (c) 2022-2025 Alexei Sibidanov.
 
 The original version of this file was copied from the CORE-MATH
-project (src/binary32/cospi/cospif.c, revision f786e13).
+project (src/binary32/cospi/cospif.c, revision bbfabd99).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -58,10 +58,10 @@ __cospif (float x)
     {
       if (__glibc_unlikely (p > 63))
 	return 1.0f;
-      int32_t iq = m << (p - 32);
+      int32_t iq = (uint32_t)m << (p - 32);
       return S[(iq + 32) & 127];
     }
-  int32_t k = m << p;
+  int32_t k = (uint32_t)m << p;
   if (__glibc_unlikely (k == 0))
     {
       int32_t iq = m >> (32 - p);
