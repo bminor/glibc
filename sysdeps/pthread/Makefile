@@ -321,6 +321,10 @@ CFLAGS-tst-cleanupx2.c += -fno-builtin
 CFLAGS-tst-cleanup2.c += $(no-fortify-source)
 CFLAGS-tst-cleanupx2.c += $(no-fortify-source)
 
+# The 'sprintf(NULL, ...' triggers UB within glibc itself.
+test-xfail-tst-cleanup2 = $(enable-ubsan)
+test-xfail-tst-cleanupx2 = $(enable-ubsan)
+
 tests += \
   tst-cancelx2 \
   tst-cancelx3 \
