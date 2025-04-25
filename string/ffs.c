@@ -40,7 +40,9 @@ __ffs (int i)
       8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8
     };
   unsigned int a;
-  unsigned int x = i & -i;
+  /* Isolate the least significant one.  */
+  unsigned int u_i = i;
+  unsigned int x = u_i & -u_i;
 
   a = x <= 0xffff ? (x <= 0xff ? 0 : 8) : (x <= 0xffffff ?  16 : 24);
 

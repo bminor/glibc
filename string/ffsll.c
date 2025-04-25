@@ -29,7 +29,9 @@ __ffsll (long long int i)
 #if USE_FFSLL_BUILTIN
   return __builtin_ffsll (i);
 #else
-  unsigned long long int x = i & -i;
+  /* Isolate the least significant one.  */
+  unsigned long long int i_u = i;
+  unsigned long long int x = i_u & -i_u;
 
   if (x <= 0xffffffff)
     return ffs (i);
