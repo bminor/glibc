@@ -29,7 +29,6 @@
 #include <gmp.h>
 #include <ieee754.h>
 #include <stdlib/gmp-impl.h>
-#include <stdlib/longlong.h>
 #include <stdlib/fpioconst.h>
 #include <locale/localeinfo.h>
 #include <limits.h>
@@ -40,6 +39,7 @@
 #include <stdlib.h>
 #include <wchar.h>
 #include <stdbool.h>
+#include <stdbit.h>
 #include <rounding-mode.h>
 #include <printf_buffer.h>
 #include <printf_buffer_to_file.h>
@@ -386,7 +386,7 @@ __printf_fp_buffer_1 (struct __printf_buffer *buf, locale_t loc,
 		{
 		  int cnt;
 		  MPN_ASSIGN (p.scale, p.tmp);
-		  count_leading_zeros (cnt, p.scale[p.scalesize - 1]);
+		  cnt = stdc_leading_zeros (p.scale[p.scalesize - 1]);
 		  scaleexpo = (p.scalesize - 2) * BITS_PER_MP_LIMB - cnt - 1;
 		  exp10 |= 1 << explog;
 		}
@@ -408,7 +408,7 @@ __printf_fp_buffer_1 (struct __printf_buffer *buf, locale_t loc,
 	    ;
 
 	  /* Determine number of bits the scaling factor is misplaced.	*/
-	  count_leading_zeros (cnt_h, p.scale[p.scalesize - 1]);
+	  cnt_h = stdc_leading_zeros (p.scale[p.scalesize - 1]);
 
 	  if (cnt_h == 0)
 	    {
@@ -426,17 +426,17 @@ __printf_fp_buffer_1 (struct __printf_buffer *buf, locale_t loc,
 	    {
 	      if (p.scale[i] != 0)
 		{
-		  count_trailing_zeros (cnt_l, p.scale[i]);
+		  cnt_l = stdc_trailing_zeros (p.scale[i]);
 		  if (p.frac[i] != 0)
 		    {
 		      int cnt_l2;
-		      count_trailing_zeros (cnt_l2, p.frac[i]);
+		      cnt_l2 = stdc_trailing_zeros (p.frac[i]);
 		      if (cnt_l2 < cnt_l)
 			cnt_l = cnt_l2;
 		    }
 		}
 	      else
-		count_trailing_zeros (cnt_l, p.frac[i]);
+		cnt_l = stdc_trailing_zeros (p.frac[i]);
 
 	      /* Now shift the numbers to their optimal position.  */
 	      if (i == 0 && BITS_PER_MP_LIMB - cnt_h > cnt_l)
@@ -528,7 +528,7 @@ __printf_fp_buffer_1 (struct __printf_buffer *buf, locale_t loc,
 	      if (cy == 0)
 		--p.tmpsize;
 
-	      count_leading_zeros (cnt_h, p.tmp[p.tmpsize - 1]);
+	      cnt_h = stdc_leading_zeros (p.tmp[p.tmpsize - 1]);
 	      incr = (p.tmpsize - p.fracsize) * BITS_PER_MP_LIMB
 		     + BITS_PER_MP_LIMB - 1 - cnt_h;
 
@@ -584,7 +584,7 @@ __printf_fp_buffer_1 (struct __printf_buffer *buf, locale_t loc,
 		    }
 		  else
 		    {
-		      count_trailing_zeros (cnt_l, p.tmp[i]);
+		      cnt_l = stdc_trailing_zeros (p.tmp[i]);
 
 		      /* Now shift the numbers to their optimal position.  */
 		      if (i == 0 && BITS_PER_MP_LIMB - 1 - cnt_h > cnt_l)
@@ -630,7 +630,7 @@ __printf_fp_buffer_1 (struct __printf_buffer *buf, locale_t loc,
 	  p.tmpsize = p.fracsize;
 	  assert (cy == 0 || p.tmp[p.tmpsize - 1] < 20);
 
-	  count_trailing_zeros (cnt_l, p.tmp[0]);
+	  cnt_l = stdc_trailing_zeros (p.tmp[0]);
 	  if (cnt_l < MIN (4, p.exponent))
 	    {
 	      cy = __mpn_lshift (p.frac, p.tmp, p.tmpsize,
