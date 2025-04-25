@@ -3,7 +3,7 @@
 Copyright (c) 2023, 2024 Alexei Sibidanov.
 
 This file is part of the CORE-MATH project
-project (file src/binary32/erfc/erfcf.c revision bc385c2).
+project (file src/binary32/erfc/erfcf.c revision d0a2be20).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -142,7 +142,7 @@ __erfcf (float xf)
   const double ln2l = 0x1.cf79abd6f5dc8p-47;
   uint64_t jt = asuint64 (fma (x2, iln2, -(1024 + 0x1p-8)));
   int64_t j = (int64_t) (jt << 12) >> 48;
-  double S = asdouble (((j >> 7) + (0x3ff | sgn << 11)) << 52);
+  double S = asdouble ((uint64_t)((j >> 7) + (0x3ff | sgn << 11)) << 52);
   static const double ch[] =
     {
       -0x1.ffffffffff333p-2, 0x1.5555555556a14p-3, -0x1.55556666659b4p-5,
