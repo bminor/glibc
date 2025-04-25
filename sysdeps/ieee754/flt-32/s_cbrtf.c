@@ -3,7 +3,7 @@
 Copyright (c) 2023, 2024 Alexei Sibidanov.
 
 The original version of this file was copied from the CORE-MATH
-project (file src/binary32/cbrt/cbrtf.c, revision bc385c2).
+project (file src/binary32/cbrt/cbrtf.c, revision f7c7408d).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -61,8 +61,8 @@ __cbrtf (float x)
   e += 899;
   uint32_t et = e / 3, it = e % 3;
   uint64_t isc = escale[it].u;
-  isc += (int64_t) (et - 342) << 52;
-  isc |= (int64_t) sgn << 63;
+  isc += (uint64_t) (et - 342) << 52;
+  isc |= (uint64_t) sgn << 63;
   double cvt2 = asdouble (isc);
   static const double c[] =
     {
