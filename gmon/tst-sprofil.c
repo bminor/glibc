@@ -45,8 +45,8 @@ unsigned int bshort[5][0x100 / sizeof (int)];
 unsigned int blong[1][0x1000 / sizeof (int)];
 unsigned int vlong[1][0x2000 / sizeof (int)];
 
-static long int
-fac (long int n)
+static long unsigned int
+fac (long int unsigned n)
 {
   if (n == 0)
     return 1;
@@ -60,7 +60,7 @@ main (int argc, char **argv)
   struct timeval tv, start;
   struct prof prof[32];
   double t_tick, delta;
-  long int sum = 0;
+  long int unsigned sum = 0;
   int i, j;
 
   for (i = 0; i < NELEMS (taddr); ++i)
