@@ -97,9 +97,9 @@ do_test (size_t align, size_t pos, size_t len, int seek_char, int max_char)
 
   for (i = 0; i < len; ++i)
     {
-      buf[align + i] = (random () * random ()) & max_char;
+      buf[align + i] = ((int64_t)random () * random ()) & max_char;
       if (!buf[align + i])
-	buf[align + i] = (random () * random ()) & max_char;
+	buf[align + i] = ((int64_t)random () * random ()) & max_char;
       if (!buf[align + i])
 	buf[align + i] = 1;
       if ((i > pos || pos >= len) && buf[align + i] == seek_char)
