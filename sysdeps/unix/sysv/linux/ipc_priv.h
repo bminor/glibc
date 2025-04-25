@@ -59,6 +59,9 @@ struct __old_ipc_perm
 #if (__WORDSIZE == 32 \
      && (!defined __SYSCALL_WORDSIZE || __SYSCALL_WORDSIZE == 32))
 # define __IPC_TIME64 1
+/* Left-shift using unsigned int, since __time64_t is signed.  */
+# define IPC_HILO(__buf, __member) \
+  ((__buf)->__member | (0ULL + (__buf)->__##__member##_high) << 32)
 #else
 # define __IPC_TIME64 0
 #endif

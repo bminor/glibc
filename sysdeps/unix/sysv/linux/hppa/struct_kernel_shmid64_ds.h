@@ -2,11 +2,11 @@
 struct kernel_shmid64_ds
 {
   struct ipc_perm shm_perm;		/* operation permission struct */
-  unsigned long int shm_atime_high;
+  unsigned long int __shm_atime_high;
   unsigned long int shm_atime;		/* time of last shmat() */
-  unsigned long int shm_dtime_high;
+  unsigned long int __shm_dtime_high;
   unsigned long int shm_dtime;		/* time of last shmdt() */
-  unsigned long int shm_ctime_high;
+  unsigned long int __shm_ctime_high;
   unsigned long int shm_ctime;		/* time of last change by shmctl() */
   unsigned long int __pad;
   size_t shm_segsz;			/* size of segment in bytes */

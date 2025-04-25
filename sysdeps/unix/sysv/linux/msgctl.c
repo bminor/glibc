@@ -172,12 +172,9 @@ static void
 msqid_to_msqid64 (struct __msqid64_ds *mq64, const struct msqid_ds *mq)
 {
   mq64->msg_perm   = mq->msg_perm;
-  mq64->msg_stime  = mq->msg_stime
-		     | ((__time64_t) mq->__msg_stime_high << 32);
-  mq64->msg_rtime  = mq->msg_rtime
-		     | ((__time64_t) mq->__msg_rtime_high << 32);
-  mq64->msg_ctime  = mq->msg_ctime
-		     | ((__time64_t) mq->__msg_ctime_high << 32);
+  mq64->msg_stime  = IPC_HILO (mq, msg_stime);
+  mq64->msg_rtime  = IPC_HILO (mq, msg_rtime);
+  mq64->msg_ctime  = IPC_HILO (mq, msg_ctime);
   mq64->msg_cbytes = mq->msg_cbytes;
   mq64->msg_qnum   = mq->msg_qnum;
   mq64->msg_qbytes = mq->msg_qbytes;

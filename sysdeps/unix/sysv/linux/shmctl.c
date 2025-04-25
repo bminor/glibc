@@ -40,11 +40,11 @@ shmid64_to_kshmid64 (const struct __shmid64_ds *shmid64,
   kshmid->shm_perm       = shmid64->shm_perm;
   kshmid->shm_segsz      = shmid64->shm_segsz;
   kshmid->shm_atime      = shmid64->shm_atime;
-  kshmid->shm_atime_high = shmid64->shm_atime >> 32;
+  kshmid->__shm_atime_high = shmid64->shm_atime >> 32;
   kshmid->shm_dtime      = shmid64->shm_dtime;
-  kshmid->shm_dtime_high = shmid64->shm_dtime >> 32;
+  kshmid->__shm_dtime_high = shmid64->shm_dtime >> 32;
   kshmid->shm_ctime      = shmid64->shm_ctime;
-  kshmid->shm_ctime_high = shmid64->shm_ctime >> 32;
+  kshmid->__shm_ctime_high = shmid64->shm_ctime >> 32;
   kshmid->shm_cpid       = shmid64->shm_cpid;
   kshmid->shm_lpid       = shmid64->shm_lpid;
   kshmid->shm_nattch     = shmid64->shm_nattch;
@@ -56,12 +56,9 @@ kshmid64_to_shmid64 (const struct kernel_shmid64_ds *kshmid,
 {
   shmid64->shm_perm   = kshmid->shm_perm;
   shmid64->shm_segsz  = kshmid->shm_segsz;
-  shmid64->shm_atime  = kshmid->shm_atime
-		        | ((__time64_t) kshmid->shm_atime_high << 32);
-  shmid64->shm_dtime  = kshmid->shm_dtime
-		        | ((__time64_t) kshmid->shm_dtime_high << 32);
-  shmid64->shm_ctime  = kshmid->shm_ctime
-		        | ((__time64_t) kshmid->shm_ctime_high << 32);
+  shmid64->shm_atime  = IPC_HILO (kshmid, shm_atime);
+  shmid64->shm_dtime  = IPC_HILO (kshmid, shm_dtime);
+  shmid64->shm_ctime  = IPC_HILO (kshmid, shm_ctime);
   shmid64->shm_cpid   = kshmid->shm_cpid;
   shmid64->shm_lpid   = kshmid->shm_lpid;
   shmid64->shm_nattch = kshmid->shm_nattch;
@@ -176,12 +173,9 @@ shmid_to_shmid64 (struct __shmid64_ds *shm64, const struct shmid_ds *shm)
 {
   shm64->shm_perm   = shm->shm_perm;
   shm64->shm_segsz  = shm->shm_segsz;
-  shm64->shm_atime  = shm->shm_atime
-		      | ((__time64_t) shm->__shm_atime_high << 32);
-  shm64->shm_dtime  = shm->shm_dtime
-		      | ((__time64_t) shm->__shm_dtime_high << 32);
-  shm64->shm_ctime  = shm->shm_ctime
-		      | ((__time64_t) shm->__shm_ctime_high << 32);
+  shm64->shm_atime  = IPC_HILO (shm, shm_atime);
+  shm64->shm_dtime  = IPC_HILO (shm, shm_dtime);
+  shm64->shm_ctime  = IPC_HILO (shm, shm_ctime);
   shm64->shm_cpid   = shm->shm_cpid;
   shm64->shm_lpid   = shm->shm_lpid;
   shm64->shm_nattch = shm->shm_nattch;

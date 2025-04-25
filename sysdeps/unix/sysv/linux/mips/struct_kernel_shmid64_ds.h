@@ -19,9 +19,9 @@ struct kernel_shmid64_ds
   unsigned long int __unused1;
   unsigned long int __unused2;
 #else
-  unsigned short int shm_atime_high;
-  unsigned short int shm_dtime_high;
-  unsigned short int shm_ctime_high;
+  unsigned short int __shm_atime_high;
+  unsigned short int __shm_dtime_high;
+  unsigned short int __shm_ctime_high;
   unsigned short int __ununsed1;
 #endif
 };

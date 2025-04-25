@@ -222,10 +222,8 @@ static void
 semid_to_semid64 (struct __semid64_ds *ds64, const struct semid_ds *ds)
 {
   ds64->sem_perm  = ds->sem_perm;
-  ds64->sem_otime = ds->sem_otime
-		    | ((__time64_t) ds->__sem_otime_high << 32);
-  ds64->sem_ctime = ds->sem_ctime
-		    | ((__time64_t) ds->__sem_ctime_high << 32);
+  ds64->sem_otime = IPC_HILO (ds, sem_otime);
+  ds64->sem_ctime = IPC_HILO (ds, sem_ctime);
   ds64->sem_nsems = ds->sem_nsems;
 }
 
