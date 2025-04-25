@@ -493,7 +493,7 @@ bench-set: $(binaries-benchset)
 bench-malloc: $(binaries-bench-malloc)
 	for run in $^; do \
 	  echo "$${run}"; \
-	  if [[ `basename $${run}` =~ bench-[cm]alloc-thread ]]; then \
+	  if basename $${run} | grep -q "bench-[cm]alloc-thread"; then \
 		for thr in 1 8 16 32; do \
 			echo "Running $${run} $${thr}"; \
 			$(run-bench) $${thr} > $${run}-$${thr}.out; \
