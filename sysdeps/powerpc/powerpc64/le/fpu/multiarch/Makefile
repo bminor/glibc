@@ -90,7 +90,7 @@ gen-libm-f128-ifunc-routines = \
 	e_acosf128 e_acoshf128 e_asinf128 e_atan2f128 e_atanhf128 e_coshf128 \
 	e_expf128 e_fmodf128 e_hypotf128 e_j0f128 e_j1f128 e_jnf128 \
 	e_lgammaf128_r e_logf128 e_log10f128 e_powf128 e_remainderf128 \
-	e_sinhf128 e_sqrtf128 e_gammaf128_r e_ilogbf128 k_tanf128 s_asinhf128 \
+	e_sinhf128 e_sqrtf128 e_gammaf128_r k_tanf128 s_asinhf128 \
 	s_atanf128 s_cbrtf128 s_ceilf128 s_cosf128 s_erff128 s_exp10m1f128 \
 	s_exp2m1f128 s_expm1f128 \
 	s_fabsf128 s_floorf128 s_log1pf128 s_logbf128 \
