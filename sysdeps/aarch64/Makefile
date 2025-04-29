@@ -75,7 +75,9 @@ sysdep_routines += \
   __alloc_gcs
 
 tests += \
-  tst-sme-jmp
+  tst-sme-jmp \
+  tst-sme-za-state \
+  # tests
 endif
 
 ifeq ($(subdir),malloc)
