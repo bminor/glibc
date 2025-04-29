@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <math-barriers.h>
 #include "math_config.h"
 
 #if WANT_ERRNO
@@ -27,8 +28,24 @@ with_errnof (float y, int e)
   errno = e;
   return y;
 }
+
+NOINLINE static int
+with_errnof_i (int y, int e)
+{
+  errno = e;
+  return y;
+}
+
+NOINLINE static long int
+with_errnof_li (long int y, int e)
+{
+  errno = e;
+  return y;
+}
 #else
 # define with_errnof(x, e) (x)
+# define with_errnof_i(x, x) (x)
+# define with_errnof_li(x, x) (x)
 #endif
 
 attribute_hidden float
@@ -79,4 +96,20 @@ __math_invalidf (float x)
 {
   float y = (x - x) / (x - x);
   return isnan (x) ? y : with_errnof (y, EDOM);
+}
+
+attribute_hidden int
+__math_invalidf_i (int x)
+{
+  float y = 0.0f / 0.0f;
+  math_force_eval (y);
+  return with_errnof_i (x, EDOM);
+}
+
+attribute_hidden long int
+__math_invalidf_li (long int x)
+{
+  float y = 0.0f / 0.0f;
+  math_force_eval (y);
+  return with_errnof_li (x, EDOM);
 }
