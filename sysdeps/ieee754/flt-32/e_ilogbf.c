@@ -1,43 +1,41 @@
-/* s_ilogbf.c -- float version of s_ilogb.c.
- */
+/* Get integer exponent of a floating-point value.
+   Copyright (C) 1999-2025 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: s_ilogbf.c,v 1.4 1995/05/10 20:47:31 jtc Exp $";
-#endif
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
 
 #include <limits.h>
 #include <math.h>
-#include <math_private.h>
+#include <stdbit.h>
+#include "math_config.h"
 
-int __ieee754_ilogbf(float x)
+int
+__ieee754_ilogbf (float x)
 {
-	int32_t hx,ix;
-
-	GET_FLOAT_WORD(hx,x);
-	hx &= 0x7fffffff;
-	if(hx<0x00800000) {
-	    if(hx==0)
-		return FP_ILOGB0;	/* ilogb(0) = FP_ILOGB0 */
-	    else			/* subnormal x */
-	        for (ix = -126,hx<<=8; hx>0; hx<<=1) ix -=1;
-	    return ix;
-	}
-	else if (hx<0x7f800000) return (hx>>23)-127;
-	else if (FP_ILOGBNAN != INT_MAX) {
-	    /* ISO C99 requires ilogbf(+-Inf) == INT_MAX.  */
-	    if (hx==0x7f800000)
-		return INT_MAX;
-	}
-	return FP_ILOGBNAN;
+  uint32_t ux = asuint (x);
+  int ex = (ux & ~SIGN_MASK) >> MANTISSA_WIDTH;
+  if (ex == 0) /* zero or subnormal */
+    {
+      /* Clear sign and exponent.  */
+      ux <<= 1 + EXPONENT_WIDTH;
+      if (ux == 0)
+	return FP_ILOGB0;
+      /* sbunormal */
+      return -127 - stdc_leading_zeros (ux);
+    }
+  if (ex == EXPONENT_MASK >> MANTISSA_WIDTH) /* NaN or Inf */
+    return ux << (1 + EXPONENT_WIDTH) ? FP_ILOGBNAN : INT_MAX;
+  return ex - 127;
 }
