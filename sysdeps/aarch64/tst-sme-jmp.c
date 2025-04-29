@@ -27,86 +27,11 @@
 #include <support/support.h>
 #include <support/test-driver.h>
 
-struct blk {
-  void *za_save_buffer;
-  uint16_t num_za_save_slices;
-  char __reserved[6];
-};
+#include "tst-sme-helper.h"
 
-static unsigned long svl;
 static uint8_t *za_orig;
 static uint8_t *za_dump;
 static uint8_t *za_save;
-
-static unsigned long
-get_svl (void)
-{
-  register unsigned long x0 asm ("x0");
-  asm volatile (
-    ".inst   0x04bf5820  /* rdsvl   x0, 1  */\n"
-    : "=r" (x0));
-  return x0;
-}
-
-/* PSTATE.ZA = 1, set ZA state to active.  */
-static void
-start_za (void)
-{
-  asm volatile (
-    ".inst   0xd503457f  /* smstart za  */");
-}
-
-/* Read SVCR to get SM (bit0) and ZA (bit1) state.  */
-static unsigned long
-get_svcr (void)
-{
-  register unsigned long x0 asm ("x0");
-  asm volatile (
-    ".inst   0xd53b4240  /* mrs     x0, svcr  */\n"
-    : "=r" (x0));
-  return x0;
-}
-
-/* Load data into ZA byte by byte from p.  */
-static void __attribute__ ((noinline))
-load_za (const void *p)
-{
-  register unsigned long x15 asm ("x15") = 0;
-  register unsigned long x16 asm ("x16") = (unsigned long)p;
-  register unsigned long x17 asm ("x17") = svl;
-
-  asm volatile (
-    ".inst   0xd503437f  /* smstart sm  */\n"
-    ".L_ldr_loop:\n"
-    ".inst   0xe1006200  /* ldr     za[w15, 0], [x16]  */\n"
-    "add     w15, w15, 1\n"
-    ".inst   0x04305030  /* addvl   x16, x16, 1  */\n"
-    "cmp     w15, w17\n"
-    "bne     .L_ldr_loop\n"
-    ".inst   0xd503427f  /* smstop  sm  */\n"
-    : "+r"(x15), "+r"(x16), "+r"(x17));
-}
-
-/* Set tpidr2 to BLK.  */
-static void
-set_tpidr2 (struct blk *blk)
-{
-  register unsigned long x0 asm ("x0") = (unsigned long)blk;
-  asm volatile (
-    ".inst   0xd51bd0a0  /* msr     tpidr2_el0, x0  */\n"
-    :: "r"(x0) : "memory");
-}
-
-/* Returns tpidr2.  */
-static void *
-get_tpidr2 (void)
-{
-  register unsigned long x0 asm ("x0");
-  asm volatile (
-    ".inst   0xd53bd0a0  /* mrs     x0, tpidr2_el0  */\n"
-    : "=r"(x0) :: "memory");
-  return (void *) x0;
-}
 
 static void
 print_data(const char *msg, void *p)
@@ -168,8 +93,8 @@ longjmp_test (void)
     {
       p = get_tpidr2 ();
       printf ("before longjmp: tp2 = %p\n", p);
-      if (p != &blk)
-	FAIL_EXIT1 ("tpidr2 is clobbered");
+      if (p != NULL)
+	FAIL_EXIT1 ("tpidr2 has not been reset to null");
       do_longjmp (env);
       FAIL_EXIT1 ("longjmp returned");
     }
