@@ -27,7 +27,7 @@
 
 #define S390_COPY_CPU_FEATURES(SRC_PTR, DEST_PTR)	\
   (DEST_PTR)->hwcap = (SRC_PTR)->hwcap;			\
-  (DEST_PTR)->stfle_bits[0] = (SRC_PTR)->stfle_bits[0];
+  (DEST_PTR)->stfle_filtered = (SRC_PTR)->stfle_filtered;
 
 static void
 TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
@@ -77,7 +77,7 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
 	  disable = true;
 	  hwcap_mask = HWCAP_S390_VXRS | HWCAP_S390_VXRS_EXT
 	    | HWCAP_S390_VXRS_EXT2;
-	  stfle_bits0_mask = S390_STFLE_MASK_ARCH13_MIE3;
+	  stfle_bits0_mask = S390_STFLE_BIT61_ARCH13_MIE3;
 	}
       else if (tunable_str_comma_strcmp_cte (&t, "z13")
 	       || tunable_str_comma_strcmp_cte (&t, "arch11"))
@@ -85,7 +85,7 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
 	  reset_features = true;
 	  disable = true;
 	  hwcap_mask = HWCAP_S390_VXRS_EXT | HWCAP_S390_VXRS_EXT2;
-	  stfle_bits0_mask = S390_STFLE_MASK_ARCH13_MIE3;
+	  stfle_bits0_mask = S390_STFLE_BIT61_ARCH13_MIE3;
 	}
       else if (tunable_str_comma_strcmp_cte (&t, "z14")
 	       || tunable_str_comma_strcmp_cte (&t, "arch12"))
@@ -93,12 +93,14 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
 	  reset_features = true;
 	  disable = true;
 	  hwcap_mask = HWCAP_S390_VXRS_EXT2;
-	  stfle_bits0_mask = S390_STFLE_MASK_ARCH13_MIE3;
+	  stfle_bits0_mask = S390_STFLE_BIT61_ARCH13_MIE3;
 	}
       else if (tunable_str_comma_strcmp_cte (&t, "z15")
 	       || tunable_str_comma_strcmp_cte (&t, "z16")
+	       || tunable_str_comma_strcmp_cte (&t, "z17")
 	       || tunable_str_comma_strcmp_cte (&t, "arch13")
-	       || tunable_str_comma_strcmp_cte (&t, "arch14"))
+	       || tunable_str_comma_strcmp_cte (&t, "arch14")
+	       || tunable_str_comma_strcmp_cte (&t, "arch15"))
 	{
 	  /* For z15 or newer we don't have to disable something, but we have
 	     to reset to the original values.  */
@@ -125,7 +127,7 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
 	    hwcap_mask |= HWCAP_S390_VXRS | HWCAP_S390_VXRS_EXT;
 	}
       else if (tunable_str_comma_strcmp_cte (&t, "STFLE_MIE3"))
-	stfle_bits0_mask = S390_STFLE_MASK_ARCH13_MIE3;
+	stfle_bits0_mask = S390_STFLE_BIT61_ARCH13_MIE3;
 
       /* Perform the actions determined above.  */
       if (reset_features)
@@ -144,22 +146,26 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
       if (stfle_bits0_mask != 0ULL)
 	{
 	  if (disable)
-	    cpu_features_curr.stfle_bits[0] &= ~stfle_bits0_mask;
+	    cpu_features_curr.stfle_filtered &= ~stfle_bits0_mask;
 	  else
-	    cpu_features_curr.stfle_bits[0] |= stfle_bits0_mask;
+	    cpu_features_curr.stfle_filtered |= stfle_bits0_mask;
 	}
     }
 
   /* Copy back the features after checking that no unsupported features were
      enabled by user.  */
   cpu_features->hwcap = cpu_features_curr.hwcap & cpu_features_orig.hwcap;
-  cpu_features->stfle_bits[0] = cpu_features_curr.stfle_bits[0]
-    & cpu_features_orig.stfle_bits[0];
+  cpu_features->stfle_filtered = cpu_features_curr.stfle_filtered
+    & cpu_features_orig.stfle_filtered;
 }
 
 static inline void
-init_cpu_features (struct cpu_features *cpu_features)
+init_cpu_features_no_tunables (struct cpu_features *cpu_features)
 {
+  /* Only initialize once.  */
+  if (cpu_features->hwcap != 0)
+    return;
+
   /* Fill cpu_features as passed by kernel and machine.  */
   cpu_features->hwcap = GLRO(dl_hwcap);
 
@@ -168,20 +174,57 @@ init_cpu_features (struct cpu_features *cpu_features)
 		      && (cpu_features->hwcap & HWCAP_S390_ZARCH)
 		      && (cpu_features->hwcap & HWCAP_S390_HIGH_GPRS)))
     {
-      register unsigned long reg0 __asm__("0") = 0;
+      unsigned long long stfle_bits[4] = { 0 };
+      register unsigned long reg0 __asm__("0") = 3;
       __asm__ __volatile__(".machine push"        "\n\t"
 			   ".machine \"z9-109\""  "\n\t"
 			   ".machinemode \"zarch_nohighgprs\"\n\t"
 			   "stfle %0"             "\n\t"
 			   ".machine pop"         "\n"
-			   : "=QS" (cpu_features->stfle_bits[0]),
+			   : "=QS" (stfle_bits[0]),
 			     "+d" (reg0)
 			   : : "cc");
+
+      unsigned long long internal_stfle_bits = 0;
+
+      /* Facility bit 34: z10: General instructions extension.  */
+      if ((stfle_bits[0] & (1ULL << (63 - 34))) != 0)
+	internal_stfle_bits |= S390_STFLE_BIT34_Z10;
+
+      /* Facility bit 45: z196: Distinct operands, popcount, ...  */
+      if ((stfle_bits[0] & (1ULL << (63 - 45))) != 0)
+	internal_stfle_bits |= S390_STFLE_BIT45_Z196;
+
+      /* Facility bit 61: arch13/z15: Miscellaneous-Instruction-Extensions
+	 Facility 3, e.g. mvcrl.  */
+      if ((stfle_bits[0] & (1ULL << (63 - 61))) != 0)
+	internal_stfle_bits |= S390_STFLE_BIT61_ARCH13_MIE3;
+
+      /* Facility bit 84: arch15/z17: Miscellaneous-instruction-extensions 4  */
+      if ((stfle_bits[1] & (1ULL << (127 - 84))) != 0)
+	internal_stfle_bits |= S390_STFLE_BIT84_ARCH15_MIE4;
+
+      /* Facility bit 198: arch15/z17: Vector-enhancements-facility 3  */
+      if ((stfle_bits[3] & (1ULL << (255 - 198))) != 0)
+	internal_stfle_bits |= S390_STFLE_BIT198_ARCH15_VXRS_EXT3;
+
+      /* Facility bit 199: arch15/z17: Vector-Packed-Decimal-Enhancement 3  */
+      if ((stfle_bits[3] & (1ULL << (255 - 199))) != 0)
+	internal_stfle_bits |= S390_STFLE_BIT199_ARCH15_VXRS_PDE3;
+
+      /* Facility bit 201: arch15/z17: CPU: Concurrent-Functions Facility  */
+      if ((stfle_bits[3] & (1ULL << (255 - 201))) != 0)
+	internal_stfle_bits |= S390_STFLE_BIT201_ARCH15_CON;
+
+      cpu_features->stfle_orig = internal_stfle_bits;
+      cpu_features->stfle_filtered = internal_stfle_bits;
     }
-  else
-    {
-      cpu_features->stfle_bits[0] = 0ULL;
-    }
+}
+
+static inline void
+init_cpu_features (struct cpu_features *cpu_features)
+{
+  init_cpu_features_no_tunables (cpu_features);
 
   TUNABLE_GET (glibc, cpu, hwcaps, tunable_val_t *, TUNABLE_CALLBACK (set_hwcaps));
 }

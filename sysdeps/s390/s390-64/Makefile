@@ -11,7 +11,8 @@ $(objpfx)tst-glibc-hwcaps: \
   $(objpfx)libmarkermod2-1.so \
   $(objpfx)libmarkermod3-1.so \
   $(objpfx)libmarkermod4-1.so \
-  $(objpfx)libmarkermod5-1.so
+  $(objpfx)libmarkermod5-1.so \
+  $(objpfx)libmarkermod6-1.so
 $(objpfx)tst-glibc-hwcaps.out: \
   $(objpfx)libmarkermod2.so \
     $(objpfx)glibc-hwcaps/z13/libmarkermod2.so \
@@ -26,7 +27,14 @@ $(objpfx)tst-glibc-hwcaps.out: \
     $(objpfx)glibc-hwcaps/z13/libmarkermod5.so \
     $(objpfx)glibc-hwcaps/z14/libmarkermod5.so \
     $(objpfx)glibc-hwcaps/z15/libmarkermod5.so \
-    $(objpfx)glibc-hwcaps/z16/libmarkermod5.so
+    $(objpfx)glibc-hwcaps/z16/libmarkermod5.so \
+  $(objpfx)libmarkermod6.so \
+    $(objpfx)glibc-hwcaps/z13/libmarkermod6.so \
+    $(objpfx)glibc-hwcaps/z14/libmarkermod6.so \
+    $(objpfx)glibc-hwcaps/z15/libmarkermod6.so \
+    $(objpfx)glibc-hwcaps/z16/libmarkermod6.so \
+    $(objpfx)glibc-hwcaps/z17/libmarkermod6.so
+
 
 $(objpfx)glibc-hwcaps/z13/libmarkermod2.so: $(objpfx)libmarkermod2-2.so
 	$(make-target-directory)
@@ -56,6 +64,21 @@ $(objpfx)glibc-hwcaps/z15/libmarkermod5.so: $(objpfx)libmarkermod5-4.so
 	$(make-target-directory)
 	cp $< $@
 $(objpfx)glibc-hwcaps/z16/libmarkermod5.so: $(objpfx)libmarkermod5-5.so
+	$(make-target-directory)
+	cp $< $@
+$(objpfx)glibc-hwcaps/z13/libmarkermod6.so: $(objpfx)libmarkermod6-2.so
+	$(make-target-directory)
+	cp $< $@
+$(objpfx)glibc-hwcaps/z14/libmarkermod6.so: $(objpfx)libmarkermod6-3.so
+	$(make-target-directory)
+	cp $< $@
+$(objpfx)glibc-hwcaps/z15/libmarkermod6.so: $(objpfx)libmarkermod6-4.so
+	$(make-target-directory)
+	cp $< $@
+$(objpfx)glibc-hwcaps/z16/libmarkermod6.so: $(objpfx)libmarkermod6-5.so
+	$(make-target-directory)
+	cp $< $@
+$(objpfx)glibc-hwcaps/z17/libmarkermod6.so: $(objpfx)libmarkermod6-6.so
 	$(make-target-directory)
 	cp $< $@
 

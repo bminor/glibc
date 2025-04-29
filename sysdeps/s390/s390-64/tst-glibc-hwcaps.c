@@ -26,35 +26,53 @@ extern int marker2 (void);
 extern int marker3 (void);
 extern int marker4 (void);
 extern int marker5 (void);
+extern int marker6 (void);
 
 /* Return the arch level, 10 for the baseline libmarkermod*.so's.  */
 static int
 compute_level (void)
 {
   const char *platform = (const char *) getauxval (AT_PLATFORM);
+  const unsigned long int hwcap = getauxval (AT_HWCAP);
+  const int latest_level = 15;
 
   /* The arch* versions refer to the edition of the Principles of
      Operation, and they are off by two when compared with the recent
      product names.  (The code below should not be considered an
      accurate mapping to Principles of Operation editions for earlier
      AT_PLATFORM strings).  */
-  if (strcmp (platform, "z900") == 0)
-    return 10;
-  if (strcmp (platform, "z990") == 0)
-    return 10;
-  if (strcmp (platform, "z9-109") == 0)
-    return 10;
-  if (strcmp (platform, "z10") == 0)
-    return 10;
-  if (strcmp (platform, "z196") == 0)
-    return 10;
-  if (strcmp (platform, "zEC12") == 0)
-    return 10;
+  if ((strcmp (platform, "z900") == 0)
+      || (strcmp (platform, "z990") == 0)
+      || (strcmp (platform, "z9-109") == 0)
+      || (strcmp (platform, "z10") == 0)
+      || (strcmp (platform, "z196") == 0)
+      || (strcmp (platform, "zEC12") == 0))
+    {
+      if ((hwcap & HWCAP_S390_VX) == 0)
+	{
+	  /* As vector-support was introduced with the newer z13
+	     architecture, we are really on one of the tested older
+	     architectures.  */
+	  return 10;
+	}
+      else
+	{
+	  /* According to AT_PLATFORM we are on an older architecture
+	     without vector-support, but according to HWCAPs vector
+	     registers are supported.  This means we are running on a
+	     new architecture which is not yet known by the kernel.
+	     Thus the default AT_PLATFORM string is used, which is the
+	     oldest supported one.  For this test, assume we are on
+	     the latest known architecture.  See
+	     <kernel>/arch/s390/kernel/processor.c:setup_elf_platform().
+	  */
+	  return latest_level;
+	}
+    }
 
   /* If we are running on z13 or newer and the kernel was booted with novx,
      then AT_PLATFORM is z13 or newer, but _dl_hwcaps_subdirs_active will
      return zero and the _dl_hwcaps_subdirs are not searched.  */
-  const unsigned long int hwcap = getauxval (AT_HWCAP);
   if ((hwcap & HWCAP_S390_VX) == 0)
     return 10;
 
@@ -66,9 +84,12 @@ compute_level (void)
     return 13;
   if (strcmp (platform, "z16") == 0)
     return 14;
+  if (strcmp (platform, "z17") == 0)
+    return latest_level;
+
   printf ("warning: unrecognized AT_PLATFORM value: %s\n", platform);
-  /* Assume that the new platform supports z16.  */
-  return 14;
+  /* Assume that the new platform supports the latest known architecture.  */
+  return latest_level;
 }
 
 static int
@@ -80,6 +101,7 @@ do_test (void)
   TEST_COMPARE (marker3 (), MIN (level - 9, 3));
   TEST_COMPARE (marker4 (), MIN (level - 9, 4));
   TEST_COMPARE (marker5 (), MIN (level - 9, 5));
+  TEST_COMPARE (marker6 (), MIN (level - 9, 6));
   return 0;
 }
 

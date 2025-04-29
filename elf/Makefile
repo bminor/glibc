@@ -768,6 +768,12 @@ modules-names += \
   libmarkermod5-3 \
   libmarkermod5-4 \
   libmarkermod5-5 \
+  libmarkermod6-1 \
+  libmarkermod6-2 \
+  libmarkermod6-3 \
+  libmarkermod6-4 \
+  libmarkermod6-5 \
+  libmarkermod6-6 \
   liborigin-mod \
   libtracemod1-1 \
   libtracemod2-1 \
@@ -2866,6 +2872,7 @@ LDFLAGS-libmarkermod2-1.so += -Wl,-soname,libmarkermod2.so
 LDFLAGS-libmarkermod3-1.so += -Wl,-soname,libmarkermod3.so
 LDFLAGS-libmarkermod4-1.so += -Wl,-soname,libmarkermod4.so
 LDFLAGS-libmarkermod5-1.so += -Wl,-soname,libmarkermod5.so
+LDFLAGS-libmarkermod6-1.so += -Wl,-soname,libmarkermod6.so
 $(objpfx)libmarkermod%.os : markermodMARKER-VALUE.c
 	$(compile-command.c) \
 	  -DMARKER=marker$(firstword $(subst -, ,$*)) \
@@ -2879,6 +2886,8 @@ $(objpfx)libmarkermod3.so: $(objpfx)libmarkermod3-1.so
 $(objpfx)libmarkermod4.so: $(objpfx)libmarkermod4-1.so
 	cp $< $@
 $(objpfx)libmarkermod5.so: $(objpfx)libmarkermod5-1.so
+	cp $< $@
+$(objpfx)libmarkermod6.so: $(objpfx)libmarkermod6-1.so
 	cp $< $@
 
 # tst-glibc-hwcaps-prepend checks that --glibc-hwcaps-prepend is

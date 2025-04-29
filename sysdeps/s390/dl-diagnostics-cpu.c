@@ -1,6 +1,5 @@
-/* IFUNC resolver function for CPU specific functions.
-   32/64 bit S/390 version.
-   Copyright (C) 2015-2025 Free Software Foundation, Inc.
+/* Print CPU diagnostics data in ld.so.  s390 version.
+   Copyright (C) 2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,20 +16,22 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <unistd.h>
-#include <cpu-features.h>
+#include <dl-diagnostics.h>
 #include <ldsodefs.h>
-#include <sys/auxv.h>
+#include <cpu-features.h>
 
-#define s390_libc_ifunc_expr_stfle_init()				\
-  const unsigned long long stfle_bits = features->stfle_filtered;
+static void
+print_cpu_features_value (const char *label, uint64_t value)
+{
+  _dl_printf ("s390.cpu_features.");
+  _dl_diagnostics_print_labeled_value (label, value);
+}
 
-#define s390_libc_ifunc_expr_init()					\
-  const struct cpu_features *features = &GLRO(dl_s390_cpu_features);	\
-  /* The hwcap from kernel is passed as argument, but we		\
-     explicitly use the hwcaps from cpu-features struct.   */		\
-  hwcap = features->hwcap;
-
-#define s390_libc_ifunc_expr(TYPE_FUNC, FUNC, EXPR)		\
-  __ifunc (TYPE_FUNC, FUNC, EXPR, unsigned long int hwcap,	\
-	   s390_libc_ifunc_expr_init);
+void
+_dl_diagnostics_cpu (void)
+{
+  const struct cpu_features *cpu_features = &GLRO(dl_s390_cpu_features);
+  print_cpu_features_value ("hwcap", cpu_features->hwcap);
+  print_cpu_features_value ("stfle_orig", cpu_features->stfle_orig);
+  print_cpu_features_value ("stfle_filtered", cpu_features->stfle_filtered);
+}
