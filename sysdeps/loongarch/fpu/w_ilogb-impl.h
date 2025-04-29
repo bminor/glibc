@@ -1,4 +1,4 @@
-/* __ieee754_ilogb().  LoongArch version.
+/* Get integer exponent of a floating-point value.  LoongArch version.
    Copyright (C) 2022-2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,20 +16,18 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define NO_MATH_REDIRECT
-#include <math.h>
 #include <fpu_control.h>
 
-int
-__ieee754_ilogb (double x)
+static inline RET_TYPE
+IMPL_NAME (double x)
 {
   int x_cond;
   asm volatile ("fclass.d \t%0, %1" : "=f" (x_cond) : "f" (x));
 
   if (__glibc_unlikely (x_cond & _FCLASS_ZERO))
-      return FP_ILOGB0;
+    return RET_INVALID (RET_LOGB0);
   else if (__glibc_unlikely (x_cond & ( _FCLASS_NAN | _FCLASS_INF)))
-      return FP_ILOGBNAN;
+    return RET_INVALID (RET_LOGBNAN);
   else
     {
       asm volatile ("fabs.d \t%0, %1" : "=f" (x) : "f" (x));

@@ -164,6 +164,8 @@ attribute_hidden double __math_divzero (uint32_t);
 
 /* Invalid input unless it is a quiet NaN.  */
 attribute_hidden double __math_invalid (double);
+attribute_hidden int __math_invalid_i (int);
+attribute_hidden long int __math_invalid_li (long int);
 
 /* Error handling using output checking, only for errno setting.  */
 
