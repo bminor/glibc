@@ -74,7 +74,9 @@ sysdep_routines += \
   __arm_za_disable
 
 tests += \
-  tst-sme-jmp
+  tst-sme-jmp \
+  tst-sme-za-state \
+  # tests
 endif
 
 ifeq ($(subdir),malloc)
