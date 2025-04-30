@@ -110,6 +110,6 @@ LEAF (__start_context)
 	mv	a0, s2
 	beqz	s2, 1f
 	jal	HIDDEN_JUMPTARGET (__setcontext)
-1:	j	HIDDEN_JUMPTARGET (exit)
+1:	call	HIDDEN_JUMPTARGET (exit)
 
 END (__start_context)
