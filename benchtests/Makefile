@@ -63,6 +63,7 @@ bench-math := \
   exp2f \
   exp2m1f \
   expf \
+  expl \
   expm1 \
   expm1f \
   floor \
