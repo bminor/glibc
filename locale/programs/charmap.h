@@ -62,6 +62,13 @@ struct charseq
   unsigned char bytes[];
 };
 
+static inline bool
+__attribute_disable_ubsan__
+check_illegal_range (const char *cp, const char *from, size_t len1,
+		     const char *to, size_t prefix_len)
+{
+  return cp == &from[len1 - 1] || strncmp (from, to, prefix_len) != 0;
+}
 
 /* True if the encoding is not ASCII compatible.  */
 extern bool enc_not_ascii_compatible;

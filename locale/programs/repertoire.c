@@ -433,7 +433,7 @@ hexadecimal range format should use only capital characters"));
 
   prefix_len = (cp - from) + 1;
 
-  if (cp == &from[len1 - 1] || strncmp (from, to, prefix_len) != 0)
+  if (check_illegal_range (cp, from, len1, to, prefix_len))
     goto invalid_range;
 
   errno = 0;
