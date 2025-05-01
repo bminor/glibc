@@ -24,6 +24,7 @@
 #include <pthread_early_init.h>
 #include <sys/single_threaded.h>
 #include <getrandom-internal.h>
+#include <malloc/malloc-internal.h>
 
 #ifdef SHARED
 _Bool __libc_initial;
@@ -32,6 +33,9 @@ _Bool __libc_initial;
 void
 __libc_early_init (_Bool initial)
 {
+  /* Initialize system malloc.  */
+  call_function_static_weak (__ptmalloc_init);
+
   /* Initialize ctype data.  */
   __ctype_init ();
 

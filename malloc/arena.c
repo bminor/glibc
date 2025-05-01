@@ -113,9 +113,6 @@ static mstate free_list;
    acquired.  */
 __libc_lock_define_initialized (static, list_lock);
 
-/* Already initialized? */
-static bool __malloc_initialized = false;
-
 /**************************************************************************/
 
 
@@ -168,9 +165,6 @@ arena_for_chunk (mchunkptr ptr)
 void
 __malloc_fork_lock_parent (void)
 {
-  if (!__malloc_initialized)
-    return;
-
   /* We do not acquire free_list_lock here because we completely
      reconstruct free_list in __malloc_fork_unlock_child.  */
 
@@ -188,9 +182,6 @@ __malloc_fork_lock_parent (void)
 void
 __malloc_fork_unlock_parent (void)
 {
-  if (!__malloc_initialized)
-    return;
-
   for (mstate ar_ptr = &main_arena;; )
     {
       __libc_lock_unlock (ar_ptr->mutex);
@@ -204,9 +195,6 @@ __malloc_fork_unlock_parent (void)
 void
 __malloc_fork_unlock_child (void)
 {
-  if (!__malloc_initialized)
-    return;
-
   /* Push all arenas to the free list, except thread_arena, which is
      attached to the current thread.  */
   __libc_lock_init (free_list_lock);
@@ -259,14 +247,9 @@ TUNABLE_CALLBACK_FNDECL (set_hugetlb, size_t)
 static void tcache_key_initialize (void);
 #endif
 
-static void
-ptmalloc_init (void)
+void
+__ptmalloc_init (void)
 {
-  if (__malloc_initialized)
-    return;
-
-  __malloc_initialized = true;
-
 #if USE_TCACHE
   tcache_key_initialize ();
 #endif

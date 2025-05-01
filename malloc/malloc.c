@@ -1937,7 +1937,7 @@ static struct malloc_par mp_ =
 /*
    Initialize a malloc_state struct.
 
-   This is called from ptmalloc_init () or from _int_new_arena ()
+   This is called from __ptmalloc_init () or from _int_new_arena ()
    when creating a new arena.
  */
 
@@ -3347,9 +3347,6 @@ __libc_malloc2 (size_t bytes)
   mstate ar_ptr;
   void *victim;
 
-  if (!__malloc_initialized)
-    ptmalloc_init ();
-
   MAYBE_INIT_TCACHE ();
 
   if (SINGLE_THREAD_P)
@@ -3454,9 +3451,6 @@ __libc_realloc (void *oldmem, size_t bytes)
   INTERNAL_SIZE_T nb;         /* padded request size */
 
   void *newp;             /* chunk to return */
-
-  if (!__malloc_initialized)
-    ptmalloc_init ();
 
 #if REALLOC_ZERO_BYTES_FREES
   if (bytes == 0 && oldmem != NULL)
@@ -3583,9 +3577,6 @@ libc_hidden_def (__libc_realloc)
 void *
 __libc_memalign (size_t alignment, size_t bytes)
 {
-  if (!__malloc_initialized)
-    ptmalloc_init ();
-
   void *address = RETURN_ADDRESS (0);
   return _mid_memalign (alignment, bytes, address);
 }
@@ -3596,9 +3587,6 @@ void *
 weak_function
 aligned_alloc (size_t alignment, size_t bytes)
 {
-  if (!__malloc_initialized)
-    ptmalloc_init ();
-
 /* Similar to memalign, but starting with ISO C17 the standard
    requires an error for alignments that are not supported by the
    implementation.  Valid alignments for the current implementation
@@ -3698,9 +3686,6 @@ _mid_memalign (size_t alignment, size_t bytes, void *address)
 void *
 __libc_valloc (size_t bytes)
 {
-  if (!__malloc_initialized)
-    ptmalloc_init ();
-
   void *address = RETURN_ADDRESS (0);
   size_t pagesize = GLRO (dl_pagesize);
   return _mid_memalign (pagesize, bytes, address);
@@ -3709,9 +3694,6 @@ __libc_valloc (size_t bytes)
 void *
 __libc_pvalloc (size_t bytes)
 {
-  if (!__malloc_initialized)
-    ptmalloc_init ();
-
   void *address = RETURN_ADDRESS (0);
   size_t pagesize = GLRO (dl_pagesize);
   size_t rounded_bytes;
@@ -3745,9 +3727,6 @@ __libc_calloc (size_t n, size_t elem_size)
     }
 
   sz = bytes;
-
-  if (!__malloc_initialized)
-    ptmalloc_init ();
 
 #if USE_TCACHE
   size_t tc_idx = usize2tidx (bytes);
@@ -5211,9 +5190,6 @@ __malloc_trim (size_t s)
 {
   int result = 0;
 
-  if (!__malloc_initialized)
-    ptmalloc_init ();
-
   mstate ar_ptr = &main_arena;
   do
     {
@@ -5330,9 +5306,6 @@ __libc_mallinfo2 (void)
   struct mallinfo2 m;
   mstate ar_ptr;
 
-  if (!__malloc_initialized)
-    ptmalloc_init ();
-
   memset (&m, 0, sizeof (m));
   ar_ptr = &main_arena;
   do
@@ -5381,8 +5354,6 @@ __malloc_stats (void)
   mstate ar_ptr;
   unsigned int in_use_b = mp_.mmapped_mem, system_b = in_use_b;
 
-  if (!__malloc_initialized)
-    ptmalloc_init ();
   _IO_flockfile (stderr);
   int old_flags2 = stderr->_flags2;
   stderr->_flags2 |= _IO_FLAGS2_NOTCANCEL;
@@ -5563,8 +5534,6 @@ __libc_mallopt (int param_number, int value)
   mstate av = &main_arena;
   int res = 1;
 
-  if (!__malloc_initialized)
-    ptmalloc_init ();
   __libc_lock_lock (av->mutex);
 
   LIBC_PROBE (memory_mallopt, 2, param_number, value);
@@ -5780,11 +5749,14 @@ malloc_printerr (const char *str)
 }
 
 #if USE_TCACHE
+
+static volatile int dummy_var;
+
 static __attribute_noinline__ void
 malloc_printerr_tail (const char *str)
 {
   /* Ensure this cannot be a no-return function.  */
-  if (!__malloc_initialized)
+  if (dummy_var)
     return;
   malloc_printerr (str);
 }
@@ -5796,9 +5768,6 @@ int
 __posix_memalign (void **memptr, size_t alignment, size_t size)
 {
   void *mem;
-
-  if (!__malloc_initialized)
-    ptmalloc_init ();
 
   /* Test whether the SIZE argument is valid.  It must be a power of
      two multiple of sizeof (void *).  */
@@ -5839,11 +5808,6 @@ __malloc_info (int options, FILE *fp)
   size_t total_max_system = 0;
   size_t total_aspace = 0;
   size_t total_aspace_mprotect = 0;
-
-
-
-  if (!__malloc_initialized)
-    ptmalloc_init ();
 
   fputs ("<malloc version=\"1\">\n", fp);
 

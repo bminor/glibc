@@ -389,7 +389,7 @@ initialize_malloc_check (void)
 {
   /* This is the copy of the malloc initializer that we pulled in along with
      malloc-check.  This does not affect any of the libc malloc structures.  */
-  ptmalloc_init ();
+  __ptmalloc_init ();
   TUNABLE_GET (check, int32_t, TUNABLE_CALLBACK (set_mallopt_check));
   return __is_malloc_debug_enabled (MALLOC_CHECK_HOOK);
 }

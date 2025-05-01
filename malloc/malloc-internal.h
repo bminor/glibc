@@ -40,4 +40,7 @@ void __malloc_arena_thread_freeres (void) attribute_hidden;
 /* Activate a standard set of debugging hooks. */
 void __malloc_check_init (void) attribute_hidden;
 
+/* Initialize malloc.  */
+void __ptmalloc_init (void) attribute_hidden;
+
 #endif /* _MALLOC_INTERNAL_H */
