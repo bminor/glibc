@@ -11,7 +11,6 @@ sysdep_routines += memcpy-power8-cached memcpy-power7 memcpy-a2 memcpy-power6 \
 		   strlen-power7 strlen-ppc64 \
 		   strnlen-power8 strnlen-power7 strnlen-ppc64 \
 		   strcasecmp-power7 strcasecmp_l-power7 \
-		   strncase-power7 strncase_l-power7 \
 		   strncmp-power8 strncmp-ppc64 \
 		   strchr-power8 strchr-power7 strchr-ppc64 \
 		   strchrnul-power8 strchrnul-power7 strchrnul-ppc64 \
@@ -38,8 +37,6 @@ sysdep_routines += memchr-power10 memcmp-power10 memcpy-power10 \
 		   stpcpy-power9 strlen-power9 strncpy-power9 stpncpy-power9 \
 		   strlen-power10
 endif
-CFLAGS-strncase-power7.c += -mcpu=power7 -funroll-loops
-CFLAGS-strncase_l-power7.c += -mcpu=power7 -funroll-loops
 endif
 
 # Called during static initialization

@@ -23,15 +23,12 @@
 extern __typeof (__strncasecmp) __libc_strncasecmp;
 
 extern __typeof (__strncasecmp) __strncasecmp_ppc attribute_hidden;
-extern __typeof (__strncasecmp) __strncasecmp_power7 attribute_hidden;
 extern __typeof (__strncasecmp) __strncasecmp_power8 attribute_hidden;
 
 libc_ifunc (__libc_strncasecmp,
 	     (hwcap2 & PPC_FEATURE2_ARCH_2_07
 	      && hwcap & PPC_FEATURE_HAS_ALTIVEC)
-             ? __strncasecmp_power8:
-	     (hwcap & PPC_FEATURE_ARCH_2_06)
-             ? __strncasecmp_power7
-             : __strncasecmp_ppc);
+             ? __strncasecmp_power8
+	     : __strncasecmp_ppc);
 
 weak_alias (__libc_strncasecmp, strncasecmp)

@@ -311,18 +311,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      hwcap2 & PPC_FEATURE2_ARCH_2_07
 			       && hwcap & PPC_FEATURE_HAS_ALTIVEC,
 			      __strncasecmp_power8)
-	      IFUNC_IMPL_ADD (array, i, strncasecmp,
-			      hwcap & PPC_FEATURE_ARCH_2_06,
-			      __strncasecmp_power7)
 	      IFUNC_IMPL_ADD (array, i, strncasecmp, 1, __strncasecmp_ppc))
-
-  /* Support sysdeps/powerpc/powerpc64/multiarch/strncase_l.c.  */
-  IFUNC_IMPL (i, name, strncasecmp_l,
-	      IFUNC_IMPL_ADD (array, i, strncasecmp_l,
-			      hwcap & PPC_FEATURE_ARCH_2_06,
-			      __strncasecmp_l_power7)
-	      IFUNC_IMPL_ADD (array, i, strncasecmp_l, 1,
-			      __strncasecmp_l_ppc))
 
   /* Support sysdeps/powerpc/powerpc64/multiarch/strrchr.c.  */
   IFUNC_IMPL (i, name, strrchr,
