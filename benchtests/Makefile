@@ -96,6 +96,7 @@ bench-math := \
   log1pf \
   log2 \
   log2f \
+  log2l \
   log2p1f \
   logb \
   logbf \
