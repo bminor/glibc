@@ -45,7 +45,8 @@ FUNC (long double *x, long double payload)
   int shift = BIAS + EXPLICIT_MANT_DIG - exponent;
   if (shift < 32
       ? (lx & ((1U << shift) - 1)) != 0
-      : (lx != 0 || (hx & ((1U << (shift - 32)) - 1)) != 0))
+      : shift < 64 ? (lx != 0 || (hx & ((1U << (shift - 32)) - 1)) != 0)
+      		   : 0)
     {
       SET_LDOUBLE_WORDS (*x, 0, 0, 0);
       return 1;
