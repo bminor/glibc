@@ -50,7 +50,7 @@ __remquol (long double x, long double p, int *quo)
   if (ep <= 0x7ffb)
     x = __ieee754_fmodl (x, 8 * p);		/* now x < 8p */
 
-  if (((ex - ep) | (hx - hp) | (lx - lp)) == 0)
+  if ((ex == ep) && (hx == hp) && (lx == lp))
     {
       *quo = qs ? -1 : 1;
       return zero * x;
