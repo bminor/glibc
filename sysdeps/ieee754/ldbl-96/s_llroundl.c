@@ -67,7 +67,8 @@ __llroundl (long double x)
 
 	  if (j0 > 31)
 	    {
-	      result = (result << (j0 - 31)) | (j >> (63 - j0));
+	      result = ((unsigned long long int)result << (j0 - 31))
+		| (j >> (63 - j0));
 #ifdef FE_INVALID
 	      if (sign == 1 && result == LLONG_MIN)
 		/* Rounding brought the value out of range.  */
