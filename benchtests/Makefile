@@ -106,6 +106,7 @@ bench-math := \
   nearbyintf \
   pow \
   powf \
+  powl \
   rint \
   rintf \
   roundeven \
