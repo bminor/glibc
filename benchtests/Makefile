@@ -67,6 +67,7 @@ bench-math := \
   expm1f \
   floor \
   floorf \
+  fmal \
   fmax \
   fmaxf \
   fmin \
