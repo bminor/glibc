@@ -72,7 +72,7 @@ __roundl (long double x)
 	/* X is integral.  */
 	return x;
 
-      uint32_t j = i1 + (1 << (62 - j0));
+      uint32_t j = i1 + (1U << (62 - j0));
       if (j < i1)
 	{
 	  uint32_t k = i0 + 1;
