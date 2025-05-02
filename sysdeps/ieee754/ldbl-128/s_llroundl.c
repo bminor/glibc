@@ -62,7 +62,7 @@ __llroundl (_Float128 x)
 	    result = (long long int) i0;
 	  else
 	    {
-	      result = ((long long int) i0 << (j0 - 48)) | (j >> (112 - j0));
+	      result = (i0 << (j0 - 48)) | (j >> (112 - j0));
 #ifdef FE_INVALID
 	      if (sign == 1 && result == LLONG_MIN)
 		/* Rounding brought the value out of range.  */
