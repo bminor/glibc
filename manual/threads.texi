@@ -552,15 +552,98 @@ get different values identified by the same key.  On failure,
 This section describes the @glibcadj{} POSIX Threads implementation.
 
 @menu
+* Creating and Destroying Threads::
 * Thread-specific Data::          Support for creating and
 				  managing thread-specific data
 * Waiting with Explicit Clocks::  Functions for waiting with an
                                   explicit clock specification.
 * POSIX Semaphores::              Support for process and thread
 				  synchronization using semaphores
+* POSIX Barriers::                Support for process and thread
+				  synchronization using barriers
+* POSIX Spin Locks::              Support for process and thread
+				  synchronization using spinlocks
+* POSIX Mutexes::                 Support for mutual exclusion
+* POSIX Threads Other APIs::      Other Standard functions
 * Non-POSIX Extensions::          Additional functions to extend
 				  POSIX Thread functionality
 @end menu
+
+@node Creating and Destroying Threads
+@subsection Creating and Destroying Threads
+
+@deftypefun int pthread_create (pthread_t *@var{newthread}, const pthread_attr_t *@var{attr}, void *(*@var{start_routine}) (void *), void *@var{arg})
+This function creates a new thread with attributes @var{attr}.  This
+thread will call @var{start_routine} and pass it @var{arg}.  If
+@var{start_routine} returns, the thread will exit and the return value
+will become the thread's exit value.  The new thread's ID is stored in
+@var{newthread}.  Returns 0 on success.
+@manpagefunctionstub{pthread_create, 3}
+@end deftypefun
+
+@deftypefun int pthread_detach (pthread_t @var{th})
+Indicates that thread @var{th} must clean up after itself
+automatically when it exits, as the parent thread will not call
+@code{pthread_join} on it.
+@manpagefunctionstub{pthread_detach, 3}
+@end deftypefun
+
+@deftypefun int pthread_join (pthread_t @var{th}, void **@var{thread_return})
+Waits for thread @var{th} to exit, and stores its return value in
+@var{thread_return}.
+@manpagefunctionstub{pthread_join, 3}
+@end deftypefun
+
+@deftypefun int pthread_kill (pthread_t @var{th}, int @var{signal})
+Sends signal @var{signal} to thread @var{th}.
+@manpagefunctionstub{pthread_kill, 3}
+@end deftypefun
+
+@deftypefun pthread_t pthread_self (void)
+Returns the ID of the thread which performed the call.
+@manpagefunctionstub{pthread_self, 3}
+@end deftypefun
+
+Each thread has a set of attributes which are passed to
+@code{pthread_create} via the @code{pthread_attr_t} type, which should
+be considered an opaque type.
+
+@deftypefun int pthread_attr_init (pthread_attr_t *@var{attr})
+Initializes @var{attr} to its default values and allocates any
+resources required.  Once initialized, @var{attr} can be modified by
+other @code{pthread_attr_*} functions, or used by
+@code{pthread_create}.
+@manpagefunctionstub{pthread_attr_init, 3}
+@end deftypefun
+
+@deftypefun int pthread_attr_destroy (pthread_attr_t *@var{attr})
+When no longer needed, @var{attr} should be destroyed with this
+function, which releases any resources allocated.  Note that
+@var{attr} is only needed for the @code{pthread_create} call, not for
+the running thread itself.
+@manpagefunctionstub{pthread_attr_destroy, 3}
+@end deftypefun
+
+@deftypefun int pthread_attr_setdetachstate (pthread_attr_t *@var{attr}, int @var{detachstate})
+Sets the detach state attribute for @var{attr}.  This attribute may be one of the following:
+
+@table @code
+@item PTHREAD_CREATE_DETACHED
+Causes the created thread to be detached, that is, as if
+@code{pthread_detach} had been called on it.
+
+@item PTHREAD_CREATE_JOINABLE
+Causes the created thread to be joinable, that is, @code{pthread_join}
+must be called on it.
+@end table
+
+@manpagefunctionstub{pthread_attr_setdetachstate, 3}
+@end deftypefun
+
+@deftypefun int pthread_attr_getdetachstate (const pthread_attr_t *@var{attr}, int *@var{detachstate})
+Gets the detach state attribute from @var{attr}.
+@manpagefunctionstub{pthread_attr_getdetachstate, 3}
+@end deftypefun
 
 @node Thread-specific Data
 @subsection Thread-specific Data
@@ -769,6 +852,272 @@ against the clock specified by @var{clockid} rather than
 @end deftypefun
 
 
+@node POSIX Barriers
+@subsection POSIX Barriers
+
+A POSIX barrier works as follows: a file-local or global
+@code{pthread_barrier_t} object is initialized via
+@code{pthread_barrier_init} to require @var{count} threads to wait on
+it.  After that, up to @var{count}-1 threads will wait on the barrier
+via @code{pthread_barrier_wait}.  None of these calls will return
+until @var{count} threads are waiting via the next call to
+@code{pthread_barrier_wait}, at which point, all of these calls will
+return.  The net result is that @var{count} threads will be
+synchronized at that point.  At some point after this, the barrier is
+destroyed via @code{pthread_barrier_destroy}.  Note that a barrier
+must be destroyed before being re-initialized, to ensure that all
+threads are properly synchronized, but need not be destroyed and
+re-initialized before being reused.
+
+@deftypefun int pthread_barrier_init (pthread_barrier_t *@var{barrier}, const pthread_barrierattr_t *@var{attr}, unsigned int @var{count})
+@standards{POSIX, pthread.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+
+This function initializes a barrier to synchronize @var{count}
+threads.  The barrier must be uninitialized or destroyed before it is
+initialized; attempting to initialize an in-use barrier results in
+undefined behavior.
+
+The @var{attr} argument to @code{pthread_barrier_init} is typically
+NULL for a process-private barrier, but may be used to share a barrier
+across processes (documentation TBD).
+
+On success, 0 is returned.  On error, one of the following is returned:
+
+@table @code
+@item EINVAL
+Either @var{count} is zero, or is large enough to cause an internal
+overflow.
+@end table
+
+@end deftypefun
+
+@deftypefun int pthread_barrier_wait (pthread_barrier_t *@var{barrier})
+@standards{POSIX, pthread.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+
+This function synchronizes threads.  The first @var{count}-1 threads
+that wait on @var{barrier} will just wait.  The next thread that waits
+on @var{barrier} will cause all @var{count} threads' calls to return.
+The @var{barrier} must be initialized with @code{pthread_barrier_init}
+and not yet destroyed with @code{pthread_barrier_destroy}.
+
+The return value of this function is
+@code{PTHREAD_BARRIER_SERIAL_THREAD} for one thread (it is unspecified
+which thread) and 0 for the remainder, for each batch of @var{count}
+threads synchronized.  After such a batch is synchronized, the
+@var{barrier} will begin synchronizing the next @var{count} threads.
+
+@end deftypefun
+
+
+@deftypefun int pthread_barrier_destroy (pthread_barrier_t *@var{barrier})
+@standards{POSIX, pthread.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+
+Destroys @var{barrier} and releases any resources it may have
+allocated.  A barrier must not be destroyed if any thread is waiting
+on it, or if it was not initialized.  This call always succeeds and
+returns 0.
+
+@end deftypefun
+
+@node POSIX Spin Locks
+@subsection POSIX Spin Locks
+
+A spinlock is a low overhead lock suitable for use in a realtime
+thread where it's known that the thread won't be paused by the
+scheduler.  Non-realtime threads should use mutexes instead.
+
+@deftypefun int pthread_spin_init (pthread_spinlock_t *@var{lock}, int @var{pshared})
+Initializes a spinlock.  @var{pshared} is one of:
+
+@table @code
+@item PTHREAD_PROCESS_PRIVATE
+This spinlock is private to the process which created it.
+
+@item PTHREAD_PROCESS_SHARED
+This spinlock is shared across any process that can access it, for
+example through shared memory.
+@end table
+
+@manpagefunctionstub{pthread_spin_init, 3}
+@end deftypefun
+
+@deftypefun int pthread_spin_destroy (pthread_spinlock_t *@var{lock})
+Destroys a spinlock and releases any resources it held.
+@manpagefunctionstub{pthread_spin_destroy, 3}
+@end deftypefun
+
+@deftypefun int pthread_spin_lock (pthread_spinlock_t *@var{lock})
+Locks a spinlock.  Only one thread at a time can lock a spinlock.  If
+another thread has locked this spinlock, the calling thread waits
+until it is unlocked, then attempts to lock it.
+@manpagefunctionstub{pthread_spin_lock, 3}
+@end deftypefun
+
+@deftypefun int pthread_spin_unlock (pthread_spinlock_t *@var{lock})
+Unlocks a spinlock.  If one or more threads are waiting for the lock
+to be unlocked, one of them (unspecified which) will succeed in
+locking it, and will return from @code{pthread_spin_lock}).
+@manpagefunctionstub{pthread_spin_unlock, 3}
+@end deftypefun
+
+@deftypefun int pthread_spin_trylock (pthread_spinlock_t *@var{lock})
+Like @code{pthread_spin_unlock} but returns 0 if the lock was
+unlocked, or EBUSY if it was locked.
+@manpagefunctionstub{pthread_spin_trylock, 3}
+@end deftypefun
+
+@node POSIX Mutexes
+@subsection POSIX Mutexes
+
+A @emph{mutex}, or ``mutual exclusion'', is a way of guaranteeing that
+only one thread at a time is able to execute a protected bit of code
+(or access any other resource).  Two or more threads trying to execute
+the same code at the same time, will instead take turns, according to
+the mutex.
+
+A mutex is much like a spinlock, but implemented in a way that is more
+appropriate for use in non-realtime threads, and is more
+resource-conserving.
+
+@deftypefun int pthread_mutex_init (pthread_mutex_t *@var{mutex}, const pthread_mutexattr_t *@var{mutexattr})
+Initiailizes a mutex.
+@manpagefunctionstub{pthread_mutex_init, 3}
+@end deftypefun
+
+@deftypefun int pthread_mutex_destroy (pthread_mutex_t *@var{mutex})
+Destroys a no-longer-needed mutex.
+@manpagefunctionstub{pthread_mutex_destroy, 3}
+@end deftypefun
+
+@deftypefun int pthread_mutex_lock (pthread_mutex_t *@var{mutex})
+Only one thread at a time may lock @var{mutex}, and must unlock it
+when appropriate.  If a thread calls @code{pthread_mutex_lock} while
+@var{mutex} is locked by another thread, the calling thread will wait
+until @var{mutex} is unlocked, then attempt to lock it.  Since there
+may be many threads waiting at the same time, the calling thread may
+need to repeat this wait-and-try many times before it successfully
+locks @var{mutex}, at which point the call to
+@code{pthread_mutex_locks} returns succesfully.
+
+This function may fail with the following:
+
+@table @code
+@item EAGAIN
+Too many locks were attempted.
+
+@item EDEADLK
+The calling thread already holds a lock on @var{mutex}.
+
+@item EINVAL
+@var{mutex} has an invalid kind, or an invalid priority was requested.
+
+@item ENOTRECOVERABLE
+The thread holding the lock died in a way that the system cannot recover from.
+
+@item EOWNERDEAD
+The thread holding the lock died in a way that the system can recover from.
+
+@end table
+
+@manpagefunctionstub{pthread_mutex_lock, 3}
+@end deftypefun
+
+@deftypefun int pthread_mutex_trylock (pthread_mutex_t *@var{mutex})
+Like @code{pthread_mutex_lock} but if the lock cannot be immediately
+obtained, returns EBUSY.
+@manpagefunctionstub{pthread_mutex_trylock, 3}
+@end deftypefun
+
+@deftypefun int pthread_mutex_unlock (pthread_mutex_t *@var{mutex})
+Unlocks @var{mutex}.  Returns EPERM if the calling thread doesn't hold
+the lock on @var{mutex}.
+@manpagefunctionstub{pthread_mutex_unlock, 3}
+@end deftypefun
+
+@deftypefun int pthread_mutex_clocklock (pthread_mutex_t *@var{mutex}, clockid_t @var{clockid}, const struct timespec *@var{abstime})
+@end deftypefun
+
+@deftypefun int pthread_mutex_timedlock (pthread_mutex_t *@var{mutex}, const struct timespec *@var{abstime})
+
+These two functions act like @code{pthread_mutex_lock} with the
+exception that the call will not wait past time @var{abstime}, as
+reported by @var{clockid} or (for @code{pthread_mutex_timedlock})
+@code{CLOCK_REALTIME}.  If @var{abstime} is reached and the mutex
+still cannot be locked, an @code{ETIMEDOUT} error is returned.
+If the time had already passed when these functions
+are called, and the mutex cannot be immediately locked, the function
+times out immediately.
+@end deftypefun
+
+@deftypefun int pthread_mutexattr_init (const pthread_mutexattr_t *@var{attr})
+Initializes @var{attr} with default values.
+@manpagefunctionstub{pthread_mutexattr_init, 3}
+@end deftypefun
+
+@deftypefun int pthread_mutexattr_destroy (pthread_mutexattr_t *@var{attr})
+Destroys @var{attr} and releases any resources it may have allocated.
+@manpagefunctionstub{pthread_mutexattr_destroy, 3}
+@end deftypefun
+
+@deftypefun int pthread_mutexattr_settype (pthread_mutexattr_t *@var{attr}, int @var{kind})
+This functions allow you to change what kind of mutex a mutex is, by
+changing the attributes used to initialize it.  The values for
+@var{kind} are:
+
+@table @code
+@item PTHREAD_MUTEX_NORMAL
+No attempt to detect deadlock is performed; a thread will deadlock if
+it tries to lock this mutex yet already holds a lock to it.
+Attempting to unlock a mutex not locked by the calling thread results
+in undefined behavior.
+
+@item PTHREAD_MUTEX_ERRORCHECK
+Attemps to relock a mutex, or unlock a mutex not held, will result in an error.
+
+@item PTHREAD_MUTEX_RECURSIVE
+Attempts to relock a mutex already held succeed, but require a
+matching number of unlocks to release it.  Attempts to unlock a mutex
+not held will result in an error.
+
+@item PTHREAD_MUTEX_DEFAULT
+Attemps to relock a mutex, or unlock a mutex not held, will result in
+undefined behavior.  This is the default.
+
+@end table
+@end deftypefun
+
+@deftypefun int pthread_mutexattr_gettype (const pthread_mutexattr_t *@var{attr}, int *@var{kind})
+This function gets the kind of mutex @var{mutex} is.
+@end deftypefun
+
+@node POSIX Threads Other APIs
+@subsection POSIX Threads Other APIs
+
+@deftypefun int pthread_equal (pthread_t @var{thread1}, pthread_t @var{thread2})
+Compares two thread IDs.  If they are the same, returns nonzero, else returns zero.
+@manpagefunctionstub{pthread_equal, 3}
+@end deftypefun
+
+@deftypefun int pthread_getcpuclockid (pthread_t @var{th}, __clockid_t *@var{clock_id})
+Get the clock associated with @var{th}.
+@manpagefunctionstub{pthread_getcpuclockid, 3}
+@end deftypefun
+
+@deftypefun int pthread_once (pthread_once_t *@var{once_control}, void (*@var{init_routine}) (void))
+Calls @var{init_routine} once for each @var{once_control}, which must
+be statically initalized to @code{PTHREAD_ONCE_INIT}.  Subsequent
+calls to @code{pthread_once} with the same @var{once_control} do not
+call @var{init_routine}, even in multi-threaded environments.
+@manpagefunctionstub{pthread_once, 3}
+@end deftypefun
+
+@deftypefun int pthread_sigmask (int @var{how}, const __sigset_t *@var{newmask}, __sigset_t *@var{oldmask})
+@manpagefunctionstub{pthread_sigmask, 3}
+@end deftypefun
+
 @node Non-POSIX Extensions
 @subsection Non-POSIX Extensions
 
@@ -780,7 +1129,9 @@ the standard.
 * Default Thread Attributes::             Setting default attributes for
 					  threads in a process.
 * Initial Thread Signal Mask::            Setting the initial mask of threads.
+* Thread CPU Affinity::			  Limiting which CPUs can run a thread.
 * Joining Threads::                       Wait for a thread to terminate.
+* Thread Names::			  Changing the name of a thread.
 * Single-Threaded::                       Detecting single-threaded execution.
 * Restartable Sequences::                 Linux-specific restartable sequences
                                           integration.
@@ -899,6 +1250,36 @@ signal mask and use @code{pthread_sigmask} to apply it to the thread.
 If the signal mask was copied to a heap allocation, the copy should be
 freed.
 
+@node Thread CPU Affinity
+@subsubsection Thread CPU Affinity
+
+Processes and threads normally run on any available CPU.  However,
+they can be given an @emph{affinity} to one or more CPUs, which limits
+them to the CPU set specified.
+
+@deftypefun int pthread_attr_setaffinity_np (pthread_attr_t *@var{attr}, size_t @var{cpusetsize}, const cpu_set_t *@var{cpuset})
+Sets the CPU affinity in @var{attr}.  The CPU affinity
+controls which CPUs a thread may execute on.  @xref{CPU Affinity}.
+@manpagefunctionstub{pthread_attr_setaffinity_np, 3}
+@end deftypefun
+
+@deftypefun int pthread_attr_getaffinity_np (const pthread_attr_t *@var{attr}, size_t @var{cpusetsize}, cpu_set_t *@var{cpuset})
+Gets the CPU affinity settings from @var{attr}.
+@manpagefunctionstub{pthread_attr_getaffinity_np, 3}
+@end deftypefun
+
+@deftypefun int pthread_setaffinity_np (pthread_t *@var{th}, size_t @var{cpusetsize}, const cpu_set_t *@var{cpuset})
+Sets the CPU affinity for thread @var{th}.  The CPU affinity controls
+which CPUs a thread may execute on.  @xref{CPU Affinity}.
+@manpagefunctionstub{pthread_setaffinity_np, 3}
+@end deftypefun
+
+@deftypefun int pthread_getaffinity_np (const pthread_t *@var{th}, size_t @var{cpusetsize}, cpu_set_t *@var{cpuset})
+Gets the CPU affinity for thread @var{th}.  The CPU affinity controls
+which CPUs a thread may execute on.  @xref{CPU Affinity}.
+@manpagefunctionstub{pthread_getaffinity_np, 3}
+@end deftypefun
+
 @node Joining Threads
 @subsubsection Wait for a thread to terminate
 
@@ -939,6 +1320,21 @@ Currently, @var{clockid} must be either @code{CLOCK_MONOTONIC} or
 
 The @code{sem_clockwait} function also works using a @code{clockid_t}
 argument.  @xref{POSIX Semaphores}.
+
+@node Thread Names
+@subsubsection Thread Names
+
+@deftypefun int pthread_setname_np (pthread_t @var{th}, const char *@var{name})
+Gives thread @var{th} the name @var{name}.  This name shows up in
+@code{ps} when it's listing individual threads.  @var{name} is a
+NUL-terminated string of no more than 15 non-NUL characters.
+@manpagefunctionstub{pthread_setname_np, 3}
+@end deftypefun
+
+@deftypefun int pthread_getname_np (pthread_t @var{th}, char *@var{buf}, size_t @var{buflen})
+Retrieves the name of thread @var{th}.
+@manpagefunctionstub{pthread_getname_np, 3}
+@end deftypefun
 
 @node Single-Threaded
 @subsubsection Detecting Single-Threaded Execution
