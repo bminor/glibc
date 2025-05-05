@@ -243,11 +243,11 @@ int32_t __ieee754_rem_pio2l(_Float128 x, _Float128 *y)
   /* This is faster than doing this in floating point, because we
      have to convert it to integers anyway and like this we can keep
      both integer and floating point units busy.  */
-  tx [0] = (double)(((ix >> 25) & 0x7fffff) | 0x800000);
-  tx [1] = (double)((ix >> 1) & 0xffffff);
-  tx [2] = (double)(((ix << 23) | (lx >> 41)) & 0xffffff);
-  tx [3] = (double)((lx >> 17) & 0xffffff);
-  tx [4] = (double)((lx << 7) & 0xffffff);
+  tx [0] = (double)((((uint64_t)ix >> 25) & 0x7fffff) | 0x800000);
+  tx [1] = (double)(((uint64_t)ix >> 1) & 0xffffff);
+  tx [2] = (double)((((uint64_t)ix << 23) | (lx >> 41)) & 0xffffff);
+  tx [3] = (double)(((uint64_t)lx >> 17) & 0xffffff);
+  tx [4] = (double)(((uint64_t)lx << 7) & 0xffffff);
 
   n = __kernel_rem_pio2 (tx, tx + 5, exp, ((lx << 7) & 0xffffff) ? 5 : 4,
 			 3, two_over_pi);
