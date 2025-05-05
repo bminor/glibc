@@ -72,7 +72,7 @@ __roundl (_Float128 x)
 	/* X is integral.  */
 	return x;
 
-      uint64_t j = i1 + (1LL << (111 - j0));
+      uint64_t j = i1 + (1ULL << (111 - j0));
       if (j < i1)
 	i0 += 1;
       i1 = j;
