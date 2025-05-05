@@ -42,7 +42,8 @@ __nearbyintl (_Float128 x)
 		 L(-5.19229685853482762853049632922009600E+33)  /* 0xC06F000000000000, 0 */
   };
   fenv_t env;
-  int64_t i0, j0, sx;
+  int64_t i0, j0;
+  uint64_t sx;
   uint64_t i1 __attribute__ ((unused));
   _Float128 w, t;
   GET_LDOUBLE_WORDS64 (i0, i1, x);
