@@ -87,7 +87,7 @@ long double
 __kernel_sinl(long double x, long double y, int iy)
 {
   long double absx, h, l, z, sin_l, cos_l_m1;
-  int index;
+  unsigned int index;
 
   absx = fabsl (x);
   if (absx < 0.1484375L)
