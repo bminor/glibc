@@ -28,7 +28,8 @@
 FLOAT
 M_DECL_FUNC (__significand) (FLOAT x)
 {
-  return M_SUF (__ieee754_scalb) (x,(FLOAT) - M_SUF (__ilogb) (x));
+  int ex = - (unsigned int) M_SUF (__ilogb) (x);
+  return M_SUF (__ieee754_scalb) (x,(FLOAT) ex);
 }
 
 /* Don't provide _FloatN aliases for significand which was originally
