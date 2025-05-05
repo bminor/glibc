@@ -80,7 +80,7 @@ __llrintl (_Float128 x)
       else if (j0 <= 48)
 	result = i0 >> (48 - j0);
       else
-	result = ((long long int) i0 << (j0 - 48)) | (i1 >> (112 - j0));
+	result = (i0 << (j0 - 48)) | (i1 >> (112 - j0));
     }
   else
     {
