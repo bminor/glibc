@@ -69,7 +69,7 @@ __lroundl (_Float128 x)
 	    result = (long int) i0;
 	  else
 	    {
-	      result = ((long int) i0 << (j0 - 48)) | (j >> (112 - j0));
+	      result = (i0 << (j0 - 48)) | (j >> (112 - j0));
 #ifdef FE_INVALID
 	      if (sizeof (long int) == 8
 		  && sign == 1
