@@ -61,6 +61,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <nss.h>
 #include <resolv/resolv-internal.h>
 #include <resolv/resolv_context.h>
+#include <stdbit.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdio_ext.h>
@@ -1462,20 +1463,6 @@ get_precedence (const struct sockaddr_in6 *in6)
   return match_prefix (in6, precedence, 0);
 }
 
-
-/* Find last bit set in a word.  */
-static int
-fls (uint32_t a)
-{
-  uint32_t mask;
-  int n;
-  for (n = 0, mask = 1 << 31; n < 32; mask >>= 1, ++n)
-    if ((a & mask) != 0)
-      break;
-  return n;
-}
-
-
 static int
 rfc3484_sort (const void *p1, const void *p2, void *arg)
 {
@@ -1658,7 +1645,7 @@ rfc3484_sort (const void *p1, const void *p2, void *arg)
 	  in_addr_t netmask1 = 0xffffffffu << (32 - a1->prefixlen);
 
 	  if ((in1_src_addr & netmask1) == (in1_dst_addr & netmask1))
-	    bit1 = fls (in1_dst_addr ^ in1_src_addr);
+	    bit1 = stdc_leading_zeros (in1_dst_addr ^ in1_src_addr);
 
 	  struct sockaddr_in *in2_dst
 	    = (struct sockaddr_in *) a2->dest_addr->ai_addr;
@@ -1669,7 +1656,7 @@ rfc3484_sort (const void *p1, const void *p2, void *arg)
 	  in_addr_t netmask2 = 0xffffffffu << (32 - a2->prefixlen);
 
 	  if ((in2_src_addr & netmask2) == (in2_dst_addr & netmask2))
-	    bit2 = fls (in2_dst_addr ^ in2_src_addr);
+	    bit2 = stdc_leading_zeros (in2_dst_addr ^ in2_src_addr);
 	}
       else if (a1->dest_addr->ai_family == PF_INET6)
 	{
@@ -1696,10 +1683,12 @@ rfc3484_sort (const void *p1, const void *p2, void *arg)
 
 	  if (i < 4)
 	    {
-	      bit1 = fls (ntohl (in1_dst->sin6_addr.s6_addr32[i]
-				 ^ in1_src->sin6_addr.s6_addr32[i]));
-	      bit2 = fls (ntohl (in2_dst->sin6_addr.s6_addr32[i]
-				 ^ in2_src->sin6_addr.s6_addr32[i]));
+	      uint32_t set_bits1 = (in1_dst->sin6_addr.s6_addr32[i]
+				    ^ in1_src->sin6_addr.s6_addr32[i]);
+	      uint32_t set_bits2 = (in2_dst->sin6_addr.s6_addr32[i]
+				    ^ in2_src->sin6_addr.s6_addr32[i]);
+	      bit1 = stdc_leading_zeros (ntohl (set_bits1));
+	      bit2 = stdc_leading_zeros (ntohl (set_bits2));
 	    }
 	}
 
