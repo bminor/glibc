@@ -17,6 +17,7 @@
  * Method: shift and subtract
  */
 
+#include <stdbit.h>
 #include <math.h>
 #include <math_private.h>
 #include <libm-alias-finite.h>
@@ -26,7 +27,7 @@ static const _Float128 one = 1.0, Zero[] = {0.0, -0.0,};
 _Float128
 __ieee754_fmodl (_Float128 x, _Float128 y)
 {
-	int64_t n,hx,hy,hz,ix,iy,sx,i;
+	int64_t n,hx,hy,hz,ix,iy,sx/*,i*/;
 	uint64_t lx,ly,lz;
 
 	GET_LDOUBLE_WORDS64(hx,lx,x);
@@ -48,18 +49,18 @@ __ieee754_fmodl (_Float128 x, _Float128 y)
     /* determine ix = ilogb(x) */
 	if(hx<0x0001000000000000LL) {	/* subnormal x */
 	    if(hx==0) {
-		for (ix = -16431, i=lx; i>0; i<<=1) ix -=1;
+		ix = INT64_C(-16431) - stdc_leading_zeros (lx);
 	    } else {
-		for (ix = -16382, i=hx<<15; i>0; i<<=1) ix -=1;
+		ix = INT64_C(-16382) - stdc_leading_zeros ((uint64_t)hx << 15);
 	    }
 	} else ix = (hx>>48)-0x3fff;
 
     /* determine iy = ilogb(y) */
 	if(hy<0x0001000000000000LL) {	/* subnormal y */
 	    if(hy==0) {
-		for (iy = -16431, i=ly; i>0; i<<=1) iy -=1;
+		iy = INT64_C(-16431) - stdc_leading_zeros (ly);
 	    } else {
-		for (iy = -16382, i=hy<<15; i>0; i<<=1) iy -=1;
+		iy = INT64_C(-16382) - stdc_leading_zeros ((uint64_t)hy << 15);
 	    }
 	} else iy = (hy>>48)-0x3fff;
 
