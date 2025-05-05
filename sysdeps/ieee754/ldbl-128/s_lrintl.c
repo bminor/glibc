@@ -81,7 +81,7 @@ __lrintl (_Float128 x)
 	  result = (j0 < 0 ? 0 : i0 >> (48 - j0));
 	}
       else if (j0 >= 112)
-	result = ((long int) i0 << (j0 - 48)) | (i1 << (j0 - 112));
+	result = (i0 << (j0 - 48)) | (i1 << (j0 - 112));
       else
 	{
 #if defined FE_INVALID || defined FE_INEXACT
@@ -108,7 +108,7 @@ __lrintl (_Float128 x)
 	  if (j0 == 48)
 	    result = (long int) i0;
 	  else
-	    result = ((long int) i0 << (j0 - 48)) | (i1 >> (112 - j0));
+	    result = (i0 << (j0 - 48)) | (i1 >> (112 - j0));
 	}
     }
   else
