@@ -436,7 +436,7 @@ __ieee754_powl (_Float128 x, _Float128 y)
   z = one - (r - z);
   o.value = z;
   j = o.parts32.w0;
-  j += (n << 16);
+  j += ((uint32_t)n << 16);
   if ((j >> 16) <= 0)
     {
       z = __scalbnl (z, n);	/* subnormal output */
