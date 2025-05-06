@@ -34,7 +34,8 @@ __nearbyintf (float x)
 		-8.3886080000e+06, /* 0xcb000000 */
   };
   fenv_t env;
-  int32_t i0, j0, sx;
+  int32_t i0, j0;
+  uint32_t sx;
   float w, t;
   GET_FLOAT_WORD (i0, x);
   sx = (i0 >> 31) & 1;
