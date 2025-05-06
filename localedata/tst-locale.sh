@@ -50,7 +50,7 @@ test_locale ()
 	     "Outputdir: \"${out}\" failed"
 	exit 1
     else
-	echo -n "locale $out generated succesfully"
+	echo -n "locale $out generated successfully"
         if [ $ret -eq 1 ]; then
 	    echo " (with warnings)"
         else
