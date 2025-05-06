@@ -95,7 +95,7 @@ __lrint (double x)
 	  if (j0 == 20)
 	    result = (long int) i0;
 	  else
-	    result = ((long int) i0 << (j0 - 20)) | (i1 >> (52 - j0));
+	    result = (i0 << (j0 - 20)) | (i1 >> (52 - j0));
 	}
     }
   else
