@@ -1015,7 +1015,7 @@ For additional information, consult the manual page
 @manpageurl{sched_setattr,2}.
 @end deftp
 
-@deftypefun int sched_setaddr (pid_t @var{tid}, struct sched_attr *@var{attr}, unsigned int flags)
+@deftypefun int sched_setattr (pid_t @var{tid}, struct sched_attr *@var{attr}, unsigned int flags)
 @standards{Linux, sched.h}
 @safety{@mtsafe{}@assafe{}@acsafe{}}
 This functions applies the scheduling policy described by
@@ -1058,7 +1058,7 @@ policy of the thread @var{tid}.
 Other error codes depend on the scheduling policy.
 @end deftypefun
 
-@deftypefun int sched_getaddr (pid_t @var{tid}, struct sched_attr *@var{attr}, unsigned int size, unsigned int flags)
+@deftypefun int sched_getattr (pid_t @var{tid}, struct sched_attr *@var{attr}, unsigned int size, unsigned int flags)
 @standards{Linux, sched.h}
 @safety{@mtsafe{}@assafe{}@acsafe{}}
 This function obtains the scheduling policy of the thread @var{tid}
