@@ -23,6 +23,7 @@
 #include <math_private.h>
 #include <nan-high-order-bit.h>
 #include <stdint.h>
+#include <stdbit.h>
 
 #ifndef WANT_ROUNDING
 /* Correct special case results in non-nearest rounding modes.  */
@@ -102,7 +103,7 @@ roundevenf_finite (float x)
     {
       union { float f; uint32_t i; } u = {y};
       union { float f; uint32_t i; } v = {y - copysignf (1.0, x)};
-      if (__builtin_ctzl (v.i) > __builtin_ctzl (u.i))
+      if (stdc_leading_zeros (v.i) > stdc_leading_zeros (u.i))
         y = v.f;
     }
   return y;
