@@ -27,6 +27,7 @@ static char rcsid[] = "$NetBSD: $";
 #include <math.h>
 #include <math_private.h>
 #include <math_ldbl_opt.h>
+#include <stdbit.h>
 
 int __ieee754_ilogbl(long double x)
 {
@@ -42,7 +43,8 @@ int __ieee754_ilogbl(long double x)
 	    if(hx==0)
 		return FP_ILOGB0;	/* ilogbl(0) = FP_ILOGB0 */
 	    else			/* subnormal x */
-		for (ix = -1022, hx<<=11; hx>0; hx<<=1) ix -=1;
+		//for (ix = -1022, hx<<=11; hx>0; hx<<=1) ix -=1;
+		ix = -1022 - stdc_leading_zeros (hx << 11);
 	    return ix;
 	}
 	else if (hx < 0x7ff0000000000000LL)
