@@ -23,13 +23,20 @@
 #include <math_ldbl_opt.h>
 #include <float.h>
 #include <ieee754.h>
+#include <intprops.h>
 
+static inline bool
+check_sign (unsigned long int v1, unsigned long int v2)
+{
+  enum { sign_shift = sizeof (unsigned long int) * CHAR_BIT - 1 };
+  return (v1 & (1UL << sign_shift)) == (v2 & (1UL << sign_shift));
+}
 
 long
 __lrintl (long double x)
 {
   double xh, xl;
-  long res, hi, lo;
+  long res, hi, lo, tmp;
   int save_round;
 
   ldbl_unpack (x, &xh, &xl);
@@ -88,7 +95,7 @@ __lrintl (long double x)
       res = (long int) ((unsigned long int) hi + (unsigned long int) lo);
 
       /* This is just sign(hi) == sign(lo) && sign(res) != sign(hi).  */
-      if (__glibc_unlikely (((~(hi ^ lo) & (res ^ hi)) < 0)))
+      if (__glibc_unlikely (check_sign (hi, lo) && !check_sign (res, hi)))
 	goto overflow;
 
       xh -= lo;
@@ -106,31 +113,32 @@ __lrintl (long double x)
 	    return res;
 
 	  if (xh < 0.0)
-	    res -= 1UL;
+	    INT_SUBTRACT_WRAPV (res, 1UL, &res);
 	  else
-	    res += 1UL;
+	    INT_ADD_WRAPV (res, 1, &res);
 	  break;
 
 	case FE_TOWARDZERO:
 	  if (res > 0 && (xh < 0.0 || (xh == 0.0 && xl < 0.0)))
-	    res -= 1UL;
+	    INT_SUBTRACT_WRAPV (res, 1UL, &res);
 	  else if (res < 0 && (xh > 0.0 || (xh == 0.0 && xl > 0.0)))
-	    res += 1UL;
+	    INT_ADD_WRAPV (res, 1, &res);
 	  return res;
 	  break;
 
 	case FE_UPWARD:
 	  if (xh > 0.0 || (xh == 0.0 && xl > 0.0))
-	    res += 1UL;
+	    INT_ADD_WRAPV (res, 1, &res);
 	  break;
 
 	case FE_DOWNWARD:
 	  if (xh < 0.0 || (xh == 0.0 && xl < 0.0))
-	    res -= 1UL;
+	    INT_SUBTRACT_WRAPV (res, 1UL, &res);
 	  break;
 	}
 
-      if (__glibc_unlikely (((~(hi ^ (res - hi)) & (res ^ hi)) < 0)))
+      INT_SUBTRACT_WRAPV (res, hi, &tmp);
+      if (__glibc_unlikely (check_sign (hi, tmp) && !check_sign (res, hi)))
 	goto overflow;
 
       return res;

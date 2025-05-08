@@ -28,7 +28,7 @@
 static inline bool
 check_sign (unsigned long int v1, unsigned long int v2)
 {
-  enum { sign_shift = sizeof (unsigned long long int) * CHAR_BIT - 1 };
+  enum { sign_shift = sizeof (unsigned long int) * CHAR_BIT - 1 };
   return (v1 & (1UL << sign_shift)) == (v2 & (1UL << sign_shift));
 }
 
