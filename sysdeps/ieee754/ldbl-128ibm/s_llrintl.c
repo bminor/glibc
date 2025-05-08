@@ -23,13 +23,20 @@
 #include <math_ldbl_opt.h>
 #include <float.h>
 #include <ieee754.h>
+#include <intprops.h>
 
+static inline bool
+check_sign (unsigned long int v1, unsigned long int v2)
+{
+  enum { sign_shift = sizeof (unsigned long long int) * CHAR_BIT - 1 };
+  return (v1 & (1UL << sign_shift)) == (v2 & (1UL << sign_shift));
+}
 
 long long
 __llrintl (long double x)
 {
   double xh, xl;
-  long long res, hi, lo;
+  long long res, hi, lo, tmp;
   int save_round;
 
   ldbl_unpack (x, &xh, &xl);
@@ -70,10 +77,11 @@ __llrintl (long double x)
       /* Peg at max/min values, assuming that the above conversions do so.
          Strictly speaking, we can return anything for values that overflow,
          but this is more useful.  */
-      res = hi + lo;
+      INT_ADD_WRAPV (hi, lo, &res);
 
       /* This is just sign(hi) == sign(lo) && sign(res) != sign(hi).  */
-      if (__glibc_unlikely (((~(hi ^ lo) & (res ^ hi)) < 0)))
+      //if (__glibc_unlikely (((~(hi ^ lo) & (res ^ hi)) < 0)))
+      if (__glibc_unlikely (check_sign (hi, lo) && !check_sign (res, hi)))
 	goto overflow;
 
       xh -= lo;
@@ -91,31 +99,32 @@ __llrintl (long double x)
 	    return res;
 
 	  if (xh < 0.0)
-	    res -= 1;
+	    INT_SUBTRACT_WRAPV (res, 1, &res);
 	  else
-	    res += 1;
+	    INT_ADD_WRAPV (res, 1, &res);
 	  break;
 
 	case FE_TOWARDZERO:
 	  if (res > 0 && (xh < 0.0 || (xh == 0.0 && xl < 0.0)))
-	    res -= 1;
+	    INT_SUBTRACT_WRAPV (res, 1, &res);
 	  else if (res < 0 && (xh > 0.0 || (xh == 0.0 && xl > 0.0)))
-	    res += 1;
+	    INT_ADD_WRAPV (res, 1, &res);
 	  return res;
 	  break;
 
 	case FE_UPWARD:
 	  if (xh > 0.0 || (xh == 0.0 && xl > 0.0))
-	    res += 1;
+	    INT_ADD_WRAPV (res, 1, &res);
 	  break;
 
 	case FE_DOWNWARD:
 	  if (xh < 0.0 || (xh == 0.0 && xl < 0.0))
-	    res -= 1;
+	    INT_SUBTRACT_WRAPV (res, 1, &res);
 	  break;
 	}
 
-      if (__glibc_unlikely (((~(hi ^ (res - hi)) & (res ^ hi)) < 0)))
+      INT_SUBTRACT_WRAPV (res, hi, &tmp);
+      if (__glibc_unlikely (check_sign (hi, tmp) && !check_sign (res, hi)))
 	goto overflow;
 
       return res;
