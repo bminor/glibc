@@ -42,7 +42,8 @@ FUNC (long double *x, long double payload)
   if ((lx & 0x7fffffffffffffffULL) != 0
       || exponent >= BIAS + PAYLOAD_DIG
       || (exponent < BIAS && !(SET_HIGH_BIT && hx == 0))
-      || (hx & ((1ULL << (BIAS + EXPLICIT_MANT_DIG - exponent)) - 1)) != 0)
+      || ((BIAS + EXPLICIT_MANT_DIG - exponent <= 64)
+	  && ((hx & ((1ULL << (BIAS + EXPLICIT_MANT_DIG - exponent)) - 1)) != 0)))
     {
       *x = 0.0L;
       return 1;
