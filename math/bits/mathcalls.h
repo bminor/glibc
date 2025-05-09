@@ -186,6 +186,9 @@ __MATHCALL_VEC (cbrt,, (_Mdouble_ __x));
 #endif
 
 #if __GLIBC_USE (IEC_60559_FUNCS_EXT_C23)
+/* Return 1+X to the Y power.  */
+__MATHCALL (compoundn,, (_Mdouble_ __x, long long int __y));
+
 /* Return X to the Y power.  */
 __MATHCALL (pown,, (_Mdouble_ __x, long long int __y));
 

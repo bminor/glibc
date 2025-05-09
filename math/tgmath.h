@@ -924,6 +924,10 @@
 #define cbrt(Val) __TGMATH_UNARY_REAL_ONLY (Val, cbrt)
 
 #if __GLIBC_USE (IEC_60559_FUNCS_EXT_C23)
+/* Return 1+X to the Y power.  */
+# define compoundn(Val1, Val2)					\
+  __TGMATH_BINARY_FIRST_REAL_ONLY (Val1, Val2, compoundn)
+
 /* Return X to the Y power.  */
 # define pown(Val1, Val2) __TGMATH_BINARY_FIRST_REAL_ONLY (Val1, Val2, pown)
 

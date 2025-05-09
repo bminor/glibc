@@ -560,6 +560,7 @@ static test_function test_functions[] =
     FUNC_mpc_c_c ("cexp", mpc_exp, false),
     FUNC_mpc_c_c ("clog", mpc_log, false),
     FUNC_mpc_c_c ("clog10", mpc_log10, false),
+    FUNC_mpfr_fL_f ("compoundn", mpfr_compound_si, false),
     FUNC_mpfr_f_f ("cos", mpfr_cos, false),
     FUNC_mpfr_f_f ("cosh", mpfr_cosh, false),
     FUNC_mpfr_f_f ("cospi", mpfr_cospi, false),

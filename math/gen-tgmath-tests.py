@@ -746,6 +746,7 @@ class Tests(object):
         self.add_tests('asinpi', 'r', ['r'])
         self.add_tests('atan2pi', 'r', ['r', 'r'])
         self.add_tests('atanpi', 'r', ['r'])
+        self.add_tests('compoundn', 'r', ['r', 'long long int'])
         self.add_tests('cospi', 'r', ['r'])
         self.add_tests('exp10', 'r', ['r'])
         self.add_tests('exp2m1', 'r', ['r'])

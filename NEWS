@@ -14,7 +14,7 @@ Major new features:
   functions for float, double, long double, _FloatN and _FloatNx, and a
   type-generic macro in <tgmath.h>.
 
-  - Power and absolute-value functions: pown, powr, rsqrt.
+  - Power and absolute-value functions: compoundn, pown, powr, rsqrt.
 
 * On Linux, the pthread_gettid_np function has been added.
 

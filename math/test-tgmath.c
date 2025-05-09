@@ -48,7 +48,7 @@ volatile int count_cdouble;
 volatile int count_cfloat;
 volatile int count_cldouble;
 
-#define NCALLS     190
+#define NCALLS     192
 #define NCALLS_INT 4
 #define NCCALLS    47
 
@@ -269,6 +269,7 @@ F(compile_test) (void)
   a = logp1 (logp1 (x));
   a = pow (pow (x, a), pow (c, b));
   b = pown (pown (x, k), k);
+  b = compoundn (compoundn (x, k), k);
   a = powr (powr (x, a), powr (c, b));
   b = sqrt (sqrt (a));
   a = rsqrt (rsqrt (b));
@@ -397,6 +398,7 @@ F(compile_test) (void)
       a = logp1 (y);
       a = pow (y, y);
       a = pown (y, 12345);
+      a = compoundn (y, 12345);
       a = powr (y, y);
       a = sqrt (y);
       a = rsqrt (y);
@@ -785,6 +787,14 @@ TYPE
 
 TYPE
 (F(powr)) (TYPE x, TYPE y)
+{
+  ++count;
+  P ();
+  return x + y;
+}
+
+TYPE
+(F(compoundn)) (TYPE x, long long int y)
 {
   ++count;
   P ();

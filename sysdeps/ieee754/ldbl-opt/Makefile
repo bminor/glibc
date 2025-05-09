@@ -42,6 +42,7 @@ libnldbl-calls = \
   cimag \
   clog \
   clog10 \
+  compoundn \
   conj \
   copysign \
   cos \
@@ -290,6 +291,7 @@ CFLAGS-nldbl-cexp.c = -fno-builtin-cexpl
 CFLAGS-nldbl-cimag.c = -fno-builtin-cimagl
 CFLAGS-nldbl-clog.c = -fno-builtin-clogl
 CFLAGS-nldbl-clog10.c = -fno-builtin-clog10l
+CFLAGS-nldbl-compoundn.c = -fno-builtin-compoundnl
 CFLAGS-nldbl-conj.c = -fno-builtin-conjl
 CFLAGS-nldbl-copysign.c = -fno-builtin-copysignl
 CFLAGS-nldbl-cos.c = -fno-builtin-cosl

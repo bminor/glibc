@@ -28,6 +28,7 @@ F128_REDIR_PFX_R (floorf128, __,);
 F128_REDIR_PFX_R (truncf128, __,);
 F128_REDIR_PFX_R (roundf128, __,);
 F128_REDIR_PFX_R (fabsf128, __,);
+F128_REDIR_PFX_R (fmaf128, __,);
 
 extern __typeof (ldexpf128) F128_SFX_APPEND (__ldexpf128);
 

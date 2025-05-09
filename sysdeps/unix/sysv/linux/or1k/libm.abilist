@@ -829,6 +829,12 @@ GLIBC_2.41 tanpif32 F
 GLIBC_2.41 tanpif32x F
 GLIBC_2.41 tanpif64 F
 GLIBC_2.41 tanpil F
+GLIBC_2.42 compoundn F
+GLIBC_2.42 compoundnf F
+GLIBC_2.42 compoundnf32 F
+GLIBC_2.42 compoundnf32x F
+GLIBC_2.42 compoundnf64 F
+GLIBC_2.42 compoundnl F
 GLIBC_2.42 pown F
 GLIBC_2.42 pownf F
 GLIBC_2.42 pownf32 F

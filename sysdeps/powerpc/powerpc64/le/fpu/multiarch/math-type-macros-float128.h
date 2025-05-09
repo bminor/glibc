@@ -78,6 +78,7 @@ F128_REDIR (__ldexpf128);
 F128_REDIR (__cargf128);
 F128_REDIR (__cimagf128);
 F128_REDIR (__crealf128);
+F128_REDIR (__compoundnf128);
 F128_REDIR (__conjf128);
 F128_REDIR (__cprojf128);
 F128_REDIR (__cabsf128);

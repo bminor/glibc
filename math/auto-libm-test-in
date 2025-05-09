@@ -4724,6 +4724,221 @@ clog10 0xfd95243681c055c2632286921092p-113 0x1bccabcd29ca2152860ec29e34ef7p-113
 clog10 0xdb85c467ee2aadd5f425fe0f4b8dp-114 0x3e83162a0f95f1dcbf97dddf410eap-114
 clog10 0x1415bcaf2105940d49a636e98ae59p-115 0x7e6a150adfcd1b0921d44b31f40f4p-115
 
+compoundn -1 0
+compoundn -0.999 0
+compoundn -0.123 0
+compoundn -min 0
+compoundn -min_subnorm 0
+compoundn -0 0
+compoundn 0 0
+compoundn min_subnorm 0
+compoundn min 0
+compoundn 0.001 0
+compoundn 0.123456 0
+compoundn 1 0
+compoundn 2 0
+compoundn max 0
+
+compoundn -1 1
+compoundn -0.999 1
+compoundn -0.123 1
+compoundn -min 1
+compoundn -min_subnorm 1
+compoundn -0 1
+compoundn 0 1
+compoundn min_subnorm 1
+compoundn min 1
+compoundn 0.001 1
+compoundn 0.123456 1
+compoundn 1 1
+compoundn 2 1
+compoundn max 1
+
+compoundn -0.999 -1
+compoundn -0.123 -1
+compoundn -min -1
+compoundn -min_subnorm -1
+compoundn -0 -1
+compoundn 0 -1
+compoundn min_subnorm -1
+compoundn min -1
+compoundn 0.001 -1
+compoundn 0.123456 -1
+compoundn 1 -1
+compoundn 2 -1
+compoundn max -1
+
+compoundn -1 2
+compoundn -0.999 2
+compoundn -0.123 2
+compoundn -min 2
+compoundn -min_subnorm 2
+compoundn -0 2
+compoundn 0 2
+compoundn min_subnorm 2
+compoundn min 2
+compoundn 0.001 2
+compoundn 0.123456 2
+compoundn 1 2
+compoundn 2 2
+compoundn max 2
+
+compoundn -0.999 -2
+compoundn -0.123 -2
+compoundn -min -2
+compoundn -min_subnorm -2
+compoundn -0 -2
+compoundn 0 -2
+compoundn min_subnorm -2
+compoundn min -2
+compoundn 0.001 -2
+compoundn 0.123456 -2
+compoundn 1 -2
+compoundn 2 -2
+compoundn max -2
+
+compoundn -1 0x7fffffffffffffff
+compoundn -0.999 0x7fffffffffffffff
+compoundn -0.123 0x7fffffffffffffff
+compoundn -min 0x7fffffffffffffff
+compoundn -min_subnorm 0x7fffffffffffffff
+compoundn -0 0x7fffffffffffffff
+compoundn 0 0x7fffffffffffffff
+compoundn min_subnorm 0x7fffffffffffffff
+compoundn min 0x7fffffffffffffff
+compoundn 0.001 0x7fffffffffffffff
+compoundn 0.123456 0x7fffffffffffffff
+compoundn 1 0x7fffffffffffffff
+compoundn 2 0x7fffffffffffffff
+compoundn max 0x7fffffffffffffff
+
+compoundn -0.999 -0x8000000000000000
+compoundn -0.123 -0x8000000000000000
+compoundn -min -0x8000000000000000
+compoundn -min_subnorm -0x8000000000000000
+compoundn -0 -0x8000000000000000
+compoundn 0 -0x8000000000000000
+compoundn min_subnorm -0x8000000000000000
+compoundn min -0x8000000000000000
+compoundn 0.001 -0x8000000000000000
+compoundn 0.123456 -0x8000000000000000
+compoundn 1 -0x8000000000000000
+compoundn 2 -0x8000000000000000
+compoundn max -0x8000000000000000
+
+compoundn 12.3456 10
+compoundn 12.3456 -10
+
+compoundn 0x1p-64 0x7fffffffffffffff
+compoundn -0x1p-64 0x7fffffffffffffff
+compoundn 0x1p-64 -0x8000000000000000
+compoundn -0x1p-64 -0x8000000000000000
+compoundn 0x1.000002p-64 0x7fffffffffffffff
+compoundn -0x1.000002p-64 0x7fffffffffffffff
+compoundn 0x1.000002p-64 -0x8000000000000000
+compoundn -0x1.000002p-64 -0x8000000000000000
+
+compoundn 0x1p-58 0x7fffffffffffffff
+compoundn -0x1p-58 0x7fffffffffffffff
+compoundn 0x1p-58 -0x8000000000000000
+compoundn -0x1p-58 -0x8000000000000000
+compoundn 0x1.000002p-58 0x7fffffffffffffff
+compoundn -0x1.000002p-58 0x7fffffffffffffff
+compoundn 0x1.000002p-58 -0x8000000000000000
+compoundn -0x1.000002p-58 -0x8000000000000000
+
+compoundn 0x1p-57 0x7fffffffffffffff
+compoundn -0x1p-57 0x7fffffffffffffff
+compoundn 0x1p-57 -0x8000000000000000
+compoundn -0x1p-57 -0x8000000000000000
+compoundn 0x1.000002p-57 0x7fffffffffffffff
+compoundn -0x1.000002p-57 0x7fffffffffffffff
+compoundn 0x1.000002p-57 -0x8000000000000000
+compoundn -0x1.000002p-57 -0x8000000000000000
+
+compoundn 0x1p-56 0x7fffffffffffffff
+compoundn -0x1p-56 0x7fffffffffffffff
+compoundn 0x1p-56 -0x8000000000000000
+compoundn -0x1p-56 -0x8000000000000000
+compoundn 0x1.000002p-56 0x7fffffffffffffff
+compoundn -0x1.000002p-56 0x7fffffffffffffff
+compoundn 0x1.000002p-56 -0x8000000000000000
+compoundn -0x1.000002p-56 -0x8000000000000000
+
+compoundn 0x1p-55 0x7fffffffffffffff
+compoundn -0x1p-55 0x7fffffffffffffff
+compoundn 0x1p-55 -0x8000000000000000
+compoundn -0x1p-55 -0x8000000000000000
+compoundn 0x1.000002p-55 0x7fffffffffffffff
+compoundn -0x1.000002p-55 0x7fffffffffffffff
+compoundn 0x1.000002p-55 -0x8000000000000000
+compoundn -0x1.000002p-55 -0x8000000000000000
+
+compoundn 0x1p-54 0x7fffffffffffffff
+compoundn -0x1p-54 0x7fffffffffffffff
+compoundn 0x1p-54 -0x8000000000000000
+compoundn -0x1p-54 -0x8000000000000000
+compoundn 0x1.000002p-54 0x7fffffffffffffff
+compoundn -0x1.000002p-54 0x7fffffffffffffff
+compoundn 0x1.000002p-54 -0x8000000000000000
+compoundn -0x1.000002p-54 -0x8000000000000000
+
+compoundn 0x1p-53 0x7fffffffffffffff
+compoundn -0x1p-53 0x7fffffffffffffff
+compoundn 0x1p-53 -0x8000000000000000
+compoundn -0x1p-53 -0x8000000000000000
+compoundn 0x1.000002p-53 0x7fffffffffffffff
+compoundn -0x1.000002p-53 0x7fffffffffffffff
+compoundn 0x1.000002p-53 -0x8000000000000000
+compoundn -0x1.000002p-53 -0x8000000000000000
+
+compoundn 0x1p-52 0x7fffffffffffffff
+compoundn -0x1p-52 0x7fffffffffffffff
+compoundn 0x1p-52 -0x8000000000000000
+compoundn -0x1p-52 -0x8000000000000000
+compoundn 0x1.000002p-52 0x7fffffffffffffff
+compoundn -0x1.000002p-52 0x7fffffffffffffff
+compoundn 0x1.000002p-52 -0x8000000000000000
+compoundn -0x1.000002p-52 -0x8000000000000000
+
+compoundn 0x1p-51 0x7fffffffffffffff
+compoundn -0x1p-51 0x7fffffffffffffff
+compoundn 0x1p-51 -0x8000000000000000
+compoundn -0x1p-51 -0x8000000000000000
+compoundn 0x1.000002p-51 0x7fffffffffffffff
+compoundn -0x1.000002p-51 0x7fffffffffffffff
+compoundn 0x1.000002p-51 -0x8000000000000000
+compoundn -0x1.000002p-51 -0x8000000000000000
+
+compoundn 0x1p-50 0x7fffffffffffffff
+compoundn -0x1p-50 0x7fffffffffffffff
+compoundn 0x1p-50 -0x8000000000000000
+compoundn -0x1p-50 -0x8000000000000000
+compoundn 0x1.000002p-50 0x7fffffffffffffff
+compoundn -0x1.000002p-50 0x7fffffffffffffff
+compoundn 0x1.000002p-50 -0x8000000000000000
+compoundn -0x1.000002p-50 -0x8000000000000000
+
+compoundn 0x1.000002p-64 0x7654321076543210
+compoundn -0x1.000002p-64 0x7654321076543210
+compoundn 0x1.000002p-64 -0x7654321076543210
+compoundn -0x1.000002p-64 -0x7654321076543210
+
+compoundn 0x1.000002p-32 0x76543210
+compoundn -0x1.000002p-32 0x76543210
+compoundn 0x1.000002p-32 -0x76543210
+compoundn -0x1.000002p-32 -0x76543210
+
+compoundn 0x1.000002p-44 0x765432100123
+compoundn -0x1.000002p-44 0x765432100123
+compoundn 0x1.000002p-44 -0x765432100123
+compoundn -0x1.000002p-44 -0x765432100123
+
+compoundn 0x1.000002p-12 0x7654
+compoundn -0x1.000002p-12 0x7654
+compoundn 0x1.000002p-12 -0x7654
+compoundn -0x1.000002p-12 -0x7654
+
 cos 0
 cos -0
 cos pi/3
