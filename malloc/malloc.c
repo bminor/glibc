@@ -591,6 +591,8 @@ tag_at (void *ptr)
 void*  __libc_malloc(size_t);
 libc_hidden_proto (__libc_malloc)
 
+static void *__libc_calloc2 (size_t);
+
 /*
   free(void* p)
   Releases the chunk of memory pointed to by p, that had been previously
@@ -3324,6 +3326,13 @@ tcache_init(void)
 
 }
 
+static void * __attribute_noinline__
+tcache_calloc_init (size_t bytes)
+{
+  tcache_init ();
+  return __libc_calloc2 (bytes);
+}
+
 # define MAYBE_INIT_TCACHE() \
   if (__glibc_unlikely (tcache == NULL)) \
     tcache_init();
@@ -3711,38 +3720,13 @@ __libc_pvalloc (size_t bytes)
 }
 
 void *
-__libc_calloc (size_t n, size_t elem_size)
+__libc_calloc2 (size_t sz)
 {
   mstate av;
   mchunkptr oldtop, p;
-  INTERNAL_SIZE_T sz, oldtopsize, csz;
+  INTERNAL_SIZE_T oldtopsize, csz;
   void *mem;
   unsigned long clearsize;
-  ptrdiff_t bytes;
-
-  if (__glibc_unlikely (__builtin_mul_overflow (n, elem_size, &bytes)))
-    {
-       __set_errno (ENOMEM);
-       return NULL;
-    }
-
-  sz = bytes;
-
-#if USE_TCACHE
-  size_t tc_idx = usize2tidx (bytes);
-  if (tcache_available (tc_idx))
-    {
-      mem = tcache_get (tc_idx);
-      p = mem2chunk (mem);
-      if (__glibc_unlikely (mtag_enabled))
-	return tag_new_zero_region (mem, memsize (p));
-
-      csz = chunksize (p);
-      clearsize = csz - SIZE_SZ;
-      return clear_memory ((INTERNAL_SIZE_T *) mem, clearsize);
-    }
-  MAYBE_INIT_TCACHE ();
-#endif
 
   if (SINGLE_THREAD_P)
     av = &main_arena;
@@ -3827,6 +3811,38 @@ __libc_calloc (size_t n, size_t elem_size)
 
   clearsize = csz - SIZE_SZ;
   return clear_memory ((INTERNAL_SIZE_T *) mem, clearsize);
+}
+
+void *
+__libc_calloc (size_t n, size_t elem_size)
+{
+  size_t bytes;
+
+  if (__glibc_unlikely (__builtin_mul_overflow (n, elem_size, &bytes)))
+    {
+       __set_errno (ENOMEM);
+       return NULL;
+    }
+
+#if USE_TCACHE
+  size_t tc_idx = usize2tidx (bytes);
+  if (__glibc_likely (tc_idx < mp_.tcache_bins))
+    {
+      if (__glibc_unlikely (tcache == NULL))
+        return tcache_calloc_init (bytes);
+
+      if (__glibc_likely (tcache->entries[tc_idx] != NULL))
+	{
+	  void *mem = tcache_get (tc_idx);
+
+	  if (__glibc_unlikely (mtag_enabled))
+            return tag_new_zero_region (mem, memsize (mem2chunk (mem)));
+
+          return clear_memory ((INTERNAL_SIZE_T *) mem, tidx2usize (tc_idx));
+	}
+    }
+#endif
+  return __libc_calloc2 (bytes);
 }
 #endif /* IS_IN (libc) */
 
