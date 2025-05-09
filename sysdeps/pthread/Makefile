@@ -544,6 +544,7 @@ $(objpfx)tst-create1: $(shared-thread-library)
 $(objpfx)tst-create1.out: $(objpfx)tst-create1mod.so
 
 $(objpfx)tst-stack2.out: $(objpfx)tst-stack2-mod.so
+$(objpfx)tst-stack2-mod.so: $(shared-thread-library)
 LDFLAGS-tst-stack2-mod.so = -Wl,-z,execstack
 ifeq ($(have-no-error-execstack),yes)
 LDFLAGS-tst-stack2-mod.so += -Wl,--no-error-execstack
