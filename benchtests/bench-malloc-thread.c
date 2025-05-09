@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef TEST_FUNC
-# define TEST_FUNC(size) malloc(size)
+# define TEST_FUNC(size) malloc (size)
 # define TEST_NAME "malloc"
 #endif
 
@@ -36,7 +36,7 @@
 #include "json-lib.h"
 
 /* Benchmark duration in seconds.  */
-#define BENCHMARK_DURATION	10
+#define BENCHMARK_DURATION	3
 #define RAND_SEED		88
 
 #ifndef NUM_THREADS
@@ -206,12 +206,12 @@ do_benchmark (size_t num_threads, size_t *iters)
       for (size_t i = 0; i < num_threads; i++)
 	{
 	  args[i].working_set = working_set[i];
-	  pthread_create(&threads[i], NULL, benchmark_thread, &args[i]);
+	  pthread_create (&threads[i], NULL, benchmark_thread, &args[i]);
 	}
 
       for (size_t i = 0; i < num_threads; i++)
 	{
-	  pthread_join(threads[i], NULL);
+	  pthread_join (threads[i], NULL);
 	  TIMING_ACCUM (elapsed, args[i].elapsed);
 	  *iters += args[i].iters;
 	}
@@ -219,7 +219,7 @@ do_benchmark (size_t num_threads, size_t *iters)
   return elapsed;
 }
 
-static void usage(const char *name)
+static void usage (const char *name)
 {
   fprintf (stderr, "%s: <num_threads>\n", name);
   exit (1);
@@ -241,15 +241,15 @@ main (int argc, char **argv)
       long ret;
 
       errno = 0;
-      ret = strtol(argv[1], NULL, 10);
+      ret = strtol (argv[1], NULL, 10);
 
       if (errno || ret == 0)
-	usage(argv[0]);
+	usage (argv[0]);
 
       num_threads = ret;
     }
   else
-    usage(argv[0]);
+    usage (argv[0]);
 
   init_random_values ();
 
@@ -275,7 +275,7 @@ main (int argc, char **argv)
   cur = do_benchmark (num_threads, &iters);
 
   struct rusage usage;
-  getrusage(RUSAGE_SELF, &usage);
+  getrusage (RUSAGE_SELF, &usage);
 
   d_total_s = cur;
   d_total_i = iters;
