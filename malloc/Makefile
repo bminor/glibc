@@ -63,7 +63,7 @@ tests := \
   tst-realloc \
   tst-reallocarray \
   tst-safe-linking \
-  tst-tcfree1 tst-tcfree2 tst-tcfree3 \
+  tst-tcfree1 tst-tcfree2 tst-tcfree3 tst-tcfree4 \
   tst-trim1 \
   tst-valloc \
 # tests

@@ -3226,21 +3226,24 @@ tcache_available (size_t tc_idx)
 /* Verify if the suspicious tcache_entry is double free.
    It's not expected to execute very often, mark it as noinline.  */
 static __attribute__ ((noinline)) void
-tcache_double_free_verify (tcache_entry *e, size_t tc_idx)
+tcache_double_free_verify (tcache_entry *e)
 {
   tcache_entry *tmp;
-  size_t cnt = 0;
-  LIBC_PROBE (memory_tcache_double_free, 2, e, tc_idx);
-  for (tmp = tcache->entries[tc_idx];
-       tmp;
-       tmp = REVEAL_PTR (tmp->next), ++cnt)
+  for (size_t tc_idx = 0; tc_idx < TCACHE_MAX_BINS; ++tc_idx)
     {
-      if (cnt >= mp_.tcache_count)
-	malloc_printerr ("free(): too many chunks detected in tcache");
-      if (__glibc_unlikely (!aligned_OK (tmp)))
-	malloc_printerr ("free(): unaligned chunk detected in tcache 2");
-      if (tmp == e)
-	malloc_printerr ("free(): double free detected in tcache 2");
+      size_t cnt = 0;
+      LIBC_PROBE (memory_tcache_double_free, 2, e, tc_idx);
+      for (tmp = tcache->entries[tc_idx];
+	   tmp;
+	   tmp = REVEAL_PTR (tmp->next), ++cnt)
+	{
+	  if (cnt >= mp_.tcache_count)
+	    malloc_printerr ("free(): too many chunks detected in tcache");
+	  if (__glibc_unlikely (!aligned_OK (tmp)))
+	    malloc_printerr ("free(): unaligned chunk detected in tcache 2");
+	  if (tmp == e)
+	    malloc_printerr ("free(): double free detected in tcache 2");
+	}
     }
   /* No double free detected - it might be in a tcache of another thread,
      or user data that happens to match the key.  Since we are not sure,
@@ -3428,7 +3431,7 @@ __libc_free (void *mem)
 
       /* Check for double free - verify if the key matches.  */
       if (__glibc_unlikely (e->key == tcache_key))
-        return tcache_double_free_verify (e, tc_idx);
+        return tcache_double_free_verify (e);
 
       if (__glibc_likely (tcache->counts[tc_idx] < mp_.tcache_count))
         return tcache_put (p, tc_idx);
