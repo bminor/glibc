@@ -529,7 +529,36 @@ Therefore, @code{CLOCK_MONOTONIC} cannot be used to measure
 absolute time, only elapsed time.
 @end deftypevr
 
-Systems may support more than just these two POSIX clocks.
+The following clocks are defined by POSIX, but may not be supported by
+all POSIX systems:
+
+@deftypevr Macro clockid_t CLOCK_PROCESS_CPUTIME_ID
+@standards{POSIX.1, time.h}
+This POSIX clock measures the amount of CPU time used by the calling
+process.
+@end deftypevr
+
+@deftypevr Macro clockid_t CLOCK_THREAD_CPUTIME_ID
+@standards{POSIX.1, time.h}
+This POSIX clock measures the amount of CPU time used by the calling
+thread.
+@end deftypevr
+
+The following clocks are Linux extensions:
+
+@deftypevr Macro clockid_t CLOCK_MONOTONIC_RAW
+@deftypevrx Macro clockid_t CLOCK_REALTIME_COARSE
+@deftypevrx Macro clockid_t CLOCK_MONOTONIC_COARSE
+@deftypevrx Macro clockid_t CLOCK_BOOTTIME
+@deftypevrx Macro clockid_t CLOCK_REALTIME_ALARM
+@deftypevrx Macro clockid_t CLOCK_BOOTTIME_ALARM
+@deftypevrx Macro clockid_t CLOCK_TAI
+@standards{Linux, time.h}
+For details of these clocks, see the manual page
+@manpageurl{clock_gettime,2}.
+@end deftypevr
+
+Systems may support additional clocks beyond those listed here.
 
 @deftypefun int clock_gettime (clockid_t @var{clock}, struct timespec *@var{ts})
 @standards{POSIX.1, time.h}
