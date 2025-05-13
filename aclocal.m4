@@ -348,7 +348,8 @@ dnl LIBC_CHECK_TEST_CC([commands])
 AC_DEFUN([LIBC_CHECK_TEST_CC],
 [
 saved_CC="$CC"
-CC="$TEST_CC"
+saved_CFLAGS="$CFLAGS"
+CC="$TEST_CC -Wno-unused-command-line-argument"
 [$1]
 CC="$saved_CC"
 ])
