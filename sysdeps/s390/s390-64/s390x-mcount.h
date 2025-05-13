@@ -68,11 +68,7 @@ C_LABEL(MCOUNT_SYMBOL)
 	/* Save the caller-clobbered registers.  */
 	aghi  %r15,-224
 	cfi_adjust_cfa_offset (224)
-	/* binutils 2.28+: .cfi_val_offset r15, -160 */
-	.cfi_escape \
-		/* DW_CFA_val_offset */ 0x14, \
-		/* r15 */               0x0f, \
-		/* scaled offset */     0x14
+	cfi_val_offset (r15, -160)
 	stmg  %r14,%r5,160(%r15)
 	cfi_offset (r14, -224)
 	cfi_offset (r0, -224+16)
