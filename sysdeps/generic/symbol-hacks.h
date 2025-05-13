@@ -30,6 +30,7 @@ asm ("strcpy = __GI_strcpy");
 asm ("strncpy = __GI_strncpy");
 asm ("strcat = __GI_strcat");
 asm ("strlen = __GI_strlen");
+asm ("stpcpy = __GI_stpcpy");
 
 /* clang might generate an abort call when cleanup functions (set by
    __attribute__ ((cleanup)) calls functions not marked as nothrow.
