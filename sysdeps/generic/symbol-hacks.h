@@ -21,6 +21,7 @@ asm ("strcpy = __GI_strcpy");
 asm ("strncpy = __GI_strncpy");
 asm ("strcat = __GI_strcat");
 asm ("strlen = __GI_strlen");
+asm ("stpcpy = __GI_stpcpy");
 
 /* Some targets do not use __stack_chk_fail_local.  In libc.so,
    redirect __stack_chk_fail to a hidden reference
