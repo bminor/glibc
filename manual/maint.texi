@@ -725,8 +725,8 @@ just @w{@samp{--with-@var{package}}} (no argument), then it sets
 @item configure.ac
 
 This file is an Autoconf input fragment to be processed into the file
-@file{configure} in this subdirectory.  @xref{Introduction,,,
-autoconf.info, Autoconf: Generating Automatic Configuration Scripts},
+@file{configure} in this subdirectory.  @xref{Introduction,,, autoconf,
+Autoconf: Generating Automatic Configuration Scripts},
 for a description of Autoconf.  You should write either @file{configure}
 or @file{configure.ac}, but not both.  The first line of
 @file{configure.ac} should invoke the @code{m4} macro

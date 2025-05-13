@@ -1061,8 +1061,7 @@ put the @samp{#include} directives immediately afterwards, following the
 feature test macro definition (@pxref{Feature Test Macros}).
 
 For more information about the use of header files and @samp{#include}
-directives, @pxref{Header Files,,, cpp.info, The GNU C Preprocessor
-Manual}.
+directives, @pxref{Header Files,,, cpp, The GNU C Preprocessor Manual}.
 
 @Theglibc{} provides several header files, each of which contains
 the type and macro definitions and variable and function declarations
