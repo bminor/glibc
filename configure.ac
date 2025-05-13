@@ -522,7 +522,7 @@ AC_PROG_LN_S
 
 LIBC_PROG_BINUTILS
 
-# Accept binutils 2.25 or newer.
+# Accept binutils 2.39 or newer.
 libc_cv_with_lld=no
 case $($LD --version) in
   "GNU gold"*)
@@ -543,7 +543,7 @@ case $($LD --version) in
   *)
     AC_CHECK_PROG_VER(LD, $LD, --version,
 		    [GNU ld.* \([0-9][0-9]*\.[0-9.]*\)],
-		    [2.1[0-9][0-9]*|2.2[5-9]*|2.[3-9][0-9]*|[3-9].*|[1-9][0-9]*],
+		    [2.[1-9][0-9][0-9]*|2.39*|2.[4-9][0-9]*|[3-9].*|[1-9][0-9]*],
 		    LD=: critic_missing="$critic_missing GNU ld")
     ;;
 esac

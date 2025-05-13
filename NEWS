@@ -36,6 +36,8 @@ Changes to build and runtime requirements:
 
 * GCC 12.1 or later is now required to build the GNU C Library.
 
+* GNU Binutils 2.39 or later is now required to build the GNU C Library.
+
 Security related changes:
 
 The following CVEs were fixed in this release, details of which can be

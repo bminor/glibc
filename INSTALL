@@ -511,7 +511,7 @@ build the GNU C Library:
      Check the FAQ for any special compiler issues on particular
      platforms.
 
-   * GNU 'binutils' 2.25 or later
+   * GNU 'binutils' 2.39 or later
 
      You must use GNU 'binutils' (as and ld) to build the GNU C Library.
      No other assembler or linker has the necessary functionality at the
@@ -521,9 +521,6 @@ build the GNU C Library:
      For PowerPC 64-bits little-endian (powerpc64le), 'objcopy' is
      required to support '--update-section'.  This option requires
      binutils 2.26 or newer.
-
-     ARC architecture needs 'binutils' 2.32 or higher for TLS related
-     fixes.
 
    * GNU 'texinfo' 4.7 or later
 

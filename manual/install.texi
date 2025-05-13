@@ -552,7 +552,7 @@ You can use whatever compiler you like to compile programs that use
 Check the FAQ for any special compiler issues on particular platforms.
 
 @item
-GNU @code{binutils} 2.25 or later
+GNU @code{binutils} 2.39 or later
 
 You must use GNU @code{binutils} (as and ld) to build @theglibc{}.
 No other assembler or linker has the necessary functionality at the
@@ -562,8 +562,6 @@ verified to work to build @theglibc{}.
 For PowerPC 64-bits little-endian (powerpc64le), @command{objcopy} is required
 to support @option{--update-section}.  This option requires binutils 2.26 or
 newer.
-
-ARC architecture needs @code{binutils} 2.32 or higher for TLS related fixes.
 
 @item
 GNU @code{texinfo} 4.7 or later
