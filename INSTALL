@@ -7,8 +7,7 @@ and describes problems you may experience with compilation and
 installation.
 
    You will need recent versions of several GNU tools: definitely GCC
-and GNU Make, and possibly others.  *Note Tools for Compilation::,
-below.
+and GNU Make, and possibly others.  See Tools for Compilation, below.
 
 Configuring and compiling the GNU C Library
 ===========================================
@@ -213,8 +212,8 @@ passed to 'configure'.  For example:
      slightly increased program load times.
 
 '--enable-pt_chown'
-     The file 'pt_chown' is a helper binary for 'grantpt' (*note
-     Pseudo-Terminals: Allocation.) that is installed setuid root to fix
+     The file 'pt_chown' is a helper binary for 'grantpt' (see
+     Pseudo-Terminals: Allocation) that is installed setuid root to fix
      up pseudo-terminal ownership on GNU/Hurd.  It is not required on
      GNU/Linux, and the GNU C Library will not use the installed
      'pt_chown' program when configured with '--enable-pt_chown'.
@@ -309,10 +308,10 @@ an appropriate numeric parameter to 'make'.  You need a recent GNU
    To build and run test programs which exercise some of the library
 facilities, type 'make check'.  If it does not complete successfully, do
 not use the built library, and report a bug after verifying that the
-problem is not already known.  *Note Reporting Bugs::, for instructions
-on reporting bugs.  Note that some of the tests assume they are not
-being run by 'root'.  We recommend you compile and test the GNU C
-Library as an unprivileged user.
+problem is not already known.  See Reporting Bugs, for instructions on
+reporting bugs.  Note that some of the tests assume they are not being
+run by 'root'.  We recommend you compile and test the GNU C Library as
+an unprivileged user.
 
    Before reporting bugs make sure there is no problem with your system.
 The tests (and later installation) use some pre-existing files of the
@@ -675,8 +674,8 @@ Unix C libraries permit things that we don't, such as closing a file
 twice.
 
    If you think you have found some way in which the GNU C Library does
-not conform to the ISO and POSIX standards (*note Standards and
-Portability::), that is definitely a bug.  Report it!
+not conform to the ISO and POSIX standards (see Standards and
+Portability), that is definitely a bug.  Report it!
 
    Once you're sure you've found a bug, try to narrow it down to the
 smallest test case that reproduces the problem.  In the case of a C
