@@ -54,11 +54,7 @@ C_LABEL(_mcount)
 	/* Save the caller-clobbered registers.  */
 	ahi   %r15,-128
 	cfi_adjust_cfa_offset (128)
-	/* binutils 2.28+: .cfi_val_offset r15, -96 */
-	.cfi_escape \
-		/* DW_CFA_val_offset */ 0x14, \
-		/* r15 */               0x0f, \
-		/* scaled offset */     0x18
+	cfi_val_offset (r15, -96)
 	stm   %r14,%r5,96(%r15)
 	cfi_offset (r14, -128)
 	l     %r2,132(%r15)       # callers address  = first parameter
