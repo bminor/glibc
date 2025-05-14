@@ -1432,6 +1432,7 @@ GLIBC_2.41 tanpil F
 GLIBC_2.42 __compoundnieee128 F
 GLIBC_2.42 __pownieee128 F
 GLIBC_2.42 __powrieee128 F
+GLIBC_2.42 __rootnieee128 F
 GLIBC_2.42 __rsqrtieee128 F
 GLIBC_2.42 compoundn F
 GLIBC_2.42 compoundnf F
@@ -1457,6 +1458,14 @@ GLIBC_2.42 powrf32x F
 GLIBC_2.42 powrf64 F
 GLIBC_2.42 powrf64x F
 GLIBC_2.42 powrl F
+GLIBC_2.42 rootn F
+GLIBC_2.42 rootnf F
+GLIBC_2.42 rootnf128 F
+GLIBC_2.42 rootnf32 F
+GLIBC_2.42 rootnf32x F
+GLIBC_2.42 rootnf64 F
+GLIBC_2.42 rootnf64x F
+GLIBC_2.42 rootnl F
 GLIBC_2.42 rsqrt F
 GLIBC_2.42 rsqrtf F
 GLIBC_2.42 rsqrtf128 F

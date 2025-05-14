@@ -1302,6 +1302,14 @@ GLIBC_2.42 powrf32x F
 GLIBC_2.42 powrf64 F
 GLIBC_2.42 powrf64x F
 GLIBC_2.42 powrl F
+GLIBC_2.42 rootn F
+GLIBC_2.42 rootnf F
+GLIBC_2.42 rootnf128 F
+GLIBC_2.42 rootnf32 F
+GLIBC_2.42 rootnf32x F
+GLIBC_2.42 rootnf64 F
+GLIBC_2.42 rootnf64x F
+GLIBC_2.42 rootnl F
 GLIBC_2.42 rsqrt F
 GLIBC_2.42 rsqrtf F
 GLIBC_2.42 rsqrtf128 F

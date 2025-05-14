@@ -195,6 +195,9 @@ __MATHCALL (pown,, (_Mdouble_ __x, long long int __y));
 /* Return X to the Y power.  */
 __MATHCALL (powr,, (_Mdouble_ __x, _Mdouble_ __y));
 
+/* Return the Yth root of X.  */
+__MATHCALL (rootn,, (_Mdouble_ __x, long long int __y));
+
 /* Return the reciprocal of the square root of X.  */
 __MATHCALL (rsqrt,, (_Mdouble_ __x));
 #endif

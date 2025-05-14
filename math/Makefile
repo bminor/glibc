@@ -142,6 +142,7 @@ gen-libm-calls = \
   s_nextdownF \
   s_pownF \
   s_powrF \
+  s_rootnF \
   s_rsqrtF \
   s_significandF \
   s_sinpiF \
@@ -691,6 +692,7 @@ libm-test-funcs-auto = \
   pow \
   pown \
   powr \
+  rootn \
   rsqrt \
   sin \
   sincos \
@@ -1028,6 +1030,7 @@ tgmath3-macros = \
   remainder \
   remquo \
   rint \
+  rootn \
   round \
   roundeven \
   rsqrt \
@@ -1454,6 +1457,7 @@ CFLAGS-s_powr.c += -fno-builtin-powrl
 CFLAGS-w_remainder.c += -fno-builtin-remainderl -fno-builtin-dreml
 CFLAGS-s_remquo.c += -fno-builtin-remquol
 CFLAGS-s_rint.c += -fno-builtin-rintl
+CFLAGS-s_rootn.c += -fno-builtin-rootnl
 CFLAGS-s_round.c += -fno-builtin-roundl
 CFLAGS-s_roundeven.c += -fno-builtin-roundevenl
 CFLAGS-s_rsqrt.c += -fno-builtin-rsqrtl
@@ -1592,6 +1596,7 @@ CFLAGS-s_powr.c += -fno-builtin-powrf32x -fno-builtin-powrf64
 CFLAGS-w_remainder.c += -fno-builtin-remainderf32x -fno-builtin-remainderf64
 CFLAGS-s_remquo.c += -fno-builtin-remquof32x -fno-builtin-remquof64
 CFLAGS-s_rint.c += -fno-builtin-rintf32x -fno-builtin-rintf64
+CFLAGS-s_rootn.c += -fno-builtin-rootnf32x -fno-builtin-rootnf64
 CFLAGS-s_round.c += -fno-builtin-roundf32x -fno-builtin-roundf64
 CFLAGS-s_roundeven.c += -fno-builtin-roundevenf32x -fno-builtin-roundevenf64
 CFLAGS-s_rsqrt.c += -fno-builtin-rsqrtf32x -fno-builtin-rsqrtf64
@@ -1721,6 +1726,7 @@ CFLAGS-s_powrf.c += -fno-builtin-powrf32
 CFLAGS-w_remainderf.c += -fno-builtin-remainderf32
 CFLAGS-s_remquof.c += -fno-builtin-remquof32
 CFLAGS-s_rintf.c += -fno-builtin-rintf32
+CFLAGS-s_rootnf.c += -fno-builtin-rootnf32
 CFLAGS-s_roundf.c += -fno-builtin-roundf32
 CFLAGS-s_roundevenf.c += -fno-builtin-roundevenf32
 CFLAGS-s_rsqrtf.c += -fno-builtin-rsqrtf32

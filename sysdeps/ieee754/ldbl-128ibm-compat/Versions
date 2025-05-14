@@ -157,6 +157,7 @@ libm {
     __compoundnieee128;
     __pownieee128;
     __powrieee128;
+    __rootnieee128;
     __rsqrtieee128;
   }
 }

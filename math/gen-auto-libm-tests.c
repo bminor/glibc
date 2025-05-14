@@ -599,6 +599,7 @@ static test_function test_functions[] =
     FUNC_mpfr_ff_f ("pow", mpfr_pow, false),
     FUNC_mpfr_fL_f ("pown", mpfr_pow_si, false),
     FUNC_mpfr_ff_f ("powr", mpfr_powr, false),
+    FUNC_mpfr_fL_f ("rootn", mpfr_rootn_si, false),
     /* mpfr_rec_sqrt differs from rsqrt on -0, but gen-auto-libm-tests
        does not handle results that are exact infinities anyway.  */
     FUNC_mpfr_f_f ("rsqrt", mpfr_rec_sqrt, true),

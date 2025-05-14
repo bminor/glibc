@@ -883,6 +883,22 @@ instead of the direct formula is wise, since the error is
 much smaller.  See also the function @code{cabs} in @ref{Absolute Value}.
 @end deftypefun
 
+@deftypefun double rootn (double @var{x}, long long int @var{n})
+@deftypefunx float rootnf (float @var{x}, long long int @var{n})
+@deftypefunx {long double} rootnl (long double @var{x}, long long int @var{n})
+@deftypefunx _FloatN rootnfN (_Float@var{N} @var{x}, long long int @var{n})
+@deftypefunx _FloatNx rootnfNx (_Float@var{N}x @var{x}, long long int @var{n})
+@standards{TS 18661-4:2015, math.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These return the @var{n}th root of @var{x}.  If @var{n} is zero, or if
+@var{x} is negative and @var{n} is even, @code{rootn} signals a domain
+error.
+
+The @code{rootn} functions are from TS 18661-4:2015 (which used
+@code{intmax_t} as the type of @var{n}; the type changed to
+@code{long long int} in C23).
+@end deftypefun
+
 @deftypefun double expm1 (double @var{x})
 @deftypefunx float expm1f (float @var{x})
 @deftypefunx {long double} expm1l (long double @var{x})

@@ -934,6 +934,9 @@
 /* Return X to the Y power.  */
 # define powr(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, powr)
 
+/* Return the Yth root of X.  */
+# define rootn(Val1, Val2) __TGMATH_BINARY_FIRST_REAL_ONLY (Val1, Val2, rootn)
+
 /* Return 1/sqrt(X).  */
 # define rsqrt(Val) __TGMATH_UNARY_REAL_ONLY (Val, rsqrt)
 #endif

@@ -677,11 +677,13 @@ libm {
     compoundnf32; compoundnf64; compoundnf32x;
     pown; pownf; pownl; pownf32; pownf64; pownf32x;
     powr; powrf; powrl; powrf32; powrf64; powrf32x;
+    rootn; rootnf; rootnl; rootnf32; rootnf64; rootnf32x;
     rsqrt; rsqrtf; rsqrtl; rsqrtf32; rsqrtf64; rsqrtf32x;
     # Functions involving _Float64x or _Float128, for some configurations.
     compoundnf64x; compoundnf128;
     pownf64x; pownf128;
     powrf64x; powrf128;
+    rootnf64x; rootnf128;
     rsqrtf64x; rsqrtf128;
   }
 }

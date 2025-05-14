@@ -181,6 +181,7 @@ libnldbl-calls = \
   remainder \
   remquo \
   rint \
+  rootn \
   round \
   roundeven \
   rsqrt \
@@ -384,6 +385,7 @@ CFLAGS-nldbl-powr.c = -fno-builtin-powrl
 CFLAGS-nldbl-remainder.c = -fno-builtin-remainderl -fno-builtin-dreml
 CFLAGS-nldbl-remquo.c = -fno-builtin-remquol
 CFLAGS-nldbl-rint.c = -fno-builtin-rintl
+CFLAGS-nldbl-rootn.c = -fno-builtin-rootnl
 CFLAGS-nldbl-round.c = -fno-builtin-roundl
 CFLAGS-nldbl-roundeven.c = -fno-builtin-roundevenl
 CFLAGS-nldbl-rsqrt.c = -fno-builtin-rsqrtl
