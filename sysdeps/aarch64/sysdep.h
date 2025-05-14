@@ -21,42 +21,14 @@
 
 #include <sysdeps/generic/sysdep.h>
 
-#ifndef __ASSEMBLER__
-/* Strip pointer authentication code from pointer p.  */
-static inline void *
-strip_pac (void *p)
-{
-  register void *ra asm ("x30") = (p);
-  asm ("hint 7 // xpaclri" : "+r"(ra));
-  return ra;
-}
-
-/* This is needed when glibc is built with -mbranch-protection=pac-ret
-   with a gcc that is affected by PR target/94891.  */
-# if HAVE_AARCH64_PAC_RET
-#  undef RETURN_ADDRESS
-#  define RETURN_ADDRESS(n) strip_pac (__builtin_return_address (n))
-# endif
-#endif
-
 #ifdef	__ASSEMBLER__
+
+/* CFI directive for return address.  */
+#define cfi_negate_ra_state	.cfi_negate_ra_state
 
 /* Syntactic details of assembler.  */
 
 #define ASM_SIZE_DIRECTIVE(name) .size name,.-name
-
-/* Branch Target Identitication support.  */
-#if HAVE_AARCH64_BTI
-# define BTI_C		hint	34
-# define BTI_J		hint	36
-#else
-# define BTI_C		nop
-# define BTI_J		nop
-#endif
-
-/* Return address signing support (pac-ret).  */
-#define PACIASP		hint	25
-#define AUTIASP		hint	29
 
 /* Guarded Control Stack support.  */
 #define CHKFEAT_X16	hint	40
@@ -87,11 +59,7 @@ strip_pac (void *p)
 
 /* Add GNU property note with the supported features to all asm code
    where sysdep.h is included.  */
-#if HAVE_AARCH64_BTI && HAVE_AARCH64_PAC_RET
 GNU_PROPERTY (FEATURE_1_AND, FEATURE_1_BTI|FEATURE_1_PAC|FEATURE_1_GCS)
-#elif HAVE_AARCH64_BTI
-GNU_PROPERTY (FEATURE_1_AND, FEATURE_1_BTI|FEATURE_1_GCS)
-#endif
 
 /* Define an entry point visible from C.  */
 #define ENTRY(name)						\
@@ -100,7 +68,7 @@ GNU_PROPERTY (FEATURE_1_AND, FEATURE_1_BTI|FEATURE_1_GCS)
   .p2align 6;							\
   C_LABEL(name)							\
   cfi_startproc;						\
-  BTI_C;							\
+  bti	c;							\
   CALL_MCOUNT
 
 /* Define an entry point visible from C.  */
@@ -110,7 +78,7 @@ GNU_PROPERTY (FEATURE_1_AND, FEATURE_1_BTI|FEATURE_1_GCS)
   .p2align align;						\
   C_LABEL(name)							\
   cfi_startproc;						\
-  BTI_C;							\
+  bti	c;							\
   CALL_MCOUNT
 
 /* Define an entry point visible from C with a specified alignment and
@@ -127,7 +95,7 @@ GNU_PROPERTY (FEATURE_1_AND, FEATURE_1_BTI|FEATURE_1_GCS)
   .endr;							\
   C_LABEL(name)							\
   cfi_startproc;						\
-  BTI_C;							\
+  bti	c;							\
   CALL_MCOUNT
 
 #undef	END

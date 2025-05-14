@@ -119,7 +119,7 @@ L(gcs_done):
 2:
 	/* The oucp context is restored here via an indirect branch,
 	   x1 must be restored too which has the real return address.  */
-	BTI_J
+	bti	j
 	mov	x30, x1
 	RET
 PSEUDO_END (__swapcontext)

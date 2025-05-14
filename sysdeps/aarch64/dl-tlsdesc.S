@@ -74,9 +74,9 @@
 	cfi_startproc
 	.align 2
 _dl_tlsdesc_return:
-	BTI_C
+	bti	c
 	ldr	x0, [x0, 8]
-	RET
+	ret
 	cfi_endproc
 	.size	_dl_tlsdesc_return, .-_dl_tlsdesc_return
 
@@ -95,7 +95,7 @@ _dl_tlsdesc_return:
 	cfi_startproc
 	.align  2
 _dl_tlsdesc_undefweak:
-	BTI_C
+	bti	c
 	str	x1, [sp, #-16]!
 	cfi_adjust_cfa_offset (16)
 	ldr	x0, [x0, 8]
@@ -103,7 +103,7 @@ _dl_tlsdesc_undefweak:
 	sub	x0, x0, x1
 	ldr	x1, [sp], #16
 	cfi_adjust_cfa_offset (-16)
-	RET
+	ret
 	cfi_endproc
 	.size	_dl_tlsdesc_undefweak, .-_dl_tlsdesc_undefweak
 
@@ -141,12 +141,8 @@ _dl_tlsdesc_undefweak:
 	cfi_startproc
 	.align 2
 _dl_tlsdesc_dynamic:
-# if HAVE_AARCH64_PAC_RET
-	PACIASP
-	cfi_window_save
-# else
-	BTI_C
-# endif
+	paciasp
+	cfi_negate_ra_state
 
 	/* Save just enough registers to support fast path, if we fall
 	   into slow path we will save additional registers.  */
@@ -177,12 +173,10 @@ _dl_tlsdesc_dynamic:
 1:
 	ldp	 x3,  x4, [sp, #16]
 	ldp	 x1,  x2, [sp], #32
-# if HAVE_AARCH64_PAC_RET
-	AUTIASP
-	cfi_window_save
-# endif
+	autiasp
+	cfi_negate_ra_state
 	cfi_adjust_cfa_offset (-32)
-	RET
+	ret
 2:
 	/* This is the slow path. We need to call __tls_get_addr() which
 	   means we need to save and restore all the register that the

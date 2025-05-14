@@ -31,7 +31,7 @@
   unsigned __attribute__((unused)) zva_size =				      \
     GLRO(dl_aarch64_cpu_features).zva_size;				      \
   bool __attribute__((unused)) bti =					      \
-    HAVE_AARCH64_BTI && GLRO(dl_aarch64_cpu_features).bti;		      \
+    GLRO(dl_aarch64_cpu_features).bti;					      \
   bool __attribute__((unused)) mte =					      \
     MTE_ENABLED ();							      \
   bool __attribute__((unused)) sve =					      \

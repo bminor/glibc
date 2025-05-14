@@ -50,10 +50,6 @@
 	.endif
 	.endm
 
-
-#undef BTI_C
-#define BTI_C
-
 ENTRY (__memset_a64fx)
 
 	cntb	vector_length

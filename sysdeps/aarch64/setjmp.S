@@ -38,10 +38,8 @@ ENTRY_ALIGN (__sigsetjmp, 2)
 
 #if IS_IN(libc)
 	/* Disable ZA state of SME in libc.a and libc.so, but not in ld.so.  */
-# if HAVE_AARCH64_PAC_RET
-	PACIASP
-	cfi_window_save
-# endif
+	paciasp
+	cfi_negate_ra_state
 	stp	x29, x30, [sp, -16]!
 	cfi_adjust_cfa_offset (16)
 	cfi_rel_offset (x29, 0)
@@ -52,10 +50,8 @@ ENTRY_ALIGN (__sigsetjmp, 2)
 	cfi_adjust_cfa_offset (-16)
 	cfi_restore (x29)
 	cfi_restore (x30)
-# if HAVE_AARCH64_PAC_RET
-	AUTIASP
-	cfi_window_save
-# endif
+	autiasp
+	cfi_negate_ra_state
 #endif
 
 	stp	x19, x20, [x0, #JB_X19<<3]
@@ -96,7 +92,7 @@ L(gcs_done):
 #if IS_IN (rtld)
 	/* In ld.so we never save the signal mask */
 	mov	w0, #0
-	RET
+	ret
 #else
 	b	C_SYMBOL_NAME(__sigjmp_save)
 #endif

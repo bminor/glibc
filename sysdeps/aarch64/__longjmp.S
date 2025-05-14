@@ -27,10 +27,8 @@ ENTRY (__longjmp)
 
 #if IS_IN(libc)
 	/* Disable ZA state of SME in libc.a and libc.so, but not in ld.so.  */
-# if HAVE_AARCH64_PAC_RET
-	PACIASP
-	cfi_window_save
-# endif
+	paciasp
+	cfi_negate_ra_state
 	stp	x29, x30, [sp, -16]!
 	cfi_adjust_cfa_offset (16)
 	cfi_rel_offset (x29, 0)
@@ -41,10 +39,8 @@ ENTRY (__longjmp)
 	cfi_adjust_cfa_offset (-16)
 	cfi_restore (x29)
 	cfi_restore (x30)
-# if HAVE_AARCH64_PAC_RET
-	AUTIASP
-	cfi_window_save
-# endif
+	autiasp
+	cfi_negate_ra_state
 #endif
 
 	cfi_def_cfa (x0, 0)

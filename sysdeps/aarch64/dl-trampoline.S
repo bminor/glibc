@@ -34,7 +34,7 @@
 	cfi_startproc
 	.align 2
 _dl_runtime_resolve:
-	BTI_C
+	bti	c
 	/* AArch64 we get called with:
 	   ip0		&PLTGOT[2]
 	   ip1		temp(dl resolver entry point)
@@ -127,12 +127,8 @@ _dl_runtime_resolve:
 	cfi_startproc
 	.align 2
 _dl_runtime_profile:
-# if HAVE_AARCH64_PAC_RET
-	PACIASP
-	cfi_window_save
-# else
-	BTI_C
-# endif
+	paciasp
+	cfi_negate_ra_state
 	/* AArch64 we get called with:
 	   ip0		&PLTGOT[2]
 	   ip1		temp(dl resolver entry point)
@@ -251,17 +247,12 @@ _dl_runtime_profile:
 	cfi_restore(x29)
 	cfi_restore(x30)
 
-# if HAVE_AARCH64_PAC_RET
 	add	sp, sp, SF_SIZE
 	cfi_adjust_cfa_offset (-SF_SIZE)
-	AUTIASP
-	cfi_window_save
+	autiasp
+	cfi_negate_ra_state
 	add	sp, sp, 16
 	cfi_adjust_cfa_offset (-16)
-# else
-	add	sp, sp, SF_SIZE + 16
-	cfi_adjust_cfa_offset (- SF_SIZE - 16)
-# endif
 
 	/* Jump to the newly found address.  */
 	br	ip0
@@ -321,10 +312,8 @@ _dl_runtime_profile:
 	/* LR from within La_aarch64_reg */
 	ldr	lr, [x29, #OFFSET_RG + DL_OFFSET_RG_LR]
 	cfi_restore(lr)
-# if HAVE_AARCH64_PAC_RET
 	/* Note: LR restored from La_aarch64_reg has no PAC.  */
-	cfi_window_save
-# endif
+	cfi_negate_ra_state
 	mov	sp, x29
 	cfi_def_cfa_register (sp)
 	ldr	x29, [x29, #0]

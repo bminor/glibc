@@ -19,9 +19,6 @@
 
 #include <sysdep.h>
 
-#undef BTI_C
-#define BTI_C
-
 /* Assumptions:
  *
  * ARMv8.2-a, AArch64, unaligned accesses, sve
@@ -90,9 +87,6 @@
 	st1b	z6.b, p0, [dst, 6, mul vl]
 	st1b	z7.b, p0, [dst, 7, mul vl]
 	.endm
-
-#undef BTI_C
-#define BTI_C
 
 ENTRY (__memcpy_a64fx)
 

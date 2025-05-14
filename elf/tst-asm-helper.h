@@ -20,6 +20,7 @@
 
 #include <config.h>
 
+#ifdef __aarch64__
 /* GNU_PROPERTY_AARCH64_* macros from elf.h for use in asm code.  */
 #define FEATURE_1_AND 0xc0000000
 #define FEATURE_1_BTI 1
@@ -42,8 +43,5 @@
 
 /* Add GNU property note with the supported features to all asm code
    where sysdep.h is included.  */
-#if HAVE_AARCH64_BTI && HAVE_AARCH64_PAC_RET
 GNU_PROPERTY (FEATURE_1_AND, FEATURE_1_BTI|FEATURE_1_PAC|FEATURE_1_GCS)
-#elif HAVE_AARCH64_BTI
-GNU_PROPERTY (FEATURE_1_AND, FEATURE_1_BTI|FEATURE_1_GCS)
 #endif
