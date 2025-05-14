@@ -41,7 +41,7 @@ select_memmove_ifunc (void)
   if (mops)
     return __memmove_mops;
 
-  if (sve && HAVE_AARCH64_SVE_ASM)
+  if (sve)
     {
       if (IS_A64FX (midr))
 	return __memmove_a64fx;

@@ -31,8 +31,6 @@
 #define PF_DIST_L1	(CACHE_LINE_SIZE * 16)	// Prefetch distance L1
 #define vector_length	x9
 
-#if HAVE_AARCH64_SVE_ASM
-
 	.arch armv8.2-a+sve
 
 #define dstin   x0
@@ -166,5 +164,3 @@ L(L2):
 	b	L(last)
 
 END (__memset_a64fx)
-
-#endif /* HAVE_AARCH64_SVE_ASM */

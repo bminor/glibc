@@ -35,8 +35,6 @@
 #define vlen	x7
 #define vlen8	x8
 
-#if HAVE_AARCH64_SVE_ASM
-
 	.arch armv8.2-a+sve
 
 	.macro ld1b_unroll8
@@ -290,4 +288,3 @@ L(full_overlap):
 	b	L(last_bytes)
 
 END (__memmove_a64fx)
-#endif /* HAVE_AARCH64_SVE_ASM */

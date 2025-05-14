@@ -113,11 +113,6 @@
 /* AArch64 big endian ABI */
 #undef HAVE_AARCH64_BE
 
-/* Assembler support ARMv8.2-A SVE.
-   This macro becomes obsolete when glibc increased the minimum
-   required version of GNU 'binutils' to 2.28 or later. */
-#define HAVE_AARCH64_SVE_ASM 0
-
 /* C-SKY ABI version.  */
 #undef CSKYABI
 

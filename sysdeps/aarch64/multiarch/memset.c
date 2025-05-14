@@ -46,7 +46,7 @@ select_memset_ifunc (void)
   if (mops)
     return __memset_mops;
 
-  if (sve && HAVE_AARCH64_SVE_ASM)
+  if (sve)
     {
       if (IS_A64FX (midr) && zva_size == 256)
 	return __memset_a64fx;

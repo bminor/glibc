@@ -25,8 +25,6 @@
  * ZVA size is 64.
  */
 
-#if HAVE_AARCH64_SVE_ASM
-
 .arch armv8.2-a+sve
 
 #define dstin	x0
@@ -120,4 +118,3 @@ L(no_zva_loop):
 	ret
 
 END (__memset_sve_zva64)
-#endif

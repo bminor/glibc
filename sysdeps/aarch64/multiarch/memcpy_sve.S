@@ -56,8 +56,6 @@
    The loop tail is handled by always copying 64 bytes from the end.
 */
 
-#if HAVE_AARCH64_SVE_ASM
-
 	.arch armv8.2-a+sve
 
 ENTRY (__memcpy_sve)
@@ -199,4 +197,3 @@ L(return):
 	ret
 
 END (__memmove_sve)
-#endif

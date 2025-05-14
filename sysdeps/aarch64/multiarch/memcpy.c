@@ -43,7 +43,7 @@ select_memcpy_ifunc (void)
   if (mops)
     return __memcpy_mops;
 
-  if (sve && HAVE_AARCH64_SVE_ASM)
+  if (sve)
     {
       if (IS_A64FX (midr))
 	return __memcpy_a64fx;
