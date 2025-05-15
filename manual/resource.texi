@@ -1653,6 +1653,22 @@ The operating system does not support this function.
 This function is Linux-specific and is declared in @file{sched.h}.
 @end deftypefun
 
+@deftypefun int sched_getcpu (void)
+@standards{Linux, <sched.h>}
+
+Similar to @code{getcpu} but with a simpler interface.  On success,
+returns a nonnegative number identifying the CPU on which the current
+thread is running.  Returns @code{-1} on failure.  The following
+@code{errno} error condition is defined for this function:
+
+@table @code
+@item ENOSYS
+The operating system does not support this function.
+@end table
+
+This function is Linux-specific and is declared in @file{sched.h}.
+@end deftypefun
+
 Here's an example of how to use most of the above to limit the number
 of CPUs a process runs on, not including error handling or good logic
 on CPU choices:
