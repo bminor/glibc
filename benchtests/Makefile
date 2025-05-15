@@ -332,8 +332,10 @@ CFLAGS-bench-isfinite.c += $(config-cflags-signaling-nans)
 ifeq (${BENCHSET},)
 bench-malloc := \
   calloc-simple \
+  calloc-tcache \
   calloc-thread \
   malloc-simple \
+  malloc-tcache \
   malloc-thread \
   # bench-malloc
 else
@@ -456,9 +458,11 @@ VALIDBENCHSETNAMES := \
   bench-pthread \
   bench-string \
   calloc-simple \
+  calloc-tcache \
   calloc-thread \
   hash-benchset \
   malloc-simple \
+  malloc-tcache \
   malloc-thread \
   math-benchset \
   stdio-benchset \
@@ -499,6 +503,11 @@ bench-malloc: $(binaries-bench-malloc)
 	  echo "$${run}"; \
 	  if basename $${run} | grep -q "bench-[cm]alloc-thread"; then \
 		for thr in 1 8 16 32; do \
+			echo "Running $${run} $${thr}"; \
+			$(run-bench) $${thr} > $${run}-$${thr}.out; \
+		done;\
+	  elif basename $${run} | grep -q "bench-[cm]alloc-tcache"; then \
+		for thr in 64 512 1024; do \
 			echo "Running $${run} $${thr}"; \
 			$(run-bench) $${thr} > $${run}-$${thr}.out; \
 		done;\
