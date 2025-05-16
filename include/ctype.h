@@ -29,9 +29,12 @@ libc_hidden_proto (toupper)
 #   define CTYPE_EXTERN_INLINE extern inline
 #  endif
 
-extern __thread const uint16_t * __libc_tsd_CTYPE_B;
-extern __thread const int32_t * __libc_tsd_CTYPE_TOUPPER;
-extern __thread const int32_t * __libc_tsd_CTYPE_TOLOWER;
+extern __thread const uint16_t * __libc_tsd_CTYPE_B
+  attribute_hidden attribute_tls_model_ie;
+extern __thread const int32_t * __libc_tsd_CTYPE_TOUPPER
+  attribute_hidden attribute_tls_model_ie;
+extern __thread const int32_t * __libc_tsd_CTYPE_TOLOWER
+  attribute_hidden attribute_tls_model_ie;
 
 
 CTYPE_EXTERN_INLINE const uint16_t ** __attribute__ ((const))
