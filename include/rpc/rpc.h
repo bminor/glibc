@@ -45,7 +45,8 @@ extern void __rpc_thread_key_cleanup (void) attribute_hidden;
 
 extern void __rpc_thread_destroy (void) attribute_hidden;
 
-extern __thread struct rpc_thread_variables *__libc_tsd_RPC_VARS;
+extern __thread struct rpc_thread_variables *__libc_tsd_RPC_VARS
+  attribute_hidden attribute_tls_model_ie;
 
 #define RPC_THREAD_VARIABLE(x) (__rpc_thread_variables()->x)
 
