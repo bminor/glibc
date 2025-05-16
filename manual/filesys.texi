@@ -409,18 +409,41 @@ entries.  It contains the following fields:
 This is the null-terminated file name component.  This is the only
 field you can count on in all POSIX systems.
 
+While this field is defined with a specified length, functions such as
+@code{readdir} may return a pointer to a @code{struct dirent} where the
+@code{d_name} extends beyond the end of the struct.
+
 @item ino_t d_fileno
 This is the file serial number.  For BSD compatibility, you can also
 refer to this member as @code{d_ino}.  On @gnulinuxhurdsystems{} and most POSIX
 systems, for most files this the same as the @code{st_ino} member that
 @code{stat} will return for the file.  @xref{File Attributes}.
 
+@item off_t d_off
+This value contains the offset of the next directory entry (after this
+entry) in the directory stream.  The value may not be compatible with
+@code{lseek} or @code{seekdir}, especially if the width of @code{d_off}
+is less than 64 bits.  Directory entries are not ordered by offset, and
+the @code{d_off} and @code{d_reclen} values are unrelated.  Seeking on
+directory streams is not recommended.  The symbol
+@code{_DIRENT_HAVE_D_OFF} is defined if the @code{d_ino} member is
+available.
+
 @item unsigned char d_namlen
 This is the length of the file name, not including the terminating
 null character.  Its type is @code{unsigned char} because that is the
 integer type of the appropriate size.  This member is a BSD extension.
 The symbol @code{_DIRENT_HAVE_D_NAMLEN} is defined if this member is
-available.
+available.  (It is not available on Linux.)
+
+@item unsigned short int d_reclen
+This is the length of the entire directory record.  When iterating
+through a buffer filled by @code{getdents64} (@pxref{Low-level Directory
+Access}), this value needs to be added to the offset of the current
+directory entry to obtain the offset of the next entry.  When using
+@code{readdir} and related functions, the value of @code{d_reclen} is
+undefined and should not be accessed.  The symbol
+@code{_DIRENT_HAVE_D_RECLEN} is defined if this member is available.
 
 @item unsigned char d_type
 This is the type of the file, possibly unknown.  The following constants
@@ -457,7 +480,7 @@ This member is a BSD extension.  The symbol @code{_DIRENT_HAVE_D_TYPE}
 is defined if this member is available.  On systems where it is used, it
 corresponds to the file type bits in the @code{st_mode} member of
 @code{struct stat}.  If the value cannot be determined the member
-value is DT_UNKNOWN.  These two macros convert between @code{d_type}
+value is @code{DT_UNKNOWN}.  These two macros convert between @code{d_type}
 values and @code{st_mode} values:
 
 @deftypefun int IFTODT (mode_t @var{mode})
@@ -631,6 +654,20 @@ and can be rewritten by a subsequent call.
 @strong{Portability Note:} On some systems @code{readdir} may not
 return entries for @file{.} and @file{..}, even though these are always
 valid file names in any directory.  @xref{File Name Resolution}.
+
+If a directory is modified between a call to @code{readdir} and after
+the directory stream was created or @code{rewinddir} was last called on
+it, it is unspecified according to POSIX whether newly created or
+removed entries appear among the entries returned by repeated
+@code{readdir} calls before the end of the directory is reached.
+However, due to practical implementation constraints, it is possible
+that entries (including unrelated, unmodified entries) appear multiple
+times or do not appear at all if the directory is modified while listing
+it.  If the application intends to create files in the directory, it may
+be necessary to complete the iteration first and create a copy of the
+information obtained before creating any new files.  (See below for
+instructions regarding copying of @code{d_name}.)  The iteration can be
+restarted using @code{rewinddir}.  @xref{Random Access Directory}.
 
 If there are no more entries in the directory or an error is detected,
 @code{readdir} returns a null pointer.  The following @code{errno} error
@@ -812,6 +849,10 @@ directory since it was opened with @code{opendir}.  (Entries for these
 files might or might not be returned by @code{readdir} if they were
 added or removed since you last called @code{opendir} or
 @code{rewinddir}.)
+
+For example, it is recommended to call @code{rewinddir} followed by
+@code{readdir} to check if a directory is empty after listing it with
+@code{readdir} and deleting all encountered files from it.
 @end deftypefun
 
 @deftypefun {long int} telldir (DIR *@var{dirstream})
@@ -823,6 +864,13 @@ added or removed since you last called @code{opendir} or
 The @code{telldir} function returns the file position of the directory
 stream @var{dirstream}.  You can use this value with @code{seekdir} to
 restore the directory stream to that position.
+
+Using the the @code{telldir} function is not recommended.
+
+The value returned by @code{telldir} may not be compatible with the
+@code{d_off} field in @code{struct dirent}, and cannot be used with the
+@code{lseek} function.  The returned value may not unambiguously
+identify the position in the directory stream.
 @end deftypefun
 
 @deftypefun void seekdir (DIR *@var{dirstream}, long int @var{pos})
@@ -836,6 +884,9 @@ stream @var{dirstream} to @var{pos}.  The value @var{pos} must be the
 result of a previous call to @code{telldir} on this particular stream;
 closing and reopening the directory can invalidate values returned by
 @code{telldir}.
+
+Using the the @code{seekdir} function is not recommended.  To seek to
+the beginning of the directory stream, use @code{rewinddir}.
 @end deftypefun
 
 
@@ -1007,9 +1058,20 @@ Note that some file systems support file names longer than
 @code{NAME_MAX} bytes (e.g., because they support up to 255 Unicode
 characters), so a buffer size of at least 1024 is recommended.
 
+If the directory has been modified since the first call to
+@code{getdents64} on the directory (opening the descriptor or seeking to
+offset zero), it is possible that the buffer contains entries that have
+been encountered before.  Likewise, it is possible that files that are
+still present are not reported before the end of the directory is
+encountered (and @code{getdents64} returns zero).
+
 This function is specific to Linux.
 @end deftypefun
 
+Systems that support @code{getdents64} support seeking on directory
+streams.  @xref{File Position Primitive}.  However, the only offset that
+works reliably is offset zero, indicating that reading the directory
+should start from the beginning.
 
 @node Working with Directory Trees
 @section Working with Directory Trees
