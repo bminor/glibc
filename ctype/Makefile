@@ -36,6 +36,23 @@ aux := ctype-info
 
 tests := \
   test_ctype \
+  tst-ctype-tls-dlmopen \
+  tst-ctype-tls-dlopen-static \
   # tests
 
+tests-static := \
+  tst-ctype-tls-dlopen-static \
+  # tests-static
+
+modules-names := \
+  tst-ctype-tls-mod \
+  # modules-names
+
 include ../Rules
+
+$(objpfx)tst-ctype-tls-dlmopen: $(shared-thread-library)
+$(objpfx)tst-ctype-tls-dlmopen.out: $(objpfx)tst-ctype-tls-mod.so
+$(objpfx)tst-ctype-tls-dlopen-static: $(static-thread-library)
+$(objpfx)tst-ctype-tls-dlopen-static.out: $(objpfx)tst-ctype-tls-mod.so
+tst-ctype-tls-dlopen-static-ENV = \
+  LD_LIBRARY_PATH=$(ld-library-path):$(common-objpfx):$(common-objpfx)elf
