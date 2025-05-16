@@ -66,6 +66,11 @@ __ctype_tolower_loc (void)
 #   define __isdigit_l(c, l) ({ int __c = (c); __c >= '0' && __c <= '9'; })
 #  endif  /* Not __NO_CTYPE.  */
 
+/* For use in initializers.  */
+extern const char _nl_C_LC_CTYPE_class[] attribute_hidden;
+extern const uint32_t _nl_C_LC_CTYPE_toupper[] attribute_hidden;
+extern const uint32_t _nl_C_LC_CTYPE_tolower[] attribute_hidden;
+
 # endif	/* IS_IN (libc).  */
 #endif  /* Not _ISOMAC.  */
 
