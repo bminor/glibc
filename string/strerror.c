@@ -21,5 +21,5 @@
 char *
 strerror (int errnum)
 {
-  return __strerror_l (errnum, __libc_tsd_get (locale_t, LOCALE));
+  return __strerror_l (errnum, __libc_tsd_LOCALE);
 }

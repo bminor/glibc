@@ -64,12 +64,9 @@ _nl_postload_ctype (void)
      in fact using the global locale.  */
   if (_NL_CURRENT_LOCALE == &_nl_global_locale)
     {
-      __libc_tsd_set (const uint16_t *, CTYPE_B,
-		      (void *) _nl_global_locale.__ctype_b);
-      __libc_tsd_set (const int32_t *, CTYPE_TOUPPER,
-		      (void *) _nl_global_locale.__ctype_toupper);
-      __libc_tsd_set (const int32_t *, CTYPE_TOLOWER,
-		      (void *) _nl_global_locale.__ctype_tolower);
+      __libc_tsd_CTYPE_B = _nl_global_locale.__ctype_b;
+      __libc_tsd_CTYPE_TOUPPER = _nl_global_locale.__ctype_toupper;
+      __libc_tsd_CTYPE_TOLOWER = _nl_global_locale.__ctype_tolower;
     }
 
 #include <shlib-compat.h>

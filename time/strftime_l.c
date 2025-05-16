@@ -40,6 +40,7 @@
 #endif
 
 #include <ctype.h>
+#include <errno.h>
 #include <sys/types.h>		/* Some systems define `time_t' here.  */
 
 #ifdef TIME_WITH_SYS_TIME

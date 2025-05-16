@@ -3,8 +3,6 @@
 
 # ifndef _ISOMAC
 
-#include <libc-tsd.h>
-
 /* Now define the internal interfaces.  */
 extern unsigned long _create_xid (void);
 
@@ -47,7 +45,7 @@ extern void __rpc_thread_key_cleanup (void) attribute_hidden;
 
 extern void __rpc_thread_destroy (void) attribute_hidden;
 
-__libc_tsd_define (extern, struct rpc_thread_variables *, RPC_VARS)
+extern __thread struct rpc_thread_variables *__libc_tsd_RPC_VARS;
 
 #define RPC_THREAD_VARIABLE(x) (__rpc_thread_variables()->x)
 
