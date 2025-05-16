@@ -19,9 +19,17 @@
 #include <ctype.h>
 #include <locale/localeinfo.h>
 
-__thread const uint16_t * __libc_tsd_CTYPE_B;
-__thread const int32_t * __libc_tsd_CTYPE_TOLOWER;
-__thread const int32_t * __libc_tsd_CTYPE_TOUPPER;
+/* Fallback initialization using relocations.  See the _nl_C_locobj
+   initializers in locale/xlocale.c.  Usually, this is overwritten by
+   __ctype_init before user code runs, but this does not happen for
+   threads in secondary namespaces.  With the initializers, secondary
+   namespaces at least get locale data from the C locale.  */
+__thread const uint16_t * __libc_tsd_CTYPE_B
+  = (const uint16_t *) _nl_C_LC_CTYPE_class + 128;
+__thread const int32_t * __libc_tsd_CTYPE_TOLOWER
+  = (const int32_t *) _nl_C_LC_CTYPE_tolower + 128;
+__thread const int32_t * __libc_tsd_CTYPE_TOUPPER
+  = (const int32_t *) _nl_C_LC_CTYPE_toupper + 128;
 
 
 void
