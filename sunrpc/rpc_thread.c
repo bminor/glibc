@@ -3,7 +3,6 @@
 #include <assert.h>
 
 #include <libc-lock.h>
-#include <libc-tsd.h>
 #include <shlib-compat.h>
 #include <libc-symbols.h>
 
