@@ -41,10 +41,7 @@ libc_hidden_def (__ctype_init)
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3)
 
 /* Defined in locale/C-ctype.c.  */
-extern const char _nl_C_LC_CTYPE_class[] attribute_hidden;
 extern const char _nl_C_LC_CTYPE_class32[] attribute_hidden;
-extern const char _nl_C_LC_CTYPE_toupper[] attribute_hidden;
-extern const char _nl_C_LC_CTYPE_tolower[] attribute_hidden;
 extern const char _nl_C_LC_CTYPE_class_upper[] attribute_hidden;
 extern const char _nl_C_LC_CTYPE_class_lower[] attribute_hidden;
 extern const char _nl_C_LC_CTYPE_class_alpha[] attribute_hidden;
