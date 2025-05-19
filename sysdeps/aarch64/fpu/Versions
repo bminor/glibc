@@ -163,5 +163,10 @@ libmvec {
     _ZGVnN4v_acospif;
     _ZGVsMxv_acospi;
     _ZGVsMxv_acospif;
+    _ZGVnN2v_asinpi;
+    _ZGVnN2v_asinpif;
+    _ZGVnN4v_asinpif;
+    _ZGVsMxv_asinpi;
+    _ZGVsMxv_asinpif;
   }
 }

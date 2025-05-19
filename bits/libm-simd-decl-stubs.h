@@ -384,4 +384,15 @@
 #define __DECL_SIMD_acospif32x
 #define __DECL_SIMD_acospif64x
 #define __DECL_SIMD_acospif128x
+
+#define __DECL_SIMD_asinpi
+#define __DECL_SIMD_asinpif
+#define __DECL_SIMD_asinpil
+#define __DECL_SIMD_asinpif16
+#define __DECL_SIMD_asinpif32
+#define __DECL_SIMD_asinpif64
+#define __DECL_SIMD_asinpif128
+#define __DECL_SIMD_asinpif32x
+#define __DECL_SIMD_asinpif64x
+#define __DECL_SIMD_asinpif128x
 #endif

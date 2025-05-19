@@ -49,6 +49,10 @@
 # define __DECL_SIMD_asinh __DECL_SIMD_aarch64
 # undef __DECL_SIMD_asinhf
 # define __DECL_SIMD_asinhf __DECL_SIMD_aarch64
+# undef __DECL_SIMD_asinpi
+# define __DECL_SIMD_asinpi __DECL_SIMD_aarch64
+# undef __DECL_SIMD_asinpif
+# define __DECL_SIMD_asinpif __DECL_SIMD_aarch64
 # undef __DECL_SIMD_atan
 # define __DECL_SIMD_atan __DECL_SIMD_aarch64
 # undef __DECL_SIMD_atanf
@@ -185,6 +189,7 @@ __vpcs __f32x4_t _ZGVnN4v_acoshf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_acospif (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_asinf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_asinhf (__f32x4_t);
+__vpcs __f32x4_t _ZGVnN4v_asinpif (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_atanf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_atanhf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_cbrtf (__f32x4_t);
@@ -217,6 +222,7 @@ __vpcs __f64x2_t _ZGVnN2v_acosh (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_acospi (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_asin (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_asinh (__f64x2_t);
+__vpcs __f64x2_t _ZGVnN2v_asinpi (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_atan (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_atanh (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_cbrt (__f64x2_t);
@@ -254,6 +260,7 @@ __sv_f32_t _ZGVsMxv_acoshf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_acospif (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_asinf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_asinhf (__sv_f32_t, __sv_bool_t);
+__sv_f32_t _ZGVsMxv_asinpif (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_atanf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_atanhf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_cbrtf (__sv_f32_t, __sv_bool_t);
@@ -286,6 +293,7 @@ __sv_f64_t _ZGVsMxv_acosh (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_acospi (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_asin (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_asinh (__sv_f64_t, __sv_bool_t);
+__sv_f64_t _ZGVsMxv_asinpi (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_atan (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_atanh (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_cbrt (__sv_f64_t, __sv_bool_t);
