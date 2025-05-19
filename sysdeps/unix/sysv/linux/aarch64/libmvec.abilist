@@ -148,3 +148,8 @@ GLIBC_2.41 _ZGVsMxv_sinpi F
 GLIBC_2.41 _ZGVsMxv_sinpif F
 GLIBC_2.41 _ZGVsMxv_tanpi F
 GLIBC_2.41 _ZGVsMxv_tanpif F
+GLIBC_2.42 _ZGVnN2v_acospi F
+GLIBC_2.42 _ZGVnN2v_acospif F
+GLIBC_2.42 _ZGVnN4v_acospif F
+GLIBC_2.42 _ZGVsMxv_acospi F
+GLIBC_2.42 _ZGVsMxv_acospif F

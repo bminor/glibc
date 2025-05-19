@@ -373,4 +373,15 @@
 #define __DECL_SIMD_tanpif32x
 #define __DECL_SIMD_tanpif64x
 #define __DECL_SIMD_tanpif128x
+
+#define __DECL_SIMD_acospi
+#define __DECL_SIMD_acospif
+#define __DECL_SIMD_acospil
+#define __DECL_SIMD_acospif16
+#define __DECL_SIMD_acospif32
+#define __DECL_SIMD_acospif64
+#define __DECL_SIMD_acospif128
+#define __DECL_SIMD_acospif32x
+#define __DECL_SIMD_acospif64x
+#define __DECL_SIMD_acospif128x
 #endif

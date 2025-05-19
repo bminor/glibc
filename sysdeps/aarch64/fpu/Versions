@@ -157,4 +157,11 @@ libmvec {
     _ZGVsMxv_tanpi;
     _ZGVsMxv_tanpif;
   }
+  GLIBC_2.42 {
+    _ZGVnN2v_acospi;
+    _ZGVnN2v_acospif;
+    _ZGVnN4v_acospif;
+    _ZGVsMxv_acospi;
+    _ZGVsMxv_acospif;
+  }
 }
