@@ -406,4 +406,15 @@
 #define __DECL_SIMD_atanpif32x
 #define __DECL_SIMD_atanpif64x
 #define __DECL_SIMD_atanpif128x
+
+#define __DECL_SIMD_atan2pi
+#define __DECL_SIMD_atan2pif
+#define __DECL_SIMD_atan2pil
+#define __DECL_SIMD_atan2pif16
+#define __DECL_SIMD_atan2pif32
+#define __DECL_SIMD_atan2pif64
+#define __DECL_SIMD_atan2pif128
+#define __DECL_SIMD_atan2pif32x
+#define __DECL_SIMD_atan2pif64x
+#define __DECL_SIMD_atan2pif128x
 #endif

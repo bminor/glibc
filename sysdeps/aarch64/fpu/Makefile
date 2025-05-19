@@ -8,6 +8,7 @@ libmvec-supported-funcs = acos \
                           atanh \
                           atanpi \
                           atan2 \
+                          atan2pi \
                           cbrt \
                           cos \
                           cosh \

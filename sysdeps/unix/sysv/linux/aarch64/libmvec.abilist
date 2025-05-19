@@ -154,12 +154,17 @@ GLIBC_2.42 _ZGVnN2v_asinpi F
 GLIBC_2.42 _ZGVnN2v_asinpif F
 GLIBC_2.42 _ZGVnN2v_atanpi F
 GLIBC_2.42 _ZGVnN2v_atanpif F
+GLIBC_2.42 _ZGVnN2vv_atan2pi F
+GLIBC_2.42 _ZGVnN2vv_atan2pif F
 GLIBC_2.42 _ZGVnN4v_acospif F
 GLIBC_2.42 _ZGVnN4v_asinpif F
 GLIBC_2.42 _ZGVnN4v_atanpif F
+GLIBC_2.42 _ZGVnN4vv_atan2pif F
 GLIBC_2.42 _ZGVsMxv_acospi F
 GLIBC_2.42 _ZGVsMxv_acospif F
 GLIBC_2.42 _ZGVsMxv_asinpi F
 GLIBC_2.42 _ZGVsMxv_asinpif F
 GLIBC_2.42 _ZGVsMxv_atanpi F
 GLIBC_2.42 _ZGVsMxv_atanpif F
+GLIBC_2.42 _ZGVsMxvv_atan2pi F
+GLIBC_2.42 _ZGVsMxvv_atan2pif F

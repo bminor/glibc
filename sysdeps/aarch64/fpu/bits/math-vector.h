@@ -69,6 +69,10 @@
 # define __DECL_SIMD_atan2 __DECL_SIMD_aarch64
 # undef __DECL_SIMD_atan2f
 # define __DECL_SIMD_atan2f __DECL_SIMD_aarch64
+# undef __DECL_SIMD_atan2pi
+# define __DECL_SIMD_atan2pi __DECL_SIMD_aarch64
+# undef __DECL_SIMD_atan2pif
+# define __DECL_SIMD_atan2pif __DECL_SIMD_aarch64
 # undef __DECL_SIMD_cbrt
 # define __DECL_SIMD_cbrt __DECL_SIMD_aarch64
 # undef __DECL_SIMD_cbrtf
@@ -188,6 +192,7 @@ typedef __SVBool_t __sv_bool_t;
 #  define __vpcs __attribute__ ((__aarch64_vector_pcs__))
 
 __vpcs __f32x4_t _ZGVnN4vv_atan2f (__f32x4_t, __f32x4_t);
+__vpcs __f32x4_t _ZGVnN4vv_atan2pif (__f32x4_t, __f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_acosf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_acoshf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_acospif (__f32x4_t);
@@ -222,6 +227,7 @@ __vpcs __f32x4_t _ZGVnN4v_tanhf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_tanpif (__f32x4_t);
 
 __vpcs __f64x2_t _ZGVnN2vv_atan2 (__f64x2_t, __f64x2_t);
+__vpcs __f64x2_t _ZGVnN2vv_atanpi2 (__f64x2_t, __f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_acos (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_acosh (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_acospi (__f64x2_t);
@@ -261,6 +267,7 @@ __vpcs __f64x2_t _ZGVnN2v_tanpi (__f64x2_t);
 #ifdef __SVE_VEC_MATH_SUPPORTED
 
 __sv_f32_t _ZGVsMxvv_atan2f (__sv_f32_t, __sv_f32_t, __sv_bool_t);
+__sv_f32_t _ZGVsMxvv_atan2pif (__sv_f32_t, __sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_acosf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_acoshf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_acospif (__sv_f32_t, __sv_bool_t);
@@ -295,6 +302,7 @@ __sv_f32_t _ZGVsMxv_tanhf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_tanpif (__sv_f32_t, __sv_bool_t);
 
 __sv_f64_t _ZGVsMxvv_atan2 (__sv_f64_t, __sv_f64_t, __sv_bool_t);
+__sv_f64_t _ZGVsMxvv_atan2pi (__sv_f64_t, __sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_acos (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_acosh (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_acospi (__sv_f64_t, __sv_bool_t);
