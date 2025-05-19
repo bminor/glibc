@@ -18,22 +18,21 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include "v_math.h"
-#include "poly_advsimd_f32.h"
 
 static const struct data
 {
-  float32x4_t poly[5];
+  float32x4_t c0, c2, c4;
+  float c1, c3;
   float32x4_t pi_over_2f;
 } data = {
   /* Polynomial approximation of  (asin(sqrt(x)) - sqrt(x)) / (x * sqrt(x))  on
      [ 0x1p-24 0x1p-2 ] order = 4 rel error: 0x1.00a23bbp-29 .  */
-  .poly = { V4 (0x1.55555ep-3), V4 (0x1.33261ap-4), V4 (0x1.70d7dcp-5),
-	    V4 (0x1.b059dp-6), V4 (0x1.3af7d8p-5) },
-  .pi_over_2f = V4 (0x1.921fb6p+0f),
+  .c0 = V4 (0x1.55555ep-3f), .c1 = 0x1.33261ap-4f,
+  .c2 = V4 (0x1.70d7dcp-5f), .c3 = 0x1.b059dp-6f,
+  .c4 = V4 (0x1.3af7d8p-5f), .pi_over_2f = V4 (0x1.921fb6p+0f),
 };
 
 #define AbsMask 0x7fffffff
-#define Half 0x3f000000
 #define One 0x3f800000
 #define Small 0x39800000 /* 2^-12.  */
 
@@ -47,11 +46,8 @@ special_case (float32x4_t x, float32x4_t y, uint32x4_t special)
 
 /* Single-precision implementation of vector asin(x).
 
-   For |x| < Small, approximate asin(x) by x. Small = 2^-12 for correct
-   rounding. If WANT_SIMD_EXCEPT = 0, Small = 0 and we proceed with the
-   following approximation.
 
-   For |x| in [Small, 0.5], use order 4 polynomial P such that the final
+   For |x| <0.5, use order 4 polynomial P such that the final
    approximation is an odd polynomial: asin(x) ~ x + x^3 P(x^2).
 
     The largest observed error in this region is 0.83 ulps,
@@ -80,24 +76,31 @@ float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (asin) (float32x4_t x)
 #endif
 
   float32x4_t ax = vreinterpretq_f32_u32 (ia);
-  uint32x4_t a_lt_half = vcltq_u32 (ia, v_u32 (Half));
+  uint32x4_t a_lt_half = vcaltq_f32 (x, v_f32 (0.5f));
 
   /* Evaluate polynomial Q(x) = y + y * z * P(z) with
      z = x ^ 2 and y = |x|            , if |x| < 0.5
      z = (1 - |x|) / 2 and y = sqrt(z), if |x| >= 0.5.  */
   float32x4_t z2 = vbslq_f32 (a_lt_half, vmulq_f32 (x, x),
-			      vfmsq_n_f32 (v_f32 (0.5), ax, 0.5));
+			      vfmsq_n_f32 (v_f32 (0.5f), ax, 0.5f));
   float32x4_t z = vbslq_f32 (a_lt_half, ax, vsqrtq_f32 (z2));
 
   /* Use a single polynomial approximation P for both intervals.  */
-  float32x4_t p = v_horner_4_f32 (z2, d->poly);
+
+  /* PW Horner 3 evaluation scheme.  */
+  float32x4_t z4 = vmulq_f32 (z2, z2);
+  float32x4_t c13 = vld1q_f32 (&d->c1);
+  float32x4_t p01 = vfmaq_laneq_f32 (d->c0, z2, c13, 0);
+  float32x4_t p23 = vfmaq_laneq_f32 (d->c2, z2, c13, 1);
+  float32x4_t p = vfmaq_f32 (p23, d->c4, z4);
+  p = vfmaq_f32 (p01, p, z4);
   /* Finalize polynomial: z + z * z2 * P(z2).  */
   p = vfmaq_f32 (z, vmulq_f32 (z, z2), p);
 
   /* asin(|x|) = Q(|x|)         , for |x| < 0.5
 	       = pi/2 - 2 Q(|x|), for |x| >= 0.5.  */
   float32x4_t y
-      = vbslq_f32 (a_lt_half, p, vfmsq_n_f32 (d->pi_over_2f, p, 2.0));
+      = vbslq_f32 (a_lt_half, p, vfmsq_n_f32 (d->pi_over_2f, p, 2.0f));
 
   /* Copy sign.  */
   return vbslq_f32 (v_u32 (AbsMask), y, x);

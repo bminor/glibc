@@ -18,22 +18,22 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include "v_math.h"
-#include "poly_advsimd_f32.h"
 
 static const struct data
 {
-  float32x4_t c0, pi_over_2, c4, c6, c2;
+  float32x4_t c0, c4, c6, c2;
   float c1, c3, c5, c7;
   uint32x4_t comp_const;
+  float32x4_t pi;
 } data = {
   /* Coefficients of polynomial P such that atan(x)~x+x*P(x^2) on
      [2**-128, 1.0].
      Generated using fpminimax between FLT_MIN and 1.  */
-  .c0 = V4 (-0x1.55555p-2f),	    .c1 = 0x1.99935ep-3f,
-  .c2 = V4 (-0x1.24051ep-3f),	    .c3 = 0x1.bd7368p-4f,
-  .c4 = V4 (-0x1.491f0ep-4f),	    .c5 = 0x1.93a2c0p-5f,
-  .c6 = V4 (-0x1.4c3c60p-6f),	    .c7 = 0x1.01fd88p-8f,
-  .pi_over_2 = V4 (0x1.921fb6p+0f), .comp_const = V4 (2 * 0x7f800000lu - 1),
+  .c0 = V4 (-0x1.5554dcp-2), .c1 = 0x1.9978ecp-3,
+  .c2 = V4 (-0x1.230a94p-3), .c3 = 0x1.b4debp-4,
+  .c4 = V4 (-0x1.3550dap-4), .c5 = 0x1.61eebp-5,
+  .c6 = V4 (-0x1.0c17d4p-6), .c7 = 0x1.7ea694p-9,
+  .pi = V4 (0x1.921fb6p+1f), .comp_const = V4 (2 * 0x7f800000lu - 1),
 };
 
 #define SignMask v_u32 (0x80000000)
@@ -54,13 +54,13 @@ static inline uint32x4_t
 zeroinfnan (uint32x4_t i, const struct data *d)
 {
   /* 2 * i - 1 >= 2 * 0x7f800000lu - 1.  */
-  return vcgeq_u32 (vsubq_u32 (vmulq_n_u32 (i, 2), v_u32 (1)), d->comp_const);
+  return vcgeq_u32 (vsubq_u32 (vshlq_n_u32 (i, 1), v_u32 (1)), d->comp_const);
 }
 
 /* Fast implementation of vector atan2f. Maximum observed error is
-   2.95 ULP in [0x1.9300d6p+6 0x1.93c0c6p+6] x [0x1.8c2dbp+6 0x1.8cea6p+6]:
-   _ZGVnN4vv_atan2f (0x1.93836cp+6, 0x1.8cae1p+6) got 0x1.967f06p-1
-						 want 0x1.967f00p-1.  */
+   2.13 ULP in [0x1.9300d6p+6 0x1.93c0c6p+6] x [0x1.8c2dbp+6 0x1.8cea6p+6]:
+   _ZGVnN4vv_atan2f (0x1.14a9d4p-87, 0x1.0eb886p-87) got 0x1.97aea2p-1
+						    want 0x1.97ae9ep-1.  */
 float32x4_t VPCS_ATTR NOINLINE V_NAME_F2 (atan2) (float32x4_t y, float32x4_t x)
 {
   const struct data *d = ptr_barrier (&data);
@@ -81,28 +81,31 @@ float32x4_t VPCS_ATTR NOINLINE V_NAME_F2 (atan2) (float32x4_t y, float32x4_t x)
   uint32x4_t pred_xlt0 = vcltzq_f32 (x);
   uint32x4_t pred_aygtax = vcgtq_f32 (ay, ax);
 
-  /* Set up z for call to atanf.  */
-  float32x4_t n = vbslq_f32 (pred_aygtax, vnegq_f32 (ax), ay);
-  float32x4_t q = vbslq_f32 (pred_aygtax, ay, ax);
-  float32x4_t z = vdivq_f32 (n, q);
+  /* Set up z for evaluation of atanf.  */
+  float32x4_t num = vbslq_f32 (pred_aygtax, vnegq_f32 (ax), ay);
+  float32x4_t den = vbslq_f32 (pred_aygtax, ay, ax);
+  float32x4_t z = vdivq_f32 (num, den);
 
-  /* Work out the correct shift.  */
+  /* Work out the correct shift for atan2:
+     Multiplication by pi is done later.
+     -pi   when x < 0  and ax < ay
+     -pi/2 when x < 0  and ax > ay
+      0    when x >= 0 and ax < ay
+      pi/2 when x >= 0 and ax > ay.  */
   float32x4_t shift = vreinterpretq_f32_u32 (
-      vandq_u32 (pred_xlt0, vreinterpretq_u32_f32 (v_f32 (-2.0f))));
-  shift = vbslq_f32 (pred_aygtax, vaddq_f32 (shift, v_f32 (1.0f)), shift);
-  shift = vmulq_f32 (shift, d->pi_over_2);
+      vandq_u32 (pred_xlt0, vreinterpretq_u32_f32 (v_f32 (-1.0f))));
+  float32x4_t shift2 = vreinterpretq_f32_u32 (
+      vandq_u32 (pred_aygtax, vreinterpretq_u32_f32 (v_f32 (0.5f))));
+  shift = vaddq_f32 (shift, shift2);
 
-  /* Calculate the polynomial approximation.
-     Use 2-level Estrin scheme for P(z^2) with deg(P)=7. However,
-     a standard implementation using z8 creates spurious underflow
-     in the very last fma (when z^8 is small enough).
-     Therefore, we split the last fma into a mul and an fma.
-     Horner and single-level Estrin have higher errors that exceed
-     threshold.  */
+  /* Calculate the polynomial approximation.  */
   float32x4_t z2 = vmulq_f32 (z, z);
+  float32x4_t z3 = vmulq_f32 (z2, z);
   float32x4_t z4 = vmulq_f32 (z2, z2);
+  float32x4_t z8 = vmulq_f32 (z4, z4);
 
   float32x4_t c1357 = vld1q_f32 (&d->c1);
+
   float32x4_t p01 = vfmaq_laneq_f32 (d->c0, z2, c1357, 0);
   float32x4_t p23 = vfmaq_laneq_f32 (d->c2, z2, c1357, 1);
   float32x4_t p45 = vfmaq_laneq_f32 (d->c4, z2, c1357, 2);
@@ -110,10 +113,11 @@ float32x4_t VPCS_ATTR NOINLINE V_NAME_F2 (atan2) (float32x4_t y, float32x4_t x)
   float32x4_t p03 = vfmaq_f32 (p01, z4, p23);
   float32x4_t p47 = vfmaq_f32 (p45, z4, p67);
 
-  float32x4_t ret = vfmaq_f32 (p03, z4, vmulq_f32 (z4, p47));
+  float32x4_t poly = vfmaq_f32 (p03, z8, p47);
 
   /* y = shift + z * P(z^2).  */
-  ret = vaddq_f32 (vfmaq_f32 (z, ret, vmulq_f32 (z2, z)), shift);
+  float32x4_t ret = vfmaq_f32 (z, shift, d->pi);
+  ret = vfmaq_f32 (ret, z3, poly);
 
   if (__glibc_unlikely (v_any_u32 (special_cases)))
     {
