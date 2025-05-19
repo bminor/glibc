@@ -25,6 +25,7 @@ libmvec_hidden_proto (V_NAME_F1(asinh));
 libmvec_hidden_proto (V_NAME_F1(asinpi));
 libmvec_hidden_proto (V_NAME_F1(atan));
 libmvec_hidden_proto (V_NAME_F1(atanh));
+libmvec_hidden_proto (V_NAME_F1(atanpi));
 libmvec_hidden_proto (V_NAME_F1(cbrt));
 libmvec_hidden_proto (V_NAME_F1(cos));
 libmvec_hidden_proto (V_NAME_F1(cosh));

@@ -395,4 +395,15 @@
 #define __DECL_SIMD_asinpif32x
 #define __DECL_SIMD_asinpif64x
 #define __DECL_SIMD_asinpif128x
+
+#define __DECL_SIMD_atanpi
+#define __DECL_SIMD_atanpif
+#define __DECL_SIMD_atanpil
+#define __DECL_SIMD_atanpif16
+#define __DECL_SIMD_atanpif32
+#define __DECL_SIMD_atanpif64
+#define __DECL_SIMD_atanpif128
+#define __DECL_SIMD_atanpif32x
+#define __DECL_SIMD_atanpif64x
+#define __DECL_SIMD_atanpif128x
 #endif

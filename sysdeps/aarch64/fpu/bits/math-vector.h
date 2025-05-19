@@ -61,6 +61,10 @@
 # define __DECL_SIMD_atanh __DECL_SIMD_aarch64
 # undef __DECL_SIMD_atanhf
 # define __DECL_SIMD_atanhf __DECL_SIMD_aarch64
+# undef __DECL_SIMD_atanpi
+# define __DECL_SIMD_atanpi __DECL_SIMD_aarch64
+# undef __DECL_SIMD_atanpif
+# define __DECL_SIMD_atanpif __DECL_SIMD_aarch64
 # undef __DECL_SIMD_atan2
 # define __DECL_SIMD_atan2 __DECL_SIMD_aarch64
 # undef __DECL_SIMD_atan2f
@@ -192,6 +196,7 @@ __vpcs __f32x4_t _ZGVnN4v_asinhf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_asinpif (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_atanf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_atanhf (__f32x4_t);
+__vpcs __f32x4_t _ZGVnN4v_atanpif (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_cbrtf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_cosf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_coshf (__f32x4_t);
@@ -225,6 +230,7 @@ __vpcs __f64x2_t _ZGVnN2v_asinh (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_asinpi (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_atan (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_atanh (__f64x2_t);
+__vpcs __f64x2_t _ZGVnN2v_atanpi (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_cbrt (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_cos (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_cosh (__f64x2_t);
@@ -263,6 +269,7 @@ __sv_f32_t _ZGVsMxv_asinhf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_asinpif (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_atanf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_atanhf (__sv_f32_t, __sv_bool_t);
+__sv_f32_t _ZGVsMxv_atanpif (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_cbrtf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_cosf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_coshf (__sv_f32_t, __sv_bool_t);
@@ -296,6 +303,7 @@ __sv_f64_t _ZGVsMxv_asinh (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_asinpi (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_atan (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_atanh (__sv_f64_t, __sv_bool_t);
+__sv_f64_t _ZGVsMxv_atanpi (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_cbrt (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_cos (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_cosh (__sv_f64_t, __sv_bool_t);

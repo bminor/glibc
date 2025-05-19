@@ -74,6 +74,7 @@ __MATHCALL (asinpi,, (_Mdouble_ __x));
 __MATHCALL_VEC (asinpi,, (_Mdouble_ __x));
 /* Arc tangent of X, divided by pi.  */
 __MATHCALL (atanpi,, (_Mdouble_ __x));
+__MATHCALL_VEC (atanpi,, (_Mdouble_ __x));
 /* Arc tangent of Y/X, divided by pi.  */
 __MATHCALL (atan2pi,, (_Mdouble_ __y, _Mdouble_ __x));
 
