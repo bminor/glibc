@@ -227,7 +227,7 @@ __vpcs __f32x4_t _ZGVnN4v_tanhf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_tanpif (__f32x4_t);
 
 __vpcs __f64x2_t _ZGVnN2vv_atan2 (__f64x2_t, __f64x2_t);
-__vpcs __f64x2_t _ZGVnN2vv_atanpi2 (__f64x2_t, __f64x2_t);
+__vpcs __f64x2_t _ZGVnN2vv_atan2pi (__f64x2_t, __f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_acos (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_acosh (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_acospi (__f64x2_t);
