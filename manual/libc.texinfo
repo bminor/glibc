@@ -29,7 +29,7 @@
 @comment %**end of header (This is for running Texinfo on a region.)
 
 @c Everything related to printed editions is disabled until we have
-@c resolved how to keep them in sync with the master sources of the
+@c resolved how to keep them in sync with the primary sources of the
 @c manual.
 @c sold 0.06/1.09, print run out 21may96
 @c @set EDITION 0.13
