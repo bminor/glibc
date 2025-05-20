@@ -29,7 +29,7 @@ import tempfile
 
 import glibcconform
 
-# The following whitelisted symbols are also allowed for now.
+# The following ALLOWLIST symbols are also allowed for now.
 #
 # * Bug 17576: stdin, stdout, stderr only reserved with external
 # linkage when stdio.h included (and possibly not then), not
@@ -38,7 +38,7 @@ import glibcconform
 # * Bug 18442: re_syntax_options wrongly brought in by regcomp and
 # used by re_comp.
 #
-WHITELIST = {'stdin', 'stdout', 'stderr', 're_syntax_options'}
+ALLOWLIST = {'stdin', 'stdout', 'stderr', 're_syntax_options'}
 
 
 def list_syms(filename):
@@ -94,7 +94,7 @@ def main():
     with open(args.stdsyms, 'r') as stdsyms_file:
         for line in stdsyms_file:
             stdsyms.add(line.rstrip())
-    stdsyms |= WHITELIST
+    stdsyms |= ALLOWLIST
 
     # Load information about GLOBAL and WEAK symbols defined or used
     # in the standard libraries.
