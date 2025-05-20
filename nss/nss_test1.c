@@ -28,9 +28,9 @@
    to test known bad data.  */
 #define alloc_buffer_maybe_copy_string(b,s) s ? alloc_buffer_copy_string (b, s) : NULL;
 
-/* This file is the master template.  Other instances of this test
-   module should define NAME(x) to have their name instead of "test1",
-   then include this file.
+/* This file is both a standalone test and a parametrized template.
+   Other instances of this test module should define NAME(x) to have
+   their name instead of "test1", then include this file.
 */
 #define NAME_(x,n) _nss_##n##_##x
 #ifndef NAME
