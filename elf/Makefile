@@ -268,6 +268,7 @@ tests-static-normal := \
   tst-array1-static \
   tst-array5-static \
   tst-dl-iter-static \
+  tst-dlopen-sgid \
   tst-dst-static \
   tst-env-setuid-static \
   tst-getauxval-static \
@@ -923,6 +924,7 @@ modules-names += \
   tst-dlopen-auditdupmod \
   tst-dlopen-constructor-null-mod1 \
   tst-dlopen-constructor-null-mod2 \
+  tst-dlopen-sgid-mod \
   tst-dlopen-tlsreinitmod1 \
   tst-dlopen-tlsreinitmod2 \
   tst-dlopen-tlsreinitmod3 \
@@ -3488,3 +3490,5 @@ $(objpfx)tst-origin.out: tst-origin.sh $(objpfx)tst-origin
 		liborigin-mod.so \
 		> $@; \
 	$(evaluate-test)
+
+$(objpfx)tst-dlopen-sgid.out: $(objpfx)tst-dlopen-sgid-mod.so
