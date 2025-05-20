@@ -267,6 +267,7 @@ tests-static-normal := \
   tst-array1-static \
   tst-array5-static \
   tst-dl-iter-static \
+  tst-dlopen-sgid \
   tst-dst-static \
   tst-env-setuid \
   tst-env-setuid-tunables \
@@ -838,6 +839,7 @@ modules-names += \
   tst-dlmopen-gethostbyname-mod \
   tst-dlmopen-twice-mod1 \
   tst-dlmopen-twice-mod2 \
+  tst-dlopen-sgid-mod \
   tst-dlopenfaillinkmod \
   tst-dlopenfailmod1 \
   tst-dlopenfailmod2 \
@@ -3016,3 +3018,5 @@ $(objpfx)tst-recursive-tls.out: \
     0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15)
 $(objpfx)tst-recursive-tlsmod%.os: tst-recursive-tlsmodN.c
 	$(compile-command.c) -DVAR=thread_$* -DFUNC=get_threadvar_$*
+
+$(objpfx)tst-dlopen-sgid.out: $(objpfx)tst-dlopen-sgid-mod.so
