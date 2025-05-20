@@ -267,6 +267,7 @@ tests-static-normal := \
   tst-array1-static \
   tst-array5-static \
   tst-dl-iter-static \
+  tst-dlopen-sgid \
   tst-dst-static \
   tst-env-setuid-static \
   tst-getauxval-static \
@@ -910,6 +911,7 @@ modules-names += \
   tst-dlmopen1mod \
   tst-dlopen-auditdup-auditmod \
   tst-dlopen-auditdupmod \
+  tst-dlopen-sgid-mod \
   tst-dlopen-tlsreinitmod1 \
   tst-dlopen-tlsreinitmod2 \
   tst-dlopen-tlsreinitmod3 \
@@ -3423,3 +3425,5 @@ $(objpfx)tst-nolink-libc-2: $(objpfx)tst-nolink-libc.o
 	  -Wl,--dynamic-linker=$(objpfx)ld.so
 $(objpfx)tst-nolink-libc-2.out: $(objpfx)tst-nolink-libc-2 $(objpfx)ld.so
 	$< > $@ 2>&1; $(evaluate-test)
+
+$(objpfx)tst-dlopen-sgid.out: $(objpfx)tst-dlopen-sgid-mod.so
