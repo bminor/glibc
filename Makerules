@@ -1400,7 +1400,7 @@ endif
 
 ifneq (,$(strip $(gpl2lgpl)))
 ifneq (,$(wildcard $(..)gpl2lgpl.sed))
-# Snarf from the master source and frob the copying notice.
+# Snarf from the original source and frob the copying notice.
 $(gpl2lgpl): %: $(..)gpl2lgpl.sed /home/gd/gnu/lib/%
 	sed -f $^ > $@-tmp
 # So I don't edit them by mistake.
