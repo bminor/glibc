@@ -922,7 +922,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 				     (CPU_FEATURE_USABLE (AVX2)
 				      && CPU_FEATURE_USABLE (BMI2)),
 				     __wcsncpy_avx2)
-	      X86_IFUNC_IMPL_ADD_V2 (array, i, wcpncpy,
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, wcsncpy,
 				     1,
 				     __wcsncpy_generic))
 
@@ -952,7 +952,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 				     (CPU_FEATURE_USABLE (AVX2)
 				      && CPU_FEATURE_USABLE (BMI2)),
 				     __wcpncpy_avx2)
-	      X86_IFUNC_IMPL_ADD_V2 (array, i, wcsncpy,
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, wcpncpy,
 				     1,
 				     __wcpncpy_generic))
 
