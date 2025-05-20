@@ -34,7 +34,7 @@ typedef struct { uint8_t align; uint16_t freq; } align_data_t;
 
 #define SIZE_NUM 65536
 #define SIZE_MASK (SIZE_NUM-1)
-static uint8_t size_arr[SIZE_NUM];
+static uint16_t size_arr[SIZE_NUM];
 
 /* Frequency data for memcpy of less than 4096 bytes based on SPEC2017.  */
 static freq_data_t size_freq[] =
