@@ -109,7 +109,7 @@ support_capture_subprogram (const char *file, char *const argv[])
    safely make it SGID with the TARGET group ID.  Then runs the
    executable.  */
 static int
-copy_and_spawn_sgid (char *child_id, gid_t gid)
+copy_and_spawn_sgid (const char *child_id, gid_t gid)
 {
   char *dirname = xasprintf ("%s/tst-tunables-setuid.%jd",
 			     test_dir, (intmax_t) getpid ());
@@ -172,7 +172,7 @@ copy_and_spawn_sgid (char *child_id, gid_t gid)
   ret = 0;
   infd = outfd = -1;
 
-  char * const args[] = {execname, child_id, NULL};
+  char * const args[] = {execname, (char *) child_id, NULL};
 
   status = support_subprogram_wait (args[0], args);
 
@@ -199,7 +199,7 @@ err:
 }
 
 int
-support_capture_subprogram_self_sgid (char *child_id)
+support_capture_subprogram_self_sgid (const char *child_id)
 {
   gid_t target = 0;
   const int count = 64;
