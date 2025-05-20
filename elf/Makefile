@@ -266,6 +266,7 @@ tests-static-normal := \
   tst-array1-static \
   tst-array5-static \
   tst-dl-iter-static \
+  tst-dlopen-sgid \
   tst-dst-static \
   tst-env-setuid-static \
   tst-getauxval-static \
@@ -844,6 +845,7 @@ modules-names += \
   tst-dlmopen-twice-mod1 \
   tst-dlmopen-twice-mod2 \
   tst-dlmopen1mod \
+  tst-dlopen-sgid-mod \
   tst-dlopen-tlsreinitmod1 \
   tst-dlopen-tlsreinitmod2 \
   tst-dlopen-tlsreinitmod3 \
@@ -3125,3 +3127,5 @@ $(objpfx)tst-dlopen-tlsreinit3.out: $(objpfx)tst-auditmod1.so
 tst-dlopen-tlsreinit3-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so
 $(objpfx)tst-dlopen-tlsreinit4.out: $(objpfx)tst-auditmod1.so
 tst-dlopen-tlsreinit4-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so
+
+$(objpfx)tst-dlopen-sgid.out: $(objpfx)tst-dlopen-sgid-mod.so
