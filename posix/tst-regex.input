@@ -8423,11 +8423,6 @@
 	* sysdeps/libm-ieee754/s_exp2f.c (__exp2f_deltatable): Renamed
 	from __exp2_deltatable.
 
-1998-02-26  Ulrich Drepper  <drepper@cygnus.com>
-
-	* nis/ypclnt.c (yp_master): Check result of strdup.
-	Patch by Thorsten Kukuk.
-
 1998-02-26  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
 
 	* nis/ypclnt.c: Give clnt handle after error checking free, change
@@ -11088,13 +11083,6 @@
 	* sysdeps/m68k/fpu/bits/mathinline.h: Protect declarations of
 	inline functions by feature tests to avoid warning about missing
 	prototype declarations.
-
-1997-12-09 15:08  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
-
-	* nis/nss_compat/compat-grp.c: Reset the blacklist correct, fix
-	return code for non existent +name entries.
-	* nis/nss_compat/compat-pwd.c: Likewise.
-	* nis/nss_compat/compat-spwd.c: Likewise.
 
 1997-12-10 13:52  Philip Blundell  <pb@nexus.co.uk>
 
