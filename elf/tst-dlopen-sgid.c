@@ -26,6 +26,8 @@
 #include <support/check.h>
 #include <support/support.h>
 #include <support/temp_file.h>
+#include <support/test-driver.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
 /* This is the name of our test object.  Use a custom module for
@@ -66,9 +68,15 @@ do_test (void)
     free (from);
   }
 
-  TEST_COMPARE (support_capture_subprogram_self_sgid (magic_argument), 0);
-
   free (libdir);
+
+  int status = support_capture_subprogram_self_sgid (magic_argument);
+
+  if (WEXITSTATUS (status) == EXIT_UNSUPPORTED)
+    return EXIT_UNSUPPORTED;
+
+  if (!WIFEXITED (status))
+    FAIL_EXIT1 ("Unexpected exit status %d from child process\n", status);
 
   return 0;
 }
