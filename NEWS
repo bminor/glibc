@@ -113,6 +113,7 @@ The following bugs are resolved with this release:
   [32231] elf: Change ldconfig auxcache magic number
   [32470] x86: Avoid integer truncation with large cache sizes
   [32582] Fix underallocation of abort_msg_s struct (CVE-2025-0395)
+  [32987] elf: Fix subprocess status handling for tst-dlopen-sgid
 
 Version 2.36
 
