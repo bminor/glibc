@@ -31,6 +31,7 @@
 #include <support/xsocket.h>
 #include <support/xspawn.h>
 #include <support/support.h>
+#include <support/temp_file.h>
 #include <support/test-driver.h>
 
 static void
@@ -113,105 +114,44 @@ support_capture_subprogram (const char *file, char *const argv[],
 /* Copies the executable into a restricted directory, so that we can
    safely make it SGID with the TARGET group ID.  Then runs the
    executable.  */
-static int
+static void
 copy_and_spawn_sgid (const char *child_id, gid_t gid)
 {
-  char *dirname = xasprintf ("%s/tst-tunables-setuid.%jd",
-			     test_dir, (intmax_t) getpid ());
+  char *dirname = support_create_temp_directory ("tst-glibc-sgid-");
   char *execname = xasprintf ("%s/bin", dirname);
-  int infd = -1;
-  int outfd = -1;
-  int ret = 1, status = 1;
+  add_temp_file (execname);
 
-  TEST_VERIFY (mkdir (dirname, 0700) == 0);
-  if (support_record_failure_is_failed ())
-    goto err;
-
-  infd = open ("/proc/self/exe", O_RDONLY);
-  if (infd < 0)
+  if (access ("/proc/self/exe", R_OK) != 0)
     FAIL_UNSUPPORTED ("unsupported: Cannot read binary from procfs\n");
 
-  outfd = open (execname, O_WRONLY | O_CREAT | O_EXCL, 0700);
-  TEST_VERIFY (outfd >= 0);
-  if (support_record_failure_is_failed ())
-    goto err;
+  support_copy_file ("/proc/self/exe", execname);
 
-  char buf[4096];
-  for (;;)
-    {
-      ssize_t rdcount = read (infd, buf, sizeof (buf));
-      TEST_VERIFY (rdcount >= 0);
-      if (support_record_failure_is_failed ())
-	goto err;
-      if (rdcount == 0)
-	break;
-      char *p = buf;
-      char *end = buf + rdcount;
-      while (p != end)
-	{
-	  ssize_t wrcount = write (outfd, buf, end - p);
-	  if (wrcount == 0)
-	    errno = ENOSPC;
-	  TEST_VERIFY (wrcount > 0);
-	  if (support_record_failure_is_failed ())
-	    goto err;
-	  p += wrcount;
-	}
-    }
+  if (chown (execname, getuid (), gid) != 0)
+    FAIL_UNSUPPORTED ("cannot change group of \"%s\" to %jd: %m",
+		      execname, (intmax_t) gid);
 
-  bool chowned = false;
-  TEST_VERIFY ((chowned = fchown (outfd, getuid (), gid) == 0)
-	       || errno == EPERM);
-  if (support_record_failure_is_failed ())
-    goto err;
-  else if (!chowned)
-    {
-      ret = 77;
-      goto err;
-    }
-
-  TEST_VERIFY (fchmod (outfd, 02750) == 0);
-  if (support_record_failure_is_failed ())
-    goto err;
-  TEST_VERIFY (close (outfd) == 0);
-  if (support_record_failure_is_failed ())
-    goto err;
-  TEST_VERIFY (close (infd) == 0);
-  if (support_record_failure_is_failed ())
-    goto err;
+  if (chmod (execname, 02750) != 0)
+    FAIL_UNSUPPORTED ("cannot make \"%s\" SGID: %m ", execname);
 
   /* We have the binary, now spawn the subprocess.  Avoid using
      support_subprogram because we only want the program exit status, not the
      contents.  */
-  ret = 0;
-  infd = outfd = -1;
 
   char * const args[] = {execname, (char *) child_id, NULL};
+  int status = support_subprogram_wait (args[0], args);
 
-  status = support_subprogram_wait (args[0], args);
+  free (execname);
+  free (dirname);
 
-err:
-  if (outfd >= 0)
-    close (outfd);
-  if (infd >= 0)
-    close (infd);
-  if (execname != NULL)
+  if (WIFEXITED (status))
     {
-      unlink (execname);
-      free (execname);
+      if (WEXITSTATUS (status) == 0)
+	return;
+      else
+	exit (WEXITSTATUS (status));
     }
-  if (dirname != NULL)
-    {
-      rmdir (dirname);
-      free (dirname);
-    }
-
-  if (ret == 77)
-    FAIL_UNSUPPORTED ("Failed to make sgid executable for test\n");
-  if (ret != 0)
-    FAIL_EXIT1 ("Failed to make sgid executable for test\n");
-
-  return status;
+  else
+    FAIL_EXIT1 ("subprogram failed with status %d", status);
 }
 
 /* Returns true if a group with NAME has been found, and writes its
@@ -253,7 +193,7 @@ find_sgid_group (gid_t *target, const char *name)
   return ok;
 }
 
-int
+void
 support_capture_subprogram_self_sgid (const char *child_id)
 {
   const int count = 64;
@@ -288,7 +228,7 @@ support_capture_subprogram_self_sgid (const char *child_id)
 			 (intmax_t) getuid ());
     }
 
-  return copy_and_spawn_sgid (child_id, target);
+  copy_and_spawn_sgid (child_id, target);
 }
 
 void
