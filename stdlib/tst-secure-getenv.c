@@ -57,13 +57,7 @@ do_test (void)
       exit (1);
     }
 
-  int status = support_capture_subprogram_self_sgid (MAGIC_ARGUMENT);
-
-  if (WEXITSTATUS (status) == EXIT_UNSUPPORTED)
-    return EXIT_UNSUPPORTED;
-
-  if (!WIFEXITED (status))
-    FAIL_EXIT1 ("Unexpected exit status %d from child process\n", status);
+  support_capture_subprogram_self_sgid (MAGIC_ARGUMENT);
 
   return 0;
 }
@@ -82,6 +76,7 @@ alternative_main (int argc, char **argv)
       if (secure_getenv ("PATH") != NULL)
 	FAIL_EXIT (4, "PATH variable not filtered out\n");
 
+      support_record_failure_barrier ();
       exit (EXIT_SUCCESS);
     }
 }

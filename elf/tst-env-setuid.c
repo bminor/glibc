@@ -104,20 +104,14 @@ do_test (int argc, char **argv)
       if (ret != 0)
 	exit (1);
 
-      exit (EXIT_SUCCESS);
+      return 0;
     }
   else
     {
       if (test_parent () != 0)
 	exit (1);
 
-      int status = support_capture_subprogram_self_sgid (SETGID_CHILD);
-
-      if (WEXITSTATUS (status) == EXIT_UNSUPPORTED)
-	return EXIT_UNSUPPORTED;
-
-      if (!WIFEXITED (status))
-	FAIL_EXIT1 ("Unexpected exit status %d from child process\n", status);
+      support_capture_subprogram_self_sgid (SETGID_CHILD);
 
       return 0;
     }
