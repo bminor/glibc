@@ -42,10 +42,12 @@ struct support_capture_subprocess support_capture_subprocess
 struct support_capture_subprocess support_capture_subprogram
   (const char *file, char *const argv[], char *const envp[]);
 
-/* Copy the running program into a setgid binary and run it with CHILD_ID
-   argument.  If execution is successful, return the exit status of the child
-   program, otherwise return a non-zero failure exit code.  */
-int support_capture_subprogram_self_sgid (const char *child_id);
+/* Copy the running program into a setgid binary and run it with
+   CHILD_ID argument.  If the program exits with a non-zero status,
+   exit with that exit status (or status 1 if the program did not exit
+   normally).  If the test cannot be performed, exit with
+   EXIT_UNSUPPORTED.  */
+void support_capture_subprogram_self_sgid (const char *child_id);
 
 /* Deallocate the subprocess data captured by
    support_capture_subprocess.  */
