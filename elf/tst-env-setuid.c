@@ -148,10 +148,7 @@ do_test (int argc, char **argv)
 
       if (ret != 0)
 	exit (1);
-
-      /* Special return code to make sure that the child executed all the way
-	 through.  */
-      exit (42);
+      return 0;
     }
   else
     {
@@ -175,17 +172,7 @@ do_test (int argc, char **argv)
 	free (profilepath);
       }
 
-      int status = support_capture_subprogram_self_sgid (SETGID_CHILD);
-
-      if (WEXITSTATUS (status) == EXIT_UNSUPPORTED)
-	exit (EXIT_UNSUPPORTED);
-
-      if (WEXITSTATUS (status) != 42)
-	{
-	  printf ("    child failed with status %d\n",
-		  WEXITSTATUS (status));
-	  support_record_failure ();
-	}
+      support_capture_subprogram_self_sgid (SETGID_CHILD);
 
       return 0;
     }
