@@ -73,6 +73,10 @@ If you define this macro to a value greater than or equal to
 @code{200809L}, then the functionality from the 2008 edition of the
 POSIX standard (IEEE Standard 1003.1-2008) is made available.
 
+If you define this macro to a value greater than or equal to
+@code{202405L}, then the functionality from the 2024 edition of the
+POSIX standard (IEEE Standard 1003.1-2024) is made available.
+
 Greater values for @code{_POSIX_C_SOURCE} will enable future extensions.
 The POSIX standards process will define these values as necessary, and
 @theglibc{} should support them some time after they become standardized.
@@ -104,7 +108,7 @@ all functionality described so far plus some new definitions from the
 Single Unix Specification, @w{version 2}.  The value @math{600}
 (corresponding to the sixth revision) includes definitions from SUSv3,
 and using @math{700} (the seventh revision) includes definitions from
-SUSv4.
+SUSv4.  The value @math{800} includes definitions from POSIX.1-2024.
 @end defvr
 
 @defvr Macro _LARGEFILE_SOURCE

@@ -44,9 +44,11 @@
 			if >=199506L, add IEEE Std 1003.1c-1995;
 			if >=200112L, all of IEEE 1003.1-2004
 			if >=200809L, all of IEEE 1003.1-2008
+			if >=202405L, all of IEEE 1003.1-2024
    _XOPEN_SOURCE	Includes POSIX and XPG things.  Set to 500 if
 			Single Unix conformance is wanted, to 600 for the
-			sixth revision, to 700 for the seventh revision.
+			sixth revision, to 700 for the seventh revision,
+			to 800 for the eighth revision.
    _XOPEN_SOURCE_EXTENDED XPG things and X/Open Unix extensions.
    _LARGEFILE_SOURCE	Some more functions for correct standard I/O.
    _LARGEFILE64_SOURCE	Additional functionality from LFS for large files.
@@ -69,7 +71,7 @@
    options such as `-std=c99', define __STRICT_ANSI__.  If none of
    these are defined, or if _DEFAULT_SOURCE is defined, the default is
    to have _POSIX_SOURCE set to one and _POSIX_C_SOURCE set to
-   200809L, as well as enabling miscellaneous functions from BSD and
+   202405L, as well as enabling miscellaneous functions from BSD and
    SVID.  If more than one of these are defined, they accumulate.  For
    example __STRICT_ANSI__, _POSIX_SOURCE and _POSIX_C_SOURCE together
    give you ISO C, 1003.1, and 1003.2, but nothing else.
@@ -96,6 +98,8 @@
    __USE_XOPEN2KXSI     Define XPG6 XSI things.
    __USE_XOPEN2K8       Define XPG7 things.
    __USE_XOPEN2K8XSI    Define XPG7 XSI things.
+   __USE_XOPEN2K24      Define XPG8 things.
+   __USE_XOPEN2K24XSI   Define XPG8 XSI things.
    __USE_LARGEFILE	Define correct standard I/O things.
    __USE_LARGEFILE64	Define LFS things with separate names.
    __USE_FILE_OFFSET64	Define 64bit interface as default.
@@ -141,6 +145,8 @@
 #undef	__USE_XOPEN2KXSI
 #undef	__USE_XOPEN2K8
 #undef	__USE_XOPEN2K8XSI
+#undef	__USE_XOPEN2K24
+#undef	__USE_XOPEN2K24XSI
 #undef	__USE_LARGEFILE
 #undef	__USE_LARGEFILE64
 #undef	__USE_FILE_OFFSET64
@@ -223,9 +229,9 @@
 # undef  _POSIX_SOURCE
 # define _POSIX_SOURCE	1
 # undef  _POSIX_C_SOURCE
-# define _POSIX_C_SOURCE	200809L
+# define _POSIX_C_SOURCE	202405L
 # undef  _XOPEN_SOURCE
-# define _XOPEN_SOURCE	700
+# define _XOPEN_SOURCE	800
 # undef  _XOPEN_SOURCE_EXTENDED
 # define _XOPEN_SOURCE_EXTENDED	1
 # undef	 _LARGEFILE64_SOURCE
@@ -301,7 +307,7 @@
 #endif
 
 /* If none of the ANSI/POSIX macros are defined, or if _DEFAULT_SOURCE
-   is defined, use POSIX.1-2008 (or another version depending on
+   is defined, use POSIX.1-2024 (or another version depending on
    _XOPEN_SOURCE).  */
 #ifdef _DEFAULT_SOURCE
 # if !defined _POSIX_SOURCE && !defined _POSIX_C_SOURCE
@@ -310,7 +316,7 @@
 # undef  _POSIX_SOURCE
 # define _POSIX_SOURCE	1
 # undef  _POSIX_C_SOURCE
-# define _POSIX_C_SOURCE	200809L
+# define _POSIX_C_SOURCE	202405L
 #endif
 
 #if ((!defined __STRICT_ANSI__					\
@@ -323,8 +329,10 @@
 #  define _POSIX_C_SOURCE	199506L
 # elif defined _XOPEN_SOURCE && (_XOPEN_SOURCE - 0) < 700
 #  define _POSIX_C_SOURCE	200112L
-# else
+# elif defined _XOPEN_SOURCE && (_XOPEN_SOURCE - 0) < 800
 #  define _POSIX_C_SOURCE	200809L
+# else
+#  define _POSIX_C_SOURCE	202405L
 # endif
 # define __USE_POSIX_IMPLICITLY	1
 #endif
@@ -374,6 +382,10 @@
 # define _ATFILE_SOURCE	1
 #endif
 
+#if defined _POSIX_C_SOURCE && (_POSIX_C_SOURCE - 0) >= 202405L
+# define __USE_XOPEN2K24	1
+#endif
+
 #ifdef	_XOPEN_SOURCE
 # define __USE_XOPEN	1
 # if (_XOPEN_SOURCE - 0) >= 500
@@ -385,6 +397,10 @@
 #   if (_XOPEN_SOURCE - 0) >= 700
 #    define __USE_XOPEN2K8	1
 #    define __USE_XOPEN2K8XSI	1
+#    if (_XOPEN_SOURCE - 0) >= 800
+#     define __USE_XOPEN2K24	1
+#     define __USE_XOPEN2K24XSI	1
+#    endif
 #   endif
 #   define __USE_XOPEN2K	1
 #   define __USE_XOPEN2KXSI	1
