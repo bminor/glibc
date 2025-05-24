@@ -23,13 +23,13 @@
 #include <sysdep-vdso.h>
 
 int __riscv_hwprobe (struct riscv_hwprobe *pairs, size_t pair_count,
-		     size_t cpu_count, unsigned long int *cpus,
+		     size_t cpusetsize, __RISCV_HWPROBE_CPUS_TYPE cpus,
 		     unsigned int flags)
 {
   int r;
 
   r = INTERNAL_VSYSCALL (riscv_hwprobe, 5, pairs, pair_count,
-                         cpu_count, cpus, flags);
+                         cpusetsize, cpus.__ul, flags);
 
   /* Negate negative errno values to match pthreads API. */
   return -r;
