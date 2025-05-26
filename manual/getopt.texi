@@ -301,7 +301,10 @@ application to pass long options with only @samp{-} instead of
 @samp{--}.  The @samp{--} prefix is still recognized but instead of
 looking through the short options if a @samp{-} is seen it is first
 tried whether this parameter names a long option.  If not, it is parsed
-as a short option.
+as a short option.  In case both short and long options could be
+matched (this can happen with single letter long options), the short
+option is preferred (with some caveats).  For long options,
+abbreviations are detected as well.
 
 Assuming @code{getopt_long_only} is used starting an application with
 
@@ -313,6 +316,32 @@ Assuming @code{getopt_long_only} is used starting an application with
 the @code{getopt_long_only} will first look for a long option named
 @samp{foo}.  If this is not found, the short options @samp{f}, @samp{o},
 and again @samp{o} are recognized.
+
+It gets more interesting with single letter long options.  If we
+define options in the following way
+
+@smallexample
+  static struct option long_options[] = @{
+          @{"f",       no_argument,       0,  0 @},
+          @{"foo",     no_argument,       0,  0 @},
+          @{0,         0,                 0,  0 @},
+  @};
+@end smallexample
+
+@noindent
+use @code{"f"} (as a C string) as an option string and start the
+application with @option{-f}, the short option will be matched.
+@option{--f} will match the long one.  And both @option{-fo} and
+@option{-foo} will match the long option @code{"foo"}.
+
+Be aware that if the option string would be @code{"f:"} (thus the
+short option requires an argument), using just @option{-f} leads to an
+error.  But using @option{-fo} results in the long option being
+matched.  For passing an argument in this situation, you need to do it
+as two arguments (@option{-f}, @option{o}).  Though any other value
+would work in a single argument (e.g., @option{-f1}), since it would
+not match a long option (or its abbreviation).
+
 @end deftypefun
 
 @node Getopt Long Option Example
