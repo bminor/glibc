@@ -496,7 +496,7 @@ the symbol's name.  For instance, the macro @code{__clock_gettime64}
 expands to @code{clock_gettime}.
 
 When @code{__TIMESIZE} is set to 64, @theglibc{} will also define
-the@code{__USE_TIME_BITS64} macro.  It is used by the Linux kernel ABI
+the @code{__USE_TIME_BITS64} macro.  It is used by the Linux kernel ABI
 to set the expected @code{time_t} size used on some syscalls.
 
 These macros are purely internal to @theglibc{} and exist only so that
