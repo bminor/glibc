@@ -892,12 +892,12 @@ host-test-program-cmd = $(host-built-program-cmd)
 endif
 
 # Extra flags to pass to GCC.
-+gccwarn := -Wall -Wwrite-strings -Wundef $(cc-option-wimplicit-fallthrough) \
-  $(cc-option-wfree-labels) $(cc-option-wmissing-parameter-name)
++gccwarn := -Wall -Wwrite-strings -Wundef $(cc-option-wimplicit-fallthrough)
 ifeq ($(enable-werror),yes)
 +gccwarn += -Werror
 endif
-+gccwarn-c = -Wstrict-prototypes -Wold-style-definition
++gccwarn-c = -Wstrict-prototypes -Wold-style-definition \
+  $(cc-option-wfree-labels) $(cc-option-wmissing-parameter-name)
 
 # We do not depend on the address of constants in different files to be
 # actually different, so allow the compiler to merge them all.
