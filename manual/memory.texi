@@ -3139,7 +3139,7 @@ used to temporarily acquire access to the memory region and relinquish
 it again:
 
 @smallexample
-  if (key >= 0 && pkey_set (key, 0) < 0)
+  if (key >= 0 && pkey_set (key, PKEY_UNRESTRICTED) < 0)
     ...; /* Perform error checking (generally fatal).  */
   /* At this point, the current thread has read-write access to the
      memory region.  */
@@ -3256,9 +3256,9 @@ not @math{-1}.
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Change the access restrictions of the current thread for memory pages with
 the protection key @var{key} to @var{access_restrictions}.  If
-@var{access_restrictions} is zero, no additional access restrictions on top of
-the page protection flags are applied.  Otherwise, @var{access_restrictions} is
-a combination of the following flags:
+@var{access_restrictions} is @code{PKEY_UNRESTRICTED} (zero), no additional
+access restrictions on top of the page protection flags are applied.  Otherwise,
+@var{access_restrictions} is a combination of the following flags:
 
 @vtable @code
 @item PKEY_DISABLE_READ
