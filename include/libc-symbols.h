@@ -208,7 +208,7 @@
 #define __make_section_unallocated(section_string)	\
   asm (".section " section_string "\n\t.previous");
 
-/* Tacking on "\n\t#" to the section name makes gcc put it's bogus
+/* Tacking on "\n\t#" to the section name makes gcc put its bogus
    section attributes on what looks like a comment to the assembler.  */
 #ifdef HAVE_SECTION_QUOTES
 # define __sec_comment "\"\n\t#\""
