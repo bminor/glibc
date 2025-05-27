@@ -742,7 +742,13 @@ class Context(object):
         logsdir = os.path.join(self.logsdir, 'host-libraries')
         self.remove_recreate_dirs(installdir, builddir, logsdir)
         cmdlist = CommandList('host-libraries', self.keep)
-        self.build_host_library(cmdlist, 'gmp')
+        # This CFLAGS setting works around GMP 6.3.0's configure
+        # script being incompatible with compilers defaulting to C23
+        # and should be removed when this script is updated to use a
+        # release of GMP from after that configure test was fixed in
+        # Jan 2025.
+        self.build_host_library(cmdlist, 'gmp',
+                                ['CFLAGS=-Wall -O2 -std=gnu17'])
         self.build_host_library(cmdlist, 'mpfr',
                                 ['--with-gmp=%s' % installdir])
         self.build_host_library(cmdlist, 'mpc',
