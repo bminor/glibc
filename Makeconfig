@@ -893,7 +893,7 @@ endif
 
 # Extra flags to pass to GCC.
 +gccwarn := -Wall -Wwrite-strings -Wundef $(cc-option-wimplicit-fallthrough) \
-  $(cc-option-wfree-labels)
+  $(cc-option-wfree-labels) $(cc-option-wmissing-parameter-name)
 ifeq ($(enable-werror),yes)
 +gccwarn += -Werror
 endif
