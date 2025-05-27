@@ -33,9 +33,6 @@ _Bool __libc_initial;
 void
 __libc_early_init (_Bool initial)
 {
-  /* Initialize system malloc.  */
-  call_function_static_weak (__ptmalloc_init);
-
   /* Initialize ctype data.  */
   __ctype_init ();
 
@@ -53,4 +50,7 @@ __libc_early_init (_Bool initial)
 #if ENABLE_ELISION_SUPPORT
   __lll_elision_init ();
 #endif
+
+  /* Initialize system malloc (needs __libc_initial to be set).  */
+  call_function_static_weak (__ptmalloc_init);
 }
