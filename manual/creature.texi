@@ -194,9 +194,9 @@ a fallback code is used with legacy (i.e. 32-bit) syscalls.
 
 On such platforms, @theglibc{} will also define @code{__USE_TIME64_REDIRECTS}
 to indicate whether the declarations are expanded to different ones
-(either by redefiniding the symbol name or using symbol aliais).
+(either by redefining the symbol name or using a symbol alias).
 For instance, if the symbol @code{clock_gettime} expands to
-@code{__glock_gettime64}.
+@code{__clock_gettime64}.
 
 @item
 If @code{_TIME_BITS} is defined to be 32, @code{time_t} is defined to
