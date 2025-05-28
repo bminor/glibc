@@ -104,6 +104,7 @@ bench-math := \
   lrint \
   lrintf \
   modf \
+  modff \
   nearbyint \
   nearbyintf \
   pow \
