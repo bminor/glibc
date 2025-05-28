@@ -183,9 +183,12 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 		  switch (name)
 		    {
 		    case MACH_MSG_TYPE_MOVE_SEND:
-		      mach_port_t *ports = (mach_port_t *) data;
-		      for (i = 0; i < number; i++)
-			__mach_port_deallocate (__mach_task_self (), *ports++);
+		      {
+			mach_port_t *ports = (mach_port_t *) data;
+			for (i = 0; i < number; i++)
+			  __mach_port_deallocate (__mach_task_self (),
+						  *ports++);
+		      }
 		      if (ty->msgtl_header.msgt_longform)
 			ty->msgtl_name = MACH_MSG_TYPE_COPY_SEND;
 		      else
