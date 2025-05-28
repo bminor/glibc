@@ -1101,7 +1101,7 @@ static void*  _int_realloc(mstate, mchunkptr, INTERNAL_SIZE_T,
 			   INTERNAL_SIZE_T);
 static void*  _int_memalign(mstate, size_t, size_t);
 #if IS_IN (libc)
-static void*  _mid_memalign(size_t, size_t, void *);
+static void*  _mid_memalign(size_t, size_t);
 #endif
 
 #if USE_TCACHE
@@ -3710,8 +3710,7 @@ libc_hidden_def (__libc_realloc)
 void *
 __libc_memalign (size_t alignment, size_t bytes)
 {
-  void *address = RETURN_ADDRESS (0);
-  return _mid_memalign (alignment, bytes, address);
+  return _mid_memalign (alignment, bytes);
 }
 libc_hidden_def (__libc_memalign)
 
@@ -3730,12 +3729,11 @@ aligned_alloc (size_t alignment, size_t bytes)
       return NULL;
     }
 
-  void *address = RETURN_ADDRESS (0);
-  return _mid_memalign (alignment, bytes, address);
+  return _mid_memalign (alignment, bytes);
 }
 
 static void *
-_mid_memalign (size_t alignment, size_t bytes, void *address)
+_mid_memalign (size_t alignment, size_t bytes)
 {
   mstate ar_ptr;
   void *p;
@@ -3807,15 +3805,12 @@ _mid_memalign (size_t alignment, size_t bytes, void *address)
 void *
 __libc_valloc (size_t bytes)
 {
-  void *address = RETURN_ADDRESS (0);
-  size_t pagesize = GLRO (dl_pagesize);
-  return _mid_memalign (pagesize, bytes, address);
+  return _mid_memalign (GLRO (dl_pagesize), bytes);
 }
 
 void *
 __libc_pvalloc (size_t bytes)
 {
-  void *address = RETURN_ADDRESS (0);
   size_t pagesize = GLRO (dl_pagesize);
   size_t rounded_bytes;
   /* ALIGN_UP with overflow check.  */
@@ -3826,9 +3821,8 @@ __libc_pvalloc (size_t bytes)
       __set_errno (ENOMEM);
       return NULL;
     }
-  rounded_bytes = rounded_bytes & -(pagesize - 1);
 
-  return _mid_memalign (pagesize, rounded_bytes, address);
+  return _mid_memalign (pagesize, rounded_bytes & -pagesize);
 }
 
 static void * __attribute_noinline__
@@ -5939,8 +5933,7 @@ __posix_memalign (void **memptr, size_t alignment, size_t size)
     return EINVAL;
 
 
-  void *address = RETURN_ADDRESS (0);
-  mem = _mid_memalign (alignment, size, address);
+  mem = _mid_memalign (alignment, size);
 
   if (mem != NULL)
     {
