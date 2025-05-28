@@ -19,7 +19,7 @@
 #ifndef _GETRANDOM_INTERNAL_H
 #define _GETRANDOM_INTERNAL_H
 
-static inline void __getrandom_early_init (_Bool)
+static inline void __getrandom_early_init (_Bool initial)
 {
 }
 
