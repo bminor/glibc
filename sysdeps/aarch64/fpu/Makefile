@@ -56,8 +56,11 @@ libmvec-support = $(addsuffix f_advsimd,$(float-advsimd-funcs)) \
                   v_powf_data
 endif
 
-sve-cflags = -march=armv8-a+sve
+# Enable SVE for building libmvec.  Since CFLAGS may contain a -mcpu or -march,
+# add a generic -mcpu and -march with SVE enabled.  Also use a tune for a modern
+# SVE core.
 
+sve-cflags = -mcpu=generic+sve -march=armv8-a+sve -mtune=neoverse-v2
 
 ifeq ($(build-mathvec),yes)
 bench-libmvec = $(addprefix float-advsimd-,$(float-advsimd-funcs)) \
