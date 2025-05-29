@@ -2205,9 +2205,19 @@ socket, or @code{-1} in case of error.  The following @code{errno} error
 conditions are defined for this function:
 
 @table @code
+@item EAFNOSUPPORT
+The @var{namespace} requested is not supported.
+
+@item ESOCKTNOSUPPORT
+@itemx EPROTONOSUPPORT
+@itemx EPROTOTYPE
+The @var{style} is not supported by the @var{namespace} specified.
+
 @item EPROTONOSUPPORT
-The @var{protocol} or @var{style} is not supported by the
-@var{namespace} specified.
+The @var{protocol} is not supported by the @var{namespace} specified.
+
+@item EINVAL
+The @var{style} or @var{protocol} requested is not valid.
 
 @item EMFILE
 The process already has too many file descriptors open.
@@ -2216,11 +2226,13 @@ The process already has too many file descriptors open.
 The system already has too many file descriptors open.
 
 @item EACCES
+@itemx EPERM
 The process does not have the privilege to create a socket of the specified
 @var{style} or @var{protocol}.
 
 @item ENOBUFS
-The system ran out of internal buffer space.
+@itemx ENOMEM
+Insufficient memory was available.
 @end table
 
 The file descriptor returned by the @code{socket} function supports both
