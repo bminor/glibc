@@ -229,6 +229,7 @@
 #define __NR_open 4005
 #define __NR_open_by_handle_at 4340
 #define __NR_open_tree 4428
+#define __NR_open_tree_attr 4467
 #define __NR_openat 4288
 #define __NR_openat2 4437
 #define __NR_pause 4029

@@ -209,6 +209,7 @@
 #define __NR_open 45
 #define __NR_open_by_handle_at 498
 #define __NR_open_tree 538
+#define __NR_open_tree_attr 577
 #define __NR_openat 450
 #define __NR_openat2 547
 #define __NR_osf_adjtime 140
