@@ -1737,7 +1737,7 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 #endif
 			    }
 
-			  if (n < 10)
+			  if (n < num_digits_len)
 			    {
 			      /* Found it.  */
 			      from_level = level;
