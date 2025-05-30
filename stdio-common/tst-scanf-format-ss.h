@@ -1,4 +1,4 @@
-/* Test feature wrapper for formatted 'scanf' input.
+/* Test feature wrapper for formatted 'sscanf' input.
    Copyright (C) 2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
