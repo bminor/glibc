@@ -977,7 +977,7 @@ multiple parameters (not just priority and niceness).
 It is expected that these interfaces will be compatible with all future
 scheduling policies.
 
-For additional information about scheduling policies, consult consult
+For additional information about scheduling policies, consult
 the manual pages @manpageurl{sched,7} and @manpageurl{sched_setattr,2}.
 
 @strong{Note:} Calling the @code{sched_setattr} function is incompatible
