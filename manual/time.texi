@@ -3213,7 +3213,7 @@ elapsed time.
 
 @item EINVAL
 The nanosecond value in the @var{requested_time} parameter contains an
-illegal value.  Either the value is negative or greater than or equal to
+invalid value.  Either the value is negative or greater than or equal to
 1000 million.
 @end table
 
