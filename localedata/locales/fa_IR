@@ -84,7 +84,7 @@ END LC_CTYPE
 LC_COLLATE
 copy "iso14651_t1"
 
-% CLDR collation rules for Ukrainian:
+% CLDR collation rules for Persian:
 % (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/fa.xml)
 %
 % 		<collation type="standard">
