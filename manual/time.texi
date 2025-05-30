@@ -3180,12 +3180,12 @@ On @gnusystems{}, it is safe to use @code{sleep} and @code{SIGALRM} in
 the same program, because @code{sleep} does not work by means of
 @code{SIGALRM}.
 
-@deftypefun int nanosleep (const struct timespec *@var{requested_time}, struct timespec *@var{remaining})
+@deftypefun int nanosleep (const struct timespec *@var{requested_time}, struct timespec *@var{remaining_time})
 @standards{POSIX.1, time.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c On Linux, it's a syscall.  On Mach, it calls gettimeofday and uses
 @c ports.
-If resolution to seconds is not enough the @code{nanosleep} function can
+If resolution to seconds is not enough, the @code{nanosleep} function can
 be used.  As the name suggests the sleep interval can be specified in
 nanoseconds.  The actual elapsed time of the sleep interval might be
 longer since the system rounds the elapsed time you request up to the
@@ -3194,21 +3194,22 @@ next integer multiple of the actual resolution the system can deliver.
 @code{*@var{requested_time}} is the elapsed time of the interval you
 want to sleep.
 
-The function returns as @code{*@var{remaining}} the elapsed time left
-in the interval for which you requested to sleep.  If the interval
-completed without getting interrupted by a signal, this is zero.
+If @var{remaining_time} is not the null pointer, the function returns as
+@code{*@var{remaining_time}} the elapsed time left in the interval for which
+you requested to sleep.  If the interval completed without getting
+interrupted by a signal, this is zero.
 
 @code{struct timespec} is described in @ref{Time Types}.
 
-If the function returns because the interval is over the return value is
-zero.  If the function returns @math{-1} the global variable @code{errno}
+If the function returns because the interval is over, the return value is
+zero.  If the function returns @math{-1}, the global variable @code{errno}
 is set to the following values:
 
 @table @code
 @item EINTR
 The call was interrupted because a signal was delivered to the thread.
-If the @var{remaining} parameter is not the null pointer the structure
-pointed to by @var{remaining} is updated to contain the remaining
+If the @var{remaining_time} parameter is not the null pointer, the structure
+pointed to by @var{remaining_time} is updated to contain the remaining
 elapsed time.
 
 @item EINVAL
@@ -3220,10 +3221,58 @@ invalid value.  Either the value is negative or greater than or equal to
 This function is a cancellation point in multi-threaded programs.  This
 is a problem if the thread allocates some resources (like memory, file
 descriptors, semaphores or whatever) at the time @code{nanosleep} is
-called.  If the thread gets canceled these resources stay allocated
-until the program ends.  To avoid this calls to @code{nanosleep} should
+called.  If the thread gets canceled, these resources stay allocated
+until the program ends.  To avoid this, calls to @code{nanosleep} should
 be protected using cancellation handlers.
 @c ref pthread_cleanup_push / pthread_cleanup_pop
 
 The @code{nanosleep} function is declared in @file{time.h}.
+@end deftypefun
+
+@deftypefun int clock_nanosleep (clockid_t @var{clock}, int @var{flags}, const struct timespec *@var{requested_time}, struct timespec *@var{remaining_time})
+@standards{POSIX.1-2001, time.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This function is a generalized variant of @code{nanosleep}, providing the
+caller with a way to specify the clock to be used to measure elapsed time
+and express the sleep interval in absolute or relative terms.  The call:
+
+@smallexample
+nanosleep (@var{requested_time}, @var{remaining_time})
+@end smallexample
+
+is equivalent to:
+
+@smallexample
+clock_nanosleep (CLOCK_REALTIME, 0, @var{requested_time}, @var{remaining_time})
+@end smallexample
+
+The @var{clock} argument specifies the clock to use.
+@xref{Getting the Time}, for the @code{clockid_t} type and possible values
+of @var{clock}.  Not all clocks listed are supported for use with
+@code{clock_nanosleep}.  For details, see the manual page
+@manpageurl{clock_nanosleep,2}.
+
+The @var{flags} argument is either @code{0} or @code{TIMER_ABSTIME}.  If
+@var{flags} is @code{0}, then @code{clock_nanosleep} interprets
+@var{requested_time} as an interval relative to the current time specified
+by @var{clock}.  If it is @code{TIMER_ABSTIME} instead, @var{requested_time}
+specifies an absolute time measured by @var{clock}; if at the time of the
+call the value requested is less than or equal to the clock specified, then
+the function returns right away.  When @var{flags} is @code{TIMER_ABSTIME},
+@var{remaining_time} is not updated.
+
+The return values and error conditions for @code{clock_nanosleep} are the
+same as for @code{nanosleep}, with the following conditions additionally
+defined:
+
+@table @code
+@item EINVAL
+The @var{clock} argument is not a valid clock.
+
+@item EOPNOTSUPP
+The @var{clock} argument is not supported by the kernel for
+@code{clock_nanosleep}.
+@end table
+
+The @code{clock_nanosleep} function is declared in @file{time.h}.
 @end deftypefun
