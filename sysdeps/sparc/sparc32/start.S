@@ -73,6 +73,10 @@ _start:
      be NULL.  */
 	mov	%g1, %o5
 
+  /* Provide the highest stack address to update the __libc_stack_end (used
+     to enable executable stacks if required).  */
+	st	%sp, [%sp+23*4]
+
   /* Let libc do the rest of the initialization, and call main.  */
 	call	__libc_start_main
 	 nop

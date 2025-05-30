@@ -29,6 +29,8 @@ The following bugs were resolved with this release:
   [32882] tst-audit10 fails with SIGILL on CPUs without AVX
   [32897] dynamic-link: pthread_getattr_np fails when executable stack
     tunable is set
+  [32981] ports: elf/tst-execstack-prog-static-tunable fails on
+    sparc64-linux-gnu
   [32987] elf: Fix subprocess status handling for tst-dlopen-sgid
 
 Version 2.41
