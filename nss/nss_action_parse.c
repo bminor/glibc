@@ -168,13 +168,16 @@ nss_action_list
   action_list_init (&list);
   if (nss_action_parse (line, &list))
     {
+      nss_action_list retval;
       size_t size;
       struct nss_action null_service
         = { .module = NULL, };
 
       action_list_add (&list, null_service);
       size = action_list_size (&list);
-      return __nss_action_allocate (action_list_begin (&list), size);
+      retval = __nss_action_allocate (action_list_begin (&list), size);
+      action_list_free (&list);
+      return retval;
     }
   else if (action_list_has_failed (&list))
     {
