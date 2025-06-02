@@ -3201,9 +3201,9 @@ interrupted by a signal, this is zero.
 
 @code{struct timespec} is described in @ref{Time Types}.
 
-If the function returns because the interval is over, the return value is
-zero.  If the function returns @math{-1}, the global variable @code{errno}
-is set to the following values:
+If the function returns because the interval is over, it returns zero.
+Otherwise it returns @math{-1} and sets the global variable @code{errno} to
+one of the following values:
 
 @table @code
 @item EINTR
@@ -3232,19 +3232,14 @@ The @code{nanosleep} function is declared in @file{time.h}.
 @deftypefun int clock_nanosleep (clockid_t @var{clock}, int @var{flags}, const struct timespec *@var{requested_time}, struct timespec *@var{remaining_time})
 @standards{POSIX.1-2001, time.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-This function is a generalized variant of @code{nanosleep}, providing the
-caller with a way to specify the clock to be used to measure elapsed time
-and express the sleep interval in absolute or relative terms.  The call:
-
-@smallexample
-nanosleep (@var{requested_time}, @var{remaining_time})
-@end smallexample
-
-is equivalent to:
-
-@smallexample
-clock_nanosleep (CLOCK_REALTIME, 0, @var{requested_time}, @var{remaining_time})
-@end smallexample
+This function is similar to @code{nanosleep} while additionally providing
+the caller with a way to specify the clock to be used to measure elapsed
+time and express the sleep interval in absolute or relative terms.  It
+returns zero when returning because the interval is over, and a positive
+error number corresponding to the error encountered otherwise.  This is
+different from @code{nanosleep}, which returns @math{-1} upon failure and
+sets the global variable @code{errno} according to the error encountered
+instead.
 
 The @var{clock} argument specifies the clock to use.
 @xref{Getting the Time}, for the @code{clockid_t} type and possible values
@@ -3261,9 +3256,9 @@ call the value requested is less than or equal to the clock specified, then
 the function returns right away.  When @var{flags} is @code{TIMER_ABSTIME},
 @var{remaining_time} is not updated.
 
-The return values and error conditions for @code{clock_nanosleep} are the
-same as for @code{nanosleep}, with the following conditions additionally
-defined:
+The @code{clock_nanosleep} function returns error codes as positive return
+values.  The error conditions for @code{clock_nanosleep} are the same as for
+@code{nanosleep}, with the following conditions additionally defined:
 
 @table @code
 @item EINVAL
