@@ -142,7 +142,7 @@ DEFINE_INT_CURR("SSP")		/* South Sudanese Pound  */
 DEFINE_INT_CURR("STD")		/* Sao Tome and Principe Dobra  */
 DEFINE_INT_CURR("SVC")		/* El Salvador Colon  */
 DEFINE_INT_CURR("SYP")		/* Syrian Arab Republic Pound  */
-DEFINE_INT_CURR("SZL")		/* Swaziland Lilangeni  */
+DEFINE_INT_CURR("SZL")		/* Eswatini Lilangeni  */
 DEFINE_INT_CURR("THB")		/* Thai Baht  */
 DEFINE_INT_CURR("TJS")		/* Tajikistani Somoni  */
 DEFINE_INT_CURR("TMM")		/* Turkmenistan Manet  */
