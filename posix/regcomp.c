@@ -3301,8 +3301,11 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
 #ifdef RE_ENABLE_I18N
 					     mbcset, &coll_sym_alloc,
 #endif /* RE_ENABLE_I18N */
-					     start_elem.opr.name,
-					     nrules, table_size, symb_table, extra);
+					     start_elem.opr.name
+#ifdef _LIBC
+                         , nrules, table_size, symb_table, extra
+#endif
+                         );
 	      if (__glibc_unlikely (*err != REG_NOERROR))
 		goto parse_bracket_exp_free_return;
 	      break;
