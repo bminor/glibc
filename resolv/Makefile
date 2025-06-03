@@ -140,6 +140,7 @@ tests += \
   tst-resolv-ai_idn-latin1 \
   tst-resolv-ai_idn-nolibidn2 \
   tst-resolv-canonname \
+  tst-resolv-getaddrinfo-fqdn \
   tst-resolv-trustad \
 
 # Needs resolv_context.
@@ -316,6 +317,7 @@ $(objpfx)tst-resolv-threads: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-txnid-collision: $(objpfx)libresolv.a \
   $(static-thread-library)
 $(objpfx)tst-resolv-canonname: $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-getaddrinfo-fqdn: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-trustad: $(objpfx)libresolv.so $(shared-thread-library)
 
 $(objpfx)tst-ns_name: $(objpfx)libresolv.so
