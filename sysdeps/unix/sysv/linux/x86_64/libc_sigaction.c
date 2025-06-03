@@ -22,7 +22,7 @@
 extern void restore_rt (void) asm ("__restore_rt") attribute_hidden;
 
 #define SET_SA_RESTORER(kact, act)			\
-  (kact)->sa_flags = (act)->sa_flags | SA_RESTORER;	\
+  (kact)->sa_flags |= SA_RESTORER;			\
   (kact)->sa_restorer = &restore_rt
 
 #define RESET_SA_RESTORER(act, kact) 			\

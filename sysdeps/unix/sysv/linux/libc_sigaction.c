@@ -49,7 +49,7 @@ __libc_sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
     {
       kact.k_sa_handler = act->sa_handler;
       memcpy (&kact.sa_mask, &act->sa_mask, sizeof (sigset_t));
-      kact.sa_flags = act->sa_flags;
+      kact.sa_flags = (unsigned int) act->sa_flags;
       SET_SA_RESTORER (&kact, act);
     }
 
