@@ -1377,11 +1377,11 @@ $(objpfx)$(1).generated-makefile: $(objpfx)$(1)
 endef
 endif
 
-postclean-generated += $(objpfx)/dso-sort-tests-1.generated-makefile \
-		       $(objpfx)/dso-sort-tests-2.generated-makefile \
-		       $(objpfx)/dso-sort-tests-all2.generated-makefile \
-		       $(objpfx)/dso-sort-tests-all3.generated-makefile \
-		       $(objpfx)/dso-sort-tests-all4.generated-makefile
+postclean-generated += $(objpfx)dso-sort-tests-1.generated-makefile \
+		       $(objpfx)dso-sort-tests-2.generated-makefile \
+		       $(objpfx)dso-sort-tests-all2.generated-makefile \
+		       $(objpfx)dso-sort-tests-all3.generated-makefile \
+		       $(objpfx)dso-sort-tests-all4.generated-makefile
 
 # Generate from each testcase description file
 $(eval $(call include_dsosort_tests,dso-sort-tests-1.def))
@@ -3049,7 +3049,7 @@ $(objpfx)tst-rtld-list-diagnostics.out: tst-rtld-list-diagnostics.py \
 	  > $@; \
 	$(evaluate-test)
 
-$(objpfx)tst-rtld-run-static.out: $(objpfx)/ldconfig
+$(objpfx)tst-rtld-run-static.out: $(objpfx)ldconfig
 
 $(objpfx)tst-dl_find_object.out: \
   $(objpfx)tst-dl_find_object-mod1.so $(objpfx)tst-dl_find_object-mod2.so

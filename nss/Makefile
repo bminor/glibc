@@ -476,39 +476,39 @@ libof-nss_test1 = extramodules
 libof-nss_test2 = extramodules
 libof-nss_test_errno = extramodules
 libof-nss_test_gai_hv2_canonname = extramodules
-$(objpfx)/libnss_test1.so: $(objpfx)nss_test1.os $(link-libc-deps)
+$(objpfx)libnss_test1.so: $(objpfx)nss_test1.os $(link-libc-deps)
 	$(build-module)
-$(objpfx)/libnss_test2.so: $(objpfx)nss_test2.os $(link-libc-deps)
+$(objpfx)libnss_test2.so: $(objpfx)nss_test2.os $(link-libc-deps)
 	$(build-module)
-$(objpfx)/libnss_test_errno.so: $(objpfx)nss_test_errno.os $(link-libc-deps)
+$(objpfx)libnss_test_errno.so: $(objpfx)nss_test_errno.os $(link-libc-deps)
 	$(build-module)
-$(objpfx)/libnss_test_gai_hv2_canonname.so: \
+$(objpfx)libnss_test_gai_hv2_canonname.so: \
   $(objpfx)nss_test_gai_hv2_canonname.os $(link-libc-deps)
 	$(build-module)
 $(objpfx)nss_test2.os : nss_test1.c
 # Use the nss_files suffix for these objects as well.
-$(objpfx)/libnss_test1.so$(libnss_files.so-version): $(objpfx)/libnss_test1.so
+$(objpfx)libnss_test1.so$(libnss_files.so-version): $(objpfx)libnss_test1.so
 	$(make-link)
-$(objpfx)/libnss_test2.so$(libnss_files.so-version): $(objpfx)/libnss_test2.so
+$(objpfx)libnss_test2.so$(libnss_files.so-version): $(objpfx)libnss_test2.so
 	$(make-link)
-$(objpfx)/libnss_test_errno.so$(libnss_files.so-version): \
-  $(objpfx)/libnss_test_errno.so
+$(objpfx)libnss_test_errno.so$(libnss_files.so-version): \
+  $(objpfx)libnss_test_errno.so
 	$(make-link)
-$(objpfx)/libnss_test_gai_hv2_canonname.so$(libnss_files.so-version): \
-  $(objpfx)/libnss_test_gai_hv2_canonname.so
+$(objpfx)libnss_test_gai_hv2_canonname.so$(libnss_files.so-version): \
+  $(objpfx)libnss_test_gai_hv2_canonname.so
 	$(make-link)
 $(patsubst %,$(objpfx)%.out,$(tests) $(tests-container)) : \
-	$(objpfx)/libnss_test1.so$(libnss_files.so-version) \
-	$(objpfx)/libnss_test2.so$(libnss_files.so-version) \
-	$(objpfx)/libnss_test_errno.so$(libnss_files.so-version) \
-	$(objpfx)/libnss_test_gai_hv2_canonname.so$(libnss_files.so-version)
+	$(objpfx)libnss_test1.so$(libnss_files.so-version) \
+	$(objpfx)libnss_test2.so$(libnss_files.so-version) \
+	$(objpfx)libnss_test_errno.so$(libnss_files.so-version) \
+	$(objpfx)libnss_test_gai_hv2_canonname.so$(libnss_files.so-version)
 
 ifeq (yes,$(have-thread-library))
 $(objpfx)tst-cancel-getpwuid_r: $(shared-thread-library)
 endif
 
-$(objpfx)tst-nss-files-alias-leak.out: $(objpfx)/libnss_files.so
-$(objpfx)tst-nss-files-alias-truncated.out: $(objpfx)/libnss_files.so
+$(objpfx)tst-nss-files-alias-leak.out: $(objpfx)libnss_files.so
+$(objpfx)tst-nss-files-alias-truncated.out: $(objpfx)libnss_files.so
 
 tst-nss-gai-hv2-canonname-ENV = \
 		MALLOC_TRACE=$(objpfx)tst-nss-gai-hv2-canonname.mtrace \
