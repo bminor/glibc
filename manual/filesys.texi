@@ -3307,12 +3307,74 @@ permission for the file, or be a privileged user.
 @item EBADF
 The @var{filedes} argument is not a valid file descriptor.
 
+@item EINVAL
+At least one of the fields in the @code{tvp} array passed has an invalid
+value.
+
 @item EPERM
 If the @var{times} argument is not a null pointer, you must either be
 the owner of the file or be a privileged user.
 
 @item EROFS
 The file lives on a read-only file system.
+@end table
+@end deftypefun
+
+@deftypefun int futimens (int @var{filedes}, const struct timespec @var{tsp}@t{[2]})
+@standards{POSIX.1-2008, sys/stat.h}
+@comment Unaudited and therefore marked AC-Unsafe and AS-Unsafe by default
+@safety{@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
+This function is like @code{futimes}, except that it sets the file access
+and modification timestamps with nanosecond precision.  The argument
+@code{tsp} is used similarly to @code{futimes}' @code{tvp}, but has a
+@code{const struct timespec} type that can express calendar time with
+nanosecond precision.  @xref{Time Types}.
+@end deftypefun
+
+@deftypefun int utimensat (int @var{filedes}, const char *@var{filename}, const struct timespec @var{tsp}@t{[2]}, int @var{flags})
+@standards{POSIX.1-2008, sys/stat.h}
+@comment Unaudited and therefore marked AC-Unsafe and AS-Unsafe by default
+@safety{@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
+This function is a descriptor-relative version of the @code{futimens}
+function above.  @xref{Descriptor-Relative Access}.  The @var{flags}
+argument can contain a combination of the flags @code{AT_EMPTY_PATH}, and
+@code{AT_SYMLINK_NOFOLLOW}.  The call:
+
+@smallexample
+futimens (@var{filedes}, @var{tsp})
+@end smallexample
+
+is equivalent to:
+
+@smallexample
+utimensat (@var{filedes}, @code{NULL}, @var{tsp}, 0)
+@end smallexample
+
+Compared to @code{futimens}, some additional error conditions can occur due
+to descriptor-relative access.  @xref{Descriptor-Relative Access}.  In
+addition to this, the following other errors can also occur:
+
+@table @code
+@item EINVAL
+The @var{filename} argument is NULL, @var{filedes} is not @code{AT_FDCWD},
+and @var{flags} is not @code{0}.
+
+@item ELOOP
+There are too many levels of indirection.  This can be the result of
+circular symbolic links to directories.
+
+@item ENAMETOOLONG
+The resulting path is too long.  This error only occurs on systems which
+have a limit on the file name length.
+
+@item ENOENT
+The @var{filename} argument is an empty string and @var{flags} does not
+contain @code{AT_EMPTY_PATH}, or @var{filename} does not refer to an
+existing file.
+
+@item ESRCH
+Search permission was denied for one of the prefix components of the the
+@var{filename} argument.
 @end table
 @end deftypefun
 
@@ -3932,5 +3994,4 @@ The @code{mkdtemp} function comes from OpenBSD.
 @c renameat2
 @c scandirat
 @c symlinkat
-@c utimensat
 @c mknodat
