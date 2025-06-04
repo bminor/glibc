@@ -162,6 +162,7 @@ bench-pthread := \
 
 bench-resolv := \
   inet_ntop_ipv4 \
+  inet_ntop_ipv6 \
   # bench-resolv
 
 LDLIBS-bench-pthread-mutex-lock += -lm
