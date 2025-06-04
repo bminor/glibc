@@ -1779,6 +1779,31 @@ file system and can't be modified.
 @end table
 @end deftypefun
 
+@deftypefun int unlinkat (int @var{filedes}, const char *@var{filename}, int @var{flags})
+@standards{POSIX.1-2008, unistd.h}
+@comment Unaudited and therefore marked AC-Unsafe and AS-Unsafe by default
+@safety{@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
+This function is a descriptor-relative version of the @code{unlink}
+function above.  @xref{Descriptor-Relative Access}.  The @var{flags}
+argument may either be @code{0} or contain the flag @code{AT_REMOVEDIR}:
+
+@table @code
+@item AT_REMOVEDIR
+This flag causes @code{unlinkat} to perform an @code{rmdir} operation on
+@code{filename} instead of performing the equivalent of @code{unlink}.
+@end table
+
+Compared to @code{unlink}, some additional error conditions can occur due to
+descriptor-relative access.  @xref{Descriptor-Relative Access}.  In
+addition to this, the following other errors can also occur:
+
+@table @code
+@item EISDIR
+The effective final path derived from @var{filename} and @var{filedes} is a
+directory but @code{AT_REMOVEDIR} was not passed in @code{flags}.
+@end table
+@end deftypefun
+
 @deftypefun int rmdir (const char *@var{filename})
 @standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
@@ -3907,6 +3932,5 @@ The @code{mkdtemp} function comes from OpenBSD.
 @c renameat2
 @c scandirat
 @c symlinkat
-@c unlinkat
 @c utimensat
 @c mknodat
