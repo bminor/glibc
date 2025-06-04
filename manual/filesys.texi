@@ -1910,6 +1910,17 @@ file systems.
 @end table
 @end deftypefun
 
+@deftypefun int renameat (int @var{oldfiledes}, const char *@var{oldname}, int @var{newfiledes}, const char *@var{newname})
+@standards{POSIX.1-2008, stdio.h}
+@comment Unaudited and therefore marked AC-Unsafe and AS-Unsafe by default
+@safety{@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
+This function is a descriptor-relative version of the @code{rename}
+function above.  @xref{Descriptor-Relative Access}.
+
+Compared to @code{rename}, some additional error conditions can occur.
+@xref{Descriptor-Relative Access}.
+@end deftypefun
+
 @node Creating Directories
 @section Creating Directories
 @cindex creating a directory
@@ -3893,7 +3904,6 @@ The @code{mkdtemp} function comes from OpenBSD.
 @c openat
 @c open_by_handle_at
 @c readlinkat
-@c renameat
 @c renameat2
 @c scandirat
 @c symlinkat
