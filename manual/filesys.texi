@@ -310,12 +310,17 @@ This is a GNU extension.
 The flags argument in @code{@dots{}at} functions can be a combination of
 the following flags, defined in @file{fcntl.h}.  Not all such functions
 support all flags, and some (such as @code{openat}) do not accept a
-flags argument at all.
+flags argument at all.  Although the flags specific to each function have
+distinct values from each other, some flags (relevant to different
+functions) might share the same value and therefore are not guaranteed to
+have unique values.
 
-In the flag descriptions below, the @dfn{effective final path component}
-refers to the final component (basename) of the full path constructed
-from the descriptor and file name arguments, using file name lookup, as
-described above.
+A non-exhaustive list of common flags and their descriptions follows.  Flags
+specific to a function are described alongside the function itself.  In
+these flag descriptions, the @dfn{effective final path component} refers to
+the final component (basename) of the full path constructed from the
+descriptor and file name arguments, using file name lookup, as described
+above.
 
 @vtable @code
 @item AT_EMPTY_PATH
@@ -352,6 +357,28 @@ a non-final component of the file name are still followed.
 @strong{Note:} There is no relationship between these flags and the type
 argument to the @code{getauxval} function (with @code{AT_@dots{}}
 constants defined in @file{elf.h}).  @xref{Auxiliary Vector}.
+
+@cindex common errors in descriptor-relative functions
+@cindex common errors in @code{@dots{}at} functions
+
+The @code{@dots{}at} functions have some common error conditions due to the
+nature of descriptor-relative access.  A list of common errors and their
+descriptions follows.  Errors specific to a function are described alongside
+the function itself.
+
+@table @code
+@item EBADF
+The file name argument is a relative path but the descriptor argument
+is neither @code{AT_FDCWD} nor a valid file descriptor.
+
+@item EINVAL
+If the function accepts a @var{flags} argument, the flag combination passed
+is not valid for the function.
+
+@item ENOTDIR
+The file name argument is a relative file name but the descriptor
+argument is associated with a file that is not a directory.
+@end table
 
 @node Accessing Directories
 @section Accessing Directories
