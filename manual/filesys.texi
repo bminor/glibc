@@ -3069,6 +3069,29 @@ Flag meaning test for execute/search permission.
 Flag meaning test for existence of the file.
 @end deftypevr
 
+@deftypefun int faccessat (int @var{filedes}, const char *@var{filename}, int @var{how}, int @var{flags})
+@standards{POSIX.1-2008, unistd.h}
+@comment Unaudited and therefore marked AC-Unsafe and AS-Unsafe by default
+@safety{@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
+This function is a descriptor-relative version of the @code{access}
+function above.  @xref{Descriptor-Relative Access}.  The @var{flags}
+argument can contain a combination of the flags @code{AT_EACCESS} described
+below, @code{AT_EMPTY_PATH}, and @code{AT_SYMLINK_NOFOLLOW}.
+
+@vtable @code
+@item AT_EACCESS
+This flag when passed to the @code{faccessat} function causes it to perform
+access checks using effective user and group IDs instead of real IDs, which
+is the default and matches the @code{access} function.
+@end vtable
+
+Compared to @code{access}, some additional error conditions can occur.
+@xref{Descriptor-Relative Access}.
+
+This function may not work correctly on older kernels missing the
+@code{faccessat2} system call.
+@end deftypefun
+
 @node File Times
 @subsection File Times
 
@@ -3849,7 +3872,6 @@ creation always works like @code{open} with @code{O_EXCL}.
 The @code{mkdtemp} function comes from OpenBSD.
 
 @c FIXME these are undocumented:
-@c faccessat
 @c fchmodat
 @c fchownat
 @c futimesat
