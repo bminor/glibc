@@ -160,6 +160,10 @@ bench-pthread := \
   thread_create \
   # bench-pthread
 
+bench-resolv := \
+  inet_ntop_ipv4 \
+  # bench-resolv
+
 LDLIBS-bench-pthread-mutex-lock += -lm
 LDLIBS-bench-pthread-mutex-trylock += -lm
 LDLIBS-bench-pthread-spin-lock += -lm
@@ -419,6 +423,7 @@ ifeq (${BENCHSET},)
 bench := \
   $(bench-math) \
   $(bench-pthread) \
+  $(bench-resolv) \
   $(bench-string) \
   # bench
 else
@@ -457,6 +462,7 @@ ifneq ($(strip ${BENCHSET}),)
 VALIDBENCHSETNAMES := \
   bench-math \
   bench-pthread \
+  bench-resolv \
   bench-string \
   calloc-simple \
   calloc-tcache \
