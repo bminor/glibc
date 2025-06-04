@@ -1964,6 +1964,17 @@ To use this function, your program should include the header file
 @pindex sys/stat.h
 @end deftypefun
 
+@deftypefun int mkdirat (int @var{filedes}, const char *@var{filename}, mode_t @var{mode})
+@standards{POSIX.1-2008, sys/stat.h}
+@comment Unaudited and therefore marked AC-Unsafe and AS-Unsafe by default
+@safety{@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
+This function is a descriptor-relative version of the @code{mkdir}
+function above.  @xref{Descriptor-Relative Access}.
+
+Compared to @code{mkdir}, some additional error conditions can occur.
+@xref{Descriptor-Relative Access}.
+@end deftypefun
+
 @node File Attributes
 @section File Attributes
 
@@ -3877,7 +3888,6 @@ The @code{mkdtemp} function comes from OpenBSD.
 @c futimesat
 @c fstatat (there's a commented-out safety assessment for this one)
 @c statx
-@c mkdirat
 @c mkfifoat
 @c name_to_handle_at
 @c openat
