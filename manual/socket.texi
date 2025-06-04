@@ -1216,6 +1216,17 @@ either @code{AF_INET} or @code{AF_INET6}, as appropriate for the type of
 address being converted.  @var{cp} is a pointer to the input string, and
 @var{buf} is a pointer to a buffer for the result.  It is the caller's
 responsibility to make sure the buffer is large enough.
+
+The return value is @code{1} on success and @code{0} if @var{cp} does not
+point to a valid address string for the address family @var{af} requested.
+On failure, the function's return value is @code{-1} and @code{errno} is
+set accordingly.  The following @code{errno} values are specific to this
+function:
+
+@table @code
+@item EAFNOSUPPORT
+The address family requested is neither @code{AF_INET} nor @code{AF_INET6}.
+@end table
 @end deftypefun
 
 @deftypefun {const char *} inet_ntop (int @var{af}, const void *@var{cp}, char *@var{buf}, socklen_t @var{len})
