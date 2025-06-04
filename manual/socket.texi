@@ -497,7 +497,20 @@ interface name, including its terminating zero byte.
 @c takes a lock, which makes all callers AS- and AC-Unsafe.
 @c  opensock @asulock @aculock @acsfd
 This function yields the interface index corresponding to a particular
-name.  If no interface exists with the name given, it returns 0.
+name specified with @var{ifname}.
+
+The return value is the interface index on success.  On failure, the
+function's return value is zero and @code{errno} is set accordingly.
+The following @code{errno} values are specific to this function:
+
+@table @code
+@item ENODEV
+There is no interface by the name requested.
+@end table
+
+Additionally, since @code{if_nametoindex} invokes @code{socket}
+internally, @code{errno} may also be set to a value listed for the
+@code{socket} function (@pxref{Creating a Socket}).
 @end deftypefun
 
 @deftypefun {char *} if_indextoname (unsigned int @var{ifindex}, char *@var{ifname})
