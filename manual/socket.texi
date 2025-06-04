@@ -505,11 +505,22 @@ name.  If no interface exists with the name given, it returns 0.
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{}}}
 @c It opens a socket with opensock to use ioctl on the fd to get the
 @c name from the index.
-This function maps an interface index to its corresponding name.  The
-returned name is placed in the buffer pointed to by @code{ifname}, which
-must be at least @code{IFNAMSIZ} bytes in length.  If the index was
-invalid, the function's return value is a null pointer, otherwise it is
-@code{ifname}.
+This function maps an interface index @var{ifindex} to its corresponding
+name.  The returned name is placed in the buffer pointed to by @var{ifname},
+which must be at least @code{IFNAMSIZ} bytes in length.
+
+The return value is @var{ifname} on success.  On failure, the function's
+return value is a null pointer and @code{errno} is set accordingly.  The
+following @code{errno} values are specific to this function:
+
+@table @code
+@item ENXIO
+There is no interface at the index requested.
+@end table
+
+Additionally, since @code{if_indextoname} invokes @code{socket}
+internally, @code{errno} may also be set to a value listed for the
+@code{socket} function (@pxref{Creating a Socket}).
 @end deftypefun
 
 @deftp {Data Type} {struct if_nameindex}
