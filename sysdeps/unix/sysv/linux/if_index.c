@@ -32,35 +32,23 @@
 unsigned int
 __if_nametoindex (const char *ifname)
 {
-#ifndef SIOCGIFINDEX
-  __set_errno (ENOSYS);
-  return 0;
-#else
-  struct ifreq ifr;
   if (strlen (ifname) >= IFNAMSIZ)
     {
       __set_errno (ENODEV);
       return 0;
     }
 
-  strncpy (ifr.ifr_name, ifname, sizeof (ifr.ifr_name));
-
   int fd = __opensock ();
-
   if (fd < 0)
     return 0;
 
-  if (__ioctl (fd, SIOCGIFINDEX, &ifr) < 0)
-    {
-      int saved_errno = errno;
-      __close_nocancel_nostatus (fd);
-      if (saved_errno == EINVAL)
-	__set_errno (ENOSYS);
-      return 0;
-    }
+  struct ifreq ifr;
+  strncpy (ifr.ifr_name, ifname, sizeof (ifr.ifr_name));
+
+  int status = __ioctl (fd, SIOCGIFINDEX, &ifr);
   __close_nocancel_nostatus (fd);
-  return ifr.ifr_ifindex;
-#endif
+
+  return status < 0 ? 0 : ifr.ifr_ifindex;
 }
 libc_hidden_def (__if_nametoindex)
 weak_alias (__if_nametoindex, if_nametoindex)
@@ -83,8 +71,8 @@ weak_alias (__if_freenameindex, if_freenameindex)
 libc_hidden_weak (if_freenameindex)
 
 
-static struct if_nameindex *
-if_nameindex_netlink (void)
+struct if_nameindex *
+__if_nameindex (void)
 {
   struct netlink_handle nh = { 0, 0, 0, NULL, NULL };
   struct if_nameindex *idx = NULL;
@@ -195,19 +183,6 @@ if_nameindex_netlink (void)
   __netlink_close (&nh);
 
   return idx;
-}
-
-
-struct if_nameindex *
-__if_nameindex (void)
-{
-#ifndef SIOCGIFINDEX
-  __set_errno (ENOSYS);
-  return NULL;
-#else
-  struct if_nameindex *result = if_nameindex_netlink ();
-  return result;
-#endif
 }
 weak_alias (__if_nameindex, if_nameindex)
 libc_hidden_weak (if_nameindex)
