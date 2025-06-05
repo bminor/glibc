@@ -63,22 +63,6 @@
 	blr
 #endif /* USE_AS_RAWMEMCHR */
 
-/* TODO: Replace macros by the actual instructions when minimum binutils becomes
-   >= 2.35.  This is used to keep compatibility with older versions.  */
-#define VEXTRACTBM(rt,vrb)	 \
-	.long(((4)<<(32-6))	 \
-	      | ((rt)<<(32-11))	 \
-	      | ((8)<<(32-16))	 \
-	      | ((vrb)<<(32-21)) \
-	      | 1602)
-
-#define LXVP(xtp,dq,ra)		   \
-	.long(((6)<<(32-6))		   \
-	      | ((((xtp)-32)>>1)<<(32-10)) \
-	      | ((1)<<(32-11))		   \
-	      | ((ra)<<(32-16))		   \
-	      | dq)
-
 #define CHECK16(vreg,offset,addr,label) \
 	lxv	  vreg+32,offset(addr);	\
 	vcmpequb. vreg,vreg,v18;	\
@@ -88,8 +72,8 @@
    of bytes already checked.  */
 #define CHECK64(offset,addr,label)	    \
 	li	  r6,offset;		    \
-	LXVP(v4+32,offset,addr);	    \
-	LXVP(v6+32,offset+32,addr);	    \
+	lxvp      v4+32,offset(addr);	    \
+	lxvp      v6+32,offset+32(addr);    \
 	RAWMEMCHR_SUBTRACT_VECTORS;	    \
 	vminub	  v14,v4,v5;		    \
 	vminub	  v15,v6,v7;		    \
@@ -234,10 +218,10 @@ L(tail_64b):
 	add	r5,r5,r6
 
 	/* Extract first bit of each byte.  */
-	VEXTRACTBM(r7,v1)
-	VEXTRACTBM(r8,v2)
-	VEXTRACTBM(r9,v3)
-	VEXTRACTBM(r10,v4)
+	vextractbm r7,v1
+	vextractbm r8,v2
+	vextractbm r9,v3
+	vextractbm r10,v4
 
 	/* Shift each value into their corresponding position.  */
 	sldi	  r8,r8,16

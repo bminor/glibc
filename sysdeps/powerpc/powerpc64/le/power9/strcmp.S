@@ -28,21 +28,6 @@
    The implementation uses unaligned doubleword access for first 32 bytes
    as in POWER8 patch and uses vectorised loops after that.  */
 
-/* TODO: Change this to actual instructions when minimum binutils is upgraded
-   to 2.27.  Macros are defined below for these newer instructions in order
-   to maintain compatibility.  */
-#define VCTZLSBB(r,v) .long (0x10010602 | ((r)<<(32-11)) | ((v)<<(32-21)))
-
-#define VEXTUBRX(t,a,b) .long (0x1000070d \
-				| ((t)<<(32-11))  \
-				| ((a)<<(32-16))  \
-				| ((b)<<(32-21)) )
-
-#define VCMPNEZB(t,a,b) .long (0x10000507 \
-				| ((t)<<(32-11))  \
-				| ((a)<<(32-16))  \
-				| ((b)<<(32-21)) )
-
 /* Get 16 bytes for unaligned case.
    reg1: Vector to hold next 16 bytes.
    reg2: Address to read from.
@@ -61,10 +46,7 @@
 2: \
 	vperm   reg1, v9, reg1, reg3;
 
-/* TODO: change this to .machine power9 when the minimum required binutils
-   allows it.  */
-
-	.machine  power7
+	.machine  power9
 ENTRY_TOCLESS (STRCMP, 4)
 	li	r0, 0
 
@@ -116,7 +98,7 @@ L(align):
 	/* Both s1 and s2 are unaligned.  */
 	GET16BYTES(v4, r7, v10)
 	GET16BYTES(v5, r4, v6)
-	VCMPNEZB(v7, v5, v4)
+	vcmpnezb. v7, v5, v4
 	beq	cr6, L(match)
 	b	L(different)
 
@@ -136,28 +118,28 @@ L(match):
 L(s1_align):
 	lvx	v4, r7, r0
 	GET16BYTES(v5, r4, v6)
-	VCMPNEZB(v7, v5, v4)
+	vcmpnezb. v7, v5, v4
 	addi	r7, r7, 16
 	addi	r4, r4, 16
 	bne	cr6, L(different)
 
 	lvx	v4, r7, r0
 	GET16BYTES(v5, r4, v6)
-	VCMPNEZB(v7, v5, v4)
+	vcmpnezb. v7, v5, v4
 	addi	r7, r7, 16
 	addi	r4, r4, 16
 	bne	cr6, L(different)
 
 	lvx	v4, r7, r0
 	GET16BYTES(v5, r4, v6)
-	VCMPNEZB(v7, v5, v4)
+	vcmpnezb. v7, v5, v4
 	addi	r7, r7, 16
 	addi	r4, r4, 16
 	bne	cr6, L(different)
 
 	lvx	v4, r7, r0
 	GET16BYTES(v5, r4, v6)
-	VCMPNEZB(v7, v5, v4)
+	vcmpnezb. v7, v5, v4
 	addi	r7, r7, 16
 	addi	r4, r4, 16
 	beq	cr6, L(s1_align)
@@ -167,37 +149,37 @@ L(s1_align):
 L(aligned):
 	lvx	v4, 0, r7
 	lvx	v5, 0, r4
-	VCMPNEZB(v7, v5, v4)
+	vcmpnezb. v7, v5, v4
 	addi	r7, r7, 16
 	addi	r4, r4, 16
 	bne	cr6, L(different)
 
 	lvx	v4, 0, r7
 	lvx	v5, 0, r4
-	VCMPNEZB(v7, v5, v4)
+	vcmpnezb. v7, v5, v4
 	addi	r7, r7, 16
 	addi	r4, r4, 16
 	bne	cr6, L(different)
 
 	lvx	v4, 0, r7
 	lvx	v5, 0, r4
-	VCMPNEZB(v7, v5, v4)
+	vcmpnezb. v7, v5, v4
 	addi	r7, r7, 16
 	addi	r4, r4, 16
 	bne	cr6, L(different)
 
 	lvx	v4, 0, r7
 	lvx	v5, 0, r4
-	VCMPNEZB(v7, v5, v4)
+	vcmpnezb. v7, v5, v4
 	addi	r7, r7, 16
 	addi	r4, r4, 16
 	beq	cr6, L(aligned)
 
 	/* Calculate and return the difference.  */
 L(different):
-	VCTZLSBB(r6, v7)
-	VEXTUBRX(r5, r6, v4)
-	VEXTUBRX(r4, r6, v5)
+	vctzlsbb r6, v7
+	vextubrx r5, r6, v4
+	vextubrx r4, r6, v5
 	subf	r3, r4, r5
 	extsw	r3, r3
 	blr
