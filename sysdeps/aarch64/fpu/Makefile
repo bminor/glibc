@@ -60,7 +60,7 @@ endif
 # add a generic -mcpu and -march with SVE enabled.  Also use a tune for a modern
 # SVE core.
 
-sve-cflags = -mcpu=generic+sve -march=armv8-a+sve -mtune=neoverse-v2
+sve-cflags = -mcpu=generic+sve -march=armv8-a+sve -mtune=neoverse-v1
 
 ifeq ($(build-mathvec),yes)
 bench-libmvec = $(addprefix float-advsimd-,$(float-advsimd-funcs)) \
