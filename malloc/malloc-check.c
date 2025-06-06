@@ -275,12 +275,12 @@ realloc_check (void *oldmem, size_t bytes)
     malloc_printerr ("realloc(): invalid pointer");
   const INTERNAL_SIZE_T oldsize = chunksize (oldp);
 
-  chnb = checked_request2size (rb);
-  if (chnb == 0)
+  if (rb > PTRDIFF_MAX)
     {
       __set_errno (ENOMEM);
       goto invert;
     }
+  chnb = checked_request2size (rb);
 
   __libc_lock_lock (main_arena.mutex);
 

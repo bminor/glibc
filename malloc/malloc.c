@@ -1323,8 +1323,8 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 /* Check if REQ overflows when padded and aligned and if the resulting
    value is less than PTRDIFF_T.  Returns the requested size or
-   MINSIZE in case the value is less than MINSIZE, or 0 if any of the
-   previous checks fail.  */
+   MINSIZE in case the value is less than MINSIZE, or SIZE_MAX if any
+   of the previous checks fail.  */
 static __always_inline size_t
 checked_request2size (size_t req) __nonnull (1)
 {
@@ -1332,7 +1332,7 @@ checked_request2size (size_t req) __nonnull (1)
                   "PTRDIFF_MAX is not more than half of SIZE_MAX");
 
   if (__glibc_unlikely (req > PTRDIFF_MAX))
-    return 0;
+    return SIZE_MAX;
 
   /* When using tagged memory, we cannot share the end of the user
      block with the header for the next chunk, so ensure that we
@@ -3462,11 +3462,6 @@ __libc_malloc (size_t bytes)
 {
 #if USE_TCACHE
   size_t nb = checked_request2size (bytes);
-  if (nb == 0)
-    {
-      __set_errno (ENOMEM);
-      return NULL;
-    }
 
   if (nb < mp_.tcache_max_bytes)
     {
@@ -3611,12 +3606,12 @@ __libc_realloc (void *oldmem, size_t bytes)
                         || misaligned_chunk (oldp)))
       malloc_printerr ("realloc(): invalid pointer");
 
-  nb = checked_request2size (bytes);
-  if (nb == 0)
+  if (bytes > PTRDIFF_MAX)
     {
       __set_errno (ENOMEM);
       return NULL;
     }
+  nb = checked_request2size (bytes);
 
   if (chunk_is_mmapped (oldp))
     {
@@ -3742,13 +3737,7 @@ _mid_memalign (size_t alignment, size_t bytes)
     }
 
 #if USE_TCACHE
-  size_t nb = checked_request2size (bytes);
-  if (nb == 0)
-    {
-      __set_errno (ENOMEM);
-      return NULL;
-    }
-  void *victim = tcache_get_align (nb, alignment);
+  void *victim = tcache_get_align (checked_request2size (bytes), alignment);
   if (victim != NULL)
     return tag_new_usable (victim);
 #endif
@@ -3909,11 +3898,7 @@ __libc_calloc (size_t n, size_t elem_size)
 
 #if USE_TCACHE
   size_t nb = checked_request2size (bytes);
-  if (nb == 0)
-    {
-      __set_errno (ENOMEM);
-      return NULL;
-    }
+
   if (nb < mp_.tcache_max_bytes)
     {
       if (__glibc_unlikely (tcache == NULL))
@@ -3988,12 +3973,12 @@ _int_malloc (mstate av, size_t bytes)
      aligned.
    */
 
-  nb = checked_request2size (bytes);
-  if (nb == 0)
+  if (bytes > PTRDIFF_MAX)
     {
       __set_errno (ENOMEM);
       return NULL;
     }
+  nb = checked_request2size (bytes);
 
   /* There are no usable arenas.  Fall back to sysmalloc to get a chunk from
      mmap.  */
@@ -5148,12 +5133,12 @@ _int_memalign (mstate av, size_t alignment, size_t bytes)
   unsigned long remainder_size;   /* its size */
   INTERNAL_SIZE_T size;
 
-  nb = checked_request2size (bytes);
-  if (nb == 0)
+  if (bytes > PTRDIFF_MAX)
     {
       __set_errno (ENOMEM);
       return NULL;
     }
+  nb = checked_request2size (bytes);
 
   /* We can't check tcache here because we hold the arena lock, which
      tcache doesn't expect.  We expect it has been checked
