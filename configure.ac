@@ -469,6 +469,9 @@ with_fp_cond=1
 # A preconfigure script may define another name to TLS descriptor variant
 mtls_descriptor=gnu2
 
+# A preconfigure script may define another name to traditional TLS variant
+mtls_traditional=gnu
+
 dnl Let sysdeps/*/preconfigure act here.
 LIBC_PRECONFIGURE([$srcdir], [for sysdeps])
 
@@ -1333,6 +1336,28 @@ fi
 rm -f conftest*])
 AC_SUBST(libc_cv_mtls_descriptor)
 LIBC_CONFIG_VAR([have-mtls-descriptor], [$libc_cv_mtls_descriptor])
+
+dnl Check if CC supports traditional tls.
+AC_CACHE_CHECK([for traditional tls support],
+	       libc_cv_test_mtls_traditional,
+[dnl
+cat > conftest.c <<EOF
+__thread int i;
+void foo (void)
+{
+  i = 10;
+}
+EOF
+if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -fPIC -mtls-dialect=$mtls_traditional -nostdlib -nostartfiles
+		   -shared conftest.c -o conftest 1>&AS_MESSAGE_LOG_FD])
+then
+  libc_cv_test_mtls_traditional=$mtls_traditional
+else
+  libc_cv_test_mtls_traditional=no
+fi
+rm -f conftest*])
+LIBC_CONFIG_VAR([have-test-mtls-traditional],
+		[$libc_cv_test_mtls_traditional])
 
 dnl clang emits an warning for a double alias redirection, to warn the
 dnl original symbol is sed even when weak definition overrides it.

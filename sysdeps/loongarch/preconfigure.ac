@@ -42,6 +42,7 @@ loongarch*)
 
     base_machine=loongarch
     mtls_descriptor=desc
+    mtls_traditional=trad
     ;;
 esac
 

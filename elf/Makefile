@@ -486,6 +486,7 @@ tests += \
   tst-tls19 \
   tst-tls20 \
   tst-tls21 \
+  tst-tls23 \
   tst-tlsalign \
   tst-tlsalign-extern \
   tst-tlsgap \
@@ -964,6 +965,7 @@ modules-names += \
   tst-tls19mod3 \
   tst-tls20mod-bad \
   tst-tls21mod \
+  tst-tls23-mod \
   tst-tlsalign-lib \
   tst-tlsgap-mod0 \
   tst-tlsgap-mod1 \
@@ -3196,6 +3198,13 @@ tst-rtld-no-malloc-audit-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so
 
 # Any shared object should do.
 tst-rtld-no-malloc-preload-ENV = LD_PRELOAD=$(objpfx)tst-auditmod1.so
+
+$(objpfx)tst-tls23: $(shared-thread-library)
+$(objpfx)tst-tls23.out: $(objpfx)tst-tls23-mod.so
+
+ifneq (no,$(have-test-mtls-traditional))
+CFLAGS-tst-tls23-mod.c += -mtls-dialect=$(have-test-mtls-traditional)
+endif
 
 $(objpfx)tst-version-hash-zero.out: \
   $(objpfx)tst-version-hash-zero-mod.so \

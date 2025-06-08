@@ -30,7 +30,9 @@ stack-align-test-flags += -malign-double
 endif
 
 ifeq ($(subdir),elf)
-sysdep-dl-routines += tlsdesc dl-tlsdesc
+sysdep-dl-routines += \
+  dl-tls-get-addr \
+# sysdep-dl-routines
 
 tests += tst-audit3
 modules-names += tst-auditmod3a tst-auditmod3b

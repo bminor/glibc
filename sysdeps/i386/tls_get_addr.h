@@ -1,5 +1,5 @@
 /* Thread-local storage handling in the ELF dynamic linker.  i386 version.
-   Copyright (C) 2002-2024 Free Software Foundation, Inc.
+   Copyright (C) 2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,26 +16,27 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+	.hidden ___tls_get_addr
+	.global	___tls_get_addr
+	.type	___tls_get_addr,@function
 
-/* Type used for the representation of TLS information in the GOT.  */
-typedef struct dl_tls_index
-{
-  unsigned long int ti_module;
-  unsigned long int ti_offset;
-} tls_index;
+	/* This function is a wrapper of ___tls_get_addr_internal to
+	   preserve caller-saved vector registers.  */
 
-
-#ifdef SHARED
-/* This is the prototype for the GNU version.  */
-extern void *___tls_get_addr (tls_index *ti)
-     __attribute__ ((__regparm__ (1)));
-# if IS_IN (rtld)
-/* Prepare using the definition of __tls_get_addr in the generic
-   version of this file.  */
-# define __tls_get_addr \
-    __attribute__ ((__regparm__ (1))) ___tls_get_addr_internal
-# else
-/* Users should get the better interface.  */
-#  define __tls_get_addr ___tls_get_addr
-# endif
-#endif
+	cfi_startproc
+	.align 16
+___tls_get_addr:
+	/* Like all TLS resolvers, preserve call-clobbered registers.
+	   We need two scratch regs anyway.  */
+	subl	$32, %esp
+	cfi_adjust_cfa_offset (32)
+	movl	%ecx, 20(%esp)
+	movl	%edx, 24(%esp)
+#include "tls-get-addr-wrapper.h"
+	movl	20(%esp), %ecx
+	movl	24(%esp), %edx
+	addl	$32, %esp
+	cfi_adjust_cfa_offset (-32)
+	ret
+	cfi_endproc
+	.size	___tls_get_addr, .-___tls_get_addr

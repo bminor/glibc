@@ -4901,6 +4901,9 @@ with_fp_cond=1
 # A preconfigure script may define another name to TLS descriptor variant
 mtls_descriptor=gnu2
 
+# A preconfigure script may define another name to traditional TLS variant
+mtls_traditional=gnu
+
 if frags=`ls -d $srcdir/sysdeps/*/preconfigure 2> /dev/null`
 then
   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for sysdeps preconfigure fragments" >&5
@@ -7222,6 +7225,39 @@ printf "%s\n" "$libc_cv_mtls_descriptor" >&6; }
 
 config_vars="$config_vars
 have-mtls-descriptor = $libc_cv_mtls_descriptor"
+
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for traditional tls support" >&5
+printf %s "checking for traditional tls support... " >&6; }
+if test ${libc_cv_test_mtls_traditional+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) cat > conftest.c <<EOF
+__thread int i;
+void foo (void)
+{
+  i = 10;
+}
+EOF
+if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -fPIC -mtls-dialect=$mtls_traditional -nostdlib -nostartfiles
+		   -shared conftest.c -o conftest 1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+then
+  libc_cv_test_mtls_traditional=$mtls_traditional
+else
+  libc_cv_test_mtls_traditional=no
+fi
+rm -f conftest* ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_test_mtls_traditional" >&5
+printf "%s\n" "$libc_cv_test_mtls_traditional" >&6; }
+config_vars="$config_vars
+have-test-mtls-traditional = $libc_cv_test_mtls_traditional"
 
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking if -Wno-ignored-attributes is required for aliases" >&5
 printf %s "checking if -Wno-ignored-attributes is required for aliases... " >&6; }

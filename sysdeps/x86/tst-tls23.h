@@ -1,5 +1,5 @@
-/* x86-64 PLT trampoline register save macros.
-   Copyright (C) 2024 Free Software Foundation, Inc.
+/* Test that __tls_get_addr preserves XMM registers.
+   Copyright (C) 2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,19 +16,20 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef DL_STACK_ALIGNMENT
-/* Due to GCC bug:
+#include <support/check.h>
 
-   https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58066
+typedef long long v2di __attribute__((vector_size(16)));
+extern v2di v1, v2, v3;
 
-   __tls_get_addr may be called with 8-byte stack alignment.  Although
-   this bug has been fixed in GCC 4.9.4, 5.3 and 6, we can't assume
-   that stack will be always aligned at 16 bytes.  */
-# define DL_STACK_ALIGNMENT 8
-#endif
+#define BEFORE_TLS_CALL()					\
+  v1 = __extension__(v2di){0, 0};				\
+  v2 = __extension__(v2di){0, 0};
 
-/* True if _dl_runtime_resolve should align stack for STATE_SAVE or align
-   stack to 16 bytes before calling _dl_fixup.  */
-#define DL_RUNTIME_RESOLVE_REALIGN_STACK \
-  (STATE_SAVE_ALIGNMENT > DL_STACK_ALIGNMENT \
-   || 16 > DL_STACK_ALIGNMENT)
+#define AFTER_TLS_CALL()					\
+  v3 = __extension__(v2di){0, 0};				\
+  asm volatile ("" : "+x" (v3));				\
+  union { v2di x; long long a[2]; } u;				\
+  u.x = v3;							\
+  TEST_VERIFY_EXIT (u.a[0] == 0 && u.a[1] == 0);
+
+#include <elf/tst-tls23.h>
