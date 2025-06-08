@@ -183,6 +183,29 @@
 
 #define atom_text_section .section ".text.atom", "ax"
 
+#ifndef DL_STACK_ALIGNMENT
+/* Due to GCC bug:
+
+   https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58066
+
+   __tls_get_addr may be called with 8-byte/4-byte stack alignment.
+   Although this bug has been fixed in GCC 4.9.4, 5.3 and 6, we can't
+   assume that stack will be always aligned at 16 bytes.  */
+# ifdef __x86_64__
+#  define DL_STACK_ALIGNMENT 8
+#  define MINIMUM_ALIGNMENT 16
+# else
+#  define DL_STACK_ALIGNMENT 4
+# endif
+#endif
+
+/* True if _dl_runtime_resolve/_dl_tlsdesc_dynamic should align stack for
+   STATE_SAVE or align stack to MINIMUM_ALIGNMENT bytes before calling
+   _dl_fixup/__tls_get_addr.  */
+#define DL_RUNTIME_RESOLVE_REALIGN_STACK \
+  (STATE_SAVE_ALIGNMENT > DL_STACK_ALIGNMENT \
+   || MINIMUM_ALIGNMENT > DL_STACK_ALIGNMENT)
+
 #endif	/* __ASSEMBLER__ */
 
 #endif	/* _X86_SYSDEP_H */
