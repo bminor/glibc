@@ -3,5 +3,6 @@ aarch64*)
 	base_machine=aarch64
 	machine=aarch64
 	mtls_descriptor=desc
+	mtls_traditional=trad
 	;;
 esac

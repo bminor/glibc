@@ -22,23 +22,6 @@
 #include <features-offsets.h>
 #include "tlsdesc.h"
 
-#ifndef DL_STACK_ALIGNMENT
-/* Due to GCC bug:
-
-   https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58066
-
-   __tls_get_addr may be called with 4-byte stack alignment.  Although
-   this bug has been fixed in GCC 4.9.4, 5.3 and 6, we can't assume
-   that stack will be always aligned at 16 bytes.  */
-# define DL_STACK_ALIGNMENT 4
-#endif
-
-/* True if _dl_tlsdesc_dynamic should align stack for STATE_SAVE or align
-   stack to MINIMUM_ALIGNMENT bytes before calling ___tls_get_addr.  */
-#define DL_RUNTIME_RESOLVE_REALIGN_STACK \
-  (STATE_SAVE_ALIGNMENT > DL_STACK_ALIGNMENT \
-   || MINIMUM_ALIGNMENT > DL_STACK_ALIGNMENT)
-
 	.text
 
      /* This function is used to compute the TP offset for symbols in

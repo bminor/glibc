@@ -41,9 +41,6 @@ ifeq ($(subdir),elf)
 CFLAGS-.os += $(if $(filter $(@F),$(patsubst %,%.os,$(all-rtld-routines))),\
 		   -mno-mmx)
 
-sysdep-dl-routines += tlsdesc dl-tlsdesc tls_get_addr
-
-tests += ifuncmain8
 modules-names += ifuncmod8
 
 $(objpfx)ifuncmain8: $(objpfx)ifuncmod8.so
