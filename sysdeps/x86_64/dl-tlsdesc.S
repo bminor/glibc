@@ -22,7 +22,6 @@
 #include <features-offsets.h>
 #include <isa-level.h>
 #include "tlsdesc.h"
-#include "dl-trampoline-save.h"
 
 /* Area on stack to save and restore registers used for parameter
    passing when calling _dl_tlsdesc_dynamic.  */

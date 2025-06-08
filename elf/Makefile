@@ -496,6 +496,7 @@ tests += \
   tst-tls21 \
   tst-tls22 \
   tst-tls22-gnu2 \
+  tst-tls23 \
   tst-tlsalign \
   tst-tlsalign-extern \
   tst-tlsgap \
@@ -1023,6 +1024,7 @@ modules-names += \
   tst-tls22-mod1-gnu2 \
   tst-tls22-mod2 \
   tst-tls22-mod2-gnu2 \
+  tst-tls23-mod \
   tst-tlsalign-lib \
   tst-tlsgap-mod0 \
   tst-tlsgap-mod1 \
@@ -3409,6 +3411,13 @@ tst-tls22-mod1.so-no-z-defs = yes
 tst-tls22-mod1-gnu2.so-no-z-defs = yes
 tst-tls22-mod2.so-no-z-defs = yes
 tst-tls22-mod2-gnu2.so-no-z-defs = yes
+
+$(objpfx)tst-tls23: $(shared-thread-library)
+$(objpfx)tst-tls23.out: $(objpfx)tst-tls23-mod.so
+
+ifneq (no,$(have-test-mtls-traditional))
+CFLAGS-tst-tls23-mod.c += -mtls-dialect=$(have-test-mtls-traditional)
+endif
 
 ifeq ($(have-test-cc-cflags-fsemantic-interposition),yes)
 # Compiler may default to -fno-semantic-interposition.  These modules

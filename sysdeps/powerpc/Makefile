@@ -28,6 +28,11 @@ tst-cache-ppc-static-dlopen-ENV = LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(c
 $(objpfx)tst-cache-ppc-static-dlopen.out: $(objpfx)mod-cache-ppc.so
 
 $(objpfx)tst-cache-ppc: $(objpfx)mod-cache-ppc.so
+
+# The test checks if the __tls_get_addr does not clobber caller-saved
+# register, so disable the powerpc specific optimization to force a
+# __tls_get_addr call.
+LDFLAGS-tst-tls23-mod.so = -Wl,--no-tls-get-addr-optimize
 endif
 
 ifneq (no,$(multi-arch))
