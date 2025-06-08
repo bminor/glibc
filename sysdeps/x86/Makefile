@@ -4,7 +4,13 @@ endif
 
 ifeq ($(subdir),elf)
 sysdep_routines += get-cpuid-feature-leaf
-sysdep-dl-routines += dl-get-cpu-features
+sysdep-dl-routines += \
+  dl-get-cpu-features \
+  dl-tlsdesc \
+  tls_get_addr \
+  tlsdesc \
+# sysdep-dl-routines
+
 sysdep_headers += \
   bits/platform/features.h \
   bits/platform/x86.h \
@@ -111,6 +117,14 @@ $(objpfx)tst-gnu2-tls2-x86-noxsavexsavec.out: \
   $(objpfx)tst-gnu2-tls2mod0.so \
   $(objpfx)tst-gnu2-tls2mod1.so \
   $(objpfx)tst-gnu2-tls2mod2.so
+
+CFLAGS-tst-tls23.c += -msse2
+CFLAGS-tst-tls23-mod.c += -msse2 -mtune=haswell
+
+LDFLAGS-tst-tls23 += -rdynamic
+tst-tls23-mod.so-no-z-defs = yes
+
+$(objpfx)tst-tls23-mod.so: $(libsupport)
 endif
 
 ifeq ($(subdir),math)

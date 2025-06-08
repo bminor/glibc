@@ -461,6 +461,7 @@ tests += \
   tst-tls19 \
   tst-tls20 \
   tst-tls21 \
+  tst-tls23 \
   tst-tlsalign \
   tst-tlsalign-extern \
   tst-tlsgap \
@@ -914,6 +915,7 @@ modules-names += \
   tst-tls19mod3 \
   tst-tls20mod-bad \
   tst-tls21mod \
+  tst-tls23-mod \
   tst-tlsalign-lib \
   tst-tlsgap-mod0 \
   tst-tlsgap-mod1 \
@@ -3068,6 +3070,13 @@ CFLAGS-tst-tlsgap-mod2.c += -mtls-dialect=gnu2
 CFLAGS-tst-gnu2-tls2mod0.c += -mtls-dialect=gnu2
 CFLAGS-tst-gnu2-tls2mod1.c += -mtls-dialect=gnu2
 CFLAGS-tst-gnu2-tls2mod2.c += -mtls-dialect=gnu2
+endif
+
+$(objpfx)tst-tls23: $(shared-thread-library)
+$(objpfx)tst-tls23.out: $(objpfx)tst-tls23-mod.so
+
+ifneq (no,$(have-test-mtls-traditional))
+CFLAGS-tst-tls23-mod.c += -mtls-dialect=$(have-test-mtls-traditional)
 endif
 
 $(objpfx)tst-recursive-tls: $(objpfx)tst-recursive-tlsmallocmod.so

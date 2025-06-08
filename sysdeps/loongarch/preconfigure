@@ -43,6 +43,7 @@ loongarch*)
 
 
     base_machine=loongarch
+    mtls_traditional=trad
     ;;
 esac
 
