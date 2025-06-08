@@ -1256,7 +1256,7 @@ no_cpuid:
 #endif
 
   if (MINIMUM_X86_ISA_LEVEL >= AVX_X86_ISA_LEVEL
-      || (GLRO(dl_x86_cpu_features).xsave_state_size != 0))
+      || cpu_features->xsave_state_size != 0)
     {
       if (CPU_FEATURE_USABLE_P (cpu_features, XSAVEC))
 	{
