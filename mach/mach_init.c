@@ -35,6 +35,10 @@ __mach_init (void)
 {
   kern_return_t err;
 
+  if (__mach_host_self_)
+    /* Already initialized.  */
+    return;
+
   __mach_task_self_ = (__mach_task_self) ();
   __mach_host_self_ = (__mach_host_self) ();
   __mig_init (0);
