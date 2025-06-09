@@ -25,7 +25,7 @@
 #include <support/xthread.h>
 #include <support/check.h>
 #include <support/test-driver.h>
-#include "tst-gnu2-tls2.h"
+#include <tst-gnu2-tls2.h>
 
 #ifndef IS_SUPPORTED
 # define IS_SUPPORTED() true
@@ -75,7 +75,7 @@ close_mod (int i)
 static void
 access_mod (int i, const char *sym)
 {
-  struct tls var = { -1, -1, -1, -1 };
+  struct tls var = { -4, -4, -4, -4 };
   struct tls *(*f) (struct tls *) = xdlsym (mod[i], sym);
   /* Check that our malloc is called.  */
   malloc_counter = 0;

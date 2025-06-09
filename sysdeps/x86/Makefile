@@ -96,14 +96,22 @@ tst-ifunc-isa-2-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-SSE4_2,-AVX,-AVX2,-AVX512
 tst-ifunc-isa-2-static-ENV = $(tst-ifunc-isa-2-ENV)
 tst-hwcap-tunables-ARGS = -- $(host-test-program-cmd)
 
-CFLAGS-tst-gnu2-tls2.c += -msse
+CFLAGS-tst-gnu2-tls2.c += -msse2
 CFLAGS-tst-gnu2-tls2mod0.c += -msse2 -mtune=haswell
 CFLAGS-tst-gnu2-tls2mod1.c += -msse2 -mtune=haswell
 CFLAGS-tst-gnu2-tls2mod2.c += -msse2 -mtune=haswell
 
-LDFLAGS-tst-gnu2-tls2-x86-noxsave += -Wl,-z,lazy
-LDFLAGS-tst-gnu2-tls2-x86-noxsavec += -Wl,-z,lazy
-LDFLAGS-tst-gnu2-tls2-x86-noxsavexsavec += -Wl,-z,lazy
+LDFLAGS-tst-gnu2-tls2 += -rdynamic
+LDFLAGS-tst-gnu2-tls2mod0.so += -Wl,-z,undefs
+LDFLAGS-tst-gnu2-tls2mod1.so += -Wl,-z,undefs
+LDFLAGS-tst-gnu2-tls2mod2.so += -Wl,-z,undefs
+
+CFLAGS-tst-gnu2-tls2-x86-noxsave.c += -msse2
+CFLAGS-tst-gnu2-tls2-x86-noxsavec.c += -msse2
+CFLAGS-tst-gnu2-tls2-x86-noxsavexsavec.c += -msse2
+LDFLAGS-tst-gnu2-tls2-x86-noxsave += -Wl,-z,lazy -rdynamic
+LDFLAGS-tst-gnu2-tls2-x86-noxsavec += -Wl,-z,lazy -rdynamic
+LDFLAGS-tst-gnu2-tls2-x86-noxsavexsavec += -Wl,-z,lazy -rdynamic
 
 # Test for bug 32810: incorrect XSAVE state size if XSAVEC is disabled
 # via tunable.
