@@ -46,7 +46,7 @@ tests-internal += \
   tst-ifunc-arg-2 \
   tst-ifunc-arg-3 \
   tst-ifunc-arg-4 \
-  #tests-internal
+  # tests-internal
 
 tests += tst-vpcs
 modules-names += tst-vpcs-mod
