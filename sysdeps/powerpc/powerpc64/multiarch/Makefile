@@ -30,12 +30,11 @@ sysdep_routines += memcpy-power8-cached memcpy-power7 memcpy-a2 memcpy-power6 \
 		   strncase-power8
 
 ifneq (,$(filter %le,$(config-machine)))
-sysdep_routines += memchr-power10 memcmp-power10 memcpy-power10 \
-		   memmove-power10 memset-power10 rawmemchr-power9 \
-		   rawmemchr-power10 strcmp-power9 strcmp-power10 \
-		   strncmp-power9 strcpy-power9 strcat-power10 \
-		   stpcpy-power9 strlen-power9 strncpy-power9 stpncpy-power9 \
-		   strlen-power10
+sysdep_routines += memcmp-power10 memcpy-power10 memmove-power10 memset-power10 \
+		   rawmemchr-power9 rawmemchr-power10 \
+		   strcmp-power9 strcmp-power10 strncmp-power9 \
+		   strcpy-power9 strcat-power10 stpcpy-power9 \
+		   strlen-power9 strncpy-power9 stpncpy-power9 strlen-power10
 endif
 endif
 
