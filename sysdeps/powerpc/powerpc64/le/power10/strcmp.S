@@ -62,7 +62,7 @@
 	lxvl	  32+v5,reg2,r0;         \
 	add	  reg1,reg1,len_reg;     \
 	add	  reg2,reg2,len_reg;     \
-	vcmpnezb  v7,v4,v5;              \
+	vcmpnezb. v7,v4,v5;              \
 	vctzlsbb  r6,v7;                 \
 	cmpld	  cr7,r6,len_reg;        \
 	blt	  cr7,L(different);      \
@@ -72,110 +72,70 @@
 
 	.machine  power9
 ENTRY_TOCLESS (STRCMP, 4)
-	andi.	r7,r3,4095
-	andi.	r8,r4,4095
-	cmpldi	cr0,r7,4096-16
-	cmpldi	cr1,r8,4096-16
-	bgt	cr0,L(crosses)
-	bgt	cr1,L(crosses)
-	COMPARE_16(v4,v5,0)
-
-L(crosses):
-	andi.	r7,r3,15
-	subfic	r7,r7,16	/* r7(nalign1) = 16 - (str1 & 15).  */
-	andi.	r9,r4,15
-	subfic	r5,r9,16	/* r5(nalign2) = 16 - (str2 & 15).  */
-	cmpld	cr7,r7,r5
-	beq	cr7,L(same_aligned)
-	blt	cr7,L(nalign1_min)
-
-	/* nalign2 is minimum and s2 pointer is aligned.  */
-	CHECK_N_BYTES(r3,r4,r5)
-	/* Are we on the 64B hunk which crosses a page?  */
-	andi.	r10,r3,63	/* Determine offset into 64B hunk.  */
-	andi.	r8,r3,15        /* The offset into the 16B hunk.  */
-	neg	r7,r3
-	andi.	r9,r7,15	/* Number of bytes after a 16B cross.  */
-	rlwinm.	r7,r7,26,0x3F	/* ((r3-4096))>>6&63.  */
-	beq	L(compare_64_pagecross)
-	mtctr	r7
-	b	L(compare_64B_unaligned)
-
-	/* nalign1 is minimum and s1 pointer is aligned.  */
-L(nalign1_min):
-	CHECK_N_BYTES(r3,r4,r7)
-	/* Are we on the 64B hunk which crosses a page?  */
-	andi.	r10,r4,63	/* Determine offset into 64B hunk.  */
-	andi.	r8,r4,15	/* The offset into the 16B hunk.  */
-	neg	r7,r4
-	andi.	r9,r7,15	/* Number of bytes after a 16B cross.  */
-	rlwinm. r7,r7,26,0x3F	/* ((r4-4096))>>6&63.  */
-	beq	L(compare_64_pagecross)
-	mtctr	r7
+	li	 r11,16
+	/* eq bit of cr1 used as swap status flag to indicate if
+	source pointers were swapped.  */
+	crclr	 4*cr1+eq
+	vspltisb v19,-1
+	andi.	 r7,r3,15
+	sub	 r7,r11,r7	/* r7(nalign1) = 16 - (str1 & 15).  */
+	andi.	 r9,r4,15
+	sub	 r5,r11,r9	/* r5(nalign2) = 16 - (str2 & 15).  */
+	cmpld	 cr7,r7,r5
+	beq	 cr7,L(same_aligned)
+	blt	 cr7,L(nalign1_min)
+	/* Swap r3 and r4, and r7 and r5 such that r3 and r7 hold the
+	pointer which is closer to the next 16B boundary so that only
+	one CHECK_N_BYTES is needed before entering the loop below.  */
+	mr	 r8,r4
+	mr	 r4,r3
+	mr	 r3,r8
+	mr	 r12,r7
+	mr	 r7,r5
+	mr	 r5,r12
+	crset	 4*cr1+eq	/* Set bit on swapping source pointers.  */
 
 	.p2align 5
-L(compare_64B_unaligned):
-	COMPARE_16(v4,v5,0)
-	COMPARE_16(v4,v5,16)
-	COMPARE_16(v4,v5,32)
-	COMPARE_16(v4,v5,48)
-	addi	r3,r3,64
-	addi	r4,r4,64
-	bdnz	L(compare_64B_unaligned)
+L(nalign1_min):
+	CHECK_N_BYTES(r3,r4,r7)
 
-	/* Cross the page boundary of s2, carefully. Only for first
-	iteration we have to get the count of 64B blocks to be checked.
-	From second iteration and beyond, loop counter is always 63.  */
-L(compare_64_pagecross):
-	li	r11, 63
+	.p2align 5
+L(s1_aligned):
+	/* r9 and r5 is number of bytes to be read after and before
+	 page boundary correspondingly.  */
+	sub 	r5,r5,r7
+	subfic	r9,r5,16
+	/* Now let r7 hold the count of quadwords which can be
+	checked without crossing a page boundary. quadword offset is
+	(str2>>4)&0xFF.  */
+	rlwinm	r7,r4,28,0xFF
+	/* Below check is required only for first iteration. For second
+	iteration and beyond, the new loop counter is always 255.  */
+	cmpldi	r7,255
+	beq	L(L3)
+	/* Get the initial loop count by 255-((str2>>4)&0xFF).  */
+	subfic  r11,r7,255
+
+	.p2align 5
+L(L1):
 	mtctr	r11
-	cmpldi	r10,16
-	ble	L(cross_4)
-	cmpldi	r10,32
-	ble	L(cross_3)
-	cmpldi	r10,48
-	ble	L(cross_2)
-L(cross_1):
-	CHECK_N_BYTES(r3,r4,r9)
-	CHECK_N_BYTES(r3,r4,r8)
-	COMPARE_16(v4,v5,0)
-	COMPARE_16(v4,v5,16)
-	COMPARE_16(v4,v5,32)
-	addi	r3,r3,48
-	addi	r4,r4,48
-	b	L(compare_64B_unaligned)
-L(cross_2):
-	COMPARE_16(v4,v5,0)
-	addi	r3,r3,16
-	addi	r4,r4,16
-	CHECK_N_BYTES(r3,r4,r9)
-	CHECK_N_BYTES(r3,r4,r8)
-	COMPARE_16(v4,v5,0)
-	COMPARE_16(v4,v5,16)
-	addi	r3,r3,32
-	addi	r4,r4,32
-	b	L(compare_64B_unaligned)
-L(cross_3):
-	COMPARE_16(v4,v5,0)
-	COMPARE_16(v4,v5,16)
-	addi	r3,r3,32
-	addi	r4,r4,32
-	CHECK_N_BYTES(r3,r4,r9)
-	CHECK_N_BYTES(r3,r4,r8)
-	COMPARE_16(v4,v5,0)
-	addi	r3,r3,16
-	addi	r4,r4,16
-	b	L(compare_64B_unaligned)
-L(cross_4):
-	COMPARE_16(v4,v5,0)
-	COMPARE_16(v4,v5,16)
-	COMPARE_16(v4,v5,32)
-	addi	r3,r3,48
-	addi	r4,r4,48
-	CHECK_N_BYTES(r3,r4,r9)
-	CHECK_N_BYTES(r3,r4,r8)
-	b	L(compare_64B_unaligned)
 
+	.p2align 5
+L(L2):
+	COMPARE_16(v4,v5,0)	/* Load 16B blocks using lxv.  */
+	addi	r3,r3,16
+	addi	r4,r4,16
+	bdnz	L(L2)
+	/* Cross the page boundary of s2, carefully.  */
+
+	.p2align 5
+L(L3):
+	CHECK_N_BYTES(r3,r4,r5)
+	CHECK_N_BYTES(r3,r4,r9)
+	li 	r11,255		/* Load the new loop counter.  */
+	b	L(L1)
+
+	.p2align 5
 L(same_aligned):
 	CHECK_N_BYTES(r3,r4,r7)
         /* Align s1 to 32B and adjust s2 address.
@@ -208,7 +168,18 @@ L(16B_aligned_loop):
 
 	/* Calculate and return the difference.  */
 L(different):
-	TAIL(v4,v5)
+	vctzlsbb r6,v7
+	vextubrx r5,r6,v4
+	vextubrx r4,r6,v5
+	bt  	 4*cr1+eq,L(swapped)
+	subf	 r3,r4,r5
+	blr
+
+	/* If src pointers were swapped, then swap the
+	indices and calculate the return value.  */
+L(swapped):
+	subf     r3,r5,r4
+	blr
 
 	.p2align 5
 L(32B_aligned_loop):
