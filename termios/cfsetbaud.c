@@ -19,17 +19,11 @@
 #include <errno.h>
 #include <stddef.h>
 
-/* Set both the input and output baud rates stored in *TERMIOS_P to SPEED.  */
+/* Set both the input and output baud rates stored in *TERMIOS_P to BAUD.  */
 int
-__cfsetspeed (struct termios *termios_p, speed_t speed)
+__cfsetbaud (struct termios *termios_p, baud_t baud)
 {
-  int rv;
-
-  rv = __cfsetospeed (termios_p, speed);
-  if (rv)
-    return rv;
-
-  return __cfsetispeed (termios_p, speed);
+  return __cfsetspeed (termios_p, baud);
 }
-libc_hidden_def (__cfsetspeed)
-weak_alias (__cfsetspeed, cfsetspeed)
+libc_hidden_def (__cfsetbaud)
+weak_alias (__cfsetbaud, cfsetbaud)

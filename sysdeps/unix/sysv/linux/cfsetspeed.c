@@ -31,6 +31,7 @@ __cfsetspeed (struct termios *termios_p, speed_t speed)
 
   return 0;
 }
+libc_hidden_def (__cfsetspeed)
 versioned_symbol (libc, __cfsetspeed, cfsetspeed, GLIBC_2_42);
 
 #if _TERMIOS_OLD_COMPAT
