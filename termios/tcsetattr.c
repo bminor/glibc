@@ -23,7 +23,7 @@ static int bad_speed (speed_t speed);
 
 /* Set the state of FD to *TERMIOS_P.  */
 int
-tcsetattr (int fd, int optional_actions, const struct termios *termios_p)
+__tcsetattr (int fd, int optional_actions, const struct termios *termios_p)
 {
   if (fd < 0)
     {
@@ -57,7 +57,8 @@ tcsetattr (int fd, int optional_actions, const struct termios *termios_p)
   __set_errno (ENOSYS);
   return -1;
 }
-libc_hidden_def (tcsetattr)
+libc_hidden_def (__tcsetattr)
+weak_alias (__tcsetattr, tcsetattr)
 
 /* Strychnine checking.  */
 static int

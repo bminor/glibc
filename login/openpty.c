@@ -124,7 +124,7 @@ __openpty (int *pptmx, int *pterminal, char *name,
 
   /* XXX Should we ignore errors here?  */
   if (termp)
-    tcsetattr (terminal, TCSAFLUSH, termp);
+    __tcsetattr (terminal, TCSAFLUSH, termp);
 #ifdef TIOCSWINSZ
   if (winp)
     __ioctl (terminal, TIOCSWINSZ, winp);

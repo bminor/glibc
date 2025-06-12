@@ -77,5 +77,5 @@ __tcsetattr (int fd, int optional_actions, const struct termios *termios_p)
 
   return INLINE_SYSCALL (ioctl, 3, fd, cmd, &k_termios);
 }
+libc_hidden_def (__tcsetattr)
 weak_alias (__tcsetattr, tcsetattr)
-libc_hidden_def (tcsetattr)
