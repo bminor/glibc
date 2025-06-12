@@ -236,6 +236,7 @@ tests += \
   tst-sysvmsg-linux \
   tst-sysvsem-linux \
   tst-sysvshm-linux \
+  tst-termios-linux \
   tst-tgkill \
   tst-timerfd \
   tst-ttyname-direct \
