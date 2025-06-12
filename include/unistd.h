@@ -152,6 +152,7 @@ libc_hidden_proto (__ttyname_r)
 extern __pid_t _Fork (void);
 libc_hidden_proto (_Fork);
 extern int __isatty (int __fd) attribute_hidden;
+extern int __isatty_nostatus (int __fd) attribute_hidden;
 extern int __link (const char *__from, const char *__to);
 extern int __symlink (const char *__from, const char *__to);
 extern int __symlinkat (const char *__from, int __fd, const char *__to);
