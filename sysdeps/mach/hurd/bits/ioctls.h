@@ -324,15 +324,8 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32, IOC_64 };
    From 4.4 <sys/ioctl_compat.h>.  */
 
 #ifdef __USE_MISC
-#ifdef USE_OLD_TTY
-# undef  TIOCGETD
-# define TIOCGETD	_IOR('t', 0, int)	/* get line discipline */
-# undef  TIOCSETD
-# define TIOCSETD	_IOW('t', 1, int)	/* set line discipline */
-#else
-# define OTIOCGETD	_IOR('t', 0, int)	/* get line discipline */
-# define OTIOCSETD	_IOW('t', 1, int)	/* set line discipline */
-#endif
+#define OTIOCGETD	_IOR('t', 0, int)	/* get line discipline */
+#define OTIOCSETD	_IOW('t', 1, int)	/* set line discipline */
 #define	TIOCHPCL	_IO('t', 2)		/* hang up on last close */
 #define	TIOCGETP	_IOR('t', 8,struct sgttyb)/* get parameters -- gtty */
 #define	TIOCSETP	_IOW('t', 9,struct sgttyb)/* set parameters -- stty */
@@ -411,26 +404,6 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32, IOC_64 };
 #define	OTTYDISC	0
 #define	NETLDISC	1
 #define	NTTYDISC	2
-
-/* From 4.4 <sys/ttydev.h>.   */
-#ifdef USE_OLD_TTY
-# define B0	0
-# define B50	1
-# define B75	2
-# define B110	3
-# define B134	4
-# define B150	5
-# define B200	6
-# define B300	7
-# define B600	8
-# define B1200	9
-# define B1800	10
-# define B2400	11
-# define B4800	12
-# define B9600	13
-# define EXTA	14
-# define EXTB	15
-#endif /* USE_OLD_TTY */
 #endif
 
 #endif /* bits/ioctls.h */
