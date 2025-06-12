@@ -35,6 +35,7 @@ typedef unsigned int	tcflag_t;
 /* c_cflag bit meaning */
 #include <bits/termios-c_cflag.h>
 
+#ifdef __USE_MISC
 #define __B0	 0000000	/* hang up */
 #define __B50	 0000001
 #define __B75	 0000002
@@ -53,9 +54,8 @@ typedef unsigned int	tcflag_t;
 #define __B38400 0000017
 #include <bits/termios-cbaud.h>
 
-#ifdef __USE_MISC
-# define EXTA	 __B19200
-# define EXTB	 __B38400
+# define __EXTA	 __B19200
+# define __EXTB	 __B38400
 # define BOTHER  __BOTHER
 #endif
 
