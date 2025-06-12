@@ -1106,11 +1106,23 @@ the only speeds that typical serial lines can support.
 @comment POSIX.1
 @vindex B4800
 @comment termios.h
+@comment GNU
+@vindex B7200
+@comment termios.h
 @comment POSIX.1
 @vindex B9600
 @comment termios.h
+@comment GNU
+@vindex B14400
+@comment termios.h
 @comment POSIX.1
 @vindex B19200
+@comment termios.h
+@comment GNU
+@vindex B28800
+@comment termios.h
+@comment GNU
+@vindex B33600
 @comment termios.h
 @comment POSIX.1
 @vindex B38400
@@ -1119,18 +1131,72 @@ the only speeds that typical serial lines can support.
 @vindex B57600
 @comment termios.h
 @comment GNU
+@vindex B76800
+@comment termios.h
+@comment GNU
 @vindex B115200
+@comment termios.h
+@comment GNU
+@vindex B153600
 @comment termios.h
 @comment GNU
 @vindex B230400
 @comment termios.h
 @comment GNU
+@vindex B307200
+@comment termios.h
+@comment GNU
 @vindex B460800
+@comment termios.h
+@comment GNU
+@vindex B500000
+@comment termios.h
+@comment GNU
+@vindex B576000
+@comment termios.h
+@comment GNU
+@vindex B614400
+@comment termios.h
+@comment GNU
+@vindex B921600
+@comment termios.h
+@comment GNU
+@vindex B1000000
+@comment termios.h
+@comment GNU
+@vindex B1152000
+@comment termios.h
+@comment GNU
+@vindex B1500000
+@comment termios.h
+@comment GNU
+@vindex B2000000
+@comment termios.h
+@comment GNU
+@vindex B2500000
+@comment termios.h
+@comment GNU
+@vindex B3000000
+@comment termios.h
+@comment GNU
+@vindex B3500000
+@comment termios.h
+@comment GNU
+@vindex B4000000
+@comment termios.h
+@comment GNU
+@vindex B5000000
+@comment termios.h
+@comment GNU
+@vindex B10000000
 @smallexample
-B0  B50  B75  B110  B134  B150  B200
-B300  B600  B1200  B1800  B2400  B4800
-B9600  B19200  B38400  B57600  B115200
-B230400  B460800
+B0  B50  B75  B110  B134  B150  B200  B300  B600  B1200
+B1800  B2400  B4800  B7200  B9600  B14400  B19200
+B28800  B33600  B38400  B57600  B76800  B115200
+B153600  B230400  B307200  B460800  B500000
+B576000  B614400  B921600  B1000000  B1152000
+B1500000  B2000000  B2500000  B3000000
+B3500000  B4000000  B5000000  B10000000
 @end smallexample
 
 @vindex EXTA
