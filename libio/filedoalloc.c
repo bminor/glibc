@@ -61,16 +61,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-/* Return the result of isatty, without changing errno.  */
-static int
-local_isatty (int fd)
-{
-  int save_errno = errno;
-  int res = __isatty (fd);
-  __set_errno (save_errno);
-  return res;
-}
-
 /* Allocate a file buffer, or switch to unbuffered I/O.  Streams for
    TTY devices default to line buffered.  */
 int
@@ -90,7 +80,7 @@ _IO_file_doallocate (FILE *fp)
 #ifdef DEV_TTY_P
 	      DEV_TTY_P (&st) ||
 #endif
-	      local_isatty (fp->_fileno))
+	      __isatty_nostatus (fp->_fileno))
 	    fp->_flags |= _IO_LINE_BUF;
 	}
 #if defined _STATBUF_ST_BLKSIZE
