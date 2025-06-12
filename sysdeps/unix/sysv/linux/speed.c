@@ -263,6 +263,7 @@ __cfgetospeed (const struct termios *termios_p)
 {
   return termios_p->c_ospeed;
 }
+libc_hidden_def (__cfgetospeed)
 versioned_symbol (libc, __cfgetospeed, cfgetospeed, GLIBC_2_42);
 
 /* Return the input baud rate stored in *TERMIOS_P.  */
@@ -271,6 +272,7 @@ __cfgetispeed (const struct termios *termios_p)
 {
   return termios_p->c_ispeed;
 }
+libc_hidden_def (__cfgetispeed)
 versioned_symbol (libc, __cfgetispeed, cfgetispeed, GLIBC_2_42);
 
 /* Set the output baud rate stored in *TERMIOS_P to SPEED.  */
@@ -285,6 +287,7 @@ __cfsetospeed (struct termios *termios_p, speed_t speed)
 
   return 0;
 }
+libc_hidden_def (__cfsetospeed)
 versioned_symbol (libc, __cfsetospeed, cfsetospeed, GLIBC_2_42);
 
 /* Set the input baud rate stored in *TERMIOS_P to SPEED. */
@@ -299,6 +302,7 @@ __cfsetispeed (struct termios *termios_p, speed_t speed)
 
   return 0;
 }
+libc_hidden_def (__cfsetispeed)
 versioned_symbol (libc, __cfsetispeed, cfsetispeed, GLIBC_2_42);
 
 #if _TERMIOS_OLD_COMPAT

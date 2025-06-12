@@ -11,4 +11,8 @@ libc {
     # t*
     tcgetsid;
   }
+  GLIBC_2.42 {
+    # cf*baud
+    cfgetibaud; cfgetobaud; cfsetibaud; cfsetobaud; cfsetbaud;
+  }
 }

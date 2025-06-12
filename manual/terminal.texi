@@ -771,11 +771,11 @@ If this bit is set, it says to ignore the control modes and line speed
 values entirely.  This is only meaningful in a call to @code{tcsetattr}.
 
 The @code{c_cflag} member and the line speed values returned by
-@code{cfgetispeed} and @code{cfgetospeed} will be unaffected by the
-call.  @code{CIGNORE} is useful if you want to set all the software
-modes in the other members, but leave the hardware details in
-@code{c_cflag} unchanged.  (This is how the @code{TCSASOFT} flag to
-@code{tcsettattr} works.)
+@code{cfgetispeed}, @code{cfgetospeed}, @code{cfgetibaud} and
+@code{cfsetibaud} will be unaffected by the call.  @code{CIGNORE} is
+useful if you want to set all the software modes in the other members,
+but leave the hardware details in @code{c_cflag} unchanged.  (This is
+how the @code{TCSASOFT} flag to @code{tcsettattr} works.)
 
 This bit is never set in the structure filled in by @code{tcgetattr}.
 @end deftypevr
@@ -1047,14 +1047,15 @@ The @code{speed_t} type is an unsigned integer data type used to
 represent line speeds.
 @end deftp
 
-The functions @code{cfsetospeed} and @code{cfsetispeed} report errors
-only for speed values that the system simply cannot handle.  If you
-specify a speed value that is basically acceptable, then those functions
-will succeed.  But they do not check that a particular hardware device
-can actually support the specified speeds---in fact, they don't know
-which device you plan to set the speed for.  If you use @code{tcsetattr}
-to set the speed of a particular device to a value that it cannot
-handle, @code{tcsetattr} returns @math{-1}.
+@deftypefun speed_t cfgetospeed (const struct termios *@var{termios-p})
+@standards{POSIX.1, termios.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Direct access to a single termios field, except on Linux, where
+@c multiple accesses may take place.  No worries either way, callers
+@c must ensure mutual exclusion on such non-opaque types.
+This function returns the output line speed stored in the structure
+@code{*@var{termios-p}}.
+@end deftypefun
 
 @strong{Portability note:} In @theglibc{}, the functions above
 accept speeds measured in bits per second as input, and return speed
@@ -1204,6 +1205,69 @@ B3500000  B4000000  B5000000  B10000000
 BSD defines two additional speed symbols as aliases: @code{EXTA} is an
 alias for @code{B19200} and @code{EXTB} is an alias for @code{B38400}.
 These aliases are obsolete.
+
+@deftypefun baud_t cfgetibaud (const struct termios *@var{termios-p})
+@standards{GNU, termios.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This function returns the input line baud rate stored in the structure
+@code{*@var{termios-p}}.
+@end deftypefun
+
+@deftypefun int cfsetobaud (struct termios *@var{termios-p}, baud_t @var{baud})
+@standards{GNU, termios.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This function stores @var{baud} in @code{*@var{termios-p}} as the output
+baud rate.  The normal return value is @math{0}; a value of @math{-1}
+indicates an error.  If @var{baud} is not a valid baud rate, @code{cfsetobaud}
+returns @math{-1}.
+@end deftypefun
+
+@deftypefun int cfsetibaud (struct termios *@var{termios-p}, baud_t @var{baud})
+@standards{GNU, termios.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This function stores @var{baud} in @code{*@var{termios-p}} as the input
+baud rate.  The normal return value is @math{0}; a value of @math{-1}
+indicates an error.  If @var{baud} is not a valid baud rate, @code{cfsetobaud}
+returns @math{-1}.
+@end deftypefun
+
+@deftypefun int cfsetbaud (struct termios *@var{termios-p}, baud_t @var{baud})
+@standards{GNU, termios.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c There's no guarantee that the two calls are atomic, but since this is
+@c not an opaque type, callers ought to ensure mutual exclusion to the
+@c termios object.
+
+@c cfsetbaud ok
+@c  cfsetibaud ok
+@c  cfsetobaud ok
+This function stores @var{baud} in @code{*@var{termios-p}} as both the
+input and output baud rates.  The normal return value is @math{0}; a value
+of @math{-1} indicates an error.  If @var{baud} is not a valid baud rate,
+@code{cfsetbaud} returns @math{-1}.
+@end deftypefun
+
+@deftp {Data Type} baud_t
+@standards{GNU}
+The @code{baud_t} type is a numeric data type used to represent line
+baud rates. It will always represent the actual numeric value
+representing the baud rate, unlike @code{speed_t}. In the current
+version of @theglibc{} this is the same type as @code{speed_t}, but this
+may not be the case in future versions, or on other implementations; it
+may not even necessarily be an integer type.
+
+@end deftp
+
+The functions @code{cfsetospeed}, @code{cfsetispeed}, @code{cfsetobaud}
+and @code{cfsetibaud} report errors only for speed values that the
+system simply cannot handle.  If you specify a speed value that is
+basically acceptable, then those functions will succeed.  But they do
+not check that a particular hardware device can actually support the
+specified speeds---in fact, they don't know which device you plan to set
+the speed for.  If you use @code{tcsetattr} to set the speed of a
+particular device to a value that it cannot handle, either @code{tcsetattr}
+returns @math{-1}, or the value is adjusted to the closest supported
+value, depending on the policy of the kernel driver.
 
 @node Special Characters
 @subsection Special Characters
