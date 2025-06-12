@@ -151,7 +151,6 @@ sysdep_headers += \
   bits/struct_stat.h \
   bits/struct_stat_time64_helper.h \
   bits/syscall.h \
-  bits/termios-baud.h \
   bits/termios-c_cc.h \
   bits/termios-c_cflag.h \
   bits/termios-c_iflag.h \
