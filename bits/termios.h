@@ -105,7 +105,7 @@ typedef unsigned int tcflag_t;
 typedef unsigned char cc_t;
 
 /* Type of baud rate specifiers.  */
-typedef int speed_t;
+typedef unsigned int speed_t;
 
 /* Terminal control structure.  */
 struct termios
