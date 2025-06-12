@@ -286,7 +286,16 @@ struct termios
   cc_t c_cc[NCCS];
 
   /* Input and output baud rates.  */
-  speed_t __ispeed, __ospeed;
+  __extension__ union {
+    speed_t __ispeed;
+    speed_t c_ispeed;
+  };
+#define _HAVE_STRUCT_TERMIOS_C_ISPEED 1
+  __extension__ union {
+    speed_t __ospeed;
+    speed_t c_ospeed;
+  };
+#define _HAVE_STRUCT_TERMIOS_C_OSPEED 1
 };
 
 #define _IOT_termios /* Hurd ioctl type field.  */ \
