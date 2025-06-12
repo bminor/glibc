@@ -1,4 +1,6 @@
-/* Copyright (C) 1991-2025 Free Software Foundation, Inc.
+/* Architectural parameters for Linux termios - generic version
+
+   Copyright (C) 1997-2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,12 +17,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <termios_internals.h>
+#define _TERMIOS2_NCCS 19
+#define _HAVE_TERMIOS2_C_CC_BEFORE_C_LINE 0
 
-/* Return 1 if FD is a terminal, 0 if not, without changing errno  */
-int
-__isatty_nostatus (int fd)
-{
-  struct termios2 k_termios;
-  return INTERNAL_SYSCALL_CALL (ioctl, fd, TCGETS2, &k_termios) == 0;
-}
+#define _HAVE_STRUCT_OLD_TERMIOS 0

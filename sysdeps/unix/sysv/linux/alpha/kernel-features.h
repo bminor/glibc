@@ -54,4 +54,15 @@
 #undef __ASSUME_CLONE3
 #define __ASSUME_CLONE3 0
 
+/* Alpha did not provide BOTHER, CIBAUD or the termios2 ioctls until
+   kernel 4.20.  Even though struct __kernel_termios and struct
+   termios2 are the same on Alpha, Calling the legacy TCSETS* ioctls
+   with BOTHER set triggers a bug in these old kernels, so only use
+   the legacy TCSETS* ioctl numbers if neither BOTHER nor split speed is
+   needed; that way the code will fail gracefully. */
+#if __LINUX_KERNEL_VERSION < 0x041400
+# undef  __ASSUME_TERMIOS2
+# define __ASSUME_TERMIOS2 0
+#endif
+
 #endif /* _KERNEL_FEATURES_H */

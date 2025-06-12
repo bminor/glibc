@@ -22,6 +22,10 @@ Major new features:
 * The ISO C2Y family of unsigned abs functions, i.e.
   uabs, ulabs, ullabs and uimaxabs, are now supported.
 
+* On Linux, the <termios.h> interface now supports arbitrary baud rates;
+  speed_t is redefined to simply be the baud rate specified as an
+  unsigned int, which matches the kernel interface.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The glibc.rtld.execstack now supports a compatibility mode to allow
