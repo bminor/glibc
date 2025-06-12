@@ -3142,6 +3142,11 @@ GLIBC_2.41 sched_getattr F
 GLIBC_2.41 sched_setattr F
 GLIBC_2.42 __inet_ntop_chk F
 GLIBC_2.42 __inet_pton_chk F
+GLIBC_2.42 cfgetispeed F
+GLIBC_2.42 cfgetospeed F
+GLIBC_2.42 cfsetispeed F
+GLIBC_2.42 cfsetospeed F
+GLIBC_2.42 cfsetspeed F
 GLIBC_2.42 pthread_gettid_np F
 GLIBC_2.42 uabs F
 GLIBC_2.42 uimaxabs F

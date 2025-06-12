@@ -15,66 +15,56 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <string.h>
-#include <termios.h>
-#include <unistd.h>
-#include <sys/ioctl.h>
-#include <sys/types.h>
-#include <sysdep.h>
-
-/* The difference here is that the termios structure used in the
-   kernel is not the same as we use in the libc.  Therefore we must
-   translate it here.  */
-#include <kernel_termios.h>
+#include <termios_internals.h>
 
 /* Put the state of FD into *TERMIOS_P.  */
 int
 __tcgetattr (int fd, struct termios *termios_p)
 {
-  struct __kernel_termios k_termios;
-  int retval;
+  struct termios2 k_termios;
+  long int retval = INLINE_SYSCALL_CALL (ioctl, fd, TCGETS2, &k_termios);
 
-  retval = INLINE_SYSCALL (ioctl, 3, fd, TCGETS, &k_termios);
-
-  if (__glibc_likely (retval == 0))
+  if (__glibc_likely (retval != -1))
     {
-      termios_p->c_iflag = k_termios.c_iflag;
-      termios_p->c_oflag = k_termios.c_oflag;
-      termios_p->c_cflag = k_termios.c_cflag;
-      termios_p->c_lflag = k_termios.c_lflag;
-      termios_p->c_line = k_termios.c_line;
-#if _HAVE_STRUCT_TERMIOS_C_ISPEED
-# if _HAVE_C_ISPEED
-      termios_p->c_ispeed = k_termios.c_ispeed;
-# else
-      termios_p->c_ispeed = k_termios.c_cflag & (CBAUD | CBAUDEX);
-# endif
-#endif
-#if _HAVE_STRUCT_TERMIOS_C_OSPEED
-# if _HAVE_C_OSPEED
-      termios_p->c_ospeed = k_termios.c_ospeed;
-# else
-      termios_p->c_ospeed = k_termios.c_cflag & (CBAUD | CBAUDEX);
-# endif
-#endif
-      if (sizeof (cc_t) == 1 || _POSIX_VDISABLE == 0
-	  || (unsigned char) _POSIX_VDISABLE == (unsigned char) -1)
-	memset (__mempcpy (&termios_p->c_cc[0], &k_termios.c_cc[0],
-			   __KERNEL_NCCS * sizeof (cc_t)),
-		_POSIX_VDISABLE, (NCCS - __KERNEL_NCCS) * sizeof (cc_t));
-      else
-	{
-	  memcpy (&termios_p->c_cc[0], &k_termios.c_cc[0],
-		  __KERNEL_NCCS * sizeof (cc_t));
+      ___termios2_canonicalize_speeds (&k_termios);
 
-	  for (size_t cnt = __KERNEL_NCCS; cnt < NCCS; ++cnt)
-	    termios_p->c_cc[cnt] = _POSIX_VDISABLE;
-	}
+      memset (termios_p, 0, sizeof (*termios_p));
+      termios_p->c_iflag  = k_termios.c_iflag;
+      termios_p->c_oflag  = k_termios.c_oflag;
+      termios_p->c_cflag  = k_termios.c_cflag;
+      termios_p->c_lflag  = k_termios.c_lflag;
+      termios_p->c_line   = k_termios.c_line;
+      termios_p->c_ospeed = k_termios.c_ospeed;
+      termios_p->c_ispeed = k_termios.c_ispeed;
+
+      copy_c_cc (termios_p->c_cc, NCCS, k_termios.c_cc, _TERMIOS2_NCCS);
     }
 
   return retval;
 }
-
 libc_hidden_def (__tcgetattr)
+
+#if _TERMIOS_OLD_COMPAT && _HAVE_STRUCT_OLD_TERMIOS
+
+versioned_symbol (libc, __tcgetattr, tcgetattr, GLIBC_2_42);
+
+/* Legacy version for shorter struct termios */
+int
+attribute_compat_text_section
+__old_tcgetattr (int fd, old_termios_t *termios_p)
+{
+  struct termios new_termios;
+  int retval = __tcgetattr (fd, &new_termios);
+  if (__glibc_likely (retval != -1))
+    {
+      memcpy (termios_p, &new_termios, sizeof (*termios_p));
+    }
+  return retval;
+}
+compat_symbol (libc, __old_tcgetattr, tcgetattr, GLIBC_2_0);
+
+#else
+
 weak_alias (__tcgetattr, tcgetattr)
+
+#endif

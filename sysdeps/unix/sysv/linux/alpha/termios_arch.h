@@ -1,5 +1,6 @@
-/* struct termios definition.  Linux/sparc version.
-   Copyright (C) 2019-2025 Free Software Foundation, Inc.
+/* Architectural parameters for Linux termios - Alpha/PowerPC version
+
+   Copyright (C) 1997-2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -13,22 +14,13 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _TERMIOS_H
-# error "Never include <bits/termios-struct.h> directly; use <termios.h> instead."
+#ifndef TERMIOS_INTERNALS_H
+# error "<termios_arch.h> should only be included from <termios_internals.h>"
 #endif
 
-#define NCCS 17
-struct termios
-  {
-    tcflag_t c_iflag;		/* input mode flags */
-    tcflag_t c_oflag;		/* output mode flags */
-    tcflag_t c_cflag;		/* control mode flags */
-    tcflag_t c_lflag;		/* local mode flags */
-    cc_t c_line;		/* line discipline */
-    cc_t c_cc[NCCS];		/* control characters */
-#define _HAVE_STRUCT_TERMIOS_C_ISPEED 0
-#define _HAVE_STRUCT_TERMIOS_C_OSPEED 0
-  };
+#define _TERMIOS2_NCCS 19
+#define _HAVE_TERMIOS2_C_CC_BEFORE_C_LINE 1
+#define _HAVE_STRUCT_OLD_TERMIOS 0

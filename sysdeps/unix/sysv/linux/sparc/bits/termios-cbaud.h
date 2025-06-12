@@ -1,4 +1,4 @@
-/* termios baud rate selection definitions.  Linux/alpha version.
+/* termios baud rate selection definitions.  Linux/sparc version.
    Copyright (C) 2019-2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,30 +17,29 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _TERMIOS_H
-# error "Never include <bits/termios-baud.h> directly; use <termios.h> instead."
+# error "Never include <bits/termios-cbaud.h> directly; use <termios.h> instead."
 #endif
 
 #ifdef __USE_MISC
-# define CBAUD	0000037
-# define CBAUDEX 0000000
-# define CMSPAR	  010000000000		/* mark or space (stick) parity */
-# define CRTSCTS  020000000000		/* flow control */
+# define CBAUD   0x0000100f
+# define CBAUDEX 0x00001000
+# define CIBAUD	 0x100f0000	/* input baud rate */
+# define IBSHIFT 16
 #endif
 
-#define  B57600   00020
-#define  B115200  00021
-#define  B230400  00022
-#define  B460800  00023
-#define  B500000  00024
-#define  B576000  00025
-#define  B921600  00026
-#define  B1000000 00027
-#define  B1152000 00030
-#define  B1500000 00031
-#define  B2000000 00032
-#define  B2500000 00033
-#define  B3000000 00034
-#define  B3500000 00035
-#define  B4000000 00036
-
-#define __MAX_BAUD B4000000
+#define  __B57600  0x00001001
+#define  __B115200 0x00001002
+#define  __B230400 0x00001003
+#define  __B460800 0x00001004
+#define  __B76800  0x00001005
+#define  __B153600 0x00001006
+#define  __B307200 0x00001007
+#define  __B614400 0x00001008
+#define  __B921600 0x00001009
+#define  __B500000 0x0000100a
+#define  __B576000 0x0000100b
+#define __B1000000 0x0000100c
+#define __B1152000 0x0000100d
+#define __B1500000 0x0000100e
+#define __B2000000 0x0000100f
+#define __BOTHER   0x00001000

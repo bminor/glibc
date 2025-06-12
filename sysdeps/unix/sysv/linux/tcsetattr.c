@@ -15,67 +15,94 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <string.h>
-#include <termios.h>
-#include <sys/ioctl.h>
-#include <sys/types.h>
-#include <sysdep.h>
+#include <termios_internals.h>
 
-/* The difference here is that the termios structure used in the
-   kernel is not the same as we use in the libc.  Therefore we must
-   translate it here.  */
-#include <kernel_termios.h>
-
-
-/* This is a gross hack around a kernel bug.  If the cfsetispeed functions
-   is called with the SPEED argument set to zero this means use the same
-   speed as for output.  But we don't have independent input and output
-   speeds and therefore cannot record this.
-
-   We use an unused bit in the `c_iflag' field to keep track of this
-   use of `cfsetispeed'.  The value here must correspond to the one used
-   in `speed.c'.  */
-#define IBAUD0	020000000000
-
+#define static_assert_equal(x,y) _Static_assert ((x) == (y), #x " != " #y)
 
 /* Set the state of FD to *TERMIOS_P.  */
 int
 __tcsetattr (int fd, int optional_actions, const struct termios *termios_p)
 {
-  struct __kernel_termios k_termios;
-  unsigned long int cmd;
+  struct termios2 k_termios;
+  unsigned long cmd;
 
-  switch (optional_actions)
-    {
-    case TCSANOW:
-      cmd = TCSETS;
-      break;
-    case TCSADRAIN:
-      cmd = TCSETSW;
-      break;
-    case TCSAFLUSH:
-      cmd = TCSETSF;
-      break;
-    default:
-      return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
-    }
+  memset (&k_termios, 0, sizeof k_termios);
 
-  k_termios.c_iflag = termios_p->c_iflag & ~IBAUD0;
+  k_termios.c_iflag = termios_p->c_iflag;
   k_termios.c_oflag = termios_p->c_oflag;
   k_termios.c_cflag = termios_p->c_cflag;
   k_termios.c_lflag = termios_p->c_lflag;
-  k_termios.c_line = termios_p->c_line;
-#if _HAVE_C_ISPEED && _HAVE_STRUCT_TERMIOS_C_ISPEED
-  k_termios.c_ispeed = termios_p->c_ispeed;
-#endif
-#if _HAVE_C_OSPEED && _HAVE_STRUCT_TERMIOS_C_OSPEED
-  k_termios.c_ospeed = termios_p->c_ospeed;
-#endif
-  memcpy (&k_termios.c_cc[0], &termios_p->c_cc[0],
-	  __KERNEL_NCCS * sizeof (cc_t));
+  k_termios.c_line  = termios_p->c_line;
 
-  return INLINE_SYSCALL (ioctl, 3, fd, cmd, &k_termios);
+  k_termios.c_ospeed = termios_p->c_ospeed;
+  k_termios.c_ispeed = termios_p->c_ispeed;
+
+  ___termios2_canonicalize_speeds (&k_termios);
+
+  copy_c_cc (k_termios.c_cc, _TERMIOS2_NCCS, termios_p->c_cc, NCCS);
+
+  /*
+   * Choose the proper ioctl number to invoke.
+   *
+   * Alpha got TCSETS2 late (Linux 4.20), but has the same structure
+   * format, and it only needs TCSETS2 if either it needs to use
+   * __BOTHER or split speed.  All other architectures have TCSETS2 as
+   * far back as the current glibc supports.  Calling TCSETS with
+   * __BOTHER causes unpredictable results on old Alpha kernels and
+   * could even crash them.
+   */
+  static_assert_equal(TCSADRAIN, TCSANOW + 1);
+  static_assert_equal(TCSAFLUSH, TCSANOW + 2);
+  static_assert_equal(TCSETSW2,  TCSETS2 + 1);
+  static_assert_equal(TCSETSF2,  TCSETS2 + 2);
+  static_assert_equal(TCSETSW,   TCSETS  + 1);
+  static_assert_equal(TCSETSF,   TCSETS  + 2);
+
+  cmd = (long)optional_actions - TCSANOW;
+  if (cmd > 2)
+    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
+
+  if (__ASSUME_TERMIOS2 ||
+      k_termios.c_ospeed != k_termios.c_ispeed ||
+      cbaud (k_termios.c_cflag) == __BOTHER)
+    {
+      cmd += TCSETS2;
+    }
+  else
+    {
+      cmd += TCSETS;
+      k_termios.c_cflag &= ~CIBAUD;
+    }
+
+  return INLINE_SYSCALL_CALL (ioctl, fd, cmd, &k_termios);
 }
 libc_hidden_def (__tcsetattr)
+
+#if _HAVE_STRUCT_OLD_TERMIOS && _TERMIOS_OLD_COMPAT
+
+versioned_symbol (libc, __tcsetattr, tcsetattr, GLIBC_2_42);
+
+/* Legacy version for shorter struct termios without speed fields */
+int
+attribute_compat_text_section
+__old_tcsetattr (int fd, int optional_actions, const old_termios_t *termios_p)
+{
+  struct termios new_termios;
+
+  memset (&new_termios, 0, sizeof (new_termios));
+  new_termios.c_iflag  = termios_p->c_iflag;
+  new_termios.c_oflag  = termios_p->c_oflag;
+  new_termios.c_cflag  = termios_p->c_cflag;
+  new_termios.c_lflag  = termios_p->c_lflag;
+  new_termios.c_line   = termios_p->c_line;
+  copy_c_cc(new_termios.c_cc, NCCS, termios_p->c_cc, OLD_NCCS);
+
+  return __tcsetattr (fd, optional_actions, &new_termios);
+}
+compat_symbol (libc, __old_tcsetattr, tcsetattr, GLIBC_2_0);
+
+#else
+
 weak_alias (__tcsetattr, tcsetattr)
+
+#endif

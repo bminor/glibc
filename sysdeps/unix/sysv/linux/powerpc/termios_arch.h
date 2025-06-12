@@ -1,4 +1,6 @@
-/* Copyright (C) 1997-2025 Free Software Foundation, Inc.
+/* Architectural parameters for Linux termios - Alpha/PowerPC version
+
+   Copyright (C) 1997-2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,26 +17,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _KERNEL_TERMIOS_H
-#define _KERNEL_TERMIOS_H 1
-/* The following corresponds to the values from the Linux 2.1.20 kernel.  */
+#ifndef TERMIOS_INTERNALS_H
+# error "<termios_arch.h> should only be included from <termios_internals.h>"
+#endif
 
-/* We need the definition of tcflag_t, cc_t, and speed_t.  */
-#include <termios.h>
-
-#define __KERNEL_NCCS 17
-
-struct __kernel_termios
-  {
-    tcflag_t c_iflag;		/* input mode flags */
-    tcflag_t c_oflag;		/* output mode flags */
-    tcflag_t c_cflag;		/* control mode flags */
-    tcflag_t c_lflag;		/* local mode flags */
-    cc_t c_line;		/* line discipline */
-    cc_t c_cc[__KERNEL_NCCS];	/* control characters */
-  };
-
-#define _HAVE_C_ISPEED 0
-#define _HAVE_C_OSPEED 0
-
-#endif /* kernel_termios.h */
+#define _TERMIOS2_NCCS 19
+#define _HAVE_TERMIOS2_C_CC_BEFORE_C_LINE 1
+#define _HAVE_STRUCT_OLD_TERMIOS 0
