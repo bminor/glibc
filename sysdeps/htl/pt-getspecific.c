@@ -19,6 +19,7 @@
 #include <pthread.h>
 
 #include <pt-internal.h>
+#include <shlib-compat.h>
 
 void *
 __pthread_getspecific (pthread_key_t key)
@@ -42,5 +43,9 @@ __pthread_getspecific (pthread_key_t key)
 
   return self->thread_specifics[key];
 }
-weak_alias (__pthread_getspecific, pthread_getspecific);
-hidden_def (__pthread_getspecific)
+libc_hidden_def (__pthread_getspecific)
+versioned_symbol (libc, __pthread_getspecific, pthread_getspecific, GLIBC_2_42);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_42)
+compat_symbol (libpthread, __pthread_getspecific, pthread_getspecific, GLIBC_2_12);
+#endif

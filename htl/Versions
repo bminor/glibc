@@ -2,6 +2,7 @@ libc {
 
   GLIBC_2.12 {
     pthread_self;
+    __pthread_key_create;
     __pthread_self;
     pthread_attr_getdetachstate;
     pthread_attr_getinheritsched;
@@ -12,6 +13,7 @@ libc {
     pthread_attr_setschedpolicy;
     pthread_equal;
     pthread_getschedparam;
+    pthread_getspecific;
     pthread_setschedparam;
     pthread_attr_destroy;
     pthread_attr_getguardsize;
@@ -45,6 +47,8 @@ libc {
     pthread_condattr_getpshared;
     pthread_condattr_setclock;
     pthread_condattr_setpshared;
+    pthread_key_create;
+    pthread_key_delete;
     pthread_mutex_destroy;
     pthread_mutex_getprioceiling;
     pthread_mutex_init;
@@ -79,6 +83,7 @@ libc {
     pthread_rwlockattr_setpshared;
     pthread_setcancelstate;
     pthread_setcanceltype;
+    pthread_setspecific;
     pthread_sigmask;
   }
 
@@ -154,6 +159,9 @@ libc {
     pthread_barrierattr_getpshared;
     pthread_barrierattr_init;
     pthread_barrierattr_setpshared;
+    pthread_getspecific;
+    pthread_key_create;
+    pthread_key_delete;
     pthread_mutex_consistent; pthread_mutex_consistent_np;
     pthread_mutex_getprioceiling;
     pthread_mutex_setprioceiling;
@@ -174,6 +182,7 @@ libc {
     pthread_rwlockattr_getpshared;
     pthread_rwlockattr_init;
     pthread_rwlockattr_setpshared;
+    pthread_setspecific;
   }
 
   GLIBC_PRIVATE {
@@ -203,6 +212,9 @@ libc {
     __pthread_cond_wait;
     __pthread_condattr_init;
     __pthread_default_condattr;
+    __pthread_destroy_specific;
+    __pthread_getspecific;
+    __pthread_key_delete;
     __pthread_mutex_checklocked;
     __pthread_mutex_destroy;
     __pthread_mutex_init;
@@ -214,6 +226,7 @@ libc {
     __pthread_mutexattr_init;
     __pthread_mutexattr_settype;
     __pthread_once;
+    __pthread_setspecific;
     __pthread_sigstate;
     __pthread_sigstate_destroy;
     __pthread_sigmask;
@@ -255,12 +268,8 @@ libpthread {
     pthread_getattr_np;
 
     pthread_getconcurrency; pthread_getcpuclockid;
-    pthread_getspecific;
 
     pthread_join;
-
-    pthread_key_create; pthread_key_delete;
-    __pthread_key_create;
 
     pthread_kill;
     __pthread_kill;
@@ -268,7 +277,7 @@ libpthread {
     pthread_mutex_transfer_np;
 
     pthread_setconcurrency;
-    pthread_setschedprio; pthread_setspecific;
+    pthread_setschedprio;
 
     pthread_testcancel;
     pthread_yield;
@@ -315,8 +324,6 @@ libpthread {
     __cthread_keycreate;
     __cthread_getspecific;
     __cthread_setspecific;
-    __pthread_getspecific;
-    __pthread_setspecific;
     __pthread_getattr_np;
     __pthread_enable_asynccancel;
     __pthread_disable_asynccancel;

@@ -22,6 +22,9 @@
 
 #include <pt-internal.h>
 #include <pthreadP.h>
+#include <shlib-compat.h>
+#include <ldsodefs.h>
+
 
 pthread_mutex_t __pthread_key_lock;
 pthread_once_t __pthread_key_once = PTHREAD_ONCE_INIT;
@@ -116,5 +119,9 @@ do_search:
   __pthread_mutex_unlock (&__pthread_key_lock);
   return 0;
 }
-weak_alias (__pthread_key_create, pthread_key_create)
-hidden_def (__pthread_key_create)
+libc_hidden_def (__pthread_key_create)
+versioned_symbol (libc, __pthread_key_create, pthread_key_create, GLIBC_2_42);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_42)
+compat_symbol (libpthread, __pthread_key_create, pthread_key_create, GLIBC_2_12);
+#endif

@@ -25,12 +25,7 @@ SYSDEPS := lockfile
 LCLHDRS :=
 
 libpthread-routines := \
-  pt-destroy-specific \
   pt-init-specific \
-  pt-key-create \
-  pt-key-delete \
-  pt-getspecific \
-  pt-setspecific \
   pt-alloc \
   pt-create \
   pt-getattr \
@@ -161,7 +156,11 @@ routines := \
   pt-condattr-init \
   pt-condattr-setclock \
   pt-condattr-setpshared \
+  pt-destroy-specific \
   pt-getschedparam \
+  pt-getspecific \
+  pt-key-create \
+  pt-key-delete \
   pt-mutex-checklocked \
   pt-mutex-consistent \
   pt-mutex-destroy \
@@ -205,6 +204,7 @@ routines := \
   pt-setcancelstate \
   pt-setcanceltype \
   pt-setschedparam \
+  pt-setspecific \
   pt-sigmask \
   pt-sigstate \
   pt-sigstate-destroy \

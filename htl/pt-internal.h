@@ -299,6 +299,7 @@ extern error_t __pthread_init_specific (struct __pthread *thread);
 /* Call the destructors on all of the thread specific data in THREAD.
    THREAD must be the calling thread.  */
 extern void __pthread_destroy_specific (struct __pthread *thread);
+libc_hidden_proto (__pthread_destroy_specific)
 
 
 /* Initialize newly create thread *THREAD's signal state data

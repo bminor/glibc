@@ -28,6 +28,7 @@ GLIBC_2.11 mkostemps F
 GLIBC_2.11 mkostemps64 F
 GLIBC_2.11 mkstemps F
 GLIBC_2.11 mkstemps64 F
+GLIBC_2.12 __pthread_key_create F
 GLIBC_2.12 __pthread_self F
 GLIBC_2.12 pthread_attr_destroy F
 GLIBC_2.12 pthread_attr_getdetachstate F
@@ -70,6 +71,9 @@ GLIBC_2.12 pthread_condattr_setclock F
 GLIBC_2.12 pthread_condattr_setpshared F
 GLIBC_2.12 pthread_equal F
 GLIBC_2.12 pthread_getschedparam F
+GLIBC_2.12 pthread_getspecific F
+GLIBC_2.12 pthread_key_create F
+GLIBC_2.12 pthread_key_delete F
 GLIBC_2.12 pthread_mutex_destroy F
 GLIBC_2.12 pthread_mutex_getprioceiling F
 GLIBC_2.12 pthread_mutex_init F
@@ -106,6 +110,7 @@ GLIBC_2.12 pthread_self F
 GLIBC_2.12 pthread_setcancelstate F
 GLIBC_2.12 pthread_setcanceltype F
 GLIBC_2.12 pthread_setschedparam F
+GLIBC_2.12 pthread_setspecific F
 GLIBC_2.12 pthread_sigmask F
 GLIBC_2.13 __fentry__ F
 GLIBC_2.14 syncfs F
@@ -2593,6 +2598,9 @@ GLIBC_2.42 pthread_barrierattr_destroy F
 GLIBC_2.42 pthread_barrierattr_getpshared F
 GLIBC_2.42 pthread_barrierattr_init F
 GLIBC_2.42 pthread_barrierattr_setpshared F
+GLIBC_2.42 pthread_getspecific F
+GLIBC_2.42 pthread_key_create F
+GLIBC_2.42 pthread_key_delete F
 GLIBC_2.42 pthread_mutex_consistent F
 GLIBC_2.42 pthread_mutex_consistent_np F
 GLIBC_2.42 pthread_mutex_getprioceiling F
@@ -2614,6 +2622,7 @@ GLIBC_2.42 pthread_rwlockattr_destroy F
 GLIBC_2.42 pthread_rwlockattr_getpshared F
 GLIBC_2.42 pthread_rwlockattr_init F
 GLIBC_2.42 pthread_rwlockattr_setpshared F
+GLIBC_2.42 pthread_setspecific F
 GLIBC_2.42 uabs F
 GLIBC_2.42 uimaxabs F
 GLIBC_2.42 ulabs F

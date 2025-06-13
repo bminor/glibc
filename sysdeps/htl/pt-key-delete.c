@@ -19,6 +19,8 @@
 #include <pthread.h>
 
 #include <pt-internal.h>
+#include <shlib-compat.h>
+#include <ldsodefs.h>
 
 int
 __pthread_key_delete (pthread_key_t key)
@@ -69,4 +71,9 @@ __pthread_key_delete (pthread_key_t key)
 
   return err;
 }
-weak_alias (__pthread_key_delete, pthread_key_delete)
+libc_hidden_def (__pthread_key_delete)
+versioned_symbol (libc, __pthread_key_delete, pthread_key_delete, GLIBC_2_42);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_42)
+compat_symbol (libpthread, __pthread_key_delete, pthread_key_delete, GLIBC_2_12);
+#endif

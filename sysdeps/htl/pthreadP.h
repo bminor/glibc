@@ -182,9 +182,13 @@ int __cthread_keycreate (__cthread_key_t *);
 int __cthread_getspecific (__cthread_key_t, void **);
 int __cthread_setspecific (__cthread_key_t, void *);
 int __pthread_key_create (pthread_key_t *key, void (*destr) (void *));
+libc_hidden_proto (__pthread_key_create)
 void *__pthread_getspecific (pthread_key_t key);
+libc_hidden_proto (__pthread_getspecific)
 int __pthread_setspecific (pthread_key_t key, const void *value);
+libc_hidden_proto (__pthread_setspecific)
 int __pthread_key_delete (pthread_key_t key);
+libc_hidden_proto (__pthread_key_delete)
 int __pthread_once (pthread_once_t *once_control, void (*init_routine) (void));
 
 int __pthread_getattr_np (pthread_t, pthread_attr_t *);
@@ -216,9 +220,6 @@ libc_hidden_proto (__pthread_condattr_init)
 #if IS_IN (libpthread)
 hidden_proto (__pthread_create)
 hidden_proto (__pthread_detach)
-hidden_proto (__pthread_key_create)
-hidden_proto (__pthread_getspecific)
-hidden_proto (__pthread_setspecific)
 hidden_proto (__pthread_get_cleanup_stack)
 #endif
 

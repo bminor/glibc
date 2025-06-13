@@ -20,6 +20,7 @@
 #include <stdlib.h>
 
 #include <pt-internal.h>
+#include <string.h>
 
 void
 __pthread_destroy_specific (struct __pthread *thread)
@@ -100,3 +101,4 @@ __pthread_destroy_specific (struct __pthread *thread)
   memset (&thread->static_thread_specifics, 0,
 	  sizeof (thread->static_thread_specifics));
 }
+libc_hidden_def (__pthread_destroy_specific)

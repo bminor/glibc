@@ -126,15 +126,9 @@ libc_hidden_proto (__pthread_setcancelstate)
    single-threaded processes.  */
 #if !defined(__NO_WEAK_PTHREAD_ALIASES) && !IS_IN (libpthread)
 # ifdef weak_extern
-weak_extern (__pthread_key_create)
-weak_extern (__pthread_setspecific)
-weak_extern (__pthread_getspecific)
 weak_extern (__pthread_initialize)
 weak_extern (__pthread_atfork)
 # else
-#  pragma weak __pthread_key_create
-#  pragma weak __pthread_setspecific
-#  pragma weak __pthread_getspecific
 #  pragma weak __pthread_initialize
 #  pragma weak __pthread_atfork
 # endif
