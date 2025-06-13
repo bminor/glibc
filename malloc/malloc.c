@@ -291,8 +291,10 @@
 
 #if USE_TCACHE
 /* We want 64 entries.  This is an arbitrary limit, which tunables can reduce.  */
-# define TCACHE_MAX_BINS		64
-# define MAX_TCACHE_SIZE	tidx2usize (TCACHE_MAX_BINS-1)
+# define TCACHE_SMALL_BINS		64
+# define TCACHE_LARGE_BINS		12 /* Up to 4M chunks */
+# define TCACHE_MAX_BINS	(TCACHE_SMALL_BINS + TCACHE_LARGE_BINS)
+# define MAX_TCACHE_SMALL_SIZE	tidx2usize (TCACHE_MAX_BINS-1)
 
 /* Only used to pre-fill the tunables.  */
 # define tidx2usize(idx)	(((size_t) idx) * MALLOC_ALIGNMENT + MINSIZE - SIZE_SZ)
@@ -592,6 +594,7 @@ void*  __libc_malloc(size_t);
 libc_hidden_proto (__libc_malloc)
 
 static void *__libc_calloc2 (size_t);
+static void *__libc_malloc2 (size_t);
 
 /*
   free(void* p)
@@ -1893,8 +1896,8 @@ struct malloc_par
   char *sbrk_base;
 
 #if USE_TCACHE
-  /* Maximum number of buckets to use.  */
-  size_t tcache_bins;
+  /* Maximum number of small buckets to use.  */
+  size_t tcache_small_bins;
   size_t tcache_max_bytes;
   /* Maximum number of chunks in each bucket.  */
   size_t tcache_count;
@@ -1930,8 +1933,8 @@ static struct malloc_par mp_ =
 #if USE_TCACHE
   ,
   .tcache_count = TCACHE_FILL_COUNT,
-  .tcache_bins = TCACHE_MAX_BINS,
-  .tcache_max_bytes = tidx2usize (TCACHE_MAX_BINS-1),
+  .tcache_small_bins = TCACHE_SMALL_BINS,
+  .tcache_max_bytes = MAX_TCACHE_SMALL_SIZE,
   .tcache_unsorted_limit = 0 /* No limit.  */
 #endif
 };
@@ -3159,10 +3162,19 @@ tcache_key_initialize (void)
     }
 }
 
+static __always_inline size_t
+large_csize2tidx(size_t nb)
+{
+  size_t idx = TCACHE_SMALL_BINS
+	       + __builtin_clz (MAX_TCACHE_SMALL_SIZE)
+	       - __builtin_clz (nb);
+  return idx;
+}
+
 /* Caller must ensure that we know tc_idx is valid and there's room
    for more chunks.  */
 static __always_inline void
-tcache_put (mchunkptr chunk, size_t tc_idx)
+tcache_put_n (mchunkptr chunk, size_t tc_idx, tcache_entry **ep, bool mangled)
 {
   tcache_entry *e = (tcache_entry *) chunk2mem (chunk);
 
@@ -3170,8 +3182,16 @@ tcache_put (mchunkptr chunk, size_t tc_idx)
      detect a double free.  */
   e->key = tcache_key;
 
-  e->next = PROTECT_PTR (&e->next, tcache->entries[tc_idx]);
-  tcache->entries[tc_idx] = e;
+  if (!mangled)
+    {
+      e->next = PROTECT_PTR (&e->next, *ep);
+      *ep = e;
+    }
+  else
+    {
+      e->next = PROTECT_PTR (&e->next, REVEAL_PTR (*ep));
+      *ep = PROTECT_PTR (ep, e);
+    }
   --(tcache->num_slots[tc_idx]);
 }
 
@@ -3179,10 +3199,10 @@ tcache_put (mchunkptr chunk, size_t tc_idx)
    available chunks to remove.  Removes chunk from the middle of the
    list.  */
 static __always_inline void *
-tcache_get_n (size_t tc_idx, tcache_entry **ep)
+tcache_get_n (size_t tc_idx, tcache_entry **ep, bool mangled)
 {
   tcache_entry *e;
-  if (ep == &(tcache->entries[tc_idx]))
+  if (!mangled)
     e = *ep;
   else
     e = REVEAL_PTR (*ep);
@@ -3190,40 +3210,109 @@ tcache_get_n (size_t tc_idx, tcache_entry **ep)
   if (__glibc_unlikely (!aligned_OK (e)))
     malloc_printerr ("malloc(): unaligned tcache chunk detected");
 
-  if (ep == &(tcache->entries[tc_idx]))
-      *ep = REVEAL_PTR (e->next);
+  void *ne = e == NULL ? NULL : REVEAL_PTR (e->next);
+  if (!mangled)
+    *ep = ne;
   else
-    *ep = PROTECT_PTR (ep, REVEAL_PTR (e->next));
+    *ep = PROTECT_PTR (ep, ne);
 
   ++(tcache->num_slots[tc_idx]);
   e->key = 0;
   return (void *) e;
 }
 
+static __always_inline void
+tcache_put (mchunkptr chunk, size_t tc_idx)
+{
+  tcache_put_n (chunk, tc_idx, &tcache->entries[tc_idx], false);
+}
+
 /* Like the above, but removes from the head of the list.  */
 static __always_inline void *
 tcache_get (size_t tc_idx)
 {
-  return tcache_get_n (tc_idx, & tcache->entries[tc_idx]);
+  return tcache_get_n (tc_idx, & tcache->entries[tc_idx], false);
 }
 
-/* Iterates through the tcache linked list.  */
-static __always_inline tcache_entry *
-tcache_next (tcache_entry *e)
+static __always_inline tcache_entry **
+tcache_location_large (size_t nb, size_t tc_idx, bool *mangled)
 {
-  return (tcache_entry *) REVEAL_PTR (e->next);
+  tcache_entry **tep = &(tcache->entries[tc_idx]);
+  tcache_entry *te = *tep;
+  while (te != NULL
+         && __glibc_unlikely (chunksize (mem2chunk (te)) < nb))
+    {
+      tep = & (te->next);
+      te = REVEAL_PTR (te->next);
+      *mangled = true;
+    }
+
+  return tep;
 }
 
-/* Check if tcache is available for alloc by corresponding tc_idx.  */
-static __always_inline bool
-tcache_available (size_t tc_idx)
+static __always_inline void
+tcache_put_large (mchunkptr chunk, size_t tc_idx)
 {
-  if (tc_idx < mp_.tcache_bins
-      && tcache != NULL
-      && tcache->entries[tc_idx] != NULL)
-    return true;
-  else
-    return false;
+  tcache_entry **entry;
+  bool mangled = false;
+  entry = tcache_location_large (chunksize (chunk), tc_idx, &mangled);
+
+  return tcache_put_n (chunk, tc_idx, entry, mangled);
+}
+
+static __always_inline void *
+tcache_get_large (size_t tc_idx, size_t nb)
+{
+  tcache_entry **entry;
+  bool mangled = false;
+  entry = tcache_location_large (nb, tc_idx, &mangled);
+
+  if ((mangled && REVEAL_PTR (*entry) == NULL)
+      || (!mangled && *entry == NULL))
+    return NULL;
+
+  return tcache_get_n (tc_idx, entry, mangled);
+}
+
+static void tcache_init (void);
+
+static __always_inline void *
+tcache_get_align (size_t nb, size_t alignment)
+{
+  if (nb < mp_.tcache_max_bytes)
+    {
+      if (__glibc_unlikely (tcache == NULL))
+	{
+	  tcache_init ();
+	  return NULL;
+	}
+
+      size_t tc_idx = csize2tidx (nb);
+      if (__glibc_unlikely (tc_idx >= TCACHE_SMALL_BINS))
+        tc_idx = large_csize2tidx (nb);
+
+      /* The tcache itself isn't encoded, but the chain is.  */
+      tcache_entry **tep = & tcache->entries[tc_idx];
+      tcache_entry *te = *tep;
+      bool mangled = false;
+      size_t csize;
+
+      while (te != NULL
+	     && ((csize = chunksize (mem2chunk (te))) < nb
+		 || (csize == nb
+	             && !PTR_IS_ALIGNED (te, alignment))))
+        {
+          tep = & (te->next);
+          te = REVEAL_PTR (te->next);
+          mangled = true;
+        }
+
+      if (te != NULL
+	  && csize == nb
+	  && PTR_IS_ALIGNED (te, alignment))
+	return tag_new_usable (tcache_get_n (tc_idx, tep, mangled));
+    }
+  return NULL;
 }
 
 /* Verify if the suspicious tcache_entry is double free.
@@ -3299,7 +3388,7 @@ tcache_init(void)
 
   /* Check minimum mmap chunk is larger than max tcache size.  This means
      mmap chunks with their different layout are never added to tcache.  */
-  if (MAX_TCACHE_SIZE >= GLRO (dl_pagesize) / 2)
+  if (MAX_TCACHE_SMALL_SIZE >= GLRO (dl_pagesize) / 2)
     malloc_printerr ("max tcache size too large");
 
   arena_get (ar_ptr, bytes);
@@ -3336,12 +3425,14 @@ tcache_calloc_init (size_t bytes)
   return __libc_calloc2 (bytes);
 }
 
-# define MAYBE_INIT_TCACHE() \
-  if (__glibc_unlikely (tcache == NULL)) \
-    tcache_init();
+static void * __attribute_noinline__
+tcache_malloc_init (size_t bytes)
+{
+  tcache_init ();
+  return __libc_malloc2 (bytes);
+}
 
 #else  /* !USE_TCACHE */
-# define MAYBE_INIT_TCACHE()
 
 static void
 tcache_thread_shutdown (void)
@@ -3358,8 +3449,6 @@ __libc_malloc2 (size_t bytes)
 {
   mstate ar_ptr;
   void *victim;
-
-  MAYBE_INIT_TCACHE ();
 
   if (SINGLE_THREAD_P)
     {
@@ -3395,10 +3484,32 @@ void *
 __libc_malloc (size_t bytes)
 {
 #if USE_TCACHE
-  size_t tc_idx = usize2tidx (bytes);
+  size_t nb = checked_request2size (bytes);
+  if (nb == 0)
+    {
+      __set_errno (ENOMEM);
+      return NULL;
+    }
 
-  if (tcache_available (tc_idx))
-    return tag_new_usable (tcache_get (tc_idx));
+  if (nb < mp_.tcache_max_bytes)
+    {
+      size_t tc_idx = csize2tidx (nb);
+      if(__glibc_unlikely (tcache == NULL))
+	return tcache_malloc_init (bytes);
+
+      if (__glibc_likely (tc_idx < TCACHE_SMALL_BINS))
+        {
+	  if (tcache->entries[tc_idx] != NULL)
+	    return tag_new_usable (tcache_get (tc_idx));
+	}
+      else
+        {
+	  tc_idx = large_csize2tidx (nb);
+	  void *victim = tcache_get_large (tc_idx, nb);
+	  if (victim != NULL)
+	    return tag_new_usable (victim);
+	}
+    }
 #endif
 
   return __libc_malloc2 (bytes);
@@ -3431,9 +3542,7 @@ __libc_free (void *mem)
   check_inuse_chunk (arena_for_chunk (p), p);
 
 #if USE_TCACHE
-  size_t tc_idx = csize2tidx (size);
-
-  if (__glibc_likely (tcache != NULL && tc_idx < mp_.tcache_bins))
+  if (__glibc_likely (size < mp_.tcache_max_bytes && tcache != NULL))
     {
       /* Check to see if it's already in the tcache.  */
       tcache_entry *e = (tcache_entry *) chunk2mem (p);
@@ -3442,8 +3551,20 @@ __libc_free (void *mem)
       if (__glibc_unlikely (e->key == tcache_key))
         return tcache_double_free_verify (e);
 
-      if (__glibc_likely (tcache->num_slots[tc_idx] != 0))
-        return tcache_put (p, tc_idx);
+      size_t tc_idx = csize2tidx (size);
+      if (__glibc_likely (tc_idx < TCACHE_SMALL_BINS))
+	{
+          if (__glibc_likely (tcache->num_slots[tc_idx] != 0))
+	    return tcache_put (p, tc_idx);
+	}
+      else
+	{
+	  tc_idx = large_csize2tidx (size);
+	  if (size >= MINSIZE
+	      && !chunk_is_mmapped (p)
+              && __glibc_likely (tcache->num_slots[tc_idx] != 0))
+	    return tcache_put_large (p, tc_idx);
+	}
     }
 #endif
 
@@ -3646,27 +3767,15 @@ _mid_memalign (size_t alignment, size_t bytes, void *address)
     }
 
 #if USE_TCACHE
-  {
-    size_t tc_idx = usize2tidx (bytes);
-
-    if (tcache_available (tc_idx))
-      {
-	/* The tcache itself isn't encoded, but the chain is.  */
-	tcache_entry **tep = & tcache->entries[tc_idx];
-	tcache_entry *te = *tep;
-	while (te != NULL && !PTR_IS_ALIGNED (te, alignment))
-	  {
-	    tep = & (te->next);
-	    te = tcache_next (te);
-	  }
-	if (te != NULL)
-	  {
-	    void *victim = tcache_get_n (tc_idx, tep);
-	    return tag_new_usable (victim);
-	  }
-      }
-    MAYBE_INIT_TCACHE ();
-  }
+  size_t nb = checked_request2size (bytes);
+  if (nb == 0)
+    {
+      __set_errno (ENOMEM);
+      return NULL;
+    }
+  void *victim = tcache_get_align (nb, alignment);
+  if (victim != NULL)
+    return tag_new_usable (victim);
 #endif
 
   if (SINGLE_THREAD_P)
@@ -3722,7 +3831,7 @@ __libc_pvalloc (size_t bytes)
   return _mid_memalign (pagesize, rounded_bytes, address);
 }
 
-void *
+static void * __attribute_noinline__
 __libc_calloc2 (size_t sz)
 {
   mstate av;
@@ -3828,20 +3937,41 @@ __libc_calloc (size_t n, size_t elem_size)
     }
 
 #if USE_TCACHE
-  size_t tc_idx = usize2tidx (bytes);
-  if (__glibc_likely (tc_idx < mp_.tcache_bins))
+  size_t nb = checked_request2size (bytes);
+  if (nb == 0)
+    {
+      __set_errno (ENOMEM);
+      return NULL;
+    }
+  if (nb < mp_.tcache_max_bytes)
     {
       if (__glibc_unlikely (tcache == NULL))
-        return tcache_calloc_init (bytes);
+	return tcache_calloc_init (bytes);
 
-      if (__glibc_likely (tcache->entries[tc_idx] != NULL))
-	{
-	  void *mem = tcache_get (tc_idx);
+      size_t tc_idx = csize2tidx (nb);
 
-	  if (__glibc_unlikely (mtag_enabled))
-            return tag_new_zero_region (mem, memsize (mem2chunk (mem)));
+      if (__glibc_unlikely (tc_idx < TCACHE_SMALL_BINS))
+        {
+	  if (tcache->entries[tc_idx] != NULL)
+	    {
+	      void *mem = tcache_get (tc_idx);
+	      if (__glibc_unlikely (mtag_enabled))
+		return tag_new_zero_region (mem, memsize (mem2chunk (mem)));
 
-          return clear_memory ((INTERNAL_SIZE_T *) mem, tidx2usize (tc_idx));
+	      return clear_memory ((INTERNAL_SIZE_T *) mem, tidx2usize (tc_idx));
+	    }
+	}
+      else
+        {
+	  tc_idx = large_csize2tidx (nb);
+	  void *mem = tcache_get_large (tc_idx, nb);
+	  if (mem != NULL)
+	    {
+	      if (__glibc_unlikely (mtag_enabled))
+	        return tag_new_zero_region (mem, memsize (mem2chunk (mem)));
+
+	      return memset (mem, 0, memsize (mem2chunk (mem)));
+	    }
 	}
     }
 #endif
@@ -3949,7 +4079,7 @@ _int_malloc (mstate av, size_t bytes)
 	      /* While we're here, if we see other chunks of the same size,
 		 stash them in the tcache.  */
 	      size_t tc_idx = csize2tidx (nb);
-	      if (tcache != NULL && tc_idx < mp_.tcache_bins)
+	      if (tcache != NULL && tc_idx < mp_.tcache_small_bins)
 		{
 		  mchunkptr tc_victim;
 
@@ -4009,7 +4139,7 @@ _int_malloc (mstate av, size_t bytes)
 	  /* While we're here, if we see other chunks of the same size,
 	     stash them in the tcache.  */
 	  size_t tc_idx = csize2tidx (nb);
-	  if (tcache != NULL && tc_idx < mp_.tcache_bins)
+	  if (tcache != NULL && tc_idx < mp_.tcache_small_bins)
 	    {
 	      mchunkptr tc_victim;
 
@@ -4071,7 +4201,7 @@ _int_malloc (mstate av, size_t bytes)
 #if USE_TCACHE
   INTERNAL_SIZE_T tcache_nb = 0;
   size_t tc_idx = csize2tidx (nb);
-  if (tcache != NULL && tc_idx < mp_.tcache_bins)
+  if (tcache != NULL && tc_idx < mp_.tcache_small_bins)
     tcache_nb = nb;
   int return_cached = 0;
 
@@ -4151,7 +4281,8 @@ _int_malloc (mstate av, size_t bytes)
 #if USE_TCACHE
 	      /* Fill cache first, return to user only if cache fills.
 		 We may return one of these chunks later.  */
-	      if (tcache_nb > 0 && tcache->num_slots[tc_idx] != 0)
+	      if (tcache_nb > 0
+		  && tcache->num_slots[tc_idx] != 0)
 		{
 		  tcache_put (victim, tc_idx);
 		  return_cached = 1;
@@ -5483,13 +5614,27 @@ do_set_arena_max (size_t value)
 static __always_inline int
 do_set_tcache_max (size_t value)
 {
-  if (value <= MAX_TCACHE_SIZE)
+  size_t nb = request2size (value);
+  size_t tc_idx = csize2tidx (nb);
+
+  /* To check that value is not too big and request2size does not return an
+     overflown value.  */
+  if (value > nb)
+    return 0;
+
+  if (nb > MAX_TCACHE_SMALL_SIZE)
+    tc_idx = large_csize2tidx (nb);
+
+  LIBC_PROBE (memory_tunable_tcache_max_bytes, 2, value, mp_.tcache_max_bytes);
+
+  if (tc_idx < TCACHE_MAX_BINS)
     {
-      LIBC_PROBE (memory_tunable_tcache_max_bytes, 2, value, mp_.tcache_max_bytes);
-      mp_.tcache_max_bytes = value;
-      mp_.tcache_bins = csize2tidx (request2size(value)) + 1;
+      if (tc_idx < TCACHE_SMALL_BINS)
+	mp_.tcache_small_bins = tc_idx + 1;
+      mp_.tcache_max_bytes = nb;
       return 1;
     }
+
   return 0;
 }
 
