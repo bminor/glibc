@@ -64,18 +64,16 @@ _start:
 	xor	%o0, %gdop_lox10(main), %o0
 	ld	[%l7 + %o0], %o0, %gdop(main)
 #endif
-	mov	0, %o3		/* Used to be init.  */
-	mov	0, %o4		/* Used to be fini.  */
 
   /* When starting a binary via the dynamic linker, %g1 contains the
      address of the shared library termination function, which will be
      registered with atexit().  If we are statically linked, this will
      be NULL.  */
-	mov	%g1, %o5
+	mov	%g1, %o3
 
   /* Provide the highest stack address to update the __libc_stack_end (used
      to enable executable stacks if required).  */
-	st	%sp, [%sp+23*4]
+	mov	%sp, %o4
 
   /* Let libc do the rest of the initialization, and call main.  */
 	call	__libc_start_main
