@@ -1940,7 +1940,10 @@ file systems.
 @comment Unaudited and therefore marked AC-Unsafe and AS-Unsafe by default
 @safety{@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
 This function is a descriptor-relative version of the @code{rename}
-function above.  @xref{Descriptor-Relative Access}.
+function above.  @xref{Descriptor-Relative Access}.  If @var{oldname} or
+@var{newname} is a relative path, it is interpreted relative to the
+directory associated with @var{oldfiledes} or @var{newfiledes},
+respectively.  Absolute paths are interpreted in the usual way.
 
 Compared to @code{rename}, some additional error conditions can occur.
 @xref{Descriptor-Relative Access}.
