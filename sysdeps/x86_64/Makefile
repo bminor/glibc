@@ -214,6 +214,24 @@ $(objpfx)tst-plt-rewrite2: $(objpfx)tst-plt-rewritemod2.so
 endif
 
 test-internal-extras += tst-gnu2-tls2mod1
+
+tests-special += $(objpfx)check-rtld.out
+
+$(objpfx)rtld.reloc: $(objpfx)rtld.os
+	@rm -f $@T
+	LC_ALL=C $(READELF) -rW $< > $@T
+	test -s $@T
+	mv -f $@T $@
+common-generated += $(objpfx)rtld.reloc
+
+# Verify that there are no run-time relocations against __ehdr_start nor
+# _end.
+$(objpfx)check-rtld.out: $(objpfx)rtld.reloc
+	LC_ALL=C; \
+	if grep -E "R_X86_64_64.*(__ehdr_start|_end)" $^ > $@; \
+	  then false; else true; fi; \
+	$(evaluate-test)
+generated += check-rtld.out
 endif # $(subdir) == elf
 
 ifeq ($(subdir),csu)

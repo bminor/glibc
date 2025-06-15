@@ -477,7 +477,10 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
   _dl_setup_hash (&_dl_rtld_map);
   _dl_rtld_map.l_real = &_dl_rtld_map;
   _dl_rtld_map.l_map_start = (ElfW(Addr)) &__ehdr_start;
+  /* Prevent run-time relocations against __ehdr_start and _end.  */
+  asm ("" : "+g" (_dl_rtld_map.l_map_start));
   _dl_rtld_map.l_map_end = (ElfW(Addr)) _end;
+  asm ("" : "+g" (_dl_rtld_map.l_map_end));
   /* Copy the TLS related data if necessary.  */
 #ifndef DONT_USE_BOOTSTRAP_MAP
 # if NO_TLS_OFFSET != 0
