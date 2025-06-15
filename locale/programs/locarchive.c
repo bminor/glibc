@@ -638,7 +638,8 @@ open_archive (struct locarhandle *ah, bool readonly)
 	  || st.st_dev != st2.st_dev
 	  || st.st_ino != st2.st_ino)
 	{
-	  (void) lockf64 (fd, F_ULOCK, sizeof (struct locarhead));
+	  if (lockf64 (fd, F_ULOCK, sizeof (struct locarhead)) != 0)
+	    error (EXIT_FAILURE, errno, _("cannot unlock archive header"));
 	  close (fd);
 	  continue;
 	}
@@ -650,14 +651,17 @@ open_archive (struct locarhandle *ah, bool readonly)
   /* Read the header.  */
   if (TEMP_FAILURE_RETRY (read (fd, &head, sizeof (head))) != sizeof (head))
     {
-      (void) lockf64 (fd, F_ULOCK, sizeof (struct locarhead));
-      error (EXIT_FAILURE, errno, _("cannot read archive header"));
+      int errval = errno;
+      if (lockf64 (fd, F_ULOCK, sizeof (struct locarhead)) != 0)
+	error (EXIT_FAILURE, errno, _("cannot unlock archive header"));
+      error (EXIT_FAILURE, errval, _("cannot read archive header"));
     }
 
   /* Check the magic value */
   if (GET (head.magic) != AR_MAGIC)
     {
-      (void) lockf64 (fd, F_ULOCK, sizeof (struct locarhead));
+      if (lockf64 (fd, F_ULOCK, sizeof (struct locarhead)) != 0)
+	error (EXIT_FAILURE, errno, _("cannot unlock archive header"));
       error (EXIT_FAILURE, 0, _("bad magic value in archive header"));
     }
 
@@ -676,8 +680,10 @@ open_archive (struct locarhandle *ah, bool readonly)
 		     MAP_SHARED | xflags, fd, 0);
   if (ah->addr == MAP_FAILED)
     {
-      (void) lockf64 (fd, F_ULOCK, sizeof (struct locarhead));
-      error (EXIT_FAILURE, errno, _("cannot map archive header"));
+      int errval = errno;
+      if (lockf64 (fd, F_ULOCK, sizeof (struct locarhead)) != 0)
+	error (EXIT_FAILURE, errno, _("cannot unlock archive header"));
+      error (EXIT_FAILURE, errval, _("cannot map archive header"));
     }
   ah->reserved = reserved;
   ah->mmap_base = mmap_base;
