@@ -428,7 +428,6 @@ static ElfW(Addr) _dl_start_final (void *arg,
 
 /* These are defined magically by the linker.  */
 extern const ElfW(Ehdr) __ehdr_start attribute_hidden;
-extern char _etext[] attribute_hidden;
 extern char _end[] attribute_hidden;
 
 
