@@ -24,3 +24,6 @@ so:
 CVE-id: CVE-2025-5745
 Public-Date: 2025-06-05
 Vulnerable-Commit: 23f0d81608d0ca6379894ef81670cf30af7fd081 (2.40)
+Fix-Commit: 63c60101ce7c5eac42be90f698ba02099b41b965 (2.42)
+Fix-Commit: 84bdbf8a6f2fdafd3661489dbb7f79835a52da82 (2.41-57)
+Fix-Commit: 42a5a940c974d02540c8da26d6374c744d148cb9 (2.40-136)
