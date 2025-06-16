@@ -1,54 +1,67 @@
-/* s_modff.c -- float version of s_modf.c.
- */
+/* Extract signed integral and fractional values.
+   Copyright (C) 1993-2025 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
 
 #include <math.h>
-#include <math_private.h>
 #include <libm-alias-float.h>
-
-static const float one = 1.0;
+#include "math_config.h"
+#include <math-use-builtins-trunc.h>
 
 float
-__modff(float x, float *iptr)
+__modff (float x, float *iptr)
 {
-	int32_t i0,j0;
-	uint32_t i;
-	GET_FLOAT_WORD(i0,x);
-	j0 = ((i0>>23)&0xff)-0x7f;	/* exponent of x */
-	if(__builtin_expect(j0<23, 1)) {		/* integer part in x */
-	    if(j0<0) {			/* |x|<1 */
-		SET_FLOAT_WORD(*iptr,i0&0x80000000);	/* *iptr = +-0 */
-		return x;
-	    } else {
-		i = (0x007fffff)>>j0;
-		if((i0&i)==0) {			/* x is integral */
-		    uint32_t ix;
-		    *iptr = x;
-		    GET_FLOAT_WORD(ix,x);
-		    SET_FLOAT_WORD(x,ix&0x80000000);	/* return +-0 */
-		    return x;
-		} else {
-		    SET_FLOAT_WORD(*iptr,i0&(~i));
-		    return x - *iptr;
-		}
-	    }
-	} else {			/* no fraction part */
-	    *iptr = x*one;
-	    /* We must handle NaNs separately.  */
-	    if (j0 == 0x80 && (i0 & 0x7fffff))
-	      return x*one;
-	    SET_FLOAT_WORD(x,i0&0x80000000);	/* return +-0 */
-	    return x;
+  uint32_t t = asuint (x);
+#if USE_TRUNCF_BUILTIN
+  if (is_inf (t))
+    {
+      *iptr = x;
+      return copysignf (0.0, x);
+    }
+  *iptr = truncf (x);
+  return copysignf (x - *iptr, x);
+#else
+  int e = get_exponent (t);
+  /* No fraction part.  */
+  if (e < MANTISSA_WIDTH)
+    {
+      if (e < 0)
+	{
+	  /* |x|<1 -> *iptr = +-0 */
+	  *iptr = asfloat (t & SIGN_MASK);
+	  return x;
 	}
+
+      uint32_t i = MANTISSA_MASK >> e;
+      if ((t & i) == 0)
+	{
+	  /* x in integral, return +-0  */
+	  *iptr = x;
+	  return asfloat (t & SIGN_MASK);
+	}
+
+      *iptr = asfloat (t & ~i);
+      return x - *iptr;
+    }
+
+  /* Set invalid operation for sNaN.  */
+  *iptr = x * 1.0f;
+  if ((e == 0x80) && (t & MANTISSA_MASK))
+    return *iptr;
+  return asfloat (t & SIGN_MASK);
+#endif
 }
 libm_alias_float (__modf, modf)
