@@ -64,4 +64,6 @@ __modff (float x, float *iptr)
   return asfloat (t & SIGN_MASK);
 #endif
 }
+#ifndef __modff
 libm_alias_float (__modf, modf)
+#endif
