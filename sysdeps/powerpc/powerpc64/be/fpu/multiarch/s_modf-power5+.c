@@ -17,4 +17,4 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define __modf __modf_power5plus
-#include <sysdeps/powerpc/fpu/s_modf.c>
+#include <sysdeps/ieee754/dbl-64/s_modf.c>
