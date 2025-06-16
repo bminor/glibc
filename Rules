@@ -153,6 +153,7 @@ tests: $(addprefix $(objpfx),$(filter-out $(tests-unsupported), \
 					  $(tests-malloc-check:%=%-malloc-check) \
 					  $(tests-malloc-hugetlb1:%=%-malloc-hugetlb1) \
 					  $(tests-malloc-hugetlb2:%=%-malloc-hugetlb2)) \
+					  $(tests-malloc-largetcache:%=%-malloc-largetcache)) \
 			     $(test-srcs)) $(tests-special) \
 			     $(tests-printers-programs)
 xtests: tests $(xtests-special)
@@ -165,6 +166,7 @@ tests: $(tests:%=$(objpfx)%.out) $(tests-internal:%=$(objpfx)%.out) \
        $(tests-malloc-check:%=$(objpfx)%-malloc-check.out) \
        $(tests-malloc-hugetlb1:%=$(objpfx)%-malloc-hugetlb1.out) \
        $(tests-malloc-hugetlb2:%=$(objpfx)%-malloc-hugetlb2.out) \
+       $(tests-malloc-largetcache:%=$(objpfx)%-malloc-largetcache.out) \
        $(tests-special) $(tests-printers-out)
 xtests: tests $(xtests:%=$(objpfx)%.out) $(xtests-special)
 endif # $(run-built-tests) != no
@@ -179,6 +181,7 @@ tests-expected = $(tests) $(tests-internal) $(tests-printers) \
 	$(tests-container) $(tests-malloc-check:%=%-malloc-check) \
 	$(tests-malloc-hugetlb1:%=%-malloc-hugetlb1) \
 	$(tests-malloc-hugetlb2:%=%-malloc-hugetlb2) \
+	$(tests-malloc-largetcache:%=%-malloc-largetcache) \
 	$(tests-mcheck:%=%-mcheck)
 xtests-expected = $(xtests)
 endif # $(run-built-tests) != no
@@ -211,6 +214,7 @@ binaries-mcheck-tests = $(tests-mcheck:%=%-mcheck)
 binaries-malloc-check-tests = $(tests-malloc-check:%=%-malloc-check)
 binaries-malloc-hugetlb1-tests = $(tests-malloc-hugetlb1:%=%-malloc-hugetlb1)
 binaries-malloc-hugetlb2-tests = $(tests-malloc-hugetlb2:%=%-malloc-hugetlb2)
+binaries-malloc-largetcache-tests = $(tests-malloc-largetcache:%=%-malloc-largetcache)
 else
 binaries-all-notests =
 binaries-all-tests = $(tests) $(tests-internal) $(xtests) $(test-srcs)
@@ -224,6 +228,7 @@ binaries-mcheck-tests =
 binaries-malloc-check-tests =
 binaries-malloc-hugetlb1-tests =
 binaries-malloc-hugetlb2-tests =
+binaries-malloc-largetcache-tests =
 endif
 
 binaries-pie = $(binaries-pie-tests) $(binaries-pie-notests)
@@ -290,6 +295,14 @@ $(addprefix $(objpfx),$(binaries-malloc-hugetlb2-tests)): %-malloc-hugetlb2: %.o
 	$(+link-tests)
 endif
 
+ifneq "$(strip $(binaries-malloc-largetcache-tests))" ""
+$(addprefix $(objpfx),$(binaries-malloc-largetcache-tests)): %-malloc-largetcache: %.o \
+  $(link-extra-libs-tests) \
+  $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
+  $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
+	$(+link-tests)
+endif
+
 ifneq "$(strip $(binaries-pie-tests))" ""
 $(addprefix $(objpfx),$(binaries-pie-tests)): %: %.o \
   $(link-extra-libs-tests) \
@@ -338,6 +351,12 @@ define malloc-hugetlb2-ENVS
 $(1)-malloc-hugetlb2-ENV += GLIBC_TUNABLES=glibc.malloc.hugetlb=2
 endef
 $(foreach t,$(tests-malloc-hugetlb2),$(eval $(call malloc-hugetlb2-ENVS,$(t))))
+
+# All malloc-largetcache tests will be run with GLIBC_TUNABLE=glibc.malloc.tcache_max=1048576
+define malloc-largetcache-ENVS
+$(1)-malloc-largetcache-ENV += GLIBC_TUNABLES=glibc.malloc.tcache_max=1048576
+endef
+$(foreach t,$(tests-malloc-largetcache),$(eval $(call malloc-largetcache-ENVS,$(t))))
 
 # mcheck tests need the debug DSO to support -lmcheck.
 define mcheck-ENVS

@@ -147,6 +147,22 @@ tests-malloc-hugetlb1 = \
 tests-malloc-hugetlb2 = \
 	$(filter-out $(tests-exclude-hugetlb2), $(tests))
 
+tests-exclude-largetcache = \
+  tst-compathooks-off \
+  tst-compathooks-on \
+  tst-interpose-thread \
+  tst-interpose-nothread \
+  tst-interpose-static-nothread \
+  tst-interpose-static-thread \
+  tst-mallocstate \
+  tst-malloc-backtrace \
+  tst-malloc-usable \
+  tst-malloc-usable-tunables \
+# tests-exclude-largetcache
+
+tests-malloc-largetcache = \
+	$(filter-out $(tests-exclude-largetcache), $(tests))
+
 # -lmcheck needs __malloc_initialize_hook, which was deprecated in 2.24.
 ifeq ($(have-GLIBC_2.23)$(build-shared),yesyes)
 # Tests that don't play well with mcheck.  They are either bugs in mcheck or
