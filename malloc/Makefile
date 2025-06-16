@@ -150,14 +150,14 @@ tests-malloc-hugetlb2 = \
 tests-exclude-largetcache = \
   tst-compathooks-off \
   tst-compathooks-on \
-  tst-interpose-thread \
   tst-interpose-nothread \
   tst-interpose-static-nothread \
   tst-interpose-static-thread \
-  tst-mallocstate \
+  tst-interpose-thread \
   tst-malloc-backtrace \
   tst-malloc-usable \
   tst-malloc-usable-tunables \
+  tst-mallocstate \
 # tests-exclude-largetcache
 
 tests-malloc-largetcache = \
