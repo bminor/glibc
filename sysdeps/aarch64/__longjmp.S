@@ -26,21 +26,16 @@
 ENTRY (__longjmp)
 
 #if IS_IN(libc)
-	/* Disable ZA state of SME in libc.a and libc.so, but not in ld.so.  */
-	paciasp
-	cfi_negate_ra_state
-	stp	x29, x30, [sp, -16]!
-	cfi_adjust_cfa_offset (16)
-	cfi_rel_offset (x29, 0)
-	cfi_rel_offset (x30, 8)
-	mov	x29, sp
+	/* Disable ZA state of SME in libc.a and libc.so, but not in ld.so.
+	   The calling convention of __libc_arm_za_disable allows to do
+	   this thus allowing to avoid saving to and reading from stack.
+	   As a result we also don't need to sign the return address and
+	   check it after returning because it is not stored to stack.  */
+	mov	x13, x30
+	cfi_register (x30, x13)
 	bl	__libc_arm_za_disable
-	ldp	x29, x30, [sp], 16
-	cfi_adjust_cfa_offset (-16)
-	cfi_restore (x29)
-	cfi_restore (x30)
-	autiasp
-	cfi_negate_ra_state
+	mov	x30, x13
+	cfi_register (x13, x30)
 #endif
 
 	cfi_def_cfa (x0, 0)
