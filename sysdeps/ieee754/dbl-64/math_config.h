@@ -109,6 +109,7 @@ issignaling_inline (double x)
 #define BIT_WIDTH       64
 #define MANTISSA_WIDTH  52
 #define EXPONENT_WIDTH  11
+#define EXPONENT_BIAS   1023
 #define MANTISSA_MASK   UINT64_C(0x000fffffffffffff)
 #define EXPONENT_MASK   UINT64_C(0x7ff0000000000000)
 #define EXP_MANT_MASK   UINT64_C(0x7fffffffffffffff)
@@ -121,10 +122,22 @@ is_nan (uint64_t x)
   return (x & EXP_MANT_MASK) > EXPONENT_MASK;
 }
 
+static inline bool
+is_inf (uint64_t x)
+{
+  return (x << 1) == (EXPONENT_MASK << 1);
+}
+
 static inline uint64_t
 get_mantissa (uint64_t x)
 {
   return x & MANTISSA_MASK;
+}
+
+static inline int
+get_exponent (uint64_t x)
+{
+  return (int)((x >> MANTISSA_WIDTH & 0x7ff) - EXPONENT_BIAS);
 }
 
 /* Convert integer number X, unbiased exponent EP, and sign S to double:

@@ -1,63 +1,68 @@
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
+/* Extract signed integral and fractional values.
+   Copyright (C) 1993-2025 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-/*
- * modf(double x, double *iptr)
- * return fraction part of x, and return x's integral part in *iptr.
- * Method:
- *	Bit twiddling.
- *
- * Exception:
- *	No exception.
- */
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
 
 #include <math.h>
-#include <math_private.h>
 #include <libm-alias-double.h>
-#include <stdint.h>
-
-static const double one = 1.0;
+#include "math_config.h"
+#include <math-use-builtins-trunc.h>
 
 double
-__modf(double x, double *iptr)
+__modf (double x, double *iptr)
 {
-	int64_t i0;
-	int32_t j0;
-	EXTRACT_WORDS64(i0,x);
-	j0 = ((i0>>52)&0x7ff)-0x3ff;	/* exponent of x */
-	if(j0<52) {			/* integer part in x */
-	    if(j0<0) {			/* |x|<1 */
-		/* *iptr = +-0 */
-		INSERT_WORDS64(*iptr,i0&UINT64_C(0x8000000000000000));
-		return x;
-	    } else {
-		uint64_t i = UINT64_C(0x000fffffffffffff)>>j0;
-		if((i0&i)==0) {		/* x is integral */
-		    *iptr = x;
-		    /* return +-0 */
-		    INSERT_WORDS64(x,i0&UINT64_C(0x8000000000000000));
-		    return x;
-		} else {
-		    INSERT_WORDS64(*iptr,i0&(~i));
-		    return x - *iptr;
-		}
-	    }
-	} else { /* no fraction part */
-	    *iptr = x*one;
-	    /* We must handle NaNs separately.  */
-	    if (j0 == 0x400 && (i0 & UINT64_C(0xfffffffffffff)))
-	      return x*one;
-	    INSERT_WORDS64(x,i0&UINT64_C(0x8000000000000000));	/* return +-0 */
-	    return x;
+  uint64_t t = asuint64 (x);
+#if USE_TRUNC_BUILTIN
+  if (is_inf (t))
+    {
+      *iptr = x;
+      return copysign (0.0, x);
+    }
+  *iptr = trunc (x);
+  return copysign (x - *iptr, x);
+#else
+  int e = get_exponent (t);
+  /* No fraction part.  */
+  if (e < MANTISSA_WIDTH)
+    {
+      if (e < 0)
+	{
+	  /* |x|<1 -> *iptr = +-0 */
+	  *iptr = asdouble (t & SIGN_MASK);
+	  return x;
 	}
+
+      uint64_t i = MANTISSA_MASK >> e;
+      if ((t & i) == 0)
+	{
+	  /* x in integral, return +-0  */
+	  *iptr = x;
+	  return asdouble (t & SIGN_MASK);
+	}
+
+      *iptr = asdouble (t & ~i);
+      return x - *iptr;
+    }
+
+  /* Set invalid operation for sNaN.  */
+  *iptr = x * 1.0;
+  if ((e == 0x400) && (t & MANTISSA_MASK))
+    return *iptr;
+  return asdouble (t & SIGN_MASK);
+#endif
 }
 #ifndef __modf
 libm_alias_double (__modf, modf)
