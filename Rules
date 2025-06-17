@@ -152,7 +152,7 @@ tests: $(addprefix $(objpfx),$(filter-out $(tests-unsupported), \
 					  $(tests-mcheck:%=%-mcheck) \
 					  $(tests-malloc-check:%=%-malloc-check) \
 					  $(tests-malloc-hugetlb1:%=%-malloc-hugetlb1) \
-					  $(tests-malloc-hugetlb2:%=%-malloc-hugetlb2)) \
+					  $(tests-malloc-hugetlb2:%=%-malloc-hugetlb2) \
 					  $(tests-malloc-largetcache:%=%-malloc-largetcache)) \
 			     $(test-srcs)) $(tests-special) \
 			     $(tests-printers-programs)
