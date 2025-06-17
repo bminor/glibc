@@ -311,9 +311,6 @@ endif
 ifeq ($(subdir),htl)
 tests-unsupported += tst-basic7
 endif
-ifeq ($(subdir),io)
-tests-unsupported += test-lfs
-endif
 ifeq ($(subdir),libio)
 tests-unsupported += tst-asprintf-null
 endif
