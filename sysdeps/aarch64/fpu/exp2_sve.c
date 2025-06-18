@@ -19,23 +19,21 @@
 
 #include "sv_math.h"
 
-#define N (1 << V_EXP_TABLE_BITS)
-
 #define BigBound 1022
 #define UOFlowBound 1280
 
 static const struct data
 {
-  double c0, c2;
-  double c1, c3;
+  double c2, c4;
+  double c0, c1, c3;
   double shift, big_bound, uoflow_bound;
 } data = {
   /* Coefficients are computed using Remez algorithm with
      minimisation of the absolute error.  */
-  .c0 = 0x1.62e42fefa3686p-1, .c1 = 0x1.ebfbdff82c241p-3,
-  .c2 = 0x1.c6b09b16de99ap-5, .c3 = 0x1.3b2abf5571ad8p-7,
-  .shift = 0x1.8p52 / N,      .uoflow_bound = UOFlowBound,
-  .big_bound = BigBound,
+  .c0 = 0x1.62e42fefa39efp-1,  .c1 = 0x1.ebfbdff82a31bp-3,
+  .c2 = 0x1.c6b08d706c8a5p-5,  .c3 = 0x1.3b2ad2ff7d2f3p-7,
+  .c4 = 0x1.5d8761184beb3p-10, .shift = 0x1.800000000ffc0p+46,
+  .uoflow_bound = UOFlowBound, .big_bound = BigBound,
 };
 
 #define SpecialOffset 0x6000000000000000 /* 0x1p513.  */
@@ -64,50 +62,52 @@ special_case (svbool_t pg, svfloat64_t s, svfloat64_t y, svfloat64_t n,
       svadd_x (pg, svsub_x (pg, svreinterpret_u64 (s), SpecialBias2), b));
 
   /* |n| > 1280 => 2^(n) overflows.  */
-  svbool_t p_cmp = svacgt (pg, n, d->uoflow_bound);
+  svbool_t p_cmp = svacle (pg, n, d->uoflow_bound);
 
   svfloat64_t r1 = svmul_x (svptrue_b64 (), s1, s1);
   svfloat64_t r2 = svmla_x (pg, s2, s2, y);
   svfloat64_t r0 = svmul_x (svptrue_b64 (), r2, s1);
 
-  return svsel (p_cmp, r1, r0);
+  return svsel (p_cmp, r0, r1);
 }
 
 /* Fast vector implementation of exp2.
-   Maximum measured error is 1.65 ulp.
-   _ZGVsMxv_exp2(-0x1.4c264ab5b559bp-6) got 0x1.f8db0d4df721fp-1
-				       want 0x1.f8db0d4df721dp-1.  */
+   Maximum measured error is 0.52 + 0.5 ulp.
+   _ZGVsMxv_exp2 (0x1.3b72ad5b701bfp-1) got 0x1.8861641b49e08p+0
+				       want 0x1.8861641b49e07p+0.  */
 svfloat64_t SV_NAME_D1 (exp2) (svfloat64_t x, svbool_t pg)
 {
   const struct data *d = ptr_barrier (&data);
-  svbool_t no_big_scale = svacle (pg, x, d->big_bound);
-  svbool_t special = svnot_z (pg, no_big_scale);
+  svbool_t special = svacge (pg, x, d->big_bound);
 
-  /* Reduce x to k/N + r, where k is integer and r in [-1/2N, 1/2N].  */
-  svfloat64_t shift = sv_f64 (d->shift);
-  svfloat64_t kd = svadd_x (pg, x, shift);
-  svuint64_t ki = svreinterpret_u64 (kd);
-  /* kd = k/N.  */
-  kd = svsub_x (pg, kd, shift);
-  svfloat64_t r = svsub_x (pg, x, kd);
+  svfloat64_t z = svadd_x (svptrue_b64 (), x, d->shift);
+  svfloat64_t n = svsub_x (svptrue_b64 (), z, d->shift);
+  svfloat64_t r = svsub_x (svptrue_b64 (), x, n);
 
-  /* scale ~= 2^(k/N).  */
-  svuint64_t idx = svand_x (pg, ki, N - 1);
-  svuint64_t sbits = svld1_gather_index (pg, __v_exp_data, idx);
-  /* This is only a valid scale when -1023*N < k < 1024*N.  */
-  svuint64_t top = svlsl_x (pg, ki, 52 - V_EXP_TABLE_BITS);
-  svfloat64_t scale = svreinterpret_f64 (svadd_x (pg, sbits, top));
+  svfloat64_t scale = svexpa (svreinterpret_u64 (z));
 
-  svfloat64_t c13 = svld1rq (svptrue_b64 (), &d->c1);
-  /* Approximate exp2(r) using polynomial.  */
-  /* y = exp2(r) - 1 ~= C0 r + C1 r^2 + C2 r^3 + C3 r^4.  */
   svfloat64_t r2 = svmul_x (svptrue_b64 (), r, r);
-  svfloat64_t p01 = svmla_lane (sv_f64 (d->c0), r, c13, 0);
-  svfloat64_t p23 = svmla_lane (sv_f64 (d->c2), r, c13, 1);
-  svfloat64_t p = svmla_x (pg, p01, p23, r2);
+  svfloat64_t c24 = svld1rq (svptrue_b64 (), &d->c2);
+
+  /* Approximate exp2(r) using polynomial.  */
+  /* y = exp2(r) - 1 ~= r * (C0 + C1 r + C2 r^2 + C3 r^3 + C4 r^4).  */
+  svfloat64_t p12 = svmla_lane (sv_f64 (d->c1), r, c24, 0);
+  svfloat64_t p34 = svmla_lane (sv_f64 (d->c3), r, c24, 1);
+  svfloat64_t p = svmla_x (pg, p12, p34, r2);
+  p = svmad_x (pg, p, r, d->c0);
   svfloat64_t y = svmul_x (svptrue_b64 (), r, p);
+
   /* Assemble exp2(x) = exp2(r) * scale.  */
   if (__glibc_unlikely (svptest_any (pg, special)))
-    return special_case (pg, scale, y, kd, d);
+    {
+      /* FEXPA zeroes the sign bit, however the sign is meaningful to the
+          special case function so needs to be copied.
+          e = sign bit of u << 46.  */
+      svuint64_t e = svand_x (pg, svlsl_x (pg, svreinterpret_u64 (z), 46),
+            0x8000000000000000);
+      scale = svreinterpret_f64 (svadd_x (pg, e, svreinterpret_u64 (scale)));
+      return special_case (pg, scale, y, n, d);
+    }
+
   return svmla_x (pg, scale, scale, y);
 }

@@ -19,26 +19,19 @@
 
 #include "sv_math.h"
 
-/* For x < -Thres, the result is subnormal and not handled correctly by
-   FEXPA.  */
-#define Thres 37.9
+/* For x < -Thres (-log10(2^126)), the result is subnormal and not handled
+   correctly by FEXPA.  */
+#define Thres 0x1.2f702p+5
 
 static const struct data
 {
-  float log2_10_lo, c0, c2, c4;
-  float c1, c3, log10_2;
-  float shift, log2_10_hi, thres;
+  float log10_2, log2_10_hi, log2_10_lo, c1;
+  float c0, shift, thres;
 } data = {
   /* Coefficients generated using Remez algorithm with minimisation of relative
-     error.
-     rel error: 0x1.89dafa3p-24
-     abs error: 0x1.167d55p-23 in [-log10(2)/2, log10(2)/2]
-     maxerr: 0.52 +0.5 ulp.  */
-  .c0 = 0x1.26bb16p+1f,
-  .c1 = 0x1.5350d2p+1f,
-  .c2 = 0x1.04744ap+1f,
-  .c3 = 0x1.2d8176p+0f,
-  .c4 = 0x1.12b41ap-1f,
+     error.  */
+  .c0 = 0x1.26bb62p1,
+  .c1 = 0x1.53524cp1,
   /* 1.5*2^17 + 127, a shift value suitable for FEXPA.  */
   .shift = 0x1.803f8p17f,
   .log10_2 = 0x1.a934fp+1,
@@ -53,28 +46,23 @@ sv_exp10f_inline (svfloat32_t x, const svbool_t pg, const struct data *d)
   /* exp10(x) = 2^(n/N) * 10^r = 2^n * (1 + poly (r)),
      with poly(r) in [1/sqrt(2), sqrt(2)] and
      x = r + n * log10(2) / N, with r in [-log10(2)/2N, log10(2)/2N].  */
-
-  svfloat32_t lane_consts = svld1rq (svptrue_b32 (), &d->log2_10_lo);
+  svfloat32_t lane_consts = svld1rq (svptrue_b32 (), &d->log10_2);
 
   /* n = round(x/(log10(2)/N)).  */
   svfloat32_t shift = sv_f32 (d->shift);
-  svfloat32_t z = svmad_x (pg, sv_f32 (d->log10_2), x, shift);
-  svfloat32_t n = svsub_x (svptrue_b32 (), z, shift);
+  svfloat32_t z = svmla_lane (shift, x, lane_consts, 0);
+  svfloat32_t n = svsub_x (pg, z, shift);
 
   /* r = x - n*log10(2)/N.  */
-  svfloat32_t r = svmsb_x (pg, sv_f32 (d->log2_10_hi), n, x);
-  r = svmls_lane (r, n, lane_consts, 0);
+  svfloat32_t r = x;
+  r = svmls_lane (r, n, lane_consts, 1);
+  r = svmls_lane (r, n, lane_consts, 2);
 
   svfloat32_t scale = svexpa (svreinterpret_u32 (z));
 
   /* Polynomial evaluation: poly(r) ~ exp10(r)-1.  */
-  svfloat32_t p12 = svmla_lane (sv_f32 (d->c1), r, lane_consts, 2);
-  svfloat32_t p34 = svmla_lane (sv_f32 (d->c3), r, lane_consts, 3);
-  svfloat32_t r2 = svmul_x (svptrue_b32 (), r, r);
-  svfloat32_t p14 = svmla_x (pg, p12, p34, r2);
-  svfloat32_t p0 = svmul_lane (r, lane_consts, 1);
-  svfloat32_t poly = svmla_x (pg, p0, r2, p14);
-
+  svfloat32_t poly = svmla_lane (sv_f32 (d->c0), r, lane_consts, 3);
+  poly = svmul_x (pg, poly, r);
   return svmla_x (pg, scale, scale, poly);
 }
 
@@ -85,11 +73,10 @@ special_case (svfloat32_t x, svbool_t special, const struct data *d)
 		      special);
 }
 
-/* Single-precision SVE exp10f routine. Implements the same algorithm
-   as AdvSIMD exp10f.
-   Worst case error is 1.02 ULPs.
-   _ZGVsMxv_exp10f(-0x1.040488p-4) got 0x1.ba5f9ep-1
-				  want 0x1.ba5f9cp-1.  */
+/* Single-precision SVE exp10f routine. Based on the FEXPA instruction.
+   Worst case error is 1.10 ULP.
+   _ZGVsMxv_exp10f (0x1.cc76dep+3) got 0x1.be0172p+47
+				  want 0x1.be017p+47.  */
 svfloat32_t SV_NAME_F1 (exp10) (svfloat32_t x, const svbool_t pg)
 {
   const struct data *d = ptr_barrier (&data);

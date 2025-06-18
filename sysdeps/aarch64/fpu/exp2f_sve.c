@@ -18,21 +18,17 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include "sv_math.h"
-#include "poly_sve_f32.h"
 
 #define Thres 0x1.5d5e2ap+6f
 
 static const struct data
 {
-  float c0, c2, c4, c1, c3;
-  float shift, thres;
+  float c0, c1, shift, thres;
 } data = {
-  /* Coefficients copied from the polynomial in AdvSIMD variant.  */
-  .c0 = 0x1.62e422p-1f,
-  .c1 = 0x1.ebf9bcp-3f,
-  .c2 = 0x1.c6bd32p-5f,
-  .c3 = 0x1.3ce9e4p-7f,
-  .c4 = 0x1.59977ap-10f,
+  /* Coefficients generated using Remez algorithm with minimisation of relative
+     error.  */
+  .c0 = 0x1.62e485p-1,
+  .c1 = 0x1.ebfbe0p-3,
   /* 1.5*2^17 + 127.  */
   .shift = 0x1.803f8p17f,
   /* Roughly 87.3. For x < -Thres, the result is subnormal and not handled
@@ -51,16 +47,8 @@ sv_exp2f_inline (svfloat32_t x, const svbool_t pg, const struct data *d)
 
   svfloat32_t scale = svexpa (svreinterpret_u32 (z));
 
-  /* Polynomial evaluation: poly(r) ~ exp2(r)-1.
-     Evaluate polynomial use hybrid scheme - offset ESTRIN by 1 for
-     coefficients 1 to 4, and apply most significant coefficient directly.  */
-  svfloat32_t even_coeffs = svld1rq (svptrue_b32 (), &d->c0);
-  svfloat32_t r2 = svmul_x (svptrue_b32 (), r, r);
-  svfloat32_t p12 = svmla_lane (sv_f32 (d->c1), r, even_coeffs, 1);
-  svfloat32_t p34 = svmla_lane (sv_f32 (d->c3), r, even_coeffs, 2);
-  svfloat32_t p14 = svmla_x (pg, p12, r2, p34);
-  svfloat32_t p0 = svmul_lane (r, even_coeffs, 0);
-  svfloat32_t poly = svmla_x (pg, p0, r2, p14);
+  svfloat32_t poly = svmla_x (pg, sv_f32 (d->c0), r, sv_f32 (d->c1));
+  poly = svmul_x (svptrue_b32 (), poly, r);
 
   return svmla_x (pg, scale, scale, poly);
 }
@@ -72,11 +60,10 @@ special_case (svfloat32_t x, svbool_t special, const struct data *d)
 		      special);
 }
 
-/* Single-precision SVE exp2f routine. Implements the same algorithm
-   as AdvSIMD exp2f.
-   Worst case error is 1.04 ULPs.
-   _ZGVsMxv_exp2f(-0x1.af994ap-3) got 0x1.ba6a66p-1
-				 want 0x1.ba6a64p-1.  */
+/* Single-precision SVE exp2f routine, based on the FEXPA instruction.
+   Worst case error is 1.09 ULPs.
+   _ZGVsMxv_exp2f (0x1.9a2a94p-1) got 0x1.be1054p+0
+				 want 0x1.be1052p+0.  */
 svfloat32_t SV_NAME_F1 (exp2) (svfloat32_t x, const svbool_t pg)
 {
   const struct data *d = ptr_barrier (&data);
