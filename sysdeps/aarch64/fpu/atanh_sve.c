@@ -30,7 +30,7 @@ special_case (svfloat64_t x, svfloat64_t y, svbool_t special)
 }
 
 /* SVE approximation for double-precision atanh, based on log1p.
-   The greatest observed error is 2.81 ULP:
+   The greatest observed error is 3.3 ULP:
    _ZGVsMxv_atanh(0x1.ffae6288b601p-6) got 0x1.ffd8ff31b5019p-6
 				      want 0x1.ffd8ff31b501cp-6.  */
 svfloat64_t SV_NAME_D1 (atanh) (svfloat64_t x, const svbool_t pg)
@@ -42,7 +42,6 @@ svfloat64_t SV_NAME_D1 (atanh) (svfloat64_t x, const svbool_t pg)
   svfloat64_t halfsign = svreinterpret_f64 (svorr_x (pg, sign, Half));
 
   /* It is special if iax >= 1.  */
-//   svbool_t special = svcmpge (pg, iax, One);
   svbool_t special = svacge (pg, x, 1.0);
 
   /* Computation is performed based on the following sequence of equality:
