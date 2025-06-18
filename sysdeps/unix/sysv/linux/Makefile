@@ -151,14 +151,6 @@ sysdep_headers += \
   bits/struct_stat.h \
   bits/struct_stat_time64_helper.h \
   bits/syscall.h \
-  bits/termios-c_cc.h \
-  bits/termios-c_cflag.h \
-  bits/termios-c_iflag.h \
-  bits/termios-c_lflag.h \
-  bits/termios-c_oflag.h \
-  bits/termios-misc.h \
-  bits/termios-struct.h \
-  bits/termios-tcflow.h \
   bits/timerfd.h \
   bits/types/struct_msqid64_ds.h \
   bits/types/struct_msqid64_ds_helper.h \
@@ -236,7 +228,6 @@ tests += \
   tst-sysvmsg-linux \
   tst-sysvsem-linux \
   tst-sysvshm-linux \
-  tst-termios-linux \
   tst-tgkill \
   tst-timerfd \
   tst-ttyname-direct \
@@ -420,6 +411,24 @@ tst-rseq-disable-ENV = GLIBC_TUNABLES=glibc.pthread.rseq=0
 tst-rseq-disable-static-ENV = GLIBC_TUNABLES=glibc.pthread.rseq=0
 
 endif # $(subdir) == misc
+
+ifeq ($(subdir),termios)
+sysdep_headers += \
+  bits/termios-c_cc.h \
+  bits/termios-c_cflag.h \
+  bits/termios-c_iflag.h \
+  bits/termios-c_lflag.h \
+  bits/termios-c_oflag.h \
+  bits/termios-cbaud.h \
+  bits/termios-misc.h \
+  bits/termios-struct.h \
+  bits/termios-tcflow.h \
+  # sysdep_headers
+
+tests += \
+  tst-termios-linux \
+  # tests
+endif
 
 ifeq ($(subdir),time)
 sysdep_headers += \
