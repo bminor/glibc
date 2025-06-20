@@ -737,6 +737,12 @@ anyway.
 @code{syscall} does not provide cancellation logic, even if the system
 call you're calling is listed as cancellable above.
 
+Using @code{syscall} with system calls that affect the internal state of
+process of thread will likely result in undefined behavior. For this reason,
+at least the following system call numbers are not supported when invoked via
+@code{syscall}: @code{SYS_clone}, @code{SYS_clone2}, @code{SYS_clone3},
+@code{SYS_rt_sigreturn}, @code{SYS_sigreturn}, @code{SYS_vfork}.
+
 @code{syscall} is declared in @file{unistd.h}.
 
 @deftypefun {long int} syscall (long int @var{sysno}, @dots{})
@@ -803,7 +809,6 @@ if (rc == -1)
 @end smallexample
 
 @end deftypefun
-
 
 @node Program Termination
 @section Program Termination
