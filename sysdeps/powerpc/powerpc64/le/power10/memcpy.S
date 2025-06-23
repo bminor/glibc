@@ -26,7 +26,7 @@
 /* __ptr_t [r3] memcpy (__ptr_t dst [r3], __ptr_t src [r4], size_t len [r5]);
 	   Returns 'dst'.  */
 
-	.machine power9
+	.machine power10
 ENTRY_TOCLESS (MEMCPY, 5)
 	CALL_MCOUNT 3
 

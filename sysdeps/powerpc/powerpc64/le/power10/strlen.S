@@ -92,7 +92,7 @@
    The implementation can load bytes past a matching byte, but only
    up to the next 64B boundary, so it never crosses a page.  */
 
-.machine power9
+.machine power10
 
 ENTRY_TOCLESS (FUNCNAME, 4)
 	CALL_MCOUNT MCOUNT_NARGS

@@ -28,7 +28,7 @@
 #ifndef MEMMOVE
 # define MEMMOVE memmove
 #endif
-	.machine power9
+	.machine power10
 ENTRY_TOCLESS (MEMMOVE, 5)
 	CALL_MCOUNT 3
 

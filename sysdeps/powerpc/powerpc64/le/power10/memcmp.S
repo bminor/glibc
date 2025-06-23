@@ -40,7 +40,7 @@
 #ifndef MEMCMP
 # define MEMCMP memcmp
 #endif
-	.machine  power9
+	.machine  power10
 ENTRY_TOCLESS (MEMCMP, 4)
 	CALL_MCOUNT 3
 

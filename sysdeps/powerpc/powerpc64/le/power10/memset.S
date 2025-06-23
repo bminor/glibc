@@ -25,7 +25,7 @@
 # define MEMSET memset
 #endif
 
-	.machine  power9
+	.machine  power10
 ENTRY_TOCLESS (MEMSET, 5)
 	CALL_MCOUNT 3
 
