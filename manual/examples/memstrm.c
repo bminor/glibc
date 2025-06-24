@@ -16,6 +16,7 @@
 */
 
 #include <stdio.h>
+#include <stdlib.h>
 
 int
 main (void)
@@ -31,6 +32,7 @@ main (void)
   fprintf (stream, ", world");
   fclose (stream);
   printf ("buf = `%s', size = %zu\n", bp, size);
+  free (bp);
 
   return 0;
 }
