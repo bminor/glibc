@@ -612,6 +612,7 @@ endif
 ifeq ($(subdir),io)
 sysdep_routines += \
   close_nocancel \
+  close_nocancel_nostatus \
   fallocate \
   fallocate64 \
   fcntl_nocancel \
