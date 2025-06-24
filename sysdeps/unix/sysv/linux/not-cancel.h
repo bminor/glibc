@@ -73,7 +73,7 @@ hidden_proto (__fcntl64_nocancel)
 static inline void
 __close_nocancel_nostatus (int fd)
 {
-  __close_nocancel (fd);
+  INTERNAL_SYSCALL_CALL (close, fd);
 }
 
 /* Non cancellable writev syscall that does not also set errno in case of
