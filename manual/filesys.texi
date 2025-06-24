@@ -2400,8 +2400,9 @@ The descriptor @var{filedes} is not associated with a directory, and
 @var{filename} is a relative file name.
 
 @item ENOENT
-The file named by @var{filename} does not exist, or @var{filename} is an
-empty string and @var{flags} does not contain @code{AT_EMPTY_PATH}.
+The file named by @var{filename} does not exist, it's a dangling symbolic link
+and @var{flags} does not contain @code{AT_SYMLINK_NOFOLLOW}, or @var{filename}
+is an empty string and @var{flags} does not contain @code{AT_EMPTY_PATH}.
 @end table
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} this

@@ -62,12 +62,23 @@ fstatat_check (int fd, const char *path, struct stat *st)
   TEST_COMPARE (fstatat (fd, path, st, 0), 0);
 }
 
+static void
+fstatat_link (const char *path, struct stat *st)
+{
+  TEST_COMPARE (fstatat (AT_FDCWD, path, st, 0), -1);
+  TEST_COMPARE (errno, ENOENT);
+
+  TEST_COMPARE (fstatat (AT_FDCWD, path, st, AT_SYMLINK_NOFOLLOW), 0);
+  TEST_COMPARE (!S_ISLNK(st->st_mode), 0);
+}
+
 typedef void (*test_t)(int, const char *path, struct stat *);
 
 static int
 do_test (void)
 {
   char *path;
+  const char *linkame = "tst-fstat.linkname";
   int fd = create_temp_file ("tst-fstat.", &path);
   TEST_VERIFY_EXIT (fd >= 0);
   support_write_file_string (path, "abc");
@@ -81,13 +92,13 @@ do_test (void)
     printf ("warning: timestamp with nanoseconds not supported\n");
 
   struct statx stx;
+  struct stat st;
   TEST_COMPARE (statx (fd, path, 0, STATX_BASIC_STATS, &stx), 0);
 
   test_t tests[] = { stat_check, lstat_check, fstat_check, fstatat_check };
 
   for (int i = 0; i < array_length (tests); i++)
     {
-      struct stat st;
       tests[i](fd, path, &st);
 
       TEST_COMPARE (stx.stx_dev_major, major (st.st_dev));
@@ -110,6 +121,10 @@ do_test (void)
 	  TEST_COMPARE (stx.stx_mtime.tv_nsec, st.st_mtim.tv_nsec);
 	}
     }
+
+  TEST_COMPARE (symlink ("tst-fstat.target", linkame), 0);
+  add_temp_file (linkame);
+  fstatat_link (linkame, &st);
 
   return 0;
 }
