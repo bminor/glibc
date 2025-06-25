@@ -111,7 +111,7 @@ mem2chunk_check (void *mem, unsigned char **magic_p)
   INTERNAL_SIZE_T sz, c;
   unsigned char magic;
 
-  if (!aligned_OK (mem))
+  if (misaligned_mem (mem))
     return NULL;
 
   p = mem2chunk (mem);

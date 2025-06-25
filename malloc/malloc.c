@@ -1309,11 +1309,9 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 /* Check if m has acceptable alignment */
 
-#define aligned_OK(m)  (((unsigned long)(m) & MALLOC_ALIGN_MASK) == 0)
+#define misaligned_mem(m)  ((uintptr_t)(m) & MALLOC_ALIGN_MASK)
 
-#define misaligned_chunk(p) \
-  ((uintptr_t)(MALLOC_ALIGNMENT == CHUNK_HDR_SZ ? (p) : chunk2mem (p)) \
-   & MALLOC_ALIGN_MASK)
+#define misaligned_chunk(p) (misaligned_mem( chunk2mem (p)))
 
 /* pad request bytes into a usable size -- internal version */
 /* Note: This must be a macro that evaluates to a compile time constant
@@ -2103,7 +2101,7 @@ do_check_chunk (mstate av, mchunkptr p)
       /* chunk is page-aligned */
       assert (((prev_size (p) + sz) & (GLRO (dl_pagesize) - 1)) == 0);
       /* mem is aligned */
-      assert (aligned_OK (chunk2mem (p)));
+      assert (!misaligned_chunk (p));
     }
 }
 
@@ -2127,7 +2125,7 @@ do_check_free_chunk (mstate av, mchunkptr p)
   if ((unsigned long) (sz) >= MINSIZE)
     {
       assert ((sz & MALLOC_ALIGN_MASK) == 0);
-      assert (aligned_OK (chunk2mem (p)));
+      assert (!misaligned_chunk (p));
       /* ... matching footer field */
       assert (prev_size (next_chunk (p)) == sz);
       /* ... and is fully consolidated */
@@ -2206,7 +2204,7 @@ do_check_remalloced_chunk (mstate av, mchunkptr p, INTERNAL_SIZE_T s)
   assert ((sz & MALLOC_ALIGN_MASK) == 0);
   assert ((unsigned long) (sz) >= MINSIZE);
   /* ... and alignment */
-  assert (aligned_OK (chunk2mem (p)));
+  assert (!misaligned_chunk (p));
   /* chunk is less than MINSIZE more than request */
   assert ((long) (sz) - (long) (s) >= 0);
   assert ((long) (sz) - (long) (s + MINSIZE) < 0);
@@ -3094,7 +3092,7 @@ mremap_chunk (mchunkptr p, size_t new_size)
 
   p = (mchunkptr) (cp + offset);
 
-  assert (aligned_OK (chunk2mem (p)));
+  assert (!misaligned_chunk (p));
 
   assert (prev_size (p) == offset);
   set_head (p, (new_size - offset) | IS_MMAPPED);
@@ -3207,7 +3205,7 @@ tcache_get_n (size_t tc_idx, tcache_entry **ep, bool mangled)
   else
     e = REVEAL_PTR (*ep);
 
-  if (__glibc_unlikely (!aligned_OK (e)))
+  if (__glibc_unlikely (misaligned_mem (e)))
     malloc_printerr ("malloc(): unaligned tcache chunk detected");
 
   void *ne = e == NULL ? NULL : REVEAL_PTR (e->next);
@@ -3331,7 +3329,7 @@ tcache_double_free_verify (tcache_entry *e)
 	{
 	  if (cnt >= mp_.tcache_count)
 	    malloc_printerr ("free(): too many chunks detected in tcache");
-	  if (__glibc_unlikely (!aligned_OK (tmp)))
+	  if (__glibc_unlikely (misaligned_mem (tmp)))
 	    malloc_printerr ("free(): unaligned chunk detected in tcache 2");
 	  if (tmp == e)
 	    malloc_printerr ("free(): double free detected in tcache 2");
@@ -3365,7 +3363,7 @@ tcache_thread_shutdown (void)
       while (tcache_tmp->entries[i])
 	{
 	  tcache_entry *e = tcache_tmp->entries[i];
-	  if (__glibc_unlikely (!aligned_OK (e)))
+	  if (__glibc_unlikely (misaligned_mem (e)))
 	    malloc_printerr ("tcache_thread_shutdown(): "
 			     "unaligned tcache chunk detected");
 	  tcache_tmp->entries[i] = REVEAL_PTR (e->next);
