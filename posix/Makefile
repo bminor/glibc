@@ -348,6 +348,7 @@ tests-internal := \
   bug-regex5 \
   bug-regex20 \
   bug-regex33 \
+  tst-libc-message \
   # tests-internal
 
 tests-container := \
@@ -391,6 +392,7 @@ endif
 
 tests-static = \
   tst-exec-static \
+  tst-libc-message \
   tst-spawn-static \
   # tests-static
 

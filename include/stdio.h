@@ -173,6 +173,10 @@ libc_hidden_proto (__fortify_fail)
 /* The maximum number of varargs allowed in a __libc_message format string */
 #define LIBC_MESSAGE_MAX_ARGS 4
 
+#define IOVEC_MAX_ERR_MSG "Fatal glibc error: Internal " \
+			  "__libc_message error. Too many arguments.\n"
+#define IOVEC_MAX_ERR_MSG_LEN (sizeof (IOVEC_MAX_ERR_MSG) - 1)
+
 _Noreturn void __libc_message_impl (const char *__fnt, ...) attribute_hidden
      __attribute__ ((__format__ (__printf__, 1, 2)));
 

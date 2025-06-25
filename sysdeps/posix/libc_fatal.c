@@ -16,23 +16,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <atomic.h>
-#include <errno.h>
-#include <fcntl.h>
+#include <assert.h>
 #include <ldsodefs.h>
-#include <libc-pointer-arith.h>
-#include <paths.h>
-#include <stdarg.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sysdep.h>
-#include <unistd.h>
-#include <sys/mman.h>
-#include <sys/uio.h>
-#include <not-cancel.h>
 #include <setvmaname.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <sys/uio.h>
+#include <unistd.h>
 
 #ifdef FATAL_PREPARE_INCLUDE
 #include FATAL_PREPARE_INCLUDE
@@ -46,6 +36,10 @@ writev_for_fatal (int fd, const struct iovec *iov, size_t niov, size_t total)
   return TEMP_FAILURE_RETRY (__writev (fd, iov, niov)) == total;
 }
 #endif
+
+/* At most a substring before each conversion specification and the
+   trailing substring (the plus one).  */
+#define IOVEC_MAX (LIBC_MESSAGE_MAX_ARGS * 2 + 1)
 
 /* Abort with an error message.  */
 void
@@ -61,7 +55,7 @@ __libc_message_impl (const char *fmt, ...)
   if (fd == -1)
     fd = STDERR_FILENO;
 
-  struct iovec iov[LIBC_MESSAGE_MAX_ARGS * 2 - 1];
+  struct iovec iov[IOVEC_MAX];
   int iovcnt = 0;
   ssize_t total = 0;
 
@@ -99,6 +93,16 @@ __libc_message_impl (const char *fmt, ...)
       iov[iovcnt].iov_len = len;
       total += len;
       iovcnt++;
+
+      if (__glibc_unlikely (iovcnt > IOVEC_MAX))
+	{
+	  len = IOVEC_MAX_ERR_MSG_LEN;
+	  iov[0].iov_base = (char *) IOVEC_MAX_ERR_MSG;
+	  iov[0].iov_len = len;
+	  total = len;
+	  iovcnt = 1;
+	  break;
+	}
     }
   va_end (ap);
 
