@@ -169,7 +169,7 @@ static void *
 __debug_malloc (size_t bytes)
 {
   void *(*hook) (size_t, const void *) = atomic_forced_read (__malloc_hook);
-  if (__builtin_expect (hook != NULL, 0))
+  if (__glibc_unlikely (hook != NULL))
     return (*hook)(bytes, RETURN_ADDRESS (0));
 
   void *victim = NULL;
@@ -193,7 +193,7 @@ static void
 __debug_free (void *mem)
 {
   void (*hook) (void *, const void *) = atomic_forced_read (__free_hook);
-  if (__builtin_expect (hook != NULL, 0))
+  if (__glibc_unlikely (hook != NULL))
     {
       (*hook)(mem, RETURN_ADDRESS (0));
       return;
@@ -218,7 +218,7 @@ __debug_realloc (void *oldmem, size_t bytes)
 {
   void *(*hook) (void *, size_t, const void *) =
     atomic_forced_read (__realloc_hook);
-  if (__builtin_expect (hook != NULL, 0))
+  if (__glibc_unlikely (hook != NULL))
     return (*hook)(oldmem, bytes, RETURN_ADDRESS (0));
 
   size_t orig_bytes = bytes, oldsize = 0;
@@ -272,7 +272,7 @@ _debug_mid_memalign (size_t alignment, size_t bytes, const void *address)
 {
   void *(*hook) (size_t, size_t, const void *) =
     atomic_forced_read (__memalign_hook);
-  if (__builtin_expect (hook != NULL, 0))
+  if (__glibc_unlikely (hook != NULL))
     return (*hook)(alignment, bytes, address);
 
   void *victim = NULL;
@@ -371,7 +371,7 @@ __debug_calloc (size_t nmemb, size_t size)
     }
 
   void *(*hook) (size_t, const void *) = atomic_forced_read (__malloc_hook);
-  if (__builtin_expect (hook != NULL, 0))
+  if (__glibc_unlikely (hook != NULL))
     {
       void *mem = (*hook)(bytes, RETURN_ADDRESS (0));
 
