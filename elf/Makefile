@@ -3362,9 +3362,11 @@ $(objpfx)tst-dlopen-auditdup.out: \
 
 # Reuse an audit module which provides ample debug logging.
 tst-rtld-no-malloc-audit-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so
+$(objpfx)tst-rtld-no-malloc-audit.out: $(objpfx)tst-auditmod1.so
 
 # Any shared object should do.
 tst-rtld-no-malloc-preload-ENV = LD_PRELOAD=$(objpfx)tst-auditmod1.so
+$(objpfx)tst-rtld-no-malloc-preload.out: $(objpfx)tst-auditmod1.so
 
 LDFLAGS-tst-hash-collision1-mod.so = -Wl,--hash-style=both
 $(objpfx)tst-hash-collision1: $(objpfx)tst-hash-collision1-mod.so
