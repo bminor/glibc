@@ -23,6 +23,7 @@
 #include <sys/prctl.h>
 #include <sys/utsname.h>
 #include <dl-tunables-parse.h>
+#include <dl-symbol-redir-ifunc.h>
 
 #define DCZID_DZP_MASK (1 << 4)
 #define DCZID_BS_MASK (0xf)
