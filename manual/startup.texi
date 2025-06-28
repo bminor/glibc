@@ -219,8 +219,8 @@ argument which itself is a comma separated list of options.  To ease the
 programming of code like this the function @code{getsubopt} is
 available.
 
-@deftypefun int getsubopt (char **@var{optionp}, char *const *@var{tokens}, char **@var{valuep})
-@standards{???, stdlib.h}
+@deftypefun int getsubopt (char **restrict @var{optionp}, char *const *restrict @var{tokens}, char **restrict @var{valuep})
+@standards{POSIX, stdlib.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c getsubopt ok
 @c  strchrnul dup ok
