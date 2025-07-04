@@ -59,7 +59,7 @@ struct termios2
    format and function as TCGETS2. On all other platforms, the termios2
    interface exists as far back as this version of glibc supports.
 
-   For TCGETS* it is more complicated; this is handled in tcsetattr.c.
+   For TCSETS* it is more complicated; this is handled in tcsetattr.c.
 
    Some other architectures only have the equivalent of the termios2
    interface, in which case the old ioctl names are the only ones
