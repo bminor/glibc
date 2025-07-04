@@ -419,6 +419,8 @@ tests += \
   tst-dlmopen1 \
   tst-dlmopen3 \
   tst-dlmopen4 \
+  tst-dlmopen4-nonpic \
+  tst-dlmopen4-pic \
   tst-dlopen-auditdup \
   tst-dlopen-constructor-null \
   tst-dlopen-self \
@@ -2257,6 +2259,13 @@ $(objpfx)tst-dlmopen2.out: $(objpfx)tst-dlmopen1mod.so
 $(objpfx)tst-dlmopen3.out: $(objpfx)tst-dlmopen1mod.so
 
 $(objpfx)tst-dlmopen4.out: $(objpfx)tst-dlmopen1mod.so
+
+CFLAGS-tst-dlmopen4-pic.c += -fPIC
+$(objpfx)tst-dlmopen4-pic.out: $(objpfx)tst-dlmopen1mod.so
+
+CFLAGS-tst-dlmopen4-nonpic.c += -fno-pie
+tst-dlmopen4-nonpic-no-pie = yes
+$(objpfx)tst-dlmopen4-nonpic.out: $(objpfx)tst-dlmopen1mod.so
 
 $(objpfx)tst-audit1.out: $(objpfx)tst-auditmod1.so
 tst-audit1-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so

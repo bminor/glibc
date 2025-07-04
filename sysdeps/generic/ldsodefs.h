@@ -1098,6 +1098,10 @@ rtld_hidden_proto (_dl_debug_state)
 extern struct r_debug *_dl_debug_initialize (ElfW(Addr) ldbase, Lmid_t ns)
      attribute_hidden;
 
+/* This is called after relocation processing to handle a potential
+   copy relocation for _r_debug.  */
+void _dl_debug_post_relocate (struct link_map *main_map) attribute_hidden;
+
 /* Update the `r_map' member and return the address of `struct r_debug'
    of the namespace NS.  */
 extern struct r_debug *_dl_debug_update (Lmid_t ns) attribute_hidden;
