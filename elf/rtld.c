@@ -2382,6 +2382,9 @@ dl_main (const ElfW(Phdr) *phdr,
 
       __rtld_mutex_init ();
       __rtld_malloc_init_real (main_map);
+
+      /* Update copy-relocated _r_debug if necessary.  */
+      _dl_debug_post_relocate (main_map);
     }
 
   /* All ld.so initialization is complete.  Apply RELRO.  */
