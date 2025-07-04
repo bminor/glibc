@@ -350,8 +350,6 @@ struct rtld_global
       size_t n_elements;
       void (*free) (void *);
     } _ns_unique_sym_table;
-    /* Keep track of changes to each namespace' list.  */
-    struct r_debug_extended _ns_debug;
   } _dl_ns[DL_NNS];
   /* One higher than index of last used namespace.  */
   EXTERN size_t _dl_nns;
