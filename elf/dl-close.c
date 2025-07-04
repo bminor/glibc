@@ -433,8 +433,7 @@ _dl_close_worker (struct link_map *map, bool force)
   /* Notify the debugger we are about to remove some loaded objects.
      LA_ACT_DELETE has already been signalled above for !unload_any.  */
   struct r_debug *r = _dl_debug_update (nsid);
-  r->r_state = RT_DELETE;
-  _dl_debug_state ();
+  _dl_debug_change_state (r, RT_DELETE);
   LIBC_PROBE (unmap_start, 2, nsid, r);
 
   if (unload_global)
@@ -726,8 +725,7 @@ _dl_close_worker (struct link_map *map, bool force)
   __rtld_lock_unlock_recursive (GL(dl_load_tls_lock));
 
   /* Notify the debugger those objects are finalized and gone.  */
-  r->r_state = RT_CONSISTENT;
-  _dl_debug_state ();
+  _dl_debug_change_state (r, RT_CONSISTENT);
   LIBC_PROBE (unmap_complete, 2, nsid, r);
 
 #ifdef SHARED

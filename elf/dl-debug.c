@@ -67,6 +67,13 @@ _dl_debug_update (Lmid_t ns)
   return &r->base;
 }
 
+void
+_dl_debug_change_state (struct r_debug *r, int state)
+{
+  atomic_store_release (&r->r_state, state);
+  _dl_debug_state ();
+}
+
 /* Initialize _r_debug_extended for the namespace NS.  LDBASE is the
    run-time load address of the dynamic linker, to be put in
    _r_debug_extended.r_ldbase.  Return the address of _r_debug.  */
