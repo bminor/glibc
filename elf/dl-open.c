@@ -771,8 +771,7 @@ dl_open_worker (void *a)
 #ifdef SHARED
 	bool was_not_consistent  = r->r_state != RT_CONSISTENT;
 #endif
-	r->r_state = RT_CONSISTENT;
-	_dl_debug_state ();
+	_dl_debug_change_state (r, RT_CONSISTENT);
 	LIBC_PROBE (map_complete, 3, nsid, r, args->map);
 
 #ifdef SHARED
@@ -841,7 +840,7 @@ no more namespaces available for dlmopen()"));
 	}
 
       GL(dl_ns)[nsid].libc_map = NULL;
-      _dl_debug_update (nsid)->r_state = RT_CONSISTENT;
+      _dl_debug_change_state (_dl_debug_update (nsid), RT_CONSISTENT);
     }
   /* Never allow loading a DSO in a namespace which is empty.  Such
      direct placements is only causing problems.  Also don't allow

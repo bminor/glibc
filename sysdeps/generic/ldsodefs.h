@@ -1052,14 +1052,24 @@ extern void _dl_debug_state (void);
 rtld_hidden_proto (_dl_debug_state)
 
 /* Initialize `struct r_debug_extended' for the namespace NS.  LDBASE
-   is the run-time load address of the dynamic linker, to be put in the
-   `r_ldbase' member.  Return the address of the structure.  */
+   is the run-time load address of the dynamic linker, to be put in
+   the `r_ldbase' member.
+
+   Return the address of the r_debug structure for the namespace.
+   This is not merely a convenience or optimization, but it is
+   necessary for the LIBC_PROBE Systemtap/debugger probes to work
+   reliably: direct variable access can create probes that tools
+   cannot consume.  */
 extern struct r_debug *_dl_debug_initialize (ElfW(Addr) ldbase, Lmid_t ns)
      attribute_hidden;
 
 /* Update the `r_map' member and return the address of `struct r_debug'
    of the namespace NS.  */
 extern struct r_debug *_dl_debug_update (Lmid_t ns) attribute_hidden;
+
+/* Update R->r_state to STATE and notify the debugger by calling
+   _dl_debug_state.  */
+void _dl_debug_change_state (struct r_debug *r, int state) attribute_hidden;
 
 /* Initialize the basic data structure for the search paths.  SOURCE
    is either "LD_LIBRARY_PATH" or "--library-path".
