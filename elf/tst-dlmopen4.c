@@ -46,6 +46,15 @@ do_test (void)
   TEST_COMPARE (debug->base.r_version, 1);
   TEST_VERIFY_EXIT (debug->r_next == NULL);
 
+#ifdef BUILD_FOR_PIC
+  /* In a PIC build, using _r_debug directly should give us the same
+     object.  */
+  TEST_VERIFY (&_r_debug == &debug->base);
+#endif
+#ifdef BUILD_FOR_NONPIC
+  TEST_COMPARE (_r_debug.r_version, 1);
+#endif
+
   void *h = xdlmopen (LM_ID_NEWLM, "$ORIGIN/tst-dlmopen1mod.so",
 		      RTLD_LAZY);
 
@@ -56,6 +65,19 @@ do_test (void)
   TEST_VERIFY_EXIT (debug->r_next->base.r_map->l_name != NULL);
   const char *name = basename (debug->r_next->base.r_map->l_name);
   TEST_COMPARE_STRING (name, "tst-dlmopen1mod.so");
+
+#ifdef BUILD_FOR_NONPIC
+  /* If a copy relocation is used, it must be at version 1.  */
+  if (&_r_debug != &debug->base)
+    {
+      TEST_COMPARE (_r_debug.r_version, 1);
+      TEST_COMPARE ((uintptr_t) _r_debug.r_map,
+		    (uintptr_t) debug->base.r_map);
+      TEST_COMPARE (_r_debug.r_brk, debug->base.r_brk);
+      TEST_COMPARE (_r_debug.r_state, debug->base.r_state);
+      TEST_COMPARE (_r_debug.r_ldbase, debug->base.r_ldbase);
+    }
+#endif
 
   xdlclose (h);
 

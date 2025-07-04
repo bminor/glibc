@@ -365,6 +365,8 @@ struct auditstate
    dynamic linker.  */
 extern struct r_debug_extended _r_debug_extended attribute_hidden;
 
+rtld_hidden_proto (_r_debug)
+
 #if __ELF_NATIVE_CLASS == 32
 # define symbind symbind32
 # define LA_SYMBIND "la_symbind32"
