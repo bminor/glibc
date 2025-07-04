@@ -30,17 +30,37 @@ extern const int verify_link_map_members[(VERIFY_MEMBER (l_addr)
 					  && VERIFY_MEMBER (l_prev))
 					 ? 1 : -1];
 
+#ifdef SHARED
+/* r_debug structs for secondary namespaces.  The first namespace is
+   handled separately because its r_debug structure must overlap with
+   the public _r_debug symbol, so the first array element corresponds
+   to LM_ID_BASE + 1.  See elf/dl-debug-symbols.S.  */
+struct r_debug_extended _r_debug_array[DL_NNS - 1];
+
+/* Return the r_debug object for the namespace NS.  */
+static inline struct r_debug_extended *
+get_rdebug (Lmid_t ns)
+{
+  if (ns == LM_ID_BASE)
+    return &_r_debug_extended;
+  else
+    return  &_r_debug_array[ns - 1];
+}
+#else /* !SHARED */
+static inline struct r_debug_extended *
+get_rdebug (Lmid_t ns)
+{
+  return &_r_debug_extended; /* There is just one namespace.  */
+}
+#endif  /* !SHARED */
+
 /* Update the `r_map' member and return the address of `struct r_debug'
    of the namespace NS. */
 
 struct r_debug *
 _dl_debug_update (Lmid_t ns)
 {
-  struct r_debug_extended *r;
-  if (ns == LM_ID_BASE)
-    r = &_r_debug_extended;
-  else
-    r = &GL(dl_ns)[ns]._ns_debug;
+  struct r_debug_extended *r = get_rdebug (ns);
   if (r->base.r_map == NULL)
     atomic_store_release (&r->base.r_map,
 			  (void *) GL(dl_ns)[ns]._ns_loaded);
@@ -54,34 +74,7 @@ _dl_debug_update (Lmid_t ns)
 struct r_debug *
 _dl_debug_initialize (ElfW(Addr) ldbase, Lmid_t ns)
 {
-  struct r_debug_extended *r, **pp = NULL;
-
-  if (ns == LM_ID_BASE)
-    {
-      r = &_r_debug_extended;
-      /* Initialize r_version to 1.  */
-      if (_r_debug_extended.base.r_version == 0)
-	_r_debug_extended.base.r_version = 1;
-    }
-  else if (DL_NNS > 1)
-    {
-      r = &GL(dl_ns)[ns]._ns_debug;
-      if (r->base.r_brk == 0)
-	{
-	  /* Add the new namespace to the linked list.  After a namespace
-	     is initialized, r_brk becomes non-zero.  A namespace becomes
-	     empty (r_map == NULL) when it is unused.  But it is never
-	     removed from the linked list.  */
-	  struct r_debug_extended *p;
-	  for (pp = &_r_debug_extended.r_next;
-	       (p = *pp) != NULL;
-	       pp = &p->r_next)
-	    ;
-
-	  r->base.r_version = 2;
-	}
-    }
-
+  struct r_debug_extended *r = get_rdebug (ns);
   if (r->base.r_brk == 0)
     {
       /* Tell the debugger where to find the map of loaded objects.
@@ -89,19 +82,35 @@ _dl_debug_initialize (ElfW(Addr) ldbase, Lmid_t ns)
 	 only once.  */
       r->base.r_ldbase = ldbase ?: _r_debug_extended.base.r_ldbase;
       r->base.r_brk = (ElfW(Addr)) &_dl_debug_state;
-      r->r_next = NULL;
+
+#ifdef SHARED
+      /* Add the new namespace to the linked list.  This assumes that
+	 namespaces are allocated in increasing order.  After a
+	 namespace is initialized, r_brk becomes non-zero.  A
+	 namespace becomes empty (r_map == NULL) when it is unused.
+	 But it is never removed from the linked list.  */
+
+      if (ns != LM_ID_BASE)
+	{
+	  r->base.r_version = 2;
+	  if (ns - 1 == LM_ID_BASE)
+	    {
+	      atomic_store_release (&_r_debug_extended.r_next, r);
+	      /* Now there are multiple namespaces.  */
+	      atomic_store_release (&_r_debug_extended.base.r_version, 2);
+	    }
+	  else
+	    /* Update r_debug_extended of the previous namespace.  */
+	    atomic_store_release (&_r_debug_array[ns - 2].r_next, r);
+	}
+      else
+#endif /* SHARED */
+	r->base.r_version = 1;
     }
 
   if (r->base.r_map == NULL)
     atomic_store_release (&r->base.r_map,
 			  (void *) GL(dl_ns)[ns]._ns_loaded);
-
-  if (pp != NULL)
-    {
-      atomic_store_release (pp, r);
-      /* Bump r_version to 2 for the new namespace.  */
-      atomic_store_release (&_r_debug_extended.base.r_version, 2);
-    }
 
   return &r->base;
 }
