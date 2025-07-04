@@ -1850,8 +1850,7 @@ dl_main (const ElfW(Phdr) *phdr,
   elf_setup_debug_entry (main_map, r);
 
   /* We start adding objects.  */
-  r->r_state = RT_ADD;
-  _dl_debug_state ();
+  _dl_debug_change_state (r, RT_ADD);
   LIBC_PROBE (init_start, 2, LM_ID_BASE, r);
 
   /* Auditing checkpoint: we are ready to signal that the initial map
@@ -2402,8 +2401,7 @@ dl_main (const ElfW(Phdr) *phdr,
   /* Notify the debugger all new objects are now ready to go.  We must re-get
      the address since by now the variable might be in another object.  */
   r = _dl_debug_update (LM_ID_BASE);
-  r->r_state = RT_CONSISTENT;
-  _dl_debug_state ();
+  _dl_debug_change_state (r, RT_CONSISTENT);
   LIBC_PROBE (init_complete, 2, LM_ID_BASE, r);
 
   /* Auditing checkpoint: we have added all objects.  */

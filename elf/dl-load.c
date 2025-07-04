@@ -947,8 +947,7 @@ _dl_notify_new_object (int mode, Lmid_t nsid, struct link_map *l)
       /* Notify the debugger we have added some objects.  We need to
 	 call _dl_debug_initialize in a static program in case dynamic
 	 linking has not been used before.  */
-      r->r_state = RT_ADD;
-      _dl_debug_state ();
+      _dl_debug_change_state (r, RT_ADD);
       LIBC_PROBE (map_start, 2, nsid, r);
     }
   else
