@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <assert.h>
 #include <ldsodefs.h>
 
 
@@ -36,6 +37,37 @@ extern const int verify_link_map_members[(VERIFY_MEMBER (l_addr)
    the public _r_debug symbol, so the first array element corresponds
    to LM_ID_BASE + 1.  See elf/dl-debug-symbols.S.  */
 struct r_debug_extended _r_debug_array[DL_NNS - 1];
+
+/* If not null, pointer to the _r_debug in the main executable.  */
+static struct r_debug *_r_debug_main;
+
+void
+_dl_debug_post_relocate (struct link_map *main_map)
+{
+  /* Perform a full symbol search in all objects, to maintain
+     compatibility if interposed _r_debug definitions.  The lookup
+     cannot fail because there is a definition in ld.so, and this
+     function is only called if the ld.so search scope is not empty.  */
+  const ElfW(Sym) *sym = NULL;
+  lookup_t result =_dl_lookup_symbol_x ("_r_debug", main_map, &sym,
+					main_map->l_scope, NULL, 0, 0, NULL);
+  if (sym->st_size >= sizeof (struct r_debug))
+    {
+      struct r_debug *main_r_debug = DL_SYMBOL_ADDRESS (result, sym);
+      if (main_r_debug != &_r_debug_extended.base)
+	{
+	  /* The extended version of the struct is not available in
+	     the main executable because a copy relocation has been
+	     used.  r_map etc. have already been copied as part of the
+	     copy relocation processing.  */
+	  main_r_debug->r_version = 1;
+
+          /* Record that dual updates of the initial link map are
+             required.  */
+          _r_debug_main = main_r_debug;
+	}
+    }
+}
 
 /* Return the r_debug object for the namespace NS.  */
 static inline struct r_debug_extended *
@@ -71,6 +103,11 @@ void
 _dl_debug_change_state (struct r_debug *r, int state)
 {
   atomic_store_release (&r->r_state, state);
+#ifdef SHARED
+  if (r == &_r_debug_extended.base && _r_debug_main != NULL)
+    /* Update the copy-relocation of _r_debug.  */
+    atomic_store_release (&_r_debug_main->r_state, state);
+#endif
   _dl_debug_state ();
 }
 
@@ -103,7 +140,9 @@ _dl_debug_initialize (ElfW(Addr) ldbase, Lmid_t ns)
 	  if (ns - 1 == LM_ID_BASE)
 	    {
 	      atomic_store_release (&_r_debug_extended.r_next, r);
-	      /* Now there are multiple namespaces.  */
+	      /* Now there are multiple namespaces.  Note that this
+		 deliberately does not update the copy in the main
+		 executable (if it exists).  */
 	      atomic_store_release (&_r_debug_extended.base.r_version, 2);
 	    }
 	  else
@@ -116,8 +155,15 @@ _dl_debug_initialize (ElfW(Addr) ldbase, Lmid_t ns)
     }
 
   if (r->base.r_map == NULL)
-    atomic_store_release (&r->base.r_map,
-			  (void *) GL(dl_ns)[ns]._ns_loaded);
+    {
+      struct link_map_public *l = (void *) GL(dl_ns)[ns]._ns_loaded;
+      atomic_store_release (&r->base.r_map, l);
+#ifdef SHARED
+      if (ns == LM_ID_BASE && _r_debug_main != NULL)
+	/* Update the copy-relocation of _r_debug.  */
+	atomic_store_release (&_r_debug_main->r_map, l);
+#endif
+    }
 
   return &r->base;
 }

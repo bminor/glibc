@@ -38,3 +38,4 @@
 _r_debug:
 _r_debug_extended:
 	.zero	R_DEBUG_EXTENDED_SIZE
+rtld_hidden_def (_r_debug)
