@@ -320,6 +320,7 @@ tests-unsupported += tst-malloc-thread-fail-malloc-check
 tests-unsupported += tst-malloc-thread-fail-mcheck
 tests-unsupported += tst-malloc-thread-fail-malloc-hugetlb1
 tests-unsupported += tst-malloc-thread-fail-malloc-hugetlb2
+tests-unsupported += tst-malloc-thread-fail-malloc-largetcache
 tests-unsupported += tst-dynarray-fail
 endif
 ifeq ($(subdir),misc)
