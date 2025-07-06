@@ -23,7 +23,6 @@
 
 void __pthread_exit (void *) __attribute__ ((__noreturn__));
 struct __pthread_cancelation_handler **__pthread_get_cleanup_stack (void);
-int __pthread_once (pthread_once_t *, void (*) (void));
 
 void _cthreads_flockfile (FILE *);
 void _cthreads_funlockfile (FILE *);
@@ -36,7 +35,6 @@ struct pthread_functions
 {
   void (*ptr___pthread_exit) (void *) __attribute__ ((__noreturn__));
   struct __pthread_cancelation_handler **(*ptr___pthread_get_cleanup_stack) (void);
-  int (*ptr_pthread_once) (pthread_once_t *, void (*) (void));
   void (*ptr__IO_flockfile) (FILE *);
   void (*ptr__IO_funlockfile) (FILE *);
   int (*ptr__IO_ftrylockfile) (FILE *);
