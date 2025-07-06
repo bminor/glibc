@@ -2,6 +2,7 @@ libc {
 
   GLIBC_2.12 {
     pthread_self;
+    __pthread_get_cleanup_stack;
     __pthread_key_create;
     __pthread_self;
     pthread_attr_getdetachstate;
@@ -242,8 +243,6 @@ libpthread {
     __errno_location; __h_errno_location;
   }
   GLIBC_2.12 {
-    __pthread_get_cleanup_stack;
-
     __pthread_mutex_transfer_np;
 
     cthread_detach;

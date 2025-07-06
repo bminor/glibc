@@ -57,6 +57,3 @@ name decl								      \
 FORWARD_NORETURN (__pthread_exit, void, (void *retval), (retval),
 		  exit (EXIT_SUCCESS))
 strong_alias (__pthread_exit, pthread_exit);
-
-FORWARD2 (__pthread_get_cleanup_stack, struct __pthread_cancelation_handler **,
-	  (void), (), return &__pthread_cleanup_stack);

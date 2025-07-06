@@ -35,7 +35,6 @@ libpthread-routines := \
   pt-initialize \
   pt-join \
   pt-spin-inlines \
-  pt-cleanup \
   pt-testcancel \
   pt-cancel \
   pt-mutex-transfer-np \
@@ -143,6 +142,7 @@ routines := \
   pt-barrierattr-setpshared \
   pt-block \
   pt-block-intr \
+  pt-cleanup \
   pt-cond \
   pt-cond-brdcast \
   pt-cond-destroy \

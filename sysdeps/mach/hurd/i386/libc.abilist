@@ -28,6 +28,7 @@ GLIBC_2.11 mkostemps F
 GLIBC_2.11 mkostemps64 F
 GLIBC_2.11 mkstemps F
 GLIBC_2.11 mkstemps64 F
+GLIBC_2.12 __pthread_get_cleanup_stack F
 GLIBC_2.12 __pthread_key_create F
 GLIBC_2.12 __pthread_self F
 GLIBC_2.12 pthread_attr_destroy F

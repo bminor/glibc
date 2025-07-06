@@ -28,7 +28,6 @@
 #if IS_IN (libpthread)
 static const struct pthread_functions pthread_functions = {
   .ptr___pthread_exit = __pthread_exit,
-  .ptr___pthread_get_cleanup_stack = __pthread_get_cleanup_stack,
   .ptr__IO_flockfile = _cthreads_flockfile,
   .ptr__IO_funlockfile = _cthreads_funlockfile,
   .ptr__IO_ftrylockfile = _cthreads_ftrylockfile,

@@ -216,11 +216,11 @@ int __pthread_condattr_init (pthread_condattr_t *attr);
 libc_hidden_proto (__pthread_self)
 libc_hidden_proto (__pthread_attr_init)
 libc_hidden_proto (__pthread_condattr_init)
+libc_hidden_proto (__pthread_get_cleanup_stack)
 
 #if IS_IN (libpthread)
 hidden_proto (__pthread_create)
 hidden_proto (__pthread_detach)
-hidden_proto (__pthread_get_cleanup_stack)
 #endif
 
 #if !defined(__NO_WEAK_PTHREAD_ALIASES) && !IS_IN (libpthread)

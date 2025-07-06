@@ -37,13 +37,10 @@
       {									      \
 	__handler.__handler = FCT;					      \
 	__handler.__arg = ARG;						      \
-	if (__pthread_get_cleanup_stack != NULL)			      \
-	  {								      \
-	    __handlers = __pthread_get_cleanup_stack ();		      \
-	    __handler.__next = *__handlers;				      \
-	    *__handlers = &__handler;					      \
-	    __registered = 1;						      \
-	  }								      \
+	__handlers = __pthread_get_cleanup_stack ();			      \
+	__handler.__next = *__handlers;					      \
+	*__handlers = &__handler;					      \
+	__registered = 1;						      \
       }									      \
 
 #define __libc_cleanup_end(DOIT) \
@@ -58,13 +55,5 @@
 
 #define __libc_cleanup_push(fct, arg) __libc_cleanup_region_start (1, fct, arg)
 #define __libc_cleanup_pop(execute) __libc_cleanup_region_end (execute)
-
-#if !IS_IN (libpthread)
-# ifdef weak_extern
-weak_extern (__pthread_get_cleanup_stack)
-# else
-#  pragma weak __pthread_get_cleanup_stack
-# endif
-#endif
 
 #endif
