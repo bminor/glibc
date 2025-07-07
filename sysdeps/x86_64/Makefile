@@ -19,6 +19,10 @@ sysdep_routines += _mcount
 # recursive calls when ENTRY is used.  Just copy the normal static
 # object.
 sysdep_noprof += _mcount
+
+ifeq (yes,$(have-x86-apx))
+CFLAGS-mcount.c += -mno-apxf
+endif
 endif
 
 ifeq ($(subdir),string)

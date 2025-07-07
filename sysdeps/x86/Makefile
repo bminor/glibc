@@ -137,6 +137,10 @@ tst-tls23-mod.so-no-z-defs = yes
 $(objpfx)tst-tls23-mod.so: $(libsupport)
 endif
 
+ifeq ($(subdir),gmon)
+CFLAGS-mcount.c += -mgeneral-regs-only
+endif
+
 ifeq ($(subdir),math)
 tests += \
  tst-ldbl-nonnormal-printf \
