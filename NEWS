@@ -26,6 +26,11 @@ Major new features:
   speed_t is redefined to simply be the baud rate specified as an
   unsigned int, which matches the kernel interface.
 
+* The thread-local cache in malloc (tcache) now supports caching of large
+  blocks.  This feature can be enabled by setting the tunable
+  glibc.malloc.tcache_max to a larger value (max 4194304).
+  Tcache is also significantly faster for small sizes.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The glibc.rtld.execstack now supports a compatibility mode to allow
