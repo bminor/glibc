@@ -28,7 +28,10 @@ detach_thrd (void *arg)
 {
   if (thrd_detach (thrd_current ()) != thrd_success)
     FAIL_EXIT1 ("thrd_detach failed");
-  thrd_exit (thrd_success);
+
+  pause ();
+
+  return 0;
 }
 
 static int
@@ -43,6 +46,7 @@ do_test (void)
   /* Give some time so the thread can finish.  */
   thrd_sleep (&(struct timespec) {.tv_sec = 2}, NULL);
 
+  /* Calling thrd_join on a detached thread is UB... */
   if (thrd_join (id, NULL) == thrd_success)
     FAIL_EXIT1 ("thrd_join succeed where it should fail");
 

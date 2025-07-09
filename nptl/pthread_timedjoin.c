@@ -24,7 +24,7 @@ ___pthread_timedjoin_np64 (pthread_t threadid, void **thread_return,
                            const struct __timespec64 *abstime)
 {
   return __pthread_clockjoin_ex (threadid, thread_return,
-                                 CLOCK_REALTIME, abstime, true);
+                                 CLOCK_REALTIME, abstime);
 }
 
 #if __TIMESIZE == 64

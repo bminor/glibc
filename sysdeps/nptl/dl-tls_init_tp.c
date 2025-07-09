@@ -73,9 +73,10 @@ __tls_init_tp (void)
   list_add (&pd->list, &GL (dl_stack_user));
 
    /* Early initialization of the TCB.   */
-   pd->tid = INTERNAL_SYSCALL_CALL (set_tid_address, &pd->tid);
+   pd->tid = INTERNAL_SYSCALL_CALL (set_tid_address, &pd->joinstate);
    THREAD_SETMEM (pd, specific[0], &pd->specific_1stblock[0]);
    THREAD_SETMEM (pd, stack_mode, ALLOCATE_GUARD_USER);
+   THREAD_SETMEM (pd, joinstate, THREAD_STATE_JOINABLE);
 
   /* Before initializing GL (dl_stack_user), the debugger could not
      find us and had to set __nptl_initial_report_events.  Propagate

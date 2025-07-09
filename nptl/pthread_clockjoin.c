@@ -30,7 +30,7 @@ ___pthread_clockjoin_np64 (pthread_t threadid, void **thread_return,
     return EINVAL;
 
   return __pthread_clockjoin_ex (threadid, thread_return,
-                                 clockid, abstime, true);
+                                 clockid, abstime);
 }
 
 #if __TIMESIZE == 64

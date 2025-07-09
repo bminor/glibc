@@ -233,7 +233,6 @@ libc_hidden_proto (__pthread_current_priority)
    nothing.  And if the test triggers the thread descriptor is
    guaranteed to be invalid.  */
 #define INVALID_TD_P(pd) __builtin_expect ((pd)->tid <= 0, 0)
-#define INVALID_NOT_TERMINATED_TD_P(pd) __builtin_expect ((pd)->tid < 0, 0)
 
 extern void __pthread_unwind (__pthread_unwind_buf_t *__buf)
      __cleanup_fct_attribute __attribute ((__noreturn__))
@@ -534,7 +533,7 @@ libc_hidden_proto (__pthread_setcanceltype)
 extern void __pthread_testcancel (void);
 libc_hidden_proto (__pthread_testcancel)
 extern int __pthread_clockjoin_ex (pthread_t, void **, clockid_t,
-				   const struct __timespec64 *, bool)
+				   const struct __timespec64 *)
   attribute_hidden;
 extern int __pthread_sigmask (int, const sigset_t *, sigset_t *);
 libc_hidden_proto (__pthread_sigmask);

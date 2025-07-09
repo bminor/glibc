@@ -132,6 +132,18 @@ enum allocate_stack_mode_t
   ALLOCATE_GUARD_USER = 2,
 };
 
+/* Define a possible thread state on 'joinstate' field.  The value will be
+   cleared by the kernel when the thread terminates (CLONE_CHILD_CLEARTID),
+   so THREAD_STATE_EXITED must be 0.  */
+enum thread_state_t
+{
+  THREAD_STATE_EXITED = 0,
+  THREAD_STATE_EXITING,
+  THREAD_STATE_JOINABLE,
+  THREAD_STATE_DETACHED,
+};
+
+
 /* Thread descriptor data structure.  */
 struct pthread
 {
@@ -174,8 +186,7 @@ struct pthread
      GL (dl_stack_user) list.  */
   list_t list;
 
-  /* Thread ID - which is also a 'is this thread descriptor (and
-     therefore stack) used' flag.  */
+  /* Thread ID set by the kernel with CLONE_PARENT_SETTID.  */
   pid_t tid;
 
   /* List of robust mutexes the thread is holding.  */
@@ -345,15 +356,8 @@ struct pthread
   /* Lock for synchronizing setxid calls.  */
   unsigned int setxid_futex;
 
-  /* If the thread waits to join another one the ID of the latter is
-     stored here.
-
-     In case a thread is detached this field contains a pointer of the
-     TCB if the thread itself.  This is something which cannot happen
-     in normal operation.  */
-  struct pthread *joinid;
-  /* Check whether a thread is detached.  */
-#define IS_DETACHED(pd) ((pd)->joinid == (pd))
+  /* The current thread state defined by the THREAD_STATE_* enumeration.  */
+  unsigned int joinstate;
 
   /* The result of the thread function.  */
   void *result;
