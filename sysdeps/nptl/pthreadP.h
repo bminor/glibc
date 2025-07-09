@@ -268,7 +268,20 @@ __do_cancel (void *result)
   self->result = result;
 
   /* Make sure we get no more cancellations.  */
-  atomic_fetch_or_relaxed (&self->cancelhandling, EXITING_BITMASK);
+  int oldval = atomic_load_relaxed (&self->cancelhandling);
+  int newval;
+  do
+    {
+      /* It is required by POSIX XSH 2.9.5 Thread Cancellation under the
+	 heading Thread Cancellation Cleanup Handlers and also avoid further
+	 cancellation wrapper to act on cancellation.  */
+      newval = oldval | CANCELSTATE_BITMASK | EXITING_BITMASK;
+      newval = newval & ~CANCELTYPE_BITMASK;
+      if (oldval == newval)
+	break;
+    }
+  while (!atomic_compare_exchange_weak_acquire (&self->cancelhandling,
+						&oldval, newval));
 
   __pthread_unwind ((__pthread_unwind_buf_t *)
 		    THREAD_GETMEM (self, cleanup_jmp_buf));
