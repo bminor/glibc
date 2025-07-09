@@ -45,6 +45,9 @@ Deprecated and removed features, and other changes affecting compatibility:
 * The support for TX lock elision of pthread mutexes is deprecated on
   all architectures and will be removed in the next release.
 
+* On AArch64 Linux targets supporting SME, setjmp and sigsetjmp will
+  disable ZA state of SME.
+
 Changes to build and runtime requirements:
 
 * GCC 12.1 or later is now required to build the GNU C Library.
