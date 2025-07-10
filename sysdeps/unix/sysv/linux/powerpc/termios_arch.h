@@ -1,4 +1,4 @@
-/* Architectural parameters for Linux termios - Alpha/PowerPC version
+/* Architectural parameters for Linux termios - PowerPC version
 
    Copyright (C) 1997-2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
@@ -17,10 +17,17 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef TERMIOS_INTERNALS_H
-# error "<termios_arch.h> should only be included from <termios_internals.h>"
-#endif
-
 #define _TERMIOS2_NCCS 19
 #define _HAVE_TERMIOS2_C_CC_BEFORE_C_LINE 1
 #define _HAVE_STRUCT_OLD_TERMIOS 0
+
+/* PowerPC quirk: on PowerPC only, ioctl() emulates the TCGETS/TCSETS*
+   ioctls with tcgetattr/tcsetattr using the glibc struct termios.
+   As struct termios2 is the same as the kernel struct termios on PowerPC,
+   simply consider the kernel ones as the termios2 interface, even
+   though the kernel doesn't call it that. */
+
+#define TCGETS2	 _IOR ('t', 19, struct termios2)
+#define TCSETS2	 _IOW ('t', 20, struct termios2)
+#define TCSETSW2 _IOW ('t', 21, struct termios2)
+#define TCSETSF2 _IOW ('t', 22, struct termios2)
