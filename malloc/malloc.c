@@ -2438,11 +2438,8 @@ sysmalloc_mmap (INTERNAL_SIZE_T nb, size_t pagesize, int extra_flags, mstate av)
 			    extra_flags);
   if (mm == MAP_FAILED)
     return mm;
-
-#ifdef MAP_HUGETLB
-  if (!(extra_flags & MAP_HUGETLB))
+  if (extra_flags == 0)
     madvise_thp (mm, size);
-#endif
 
   __set_vma_name (mm, size, " glibc: malloc");
 
@@ -2526,10 +2523,8 @@ sysmalloc_mmap_fallback (long int *s, INTERNAL_SIZE_T nb,
   if (mbrk == MAP_FAILED)
     return MAP_FAILED;
 
-#ifdef MAP_HUGETLB
-  if (!(extra_flags & MAP_HUGETLB))
+  if (extra_flags == 0)
     madvise_thp (mbrk, size);
-#endif
 
   __set_vma_name (mbrk, size, " glibc: malloc");
 
@@ -2700,7 +2695,6 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
          previous calls. Otherwise, we correct to page-align below.
        */
 
-#ifdef MADV_HUGEPAGE
       /* Defined in brk.c.  */
       extern void *__curbrk;
       if (__glibc_unlikely (mp_.thp_pagesize != 0))
@@ -2710,7 +2704,6 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
 	  size = top - (uintptr_t) __curbrk;
 	}
       else
-#endif
 	size = ALIGN_UP (size, GLRO(dl_pagesize));
 
       /*
@@ -2985,11 +2978,9 @@ systrim (size_t pad, mstate av)
     return 0;
 
   /* Release in pagesize units and round down to the nearest page.  */
-#ifdef MADV_HUGEPAGE
   if (__glibc_unlikely (mp_.thp_pagesize != 0))
     extra = ALIGN_DOWN (top_area - pad, mp_.thp_pagesize);
   else
-#endif
     extra = ALIGN_DOWN (top_area - pad, GLRO(dl_pagesize));
 
   if (extra == 0)
