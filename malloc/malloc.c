@@ -3208,11 +3208,10 @@ tcache_get_n (size_t tc_idx, tcache_entry **ep, bool mangled)
   if (__glibc_unlikely (misaligned_mem (e)))
     malloc_printerr ("malloc(): unaligned tcache chunk detected");
 
-  void *ne = e == NULL ? NULL : REVEAL_PTR (e->next);
   if (!mangled)
-    *ep = ne;
+    *ep = REVEAL_PTR (e->next);
   else
-    *ep = PROTECT_PTR (ep, ne);
+    *ep = PROTECT_PTR (ep, REVEAL_PTR (e->next));
 
   ++(tcache->num_slots[tc_idx]);
   e->key = 0;
@@ -3229,7 +3228,7 @@ tcache_put (mchunkptr chunk, size_t tc_idx)
 static __always_inline void *
 tcache_get (size_t tc_idx)
 {
-  return tcache_get_n (tc_idx, & tcache->entries[tc_idx], false);
+  return tcache_get_n (tc_idx, &tcache->entries[tc_idx], false);
 }
 
 static __always_inline tcache_entry **
