@@ -221,13 +221,7 @@ __condvar_quiesce_and_switch_g1 (pthread_cond_t *cond, uint64_t wseq,
      * New waiters arriving concurrently with the group switching will all go
        into G2 until we atomically make the switch.  Waiters existing in G2
        are not affected.
-     * Waiters in G1 have already received a signal and been woken. If they
-       haven't woken yet, they will be closed out immediately by the advancing
-       of __g_signals to the next "lowseq" (low 31 bits of the new g1_start),
-       which will prevent waiters from blocking using a futex on
-       __g_signals since it provides enough signals for all possible
-       remaining waiters.  As a result, they can each consume a signal
-       and they will eventually remove their group reference.  */
+     * Waiters in G1 have already received a signal and been woken.  */
 
   /* Update __g1_start, which finishes closing this group.  The value we add
      will never be negative because old_orig_size can only be zero when we
@@ -239,29 +233,6 @@ __condvar_quiesce_and_switch_g1 (pthread_cond_t *cond, uint64_t wseq,
       (old_orig_size << 1) + (g1 == 1 ? 1 : - 1));
 
   unsigned int lowseq = ((old_g1_start + old_orig_size) << 1) & ~1U;
-
-  /* If any waiters still hold group references (and thus could be blocked),
-     then wake them all up now and prevent any running ones from blocking.
-     This is effectively a catch-all for any possible current or future
-     bugs that can allow the group size to reach 0 before all G1 waiters
-     have been awakened or at least given signals to consume, or any
-     other case that can leave blocked (or about to block) older waiters..  */
-  if ((atomic_fetch_or_release (cond->__data.__g_refs + g1, 0) >> 1) > 0)
-   {
-    /* First advance signals to the end of the group (i.e. enough signals
-       for the entire G1 group) to ensure that waiters which have not
-       yet blocked in the futex will not block.
-       Note that in the vast majority of cases, this should never
-       actually be necessary, since __g_signals will have enough
-       signals for the remaining g_refs waiters.  As an optimization,
-       we could check this first before proceeding, although that
-       could still leave the potential for futex lost wakeup bugs
-       if the signal count was non-zero but the futex wakeup
-       was somehow lost.  */
-    atomic_store_release (cond->__data.__g_signals + g1, lowseq);
-
-    futex_wake (cond->__data.__g_signals + g1, INT_MAX, private);
-   }
 
   /* At this point, the old G1 is now a valid new G2 (but not in use yet).
      No old waiter can neither grab a signal nor acquire a reference without
