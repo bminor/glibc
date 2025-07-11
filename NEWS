@@ -42,6 +42,11 @@ Deprecated and removed features, and other changes affecting compatibility:
   obsolete since the very first version of POSIX.1 in 1988, replaced
   with <termios.h>.
 
+* On Linux, the ioctl constants TCGETS, TCSETS, TCSETSF, TCSETSW,
+  TCGETS2, TCSETS2, TCSETSF2, TCSETSW2 are no longer defined in
+  <sys/ioctl.h>.  Applications must use the high-level <termios.h>
+  interfaces instead.
+
 * The support for TX lock elision of pthread mutexes is deprecated on
   all architectures and will be removed in the next release.
 

@@ -22,7 +22,7 @@ int
 __tcgetattr (int fd, struct termios *termios_p)
 {
   struct termios2 k_termios;
-  long int retval = INLINE_SYSCALL_CALL (ioctl, fd, TCGETS2, &k_termios);
+  long int retval = INLINE_SYSCALL_CALL (ioctl, fd, ARCH_TCGETS, &k_termios);
 
   if (__glibc_likely (retval != -1))
     {

@@ -22,5 +22,5 @@ int
 __isatty_nostatus (int fd)
 {
   struct termios2 k_termios;
-  return INTERNAL_SYSCALL_CALL (ioctl, fd, TCGETS2, &k_termios) == 0;
+  return INTERNAL_SYSCALL_CALL (ioctl, fd, ARCH_TCGETS, &k_termios) == 0;
 }

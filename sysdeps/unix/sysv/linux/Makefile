@@ -425,6 +425,8 @@ sysdep_headers += \
   bits/termios-tcflow.h \
   # sysdep_headers
 
+gen-as-const-headers += termios-kernel-consts.sym
+
 tests += \
   tst-termios-linux \
   # tests

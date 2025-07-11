@@ -22,4 +22,18 @@
 /* Use the definitions from the kernel header files.  */
 #include <asm/ioctls.h>
 
+/* The GNU C library has a different definition of struct termios,
+   incompatible with what the ioctl interface expects.  The existence
+   of the termios2 ioctls is considered an implementation detail.
+   Undefine all related ioctl constants.  */
+#undef TCGETS
+#undef TCSETS
+#undef TCSETSF
+#undef TCSETSW
+#undef TCGETS2
+#undef TCSETS2
+#undef TCSETSF2
+#undef TCSETSW2
+
+
 #include <linux/sockios.h>
