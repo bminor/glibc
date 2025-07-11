@@ -383,64 +383,64 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
     }
 
 
-      while (1)
-	{
-	  /* Now wait until a signal is available in our group or it is closed.
-	     Acquire MO so that if we observe (signals == lowseq) after group
-	     switching in __condvar_quiesce_and_switch_g1, we synchronize with that
-	     store and will see the prior update of __g1_start done while switching
-	     groups too.  */
-	  unsigned int signals = atomic_load_acquire (cond->__data.__g_signals + g);
-	  uint64_t g1_start = __condvar_load_g1_start_relaxed (cond);
-	  unsigned int lowseq = (g1_start & 1) == g ? signals : g1_start & ~1U;
+  while (1)
+    {
+      /* Now wait until a signal is available in our group or it is closed.
+         Acquire MO so that if we observe (signals == lowseq) after group
+         switching in __condvar_quiesce_and_switch_g1, we synchronize with that
+         store and will see the prior update of __g1_start done while switching
+         groups too.  */
+      unsigned int signals = atomic_load_acquire (cond->__data.__g_signals + g);
+      uint64_t g1_start = __condvar_load_g1_start_relaxed (cond);
+      unsigned int lowseq = (g1_start & 1) == g ? signals : g1_start & ~1U;
 
-	  if (seq < (g1_start >> 1))
-	    {
-	      /* If the group is closed already,
-	         then this waiter originally had enough extra signals to
-	         consume, up until the time its group was closed.  */
-	       break;
-	    }
+      if (seq < (g1_start >> 1))
+        {
+          /* If the group is closed already,
+             then this waiter originally had enough extra signals to
+             consume, up until the time its group was closed.  */
+           break;
+        }
 
-	  /* If there is an available signal, don't block.
-	     If __g1_start has advanced at all, then we must be in G1
-	     by now, perhaps in the process of switching back to an older
-	     G2, but in either case we're allowed to consume the available
-	     signal and should not block anymore.  */
-	  if ((int)(signals - lowseq) >= 2)
-	    {
-	      /* Try to grab a signal.  See above for MO.  (if we do another loop
-		 iteration we need to see the correct value of g1_start)  */
-		      if (atomic_compare_exchange_weak_acquire (
-		      		cond->__data.__g_signals + g,
+      /* If there is an available signal, don't block.
+         If __g1_start has advanced at all, then we must be in G1
+         by now, perhaps in the process of switching back to an older
+         G2, but in either case we're allowed to consume the available
+         signal and should not block anymore.  */
+      if ((int)(signals - lowseq) >= 2)
+        {
+	  /* Try to grab a signal.  See above for MO.  (if we do another loop
+	     iteration we need to see the correct value of g1_start)  */
+	    if (atomic_compare_exchange_weak_acquire (
+			cond->__data.__g_signals + g,
 			&signals, signals - 2))
-		      	break;
-		      else
-		      	continue;
-	    }
-
-	  // Now block.
-	  struct _pthread_cleanup_buffer buffer;
-	  struct _condvar_cleanup_buffer cbuffer;
-	  cbuffer.wseq = wseq;
-	  cbuffer.cond = cond;
-	  cbuffer.mutex = mutex;
-	  cbuffer.private = private;
-	  __pthread_cleanup_push (&buffer, __condvar_cleanup_waiting, &cbuffer);
-
-	  err = __futex_abstimed_wait_cancelable64 (
-	    cond->__data.__g_signals + g, signals, clockid, abstime, private);
-
-	  __pthread_cleanup_pop (&buffer, 0);
-
-	  if (__glibc_unlikely (err == ETIMEDOUT || err == EOVERFLOW))
-	    {
-	      /* If we timed out, we effectively cancel waiting.  */
-	      __condvar_cancel_waiting (cond, seq, g, private);
-	      result = err;
 	      break;
-	    }
+	    else
+	      continue;
 	}
+
+      // Now block.
+      struct _pthread_cleanup_buffer buffer;
+      struct _condvar_cleanup_buffer cbuffer;
+      cbuffer.wseq = wseq;
+      cbuffer.cond = cond;
+      cbuffer.mutex = mutex;
+      cbuffer.private = private;
+      __pthread_cleanup_push (&buffer, __condvar_cleanup_waiting, &cbuffer);
+
+      err = __futex_abstimed_wait_cancelable64 (
+        cond->__data.__g_signals + g, signals, clockid, abstime, private);
+
+      __pthread_cleanup_pop (&buffer, 0);
+
+      if (__glibc_unlikely (err == ETIMEDOUT || err == EOVERFLOW))
+        {
+          /* If we timed out, we effectively cancel waiting.  */
+          __condvar_cancel_waiting (cond, seq, g, private);
+          result = err;
+          break;
+        }
+    }
 
   /* Confirm that we have been woken.  We do that before acquiring the mutex
      to allow for execution of pthread_cond_destroy while having acquired the
