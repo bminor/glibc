@@ -22,12 +22,31 @@ subdir	:= termios
 
 include ../Makeconfig
 
-headers	:= termios.h bits/termios.h bits/termios-baud.h \
-	   sys/ttydefaults.h sys/termios.h sys/ttychars.h
+headers	:= \
+  bits/termios-baud.h \
+  bits/termios.h \
+  sys/termios.h \
+  sys/ttychars.h \
+  sys/ttydefaults.h \
+  termios.h \
+  # headers
 
-routines	:= speed cfsetspeed tcsetattr tcgetattr tcgetpgrp tcsetpgrp \
-		   tcdrain tcflow tcflush tcsendbrk cfmakeraw tcgetsid \
-		   baud cfsetbaud
+routines := \
+  baud \
+  cfmakeraw \
+  cfsetbaud \
+  cfsetspeed \
+  speed \
+  tcdrain \
+  tcflow \
+  tcflush \
+  tcgetattr \
+  tcgetpgrp \
+  tcgetsid \
+  tcsendbrk \
+  tcsetattr \
+  tcsetpgrp \
+  # routines
 
 include ../Rules
 
