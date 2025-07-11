@@ -26,9 +26,6 @@ libc {
     # g*
     get_current_dir_name; getcwd; getwd;
 
-    # i*
-    isatty;
-
     # l*
     lchown; link; lockf; lseek;
 

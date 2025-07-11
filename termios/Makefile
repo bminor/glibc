@@ -36,6 +36,8 @@ routines := \
   cfmakeraw \
   cfsetbaud \
   cfsetspeed \
+  isatty \
+  isatty_nostatus \
   speed \
   tcdrain \
   tcflow \

@@ -3,6 +3,9 @@ libc {
     # c*
     cfgetispeed; cfgetospeed; cfmakeraw; cfsetispeed; cfsetospeed; cfsetspeed;
 
+    # i*
+    isatty;
+
     # t*
     tcdrain; tcflow; tcflush; tcgetattr; tcgetpgrp; tcsendbreak; tcsetattr;
     tcsetpgrp;
