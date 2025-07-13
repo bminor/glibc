@@ -1047,16 +1047,6 @@ The @code{speed_t} type is an unsigned integer data type used to
 represent line speeds.
 @end deftp
 
-@deftypefun speed_t cfgetospeed (const struct termios *@var{termios-p})
-@standards{POSIX.1, termios.h}
-@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-@c Direct access to a single termios field, except on Linux, where
-@c multiple accesses may take place.  No worries either way, callers
-@c must ensure mutual exclusion on such non-opaque types.
-This function returns the output line speed stored in the structure
-@code{*@var{termios-p}}.
-@end deftypefun
-
 @strong{Portability note:} In @theglibc{}, the functions above
 accept speeds measured in bits per second as input, and return speed
 values measured in bits per second.  Other libraries require speeds to
