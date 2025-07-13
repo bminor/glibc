@@ -775,7 +775,7 @@ The @code{c_cflag} member and the line speed values returned by
 @code{cfsetibaud} will be unaffected by the call.  @code{CIGNORE} is
 useful if you want to set all the software modes in the other members,
 but leave the hardware details in @code{c_cflag} unchanged.  (This is
-how the @code{TCSASOFT} flag to @code{tcsettattr} works.)
+how the @code{TCSASOFT} flag to @code{tcsetattr} works.)
 
 This bit is never set in the structure filled in by @code{tcgetattr}.
 @end deftypevr
