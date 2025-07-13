@@ -1264,6 +1264,17 @@ BSD defines two additional speed symbols as aliases: @code{EXTA} is an
 alias for @code{B19200} and @code{EXTB} is an alias for @code{B38400}.
 These aliases are obsolete.
 
+@deftypevr Macro speed_t SPEED_MAX
+@standards{GNU, termios.h}
+
+@theglibc{} defines the constant @code{SPEED_MAX} for the largest valid
+value of type @code{speed_t}.  This value may be smaller than the
+underlying C type can store.
+
+For compatiblity with some other platforms the alias @code{__MAX_BAUD}
+is defined for this constant.
+@end deftypevr
+
 @deftypefun speed_t cfgetospeed (const struct termios *@var{termios-p})
 @standards{POSIX.1, termios.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
@@ -1346,6 +1357,13 @@ version of @theglibc{} this is the same type as @code{speed_t}, but this
 may not be the case in future versions or on other implementations; it
 is specifically not guaranteed to be an integer type.
 @end deftp
+
+@deftypevr Macro baud_t BAUD_MAX
+@standards{GNU, termios.h}
+The constant @code{BAUD_MAX} is defined to the maximum valid value of
+type @code{baud_t}.  This value may be smaller than the underlying C
+type can store.
+@end deftypevr
 
 @deftypefun baud_t cfgetobaud (const struct termios *@var{termios-p})
 @standards{GNU, termios.h}
