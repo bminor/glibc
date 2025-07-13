@@ -13,6 +13,7 @@ Most of the functions in this chapter operate on file descriptors.
 descriptor is and how to open a file descriptor for a terminal device.
 
 @menu
+* Terminal Device Model::       The fundamental concepts of a terminal device
 * Is It a Terminal::            How to determine if a file is a terminal
 			         device, and what its name is.
 * I/O Queues::                  About flow control and typeahead.
@@ -27,6 +28,83 @@ descriptor is and how to open a file descriptor for a terminal device.
 * getpass::                     Prompting the user for a passphrase.
 * Pseudo-Terminals::            How to open a pseudo-terminal.
 @end menu
+
+@node Terminal Device Model
+@section Terminal Device Model
+@cindex terminal model
+
+A @dfn{terminal device}, abbreviated @code{tty} (for @dfn{teletype}), is
+a character device which implements a set of functionality appropriate
+for communications devices, and which can host an interactive login
+session.  Conceptually, a terminal device implements an RS232
+asynchronous serial interface, but the actual hardware implementation
+may be entirely different, or it may be entirely virtual, notably
+@pxref{Pseudo-Terminals}.
+
+For a true conventional asynchronous serial port, such as RS232/V.24,
+RS422/V.11, RS423, or RS485, the functionality is generally as
+described, whereas for other devices, the meaning of serial port
+specific functionality such as modem control signals, BREAK, and line
+speed is device specific.
+
+The rest of this section is described in terms of a physical RS232
+interface.
+
+The RS232 specification assumes the host (Data Terminal Equipment, DTE)
+connects to a modem (Data Communications Equipment, DCE), regardless of
+if a physical modem is present or not.
+
+In addition to the serial data, the DTE provides a set of control
+signals to the DCE, and the DCE a set of status signals to the DTE.  The
+full RS232 and V.24 specifications provide a large number of signals,
+but the ones that are typically implemented in contemporary hardware and
+are relevant to the terminal device interface are:
+
+@table @asis
+@item DTR - Data Terminal Ready (control)
+
+If asserted (true), the DTE is ready to accept/continue an incoming
+communications session.  If deasserted (false), this is a
+@dfn{modem disconnect request} to the DCE.  The DCE may, but is not
+required to, trigger a modem disconnect in response.
+@cindex modem disconnect request
+
+@item RTS - Request To Send (control)
+
+This signal is also referred to as Ready To Receive (RTR).
+
+If asserted, the DTE is ready to accept data.  If deasserted, the DCE is
+requested to hold data temporarily without disconnecting.  This is known
+as hardware or RTS/CTS @dfn{flow control} and can be handled
+automatically if the appropriate terminal mode flags are set.
+
+@item DSR - Data Set Ready (status)
+
+If asserted, the DCE is ready to communicate, but may or may not have a
+connection to a remote peer.
+
+@item DCD - Data Carrier Detect (status)
+
+If asserted, the DCE has a connection to the remote peer.  If
+deasserted, this is a @dfn{modem disconnect} signal to the DTE.  A modem
+disconnect may be triggered in response to the DTR control signal being
+deasserted, or it may be caused by an external event.
+@cindex modem disconnect
+
+@item CTS - Clear To Send (status)
+
+If asserted, the DCE is ready to accept data.  If deasserted, the DTE is
+requested to hold data temporarily but should not interpret it as a
+disconnect.  This is the DCE to DTE part of RTS/CTS flow
+control.
+
+@item RI - Ring Indicator (status)
+
+If asserted, this indicates that a remote peer is requesting to connect
+(``the phone is ringing'').  Depending on how the DCE is configured, the
+DTE may need to assert the DTR control signal before the DCE will accept
+the incoming connection.
+@end table
 
 @node Is It a Terminal
 @section Identifying Terminals
@@ -685,8 +763,10 @@ clear the condition.
 
 @deftypevr Macro tcflag_t HUPCL
 @standards{POSIX.1, termios.h}
-If this bit is set, a modem disconnect is generated when all processes
-that have the terminal device open have either closed the file or exited.
+If this bit is set, a modem disconnect request is generated when all
+processes that have the terminal device open have either closed the file
+or exited.
+@cindex modem disconnect request
 @end deftypevr
 
 @deftypevr Macro tcflag_t CREAD
@@ -965,97 +1045,82 @@ bit remains set until reprinting is finished.  @xref{Editing Characters}.
 The terminal line speed tells the computer how fast to read and write
 data on the terminal.
 
-If the terminal is connected to a real serial line, the terminal speed
-you specify actually controls the line---if it doesn't match the
-terminal's own idea of the speed, communication does not work.  Real
-serial ports accept only certain standard speeds.  Also, particular
-hardware may not support even all the standard speeds.  Specifying a
-speed of zero hangs up a dialup connection and turns off modem control
-signals.
+For standard asynchronous serial lines employing binary NRZ encoding
+such as RS232, RS422, RS423, or RS485, the terminal speed will equal the
+physical layer baud rate including asynchronous framing and parity bits.
+This needs to match the communication speed expected by the peer device,
+or communication will not work.  Which particular speeds are supported
+by any particular interface is hardware specific.
 
-If the terminal is not a real serial line (for example, if it is a
-network connection), then the line speed won't really affect data
-transmission speed, but some programs will use it to determine the
-amount of padding needed.  It's best to specify a line speed value that
-matches the actual speed of the actual terminal, but you can safely
-experiment with different values to vary the amount of padding.
+For other types of devices the meaning of the line speed is
+device-specific and may not even affect the actual data transmission
+speed at all (for example, if it is a pseudo-terminal or network
+connection), but some programs will use it to determine the amount of
+padding needed.  It's best to specify a line speed value that matches
+the actual speed of the actual terminal, but you can safely experiment
+with different values to vary the amount of padding.
+
+As the terminal interface models an RS232 serial interface
+(@pxref{Terminal Device Model}), the term ``baud rate'' is frequently
+used as a direct alias for ``line speed''; this convention is followed
+in the following descriptions.
 
 There are actually two line speeds for each terminal, one for input and
 one for output.  You can set them independently, but most often
-terminals use the same speed for both directions.
+terminals use the same speed for both directions.  If the hardware does
+not support different speeds for each direction, the output speed will
+be used for both input and output.
 
-The speed values are stored in the @code{struct termios} structure, but
+Specifying an output speed of zero generates a modem disconnect request.
+For the @code{speed_t} interface, this is the constant @code{B0} which
+may or may not have the numeric value @math{0}.
+
+Specifying an input speed value of zero sets the input speed to equal
+the output speed.  This is the numeric constant @math{0} (not
+necessarily the same as @code{B0}) for both the @code{speed_t} and
+@code{baud_t} interfaces.  This use is deprecated.
+
+The line speed values are stored in the @code{struct termios} structure, but
 don't try to access them in the @code{struct termios} structure
-directly.  Instead, you should use the following functions to read and
-store them:
+directly.  Instead, you should use the functions defined by the
+interfaces below to access them.
 
-@deftypefun speed_t cfgetospeed (const struct termios *@var{termios-p})
-@standards{POSIX.1, termios.h}
-@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-@c Direct access to a single termios field, except on Linux, where
-@c multiple accesses may take place.  No worries either way, callers
-@c must ensure mutual exclusion on such non-opaque types.
-This function returns the output line speed stored in the structure
-@code{*@var{termios-p}}.
-@end deftypefun
+The line speed setting functions report errors only when attempting to
+set line rate values that the system simply cannot handle.  If you
+specify a line speed value that is plausible for the system, then the
+functions will succeed.  However, they do not check that a particular
+hardware device can actually support the specified value---in fact, they
+don't know which device you plan to set the line speed for until
+@code{tcsetattr} is called.  If you use @code{tcsetattr} to set the
+speed of a particular device to a value that it cannot handle, either
+@code{tcsetattr} returns @math{-1} and sets @code{errno} to
+@code{EINVAL}, or the value is adjusted to the closest supported value,
+depending on the policy of the kernel driver.  In the latter case, a
+subsequent call to @code{tcgetattr} may or may not reflect this
+adjustment.
 
-@deftypefun speed_t cfgetispeed (const struct termios *@var{termios-p})
-@standards{POSIX.1, termios.h}
-@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-This function returns the input line speed stored in the structure
-@code{*@var{termios-p}}.
-@end deftypefun
+@theglibc{} supports two interoperable interfaces for setting the line
+speed: the POSIX.1 @code{speed_t} interface, which requires the use of a
+set of enumerated constants, and the @code{baud_t} interface, a GNU
+extension, which is guaranteed to use plain numeric values.
 
-@deftypefun int cfsetospeed (struct termios *@var{termios-p}, speed_t @var{speed})
-@standards{POSIX.1, termios.h}
-@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-This function stores @var{speed} in @code{*@var{termios-p}} as the output
-speed.  The normal return value is @math{0}; a value of @math{-1}
-indicates an error.  If @var{speed} is not a speed, @code{cfsetospeed}
-returns @math{-1}.
-@end deftypefun
-
-@deftypefun int cfsetispeed (struct termios *@var{termios-p}, speed_t @var{speed})
-@standards{POSIX.1, termios.h}
-@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-This function stores @var{speed} in @code{*@var{termios-p}} as the input
-speed.  The normal return value is @math{0}; a value of @math{-1}
-indicates an error.  If @var{speed} is not a speed, @code{cfsetospeed}
-returns @math{-1}.
-@end deftypefun
-
-@deftypefun int cfsetspeed (struct termios *@var{termios-p}, speed_t @var{speed})
-@standards{BSD, termios.h}
-@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-@c There's no guarantee that the two calls are atomic, but since this is
-@c not an opaque type, callers ought to ensure mutual exclusion to the
-@c termios object.
-
-@c cfsetspeed ok
-@c  cfsetispeed ok
-@c  cfsetospeed ok
-This function stores @var{speed} in @code{*@var{termios-p}} as both the
-input and output speeds.  The normal return value is @math{0}; a value
-of @math{-1} indicates an error.  If @var{speed} is not a speed,
-@code{cfsetspeed} returns @math{-1}.  This function is an extension in
-4.4 BSD.
-@end deftypefun
+@subsubsection The @code{speed_t} interface
 
 @deftp {Data Type} speed_t
 @standards{POSIX.1, termios.h}
 The @code{speed_t} type is an unsigned integer data type used to
 represent line speeds.
-@end deftp
 
-@strong{Portability note:} In @theglibc{}, the functions above
-accept speeds measured in bits per second as input, and return speed
-values measured in bits per second.  Other libraries require speeds to
-be indicated by special codes.  For POSIX.1 portability, you must use
+@strong{Portability note:} In the current version of @theglibc{}, the
+@code{speed_t} type is numerically indentical to the line speed rate.
+Other libraries and older versions of @theglibc{} may require speeds to
+be indicated by enumerated constants, which may not be numerically
+identical to the requested line speed.  For portability, you must use
 one of the following symbols to represent the speed; their precise
 numeric values are system-dependent, but each name has a fixed meaning:
 @code{B110} stands for 110 bps, @code{B300} for 300 bps, and so on.
-There is no portable way to represent any speed but these, but these are
-the only speeds that typical serial lines can support.
+There is no portable way to represent any speed but these.
+@end deftp
 
 @comment termios.h
 @comment POSIX.1
@@ -1097,26 +1162,33 @@ the only speeds that typical serial lines can support.
 @comment POSIX.1
 @vindex B4800
 @comment termios.h
-@comment GNU
-@vindex B7200
-@comment termios.h
 @comment POSIX.1
 @vindex B9600
 @comment termios.h
-@comment GNU
-@vindex B14400
-@comment termios.h
 @comment POSIX.1
 @vindex B19200
+@comment termios.h
+@comment POSIX.1
+@vindex B38400
+@smallexample
+B0  B50  B75  B110  B134  B150  B200  B300  B600  B1200
+B1800  B2400  B4800  B9600  B19200  B38400
+@end smallexample
+
+@theglibc{} defines these additional constants:
+
+@comment termios.h
+@comment GNU
+@vindex B7200
+@comment termios.h
+@comment GNU
+@vindex B14400
 @comment termios.h
 @comment GNU
 @vindex B28800
 @comment termios.h
 @comment GNU
 @vindex B33600
-@comment termios.h
-@comment POSIX.1
-@vindex B38400
 @comment termios.h
 @comment GNU
 @vindex B57600
@@ -1181,13 +1253,9 @@ the only speeds that typical serial lines can support.
 @comment GNU
 @vindex B10000000
 @smallexample
-B0  B50  B75  B110  B134  B150  B200  B300  B600  B1200
-B1800  B2400  B4800  B7200  B9600  B14400  B19200
-B28800  B33600  B38400  B57600  B76800  B115200
-B153600  B230400  B307200  B460800  B500000
-B576000  B614400  B921600  B1000000  B1152000
-B1500000  B2000000  B2500000  B3000000
-B3500000  B4000000  B5000000  B10000000
+B7200 B14400 B28800 B33600 B57600 B76800 B115200 B153600 B230400 B307200
+B460800 B500000 B576000 B614400 B921600 B1000000 B1152000 B1500000
+B2000000 B2500000 B3000000 B3500000 B4000000 B5000000 B10000000
 @end smallexample
 
 @vindex EXTA
@@ -1196,68 +1264,153 @@ BSD defines two additional speed symbols as aliases: @code{EXTA} is an
 alias for @code{B19200} and @code{EXTB} is an alias for @code{B38400}.
 These aliases are obsolete.
 
+@deftypefun speed_t cfgetospeed (const struct termios *@var{termios-p})
+@standards{POSIX.1, termios.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Direct access to a single termios field.  However, this may not be
+@c true on other implementations; callers must ensure mutual exclusion
+@c on such non-opaque types.
+This function returns the output line speed stored in the structure
+@code{*@var{termios-p}}.
+@end deftypefun
+
+@deftypefun speed_t cfgetispeed (const struct termios *@var{termios-p})
+@standards{POSIX.1, termios.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This function returns the input line speed stored in the structure
+@code{*@var{termios-p}}.
+@end deftypefun
+
+@deftypefun int cfsetospeed (struct termios *@var{termios-p}, speed_t @var{speed})
+@standards{POSIX.1, termios.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Direct access to a single termios field, except on Linux, where two
+@c fields are accessed, one of which (c_cflag) is read-modify-write.  No
+@c worries either way, callers must ensure mutual exclusion on such
+@c non-opaque types.
+This function stores @var{speed} in @code{*@var{termios-p}} as the
+output line speed.  If @var{speed} is @code{B0}, generates a modem
+disconnect request.
+
+If @var{speed} is neither a plausible line speed nor @code{B0},
+@code{cfsetospeed} returns @math{-1} and sets @code{errno} to
+@code{EINVAL}.
+@end deftypefun
+
+@deftypefun int cfsetispeed (struct termios *@var{termios-p}, speed_t @var{speed})
+@standards{POSIX.1, termios.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This function stores @var{speed} in @code{*@var{termios-p}} as the input
+speed.  If @var{speed} is @math{0}, the input speed is set to equal the
+output speed; note that POSIX.1 specifies this as the numeric value
+@math{0} which is not required to equal the constant @code{B0}.
+
+If @var{speed} is not a plausible line speed or @math{0},
+@code{cfsetispeed} returns @math{-1} and sets @code{errno} to
+@code{EINVAL}.
+
+@strong{Portability note:} POSIX.1-2024 has deprecated setting of the
+input speed to @math{0} to set the input line speed to equal the output
+line speed.  After calling @code{tcsetattr} followed by
+@code{tcgetattr}, @code{cfgetispeed} may report the input line speed
+either as @math{0} or the same as @code{cfgetospeed}.
+@end deftypefun
+
+@deftypefun int cfsetspeed (struct termios *@var{termios-p}, speed_t @var{speed})
+@standards{BSD, termios.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c There's no guarantee that the two calls are atomic, but since this is
+@c not an opaque type, callers ought to ensure mutual exclusion to the
+@c termios object.
+
+@c cfsetspeed ok
+@c  cfsetispeed ok
+@c  cfsetospeed ok
+This function stores @var{speed} in @code{*@var{termios-p}} as both the
+input and output speeds.
+
+If @var{baud} is not a plausible line speed, @code{cfsetbaud} returns
+@math{-1} and sets @code{errno} to @code{EINVAL}.
+
+This function is an extension which originated in 4.4 BSD.
+@end deftypefun
+
+@subsubsection The @code{baud_t} interface
+
+@deftp {Data Type} baud_t
+@standards{GNU, termios.h}
+The @code{baud_t} type is a numeric data type used to represent line
+baud rates. It will always represent the actual numeric value
+corresponding to the line speed, unlike @code{speed_t}. In the current
+version of @theglibc{} this is the same type as @code{speed_t}, but this
+may not be the case in future versions or on other implementations; it
+is specifically not guaranteed to be an integer type.
+@end deftp
+
+@deftypefun baud_t cfgetobaud (const struct termios *@var{termios-p})
+@standards{GNU, termios.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Direct access to a single termios field.  However, this may not be
+@c true on other implementations; callers must ensure mutual exclusion
+@c on such non-opaque types.
+This function returns the output line speed stored in the structure
+@code{*@var{termios-p}} as a numeric value.
+@end deftypefun
+
 @deftypefun baud_t cfgetibaud (const struct termios *@var{termios-p})
 @standards{GNU, termios.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-This function returns the input line baud rate stored in the structure
-@code{*@var{termios-p}}.
+This function returns the input line speed stored in the structure
+@code{*@var{termios-p}} as a numeric value.
 @end deftypefun
 
 @deftypefun int cfsetobaud (struct termios *@var{termios-p}, baud_t @var{baud})
 @standards{GNU, termios.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+@c Direct access to a single termios field, except on Linux, where two
+@c fields are accessed, one of which (c_cflag) is read-modify-write.  No
+@c worries either way, callers must ensure mutual exclusion on such
+@c non-opaque types.
 This function stores @var{baud} in @code{*@var{termios-p}} as the output
-baud rate.  The normal return value is @math{0}; a value of @math{-1}
-indicates an error.  If @var{baud} is not a valid baud rate, @code{cfsetobaud}
-returns @math{-1}.
+line speed.  If @var{baud} is @math{0}, generates a modem disconnect.
+
+If @var{speed} is not a plausible line speed, @code{cfsetspeed} returns
+@math{-1} and sets @code{errno} to @code{EINVAL}.
 @end deftypefun
 
 @deftypefun int cfsetibaud (struct termios *@var{termios-p}, baud_t @var{baud})
 @standards{GNU, termios.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This function stores @var{baud} in @code{*@var{termios-p}} as the input
-baud rate.  The normal return value is @math{0}; a value of @math{-1}
-indicates an error.  If @var{baud} is not a valid baud rate, @code{cfsetobaud}
-returns @math{-1}.
+line speed.
+
+To simplify conversions from the @code{speed_t} interface, setting the
+input line speed to @math{0} is interpreted as setting the input line
+speed equal to the output line speed.  The caveats described under
+@code{cfsetispeed} apply equally to @code{cfsetibaud}.  As for
+@code{cfsetispeed}, this usage is deprecated.
+
+If @var{baud} is not a plausible line speed or @math{0},
+@code{cfsetibaud} returns @math{-1} and sets @code{errno} to
+@code{EINVAL}.
 @end deftypefun
 
 @deftypefun int cfsetbaud (struct termios *@var{termios-p}, baud_t @var{baud})
 @standards{GNU, termios.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c There's no guarantee that the two calls are atomic, but since this is
-@c not an opaque type, callers ought to ensure mutual exclusion to the
+@c not an opaque type, callers should ensure mutual exclusion to the
 @c termios object.
 
 @c cfsetbaud ok
 @c  cfsetibaud ok
 @c  cfsetobaud ok
 This function stores @var{baud} in @code{*@var{termios-p}} as both the
-input and output baud rates.  The normal return value is @math{0}; a value
-of @math{-1} indicates an error.  If @var{baud} is not a valid baud rate,
-@code{cfsetbaud} returns @math{-1}.
+input and output line speeds.
+
+If @var{baud} is not a plausible line speed, @code{cfsetbaud} returns
+@math{-1} and sets @code{errno} to @code{EINVAL}.
 @end deftypefun
-
-@deftp {Data Type} baud_t
-@standards{GNU}
-The @code{baud_t} type is a numeric data type used to represent line
-baud rates. It will always represent the actual numeric value
-representing the baud rate, unlike @code{speed_t}. In the current
-version of @theglibc{} this is the same type as @code{speed_t}, but this
-may not be the case in future versions, or on other implementations; it
-may not even necessarily be an integer type.
-
-@end deftp
-
-The functions @code{cfsetospeed}, @code{cfsetispeed}, @code{cfsetobaud}
-and @code{cfsetibaud} report errors only for speed values that the
-system simply cannot handle.  If you specify a speed value that is
-basically acceptable, then those functions will succeed.  But they do
-not check that a particular hardware device can actually support the
-specified speeds---in fact, they don't know which device you plan to set
-the speed for.  If you use @code{tcsetattr} to set the speed of a
-particular device to a value that it cannot handle, either @code{tcsetattr}
-returns @math{-1}, or the value is adjusted to the closest supported
-value, depending on the policy of the kernel driver.
 
 @node Special Characters
 @subsection Special Characters
