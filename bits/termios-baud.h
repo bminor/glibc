@@ -69,4 +69,7 @@
 #define B5000000       5000000U
 #define B10000000     10000000U
 
-#define __MAX_BAUD  4294967295U
+#ifdef __USE_GNU
+#define SPEED_MAX  4294967295U	/* maximum valid speed_t value */
+#endif
+#define __MAX_BAUD 4294967295U	/* legacy alias for SPEED_MAX */
