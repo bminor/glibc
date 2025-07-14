@@ -33,9 +33,10 @@
 # define closedir __closedir
 # define mempcpy __mempcpy
 # define struct_stat64 struct __stat64_t64
-# define lstat64 __lstat64_time64
+# define stat64_impl __stat64_time64
 # define feof_unlocked __feof_unlocked
 #else
+# define stat64_impl stat64
 # define struct_stat64 struct stat64
 #endif
 
@@ -151,7 +152,8 @@ gconv_parseconfdir (const char *prefix, const char *dir, size_t dir_len)
       struct dirent64 *ent;
       while ((ent = readdir64 (confdir)) != NULL)
 	{
-	  if (ent->d_type != DT_REG && ent->d_type != DT_UNKNOWN)
+	  if (ent->d_type != DT_REG && ent->d_type != DT_UNKNOWN
+	      && ent->d_type != DT_LNK)
 	    continue;
 
 	  size_t len = strlen (ent->d_name);
@@ -166,7 +168,7 @@ gconv_parseconfdir (const char *prefix, const char *dir, size_t dir_len)
 		continue;
 
 	      if (ent->d_type != DT_UNKNOWN
-		  || (lstat64 (conf, &st) != -1 && S_ISREG (st.st_mode)))
+		  || (stat64_impl (conf, &st) != -1 && S_ISREG (st.st_mode)))
 		found |= read_conf_file (conf, dir, dir_len);
 
 	      free (conf);

@@ -85,6 +85,7 @@ tests-special += \
 	$(objpfx)tst-iconv_prog-buffer-tiny.out \
 	$(objpfx)tst-iconv_prog-buffer.out \
 	$(objpfx)tst-iconv_prog.out \
+	$(objpfx)tst-iconvconfig.out \
 	$(objpfx)tst-translit-mchar.out \
 	# tests-special
 endif
@@ -164,3 +165,8 @@ $(objpfx)tst-iconv_prog-buffer-large.out: \
   tst-iconv_prog-buffer.sh $(objpfx)iconv_prog
 	$(BASH) $< $(common-objdir) '$(run-program-prefix)' '' '22' > $@; \
 	$(evaluate-test)
+
+$(objpfx)tst-iconvconfig.out: tst-iconvconfig.sh $(objpfx)iconvconfig
+	$(BASH) $< $(common-objdir) '$(test-wrapper-env)' \
+		'$(run-program-env)' > $@; \
+    $(evaluate-test)
