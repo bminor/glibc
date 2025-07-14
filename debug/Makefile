@@ -278,6 +278,34 @@ LDFLAGS-tst-backtrace4 = -rdynamic
 LDFLAGS-tst-backtrace5 = -rdynamic
 LDFLAGS-tst-backtrace6 = -rdynamic
 
+# When SFrame is enabled, make sure the dwarf unwinder is also exercised.
+ifeq ($(enable-gsframe),yes)
+dw_unwind_pair := \
+  tst-backtrace7:tst-backtrace2 \
+  tst-backtrace8:tst-backtrace3 \
+  tst-backtrace9:tst-backtrace4 \
+  tst-backtrace10:tst-backtrace5 \
+  tst-backtrace11:tst-backtrace6
+
+first_column = $(foreach pair,$(dw_unwind_pair),$(word 1,$(subst :, ,$(pair))))
+tests-dw-unwind = $(patsubst %,$(objpfx)%.out,$(first_column))
+tests-special += $(tests-dw-unwind)
+endif
+
+define make-strip-rule
+$(objpfx)$(word 1,$(subst :, ,$(1))): $(objpfx)$(word 2,$(subst :, ,$(1)))
+	strip --remove-section=.sframe $$< -o $$@
+endef
+
+$(foreach pair,$(dw_unwind_pair),$(eval $(call make-strip-rule,$(pair))))
+
+define make-run-rule
+$(objpfx)$(word 1,$(subst :, ,$(1))).out: /dev/null $(objpfx)$(word 1,$(subst :, ,$(1)))
+	$$(make-test-out) > $$@; $$(evaluate-test)
+endef
+
+$(foreach pair,$(dw_unwind_pair),$(eval $(call make-run-rule,$(pair))))
+
 CFLAGS-tst-ssp-1.c += -fstack-protector-all
 
 # Disable compiler optimizations around vsprintf (the function under test).
