@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <unwind.h>
 #include <unwind-link.h>
+#include <sframe.h>
 
 struct trace_arg
 {
@@ -29,6 +30,40 @@ struct trace_arg
   int cnt;
   int size;
 };
+
+/* Initialize the SFrame backtrace routine and attempt to backtrace
+   the current stack using SFrame information.  For the SFrame
+   backtrace to be considered valid, the tracer must return more than
+   one frame.  If it doesn't, this could indicate a mixed
+   environment for example, glibc may have been compiled with SFrame
+   support, while the application was not.  An even more complex
+   scenario arises when the application uses shared objects compiled
+   with differing configurations.
+
+   Additionally, glibc includes certain callback paths that must be
+   considered.  For example: an application calls shared object A,
+   which calls shared object B, which in turn calls qsort() in
+   glibc.  qsort() then invokes a helper in shared object C, which
+   raises a SIGFPE signal, handled by object D, which requests a
+   backtrace.  Any of these components may or may not include SFrame
+   encoding.
+
+   In cases where a stack frame lacks SFrame information, the SFrame
+   backtracer can fall back to using the DWARF unwinder.
+
+   This function must be always inline.  Otherwise the
+   __builtin_frame_address and the __getXX helper functions will not
+   return the right addresses.  */
+
+static inline int __attribute__ ((always_inline))
+do_sframe_backtrace (void **array, int size)
+{
+  frame frame;
+  frame.pc = __getPC ();
+  frame.sp = __getSP ();
+  frame.fp = (_Unwind_Ptr) __builtin_frame_address (0);
+  return __stacktrace_sframe (array, size, &frame);
+}
 
 static _Unwind_Reason_Code
 backtrace_helper (struct _Unwind_Context *ctx, void *a)
@@ -72,7 +107,16 @@ __backtrace (void **array, int size)
      .cnt = -1
     };
 
-  if (size <= 0 || arg.unwind_link == NULL)
+  if (size <= 0)
+    return 0;
+
+  /* Try first the SFrame backtracer.  */
+  int cnt = do_sframe_backtrace (array, size);
+  if (cnt > 1)
+    return cnt;
+
+  /* Try the dwarf unwinder.  */
+  if (arg.unwind_link == NULL)
     return 0;
 
   UNWIND_LINK_PTR (arg.unwind_link, _Unwind_Backtrace)
