@@ -1030,6 +1030,12 @@ endif
 # Filter out 64 bit time_t flags if compiler defines it by default.
 +cflags += $(no-time-bits-source)
 
+# Enable SFrame while compiling for stack backtracing.
+ifeq ($(enable-gsframe),yes)
+as-sframe = -Wa,--gsframe
+endif
++cflags += $(as-sframe)
+
 # Each sysdeps directory can contain header files that both will be
 # used to compile and will be installed.  Each can also contain an
 # include/ subdirectory, whose header files will be used to compile
@@ -1178,7 +1184,7 @@ endif
 ifndef ASFLAGS
 ASFLAGS := $(filter -g% -fdebug-prefix-map=%,$(CFLAGS))
 endif
-override ASFLAGS += -Werror=undef $(ASFLAGS-config) $(asflags-cpu)
+override ASFLAGS += -Werror=undef $(ASFLAGS-config) $(asflags-cpu) $(as-sframe)
 
 move-if-change = $(SHELL) $(..)scripts/move-if-change
 

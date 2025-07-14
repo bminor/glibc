@@ -440,6 +440,12 @@ case "$enable_fortify_source" in
 *) AC_MSG_ERROR([Not a valid argument for --enable-fortify-source: "$enable_fortify_source"]);;
 esac
 
+AC_ARG_ENABLE([sframe],
+	      [AS_HELP_STRING([--disable-sframe],
+			     [Disable building with SFrame stack trace information @<:@default=yes if GNU as is 2.41 or older@:>@])],
+	      [use_sframe=$enableval],
+	      [use_sframe=notset])
+
 # We keep the original values in `$config_*' and never modify them, so we
 # can write them unchanged into config.make.  Everything else uses
 # $machine, $vendor, and $os, and changes them whenever convenient.
@@ -2114,6 +2120,44 @@ LIBC_CONFIG_VAR([have-libgcc_s], [$libc_cv_have_libgcc_s])
 AC_SUBST(libc_cv_test_cc_mprefer_vector_width)
 AC_SUBST(test_enable_cet)
 AC_SUBST(libc_cv_test_x86_have_amx_tile)
+
+# Glibc stacktracer supports SFrame v2 or newer
+libc_cv_readelf_version_ok=yes
+# SFrame is supported from 2.41 or higher
+AC_CHECK_PROG_VER(READELF_SFRAME, $READELF, --version,
+  [GNU readelf.* \([0-9][0-9]*\.[0-9.]*\)],
+  [2.4[1-9]*|2.[5-9][0-9]*|[3-9].*|[1-9][0-9][0-9]*],
+  libc_cv_readelf_version_ok=no)
+
+# Check the current toolchain for SFrame support
+if test $libc_cv_readelf_version_ok = yes; then
+  AC_CACHE_CHECK([for SFrame support], libc_cv_default_sframe,
+  [dnl
+cat > conftest.c <<EOF
+int test_function(void)
+{
+  return 42;
+}
+EOF
+  libc_cv_default_sframe=no
+  if ${CC} -c conftest.c -o conftest.o -Wa,--gsframe >/dev/null 2>&1 && \
+     # Check if .sframe section is present and if version > 1
+     $READELF --sframe conftest.o | grep "SFRAME_VER" | grep -qv "VERSION_1"; then
+          libc_cv_default_sframe=yes
+  fi
+  rm -f conftest.c conftest.o
+  ])
+fi
+
+# Prevent enabling sframe on non-supporting toolchains
+enable_gsframe=no
+if test $use_sframe$libc_cv_default_sframe = yesyes || \
+   test $use_sframe$libc_cv_default_sframe = notsetyes; then
+  enable_gsframe=yes
+elif test $use_sframe = yes; then
+   AC_MSG_FAILURE([toolchain doesn't support SFrame v2 or higher])
+fi
+AC_SUBST(enable_gsframe)
 
 # Set the `multidir' variable by grabbing the variable from the compiler.
 # We do it once and save the result in a generated makefile.

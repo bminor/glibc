@@ -51,6 +51,7 @@ c++-cstdlib-header = @CXX_CSTDLIB_HEADER@
 c++-cmath-header = @CXX_CMATH_HEADER@
 c++-bits-std_abs-h = @CXX_BITS_STD_ABS_H@
 enable-werror = @enable_werror@
+enable-gsframe = @enable_gsframe@
 
 have-z-execstack = @libc_cv_z_execstack@
 have-no-error-execstack = @libc_cv_no_error_execstack@

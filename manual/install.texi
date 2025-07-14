@@ -320,6 +320,11 @@ If not provided, @option{LEVEL} defaults to highest possible value supported by
 the build compiler.
 
 Default is to disable fortification.
+
+@item --disable-sframe
+By default, the GNU C Library is built with @option{-Wa,--gsframe} if
+the current GNU @code{binutils} supports it. You may want to use this
+option if you don't plan to use SFrame stack tracer.
 @end table
 
 To build the library and related programs, type @code{make}.  This will

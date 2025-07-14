@@ -31,6 +31,10 @@ Major new features:
   glibc.malloc.tcache_max to a larger value (max 4194304).
   Tcache is also significantly faster for small sizes.
 
+* New stack tracer using SFrame.  Introducing --disable-sframe a new
+  configuration flag.  Building glibc using sframe is automatically
+  enabled when the build system supports it.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The glibc.rtld.execstack now supports a compatibility mode to allow
