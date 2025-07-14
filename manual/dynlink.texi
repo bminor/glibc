@@ -545,7 +545,8 @@ result data to the caller.
 
 @table @code
 @item unsigned long long int dlfo_flags
-Currently unused and always 0.
+Bit zero signals if SFrame stack data is valid.  See
+@code{DLFO_FLAG_SFRAME} below.
 
 @item void *dlfo_map_start
 The start address of the inspected mapping.  This information comes from
@@ -561,6 +562,11 @@ This member contains a pointer to the link map of the object.
 @item void *dlfo_eh_frame
 This member contains a pointer to the exception handling data of the
 object.  See @code{DLFO_EH_SEGMENT_TYPE} below.
+
+@item void *dlfo_sframe
+This member points to the SFrame stack trace data associated with the
+object.  It is valid only when @code{DLFO_FLAG_SFRAME} is set in
+@code{dlfo_flags}; otherwise, it may be null or undefined.
 
 @end table
 
@@ -638,6 +644,15 @@ information is processed.
 
 This function is a GNU extension.
 @end deftypefun
+
+The following flag masks are defined for use with @code{dlfo_flags}:
+
+@table @code
+@item DLFO_FLAG_SFRAME
+A bit mask used to signal that the object contains SFrame data.  See
+@code{dlfo_sframe} above.
+
+@end table
 
 @node Dynamic Linker Hardening
 @section Avoiding Unexpected Issues With Dynamic Linking

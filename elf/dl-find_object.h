@@ -43,6 +43,7 @@ struct dl_find_object_internal
 #if DLFO_STRUCT_HAS_EH_COUNT
   int eh_count;
 #endif
+  void *sframe;
 };
 
 /* Create a copy of *SOURCE in *COPY using relaxed MO loads and
@@ -67,13 +68,14 @@ _dl_find_object_internal_copy (const struct dl_find_object_internal *source,
   atomic_store_relaxed (&copy->eh_count,
                         atomic_load_relaxed (&source->eh_count));
 #endif
+  atomic_store_relaxed (&copy->sframe,
+                        atomic_load_relaxed (&source->sframe));
 }
 
 static inline void
 _dl_find_object_to_external (struct dl_find_object_internal *internal,
                              struct dl_find_object *external)
 {
-  external->dlfo_flags = 0;
   external->dlfo_map_start = (void *) internal->map_start;
   external->dlfo_map_end = (void *) internal->map_end;
   external->dlfo_link_map = internal->map;
@@ -84,6 +86,11 @@ _dl_find_object_to_external (struct dl_find_object_internal *internal,
 # if DLFO_STRUCT_HAS_EH_COUNT
   external->dlfo_eh_count = internal->eh_count;
 # endif
+  external->dlfo_sframe = internal->sframe;
+  if (internal->sframe != NULL)
+    external->dlfo_flags = DLFO_FLAG_SFRAME;
+  else
+    external->dlfo_flags = 0;
 }
 
 /* Extract the object location data from a link map and writes it to
@@ -92,6 +99,9 @@ static void __attribute__ ((unused))
 _dl_find_object_from_map (struct link_map *l,
                           struct dl_find_object_internal *result)
 {
+  /* A mask to find out which segment has been read out.  */
+  unsigned int read_seg = 0;
+
   atomic_store_relaxed (&result->map_start, (uintptr_t) l->l_map_start);
   atomic_store_relaxed (&result->map_end, (uintptr_t) l->l_map_end);
   atomic_store_relaxed (&result->map, l);
@@ -100,23 +110,39 @@ _dl_find_object_from_map (struct link_map *l,
   atomic_store_relaxed (&result->eh_dbase, (void *) l->l_info[DT_PLTGOT]);
 #endif
 
-  for (const ElfW(Phdr) *ph = l->l_phdr, *ph_end = l->l_phdr + l->l_phnum;
-       ph < ph_end; ++ph)
-    if (ph->p_type == DLFO_EH_SEGMENT_TYPE)
-      {
-        atomic_store_relaxed (&result->eh_frame,
-                              (void *) (ph->p_vaddr + l->l_addr));
-#if DLFO_STRUCT_HAS_EH_COUNT
-        atomic_store_relaxed (&result->eh_count, ph->p_memsz / 8);
-#endif
-        return;
-      }
-
-  /* Object has no exception handling segment.  */
+  /* Initialize object's exception handling segment and SFrame segment
+     data.  */
+  atomic_store_relaxed (&result->sframe, NULL);
   atomic_store_relaxed (&result->eh_frame, NULL);
 #if DLFO_STRUCT_HAS_EH_COUNT
   atomic_store_relaxed (&result->eh_count, 0);
 #endif
+
+  for (const ElfW(Phdr) *ph = l->l_phdr, *ph_end = l->l_phdr + l->l_phnum;
+       ph < ph_end; ++ph)
+    {
+      switch (ph->p_type)
+        {
+        case DLFO_EH_SEGMENT_TYPE:
+          atomic_store_relaxed (&result->eh_frame,
+                                (void *) (ph->p_vaddr + l->l_addr));
+#if DLFO_STRUCT_HAS_EH_COUNT
+          atomic_store_relaxed (&result->eh_count, ph->p_memsz / 8);
+#endif
+          read_seg |= 1;
+          break;
+
+        case PT_GNU_SFRAME:
+          atomic_store_relaxed (&result->sframe,
+                                (void *) (ph->p_vaddr + l->l_addr));
+          read_seg |= 2;
+          /* Fall through.  */
+        default:
+          break;
+        }
+      if (read_seg == 3)
+        return;
+   }
 }
 
 /* Called by the dynamic linker to set up the data structures for the
