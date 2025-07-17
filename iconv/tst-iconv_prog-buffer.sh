@@ -75,6 +75,10 @@ run_iconv () {
 }
 
 check_out_expected () {
+    if test -x "$tmp/out" ; then
+	echo "error: iconv output file is executable"
+	failure=true
+    fi
     if ! cmp -s "$tmp/out" "$tmp/expected" ; then
         echo "error: iconv output difference" >&$logfd
         echo "*** expected ***" >&$logfd
