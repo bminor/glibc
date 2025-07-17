@@ -60,7 +60,8 @@ __pthread_cancel (pthread_t th)
 {
   volatile struct pthread *pd = (volatile struct pthread *) th;
 
-  if (pd->tid == 0)
+  int state = atomic_load_relaxed (&pd->joinstate);
+  if (state == THREAD_STATE_EXITED)
     /* The thread has already exited on the kernel side.  Its outcome
        (regular exit, other cancelation) has already been
        determined.  */

@@ -25,32 +25,28 @@ ___pthread_detach (pthread_t th)
 {
   struct pthread *pd = (struct pthread *) th;
 
-  /* Make sure the descriptor is valid.  */
-  if (INVALID_NOT_TERMINATED_TD_P (pd))
-    /* Not a valid thread handle.  */
-    return ESRCH;
+  /* CONCURRENCY NOTES:
 
-  int result = 0;
+     Concurrent pthread_detach will return EINVAL for the case the thread
+     is already detached (THREAD_STATE_DETACHED).  POSIX states it is
+     undefined to call pthread_detach if TH refers to a non joinable thread.
 
-  /* Mark the thread as detached.  */
-  if (atomic_compare_and_exchange_bool_acq (&pd->joinid, pd, NULL))
+     For the case the thread is being terminated (THREAD_STATE_EXITING),
+     pthread_detach will responsible to clean up the stack.  */
+
+  unsigned int prevstate = atomic_load_relaxed (&pd->joinstate);
+  do
     {
-      /* There are two possibilities here.  First, the thread might
-	 already be detached.  In this case we return EINVAL.
-	 Otherwise there might already be a waiter.  The standard does
-	 not mention what happens in this case.  */
-      if (IS_DETACHED (pd))
-	result = EINVAL;
+      if (prevstate != THREAD_STATE_JOINABLE)
+	{
+	  if (prevstate == THREAD_STATE_DETACHED)
+	    return EINVAL;
+	  return __pthread_join (th, 0);
+	}
     }
-  else
-    /* Check whether the thread terminated meanwhile.  In this case we
-       will just free the TCB.  */
-    if ((pd->cancelhandling & EXITING_BITMASK) != 0)
-      /* Note that the code in __free_tcb makes sure each thread
-	 control block is freed only once.  */
-      __nptl_free_tcb (pd);
-
-  return result;
+  while (!atomic_compare_exchange_weak_acquire (&pd->joinstate, &prevstate,
+						THREAD_STATE_DETACHED));
+  return 0;
 }
 versioned_symbol (libc, ___pthread_detach, pthread_detach, GLIBC_2_34);
 libc_hidden_ver (___pthread_detach, __pthread_detach)

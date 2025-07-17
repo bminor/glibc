@@ -22,7 +22,7 @@ int
 ___pthread_join (pthread_t threadid, void **thread_return)
 {
   return __pthread_clockjoin_ex (threadid, thread_return, 0 /* Ignored */,
-				 NULL, true);
+				 NULL);
 }
 versioned_symbol (libc, ___pthread_join, pthread_join, GLIBC_2_34);
 libc_hidden_ver (___pthread_join, __pthread_join)
