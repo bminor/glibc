@@ -117,7 +117,9 @@ else
   AC_DEFINE_UNQUOTED(MINIMUM_X86_ISA_LEVEL, $libc_cv_have_x86_isa_level)
 fi
 LIBC_CONFIG_VAR([have-x86-isa-level], [$libc_cv_have_x86_isa_level])
+LIBC_CONFIG_VAR([x86-isa-level-2-or-above], [2 3 4])
 LIBC_CONFIG_VAR([x86-isa-level-3-or-above], [3 4])
+LIBC_CONFIG_VAR([x86-isa-level-4-or-above], [4])
 LIBC_CONFIG_VAR([enable-x86-isa-level], [$libc_cv_include_x86_isa_level])
 
 dnl Check if TEST_CC supports -mfpmath=387

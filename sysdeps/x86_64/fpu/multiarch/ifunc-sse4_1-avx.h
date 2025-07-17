@@ -1,4 +1,4 @@
-/* Multiple versions of modff
+/* Common definition for ifunc selections optimized with SSE4.1 and AVX.
    Copyright (C) 2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,26 +16,26 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sysdeps/x86/isa-level.h>
-#if MINIMUM_X86_ISA_LEVEL < AVX_X86_ISA_LEVEL
-# define NO_MATH_REDIRECT
-# include <libm-alias-float.h>
+#include <init-arch.h>
 
-# define modff __redirect_modff
-# define __modff __redirect___modff
-# include <math.h>
-# undef modff
-# undef __modff
+extern __typeof (REDIRECT_NAME) OPTIMIZE (sse2) attribute_hidden;
+extern __typeof (REDIRECT_NAME) OPTIMIZE (sse41) attribute_hidden;
+extern __typeof (REDIRECT_NAME) OPTIMIZE (avx) attribute_hidden;
 
-# define SYMBOL_NAME modff
-# include "ifunc-sse4_1-avx.h"
+static inline void *
+IFUNC_SELECTOR (void)
+{
+  const struct cpu_features* cpu_features = __get_cpu_features ();
 
-libc_ifunc_redirected (__redirect_modff, __modff, IFUNC_SELECTOR ());
-libm_alias_float (__modf, modf)
-# if MINIMUM_X86_ISA_LEVEL == SSE4_1_X86_ISA_LEVEL
-#  define __modff __modff_sse41
-# else
-#  define __modff __modff_sse2
-# endif
+  if (CPU_FEATURE_USABLE_P (cpu_features, AVX))
+    return OPTIMIZE (avx);
+
+#if MINIMUM_X86_ISA_LEVEL == SSE4_1_X86_ISA_LEVEL
+  return OPTIMIZE (sse41);
+#else
+  if (CPU_FEATURE_USABLE_P (cpu_features, SSE4_1))
+    return OPTIMIZE (sse41);
+
+  return OPTIMIZE (sse2);
 #endif
-#include <sysdeps/ieee754/flt-32/s_modff.c>
+}

@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdeps/x86/isa-level.h>
-#if MINIMUM_X86_ISA_LEVEL < SSE4_1_X86_ISA_LEVEL
+#if MINIMUM_X86_ISA_LEVEL < AVX_X86_ISA_LEVEL
 # define NO_MATH_REDIRECT
 # include <libm-alias-double.h>
 
@@ -28,8 +28,14 @@
 # undef __modf
 
 # define SYMBOL_NAME modf
-# include "ifunc-sse4_1.h"
+# include "ifunc-sse4_1-avx.h"
 
 libc_ifunc_redirected (__redirect_modf, __modf, IFUNC_SELECTOR ());
 libm_alias_double (__modf, modf)
+# if MINIMUM_X86_ISA_LEVEL == SSE4_1_X86_ISA_LEVEL
+#  define __modf __modf_sse41
+# else
+#  define __modf __modf_sse2
+# endif
 #endif
+#include <sysdeps/ieee754/dbl-64/s_modf.c>

@@ -26,19 +26,21 @@ CFLAGS-s_sinf-fma.c = -mfma -mavx2
 CFLAGS-s_cosf-fma.c = -mfma -mavx2
 CFLAGS-s_sincosf-fma.c = -mfma -mavx2
 
+# Check if ISA level is 2 or above.
+ifeq (,$(filter $(have-x86-isa-level),$(x86-isa-level-2-or-above)))
+sysdep_calls += \
+  s_modf-sse4_1 \
+  s_modff-sse4_1 \
+# sysdep_calls
+endif
+
 # Check if ISA level is 3 or above.
 ifneq (,$(filter $(have-x86-isa-level),$(x86-isa-level-3-or-above)))
-sysdep_routines += \
-  s_modf-avx \
-  s_modff-avx \
-# sysdep_routines
 libm-sysdep_routines += \
   s_ceil-avx \
   s_ceilf-avx \
   s_floor-avx \
   s_floorf-avx \
-  s_modf-avx \
-  s_modff-avx \
   s_nearbyint-avx \
   s_nearbyintf-avx \
   s_rint-avx \
@@ -49,6 +51,10 @@ libm-sysdep_routines += \
   s_truncf-avx \
 # libm-sysdep_routines
 else
+sysdep_calls += \
+  s_modf-avx \
+  s_modff-avx \
+# sysdep_calls
 ifeq (no,$(have-x86-apx))
 libm-sysdep_routines += \
   e_asin-fma4 \
@@ -62,10 +68,6 @@ libm-sysdep_routines += \
   s_tan-fma4 \
 # libm-sysdep_routines
 endif
-sysdep_routines += \
-  s_modf-sse4_1 \
-  s_modff-sse4_1 \
-# sysdep_routines
 libm-sysdep_routines += \
   e_asin-fma \
   e_atan2-avx \
@@ -95,8 +97,6 @@ libm-sysdep_routines += \
   s_floor-sse4_1 \
   s_floorf-sse4_1 \
   s_log1p-fma \
-  s_modf-sse4_1 \
-  s_modff-sse4_1 \
   s_nearbyint-sse4_1 \
   s_nearbyintf-sse4_1 \
   s_rint-sse4_1 \
@@ -118,17 +118,11 @@ libm-sysdep_routines += \
   s_truncf-sse4_1 \
 # libm-sysdep_routines
 ifeq ($(have-x86-isa-level),baseline)
-sysdep_routines += \
-  s_modf-c \
-  s_modff-c \
-# sysdep-routines
 libm-sysdep_routines += \
   s_ceil-c \
   s_ceilf-c \
   s_floor-c \
   s_floorf-c \
-  s_modf-c \
-  s_modff-c \
   s_nearbyint-c \
   s_nearbyintf-c \
   s_rint-c \
@@ -139,6 +133,11 @@ libm-sysdep_routines += \
   s_truncf-c \
 # libm-sysdep_routines
 endif
+
+# $(sysdep_calls) functions are built both for libc and libm.  While the
+# libc objects have the prefix s_, the libm ones are prefixed with m_.
+sysdep_routines += $(sysdep_calls)
+libm-sysdep_routines += $(sysdep_calls:s_%=m_%)
 endif
 
 CFLAGS-e_asin-fma4.c = -mfma4
@@ -159,18 +158,11 @@ CFLAGS-s_sin-avx.c = -msse2avx -DSSE2AVX
 CFLAGS-s_tan-avx.c = -msse2avx -DSSE2AVX
 CFLAGS-s_sincos-avx.c = -msse2avx -DSSE2AVX
 
-CFLAGS-s_modf-c.c = $(no-stack-protector)
-CFLAGS-s_modff-c.c = $(no-stack-protector)
+CFLAGS-s_modf-sse4_1.c = -msse4.1 -fno-builtin-modff32x -fno-builtin-modff64
+CFLAGS-s_modff-sse4_1.c = -msse4.1 -fno-builtin-modff32
 
-CFLAGS-s_modf-sse4_1.c = -msse4.1 -fno-builtin-modff32x \
-			 -fno-builtin-modff64 $(no-stack-protector)
-CFLAGS-s_modff-sse4_1.c = -msse4.1 -fno-builtin-modff32 \
-			  $(no-stack-protector)
-
-CFLAGS-s_modf-avx.c = -msse2avx -DSSE2AVX -fno-builtin-modff32x \
-		      $(no-stack-protector) -fno-builtin-modff64
-CFLAGS-s_modff-avx.c = -msse2avx -DSSE2AVX -fno-builtin-modff32 \
-		      $(no-stack-protector)
+CFLAGS-s_modf-avx.c = -mavx -fno-builtin-modff32x -fno-builtin-modff64
+CFLAGS-s_modff-avx.c = -mavx -fno-builtin-modff32
 endif
 
 ifeq ($(subdir),mathvec)
