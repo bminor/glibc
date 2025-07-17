@@ -294,9 +294,9 @@
 # define TCACHE_SMALL_BINS		64
 # define TCACHE_LARGE_BINS		12 /* Up to 4M chunks */
 # define TCACHE_MAX_BINS	(TCACHE_SMALL_BINS + TCACHE_LARGE_BINS)
-# define MAX_TCACHE_SMALL_SIZE	tidx2usize (TCACHE_SMALL_BINS-1)
+# define MAX_TCACHE_SMALL_SIZE	tidx2csize (TCACHE_SMALL_BINS-1)
 
-/* Only used to pre-fill the tunables.  */
+# define tidx2csize(idx)	(((size_t) idx) * MALLOC_ALIGNMENT + MINSIZE)
 # define tidx2usize(idx)	(((size_t) idx) * MALLOC_ALIGNMENT + MINSIZE - SIZE_SZ)
 
 /* When "x" is from chunksize().  */
@@ -1934,7 +1934,7 @@ static struct malloc_par mp_ =
   ,
   .tcache_count = TCACHE_FILL_COUNT,
   .tcache_small_bins = TCACHE_SMALL_BINS,
-  .tcache_max_bytes = MAX_TCACHE_SMALL_SIZE,
+  .tcache_max_bytes = MAX_TCACHE_SMALL_SIZE + 1,
   .tcache_unsorted_limit = 0 /* No limit.  */
 #endif
 };
@@ -5593,15 +5593,13 @@ do_set_arena_max (size_t value)
 static __always_inline int
 do_set_tcache_max (size_t value)
 {
+  if (value > PTRDIFF_MAX)
+    return 0;
+
   size_t nb = request2size (value);
   size_t tc_idx = csize2tidx (nb);
 
-  /* To check that value is not too big and request2size does not return an
-     overflown value.  */
-  if (value > nb)
-    return 0;
-
-  if (nb > MAX_TCACHE_SMALL_SIZE)
+  if (tc_idx >= TCACHE_SMALL_BINS)
     tc_idx = large_csize2tidx (nb);
 
   LIBC_PROBE (memory_tunable_tcache_max_bytes, 2, value, mp_.tcache_max_bytes);
@@ -5610,7 +5608,7 @@ do_set_tcache_max (size_t value)
     {
       if (tc_idx < TCACHE_SMALL_BINS)
 	mp_.tcache_small_bins = tc_idx + 1;
-      mp_.tcache_max_bytes = nb;
+      mp_.tcache_max_bytes = nb + 1;
       return 1;
     }
 
