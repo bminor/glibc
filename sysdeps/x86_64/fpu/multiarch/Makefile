@@ -159,11 +159,18 @@ CFLAGS-s_sin-avx.c = -msse2avx -DSSE2AVX
 CFLAGS-s_tan-avx.c = -msse2avx -DSSE2AVX
 CFLAGS-s_sincos-avx.c = -msse2avx -DSSE2AVX
 
-CFLAGS-s_modf-sse4_1.c = -msse4.1 -fno-builtin-modff32x -fno-builtin-modff64
-CFLAGS-s_modff-sse4_1.c = -msse4.1 -fno-builtin-modff32
+CFLAGS-s_modf-c.c = $(no-stack-protector)
+CFLAGS-s_modff-c.c = $(no-stack-protector)
 
-CFLAGS-s_modf-avx.c = -msse2avx -DSSE2AVX -fno-builtin-modff32x -fno-builtin-modff64
-CFLAGS-s_modff-avx.c = -msse2avx -DSSE2AVX -fno-builtin-modff32
+CFLAGS-s_modf-sse4_1.c = -msse4.1 -fno-builtin-modff32x \
+			 -fno-builtin-modff64 $(no-stack-protector)
+CFLAGS-s_modff-sse4_1.c = -msse4.1 -fno-builtin-modff32 \
+			  $(no-stack-protector)
+
+CFLAGS-s_modf-avx.c = -msse2avx -DSSE2AVX -fno-builtin-modff32x \
+		      $(no-stack-protector) -fno-builtin-modff64
+CFLAGS-s_modff-avx.c = -msse2avx -DSSE2AVX -fno-builtin-modff32 \
+		      $(no-stack-protector)
 endif
 
 ifeq ($(subdir),mathvec)
