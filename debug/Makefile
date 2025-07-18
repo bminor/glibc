@@ -187,9 +187,9 @@ CFLAGS-tst-sprintf-fortify-rdonly-dlopen.c += $(no-fortify-source) -D_FORTIFY_SO
 CFLAGS-tst-fortify-syslog.c += $(no-fortify-source) -D_FORTIFY_SOURCE=2
 CFLAGS-tst-fortify-wide.c += $(no-fortify-source) -D_FORTIFY_SOURCE=2
 
-$(objpfx)tst-sprintf-fortify-rdonly: \
-	$(objpfx)tst-sprintf-fortify-rdonly-mod.so \
-	$(objpfx)tst-sprintf-fortify-rdonly-dlopen.so
+$(objpfx)tst-sprintf-fortify-rdonly: $(objpfx)tst-sprintf-fortify-rdonly-mod.so
+$(objpfx)tst-sprintf-fortify-rdonly.out: \
+  $(objpfx)tst-sprintf-fortify-rdonly-dlopen.so
 
 # _FORTIFY_SOURCE tests.
 # Auto-generate tests for _FORTIFY_SOURCE for different levels, compilers and
