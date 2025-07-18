@@ -133,6 +133,27 @@ copy_and_spawn_sgid (const char *child_id, gid_t gid)
   if (chmod (execname, 02750) != 0)
     FAIL_UNSUPPORTED ("cannot make \"%s\" SGID: %m ", execname);
 
+  /* Now we can drop the privilege of that group.  */
+  const int count = 64;
+  gid_t groups[count];
+  int ngroups = getgroups(count, groups);
+
+  if (ngroups < 0)
+    FAIL_UNSUPPORTED ("Could not get group list again for user %jd\n",
+		      (intmax_t) getuid ());
+
+  int n = 0;
+  for (int i = 0; i < ngroups; i++)
+    {
+      if (groups[i] != gid)
+	{
+	  if (n != i)
+	    groups[n] = groups[i];
+	  n++;
+	}
+    }
+  setgroups (n, groups);
+
   /* We have the binary, now spawn the subprocess.  Avoid using
      support_subprogram because we only want the program exit status, not the
      contents.  */
