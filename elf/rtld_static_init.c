@@ -79,6 +79,7 @@ __rtld_static_init (struct link_map *map)
     attribute_hidden;
   dl->_dl_tls_static_size = _dl_tls_static_size;
   dl->_dl_find_object = _dl_find_object;
+  dl->_dl_readonly_area = _dl_readonly_area;
 
   __rtld_static_init_arch (map, dl);
 }

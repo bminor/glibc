@@ -184,12 +184,19 @@ CPPFLAGS-tst-chk-cancel.c += $(no-fortify-source) -D_FORTIFY_SOURCE=2
 CFLAGS-tst-sprintf-fortify-rdonly.c += $(no-fortify-source) -D_FORTIFY_SOURCE=2
 CFLAGS-tst-sprintf-fortify-rdonly-mod.c += $(no-fortify-source) -D_FORTIFY_SOURCE=2
 CFLAGS-tst-sprintf-fortify-rdonly-dlopen.c += $(no-fortify-source) -D_FORTIFY_SOURCE=2
+CFLAGS-tst-sprintf-fortify-rdonly-static.c += $(no-fortify-source) -D_FORTIFY_SOURCE=2
 CFLAGS-tst-fortify-syslog.c += $(no-fortify-source) -D_FORTIFY_SOURCE=2
 CFLAGS-tst-fortify-wide.c += $(no-fortify-source) -D_FORTIFY_SOURCE=2
 
 $(objpfx)tst-sprintf-fortify-rdonly: $(objpfx)tst-sprintf-fortify-rdonly-mod.so
 $(objpfx)tst-sprintf-fortify-rdonly.out: \
   $(objpfx)tst-sprintf-fortify-rdonly-dlopen.so
+$(objpfx)tst-sprintf-fortify-rdonly-static: \
+  $(objpfx)tst-sprintf-fortify-rdonly-dlopen.o
+$(objpfx)tst-sprintf-fortify-rdonly-static.out: \
+  $(objpfx)tst-sprintf-fortify-rdonly-dlopen.so
+tst-sprintf-fortify-rdonly-static-ENV = \
+  LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)/elf
 
 # _FORTIFY_SOURCE tests.
 # Auto-generate tests for _FORTIFY_SOURCE for different levels, compilers and
@@ -328,8 +335,13 @@ tests = \
   tst-longjmp_chk3 \
   tst-realpath-chk \
   tst-sprintf-fortify-rdonly \
+  tst-sprintf-fortify-rdonly-static \
   tst-sprintf-fortify-unchecked \
   # tests
+
+tests-static = \
+  tst-sprintf-fortify-rdonly-static \
+  # tests-static
 
 tests-time64 += \
   $(tests-all-time64-chk) \

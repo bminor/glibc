@@ -371,7 +371,6 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
     ._dl_error_free = _dl_error_free,
     ._dl_tls_get_addr_soft = _dl_tls_get_addr_soft,
     ._dl_libc_freeres = __rtld_libc_freeres,
-    ._dl_readonly_area = _dl_readonly_area,
   };
 /* If we would use strong_alias here the compiler would see a
    non-hidden definition.  This would undo the effect of the previous
@@ -458,6 +457,7 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
   /* Do not use an initializer for these members because it would
      interfere with __rtld_static_init.  */
   GLRO (dl_find_object) = &_dl_find_object;
+  GLRO (dl_readonly_area) = &_dl_readonly_area;
 
   /* If it hasn't happen yet record the startup time.  */
   rtld_timer_start (&start_time);
