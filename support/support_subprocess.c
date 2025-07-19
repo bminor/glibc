@@ -25,6 +25,7 @@
 #include <support/check.h>
 #include <support/xunistd.h>
 #include <support/subprocess.h>
+#include <support/temp_file-internal.h>
 
 static struct support_subprocess
 support_subprocess_init (void)
@@ -60,6 +61,8 @@ support_subprocess (void (*callback) (void *), void *closure)
       xclose (result.stdout_pipe[1]);
       xclose (result.stderr_pipe[1]);
       callback (closure);
+      /* Make sure that temporary files are deleted.  */
+      support_delete_temp_files ();
       _exit (0);
     }
   xclose (result.stdout_pipe[1]);
