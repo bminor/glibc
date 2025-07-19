@@ -34,11 +34,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 #include <support/check.h>
 #include <support/temp_file.h>
 #include <support/xstdio.h>
 #include <support/xthread.h>
+#include <support/support.h>
 
 #define NUM_THREADS 100
 #define ITERS 10
@@ -111,7 +113,8 @@ threadOpenCloseRoutine (void *argv)
   /* Wait for all threads to be ready to call fopen and fclose.  */
   xpthread_barrier_wait (&barrier);
 
-  FILE *fd = xfopen ("/tmp/openclosetest", "w+");
+  char *file = (char *) argv;
+  FILE *fd = xfopen (file, "w+");
   xfclose (fd);
   return NULL;
 }
@@ -235,6 +238,10 @@ do_test (void)
       xfclose (fd_file);
     }
 
+  char *tempdir = support_create_temp_directory ("openclosetest-");
+  char *file = xasprintf ("%s/file", tempdir);
+  add_temp_file (file);
+
   /* Test 3: Concurrent open/close.  */
   for (int reps = 1; reps <= ITERS; reps++)
     {
@@ -243,7 +250,7 @@ do_test (void)
         {
           threads[i] =
             xpthread_create (support_small_stack_thread_attribute (),
-                             threadOpenCloseRoutine, NULL);
+                             threadOpenCloseRoutine, file);
         }
       for (int i = 0; i < NUM_THREADS; i++)
         {
@@ -251,6 +258,9 @@ do_test (void)
         }
       xpthread_barrier_destroy (&barrier);
     }
+
+  free (file);
+  free (tempdir);
 
   return 0;
 }
