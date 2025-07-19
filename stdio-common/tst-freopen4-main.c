@@ -28,25 +28,15 @@
 #include <support/test-driver.h>
 #include <support/xstdio.h>
 #include <support/xunistd.h>
+#include <support/capture_subprocess.h>
 
-int
-do_test (void)
+static void
+do_test_chroot (void *data)
 {
-  mtrace ();
-  char *temp_dir;
+  char *temp_dir = (char *) data;
   FILE *fp;
   int ret;
 
-  /* These chroot tests verify that either reopening a renamed or
-     deleted file works even in the absence of /proc, or that it fails
-     (without memory leaks); thus, for example, such reopening does
-     not crash in the absence of /proc.  */
-
-  support_become_root ();
-  if (!support_can_chroot ())
-    return EXIT_UNSUPPORTED;
-
-  temp_dir = support_create_temp_directory ("tst-freopen4");
   xchroot (temp_dir);
 
   /* Test freopen with NULL, renamed file.  This verifies that
@@ -96,6 +86,32 @@ do_test (void)
     puts ("freopen of deleted file failed (OK)");
 
   free (temp_dir);
+}
+
+int
+do_test (void)
+{
+  mtrace ();
+  char *temp_dir;
+
+  /* These chroot tests verify that either reopening a renamed or
+     deleted file works even in the absence of /proc, or that it fails
+     (without memory leaks); thus, for example, such reopening does
+     not crash in the absence of /proc.  */
+
+  support_become_root ();
+  if (!support_can_chroot ())
+    return EXIT_UNSUPPORTED;
+
+  temp_dir = support_create_temp_directory ("tst-freopen4");
+
+  struct support_capture_subprocess result;
+  result = support_capture_subprocess (do_test_chroot, temp_dir);
+  support_capture_subprocess_check (&result, "freopen4", 0,
+				    sc_allow_stdout);
+  fputs (result.out.buffer, stdout);
+  support_capture_subprocess_free (&result);
+
   return 0;
 }
 
