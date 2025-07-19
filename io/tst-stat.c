@@ -27,6 +27,7 @@
 #include <sys/sysmacros.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 static void
 stat_check (int fd, const char *path, struct stat *st)
@@ -78,7 +79,8 @@ static int
 do_test (void)
 {
   char *path;
-  const char *linkame = "tst-fstat.linkname";
+  char *tempdir = support_create_temp_directory ("tst-stat-");
+  char *linkname = xasprintf ("%s/tst-fstat.linkname", tempdir);
   int fd = create_temp_file ("tst-fstat.", &path);
   TEST_VERIFY_EXIT (fd >= 0);
   support_write_file_string (path, "abc");
@@ -122,9 +124,12 @@ do_test (void)
 	}
     }
 
-  TEST_COMPARE (symlink ("tst-fstat.target", linkame), 0);
-  add_temp_file (linkame);
-  fstatat_link (linkame, &st);
+  TEST_COMPARE (symlink ("tst-fstat.target", linkname), 0);
+  add_temp_file (linkname);
+  fstatat_link (linkname, &st);
+
+  free (linkname);
+  free (tempdir);
 
   return 0;
 }
