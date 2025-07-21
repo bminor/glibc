@@ -5,12 +5,12 @@
 #
 # Denis Lackovic <delacko@fly.srk.fer.hr>, 2002.
 # Tomislav Krznar <tomislav.krznar@gmail.com>, 2012.
-# Božidar Putanec <bozidarp@yahoo.com>, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025.
+# Božidar Putanec <bozidarp@yahoo.com>, 2018-2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: libc-2.40.9000\n"
-"POT-Creation-Date: 2025-01-28 12:35+0100\n"
-"PO-Revision-Date: 2025-01-07 18:25-0800\n"
+"Project-Id-Version: libc-2.41.9000\n"
+"POT-Creation-Date: 2025-07-19 22:21+0200\n"
+"PO-Revision-Date: 2025-07-20 17:57+0200\n"
 "Last-Translator: Božidar Putanec <bozidarp@yahoo.com>\n"
 "Language-Team: Croatian <lokalizacija@linux.hr>\n"
 "Language: hr\n"
@@ -58,7 +58,7 @@ msgstr " [OPCIJA...]"
 #: argp/argp-help.c:1756
 #, c-format
 msgid "Try `%s --help' or `%s --usage' for more information.\n"
-msgstr "Pokušajte „%s --help“ ili „%s --usage“ za više informacija.\n"
+msgstr "Pokušajte „%s --help” ili „%s --usage” za više informacija.\n"
 
 #: argp/argp-help.c:1784
 #, c-format
@@ -104,7 +104,7 @@ msgstr "(**INTERNA GREŠKA PROGRAMA**) Nema poznate inačice!?"
 msgid "%s: Too many arguments\n"
 msgstr "%s: Previše argumenata\n"
 
-#: argp/argp-parse.c:751
+#: argp/argp-parse.c:754
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(**INTERNA GREŠKA PROGRAMA**) Opcije su trebale biti prepoznate!?"
 
@@ -116,7 +116,7 @@ msgstr "%s%s%s:%u: %s%sNeočekivana greška: %s.\n"
 #: assert/assert.c:127
 #, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
-msgstr "%s%s%s:%u: %s%sKontrolni test „%s“ nije uspio.\n"
+msgstr "%s%s%s:%u: %s%sKontrolni test „%s” nije uspio.\n"
 
 #: catgets/gencat.c:111
 msgid "Create C header file NAME containing symbol definitions"
@@ -147,7 +147,7 @@ msgstr ""
 "-o IZLAZNA-DATOTEKA [ULAZNA-DATOTEKA]...\n"
 "[IZLAZNA-DATOTEKA [ULAZNA-DATOTEKA]...]"
 
-#: catgets/gencat.c:230 debug/pcprofiledump.c:219 elf/ldconfig.c:217
+#: catgets/gencat.c:230 debug/pcprofiledump.c:219 elf/ldconfig.c:216
 #: elf/pldd.c:246 elf/sln.c:77 elf/sprof.c:371 iconv/iconv_prog.c:374
 #: iconv/iconvconfig.c:380 locale/programs/locale.c:275
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:88
@@ -162,7 +162,7 @@ msgstr ""
 "%s.\n"
 
 #: catgets/gencat.c:246 debug/pcprofiledump.c:235 debug/xtrace.sh:63
-#: elf/ldconfig.c:233 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
+#: elf/ldconfig.c:232 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
 #: elf/sprof.c:388 iconv/iconv_prog.c:391 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
@@ -178,7 +178,7 @@ msgstr ""
 "NEMA jamstava; čak ni za PRODAJU ili UPOTREBU ZA ODREĐENU NAMJENU.\n"
 
 #: catgets/gencat.c:251 debug/pcprofiledump.c:240 debug/xtrace.sh:67
-#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:396
+#: elf/ldconfig.c:237 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:396
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
@@ -195,7 +195,7 @@ msgstr "*standardni ulaz*"
 #: iconv/iconv_prog.c:432 nss/makedb.c:248
 #, c-format
 msgid "cannot open input file `%s'"
-msgstr "nije moguće otvoriti ulaznu datoteku „%s“"
+msgstr "nije moguće otvoriti ulaznu datoteku „%s”"
 
 #: catgets/gencat.c:417 catgets/gencat.c:492
 msgid "illegal set number"
@@ -212,7 +212,7 @@ msgstr "ovo je prva definicija"
 #: catgets/gencat.c:517
 #, c-format
 msgid "unknown set `%s'"
-msgstr "nepoznati skup „%s“"
+msgstr "nepoznati skup „%s”"
 
 #: catgets/gencat.c:558
 msgid "invalid quote character"
@@ -221,7 +221,7 @@ msgstr "nevaljani znak za citiranje"
 #: catgets/gencat.c:571
 #, c-format
 msgid "unknown directive `%s': line ignored"
-msgstr "nepoznata direktiva „%s“: redak je zanemaren"
+msgstr "nepoznata direktiva „%s”: redak je zanemaren"
 
 #: catgets/gencat.c:616
 msgid "duplicated message number"
@@ -251,7 +251,7 @@ msgstr "nije moguće dodijeliti memoriju"
 #: catgets/gencat.c:1000 catgets/gencat.c:1045
 #, c-format
 msgid "cannot open output file `%s'"
-msgstr "nije moguće otvoriti izlaznu datoteku „%s“"
+msgstr "nije moguće otvoriti izlaznu datoteku „%s”"
 
 #: catgets/gencat.c:1210 locale/programs/linereader.c:588
 msgid "invalid escape sequence"
@@ -325,7 +325,7 @@ msgstr "Uporaba: xtrace [OPCIJA]... PROGRAM [OPCIJA_PROGRAMA]...\\n"
 #: debug/xtrace.sh:31 elf/sotruss.sh:56 elf/sotruss.sh:67 elf/sotruss.sh:135
 #: malloc/memusage.sh:25
 msgid "Try \\`%s --help' or \\`%s --usage' for more information.\\n"
-msgstr "Pokušajte „%s --help“ ili „%s --usage“ za više informacija.\\n"
+msgstr "Pokušajte „%s --help” ili „%s --usage” za više informacija.\\n"
 
 #: debug/xtrace.sh:37
 msgid "%s: option '%s' requires an argument.\\n"
@@ -363,7 +363,7 @@ msgstr "Za upute o prijavljivanju grešaka pogledajte:\\\\n%s.\\\\n"
 
 #: debug/xtrace.sh:124
 msgid "xtrace: unrecognized option \\`$1'\\n"
-msgstr "xtrace: neprepoznata opcija „$1“\\n"
+msgstr "xtrace: neprepoznata opcija „$1”\\n"
 
 #: debug/xtrace.sh:137
 msgid "No program name given\\n"
@@ -372,12 +372,12 @@ msgstr "Nije navedeno ime programa\\n"
 #: debug/xtrace.sh:145
 #, sh-format
 msgid "executable \\`$program' not found\\n"
-msgstr "izvršna datoteka „$program“ nije nađena\\n"
+msgstr "izvršna datoteka „$program” nije nađena\\n"
 
 #: debug/xtrace.sh:149
 #, sh-format
 msgid "\\`$program' is no executable\\n"
-msgstr "Program „$program“ nije izvršna datoteka\\n"
+msgstr "Program „$program” nije izvršna datoteka\\n"
 
 #: dlfcn/dlinfo.c:48
 msgid "unsupported dlinfo request"
@@ -408,7 +408,7 @@ msgstr "Datoteka predmemorije ima loš endian.\n"
 msgid "Cache generated by: "
 msgstr "Predmemoriju je generiao: "
 
-#: elf/cache.c:296 elf/ldconfig.c:1239
+#: elf/cache.c:296 elf/ldconfig.c:1238
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Nije moguće otvoriti cache-datoteku %s\n"
@@ -426,7 +426,7 @@ msgstr "To nije cache-datoteka.\n"
 #: elf/cache.c:368 elf/cache.c:383
 #, c-format
 msgid "%d libs found in cache `%s'\n"
-msgstr "%d biblioteka je pronađena u predmemoriji (cache) „%s“\n"
+msgstr "%d biblioteka je pronađena u predmemoriji (cache) „%s”\n"
 
 #: elf/cache.c:381
 #, c-format
@@ -477,11 +477,11 @@ msgstr "greška pri učitavanju zajedničkih biblioteka"
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr "GREŠKA DINAMIČKOG LINKERA!!!"
 
-#: elf/dl-close.c:363 elf/dl-open.c:298
+#: elf/dl-close.c:363 elf/dl-open.c:297
 msgid "cannot create scope list"
 msgstr "nije moguće stvoriti popis opsega (scope list)"
 
-#: elf/dl-close.c:792
+#: elf/dl-close.c:790
 msgid "shared object not open"
 msgstr "zajednički objekt nije otvoren"
 
@@ -496,7 +496,7 @@ msgstr "zamjena praznog DST (dynamic string token)"
 #: elf/dl-deps.c:115
 #, c-format
 msgid "cannot load auxiliary `%s' because of empty dynamic string token substitution\n"
-msgstr "nije moguće učitati pomoćnu datoteku „%s“ zbog zamjene praznog DST (dynamic string token)\n"
+msgstr "nije moguće učitati pomoćnu datoteku „%s” zbog zamjene praznog DST (dynamic string token)\n"
 
 #: elf/dl-deps.c:204
 msgid "cannot allocate dependency buffer"
@@ -510,11 +510,11 @@ msgstr "nije moguće dodijeliti memoriju za popis ovisnosti"
 msgid "cannot allocate symbol search list"
 msgstr "nije moguće dodijeliti memoriju za popis simbola za pretraživanje"
 
-#: elf/dl-hwcaps.c:104
+#: elf/dl-hwcaps.c:103
 msgid "cannot create HWCAP priorities"
 msgstr "nije moguće stvoriti HWCAP prioritete"
 
-#: elf/dl-hwcaps.c:196
+#: elf/dl-hwcaps.c:195
 msgid "cannot create capability list"
 msgstr "nije moguće stvoriti popis kvalifikacija"
 
@@ -534,99 +534,99 @@ msgstr "nije moguće stvoriti RUNPATH/RPATH kopiju"
 msgid "cannot create search path array"
 msgstr "nije moguće stvoriti polje za pretraživanje staza"
 
-#: elf/dl-load.c:973
+#: elf/dl-load.c:978
 msgid "cannot stat shared object"
 msgstr "nije moguće stat zajednički objekt"
 
-#: elf/dl-load.c:1066 elf/dl-load.c:2155
+#: elf/dl-load.c:1071 elf/dl-load.c:2155
 msgid "cannot create shared object descriptor"
 msgstr "nije moguće stvoriti deskriptor zajedničkog objekta"
 
-#: elf/dl-load.c:1085 elf/dl-load.c:1604 elf/dl-load.c:1710
+#: elf/dl-load.c:1090 elf/dl-load.c:1605 elf/dl-load.c:1711
 msgid "cannot read file data"
 msgstr "nije moguće pročitati podatke iz datoteke"
 
-#: elf/dl-load.c:1138 elf/dl-map-segments.h:117
+#: elf/dl-load.c:1143 elf/dl-map-segments.h:118
 msgid "ELF load command address/offset not page-aligned"
-msgstr "adresa/odmak ELF naredbe nije page-aligned"
+msgstr "adresa/pomak ELF naredbe nije page-aligned"
 
-#: elf/dl-load.c:1230
+#: elf/dl-load.c:1235
 msgid "object file has no loadable segments"
 msgstr "datoteka objekta nema segmenata koji se mogu učitati"
 
-#: elf/dl-load.c:1247
+#: elf/dl-load.c:1252
 msgid "cannot dynamically load executable"
 msgstr "nije moguće dinamički učitati izvršnu datoteku"
 
-#: elf/dl-load.c:1254
+#: elf/dl-load.c:1259
 msgid "object file has no dynamic section"
 msgstr "datoteka objekta nema dinamičku sekciju"
 
-#: elf/dl-load.c:1289
+#: elf/dl-load.c:1294
 msgid "cannot dynamically load position-independent executable"
 msgstr "nije moguće dinamički učitati izvršnu ovisnu-o-poziciji datoteku"
 
-#: elf/dl-load.c:1291
+#: elf/dl-load.c:1296
 msgid "shared object cannot be dlopen()ed"
 msgstr "zajednički objekt nije moguće otvoriti s dlopen()"
 
-#: elf/dl-load.c:1304
+#: elf/dl-load.c:1309
 msgid "cannot allocate memory for program header"
 msgstr "nije moguće dodijeliti memoriju za zaglavlje programa"
 
-#: elf/dl-load.c:1329
+#: elf/dl-load.c:1334
 msgid "cannot enable executable stack as shared object requires"
 msgstr "nije moguće koristiti izvršni stȏg kako to zahtijeva zajednički objekt"
 
-#: elf/dl-load.c:1357
+#: elf/dl-load.c:1362
 msgid "cannot close file descriptor"
 msgstr "nije moguće zatvoriti deskriptor datoteke"
 
-#: elf/dl-load.c:1604
+#: elf/dl-load.c:1605
 msgid "file too short"
 msgstr "datoteka je prekratka"
 
-#: elf/dl-load.c:1638
+#: elf/dl-load.c:1639
 msgid "invalid ELF header"
 msgstr "nevaljano ELF zaglavlje"
 
-#: elf/dl-load.c:1653
+#: elf/dl-load.c:1654
 msgid "ELF file data encoding not big-endian"
 msgstr "Kodiranje podataka ELF datoteke nije big-endian"
 
-#: elf/dl-load.c:1655
+#: elf/dl-load.c:1656
 msgid "ELF file data encoding not little-endian"
 msgstr "Kodiranje podataka ELF datoteke nije little-endian"
 
-#: elf/dl-load.c:1659
+#: elf/dl-load.c:1660
 msgid "ELF file version ident does not match current one"
 msgstr "Identifikacija inačice ELF datoteke ne slaže se s aktualnom"
 
-#: elf/dl-load.c:1663
+#: elf/dl-load.c:1664
 msgid "ELF file OS ABI invalid"
 msgstr "OS ABI od ELF datoteke nije valjani"
 
-#: elf/dl-load.c:1666
+#: elf/dl-load.c:1667
 msgid "ELF file ABI version invalid"
 msgstr "ABI inačica od ELF datoteke nije valjana"
 
-#: elf/dl-load.c:1669
+#: elf/dl-load.c:1670
 msgid "nonzero padding in e_ident"
-msgstr "popuna u e_ident() nisu nule"
+msgstr "dopuna u e_ident() nisu nule"
 
-#: elf/dl-load.c:1672
+#: elf/dl-load.c:1673
 msgid "internal error"
 msgstr "**interna greška**"
 
-#: elf/dl-load.c:1679
+#: elf/dl-load.c:1680
 msgid "ELF file version does not match current one"
 msgstr "Inačica ELF datoteke ne slaže se s aktualnom"
 
-#: elf/dl-load.c:1691
+#: elf/dl-load.c:1692
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "mogu se učitati samo ET_DYN i ET_EXEC"
 
-#: elf/dl-load.c:1696
+#: elf/dl-load.c:1697
 msgid "ELF file's phentsize not the expected size"
 msgstr "phentsize ELF datoteke nije očekivane veličine"
 
@@ -654,21 +654,21 @@ msgstr "nije moguće promijeniti zaštitu memorije"
 msgid "cannot map zero-fill pages"
 msgstr "nulama ispunjene stranice ne mogu se mapirati u memoriju"
 
-#: elf/dl-lookup.c:800
+#: elf/dl-lookup.c:810
 msgid "symbol lookup error"
 msgstr "greška u potrazi za simbolom"
 
-#: elf/dl-open.c:84
+#: elf/dl-open.c:83
 msgid "cannot extend global scope"
 msgstr "nije moguće proširiti globalni opseg"
 
-#: elf/dl-open.c:382
+#: elf/dl-open.c:381
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr ""
 "Brojač TLS generatora ponovno je počeo od nule!\n"
 "Ovo je ** programska pogreška **. Molimo da to prijavite."
 
-#: elf/dl-open.c:716
+#: elf/dl-open.c:717
 msgid "cannot allocate address lookup data"
 msgstr "nije moguće dodijeliti adresu za pretraživanje"
 
@@ -709,7 +709,7 @@ msgstr "nije moguće primijeniti dodatnu zaštitu memorije nakon premještanja"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT korišten u kodu nije dinamički učitan"
 
-#: elf/dl-tls.c:1196
+#: elf/dl-tls.c:1209
 msgid "cannot create TLS data structures"
 msgstr "nije moguće stvoriti TLS podatkovne strukture"
 
@@ -721,222 +721,222 @@ msgstr "greška u potrazi za inačicom"
 msgid "cannot allocate version reference table"
 msgstr "nije moguće dodijeliti memoriju za tablicu referencija inačica"
 
-#: elf/dl-version.c:380
+#: elf/dl-version.c:387
 msgid "DT_RELR without GLIBC_ABI_DT_RELR dependency"
 msgstr "DT_RELR bez GLIBC_ABI_DT_RELR ovisnosti"
 
-#: elf/ldconfig.c:125
+#: elf/ldconfig.c:124
 msgid "Print cache"
 msgstr "pregled sadržaja predmemorije (cache)"
 
-#: elf/ldconfig.c:126
+#: elf/ldconfig.c:125
 msgid "Generate verbose messages"
 msgstr "generira opširne poruke"
 
-#: elf/ldconfig.c:127
+#: elf/ldconfig.c:126
 msgid "Don't build cache"
 msgstr "ne gradi predmemoriju (cache)"
 
-#: elf/ldconfig.c:128
+#: elf/ldconfig.c:127
 msgid "Don't update symbolic links"
 msgstr "ne ažurira simbolične poveznice"
 
-#: elf/ldconfig.c:129
+#: elf/ldconfig.c:128
 msgid "Change to and use ROOT as root directory"
 msgstr "promijeni direktorij u ROOT i koristi ga kao root direktorij"
 
-#: elf/ldconfig.c:129
+#: elf/ldconfig.c:128
 msgid "ROOT"
 msgstr "ROOT"
 
-#: elf/ldconfig.c:130
+#: elf/ldconfig.c:129
 msgid "CACHE"
 msgstr "PREDMEMORIJA"
 
-#: elf/ldconfig.c:130
+#: elf/ldconfig.c:129
 msgid "Use CACHE as cache file"
 msgstr "rabi PREDMEMORIJU kao cache-datoteku"
 
-#: elf/ldconfig.c:131
+#: elf/ldconfig.c:130
 msgid "CONF"
 msgstr "KONFIG"
 
-#: elf/ldconfig.c:131
+#: elf/ldconfig.c:130
 msgid "Use CONF as configuration file"
 msgstr "rabi KONFIG kao konfiguracijsku datoteku"
 
-#: elf/ldconfig.c:132
+#: elf/ldconfig.c:131
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "obradi samo direktorije navedene u naredbenom retku i ne gradi predmemoriju"
 
-#: elf/ldconfig.c:133
+#: elf/ldconfig.c:132
 msgid "Manually link individual libraries."
 msgstr "ručno poveže pojedine biblioteke"
 
-#: elf/ldconfig.c:134
+#: elf/ldconfig.c:133
 msgid "FORMAT"
 msgstr "FORMAT"
 
-#: elf/ldconfig.c:134
+#: elf/ldconfig.c:133
 msgid "Format to use: new (default), old, or compat"
 msgstr "koristi se jedan od formata: new (zadano), old ili compat"
 
-#: elf/ldconfig.c:135
+#: elf/ldconfig.c:134
 msgid "Ignore auxiliary cache file"
 msgstr "zanemari datoteku pomoćne predmemorije"
 
-#: elf/ldconfig.c:143
+#: elf/ldconfig.c:142
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr "Konfigurira dinamički linker."
 
-#: elf/ldconfig.c:277
+#: elf/ldconfig.c:276
 #, c-format
 msgid "Path `%s' given more than once"
-msgstr "Staza „%s“ navedena je više puta"
+msgstr "Staza „%s” navedena je više puta"
 
-#: elf/ldconfig.c:278
+#: elf/ldconfig.c:277
 #, c-format
 msgid "(from %s:%d and %s:%d)\n"
 msgstr "(od %s:%d i %s:%d)\n"
 
-#: elf/ldconfig.c:310 elf/ldconfig.c:351
+#: elf/ldconfig.c:309 elf/ldconfig.c:350
 #, c-format
 msgid "Could not form glibc-hwcaps path"
 msgstr "Nije moguće formirati glibc-hwcaps stazu"
 
-#: elf/ldconfig.c:324
+#: elf/ldconfig.c:323
 #, c-format
 msgid "Listing directory %s"
 msgstr "Nije moguće pročitati stazu %s"
 
-#: elf/ldconfig.c:406
+#: elf/ldconfig.c:405
 #, c-format
 msgid "Can't stat %s"
 msgstr "Nije moguće dobiti status %s"
 
-#: elf/ldconfig.c:487
+#: elf/ldconfig.c:486
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "Nije moguće dobiti status %s\n"
 
-#: elf/ldconfig.c:497
+#: elf/ldconfig.c:496
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s nije simbolična poveznica\n"
 
-#: elf/ldconfig.c:516
+#: elf/ldconfig.c:515
 #, c-format
 msgid "Can't unlink %s"
 msgstr "Nije moguće ukloniti (unlink) vezu %s"
 
-#: elf/ldconfig.c:522
+#: elf/ldconfig.c:521
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "Nije moguće napraviti vezu (link) %s na %s"
 
-#: elf/ldconfig.c:528
+#: elf/ldconfig.c:527
 msgid " (changed)\n"
 msgstr " (promijenjeno)\n"
 
-#: elf/ldconfig.c:530
+#: elf/ldconfig.c:529
 msgid " (SKIPPED)\n"
 msgstr " (PRESKOČENO)\n"
 
-#: elf/ldconfig.c:585
+#: elf/ldconfig.c:584
 #, c-format
 msgid "Can't find %s"
 msgstr "Nije moguće pronaći %s"
 
-#: elf/ldconfig.c:601 elf/ldconfig.c:760 elf/ldconfig.c:827
+#: elf/ldconfig.c:600 elf/ldconfig.c:759 elf/ldconfig.c:826
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "Nije moguće dobiti status veze %s"
 
-#: elf/ldconfig.c:607
+#: elf/ldconfig.c:606
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "%s datoteka je zanemarena jer nije obična datoteka."
 
-#: elf/ldconfig.c:615
+#: elf/ldconfig.c:614
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "Nijedna poveznica nije stvorena jer soname nije bilo moguće naći za %s"
 
-#: elf/ldconfig.c:701
+#: elf/ldconfig.c:700
 #, c-format
 msgid " (from %s:%d)\n"
 msgstr " (od %s:%d)\n"
 
-#: elf/ldconfig.c:716
+#: elf/ldconfig.c:715
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Nije moguće otvoriti direktorij %s"
 
-#: elf/ldconfig.c:743 elf/ldconfig.c:748
+#: elf/ldconfig.c:742 elf/ldconfig.c:747
 #, c-format
 msgid "Could not form library path"
 msgstr "Nije bilo moguće formirati stazu biblioteke"
 
-#: elf/ldconfig.c:777 elf/ldconfig.c:815 elf/readlib.c:81
+#: elf/ldconfig.c:776 elf/ldconfig.c:814 elf/readlib.c:81
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Ulazna datoteka %s nije pronađena.\n"
 
-#: elf/ldconfig.c:784
+#: elf/ldconfig.c:783
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Nije moguće stat %s"
 
-#: elf/ldconfig.c:903
+#: elf/ldconfig.c:902
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "libc6 biblioteka %s je u krivom direktoriju"
 
-#: elf/ldconfig.c:922
+#: elf/ldconfig.c:921
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "Biblioteke %s i %s u direktoriju %s imaju isti soname ali su različite vrste."
 
-#: elf/ldconfig.c:1051
+#: elf/ldconfig.c:1050
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr ""
 "Upozorenje: zanemarena konfiguracijska datoteka\n"
 "  koju nije moguće otvoriti: %s"
 
-#: elf/ldconfig.c:1099
+#: elf/ldconfig.c:1098
 #, c-format
 msgid "%s:%u: hwcap directive ignored"
 msgstr "%s:%u: hwcap direktiva -- zanemareno"
 
-#: elf/ldconfig.c:1118
+#: elf/ldconfig.c:1117
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "treba apsolutno ime datoteke za konfiguracijsku datoteku kad se koristi -r"
 
-#: elf/ldconfig.c:1125 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1124 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:460 posix/getconf.c:699
 #, c-format
 msgid "memory exhausted"
 msgstr "nema dovoljno memorije"
 
-#: elf/ldconfig.c:1158
+#: elf/ldconfig.c:1157
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: nije moguće čitati direktorij %s"
 
-#: elf/ldconfig.c:1196
+#: elf/ldconfig.c:1195
 #, c-format
 msgid "relative path `%s' used to build cache"
-msgstr "relativna staza „%s“ korištena je za izgradnju predmemorije"
+msgstr "relativna staza „%s” korištena je za izgradnju predmemorije"
 
-#: elf/ldconfig.c:1218
+#: elf/ldconfig.c:1217
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Nije moguće promijeniti direktorij u / (root)"
 
-#: elf/ldconfig.c:1259
+#: elf/ldconfig.c:1258
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Nije moguće otvoriti direktorij %s s cache-datotekom\n"
@@ -967,7 +967,7 @@ msgstr ""
 
 #: elf/ldd.bash.in:80
 msgid "ldd: option \\`$1' is ambiguous"
-msgstr "ldd: opcija „$1“ nije jednoznačna"
+msgstr "ldd: opcija „$1” nije jednoznačna"
 
 #: elf/ldd.bash.in:87
 msgid "unrecognized option"
@@ -975,7 +975,7 @@ msgstr "neprepoznata opcija"
 
 #: elf/ldd.bash.in:88 elf/ldd.bash.in:125
 msgid "Try \\`ldd --help' for more information."
-msgstr "Pokušajte „ldd --help“ za više informacija."
+msgstr "Pokušajte „ldd --help” za više informacija."
 
 #: elf/ldd.bash.in:124
 msgid "missing file arguments"
@@ -1200,7 +1200,7 @@ msgstr "%s: nevaljano odredište: %s\n"
 #: elf/sln.c:189 elf/sln.c:198
 #, c-format
 msgid "Invalid link from \"%s\" to \"%s\": %s\n"
-msgstr "Nevaljana poveznica od „%s“ na „%s“: %s\n"
+msgstr "Nevaljana poveznica od „%s” na „%s”: %s\n"
 
 #: elf/sotruss.sh:32
 #, sh-format
@@ -1292,84 +1292,84 @@ msgstr "DIJELJENI_OBJEKT [PROFILE_DATA]"
 #: elf/sprof.c:432
 #, c-format
 msgid "failed to load shared object `%s'"
-msgstr "nije uspjelo učitati dijeljeni objekt „%s“"
+msgstr "nije uspjelo učitati dijeljeni objekt „%s”"
 
-#: elf/sprof.c:441 elf/sprof.c:824 elf/sprof.c:922
+#: elf/sprof.c:441 elf/sprof.c:821 elf/sprof.c:919
 #, c-format
 msgid "cannot create internal descriptor"
 msgstr "nije moguće stvoriti interni deskriptor"
 
-#: elf/sprof.c:553
+#: elf/sprof.c:550
 #, c-format
 msgid "Reopening shared object `%s' failed"
-msgstr "Ponovno otvaranje dijeljenog objekta „%s“ nije uspjelo"
+msgstr "Ponovno otvaranje dijeljenog objekta „%s” nije uspjelo"
 
-#: elf/sprof.c:560 elf/sprof.c:655
+#: elf/sprof.c:557 elf/sprof.c:652
 #, c-format
 msgid "reading of section headers failed"
-msgstr "pročitati „section headers“ nije uspjelo"
+msgstr "pročitati „section headers” nije uspjelo"
 
-#: elf/sprof.c:568 elf/sprof.c:663
+#: elf/sprof.c:565 elf/sprof.c:660
 #, c-format
 msgid "reading of section header string table failed"
-msgstr "pročitati „section header string table“ nije uspjelo"
+msgstr "pročitati „section header string table” nije uspjelo"
 
-#: elf/sprof.c:594
+#: elf/sprof.c:591
 #, c-format
 msgid "*** Cannot read debuginfo file name: %m\n"
 msgstr "*** Nije moguće pročitati ime datoteke s podacima za debugiranje: %m\n"
 
-#: elf/sprof.c:615
+#: elf/sprof.c:612
 #, c-format
 msgid "cannot determine file name"
 msgstr "nije moguće odrediti ime datoteke"
 
-#: elf/sprof.c:648
+#: elf/sprof.c:645
 #, c-format
 msgid "reading of ELF header failed"
 msgstr "čitanje ELF zaglavlja nije uspjelo"
 
-#: elf/sprof.c:684
+#: elf/sprof.c:681
 #, c-format
 msgid "*** The file `%s' is stripped: no detailed analysis possible\n"
-msgstr "*** Dijelovi datoteke „%s“ su uklonjeni: detaljna analiza nije moguća\n"
+msgstr "*** Dijelovi datoteke „%s” su uklonjeni: detaljna analiza nije moguća\n"
 
-#: elf/sprof.c:714
+#: elf/sprof.c:711
 #, c-format
 msgid "failed to load symbol data"
 msgstr "nije uspjelo učitati podatke o simbolima"
 
-#: elf/sprof.c:779
+#: elf/sprof.c:776
 #, c-format
 msgid "cannot load profiling data"
 msgstr "nije moguće učitati podatke od profiliranja"
 
-#: elf/sprof.c:788
+#: elf/sprof.c:785
 #, c-format
 msgid "while stat'ing profiling data file"
 msgstr "prilikom upita o statusu datoteke s podacima profiliranja"
 
-#: elf/sprof.c:796
+#: elf/sprof.c:793
 #, c-format
 msgid "profiling data file `%s' does not match shared object `%s'"
-msgstr "datoteka s podacima profiliranja „%s“ ne odgovara dijeljenom objektu „%s“"
+msgstr "datoteka s podacima profiliranja „%s” ne odgovara dijeljenom objektu „%s”"
 
-#: elf/sprof.c:807
+#: elf/sprof.c:804
 #, c-format
 msgid "failed to mmap the profiling data file"
 msgstr "nije uspjelo mapirati datoteku s podacima profiliranja u memoriju"
 
-#: elf/sprof.c:815
+#: elf/sprof.c:812
 #, c-format
 msgid "error while closing the profiling data file"
 msgstr "greška pri zatvaranju datoteke s podacima profiliranja"
 
-#: elf/sprof.c:898
+#: elf/sprof.c:895
 #, c-format
 msgid "`%s' is no correct profile data file for `%s'"
-msgstr "„%s“ nije ispravna datoteka s podacima profiliranja za „%s“"
+msgstr "„%s” nije ispravna datoteka s podacima profiliranja za „%s”"
 
-#: elf/sprof.c:1079 elf/sprof.c:1137
+#: elf/sprof.c:1076 elf/sprof.c:1134
 #, c-format
 msgid "cannot allocate symbol data"
 msgstr "nije moguće dodijeliti memoriju za podatke o simbolima"
@@ -1397,7 +1397,7 @@ msgstr "nije moguće otvoriti izlaznu datoteku"
 #: iconv/iconv_charmap.c:192
 #, c-format
 msgid "error while closing input `%s'"
-msgstr "greška pri zatvaranju ulaza „%s“"
+msgstr "greška pri zatvaranju ulaza „%s”"
 
 #: iconv/iconv_charmap.c:443
 #, c-format
@@ -1490,22 +1490,22 @@ msgstr "nije uspjelo započeti proces konverzije"
 #: iconv/iconv_prog.c:225
 #, c-format
 msgid "conversions from `%s' and to `%s' are not supported"
-msgstr "konverzija iz „%s“ i u „%s“ nije podržana"
+msgstr "konverzija iz „%s” i u „%s” nije podržana"
 
 #: iconv/iconv_prog.c:230
 #, c-format
 msgid "conversion from `%s' is not supported"
-msgstr "konverzija iz „%s“ nije podržana"
+msgstr "konverzija iz „%s” nije podržana"
 
 #: iconv/iconv_prog.c:237
 #, c-format
 msgid "conversion to `%s' is not supported"
-msgstr "konverzija u „%s“ nije podržana"
+msgstr "konverzija u „%s” nije podržana"
 
 #: iconv/iconv_prog.c:241
 #, c-format
 msgid "conversion from `%s' to `%s' is not supported"
-msgstr "konverzija iz „%s“ u „%s“ nije podržana"
+msgstr "konverzija iz „%s” u „%s” nije podržana"
 
 #: iconv/iconv_prog.c:349
 #, c-format
@@ -1694,23 +1694,23 @@ msgstr "Nepoznata ključna riječ %s u .netrc"
 #: locale/programs/charmap-dir.c:56
 #, c-format
 msgid "cannot read character map directory `%s'"
-msgstr "nije moguće pročitati direktorij „%s“ s tablicama znakova"
+msgstr "nije moguće pročitati direktorij „%s” s tablicama znakova"
 
 #: locale/programs/charmap.c:137
 #, c-format
 msgid "character map file `%s' not found"
-msgstr "datoteka „%s“ s tablicom znakova nije pronađena"
+msgstr "datoteka „%s” s tablicom znakova nije pronađena"
 
 #: locale/programs/charmap.c:195
 #, c-format
 msgid "default character map file `%s' not found"
-msgstr "zadana datoteka „%s“ s tablicom znakova nije pronađena"
+msgstr "zadana datoteka „%s” s tablicom znakova nije pronađena"
 
 #: locale/programs/charmap.c:264
 #, c-format
 msgid "character map `%s' is not ASCII compatible, locale not ISO C compliant [--no-warnings=ascii]"
 msgstr ""
-"tablica znakova „%s“ nije ASCII-kompatibilna,\n"
+"tablica znakova „%s” nije ASCII-kompatibilna,\n"
 "  locale nije sukladan s ISO C [--no-warnings=ascii]"
 
 #: locale/programs/charmap.c:342
@@ -1797,7 +1797,7 @@ msgstr "nije dano simbolično ime kraja raspona"
 #: locale/programs/ld-time.c:958 locale/programs/repertoire.c:311
 #, c-format
 msgid "%1$s: definition does not end with `END %1$s'"
-msgstr "%1$s: definicija ne završava sa „END %1$s“"
+msgstr "%1$s: definicija ne završava sa „END %1$s”"
 
 #: locale/programs/charmap.c:647
 msgid "only WIDTH definitions are allowed to follow the CHARMAP definition"
@@ -1831,7 +1831,7 @@ msgstr "%s: preuranjen kraj datoteke"
 #: locale/programs/charmap.c:874 locale/programs/charmap.c:885
 #, c-format
 msgid "unknown character `%s'"
-msgstr "nepoznati znak „%s“"
+msgstr "nepoznati znak „%s”"
 
 #: locale/programs/charmap.c:893
 #, c-format
@@ -1847,7 +1847,7 @@ msgstr "nevaljana imena raspona znakova"
 
 #: locale/programs/charmap.c:1010 locale/programs/repertoire.c:429
 msgid "hexadecimal range format should use only capital characters"
-msgstr "heksadecimalni format raspona trebao bi se koristiti samo velika slova"
+msgstr "heksadekadski format raspona trebao bi se koristiti samo velika slova"
 
 #: locale/programs/charmap.c:1028 locale/programs/repertoire.c:447
 #, c-format
@@ -1885,45 +1885,45 @@ msgstr "Nije nađena definicija za kategoriju %s"
 #: locale/programs/ld-time.c:179 locale/programs/ld-time.c:200
 #, c-format
 msgid "%s: field `%s' not defined"
-msgstr "%s: polje „%s“ nije definirano"
+msgstr "%s: polje „%s” nije definirano"
 
 #: locale/programs/ld-address.c:155 locale/programs/ld-address.c:206
 #: locale/programs/ld-address.c:236 locale/programs/ld-address.c:274
 #: locale/programs/ld-name.c:115 locale/programs/ld-telephone.c:114
 #, c-format
 msgid "%s: field `%s' must not be empty"
-msgstr "%s: polje „%s“ ne smije biti prazno"
+msgstr "%s: polje „%s” ne smije biti prazno"
 
 #: locale/programs/ld-address.c:167
 #, c-format
 msgid "%s: invalid escape `%%%c' sequence in field `%s'"
-msgstr "%s: nevaljani kontrolni kod „%%%c“ u polju „%s“"
+msgstr "%s: nevaljani kontrolni kod „%%%c” u polju „%s”"
 
 #: locale/programs/ld-address.c:217
 #, c-format
 msgid "%s: terminology language code `%s' not defined"
-msgstr "%s: terminologija jezičnog koda „%s“ nije definirana"
+msgstr "%s: terminologija jezičnog koda „%s” nije definirana"
 
 #: locale/programs/ld-address.c:242
 #, c-format
 msgid "%s: field `%s' must not be defined"
-msgstr "%s: polje „%s“ ne smije biti definirano"
+msgstr "%s: polje „%s” ne smije biti definirano"
 
 #: locale/programs/ld-address.c:256 locale/programs/ld-address.c:285
 #, c-format
 msgid "%s: language abbreviation `%s' not defined"
-msgstr "%s: kratica za „%s“ jezik nije definirana"
+msgstr "%s: kratica za „%s” jezik nije definirana"
 
 #: locale/programs/ld-address.c:263 locale/programs/ld-address.c:291
 #: locale/programs/ld-address.c:324 locale/programs/ld-address.c:336
 #, c-format
 msgid "%s: `%s' value does not match `%s' value"
-msgstr "%s: vrijednost „%s“ ne slaže se s vrijednosti „%s“"
+msgstr "%s: vrijednost „%s” ne slaže se s vrijednosti „%s”"
 
 #: locale/programs/ld-address.c:310
 #, c-format
 msgid "%s: numeric country code `%d' not valid"
-msgstr "%s: nevaljani brojčani kod za „%d“ zemlju"
+msgstr "%s: nevaljani brojčani kod za „%d” zemlju"
 
 #: locale/programs/ld-address.c:431 locale/programs/ld-address.c:468
 #: locale/programs/ld-address.c:506 locale/programs/ld-ctype.c:2478
@@ -1935,7 +1935,7 @@ msgstr "%s: nevaljani brojčani kod za „%d“ zemlju"
 #: locale/programs/ld-time.c:863 locale/programs/ld-time.c:905
 #, c-format
 msgid "%s: field `%s' declared more than once"
-msgstr "%s: polje „%s“ deklarirano je više od jedanput"
+msgstr "%s: polje „%s” deklarirano je više od jedanput"
 
 #: locale/programs/ld-address.c:435 locale/programs/ld-address.c:473
 #: locale/programs/ld-identification.c:312 locale/programs/ld-messages.c:273
@@ -1945,7 +1945,7 @@ msgstr "%s: polje „%s“ deklarirano je više od jedanput"
 #: locale/programs/ld-time.c:826 locale/programs/ld-time.c:868
 #, c-format
 msgid "%s: unknown character in field `%s'"
-msgstr "%s: nepoznati znak u polju „%s“"
+msgstr "%s: nepoznati znak u polju „%s”"
 
 #: locale/programs/ld-address.c:520 locale/programs/ld-collate.c:3797
 #: locale/programs/ld-ctype.c:2826 locale/programs/ld-identification.c:393
@@ -1955,7 +1955,7 @@ msgstr "%s: nepoznati znak u polju „%s“"
 #: locale/programs/ld-telephone.c:273 locale/programs/ld-time.c:956
 #, c-format
 msgid "%s: incomplete `END' line"
-msgstr "%s: nepotpuni „END“ redak"
+msgstr "%s: nepotpuni „END” redak"
 
 #: locale/programs/ld-address.c:530 locale/programs/ld-collate.c:553
 #: locale/programs/ld-collate.c:605 locale/programs/ld-collate.c:901
@@ -1975,33 +1975,33 @@ msgstr "%s: sintaktička greška"
 #: locale/programs/ld-collate.c:428
 #, c-format
 msgid "`%.*s' already defined in charmap"
-msgstr "„%.*s“ je već definirano u tablici znakova (charmap)"
+msgstr "„%.*s” je već definirano u tablici znakova (charmap)"
 
 #: locale/programs/ld-collate.c:437
 #, c-format
 msgid "`%.*s' already defined in repertoire"
-msgstr "„%.*s“ je već definirano u repertoaru"
+msgstr "„%.*s” je već definirano u repertoaru"
 
 #: locale/programs/ld-collate.c:444
 #, c-format
 msgid "`%.*s' already defined as collating symbol"
-msgstr "„%.*s“ je već definiran kao simbol razvrstavanja"
+msgstr "„%.*s” je već definiran kao simbol razvrstavanja"
 
 #: locale/programs/ld-collate.c:451
 #, c-format
 msgid "`%.*s' already defined as collating element"
-msgstr "„%.*s“ je već definiran kao element razvrstavanja"
+msgstr "„%.*s” je već definiran kao element razvrstavanja"
 
 #: locale/programs/ld-collate.c:482 locale/programs/ld-collate.c:508
 #, c-format
 msgid "%s: `forward' and `backward' are mutually excluding each other"
-msgstr "%s: „forward“ i „backward“ se međusobno isključuju"
+msgstr "%s: „forward” i „backward” se međusobno isključuju"
 
 #: locale/programs/ld-collate.c:492 locale/programs/ld-collate.c:518
 #: locale/programs/ld-collate.c:534
 #, c-format
 msgid "%s: `%s' mentioned more than once in definition of weight %d"
-msgstr "%s: „%s“ spomenuto je više od jedanput u definiciji težine %d"
+msgstr "%s: „%s” spomenuto je više od jedanput u definiciji težine %d"
 
 #: locale/programs/ld-collate.c:590
 #, c-format
@@ -2021,7 +2021,7 @@ msgstr "%s: prazan string težine nije dopušten"
 #: locale/programs/ld-collate.c:886
 #, c-format
 msgid "%s: weights must use the same ellipsis symbol as the name"
-msgstr "%s: težine moraju koristiti istu elipsu kao i ime"
+msgstr "%s: težine moraju koristiti ist trotočje kao i ime"
 
 #: locale/programs/ld-collate.c:942
 #, c-format
@@ -2031,7 +2031,7 @@ msgstr "%s: previše vrijednosti"
 #: locale/programs/ld-collate.c:1062 locale/programs/ld-collate.c:1237
 #, c-format
 msgid "order for `%.*s' already defined at %s:%zu"
-msgstr "redoslijed za „%.*s“ je već definiran u %s:%zu"
+msgstr "redoslijed za „%.*s” je već definiran u %s:%zu"
 
 #: locale/programs/ld-collate.c:1112
 #, c-format
@@ -2051,49 +2051,49 @@ msgstr "%s: sekvencija bajtova prvog znaka raspona nije manji od onog zadnjeg zn
 #: locale/programs/ld-collate.c:1306
 #, c-format
 msgid "%s: symbolic range ellipsis must not directly follow `order_start'"
-msgstr "%s: elipsa simboličnog raspona ne smije neposredno slijediti „order_start“"
+msgstr "%s: trotočje simboličnog raspona ne smije neposredno slijediti „order_start”"
 
 #: locale/programs/ld-collate.c:1310
 #, c-format
 msgid "%s: symbolic range ellipsis must not be directly followed by `order_end'"
-msgstr "%s: elipsa simboličnog raspona ne smije biti neposredno ispred „order_end“"
+msgstr "%s: trotočje simboličnog raspona ne smije biti neposredno ispred „order_end”"
 
 #: locale/programs/ld-collate.c:1330 locale/programs/ld-ctype.c:1362
 #, c-format
 msgid "`%s' and `%.*s' are not valid names for symbolic range"
-msgstr "„%s“ i „%.*s“ nisu valjana imena za simbol raspona"
+msgstr "„%s” i „%.*s” nisu valjana imena za simbol raspona"
 
 #: locale/programs/ld-collate.c:1380 locale/programs/ld-collate.c:3731
 #, c-format
 msgid "%s: order for `%.*s' already defined at %s:%zu"
-msgstr "%s: redoslijed za „%.*s“ je već definiran u %s:%zu"
+msgstr "%s: redoslijed za „%.*s” je već definiran u %s:%zu"
 
 #: locale/programs/ld-collate.c:1389
 #, c-format
 msgid "%s: `%s' must be a character"
-msgstr "%s: „%s“ mora biti znak"
+msgstr "%s: „%s” mora biti znak"
 
 #: locale/programs/ld-collate.c:1590
 #, c-format
 msgid "%s: `position' must be used for a specific level in all sections or none"
 msgstr ""
-"%s: „position“ se mora koristiti za određenu razinu\n"
+"%s: „position” se mora koristiti za određenu razinu\n"
 "  u svim sekcijama ili nijednoj sekciji"
 
 #: locale/programs/ld-collate.c:1614
 #, c-format
 msgid "symbol `%s' not defined"
-msgstr "simbol „%s“ nije definiran"
+msgstr "simbol „%s” nije definiran"
 
 #: locale/programs/ld-collate.c:1690 locale/programs/ld-collate.c:1789
 #, c-format
 msgid "symbol `%s' has the same encoding as"
-msgstr "simbol „%s“ ima isto kodiranje kao"
+msgstr "simbol „%s” ima isto kodiranje kao"
 
 #: locale/programs/ld-collate.c:1694 locale/programs/ld-collate.c:1793
 #, c-format
 msgid "symbol `%s'"
-msgstr "simbol „%s“"
+msgstr "simbol „%s”"
 
 #: locale/programs/ld-collate.c:1856
 msgid "too many errors; giving up"
@@ -2112,12 +2112,12 @@ msgstr "%s: više od jedan ‘else’"
 #: locale/programs/ld-collate.c:2724
 #, c-format
 msgid "%s: duplicate definition of `%s'"
-msgstr "%s:duplikat definicije od „%s“"
+msgstr "%s:duplikat definicije od „%s”"
 
 #: locale/programs/ld-collate.c:2760
 #, c-format
 msgid "%s: duplicate declaration of section `%s'"
-msgstr "%s: duplikat deklaracije od sekcije „%s“"
+msgstr "%s: duplikat deklaracije od sekcije „%s”"
 
 #: locale/programs/ld-collate.c:2896
 #, c-format
@@ -2137,7 +2137,7 @@ msgstr "%s: nepoznati znak u vrijednosti definicije ekvivalencije"
 #: locale/programs/ld-collate.c:3046
 #, c-format
 msgid "%s: unknown symbol `%s' in equivalent definition"
-msgstr "%s: nepoznati simbol „%s“ u definicije ekvivalencije"
+msgstr "%s: nepoznati simbol „%s” u definicije ekvivalencije"
 
 #: locale/programs/ld-collate.c:3055
 msgid "error while adding equivalent collating symbol"
@@ -2146,17 +2146,17 @@ msgstr "greška prilikom dodavanja ekvivalentnog simbola razvrstavanja"
 #: locale/programs/ld-collate.c:3093
 #, c-format
 msgid "duplicate definition of script `%s'"
-msgstr "duplikat definicije od skripte „%s“"
+msgstr "duplikat definicije od skripte „%s”"
 
 #: locale/programs/ld-collate.c:3141
 #, c-format
 msgid "%s: unknown section name `%.*s'"
-msgstr "%s: nepoznato ime sekcije „%.*s“"
+msgstr "%s: nepoznato ime sekcije „%.*s”"
 
 #: locale/programs/ld-collate.c:3170
 #, c-format
 msgid "%s: multiple order definitions for section `%s'"
-msgstr "%s: nekoliko definicija poretka za sekciju „%s“"
+msgstr "%s: nekoliko definicija poretka za sekciju „%s”"
 
 #: locale/programs/ld-collate.c:3198
 #, c-format
@@ -2172,7 +2172,7 @@ msgstr "%s: nekoliko definicija poretka za neimenovanu sekciju"
 #: locale/programs/ld-collate.c:3775
 #, c-format
 msgid "%s: missing `order_end' keyword"
-msgstr "%s: nema ključne riječi „order_end“"
+msgstr "%s: nema ključne riječi „order_end”"
 
 #: locale/programs/ld-collate.c:3343
 #, c-format
@@ -2192,12 +2192,12 @@ msgstr "%s: nije moguće promijeniti poredak poslije %.*s: simbol nije poznat"
 #: locale/programs/ld-collate.c:3424 locale/programs/ld-collate.c:3787
 #, c-format
 msgid "%s: missing `reorder-end' keyword"
-msgstr "%s: nema ključne riječi „reorder-end“"
+msgstr "%s: nema ključne riječi „reorder-end”"
 
 #: locale/programs/ld-collate.c:3458 locale/programs/ld-collate.c:3656
 #, c-format
 msgid "%s: section `%.*s' not known"
-msgstr "%s: sekcija „%.*s“ nije poznata"
+msgstr "%s: sekcija „%.*s” nije poznata"
 
 #: locale/programs/ld-collate.c:3523
 #, c-format
@@ -2207,7 +2207,7 @@ msgstr "%s: loši simbol <%.*s>"
 #: locale/programs/ld-collate.c:3719
 #, c-format
 msgid "%s: cannot have `%s' as end of ellipsis range"
-msgstr "%s: „%s“ ne može biti kraj raspona"
+msgstr "%s: „%s” ne može biti kraj raspona trotočja"
 
 #: locale/programs/ld-collate.c:3771
 #, c-format
@@ -2217,7 +2217,7 @@ msgstr "%s: prazan opis kategorije nije dopušten"
 #: locale/programs/ld-collate.c:3790
 #, c-format
 msgid "%s: missing `reorder-sections-end' keyword"
-msgstr "%s: nema ključne riječi „reorder-sections-end“"
+msgstr "%s: nema ključne riječi „reorder-sections-end”"
 
 #: locale/programs/ld-collate.c:3954
 #, c-format
@@ -2227,7 +2227,7 @@ msgstr "%s: ‘%s’ bez odgovarajućega ‘ifdef’ ili ‘ifndef’"
 #: locale/programs/ld-collate.c:3972
 #, c-format
 msgid "%s: 'endif' without matching 'ifdef' or 'ifndef'"
-msgstr "%s: „endif“ bez odgovarajućega ‘ifdef’ ili ‘ifndef’"
+msgstr "%s: „endif” bez odgovarajućega ‘ifdef’ ili ‘ifndef’"
 
 #: locale/programs/ld-ctype.c:447
 msgid "No character set name specified in charmap"
@@ -2236,12 +2236,12 @@ msgstr "U tablici znakova nema imena skupa znakova"
 #: locale/programs/ld-ctype.c:475
 #, c-format
 msgid "character L'\\u%0*x' in class `%s' must be in class `%s'"
-msgstr "znak L„\\u%0*x“ iz klase „%s“ mora biti u klasi „%s“"
+msgstr "znak L„\\u%0*x” iz klase „%s” mora biti u klasi „%s”"
 
 #: locale/programs/ld-ctype.c:489
 #, c-format
 msgid "character L'\\u%0*x' in class `%s' must not be in class `%s'"
-msgstr "znak L„\\u%0*x“ iz klase „%s“ ne smije biti u klasi „%s“"
+msgstr "znak L„\\u%0*x” iz klase „%s” ne smije biti u klasi „%s”"
 
 #: locale/programs/ld-ctype.c:503 locale/programs/ld-ctype.c:559
 #, c-format
@@ -2251,22 +2251,22 @@ msgstr "**interna greška** u %s, redak %u"
 #: locale/programs/ld-ctype.c:531
 #, c-format
 msgid "character '%s' in class `%s' must be in class `%s'"
-msgstr "znak ‘%s’ iz klase „%s“ mora biti u klasi „%s“"
+msgstr "znak ‘%s’ iz klase „%s” mora biti u klasi „%s”"
 
 #: locale/programs/ld-ctype.c:546
 #, c-format
 msgid "character '%s' in class `%s' must not be in class `%s'"
-msgstr "znak ‘%s’ iz klase „%s“ ne smije biti u klasi „%s“"
+msgstr "znak ‘%s’ iz klase „%s” ne smije biti u klasi „%s”"
 
 #: locale/programs/ld-ctype.c:575 locale/programs/ld-ctype.c:610
 #, c-format
 msgid "<SP> character not in class `%s'"
-msgstr "<SP> znak nije u klasi „%s“"
+msgstr "<SP> znak nije u klasi „%s”"
 
 #: locale/programs/ld-ctype.c:586 locale/programs/ld-ctype.c:620
 #, c-format
 msgid "<SP> character must not be in class `%s'"
-msgstr "<SP> znak ne smije biti u klasi „%s“"
+msgstr "<SP> znak ne smije biti u klasi „%s”"
 
 #: locale/programs/ld-ctype.c:600
 msgid "character <SP> not defined in character map"
@@ -2274,7 +2274,7 @@ msgstr "znak <SP> nije definiran u tablici znakova"
 
 #: locale/programs/ld-ctype.c:734
 msgid "`digit' category has not entries in groups of ten"
-msgstr "kategorija „digit“ nema stavke u grupama od po deset"
+msgstr "kategorija „digit” nema stavke u grupama od po deset"
 
 #: locale/programs/ld-ctype.c:783
 msgid "no input digits defined and none of the standard names in the charmap"
@@ -2284,16 +2284,16 @@ msgstr ""
 
 #: locale/programs/ld-ctype.c:846
 msgid "not all characters used in `outdigit' are available in the charmap"
-msgstr "nisu svi znakovi korišteni u „outdigit“ dostupni u tablici znakova"
+msgstr "nisu svi znakovi korišteni u „outdigit” dostupni u tablici znakova"
 
 #: locale/programs/ld-ctype.c:865
 msgid "not all characters used in `outdigit' are available in the repertoire"
-msgstr "nisu svi znakovi korišteni u „outdigit“ dostupni u repertoaru"
+msgstr "nisu svi znakovi korišteni u „outdigit” dostupni u repertoaru"
 
 #: locale/programs/ld-ctype.c:1130
 #, c-format
 msgid "character class `%s' already defined"
-msgstr "klasa znakova „%s“ je već definirana"
+msgstr "klasa znakova „%s” je već definirana"
 
 #: locale/programs/ld-ctype.c:1136
 #, c-format
@@ -2303,7 +2303,7 @@ msgstr "ograničenje implementacije: nije dopušteno više od %Zd klasa znakova"
 #: locale/programs/ld-ctype.c:1162
 #, c-format
 msgid "character map `%s' already defined"
-msgstr "tablica znakova „%s“ je već definirana"
+msgstr "tablica znakova „%s” je već definirana"
 
 #: locale/programs/ld-ctype.c:1168
 #, c-format
@@ -2315,7 +2315,7 @@ msgstr "ograničenje implementacije: nije dopušteno više od %d tablica znakova
 #: locale/programs/ld-ctype.c:3301
 #, c-format
 msgid "%s: field `%s' does not contain exactly ten entries"
-msgstr "%s: polje „%s“ ne sadrži točno deset stavki"
+msgstr "%s: polje „%s” ne sadrži točno deset stavki"
 
 #: locale/programs/ld-ctype.c:1462 locale/programs/ld-ctype.c:2036
 #, c-format
@@ -2332,7 +2332,7 @@ msgstr "konačna vrijednost je manja od početne vrijednosti"
 
 #: locale/programs/ld-ctype.c:1956 locale/programs/ld-ctype.c:2007
 msgid "premature end of `translit_ignore' definition"
-msgstr "preuranjen kraj definicije „translit_ignore“"
+msgstr "preuranjen kraj definicije „translit_ignore”"
 
 #: locale/programs/ld-ctype.c:1962 locale/programs/ld-ctype.c:2013
 #: locale/programs/ld-ctype.c:2055
@@ -2351,34 +2351,34 @@ msgstr "%s: sintaktička greška u definiciji nove tablice znakova"
 
 #: locale/programs/ld-ctype.c:2363
 msgid "ellipsis range must be marked by two operands of same type"
-msgstr "raspon s elipsom mora sadržavati dva parametra istog tipa"
+msgstr "raspon s trotočjem mora sadržavati dva parametra istog tipa"
 
 #: locale/programs/ld-ctype.c:2372
 msgid "with symbolic name range values the absolute ellipsis `...' must not be used"
-msgstr "u rasponu sa simboličnnim imenima ne smije se koristiti apsolutna elipsa „...“"
+msgstr "u rasponu sa simboličnnim imenima ne smije se koristiti apsolutno trotočje „...”"
 
 #: locale/programs/ld-ctype.c:2387
 msgid "with UCS range values one must use the hexadecimal symbolic ellipsis `..'"
-msgstr "u rasponu s UCS vrijednosti mora se koristiti heksadecimalna simbolička elipsa „..“"
+msgstr "za UCS raspon morate se koristiti heksadekadsko simbolično dvotočje „..”"
 
 #: locale/programs/ld-ctype.c:2401
 msgid "with character code range values one must use the absolute ellipsis `...'"
-msgstr "za vrijednosti raspona znakovnog koda morate koristiti apsolutnu elipsu „...“"
+msgstr "za vrijednosti raspona znakovnog koda morate koristiti apsolutno trotočje „...”"
 
 #: locale/programs/ld-ctype.c:2552
 #, c-format
 msgid "duplicated definition for mapping `%s'"
-msgstr "duplikat definicije za mapiranje „%s“"
+msgstr "duplikat definicije za mapiranje „%s”"
 
 #: locale/programs/ld-ctype.c:2638 locale/programs/ld-ctype.c:2782
 #, c-format
 msgid "%s: `translit_start' section does not end with `translit_end'"
-msgstr "%s: „translit_start“ sekcija ne završava s „translit_end“"
+msgstr "%s: „translit_start” sekcija ne završava s „translit_end”"
 
 #: locale/programs/ld-ctype.c:2733
 #, c-format
 msgid "%s: duplicate `default_missing' definition"
-msgstr "%s: duplikat definicije „default_missing“"
+msgstr "%s: duplikat definicije „default_missing”"
 
 #: locale/programs/ld-ctype.c:2738
 msgid "previous definition was here"
@@ -2387,7 +2387,7 @@ msgstr "prethodna definicija bila je ovdje"
 #: locale/programs/ld-ctype.c:2760
 #, c-format
 msgid "%s: no representable `default_missing' definition found"
-msgstr "%s: nema reprezentativne definicije „default_missing“"
+msgstr "%s: nema reprezentativne definicije „default_missing”"
 
 #: locale/programs/ld-ctype.c:2877 locale/programs/ld-ctype.c:2973
 #: locale/programs/ld-ctype.c:2992 locale/programs/ld-ctype.c:3012
@@ -2397,7 +2397,7 @@ msgstr "%s: nema reprezentativne definicije „default_missing“"
 #: locale/programs/ld-ctype.c:3238 locale/programs/ld-ctype.c:3261
 #, c-format
 msgid "%s: character `%s' not defined while needed as default value"
-msgstr "%s: znak „%s“ potreban je kao zadana vrijednost a nije definiran"
+msgstr "%s: znak „%s” potreban je kao zadana vrijednost a nije definiran"
 
 #: locale/programs/ld-ctype.c:2882 locale/programs/ld-ctype.c:2978
 #: locale/programs/ld-ctype.c:2997 locale/programs/ld-ctype.c:3017
@@ -2406,12 +2406,12 @@ msgstr "%s: znak „%s“ potreban je kao zadana vrijednost a nije definiran"
 #: locale/programs/ld-ctype.c:3136 locale/programs/ld-ctype.c:3202
 #, c-format
 msgid "%s: character `%s' in charmap not representable with one byte"
-msgstr "%s: znak „%s“ u tablici znakova ne može se prikazati samo s jednim bajtom"
+msgstr "%s: znak „%s” u tablici znakova ne može se prikazati samo s jednim bajtom"
 
 #: locale/programs/ld-ctype.c:3244 locale/programs/ld-ctype.c:3267
 #, c-format
 msgid "%s: character `%s' needed as default value not representable with one byte"
-msgstr "%s: znak „%s“, kao zadana vrijednost ne može se prikazati s jednim bajtom"
+msgstr "%s: znak „%s”, kao zadana vrijednost ne može se prikazati s jednim bajtom"
 
 #: locale/programs/ld-ctype.c:3323
 msgid "no output digits defined and none of the standard names in the charmap"
@@ -2420,17 +2420,17 @@ msgstr "izlazne znamenke nisu definirane i nemaju standardna imena u tablici zna
 #: locale/programs/ld-ctype.c:3545
 #, c-format
 msgid "%s: transliteration data from locale `%s' not available"
-msgstr "%s: nema podataka za transliteraciju iz locale „%s“"
+msgstr "%s: nema podataka za transliteraciju iz locale „%s”"
 
 #: locale/programs/ld-ctype.c:3644
 #, c-format
 msgid "%s: table for class \"%s\": %lu bytes"
-msgstr "%s: tablica za klasu „%s“: %lu bajtova"
+msgstr "%s: tablica za klasu „%s”: %lu bajtova"
 
 #: locale/programs/ld-ctype.c:3708
 #, c-format
 msgid "%s: table for map \"%s\": %lu bytes"
-msgstr "%s: tablica za znakovne tablice „%s“: %lu bajtova"
+msgstr "%s: tablica za znakovne tablice „%s”: %lu bajtova"
 
 #: locale/programs/ld-ctype.c:3832
 #, c-format
@@ -2440,12 +2440,12 @@ msgstr "%s: tablica za širinu: %lu bajtova"
 #: locale/programs/ld-identification.c:172
 #, c-format
 msgid "%s: no identification for category `%s'"
-msgstr "%s: nema identifikacije za kategoriju „%s“"
+msgstr "%s: nema identifikacije za kategoriju „%s”"
 
 #: locale/programs/ld-identification.c:196
 #, c-format
 msgid "%s: unknown standard `%s' for category `%s'"
-msgstr "%s: nepoznati standard „%s“ za kategoriju „%s“"
+msgstr "%s: nepoznati standard „%s” za kategoriju „%s”"
 
 #: locale/programs/ld-identification.c:379
 #, c-format
@@ -2455,58 +2455,58 @@ msgstr "%s: duplikat definicije inačice kategorije"
 #: locale/programs/ld-measurement.c:110
 #, c-format
 msgid "%s: invalid value for field `%s'"
-msgstr "%s: nevaljana vrijednost polja „%s“"
+msgstr "%s: nevaljana vrijednost polja „%s”"
 
 #: locale/programs/ld-messages.c:112 locale/programs/ld-messages.c:145
 #, c-format
 msgid "%s: field `%s' undefined"
-msgstr "%s: polje „%s“ nije definirano"
+msgstr "%s: polje „%s” nije definirano"
 
 #: locale/programs/ld-messages.c:118 locale/programs/ld-messages.c:151
 #: locale/programs/ld-numeric.c:116
 #, c-format
 msgid "%s: value for field `%s' must not be an empty string"
-msgstr "%s: vrijednost polja „%s“ ne smije biti prazni string"
+msgstr "%s: vrijednost polja „%s” ne smije biti prazni string"
 
 #: locale/programs/ld-messages.c:134 locale/programs/ld-messages.c:167
 #, c-format
 msgid "%s: no correct regular expression for field `%s': %s"
-msgstr "%s: nema ispravnog regularnog izraza za polje „%s“: %s"
+msgstr "%s: nema ispravnog regularnog izraza za polje „%s”: %s"
 
 #: locale/programs/ld-monetary.c:310
 #, c-format
 msgid "%s: value of field `int_curr_symbol' has wrong length"
-msgstr "%s: vrijednost polja „int_curr_symbol“ ima pogrešnu duljinu"
+msgstr "%s: vrijednost polja „int_curr_symbol” ima pogrešnu duljinu"
 
 #: locale/programs/ld-monetary.c:327
 #, c-format
 msgid "%s: value of field `int_curr_symbol' does not correspond to a valid name in ISO 4217 [--no-warnings=intcurrsym]"
-msgstr "%s: vrijednost polja „int_curr_symbol“ ne odgovara valjanom  imenu u ISO 4217 [--no-warnings=intcurrsym]"
+msgstr "%s: vrijednost polja „int_curr_symbol” ne odgovara valjanom  imenu u ISO 4217 [--no-warnings=intcurrsym]"
 
 #: locale/programs/ld-monetary.c:348 locale/programs/ld-monetary.c:358
 #, c-format
 msgid "%s: field `%s' not defined, using defaults"
-msgstr "%s: polje „%s“ nije definirano, koristimo zadano"
+msgstr "%s: polje „%s” nije definirano, koristimo zadano"
 
 #: locale/programs/ld-monetary.c:396 locale/programs/ld-monetary.c:420
 #, c-format
 msgid "%s: value for field `%s' must be in range %d...%d"
-msgstr "%s: vrijednost polja „%s“ mora biti u rasponu %d...%d"
+msgstr "%s: vrijednost polja „%s” mora biti u rasponu %d...%d"
 
 #: locale/programs/ld-monetary.c:656 locale/programs/ld-numeric.c:227
 #, c-format
 msgid "%s: value for field `%s' must be a single character"
-msgstr "%s: vrijednost polja „%s“ mora biti samo jedan znak"
+msgstr "%s: vrijednost polja „%s” mora biti samo jedan znak"
 
 #: locale/programs/ld-monetary.c:753 locale/programs/ld-numeric.c:271
 #, c-format
 msgid "%s: `-1' must be last entry in `%s' field"
-msgstr "%s: „-1“ mora biti zadnja stavka u polju „%s“"
+msgstr "%s: „-1” mora biti zadnja stavka u polju „%s”"
 
 #: locale/programs/ld-monetary.c:775 locale/programs/ld-numeric.c:288
 #, c-format
 msgid "%s: values for field `%s' must be smaller than 127"
-msgstr "%s: vrijednosti polja „%s“ moraju biti manje od 127"
+msgstr "%s: vrijednosti polja „%s” moraju biti manje od 127"
 
 #: locale/programs/ld-monetary.c:821
 msgid "conversion rate value cannot be zero"
@@ -2516,78 +2516,78 @@ msgstr "vrijednost faktora za konverziju ne može biti nula"
 #: locale/programs/ld-telephone.c:146
 #, c-format
 msgid "%s: invalid escape sequence in field `%s'"
-msgstr "%s: nevaljani kontrolni kod u polju „%s“"
+msgstr "%s: nevaljani kontrolni kod u polju „%s”"
 
 #: locale/programs/ld-time.c:250
 #, c-format
 msgid "%s: direction flag in string %Zd in `era' field is not '+' nor '-'"
-msgstr "%s: pokazivač smjera u stringu %Zd u polju „era“ nije ni ‘+’ ni ‘-’"
+msgstr "%s: pokazivač smjera u stringu %Zd u polju „era” nije ni ‘+’ ni ‘-’"
 
 #: locale/programs/ld-time.c:260
 #, c-format
 msgid "%s: direction flag in string %Zd in `era' field is not a single character"
-msgstr "%s: pokazivač smjera u stringu %Zd u polju „era“ nije jedan znak"
+msgstr "%s: pokazivač smjera u stringu %Zd u polju „era” nije jedan znak"
 
 #: locale/programs/ld-time.c:272
 #, c-format
 msgid "%s: invalid number for offset in string %Zd in `era' field"
-msgstr "%s: nevaljani broj za odmak u stringu %Zd u polju „era“"
+msgstr "%s: nevaljani broj za pomak u stringu %Zd u polju „era”"
 
 #: locale/programs/ld-time.c:279
 #, c-format
 msgid "%s: garbage at end of offset value in string %Zd in `era' field"
-msgstr "%s: smeće pri kraju vrijednosti odmaka u stringu %Zd u polju „era“"
+msgstr "%s: smeće pri kraju vrijednosti odmaka u stringu %Zd u polju „era”"
 
 #: locale/programs/ld-time.c:329
 #, c-format
 msgid "%s: invalid starting date in string %Zd in `era' field"
-msgstr "%s: nevaljani početni datum u stringu %Zd u polju „era“"
+msgstr "%s: nevaljani početni datum u stringu %Zd u polju „era”"
 
 #: locale/programs/ld-time.c:337
 #, c-format
 msgid "%s: garbage at end of starting date in string %Zd in `era' field "
-msgstr "%s: smeće pri kraju početnog datuma u stringu %Zd u polju „era“"
+msgstr "%s: smeće pri kraju početnog datuma u stringu %Zd u polju „era”"
 
 #: locale/programs/ld-time.c:355
 #, c-format
 msgid "%s: starting date is invalid in string %Zd in `era' field"
-msgstr "%s: nevaljani početni datum u stringu %Zd u polju „era“"
+msgstr "%s: nevaljani početni datum u stringu %Zd u polju „era”"
 
 #: locale/programs/ld-time.c:403 locale/programs/ld-time.c:429
 #, c-format
 msgid "%s: invalid stopping date in string %Zd in `era' field"
-msgstr "%s: nevaljani krajnji datum u stringu %Zd u polju „era“"
+msgstr "%s: nevaljani krajnji datum u stringu %Zd u polju „era”"
 
 #: locale/programs/ld-time.c:411
 #, c-format
 msgid "%s: garbage at end of stopping date in string %Zd in `era' field"
-msgstr "%s: smeće pri kraju krajnjeg datuma u stringu %Zd u polju „era“"
+msgstr "%s: smeće pri kraju krajnjeg datuma u stringu %Zd u polju „era”"
 
 #: locale/programs/ld-time.c:437
 #, c-format
 msgid "%s: missing era name in string %Zd in `era' field"
-msgstr "%s: nema imena ere u stringu %Zd u polju „era“"
+msgstr "%s: nema imena ere u stringu %Zd u polju „era”"
 
 #: locale/programs/ld-time.c:448
 #, c-format
 msgid "%s: missing era format in string %Zd in `era' field"
-msgstr "%s: nema formata ere u stringu %Zd u polju „era“"
+msgstr "%s: nema formata ere u stringu %Zd u polju „era”"
 
 #: locale/programs/ld-time.c:493
 #, c-format
 msgid "%s: third operand for value of field `%s' must not be larger than %d"
-msgstr "%s: treći operand vrijednosti polja „%s“ ne smije biti veći od %d"
+msgstr "%s: treći operand vrijednosti polja „%s” ne smije biti veći od %d"
 
 #: locale/programs/ld-time.c:501 locale/programs/ld-time.c:509
 #: locale/programs/ld-time.c:517
 #, c-format
 msgid "%s: values for field `%s' must not be larger than %d"
-msgstr "%s: vrijednosti polja „%s“ ne smiju biti veće od %d"
+msgstr "%s: vrijednosti polja „%s” ne smiju biti veće od %d"
 
 #: locale/programs/ld-time.c:739
 #, c-format
 msgid "%s: too few values for field `%s'"
-msgstr "%s: premalo vrijednosti za polje „%s“"
+msgstr "%s: premalo vrijednosti za polje „%s”"
 
 #: locale/programs/ld-time.c:784
 msgid "extra trailing semicolon"
@@ -2596,7 +2596,7 @@ msgstr "suvišna završna točka sa zarezom (;)"
 #: locale/programs/ld-time.c:787
 #, c-format
 msgid "%s: too many values for field `%s'"
-msgstr "%s: previše vrijednosti za polje „%s“"
+msgstr "%s: previše vrijednosti za polje „%s”"
 
 #: locale/programs/linereader.c:130
 msgid "trailing garbage at end of line"
@@ -2638,17 +2638,17 @@ msgstr "nevaljana 8-bitna kontrolna sekvencija (escape sequence)"
 #: locale/programs/linereader.c:940
 #, c-format
 msgid "symbol `%.*s' not in charmap"
-msgstr "simbol „%.*s“ nije u tablici znakova"
+msgstr "simbol „%.*s” nije u tablici znakova"
 
 #: locale/programs/linereader.c:961
 #, c-format
 msgid "symbol `%.*s' not in repertoire map"
-msgstr "simbol „%.*s“ nije u tablici repertoara"
+msgstr "simbol „%.*s” nije u tablici repertoara"
 
 #: locale/programs/locale-spec.c:129
 #, c-format
 msgid "unknown name \"%s\""
-msgstr "nepoznato ime „%s“"
+msgstr "nepoznato ime „%s”"
 
 #: locale/programs/locale.c:69
 msgid "System information:"
@@ -2703,7 +2703,7 @@ msgstr "Nije moguće postaviti %s na zadani (default) locale"
 #: locale/programs/locale.c:1097
 #, c-format
 msgid "warning: The LOCPATH variable is set to \"%s\"\n"
-msgstr "upozorenje: varijable LOCPATH je postavljena na „%s“\n"
+msgstr "upozorenje: varijable LOCPATH je postavljena na „%s”\n"
 
 #: locale/programs/localedef.c:115
 msgid "Input Files:"
@@ -2818,18 +2818,18 @@ msgstr "nije moguće stvoriti direktorij za izlazne datoteke"
 
 #: locale/programs/localedef.c:249
 msgid "FATAL: system does not define `_POSIX2_LOCALEDEF'"
-msgstr "FATALNA GREŠKA: sustav ne definira „_POSIX2_LOCALEDEF“"
+msgstr "FATALNA GREŠKA: sustav ne definira „_POSIX2_LOCALEDEF”"
 
 #: locale/programs/localedef.c:263 locale/programs/localedef.c:279
 #: locale/programs/localedef.c:677 locale/programs/localedef.c:697
 #, c-format
 msgid "cannot open locale definition file `%s'"
-msgstr "nije moguće otvoriti locale datoteku s definicijama za „%s“"
+msgstr "nije moguće otvoriti locale datoteku s definicijama za „%s”"
 
 #: locale/programs/localedef.c:303
 #, c-format
 msgid "cannot write output files to `%s'"
-msgstr "nije moguće spremiti izlazne datoteke u „%s“"
+msgstr "nije moguće spremiti izlazne datoteke u „%s”"
 
 #: locale/programs/localedef.c:309
 msgid "no output file produced because errors were issued"
@@ -2866,7 +2866,7 @@ msgstr "kružne ovisnosti između locale definicija"
 #: locale/programs/localedef.c:651
 #, c-format
 msgid "cannot add already read locale `%s' a second time"
-msgstr "nije moguće dodati već pročitani locale „%s“ po drugi put"
+msgstr "nije moguće dodati već pročitani locale „%s” po drugi put"
 
 #: locale/programs/locarchive.c:132 locale/programs/locarchive.c:379
 #, c-format
@@ -2884,7 +2884,7 @@ msgid "cannot resize archive file"
 msgstr "nije moguće prilagoditi veličinu datoteke arhive"
 
 #: locale/programs/locarchive.c:188 locale/programs/locarchive.c:451
-#: locale/programs/locarchive.c:680
+#: locale/programs/locarchive.c:686
 #, c-format
 msgid "cannot map archive header"
 msgstr "nije moguće mapirati zaglavlje arhive u memoriju"
@@ -2931,84 +2931,90 @@ msgstr "nije moguće preimenovati novu arhivu"
 #: locale/programs/locarchive.c:607
 #, c-format
 msgid "cannot open locale archive \"%s\""
-msgstr "nije moguće otvoriti „%s“ locale arhivu"
+msgstr "nije moguće otvoriti „%s” locale arhivu"
 
 #: locale/programs/locarchive.c:612
 #, c-format
 msgid "cannot stat locale archive \"%s\""
-msgstr "nije moguće stat locale arhivu „%s“"
+msgstr "nije moguće stat locale arhivu „%s”"
 
 #: locale/programs/locarchive.c:631
 #, c-format
 msgid "cannot lock locale archive \"%s\""
-msgstr "nije moguće zaključati locale arhivu „%s“"
+msgstr "nije moguće zaključati locale arhivu „%s”"
 
-#: locale/programs/locarchive.c:654
+#: locale/programs/locarchive.c:642 locale/programs/locarchive.c:656
+#: locale/programs/locarchive.c:664 locale/programs/locarchive.c:685
+#, c-format
+msgid "cannot unlock archive header"
+msgstr "nije moguće otključati zaglavlje arhive"
+
+#: locale/programs/locarchive.c:657
 #, c-format
 msgid "cannot read archive header"
 msgstr "nije moguće pročitati zaglavlje arhive"
 
-#: locale/programs/locarchive.c:661
+#: locale/programs/locarchive.c:665
 #, c-format
 msgid "bad magic value in archive header"
 msgstr "loša kontrolna suma u zaglavlju arhive"
 
-#: locale/programs/locarchive.c:734
+#: locale/programs/locarchive.c:740
 #, c-format
 msgid "locale '%s' already exists"
 msgstr "locale ‘%s’ već postoji"
 
-#: locale/programs/locarchive.c:1009 locale/programs/locarchive.c:1024
-#: locale/programs/locarchive.c:1036 locale/programs/locarchive.c:1048
+#: locale/programs/locarchive.c:1015 locale/programs/locarchive.c:1030
+#: locale/programs/locarchive.c:1042 locale/programs/locarchive.c:1054
 #: locale/programs/locfile.c:349
 #, c-format
 msgid "cannot add to locale archive"
 msgstr "nije moguće pridodati u locale arhivu"
 
-#: locale/programs/locarchive.c:1217
+#: locale/programs/locarchive.c:1223
 #, c-format
 msgid "locale alias file `%s' not found"
-msgstr "locale alias datoteka „%s“ nije pronađena"
+msgstr "locale alias datoteka „%s” nije pronađena"
 
-#: locale/programs/locarchive.c:1365
+#: locale/programs/locarchive.c:1371
 #, c-format
 msgid "Adding %s\n"
 msgstr "Dodavanje %s\n"
 
-#: locale/programs/locarchive.c:1371
-#, c-format
-msgid "stat of \"%s\" failed: %s: ignored"
-msgstr "stat „%s“ nije uspio: %s -- zanemareno"
-
 #: locale/programs/locarchive.c:1377
 #, c-format
-msgid "\"%s\" is no directory; ignored"
-msgstr "„%s“ nije direktorij -- zanemareno"
+msgid "stat of \"%s\" failed: %s: ignored"
+msgstr "stat „%s” nije uspio: %s -- zanemareno"
 
-#: locale/programs/locarchive.c:1384
+#: locale/programs/locarchive.c:1383
+#, c-format
+msgid "\"%s\" is no directory; ignored"
+msgstr "„%s” nije direktorij -- zanemareno"
+
+#: locale/programs/locarchive.c:1390
 #, c-format
 msgid "cannot open directory \"%s\": %s: ignored"
-msgstr "nije moguće otvoriti direktorij „%s“: %s: zanemareno"
+msgstr "nije moguće otvoriti direktorij „%s”: %s: zanemareno"
 
-#: locale/programs/locarchive.c:1452
+#: locale/programs/locarchive.c:1458
 #, c-format
 msgid "incomplete set of locale files in \"%s\""
-msgstr "nepotpuni skup locale datoteka u „%s“"
+msgstr "nepotpuni skup locale datoteka u „%s”"
 
-#: locale/programs/locarchive.c:1516
+#: locale/programs/locarchive.c:1522
 #, c-format
 msgid "cannot read all files in \"%s\": ignored"
-msgstr "nije moguće čitati sve datoteke u „%s“ -- zanemareno"
+msgstr "nije moguće čitati sve datoteke u „%s” -- zanemareno"
 
-#: locale/programs/locarchive.c:1586
+#: locale/programs/locarchive.c:1592
 #, c-format
 msgid "locale \"%s\" not in archive"
-msgstr "locale „%s“ nije u arhivi"
+msgstr "locale „%s” nije u arhivi"
 
 #: locale/programs/locfile.c:136
 #, c-format
 msgid "argument to `%s' must be a single character"
-msgstr "argument za „%s“ mora biti samo jedan znak"
+msgstr "argument za „%s” mora biti samo jedan znak"
 
 #: locale/programs/locfile.c:256
 msgid "syntax error: not inside a locale definition section"
@@ -3017,21 +3023,21 @@ msgstr "sintaktička greška: nije unutar sekcije locale definicije"
 #: locale/programs/locfile.c:798
 #, c-format
 msgid "cannot open output file `%s' for category `%s'"
-msgstr "nije moguće otvoriti izlaznu datoteku „%s“ za kategoriju „%s“"
+msgstr "nije moguće otvoriti izlaznu datoteku „%s” za kategoriju „%s”"
 
 #: locale/programs/locfile.c:821
 #, c-format
 msgid "failure while writing data for category `%s'"
-msgstr "neuspjeh pri pisanju podataka za kategoriju „%s“"
+msgstr "neuspjeh pri pisanju podataka za kategoriju „%s”"
 
 #: locale/programs/locfile.c:929
 #, c-format
 msgid "cannot create output file `%s' for category `%s'"
-msgstr "nije moguće stvoriti izlaznu datoteku „%s“ za kategoriju „%s“"
+msgstr "nije moguće stvoriti izlaznu datoteku „%s” za kategoriju „%s”"
 
 #: locale/programs/locfile.c:965
 msgid "expecting string argument for `copy'"
-msgstr "očekuje se string kao argument za „copy“"
+msgstr "očekuje se string kao argument za „copy”"
 
 #: locale/programs/locfile.c:969
 msgid "locale name should consist only of portable characters"
@@ -3039,12 +3045,12 @@ msgstr "ime za locale treba se sastojati samo od prenosivih znakova"
 
 #: locale/programs/locfile.c:988
 msgid "no other keyword shall be specified when `copy' is used"
-msgstr "kad se koristi „copy“ ne smije se navesti nijedna druga ključna riječ"
+msgstr "kad se koristi „copy” ne smije se navesti nijedna druga ključna riječ"
 
 #: locale/programs/locfile.c:1002
 #, c-format
 msgid "`%1$s' definition does not end with `END %1$s'"
-msgstr "„%1$s“ definicija ne završava sa „END %1$s“"
+msgstr "„%1$s” definicija ne završava sa „END %1$s”"
 
 #: locale/programs/repertoire.c:227 locale/programs/repertoire.c:268
 #: locale/programs/repertoire.c:293
@@ -3063,12 +3069,12 @@ msgstr "nije moguće spremiti novu mapu repertoara"
 #: locale/programs/repertoire.c:340
 #, c-format
 msgid "repertoire map file `%s' not found"
-msgstr "datoteka mape repertoara „%s“ nije pronađena"
+msgstr "datoteka mape repertoara „%s” nije pronađena"
 
 #: login/programs/pt_chown.c:78
 #, c-format
 msgid "Set the owner, group and access permission of the slave pseudo terminal corresponding to the master pseudo terminal passed on file descriptor `%d'.  This is the helper program for the `grantpt' function.  It is not intended to be run directly from the command line.\n"
-msgstr "Postavi vlasnika, grupu i prava pristupa podređenog pseudo terminala koji odgovara glavnom pseudo terminalu proslijeđenom deskriptoru datoteke „%d“. Ovo je pomoćni program za funkciju „grantpt“. Nije namijenjen pokretanju izravno iz naredbenog retka.\n"
+msgstr "Postavi vlasnika, grupu i prava pristupa podređenog pseudo terminala koji odgovara glavnom pseudo terminalu proslijeđenom deskriptoru datoteke „%d”. Ovo je pomoćni program za funkciju „grantpt”. Nije namijenjen pokretanju izravno iz naredbenog retka.\n"
 
 #: login/programs/pt_chown.c:92
 #, c-format
@@ -3077,7 +3083,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"Vlasnik je postavljen na trenutačnog korisnika, grupa je postavljena na „%s“, a prava pristupa su postavljene na „%o“.\n"
+"Vlasnik je postavljen na trenutačnog korisnika, grupa je postavljena na „%s”, a prava pristupa su postavljene na „%o”.\n"
 "\n"
 "%s"
 
@@ -3089,7 +3095,7 @@ msgstr "previše argumenata"
 #: login/programs/pt_chown.c:211
 #, c-format
 msgid "needs to be installed setuid `root'"
-msgstr "mora biti instaliran kao setuid „root“"
+msgstr "mora biti instaliran kao setuid „root”"
 
 #: malloc/mcheck-impl.c:354
 msgid "memory is consistent, library is buggy\n"
@@ -3482,7 +3488,7 @@ msgstr "(Nepoznati objekt"
 #: nis/nis_print.c:164
 #, c-format
 msgid "Name : `%s'\n"
-msgstr "Ime : „%s“\n"
+msgstr "Ime : „%s”\n"
 
 #: nis/nis_print.c:165
 #, c-format
@@ -3697,7 +3703,7 @@ msgstr "Objekt #%d:\n"
 #: nis/nis_print_group_entry.c:116
 #, c-format
 msgid "Group entry for \"%s.%s\" group:\n"
-msgstr "Unos grupe za grupu „%s.%s“:\n"
+msgstr "Unos grupe za grupu „%s.%s”:\n"
 
 #: nis/nis_print_group_entry.c:124
 msgid "    Explicit members:\n"
@@ -3838,17 +3844,17 @@ msgstr "yp_update: nije moguće dobiti adresu servera\n"
 #: nscd/aicache.c:68 nscd/hstcache.c:451
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
-msgstr "Nije pronađen „%s“ u predmemoriji računala!"
+msgstr "Nije pronađen „%s” u predmemoriji računala!"
 
 #: nscd/aicache.c:70 nscd/hstcache.c:453
 #, c-format
 msgid "Reloading \"%s\" in hosts cache!"
-msgstr "Ponovno učitavanje „%s“ predmemoriju računala!"
+msgstr "Ponovno učitavanje „%s” predmemoriju računala!"
 
 #: nscd/cache.c:150
 #, c-format
 msgid "add new entry \"%s\" of type %s for %s to cache%s"
-msgstr "doda novu stavku „%s“ vrste %s za %s u cache%s"
+msgstr "doda novu stavku „%s” vrste %s za %s u cache%s"
 
 #: nscd/cache.c:152
 msgid " (first)"
@@ -3857,12 +3863,12 @@ msgstr " (prvi)"
 #: nscd/cache.c:287
 #, c-format
 msgid "checking for monitored file `%s': %s"
-msgstr "provjeravanje praćene datoteku „%s“: %s"
+msgstr "provjeravanje praćene datoteku „%s”: %s"
 
 #: nscd/cache.c:297
 #, c-format
 msgid "monitored file `%s` changed (mtime)"
-msgstr "praćena datoteka „%s“ se promijenila (mtime)"
+msgstr "praćena datoteka „%s” se promijenila (mtime)"
 
 #: nscd/cache.c:340
 #, c-format
@@ -3872,21 +3878,21 @@ msgstr "čišćenje predmemorije %s; vrijeme %ld"
 #: nscd/cache.c:369
 #, c-format
 msgid "considering %s entry \"%s\", timeout %<PRIu64>"
-msgstr "razmatranje %s stavke „%s“; tajmaut %<PRIu64>"
+msgstr "razmatranje %s stavke „%s”; tajmaut %<PRIu64>"
 
 #: nscd/cachedumper.c:168
 msgid " - all data: "
-msgstr " - svi podaci: "
+msgstr " - all data: "
 
 #: nscd/cachedumper.c:362
 #, c-format
 msgid " - remaining data %p: "
-msgstr " - ostatak podataka %p: "
+msgstr " - remaining data %p: "
 
 #: nscd/connections.c:530
 #, c-format
 msgid "invalid persistent database file \"%s\": %s"
-msgstr "nevaljana postojana datoteka baze podataka „%s“: %s"
+msgstr "nevaljana postojana datoteka baze podataka „%s”: %s"
 
 #: nscd/connections.c:538
 msgid "uninitialized header"
@@ -3914,7 +3920,7 @@ msgstr ""
 #: nscd/connections.c:595 nscd/connections.c:679
 #, c-format
 msgid "cannot create read-only descriptor for \"%s\"; no mmap"
-msgstr "nije moguće stvoriti deskriptor „%s“ samo za čitanje; nema mmap()"
+msgstr "nije moguće stvoriti deskriptor „%s” samo za čitanje; nema mmap()"
 
 #: nscd/connections.c:611
 #, c-format
@@ -3956,22 +3962,22 @@ msgstr "nije moguće omogućiti utičnicu za prihvaćanje poveznica: %s"
 #: nscd/connections.c:871
 #, c-format
 msgid "disabled inotify-based monitoring for file `%s': %s"
-msgstr "onemogućuje se praćenje praćenje datoteke „%s“ s inotify: %s"
+msgstr "onemogućuje se praćenje praćenje datoteke „%s” s inotify: %s"
 
 #: nscd/connections.c:875
 #, c-format
 msgid "monitoring file `%s` (%d)"
-msgstr "prati se datoteka „%s“ (%d)"
+msgstr "prati se datoteka „%s” (%d)"
 
 #: nscd/connections.c:888
 #, c-format
 msgid "disabled inotify-based monitoring for directory `%s': %s"
-msgstr "onemogućuje se praćenje praćenje direktorija „%s“ s inotify: %s"
+msgstr "onemogućuje se praćenje praćenje direktorija „%s” s inotify: %s"
 
 #: nscd/connections.c:892
 #, c-format
 msgid "monitoring directory `%s` (%d)"
-msgstr "prati se direktorij „%s“ (%d)"
+msgstr "prati se direktorij „%s” (%d)"
 
 #: nscd/connections.c:920
 #, c-format
@@ -3981,7 +3987,7 @@ msgstr "prati se datoteke %s za bazu podataka %s"
 #: nscd/connections.c:930
 #, c-format
 msgid "stat failed for file `%s'; will try again later: %s"
-msgstr "nije uspjelo dobiti status datoteke „%s“; pokušati će se ponovno: %s"
+msgstr "nije uspjelo dobiti status datoteke „%s”; pokušati će se ponovno: %s"
 
 #: nscd/connections.c:1049
 #, c-format
@@ -4053,7 +4059,7 @@ msgstr ""
 #: nscd/connections.c:1463
 #, c-format
 msgid "cannot change current working directory to \"/\": %s"
-msgstr "nije moguće promijeniti trenutačni radni direktorij u „/“: %s"
+msgstr "nije moguće promijeniti trenutačni radni direktorij u „/”: %s"
 
 #: nscd/connections.c:1647
 #, c-format
@@ -4083,37 +4089,37 @@ msgstr "handle_request: zahtjev je primljen (inačica = %d)"
 #: nscd/connections.c:1848
 #, c-format
 msgid "ignored inotify event for `%s` (file exists)"
-msgstr "zanemareni inotify događaj za „%s“ (datoteka postoji)"
+msgstr "zanemareni inotify događaj za „%s” (datoteka postoji)"
 
 #: nscd/connections.c:1853
 #, c-format
 msgid "monitored file `%s` was %s, removing watch"
-msgstr "praćena datoteka „%s“ bila je %s; motrenje prestaje"
+msgstr "praćena datoteka „%s” bila je %s; motrenje prestaje"
 
 #: nscd/connections.c:1861 nscd/connections.c:1903
 #, c-format
 msgid "failed to remove file watch `%s`: %s"
-msgstr "nije uspjelo ukloniti nadzor nad datotekom „%s“: %s"
+msgstr "nije uspjelo ukloniti nadzor nad datotekom „%s”: %s"
 
 #: nscd/connections.c:1876
 #, c-format
 msgid "monitored file `%s` was written to"
-msgstr "praćena datoteka „%s“ je zapisana u"
+msgstr "praćena datoteka „%s” je zapisana u"
 
 #: nscd/connections.c:1900
 #, c-format
 msgid "monitored parent directory `%s` was %s, removing watch on `%s`"
-msgstr "praćeni naddirektorij „%s“ je bio »%s«; motrenje „%s“ prestaje"
+msgstr "praćeni naddirektorij „%s” je bio »%s«; motrenje „%s” prestaje"
 
 #: nscd/connections.c:1926
 #, c-format
 msgid "monitored file `%s` was %s, adding watch"
-msgstr "praćena datoteka „%s“ bila je »%s«; motrenje započinje"
+msgstr "praćena datoteka „%s” bila je »%s«; motrenje započinje"
 
 #: nscd/connections.c:1938
 #, c-format
 msgid "failed to add file watch `%s`: %s"
-msgstr "nije uspjelo dodati motrenje datoteke „%s“: %s"
+msgstr "nije uspjelo dodati motrenje datoteke „%s”: %s"
 
 #: nscd/connections.c:2116 nscd/connections.c:2281
 #, c-format
@@ -4126,11 +4132,11 @@ msgstr "nije bilo moguće inicirati uvjetnu varijablu"
 
 #: nscd/connections.c:2405
 msgid "could not start clean-up thread; terminating"
-msgstr "nije bilo moguće pokrenuti „čistačica“-dretvu -- završava se"
+msgstr "nije bilo moguće pokrenuti „čistačica”-dretvu -- završava se"
 
 #: nscd/connections.c:2419
 msgid "could not start any worker thread; terminating"
-msgstr "nije bilo moguće pokrenuti nijednu „radnik“-dretvu -- završava se"
+msgstr "nije bilo moguće pokrenuti nijednu „radnik”-dretvu -- završava se"
 
 #: nscd/connections.c:2474 nscd/connections.c:2476 nscd/connections.c:2492
 #: nscd/connections.c:2502 nscd/connections.c:2520 nscd/connections.c:2531
@@ -4160,17 +4166,17 @@ msgstr "nepotpuno zapisivanje u %s: %s"
 #: nscd/grpcache.c:429 nscd/initgrcache.c:74
 #, c-format
 msgid "Haven't found \"%s\" in group cache!"
-msgstr "Nije pronađen „%s“ u predmemoriji grupa!"
+msgstr "Nije pronađen „%s” u predmemoriji grupa!"
 
 #: nscd/grpcache.c:431 nscd/initgrcache.c:76
 #, c-format
 msgid "Reloading \"%s\" in group cache!"
-msgstr "Ponovno učitavanje „%s“ u predmemoriju grupa!"
+msgstr "Ponovno učitavanje „%s” u predmemoriju grupa!"
 
 #: nscd/grpcache.c:491
 #, c-format
 msgid "Invalid numeric gid \"%s\"!"
-msgstr "Nevaljani numerički GID „%s“!"
+msgstr "Nevaljani numerički GID „%s”!"
 
 #: nscd/mem.c:420
 #, c-format
@@ -4185,22 +4191,22 @@ msgstr "nema više memorije za bazu podataka ‘%s’"
 #: nscd/netgroupcache.c:198
 #, c-format
 msgid "Haven't found \"%s\" in netgroup cache!"
-msgstr "Nije pronađeno „%s“ u netgroup predmemoriji!"
+msgstr "Nije pronađeno „%s” u netgroup predmemoriji!"
 
 #: nscd/netgroupcache.c:200
 #, c-format
 msgid "Reloading \"%s\" in netgroup cache!"
-msgstr "Ponovno se učitava „%s“ u netgroup predmemoriju!"
+msgstr "Ponovno se učitava „%s” u netgroup predmemoriju!"
 
 #: nscd/netgroupcache.c:486
 #, c-format
 msgid "Haven't found \"%s (%s,%s,%s)\" in netgroup cache!"
-msgstr "Nije pronađen „%s (%s,%s,%s)“ u netgroup predmemoriji!"
+msgstr "Nije pronađen „%s (%s,%s,%s)” u netgroup predmemoriji!"
 
 #: nscd/netgroupcache.c:489
 #, c-format
 msgid "Reloading \"%s (%s,%s,%s)\" in netgroup cache!"
-msgstr "Ponovno se učitava „%s (%s,%s,%s)“ u netgroup predmemoriju!"
+msgstr "Ponovno se učitava „%s (%s,%s,%s)” u netgroup predmemoriju!"
 
 #: nscd/nscd.c:107
 msgid "Read configuration data from NAME"
@@ -4277,7 +4283,7 @@ msgstr "nije moguće započeti novi proces (novog potomka, novi child process)"
 
 #: nscd/nscd.c:276
 msgid "cannot change current working directory to \"/\""
-msgstr "nije moguće promijeniti trenutačni radni direktorij u „/“"
+msgstr "nije moguće promijeniti trenutačni radni direktorij u „/”"
 
 #: nscd/nscd.c:284
 msgid "Could not create log file"
@@ -4331,7 +4337,7 @@ msgstr ""
 #: nscd/nscd.c:647
 #, c-format
 msgid "'wait' failed\n"
-msgstr "neuspješni „wait“\n"
+msgstr "neuspješni „wait”\n"
 
 #: nscd/nscd.c:654
 #, c-format
@@ -4515,17 +4521,17 @@ msgstr ""
 #: nscd/pwdcache.c:406
 #, c-format
 msgid "Haven't found \"%s\" in user database cache!"
-msgstr "Nije pronađen „%s“ u korisničkoj predmemoriji baze podataka!"
+msgstr "Nije pronađen „%s” u korisničkoj predmemoriji baze podataka!"
 
 #: nscd/pwdcache.c:408
 #, c-format
 msgid "Reloading \"%s\" in user database cache!"
-msgstr "Ponovno učitavanje „%s“ u korisničku predmemoriju baze podataka!"
+msgstr "Ponovno učitavanje „%s” u korisničku predmemoriju baze podataka!"
 
 #: nscd/pwdcache.c:470
 #, c-format
 msgid "Invalid numeric uid \"%s\"!"
-msgstr "Nevaljani numerički UID „%s“!"
+msgstr "Nevaljani numerički UID „%s”!"
 
 #: nscd/selinux.c:154
 #, c-format
@@ -4593,7 +4599,7 @@ msgstr "Greška pri dobivanju nscd konteksta."
 #: nscd/selinux.c:393
 #, c-format
 msgid "Error translating permission name \"%s\" to access vector bit."
-msgstr "Greška pri prevođenju naziva dopuštenja „%s“ za pristup vektorskom bitu."
+msgstr "Greška pri prevođenju naziva dopuštenja „%s” za pristup vektorskom bitu."
 
 #: nscd/selinux.c:403
 msgid "Error getting context of socket peer"
@@ -4637,12 +4643,12 @@ msgstr ""
 #: nscd/servicescache.c:357
 #, c-format
 msgid "Haven't found \"%s\" in services cache!"
-msgstr "Nije bio pronađen „%s“ u predmemoriji usluga!"
+msgstr "Nije bio pronađen „%s” u predmemoriji usluga!"
 
 #: nscd/servicescache.c:359
 #, c-format
 msgid "Reloading \"%s\" in services cache!"
-msgstr "Ponovno učitavanje „%s“ u predmemoriju usluga!"
+msgstr "Ponovno učitavanje „%s” u predmemoriju usluga!"
 
 #: nss/getent.c:54
 msgid "database [key ...]"
@@ -4729,7 +4735,7 @@ msgstr ""
 #: nss/makedb.c:229
 #, c-format
 msgid "cannot open database file `%s'"
-msgstr "nije moguće otvoriti datoteku baze podataka „%s“"
+msgstr "nije moguće otvoriti datoteku baze podataka „%s”"
 
 #: nss/makedb.c:274
 #, c-format
@@ -4768,7 +4774,7 @@ msgstr "duplikat ključa"
 #: nss/makedb.c:570
 #, c-format
 msgid "problems while reading `%s'"
-msgstr "problemi pri čitanju „%s“"
+msgstr "problemi pri čitanju „%s”"
 
 #: nss/makedb.c:748
 #, c-format
@@ -4803,7 +4809,7 @@ msgstr "nije moguće inicirati SELinux kontekst"
 #: nss/makedb.c:902
 #, c-format
 msgid "cannot set file creation context for `%s'"
-msgstr "nije moguće uspostaviti kontekst stvaranja datoteke za „%s“"
+msgstr "nije moguće uspostaviti kontekst stvaranja datoteke za „%s”"
 
 #: posix/getconf.c:419
 #, c-format
@@ -4841,7 +4847,7 @@ msgstr ""
 #: posix/getconf.c:574
 #, c-format
 msgid "unknown specification \"%s\""
-msgstr "nepoznata specifikacija „%s“"
+msgstr "nepoznata specifikacija „%s”"
 
 #: posix/getconf.c:626
 #, c-format
@@ -4855,7 +4861,7 @@ msgstr "nije definirano"
 #: posix/getconf.c:709
 #, c-format
 msgid "Unrecognized variable `%s'"
-msgstr "Neprepoznata varijabla „%s“"
+msgstr "Neprepoznata varijabla „%s”"
 
 #: posix/getopt.c:278
 #, c-format
@@ -4910,7 +4916,7 @@ msgstr "Nevaljano ime klase znakova"
 
 #: posix/regcomp.c:150
 msgid "Trailing backslash"
-msgstr "Zaostala obrnuta kosa crta („\\“, backslash)"
+msgstr "Zaostala obrnuta kosa crta („\\”, backslash)"
 
 #: posix/regcomp.c:153
 msgid "Invalid back reference"
@@ -5005,17 +5011,17 @@ msgstr "%s: redak %d: nakon znaka za odvajanje popisa ne slijedi domena"
 #: resolv/res_hconf.c:176
 #, c-format
 msgid "%s: line %d: expected `on' or `off', found `%s'\n"
-msgstr "%s: redak %d: očekuje se „on“ ili „off“, „%s“ nađen\n"
+msgstr "%s: redak %d: očekuje se „on” ili „off”, „%s” nađen\n"
 
 #: resolv/res_hconf.c:219
 #, c-format
 msgid "%s: line %d: bad command `%s'\n"
-msgstr "%s: redak %d: loša naredba „%s“\n"
+msgstr "%s: redak %d: loša naredba „%s”\n"
 
 #: resolv/res_hconf.c:252
 #, c-format
 msgid "%s: line %d: ignoring trailing garbage `%s'\n"
-msgstr "%s: redak %d: zanemareno smeće na kraju „%s“\n"
+msgstr "%s: redak %d: zanemareno smeće na kraju „%s”\n"
 
 #: stdio-common/psiginfo-data.h:2
 msgid "Illegal opcode"
@@ -5055,7 +5061,7 @@ msgstr "Dijeljenje s nulom cijelog broja"
 
 #: stdio-common/psiginfo-data.h:13
 msgid "Integer overflow"
-msgstr "Prelijevanje pri operaciji s cijelim brojem"
+msgstr "preljev pri operaciji s cijelim brojem"
 
 #: stdio-common/psiginfo-data.h:14
 msgid "Floating-point divide by zero"
@@ -6173,7 +6179,7 @@ msgstr "Vlasnik je mrtav"
 
 #: sysdeps/gnu/errlist.h:549
 msgid "State not recoverable"
-msgstr "Stanje se ne može oporaviti"
+msgstr "Stanje nije moguće oporaviti"
 
 #: sysdeps/gnu/errlist.h:552
 msgid "Interrupted system call should be restarted"
@@ -6630,7 +6636,7 @@ msgstr "ima više od 6 znakova"
 #: timezone/zdump.c:411
 #, c-format
 msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
-msgstr "%s: upozorenje: zona „%s“ kratica „%s“ %s\n"
+msgstr "%s: upozorenje: zona „%s” kratica „%s” %s\n"
 
 #: timezone/zdump.c:457
 #, c-format
@@ -6705,12 +6711,12 @@ msgstr "standardni ulaz"
 #: timezone/zic.c:616
 #, c-format
 msgid "\"%s\", line %<PRIdMAX>: "
-msgstr "„%s“, redak %<PRIdMAX>: "
+msgstr "„%s”, redak %<PRIdMAX>: "
 
 #: timezone/zic.c:620
 #, c-format
 msgid " (rule from \"%s\", line %<PRIdMAX>)"
-msgstr " (pravilo iz „%s“, redak %<PRIdMAX>)"
+msgstr " (pravilo iz „%s”, redak %<PRIdMAX>)"
 
 #: timezone/zic.c:639
 #, c-format
@@ -6744,7 +6750,7 @@ msgstr "%s: Nije moguće promijeniti (chdir) radni direktorij u %s: %s\n"
 #: timezone/zic.c:786
 #, c-format
 msgid "\"Link %s %s\" is part of a link cycle"
-msgstr "„Link %s %s“ je dio ciklične poveznice"
+msgstr "„Link %s %s” je dio ciklične poveznice"
 
 #: timezone/zic.c:797
 #, c-format
@@ -6962,7 +6968,7 @@ msgstr "nevaljani broj polja u Rule retku"
 #: timezone/zic.c:1859
 #, c-format
 msgid "Invalid rule name \"%s\""
-msgstr "Nevaljano ime za pravilo „%s“!"
+msgstr "Nevaljano ime za pravilo „%s”!"
 
 #: timezone/zic.c:1883
 msgid "wrong number of fields on Zone line"
@@ -6971,17 +6977,17 @@ msgstr "nevaljani broj polja u Zone retku"
 #: timezone/zic.c:1887
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
-msgstr "„Zone %s“ redak i opcija -l se međusobno isključuju"
+msgstr "„Zone %s” redak i opcija -l se međusobno isključuju"
 
 #: timezone/zic.c:1892
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
-msgstr "„Zone %s“ redak i opcija -p se međusobno isključuju"
+msgstr "„Zone %s” redak i opcija -p se međusobno isključuju"
 
 #: timezone/zic.c:1899
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %<PRIdMAX>)"
-msgstr "duplikat imena zone %s (datoteka „%s“, redak %<PRIdMAX>)"
+msgstr "duplikat imena zone %s (datoteka „%s”, redak %<PRIdMAX>)"
 
 #: timezone/zic.c:1913
 msgid "wrong number of fields on Zone continuation line"
@@ -6989,7 +6995,7 @@ msgstr "nevaljani broj polja u Zone continuation-retku"
 
 #: timezone/zic.c:1952
 msgid "invalid UT offset"
-msgstr "nevaljani UTC odmak"
+msgstr "nevaljani UTC pomak"
 
 #: timezone/zic.c:1956
 msgid "invalid abbreviation format"
@@ -7065,7 +7071,7 @@ msgstr "TARGET prazno polje TARGET u retku Link"
 #: timezone/zic.c:2192
 #, c-format
 msgid "FROM year \"%s\" is obsolete; treated as %d"
-msgstr "FROM godine „%s“ je zastarjelo; tretira se kao %d"
+msgstr "FROM godine „%s” je zastarjelo; tretira se kao %d"
 
 #: timezone/zic.c:2199
 msgid "invalid starting year"
@@ -7082,7 +7088,7 @@ msgstr "početna godina je veća od konačne godine"
 #: timezone/zic.c:2222
 #, c-format
 msgid "year type \"%s\" is unsupported; use \"-\" instead"
-msgstr "vrsta godine „%s“ nije podržano; umjesto toga koristite „-“"
+msgstr "vrsta godine „%s” nije podržano; umjesto toga koristite „-”"
 
 #: timezone/zic.c:2257
 msgid "invalid weekday name"
@@ -7137,7 +7143,7 @@ msgstr ""
 
 #: timezone/zic.c:3489
 msgid "UT offset out of range"
-msgstr "UTC odmak je izvan granica raspona"
+msgstr "UTC pomak je izvan granica raspona"
 
 #: timezone/zic.c:3512
 msgid "too many local time types"
@@ -7162,12 +7168,12 @@ msgstr "zadnja vrijednost od Leap (prijestupnog) vremena ne prethodi vrijednosti
 #: timezone/zic.c:3679
 #, c-format
 msgid "\"%s\" is undocumented; use \"last%s\" instead"
-msgstr "„%s“ nije dokumentirana -- koristite umjesto toga „last%s“"
+msgstr "„%s” nije dokumentirana -- koristite umjesto toga „last%s”"
 
 #: timezone/zic.c:3710
 #, c-format
 msgid "\"%s\" is ambiguous in pre-2017c zic"
-msgstr "„%s“ nije jasno za „zic“  stariji od 2017c"
+msgstr "„%s” nije jasno za „zic”  stariji od 2017c"
 
 #: timezone/zic.c:3741
 msgid "Odd number of quotation marks"

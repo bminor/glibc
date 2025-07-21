@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.3.2\n"
-"POT-Creation-Date: 2025-01-28 12:35+0100\n"
+"POT-Creation-Date: 2025-07-19 22:21+0200\n"
 "PO-Revision-Date: 2003-08-28 09:27+0100\n"
 "Last-Translator: Eivind Tagseth <eivindt@multinet.no>\n"
 "Language-Team: Norwegian <i18n-nb@lister.ping.uio.no>\n"
@@ -93,7 +93,7 @@ msgstr "(PROGRAMFEIL) Ingen versjon kjent!?"
 msgid "%s: Too many arguments\n"
 msgstr "%s: For mange argumenter\n"
 
-#: argp/argp-parse.c:751
+#: argp/argp-parse.c:754
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(PROGRAMFEIL) Flagg skulle ha blitt gjenkjent!?"
 
@@ -124,7 +124,7 @@ msgstr ""
 "[UTFIL [INNFIL]...]"
 
 #: catgets/gencat.c:246 debug/pcprofiledump.c:235 debug/xtrace.sh:63
-#: elf/ldconfig.c:233 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
+#: elf/ldconfig.c:232 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
 #: elf/sprof.c:388 iconv/iconv_prog.c:391 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
@@ -141,7 +141,7 @@ msgstr ""
 "TIL NOEN SPESIELL OPPGAVE.\n"
 
 #: catgets/gencat.c:251 debug/pcprofiledump.c:240 debug/xtrace.sh:67
-#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:396
+#: elf/ldconfig.c:237 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:396
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
@@ -216,7 +216,7 @@ msgstr "ugyldig modus for dlopen()"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT brukt i kode som ikke er dynamisk lastet"
 
-#: elf/ldconfig.c:1125 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1124 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:460 posix/getconf.c:699
 #, c-format
@@ -243,57 +243,57 @@ msgstr "generer kall-graf"
 msgid "failed to load shared object `%s'"
 msgstr "klarte ikke å laste delt objekt «%s»"
 
-#: elf/sprof.c:441 elf/sprof.c:824 elf/sprof.c:922
+#: elf/sprof.c:441 elf/sprof.c:821 elf/sprof.c:919
 #, c-format
 msgid "cannot create internal descriptor"
 msgstr "kan ikke opprette intern deskriptor"
 
-#: elf/sprof.c:553
+#: elf/sprof.c:550
 #, c-format
 msgid "Reopening shared object `%s' failed"
 msgstr "Gjenåpning av delt objekt «%s» feilet"
 
-#: elf/sprof.c:684
+#: elf/sprof.c:681
 #, c-format
 msgid "*** The file `%s' is stripped: no detailed analysis possible\n"
 msgstr "*** Filen «%s» er strippet: ingen detaljert analyse mulig\n"
 
-#: elf/sprof.c:714
+#: elf/sprof.c:711
 #, c-format
 msgid "failed to load symbol data"
 msgstr "klarte ikke å laste symboldata"
 
-#: elf/sprof.c:779
+#: elf/sprof.c:776
 #, c-format
 msgid "cannot load profiling data"
 msgstr "kan ikke laste inn profileringsdata"
 
-#: elf/sprof.c:788
+#: elf/sprof.c:785
 #, c-format
 msgid "while stat'ing profiling data file"
 msgstr "under stat() av profileringsdatafil"
 
-#: elf/sprof.c:796
+#: elf/sprof.c:793
 #, c-format
 msgid "profiling data file `%s' does not match shared object `%s'"
 msgstr "profileringsdatafil «%s» passer ikke med del objekt «%s»"
 
-#: elf/sprof.c:807
+#: elf/sprof.c:804
 #, c-format
 msgid "failed to mmap the profiling data file"
 msgstr "klarte ikke å mmap'e filen med profileringsdata"
 
-#: elf/sprof.c:815
+#: elf/sprof.c:812
 #, c-format
 msgid "error while closing the profiling data file"
 msgstr "feil ved lukking av datafilen for profilering"
 
-#: elf/sprof.c:898
+#: elf/sprof.c:895
 #, c-format
 msgid "`%s' is no correct profile data file for `%s'"
 msgstr "«%s» er ikke korrekt profildatafil for «%s»"
 
-#: elf/sprof.c:1079 elf/sprof.c:1137
+#: elf/sprof.c:1076 elf/sprof.c:1134
 #, c-format
 msgid "cannot allocate symbol data"
 msgstr "kan ikke allokere symboldata"

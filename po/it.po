@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc-2.36.9000\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-28 12:35+0100\n"
+"POT-Creation-Date: 2025-07-19 22:21+0200\n"
 "PO-Revision-Date: 2023-05-03 15:28+0200\n"
 "Last-Translator: Sergio Zanchetta <primes2h@ubuntu.com>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
@@ -102,7 +102,7 @@ msgstr "(ERRORE DEL PROGRAMMA) Nessuna versione conosciuta."
 msgid "%s: Too many arguments\n"
 msgstr "%s: troppi argomenti\n"
 
-#: argp/argp-parse.c:751
+#: argp/argp-parse.c:754
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(ERRORE DEL PROGRAMMA) L'opzione avrebbe dovuto essere riconosciuta."
 
@@ -139,7 +139,7 @@ msgstr ""
 "[FILE-OUTPUT [FILE-INPUT]...]"
 
 #: catgets/gencat.c:246 debug/pcprofiledump.c:235 debug/xtrace.sh:63
-#: elf/ldconfig.c:233 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
+#: elf/ldconfig.c:232 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
 #: elf/sprof.c:388 iconv/iconv_prog.c:391 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
@@ -157,7 +157,7 @@ msgstr ""
 
 # lf
 #: catgets/gencat.c:251 debug/pcprofiledump.c:240 debug/xtrace.sh:67
-#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:396
+#: elf/ldconfig.c:237 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:396
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
@@ -366,7 +366,7 @@ msgstr "modalità non valida"
 msgid "invalid mode parameter"
 msgstr "parametro di modalità non valido"
 
-#: elf/cache.c:296 elf/ldconfig.c:1239
+#: elf/cache.c:296 elf/ldconfig.c:1238
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Impossibile aprire il file di cache %s\n"
@@ -421,12 +421,12 @@ msgstr "BUG DEL LINKER DINAMICO."
 
 # lf
 #
-#: elf/dl-close.c:363 elf/dl-open.c:298
+#: elf/dl-close.c:363 elf/dl-open.c:297
 msgid "cannot create scope list"
 msgstr "impossibile creare l'elenco di ambito"
 
 # lf
-#: elf/dl-close.c:792
+#: elf/dl-close.c:790
 msgid "shared object not open"
 msgstr "oggetto condiviso non aperto"
 
@@ -455,7 +455,7 @@ msgid "cannot allocate symbol search list"
 msgstr "impossibile allocare l'elenco della ricerca simboli"
 
 # lf
-#: elf/dl-hwcaps.c:196
+#: elf/dl-hwcaps.c:195
 msgid "cannot create capability list"
 msgstr "impossibile creare l'elenco di capacità"
 
@@ -480,106 +480,106 @@ msgid "cannot create search path array"
 msgstr "impossibile creare l'array dei percorsi di ricerca"
 
 # lf
-#: elf/dl-load.c:973
+#: elf/dl-load.c:978
 msgid "cannot stat shared object"
 msgstr "impossibile fare stat sull'oggetto condiviso"
 
 # lf
-#: elf/dl-load.c:1066 elf/dl-load.c:2155
+#: elf/dl-load.c:1071 elf/dl-load.c:2155
 msgid "cannot create shared object descriptor"
 msgstr "impossibile creare il descrittore di oggetto condiviso"
 
 # lf
-#: elf/dl-load.c:1085 elf/dl-load.c:1604 elf/dl-load.c:1710
+#: elf/dl-load.c:1090 elf/dl-load.c:1605 elf/dl-load.c:1711
 msgid "cannot read file data"
 msgstr "impossibile leggere il file di dati"
 
 # lf
-#: elf/dl-load.c:1230
+#: elf/dl-load.c:1235
 msgid "object file has no loadable segments"
 msgstr "il file oggetto non presenta segmenti caricabili"
 
 # lf
-#: elf/dl-load.c:1247
+#: elf/dl-load.c:1252
 msgid "cannot dynamically load executable"
 msgstr "impossibile caricare dinamicamente l'eseguibile"
 
 # lf
 #
-#: elf/dl-load.c:1254
+#: elf/dl-load.c:1259
 msgid "object file has no dynamic section"
 msgstr "il file oggetto non presenta una sezione dinamica"
 
 # lf
-#: elf/dl-load.c:1291
+#: elf/dl-load.c:1296
 msgid "shared object cannot be dlopen()ed"
 msgstr "impossibile eseguire dlopen() sull'oggetto condiviso"
 
 # lf
-#: elf/dl-load.c:1304
+#: elf/dl-load.c:1309
 msgid "cannot allocate memory for program header"
 msgstr "impossibile allocare memoria per l'intestazione di programma"
 
 # lf
-#: elf/dl-load.c:1329
+#: elf/dl-load.c:1334
 msgid "cannot enable executable stack as shared object requires"
 msgstr "impossibile abilitare lo stack eseguibile come richiesto dall'oggetto condiviso"
 
-#: elf/dl-load.c:1357
+#: elf/dl-load.c:1362
 msgid "cannot close file descriptor"
 msgstr "impossibile chiudere il descrittore di file"
 
 # lf
-#: elf/dl-load.c:1604
+#: elf/dl-load.c:1605
 msgid "file too short"
 msgstr "file troppo corto"
 
 # lf
-#: elf/dl-load.c:1638
+#: elf/dl-load.c:1639
 msgid "invalid ELF header"
 msgstr "intestazione ELF non valida"
 
 # lf
-#: elf/dl-load.c:1653
+#: elf/dl-load.c:1654
 msgid "ELF file data encoding not big-endian"
 msgstr "la codifica dati del file ELF non è big-endian"
 
 # lf
-#: elf/dl-load.c:1655
+#: elf/dl-load.c:1656
 msgid "ELF file data encoding not little-endian"
 msgstr "la codifica dati del file ELF non è little-endian"
 
-#: elf/dl-load.c:1659
+#: elf/dl-load.c:1660
 msgid "ELF file version ident does not match current one"
 msgstr "l'identificatore di versione del file ELF non corrisponde a quello attuale"
 
-#: elf/dl-load.c:1663
+#: elf/dl-load.c:1664
 msgid "ELF file OS ABI invalid"
 msgstr "ABI del file ELF del sistema operativo non valido"
 
-#: elf/dl-load.c:1666
+#: elf/dl-load.c:1667
 msgid "ELF file ABI version invalid"
 msgstr "versione ABI del file ELF non valida"
 
-#: elf/dl-load.c:1669
+#: elf/dl-load.c:1670
 msgid "nonzero padding in e_ident"
 msgstr "riempimento con valori diversi da zero in e_ident"
 
 # lf
-#: elf/dl-load.c:1672
+#: elf/dl-load.c:1673
 msgid "internal error"
 msgstr "errore interno"
 
-#: elf/dl-load.c:1679
+#: elf/dl-load.c:1680
 msgid "ELF file version does not match current one"
 msgstr "La versione del file ELF non corrisponde a quella attuale"
 
 # lf
-#: elf/dl-load.c:1691
+#: elf/dl-load.c:1692
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "è possibile caricare solo ET_DYN ed ET_EXEC"
 
-#: elf/dl-load.c:1696
+#: elf/dl-load.c:1697
 msgid "ELF file's phentsize not the expected size"
 msgstr "La phentsize del file ELF non corrisponde a quella attesa"
 
@@ -612,17 +612,17 @@ msgstr "impossibile cambiare le protezioni della memoria"
 msgid "cannot map zero-fill pages"
 msgstr "impossibile mappare le pagine riempite con zeri"
 
-#: elf/dl-lookup.c:800
+#: elf/dl-lookup.c:810
 msgid "symbol lookup error"
 msgstr "errore nella ricerca del simbolo"
 
 # ls
 #
-#: elf/dl-open.c:84
+#: elf/dl-open.c:83
 msgid "cannot extend global scope"
 msgstr "impossibile estendere l'ambito globale"
 
-#: elf/dl-open.c:382
+#: elf/dl-open.c:381
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "contatore TLS di generazione azzerato. Segnalare questo problema."
 
@@ -668,7 +668,7 @@ msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT usato in codice caricato non dinamicamente"
 
 # lf
-#: elf/dl-tls.c:1196
+#: elf/dl-tls.c:1209
 msgid "cannot create TLS data structures"
 msgstr "impossibile creare le strutture dati TLS"
 
@@ -682,194 +682,194 @@ msgid "cannot allocate version reference table"
 msgstr "impossibile allocare la tabella di riferimento versione"
 
 # lf
-#: elf/ldconfig.c:125
+#: elf/ldconfig.c:124
 msgid "Print cache"
 msgstr "Stampa la cache"
 
-#: elf/ldconfig.c:126
+#: elf/ldconfig.c:125
 msgid "Generate verbose messages"
 msgstr "Genera messaggi prolissi"
 
 # lf
-#: elf/ldconfig.c:127
+#: elf/ldconfig.c:126
 msgid "Don't build cache"
 msgstr "Non crea la cache"
 
 # lf
-#: elf/ldconfig.c:129
+#: elf/ldconfig.c:128
 msgid "Change to and use ROOT as root directory"
 msgstr "Passa a RADICE come directory di root"
 
-#: elf/ldconfig.c:129
+#: elf/ldconfig.c:128
 msgid "ROOT"
 msgstr "ROOT"
 
-#: elf/ldconfig.c:130
+#: elf/ldconfig.c:129
 msgid "CACHE"
 msgstr "CACHE"
 
 # lf
-#: elf/ldconfig.c:130
+#: elf/ldconfig.c:129
 msgid "Use CACHE as cache file"
 msgstr "Usa CACHE come file di cache"
 
-#: elf/ldconfig.c:131
+#: elf/ldconfig.c:130
 msgid "CONF"
 msgstr "CONF"
 
 # lf
-#: elf/ldconfig.c:131
+#: elf/ldconfig.c:130
 msgid "Use CONF as configuration file"
 msgstr "Usa CONF come file di configurazione"
 
 # lf
-#: elf/ldconfig.c:132
+#: elf/ldconfig.c:131
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "Elabora solo le directory specificate nella riga di comando. Non crea la cache."
 
 # lf
-#: elf/ldconfig.c:133
+#: elf/ldconfig.c:132
 msgid "Manually link individual libraries."
 msgstr "Crea manualmente i collegamenti alle singole librerie."
 
-#: elf/ldconfig.c:134
+#: elf/ldconfig.c:133
 msgid "FORMAT"
 msgstr "FORMATO"
 
-#: elf/ldconfig.c:134
+#: elf/ldconfig.c:133
 msgid "Format to use: new (default), old, or compat"
 msgstr "Formato da usare: new (predefinito), old o compat"
 
-#: elf/ldconfig.c:135
+#: elf/ldconfig.c:134
 msgid "Ignore auxiliary cache file"
 msgstr "Ignora il file di cache ausiliario"
 
-#: elf/ldconfig.c:143
+#: elf/ldconfig.c:142
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr "Configura i binding a runtime del linker dinamico."
 
 # lf
-#: elf/ldconfig.c:277
+#: elf/ldconfig.c:276
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "Percorso \"%s\" fornito più di una volta"
 
-#: elf/ldconfig.c:406
+#: elf/ldconfig.c:405
 #, c-format
 msgid "Can't stat %s"
 msgstr "Impossibile fare stat di %s"
 
-#: elf/ldconfig.c:487
+#: elf/ldconfig.c:486
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "Impossibile fare stat di %s\n"
 
 # lf
-#: elf/ldconfig.c:497
+#: elf/ldconfig.c:496
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s non è un collegamento simbolico\n"
 
 # lf
-#: elf/ldconfig.c:516
+#: elf/ldconfig.c:515
 #, c-format
 msgid "Can't unlink %s"
 msgstr "Impossibile eseguire l'unlink di %s"
 
 # lf
 #
-#: elf/ldconfig.c:522
+#: elf/ldconfig.c:521
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "Impossibile collegare %s a %s"
 
-#: elf/ldconfig.c:528
+#: elf/ldconfig.c:527
 msgid " (changed)\n"
 msgstr " (cambiato)\n"
 
-#: elf/ldconfig.c:530
+#: elf/ldconfig.c:529
 msgid " (SKIPPED)\n"
 msgstr " (SALTATO)\n"
 
-#: elf/ldconfig.c:585
+#: elf/ldconfig.c:584
 #, c-format
 msgid "Can't find %s"
 msgstr "Impossibile trovare %s"
 
-#: elf/ldconfig.c:601 elf/ldconfig.c:760 elf/ldconfig.c:827
+#: elf/ldconfig.c:600 elf/ldconfig.c:759 elf/ldconfig.c:826
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "Impossibile fare lstat di %s"
 
 # lf
-#: elf/ldconfig.c:607
+#: elf/ldconfig.c:606
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "File %s ignorato poiché non è un file normale."
 
 # lf
 #
-#: elf/ldconfig.c:615
+#: elf/ldconfig.c:614
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "Collegamenti non creati poiché non è stato possibile trovare il soname per %s"
 
-#: elf/ldconfig.c:716
+#: elf/ldconfig.c:715
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Impossibile aprire la directory %s"
 
-#: elf/ldconfig.c:777 elf/ldconfig.c:815 elf/readlib.c:81
+#: elf/ldconfig.c:776 elf/ldconfig.c:814 elf/readlib.c:81
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "File di input %s non trovato.\n"
 
-#: elf/ldconfig.c:784
+#: elf/ldconfig.c:783
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Impossibile fare stat di %s"
 
 # lf
-#: elf/ldconfig.c:903
+#: elf/ldconfig.c:902
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "libreria libc6 %s nella directory errata"
 
 # lf
-#: elf/ldconfig.c:922
+#: elf/ldconfig.c:921
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "le librerie %s e %s nella directory %s hanno lo stesso soname, ma di tipo differente."
 
-#: elf/ldconfig.c:1118
+#: elf/ldconfig.c:1117
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "se viene usato -r è necessario un nome file assoluto per il file di configurazione"
 
-#: elf/ldconfig.c:1125 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1124 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:460 posix/getconf.c:699
 #, c-format
 msgid "memory exhausted"
 msgstr "memoria esaurita"
 
-#: elf/ldconfig.c:1158
+#: elf/ldconfig.c:1157
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: impossibile leggere la directory %s"
 
 # lf
-#: elf/ldconfig.c:1196
+#: elf/ldconfig.c:1195
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "usato il percorso relativo \"%s\" per creare la cache"
 
-#: elf/ldconfig.c:1218
+#: elf/ldconfig.c:1217
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Impossibile fare chdir a /"
 
-#: elf/ldconfig.c:1259
+#: elf/ldconfig.c:1258
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Impossibile aprire la directory del file di cache %s\n"
@@ -1103,88 +1103,88 @@ msgid "failed to load shared object `%s'"
 msgstr "caricamento dell'oggetto condiviso \"%s\" non riuscito"
 
 # lf
-#: elf/sprof.c:441 elf/sprof.c:824 elf/sprof.c:922
+#: elf/sprof.c:441 elf/sprof.c:821 elf/sprof.c:919
 #, c-format
 msgid "cannot create internal descriptor"
 msgstr "impossibile creare il descrittore interno"
 
 # lf
-#: elf/sprof.c:553
+#: elf/sprof.c:550
 #, c-format
 msgid "Reopening shared object `%s' failed"
 msgstr "Riapertura dell'oggetto condiviso \"%s\" non riuscita"
 
-#: elf/sprof.c:560 elf/sprof.c:655
+#: elf/sprof.c:557 elf/sprof.c:652
 #, c-format
 msgid "reading of section headers failed"
 msgstr "lettura delle intestazioni di sezione non riuscita"
 
-#: elf/sprof.c:568 elf/sprof.c:663
+#: elf/sprof.c:565 elf/sprof.c:660
 #, c-format
 msgid "reading of section header string table failed"
 msgstr "lettura della tabella di stringhe delle intestazioni di sezione non riuscita"
 
-#: elf/sprof.c:594
+#: elf/sprof.c:591
 #, c-format
 msgid "*** Cannot read debuginfo file name: %m\n"
 msgstr "*** Impossibile leggere il nome del file debuginfo: %m\n"
 
-#: elf/sprof.c:615
+#: elf/sprof.c:612
 #, c-format
 msgid "cannot determine file name"
 msgstr "impossibile determinare il nome del file"
 
-#: elf/sprof.c:648
+#: elf/sprof.c:645
 #, c-format
 msgid "reading of ELF header failed"
 msgstr "lettura dell'intestazione ELF non riuscita"
 
-#: elf/sprof.c:684
+#: elf/sprof.c:681
 #, c-format
 msgid "*** The file `%s' is stripped: no detailed analysis possible\n"
 msgstr "*** Il file \"%s\" è stato rimosso: impossibile fare l'analisi dettagliata\n"
 
 # lf
-#: elf/sprof.c:714
+#: elf/sprof.c:711
 #, c-format
 msgid "failed to load symbol data"
 msgstr "caricamento dei dati dei simboli non riuscito"
 
 # lf
-#: elf/sprof.c:779
+#: elf/sprof.c:776
 #, c-format
 msgid "cannot load profiling data"
 msgstr "impossibile caricare i dati di profiling"
 
-#: elf/sprof.c:788
+#: elf/sprof.c:785
 #, c-format
 msgid "while stat'ing profiling data file"
 msgstr "durante lo stat del relativo file"
 
-#: elf/sprof.c:796
+#: elf/sprof.c:793
 #, c-format
 msgid "profiling data file `%s' does not match shared object `%s'"
 msgstr "il file di dati di profiling \"%s\" non ha corrispondenza con l'oggetto condiviso \"%s\""
 
 # lf
-#: elf/sprof.c:807
+#: elf/sprof.c:804
 #, c-format
 msgid "failed to mmap the profiling data file"
 msgstr "mmap sul file di dati di profiling non riuscito"
 
 # lf
-#: elf/sprof.c:815
+#: elf/sprof.c:812
 #, c-format
 msgid "error while closing the profiling data file"
 msgstr "errore durante la chiusura del file di dati di profiling"
 
 # lf
-#: elf/sprof.c:898
+#: elf/sprof.c:895
 #, c-format
 msgid "`%s' is no correct profile data file for `%s'"
 msgstr "\"%s\" non è il corretto file di dati profilo per \"%s\""
 
-#: elf/sprof.c:1079 elf/sprof.c:1137
+#: elf/sprof.c:1076 elf/sprof.c:1134
 #, c-format
 msgid "cannot allocate symbol data"
 msgstr "impossibile allocare i dati dei simboli"
@@ -2618,7 +2618,7 @@ msgid "cannot resize archive file"
 msgstr "impossibile ridimensionare il file d'archivio"
 
 #: locale/programs/locarchive.c:188 locale/programs/locarchive.c:451
-#: locale/programs/locarchive.c:680
+#: locale/programs/locarchive.c:686
 #, c-format
 msgid "cannot map archive header"
 msgstr "impossibile mappare l'intestazione dell'archivio"
@@ -2677,61 +2677,61 @@ msgstr "impossibile fare stat dell'archivio di localizzazione \"%s\""
 msgid "cannot lock locale archive \"%s\""
 msgstr "impossibile fare il lock dell'archivio di localizzazione \"%s\""
 
-#: locale/programs/locarchive.c:654
+#: locale/programs/locarchive.c:657
 #, c-format
 msgid "cannot read archive header"
 msgstr "impossibile leggere l'intestazione dell'archivio"
 
-#: locale/programs/locarchive.c:734
+#: locale/programs/locarchive.c:740
 #, c-format
 msgid "locale '%s' already exists"
 msgstr "la localizzazione \"%s\" esiste già"
 
-#: locale/programs/locarchive.c:1009 locale/programs/locarchive.c:1024
-#: locale/programs/locarchive.c:1036 locale/programs/locarchive.c:1048
+#: locale/programs/locarchive.c:1015 locale/programs/locarchive.c:1030
+#: locale/programs/locarchive.c:1042 locale/programs/locarchive.c:1054
 #: locale/programs/locfile.c:349
 #, c-format
 msgid "cannot add to locale archive"
 msgstr "impossibile aggiungere all'archivio delle localizzazioni"
 
 # lf
-#: locale/programs/locarchive.c:1217
+#: locale/programs/locarchive.c:1223
 #, c-format
 msgid "locale alias file `%s' not found"
 msgstr "file alias \"%s\" di localizzazione non trovato"
 
-#: locale/programs/locarchive.c:1365
+#: locale/programs/locarchive.c:1371
 #, c-format
 msgid "Adding %s\n"
 msgstr "Aggiunta di %s\n"
 
-#: locale/programs/locarchive.c:1371
+#: locale/programs/locarchive.c:1377
 #, c-format
 msgid "stat of \"%s\" failed: %s: ignored"
 msgstr "stat di \"%s\" non riuscita: %s: ignorato"
 
-#: locale/programs/locarchive.c:1377
+#: locale/programs/locarchive.c:1383
 #, c-format
 msgid "\"%s\" is no directory; ignored"
 msgstr "\"%s\" non è una directory; ignorato"
 
 # lf
-#: locale/programs/locarchive.c:1384
+#: locale/programs/locarchive.c:1390
 #, c-format
 msgid "cannot open directory \"%s\": %s: ignored"
 msgstr "impossibile aprire la directory \"%s\": %s: ignorato"
 
-#: locale/programs/locarchive.c:1452
+#: locale/programs/locarchive.c:1458
 #, c-format
 msgid "incomplete set of locale files in \"%s\""
 msgstr "set incompleto di file di localizzazione in \"%s\""
 
-#: locale/programs/locarchive.c:1516
+#: locale/programs/locarchive.c:1522
 #, c-format
 msgid "cannot read all files in \"%s\": ignored"
 msgstr "impossibile leggere tutti i file in \"%s\": ignorato"
 
-#: locale/programs/locarchive.c:1586
+#: locale/programs/locarchive.c:1592
 #, c-format
 msgid "locale \"%s\" not in archive"
 msgstr "la localizzazione \"%s\" non è nell'archivio"

@@ -14,7 +14,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.3\n"
-"POT-Creation-Date: 2025-01-28 12:35+0100\n"
+"POT-Creation-Date: 2025-07-19 22:21+0200\n"
 "PO-Revision-Date: 2005-04-04 10:55-0700\n"
 "Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
 "Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"

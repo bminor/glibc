@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.2.3\n"
-"POT-Creation-Date: 2025-01-28 12:35+0100\n"
+"POT-Creation-Date: 2025-07-19 22:21+0200\n"
 "PO-Revision-Date: 2001-05-21 19:20:31+0000\n"
 "Last-Translator: Nikos Mavroyanopoulos <nmav@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -92,7 +92,7 @@ msgstr "(ΣΦΑΛΜΑ ΠΡΟΓΡΑΜΜΑΤΟΣ) Δεν είναι γνωστή �
 msgid "%s: Too many arguments\n"
 msgstr "%s: Πάρα πολλά ορίσματα\n"
 
-#: argp/argp-parse.c:751
+#: argp/argp-parse.c:754
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(ΣΦΑΛΜΑ ΠΡΟΓΡΑΜΜΑΤΟΣ) Η επιλογή θα έπρεπε να είχε αναγνωριστεί!;"
 
@@ -127,7 +127,7 @@ msgstr ""
 "[ΑΡΧΕΙΟ-ΕΞΟΔΟΥ [ΑΡΧΕΙΟ-ΕΙΣΟΔΟΥ]...]"
 
 #: catgets/gencat.c:246 debug/pcprofiledump.c:235 debug/xtrace.sh:63
-#: elf/ldconfig.c:233 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
+#: elf/ldconfig.c:232 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
 #: elf/sprof.c:388 iconv/iconv_prog.c:391 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
@@ -144,7 +144,7 @@ msgstr ""
 "ΚΑΠΟΙΟ ΣΥΓΚΕΚΡΙΜΕΝΟ ΣΚΟΠΟ.\n"
 
 #: catgets/gencat.c:251 debug/pcprofiledump.c:240 debug/xtrace.sh:67
-#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:396
+#: elf/ldconfig.c:237 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:396
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
@@ -219,16 +219,16 @@ msgstr "μη έγκυρη κατάσταση για την dlopen()"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "Το RTLD_NEXT που χρησιμοποιείται στον κώδικα δεν φορτώθηκε δυναμικά"
 
-#: elf/ldconfig.c:497
+#: elf/ldconfig.c:496
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "το %s δεν είναι συμβολικός σύνδεσμος\n"
 
-#: elf/ldconfig.c:528
+#: elf/ldconfig.c:527
 msgid " (changed)\n"
 msgstr " (άλλαξε)\n"
 
-#: elf/ldconfig.c:1125 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1124 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:460 posix/getconf.c:699
 #, c-format
@@ -276,57 +276,57 @@ msgstr "SHOBJ [PROFDATA]"
 msgid "failed to load shared object `%s'"
 msgstr "αποτυχία φόρτωσης διαμοιραζομένου αντικειμένου `%s'"
 
-#: elf/sprof.c:441 elf/sprof.c:824 elf/sprof.c:922
+#: elf/sprof.c:441 elf/sprof.c:821 elf/sprof.c:919
 #, c-format
 msgid "cannot create internal descriptor"
 msgstr "αδυναμία δημιουργίας εσωτερικού περιγραφέα"
 
-#: elf/sprof.c:553
+#: elf/sprof.c:550
 #, c-format
 msgid "Reopening shared object `%s' failed"
 msgstr "Αποτυχία ανοίγματος ξανά του διαμοιραζομένου αντικειμένου `%s'"
 
-#: elf/sprof.c:684
+#: elf/sprof.c:681
 #, c-format
 msgid "*** The file `%s' is stripped: no detailed analysis possible\n"
 msgstr "*** Το αρχείο `%s' είναι απογυμνωμένο: δεν είναι δυνατή λεπτομερής ανάλυση\n"
 
-#: elf/sprof.c:714
+#: elf/sprof.c:711
 #, c-format
 msgid "failed to load symbol data"
 msgstr "αποτυχία φόρτωσης δεδομένων συμβόλων"
 
-#: elf/sprof.c:779
+#: elf/sprof.c:776
 #, c-format
 msgid "cannot load profiling data"
 msgstr "αδύνατη η φόρτωση δεδομένων προφίλ"
 
-#: elf/sprof.c:788
+#: elf/sprof.c:785
 #, c-format
 msgid "while stat'ing profiling data file"
 msgstr "κατά την προσπέλαση (stat) του αρχείου δεδομένων προφίλ"
 
-#: elf/sprof.c:796
+#: elf/sprof.c:793
 #, c-format
 msgid "profiling data file `%s' does not match shared object `%s'"
 msgstr "το αρχείο δεδομένων προφίλ `%s' δεν ταιριάζει με το διαμοιραζόμενο αντικείμενο `%s'"
 
-#: elf/sprof.c:807
+#: elf/sprof.c:804
 #, c-format
 msgid "failed to mmap the profiling data file"
 msgstr "αποτυχία στη λειτουργία mmap για το αρχείο δεδομένων προφίλ"
 
-#: elf/sprof.c:815
+#: elf/sprof.c:812
 #, c-format
 msgid "error while closing the profiling data file"
 msgstr "σφάλμα κατά το κλείσιμο του αρχείου δεδομένων προφίλ"
 
-#: elf/sprof.c:898
+#: elf/sprof.c:895
 #, c-format
 msgid "`%s' is no correct profile data file for `%s'"
 msgstr "Το `%s' δεν είναι το σωστό αρχείο δεδομένων προφίλ για το `%s'"
 
-#: elf/sprof.c:1079 elf/sprof.c:1137
+#: elf/sprof.c:1076 elf/sprof.c:1134
 #, c-format
 msgid "cannot allocate symbol data"
 msgstr "αδυναμία δέσμευσης δεδομένων συμβόλων"

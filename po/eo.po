@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.31.9000\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-28 12:35+0100\n"
+"POT-Creation-Date: 2025-07-19 22:21+0200\n"
 "PO-Revision-Date: 2020-12-30 12:07+0100\n"
 "Last-Translator: Benno Schulenberg <vertaling@coevern.nl>\n"
 "Language-Team: Esperanto <translation-team-eo@lists.sourceforge.net>\n"
@@ -102,7 +102,7 @@ msgstr "(**Programmiso**) Ne konas sian version!?"
 msgid "%s: Too many arguments\n"
 msgstr "%s: tro da argumentoj\n"
 
-#: argp/argp-parse.c:751
+#: argp/argp-parse.c:754
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(**Programmiso**) Opcio devus esti rekonata!?"
 
@@ -134,7 +134,7 @@ msgstr ""
 "-o ELIGDOSIERO [ENIGDOSIERO...]\n"
 "[ELIGDOSIERO [ENIGDOSIERO...]]"
 
-#: catgets/gencat.c:230 debug/pcprofiledump.c:219 elf/ldconfig.c:217
+#: catgets/gencat.c:230 debug/pcprofiledump.c:219 elf/ldconfig.c:216
 #: elf/pldd.c:246 elf/sln.c:77 elf/sprof.c:371 iconv/iconv_prog.c:374
 #: iconv/iconvconfig.c:380 locale/programs/locale.c:275
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:88
@@ -149,7 +149,7 @@ msgstr ""
 "  %s.\n"
 
 #: catgets/gencat.c:246 debug/pcprofiledump.c:235 debug/xtrace.sh:63
-#: elf/ldconfig.c:233 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
+#: elf/ldconfig.c:232 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
 #: elf/sprof.c:388 iconv/iconv_prog.c:391 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
@@ -165,7 +165,7 @@ msgstr ""
 "Doniĝas NENIA GARANTIO; eĉ ne por KOMERCKVALITO aŭ ADEKVATECO POR IU CELO.\n"
 
 #: catgets/gencat.c:251 debug/pcprofiledump.c:240 debug/xtrace.sh:67
-#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:396
+#: elf/ldconfig.c:237 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:396
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
@@ -330,7 +330,7 @@ msgstr "nevalida moduso"
 msgid "invalid mode parameter"
 msgstr "nevalida modusa argumento"
 
-#: elf/cache.c:296 elf/ldconfig.c:1239
+#: elf/cache.c:296 elf/ldconfig.c:1238
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Ne eblas malfermi kaŝmemoran dosieron %s\n"
@@ -379,15 +379,15 @@ msgstr "eraro dum ŝargo de komunaj bibliotekoj"
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr "**PROGRAMMISO** en dinamika bindilo!!!"
 
-#: elf/dl-close.c:363 elf/dl-open.c:298
+#: elf/dl-close.c:363 elf/dl-open.c:297
 msgid "cannot create scope list"
 msgstr "ne eblas krei ampleksliston"
 
-#: elf/dl-close.c:792
+#: elf/dl-close.c:790
 msgid "shared object not open"
 msgstr "komuna objekto ne estas malferma"
 
-#: elf/dl-hwcaps.c:196
+#: elf/dl-hwcaps.c:195
 msgid "cannot create capability list"
 msgstr "ne eblas krei mandatliston"
 
@@ -399,27 +399,27 @@ msgstr "mankas sufiĉa memoro por nomrikordo"
 msgid "cannot create cache for search path"
 msgstr "ne eblas krei kaŝmemoron por serĉpado"
 
-#: elf/dl-load.c:973
+#: elf/dl-load.c:978
 msgid "cannot stat shared object"
 msgstr "malsukcesis eltrovi statinformon pri komuna objekto"
 
-#: elf/dl-load.c:1085 elf/dl-load.c:1604 elf/dl-load.c:1710
+#: elf/dl-load.c:1090 elf/dl-load.c:1605 elf/dl-load.c:1711
 msgid "cannot read file data"
 msgstr "ne eblas legi dosierdatumojn"
 
-#: elf/dl-load.c:1357
+#: elf/dl-load.c:1362
 msgid "cannot close file descriptor"
 msgstr "ne eblas fermi dosierpriaĵon"
 
-#: elf/dl-load.c:1604
+#: elf/dl-load.c:1605
 msgid "file too short"
 msgstr "dosiero tro mallongas"
 
-#: elf/dl-load.c:1638
+#: elf/dl-load.c:1639
 msgid "invalid ELF header"
 msgstr "nevalida ELF-ĉapo"
 
-#: elf/dl-load.c:1672
+#: elf/dl-load.c:1673
 msgid "internal error"
 msgstr "**interna programmiso**"
 
@@ -439,179 +439,179 @@ msgstr "ne eblas malfermi komunan objektdosieron"
 msgid "invalid mode for dlopen()"
 msgstr "nevalida moduso por 'dlopen()'"
 
-#: elf/ldconfig.c:125
+#: elf/ldconfig.c:124
 msgid "Print cache"
 msgstr "eligi kaŝmemoron"
 
-#: elf/ldconfig.c:126
+#: elf/ldconfig.c:125
 msgid "Generate verbose messages"
 msgstr "eligi detalajn mesaĝojn"
 
-#: elf/ldconfig.c:127
+#: elf/ldconfig.c:126
 msgid "Don't build cache"
 msgstr "ne krei kaŝmemoron"
 
-#: elf/ldconfig.c:128
+#: elf/ldconfig.c:127
 msgid "Don't update symbolic links"
 msgstr "ne ĝisdatigi simbolajn ligojn"
 
-#: elf/ldconfig.c:129
+#: elf/ldconfig.c:128
 msgid "Change to and use ROOT as root directory"
 msgstr "ŝanĝi al RADIKO kaj uzi ĝin kiel radikan dosierujon"
 
-#: elf/ldconfig.c:129
+#: elf/ldconfig.c:128
 msgid "ROOT"
 msgstr "RADIKO"
 
-#: elf/ldconfig.c:130
+#: elf/ldconfig.c:129
 msgid "CACHE"
 msgstr "KAŜMEMORO"
 
-#: elf/ldconfig.c:130
+#: elf/ldconfig.c:129
 msgid "Use CACHE as cache file"
 msgstr "uzi KAŜMEMOROn kiel kaŝmemoran dosieron"
 
-#: elf/ldconfig.c:131
+#: elf/ldconfig.c:130
 msgid "CONF"
 msgstr "AGORDDOSIERO"
 
-#: elf/ldconfig.c:131
+#: elf/ldconfig.c:130
 msgid "Use CONF as configuration file"
 msgstr "uzi AGORDDOSIEROn kiel agordan dosieron"
 
-#: elf/ldconfig.c:132
+#: elf/ldconfig.c:131
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "nur trakti dosierujojn kiuj indikatas en komandlinio; ne krei kaŝmemoron"
 
-#: elf/ldconfig.c:133
+#: elf/ldconfig.c:132
 msgid "Manually link individual libraries."
 msgstr "mane ligi individuajn bibliotekojn"
 
-#: elf/ldconfig.c:134
+#: elf/ldconfig.c:133
 msgid "FORMAT"
 msgstr "ARANĜO"
 
-#: elf/ldconfig.c:134
+#: elf/ldconfig.c:133
 msgid "Format to use: new (default), old, or compat"
 msgstr "uzenda aranĝo: 'new' (nova, defaŭlte), 'old' (malnova), aŭ 'compat' (kongrua)"
 
-#: elf/ldconfig.c:135
+#: elf/ldconfig.c:134
 msgid "Ignore auxiliary cache file"
 msgstr "ignori neĉefan kaŝmemoran dosieron"
 
-#: elf/ldconfig.c:143
+#: elf/ldconfig.c:142
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr ""
 "  \n"
 "Agordas la dinamika bindilo."
 
-#: elf/ldconfig.c:277
+#: elf/ldconfig.c:276
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "pado '%s' indikatas plurfoje"
 
-#: elf/ldconfig.c:406
+#: elf/ldconfig.c:405
 #, c-format
 msgid "Can't stat %s"
 msgstr "malsukcesis eltrovi statinformon pri %s"
 
-#: elf/ldconfig.c:487
+#: elf/ldconfig.c:486
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "malsukcesis eltrovi statinformon pri %s\n"
 
-#: elf/ldconfig.c:497
+#: elf/ldconfig.c:496
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s ne estas simbola ligo\n"
 
-#: elf/ldconfig.c:516
+#: elf/ldconfig.c:515
 #, c-format
 msgid "Can't unlink %s"
 msgstr "ne eblas malligi %s"
 
-#: elf/ldconfig.c:522
+#: elf/ldconfig.c:521
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "ne eblas ligi %s al %s"
 
 # SIGWINCH    28,28,20    Ign     Window resize signal (4.3 BSD, Sun)
-#: elf/ldconfig.c:528
+#: elf/ldconfig.c:527
 msgid " (changed)\n"
 msgstr " (ŝanĝiĝis)\n"
 
-#: elf/ldconfig.c:530
+#: elf/ldconfig.c:529
 msgid " (SKIPPED)\n"
 msgstr " (TRANSSALTITA)\n"
 
-#: elf/ldconfig.c:585
+#: elf/ldconfig.c:584
 #, c-format
 msgid "Can't find %s"
 msgstr "malsukcesis trovi %s"
 
-#: elf/ldconfig.c:601 elf/ldconfig.c:760 elf/ldconfig.c:827
+#: elf/ldconfig.c:600 elf/ldconfig.c:759 elf/ldconfig.c:826
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "malsukcesis eltrovi statinformon pri %s"
 
-#: elf/ldconfig.c:607
+#: elf/ldconfig.c:606
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "Dosiero %s ignoriĝis ĉar ĝi ne estas normala dosiero."
 
-#: elf/ldconfig.c:701
+#: elf/ldconfig.c:700
 #, c-format
 msgid " (from %s:%d)\n"
 msgstr " (elde %s:%d)\n"
 
-#: elf/ldconfig.c:716
+#: elf/ldconfig.c:715
 #, c-format
 msgid "Can't open directory %s"
 msgstr "ne eblas malfermi dosierujon %s"
 
-#: elf/ldconfig.c:777 elf/ldconfig.c:815 elf/readlib.c:81
+#: elf/ldconfig.c:776 elf/ldconfig.c:814 elf/readlib.c:81
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Eniga dosiero %s ne troviĝas.\n"
 
-#: elf/ldconfig.c:784
+#: elf/ldconfig.c:783
 #, c-format
 msgid "Cannot stat %s"
 msgstr "malsukcesis eltrovi statinformon pri %s"
 
-#: elf/ldconfig.c:903
+#: elf/ldconfig.c:902
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "libc6-biblioteko %s estas en malĝusta dosierujo"
 
-#: elf/ldconfig.c:1051
+#: elf/ldconfig.c:1050
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr "Averto: ignoriĝas agorda dosiero kiu ne malfermeblas: %s"
 
-#: elf/ldconfig.c:1125 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1124 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:460 posix/getconf.c:699
 #, c-format
 msgid "memory exhausted"
 msgstr "mankas sufiĉa memoro"
 
-#: elf/ldconfig.c:1158
+#: elf/ldconfig.c:1157
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: ne eblas legi dosierujon %s"
 
-#: elf/ldconfig.c:1196
+#: elf/ldconfig.c:1195
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "uziĝas relativa pado '%s' por krei kaŝmemoron"
 
-#: elf/ldconfig.c:1218
+#: elf/ldconfig.c:1217
 #, c-format
 msgid "Can't chdir to /"
 msgstr "malsukcesis ŝanĝi aktualan dosierujon al «/»"
 
-#: elf/ldconfig.c:1259
+#: elf/ldconfig.c:1258
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "malsukcesis malfermi kaŝmemoran dosierujon %s\n"
@@ -1187,22 +1187,22 @@ msgstr "ne eblas krei eligan padon '%s': %s"
 msgid "cannot create temporary file: %s"
 msgstr "malsukcesis krei provizoran dosieron %s"
 
-#: locale/programs/locarchive.c:1365
+#: locale/programs/locarchive.c:1371
 #, c-format
 msgid "Adding %s\n"
 msgstr "Aldoniĝas %s\n"
 
-#: locale/programs/locarchive.c:1371
+#: locale/programs/locarchive.c:1377
 #, c-format
 msgid "stat of \"%s\" failed: %s: ignored"
 msgstr "malsukcesis eltrovi statinformon pri '%s': %s -- ignoriĝas"
 
-#: locale/programs/locarchive.c:1377
+#: locale/programs/locarchive.c:1383
 #, c-format
 msgid "\"%s\" is no directory; ignored"
 msgstr "'%s' ne estas dosierujo -- ignoriĝas"
 
-#: locale/programs/locarchive.c:1384
+#: locale/programs/locarchive.c:1390
 #, c-format
 msgid "cannot open directory \"%s\": %s: ignored"
 msgstr "ne eblas malfermi dosierujon '%s': %s -- ignoriĝas"

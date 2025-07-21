@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.3.3\n"
-"POT-Creation-Date: 2025-01-28 12:35+0100\n"
+"POT-Creation-Date: 2025-07-19 22:21+0200\n"
 "PO-Revision-Date: 2004-08-05 22:19+0200\n"
 "Last-Translator: Marcel Telka <marcel@telka.sk>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -92,7 +92,7 @@ msgstr "(CHYBA PROGRAMU) Verzia neznáma!?"
 msgid "%s: Too many arguments\n"
 msgstr "%s: Priveľa argumentov\n"
 
-#: argp/argp-parse.c:751
+#: argp/argp-parse.c:754
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(CHYBA PROGRAMU) Voľba by mala byť rozpoznaná!?"
 
@@ -135,7 +135,7 @@ msgstr ""
 "[VÝSTUPNÝ_SÚBOR [VSTUPNÝ_SÚBOR]...]"
 
 #: catgets/gencat.c:246 debug/pcprofiledump.c:235 debug/xtrace.sh:63
-#: elf/ldconfig.c:233 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
+#: elf/ldconfig.c:232 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
 #: elf/sprof.c:388 iconv/iconv_prog.c:391 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:582
@@ -152,7 +152,7 @@ msgstr ""
 "NA KONKRÉTNY ÚČEL.\n"
 
 #: catgets/gencat.c:251 debug/pcprofiledump.c:240 debug/xtrace.sh:67
-#: elf/ldconfig.c:238 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:396
+#: elf/ldconfig.c:237 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:396
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
 #: malloc/memusagestat.c:587 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:392
@@ -276,7 +276,7 @@ msgstr "neprípustná veľkostť ukazovateľa"
 msgid "unsupported dlinfo request"
 msgstr "nepodporovaná žiadosť dlinfo"
 
-#: elf/cache.c:296 elf/ldconfig.c:1239
+#: elf/cache.c:296 elf/ldconfig.c:1238
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Nie je možné otvoriť cache súbor %s\n"
@@ -325,11 +325,11 @@ msgstr "chyba počas načítavania zdieľaných knižníc"
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr "CHYBA V DYNAMICKOM LINKERI!!!"
 
-#: elf/dl-close.c:363 elf/dl-open.c:298
+#: elf/dl-close.c:363 elf/dl-open.c:297
 msgid "cannot create scope list"
 msgstr "nie je možné vytvoriť zoznam pôsobnosti"
 
-#: elf/dl-close.c:792
+#: elf/dl-close.c:790
 msgid "shared object not open"
 msgstr "zdieľaný objekt nie je otvorený"
 
@@ -354,7 +354,7 @@ msgstr "nie je možné prideliť pamäť pre zoznam závislostí"
 msgid "cannot allocate symbol search list"
 msgstr "nie je možné prideliť pamäť pre vyhľadávací zoznam symbolov"
 
-#: elf/dl-hwcaps.c:196
+#: elf/dl-hwcaps.c:195
 msgid "cannot create capability list"
 msgstr "nie je možné vytvoriť zoznam zlučiteľnosti"
 
@@ -374,83 +374,83 @@ msgstr "nie je možné vytvoriť kópiu RUNPATH/RPATH"
 msgid "cannot create search path array"
 msgstr "nie je možné vytvoriť pole ciest"
 
-#: elf/dl-load.c:973
+#: elf/dl-load.c:978
 msgid "cannot stat shared object"
 msgstr "nepodarilo sa zistiť stav zdieľaného objektu"
 
-#: elf/dl-load.c:1066 elf/dl-load.c:2155
+#: elf/dl-load.c:1071 elf/dl-load.c:2155
 msgid "cannot create shared object descriptor"
 msgstr "nie je možné vytvoriť deskriptor zdieľaného objektu"
 
-#: elf/dl-load.c:1085 elf/dl-load.c:1604 elf/dl-load.c:1710
+#: elf/dl-load.c:1090 elf/dl-load.c:1605 elf/dl-load.c:1711
 msgid "cannot read file data"
 msgstr "nie je možné načítať údaje súboru"
 
-#: elf/dl-load.c:1230
+#: elf/dl-load.c:1235
 msgid "object file has no loadable segments"
 msgstr "objektový súbor neobsahuje žiadny nahrateľný segment"
 
-#: elf/dl-load.c:1247
+#: elf/dl-load.c:1252
 msgid "cannot dynamically load executable"
 msgstr "nie je možné dynamicky načítať spustiteľný súbor"
 
-#: elf/dl-load.c:1254
+#: elf/dl-load.c:1259
 msgid "object file has no dynamic section"
 msgstr "objektový súbor neobsahuje žiadnu dynamickú sekciu"
 
-#: elf/dl-load.c:1291
+#: elf/dl-load.c:1296
 msgid "shared object cannot be dlopen()ed"
 msgstr "zdieľaný objekt nemôže byť otvorený pomocou dlopen()"
 
-#: elf/dl-load.c:1304
+#: elf/dl-load.c:1309
 msgid "cannot allocate memory for program header"
 msgstr "nie je možné prideliť pamäť pre hlavičku programu"
 
-#: elf/dl-load.c:1329
+#: elf/dl-load.c:1334
 msgid "cannot enable executable stack as shared object requires"
 msgstr "nie je možné povoliť spustiteľný zásobník ako vyžaduje zdieľaný objekt"
 
-#: elf/dl-load.c:1604
+#: elf/dl-load.c:1605
 msgid "file too short"
 msgstr "súbor je príliš krátky"
 
-#: elf/dl-load.c:1638
+#: elf/dl-load.c:1639
 msgid "invalid ELF header"
 msgstr "neprípustná ELF hlavička"
 
-#: elf/dl-load.c:1653
+#: elf/dl-load.c:1654
 msgid "ELF file data encoding not big-endian"
 msgstr "Kódovanie dát v ELF súbore nie je big-endian"
 
-#: elf/dl-load.c:1655
+#: elf/dl-load.c:1656
 msgid "ELF file data encoding not little-endian"
 msgstr "Kódovanie dát v ELF súbore nie je little-endian"
 
-#: elf/dl-load.c:1659
+#: elf/dl-load.c:1660
 msgid "ELF file version ident does not match current one"
 msgstr "Identifikácia verzie ELF súboru sa nezhoduje s aktuálnou"
 
-#: elf/dl-load.c:1663
+#: elf/dl-load.c:1664
 msgid "ELF file OS ABI invalid"
 msgstr "Neplatný OS ABI ELF súboru"
 
-#: elf/dl-load.c:1666
+#: elf/dl-load.c:1667
 msgid "ELF file ABI version invalid"
 msgstr "Neplatná verzia ABI ELF súboru"
 
-#: elf/dl-load.c:1672
+#: elf/dl-load.c:1673
 msgid "internal error"
 msgstr "interná chyba"
 
-#: elf/dl-load.c:1679
+#: elf/dl-load.c:1680
 msgid "ELF file version does not match current one"
 msgstr "Verzia súboru ELF sa nezhoduje s aktuálnou"
 
-#: elf/dl-load.c:1691
+#: elf/dl-load.c:1692
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "iba ET_DYN a ET_EXEC môžu byť načítané"
 
-#: elf/dl-load.c:1696
+#: elf/dl-load.c:1697
 msgid "ELF file's phentsize not the expected size"
 msgstr "phentsize ELF súboru nie je očakávaná"
 
@@ -470,7 +470,7 @@ msgstr "nie je možné zmeniť ochranu pamäti"
 msgid "cannot map zero-fill pages"
 msgstr "nie je možné namapovať stránky vyplnené nulami"
 
-#: elf/dl-open.c:84
+#: elf/dl-open.c:83
 msgid "cannot extend global scope"
 msgstr "nie je možné rozšíriť globálny rozsah"
 
@@ -494,7 +494,7 @@ msgstr "nie je možné obnoviť segment prot po reloc"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT je použité pre kód, ktorý nie je dynamicky zavedený"
 
-#: elf/dl-tls.c:1196
+#: elf/dl-tls.c:1209
 msgid "cannot create TLS data structures"
 msgstr "nie je možné dátové štruktúry TLS"
 
@@ -502,143 +502,143 @@ msgstr "nie je možné dátové štruktúry TLS"
 msgid "cannot allocate version reference table"
 msgstr "nie je možné prideliť pamäť pre referenčnú tabuľku verzií"
 
-#: elf/ldconfig.c:125
+#: elf/ldconfig.c:124
 msgid "Print cache"
 msgstr "Vypísať cache"
 
-#: elf/ldconfig.c:126
+#: elf/ldconfig.c:125
 msgid "Generate verbose messages"
 msgstr "Vypísovať podrobnejšie správy"
 
-#: elf/ldconfig.c:127
+#: elf/ldconfig.c:126
 msgid "Don't build cache"
 msgstr "Nevytvoriť cache"
 
-#: elf/ldconfig.c:129
+#: elf/ldconfig.c:128
 msgid "Change to and use ROOT as root directory"
 msgstr "Zmeniť adresár na ROOT a použiť ho ako koreňový adresár"
 
-#: elf/ldconfig.c:130
+#: elf/ldconfig.c:129
 msgid "Use CACHE as cache file"
 msgstr "Použiť CACHE ako cache súbor"
 
-#: elf/ldconfig.c:131
+#: elf/ldconfig.c:130
 msgid "Use CONF as configuration file"
 msgstr "Použiť CONF ako konfiguračný súbor"
 
-#: elf/ldconfig.c:132
+#: elf/ldconfig.c:131
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "Na príkazovom riadku sú zadané iba adresáre procesov. Nevytvárať cache."
 
-#: elf/ldconfig.c:133
+#: elf/ldconfig.c:132
 msgid "Manually link individual libraries."
 msgstr "Ručne linkovať jednotlivé knižnice."
 
-#: elf/ldconfig.c:143
+#: elf/ldconfig.c:142
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr "Konfigurácia runtime väzieb dynamického linkera."
 
-#: elf/ldconfig.c:277
+#: elf/ldconfig.c:276
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "Cesta `%s' bola zadaná viac ako raz"
 
-#: elf/ldconfig.c:406
+#: elf/ldconfig.c:405
 #, c-format
 msgid "Can't stat %s"
 msgstr "Zlyhal stat %s"
 
-#: elf/ldconfig.c:487
+#: elf/ldconfig.c:486
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "Zlyhal stat %s\n"
 
-#: elf/ldconfig.c:497
+#: elf/ldconfig.c:496
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s nie je symbolický odkaz\n"
 
-#: elf/ldconfig.c:516
+#: elf/ldconfig.c:515
 #, c-format
 msgid "Can't unlink %s"
 msgstr "Nie je možné odstrániť %s"
 
-#: elf/ldconfig.c:522
+#: elf/ldconfig.c:521
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "Nie je možné vytvoriť odkaz %s na %s"
 
-#: elf/ldconfig.c:528
+#: elf/ldconfig.c:527
 msgid " (changed)\n"
 msgstr " (zmenené)\n"
 
-#: elf/ldconfig.c:530
+#: elf/ldconfig.c:529
 msgid " (SKIPPED)\n"
 msgstr " (VYNECHANÉ)\n"
 
-#: elf/ldconfig.c:585
+#: elf/ldconfig.c:584
 #, c-format
 msgid "Can't find %s"
 msgstr "Nie je možné nájsť %s"
 
-#: elf/ldconfig.c:601 elf/ldconfig.c:760 elf/ldconfig.c:827
+#: elf/ldconfig.c:600 elf/ldconfig.c:759 elf/ldconfig.c:826
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "Zlyhal lstat %s"
 
-#: elf/ldconfig.c:607
+#: elf/ldconfig.c:606
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "Súbor %s ignorovaný, keďže nie je regulérnym súborom."
 
-#: elf/ldconfig.c:615
+#: elf/ldconfig.c:614
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "Odkaz nebol vytvorený, keďže pre %s nebolo možné nájsť soname"
 
-#: elf/ldconfig.c:716
+#: elf/ldconfig.c:715
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Nie je možné otvoriť adresár %s"
 
-#: elf/ldconfig.c:777 elf/ldconfig.c:815 elf/readlib.c:81
+#: elf/ldconfig.c:776 elf/ldconfig.c:814 elf/readlib.c:81
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Vstupný súbor %s nebol nájdený.\n"
 
-#: elf/ldconfig.c:784
+#: elf/ldconfig.c:783
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Zlyhal stat %s"
 
-#: elf/ldconfig.c:903
+#: elf/ldconfig.c:902
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "libc6 knižnica %s je v nesprávnom adresári"
 
-#: elf/ldconfig.c:922
+#: elf/ldconfig.c:921
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "knižnice %s a %s v adresári %s majú rovnaké soname, ale odlišný typ."
 
-#: elf/ldconfig.c:1125 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1124 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:460 posix/getconf.c:699
 #, c-format
 msgid "memory exhausted"
 msgstr "nedostatok pamäti"
 
-#: elf/ldconfig.c:1196
+#: elf/ldconfig.c:1195
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "relatívna cesta `%s' použitá na vytvorenie cache"
 
-#: elf/ldconfig.c:1218
+#: elf/ldconfig.c:1217
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Nie je možné zmeniť adresár na /"
 
-#: elf/ldconfig.c:1259
+#: elf/ldconfig.c:1258
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Nie je možné otvoriť adresár cache súboru %s\n"
@@ -729,57 +729,57 @@ msgstr "ZDIEĽ_OBJEKT [PROF_ÚDAJE]"
 msgid "failed to load shared object `%s'"
 msgstr "nepodarilo sa načítať zdieľaný objekt `%s'"
 
-#: elf/sprof.c:441 elf/sprof.c:824 elf/sprof.c:922
+#: elf/sprof.c:441 elf/sprof.c:821 elf/sprof.c:919
 #, c-format
 msgid "cannot create internal descriptor"
 msgstr "nie je možné vytvoriť interný deskriptor"
 
-#: elf/sprof.c:553
+#: elf/sprof.c:550
 #, c-format
 msgid "Reopening shared object `%s' failed"
 msgstr "Znovuotvorenie zdieľaného objektu `%s' zlyhalo"
 
-#: elf/sprof.c:684
+#: elf/sprof.c:681
 #, c-format
 msgid "*** The file `%s' is stripped: no detailed analysis possible\n"
 msgstr "*** Zo súboru `%s' boli odstránené ladiace informácie: podrobná analýza nie je možná\n"
 
-#: elf/sprof.c:714
+#: elf/sprof.c:711
 #, c-format
 msgid "failed to load symbol data"
 msgstr "nepodarilo sa načítať symbolické údaje"
 
-#: elf/sprof.c:779
+#: elf/sprof.c:776
 #, c-format
 msgid "cannot load profiling data"
 msgstr "nie je možné načítať profilovacie údaje"
 
-#: elf/sprof.c:788
+#: elf/sprof.c:785
 #, c-format
 msgid "while stat'ing profiling data file"
 msgstr "počas stat-u súboru profilovacích informácií"
 
-#: elf/sprof.c:796
+#: elf/sprof.c:793
 #, c-format
 msgid "profiling data file `%s' does not match shared object `%s'"
 msgstr "profilovacie údaje `%s' nesúhlasia so zdieľanýmobjektom `%s'"
 
-#: elf/sprof.c:807
+#: elf/sprof.c:804
 #, c-format
 msgid "failed to mmap the profiling data file"
 msgstr "nepodarilo sa mmap-ovať súbor profilovacích údajov"
 
-#: elf/sprof.c:815
+#: elf/sprof.c:812
 #, c-format
 msgid "error while closing the profiling data file"
 msgstr "chyba počas zatvárania súboru profilovacích údajov"
 
-#: elf/sprof.c:898
+#: elf/sprof.c:895
 #, c-format
 msgid "`%s' is no correct profile data file for `%s'"
 msgstr "`%s' nie sú správne profilovacie údaje pre `%s'"
 
-#: elf/sprof.c:1079 elf/sprof.c:1137
+#: elf/sprof.c:1076 elf/sprof.c:1134
 #, c-format
 msgid "cannot allocate symbol data"
 msgstr "nie je možné prideliť pamäť pre symbolické údaje"
@@ -1993,7 +1993,7 @@ msgid "cannot resize archive file"
 msgstr "nie je možné zmeniť veľkosť archívneho súboru"
 
 #: locale/programs/locarchive.c:188 locale/programs/locarchive.c:451
-#: locale/programs/locarchive.c:680
+#: locale/programs/locarchive.c:686
 #, c-format
 msgid "cannot map archive header"
 msgstr "nie je možné namapovať hlavičku archívu"
@@ -2048,59 +2048,59 @@ msgstr "nie je možné zistiť stav archívu národného prostredia \"%s\""
 msgid "cannot lock locale archive \"%s\""
 msgstr "nie je možné uzamknúť archív národného prostredia \"%s\""
 
-#: locale/programs/locarchive.c:654
+#: locale/programs/locarchive.c:657
 #, c-format
 msgid "cannot read archive header"
 msgstr "nie je možné prečítať hlavičku archívu"
 
-#: locale/programs/locarchive.c:734
+#: locale/programs/locarchive.c:740
 #, c-format
 msgid "locale '%s' already exists"
 msgstr "národné prostredie `%s' už existuje"
 
-#: locale/programs/locarchive.c:1009 locale/programs/locarchive.c:1024
-#: locale/programs/locarchive.c:1036 locale/programs/locarchive.c:1048
+#: locale/programs/locarchive.c:1015 locale/programs/locarchive.c:1030
+#: locale/programs/locarchive.c:1042 locale/programs/locarchive.c:1054
 #: locale/programs/locfile.c:349
 #, c-format
 msgid "cannot add to locale archive"
 msgstr "nie je možné pridať do archívu národného prostredia"
 
-#: locale/programs/locarchive.c:1217
+#: locale/programs/locarchive.c:1223
 #, c-format
 msgid "locale alias file `%s' not found"
 msgstr "súbor aliasu národného prostredia `%s' nebol nájdený"
 
-#: locale/programs/locarchive.c:1365
+#: locale/programs/locarchive.c:1371
 #, c-format
 msgid "Adding %s\n"
 msgstr "Pridávam %s\n"
 
-#: locale/programs/locarchive.c:1371
+#: locale/programs/locarchive.c:1377
 #, c-format
 msgid "stat of \"%s\" failed: %s: ignored"
 msgstr "zistenie stavu \"%s\" zlyhalo: %s: ignorované"
 
-#: locale/programs/locarchive.c:1377
+#: locale/programs/locarchive.c:1383
 #, c-format
 msgid "\"%s\" is no directory; ignored"
 msgstr "\"%s\" nie je adresár; ignorované"
 
-#: locale/programs/locarchive.c:1384
+#: locale/programs/locarchive.c:1390
 #, c-format
 msgid "cannot open directory \"%s\": %s: ignored"
 msgstr "nie je možné otvoriť adresár \"%s\": %s: ignorované"
 
-#: locale/programs/locarchive.c:1452
+#: locale/programs/locarchive.c:1458
 #, c-format
 msgid "incomplete set of locale files in \"%s\""
 msgstr "nekompletná skupina súborov národných prostredí v \"%s\""
 
-#: locale/programs/locarchive.c:1516
+#: locale/programs/locarchive.c:1522
 #, c-format
 msgid "cannot read all files in \"%s\": ignored"
 msgstr "nie je možné načítať všetky súbory v \"%s\": ignorované"
 
-#: locale/programs/locarchive.c:1586
+#: locale/programs/locarchive.c:1592
 #, c-format
 msgid "locale \"%s\" not in archive"
 msgstr "národné prostredie \"%s\" nie je v archíve"
