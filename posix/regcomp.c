@@ -3387,6 +3387,7 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
     {
 #ifdef RE_ENABLE_I18N
       free_charset (mbcset);
+      mbcset = NULL;
 #endif
       /* Build a tree for simple bracket.  */
       br_token.type = SIMPLE_BRACKET;
@@ -3402,7 +3403,8 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
  parse_bracket_exp_free_return:
   re_free (sbcset);
 #ifdef RE_ENABLE_I18N
-  free_charset (mbcset);
+  if (__glibc_likely (mbcset != NULL))
+    free_charset (mbcset);
 #endif /* RE_ENABLE_I18N */
   return NULL;
 }
