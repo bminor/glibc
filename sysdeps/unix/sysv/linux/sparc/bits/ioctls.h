@@ -1,6 +1,4 @@
-/* old_termios.h for MIPS.
-
-   Copyright (C) 2025 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,15 +15,22 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define _HAVE_STRUCT_OLD_TERMIOS 1
+#ifndef _SYS_IOCTL_H
+# error "Never use <bits/ioctls.h> directly; include <sys/ioctl.h> instead."
+#endif
 
-#define OLD_NCCS 32
-typedef struct old_termios
-{
-  tcflag_t c_iflag;             /* input mode flags */
-  tcflag_t c_oflag;             /* output mode flags */
-  tcflag_t c_cflag;             /* control mode flags */
-  tcflag_t c_lflag;             /* local mode flags */
-  cc_t c_line;                  /* line discipline */
-  cc_t c_cc[OLD_NCCS];          /* control characters */
-} old_termios_t;
+/* Use the definitions from the kernel header files.  */
+#include <asm/ioctls.h>
+
+/* Oh well, this is necessary since the kernel data structure is
+   different from the user-level version.  */
+#undef  TCGETS
+#undef  TCSETS
+#undef  TCSETSW
+#undef  TCSETSF
+#define TCGETS	_IOR ('T', 8, char[36])
+#define TCSETS	_IOW ('T', 9, char[36])
+#define TCSETSW	_IOW ('T', 10, char[36])
+#define TCSETSF	_IOW ('T', 11, char[36])
+
+#include <linux/sockios.h>

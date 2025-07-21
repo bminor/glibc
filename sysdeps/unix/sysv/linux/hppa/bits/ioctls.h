@@ -12,7 +12,7 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
+   License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _SYS_IOCTL_H
@@ -21,5 +21,16 @@
 
 /* Use the definitions from the kernel header files.  */
 #include <asm/ioctls.h>
+
+/* Oh well, this is necessary since the kernel data structure is
+   different from the user-level version.  */
+#undef  TCGETS
+#undef  TCSETS
+#undef  TCSETSW
+#undef  TCSETSF
+#define TCGETS	_IOR ('T', 16, char[36])
+#define TCSETS	_IOW ('T', 17, char[36])
+#define TCSETSW	_IOW ('T', 18, char[36])
+#define TCSETSF	_IOW ('T', 19, char[36])
 
 #include <linux/sockios.h>

@@ -24,6 +24,6 @@ int
 __isatty (int fd)
 {
   struct termios2 k_termios;
-  return INLINE_SYSCALL_CALL (ioctl, fd, ARCH_TCGETS, &k_termios) == 0;
+  return INLINE_SYSCALL_CALL (ioctl, fd, TCGETS2, &k_termios) == 0;
 }
 weak_alias (__isatty, isatty)

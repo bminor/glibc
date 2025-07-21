@@ -19,12 +19,6 @@
 
 #define static_assert_equal(x,y) _Static_assert ((x) == (y), #x " != " #y)
 
-static_assert_equal (sizeof (struct termios2), KERNEL_TERMIOS2_SIZE);
-static_assert_equal (offsetof (struct termios2, c_cc),
-                     KERNEL_TERMIOS2_CC_OFFSET);
-static_assert_equal (offsetof (struct termios2, c_line),
-                     KERNEL_TERMIOS2_LINE_OFFSET);
-
 /* Set the state of FD to *TERMIOS_P.  */
 int
 __tcsetattr (int fd, int optional_actions, const struct termios *termios_p)
@@ -59,10 +53,10 @@ __tcsetattr (int fd, int optional_actions, const struct termios *termios_p)
    */
   static_assert_equal(TCSADRAIN, TCSANOW + 1);
   static_assert_equal(TCSAFLUSH, TCSANOW + 2);
-  static_assert_equal(KERNEL_TCSETSW2, KERNEL_TCSETS2 + 1);
-  static_assert_equal(KERNEL_TCSETSF2, KERNEL_TCSETS2 + 2);
-  static_assert_equal(KERNEL_TCSETSW,  KERNEL_TCSETS  + 1);
-  static_assert_equal(KERNEL_TCSETSF,  KERNEL_TCSETS  + 2);
+  static_assert_equal(TCSETSW2,  TCSETS2 + 1);
+  static_assert_equal(TCSETSF2,  TCSETS2 + 2);
+  static_assert_equal(TCSETSW,   TCSETS  + 1);
+  static_assert_equal(TCSETSF,   TCSETS  + 2);
 
   cmd = (long)optional_actions - TCSANOW;
   if (cmd > 2)
@@ -72,11 +66,11 @@ __tcsetattr (int fd, int optional_actions, const struct termios *termios_p)
       k_termios.c_ospeed != k_termios.c_ispeed ||
       cbaud (k_termios.c_cflag) == __BOTHER)
     {
-      cmd += KERNEL_TCSETS2;
+      cmd += TCSETS2;
     }
   else
     {
-      cmd += KERNEL_TCSETS;
+      cmd += TCSETS;
       k_termios.c_cflag &= ~CIBAUD;
     }
 

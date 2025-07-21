@@ -1,4 +1,6 @@
-/* Copyright (C) 1996-2025 Free Software Foundation, Inc.
+/* Architectural parameters for Linux termios - generic version
+
+   Copyright (C) 1997-2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,11 +17,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _SYS_IOCTL_H
-# error "Never use <bits/ioctls.h> directly; include <sys/ioctl.h> instead."
-#endif
+#define _TERMIOS2_NCCS 19
+#define _HAVE_TERMIOS2_C_CC_BEFORE_C_LINE 0
 
-/* Use the definitions from the kernel header files.  */
-#include <asm/ioctls.h>
-
-#include <linux/sockios.h>
+#define _HAVE_STRUCT_OLD_TERMIOS 0

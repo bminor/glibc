@@ -1,6 +1,6 @@
-/* old_termios.h for SPARC.
+/* Architectural parameters for Linux termios - Alpha/PowerPC version
 
-   Copyright (C) 2025 Free Software Foundation, Inc.
+   Copyright (C) 1997-2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,15 +17,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define _HAVE_STRUCT_OLD_TERMIOS 1
+#ifndef TERMIOS_INTERNALS_H
+# error "<termios_arch.h> should only be included from <termios_internals.h>"
+#endif
 
-#define OLD_NCCS 17
-typedef struct old_termios
-{
-  tcflag_t c_iflag;             /* input mode flags */
-  tcflag_t c_oflag;             /* output mode flags */
-  tcflag_t c_cflag;             /* control mode flags */
-  tcflag_t c_lflag;             /* local mode flags */
-  cc_t c_line;                  /* line discipline */
-  cc_t c_cc[OLD_NCCS];          /* control characters */
-} old_termios_t;
+#define _TERMIOS2_NCCS 19
+#define _HAVE_TERMIOS2_C_CC_BEFORE_C_LINE 1
+#define _HAVE_STRUCT_OLD_TERMIOS 0

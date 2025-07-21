@@ -30,18 +30,7 @@
 #include <sysdep.h>
 #include <shlib-compat.h>
 
-#include <termios-kernel-consts.h>
-
-/* Alpha got termios2 late, but TCGETS has exactly the same structure
-   format and function as TCGETS2. On all other platforms, the termios2
-   interface exists as far back as this version of glibc supports.
-
-   For TCSETS* it is more complicated; this is handled in tcsetattr.c.  */
-#ifdef __ASSUME_TERMIOS2
-# define ARCH_TCGETS KERNEL_TCGETS2
-#else
-# define ARCH_TCGETS KERNEL_TCGETS
-#endif
+#include <termios_arch.h>
 
 /* ---- Kernel interface definitions ---- */
 
@@ -55,7 +44,7 @@ struct termios2
   tcflag_t c_oflag;		/* output mode flags */
   tcflag_t c_cflag;		/* control mode flags */
   tcflag_t c_lflag;		/* local mode flags */
-#if KERNEL_TERMIOS2_CC_OFFSET < KERNEL_TERMIOS2_LINE_OFFSET
+#if _HAVE_TERMIOS2_C_CC_BEFORE_C_LINE
   cc_t c_cc[_TERMIOS2_NCCS];	/* control characters */
   cc_t c_line;			/* line discipline */
 #else
@@ -65,6 +54,26 @@ struct termios2
   speed_t c_ispeed;		/* input speed */
   speed_t c_ospeed;		/* output speed */
 };
+
+/* Alpha got termios2 late, but TCGETS has exactly the same structure
+   format and function as TCGETS2. On all other platforms, the termios2
+   interface exists as far back as this version of glibc supports.
+
+   For TCSETS* it is more complicated; this is handled in tcsetattr.c.
+
+   Some other architectures only have the equivalent of the termios2
+   interface, in which case the old ioctl names are the only ones
+   presented, but are equivalent to the new ones. */
+#ifndef TCGETS2
+# define TCGETS2  TCGETS
+# define TCSETS2  TCSETS
+# define TCSETSW2 TCSETSW
+# define TCSETSF2 TCSETSF
+#elif !__ASSUME_TERMIOS2
+/* Hack for Alpha */
+# undef  TCGETS2
+# define TCGETS2 TCGETS
+#endif
 
 /* ---- Application interface definitions ---- */
 
@@ -82,7 +91,12 @@ struct termios2
  * This only applies to SPARC and MIPS; for other architectures the
  * new and old speed_t interfaces both use the same struct termios.
  */
-#include <old_termios.h>
+#if _HAVE_STRUCT_OLD_TERMIOS
+typedef struct old_termios old_termios_t;
+#else
+# define OLD_NCCS NCCS
+typedef struct termios old_termios_t;
+#endif
 
 /* ---- Internal function definitions ---- */
 
