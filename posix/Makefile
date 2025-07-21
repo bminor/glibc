@@ -109,7 +109,7 @@ tests		:= test-errno tstgetopt testfnm runtests runptests \
 		   tst-glob-tilde test-ssize-max tst-spawn4 bug-regex37 \
 		   bug-regex38 tst-regcomp-truncated tst-spawn-chdir \
 		   tst-wordexp-nocmd tst-execveat tst-spawn5 \
-		   tst-sched_getaffinity tst-spawn6
+		   tst-sched_getaffinity tst-spawn6 tst-regcomp-bracket-free
 
 # Test for the glob symbol version that was replaced in glibc 2.27.
 ifeq ($(have-GLIBC_2.26)$(build-shared),yesyes)
