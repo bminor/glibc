@@ -305,6 +305,7 @@ tests := \
   tst-posix_spawn-setsid \
   tst-preadwrite \
   tst-preadwrite64 \
+  tst-regcomp-bracket-free \
   tst-regcomp-truncated \
   tst-regex \
   tst-regex2 \
