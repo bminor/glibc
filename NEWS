@@ -111,6 +111,7 @@ The following bugs are resolved with this release:
     correct for !__ASSUME_TIME64_SYSCALLS
   [29528] elf: Call __libc_early_init for reused namespaces
   [29611] Optimized AVX2 string functions unconditionally use BMI2 instructions
+  [33185] Fix double-free after allocation failure in regcomp
 
 
 Version 2.32
