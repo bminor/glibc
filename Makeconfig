@@ -718,7 +718,7 @@ libgcc_eh := -Wl,--as-needed -lgcc_s $(libunwind) -Wl,--no-as-needed
 gnulib-arch =
 gnulib = -lgcc $(gnulib-arch)
 gnulib-tests := -lgcc $(libgcc_eh)
-gnulib-extralibdir = $(shell $(CC) -print-file-name=libgcc_s.so$(libgcc_s.so-version) | sed 's#/[^/]*$$##')
+gnulib-extralibdir = $(dir $(shell $(CC) -print-file-name=libgcc_s.so$(libgcc_s.so-version)))
 static-gnulib-arch =
 # By default, elf/static-stubs.o, instead of -lgcc_eh, is used to
 # statically link programs.  When --disable-shared is used, we use
