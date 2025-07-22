@@ -99,6 +99,12 @@ __sframe_fre_get_ra_offset (sframe_decoder_ctx *dctx,
 			    sframe_frame_row_entry *fre,
 			    _Unwind_Reason_Code *errp);
 
+/* Get the offset of the sfde_func_start_address field.  */
+
+extern uint32_t
+__sframe_decoder_get_offsetof_fde_start_addr (sframe_decoder_ctx *dctx,
+					      uint32_t func_idx,
+					      _Unwind_Reason_Code *errp);
 #ifdef	__cplusplus
 }
 #endif

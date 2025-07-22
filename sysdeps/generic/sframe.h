@@ -80,9 +80,20 @@ extern "C"
 /* Various flags for SFrame.  */
 
 /* Function Descriptor Entries are sorted on PC.  */
-#define SFRAME_F_FDE_SORTED	0x1
+#define SFRAME_F_FDE_SORTED		    0x1
 /* Functions preserve frame pointer.  */
-#define SFRAME_F_FRAME_POINTER 0x2
+#define SFRAME_F_FRAME_POINTER		    0x2
+/* Function start address in SFrame FDE is encoded as the distance from the
+   location of the sfde_func_start_address to the start PC of the function.
+   If absent, the function start address in SFrame FDE is encoded as the
+   distance from the start of the SFrame FDE section to the start PC of the
+   function.  */
+#define SFRAME_F_FDE_FUNC_START_PCREL	    0x4
+
+/* Set of all defined flags in SFrame V2.  */
+#define SFRAME_V2_F_ALL_FLAGS \
+  (SFRAME_F_FDE_SORTED | SFRAME_F_FRAME_POINTER \
+   | SFRAME_F_FDE_FUNC_START_PCREL)
 
 #define SFRAME_CFA_FIXED_FP_INVALID 0
 #define SFRAME_CFA_FIXED_RA_INVALID 0
