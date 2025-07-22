@@ -1099,7 +1099,7 @@ depending on the policy of the kernel driver.  In the latter case, a
 subsequent call to @code{tcgetattr} may or may not reflect this
 adjustment.
 
-@theglibc{} supports two interoperable interfaces for setting the line
+@Theglibc{} supports two interoperable interfaces for setting the line
 speed: the POSIX.1 @code{speed_t} interface, which requires the use of a
 set of enumerated constants, and the @code{baud_t} interface, a GNU
 extension, which is guaranteed to use plain numeric values.
@@ -1175,7 +1175,7 @@ B0  B50  B75  B110  B134  B150  B200  B300  B600  B1200
 B1800  B2400  B4800  B9600  B19200  B38400
 @end smallexample
 
-@theglibc{} defines these additional constants:
+@Theglibc{} defines these additional constants:
 
 @comment termios.h
 @comment GNU
@@ -1267,7 +1267,7 @@ These aliases are obsolete.
 @deftypevr Macro speed_t SPEED_MAX
 @standards{GNU, termios.h}
 
-@theglibc{} defines the constant @code{SPEED_MAX} for the largest valid
+@Theglibc{} defines the constant @code{SPEED_MAX} for the largest valid
 value of type @code{speed_t}.  This value may be smaller than the
 underlying C type can store.
 
