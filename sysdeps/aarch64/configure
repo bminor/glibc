@@ -194,3 +194,5 @@ if test $build_mathvec = no; then
 printf "%s\n" "$as_me: WARNING: mathvec is disabled, this results in incomplete ABI." >&2;}
 fi
 
+libc_cv_support_sframe=yes
+

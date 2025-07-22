@@ -104,5 +104,7 @@ if test $libc_cv_x86_have_apx = yes; then
 fi
 LIBC_CONFIG_VAR([have-x86-apx], [$libc_cv_x86_have_apx])
 
+libc_cv_support_sframe=yes
+
 test -n "$critic_missing" && AC_MSG_ERROR([
 *** $critic_missing])

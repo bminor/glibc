@@ -286,14 +286,17 @@ LDFLAGS-tst-backtrace4 = -rdynamic
 LDFLAGS-tst-backtrace5 = -rdynamic
 LDFLAGS-tst-backtrace6 = -rdynamic
 
+$(objpfx)tst-backtrace1: $(shared-thread-library)
+
 # When SFrame is enabled, make sure the dwarf unwinder is also exercised.
 ifeq ($(enable-gsframe),yes)
 dw_unwind_pair := \
-  tst-backtrace7:tst-backtrace2 \
-  tst-backtrace8:tst-backtrace3 \
-  tst-backtrace9:tst-backtrace4 \
-  tst-backtrace10:tst-backtrace5 \
-  tst-backtrace11:tst-backtrace6
+  tst-backtrace1-nosframe:tst-backtrace1 \
+  tst-backtrace2-nosframe:tst-backtrace2 \
+  tst-backtrace3-nosframe:tst-backtrace3 \
+  tst-backtrace4-nosframe:tst-backtrace4 \
+  tst-backtrace5-nosframe:tst-backtrace5 \
+  tst-backtrace6-nosframe:tst-backtrace6
 
 first_column = $(foreach pair,$(dw_unwind_pair),$(word 1,$(subst :, ,$(pair))))
 tests-dw-unwind = $(patsubst %,$(objpfx)%.out,$(first_column))
@@ -302,7 +305,7 @@ endif
 
 define make-strip-rule
 $(objpfx)$(word 1,$(subst :, ,$(1))): $(objpfx)$(word 2,$(subst :, ,$(1)))
-	strip --remove-section=.sframe $$< -o $$@
+	$(STRIP) --remove-section=.sframe $$< -o $$@
 endef
 
 $(foreach pair,$(dw_unwind_pair),$(eval $(call make-strip-rule,$(pair))))
@@ -325,6 +328,7 @@ tests = \
   backtrace-tst \
   test-stpcpy_chk \
   test-strcpy_chk \
+  tst-backtrace1 \
   tst-backtrace2 \
   tst-backtrace3 \
   tst-backtrace4 \

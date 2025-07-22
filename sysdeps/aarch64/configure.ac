@@ -31,3 +31,5 @@ fi
 if test $build_mathvec = no; then
   AC_MSG_WARN([mathvec is disabled, this results in incomplete ABI.])
 fi
+
+libc_cv_support_sframe=yes

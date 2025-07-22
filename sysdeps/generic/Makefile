@@ -21,7 +21,9 @@ CFLAGS-wordcopy.c += -Wno-uninitialized
 endif
 
 ifeq ($(subdir),elf)
+ifeq ($(enable-gsframe),yes)
 sysdep_routines += sframe-read sframe
+endif
 ifeq (yes:yes,$(build-shared):$(unwind-find-fde))
 # This is needed to support g++ v2 and v3.
 sysdep_routines += framestate unwind-pe

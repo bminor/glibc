@@ -321,10 +321,13 @@ the build compiler.
 
 Default is to disable fortification.
 
-@item --disable-sframe
-By default, the GNU C Library is built with @option{-Wa,--gsframe} if
-the current GNU @code{binutils} supports it. You may want to use this
-option if you don't plan to use SFrame stack tracer.
+@item --enable-sframe
+Experimental option supported by some architectures, where @theglibc{}
+is built with @option{-Wa,--gsframe} if @code{binutils} supports it.
+Currently this is only supported on x86_64 and aarch64.  The option
+enables SFrame support on @code{backtrace}.
+
+Default is to disable SFrame support.
 @end table
 
 To build the library and related programs, type @code{make}.  This will
