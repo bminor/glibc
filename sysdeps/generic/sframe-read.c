@@ -75,11 +75,10 @@ sframe_get_fde_type (sframe_func_desc_entry *fdep)
 static bool
 sframe_header_sanity_check_p (sframe_header *hp)
 {
-  uint8_t all_flags = SFRAME_F_FDE_SORTED | SFRAME_F_FRAME_POINTER;
   /* Check preamble is valid.  */
   if ((hp->sfh_preamble.sfp_magic != SFRAME_MAGIC)
       || (hp->sfh_preamble.sfp_version != SFRAME_VERSION_2)
-      || ((hp->sfh_preamble.sfp_flags | all_flags) != all_flags))
+      || (hp->sfh_preamble.sfp_flags & ~SFRAME_V2_F_ALL_FLAGS))
     return false;
 
   /* Check offsets are valid.  */
@@ -171,25 +170,103 @@ sframe_fre_entry_size (sframe_frame_row_entry *frep, size_t addr_size)
 	  + sframe_fre_offset_bytes_size (fre_info));
 }
 
-/* Check whether for the given FDEP, the SFrame Frame Row Entry identified via
-   the START_IP_OFFSET and the END_IP_OFFSET, provides the stack trace
-   information for the PC.  */
+/* Get SFrame header from the given decoder context DCTX.  */
+
+static inline sframe_header *
+sframe_decoder_get_header (sframe_decoder_ctx *dctx)
+{
+  sframe_header *hp = NULL;
+  if (dctx != NULL)
+    hp = &dctx->sfd_header;
+  return hp;
+}
+
+/* Get the offset of the sfde_func_start_address field (from the start of the
+   on-disk layout of the SFrame section) of the FDE at FUNC_IDX in the decoder
+   context DCTX.  */
+
+static uint32_t
+sframe_decoder_get_offsetof_fde_start_addr (sframe_decoder_ctx *dctx,
+					    uint32_t func_idx,
+					    _Unwind_Reason_Code *errp)
+{
+  sframe_header *dhp;
+
+  dhp = sframe_decoder_get_header (dctx);
+  if (dhp == NULL)
+    {
+      if (errp != NULL)
+	*errp = _URC_END_OF_STACK;
+      return 0;
+    }
+
+  if (func_idx >= dhp->sfh_num_fdes)
+    {
+      if (errp != NULL)
+	*errp = _URC_END_OF_STACK;
+      return 0;
+    }
+  else if (errp != NULL)
+    *errp = _URC_NO_REASON;
+
+  return (sframe_get_hdr_size (dhp)
+	  + func_idx * sizeof (sframe_func_desc_entry)
+	  + offsetof (sframe_func_desc_entry, sfde_func_start_address));
+}
+
+
+/* Get the offset of the start PC of the SFrame FDE at FUNC_IDX from
+   the start of the SFrame section. If the flag
+   SFRAME_F_FDE_FUNC_START_PCREL is set, sfde_func_start_address is
+   the offset of the start PC of the function from the field itself.
+
+   If FUNC_IDX is not a valid index in the given decoder object, returns 0.  */
+
+static int32_t
+sframe_decoder_get_secrel_func_start_addr (sframe_decoder_ctx *dctx,
+					   uint32_t func_idx)
+{
+  int32_t func_start_addr;
+  _Unwind_Reason_Code err = 0;
+  int32_t offsetof_fde_in_sec = 0;
+
+  /* Check if we have SFRAME_F_FDE_FUNC_START_PCREL.  */
+  sframe_header *sh = &dctx->sfd_header;
+  if ((sh->sfh_preamble.sfp_flags & SFRAME_F_FDE_FUNC_START_PCREL))
+    {
+      offsetof_fde_in_sec =
+	sframe_decoder_get_offsetof_fde_start_addr (dctx, func_idx, &err);
+      /* If func_idx is not a valid index, return 0.  */
+      if (err == _URC_END_OF_STACK)
+	return 0;
+    }
+
+  func_start_addr = dctx->sfd_funcdesc[func_idx].sfde_func_start_address;
+
+  return func_start_addr + offsetof_fde_in_sec;
+}
+
+/* Check if the SFrame Frame Row Entry identified via the
+   START_IP_OFFSET and the END_IP_OFFSET (for SFrame FDE at
+   FUNC_IDX).  */
 
 static bool
-sframe_fre_check_range_p (sframe_func_desc_entry *fdep,
+sframe_fre_check_range_p (sframe_decoder_ctx *dctx, uint32_t func_idx,
 			  uint32_t start_ip_offset, uint32_t end_ip_offset,
 			  int32_t pc)
 {
+  sframe_func_desc_entry *fdep;
   int32_t func_start_addr;
   uint8_t rep_block_size;
   uint32_t fde_type;
   uint32_t pc_offset;
   bool mask_p;
 
+  fdep = &dctx->sfd_funcdesc[func_idx];
   if (fdep == NULL)
     return false;
 
-  func_start_addr = fdep->sfde_func_start_address;
+  func_start_addr = sframe_decoder_get_secrel_func_start_addr (dctx, func_idx);
   fde_type = sframe_get_fde_type (fdep);
   mask_p = (fde_type == SFRAME_FDE_TYPE_PCMASK);
   rep_block_size = fdep->sfde_func_rep_size;
@@ -205,19 +282,6 @@ sframe_fre_check_range_p (sframe_func_desc_entry *fdep,
     pc_offset = pc_offset % rep_block_size;
 
   return (start_ip_offset <= pc_offset) && (end_ip_offset >= pc_offset);
-}
-
-/* The SFrame Decoder.  */
-
-/* Get SFrame header from the given decoder context DCTX.  */
-
-static inline sframe_header *
-sframe_decoder_get_header (sframe_decoder_ctx *dctx)
-{
-  sframe_header *hp = NULL;
-  if (dctx != NULL)
-    hp = &dctx->sfd_header;
-  return hp;
 }
 
 /* Get IDX'th offset from FRE.  Set ERRP as applicable.  */
@@ -298,7 +362,7 @@ sframe_decode_fre_start_address (const char *fre_buf,
 
 static sframe_func_desc_entry *
 sframe_get_funcdesc_with_addr_internal (sframe_decoder_ctx *ctx, int32_t addr,
-					int *errp)
+					int *errp, uint32_t *func_idx)
 {
   sframe_header *dhp;
   sframe_func_desc_entry *fdp;
@@ -319,19 +383,23 @@ sframe_get_funcdesc_with_addr_internal (sframe_decoder_ctx *ctx, int32_t addr,
   /* Do the binary search.  */
   fdp = (sframe_func_desc_entry *) ctx->sfd_funcdesc;
   low = 0;
-  high = dhp->sfh_num_fdes;
+  high = dhp->sfh_num_fdes - 1;
   while (low <= high)
     {
       int mid = low + (high - low) / 2;
 
       /* Given sfde_func_start_address <= addr,
 	 addr - sfde_func_start_address must be positive.  */
-      if (fdp[mid].sfde_func_start_address <= addr
-	  && ((uint32_t)(addr - fdp[mid].sfde_func_start_address)
+      if (sframe_decoder_get_secrel_func_start_addr (ctx, mid) <= addr
+	  && ((uint32_t)(addr - sframe_decoder_get_secrel_func_start_addr (ctx,
+									   mid))
 	      < fdp[mid].sfde_func_size))
-	return fdp + mid;
+	{
+	  *func_idx = mid;
+	  return fdp + mid;
+	}
 
-      if (fdp[mid].sfde_func_start_address < addr)
+      if (sframe_decoder_get_secrel_func_start_addr (ctx, mid) < addr)
 	low = mid + 1;
       else
 	high = mid - 1;
@@ -510,6 +578,7 @@ __sframe_find_fre (sframe_decoder_ctx *ctx, int32_t pc,
 		   sframe_frame_row_entry *frep)
 {
   sframe_func_desc_entry *fdep;
+  uint32_t func_idx;
   uint32_t fre_type, i;
   uint32_t start_ip_offset;
   int32_t func_start_addr;
@@ -522,14 +591,14 @@ __sframe_find_fre (sframe_decoder_ctx *ctx, int32_t pc,
     return _URC_END_OF_STACK;
 
   /* Find the FDE which contains the PC, then scan its fre entries.  */
-  fdep = sframe_get_funcdesc_with_addr_internal (ctx, pc, &err);
+  fdep = sframe_get_funcdesc_with_addr_internal (ctx, pc, &err, &func_idx);
   if (fdep == NULL || ctx->sfd_fres == NULL)
     return _URC_END_OF_STACK;
 
   fre_type = sframe_get_fre_type (fdep);
 
   fres = ctx->sfd_fres + fdep->sfde_func_start_fre_off;
-  func_start_addr = fdep->sfde_func_start_address;
+  func_start_addr = sframe_decoder_get_secrel_func_start_addr (ctx, func_idx);
 
   for (i = 0; i < fdep->sfde_func_num_fres; i++)
     {
@@ -553,7 +622,8 @@ __sframe_find_fre (sframe_decoder_ctx *ctx, int32_t pc,
       if (start_ip_offset > (uint32_t) (pc - func_start_addr))
 	return _URC_END_OF_STACK;
 
-      if (sframe_fre_check_range_p (fdep, start_ip_offset, end_ip_offset, pc))
+      if (sframe_fre_check_range_p (ctx, func_idx, start_ip_offset,
+				    end_ip_offset, pc))
 	{
 	  /* Decode last FRE bits: offsets size.  */
 	  frep->fre_offsets = fres + addr_size + sizeof (frep->fre_info);
