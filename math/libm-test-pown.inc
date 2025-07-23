@@ -79,7 +79,7 @@ static const struct test_fL_f_data pown_test_data[] =
     TEST_fL_f (pown, minus_zero, -0x1fffffffffffffLL, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_fL_f (pown, minus_zero, -0x3ffffffffffffeLL, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_fL_f (pown, minus_zero, -0x7ffffffffffffffeLL, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
-    TEST_fL_f (pown, minus_zero, -0x7fffffffffffffffLL, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
+    TEST_fL_f (pown, minus_zero, -0x7fffffffffffffffLL, minus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE|XFAIL_ROUNDING_IBM128_LIBGCC),
 
     TEST_fL_f (pown, 0, -2, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
     TEST_fL_f (pown, 0, -0x1000000, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|ERRNO_ERANGE),
@@ -107,7 +107,7 @@ static const struct test_fL_f_data pown_test_data[] =
     TEST_fL_f (pown, minus_infty, 0x1fffffffffffffLL, minus_infty, ERRNO_UNCHANGED),
     TEST_fL_f (pown, minus_infty, 0x3ffffffffffffeL, plus_infty, ERRNO_UNCHANGED),
     TEST_fL_f (pown, minus_infty, 0x7ffffffffffffffeLL, plus_infty, ERRNO_UNCHANGED),
-    TEST_fL_f (pown, minus_infty, 0x7fffffffffffffffLL, minus_infty, ERRNO_UNCHANGED),
+    TEST_fL_f (pown, minus_infty, 0x7fffffffffffffffLL, minus_infty, ERRNO_UNCHANGED|XFAIL_ROUNDING_IBM128_LIBGCC),
 
     /* pown (-inf, y) == +inf for y > 0 and not an odd integer.  */
     TEST_fL_f (pown, minus_infty, 28, plus_infty, ERRNO_UNCHANGED),
@@ -122,7 +122,7 @@ static const struct test_fL_f_data pown_test_data[] =
     TEST_fL_f (pown, minus_infty, -0x1fffffffffffffLL, minus_zero, ERRNO_UNCHANGED),
     TEST_fL_f (pown, minus_infty, -0x3ffffffffffffeLL, plus_zero, ERRNO_UNCHANGED),
     TEST_fL_f (pown, minus_infty, -0x7ffffffffffffffeLL, plus_zero, ERRNO_UNCHANGED),
-    TEST_fL_f (pown, minus_infty, -0x7fffffffffffffffLL, minus_zero, ERRNO_UNCHANGED),
+    TEST_fL_f (pown, minus_infty, -0x7fffffffffffffffLL, minus_zero, ERRNO_UNCHANGED|XFAIL_ROUNDING_IBM128_LIBGCC),
 
     /* pown (-inf, y) == +0 for y < 0 and not an odd integer.  */
     TEST_fL_f (pown, minus_infty, -2, 0.0, ERRNO_UNCHANGED),
