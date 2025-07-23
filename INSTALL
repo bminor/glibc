@@ -291,10 +291,11 @@ passed to 'configure'.  For example:
 
      Default is to disable fortification.
 
-'--disable-sframe'
-     By default, the GNU C Library is built with '-Wa,--gsframe' if the
-     current GNU 'binutils' supports it.  You may want to use this
-     option if you don't plan to use SFrame stack tracer.
+'--enable-sframe'
+     Experimental option supported by some architectures, where
+     the GNU C Library is built with '-Wa,--gsframe' if the binutils
+     supports it.  This option also enables SFrame support for
+     backtrace.
 
    To build the library and related programs, type 'make'.  This will
 produce a lot of output, some of which may look like errors from 'make'

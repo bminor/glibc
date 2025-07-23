@@ -287,6 +287,9 @@
 /* Define if static PIE is enabled.  */
 #define ENABLE_STATIC_PIE 0
 
+/* Define if SFrame v2 is enabled.  */
+#define ENABLE_SFRAME 0
+
 /* The default value of x86 CET control.  */
 #define DEFAULT_DL_X86_CET_CONTROL cet_elf_property
 

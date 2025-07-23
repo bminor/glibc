@@ -31,9 +31,10 @@ Major new features:
   glibc.malloc.tcache_max to a larger value (max 4194304).
   Tcache is also significantly faster for small sizes.
 
-* New stack tracer using SFrame.  Introducing --disable-sframe a new
-  configuration flag.  Building glibc using sframe is automatically
-  enabled when the build system supports it.
+* A new configure option, "--eanble-sframe", can be used to enable
+  the SFrame support on the GNU C Libraries.  The SFrame is a new
+  stack trace information which can be used by backtrace.  It requires
+  binutils with minimum version of 2.45.
 
 Deprecated and removed features, and other changes affecting compatibility:
 

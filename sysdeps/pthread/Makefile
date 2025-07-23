@@ -62,7 +62,6 @@ tests += \
   tst-abstime \
   tst-atfork1 \
   tst-attr1 \
-  tst-backtrace1 \
   tst-bad-schedattr \
   tst-barrier1 \
   tst-barrier2 \

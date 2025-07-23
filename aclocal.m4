@@ -145,6 +145,10 @@ if test -z "$NM"; then
     NM=`$CC -print-prog-name=nm`
 fi
 AC_SUBST(NM)
+if test -z "$STRIP"; then
+    STRIP=`$CC -print-prog-name=strip`
+fi
+AC_SUBST(STRIP)
 ])
 
 dnl Run a static link test with -nostdlib -nostartfiles.

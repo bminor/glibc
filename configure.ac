@@ -441,10 +441,10 @@ case "$enable_fortify_source" in
 esac
 
 AC_ARG_ENABLE([sframe],
-	      [AS_HELP_STRING([--disable-sframe],
-			     [Disable building with SFrame stack trace information @<:@default=yes if GNU as is 2.41 or older@:>@])],
+	      [AS_HELP_STRING([--enable-sframe],
+			      [Enable building with SFrame support @<:@default=no@:>@])],
 	      [use_sframe=$enableval],
-	      [use_sframe=notset])
+	      [use_sframe=no])
 
 # We keep the original values in `$config_*' and never modify them, so we
 # can write them unchanged into config.make.  Everything else uses
@@ -2121,16 +2121,24 @@ AC_SUBST(libc_cv_test_cc_mprefer_vector_width)
 AC_SUBST(test_enable_cet)
 AC_SUBST(libc_cv_test_x86_have_amx_tile)
 
-# Glibc stacktracer supports SFrame v2 or newer
-libc_cv_readelf_version_ok=yes
-# SFrame is supported from 2.41 or higher
-AC_CHECK_PROG_VER(READELF_SFRAME, $READELF, --version,
-  [GNU readelf.* \([0-9][0-9]*\.[0-9.]*\)],
-  [2.4[1-9]*|2.[5-9][0-9]*|[3-9].*|[1-9][0-9][0-9]*],
-  libc_cv_readelf_version_ok=no)
+enable_gsframe=no
+if test $use_sframe = yes; then
+  # SFrame requires to be explicit enabled by the architecture
+  if test -z $libc_cv_support_sframe; then
+    AC_MSG_FAILURE([the architecture doesn't support SFrame])
+  fi
 
-# Check the current toolchain for SFrame support
-if test $libc_cv_readelf_version_ok = yes; then
+  # SFrame requires binutils 2.45 or higher.
+  libc_cv_sframe_readelf_version=yes
+  AC_CHECK_PROG_VER(READELF, $READELF, --version,
+    [GNU readelf.* \([0-9][0-9]*\.[0-9.]*\)],
+    [2.4[5-9]*|2.[5-9][0-9]*|2.[1-9][0-9][0-9]*|[3-9]*|[1-9][0-9]*],
+    libc_cv_sframe_readelf_version=no)
+  if test $libc_cv_sframe_readelf_version == no; then
+    AC_MSG_FAILURE([binutils too old to enable SFrame])
+  fi
+
+  # Check if the current toolchain supports SFrame
   AC_CACHE_CHECK([for SFrame support], libc_cv_default_sframe,
   [dnl
 cat > conftest.c <<EOF
@@ -2139,25 +2147,23 @@ int test_function(void)
   return 42;
 }
 EOF
-  libc_cv_default_sframe=no
-  if ${CC} -c conftest.c -o conftest.o -Wa,--gsframe >/dev/null 2>&1 && \
-     # Check if .sframe section is present and if version > 1
-     $READELF --sframe conftest.o | grep "SFRAME_VER" | grep -qv "VERSION_1"; then
-          libc_cv_default_sframe=yes
-  fi
-  rm -f conftest.c conftest.o
+    libc_cv_default_sframe=no
+    if ${CC} -c conftest.c -o conftest.o -Wa,--gsframe >/dev/null 2>&1 && \
+       # Check if .sframe section is present and if version > 1
+       $READELF --sframe conftest.o | grep "SFRAME_VER" | grep -qv "VERSION_1"; then
+      libc_cv_default_sframe=yes
+    fi
+    rm -f conftest.c conftest.o
   ])
-fi
 
-# Prevent enabling sframe on non-supporting toolchains
-enable_gsframe=no
-if test $use_sframe$libc_cv_default_sframe = yesyes || \
-   test $use_sframe$libc_cv_default_sframe = notsetyes; then
+  if test $libc_cv_default_sframe == no; then
+    AC_MSG_FAILURE([toolchain doesn't support SFrame v2 or higher])
+  fi
+
   enable_gsframe=yes
-elif test $use_sframe = yes; then
-   AC_MSG_FAILURE([toolchain doesn't support SFrame v2 or higher])
+  AC_DEFINE(ENABLE_SFRAME)
 fi
-AC_SUBST(enable_gsframe)
+LIBC_CONFIG_VAR([enable-gsframe], [$enable_gsframe])
 
 # Set the `multidir' variable by grabbing the variable from the compiler.
 # We do it once and save the result in a generated makefile.
