@@ -16,3 +16,8 @@ CVE-id: CVE-2025-4802
 Public-Date: 2025-05-16
 Vulnerable-Commit: 10e93d968716ab82931d593bada121c17c0a4b93 (2.27)
 Fix-Commit: 5451fa962cd0a90a0e2ec1d8910a559ace02bba0 (2.39)
+Fix-Commit: 3be3728df2f1912c80abd3288bc6e3a25ad679e4 (2.38-132)
+Fix-Commit: 7403ede2d7752e59e0c47d5d33d73c2bf850e7be (2.37-154)
+Fix-Commit: 2ef7850279b2931caf6d6d6743ebaa91839e1cf7 (2.36-227)
+Fix-Commit: 621c65ccf12ddd415ceeb2234423bd1acd0fabb3 (2.35-387)
+Fix-Commit: 35018c0fd20eac9ceaf60060fed2745b3177359d (2.34-517)
