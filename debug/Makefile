@@ -187,6 +187,7 @@ CFLAGS-tst-sprintf-fortify-rdonly-dlopen.c += $(no-fortify-source) -D_FORTIFY_SO
 CFLAGS-tst-sprintf-fortify-rdonly-static.c += $(no-fortify-source) -D_FORTIFY_SOURCE=2
 CFLAGS-tst-fortify-syslog.c += $(no-fortify-source) -D_FORTIFY_SOURCE=2
 CFLAGS-tst-fortify-wide.c += $(no-fortify-source) -D_FORTIFY_SOURCE=2
+LDFLAGS-tst-sprintf-fortify-rdonly-static += $(relro-LDFLAGS)
 
 $(objpfx)tst-sprintf-fortify-rdonly: $(objpfx)tst-sprintf-fortify-rdonly-mod.so
 $(objpfx)tst-sprintf-fortify-rdonly.out: \
