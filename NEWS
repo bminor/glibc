@@ -11,6 +11,7 @@ The following bugs were resolved with this release:
 
   [31943] _dl_find_object can fail if ld.so contains gaps between load segments
   [32994] stdlib: resolve a double lock init issue after fork
+  [33234] Use TLS initial-exec model for __libc_tsd_CTYPE_* thread variables
   [33245] nptl: nptl: error in internal cancellation syscall handling
 
 Version 2.42
