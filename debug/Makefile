@@ -300,7 +300,9 @@ dw_unwind_pair := \
 
 first_column = $(foreach pair,$(dw_unwind_pair),$(word 1,$(subst :, ,$(pair))))
 tests-dw-unwind = $(patsubst %,$(objpfx)%.out,$(first_column))
+ifeq ($(run-built-tests),yes)
 tests-special += $(tests-dw-unwind)
+endif
 endif
 
 define make-strip-rule
