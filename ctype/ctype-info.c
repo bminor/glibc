@@ -24,11 +24,11 @@
    __ctype_init before user code runs, but this does not happen for
    threads in secondary namespaces.  With the initializers, secondary
    namespaces at least get locale data from the C locale.  */
-__thread const uint16_t * __libc_tsd_CTYPE_B
+__thread const uint16_t * __libc_tsd_CTYPE_B attribute_tls_model_ie
   = (const uint16_t *) _nl_C_LC_CTYPE_class + 128;
-__thread const int32_t * __libc_tsd_CTYPE_TOLOWER
+__thread const int32_t * __libc_tsd_CTYPE_TOLOWER attribute_tls_model_ie
   = (const int32_t *) _nl_C_LC_CTYPE_tolower + 128;
-__thread const int32_t * __libc_tsd_CTYPE_TOUPPER
+__thread const int32_t * __libc_tsd_CTYPE_TOUPPER attribute_tls_model_ie
   = (const int32_t *) _nl_C_LC_CTYPE_toupper + 128;
 
 
