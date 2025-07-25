@@ -28,19 +28,23 @@ bench-math := \
   acosf \
   acosh \
   acoshf \
+  acospi \
   acospif \
   asin \
   asinf \
   asinh \
   asinhf \
+  asinpi \
   asinpif \
   atan \
   atan2 \
   atan2f \
+  atan2pi \
   atan2pif \
   atanf \
   atanh \
   atanhf \
+  atanpi \
   atanpif \
   cbrt \
   cbrtf \
@@ -50,6 +54,7 @@ bench-math := \
   cosf \
   cosh \
   coshf \
+  cospi \
   cospif \
   erf \
   erfc \
@@ -58,9 +63,11 @@ bench-math := \
   exp \
   exp10 \
   exp10f \
+  exp10m1 \
   exp10m1f \
   exp2 \
   exp2f \
+  exp2m1 \
   exp2m1f \
   expf \
   expl \
@@ -91,12 +98,14 @@ bench-math := \
   log \
   log10 \
   log10f \
+  log10p1 \
   log10p1f \
   log1p \
   log1pf \
   log2 \
   log2f \
   log2l \
+  log2p1 \
   log2p1f \
   logb \
   logbf \
@@ -120,12 +129,14 @@ bench-math := \
   sinf \
   sinh \
   sinhf \
+  sinpi \
   sinpif \
   sqrt \
   tan \
   tanf \
   tanh \
   tanhf \
+  tanpi \
   tanpif \
   tgamma \
   tgammaf \
