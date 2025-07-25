@@ -19,39 +19,39 @@ Major new features:
 
 * On Linux, the pthread_gettid_np function has been added.
 
-* The ISO C2Y family of unsigned abs functions, i.e.
-  uabs, ulabs, ullabs and uimaxabs, are now supported.
+* The ISO C2Y family of unsigned abs functions, i.e. uabs, ulabs,
+  ullabs, and uimaxabs, is now supported.
 
 * On Linux, the <termios.h> interface now supports arbitrary baud rates;
   speed_t is redefined to simply be the baud rate specified as an
   unsigned int, which matches the kernel interface.
 
-* The thread-local cache in malloc (tcache) now supports caching of large
-  blocks.  This feature can be enabled by setting the tunable
-  glibc.malloc.tcache_max to a larger value (max 4194304).
-  Tcache is also significantly faster for small sizes.
+* The thread-local cache in malloc (tcache) now supports caching of
+  large blocks.  This feature can be enabled by setting the tunable
+  glibc.malloc.tcache_max to a larger value (max 4194304). Tcache is
+  also significantly faster for small sizes.
 
-* A new configure option, "--eanble-sframe", can be used to enable
-  the SFrame support on the GNU C Libraries.  The SFrame is a new
-  stack trace information which can be used by backtrace.  It requires
-  binutils with minimum version of 2.45.
+* A new configure option, "--enable-sframe", can be used to enable
+  SFrame support of the GNU C Libraries.  SFrame is a new stack trace
+  information format which can be used by backtrace.  It requires
+  binutils with a minimum version of 2.45.
 
 Deprecated and removed features, and other changes affecting compatibility:
 
-* The glibc.rtld.execstack now supports a compatibility mode to allow
-  programs that require an executable stack through dynamic loaded
-  shared libraries.
+* The glibc.rtld.execstack tunable now supports a compatibility mode to
+  allow programs that require an executable stack through dynamically
+  loaded shared libraries.
 
 * On Linux, the <termio.h> header and the definition of struct termio
   in <sys/ioctl.h> have been removed. The termio interface has been
   obsolete since the very first version of POSIX.1 in 1988, replaced
   with <termios.h>.
 
-* The support for TX lock elision of pthread mutexes is deprecated on
-  all architectures and will be removed in the next release.
+* The support for TX lock elision of pthread mutexes has been deprecated
+  on all architectures and will be removed in the next release.
 
-* On AArch64 Linux targets supporting SME, setjmp and sigsetjmp will
-  disable ZA state of SME.
+* On AArch64 Linux targets supporting the Scalable Matrix Extension
+  (SME), setjmp and sigsetjmp will disable the ZA state of SME.
 
 Changes to build and runtime requirements:
 
