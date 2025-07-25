@@ -43,9 +43,12 @@ Major new features:
   been imported from the CORE-MATH project, in particular acospif,
   asinpif, atanpif, atan2pif, cospif, sinpif, tanpif.
 
-* The testsuite has been significantly extended to cover the
-  functionality of the printf and scanf function families in many
+* The testsuite has been significantly extended, including coverage of
+  the functionality of the printf and scanf function families in many
   variants.
+
+* The manual has been significantly extended and updated, particularly
+  the threads, terminal, filesystem, resource, and math chapters.
 
 * Code has been added to detect the x86-64 Intel Arrow Lake, Panther
   Lake, Clearwater Forest, and Diamond Rapids microarchitectures.
