@@ -36,6 +36,22 @@ Major new features:
   information format which can be used by backtrace.  It requires
   binutils with a minimum version of 2.45.
 
+* Support for lightweight stack guard pages via madvise and the
+  MADV_GUARD_INSTALL flag has been added to pthread_create.
+
+* Additional optimized and correctly rounded mathematical functions have
+  been imported from the CORE-MATH project, in particular acospif,
+  asinpif, atanpif, atan2pif, cospif, sinpif, tanpif.
+
+* The testsuite has been significantly extended to cover the
+  functionality of the printf and scanf function families in many
+  variants.
+
+* Code has been added to detect the x86-64 Intel Arrow Lake, Panther
+  Lake, Clearwater Forest, and Diamond Rapids microarchitectures.
+
+* Regarding S390, support for the new z17 platform has been added.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The glibc.rtld.execstack tunable now supports a compatibility mode to
