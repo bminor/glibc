@@ -24,7 +24,7 @@
 #include <sys/ucontext.h>
 #include <kernel_rt_sigframe.h>
 
-#if __AARCH64EL__
+#ifdef __AARCH64EL__
 #define MOVZ_X8_8B      0xd2801168
 #define SVC_0           0xd4000001
 #else
