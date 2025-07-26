@@ -2271,8 +2271,8 @@ inefficient.
 A better solution is to use the @code{select} function.  This blocks the
 program until input or output is ready on a specified set of file
 descriptors, or until a timer expires, whichever comes first.  This
-facility is declared in the header file @file{sys/types.h}.
-@pindex sys/types.h
+facility is declared in the header file @file{sys/select.h}.
+@pindex sys/select.h
 
 In the case of a server socket (@pxref{Listening}), we say that
 ``input'' is available when there are pending connections that could be
@@ -2286,13 +2286,13 @@ as @code{fd_set} objects.  Here is the description of the data type
 and some macros for manipulating these objects.
 
 @deftp {Data Type} fd_set
-@standards{BSD, sys/types.h}
+@standards{POSIX.1, sys/select.h}
 The @code{fd_set} data type represents file descriptor sets for the
 @code{select} function.  It is actually a bit array.
 @end deftp
 
 @deftypevr Macro int FD_SETSIZE
-@standards{BSD, sys/types.h}
+@standards{POSIX.1, sys/select.h}
 The value of this macro is the maximum number of file descriptors that a
 @code{fd_set} object can hold information about.  On systems with a
 fixed maximum number, @code{FD_SETSIZE} is at least that number.  On
@@ -2304,14 +2304,14 @@ that descriptor into an @code{fd_set}.
 @end deftypevr
 
 @deftypefn Macro void FD_ZERO (fd_set *@var{set})
-@standards{BSD, sys/types.h}
+@standards{POSIX.1, sys/select.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:set}}@assafe{}@acsafe{}}
 This macro initializes the file descriptor set @var{set} to be the
 empty set.
 @end deftypefn
 
 @deftypefn Macro void FD_SET (int @var{filedes}, fd_set *@var{set})
-@standards{BSD, sys/types.h}
+@standards{POSIX.1, sys/select.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:set}}@assafe{}@acsafe{}}
 @c Setting a bit isn't necessarily atomic, so there's a potential race
 @c here if set is not used exclusively.
@@ -2322,7 +2322,7 @@ evaluated more than once.
 @end deftypefn
 
 @deftypefn Macro void FD_CLR (int @var{filedes}, fd_set *@var{set})
-@standards{BSD, sys/types.h}
+@standards{POSIX.1, sys/select.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:set}}@assafe{}@acsafe{}}
 @c Setting a bit isn't necessarily atomic, so there's a potential race
 @c here if set is not used exclusively.
@@ -2333,7 +2333,7 @@ evaluated more than once.
 @end deftypefn
 
 @deftypefn Macro int FD_ISSET (int @var{filedes}, const fd_set *@var{set})
-@standards{BSD, sys/types.h}
+@standards{POSIX.1, sys/select.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:set}}@assafe{}@acsafe{}}
 This macro returns a nonzero value (true) if @var{filedes} is a member
 of the file descriptor set @var{set}, and zero (false) otherwise.
@@ -2345,7 +2345,7 @@ evaluated more than once.
 Next, here is the description of the @code{select} function itself.
 
 @deftypefun int select (int @var{nfds}, fd_set *@var{read-fds}, fd_set *@var{write-fds}, fd_set *@var{except-fds}, struct timeval *@var{timeout})
-@standards{BSD, sys/types.h}
+@standards{POSIX.1, sys/select.h}
 @safety{@prelim{}@mtsafe{@mtsrace{:read-fds} @mtsrace{:write-fds} @mtsrace{:except-fds}}@assafe{}@acsafe{}}
 @c The select syscall is preferred, but pselect6 may be used instead,
 @c which requires converting timeout to a timespec and back.  The
@@ -2419,9 +2419,6 @@ The @var{timeout} argument is invalid; one of the components is negative
 or too large.
 @end table
 @end deftypefun
-
-@strong{Portability Note:}  The @code{select} function is a BSD Unix
-feature.
 
 Here is an example showing how you can use @code{select} to establish a
 timeout period for reading from a file descriptor.  The @code{input_timeout}
