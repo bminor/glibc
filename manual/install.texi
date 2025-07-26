@@ -543,7 +543,7 @@ GCC 12.1 or newer
 GCC 12.1 or higher is required.  In general it is recommended to use
 the newest version of the compiler that is known to work for building
 @theglibc{}, as newer compilers usually produce better code.  As of
-release time, GCC 14.2.1 is the newest compiler verified to work to build
+release time, GCC 15.1.1 is the newest compiler verified to work to build
 @theglibc{}.
 
 For multi-arch support it is recommended to use a GCC which has been built with
@@ -564,7 +564,8 @@ GNU @code{binutils} 2.39 or later
 
 You must use GNU @code{binutils} (as and ld) to build @theglibc{}.
 No other assembler or linker has the necessary functionality at the
-moment. As of release time, GNU @code{binutils} 2.43.1 is the newest
+moment. As of release time, GNU @code{binutils} 2.44 and the GNU
+@code{binutils} 2.45 prerelease code of 24 July 2025 are the newest
 verified to work to build @theglibc{}.
 
 @item
@@ -583,7 +584,7 @@ GNU @code{awk} 3.1.2, or higher
 @code{awk} is used in several places to generate files.
 Some @code{gawk} extensions are used, including the @code{asorti}
 function, which was introduced in version 3.1.2 of @code{gawk}.
-As of release time, @code{gawk} version 5.3.1 is the newest verified
+As of release time, @code{gawk} version 5.3.2 is the newest verified
 to work to build @theglibc{}.
 
 Testing the GNU C Library requires @code{gawk} to be compiled with
@@ -602,7 +603,7 @@ Perl 5
 
 Perl is not required, but if present it is used in some tests and the
 @code{mtrace} program, to build the @glibcadj{} manual.  As of release
-time @code{perl} version 5.40.0 is the newest verified to work to
+time @code{perl} version 5.42.0 is the newest verified to work to
 build @theglibc{}.
 
 @item
@@ -616,7 +617,7 @@ with any version of @code{sed}.  As of release time, @code{sed} version
 Python 3.4 or later
 
 Python is required to build @theglibc{}.  As of release time, Python
-3.12.8 is the newest verified to work for building and testing
+3.13.5 is the newest verified to work for building and testing
 @theglibc{}.
 
 @item PExpect 4.0
@@ -636,7 +637,7 @@ missing @code{abnf} module does not reduce the test coverage of the
 library itself.
 
 @item
-GDB 7.8 or later with support for Python 2.7/3.4 or later
+GDB 7.8 or later with support for Python 3.4 or later
 
 GDB itself needs to be configured with Python support in order to use
 the pretty printers.  Notice that your system having Python available
@@ -665,7 +666,7 @@ and if you change any of the message translation files you will need
 @item
 GNU @code{gettext} 0.10.36 or later
 
-As of release time, GNU @code{gettext} version 0.23 is the newest
+As of release time, GNU @code{gettext} version 0.23.2 is the newest
 version verified to work to build @theglibc{}.
 @end itemize
 
