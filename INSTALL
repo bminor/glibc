@@ -292,10 +292,12 @@ passed to 'configure'.  For example:
      Default is to disable fortification.
 
 '--enable-sframe'
-     Experimental option supported by some architectures, where
-     the GNU C Library is built with '-Wa,--gsframe' if the binutils
-     supports it.  This option also enables SFrame support for
-     backtrace.
+     Experimental option supported by some architectures, where the GNU
+     C Library is built with '-Wa,--gsframe' if 'binutils' supports it.
+     Currently this is only supported on x86_64 and aarch64.  The option
+     enables SFrame support on 'backtrace'.
+
+     Default is to disable SFrame support.
 
    To build the library and related programs, type 'make'.  This will
 produce a lot of output, some of which may look like errors from 'make'
@@ -498,7 +500,7 @@ build the GNU C Library:
      GCC 12.1 or higher is required.  In general it is recommended to
      use the newest version of the compiler that is known to work for
      building the GNU C Library, as newer compilers usually produce
-     better code.  As of release time, GCC 14.2.1 is the newest compiler
+     better code.  As of release time, GCC 15.1.1 is the newest compiler
      verified to work to build the GNU C Library.
 
      For multi-arch support it is recommended to use a GCC which has
@@ -520,7 +522,8 @@ build the GNU C Library:
 
      You must use GNU 'binutils' (as and ld) to build the GNU C Library.
      No other assembler or linker has the necessary functionality at the
-     moment.  As of release time, GNU 'binutils' 2.43.1 is the newest
+     moment.  As of release time, GNU 'binutils' 2.44 and the GNU
+     'binutils' 2.45 prerelease code of 24 July 2025 are the newest
      verified to work to build the GNU C Library.
 
    * GNU 'texinfo' 4.7 or later
@@ -537,7 +540,7 @@ build the GNU C Library:
      'awk' is used in several places to generate files.  Some 'gawk'
      extensions are used, including the 'asorti' function, which was
      introduced in version 3.1.2 of 'gawk'.  As of release time, 'gawk'
-     version 5.3.1 is the newest verified to work to build the GNU C
+     version 5.3.2 is the newest verified to work to build the GNU C
      Library.
 
      Testing the GNU C Library requires 'gawk' to be compiled with
@@ -554,7 +557,7 @@ build the GNU C Library:
 
      Perl is not required, but if present it is used in some tests and
      the 'mtrace' program, to build the GNU C Library manual.  As of
-     release time 'perl' version 5.40.0 is the newest verified to work
+     release time 'perl' version 5.42.0 is the newest verified to work
      to build the GNU C Library.
 
    * GNU 'sed' 3.02 or newer
@@ -566,7 +569,7 @@ build the GNU C Library:
    * Python 3.4 or later
 
      Python is required to build the GNU C Library.  As of release time,
-     Python 3.12.8 is the newest verified to work for building and
+     Python 3.13.5 is the newest verified to work for building and
      testing the GNU C Library.
 
    * PExpect 4.0
@@ -584,7 +587,7 @@ build the GNU C Library:
      A missing 'abnf' module does not reduce the test coverage of the
      library itself.
 
-   * GDB 7.8 or later with support for Python 2.7/3.4 or later
+   * GDB 7.8 or later with support for Python 3.4 or later
 
      GDB itself needs to be configured with Python support in order to
      use the pretty printers.  Notice that your system having Python
@@ -606,7 +609,7 @@ and if you change any of the message translation files you will need
 
    * GNU 'gettext' 0.10.36 or later
 
-     As of release time, GNU 'gettext' version 0.23 is the newest
+     As of release time, GNU 'gettext' version 0.23.2 is the newest
      version verified to work to build the GNU C Library.
 
 You may also need these packages if you upgrade your source tree using
