@@ -21,7 +21,7 @@ so:
 
     export GLIBC_TUNABLES=glibc.cpu.hwcaps=-arch_3_1
 
-CVE-id: CVE-2025-5745
+CVE-Id: CVE-2025-5745
 Public-Date: 2025-06-05
 Vulnerable-Commit: 23f0d81608d0ca6379894ef81670cf30af7fd081 (2.40)
 Fix-Commit: 63c60101ce7c5eac42be90f698ba02099b41b965 (2.42)
