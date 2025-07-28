@@ -17,19 +17,22 @@ ifeq ($(subdir),gmon)
 sysdep_routines += i386-mcount
 endif
 
-ifeq ($(subdir),elf)
-CFLAGS-rtld.c += -Wno-uninitialized -Wno-unused
-CFLAGS-dl-load.c += -Wno-unused
-CFLAGS-dl-reloc.c += -Wno-unused
-endif
-
 ifeq ($(subdir),csu)
 gen-as-const-headers += link-defines.sym
+gen-as-const-headers += tlsdesc.sym
 else
 stack-align-test-flags += -malign-double
 endif
 
+# Make sure no code in ld.so uses mm/xmm/ymm/zmm registers on i386 since
+# the first 3 mm/xmm/ymm/zmm registers are used to pass vector parameters
+# which must be preserved.
+# With SSE disabled, ensure -fpmath is not set to use sse either.
+rtld-CFLAGS += -mno-sse -mno-mmx -mfpmath=387
 ifeq ($(subdir),elf)
+CFLAGS-rtld.c += -Wno-uninitialized -Wno-unused
+CFLAGS-dl-load.c += -Wno-unused
+CFLAGS-dl-reloc.c += -Wno-unused
 sysdep-dl-routines += \
   dl-tls-get-addr \
 # sysdep-dl-routines
@@ -40,18 +43,6 @@ modules-names += tst-auditmod3a tst-auditmod3b
 $(objpfx)tst-audit3: $(objpfx)tst-auditmod3a.so
 $(objpfx)tst-audit3.out: $(objpfx)tst-auditmod3b.so
 tst-audit3-ENV = LD_AUDIT=$(objpfx)tst-auditmod3b.so
-endif
-
-ifeq ($(subdir),csu)
-gen-as-const-headers += tlsdesc.sym
-endif
-
-# Make sure no code in ld.so uses mm/xmm/ymm/zmm registers on i386 since
-# the first 3 mm/xmm/ymm/zmm registers are used to pass vector parameters
-# which must be preserved.
-# With SSE disabled, ensure -fpmath is not set to use sse either.
-rtld-CFLAGS += -mno-sse -mno-mmx -mfpmath=387
-ifeq ($(subdir),elf)
 CFLAGS-.os += $(if $(filter $(@F),$(patsubst %,%.os,$(all-rtld-routines))),\
 		   $(rtld-CFLAGS))
 
