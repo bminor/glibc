@@ -212,6 +212,15 @@ LDFLAGS-tst-plt-rewrite2 = -Wl,-z,now
 LDFLAGS-tst-plt-rewritemod2.so = -Wl,-z,now,-z,undefs
 tst-plt-rewrite2-ENV = GLIBC_TUNABLES=glibc.cpu.plt_rewrite=2
 $(objpfx)tst-plt-rewrite2: $(objpfx)tst-plt-rewritemod2.so
+
+tests-special += $(objpfx)check-gnu2-tls.out
+
+$(objpfx)check-gnu2-tls.out: $(common-objpfx)libc.so
+	LC_ALL=C $(READELF) -V -W $< \
+		| sed -ne '/.gnu.version_d/, /.gnu.version_r/ p' \
+		| grep GLIBC_ABI_GNU2_TLS > $@; \
+	$(evaluate-test)
+generated += check-gnu2-tls.out
 endif
 
 test-internal-extras += tst-gnu2-tls2mod1
