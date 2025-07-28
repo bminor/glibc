@@ -5,6 +5,11 @@ libc {
   GLIBC_2.13 {
     __fentry__;
   }
+  GLIBC_ABI_GNU2_TLS {
+    # This symbol is used only for empty version map and will be removed
+    # by scripts/versions.awk.
+    __placeholder_only_for_empty_version_map;
+  }
   GLIBC_ABI_DT_X86_64_PLT {
     # This symbol is used only for empty version map and will be removed
     # by scripts/versions.awk.

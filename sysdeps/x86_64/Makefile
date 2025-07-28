@@ -181,6 +181,14 @@ $(objpfx)check-dt-x86-64-plt.out: $(common-objpfx)libc.so
        $(evaluate-test)
 generated += check-dt-x86-64-plt.out
 
+tests-special += $(objpfx)check-gnu2-tls.out
+
+$(objpfx)check-gnu2-tls.out: $(common-objpfx)libc.so
+	LC_ALL=C $(READELF) -V -W $< \
+		| sed -ne '/.gnu.version_d/, /.gnu.version_r/ p' \
+		| grep GLIBC_ABI_GNU2_TLS > $@; \
+	$(evaluate-test)
+generated += check-gnu2-tls.out
 endif # $(subdir) == elf
 
 ifeq ($(subdir),csu)
