@@ -4752,7 +4752,7 @@ compoundn 0.001 1
 compoundn 0.123456 1
 compoundn 1 1
 compoundn 2 1
-compoundn max 1
+compoundn max 1 xfail:ibm128-libgcc
 
 compoundn -0.999 -1
 compoundn -0.123 -1
@@ -8411,7 +8411,7 @@ pown -0 0xffffff
 pown -0 0x1fffffe
 pown -0 0x1fffffffffffff
 pown -0 0x3ffffffffffffe
-pown -0 0x7fffffffffffffff
+pown -0 0x7fffffffffffffff xfail-rounding:ibm128-libgcc
 
 # pown (+0, y) == +0 for y > 0 and not an odd integer.
 pown 0.0 4
@@ -8428,13 +8428,13 @@ pown -1.0 -0xffffff
 pown -1.0 -0x1fffffe
 pown -1.0 -0x1fffffffffffff
 pown -1.0 -0x3ffffffffffffe
-pown -1.0 -0x7fffffffffffffff
+pown -1.0 -0x7fffffffffffffff xfail-rounding:ibm128-libgcc
 
 pown -1.0 0xffffff
 pown -1.0 0x1fffffe
 pown -1.0 0x1fffffffffffff
 pown -1.0 0x3ffffffffffffe
-pown -1.0 0x7fffffffffffffff
+pown -1.0 0x7fffffffffffffff xfail-rounding:ibm128-libgcc
 
 pown -2.0 126
 pown -2.0 127
