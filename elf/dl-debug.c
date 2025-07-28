@@ -167,14 +167,3 @@ _dl_debug_initialize (ElfW(Addr) ldbase, Lmid_t ns)
 
   return &r->base;
 }
-
-
-/* This function exists solely to have a breakpoint set on it by the
-   debugger.  The debugger is supposed to find this function's address by
-   examining the r_brk member of struct r_debug, but GDB 4.15 in fact looks
-   for this particular symbol name in the PT_INTERP file.  */
-void
-_dl_debug_state (void)
-{
-}
-rtld_hidden_def (_dl_debug_state)
