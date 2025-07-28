@@ -57,6 +57,7 @@ dl-routines = \
   dl-close \
   dl-debug \
   dl-debug-symbols \
+  dl-debug_state \
   dl-deps \
   dl-exception \
   dl-execstack \
