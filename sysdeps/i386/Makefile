@@ -60,6 +60,15 @@ $(objpfx)tst-ld-sse-use.out: ../sysdeps/i386/tst-ld-sse-use.sh $(objpfx)ld.so
 	@echo "Checking ld.so for SSE register use.  This will take a few seconds..."
 	$(BASH) $< $(objpfx) '$(NM)' '$(OBJDUMP)' '$(READELF)' > $@; \
 	$(evaluate-test)
+
+tests-special += $(objpfx)check-gnu-tls.out
+
+$(objpfx)check-gnu-tls.out: $(common-objpfx)libc.so
+	LC_ALL=C $(READELF) -V -W $< \
+		| sed -ne '/.gnu.version_d/, /.gnu.version_r/ p' \
+		| grep GLIBC_ABI_GNU_TLS > $@; \
+	$(evaluate-test)
+generated += check-gnu-tls.out
 else
 CFLAGS-.os += $(if $(filter rtld-%.os,$(@F)), $(rtld-CFLAGS))
 endif
