@@ -564,8 +564,7 @@ GNU @code{binutils} 2.39 or later
 
 You must use GNU @code{binutils} (as and ld) to build @theglibc{}.
 No other assembler or linker has the necessary functionality at the
-moment. As of release time, GNU @code{binutils} 2.44 and the GNU
-@code{binutils} 2.45 prerelease code of 24 July 2025 are the newest
+moment. As of release time, GNU @code{binutils} 2.45 is the newest
 verified to work to build @theglibc{}.
 
 @item
