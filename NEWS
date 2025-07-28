@@ -194,6 +194,8 @@ The following bugs were resolved with this release:
   [33173] math: Wrong IFUNC selector is used for modf/modff
   [33185] regex: Double-free after memory allocation failure in regcomp
     bracket expression parsing (CVE-2025-8058)
+  [33224] dynamic-link: _dl_debug_state hook no longer works (since
+    8329939a37f483a16013dd8af8303cbcb86d92cb)
 
 Version 2.41
 
