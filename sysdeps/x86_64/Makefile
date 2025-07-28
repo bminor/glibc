@@ -11,6 +11,7 @@ endif
 
 ifeq ($(subdir),csu)
 gen-as-const-headers += link-defines.sym
+gen-as-const-headers += tlsdesc.sym rtld-offsets.sym
 endif
 
 ifeq ($(subdir),gmon)
@@ -235,10 +236,6 @@ $(objpfx)check-rtld.out: $(objpfx)rtld.reloc
 generated += check-rtld.out
 endif # $(subdir) == elf
 
-ifeq ($(subdir),csu)
-gen-as-const-headers += tlsdesc.sym rtld-offsets.sym
-endif
-
 ifeq ($(subdir),wcsmbs)
 
 sysdep_routines += \
@@ -269,6 +266,15 @@ endif
 
 
 ifneq ($(enable-cet),no)
+# Add -fcf-protection to CFLAGS when CET is enabled.
+CFLAGS-.o += -fcf-protection
+CFLAGS-.os += -fcf-protection
+CFLAGS-.op += -fcf-protection
+CFLAGS-.oS += -fcf-protection
+
+# Compile assembly codes with <cet.h> when CET is enabled.
+asm-CPPFLAGS += -fcf-protection -include cet.h
+
 ifeq ($(subdir),elf)
 sysdep-dl-routines += dl-cet
 
@@ -461,18 +467,7 @@ $(objpfx)tst-shstk-legacy-1g.out: \
   $(..)/sysdeps/x86_64/tst-shstk-legacy-1g.sh $(objpfx)tst-shstk-legacy-1g
 	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)' 2> $@; \
 	$(evaluate-test)
-endif
 
-# Add -fcf-protection to CFLAGS when CET is enabled.
-CFLAGS-.o += -fcf-protection
-CFLAGS-.os += -fcf-protection
-CFLAGS-.op += -fcf-protection
-CFLAGS-.oS += -fcf-protection
-
-# Compile assembly codes with <cet.h> when CET is enabled.
-asm-CPPFLAGS += -fcf-protection -include cet.h
-
-ifeq ($(subdir),elf)
 ifeq (yes,$(build-shared))
 tests-special += $(objpfx)check-cet.out
 endif
