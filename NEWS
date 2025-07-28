@@ -5,6 +5,12 @@ See the end for copying conditions.
 Please send GNU C library bug reports via <https://sourceware.org/bugzilla/>
 using `glibc' in the "product" field.
 
+Version 2.42.1
+
+The following bugs were resolved with this release:
+
+  [insert bugs here]
+
 Version 2.42
 
 Major new features:
