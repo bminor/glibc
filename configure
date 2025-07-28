@@ -9439,7 +9439,7 @@ if test $ac_verc_fail = yes; then
   libc_cv_sframe_readelf_version=no
 fi
 
-  if test $libc_cv_sframe_readelf_version == no; then
+  if test $libc_cv_sframe_readelf_version = no; then
     { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in '$ac_pwd':" >&5
 printf "%s\n" "$as_me: error: in '$ac_pwd':" >&2;}
 as_fn_error $? "binutils too old to enable SFrame
@@ -9472,7 +9472,7 @@ fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_default_sframe" >&5
 printf "%s\n" "$libc_cv_default_sframe" >&6; }
 
-  if test $libc_cv_default_sframe == no; then
+  if test $libc_cv_default_sframe = no; then
     { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in '$ac_pwd':" >&5
 printf "%s\n" "$as_me: error: in '$ac_pwd':" >&2;}
 as_fn_error $? "toolchain doesn't support SFrame v2 or higher

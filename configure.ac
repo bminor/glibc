@@ -2134,7 +2134,7 @@ if test $use_sframe = yes; then
     [GNU readelf.* \([0-9][0-9]*\.[0-9.]*\)],
     [2.4[5-9]*|2.[5-9][0-9]*|2.[1-9][0-9][0-9]*|[3-9]*|[1-9][0-9]*],
     libc_cv_sframe_readelf_version=no)
-  if test $libc_cv_sframe_readelf_version == no; then
+  if test $libc_cv_sframe_readelf_version = no; then
     AC_MSG_FAILURE([binutils too old to enable SFrame])
   fi
 
@@ -2156,7 +2156,7 @@ EOF
     rm -f conftest.c conftest.o
   ])
 
-  if test $libc_cv_default_sframe == no; then
+  if test $libc_cv_default_sframe = no; then
     AC_MSG_FAILURE([toolchain doesn't support SFrame v2 or higher])
   fi
 
