@@ -797,3 +797,12 @@ _S(ED, N_("?"))
 #ifdef EPROGUNAVAIL
 _S(EPROGUNAVAIL, N_("RPC program not available"))
 #endif
+#ifdef EINIT
+_S(EINIT, N_("Initialization error"))
+#endif
+#ifdef EREMDEV
+_S(EREMDEV, N_("Device is remote"))
+#endif
+#ifdef ERREMOTE
+_S(ERREMOTE, N_("Too many levels of remote in path"))
+#endif
