@@ -230,6 +230,9 @@
 /* For uintptr_t.  */
 #include <stdint.h>
 
+/* For stdc_count_ones.  */
+#include <stdbit.h>
+
 /* For va_arg, va_start, va_end.  */
 #include <stdarg.h>
 
@@ -3152,6 +3155,19 @@ tcache_key_initialize (void)
   if (__getrandom_nocancel_nostatus_direct (&tcache_key, sizeof(tcache_key),
 					    GRND_NONBLOCK)
       != sizeof (tcache_key))
+    tcache_key = 0;
+
+  /* We need tcache_key to be non-zero (otherwise tcache_double_free_verify's
+     clearing of e->key would go unnoticed and it would loop getting called
+     through __libc_free), and we want tcache_key not to be a
+     commonly-occurring value in memory, so ensure a minimum amount of one and
+     zero bits.  */
+  int minimum_bits = __WORDSIZE / 4;
+  int maximum_bits = __WORDSIZE - minimum_bits;
+
+  while (labs (tcache_key) <= 0x1000000
+      || stdc_count_ones (tcache_key) < minimum_bits
+      || stdc_count_ones (tcache_key) > maximum_bits)
     {
       tcache_key = random_bits ();
 #if __WORDSIZE == 64
