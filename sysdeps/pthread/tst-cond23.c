@@ -151,7 +151,7 @@ do_test (void)
 #if !defined _POSIX_CLOCK_SELECTION || _POSIX_CLOCK_SELECTION == -1
 
   puts ("_POSIX_CLOCK_SELECTION not supported, test skipped");
-  return 0;
+  return EXIT_UNSUPPORTED;
 
 #else
 
