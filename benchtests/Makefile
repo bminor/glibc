@@ -123,6 +123,8 @@ bench-math := \
   rintf \
   roundeven \
   roundevenf \
+  rsqrt \
+  rsqrtf \
   sin \
   sincos \
   sincosf \
