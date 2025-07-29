@@ -1871,6 +1871,7 @@ struct malloc_par
   INTERNAL_SIZE_T arena_max;
 
   /* Transparent Large Page support.  */
+  enum malloc_thp_mode_t thp_mode;
   INTERNAL_SIZE_T thp_pagesize;
   /* A value different than 0 means to align mmap allocation to hp_pagesize
      add hp_flags on flags.  */
@@ -1927,7 +1928,8 @@ static struct malloc_par mp_ =
   .mmap_threshold = DEFAULT_MMAP_THRESHOLD,
   .trim_threshold = DEFAULT_TRIM_THRESHOLD,
 #define NARENAS_FROM_NCORES(n) ((n) * (sizeof (long) == 4 ? 2 : 8))
-  .arena_test = NARENAS_FROM_NCORES (1)
+  .arena_test = NARENAS_FROM_NCORES (1),
+  .thp_mode = malloc_thp_mode_not_supported
 #if USE_TCACHE
   ,
   .tcache_count = TCACHE_FILL_COUNT,
@@ -2011,6 +2013,11 @@ static inline void
 madvise_thp (void *p, INTERNAL_SIZE_T size)
 {
 #ifdef MADV_HUGEPAGE
+  /* Only use __madvise if the system is using 'madvise' mode.
+     Otherwise the call is wasteful. */
+  if (mp_.thp_mode != malloc_thp_mode_madvise)
+    return;
+
   /* Do not consider areas smaller than a huge page or if the tunable is
      not active.  */
   if (mp_.thp_pagesize == 0 || size < mp_.thp_pagesize)
@@ -5648,12 +5655,9 @@ do_set_hugetlb (size_t value)
 {
   if (value == 1)
     {
-      enum malloc_thp_mode_t thp_mode = __malloc_thp_mode ();
-      /*
-	 Only enable THP madvise usage if system does support it and
-	 has 'madvise' mode.  Otherwise the madvise() call is wasteful.
-       */
-      if (thp_mode == malloc_thp_mode_madvise)
+      mp_.thp_mode = __malloc_thp_mode ();
+      if (mp_.thp_mode == malloc_thp_mode_madvise
+          || mp_.thp_mode == malloc_thp_mode_always)
 	mp_.thp_pagesize = __malloc_default_thp_pagesize ();
     }
   else if (value >= 2)
