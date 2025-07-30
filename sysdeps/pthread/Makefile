@@ -212,6 +212,7 @@ tests += \
   tst-pt-vfork1 \
   tst-pt-vfork2 \
   tst-pthread-exit-signal \
+  tst-pthread-exited \
   tst-pthread-mutexattr \
   tst-pthread-mutexattr-2 \
   tst-pthread-raise-blocked-self \

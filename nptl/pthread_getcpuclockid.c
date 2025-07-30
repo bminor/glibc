@@ -29,7 +29,7 @@ __pthread_getcpuclockid (pthread_t threadid, clockid_t *clockid)
   struct pthread *pd = (struct pthread *) threadid;
 
   /* Make sure the descriptor is valid.  */
-  if (INVALID_TD_P (pd))
+  if (!__pthread_descriptor_valid (pd))
     /* Not a valid thread handle.  */
     return ESRCH;
 
