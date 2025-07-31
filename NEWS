@@ -9,7 +9,7 @@ Version 2.42.1
 
 The following bugs were resolved with this release:
 
-  [insert bugs here]
+  [32994] stdlib: resolve a double lock init issue after fork
 
 Version 2.42
 
