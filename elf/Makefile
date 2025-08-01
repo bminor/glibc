@@ -504,6 +504,8 @@ tests-internal += \
   tst-dl_find_object \
   tst-dl_find_object-threads \
   tst-dlmopen2 \
+  tst-link-map-contiguous-ldso \
+  tst-link-map-contiguous-libc \
   tst-ptrguard1 \
   tst-stackguard1 \
   tst-tls-surplus \
@@ -514,6 +516,10 @@ tests-internal += \
   unload \
   unload2 \
   # tests-internal
+
+ifeq ($(build-hardcoded-path-in-tests),yes)
+tests-internal += tst-link-map-contiguous-main
+endif
 
 tests-container += \
   tst-dlopen-self-container \

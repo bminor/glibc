@@ -1297,7 +1297,7 @@ rtld_setup_main_map (struct link_map *main_map)
 
 /* Set up the program header information for the dynamic linker
    itself.  It can be accessed via _r_debug and dl_iterate_phdr
-   callbacks.  */
+   callbacks, and it is used by _dl_find_object.  */
 static void
 rtld_setup_phdr (void)
 {
@@ -1314,6 +1314,29 @@ rtld_setup_phdr (void)
   GL(dl_rtld_map).l_phdr = rtld_phdr;
   GL(dl_rtld_map).l_phnum = rtld_ehdr->e_phnum;
 
+
+  GL(dl_rtld_map).l_contiguous = 1;
+  /* The linker may not have produced a contiguous object.  The kernel
+     will load the object with actual gaps (unlike the glibc loader
+     for shared objects, which always produces a contiguous mapping).
+     See similar logic in rtld_setup_main_map above.  */
+  {
+    ElfW(Addr) expected_load_address = 0;
+    for (const ElfW(Phdr) *ph = rtld_phdr; ph < &rtld_phdr[rtld_ehdr->e_phnum];
+	 ++ph)
+      if (ph->p_type == PT_LOAD)
+	{
+	  ElfW(Addr) mapstart = ph->p_vaddr & ~(GLRO(dl_pagesize) - 1);
+	  if (GL(dl_rtld_map).l_contiguous && expected_load_address != 0
+	      && expected_load_address != mapstart)
+	    GL(dl_rtld_map).l_contiguous = 0;
+	  ElfW(Addr) allocend = ph->p_vaddr + ph->p_memsz;
+	  /* The next expected address is the page following this load
+	     segment.  */
+	  expected_load_address = ((allocend + GLRO(dl_pagesize) - 1)
+				   & ~(GLRO(dl_pagesize) - 1));
+	}
+  }
 
   /* PT_GNU_RELRO is usually the last phdr.  */
   size_t cnt = rtld_ehdr->e_phnum;
