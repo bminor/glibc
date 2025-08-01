@@ -100,6 +100,7 @@ The following bugs are resolved with this release:
   [31184] FAIL: elf/tst-tlsgap
   [31185] Incorrect thread point access in _dl_tlsdesc_undefweak and _dl_tlsdesc_dynamic
   [31890] resolv: Allow short error responses to match any DNS query
+  [31943] _dl_find_object can fail if ld.so contains gaps between load segments
   [31965] rseq extension mechanism does not work as intended
   [31968] mremap implementation in C does not handle arguments correctly
   [32052] Name space violation in fortify wrappers
