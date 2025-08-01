@@ -15,6 +15,7 @@ Deprecated and removed features, and other changes affecting compatibility:
 
 The following bugs were resolved with this release:
 
+  [31943] _dl_find_object can fail if ld.so contains gaps between load segments
   [32269] RISC-V IFUNC resolver cannot access gp pointer
   [32626] math: math: log10p1f is not correctly rounded
   [32627] math: math: sinhf is not correctly rounded
