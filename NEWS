@@ -91,6 +91,7 @@ The following bugs are resolved with this release:
   [31883] build: ISA level support configure check relies on bashism /
     is otherwise broken for arithmetic
   [31890] resolv: Allow short error responses to match any DNS query
+  [31943] _dl_find_object can fail if ld.so contains gaps between load segments
   [31965] rseq extension mechanism does not work as intended
   [31968] mremap implementation in C does not handle arguments correctly
   [32026] strerror/strsignal TLS not handled correctly for secondary namespaces
