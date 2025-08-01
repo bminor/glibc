@@ -9,6 +9,7 @@ Version 2.42.1
 
 The following bugs were resolved with this release:
 
+  [31943] _dl_find_object can fail if ld.so contains gaps between load segments
   [32994] stdlib: resolve a double lock init issue after fork
 
 Version 2.42
