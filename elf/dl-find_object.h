@@ -87,7 +87,7 @@ _dl_find_object_to_external (struct dl_find_object_internal *internal,
 }
 
 /* Extract the object location data from a link map and writes it to
-   *RESULT using relaxed MO stores.  */
+   *RESULT using relaxed MO stores.  Set L->l_find_object_processed.  */
 static void __attribute__ ((unused))
 _dl_find_object_from_map (struct link_map *l,
                           struct dl_find_object_internal *result)
@@ -99,6 +99,8 @@ _dl_find_object_from_map (struct link_map *l,
 #if DLFO_STRUCT_HAS_EH_DBASE
   atomic_store_relaxed (&result->eh_dbase, (void *) l->l_info[DT_PLTGOT]);
 #endif
+
+  l->l_find_object_processed = 1;
 
   for (const ElfW(Phdr) *ph = l->l_phdr, *ph_end = l->l_phdr + l->l_phnum;
        ph < ph_end; ++ph)
