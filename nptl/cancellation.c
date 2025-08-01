@@ -72,8 +72,8 @@ __syscall_cancel (__syscall_arg_t a1, __syscall_arg_t a2,
 		  __syscall_arg_t a5, __syscall_arg_t a6,
 		  __SYSCALL_CANCEL7_ARG_DEF __syscall_arg_t nr)
 {
-  int r = __internal_syscall_cancel (a1, a2, a3, a4, a5, a6,
-				     __SYSCALL_CANCEL7_ARG nr);
+  long int r = __internal_syscall_cancel (a1, a2, a3, a4, a5, a6,
+					  __SYSCALL_CANCEL7_ARG nr);
   return __glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (r))
 	 ? SYSCALL_ERROR_LABEL (INTERNAL_SYSCALL_ERRNO (r))
 	 : r;
