@@ -1182,7 +1182,7 @@ endif
 
 # The assembler can generate debug information too.
 ifndef ASFLAGS
-ASFLAGS := $(filter -g% -fdebug-prefix-map=%,$(CFLAGS))
+ASFLAGS := $(filter -g% -fdebug-prefix-map=% -m%,$(CFLAGS))
 endif
 override ASFLAGS += -Werror=undef $(ASFLAGS-config) $(asflags-cpu) $(as-sframe)
 
