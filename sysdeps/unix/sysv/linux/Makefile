@@ -192,6 +192,7 @@ tests += \
   tst-clone \
   tst-clone2 \
   tst-clone3 \
+  tst-copy_file_range-large \
   tst-epoll \
   tst-epoll-ioctls \
   tst-fanotify \
