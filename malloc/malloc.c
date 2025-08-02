@@ -2075,12 +2075,13 @@ static void
 do_check_chunk (mstate av, mchunkptr p)
 {
   unsigned long sz = chunksize (p);
-  /* min and max possible addresses assuming contiguous allocation */
-  char *max_address = (char *) (av->top) + chunksize (av->top);
-  char *min_address = max_address - av->system_mem;
 
   if (!chunk_is_mmapped (p))
     {
+      /* min and max possible addresses assuming contiguous allocation */
+      char *max_address = (char *) (av->top) + chunksize (av->top);
+      char *min_address = max_address - av->system_mem;
+
       /* Has legal address ... */
       if (p != av->top)
         {
@@ -2100,11 +2101,6 @@ do_check_chunk (mstate av, mchunkptr p)
     }
   else
     {
-      /* address is outside main heap  */
-      if (contiguous (av) && av->top != initial_top (av))
-        {
-          assert (((char *) p) < min_address || ((char *) p) >= max_address);
-        }
       /* chunk is page-aligned */
       assert (((prev_size (p) + sz) & (GLRO (dl_pagesize) - 1)) == 0);
       /* mem is aligned */
@@ -2404,34 +2400,16 @@ do_check_malloc_state (mstate av)
 
 /* ----------- Routines dealing with system allocation -------------- */
 
-/*
-   sysmalloc handles malloc cases requiring more memory from the system.
-   On entry, it is assumed that av->top does not have enough
-   space to service request for nb bytes, thus requiring that av->top
-   be extended or replaced.
- */
+/* Allocate a mmap chunk - used for large block sizes or as a fallback.
+   Round up size to nearest page.  Add padding if MALLOC_ALIGNMENT is
+   larger than CHUNK_HDR_SZ.  Add SIZE_SZ at the end since there is no
+   following chunk whose prev_size field could be used.  */
 
 static void *
-sysmalloc_mmap (INTERNAL_SIZE_T nb, size_t pagesize, int extra_flags, mstate av)
+sysmalloc_mmap (INTERNAL_SIZE_T nb, size_t pagesize, int extra_flags)
 {
-  long int size;
-
-  /*
-    Round up size to nearest page.  For mmapped chunks, the overhead is one
-    SIZE_SZ unit larger than for normal chunks, because there is no
-    following chunk whose prev_size field could be used.
-
-    See the front_misalign handling below, for glibc there is no need for
-    further alignments unless we have have high alignment.
-   */
-  if (MALLOC_ALIGNMENT == CHUNK_HDR_SZ)
-    size = ALIGN_UP (nb + SIZE_SZ, pagesize);
-  else
-    size = ALIGN_UP (nb + SIZE_SZ + MALLOC_ALIGN_MASK, pagesize);
-
-  /* Don't try if size wraps around 0.  */
-  if ((unsigned long) (size) <= (unsigned long) (nb))
-    return MAP_FAILED;
+  size_t padding = MALLOC_ALIGNMENT - CHUNK_HDR_SZ;
+  size_t size = ALIGN_UP (nb + padding + SIZE_SZ, pagesize);
 
   char *mm = (char *) MMAP (NULL, size,
 			    mtag_mmap_flags | PROT_READ | PROT_WRITE,
@@ -2443,41 +2421,10 @@ sysmalloc_mmap (INTERNAL_SIZE_T nb, size_t pagesize, int extra_flags, mstate av)
 
   __set_vma_name (mm, size, " glibc: malloc");
 
-  /*
-    The offset to the start of the mmapped region is stored in the prev_size
-    field of the chunk.  This allows us to adjust returned start address to
-    meet alignment requirements here and in memalign(), and still be able to
-    compute proper address argument for later munmap in free() and realloc().
-   */
-
-  INTERNAL_SIZE_T front_misalign; /* unusable bytes at front of new space */
-
-  if (MALLOC_ALIGNMENT == CHUNK_HDR_SZ)
-    {
-      /* For glibc, chunk2mem increases the address by CHUNK_HDR_SZ and
-	 MALLOC_ALIGN_MASK is CHUNK_HDR_SZ-1.  Each mmap'ed area is page
-	 aligned and therefore definitely MALLOC_ALIGN_MASK-aligned.  */
-      assert (((INTERNAL_SIZE_T) chunk2mem (mm) & MALLOC_ALIGN_MASK) == 0);
-      front_misalign = 0;
-    }
-  else
-    front_misalign = (INTERNAL_SIZE_T) chunk2mem (mm) & MALLOC_ALIGN_MASK;
-
-  mchunkptr p;                    /* the allocated/returned chunk */
-
-  if (front_misalign > 0)
-    {
-      ptrdiff_t correction = MALLOC_ALIGNMENT - front_misalign;
-      p = (mchunkptr) (mm + correction);
-      set_prev_size (p, correction);
-      set_head (p, (size - correction) | IS_MMAPPED);
-    }
-  else
-    {
-      p = (mchunkptr) mm;
-      set_prev_size (p, 0);
-      set_head (p, size | IS_MMAPPED);
-    }
+  /* Store offset to start of mmap in prev_size.  */
+  mchunkptr p = (mchunkptr) (mm + padding);
+  set_prev_size (p, padding);
+  set_head (p, (size - padding) | IS_MMAPPED);
 
   /* update statistics */
   int new = atomic_fetch_add_relaxed (&mp_.n_mmaps, 1) + 1;
@@ -2487,7 +2434,7 @@ sysmalloc_mmap (INTERNAL_SIZE_T nb, size_t pagesize, int extra_flags, mstate av)
   sum = atomic_fetch_add_relaxed (&mp_.mmapped_mem, size) + size;
   atomic_max (&mp_.max_mmapped_mem, sum);
 
-  check_chunk (av, p);
+  check_chunk (NULL, p);
 
   return chunk2mem (p);
 }
@@ -2579,11 +2526,11 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
 	{
 	  /* There is no need to issue the THP madvise call if Huge Pages are
 	     used directly.  */
-	  mm = sysmalloc_mmap (nb, mp_.hp_pagesize, mp_.hp_flags, av);
+	  mm = sysmalloc_mmap (nb, mp_.hp_pagesize, mp_.hp_flags);
 	  if (mm != MAP_FAILED)
 	    return mm;
 	}
-      mm = sysmalloc_mmap (nb, pagesize, 0, av);
+      mm = sysmalloc_mmap (nb, pagesize, 0);
       if (mm != MAP_FAILED)
 	return mm;
       tried_mmap = true;
@@ -2667,7 +2614,7 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
 	  /* We can at least try to use to mmap memory.  If new_heap fails
 	     it is unlikely that trying to allocate huge pages will
 	     succeed.  */
-	  char *mm = sysmalloc_mmap (nb, pagesize, 0, av);
+	  char *mm = sysmalloc_mmap (nb, pagesize, 0);
 	  if (mm != MAP_FAILED)
 	    return mm;
 	}
