@@ -96,6 +96,7 @@ void *support_fuse_cast_name_internal (struct fuse_in_header *, uint32_t,
 #define support_fuse_payload_type_READ struct fuse_read_in
 #define support_fuse_payload_type_SETATTR struct fuse_setattr_in
 #define support_fuse_payload_type_WRITE struct fuse_write_in
+#define support_fuse_payload_type_COPY_FILE_RANGE struct fuse_copy_file_range_in
 #define support_fuse_cast(typ, inh)                     \
   ((support_fuse_payload_type_##typ *)                  \
    support_fuse_cast_internal ((inh), FUSE_##typ))
