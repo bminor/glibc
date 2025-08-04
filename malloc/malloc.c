@@ -1412,10 +1412,6 @@ checked_request2size (size_t req) __nonnull (1)
 /* Ptr to previous physical malloc_chunk.  Only valid if !prev_inuse (P).  */
 #define prev_chunk(p) ((mchunkptr) (((char *) (p)) - prev_size (p)))
 
-/* Return mmap base pointer/size of a chunk with IS_MMAPPED set.  */
-#define mmap_base(p) ((void*)(((char *) (p)) - prev_size (p)))
-#define mmap_size(p) (prev_size (p) + chunksize (p) + CHUNK_HDR_SZ)
-
 /* Treat space at ptr + offset as a chunk */
 #define chunk_at_offset(p, s)  ((mchunkptr) (((char *) (p)) + (s)))
 
@@ -1459,7 +1455,7 @@ checked_request2size (size_t req) __nonnull (1)
 #define memsize(p)                                                    \
   (__MTAG_GRANULE_SIZE > SIZE_SZ && __glibc_unlikely (mtag_enabled) ? \
     chunksize (p) - CHUNK_HDR_SZ :                                    \
-    chunksize (p) - CHUNK_HDR_SZ + SIZE_SZ)
+    chunksize (p) - CHUNK_HDR_SZ + (chunk_is_mmapped (p) ? 0 : SIZE_SZ))
 
 /* If memory tagging is enabled the layout changes to accommodate the granule
    size, this is wasteful for small allocations so not done by default.
@@ -2106,7 +2102,7 @@ do_check_chunk (mstate av, mchunkptr p)
   else
     {
       /* chunk is page-aligned */
-      assert ((mmap_size (p) & (GLRO (dl_pagesize) - 1)) == 0);
+      assert (((prev_size (p) + sz) & (GLRO (dl_pagesize) - 1)) == 0);
       /* mem is aligned */
       assert (!misaligned_chunk (p));
     }
@@ -2406,14 +2402,14 @@ do_check_malloc_state (mstate av)
 
 /* Allocate a mmap chunk - used for large block sizes or as a fallback.
    Round up size to nearest page.  Add padding if MALLOC_ALIGNMENT is
-   larger than CHUNK_HDR_SZ.  Add CHUNK_HDR_SZ at the end so that mmap
-   chunks have the same layout as regular chunks.  */
+   larger than CHUNK_HDR_SZ.  Add SIZE_SZ at the end since there is no
+   following chunk whose prev_size field could be used.  */
 
 static void *
 sysmalloc_mmap (INTERNAL_SIZE_T nb, size_t pagesize, int extra_flags)
 {
   size_t padding = MALLOC_ALIGNMENT - CHUNK_HDR_SZ;
-  size_t size = ALIGN_UP (nb + padding + CHUNK_HDR_SZ, pagesize);
+  size_t size = ALIGN_UP (nb + padding + SIZE_SZ, pagesize);
 
   char *mm = (char *) MMAP (NULL, size,
 			    mtag_mmap_flags | PROT_READ | PROT_WRITE,
@@ -2428,7 +2424,7 @@ sysmalloc_mmap (INTERNAL_SIZE_T nb, size_t pagesize, int extra_flags)
   /* Store offset to start of mmap in prev_size.  */
   mchunkptr p = (mchunkptr) (mm + padding);
   set_prev_size (p, padding);
-  set_head (p, (size - padding - CHUNK_HDR_SZ) | IS_MMAPPED);
+  set_head (p, (size - padding) | IS_MMAPPED);
 
   /* update statistics */
   int new = atomic_fetch_add_relaxed (&mp_.n_mmaps, 1) + 1;
@@ -2978,12 +2974,13 @@ static void
 munmap_chunk (mchunkptr p)
 {
   size_t pagesize = GLRO (dl_pagesize);
+  INTERNAL_SIZE_T size = chunksize (p);
 
   assert (chunk_is_mmapped (p));
 
   uintptr_t mem = (uintptr_t) chunk2mem (p);
-  uintptr_t block = (uintptr_t) mmap_base (p);
-  size_t total_size = mmap_size (p);
+  uintptr_t block = (uintptr_t) p - prev_size (p);
+  size_t total_size = prev_size (p) + size;
   /* Unfortunately we have to do the compilers job by hand here.  Normally
      we would test BLOCK and TOTAL-SIZE separately for compliance with the
      page size.  But gcc does not recognize the optimization possibility
@@ -3014,15 +3011,15 @@ mremap_chunk (mchunkptr p, size_t new_size)
 
   assert (chunk_is_mmapped (p));
 
-  uintptr_t block = (uintptr_t) mmap_base (p);
+  uintptr_t block = (uintptr_t) p - offset;
   uintptr_t mem = (uintptr_t) chunk2mem(p);
-  size_t total_size = mmap_size (p);
+  size_t total_size = offset + size;
   if (__glibc_unlikely ((block | total_size) & (pagesize - 1)) != 0
       || __glibc_unlikely (!powerof2 (mem & (pagesize - 1))))
     malloc_printerr("mremap_chunk(): invalid pointer");
 
-  /* Note the extra CHUNK_HDR_SZ overhead as in mmap_chunk(). */
-  new_size = ALIGN_UP (new_size + offset + CHUNK_HDR_SZ, pagesize);
+  /* Note the extra SIZE_SZ overhead as in mmap_chunk(). */
+  new_size = ALIGN_UP (new_size + offset + SIZE_SZ, pagesize);
 
   /* No need to remap if the number of pages does not change.  */
   if (total_size == new_size)
@@ -3041,7 +3038,7 @@ mremap_chunk (mchunkptr p, size_t new_size)
   assert (!misaligned_chunk (p));
 
   assert (prev_size (p) == offset);
-  set_head (p, (new_size - offset - CHUNK_HDR_SZ) | IS_MMAPPED);
+  set_head (p, (new_size - offset) | IS_MMAPPED);
 
   INTERNAL_SIZE_T new;
   new = atomic_fetch_add_relaxed (&mp_.mmapped_mem, new_size - size - offset)
@@ -3331,6 +3328,11 @@ tcache_init (void)
   if (tcache_shutting_down)
     return;
 
+  /* Check minimum mmap chunk is larger than max tcache size.  This means
+     mmap chunks with their different layout are never added to tcache.  */
+  if (MAX_TCACHE_SMALL_SIZE >= GLRO (dl_pagesize) / 2)
+    malloc_printerr ("max tcache size too large");
+
   size_t bytes = sizeof (tcache_perthread_struct);
   tcache = (tcache_perthread_struct *) __libc_malloc2 (bytes);
 
@@ -3478,6 +3480,7 @@ __libc_free (void *mem)
 	{
 	  tc_idx = large_csize2tidx (size);
 	  if (size >= MINSIZE
+	      && !chunk_is_mmapped (p)
               && __glibc_likely (tcache->num_slots[tc_idx] != 0))
 	    return tcache_put_large (p, tc_idx);
 	}
@@ -5260,7 +5263,7 @@ musable (void *mem)
   mchunkptr p = mem2chunk (mem);
 
   if (chunk_is_mmapped (p))
-    return memsize (p);
+    return chunksize (p) - CHUNK_HDR_SZ;
   else if (inuse (p))
     return memsize (p);
 
