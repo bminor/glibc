@@ -444,13 +444,10 @@ alloc_new_heap  (size_t size, size_t top_pad, size_t pagesize,
 static heap_info *
 new_heap (size_t size, size_t top_pad)
 {
-  bool use_hugepage = mp_.hp_pagesize != 0;
-  size_t pagesize = use_hugepage ? mp_.hp_pagesize : mp_.thp_pagesize;
-
-  if (pagesize != 0 && pagesize <= heap_max_size ())
+  if (mp_.hp_pagesize != 0 && mp_.hp_pagesize <= heap_max_size ())
     {
-      heap_info *h = alloc_new_heap (size, top_pad, pagesize,
-				     use_hugepage ? mp_.hp_flags : 0);
+      heap_info *h = alloc_new_heap (size, top_pad, mp_.hp_pagesize,
+				     mp_.hp_flags);
       if (h != NULL)
 	return h;
     }
@@ -481,8 +478,6 @@ grow_heap (heap_info *h, long diff)
 
       h->mprotect_size = new_size;
     }
-
-  madvise_thp (h, new_size);
 
   h->size = new_size;
   LIBC_PROBE (memory_heap_more, 2, h, h->size);
