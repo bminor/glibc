@@ -3504,16 +3504,16 @@ __libc_realloc (void *oldmem, size_t bytes)
 
   void *newp;             /* chunk to return */
 
-  /* realloc of null is supposed to be same as malloc */
-  if (oldmem == NULL)
-    return __libc_malloc (bytes);
-
 #if REALLOC_ZERO_BYTES_FREES
-  if (bytes == 0)
+  if (bytes == 0 && oldmem != NULL)
     {
       __libc_free (oldmem); return NULL;
     }
 #endif
+
+  /* realloc of null is supposed to be same as malloc */
+  if (oldmem == NULL)
+    return __libc_malloc (bytes);
 
   /* Perform a quick check to ensure that the pointer's tag matches the
      memory's tag.  */
@@ -3532,12 +3532,18 @@ __libc_realloc (void *oldmem, size_t bytes)
   if (bytes <= usable)
     {
       size_t difference = usable - bytes;
-      if ((unsigned long) difference < 2 * sizeof (INTERNAL_SIZE_T))
+      if ((unsigned long) difference < 2 * sizeof (INTERNAL_SIZE_T)
+	  || (chunk_is_mmapped (oldp) && difference <= GLRO (dl_pagesize)))
 	return oldmem;
     }
 
   /* its size */
   const INTERNAL_SIZE_T oldsize = chunksize (oldp);
+
+  if (chunk_is_mmapped (oldp))
+    ar_ptr = NULL;
+  else
+    ar_ptr = arena_for_chunk (oldp);
 
   /* Little security check which won't hurt performance: the allocator
      never wraps around at the end of the address space.  Therefore
@@ -3571,9 +3577,9 @@ __libc_realloc (void *oldmem, size_t bytes)
 	  return tag_new_usable (newmem);
 	}
 #endif
-      /* Return if shrinking and mremap was unsuccessful.  */
-      if (bytes <= usable)
-	return oldmem;
+      /* Note the extra SIZE_SZ overhead. */
+      if (oldsize - SIZE_SZ >= nb)
+        return oldmem;                         /* do nothing */
 
       /* Must alloc, copy, free. */
       newmem = __libc_malloc (bytes);
@@ -3584,8 +3590,6 @@ __libc_realloc (void *oldmem, size_t bytes)
       munmap_chunk (oldp);
       return newmem;
     }
-
-  ar_ptr = arena_for_chunk (oldp);
 
   if (SINGLE_THREAD_P)
     {
