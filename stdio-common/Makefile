@@ -759,6 +759,30 @@ CFLAGS-tst-scanf-binary-gnu89.c += -std=gnu89 -DOBJPFX=\"$(objpfx)\"
 
 CPPFLAGS += $(libio-mtsafe)
 
+make-tst-freopen4-out = \
+  $(run-program-prefix-before-env) \
+  $(run-program-env) \
+  MALLOC_TRACE=$(@:.out=.mtrace) \
+  LD_PRELOAD=$(common-objpfx)malloc/libc_malloc_debug.so \
+  $(run-program-prefix-after-env) $<
+
+freopen4-temp-dir-before = warning: could not remove temporary file:
+freopen4-temp-dir-after = : No such file or directory
+
+$(objpfx)tst-freopen4.out: $(objpfx)tst-freopen4
+	$(make-tst-freopen4-out) > $@ && \
+	  grep "$(freopen4-temp-dir-before)" $@ \
+	  | sed -e "s/$(freopen4-temp-dir-before)//; s/$(freopen4-temp-dir-after)//" \
+	  | xargs rm -rf; \
+	$(evaluate-test)
+
+$(objpfx)tst-freopen64-4.out: $(objpfx)tst-freopen64-4
+	$(make-tst-freopen4-out) > $@ && \
+	  grep "$(freopen4-temp-dir-before)" $@ \
+	  | sed -e "s/$(freopen4-temp-dir-before)//; s/$(freopen4-temp-dir-after)//" \
+	  | xargs rm -rf; \
+	$(evaluate-test)
+
 $(objpfx)tst-setvbuf1.out: /dev/null $(objpfx)tst-setvbuf1
 	$(test-program-cmd) > $@ 2>&1; \
 	$(evaluate-test)
