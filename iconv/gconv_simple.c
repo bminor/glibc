@@ -90,7 +90,7 @@ internal_ucs4_loop (struct __gconv_step *step,
   for (cnt = 0; cnt < n_convert; ++cnt, inptr += 4, outptr += 4)
     {
       uint32_t val = get32 (inptr);
-      put32 (outptr, __builtin_bswap32 (val));
+      put32 (outptr, bswap_32 (val));
     }
 
   *inptrp = inptr;
@@ -196,7 +196,7 @@ ucs4_internal_loop (struct __gconv_step *step,
     {
       uint32_t inval = get32 (inptr);
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-      inval = __builtin_bswap32 (inval);
+      inval = bswap_32 (inval);
 #endif
 
       if (__glibc_unlikely (inval > 0x7fffffff))
@@ -337,7 +337,7 @@ internal_ucs4le_loop (struct __gconv_step *step,
   for (cnt = 0; cnt < n_convert; ++cnt, inptr += 4, outptr += 4)
     {
       uint32_t val = get32 (inptr);
-      put32 (outptr, __builtin_bswap32 (val));
+      put32 (outptr, bswap_32 (val));
     }
 
   *inptrp = inptr;
@@ -442,7 +442,7 @@ ucs4le_internal_loop (struct __gconv_step *step,
     {
       uint32_t inval = get32 (inptr);
 #if __BYTE_ORDER == __BIG_ENDIAN
-      inval = __builtin_bswap32 (inval);
+      inval = bswap_32 (inval);
 #endif
 
       if (__glibc_unlikely (inval > 0x7fffffff))
