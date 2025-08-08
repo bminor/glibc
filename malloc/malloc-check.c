@@ -151,8 +151,8 @@ mem2chunk_check (void *mem, unsigned char **magic_p)
            offset != 0x200 && offset != 0x400 && offset != 0x800 && offset != 0x1000 &&
            offset < 0x2000) ||
           !chunk_is_mmapped (p) || prev_inuse (p) ||
-          ((((unsigned long) p - prev_size (p)) & page_mask) != 0) ||
-          ((prev_size (p) + sz) & page_mask) != 0)
+          ((((uintptr_t) mmap_base (p)) & page_mask) != 0) ||
+          (mmap_size (p) & page_mask) != 0)
         return NULL;
 
       for (sz = CHUNK_HDR_SZ + memsize (p) - 1;
@@ -273,7 +273,6 @@ realloc_check (void *oldmem, size_t bytes)
   __libc_lock_unlock (main_arena.mutex);
   if (!oldp)
     malloc_printerr ("realloc(): invalid pointer");
-  const INTERNAL_SIZE_T oldsize = chunksize (oldp);
 
   if (rb > PTRDIFF_MAX)
     {
@@ -293,8 +292,8 @@ realloc_check (void *oldmem, size_t bytes)
       else
 #endif
       {
-	/* Note the extra SIZE_SZ overhead. */
-        if (oldsize - SIZE_SZ >= chnb)
+	size_t oldsize = memsize (oldp);
+        if (oldsize >= rb)
           newmem = oldmem; /* do nothing */
         else
           {
@@ -303,7 +302,7 @@ realloc_check (void *oldmem, size_t bytes)
 	    newmem = _int_malloc (&main_arena, rb);
             if (newmem)
               {
-                memcpy (newmem, oldmem, oldsize - CHUNK_HDR_SZ);
+                memcpy (newmem, oldmem, oldsize);
                 munmap_chunk (oldp);
               }
           }
@@ -312,7 +311,7 @@ realloc_check (void *oldmem, size_t bytes)
   else
     {
       top_check ();
-      newmem = _int_realloc (&main_arena, oldp, oldsize, chnb);
+      newmem = _int_realloc (&main_arena, oldp, chunksize (oldp), chnb);
     }
 
   DIAG_PUSH_NEEDS_COMMENT;
