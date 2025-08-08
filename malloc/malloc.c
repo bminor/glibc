@@ -3456,8 +3456,6 @@ __libc_free (void *mem)
   if (__glibc_unlikely (misaligned_chunk (p)))
     return malloc_printerr_tail ("free(): invalid pointer");
 
-  check_inuse_chunk (arena_for_chunk (p), p);
-
 #if USE_TCACHE
   if (__glibc_likely (size < mp_.tcache_max_bytes && tcache != NULL))
     {
@@ -4679,6 +4677,8 @@ static void
 _int_free_merge_chunk (mstate av, mchunkptr p, INTERNAL_SIZE_T size)
 {
   mchunkptr nextchunk = chunk_at_offset(p, size);
+
+  check_inuse_chunk (av, p);
 
   /* Lightweight tests: check whether the block is already the
      top block.  */
