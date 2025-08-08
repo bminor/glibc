@@ -2642,13 +2642,11 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
          previous calls. Otherwise, we correct to page-align below.
        */
 
-      /* Defined in brk.c.  */
-      extern void *__curbrk;
       if (__glibc_unlikely (mp_.thp_pagesize != 0))
 	{
-	  uintptr_t top = ALIGN_UP ((uintptr_t) __curbrk + size,
-				    mp_.thp_pagesize);
-	  size = top - (uintptr_t) __curbrk;
+	  uintptr_t lastbrk = (uintptr_t) MORECORE (0);
+	  uintptr_t top = ALIGN_UP (lastbrk + size, mp_.thp_pagesize);
+	  size = top - lastbrk;
 	}
       else
 	size = ALIGN_UP (size, GLRO(dl_pagesize));
