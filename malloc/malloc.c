@@ -3165,7 +3165,7 @@ tcache_key_initialize (void)
   int minimum_bits = __WORDSIZE / 4;
   int maximum_bits = __WORDSIZE - minimum_bits;
 
-  while (labs (tcache_key) <= 0x1000000
+  while (labs ((intptr_t) tcache_key) <= 0x1000000
       || stdc_count_ones (tcache_key) < minimum_bits
       || stdc_count_ones (tcache_key) > maximum_bits)
     {
