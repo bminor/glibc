@@ -73,19 +73,19 @@
 ({									\
   __label__ out;							\
   bool match = true;							\
-  int err = 0;								\
+  int errx = 0;								\
   type_t v;								\
 									\
   initialize_value (v);							\
   /* Make sure it's been committed.  */					\
   __asm__ ("" : : : "memory");						\
-  v = read_real (&err);							\
-  if (err < 0)								\
+  v = read_real (&errx);						\
+  if (errx < 0)								\
     goto out;								\
   match = compare_real (val, v);					\
 									\
 out:									\
-  if (err || !match)							\
+  if (errx || !match)							\
     {									\
       union								\
 	{								\
@@ -104,7 +104,7 @@ out:									\
       printf ("'\n");							\
     }									\
 									\
-  *errp = err;								\
+  *errp = errx;								\
   match;								\
 })
 
