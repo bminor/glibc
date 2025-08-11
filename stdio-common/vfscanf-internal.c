@@ -2561,15 +2561,15 @@ digits_extended_fail:
 	      goto errout;
 	    }
 
-	  /* Have we read any character?  If we try to read a number
-	     in hexadecimal notation and we have read only the `0x'
-	     prefix this is an error.  Also it is an error where we
-	     have read no digits after the exponent character.  */
+	  /* Have we read any character?  If we try to read a number in
+	     hexadecimal notation and we have read only the `0x' prefix,
+	     this is an error.  Also it is an error where we have read
+	     no digits (before or after the exponent character).  */
 	  if (__glibc_unlikely (char_buffer_size (&charbuf) == got_sign
 				|| ((flags & HEXA_FLOAT)
 				    && (char_buffer_size (&charbuf)
 					== 2 + got_sign)))
-				|| (got_e && !got_digit))
+				|| !got_digit)
 	    conv_error ();
 
 	scan_float:
