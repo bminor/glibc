@@ -119,6 +119,15 @@
 			    (void) (c != EOF				      \
 				    ? ++read_in				      \
 				    : (size_t) (inchar_errno = errno)), c))
+/* Same as INCHAR, but stop upon field exhaustion according to AVAIL.  */
+# define inchar_in_field(avail)						      \
+({									      \
+  if (avail == 0)							      \
+    c = EOF;								      \
+  else									      \
+    inchar ();								      \
+  c;									      \
+})
 # define ISSPACE(Ch)	  __isspace_l (Ch, loc)
 # define ISDIGIT(Ch)	  __isdigit_l (Ch, loc)
 # define ISXDIGIT(Ch)	  __isxdigit_l (Ch, loc)
@@ -1639,7 +1648,7 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 		      ++wcdigits[n];
 #else
 		      const char *cmpp;
-		      int avail = width > 0 ? width : INT_MAX;
+		      int avail = width >= 0 ? width : INT_MAX;
 
 		      if (__glibc_unlikely (map != NULL))
 			mbdigits[n] = digits_extended[n];
@@ -1657,7 +1666,7 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 			    break;
 			  else
 			    {
-			      if (avail == 0 || inchar () == EOF)
+			      if (inchar_in_field (avail) == EOF)
 				break;
 			      --avail;
 			    }
@@ -1701,7 +1710,7 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 			      ++wcdigits[n];
 #else
 			      const char *cmpp;
-			      int avail = width > 0 ? width : INT_MAX;
+			      int avail = width >= 0 ? width : INT_MAX;
 
 			      cmpp = mbdigits[n];
 			      while ((unsigned char) *cmpp == c && avail >= 0)
@@ -1710,7 +1719,7 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 				    break;
 				  else
 				    {
-				      if (avail == 0 || inchar () == EOF)
+				      if (inchar_in_field (avail) == EOF)
 					break;
 				      --avail;
 				    }
@@ -1757,7 +1766,7 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 			  break;
 #else
 		      const char *cmpp = thousands;
-		      int avail = width > 0 ? width : INT_MAX;
+		      int avail = width >= 0 ? width : INT_MAX;
 
 		      while ((unsigned char) *cmpp == c && avail >= 0)
 			{
@@ -1766,7 +1775,7 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 			    break;
 			  else
 			    {
-			      if (avail == 0 || inchar () == EOF)
+			      if (inchar_in_field (avail) == EOF)
 				break;
 			      --avail;
 			    }
@@ -1837,7 +1846,7 @@ digits_extended_fail:
 			  break;
 #else
 			const char *cmpp = thousands;
-			int avail = width > 0 ? width : INT_MAX;
+			int avail = width >= 0 ? width : INT_MAX;
 
 			while ((unsigned char) *cmpp == c && avail >= 0)
 			  {
@@ -1846,7 +1855,7 @@ digits_extended_fail:
 			      break;
 			    else
 			      {
-				if (avail == 0 || inchar () == EOF)
+				if (inchar_in_field (avail) == EOF)
 				  break;
 				--avail;
 			      }
@@ -2225,7 +2234,7 @@ digits_extended_fail:
 		    }
 #else
 		  const char *cmpp = decimal;
-		  int avail = width > 0 ? width : INT_MAX;
+		  int avail = width >= 0 ? width : INT_MAX;
 
 		  if (! got_dot)
 		    {
@@ -2463,14 +2472,14 @@ digits_extended_fail:
 				}
 #else
 			      const char *cmpp = mbdigits[n];
-			      int avail = width > 0 ? width : INT_MAX;
+			      int avail = width >= 0 ? width : INT_MAX;
 
 			      while ((unsigned char) *cmpp == c && avail >= 0)
 				if (*++cmpp == '\0')
 				  break;
 				else
 				  {
-				    if (avail == 0 || inchar () == EOF)
+				    if (inchar_in_field (avail) == EOF)
 				      break;
 				    --avail;
 				  }

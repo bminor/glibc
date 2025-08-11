@@ -249,6 +249,8 @@ tests = \
   tst-mbswcs4 \
   tst-mbswcs5 \
   tst-mbswcs6 \
+  tst-scanf-width-digit \
+  tst-scanf-width-point \
   tst-setlocale \
   tst-setlocale2 \
   tst-setlocale3 \
