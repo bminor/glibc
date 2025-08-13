@@ -233,13 +233,11 @@ class Context(object):
         self.add_config(arch='i686',
                         os_name='gnu')
         self.add_config(arch='loongarch64',
-                        os_name='linux-gnu',
-                        variant='lp64d',
-                        gcc_cfg=['--with-abi=lp64d','--disable-multilib'])
+                        os_name='linux-gnuf64',
+                        gcc_cfg=['--disable-multilib'])
         self.add_config(arch='loongarch64',
-                        os_name='linux-gnu',
-                        variant='lp64s',
-                        gcc_cfg=['--with-abi=lp64s','--disable-multilib'])
+                        os_name='linux-gnusf',
+                        gcc_cfg=['--disable-multilib'])
         self.add_config(arch='m68k',
                         os_name='linux-gnu',
                         gcc_cfg=['--disable-multilib'])
