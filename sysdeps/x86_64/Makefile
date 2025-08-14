@@ -183,6 +183,15 @@ endif
 
 tests-internal += tst-x86-64-tls-1
 
+tests-special += $(objpfx)check-dt-x86-64-plt.out
+
+$(objpfx)check-dt-x86-64-plt.out: $(common-objpfx)libc.so
+       LC_ALL=C $(READELF) -V -W $< \
+               | sed -ne '/.gnu.version_d/, /.gnu.version_r/ p' \
+               | grep GLIBC_ABI_DT_X86_64_PLT > $@; \
+       $(evaluate-test)
+generated += check-dt-x86-64-plt.out
+
 endif # $(subdir) == elf
 
 ifeq ($(subdir),csu)
