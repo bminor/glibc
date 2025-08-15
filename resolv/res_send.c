@@ -117,6 +117,13 @@
 #define MAXPACKET       65536
 #endif
 
+static inline void tag_socket(int fd) {
+#if defined(SO_NET_PROTOCOL_ID) && defined(PROTOCOL_ID_DNS)
+	int id = PROTOCOL_ID_DNS;
+	setsockopt(fd, SOL_SOCKET, SO_NET_PROTOCOL_ID, &id, sizeof(id));
+#endif
+}
+
 /* From ev_streams.c.  */
 
 static inline void
@@ -743,6 +750,7 @@ send_vc(res_state statp,
 			return (-1);
 		}
 		__set_errno (0);
+		tag_socket(statp->_vcsock);
 		if (connect(statp->_vcsock, nsap,
 			    nsap->sa_family == AF_INET
 			    ? sizeof (struct sockaddr_in)
@@ -945,6 +953,7 @@ reopen (res_state statp, int *terrno, int ns)
 			*terrno = errno;
 			return (-1);
 		}
+		tag_socket(EXT(statp).nssocks[ns]);
 
 		/*
 		 * On a 4.3BSD+ machine (client and server,
