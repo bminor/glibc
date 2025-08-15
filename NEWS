@@ -8326,7 +8326,7 @@ Version 1.06
   `make dvi' will produce a DVI file of the printed manual.
   `make info' will produce Info files that you can read on line using C-h i
   in Emacs or the `info' program.
-  Please send comments on the manual to bug-glibc-manual@gnu.org.
+  Please send comments on the manual to libc-alpha@sourceware.org.
 
 * The library now supports SVR4 on i386s (i386-unknown-sysv4).
 

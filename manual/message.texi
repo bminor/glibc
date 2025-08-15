@@ -1356,7 +1356,7 @@ The following rules are known at this point.  The language with families
 are listed.  But this does not necessarily mean the information can be
 generalized for the whole family (as can be easily seen in the table
 below).@footnote{Additions are welcome.  Send appropriate information to
-@email{bug-glibc-manual@@gnu.org}.}
+@email{libc-alpha@@sourceware.org}.}
 
 @table @asis
 @item Only one form:
