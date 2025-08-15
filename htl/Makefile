@@ -45,7 +45,6 @@ libpthread-routines := \
   pt-spin \
   pt-sigstate-init \
   pt-kill \
-  pt-getcpuclockid \
   pt-yield \
   pt-getname-np \
   pt-setname-np \
@@ -150,6 +149,7 @@ routines := \
   pt-dealloc \
   pt-destroy-specific \
   pt-getconcurrency \
+  pt-getcpuclockid \
   pt-getschedparam \
   pt-getspecific \
   pt-init-specific \
