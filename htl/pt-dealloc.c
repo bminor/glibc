@@ -23,6 +23,7 @@
 #include <pt-internal.h>
 
 #include <atomic.h>
+#include <ldsodefs.h>
 
 /* List of thread structures corresponding to free thread IDs.  */
 extern struct __pthread *__pthread_free_threads;
@@ -55,6 +56,7 @@ __pthread_dealloc (struct __pthread *pthread)
   __pthread_enqueue (&__pthread_free_threads, pthread);
   __pthread_mutex_unlock (&__pthread_free_threads_lock);
 }
+libc_hidden_def (__pthread_dealloc)
 
 /* Confirm deallocation of the thread structure for PTHREAD.  */
 void
@@ -69,3 +71,4 @@ __pthread_dealloc_finish (struct __pthread *pthread)
      which reads this variable.  */
   pthread->terminated = TRUE;
 }
+libc_hidden_def (__pthread_dealloc_finish)

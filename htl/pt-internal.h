@@ -172,6 +172,7 @@ extern int __pthread_concurrency;
 
 /* The size of the thread ID lookup table.  */
 extern int __pthread_max_threads;
+libc_hidden_proto (__pthread_max_threads)
 
 #define __pthread_getid(thread) \
   ({ struct __pthread *__t = NULL;                                           \
@@ -209,6 +210,7 @@ extern int __pthread_create_internal (struct __pthread **__restrict pthread,
 /* Allocate a new thread structure and a pthread thread ID (but not a
    kernel thread or a stack).  THREAD has one reference.  */
 extern int __pthread_alloc (struct __pthread **thread);
+libc_hidden_proto (__pthread_alloc)
 
 /* Deallocate the content of the thread structure.  This is the dual of
    __pthread_alloc (N.B. it does not call __pthread_stack_dealloc nor
@@ -217,11 +219,12 @@ extern int __pthread_alloc (struct __pthread **thread);
    to call __pthread_dealloc_finish when it is really finished with using
    THREAD.  */
 extern void __pthread_dealloc (struct __pthread *thread);
+libc_hidden_proto (__pthread_dealloc)
 
 /* Confirm deallocating the thread structure.  Before calling this
    the structure will not be reused yet.  */
 extern void __pthread_dealloc_finish (struct __pthread *pthread);
-
+libc_hidden_proto (__pthread_dealloc_finish)
 
 /* Allocate a stack of size STACKSIZE.  The stack base shall be
    returned in *STACKADDR.  */

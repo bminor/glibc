@@ -201,9 +201,11 @@ libc {
     __pthread_cleanup_stack;
     __pthread_total;
     ___pthread_self;
+    __pthread_alloc;
     __pthread_block;
     __pthread_block_intr;
     __pthread_init_thread;
+    __pthread_init_static_tls;
     __pthread_default_attr;
     __pthread_attr_init;
     __pthread_attr_getstacksize;
@@ -212,6 +214,8 @@ libc {
     __pthread_attr_setstacksize;
     __pthread_attr_setstackaddr;
     __pthread_attr_setstack;
+    __pthread_dealloc;
+    __pthread_dealloc_finish;
     __pthread_setcancelstate;
     __pthread_cond_broadcast;
     __pthread_cond_destroy;
@@ -225,6 +229,7 @@ libc {
     __pthread_destroy_specific;
     __pthread_getspecific;
     __pthread_key_delete;
+    __pthread_max_threads;
     __pthread_mutex_checklocked;
     __pthread_mutex_destroy;
     __pthread_mutex_init;

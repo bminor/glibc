@@ -23,6 +23,7 @@
 #include <string.h>
 
 #include <pt-internal.h>
+#include <ldsodefs.h>
 
 /* This braindamage is necessary because the standard says that some
    of the threads functions "shall fail" if "No thread could be found
@@ -30,6 +31,7 @@
 
 /* The size of the thread ID lookup table.  */
 int __pthread_max_threads;
+libc_hidden_data_def (__pthread_max_threads)
 
 /* List of thread structures corresponding to free thread IDs.  */
 struct __pthread *__pthread_free_threads;
@@ -201,6 +203,7 @@ retry:
   *pthread = new;
   return 0;
 }
+libc_hidden_def (__pthread_alloc)
 
 void
 attribute_hidden
@@ -230,3 +233,4 @@ __pthread_init_static_tls (struct link_map *map)
     }
   __libc_rwlock_unlock (GL (dl_pthread_threads_lock));
 }
+libc_hidden_def (__pthread_init_static_tls)

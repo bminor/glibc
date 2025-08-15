@@ -25,11 +25,8 @@ SYSDEPS := lockfile
 LCLHDRS :=
 
 libpthread-routines := \
-  pt-init-specific \
-  pt-alloc \
   pt-create \
   pt-getattr \
-  pt-dealloc \
   pt-detach \
   pt-exit \
   pt-initialize \
@@ -108,6 +105,7 @@ routines := \
   forward \
   htlfreeres \
   libc_pthread_init \
+  pt-alloc \
   pt-attr \
   pt-attr-destroy \
   pt-attr-getdetachstate \
@@ -153,10 +151,12 @@ routines := \
   pt-condattr-init \
   pt-condattr-setclock \
   pt-condattr-setpshared \
+  pt-dealloc \
   pt-destroy-specific \
   pt-getconcurrency \
   pt-getschedparam \
   pt-getspecific \
+  pt-init-specific \
   pt-key-create \
   pt-key-delete \
   pt-mutex-checklocked \

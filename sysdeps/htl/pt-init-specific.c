@@ -20,6 +20,8 @@
 #include <stdlib.h>
 
 #include <pt-internal.h>
+#include <string.h>
+
 
 error_t
 __pthread_init_specific (struct __pthread *thread)
