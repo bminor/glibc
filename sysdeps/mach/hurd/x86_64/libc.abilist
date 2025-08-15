@@ -1556,6 +1556,7 @@ GLIBC_2.38 pthread_condattr_setclock F
 GLIBC_2.38 pthread_condattr_setpshared F
 GLIBC_2.38 pthread_equal F
 GLIBC_2.38 pthread_exit F
+GLIBC_2.38 pthread_getattr_np F
 GLIBC_2.38 pthread_getconcurrency F
 GLIBC_2.38 pthread_getcpuclockid F
 GLIBC_2.38 pthread_getschedparam F
@@ -2325,6 +2326,7 @@ GLIBC_2.42 uimaxabs F
 GLIBC_2.42 ulabs F
 GLIBC_2.42 ullabs F
 GLIBC_2.43 pthread_cancel F
+GLIBC_2.43 pthread_getattr_np F
 GLIBC_2.43 pthread_getconcurrency F
 GLIBC_2.43 pthread_getcpuclockid F
 GLIBC_2.43 pthread_kill F
@@ -2341,6 +2343,7 @@ HURD_CTHREADS_0.3 __mutex_lock_solid F
 HURD_CTHREADS_0.3 __mutex_trylock F
 HURD_CTHREADS_0.3 __mutex_unlock F
 HURD_CTHREADS_0.3 __mutex_unlock_solid F
+HURD_CTHREADS_0.3 __pthread_getattr_np F
 HURD_CTHREADS_0.3 __spin_lock F
 HURD_CTHREADS_0.3 __spin_lock_init F
 HURD_CTHREADS_0.3 __spin_lock_solid F

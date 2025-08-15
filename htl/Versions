@@ -51,6 +51,7 @@ libc {
     pthread_condattr_getpshared;
     pthread_condattr_setclock;
     pthread_condattr_setpshared;
+    pthread_getattr_np;
     pthread_getconcurrency;
     pthread_key_create;
     pthread_key_delete;
@@ -197,6 +198,7 @@ libc {
 
   GLIBC_2.43 {
     pthread_cancel;
+    pthread_getattr_np;
     pthread_getconcurrency;
     pthread_getcpuclockid;
     pthread_kill;
@@ -293,8 +295,6 @@ libpthread {
 
     pthread_create; pthread_detach; pthread_exit;
 
-    pthread_getattr_np;
-
     pthread_join;
 
     pthread_mutex_transfer_np;
@@ -341,7 +341,6 @@ libpthread {
     __cthread_keycreate;
     __cthread_getspecific;
     __cthread_setspecific;
-    __pthread_getattr_np;
     __pthread_enable_asynccancel;
     __pthread_disable_asynccancel;
   }

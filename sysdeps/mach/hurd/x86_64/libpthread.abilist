@@ -40,7 +40,6 @@ GLIBC_2.38 pthread_clockjoin_np F
 GLIBC_2.38 pthread_create F
 GLIBC_2.38 pthread_detach F
 GLIBC_2.38 pthread_exit F
-GLIBC_2.38 pthread_getattr_np F
 GLIBC_2.38 pthread_hurd_cond_timedwait_np F
 GLIBC_2.38 pthread_hurd_cond_wait_np F
 GLIBC_2.38 pthread_join F

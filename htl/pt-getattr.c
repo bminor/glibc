@@ -21,6 +21,8 @@
 #include <pthread.h>
 
 #include <pt-internal.h>
+#include <shlib-compat.h>
+#include <ldsodefs.h>
 
 /* Initialize thread attribute *ATTR with attributes corresponding to the
    already running thread THREAD.  It shall be called on an uninitialized ATTR
@@ -48,4 +50,9 @@ __pthread_getattr_np (pthread_t thread, pthread_attr_t *attr)
 
   return 0;
 }
-weak_alias (__pthread_getattr_np, pthread_getattr_np)
+libc_hidden_def (__pthread_getattr_np)
+versioned_symbol (libc, __pthread_getattr_np, pthread_getattr_np, GLIBC_2_43);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_43)
+compat_symbol (libpthread, __pthread_getattr_np, pthread_getattr_np, GLIBC_2_12);
+#endif

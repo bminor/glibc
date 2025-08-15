@@ -22,7 +22,6 @@ GLIBC_2.12 pthread_atfork F
 GLIBC_2.12 pthread_create F
 GLIBC_2.12 pthread_detach F
 GLIBC_2.12 pthread_exit F
-GLIBC_2.12 pthread_getattr_np F
 GLIBC_2.12 pthread_join F
 GLIBC_2.12 pthread_mutex_transfer_np F
 GLIBC_2.12 pthread_spin_destroy F
