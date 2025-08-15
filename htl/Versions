@@ -4,6 +4,7 @@ libc {
     pthread_self;
     __pthread_get_cleanup_stack;
     __pthread_key_create;
+    __pthread_kill;
     __pthread_self;
     pthread_attr_getdetachstate;
     pthread_attr_getinheritsched;
@@ -53,6 +54,7 @@ libc {
     pthread_getconcurrency;
     pthread_key_create;
     pthread_key_delete;
+    pthread_kill;
     pthread_mutex_destroy;
     pthread_mutex_getprioceiling;
     pthread_mutex_init;
@@ -196,6 +198,7 @@ libc {
     pthread_cancel;
     pthread_getconcurrency;
     pthread_getcpuclockid;
+    pthread_kill;
     pthread_setconcurrency;
     pthread_setschedprio;
     pthread_yield;
@@ -290,9 +293,6 @@ libpthread {
     pthread_getattr_np;
 
     pthread_join;
-
-    pthread_kill;
-    __pthread_kill;
 
     pthread_mutex_transfer_np;
 

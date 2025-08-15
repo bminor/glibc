@@ -41,7 +41,6 @@ libpthread-routines := \
   pt-setup \
   pt-spin \
   pt-sigstate-init \
-  pt-kill \
   pt-getname-np \
   pt-setname-np \
   sem_close \
@@ -153,6 +152,7 @@ routines := \
   pt-init-specific \
   pt-key-create \
   pt-key-delete \
+  pt-kill \
   pt-machdep \
   pt-mutex-checklocked \
   pt-mutex-consistent \

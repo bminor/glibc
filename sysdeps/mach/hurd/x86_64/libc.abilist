@@ -393,6 +393,7 @@ GLIBC_2.38 __progname D 0x8
 GLIBC_2.38 __progname_full D 0x8
 GLIBC_2.38 __pthread_get_cleanup_stack F
 GLIBC_2.38 __pthread_key_create F
+GLIBC_2.38 __pthread_kill F
 GLIBC_2.38 __pthread_self F
 GLIBC_2.38 __ptsname_r_chk F
 GLIBC_2.38 __pwrite64 F
@@ -1561,6 +1562,7 @@ GLIBC_2.38 pthread_getschedparam F
 GLIBC_2.38 pthread_getspecific F
 GLIBC_2.38 pthread_key_create F
 GLIBC_2.38 pthread_key_delete F
+GLIBC_2.38 pthread_kill F
 GLIBC_2.38 pthread_mutex_clocklock F
 GLIBC_2.38 pthread_mutex_consistent F
 GLIBC_2.38 pthread_mutex_consistent_np F
@@ -2324,6 +2326,7 @@ GLIBC_2.42 ullabs F
 GLIBC_2.43 pthread_cancel F
 GLIBC_2.43 pthread_getconcurrency F
 GLIBC_2.43 pthread_getcpuclockid F
+GLIBC_2.43 pthread_kill F
 GLIBC_2.43 pthread_setconcurrency F
 GLIBC_2.43 pthread_setschedprio F
 GLIBC_2.43 pthread_yield F

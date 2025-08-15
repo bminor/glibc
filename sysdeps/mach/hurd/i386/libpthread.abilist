@@ -1,6 +1,5 @@
 GLIBC_2.12 __mutex_lock_solid F
 GLIBC_2.12 __mutex_unlock_solid F
-GLIBC_2.12 __pthread_kill F
 GLIBC_2.12 __pthread_mutex_transfer_np F
 GLIBC_2.12 __pthread_spin_destroy F
 GLIBC_2.12 __pthread_spin_init F
@@ -25,7 +24,6 @@ GLIBC_2.12 pthread_detach F
 GLIBC_2.12 pthread_exit F
 GLIBC_2.12 pthread_getattr_np F
 GLIBC_2.12 pthread_join F
-GLIBC_2.12 pthread_kill F
 GLIBC_2.12 pthread_mutex_transfer_np F
 GLIBC_2.12 pthread_spin_destroy F
 GLIBC_2.12 pthread_spin_init F
