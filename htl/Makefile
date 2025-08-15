@@ -33,12 +33,10 @@ libpthread-routines := \
   pt-join \
   pt-spin-inlines \
   pt-testcancel \
-  pt-cancel \
   pt-mutex-transfer-np \
   pt-hurd-cond-wait \
   pt-hurd-cond-timedwait \
   pt-startup \
-  pt-docancel \
   pt-sysdep \
   pt-setup \
   pt-spin \
@@ -130,6 +128,7 @@ routines := \
   pt-barrierattr-setpshared \
   pt-block \
   pt-block-intr \
+  pt-cancel \
   pt-cleanup \
   pt-cond \
   pt-cond-brdcast \
@@ -146,6 +145,7 @@ routines := \
   pt-condattr-setpshared \
   pt-dealloc \
   pt-destroy-specific \
+  pt-docancel \
   pt-getconcurrency \
   pt-getcpuclockid \
   pt-getschedparam \

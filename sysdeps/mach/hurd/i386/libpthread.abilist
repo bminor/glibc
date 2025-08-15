@@ -20,7 +20,6 @@ GLIBC_2.12 flockfile F
 GLIBC_2.12 ftrylockfile F
 GLIBC_2.12 funlockfile F
 GLIBC_2.12 pthread_atfork F
-GLIBC_2.12 pthread_cancel F
 GLIBC_2.12 pthread_create F
 GLIBC_2.12 pthread_detach F
 GLIBC_2.12 pthread_exit F

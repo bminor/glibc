@@ -37,7 +37,6 @@ GLIBC_2.38 mtx_lock F
 GLIBC_2.38 mtx_timedlock F
 GLIBC_2.38 mtx_trylock F
 GLIBC_2.38 mtx_unlock F
-GLIBC_2.38 pthread_cancel F
 GLIBC_2.38 pthread_clockjoin_np F
 GLIBC_2.38 pthread_create F
 GLIBC_2.38 pthread_detach F
