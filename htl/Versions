@@ -90,6 +90,7 @@ libc {
     pthread_setschedprio;
     pthread_setspecific;
     pthread_sigmask;
+    pthread_yield;
   }
 
   GLIBC_2.21 {
@@ -195,6 +196,7 @@ libc {
     pthread_getcpuclockid;
     pthread_setconcurrency;
     pthread_setschedprio;
+    pthread_yield;
   }
 
   GLIBC_PRIVATE {
@@ -294,7 +296,6 @@ libpthread {
     pthread_mutex_transfer_np;
 
     pthread_testcancel;
-    pthread_yield;
 
     sem_close; sem_destroy; sem_getvalue; sem_init; sem_open; sem_post;
     sem_timedwait; sem_trywait; sem_unlink; sem_wait;

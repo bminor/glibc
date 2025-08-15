@@ -45,7 +45,6 @@ libpthread-routines := \
   pt-spin \
   pt-sigstate-init \
   pt-kill \
-  pt-yield \
   pt-getname-np \
   pt-setname-np \
   sem_close \
@@ -211,6 +210,7 @@ routines := \
   pt-timedblock \
   pt-timedblock-intr \
   pt-wakeup \
+  pt-yield \
   # routines
 shared-only-routines = forward
 
