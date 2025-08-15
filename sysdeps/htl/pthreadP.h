@@ -138,6 +138,9 @@ extern int __pthread_rwlockattr_setpshared (pthread_rwlockattr_t *__attr,
 					  int __pshared);
 libc_hidden_proto (__pthread_rwlockattr_setpshared)
 
+extern int __pthread_setschedprio (pthread_t __thr, int __prio);
+libc_hidden_proto (__pthread_setschedprio)
+
 extern int __pthread_cond_init (pthread_cond_t *cond,
 				const pthread_condattr_t *cond_attr);
 libc_hidden_proto (__pthread_cond_init)

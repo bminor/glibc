@@ -1603,6 +1603,7 @@ GLIBC_2.38 pthread_self F
 GLIBC_2.38 pthread_setcancelstate F
 GLIBC_2.38 pthread_setcanceltype F
 GLIBC_2.38 pthread_setschedparam F
+GLIBC_2.38 pthread_setschedprio F
 GLIBC_2.38 pthread_setspecific F
 GLIBC_2.38 pthread_sigmask F
 GLIBC_2.38 ptrace F
@@ -2315,6 +2316,7 @@ GLIBC_2.42 uabs F
 GLIBC_2.42 uimaxabs F
 GLIBC_2.42 ulabs F
 GLIBC_2.42 ullabs F
+GLIBC_2.43 pthread_setschedprio F
 HURD_CTHREADS_0.3 __cthread_getspecific F
 HURD_CTHREADS_0.3 __cthread_keycreate F
 HURD_CTHREADS_0.3 __cthread_setspecific F

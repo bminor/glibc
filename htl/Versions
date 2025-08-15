@@ -84,6 +84,7 @@ libc {
     pthread_rwlockattr_setpshared;
     pthread_setcancelstate;
     pthread_setcanceltype;
+    pthread_setschedprio;
     pthread_setspecific;
     pthread_sigmask;
   }
@@ -186,6 +187,10 @@ libc {
     pthread_setspecific;
   }
 
+  GLIBC_2.43 {
+    pthread_setschedprio;
+  }
+
   GLIBC_PRIVATE {
     __libc_alloca_cutoff;
     __libc_pthread_init;
@@ -276,7 +281,6 @@ libpthread {
     pthread_mutex_transfer_np;
 
     pthread_setconcurrency;
-    pthread_setschedprio;
 
     pthread_testcancel;
     pthread_yield;

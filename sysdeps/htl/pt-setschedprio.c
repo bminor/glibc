@@ -18,11 +18,18 @@
 
 #include <pthread.h>
 #include <pt-internal.h>
+#include <shlib-compat.h>
 
 int
-pthread_setschedprio (pthread_t thread, int prio)
+__pthread_setschedprio (pthread_t thread, int prio)
 {
   return ENOSYS;
 }
 
+libc_hidden_def (__pthread_setschedprio)
+versioned_symbol (libc, __pthread_setschedprio, pthread_setschedprio, GLIBC_2_43);
 stub_warning (pthread_setschedprio)
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_43)
+compat_symbol (libc, __pthread_setschedprio, pthread_setschedprio, GLIBC_2_12);
+#endif

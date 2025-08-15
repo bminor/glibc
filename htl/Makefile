@@ -55,7 +55,6 @@ libpthread-routines := \
   pt-sigstate-init \
   pt-kill \
   pt-getcpuclockid \
-  pt-setschedprio \
   pt-yield \
   pt-getname-np \
   pt-setname-np \
@@ -204,6 +203,7 @@ routines := \
   pt-setcancelstate \
   pt-setcanceltype \
   pt-setschedparam \
+  pt-setschedprio \
   pt-setspecific \
   pt-sigmask \
   pt-sigstate \
