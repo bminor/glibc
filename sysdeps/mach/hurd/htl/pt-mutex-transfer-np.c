@@ -24,6 +24,8 @@
 #include "pt-mutex.h"
 #include <hurdlock.h>
 #include <unistd.h>
+#include <shlib-compat.h>
+#include <ldsodefs.h>
 
 int
 __pthread_mutex_transfer_np (pthread_mutex_t *mtxp, pthread_t th)
@@ -73,5 +75,8 @@ __pthread_mutex_transfer_np (pthread_mutex_t *mtxp, pthread_t th)
 
   return ret;
 }
+versioned_symbol (libc, __pthread_mutex_transfer_np, pthread_mutex_transfer_np, GLIBC_2_43);
 
-weak_alias (__pthread_mutex_transfer_np, pthread_mutex_transfer_np)
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_43)
+compat_symbol (libpthread, __pthread_mutex_transfer_np, pthread_mutex_transfer_np, GLIBC_2_12);
+#endif

@@ -5,6 +5,7 @@ libc {
     __pthread_get_cleanup_stack;
     __pthread_key_create;
     __pthread_kill;
+    __pthread_mutex_transfer_np;
     __pthread_self;
     pthread_attr_getdetachstate;
     pthread_attr_getinheritsched;
@@ -62,6 +63,7 @@ libc {
     pthread_mutex_lock;
     pthread_mutex_setprioceiling;
     pthread_mutex_timedlock;
+    pthread_mutex_transfer_np;
     pthread_mutex_trylock;
     pthread_mutex_unlock;
     pthread_mutexattr_destroy;
@@ -202,6 +204,7 @@ libc {
     pthread_getconcurrency;
     pthread_getcpuclockid;
     pthread_kill;
+    pthread_mutex_transfer_np;
     pthread_setconcurrency;
     pthread_setschedprio;
     pthread_testcancel;
@@ -276,8 +279,6 @@ libpthread {
     __errno_location; __h_errno_location;
   }
   GLIBC_2.12 {
-    __pthread_mutex_transfer_np;
-
     cthread_detach;
     cthread_fork;
     cthread_keycreate;
@@ -296,8 +297,6 @@ libpthread {
     pthread_create; pthread_detach; pthread_exit;
 
     pthread_join;
-
-    pthread_mutex_transfer_np;
 
     sem_close; sem_destroy; sem_getvalue; sem_init; sem_open; sem_post;
     sem_timedwait; sem_trywait; sem_unlink; sem_wait;

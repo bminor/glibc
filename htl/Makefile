@@ -31,7 +31,6 @@ libpthread-routines := \
   pt-initialize \
   pt-join \
   pt-spin-inlines \
-  pt-mutex-transfer-np \
   pt-hurd-cond-wait \
   pt-hurd-cond-timedwait \
   pt-startup \
@@ -161,6 +160,7 @@ routines := \
   pt-mutex-lock \
   pt-mutex-setprioceiling \
   pt-mutex-timedlock \
+  pt-mutex-transfer-np \
   pt-mutex-trylock \
   pt-mutex-unlock \
   pt-mutexattr-destroy \
