@@ -22,3 +22,4 @@ void
 __pthread_startup (void)
 {
 }
+libc_hidden_def (__pthread_startup)

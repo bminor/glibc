@@ -270,6 +270,7 @@ libc_hidden_proto (__pthread_thread_terminate)
 /* Called by a thread just before it calls the provided start
    routine.  */
 extern void __pthread_startup (void);
+libc_hidden_proto (__pthread_startup)
 
 /* Block THREAD.  */
 extern void __pthread_block (struct __pthread *thread);

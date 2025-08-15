@@ -30,7 +30,6 @@ libpthread-routines := \
   pt-spin-inlines \
   pt-hurd-cond-wait \
   pt-hurd-cond-timedwait \
-  pt-startup \
   pt-sysdep \
   pt-spin \
   pt-getname-np \
@@ -203,6 +202,7 @@ routines := \
   pt-sigstate-destroy \
   pt-sigstate-init \
   pt-stack-alloc \
+  pt-startup \
   pt-testcancel \
   pt-thread-alloc \
   pt-thread-start \
