@@ -45,7 +45,7 @@ __pthread_setcancelstate (int state, int *oldstate)
     p->cancel_pending = 2;
   __pthread_mutex_unlock (&p->cancel_lock);
 
-  if (cancelled && __pthread_exit)
+  if (cancelled)
     __pthread_exit (PTHREAD_CANCELED);
 
   return 0;

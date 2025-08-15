@@ -75,6 +75,7 @@ GLIBC_2.12 pthread_condattr_setclock F
 GLIBC_2.12 pthread_condattr_setpshared F
 GLIBC_2.12 pthread_detach F
 GLIBC_2.12 pthread_equal F
+GLIBC_2.12 pthread_exit F
 GLIBC_2.12 pthread_getattr_np F
 GLIBC_2.12 pthread_getconcurrency F
 GLIBC_2.12 pthread_getcpuclockid F

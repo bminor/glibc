@@ -42,7 +42,7 @@ __pthread_setcanceltype (int type, int *oldtype)
   cancelled = (p->cancel_state == PTHREAD_CANCEL_ENABLE) && p->cancel_pending && (p->cancel_type == PTHREAD_CANCEL_ASYNCHRONOUS);
   __pthread_mutex_unlock (&p->cancel_lock);
 
-  if (cancelled && __pthread_exit)
+  if (cancelled)
     __pthread_exit (PTHREAD_CANCELED);
 
   return 0;

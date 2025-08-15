@@ -182,6 +182,7 @@ void __cthread_detach (__cthread_t);
 int __pthread_detach (pthread_t __threadp);
 libc_hidden_proto (__pthread_detach)
 void __pthread_exit (void *value) __attribute__ ((__noreturn__));
+libc_hidden_proto (__pthread_exit)
 int __pthread_join (pthread_t, void **);
 int __cthread_keycreate (__cthread_key_t *);
 int __cthread_getspecific (__cthread_key_t, void **);
@@ -231,14 +232,6 @@ libc_hidden_proto (__pthread_get_cleanup_stack)
 
 #if IS_IN (libpthread)
 hidden_proto (__pthread_create)
-#endif
-
-#if !defined(__NO_WEAK_PTHREAD_ALIASES) && !IS_IN (libpthread)
-# ifdef weak_extern
-weak_extern (__pthread_exit)
-# else
-#  pragma weak __pthread_exit
-# endif
 #endif
 
 #define ASSERT_TYPE_SIZE(type, size) 					\

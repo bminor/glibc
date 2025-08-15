@@ -58,6 +58,7 @@ libc {
     pthread_key_create;
     pthread_key_delete;
     pthread_kill;
+    pthread_exit;
     pthread_mutex_destroy;
     pthread_mutex_getprioceiling;
     pthread_mutex_init;
@@ -245,6 +246,7 @@ libc {
     __pthread_condattr_init;
     __pthread_default_condattr;
     __pthread_destroy_specific;
+    __pthread_exit;
     __pthread_getspecific;
     __pthread_key_delete;
     __pthread_max_threads;
@@ -297,7 +299,7 @@ libpthread {
 
     pthread_atfork;
 
-    pthread_create; pthread_exit;
+    pthread_create;
 
     pthread_join;
 
