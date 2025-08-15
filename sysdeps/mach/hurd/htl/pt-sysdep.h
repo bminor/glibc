@@ -69,6 +69,6 @@ __pthread_stack_dealloc (void *stackaddr, size_t stacksize)
 extern int __thread_set_pcsptp (thread_t thread,
 				int set_pc, void *pc,
 				int set_sp, void *sp, int set_tp, void *tp);
-
+libc_hidden_proto (__thread_set_pcsptp)
 
 #endif /* pt-sysdep.h */

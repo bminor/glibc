@@ -256,6 +256,7 @@ libc {
     __pthread_thread_start;
     __pthread_thread_terminate;
     __pthread_wakeup;
+    __thread_set_pcsptp;
   }
 }
 

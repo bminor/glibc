@@ -23,6 +23,7 @@
 #include <mach/i386/mach_i386.h>
 #include <mach/mig_errors.h>
 #include <mach/thread_status.h>
+#include <pt-sysdep.h>
 
 #define HURD_TLS_DESC_DECL(desc, tcb)					      \
   struct descriptor desc =						      \
@@ -80,3 +81,4 @@ __thread_set_pcsptp (thread_t thread,
 
   return 0;
 }
+libc_hidden_def (__thread_set_pcsptp)

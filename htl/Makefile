@@ -41,7 +41,6 @@ libpthread-routines := \
   pt-docancel \
   pt-sysdep \
   pt-setup \
-  pt-machdep \
   pt-spin \
   pt-sigstate-init \
   pt-kill \
@@ -154,6 +153,7 @@ routines := \
   pt-init-specific \
   pt-key-create \
   pt-key-delete \
+  pt-machdep \
   pt-mutex-checklocked \
   pt-mutex-consistent \
   pt-mutex-destroy \
