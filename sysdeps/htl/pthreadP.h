@@ -180,6 +180,7 @@ int __pthread_create (pthread_t *newthread,
 
 void __cthread_detach (__cthread_t);
 int __pthread_detach (pthread_t __threadp);
+libc_hidden_proto (__pthread_detach)
 void __pthread_exit (void *value) __attribute__ ((__noreturn__));
 int __pthread_join (pthread_t, void **);
 int __cthread_keycreate (__cthread_key_t *);
@@ -230,7 +231,6 @@ libc_hidden_proto (__pthread_get_cleanup_stack)
 
 #if IS_IN (libpthread)
 hidden_proto (__pthread_create)
-hidden_proto (__pthread_detach)
 #endif
 
 #if !defined(__NO_WEAK_PTHREAD_ALIASES) && !IS_IN (libpthread)

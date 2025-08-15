@@ -26,7 +26,6 @@ LCLHDRS :=
 
 libpthread-routines := \
   pt-create \
-  pt-detach \
   pt-exit \
   pt-initialize \
   pt-join \
@@ -140,6 +139,7 @@ routines := \
   pt-condattr-setpshared \
   pt-dealloc \
   pt-destroy-specific \
+  pt-detach \
   pt-docancel \
   pt-getattr \
   pt-getconcurrency \

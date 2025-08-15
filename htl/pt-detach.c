@@ -21,6 +21,8 @@
 #include <stddef.h>
 
 #include <pt-internal.h>
+#include <shlib-compat.h>
+#include <ldsodefs.h>
 
 /* Indicate that the storage for THREAD can be reclaimed when it
    terminates.  */
@@ -71,5 +73,9 @@ __pthread_detach (pthread_t thread)
 
   return err;
 }
-weak_alias (__pthread_detach, pthread_detach)
-hidden_def (__pthread_detach)
+libc_hidden_def (__pthread_detach)
+versioned_symbol (libc, __pthread_detach, pthread_detach, GLIBC_2_43);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_43)
+compat_symbol (libpthread, __pthread_detach, pthread_detach, GLIBC_2_12);
+#endif
