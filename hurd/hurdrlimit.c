@@ -37,6 +37,11 @@ init_rlimit (void)
 
   __mutex_init (&_hurd_rlimit_lock);
 
+#ifdef HAVE_MACH_VM_GET_SIZE_LIMIT
+  __vm_get_size_limit (__mach_task_self (),
+      &_hurd_rlimits[RLIMIT_AS].rlim_cur, &_hurd_rlimits[RLIMIT_AS].rlim_max);
+#endif
+
   for (i = 0; i < RLIM_NLIMITS; ++i)
     {
       if (_hurd_rlimits[i].rlim_max == 0)

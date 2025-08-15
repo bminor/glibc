@@ -581,6 +581,66 @@ if test $libc_cv_mach_rpc_thread_get_name = yes; then
 
 fi
 
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for vm_set_size_limit in gnumach.defs" >&5
+printf %s "checking for vm_set_size_limit in gnumach.defs... " >&6; }
+if test ${libc_cv_mach_rpc_vm_set_size_limit+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <mach/gnumach.defs>
+
+_ACEOF
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  $EGREP_TRADITIONAL "vm_set_size_limit" >/dev/null 2>&1
+then :
+  libc_cv_mach_rpc_vm_set_size_limit=yes
+else case e in #(
+  e) libc_cv_mach_rpc_vm_set_size_limit=no ;;
+esac
+fi
+rm -rf conftest*
+ ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_mach_rpc_vm_set_size_limit" >&5
+printf "%s\n" "$libc_cv_mach_rpc_vm_set_size_limit" >&6; }
+if test $libc_cv_mach_rpc_vm_set_size_limit = yes; then
+  printf "%s\n" "#define HAVE_MACH_VM_SET_SIZE_LIMIT 1" >>confdefs.h
+
+fi
+
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for vm_get_size_limit in gnumach.defs" >&5
+printf %s "checking for vm_get_size_limit in gnumach.defs... " >&6; }
+if test ${libc_cv_mach_rpc_vm_get_size_limit+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <mach/gnumach.defs>
+
+_ACEOF
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  $EGREP_TRADITIONAL "vm_get_size_limit" >/dev/null 2>&1
+then :
+  libc_cv_mach_rpc_vm_get_size_limit=yes
+else case e in #(
+  e) libc_cv_mach_rpc_vm_get_size_limit=no ;;
+esac
+fi
+rm -rf conftest*
+ ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_mach_rpc_vm_get_size_limit" >&5
+printf "%s\n" "$libc_cv_mach_rpc_vm_get_size_limit" >&6; }
+if test $libc_cv_mach_rpc_vm_get_size_limit = yes; then
+  printf "%s\n" "#define HAVE_MACH_VM_GET_SIZE_LIMIT 1" >>confdefs.h
+
+fi
+
 
 ac_fn_c_check_header_preproc "$LINENO" "mach/machine/ndr_def.h" "ac_cv_header_mach_machine_ndr_def_h"
 if test "x$ac_cv_header_mach_machine_ndr_def_h" = xyes

@@ -100,6 +100,10 @@ mach_RPC_CHECK(gnumach.defs, thread_set_name,
 	       HAVE_MACH_THREAD_SET_NAME)
 mach_RPC_CHECK(gnumach.defs, thread_get_name,
 	       HAVE_MACH_THREAD_GET_NAME)
+mach_RPC_CHECK(gnumach.defs, vm_set_size_limit,
+               HAVE_MACH_VM_SET_SIZE_LIMIT)
+mach_RPC_CHECK(gnumach.defs, vm_get_size_limit,
+               HAVE_MACH_VM_GET_SIZE_LIMIT)
 
 AC_CHECK_HEADER(mach/machine/ndr_def.h, [dnl
   DEFINES="$DEFINES -DNDR_DEF_HEADER='<mach/machine/ndr_def.h>'"], [dnl

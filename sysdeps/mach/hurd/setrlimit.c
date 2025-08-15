@@ -28,6 +28,8 @@ int
 __setrlimit (enum __rlimit_resource resource, const struct rlimit *rlimits)
 {
   struct rlimit lim;
+  error_t err = 0;
+  mach_port_t host = MACH_PORT_NULL;
 
   if (rlimits == NULL || (unsigned int) resource >= RLIMIT_NLIMITS)
     return __hurd_fail (EINVAL);
@@ -41,13 +43,57 @@ __setrlimit (enum __rlimit_resource resource, const struct rlimit *rlimits)
   if (lim.rlim_cur > lim.rlim_max)
     lim.rlim_cur = lim.rlim_max;
 
+retry:
   HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_rlimit_lock);
+
+#ifdef HAVE_MACH_VM_SET_SIZE_LIMIT
+  if (resource == RLIMIT_AS)
+    {
+      if (host == MACH_PORT_NULL)
+        {
+          /* Check whether the privileged host control port is required */
+          if (_hurd_rlimits[resource].rlim_max < lim.rlim_max)
+            {
+              err = __get_privileged_ports (&host, NULL);
+              if (err)
+                goto fail;
+            }
+          else
+            host = __mach_host_self ();
+        }
+
+      err = __vm_set_size_limit (host, __mach_task_self (),
+          lim.rlim_cur, lim.rlim_max);
+
+      if (err == MIG_BAD_ID)
+        /* MIG_BAD_ID returned as kernel support is missing, clear error */
+        err = 0;
+      else if (err)
+        {
+          if (err == KERN_NO_ACCESS)
+            err = EPERM;
+          goto fail;
+        }
+    }
+#endif
+
   _hurd_rlimits[resource] = lim;
+
+#ifdef HAVE_MACH_VM_SET_SIZE_LIMIT
+fail:
+#endif
   __mutex_unlock (&_hurd_rlimit_lock);
   HURD_CRITICAL_END;
 
-  return 0;
+  if (err == EINTR)
+    /* Got a  signal while inside an RPC of the critical section, retry */
+    goto retry;
+
+  if (host != MACH_PORT_NULL && host != __mach_host_self ())
+    __mach_port_deallocate (__mach_task_self (), host);
+
+  return  __hurd_fail (err);
 }
 
 libc_hidden_def (__setrlimit)
