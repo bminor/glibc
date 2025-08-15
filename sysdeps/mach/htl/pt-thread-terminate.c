@@ -91,3 +91,4 @@ __pthread_thread_terminate (struct __pthread *thread)
   /* We are out of luck.  */
   assert_perror (err);
 }
+libc_hidden_def (__pthread_thread_terminate)

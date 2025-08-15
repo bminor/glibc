@@ -248,6 +248,9 @@ libc {
     __pthread_stack_alloc;
     __pthread_timedblock;
     __pthread_timedblock_intr;
+    __pthread_thread_alloc;
+    __pthread_thread_start;
+    __pthread_thread_terminate;
     __pthread_wakeup;
   }
 }

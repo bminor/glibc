@@ -37,9 +37,6 @@ libpthread-routines := \
   pt-mutex-transfer-np \
   pt-hurd-cond-wait \
   pt-hurd-cond-timedwait \
-  pt-thread-alloc \
-  pt-thread-start \
-  pt-thread-terminate \
   pt-startup \
   pt-docancel \
   pt-sysdep \
@@ -208,6 +205,9 @@ routines := \
   pt-sigstate \
   pt-sigstate-destroy \
   pt-stack-alloc \
+  pt-thread-alloc \
+  pt-thread-start \
+  pt-thread-terminate \
   pt-timedblock \
   pt-timedblock-intr \
   pt-wakeup \

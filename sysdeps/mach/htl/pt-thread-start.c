@@ -51,3 +51,4 @@ __pthread_thread_start (struct __pthread *thread)
 
   return 0;
 }
+libc_hidden_def (__pthread_thread_start)

@@ -247,9 +247,11 @@ extern int __pthread_setup (struct __pthread *__restrict thread,
 /* Allocate a kernel thread (and any miscellaneous system dependent
    resources) for THREAD; it must not be placed on the run queue.  */
 extern int __pthread_thread_alloc (struct __pthread *thread);
+libc_hidden_proto (__pthread_thread_alloc)
 
 /* Start THREAD making it eligible to run.  */
 extern int __pthread_thread_start (struct __pthread *thread);
+libc_hidden_proto (__pthread_thread_start)
 
 /* Terminate the kernel thread associated with THREAD, and deallocate its
    stack as well as any other kernel resource associated with it.
@@ -263,7 +265,7 @@ extern int __pthread_thread_start (struct __pthread *thread);
    has started, no other thread can terminate it, so that thread-local
    variables created by that thread are correctly released.  */
 extern void __pthread_thread_terminate (struct __pthread *thread);
-
+libc_hidden_proto (__pthread_thread_terminate)
 
 /* Called by a thread just before it calls the provided start
    routine.  */
