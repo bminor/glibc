@@ -27,7 +27,6 @@ LCLHDRS :=
 libpthread-routines := \
   pt-create \
   pt-initialize \
-  pt-join \
   pt-spin-inlines \
   pt-hurd-cond-wait \
   pt-hurd-cond-timedwait \
@@ -147,6 +146,7 @@ routines := \
   pt-getschedparam \
   pt-getspecific \
   pt-init-specific \
+  pt-join \
   pt-key-create \
   pt-key-delete \
   pt-kill \

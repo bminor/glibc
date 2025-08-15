@@ -1542,6 +1542,7 @@ GLIBC_2.38 pthread_barrierattr_getpshared F
 GLIBC_2.38 pthread_barrierattr_init F
 GLIBC_2.38 pthread_barrierattr_setpshared F
 GLIBC_2.38 pthread_cancel F
+GLIBC_2.38 pthread_clockjoin_np F
 GLIBC_2.38 pthread_cond_broadcast F
 GLIBC_2.38 pthread_cond_clockwait F
 GLIBC_2.38 pthread_cond_destroy F
@@ -1563,6 +1564,7 @@ GLIBC_2.38 pthread_getconcurrency F
 GLIBC_2.38 pthread_getcpuclockid F
 GLIBC_2.38 pthread_getschedparam F
 GLIBC_2.38 pthread_getspecific F
+GLIBC_2.38 pthread_join F
 GLIBC_2.38 pthread_key_create F
 GLIBC_2.38 pthread_key_delete F
 GLIBC_2.38 pthread_kill F
@@ -1617,6 +1619,8 @@ GLIBC_2.38 pthread_setschedprio F
 GLIBC_2.38 pthread_setspecific F
 GLIBC_2.38 pthread_sigmask F
 GLIBC_2.38 pthread_testcancel F
+GLIBC_2.38 pthread_timedjoin_np F
+GLIBC_2.38 pthread_tryjoin_np F
 GLIBC_2.38 pthread_yield F
 GLIBC_2.38 ptrace F
 GLIBC_2.38 ptsname F
@@ -2329,15 +2333,19 @@ GLIBC_2.42 uimaxabs F
 GLIBC_2.42 ulabs F
 GLIBC_2.42 ullabs F
 GLIBC_2.43 pthread_cancel F
+GLIBC_2.43 pthread_clockjoin_np F
 GLIBC_2.43 pthread_detach F
 GLIBC_2.43 pthread_getattr_np F
 GLIBC_2.43 pthread_getconcurrency F
 GLIBC_2.43 pthread_getcpuclockid F
+GLIBC_2.43 pthread_join F
 GLIBC_2.43 pthread_kill F
 GLIBC_2.43 pthread_mutex_transfer_np F
 GLIBC_2.43 pthread_setconcurrency F
 GLIBC_2.43 pthread_setschedprio F
 GLIBC_2.43 pthread_testcancel F
+GLIBC_2.43 pthread_timedjoin_np F
+GLIBC_2.43 pthread_tryjoin_np F
 GLIBC_2.43 pthread_yield F
 HURD_CTHREADS_0.3 __cthread_getspecific F
 HURD_CTHREADS_0.3 __cthread_keycreate F

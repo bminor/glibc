@@ -19,7 +19,6 @@ GLIBC_2.12 ftrylockfile F
 GLIBC_2.12 funlockfile F
 GLIBC_2.12 pthread_atfork F
 GLIBC_2.12 pthread_create F
-GLIBC_2.12 pthread_join F
 GLIBC_2.12 pthread_spin_destroy F
 GLIBC_2.12 pthread_spin_init F
 GLIBC_2.12 pthread_spin_lock F
@@ -55,9 +54,6 @@ GLIBC_2.32 mtx_lock F
 GLIBC_2.32 mtx_timedlock F
 GLIBC_2.32 mtx_trylock F
 GLIBC_2.32 mtx_unlock F
-GLIBC_2.32 pthread_clockjoin_np F
-GLIBC_2.32 pthread_timedjoin_np F
-GLIBC_2.32 pthread_tryjoin_np F
 GLIBC_2.32 sem_clockwait F
 GLIBC_2.32 thrd_create F
 GLIBC_2.32 thrd_detach F

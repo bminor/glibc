@@ -184,6 +184,16 @@ libc_hidden_proto (__pthread_detach)
 void __pthread_exit (void *value) __attribute__ ((__noreturn__));
 libc_hidden_proto (__pthread_exit)
 int __pthread_join (pthread_t, void **);
+libc_hidden_proto (__pthread_join)
+int __pthread_tryjoin_np (pthread_t __th, void **__thread_return);
+libc_hidden_proto (__pthread_tryjoin_np)
+int __pthread_timedjoin_np (pthread_t __th, void **__thread_return,
+				 const struct timespec *__abstime);
+libc_hidden_proto (__pthread_timedjoin_np)
+int __pthread_clockjoin_np (pthread_t __th, void **__thread_return,
+                                 clockid_t __clockid,
+				 const struct timespec *__abstime);
+libc_hidden_proto (__pthread_clockjoin_np)
 int __cthread_keycreate (__cthread_key_t *);
 int __cthread_getspecific (__cthread_key_t, void **);
 int __cthread_setspecific (__cthread_key_t, void *);
