@@ -311,6 +311,7 @@ libc_hidden_proto (__pthread_destroy_specific)
 /* Initialize newly create thread *THREAD's signal state data
    structures.  */
 extern error_t __pthread_sigstate_init (struct __pthread *thread);
+libc_hidden_proto (__pthread_sigstate_init)
 
 /* Destroy the signal state data structures associated with thread
    *THREAD.  */

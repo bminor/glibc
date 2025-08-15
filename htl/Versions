@@ -258,6 +258,7 @@ libc {
     __pthread_mutexattr_settype;
     __pthread_once;
     __pthread_setspecific;
+    __pthread_sigstate_init;
     __pthread_sigstate;
     __pthread_sigstate_destroy;
     __pthread_sigmask;

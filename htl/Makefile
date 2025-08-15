@@ -37,7 +37,6 @@ libpthread-routines := \
   pt-sysdep \
   pt-setup \
   pt-spin \
-  pt-sigstate-init \
   pt-getname-np \
   pt-setname-np \
   sem_close \
@@ -202,6 +201,7 @@ routines := \
   pt-sigmask \
   pt-sigstate \
   pt-sigstate-destroy \
+  pt-sigstate-init \
   pt-stack-alloc \
   pt-testcancel \
   pt-thread-alloc \

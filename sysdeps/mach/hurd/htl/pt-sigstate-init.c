@@ -19,6 +19,7 @@
 #include <pthread.h>
 #include <pt-internal.h>
 #include <hurd/signal.h>
+#include <ldsodefs.h>
 
 error_t
 __pthread_sigstate_init (struct __pthread *thread)
@@ -42,3 +43,5 @@ __pthread_sigstate_init (struct __pthread *thread)
 
   return 0;
 }
+
+libc_hidden_def (__pthread_sigstate_init)
