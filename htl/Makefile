@@ -45,8 +45,6 @@ libpthread-routines := \
   pt-thread-start \
   pt-thread-terminate \
   pt-startup \
-  pt-getconcurrency \
-  pt-setconcurrency \
   pt-docancel \
   pt-sysdep \
   pt-setup \
@@ -156,6 +154,7 @@ routines := \
   pt-condattr-setclock \
   pt-condattr-setpshared \
   pt-destroy-specific \
+  pt-getconcurrency \
   pt-getschedparam \
   pt-getspecific \
   pt-key-create \
@@ -202,6 +201,7 @@ routines := \
   pt-self pt-equal \
   pt-setcancelstate \
   pt-setcanceltype \
+  pt-setconcurrency \
   pt-setschedparam \
   pt-setschedprio \
   pt-setspecific \

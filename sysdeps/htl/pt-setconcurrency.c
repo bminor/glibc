@@ -18,11 +18,12 @@
 
 #include <pthread.h>
 #include <pt-internal.h>
+#include <shlib-compat.h>
 
 int __pthread_concurrency;
 
 int
-pthread_setconcurrency (int new_level)
+__pthread_setconcurrency (int new_level)
 {
   if (new_level < 0)
     return EINVAL;
@@ -31,3 +32,9 @@ pthread_setconcurrency (int new_level)
 
   return 0;
 }
+libc_hidden_def (__pthread_setconcurrency)
+versioned_symbol (libc, __pthread_setconcurrency, pthread_setconcurrency, GLIBC_2_43);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_43)
+compat_symbol (libc, __pthread_setconcurrency, pthread_setconcurrency, GLIBC_2_12);
+#endif

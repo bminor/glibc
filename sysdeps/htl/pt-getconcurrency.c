@@ -18,9 +18,16 @@
 
 #include <pthread.h>
 #include <pt-internal.h>
+#include <shlib-compat.h>
 
 int
-pthread_getconcurrency (void)
+__pthread_getconcurrency (void)
 {
   return __pthread_concurrency;
 }
+libc_hidden_def (__pthread_getconcurrency)
+versioned_symbol (libc, __pthread_getconcurrency, pthread_getconcurrency, GLIBC_2_43);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_43)
+compat_symbol (libc, __pthread_getconcurrency, pthread_getconcurrency, GLIBC_2_12);
+#endif

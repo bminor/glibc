@@ -213,6 +213,10 @@ libc_hidden_proto (__pthread_attr_getstack)
 void __pthread_testcancel (void);
 int __pthread_attr_init (pthread_attr_t *attr);
 int __pthread_condattr_init (pthread_condattr_t *attr);
+int __pthread_setconcurrency (int __new_level);
+libc_hidden_proto (__pthread_setconcurrency)
+int __pthread_getconcurrency (void);
+libc_hidden_proto (__pthread_getconcurrency)
 
 #define __pthread_raise_internal(__sig) raise (__sig)
 
