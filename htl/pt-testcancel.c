@@ -20,6 +20,7 @@
 
 #include <pt-internal.h>
 #include <pthreadP.h>
+#include <shlib-compat.h>
 
 void
 __pthread_testcancel (void)
@@ -34,4 +35,10 @@ __pthread_testcancel (void)
   if (cancelled)
     __pthread_exit (PTHREAD_CANCELED);
 }
-strong_alias (__pthread_testcancel, pthread_testcancel)
+
+libc_hidden_def (__pthread_testcancel)
+versioned_symbol (libc, __pthread_testcancel, pthread_testcancel, GLIBC_2_43);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_43)
+compat_symbol (libpthread, __pthread_testcancel, pthread_testcancel, GLIBC_2_12);
+#endif

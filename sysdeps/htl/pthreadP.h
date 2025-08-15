@@ -212,6 +212,7 @@ libc_hidden_proto (__pthread_attr_setstack)
 int __pthread_attr_getstack (const pthread_attr_t *, void **, size_t *);
 libc_hidden_proto (__pthread_attr_getstack)
 void __pthread_testcancel (void);
+libc_hidden_proto (__pthread_testcancel)
 int __pthread_attr_init (pthread_attr_t *attr);
 int __pthread_condattr_init (pthread_condattr_t *attr);
 int __pthread_setconcurrency (int __new_level);

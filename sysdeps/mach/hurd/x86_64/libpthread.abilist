@@ -50,7 +50,6 @@ GLIBC_2.38 pthread_spin_init F
 GLIBC_2.38 pthread_spin_lock F
 GLIBC_2.38 pthread_spin_trylock F
 GLIBC_2.38 pthread_spin_unlock F
-GLIBC_2.38 pthread_testcancel F
 GLIBC_2.38 pthread_timedjoin_np F
 GLIBC_2.38 pthread_tryjoin_np F
 GLIBC_2.38 sem_clockwait F

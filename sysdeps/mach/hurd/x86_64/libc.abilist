@@ -1612,6 +1612,7 @@ GLIBC_2.38 pthread_setschedparam F
 GLIBC_2.38 pthread_setschedprio F
 GLIBC_2.38 pthread_setspecific F
 GLIBC_2.38 pthread_sigmask F
+GLIBC_2.38 pthread_testcancel F
 GLIBC_2.38 pthread_yield F
 GLIBC_2.38 ptrace F
 GLIBC_2.38 ptsname F
@@ -2329,6 +2330,7 @@ GLIBC_2.43 pthread_getcpuclockid F
 GLIBC_2.43 pthread_kill F
 GLIBC_2.43 pthread_setconcurrency F
 GLIBC_2.43 pthread_setschedprio F
+GLIBC_2.43 pthread_testcancel F
 GLIBC_2.43 pthread_yield F
 HURD_CTHREADS_0.3 __cthread_getspecific F
 HURD_CTHREADS_0.3 __cthread_keycreate F

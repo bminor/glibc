@@ -30,7 +30,6 @@ GLIBC_2.12 pthread_spin_init F
 GLIBC_2.12 pthread_spin_lock F
 GLIBC_2.12 pthread_spin_trylock F
 GLIBC_2.12 pthread_spin_unlock F
-GLIBC_2.12 pthread_testcancel F
 GLIBC_2.12 sem_close F
 GLIBC_2.12 sem_destroy F
 GLIBC_2.12 sem_getvalue F

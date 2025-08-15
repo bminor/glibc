@@ -32,7 +32,6 @@ libpthread-routines := \
   pt-initialize \
   pt-join \
   pt-spin-inlines \
-  pt-testcancel \
   pt-mutex-transfer-np \
   pt-hurd-cond-wait \
   pt-hurd-cond-timedwait \
@@ -204,6 +203,7 @@ routines := \
   pt-sigstate \
   pt-sigstate-destroy \
   pt-stack-alloc \
+  pt-testcancel \
   pt-thread-alloc \
   pt-thread-start \
   pt-thread-terminate \

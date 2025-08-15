@@ -93,6 +93,7 @@ libc {
     pthread_setschedprio;
     pthread_setspecific;
     pthread_sigmask;
+    pthread_testcancel;
     pthread_yield;
   }
 
@@ -201,6 +202,7 @@ libc {
     pthread_kill;
     pthread_setconcurrency;
     pthread_setschedprio;
+    pthread_testcancel;
     pthread_yield;
   }
 
@@ -255,6 +257,7 @@ libc {
     __pthread_sigstate_destroy;
     __pthread_sigmask;
     __pthread_stack_alloc;
+    __pthread_testcancel;
     __pthread_timedblock;
     __pthread_timedblock_intr;
     __pthread_thread_alloc;
@@ -295,8 +298,6 @@ libpthread {
     pthread_join;
 
     pthread_mutex_transfer_np;
-
-    pthread_testcancel;
 
     sem_close; sem_destroy; sem_getvalue; sem_init; sem_open; sem_post;
     sem_timedwait; sem_trywait; sem_unlink; sem_wait;
