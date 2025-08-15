@@ -229,6 +229,7 @@ libc_hidden_proto (__pthread_dealloc_finish)
 /* Allocate a stack of size STACKSIZE.  The stack base shall be
    returned in *STACKADDR.  */
 extern int __pthread_stack_alloc (void **stackaddr, size_t stacksize);
+libc_hidden_proto (__pthread_stack_alloc)
 
 /* Deallocate the stack STACKADDR of size STACKSIZE.  */
 extern void __pthread_stack_dealloc (void *stackaddr, size_t stacksize);

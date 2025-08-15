@@ -21,6 +21,7 @@
 #include <mach.h>
 
 #include <pt-internal.h>
+#include <ldsodefs.h>
 
 /* Allocate a new stack of size STACKSIZE.  If successful, store the
    address of the newly allocated stack in *STACKADDR and return 0.
@@ -44,3 +45,4 @@ __pthread_stack_alloc (void **stackaddr, size_t stacksize)
     err = EAGAIN;
   return err;
 }
+libc_hidden_def (__pthread_stack_alloc)
