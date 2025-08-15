@@ -242,7 +242,7 @@ extern int __pthread_setup (struct __pthread *__restrict thread,
 						 void *),
 			    void *(*start_routine) (void *),
 			    void *__restrict arg);
-
+libc_hidden_proto (__pthread_setup)
 
 /* Allocate a kernel thread (and any miscellaneous system dependent
    resources) for THREAD; it must not be placed on the run queue.  */

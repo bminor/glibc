@@ -32,7 +32,6 @@ libpthread-routines := \
   pt-hurd-cond-timedwait \
   pt-startup \
   pt-sysdep \
-  pt-setup \
   pt-spin \
   pt-getname-np \
   pt-setname-np \
@@ -198,6 +197,7 @@ routines := \
   pt-setschedparam \
   pt-setschedprio \
   pt-setspecific \
+  pt-setup \
   pt-sigmask \
   pt-sigstate \
   pt-sigstate-destroy \

@@ -91,3 +91,4 @@ __pthread_setup (struct __pthread *thread,
 
   return 0;
 }
+libc_hidden_def (__pthread_setup)
