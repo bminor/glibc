@@ -64,6 +64,7 @@ __lll_abstimed_wait_intr (void *ptr, int val,
   int mlsec = compute_reltime (tsp, clk);
   return mlsec < 0 ? KERN_TIMEDOUT : __lll_timed_wait_intr (ptr, val, mlsec, flags);
 }
+libc_hidden_def (__lll_abstimed_wait_intr)
 
 int
 __lll_abstimed_xwait (void *ptr, int lo, int hi,

@@ -107,6 +107,9 @@ libc {
     sem_init;
     sem_open;
     sem_post;
+    sem_timedwait;
+    sem_trywait;
+    sem_wait;
   }
 
   GLIBC_2.21 {
@@ -147,6 +150,8 @@ libc {
 
     pthread_rwlock_clockrdlock; pthread_rwlock_clockwrlock;
     pthread_timedjoin_np; pthread_tryjoin_np;
+
+    sem_clockwait;
   }
 
   GLIBC_2.41 {
@@ -225,12 +230,16 @@ libc {
     pthread_timedjoin_np;
     pthread_tryjoin_np;
     pthread_yield;
+    sem_clockwait;
     sem_close;
     sem_destroy;
     sem_getvalue;
     sem_init;
     sem_open;
     sem_post;
+    sem_timedwait;
+    sem_trywait;
+    sem_wait;
   }
 
   GLIBC_PRIVATE {
@@ -323,7 +332,7 @@ libpthread {
 
     pthread_create;
 
-    sem_timedwait; sem_trywait; sem_unlink; sem_wait;
+    sem_unlink;
 
     pthread_spin_destroy; pthread_spin_init; pthread_spin_lock;
     pthread_spin_trylock; pthread_spin_unlock;
@@ -343,8 +352,6 @@ libpthread {
     call_once;
     cnd_broadcast; cnd_destroy; cnd_init; cnd_signal; cnd_timedwait; cnd_wait;
     tss_create; tss_delete; tss_get; tss_set;
-
-    sem_clockwait;
   }
 
   GLIBC_2.40 {

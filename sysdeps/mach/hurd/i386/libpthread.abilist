@@ -24,10 +24,7 @@ GLIBC_2.12 pthread_spin_init F
 GLIBC_2.12 pthread_spin_lock F
 GLIBC_2.12 pthread_spin_trylock F
 GLIBC_2.12 pthread_spin_unlock F
-GLIBC_2.12 sem_timedwait F
-GLIBC_2.12 sem_trywait F
 GLIBC_2.12 sem_unlink F
-GLIBC_2.12 sem_wait F
 GLIBC_2.2.6 _IO_flockfile F
 GLIBC_2.2.6 _IO_ftrylockfile F
 GLIBC_2.2.6 _IO_funlockfile F
@@ -48,7 +45,6 @@ GLIBC_2.32 mtx_lock F
 GLIBC_2.32 mtx_timedlock F
 GLIBC_2.32 mtx_trylock F
 GLIBC_2.32 mtx_unlock F
-GLIBC_2.32 sem_clockwait F
 GLIBC_2.32 thrd_create F
 GLIBC_2.32 thrd_detach F
 GLIBC_2.32 thrd_exit F

@@ -25,6 +25,7 @@
 #include <sysdep-cancel.h>
 
 #include <pt-internal.h>
+#include <shlib-compat.h>
 
 #if !__HAVE_64B_ATOMICS
 static void
@@ -196,7 +197,12 @@ __sem_clockwait (sem_t *sem, clockid_t clockid,
 {
   return __sem_timedwait_internal (sem, clockid, timeout);
 }
-weak_alias (__sem_clockwait, sem_clockwait);
+
+libc_hidden_def (__sem_clockwait)
+versioned_symbol (libc, __sem_clockwait, sem_clockwait, GLIBC_2_43);
+# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_32, GLIBC_2_43)
+compat_symbol (libpthread, __sem_clockwait, sem_clockwait, GLIBC_2_32);
+#endif
 
 int
 __sem_timedwait (sem_t *restrict sem, const struct timespec *restrict timeout)
@@ -204,4 +210,8 @@ __sem_timedwait (sem_t *restrict sem, const struct timespec *restrict timeout)
   return __sem_timedwait_internal (sem, CLOCK_REALTIME, timeout);
 }
 
-weak_alias (__sem_timedwait, sem_timedwait);
+libc_hidden_def (__sem_timedwait)
+versioned_symbol (libc, __sem_timedwait, sem_timedwait, GLIBC_2_43);
+# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_43)
+compat_symbol (libpthread, __sem_timedwait, sem_timedwait, GLIBC_2_12);
+#endif

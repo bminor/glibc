@@ -134,6 +134,9 @@ GLIBC_2.12 sem_getvalue F
 GLIBC_2.12 sem_init F
 GLIBC_2.12 sem_open F
 GLIBC_2.12 sem_post F
+GLIBC_2.12 sem_timedwait F
+GLIBC_2.12 sem_trywait F
+GLIBC_2.12 sem_wait F
 GLIBC_2.13 __fentry__ F
 GLIBC_2.14 syncfs F
 GLIBC_2.15 __fdelt_chk F
@@ -2333,6 +2336,7 @@ GLIBC_2.32 pthread_rwlock_clockrdlock F
 GLIBC_2.32 pthread_rwlock_clockwrlock F
 GLIBC_2.32 pthread_timedjoin_np F
 GLIBC_2.32 pthread_tryjoin_np F
+GLIBC_2.32 sem_clockwait F
 GLIBC_2.32 sigabbrev_np F
 GLIBC_2.32 sigdescr_np F
 GLIBC_2.32 strerrordesc_np F
@@ -2672,12 +2676,16 @@ GLIBC_2.43 pthread_testcancel F
 GLIBC_2.43 pthread_timedjoin_np F
 GLIBC_2.43 pthread_tryjoin_np F
 GLIBC_2.43 pthread_yield F
+GLIBC_2.43 sem_clockwait F
 GLIBC_2.43 sem_close F
 GLIBC_2.43 sem_destroy F
 GLIBC_2.43 sem_getvalue F
 GLIBC_2.43 sem_init F
 GLIBC_2.43 sem_open F
 GLIBC_2.43 sem_post F
+GLIBC_2.43 sem_timedwait F
+GLIBC_2.43 sem_trywait F
+GLIBC_2.43 sem_wait F
 GLIBC_2.5 __readlinkat_chk F
 GLIBC_2.5 inet6_opt_append F
 GLIBC_2.5 inet6_opt_find F

@@ -18,6 +18,7 @@
 
 #include <semaphore.h>
 #include <pt-internal.h>
+#include <shlib-compat.h>
 
 extern int __sem_timedwait_internal (sem_t *restrict sem,
 				     clockid_t clockid,
@@ -29,4 +30,7 @@ __sem_wait (sem_t *sem)
   return __sem_timedwait_internal (sem, CLOCK_REALTIME, 0);
 }
 
-strong_alias (__sem_wait, sem_wait);
+versioned_symbol (libc, __sem_wait, sem_wait, GLIBC_2_43);
+# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_43)
+compat_symbol (libpthread, __sem_wait, sem_wait, GLIBC_2_12);
+#endif

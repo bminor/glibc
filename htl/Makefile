@@ -34,11 +34,7 @@ libpthread-routines := \
   pt-spin \
   pt-getname-np \
   pt-setname-np \
-  sem-timedwait \
-  sem-trywait \
   sem_unlink \
-  sem-wait \
-  sem-waitfast \
   cancellation \
   cthreads-compat \
   herrno \
@@ -208,6 +204,10 @@ routines := \
   sem-getvalue \
   sem-init \
   sem-post \
+  sem-timedwait \
+  sem-trywait \
+  sem-wait \
+  sem-waitfast \
   sem_close \
   sem_open \
   sem_routines \
