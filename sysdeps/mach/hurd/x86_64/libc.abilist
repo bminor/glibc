@@ -1760,6 +1760,7 @@ GLIBC_2.38 seed48_r F
 GLIBC_2.38 seekdir F
 GLIBC_2.38 select F
 GLIBC_2.38 sem_destroy F
+GLIBC_2.38 sem_getvalue F
 GLIBC_2.38 semctl F
 GLIBC_2.38 semget F
 GLIBC_2.38 semop F
@@ -2349,6 +2350,7 @@ GLIBC_2.43 pthread_timedjoin_np F
 GLIBC_2.43 pthread_tryjoin_np F
 GLIBC_2.43 pthread_yield F
 GLIBC_2.43 sem_destroy F
+GLIBC_2.43 sem_getvalue F
 HURD_CTHREADS_0.3 __cthread_getspecific F
 HURD_CTHREADS_0.3 __cthread_keycreate F
 HURD_CTHREADS_0.3 __cthread_setspecific F

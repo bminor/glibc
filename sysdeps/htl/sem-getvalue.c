@@ -18,6 +18,7 @@
 
 #include <semaphore.h>
 #include <pt-internal.h>
+#include <shlib-compat.h>
 
 int
 __sem_getvalue (sem_t *restrict sem, int *restrict value)
@@ -33,4 +34,7 @@ __sem_getvalue (sem_t *restrict sem, int *restrict value)
   return 0;
 }
 
-strong_alias (__sem_getvalue, sem_getvalue);
+versioned_symbol (libc, __sem_getvalue, sem_getvalue, GLIBC_2_43);
+# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_43)
+compat_symbol (libpthread, __sem_getvalue, sem_getvalue, GLIBC_2_12);
+#endif
