@@ -18,60 +18,35 @@
 
 /* Read member of the thread descriptor directly.  */
 #define THREAD_GETMEM(descr, member) \
-  ({ __typeof (descr->member) __value;					      \
-     _Static_assert (sizeof (__value) == 1				      \
-		     || sizeof (__value) == 4				      \
-		     || sizeof (__value) == 8,				      \
+  ({									      \
+     _Static_assert (sizeof (descr->member) == 1       			      \
+		     || sizeof (descr->member) == 4			      \
+		     || sizeof (descr->member) == 8,			      \
 		     "size of per-thread data");			      \
-     if (sizeof (__value) == 1)						      \
-       asm volatile ("movb %%gs:%P2,%b0"				      \
-		     : "=q" (__value)					      \
-		     : "0" (0), "i" (offsetof (struct pthread, member)));     \
-     else if (sizeof (__value) == 4)					      \
-       asm volatile ("movl %%gs:%P1,%0"					      \
-		     : "=r" (__value)					      \
-		     : "i" (offsetof (struct pthread, member)));	      \
-     else /* 8 */								      \
-       {								      \
-	 asm volatile ("movl %%gs:%P1,%%eax\n\t"			      \
-		       "movl %%gs:%P2,%%edx"				      \
-		       : "=A" (__value)					      \
-		       : "i" (offsetof (struct pthread, member)),	      \
-			 "i" (offsetof (struct pthread, member) + 4));	      \
-       }								      \
-     __value; })
+     (*(__typeof (descr->member) __seg_gs *)				      \
+      offsetof (struct pthread, member));				      \
+  })
 
-/* THREAD_GETMEM already forces a read.  */
-#define THREAD_GETMEM_VOLATILE(descr, member) THREAD_GETMEM (descr, member)
+#define THREAD_GETMEM_VOLATILE(descr, member) \
+  ({									      \
+     _Static_assert (sizeof (descr->member) == 1			      \
+		     || sizeof (descr->member) == 4			      \
+		     || sizeof (descr->member) == 8,			      \
+		     "size of per-thread data");			      \
+     (*(volatile __typeof (descr->member) __seg_gs *)			      \
+      offsetof (struct pthread, member));				      \
+  })
 
 /* Same as THREAD_GETMEM, but the member offset can be non-constant.  */
 #define THREAD_GETMEM_NC(descr, member, idx) \
-  ({ __typeof (descr->member[0]) __value;				      \
-     _Static_assert (sizeof (__value) == 1				      \
-		     || sizeof (__value) == 4				      \
-		     || sizeof (__value) == 8,				      \
+  ({									      \
+     _Static_assert (sizeof (descr->member[0]) == 1			      \
+		     || sizeof (descr->member[0]) == 4			      \
+		     || sizeof (descr->member[0]) == 8,			      \
 		     "size of per-thread data");			      \
-     if (sizeof (__value) == 1)						      \
-       asm volatile ("movb %%gs:%P2(%3),%b0"				      \
-		     : "=q" (__value)					      \
-		     : "0" (0), "i" (offsetof (struct pthread, member[0])),   \
-		     "r" (idx));					      \
-     else if (sizeof (__value) == 4)					      \
-       asm volatile ("movl %%gs:%P1(,%2,4),%0"				      \
-		     : "=r" (__value)					      \
-		     : "i" (offsetof (struct pthread, member[0])),	      \
-		       "r" (idx));					      \
-     else /* 8 */							      \
-       {								      \
-	 asm volatile  ("movl %%gs:%P1(,%2,8),%%eax\n\t"		      \
-			"movl %%gs:4+%P1(,%2,8),%%edx"			      \
-			: "=&A" (__value)				      \
-			: "i" (offsetof (struct pthread, member[0])),	      \
-			  "r" (idx));					      \
-       }								      \
-     __value; })
-
-
+     (*(__typeof (descr->member[0]) __seg_gs *)				      \
+      offsetof (struct pthread, member[idx]));				      \
+  })
 
 /* Set member of the thread descriptor directly.  */
 #define THREAD_SETMEM(descr, member, value) \
@@ -80,23 +55,9 @@
 		     || sizeof (descr->member) == 4			      \
 		     || sizeof (descr->member) == 8,			      \
 		     "size of per-thread data");			      \
-     if (sizeof (descr->member) == 1)					      \
-       asm volatile ("movb %b0,%%gs:%P1" :				      \
-		     : "iq" (value),					      \
-		       "i" (offsetof (struct pthread, member)));	      \
-     else if (sizeof (descr->member) == 4)				      \
-       asm volatile ("movl %0,%%gs:%P1" :				      \
-		     : "ir" (value),					      \
-		       "i" (offsetof (struct pthread, member)));	      \
-     else /* 8 */							      \
-       {								      \
-	 asm volatile ("movl %%eax,%%gs:%P1\n\t"			      \
-		       "movl %%edx,%%gs:%P2" :				      \
-		       : "A" ((uint64_t) cast_to_integer (value)),	      \
-			 "i" (offsetof (struct pthread, member)),	      \
-			 "i" (offsetof (struct pthread, member) + 4));	      \
-       }})
-
+     (*(__typeof (descr->member) __seg_gs *)				      \
+      offsetof (struct pthread, member) = (value));			      \
+  })
 
 /* Same as THREAD_SETMEM, but the member offset can be non-constant.  */
 #define THREAD_SETMEM_NC(descr, member, idx, value) \
@@ -105,21 +66,6 @@
 		     || sizeof (descr->member[0]) == 4			      \
 		     || sizeof (descr->member[0]) == 8,			      \
 		     "size of per-thread data");			      \
-     if (sizeof (descr->member[0]) == 1)				      \
-       asm volatile ("movb %b0,%%gs:%P1(%2)" :				      \
-		     : "iq" (value),					      \
-		       "i" (offsetof (struct pthread, member)),		      \
-		       "r" (idx));					      \
-     else if (sizeof (descr->member[0]) == 4)				      \
-       asm volatile ("movl %0,%%gs:%P1(,%2,4)" :			      \
-		     : "ir" (value),					      \
-		       "i" (offsetof (struct pthread, member)),		      \
-		       "r" (idx));					      \
-     else /* 8 */							      \
-       {								      \
-	 asm volatile ("movl %%eax,%%gs:%P1(,%2,8)\n\t"			      \
-		       "movl %%edx,%%gs:4+%P1(,%2,8)" :			      \
-		       : "A" ((uint64_t) cast_to_integer (value)),	      \
-			 "i" (offsetof (struct pthread, member)),	      \
-			 "r" (idx));					      \
-       }})
+     (*(__typeof (descr->member[0]) __seg_gs *)				      \
+      offsetof (struct pthread, member[idx]) = (value));		      \
+  })
