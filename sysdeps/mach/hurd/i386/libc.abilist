@@ -130,6 +130,7 @@ GLIBC_2.12 pthread_testcancel F
 GLIBC_2.12 pthread_yield F
 GLIBC_2.12 sem_destroy F
 GLIBC_2.12 sem_getvalue F
+GLIBC_2.12 sem_init F
 GLIBC_2.13 __fentry__ F
 GLIBC_2.14 syncfs F
 GLIBC_2.15 __fdelt_chk F
@@ -2670,6 +2671,7 @@ GLIBC_2.43 pthread_tryjoin_np F
 GLIBC_2.43 pthread_yield F
 GLIBC_2.43 sem_destroy F
 GLIBC_2.43 sem_getvalue F
+GLIBC_2.43 sem_init F
 GLIBC_2.5 __readlinkat_chk F
 GLIBC_2.5 inet6_opt_append F
 GLIBC_2.5 inet6_opt_find F

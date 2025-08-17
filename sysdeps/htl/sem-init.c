@@ -21,6 +21,7 @@
 
 #include <hurd.h>
 #include <pt-internal.h>
+#include <shlib-compat.h>
 
 int
 __sem_init (sem_t *sem, int pshared, unsigned value)
@@ -36,4 +37,7 @@ __sem_init (sem_t *sem, int pshared, unsigned value)
   return 0;
 }
 
-strong_alias (__sem_init, sem_init);
+versioned_symbol (libc, __sem_init, sem_init, GLIBC_2_43);
+# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_43)
+compat_symbol (libpthread, __sem_init, sem_init, GLIBC_2_12);
+#endif
