@@ -106,6 +106,7 @@ libc {
     sem_getvalue;
     sem_init;
     sem_open;
+    sem_post;
   }
 
   GLIBC_2.21 {
@@ -229,6 +230,7 @@ libc {
     sem_getvalue;
     sem_init;
     sem_open;
+    sem_post;
   }
 
   GLIBC_PRIVATE {
@@ -321,7 +323,6 @@ libpthread {
 
     pthread_create;
 
-    sem_post;
     sem_timedwait; sem_trywait; sem_unlink; sem_wait;
 
     pthread_spin_destroy; pthread_spin_init; pthread_spin_lock;

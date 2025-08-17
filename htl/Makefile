@@ -34,7 +34,6 @@ libpthread-routines := \
   pt-spin \
   pt-getname-np \
   pt-setname-np \
-  sem-post \
   sem-timedwait \
   sem-trywait \
   sem_unlink \
@@ -208,6 +207,7 @@ routines := \
   sem-destroy \
   sem-getvalue \
   sem-init \
+  sem-post \
   sem_close \
   sem_open \
   sem_routines \

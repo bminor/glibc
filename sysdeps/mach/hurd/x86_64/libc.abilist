@@ -1764,6 +1764,7 @@ GLIBC_2.38 sem_destroy F
 GLIBC_2.38 sem_getvalue F
 GLIBC_2.38 sem_init F
 GLIBC_2.38 sem_open F
+GLIBC_2.38 sem_post F
 GLIBC_2.38 semctl F
 GLIBC_2.38 semget F
 GLIBC_2.38 semop F
@@ -2357,6 +2358,7 @@ GLIBC_2.43 sem_destroy F
 GLIBC_2.43 sem_getvalue F
 GLIBC_2.43 sem_init F
 GLIBC_2.43 sem_open F
+GLIBC_2.43 sem_post F
 HURD_CTHREADS_0.3 __cthread_getspecific F
 HURD_CTHREADS_0.3 __cthread_keycreate F
 HURD_CTHREADS_0.3 __cthread_setspecific F
