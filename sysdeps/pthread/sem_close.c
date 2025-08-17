@@ -18,6 +18,7 @@
 #include <errno.h>
 #include "semaphoreP.h"
 #include <sem_routines.h>
+#include <shlib-compat.h>
 
 int
 __sem_close (sem_t *sem)
@@ -30,11 +31,14 @@ __sem_close (sem_t *sem)
 
   return 0;
 }
-#if PTHREAD_IN_LIBC
+#ifndef __PTHREAD_HTL
 versioned_symbol (libc, __sem_close, sem_close, GLIBC_2_34);
 # if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1_1, GLIBC_2_34)
 compat_symbol (libpthread, __sem_close, sem_close, GLIBC_2_1_1);
 # endif
-#else /* !PTHREAD_IN_LIBC */
-strong_alias (__sem_close, sem_close)
+#else /* __PTHREAD_HTL */
+versioned_symbol (libc, __sem_close, sem_close, GLIBC_2_43);
+# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_43)
+compat_symbol (libpthread, __sem_close, sem_close, GLIBC_2_12);
+#endif
 #endif

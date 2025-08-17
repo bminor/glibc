@@ -20,6 +20,7 @@
 #include <semaphoreP.h>
 #include <sys/mman.h>
 #include <sem_routines.h>
+#include <string.h>
 
 /* Keeping track of currently used mappings.  */
 struct inuse_sem

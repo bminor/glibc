@@ -25,13 +25,8 @@
 #include <sem_routines.h>
 #include <futex-internal.h>
 #include <libc-lock.h>
-
-
-#if !PTHREAD_IN_LIBC
-/* The private names are not exported from libc.  */
-# define __link link
-# define __unlink unlink
-#endif
+#include <string.h>
+#include <shlib-compat.h>
 
 #define SEM_OPEN_FLAGS (O_RDWR | O_NOFOLLOW | O_CLOEXEC)
 
@@ -215,11 +210,14 @@ out:
 
   return result;
 }
-#if PTHREAD_IN_LIBC
+#ifndef __PTHREAD_HTL
 versioned_symbol (libc, __sem_open, sem_open, GLIBC_2_34);
 # if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1_1, GLIBC_2_34)
 compat_symbol (libpthread, __sem_open, sem_open, GLIBC_2_1_1);
 # endif
-#else /* !PTHREAD_IN_LIBC */
-strong_alias (__sem_open, sem_open)
+#else /* __PTHREAD_HTL */
+versioned_symbol (libc, __sem_open, sem_open, GLIBC_2_43);
+# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_43)
+compat_symbol (libpthread, __sem_open, sem_open, GLIBC_2_12);
+#endif
 #endif
