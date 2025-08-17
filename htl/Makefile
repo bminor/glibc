@@ -34,7 +34,6 @@ libpthread-routines := \
   pt-spin \
   pt-getname-np \
   pt-setname-np \
-  sem_unlink \
   cancellation \
   cthreads-compat \
   herrno \
@@ -211,6 +210,7 @@ routines := \
   sem_close \
   sem_open \
   sem_routines \
+  sem_unlink \
   # routines
 shared-only-routines = forward
 

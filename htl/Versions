@@ -109,6 +109,7 @@ libc {
     sem_post;
     sem_timedwait;
     sem_trywait;
+    sem_unlink;
     sem_wait;
   }
 
@@ -239,6 +240,7 @@ libc {
     sem_post;
     sem_timedwait;
     sem_trywait;
+    sem_unlink;
     sem_wait;
   }
 
@@ -331,8 +333,6 @@ libpthread {
     pthread_atfork;
 
     pthread_create;
-
-    sem_unlink;
 
     pthread_spin_destroy; pthread_spin_init; pthread_spin_lock;
     pthread_spin_trylock; pthread_spin_unlock;

@@ -43,7 +43,6 @@ GLIBC_2.38 pthread_spin_init F
 GLIBC_2.38 pthread_spin_lock F
 GLIBC_2.38 pthread_spin_trylock F
 GLIBC_2.38 pthread_spin_unlock F
-GLIBC_2.38 sem_unlink F
 GLIBC_2.38 thrd_create F
 GLIBC_2.38 thrd_detach F
 GLIBC_2.38 thrd_exit F

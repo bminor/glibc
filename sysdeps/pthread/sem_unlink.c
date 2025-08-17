@@ -22,11 +22,7 @@
 #include <unistd.h>
 #include "semaphoreP.h"
 #include <shm-directory.h>
-
-#if !PTHREAD_IN_LIBC
-/* The private name is not exported from libc.  */
-# define __unlink unlink
-#endif
+#include <shlib-compat.h>
 
 int
 __sem_unlink (const char *name)
@@ -44,11 +40,14 @@ __sem_unlink (const char *name)
     __set_errno (EACCES);
   return ret;
 }
-#if PTHREAD_IN_LIBC
+#ifndef __PTHREAD_HTL
 versioned_symbol (libc, __sem_unlink, sem_unlink, GLIBC_2_34);
 # if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1_1, GLIBC_2_34)
 compat_symbol (libpthread, __sem_unlink, sem_unlink, GLIBC_2_1_1);
 # endif
-#else /* !PTHREAD_IN_LIBC */
-strong_alias (__sem_unlink, sem_unlink)
+#else /* __PTHREAD_HTL */
+versioned_symbol (libc, __sem_unlink, sem_unlink, GLIBC_2_43);
+# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_43)
+compat_symbol (libpthread, __sem_unlink, sem_unlink, GLIBC_2_12);
+#endif
 #endif

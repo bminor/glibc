@@ -1768,6 +1768,7 @@ GLIBC_2.38 sem_open F
 GLIBC_2.38 sem_post F
 GLIBC_2.38 sem_timedwait F
 GLIBC_2.38 sem_trywait F
+GLIBC_2.38 sem_unlink F
 GLIBC_2.38 sem_wait F
 GLIBC_2.38 semctl F
 GLIBC_2.38 semget F
@@ -2366,6 +2367,7 @@ GLIBC_2.43 sem_open F
 GLIBC_2.43 sem_post F
 GLIBC_2.43 sem_timedwait F
 GLIBC_2.43 sem_trywait F
+GLIBC_2.43 sem_unlink F
 GLIBC_2.43 sem_wait F
 HURD_CTHREADS_0.3 __cthread_getspecific F
 HURD_CTHREADS_0.3 __cthread_keycreate F
