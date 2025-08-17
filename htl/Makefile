@@ -35,7 +35,6 @@ libpthread-routines := \
   pt-getname-np \
   pt-setname-np \
   sem_close \
-  sem-destroy \
   sem-getvalue \
   sem-init \
   sem_open \
@@ -211,6 +210,7 @@ routines := \
   pt-timedblock-intr \
   pt-wakeup \
   pt-yield \
+  sem-destroy \
   # routines
 shared-only-routines = forward
 

@@ -45,7 +45,6 @@ GLIBC_2.38 pthread_spin_trylock F
 GLIBC_2.38 pthread_spin_unlock F
 GLIBC_2.38 sem_clockwait F
 GLIBC_2.38 sem_close F
-GLIBC_2.38 sem_destroy F
 GLIBC_2.38 sem_getvalue F
 GLIBC_2.38 sem_init F
 GLIBC_2.38 sem_open F
