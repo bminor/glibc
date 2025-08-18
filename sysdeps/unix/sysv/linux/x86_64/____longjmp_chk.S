@@ -44,7 +44,7 @@ longjmp_msg:
 	/* Without working sigaltstack we cannot perform the test.  */	\
 	testl	%eax, %eax;						\
 	jne	.Lok2;							\
-	testl	$1, (-sizeSS + oSS_FLAGS)(%rsp);			\
+	testb	$1, (-sizeSS + oSS_FLAGS)(%rsp);			\
 	jz	.Lfail;							\
 	mov	(-sizeSS + oSS_SP)(%rsp), %RAX_LP;			\
 	add	(-sizeSS + oSS_SIZE)(%rsp), %RAX_LP;			\
