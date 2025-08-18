@@ -127,6 +127,15 @@ LDFLAGS-tst-tls23 += -rdynamic
 tst-tls23-mod.so-no-z-defs = yes
 
 $(objpfx)tst-tls23-mod.so: $(libsupport)
+
+tests-special += $(objpfx)check-gnu2-tls.out
+
+$(objpfx)check-gnu2-tls.out: $(common-objpfx)libc.so
+	LC_ALL=C $(READELF) -V -W $< \
+		| sed -ne '/.gnu.version_d/, /.gnu.version_r/ p' \
+		| grep GLIBC_ABI_GNU2_TLS > $@; \
+	$(evaluate-test)
+generated += check-gnu2-tls.out
 endif
 
 ifeq ($(subdir),math)
