@@ -67,7 +67,7 @@ ENTRY (____longjmp_chk)
 	/* Without working sigaltstack we cannot perform the test.  */
 	test	%eax, %eax
 	jne	.Lok2
-	testl	$1, 4(%esp)
+	testb	$1, 4(%esp)
 	jz	.Lfail
 
 	movl	(%esp), %eax
