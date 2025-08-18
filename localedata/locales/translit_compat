@@ -9,7 +9,7 @@ comment_char %
 % otherwise be governed by that license.
 
 % Transliterations of compatibility characters and ligatures.
-% Generated automatically from UnicodeData.txt by gen_translit_compat.py on 2024-09-12 for Unicode 16.0.0.
+% Generated automatically from UnicodeData.txt by gen_translit_compat.py on 2025-08-18 for Unicode 17.0.0.
 
 LC_CTYPE
 
@@ -1679,6 +1679,8 @@ translit_start
 <UA69D> "<U044C>"
 % MODIFIER LETTER US
 <UA770> "<UA76F>"
+% MODIFIER LETTER CAPITAL S
+<UA7F1> "<U0053>"
 % MODIFIER LETTER CAPITAL C
 <UA7F2> "<U0043>"
 % MODIFIER LETTER CAPITAL F
