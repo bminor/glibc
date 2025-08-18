@@ -212,6 +212,9 @@ support_fuse_handle_directory (struct support_fuse *f)
         support_fuse_reply_prepared (f);
       }
       return true;
+    case FUSE_GETXATTR:
+      support_fuse_reply_error (f, ENOSYS);
+      return true;
     default:
       return false;
     }
@@ -222,7 +225,8 @@ support_fuse_handle_mountpoint (struct support_fuse *f)
 {
   TEST_VERIFY (f->inh != NULL);
   /* 1 is the root node.  */
-  if (f->inh->opcode == FUSE_GETATTR && f->inh->nodeid == 1)
+  if ((f->inh->opcode == FUSE_GETATTR || f->inh->opcode == FUSE_GETXATTR)
+      && f->inh->nodeid == 1)
     return support_fuse_handle_directory (f);
   return false;
 }
