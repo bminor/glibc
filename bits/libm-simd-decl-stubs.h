@@ -187,6 +187,28 @@
 #define __DECL_SIMD_expm1f64x
 #define __DECL_SIMD_expm1f128x
 
+#define __DECL_SIMD_exp2m1
+#define __DECL_SIMD_exp2m1f
+#define __DECL_SIMD_exp2m1l
+#define __DECL_SIMD_exp2m1f16
+#define __DECL_SIMD_exp2m1f32
+#define __DECL_SIMD_exp2m1f64
+#define __DECL_SIMD_exp2m1f128
+#define __DECL_SIMD_exp2m1f32x
+#define __DECL_SIMD_exp2m1f64x
+#define __DECL_SIMD_exp2m1f128x
+
+#define __DECL_SIMD_exp10m1
+#define __DECL_SIMD_exp10m1f
+#define __DECL_SIMD_exp10m1l
+#define __DECL_SIMD_exp10m1f16
+#define __DECL_SIMD_exp10m1f32
+#define __DECL_SIMD_exp10m1f64
+#define __DECL_SIMD_exp10m1f128
+#define __DECL_SIMD_exp10m1f32x
+#define __DECL_SIMD_exp10m1f64x
+#define __DECL_SIMD_exp10m1f128x
+
 #define __DECL_SIMD_sinh
 #define __DECL_SIMD_sinhf
 #define __DECL_SIMD_sinhl

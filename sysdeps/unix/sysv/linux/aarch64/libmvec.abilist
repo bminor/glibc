@@ -168,3 +168,13 @@ GLIBC_2.42 _ZGVsMxv_atanpi F
 GLIBC_2.42 _ZGVsMxv_atanpif F
 GLIBC_2.42 _ZGVsMxvv_atan2pi F
 GLIBC_2.42 _ZGVsMxvv_atan2pif F
+GLIBC_2.43 _ZGVnN2v_exp10m1 F
+GLIBC_2.43 _ZGVnN2v_exp10m1f F
+GLIBC_2.43 _ZGVnN2v_exp2m1 F
+GLIBC_2.43 _ZGVnN2v_exp2m1f F
+GLIBC_2.43 _ZGVnN4v_exp10m1f F
+GLIBC_2.43 _ZGVnN4v_exp2m1f F
+GLIBC_2.43 _ZGVsMxv_exp10m1 F
+GLIBC_2.43 _ZGVsMxv_exp10m1f F
+GLIBC_2.43 _ZGVsMxv_exp2m1 F
+GLIBC_2.43 _ZGVsMxv_exp2m1f F

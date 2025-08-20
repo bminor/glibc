@@ -179,4 +179,16 @@ libmvec {
     _ZGVsMxvv_atan2pi;
     _ZGVsMxvv_atan2pif;
   }
+  GLIBC_2.43 {
+    _ZGVnN2v_exp2m1;
+    _ZGVnN2v_exp2m1f;
+    _ZGVnN4v_exp2m1f;
+    _ZGVsMxv_exp2m1;
+    _ZGVsMxv_exp2m1f;
+    _ZGVnN2v_exp10m1;
+    _ZGVnN2v_exp10m1f;
+    _ZGVnN4v_exp10m1f;
+    _ZGVsMxv_exp10m1;
+    _ZGVsMxv_exp10m1f;
+  }
 }

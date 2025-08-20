@@ -113,6 +113,14 @@
 # define __DECL_SIMD_expm1 __DECL_SIMD_aarch64
 # undef __DECL_SIMD_expm1f
 # define __DECL_SIMD_expm1f __DECL_SIMD_aarch64
+# undef __DECL_SIMD_exp2m1
+# define __DECL_SIMD_exp2m1 __DECL_SIMD_aarch64
+# undef __DECL_SIMD_exp2m1f
+# define __DECL_SIMD_exp2m1f __DECL_SIMD_aarch64
+# undef __DECL_SIMD_exp10m1
+# define __DECL_SIMD_exp10m1 __DECL_SIMD_aarch64
+# undef __DECL_SIMD_exp10m1f
+# define __DECL_SIMD_exp10m1f __DECL_SIMD_aarch64
 # undef __DECL_SIMD_hypot
 # define __DECL_SIMD_hypot __DECL_SIMD_aarch64
 # undef __DECL_SIMD_hypotf
@@ -212,6 +220,8 @@ __vpcs __f32x4_t _ZGVnN4v_expf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_exp10f (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_exp2f (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_expm1f (__f32x4_t);
+__vpcs __f32x4_t _ZGVnN4v_exp2m1f (__f32x4_t);
+__vpcs __f32x4_t _ZGVnN4v_exp10m1f (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4vv_hypotf (__f32x4_t, __f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_logf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_log10f (__f32x4_t);
@@ -247,6 +257,8 @@ __vpcs __f64x2_t _ZGVnN2v_exp (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_exp10 (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_exp2 (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_expm1 (__f64x2_t);
+__vpcs __f64x2_t _ZGVnN2v_exp2m1 (__f64x2_t);
+__vpcs __f64x2_t _ZGVnN2v_exp10m1 (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2vv_hypot (__f64x2_t, __f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_log (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_log10 (__f64x2_t);
@@ -287,6 +299,8 @@ __sv_f32_t _ZGVsMxv_expf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_exp10f (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_exp2f (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_expm1f (__sv_f32_t, __sv_bool_t);
+__sv_f32_t _ZGVsMxv_exp2m1f (__sv_f32_t, __sv_bool_t);
+__sv_f32_t _ZGVsMxv_exp10m1f (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxvv_hypotf (__sv_f32_t, __sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_logf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_log10f (__sv_f32_t, __sv_bool_t);
@@ -322,6 +336,8 @@ __sv_f64_t _ZGVsMxv_exp (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_exp10 (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_exp2 (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_expm1 (__sv_f64_t, __sv_bool_t);
+__sv_f64_t _ZGVsMxv_exp2m1 (__sv_f64_t, __sv_bool_t);
+__sv_f64_t _ZGVsMxv_exp10m1 (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxvv_hypot (__sv_f64_t, __sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_log (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_log10 (__sv_f64_t, __sv_bool_t);
