@@ -223,15 +223,15 @@ sv_powf_core (const svbool_t pg, svuint32_t i, svuint32_t iz, svint32_t k,
   const svbool_t ptrue = svptrue_b64 ();
 
   /* Unpack and promote input vectors (pg, y, z, i, k and sign_bias) into two
-   * in order to perform core computation in double precision.  */
+     in order to perform core computation in double precision.  */
   const svbool_t pg_lo = svunpklo (pg);
   const svbool_t pg_hi = svunpkhi (pg);
-  svfloat64_t y_lo
-      = svcvt_f64_x (pg, svreinterpret_f32 (svunpklo (svreinterpret_u32 (y))));
-  svfloat64_t y_hi
-      = svcvt_f64_x (pg, svreinterpret_f32 (svunpkhi (svreinterpret_u32 (y))));
-  svfloat64_t z_lo = svcvt_f64_x (pg, svreinterpret_f32 (svunpklo (iz)));
-  svfloat64_t z_hi = svcvt_f64_x (pg, svreinterpret_f32 (svunpkhi (iz)));
+  svfloat64_t y_lo = svcvt_f64_x (
+      ptrue, svreinterpret_f32 (svunpklo (svreinterpret_u32 (y))));
+  svfloat64_t y_hi = svcvt_f64_x (
+      ptrue, svreinterpret_f32 (svunpkhi (svreinterpret_u32 (y))));
+  svfloat64_t z_lo = svcvt_f64_x (ptrue, svreinterpret_f32 (svunpklo (iz)));
+  svfloat64_t z_hi = svcvt_f64_x (ptrue, svreinterpret_f32 (svunpkhi (iz)));
   svuint64_t i_lo = svunpklo (i);
   svuint64_t i_hi = svunpkhi (i);
   svint64_t k_lo = svunpklo (k);
@@ -312,7 +312,7 @@ svfloat32_t SV_NAME_F2 (pow) (svfloat32_t x, svfloat32_t y, const svbool_t pg)
 			 (23 - V_POWF_EXP2_TABLE_BITS));
 
   /* Compute core in extended precision and return intermediate ylogx results
-   * to handle cases of underflow and underflow in exp.  */
+     to handle cases of underflow and overflow in exp.  */
   svfloat32_t ylogx;
   svfloat32_t ret
       = sv_powf_core (yint_or_xpos, i, iz, k, y, sign_bias, &ylogx, d);
