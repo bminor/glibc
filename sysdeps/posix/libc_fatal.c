@@ -43,7 +43,7 @@ writev_for_fatal (int fd, const struct iovec *iov, size_t niov, size_t total)
 
 /* Abort with an error message.  */
 void
-__libc_message_impl (const char *fmt, ...)
+__libc_message_impl (const char *vma_name, const char *fmt, ...)
 {
   va_list ap;
   int fd = -1;
@@ -123,7 +123,7 @@ __libc_message_impl (const char *fmt, ...)
 	    wp = mempcpy (wp, iov[cnt].iov_base, iov[cnt].iov_len);
 	  *wp = '\0';
 
-	  __set_vma_name (buf, total, " glibc: fatal");
+	  __set_vma_name (buf, total, vma_name);
 
 	  /* We have to free the old buffer since the application might
 	     catch the SIGABRT signal.  */

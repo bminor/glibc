@@ -171,36 +171,35 @@ extern void __fortify_fail (const char *msg) __attribute__ ((__noreturn__));
 libc_hidden_proto (__fortify_fail)
 
 /* The maximum number of varargs allowed in a __libc_message format string */
-#define LIBC_MESSAGE_MAX_ARGS 4
+#define LIBC_MESSAGE_MAX_ARGS 7
 
 #define IOVEC_MAX_ERR_MSG "Fatal glibc error: Internal " \
 			  "__libc_message error. Too many arguments.\n"
 #define IOVEC_MAX_ERR_MSG_LEN (sizeof (IOVEC_MAX_ERR_MSG) - 1)
 
-_Noreturn void __libc_message_impl (const char *__fnt, ...) attribute_hidden
-     __attribute__ ((__format__ (__printf__, 1, 2)));
+_Noreturn void __libc_message_impl (const char *__vmaname, const char *__fmt,
+				    ...) attribute_hidden
+     __attribute__ ((__format__ (__printf__, 2, 3)));
 
-#define __libc_message0(fmt) \
-   __libc_message_impl (fmt)
-#define __libc_message1(fmt, a1) \
-   __libc_message_impl (fmt, a1)
-#define __libc_message2(fmt, a1, a2) \
-   __libc_message_impl (fmt, a1, a2)
-#define __libc_message3(fmt, a1, a2, a3) \
-   __libc_message_impl (fmt, a1, a2, a3)
-#define __libc_message4(fmt, a1, a2, a3, a4) \
-   __libc_message_impl (fmt, a1, a2, a3, a4)
+#define __libc_fatal_vma_name  "glibc: fatal"
+#define __libc_assert_vma_name "glibc: assert"
 
-#define __libc_message_concat_x(a,b)  a##b
-#define __libc_message_concat(a,b)    __libc_message_concat_x (a, b)
-
-#define __libc_message_nargs_x(a0,a1,a2,a3,a4,a5,a6,...) a6
-#define __libc_message_nargs(b, ...) \
-   __libc_message_nargs_x (__VA_ARGS__,6,5,4,3,2,1,0,)
-#define __libc_message_disp(b, ...) \
-   __libc_message_concat (b, __libc_message_nargs (__VA_ARGS__))(__VA_ARGS__)
+static inline _Noreturn void __libc_message_wrapper (const char *vmaname,
+						     const char *fmt, ...)
+{
+#ifdef __va_arg_pack_len
+  if (__va_arg_pack_len () > LIBC_MESSAGE_MAX_ARGS)
+    {
+      __errordecl (__libc_message_error, "invalid number of arguments");
+      __libc_message_error ();
+    }
+#endif
+  __libc_message_impl (vmaname, fmt, __va_arg_pack ());
+}
 #define __libc_message(...) \
-   __libc_message_disp (__libc_message, __VA_ARGS__)
+   __libc_message_wrapper (__libc_fatal_vma_name, __VA_ARGS__)
+#define __libc_assert(...) \
+   __libc_message_wrapper (__libc_assert_vma_name, __VA_ARGS__)
 
 /* Acquire ownership of STREAM.  */
 extern void __flockfile (FILE *__stream) attribute_hidden;

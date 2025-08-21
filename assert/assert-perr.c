@@ -15,10 +15,15 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <_itoa.h>
+#include <array_length.h>
 #include <assert.h>
+#include <intprops.h>
 #include <libintl.h>
 #include <string.h>
+#include <stdio.h>
 
+extern const char *__progname;
 
 /* This function, when passed an error number, a filename, and a line
    number, prints a message on the standard error stream of the form:
@@ -31,8 +36,19 @@ __assert_perror_fail (int errnum,
 {
   char errbuf[1024];
 
-  char *e = __strerror_r (errnum, errbuf, sizeof errbuf);
-  __assert_fail_base (_("%s%s%s:%u: %s%sUnexpected error: %s.\n"),
-		      e, file, line, function);
+  const char *e = __strerror_r (errnum, errbuf, sizeof errbuf);
+
+  char linebuf[INT_BUFSIZE_BOUND (unsigned int)];
+  array_end (linebuf)[-1] = '\0';
+  char *linestr = _itoa_word (line, array_end (linebuf) - 1, 10, 0);
+
+  __libc_message (_("%s%s%s:%s: %s%sUnexpected error: %s.\n"),
+		  __progname,
+		  __progname[0] ? ": " : "",
+		  file,
+		  linestr,
+		  function ? function : "",
+		  function ? ": " : "",
+		  e);
 }
 libc_hidden_def (__assert_perror_fail)

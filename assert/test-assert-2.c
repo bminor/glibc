@@ -127,7 +127,7 @@ check_posix (const char *buf, int rv, int line,
 }
 
 static void
-one_test (void (*func)(void *), int which_path)
+one_test (void (*func)(void *))
 {
   struct support_capture_subprocess sp;
   int rv;
@@ -140,17 +140,7 @@ one_test (void (*func)(void *), int which_path)
 
   check_posix (sp.err.buffer, rv, do_lineno, do_funcname, "1 == 2");
 
-  /* Look for intentional subtle differences in messages to verify
-     that the intended code path was taken.  */
-  switch (which_path)
-    {
-    case 0:
-      TEST_VERIFY (strstr (sp.err.buffer, "failed.\n") != NULL);
-      break;
-    case 1:
-      TEST_VERIFY (strstr (sp.err.buffer, "failed\n") != NULL);
-      break;
-    }
+  TEST_VERIFY (strstr (sp.err.buffer, "failed.\n") != NULL);
 
   support_capture_subprocess_free (&sp);
 }
@@ -158,8 +148,8 @@ one_test (void (*func)(void *), int which_path)
 static int
 do_test(void)
 {
-  one_test (test_assert_normal, 0);
-  one_test (test_assert_nomalloc, 1);
+  one_test (test_assert_normal);
+  one_test (test_assert_nomalloc);
 
   return 0;
 }

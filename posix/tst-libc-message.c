@@ -25,8 +25,11 @@
 static _Noreturn void
 run_libc_message (void *closure)
 {
-  /* We only support 4 arguments.  Call with 5 to trigger failure.  */
-  __libc_message_impl ("%s %s %s %s %s\n", "1", "2", "3", "4", "5");
+  /* We only support 7 (LIBC_MESSAGE_MAX_ARGS) arguments.  Call with 8 to
+     trigger failure.  */
+  __libc_message_impl ("glibc: test",
+		       "%s %s %s %s %s %s %s %s\n",
+		       "1", "2", "3", "4", "5", "6", "7", "8");
   __builtin_unreachable ();
 }
 
