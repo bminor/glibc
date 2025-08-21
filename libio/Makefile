@@ -130,6 +130,7 @@ tests = \
   tst-sprintf-chk-ub \
   tst-sprintf-ub \
   tst-sscanf \
+  tst-stdio-static \
   tst-swscanf \
   tst-ungetwc1 \
   tst-ungetwc2 \
@@ -148,6 +149,8 @@ tests = \
   tst_wprintf2 \
   tst_wscanf \
   # tests
+
+tests-static += tst-stdio-static
 
 $(objpfx)tst-popen-fork: $(shared-thread-library)
 
@@ -445,3 +448,9 @@ $(objpfx)tst-bz22415-mem.out: $(objpfx)tst-bz22415.out
 $(objpfx)tst-bz24228-mem.out: $(objpfx)tst-bz24228.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-bz24228.mtrace > $@; \
 	$(evaluate-test)
+
+# Test stdio.o with "strip --strip-unneeded".
+$(objpfx)tst-stdio-static: $(objpfx)stdio-stripped.o
+
+$(objpfx)stdio-stripped.o: $(objpfx)stdio.o
+	$(STRIP) --strip-unneeded -o $@ $<
