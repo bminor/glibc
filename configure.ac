@@ -1611,7 +1611,7 @@ LIBC_TRY_CC_AND_TEST_CC_OPTION([for -Wfree-labels],
   [libc_cv_test_cc_wfree_labels=-Wfree-labels],
   [libc_cv_test_cc_wfree_labels=])
 LIBC_CONFIG_VAR([cc-option-wfree-labels], [$libc_cv_cc_wfree_labels])
-AC_SUBST(libc_cv_test_cc_wfree_labels)
+LIBC_CONFIG_VAR([test-cc-option-wfree-labels], [$libc_cv_test_cc_wfree_labels])
 
 LIBC_TRY_CC_AND_TEST_CC_OPTION([for -Wmissing-parameter-name],
   [-Werror -Wmissing-parameter-name],
@@ -1623,7 +1623,8 @@ LIBC_TRY_CC_AND_TEST_CC_OPTION([for -Wmissing-parameter-name],
   [libc_cv_test_cc_wmissing_parameter_name=])
 LIBC_CONFIG_VAR([cc-option-wmissing-parameter-name],
 		[$libc_cv_cc_wmissing_parameter_name])
-AC_SUBST(libc_cv_test_cc_wmissing_parameter_name)
+LIBC_CONFIG_VAR([test-cc-option-wmissing-parameter-name],
+		[$libc_cv_test_cc_wmissing_parameter_name])
 
 conftest_code="
 void bar (void (*callback) (void));

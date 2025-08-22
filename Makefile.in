@@ -26,6 +26,8 @@ check xcheck test:
 		config-cflags-mprefer-vector-width="$(test-config-cflags-mprefer-vector-width)" \
 		config-cflags-signaling-nans="$(test-config-cflags-signaling-nans)" \
 		config-cflags-wno-ignored-attributes="$(test-config-cflags-wno-ignored-attributes)" \
+		cc-option-wfree-labels="$(test-cc-option-wfree-labels)" \
+		cc-option-wmissing-parameter-name="$(test-cc-option-wmissing-parameter-name)" \
 		enable-cet="$(test-enable-cet)" \
 		have-mamx-tile="$(test-have-mamx-tile)" \
 		have-static-pie="$(test-have-static-pie)" \

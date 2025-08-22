@@ -649,8 +649,6 @@ have_selinux
 have_libcap
 have_libaudit
 LIBGD
-libc_cv_test_cc_wmissing_parameter_name
-libc_cv_test_cc_wfree_labels
 libc_cv_test_cc_wimplicit_fallthrough
 libc_cv_cc_loop_to_function
 libc_cv_test_cc_signaling_nans
@@ -8086,7 +8084,8 @@ fi
 
 config_vars="$config_vars
 cc-option-wfree-labels = $libc_cv_cc_wfree_labels"
-
+config_vars="$config_vars
+test-cc-option-wfree-labels = $libc_cv_test_cc_wfree_labels"
 
 
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for -Wmissing-parameter-name" >&5
@@ -8146,7 +8145,8 @@ fi
 
 config_vars="$config_vars
 cc-option-wmissing-parameter-name = $libc_cv_cc_wmissing_parameter_name"
-
+config_vars="$config_vars
+test-cc-option-wmissing-parameter-name = $libc_cv_test_cc_wmissing_parameter_name"
 
 conftest_code="
 void bar (void (*callback) (void));
