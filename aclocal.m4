@@ -326,6 +326,23 @@ case "$prefix" in
   ;;
 esac])
 
+dnl Test a CC compiler option or options with an input file.
+dnl LIBC_TRY_CC_COMMAND([message], [code], [options],
+dnl   [CC-cache-id], [CC-action-if-true], [CC-action-if-false])
+AC_DEFUN([LIBC_TRY_CC_COMMAND],
+[
+cat > conftest.c <<EOF
+$2
+EOF
+AC_CACHE_CHECK([$1], $4, [dnl
+  if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $3 conftest.c -o conftest 1>&AS_MESSAGE_LOG_FD])
+  then
+    [$5]
+  else
+    [$6]
+  fi])
+rm -f conftest*])
+
 dnl Run a test with TEST_CC.
 dnl LIBC_CHECK_TEST_CC([commands])
 AC_DEFUN([LIBC_CHECK_TEST_CC],

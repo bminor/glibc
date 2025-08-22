@@ -144,6 +144,12 @@ $(objpfx)check-gnu2-tls.out: $(common-objpfx)libc.so
 		| grep GLIBC_ABI_GNU2_TLS > $@; \
 	$(evaluate-test)
 generated += check-gnu2-tls.out
+
+ifneq (,$(test-cc-cflags-no-direct-extern-access))
+CFLAGS-tst-protected1a.c += $(test-cc-cflags-no-direct-extern-access)
+CFLAGS-tst-protected1b.c += $(test-cc-cflags-no-direct-extern-access)
+CFLAGS-vismain.c += $(test-cc-cflags-no-direct-extern-access)
+endif
 endif
 
 ifeq ($(subdir),gmon)

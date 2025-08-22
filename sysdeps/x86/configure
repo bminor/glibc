@@ -213,6 +213,137 @@ CC="$saved_CC"
 config_vars="$config_vars
 have-test-cc-cflags-mfpmath-387 = $libc_cv_have_test_cc_cflags_mfpmath_387"
 
+conftest_code="
+extern int foo;
+int *
+foo_p (void)
+{
+  return &foo;
+}
+"
+
+cat > conftest.c <<EOF
+$conftest_code
+EOF
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking if no direct extern access is enabled by default" >&5
+printf %s "checking if no direct extern access is enabled by default... " >&6; }
+if test ${libc_cv_cc_no_direct_extern_access+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e)   if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -S -O2 -fno-pic conftest.c -o conftest 1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+  then
+
+libc_cv_cc_cflags_no_direct_extern_access=no
+if test "$base_machine" = x86_64; then
+  if grep -E -q "mov[lq][ 	]+foo@GOTPCREL\(%rip\)," conftest; then
+    libc_cv_cc_no_direct_extern_access=yes
+  fi
+elif test "$base_machine" = i386; then
+  if grep -E -q "movl[ 	]+foo@GOT," conftest; then
+    libc_cv_cc_no_direct_extern_access=yes
+  fi
+else
+  echo unsupported machine: $base_machine
+  rm -f conftest*
+  exit 1
+fi
+
+  else
+
+echo failed to check no direct external data access
+rm -f conftest*
+exit 1
+
+  fi ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cc_no_direct_extern_access" >&5
+printf "%s\n" "$libc_cv_cc_no_direct_extern_access" >&6; }
+rm -f conftest*
+
+
+
+saved_CC="$CC"
+CC="$TEST_CC"
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking if -mno-direct-extern-access works in testing" >&5
+printf %s "checking if -mno-direct-extern-access works in testing... " >&6; }
+if test ${libc_cv_test_cc_cflags_mno_direct_extern_access+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) if { ac_try='${CC-cc} -Werror -mno-direct-extern-access -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+then :
+  libc_cv_test_cc_cflags_mno_direct_extern_access=yes
+else case e in #(
+  e) libc_cv_test_cc_cflags_mno_direct_extern_access=no
+ ;;
+esac
+fi ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_test_cc_cflags_mno_direct_extern_access" >&5
+printf "%s\n" "$libc_cv_test_cc_cflags_mno_direct_extern_access" >&6; }
+
+CC="$saved_CC"
+
+
+
+
+
+saved_CC="$CC"
+CC="$TEST_CC"
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking if -fno-direct-access-external-data works in testing" >&5
+printf %s "checking if -fno-direct-access-external-data works in testing... " >&6; }
+if test ${libc_cv_test_cc_cflags_fno_direct_access_external_data+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) if { ac_try='${CC-cc} -Werror -fno-direct-access-external-data -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+then :
+  libc_cv_test_cc_cflags_fno_direct_access_external_data=yes
+else case e in #(
+  e) libc_cv_test_cc_cflags_fno_direct_access_external_data=no
+ ;;
+esac
+fi ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_test_cc_cflags_fno_direct_access_external_data" >&5
+printf "%s\n" "$libc_cv_test_cc_cflags_fno_direct_access_external_data" >&6; }
+
+CC="$saved_CC"
+
+
+
+if test $libc_cv_test_cc_cflags_mno_direct_extern_access = yes; then
+  libc_cv_test_cc_cflags_no_direct_extern_access="-mno-direct-extern-access"
+elif test $libc_cv_test_cc_cflags_fno_direct_access_external_data = yes; then
+  libc_cv_test_cc_cflags_no_direct_extern_access="-fno-direct-access-external-data"
+fi
+
+config_vars="$config_vars
+test-cc-cflags-no-direct-extern-access = $libc_cv_test_cc_cflags_no_direct_extern_access"
+
+if test "${libc_cv_cc_no_direct_extern_access}${libc_cv_test_cc_cflags_no_direct_extern_access}" = yes; then
+  libc_cv_protected_data=no
+fi
+
 printf "%s\n" "#define SUPPORT_STATIC_PIE 1" >>confdefs.h
 
 

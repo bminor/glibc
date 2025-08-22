@@ -132,5 +132,75 @@ LIBC_TRY_TEST_CC_OPTION([if -mfpmath=387 works],
 LIBC_CONFIG_VAR(have-test-cc-cflags-mfpmath-387,
 		$libc_cv_have_test_cc_cflags_mfpmath_387)
 
+conftest_code="
+extern int foo;
+int *
+foo_p (void)
+{
+  return &foo;
+}
+"
+dnl Check if CC enables no direct extern access by default.
+LIBC_TRY_CC_COMMAND([if no direct extern access is enabled by default],
+  [$conftest_code],
+  [-S -O2 -fno-pic],
+  libc_cv_cc_no_direct_extern_access,
+  [
+libc_cv_cc_cflags_no_direct_extern_access=no
+if test "$base_machine" = x86_64; then
+  if grep -E -q "mov[lq][ 	]+foo@GOTPCREL\(%rip\)," conftest; then
+    libc_cv_cc_no_direct_extern_access=yes
+  fi
+elif test "$base_machine" = i386; then
+  if grep -E -q "movl[ 	]+foo@GOT," conftest; then
+    libc_cv_cc_no_direct_extern_access=yes
+  fi
+else
+  echo unsupported machine: $base_machine
+  rm -f conftest*
+  exit 1
+fi
+  ],
+  [
+echo failed to check no direct external data access
+rm -f conftest*
+exit 1
+])
+
+dnl Check if TEST_CC supports -mno-direct-extern-access.
+LIBC_TRY_TEST_CC_OPTION([if -mno-direct-extern-access works],
+  [-Werror -mno-direct-extern-access],
+  libc_cv_test_cc_cflags_mno_direct_extern_access,
+  [libc_cv_test_cc_cflags_mno_direct_extern_access=yes],
+  [libc_cv_test_cc_cflags_mno_direct_extern_access=no]
+)
+
+dnl Check if TEST_CC supports -fno-direct-access-external-data.
+LIBC_TRY_TEST_CC_OPTION([if -fno-direct-access-external-data works],
+  [-Werror -fno-direct-access-external-data],
+  libc_cv_test_cc_cflags_fno_direct_access_external_data,
+  [libc_cv_test_cc_cflags_fno_direct_access_external_data=yes],
+  [libc_cv_test_cc_cflags_fno_direct_access_external_data=no]
+)
+
+if test $libc_cv_test_cc_cflags_mno_direct_extern_access = yes; then
+  libc_cv_test_cc_cflags_no_direct_extern_access="-mno-direct-extern-access"
+elif test $libc_cv_test_cc_cflags_fno_direct_access_external_data = yes; then
+  libc_cv_test_cc_cflags_no_direct_extern_access="-fno-direct-access-external-data"
+fi
+
+LIBC_CONFIG_VAR(test-cc-cflags-no-direct-extern-access,
+		$libc_cv_test_cc_cflags_no_direct_extern_access)
+
+dnl If the building compiler enables no direct external data access by
+dnl default, access to protected data in shared libraries from executables
+dnl must be compiled with no direct external data access.  If the testing
+dnl compiler doesn't support it, set have-protected-data to no to disable
+dnl the tests which requires no direct external data access.
+dnl
+if test "${libc_cv_cc_no_direct_extern_access}${libc_cv_test_cc_cflags_no_direct_extern_access}" = yes; then
+  libc_cv_protected_data=no
+fi
+
 dnl Static PIE is supported.
 AC_DEFINE(SUPPORT_STATIC_PIE)
