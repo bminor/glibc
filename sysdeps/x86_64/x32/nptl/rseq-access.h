@@ -1,5 +1,5 @@
-/* RSEQ_* accessors.  x86_64 version.
-   Copyright (C) 2002-2025 Free Software Foundation, Inc.
+/* RSEQ_* accessors.  x32 version.
+   Copyright (C) 2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,6 +44,14 @@
 
 /* Read member of the RSEQ area directly.  */
 #define RSEQ_GETMEM(member) RSEQ_GETMEM_ONCE(member)
+
+/* Loading addresses of objects on x86-64 needs to be treated special
+   when generating PIC code.  */
+#ifdef __pic__
+# define IMM_MODE "nr"
+#else
+# define IMM_MODE "ir"
+#endif
 
 /* Set member of the RSEQ area directly, with single-copy atomicity semantics.  */
 #define RSEQ_SETMEM_ONCE(member, value) \
