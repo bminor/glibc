@@ -222,7 +222,7 @@ tls_fill_user_desc (union user_desc_init *desc,
 
 
 /* Return the thread descriptor for the current thread.  */
-#  define THREAD_SELF \
+# define THREAD_SELF \
   (*(struct pthread *__seg_gs *) offsetof (struct pthread, header.self))
 
 /* Magic for libthread_db to know how to do THREAD_SELF.  */

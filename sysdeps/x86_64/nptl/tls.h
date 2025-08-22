@@ -169,7 +169,7 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
 
 
 /* Return the thread descriptor for the current thread.  */
-#  define THREAD_SELF \
+# define THREAD_SELF \
   (*(struct pthread *__seg_fs *) offsetof (struct pthread, header.self))
 
 /* Magic for libthread_db to know how to do THREAD_SELF.  */
