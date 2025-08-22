@@ -2167,7 +2167,7 @@ $(objpfx)execstack-default: $(first-word $(wildcard $(sysdirs:%=%/stackinfo.h)))
 	$(make-target-directory)
 	{ echo '#include <elf.h>'; \
 	  echo '#include <stackinfo.h>'; \
-	  echo '#if (DEFAULT_STACK_PERMS & PF_X) == 0'; \
+	  echo '#if (DEFAULT_STACK_PROT_PERMS & PROT_EXEC) == 0'; \
 	  echo '@@@execstack-no@@@'; \
 	  echo '#else'; \
 	  echo '@@@execstack-yes@@@'; \

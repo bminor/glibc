@@ -150,17 +150,11 @@ get_cached_stack (size_t *sizep, void **memp)
    and fallback to ALLOCATE_GUARD_PROT_NONE if the madvise call fails.  */
 static int allocate_stack_mode = ALLOCATE_GUARD_MADV_GUARD;
 
-static inline int stack_prot (void)
-{
-  return (PROT_READ | PROT_WRITE
-	  | ((GL(dl_stack_flags) & PF_X) ? PROT_EXEC : 0));
-}
-
 static void *
 allocate_thread_stack (size_t size, size_t guardsize)
 {
   /* MADV_ADVISE_GUARD does not require an additional PROT_NONE mapping.  */
-  int prot = stack_prot ();
+  int prot = GL(dl_stack_prot_flags);
 
   if (atomic_load_relaxed (&allocate_stack_mode) == ALLOCATE_GUARD_PROT_NONE)
     /* If a guard page is required, avoid committing memory by first allocate
@@ -216,7 +210,7 @@ setup_stack_prot (char *mem, size_t size, struct pthread *pd,
     }
   else
     {
-      const int prot = stack_prot ();
+      const int prot = GL(dl_stack_prot_flags);
       char *guardend = guard + guardsize;
 #if _STACK_GROWS_DOWN
       /* As defined at guard_position, for architectures with downward stack
@@ -294,7 +288,7 @@ adjust_stack_prot (char *mem, size_t size, const struct pthread *pd,
 	}
       else if (pd->stack_mode == ALLOCATE_GUARD_PROT_NONE)
 	{
-	  const int prot = stack_prot ();
+	  const int prot = GL(dl_stack_prot_flags);
 #if _STACK_GROWS_DOWN
 	  return __mprotect (mem + guardsize, slacksize, prot) == 0;
 #else

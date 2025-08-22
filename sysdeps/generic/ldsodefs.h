@@ -171,19 +171,6 @@ dl_symbol_visibility_binds_local_p (const ElfW(Sym) *sym)
 # define ELF_RTYPE_CLASS_COPY 0
 #endif
 
-/* ELF uses the PF_x macros to specify the segment permissions, mmap
-   uses PROT_xxx.  In most cases the three macros have the values 1, 2,
-   and 3 but not in a matching order.  The following macros allows
-   converting from the PF_x values to PROT_xxx values.  */
-#define PF_TO_PROT \
-  ((PROT_READ << (PF_R * 4))						      \
-   | (PROT_WRITE << (PF_W * 4))						      \
-   | (PROT_EXEC << (PF_X * 4))						      \
-   | ((PROT_READ | PROT_WRITE) << ((PF_R | PF_W) * 4))			      \
-   | ((PROT_READ | PROT_EXEC) << ((PF_R | PF_X) * 4))			      \
-   | ((PROT_WRITE | PROT_EXEC) << (PF_W | PF_X) * 4)			      \
-   | ((PROT_READ | PROT_WRITE | PROT_EXEC) << ((PF_R | PF_W | PF_X) * 4)))
-
 /* The filename itself, or the main program name, if available.  */
 #define DSO_FILENAME(name) ((name)[0] ? (name)				      \
 			    : (rtld_progname ?: "<main program>"))
@@ -416,7 +403,7 @@ struct rtld_global
 #include <dl-procruntime.c>
 
   /* Prevailing state of the stack, PF_X indicating it's executable.  */
-  EXTERN ElfW(Word) _dl_stack_flags;
+  EXTERN int _dl_stack_prot_flags;
 
   /* Flag signalling whether there are gaps in the module ID allocation.  */
   EXTERN bool _dl_tls_dtv_gaps;

@@ -25,6 +25,7 @@
 
 #include <pt-internal.h>
 #include <pthreadP.h>
+#include <stackinfo.h>
 
 static void
 reset_pthread_total (void)

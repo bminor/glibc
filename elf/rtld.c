@@ -322,7 +322,7 @@ struct rtld_global _rtld_global =
 #include <dl-procruntime.c>
     /* Generally the default presumption without further information is an
      * executable stack but this is not true for all platforms.  */
-    ._dl_stack_flags = DEFAULT_STACK_PERMS,
+    ._dl_stack_prot_flags = DEFAULT_STACK_PROT_PERMS,
 #ifdef _LIBC_REENTRANT
     ._dl_load_lock = _RTLD_LOCK_RECURSIVE_INITIALIZER,
     ._dl_load_write_lock = _RTLD_LOCK_RECURSIVE_INITIALIZER,
@@ -1197,7 +1197,7 @@ rtld_setup_main_map (struct link_map *main_map)
 	break;
 
       case PT_GNU_STACK:
-	GL(dl_stack_flags) = ph->p_flags;
+	GL(dl_stack_prot_flags) = pf_to_prot (ph->p_flags);
 	break;
 
       case PT_GNU_RELRO:
@@ -1541,12 +1541,12 @@ dl_main (const ElfW(Phdr) *phdr,
       --_dl_argc;
       ++_dl_argv;
 
-      /* The initialization of _dl_stack_flags done below assumes the
+      /* The initialization of dl_stack_prot_flags done below assumes the
 	 executable's PT_GNU_STACK may have been honored by the kernel, and
 	 so a PT_GNU_STACK with PF_X set means the stack started out with
 	 execute permission.  However, this is not really true if the
 	 dynamic linker is the executable the kernel loaded.  For this
-	 case, we must reinitialize _dl_stack_flags to match the dynamic
+	 case, we must reinitialize dl_stack_prot_flags to match the dynamic
 	 linker itself.  If the dynamic linker was built with a
 	 PT_GNU_STACK, then the kernel may have loaded us with a
 	 nonexecutable stack that we will have to make executable when we
@@ -1556,7 +1556,7 @@ dl_main (const ElfW(Phdr) *phdr,
       for (const ElfW(Phdr) *ph = phdr; ph < &phdr[phnum]; ++ph)
 	if (ph->p_type == PT_GNU_STACK)
 	  {
-	    GL(dl_stack_flags) = ph->p_flags;
+	    GL(dl_stack_prot_flags) = pf_to_prot (ph->p_flags);
 	    break;
 	  }
 
@@ -1677,8 +1677,6 @@ dl_main (const ElfW(Phdr) *phdr,
 
   bool has_interp = rtld_setup_main_map (main_map);
 
-  /* Handle this after PT_GNU_STACK parse, because it updates dl_stack_flags
-     if required.  */
   _dl_handle_execstack_tunable ();
 
   /* If the current libname is different from the SONAME, add the

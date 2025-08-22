@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <ldsodefs.h>
+#include <stackinfo.h>
 
 int
 _dl_make_stack_executable (const void *stack_endp)
@@ -36,7 +37,7 @@ _dl_make_stack_executable (const void *stack_endp)
     return errno;
 
   /* Remember that we changed the permission.  */
-  GL(dl_stack_flags) |= PF_X;
+  GL(dl_stack_prot_flags) |= PROT_EXEC;
 
   return 0;
 }

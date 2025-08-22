@@ -1095,7 +1095,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
    /* On most platforms presume that PT_GNU_STACK is absent and the stack is
     * executable.  Other platforms default to a nonexecutable stack and don't
     * need PT_GNU_STACK to do so.  */
-   unsigned int stack_flags = DEFAULT_STACK_PERMS;
+   unsigned int stack_flags = DEFAULT_STACK_PROT_PERMS;
 
   {
     /* Scan the program header table, collecting its load commands.  */
@@ -1170,18 +1170,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 	  DIAG_POP_NEEDS_COMMENT;
 
 	  /* Optimize a common case.  */
-#if (PF_R | PF_W | PF_X) == 7 && (PROT_READ | PROT_WRITE | PROT_EXEC) == 7
-	  c->prot = (PF_TO_PROT
-		     >> ((ph->p_flags & (PF_R | PF_W | PF_X)) * 4)) & 0xf;
-#else
-	  c->prot = 0;
-	  if (ph->p_flags & PF_R)
-	    c->prot |= PROT_READ;
-	  if (ph->p_flags & PF_W)
-	    c->prot |= PROT_WRITE;
-	  if (ph->p_flags & PF_X)
-	    c->prot |= PROT_EXEC;
-#endif
+	  c->prot = pf_to_prot (ph->p_flags);
 	  break;
 
 	case PT_TLS:
@@ -1218,7 +1207,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 	  break;
 
 	case PT_GNU_STACK:
-	  stack_flags = ph->p_flags;
+	  stack_flags = pf_to_prot (ph->p_flags);
 	  break;
 
 	case PT_GNU_RELRO:
@@ -1318,7 +1307,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
     /* Adjust the PT_PHDR value by the runtime load address.  */
     l->l_phdr = (ElfW(Phdr) *) ((ElfW(Addr)) l->l_phdr + l->l_addr);
 
-  if (__glibc_unlikely ((stack_flags &~ GL(dl_stack_flags)) & PF_X))
+  if (__glibc_unlikely ((stack_flags &~ GL(dl_stack_prot_flags)) & PROT_EXEC))
     {
       /* The stack is presently not executable, but this module
 	 requires that it be executable.  Only tries to change the

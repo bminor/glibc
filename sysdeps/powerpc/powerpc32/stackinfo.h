@@ -26,7 +26,8 @@
 /* On PPC the stack grows down.  */
 #define _STACK_GROWS_DOWN	1
 
-/* PF_X can be overridden if PT_GNU_STACK is present but is presumed absent.  */
-#define DEFAULT_STACK_PERMS (PF_R|PF_W|PF_X)
+/* PROT_EXEC can be overridden if PT_GNU_STACK is present but is presumed
+   absent.  */
+#define DEFAULT_STACK_PROT_PERMS (PROT_READ|PROT_WRITE|PROT_EXEC)
 
 #endif	/* stackinfo.h */

@@ -39,4 +39,38 @@
 # error "stackinfo.h must define _STACK_GROWS_UP or _STACK_GROWS_DOWN!"
 #endif
 
+#include <sys/mman.h>
+#include <link.h>
+
+/* ELF uses the PF_x macros to specify the segment permissions, mmap
+   uses PROT_xxx.  In most cases the three macros have the values 1, 2,
+   and 4 but not in a matching order.  The following macros allows
+   converting from the PF_x values to PROT_xxx values.  */
+#define PF_TO_PROT \
+  ((PROT_READ << (PF_R * 4))						      \
+   | (PROT_WRITE << (PF_W * 4))						      \
+   | (PROT_EXEC << (PF_X * 4))						      \
+   | ((PROT_READ | PROT_WRITE) << ((PF_R | PF_W) * 4))			      \
+   | ((PROT_READ | PROT_EXEC) << ((PF_R | PF_X) * 4))			      \
+   | ((PROT_WRITE | PROT_EXEC) << (PF_W | PF_X) * 4)			      \
+   | ((PROT_READ | PROT_WRITE | PROT_EXEC) << ((PF_R | PF_W | PF_X) * 4)))
+
+static inline int
+pf_to_prot (ElfW(Word) value)
+{
+#if (PF_R | PF_W | PF_X) == 7 && (PROT_READ | PROT_WRITE | PROT_EXEC) == 7
+  return (PF_TO_PROT >> ((value & (PF_R | PF_W | PF_X)) * 4)) & 0xf;
+#else
+  ElfW(Word) ret = 0;
+  if (value & PF_R)
+    ret |= PROT_READ;
+  if (value & PF_W)
+    ret |= PROT_WRITE;
+  if (value & PF_X)
+    ret |= PROT_EXEC;
+  return ret;
+#endif
+
+}
+
 #endif  /* include/stackinfo.h */

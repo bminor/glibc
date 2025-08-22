@@ -34,7 +34,7 @@ __pthread_stack_alloc (void **stackaddr, size_t stacksize)
   error_t err;
   vm_prot_t prot = VM_PROT_READ | VM_PROT_WRITE;
 
-  if (GL(dl_stack_flags) & PF_X)
+  if (GL(dl_stack_prot_flags) & PROT_EXEC)
     prot |= VM_PROT_EXECUTE;
 
   err = __vm_map (__mach_task_self (), (vm_offset_t *) stackaddr,

@@ -166,9 +166,8 @@ enum dso_sort_algorithm _dl_dso_sort_algo;
 /* The value of the FPU control word the kernel will preset in hardware.  */
 fpu_control_t _dl_fpu_control = _FPU_DEFAULT;
 
-/* Prevailing state of the stack.  Generally this includes PF_X, indicating it's
- * executable but this isn't true for all platforms.  */
-ElfW(Word) _dl_stack_flags = DEFAULT_STACK_PERMS;
+/* Required flags used for stack allocation.  */
+int _dl_stack_prot_flags = DEFAULT_STACK_PROT_PERMS;
 
 #if PTHREAD_IN_LIBC
 list_t _dl_stack_used;
@@ -322,7 +321,7 @@ _dl_non_dynamic_init (void)
       {
       /* Check if the stack is nonexecutable.  */
       case PT_GNU_STACK:
-	_dl_stack_flags = ph->p_flags;
+	_dl_stack_prot_flags = pf_to_prot (ph->p_flags);
 	break;
 
       case PT_GNU_RELRO:

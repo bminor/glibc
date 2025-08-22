@@ -24,6 +24,6 @@
 #include <elf.h>
 
 #define _STACK_GROWS_DOWN	1
-#define DEFAULT_STACK_PERMS	(PF_R|PF_W)
+#define DEFAULT_STACK_PROT_PERMS (PROT_READ|PROT_WRITE)
 
 #endif

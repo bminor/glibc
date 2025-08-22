@@ -26,9 +26,9 @@
 /* On x86 the stack grows down.  */
 #define _STACK_GROWS_DOWN	1
 
-/* Default to an executable stack.  PF_X can be overridden if PT_GNU_STACK is
- * present, but it is presumed absent.  */
-#define DEFAULT_STACK_PERMS (PF_R|PF_W|PF_X)
+/* Default to an executable stack.  PROT_EXEC can be overridden if PT_GNU_STACK
+ * is present, but it is presumed absent.  */
+#define DEFAULT_STACK_PROT_PERMS (PROT_READ|PROT_WRITE|PROT_EXEC)
 
 /* Access to the stack pointer.  The macros are used in alloca_account
    for which they need to act as barriers as well, hence the additional

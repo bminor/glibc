@@ -348,9 +348,6 @@ __spawnix (int *pid, const char *file,
 	return errno;
       }
 
-  int prot = (PROT_READ | PROT_WRITE
-	     | ((GL (dl_stack_flags) & PF_X) ? PROT_EXEC : 0));
-
   /* Add a slack area for child's stack.  */
   size_t argv_size = (argc * sizeof (void *)) + 512;
   /* We need at least a few pages in case the compiler's stack checking is
@@ -361,7 +358,7 @@ __spawnix (int *pid, const char *file,
      where it might use about 1k extra stack space).  */
   argv_size += (32 * 1024);
   size_t stack_size = ALIGN_UP (argv_size, GLRO(dl_pagesize));
-  void *stack = __mmap (NULL, stack_size, prot,
+  void *stack = __mmap (NULL, stack_size, GL (dl_stack_prot_flags),
 			MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, -1, 0);
   if (__glibc_unlikely (stack == MAP_FAILED))
     return errno;

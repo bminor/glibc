@@ -19,6 +19,8 @@
 #ifndef _MACHINE_SP_H
 #define _MACHINE_SP_H
 
+#include <stackinfo.h>
+
 /* Return the current stack pointer.  */
 static inline uintptr_t
 __thread_stack_pointer (void)

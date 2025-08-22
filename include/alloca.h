@@ -4,7 +4,7 @@
 
 # ifndef _ISOMAC
 
-#include <stackinfo.h>
+#include <elf.h>
 
 #undef	__alloca
 
