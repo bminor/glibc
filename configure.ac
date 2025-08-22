@@ -1590,6 +1590,14 @@ LIBC_TRY_CC_AND_TEST_CC_OPTION([for -Wimplicit-fallthrough],
   libc_cv_test_cc_wimplicit_fallthrough,
   [libc_cv_test_cc_wimplicit_fallthrough=-Wimplicit-fallthrough],
   [libc_cv_test_cc_wimplicit_fallthrough=])
+dnl Clang's -Wimplicit-fallthrough warning, which flags unannotated
+dnl fall-through in switch statements, does not recognize specific
+dnl comments like /* FALLTHROUGH */ for suppressing the warning, unlike
+dnl GCC.  Since fall through comments are used extensively in glibc,
+dnl disable -Wimplicit-fallthrough when clang is in use.
+if test $libc_cv_test_clang = yes; then
+  libc_cv_test_cc_wimplicit_fallthrough=
+fi
 LIBC_CONFIG_VAR([cc-option-wimplicit-fallthrough],
 		[$libc_cv_cc_wimplicit_fallthrough])
 AC_SUBST(libc_cv_test_cc_wimplicit_fallthrough)

@@ -8021,6 +8021,9 @@ CC="$saved_CC"
 
 fi
 
+if test $libc_cv_test_clang = yes; then
+  libc_cv_test_cc_wimplicit_fallthrough=
+fi
 config_vars="$config_vars
 cc-option-wimplicit-fallthrough = $libc_cv_cc_wimplicit_fallthrough"
 
