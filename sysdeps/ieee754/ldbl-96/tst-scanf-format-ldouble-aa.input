@@ -16,13 +16,13 @@
 %*LA:-0X0P+0:0:7:
 %LA:-0X.0P0:1:7:-0x0:
 %*LA:-0X.0P0:0:7:
-%LA:-NAN(09A_Zaz):1:13:-nan:
+%LA:-NAN(09A_Zaz):1:13:-nan(09A_Zaz):
 %*LA:-NAN(09A_Zaz):0:13:
-%LA:-NAN():1:6:-nan:
+%LA:-NAN():1:6:-nan():
 %*LA:-NAN():0:6:
-%LA:NAN():1:5:nan:
+%LA:NAN():1:5:nan():
 %*LA:NAN():0:5:
-%LA:NAN(09A_Zaz):1:12:nan:
+%LA:NAN(09A_Zaz):1:12:nan(09A_Zaz):
 %*LA:NAN(09A_Zaz):0:12:
 %LA:0X.0P0:1:6:0x0:
 %*LA:0X.0P0:0:6:
@@ -40,9 +40,9 @@
 %*LA:0XF.FFFFFFFFFFFFFFFP+16380:0:26:
 %LA:INFINITY:1:8:inf:
 %*LA:INFINITY:0:8:
-%LA:+NAN():1:6:nan:
+%LA:+NAN():1:6:nan():
 %*LA:+NAN():0:6:
-%LA:+NAN(09A_Zaz):1:13:nan:
+%LA:+NAN(09A_Zaz):1:13:nan(09A_Zaz):
 %*LA:+NAN(09A_Zaz):0:13:
 %LA:+0X.0P0:1:7:0x0:
 %*LA:+0X.0P0:0:7:
@@ -330,7 +330,7 @@
 %*5LA:-NAN(09A_Zaz):0:-1:
 %5LA:-NAN():0:-1:
 %*5LA:-NAN():0:-1:
-%5LA:NAN():1:5:nan:
+%5LA:NAN():1:5:nan():
 %*5LA:NAN():0:5:
 %5LA:NAN(09A_Zaz):0:-1:
 %*5LA:NAN(09A_Zaz):0:-1:
@@ -390,9 +390,9 @@
 %*6LA:-0X.0P0:0:-1:
 %6LA:-NAN(09A_Zaz):0:-1:
 %*6LA:-NAN(09A_Zaz):0:-1:
-%6LA:-NAN():1:6:-nan:
+%6LA:-NAN():1:6:-nan():
 %*6LA:-NAN():0:6:
-%6LA:NAN():1:5:nan:
+%6LA:NAN():1:5:nan():
 %*6LA:NAN():0:5:
 %6LA:NAN(09A_Zaz):0:-1:
 %*6LA:NAN(09A_Zaz):0:-1:
@@ -412,7 +412,7 @@
 %*6LA:0XF.FFFFFFFFFFFFFFFP+16380:0:6:
 %6LA:INFINITY:0:-1:
 %*6LA:INFINITY:0:-1:
-%6LA:+NAN():1:6:nan:
+%6LA:+NAN():1:6:nan():
 %*6LA:+NAN():0:6:
 %6LA:+NAN(09A_Zaz):0:-1:
 %*6LA:+NAN(09A_Zaz):0:-1:
@@ -450,13 +450,13 @@
 %*22LA:-0X0P+0:0:7:
 %22LA:-0X.0P0:1:7:-0x0:
 %*22LA:-0X.0P0:0:7:
-%22LA:-NAN(09A_Zaz):1:13:-nan:
+%22LA:-NAN(09A_Zaz):1:13:-nan(09A_Zaz):
 %*22LA:-NAN(09A_Zaz):0:13:
-%22LA:-NAN():1:6:-nan:
+%22LA:-NAN():1:6:-nan():
 %*22LA:-NAN():0:6:
-%22LA:NAN():1:5:nan:
+%22LA:NAN():1:5:nan():
 %*22LA:NAN():0:5:
-%22LA:NAN(09A_Zaz):1:12:nan:
+%22LA:NAN(09A_Zaz):1:12:nan(09A_Zaz):
 %*22LA:NAN(09A_Zaz):0:12:
 %22LA:0X.0P0:1:6:0x0:
 %*22LA:0X.0P0:0:6:
@@ -474,9 +474,9 @@
 %*22LA:0XF.FFFFFFFFFFFFFFFP+16380:0:22:
 %22LA:INFINITY:1:8:inf:
 %*22LA:INFINITY:0:8:
-%22LA:+NAN():1:6:nan:
+%22LA:+NAN():1:6:nan():
 %*22LA:+NAN():0:6:
-%22LA:+NAN(09A_Zaz):1:13:nan:
+%22LA:+NAN(09A_Zaz):1:13:nan(09A_Zaz):
 %*22LA:+NAN(09A_Zaz):0:13:
 %22LA:+0X.0P0:1:7:0x0:
 %*22LA:+0X.0P0:0:7:
@@ -512,13 +512,13 @@
 %*37LA:-0X0P+0:0:7:
 %37LA:-0X.0P0:1:7:-0x0:
 %*37LA:-0X.0P0:0:7:
-%37LA:-NAN(09A_Zaz):1:13:-nan:
+%37LA:-NAN(09A_Zaz):1:13:-nan(09A_Zaz):
 %*37LA:-NAN(09A_Zaz):0:13:
-%37LA:-NAN():1:6:-nan:
+%37LA:-NAN():1:6:-nan():
 %*37LA:-NAN():0:6:
-%37LA:NAN():1:5:nan:
+%37LA:NAN():1:5:nan():
 %*37LA:NAN():0:5:
-%37LA:NAN(09A_Zaz):1:12:nan:
+%37LA:NAN(09A_Zaz):1:12:nan(09A_Zaz):
 %*37LA:NAN(09A_Zaz):0:12:
 %37LA:0X.0P0:1:6:0x0:
 %*37LA:0X.0P0:0:6:
@@ -536,9 +536,9 @@
 %*37LA:0XF.FFFFFFFFFFFFFFFP+16380:0:26:
 %37LA:INFINITY:1:8:inf:
 %*37LA:INFINITY:0:8:
-%37LA:+NAN():1:6:nan:
+%37LA:+NAN():1:6:nan():
 %*37LA:+NAN():0:6:
-%37LA:+NAN(09A_Zaz):1:13:nan:
+%37LA:+NAN(09A_Zaz):1:13:nan(09A_Zaz):
 %*37LA:+NAN(09A_Zaz):0:13:
 %37LA:+0X.0P0:1:7:0x0:
 %*37LA:+0X.0P0:0:7:
@@ -578,7 +578,7 @@
 %*5LA: -NAN(09A_Zaz):0:-1:
 %5LA: -NAN():0:-1:
 %*5LA: -NAN():0:-1:
-%5LA: NAN():1:6:nan:
+%5LA: NAN():1:6:nan():
 %*5LA: NAN():0:6:
 %5LA: NAN(09A_Zaz):0:-1:
 %*5LA: NAN(09A_Zaz):0:-1:
@@ -636,13 +636,13 @@
 %*37LA: -0X0P+0:0:8:
 %37LA: -0X.0P0:1:8:-0x0:
 %*37LA: -0X.0P0:0:8:
-%37LA: -NAN(09A_Zaz):1:14:-nan:
+%37LA: -NAN(09A_Zaz):1:14:-nan(09A_Zaz):
 %*37LA: -NAN(09A_Zaz):0:14:
-%37LA: -NAN():1:7:-nan:
+%37LA: -NAN():1:7:-nan():
 %*37LA: -NAN():0:7:
-%37LA: NAN():1:6:nan:
+%37LA: NAN():1:6:nan():
 %*37LA: NAN():0:6:
-%37LA: NAN(09A_Zaz):1:13:nan:
+%37LA: NAN(09A_Zaz):1:13:nan(09A_Zaz):
 %*37LA: NAN(09A_Zaz):0:13:
 %37LA: 0X.0P0:1:7:0x0:
 %*37LA: 0X.0P0:0:7:
@@ -660,9 +660,9 @@
 %*37LA: 0XF.FFFFFFFFFFFFFFFP+16380:0:27:
 %37LA: INFINITY:1:9:inf:
 %*37LA: INFINITY:0:9:
-%37LA: +NAN():1:7:nan:
+%37LA: +NAN():1:7:nan():
 %*37LA: +NAN():0:7:
-%37LA: +NAN(09A_Zaz):1:14:nan:
+%37LA: +NAN(09A_Zaz):1:14:nan(09A_Zaz):
 %*37LA: +NAN(09A_Zaz):0:14:
 %37LA: +0X.0P0:1:8:0x0:
 %*37LA: +0X.0P0:0:8:

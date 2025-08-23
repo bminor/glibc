@@ -16,13 +16,13 @@
 %*Le:-0e+0:0:5:
 %Le:-.0e0:1:5:-0x0:
 %*Le:-.0e0:0:5:
-%Le:-nan(09A_Zaz):1:13:-nan:
+%Le:-nan(09A_Zaz):1:13:-nan(09A_Zaz):
 %*Le:-nan(09A_Zaz):0:13:
-%Le:-nan():1:6:-nan:
+%Le:-nan():1:6:-nan():
 %*Le:-nan():0:6:
-%Le:nan():1:5:nan:
+%Le:nan():1:5:nan():
 %*Le:nan():0:5:
-%Le:nan(09A_Zaz):1:12:nan:
+%Le:nan(09A_Zaz):1:12:nan(09A_Zaz):
 %*Le:nan(09A_Zaz):0:12:
 %Le:.0e0:1:4:0x0:
 %*Le:.0e0:0:4:
@@ -40,9 +40,9 @@
 %*Le:1.18973149535723176502126385303097021e+4932:0:43:
 %Le:infinity:1:8:inf:
 %*Le:infinity:0:8:
-%Le:+nan():1:6:nan:
+%Le:+nan():1:6:nan():
 %*Le:+nan():0:6:
-%Le:+nan(09A_Zaz):1:13:nan:
+%Le:+nan(09A_Zaz):1:13:nan(09A_Zaz):
 %*Le:+nan(09A_Zaz):0:13:
 %Le:+.0e0:1:5:0x0:
 %*Le:+.0e0:0:5:
@@ -326,13 +326,13 @@
 %*40Le:-0e+0:0:5:
 %40Le:-.0e0:1:5:-0x0:
 %*40Le:-.0e0:0:5:
-%40Le:-nan(09A_Zaz):1:13:-nan:
+%40Le:-nan(09A_Zaz):1:13:-nan(09A_Zaz):
 %*40Le:-nan(09A_Zaz):0:13:
-%40Le:-nan():1:6:-nan:
+%40Le:-nan():1:6:-nan():
 %*40Le:-nan():0:6:
-%40Le:nan():1:5:nan:
+%40Le:nan():1:5:nan():
 %*40Le:nan():0:5:
-%40Le:nan(09A_Zaz):1:12:nan:
+%40Le:nan(09A_Zaz):1:12:nan(09A_Zaz):
 %*40Le:nan(09A_Zaz):0:12:
 %40Le:.0e0:1:4:0x0:
 %*40Le:.0e0:0:4:
@@ -350,9 +350,9 @@
 %*40Le:1.18973149535723176502126385303097021e+4932:0:40:
 %40Le:infinity:1:8:inf:
 %*40Le:infinity:0:8:
-%40Le:+nan():1:6:nan:
+%40Le:+nan():1:6:nan():
 %*40Le:+nan():0:6:
-%40Le:+nan(09A_Zaz):1:13:nan:
+%40Le:+nan(09A_Zaz):1:13:nan(09A_Zaz):
 %*40Le:+nan(09A_Zaz):0:13:
 %40Le:+.0e0:1:5:0x0:
 %*40Le:+.0e0:0:5:
@@ -388,13 +388,13 @@
 %*48Le:-0e+0:0:5:
 %48Le:-.0e0:1:5:-0x0:
 %*48Le:-.0e0:0:5:
-%48Le:-nan(09A_Zaz):1:13:-nan:
+%48Le:-nan(09A_Zaz):1:13:-nan(09A_Zaz):
 %*48Le:-nan(09A_Zaz):0:13:
-%48Le:-nan():1:6:-nan:
+%48Le:-nan():1:6:-nan():
 %*48Le:-nan():0:6:
-%48Le:nan():1:5:nan:
+%48Le:nan():1:5:nan():
 %*48Le:nan():0:5:
-%48Le:nan(09A_Zaz):1:12:nan:
+%48Le:nan(09A_Zaz):1:12:nan(09A_Zaz):
 %*48Le:nan(09A_Zaz):0:12:
 %48Le:.0e0:1:4:0x0:
 %*48Le:.0e0:0:4:
@@ -412,9 +412,9 @@
 %*48Le:1.18973149535723176502126385303097021e+4932:0:43:
 %48Le:infinity:1:8:inf:
 %*48Le:infinity:0:8:
-%48Le:+nan():1:6:nan:
+%48Le:+nan():1:6:nan():
 %*48Le:+nan():0:6:
-%48Le:+nan(09A_Zaz):1:13:nan:
+%48Le:+nan(09A_Zaz):1:13:nan(09A_Zaz):
 %*48Le:+nan(09A_Zaz):0:13:
 %48Le:+.0e0:1:5:0x0:
 %*48Le:+.0e0:0:5:
@@ -512,13 +512,13 @@
 %*48Le: -0e+0:0:6:
 %48Le: -.0e0:1:6:-0x0:
 %*48Le: -.0e0:0:6:
-%48Le: -nan(09A_Zaz):1:14:-nan:
+%48Le: -nan(09A_Zaz):1:14:-nan(09A_Zaz):
 %*48Le: -nan(09A_Zaz):0:14:
-%48Le: -nan():1:7:-nan:
+%48Le: -nan():1:7:-nan():
 %*48Le: -nan():0:7:
-%48Le: nan():1:6:nan:
+%48Le: nan():1:6:nan():
 %*48Le: nan():0:6:
-%48Le: nan(09A_Zaz):1:13:nan:
+%48Le: nan(09A_Zaz):1:13:nan(09A_Zaz):
 %*48Le: nan(09A_Zaz):0:13:
 %48Le: .0e0:1:5:0x0:
 %*48Le: .0e0:0:5:
@@ -536,9 +536,9 @@
 %*48Le: 1.18973149535723176502126385303097021e+4932:0:44:
 %48Le: infinity:1:9:inf:
 %*48Le: infinity:0:9:
-%48Le: +nan():1:7:nan:
+%48Le: +nan():1:7:nan():
 %*48Le: +nan():0:7:
-%48Le: +nan(09A_Zaz):1:14:nan:
+%48Le: +nan(09A_Zaz):1:14:nan(09A_Zaz):
 %*48Le: +nan(09A_Zaz):0:14:
 %48Le: +.0e0:1:6:0x0:
 %*48Le: +.0e0:0:6:
