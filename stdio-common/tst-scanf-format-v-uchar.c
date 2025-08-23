@@ -19,4 +19,4 @@
 #include "tst-scanf-format-skeleton.h"
 #include "tst-scanf-format-v.h"
 #include "tst-scanf-format-integer.h"
-#include "tst-scanf-format-skeleton-uchar.c"
+#include <tst-scanf-format-skeleton-uchar.c>

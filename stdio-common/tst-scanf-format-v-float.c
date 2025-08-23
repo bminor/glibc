@@ -19,4 +19,4 @@
 #include "tst-scanf-format-skeleton.h"
 #include "tst-scanf-format-v.h"
 #include "tst-scanf-format-real.h"
-#include "tst-scanf-format-skeleton-float.c"
+#include <tst-scanf-format-skeleton-float.c>
