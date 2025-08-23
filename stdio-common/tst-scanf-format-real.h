@@ -207,6 +207,11 @@ out:									\
 	if (ch == '(')							\
 	  while (1)							\
 	    {								\
+	      if (i == seq_size)					\
+		{							\
+		  seq_size += SIZE_CHUNK;				\
+		  seq = xrealloc (seq, seq_size);			\
+		}							\
 	      ch = read_input ();					\
 	      if (ch == ')')						\
 		break;							\
@@ -218,11 +223,6 @@ out:									\
 		  err = ch < 0 ? ch : INPUT_FORMAT;			\
 		  v = NAN;						\
 		  goto out;						\
-		}							\
-	      if (i == seq_size)					\
-		{							\
-		  seq_size += SIZE_CHUNK;				\
-		  seq = xrealloc (seq, seq_size);			\
 		}							\
 	      seq[i++] = ch;						\
 	    }								\
