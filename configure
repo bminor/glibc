@@ -620,7 +620,6 @@ DEFINES
 static_nss
 profile
 libc_cv_multidir
-libc_cv_test_x86_have_amx_tile
 test_enable_cet
 libc_cv_test_cc_mprefer_vector_width
 shared
@@ -9357,7 +9356,6 @@ config_vars="$config_vars
 have-libgcc_s = $libc_cv_have_libgcc_s"
 
 # Support configure.ac under sysdeps.
-
 
 
 

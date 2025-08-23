@@ -2127,7 +2127,6 @@ LIBC_CONFIG_VAR([have-libgcc_s], [$libc_cv_have_libgcc_s])
 # Support configure.ac under sysdeps.
 AC_SUBST(libc_cv_test_cc_mprefer_vector_width)
 AC_SUBST(test_enable_cet)
-AC_SUBST(libc_cv_test_x86_have_amx_tile)
 
 enable_gsframe=no
 if test $use_sframe = yes; then
