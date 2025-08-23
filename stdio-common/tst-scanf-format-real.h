@@ -201,41 +201,43 @@ out:									\
 	    goto out;							\
 	  }								\
 									\
-	size_t seq_size = 0;						\
-	char *seq = NULL;						\
-	i = 0;								\
 	if (ch == '(')							\
-	  while (1)							\
-	    {								\
-	      if (i == seq_size)					\
-		{							\
-		  seq_size += SIZE_CHUNK;				\
-		  seq = xrealloc (seq, seq_size);			\
-		}							\
-	      ch = read_input ();					\
-	      if (ch == ')')						\
-		break;							\
-	      if (ch != '_' && !isdigit (ch)				\
-		  && !(ch >= 'A' && ch <= 'Z')				\
-		  && !(ch >= 'a' && ch <= 'z'))				\
-		{							\
-		  free (seq);						\
-		  err = ch < 0 ? ch : INPUT_FORMAT;			\
-		  v = NAN;						\
-		  goto out;						\
-		}							\
-	      seq[i++] = ch;						\
-	    }								\
-	seq[i] = '\0';							\
-									\
-	ch = read_input ();						\
-	if (ch == ':')							\
 	  {								\
-	    v = m ? -nan (v, seq) : nan (v, seq);			\
+	    size_t seq_size = 0;					\
+	    char *seq = NULL;						\
+	    i = 0;							\
+	    while (1)							\
+	      {								\
+		if (i == seq_size)					\
+		  {							\
+		    seq_size += SIZE_CHUNK;				\
+		    seq = xrealloc (seq, seq_size);			\
+		  }							\
+		ch = read_input ();					\
+		if (ch == ')')						\
+		  break;						\
+		if (ch != '_' && !isdigit (ch)				\
+		    && !(ch >= 'A' && ch <= 'Z')			\
+		    && !(ch >= 'a' && ch <= 'z'))			\
+		  {							\
+		    free (seq);						\
+		    err = ch < 0 ? ch : INPUT_FORMAT;			\
+		    v = NAN;						\
+		    goto out;						\
+		  }							\
+		seq[i++] = ch;						\
+	      }								\
+	    seq[i] = '\0';						\
+									\
+	    ch = read_input ();						\
+	    if (ch == ':')						\
+	      {								\
+		v = m ? -nan (v, seq) : nan (v, seq);			\
+		free (seq);						\
+		goto out;						\
+	      }								\
 	    free (seq);							\
-	    goto out;							\
 	  }								\
-	free (seq);							\
       }									\
       err = ch < 0 ? ch : INPUT_FORMAT;					\
       v = NAN;								\
