@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <stdbool.h>
 #include <string.h>
 
 #include <support/next_to_fault.h>
@@ -62,69 +63,69 @@ do									\
   }									\
 while (0)
 
-#define verify_input(f, val, count, errp)				\
-({									\
-  __label__ out, skip;							\
-  bool match = true;							\
-  int err = 0;								\
-  size_t i;								\
-  int ch;								\
-									\
-  for (i = 0; i < count; i++)						\
-    {									\
-      ch = read_input ();						\
-      if (ch < 0)							\
-	{								\
-	  err = ch;							\
-	  goto out;							\
-	}								\
-      if (ch == ':' && val[i] == '\0' && f == 's')			\
-	goto skip;							\
-      if (ch != val[i])							\
-	{								\
-	  match = false;						\
-	  goto out;							\
-	}								\
-    }									\
-  ch = read_input ();							\
-  if (ch < 0)								\
-    {									\
-      err = ch;								\
-      goto out;								\
-    }									\
-									\
-skip:									\
-  if (f != 'c' && val[i++] != '\0')					\
-    {									\
-      err = OUTPUT_TERM;						\
-      goto out;								\
-    }									\
-  if (val[i] != '\xa5')							\
-    {									\
-      err = OUTPUT_OVERRUN;						\
-      goto out;								\
-    }									\
-									\
-  while (ch != ':')							\
-    {									\
-      ch = read_input ();						\
-      if (ch < 0)							\
-	{								\
-	  err = ch;							\
-	  goto out;							\
-	}								\
-      match = false;							\
-    }									\
-									\
-out:									\
-  if (err || !match)							\
-    {									\
-      printf ("error: %s:%d: input buffer: `", __FILE__, __LINE__);	\
-      for (size_t j = 0; j <= i; j++)					\
-	printf ("%c", val[j]);						\
-      printf ("'\n");							\
-    }									\
-									\
-  *errp = err;								\
-  match;								\
-})
+static bool
+verify_input (char f, type_t val, long long count, int *errp)
+{
+  bool match = true;
+  int err = 0;
+  size_t i;
+  int ch;
+
+  for (i = 0; i < count; i++)
+    {
+      ch = read_input ();
+      if (ch < 0)
+	{
+	  err = ch;
+	  goto out;
+	}
+      if (ch == ':' && val[i] == '\0' && f == 's')
+	goto skip;
+      if (ch != val[i])
+	{
+	  match = false;
+	  goto out;
+	}
+    }
+  ch = read_input ();
+  if (ch < 0)
+    {
+      err = ch;
+      goto out;
+    }
+
+skip:
+  if (f != 'c' && val[i++] != '\0')
+    {
+      err = OUTPUT_TERM;
+      goto out;
+    }
+  if (val[i] != '\xa5')
+    {
+      err = OUTPUT_OVERRUN;
+      goto out;
+    }
+
+  while (ch != ':')
+    {
+      ch = read_input ();
+      if (ch < 0)
+	{
+	  err = ch;
+	  goto out;
+	}
+      match = false;
+    }
+
+out:
+  if (err || !match)
+    {
+      printf ("error: %s:%d: input buffer: `", __FILE__, __LINE__);
+      for (size_t j = 0; j <= i; j++)
+	printf ("%c", val[j]);
+      printf ("'\n");
+    }
+
+  *errp = err;
+  return match;
+}

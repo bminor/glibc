@@ -17,19 +17,21 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <math_ldbl.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
 
 typedef long double type_t;
 
+static bool
+compare_real (type_t x, type_t y)
+{
+  ieee_long_double_shape_type ux = { .value = x }, uy = { .value = y };
+
+  return (ux.parts.lsw == uy.parts.lsw && ux.parts.msw == uy.parts.msw
+	  && ux.parts.sign_exponent == uy.parts.sign_exponent);
+}
+#define compare_real compare_real
+
 #include "tst-scanf-format-real.h"
-
-#undef compare_real
-#define compare_real(x, y)						\
-({									\
-  ieee_long_double_shape_type ux = { .value = x }, uy = { .value = y };	\
-  (ux.parts.lsw == uy.parts.lsw && ux.parts.msw == uy.parts.msw		\
-   && ux.parts.sign_exponent == uy.parts.sign_exponent);	 	\
-})
-
 #include "tst-scanf-format-skeleton.c"

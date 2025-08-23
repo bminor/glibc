@@ -60,11 +60,6 @@
 #ifndef TYPE_T_UNSIGNED_P
 # define TYPE_T_UNSIGNED_P 0
 #endif
-#if TYPE_T_UNSIGNED_P
-# define UNSIGNED unsigned
-#else
-# define UNSIGNED
-#endif
 
 /* Read and return a single character from standard input, returning
    end-of-file or error status indication where applicable.  */
