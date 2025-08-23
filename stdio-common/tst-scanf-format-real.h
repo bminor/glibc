@@ -79,13 +79,13 @@
   initialize_value (v);							\
   /* Make sure it's been committed.  */					\
   __asm__ ("" : : : "memory");						\
+									\
   v = read_real (&errx);						\
   if (errx < 0)								\
     goto out;								\
-  match = compare_real (val, v);					\
 									\
-out:									\
-  if (errx || !match)							\
+  match = compare_real (val, v);					\
+  if (!match)								\
     {									\
       union								\
 	{								\
@@ -104,6 +104,7 @@ out:									\
       printf ("'\n");							\
     }									\
 									\
+out:									\
   *errp = errx;								\
   match;								\
 })
