@@ -260,6 +260,7 @@ tests := \
   tllformat \
   tst-bz11319 \
   tst-bz11319-fortify2 \
+  tst-bz12701-c \
   tst-cookie \
   tst-dprintf-length \
   tst-fclose-devzero \

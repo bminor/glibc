@@ -898,6 +898,8 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 	      else
 		while (--width > 0 && inchar () != EOF);
 #endif
+	      if (width > 0)
+		input_error ();
 
 	      if (!(flags & SUPPRESS))
 		{
@@ -1051,6 +1053,8 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 	    while (--width > 0 && inchar () != EOF);
 	  }
 #endif
+	  if (width > 0)
+	    input_error ();
 
 	  if (!(flags & SUPPRESS))
 	    {
