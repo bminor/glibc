@@ -1543,7 +1543,7 @@ AC_SUBST(libc_cv_test_cc_signaling_nans)
 
 dnl Check if TEST_CC supports -fsemantic-interposition.
 LIBC_TRY_TEST_CC_OPTION([-fsemantic-interposition],
-  [-c -Werror -fsemantic-interposition],
+  [-Werror -fsemantic-interposition],
   libc_cv_test_cc_cflags_fsemantic_interposition,
   [libc_cv_test_cc_cflags_fsemantic_interposition=yes],
   [libc_cv_test_cc_cflags_fsemantic_interposition=no]
@@ -1649,7 +1649,7 @@ LIBC_CONFIG_VAR([have-test-cc-trampoline],
 
 dnl Check if TEST_CC supports -Wno-restrict.
 LIBC_TRY_TEST_CC_OPTION([-Wno-restrict],
-  [-c -Werror -Wno-restrict],
+  [-Werror -Wno-restrict],
   libc_cv_test_cflags_wno_restrict,
   [libc_cv_test_cflags_wno_restrict=-Wno-restrict],
   [libc_cv_test_cflags_wno_restrict=]
@@ -1659,7 +1659,7 @@ LIBC_CONFIG_VAR([test-config-cflags-wno-restrict],
 
 dnl Check if TEST_CC supports -Wno-fortify-source.
 LIBC_TRY_TEST_CC_OPTION([-Wno-fortify-source],
-  [-c -Werror -Wno-fortify-source],
+  [-Werror -Wno-fortify-source],
   libc_cv_test_cflags_wno_fortify_source,
   [libc_cv_test_cflags_wno_fortify_source=-Wno-fortify-source],
   [libc_cv_test_cflags_wno_fortify_source=]
@@ -1669,7 +1669,7 @@ LIBC_CONFIG_VAR([test-config-cflags-wno-fortify-source],
 
 dnl Check if TEST_CC supports -finput-charset=ascii.
 LIBC_TRY_TEST_CC_OPTION([-finput-charset=ascii],
-  [-c -Werror -finput-charset=ascii],
+  [-Werror -finput-charset=ascii],
   libc_cv_test_cflags_finput_charset_ascii,
   [libc_cv_test_cflags_finput_charset_ascii="-finput-charset=ascii"],
   [libc_cv_test_cflags_finput_charset_ascii=]
@@ -1679,7 +1679,7 @@ LIBC_CONFIG_VAR(test-config-cflags-finput-charset-ascii,
 
 dnl Check if TEST_CXX supports -finput-charset=ascii.
 LIBC_TRY_TEST_CXX_OPTION([$CXX -finput-charset=ascii],
-  [-c -Werror -finput-charset=ascii],
+  [-Werror -finput-charset=ascii],
   libc_cv_test_cxxflags_finput_charset_ascii,
   [libc_cv_test_cxxflags_finput_charset_ascii="-finput-charset=ascii"],
   [libc_cv_test_cxxflags_finput_charset_ascii=]

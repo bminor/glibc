@@ -124,7 +124,7 @@ LIBC_CONFIG_VAR([enable-x86-isa-level], [$libc_cv_include_x86_isa_level])
 
 dnl Check if TEST_CC supports -mfpmath=387
 LIBC_TRY_TEST_CC_OPTION([if -mfpmath=387 works],
-  [-c -Werror -mfpmath=387],
+  [-Werror -mfpmath=387],
   libc_cv_have_test_cc_cflags_mfpmath_387,
   [libc_cv_have_test_cc_cflags_mfpmath_387=yes],
   [libc_cv_have_test_cc_cflags_mfpmath_387=no]

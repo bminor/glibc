@@ -7834,7 +7834,7 @@ if test ${libc_cv_test_cc_cflags_fsemantic_interposition+y}
 then :
   printf %s "(cached) " >&6
 else case e in #(
-  e) if { ac_try='${CC-cc} -c -Werror -fsemantic-interposition -xc /dev/null -S -o /dev/null'
+  e) if { ac_try='${CC-cc} -Werror -fsemantic-interposition -xc /dev/null -S -o /dev/null'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -8204,7 +8204,7 @@ if test ${libc_cv_test_cflags_wno_restrict+y}
 then :
   printf %s "(cached) " >&6
 else case e in #(
-  e) if { ac_try='${CC-cc} -c -Werror -Wno-restrict -xc /dev/null -S -o /dev/null'
+  e) if { ac_try='${CC-cc} -Werror -Wno-restrict -xc /dev/null -S -o /dev/null'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -8238,7 +8238,7 @@ if test ${libc_cv_test_cflags_wno_fortify_source+y}
 then :
   printf %s "(cached) " >&6
 else case e in #(
-  e) if { ac_try='${CC-cc} -c -Werror -Wno-fortify-source -xc /dev/null -S -o /dev/null'
+  e) if { ac_try='${CC-cc} -Werror -Wno-fortify-source -xc /dev/null -S -o /dev/null'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -8272,7 +8272,7 @@ if test ${libc_cv_test_cflags_finput_charset_ascii+y}
 then :
   printf %s "(cached) " >&6
 else case e in #(
-  e) if { ac_try='${CC-cc} -c -Werror -finput-charset=ascii -xc /dev/null -S -o /dev/null'
+  e) if { ac_try='${CC-cc} -Werror -finput-charset=ascii -xc /dev/null -S -o /dev/null'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -8306,7 +8306,7 @@ if test ${libc_cv_test_cxxflags_finput_charset_ascii+y}
 then :
   printf %s "(cached) " >&6
 else case e in #(
-  e) if { ac_try='${CXX-c++} -c -Werror -finput-charset=ascii -xc++ /dev/null -S -o /dev/null'
+  e) if { ac_try='${CXX-c++} -Werror -finput-charset=ascii -xc++ /dev/null -S -o /dev/null'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
