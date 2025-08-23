@@ -18,4 +18,5 @@
 
 typedef char *type_t;
 
+#include "tst-scanf-format-character.h"
 #include "tst-scanf-format-skeleton.c"

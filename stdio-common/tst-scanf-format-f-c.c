@@ -18,5 +18,4 @@
 
 #include "tst-scanf-format-skeleton.h"
 #include "tst-scanf-format-f.h"
-#include "tst-scanf-format-character.h"
 #include <tst-scanf-format-skeleton-c.c>

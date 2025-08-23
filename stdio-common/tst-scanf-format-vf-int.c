@@ -18,5 +18,4 @@
 
 #include "tst-scanf-format-skeleton.h"
 #include "tst-scanf-format-vf.h"
-#include "tst-scanf-format-integer.h"
 #include <tst-scanf-format-skeleton-int.c>

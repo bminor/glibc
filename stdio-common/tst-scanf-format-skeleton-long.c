@@ -18,4 +18,5 @@
 
 typedef long int type_t;
 
+#include "tst-scanf-format-integer.h"
 #include "tst-scanf-format-skeleton.c"

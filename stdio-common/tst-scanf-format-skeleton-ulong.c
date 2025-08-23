@@ -19,4 +19,5 @@
 #define TYPE_T_UNSIGNED_P 1
 typedef unsigned long int type_t;
 
+#include "tst-scanf-format-integer.h"
 #include "tst-scanf-format-skeleton.c"

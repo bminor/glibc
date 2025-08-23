@@ -18,4 +18,5 @@
 
 typedef double type_t;
 
+#include "tst-scanf-format-real.h"
 #include "tst-scanf-format-skeleton.c"

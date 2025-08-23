@@ -20,6 +20,10 @@
 #include <stdint.h>
 #include <string.h>
 
+typedef long double type_t;
+
+#include "tst-scanf-format-real.h"
+
 #undef compare_real
 #define compare_real(x, y)						\
 ({									\
@@ -27,7 +31,5 @@
   (ux.parts.lsw == uy.parts.lsw && ux.parts.msw == uy.parts.msw		\
    && ux.parts.sign_exponent == uy.parts.sign_exponent);	 	\
 })
-
-typedef long double type_t;
 
 #include "tst-scanf-format-skeleton.c"
