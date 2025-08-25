@@ -229,136 +229,63 @@ tzdata:
   # This is yearistype.sh in the parent project
   timezone/yearistype
 
-# The following files are shared with the CORE-MATH project
-sysdeps/ieee754/flt-32/e_gammaf_r.c
-  (file src/binary32/tgamma/tgammaf.c in CORE-MATH)
-  Instructions to merge new versions:
-  - change the function name from cr_tgammaf to __ieee754_gammaf_r
-  - add "int *signgamp" as 2nd argument and add at the beginning:
-    if (signgamp != NULL) *signgamp = 1;
-  - remove the errno stuff (this is done by the wrapper)
-  - replace 0x1p127f * 0x1p127f by math_narrow_eval (x * 0x1p127f)
-  - replace 0x1p-127f * sgn[k&1] by math_narrow_eval (0x1p-127f * sgn[k&1])
-  - add libm_alias_finite (__ieee754_gammaf_r, __gammaf_r) at the end
-sysdeps/ieee754/flt-32/s_exp10m1f.c
-  (file src/binary32/exp10m1/exp10m1f.c in CORE-MATH)
-  - The code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
-sysdeps/ieee754/flt-32/s_exp2m1f.c
-  (file src/binary32/exp2m1/exp2m1f.c in CORE-MATH)
-  - The code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
-sysdeps/ieee754/flt-32/s_expm1f.c
-  (file src/binary32/expm1/expm1f.c in CORE-MATH)
-  - The code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
-sysdeps/ieee754/flt-32/e_log10f.c
-  (file src/binary32/log10/log10f.c in CORE-MATH)
-  - The code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
-sysdeps/ieee754/flt-32/s_log2p1f.c
-  (file src/binary32/log2p1/log2p1f.c in CORE-MATH)
-  - The code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
-sysdeps/ieee754/flt-32/s_log1pf.c
-  (file src/binary32/log1p/log1pf.c in CORE-MATH)
-  - The code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
-sysdeps/ieee754/flt-32/s_log10p1f.c
-  (file src/binary32/log10p1/log10p1f.c in CORE-MATH)
-  - The code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
-sysdeps/ieee754/flt-32/s_cbrtf.c
-  (file src/binary32/cbrt/cbrtf.c in CORE-MATH)
-  - The code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
-sysdeps/ieee754/flt-32/s_erff.c
-  (file src/binary32/erf/erff.c in CORE-MATH)
-  - The code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
-sysdeps/ieee754/flt-32/s_erfcf.c
-  (file src/binary32/erfc/erfcf.c in CORE-MATH)
-  - The code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
-sysdeps/ieee754/flt-32/e_lgammaf_r.c:
-  (file src/binary32/lgamma/lgammaf.c in CORE-MATH)
-  - change the function name from cr_lgammaf to __ieee754_lgammaf_r
-  - add "int *signgamp" as 2nd argument and add at the beginning:
-    if (signgamp != NULL) *signgamp = 1;
-  - remove the errno stuff (this is done by the wrapper)
-  - replace 0x1p127f * 0x1p127f by math_narrow_eval (x * 0x1p127f)
-  - add libm_alias_finite (__ieee754_lgammaf_r, __lgammaf_r) at the end
-sysdeps/ieee754/flt-32/s_tanf.c:
-  (src/binary32/tan/tanf.c in CORE-MATH)
-  - The code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.  It was changed
-    to use an internal wrapper for 128 bit unsigned integer operations
-    for ABIs that do not support the type natively.
-sysdeps/ieee754/flt-32/e_acosf.c:
-  (src/binary32/acos/acosf.c in CORE-MATH)
-  - The code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
-sysdeps/ieee754/flt-32/e_acoshf.c:
-  (src/binary32/acosh/acoshf.c in CORE-MATH)
-  - The code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
-sysdeps/ieee754/flt-32/e_asinf.c:
-  (src/binary32/asin/asinf.c in CORE-MATH)
-  - The code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
-sysdeps/ieee754/flt-32/s_asinhf.c:
-  (src/binary32/asinh/asinhf.c in CORE-MATH)
-  - The code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
-sysdeps/ieee754/flt-32/s_atanf.c:
-  (src/binary32/atan/atanf.c in CORE-MATH)
-  - The code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
-sysdeps/ieee754/flt-32/e_atan2f.c:
-  (src/binary32/atan2/atan2f.c in CORE-MATH)
-  - The code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
-sysdeps/ieee754/flt-32/e_atanhf.c:
-  (src/binary32/atanh/atanhf.c in CORE-MATH)
-  - The code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
-sysdeps/ieee754/flt-32/e_coshf.c:
-  (src/binary32/cosh/coshf.c in CORE-MATH)
-  - the code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
-sysdeps/ieee754/flt-32/e_sinhf.c:
-  (src/binary32/sinh/sinhf.c in CORE-MATH)
-  - the code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
-sysdeps/ieee754/flt-32/s_tanhf.c:
-  (src/binary32/tanh/tanhf.c in CORE-MATH)
-  - the code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
-sysdeps/ieee754/flt-32/s_acospif.c:
-  (src/binary32/acospi/acospif.c in CORE-MATH)
-  - the code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
-sysdeps/ieee754/flt-32/s_asinpif.c:
-  (src/binary32/asinpi/asinpif.c in CORE-MATH)
-  - the code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
-sysdeps/ieee754/flt-32/s_atan2pif.c:
-  (src/binary32/atan2pi/atan2pif.c in CORE-MATH)
-  - the code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
-sysdeps/ieee754/flt-32/s_atanpif.c:
-  (src/binary32/atanpi/atanpif.c in CORE-MATH)
-  - the code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
-sysdeps/ieee754/flt-32/s_cospif.c:
-  (src/binary32/cospi/cospif.c in CORE-MATH)
-  - the code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
-sysdeps/ieee754/flt-32/s_sinpif.c:
-  (src/binary32/sinpi/sinpif.c in CORE-MATH)
-  - the code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
-sysdeps/ieee754/flt-32/s_tanpif.c:
-  (src/binary32/tanpi/tanpif.c in CORE-MATH)
-  - the code was adapted to use glibc code style and internal
-    functions to handle errno, overflow, and underflow.
+# The following files are imported from the CORE-MATH project, with
+# adjustments made to follow glibc code style, to utilize internal error
+# handling functions, and to implement minor fixes for ABIs with
+# FLT_EVAL_METHOD equal to 2 (i386).  Additionally, extra optimizations
+# are applied to share the internal data table across different
+# implementations.
+# 
+# The project is distribute here:
+#       https://gitlab.inria.fr/core-math/core-math/
+core-math:
+  # src/binary32/acos/acosf.c, revision 56dd347
+  sysdeps/ieee754/flt-32/e_acosf.c
+  # src/binary32/acosh/acoshf.c, revision d0b9ddd
+  sysdeps/ieee754/flt-32/e_acoshf.c
+  # file src/binary32/cosh/coshf.c, revision de59ecfb
+  sysdeps/ieee754/flt-32/e_coshf.c
+  # src/binary32/tgamma/tgammaf.c, revision a48e352
+  sysdeps/ieee754/flt-32/e_gammaf_r.c
+  # src/binary32/lgamma/lgammaf.c, revision bc385c2
+  sysdeps/ieee754/flt-32/e_lgammaf_r.c
+  # src/binary32/log10/log10f.c, revision bc385c2
+  sysdeps/ieee754/flt-32/e_log10f.c
+  # src/binary32/sinh/sinhf.c, revision bbfabd99
+  sysdeps/ieee754/flt-32/e_sinhf.c
+  # src/binary32/acospi/acospif.c, revision 1a6a9ab
+  sysdeps/ieee754/flt-32/s_acospif.c
+  # src/binary32/asinpi/asinpif.c, revision 6ee58266
+  sysdeps/ieee754/flt-32/s_asinpif.c
+  # src/binary32/atan2pi/atan2pif.c, revision dbebee1
+  sysdeps/ieee754/flt-32/s_atan2pif.c
+  # src/binary32/atanpi/atanpif.c, revision e02000e
+  sysdeps/ieee754/flt-32/s_atanpif.c
+  # src/binary32/cbrt/cbrtf.c, revision f7c7408d
+  sysdeps/ieee754/flt-32/s_cbrtf.c
+  # src/binary32/cospi/cospif.c, revision bbfabd99
+  sysdeps/ieee754/flt-32/s_cospif.c
+  # src/binary32/erfc/erfcf.c revision d0a2be20
+  sysdeps/ieee754/flt-32/s_erfcf.c
+  # src/binary32/erf/erff.c revision bc385c2
+  sysdeps/ieee754/flt-32/s_erff.c
+  # src/binary32/exp10m1/exp10m1f.c, revision c46b85b
+  sysdeps/ieee754/flt-32/s_exp10m1f.c
+  # src/binary32/exp2m1/exp2m1f.c, revision baf5f6b
+  sysdeps/ieee754/flt-32/s_exp2m1f.c
+  # src/binary32/expm1/expm1f.c, revision bc385c2
+  sysdeps/ieee754/flt-32/s_expm1f.c
+  # src/binary32/log10p1/log10p1f.c revision bc385c2
+  sysdeps/ieee754/flt-32/s_log10p1f.c
+  # src/binary32/log1p/log1pf.c revision bc385c2
+  sysdeps/ieee754/flt-32/s_log1pf.c
+  # src/binary32/log2p1/log2p1f.c revision bc385c2
+  sysdeps/ieee754/flt-32/s_log2p1f.c
+  # src/binary32/sinpi/sinpif.c, revision bbfabd99d
+  sysdeps/ieee754/flt-32/s_sinpif.c
+  # src/binary32/tan/tanf.c, revision 59d21d7
+  sysdeps/ieee754/flt-32/s_tanf.c
+  # src/binary32/tanh/tanhf.c, revision b1ecd83
+  sysdeps/ieee754/flt-32/s_tanhf.c
+  # src/binary32/tanpi/tanpif.c, revision 3bbf907
+  sysdeps/ieee754/flt-32/s_tanpif.c
