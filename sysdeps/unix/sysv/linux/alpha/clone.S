@@ -49,6 +49,8 @@ __clone:
 	/* Sanity check arguments.  */
 	ldiq	v0, EINVAL
 	beq	a0, SYSCALL_ERROR_LABEL	/* no NULL function pointers */
+	/* Align stack.  */
+	bic	a1, 15, a1
 	beq	a1, SYSCALL_ERROR_LABEL	/* no NULL stack pointers */
 
 	/* Save the fn ptr and arg on the new stack.  */
