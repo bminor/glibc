@@ -56,7 +56,7 @@ __fma (double x, double y, double z)
   u.d = temp + (long double) z;
   if ((u.ieee.mantissa3 & 1) == 0 && u.ieee.exponent != 0x7fff)
     u.ieee.mantissa3 |= fetestexcept (FE_INEXACT) != 0;
-  feupdateenv (&env);
+  __feupdateenv (&env);
   /* And finally truncation with round to nearest.  */
   return (double) u.d;
 #endif /* ! USE_FMA_BUILTIN  */

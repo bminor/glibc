@@ -80,7 +80,7 @@ __fma (double x, double y, double z)
   /* If the result is an exact zero, ensure it has the correct sign.  */
   if (a1 == 0 && m2 == 0)
     {
-      feupdateenv (&env);
+      __feupdateenv (&env);
       /* Ensure that round-to-nearest value of z + m1 is not reused.  */
       z = math_opt_barrier (z);
       return z + m1;
@@ -95,7 +95,7 @@ __fma (double x, double y, double z)
   u.d = a1 + a2;
   if ((u.ieee.mantissa1 & 1) == 0 && u.ieee.exponent != 0x7fff)
     u.ieee.mantissa1 |= fetestexcept (FE_INEXACT) != 0;
-  feupdateenv (&env);
+  __feupdateenv (&env);
 
   /* Add finally round to double precision.  */
   return u.d;

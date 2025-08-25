@@ -213,7 +213,7 @@ __fmal (long double x, long double y, long double z)
   /* If the result is an exact zero, ensure it has the correct sign.  */
   if (a1 == 0 && m2 == 0)
     {
-      feupdateenv (&env);
+      __feupdateenv (&env);
       /* Ensure that round-to-nearest value of z + m1 is not reused.  */
       z = math_opt_barrier (z);
       return z + m1;
@@ -227,7 +227,7 @@ __fmal (long double x, long double y, long double z)
     {
       if ((u.ieee.mantissa1 & 1) == 0 && u.ieee.exponent != 0x7fff)
 	u.ieee.mantissa1 |= fetestexcept (FE_INEXACT) != 0;
-      feupdateenv (&env);
+      __feupdateenv (&env);
       /* Result is a1 + u.d.  */
       return a1 + u.d;
     }
@@ -235,7 +235,7 @@ __fmal (long double x, long double y, long double z)
     {
       if ((u.ieee.mantissa1 & 1) == 0 && u.ieee.exponent != 0x7fff)
 	u.ieee.mantissa1 |= fetestexcept (FE_INEXACT) != 0;
-      feupdateenv (&env);
+      __feupdateenv (&env);
       /* Result is a1 + u.d, scaled up.  */
       return (a1 + u.d) * 0x1p64L;
     }
@@ -247,7 +247,7 @@ __fmal (long double x, long double y, long double z)
       /* Ensure the addition is not scheduled after fetestexcept call.  */
       math_force_eval (v.d);
       int j = fetestexcept (FE_INEXACT) != 0;
-      feupdateenv (&env);
+      __feupdateenv (&env);
       /* Ensure the following computations are performed in default rounding
 	 mode instead of just reusing the round to zero computation.  */
       asm volatile ("" : "=m" (u) : "m" (u));
