@@ -50,7 +50,7 @@ __fma (double x, double y, double z)
     return (double) temp + z;
 
   union ieee854_long_double u;
-  feholdexcept (&env);
+  __feholdexcept (&env);
   fesetround (FE_TOWARDZERO);
   /* Perform addition with round to odd.  */
   u.d = temp + (long double) z;

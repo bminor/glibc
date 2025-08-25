@@ -184,7 +184,7 @@ __fmal (long double x, long double y, long double z)
     }
 
   fenv_t env;
-  feholdexcept (&env);
+  __feholdexcept (&env);
   fesetround (FE_TONEAREST);
 
   /* Multiplication m1 + m2 = x * y using Dekker's algorithm.  */
