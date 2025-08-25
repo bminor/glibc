@@ -35,6 +35,7 @@ __feclearexcept (int excepts)
   /* Success.  */
   return 0;
 }
+libm_hidden_def (__feclearexcept)
 
 #include <shlib-compat.h>
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)

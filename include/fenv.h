@@ -33,6 +33,7 @@ libm_hidden_proto (feupdateenv)
 libm_hidden_proto (__feupdateenv)
 libm_hidden_proto (fetestexcept)
 libm_hidden_proto (feclearexcept)
+libm_hidden_proto (__feclearexcept)
 
 /* Rounding mode context.  This allows functions to set/restore rounding mode
    only when the desired rounding mode is different from the current rounding

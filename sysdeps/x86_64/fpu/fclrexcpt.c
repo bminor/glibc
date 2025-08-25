@@ -19,7 +19,7 @@
 #include <fenv.h>
 
 int
-feclearexcept (int excepts)
+__feclearexcept (int excepts)
 {
   fenv_t temp;
   unsigned int mxcsr;
@@ -49,4 +49,6 @@ feclearexcept (int excepts)
   /* Success.  */
   return 0;
 }
+libm_hidden_def (__feclearexcept)
+weak_alias (__feclearexcept, feclearexcept)
 libm_hidden_def (feclearexcept)

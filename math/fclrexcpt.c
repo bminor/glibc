@@ -25,6 +25,7 @@ __feclearexcept (int excepts)
   /* This always fails unless nothing needs to be done.  */
   return (excepts != 0);
 }
+libm_hidden_def (__feclearexcept)
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
 strong_alias (__feclearexcept, __old_feclearexcept)
 compat_symbol (libm, __old_feclearexcept, feclearexcept, GLIBC_2_1);

@@ -20,7 +20,7 @@
 #include <fpu_control.h>
 
 int
-feclearexcept (int excepts)
+__feclearexcept (int excepts)
 {
   unsigned int fpsr;
 
@@ -33,4 +33,6 @@ feclearexcept (int excepts)
 
   return 0;
 }
+libm_hidden_def (__feclearexcept)
+weak_alias (__feclearexcept, feclearexcept)
 libm_hidden_def (feclearexcept)

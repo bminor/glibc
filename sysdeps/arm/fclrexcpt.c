@@ -22,7 +22,7 @@
 
 
 int
-feclearexcept (int excepts)
+__feclearexcept (int excepts)
 {
   fpu_control_t fpscr, new_fpscr;
 
@@ -40,4 +40,6 @@ feclearexcept (int excepts)
 
   return 0;
 }
+libm_hidden_def (__feclearexcept)
+weak_alias (__feclearexcept, feclearexcept)
 libm_hidden_def (feclearexcept)

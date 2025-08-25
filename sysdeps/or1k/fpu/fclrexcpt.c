@@ -21,7 +21,7 @@
 #include <fpu_control.h>
 
 int
-feclearexcept (int excepts)
+__feclearexcept (int excepts)
 {
   fpu_control_t cw;
   fpu_control_t cw_new;
@@ -41,4 +41,6 @@ feclearexcept (int excepts)
   /* Success.  */
   return 0;
 }
+libm_hidden_def (__feclearexcept)
+weak_alias (__feclearexcept, feclearexcept)
 libm_hidden_def (feclearexcept)
