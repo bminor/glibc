@@ -1,6 +1,7 @@
 ## args: double
 ## ret: double
 ## includes: math.h
+## name: workload-random
 # Random inputs in [0,b=0xa.b9fd72b0fb24p+4]
 # where b is the smallest number such that tgamma rounds to +Inf (to nearest)
 0x5.6c7f215351cc8p+4
