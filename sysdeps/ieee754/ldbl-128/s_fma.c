@@ -55,7 +55,7 @@ __fma (double x, double y, double z)
   /* Perform addition with round to odd.  */
   u.d = temp + (long double) z;
   if ((u.ieee.mantissa3 & 1) == 0 && u.ieee.exponent != 0x7fff)
-    u.ieee.mantissa3 |= fetestexcept (FE_INEXACT) != 0;
+    u.ieee.mantissa3 |= __fetestexcept (FE_INEXACT) != 0;
   __feupdateenv (&env);
   /* And finally truncation with round to nearest.  */
   return (double) u.d;

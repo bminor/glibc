@@ -226,7 +226,7 @@ __fmal (long double x, long double y, long double z)
   if (__glibc_likely (adjust == 0))
     {
       if ((u.ieee.mantissa1 & 1) == 0 && u.ieee.exponent != 0x7fff)
-	u.ieee.mantissa1 |= fetestexcept (FE_INEXACT) != 0;
+	u.ieee.mantissa1 |= __fetestexcept (FE_INEXACT) != 0;
       __feupdateenv (&env);
       /* Result is a1 + u.d.  */
       return a1 + u.d;
@@ -234,7 +234,7 @@ __fmal (long double x, long double y, long double z)
   else if (__glibc_likely (adjust > 0))
     {
       if ((u.ieee.mantissa1 & 1) == 0 && u.ieee.exponent != 0x7fff)
-	u.ieee.mantissa1 |= fetestexcept (FE_INEXACT) != 0;
+	u.ieee.mantissa1 |= __fetestexcept (FE_INEXACT) != 0;
       __feupdateenv (&env);
       /* Result is a1 + u.d, scaled up.  */
       return (a1 + u.d) * 0x1p64L;
@@ -242,11 +242,11 @@ __fmal (long double x, long double y, long double z)
   else
     {
       if ((u.ieee.mantissa1 & 1) == 0)
-	u.ieee.mantissa1 |= fetestexcept (FE_INEXACT) != 0;
+	u.ieee.mantissa1 |= __fetestexcept (FE_INEXACT) != 0;
       v.d = a1 + u.d;
       /* Ensure the addition is not scheduled after fetestexcept call.  */
       math_force_eval (v.d);
-      int j = fetestexcept (FE_INEXACT) != 0;
+      int j = __fetestexcept (FE_INEXACT) != 0;
       __feupdateenv (&env);
       /* Ensure the following computations are performed in default rounding
 	 mode instead of just reusing the round to zero computation.  */

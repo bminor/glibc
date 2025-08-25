@@ -94,7 +94,7 @@ __fma (double x, double y, double z)
   union ieee854_long_double u;
   u.d = a1 + a2;
   if ((u.ieee.mantissa1 & 1) == 0 && u.ieee.exponent != 0x7fff)
-    u.ieee.mantissa1 |= fetestexcept (FE_INEXACT) != 0;
+    u.ieee.mantissa1 |= __fetestexcept (FE_INEXACT) != 0;
   __feupdateenv (&env);
 
   /* Add finally round to double precision.  */
