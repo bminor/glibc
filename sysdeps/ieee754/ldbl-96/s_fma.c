@@ -52,7 +52,7 @@ __fma (double x, double y, double z)
 
   fenv_t env;
   __feholdexcept (&env);
-  fesetround (FE_TONEAREST);
+  __fesetround (FE_TONEAREST);
 
   /* Multiplication m1 + m2 = x * y using Dekker's algorithm.  */
 #define C ((1ULL << (LDBL_MANT_DIG + 1) / 2) + 1)
@@ -86,7 +86,7 @@ __fma (double x, double y, double z)
       return z + m1;
     }
 
-  fesetround (FE_TOWARDZERO);
+  __fesetround (FE_TOWARDZERO);
   /* Perform m2 + a2 addition with round to odd.  */
   a2 = a2 + m2;
 

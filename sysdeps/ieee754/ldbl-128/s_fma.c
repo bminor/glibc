@@ -51,7 +51,7 @@ __fma (double x, double y, double z)
 
   union ieee854_long_double u;
   __feholdexcept (&env);
-  fesetround (FE_TOWARDZERO);
+  __fesetround (FE_TOWARDZERO);
   /* Perform addition with round to odd.  */
   u.d = temp + (long double) z;
   if ((u.ieee.mantissa3 & 1) == 0 && u.ieee.exponent != 0x7fff)

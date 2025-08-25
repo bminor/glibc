@@ -195,7 +195,7 @@ __fmal (_Float128 x, _Float128 y, _Float128 z)
 
   fenv_t env;
   __feholdexcept (&env);
-  fesetround (FE_TONEAREST);
+  __fesetround (FE_TONEAREST);
 
   /* Multiplication m1 + m2 = x * y using Dekker's algorithm.  */
 #define C ((1LL << (LDBL_MANT_DIG + 1) / 2) + 1)
@@ -229,7 +229,7 @@ __fmal (_Float128 x, _Float128 y, _Float128 z)
       return z + m1;
     }
 
-  fesetround (FE_TOWARDZERO);
+  __fesetround (FE_TOWARDZERO);
   /* Perform m2 + a2 addition with round to odd.  */
   u.d = a2 + m2;
 
