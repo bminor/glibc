@@ -208,7 +208,7 @@ __fmal (long double x, long double y, long double z)
   /* Ensure the arithmetic is not scheduled after feclearexcept call.  */
   math_force_eval (m2);
   math_force_eval (a2);
-  feclearexcept (FE_INEXACT);
+  __feclearexcept (FE_INEXACT);
 
   /* If the result is an exact zero, ensure it has the correct sign.  */
   if (a1 == 0 && m2 == 0)
