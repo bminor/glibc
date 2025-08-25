@@ -1,4 +1,5 @@
-/* Copyright (C) 2007-2025 Free Software Foundation, Inc.
+/* Fix for conversion of floating point to integer overflow.  Alpha version.
+   Copyright (C) 2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -12,27 +13,18 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define __llround	not___llround
-#define llround		not_llround
-#include <math.h>
-#include <math_ldbl_opt.h>
-#include <libm-alias-double.h>
-#undef __llround
-#undef llround
+#ifndef FIX_FP_INT_CONVERT_OVERFLOW_H
+#define FIX_FP_INT_CONVERT_OVERFLOW_H	1
 
-long int
-__lround (double x)
-{
-  double adj, y;
+#define FIX_FLT_LLONG_CONVERT_OVERFLOW 1
+#define FIX_DBL_LLONG_CONVERT_OVERFLOW 1
+#define FIX_LDBL_LLONG_CONVERT_OVERFLOW 1
 
-  adj = copysign (0.5, x);
-  asm("addt/suc %1,%2,%0" : "=&f"(y) : "f"(x), "f"(adj));
-  return y;
-}
+#define FIX_FLT_LONG_CONVERT_OVERFLOW 1
+#define FIX_DBL_LONG_CONVERT_OVERFLOW 1
+#define FIX_LDBL_LONG_CONVERT_OVERFLOW 1
 
-strong_alias (__lround, __llround)
-libm_alias_double (__lround, lround)
-libm_alias_double (__llround, llround)
+#endif /* fix-fp-int-convert-overflow.h */
