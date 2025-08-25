@@ -1,6 +1,7 @@
 ## args: double
 ## ret: double
 ## includes: math.h
+## name: workload-random
 # Random inputs in [0,b=0x1.b39dc41e48bfdp+4]
 # where b is the smallest number such that erfc(b) rounds to 0 (to nearest)
 0x1.13ef47322481bp+4
