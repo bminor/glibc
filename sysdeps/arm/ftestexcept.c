@@ -21,7 +21,7 @@
 
 
 int
-fetestexcept (int excepts)
+__fetestexcept (int excepts)
 {
   /* Return no exception flags if a VFP unit isn't present.  */
   if (!ARM_HAVE_VFP)
@@ -29,4 +29,6 @@ fetestexcept (int excepts)
 
   return libc_fetestexcept_vfp (excepts);
 }
+libm_hidden_def (__fetestexcept)
+weak_alias (__fetestexcept, fetestexcept)
 libm_hidden_def (fetestexcept)

@@ -21,7 +21,7 @@
 #include <ldsodefs.h>
 
 int
-fetestexcept (int excepts)
+__fetestexcept (int excepts)
 {
   short temp;
   int xtemp = 0;
@@ -35,4 +35,6 @@ fetestexcept (int excepts)
 
   return (temp | xtemp) & excepts & FE_ALL_EXCEPT;
 }
+libm_hidden_def (__fetestexcept)
+weak_alias (__fetestexcept, fetestexcept)
 libm_hidden_def (fetestexcept)

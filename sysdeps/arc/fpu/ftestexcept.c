@@ -22,7 +22,7 @@
 #include <stdio.h>
 
 int
-fetestexcept (int excepts)
+__fetestexcept (int excepts)
 {
   unsigned int fpsr;
 
@@ -30,4 +30,6 @@ fetestexcept (int excepts)
 
   return fpsr & excepts;
 }
+libm_hidden_def (__fetestexcept)
+weak_alias (__fetestexcept, fetestexcept)
 libm_hidden_def (fetestexcept)

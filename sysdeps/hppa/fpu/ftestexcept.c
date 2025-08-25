@@ -19,7 +19,7 @@
 #include <fenv.h>
 
 int
-fetestexcept (int excepts)
+__fetestexcept (int excepts)
 {
   union { unsigned long long l; unsigned int sw[2]; } s;
 
@@ -30,4 +30,6 @@ fetestexcept (int excepts)
 
   return (s.sw[0] >> 27) & excepts & FE_ALL_EXCEPT;
 }
+libm_hidden_def (__fetestexcept)
+weak_alias (__fetestexcept, fetestexcept)
 libm_hidden_def (fetestexcept)

@@ -20,7 +20,7 @@
 #include <fenv_private.h>
 
 int
-fetestexcept (int excepts)
+__fetestexcept (int excepts)
 {
   fenv_t tmp;
 
@@ -28,4 +28,6 @@ fetestexcept (int excepts)
 
   return tmp & excepts & FE_ALL_EXCEPT;
 }
+libm_hidden_def (__fetestexcept)
+weak_alias (__fetestexcept, fetestexcept)
 libm_hidden_def (fetestexcept)

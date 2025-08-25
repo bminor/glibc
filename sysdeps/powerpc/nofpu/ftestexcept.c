@@ -20,8 +20,10 @@
 #include "soft-supp.h"
 
 int
-fetestexcept (int x)
+__fetestexcept (int x)
 {
   return __sim_exceptions_thread & x;
 }
+libm_hidden_def (__fetestexcept)
+weak_alias (__fetestexcept, fetestexcept)
 libm_hidden_def (fetestexcept)

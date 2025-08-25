@@ -20,7 +20,7 @@
 #include <fpu_control.h>
 
 int
-fetestexcept (int excepts)
+__fetestexcept (int excepts)
 {
   fpu_control_t temp;
 
@@ -29,4 +29,6 @@ fetestexcept (int excepts)
 
   return temp & excepts & FE_ALL_EXCEPT;
 }
+libm_hidden_def (__fetestexcept)
+weak_alias (__fetestexcept, fetestexcept)
 libm_hidden_def (fetestexcept)

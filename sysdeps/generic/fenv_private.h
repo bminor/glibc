@@ -82,13 +82,13 @@ default_libc_feholdexcept_setround (fenv_t *e, int r)
 #endif
 
 #ifndef libc_fetestexcept
-# define libc_fetestexcept  fetestexcept
+# define libc_fetestexcept  __fetestexcept
 #endif
 #ifndef libc_fetestexceptf
-# define libc_fetestexceptf fetestexcept
+# define libc_fetestexceptf __fetestexcept
 #endif
 #ifndef libc_fetestexceptl
-# define libc_fetestexceptl fetestexcept
+# define libc_fetestexceptl __fetestexcept
 #endif
 
 static __always_inline void
@@ -130,7 +130,7 @@ default_libc_feupdateenv (fenv_t *e)
 static __always_inline int
 default_libc_feupdateenv_test (fenv_t *e, int ex)
 {
-  int ret = fetestexcept (ex);
+  int ret = __fetestexcept (ex);
   __feupdateenv (e);
   return ret;
 }

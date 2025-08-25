@@ -19,7 +19,7 @@
 #include <fenv_libc.h>
 
 int
-fetestexcept (int excepts)
+__fetestexcept (int excepts)
 {
   unsigned long tmp;
 
@@ -28,4 +28,6 @@ fetestexcept (int excepts)
 
   return tmp & excepts & SWCR_STATUS_MASK;
 }
+libm_hidden_def (__fetestexcept)
+weak_alias (__fetestexcept, fetestexcept)
 libm_hidden_def (fetestexcept)
