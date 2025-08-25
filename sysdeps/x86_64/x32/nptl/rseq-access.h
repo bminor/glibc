@@ -18,29 +18,32 @@
 
 /* Read member of the RSEQ area directly, with single-copy atomicity semantics.  */
 #define RSEQ_GETMEM_ONCE(member) \
-  ({ __typeof (RSEQ_SELF()->member) __value;				      \
+  ({									      \
+     __typeof (RSEQ_SELF()->member) __value;				      \
      _Static_assert (sizeof (__value) == 1				      \
 		     || sizeof (__value) == 4				      \
 		     || sizeof (__value) == 8,				      \
-		     "size of rseq data");			      \
+		     "size of rseq data");				      \
      if (sizeof (__value) == 1)						      \
-       asm volatile ("movb %%fs:%P2(%q3),%b0"				      \
-		     : "=q" (__value)					      \
-		     : "0" (0), "i" (offsetof (struct rseq_area, member)),    \
-		       "r" ((long long int) __rseq_offset));		      \
-     else if (sizeof (__value) == 4)					      \
-       asm volatile ("movl %%fs:%P1(%q2),%0"				      \
+       asm volatile ("movzbl %%fs:%c1(%2),%k0"				      \
 		     : "=r" (__value)					      \
 		     : "i" (offsetof (struct rseq_area, member)),	      \
-		       "r" ((long long int) __rseq_offset));		      \
+		       "r" ((long long int) __rseq_offset)		      \
+		     : "memory" );					      \
+     else if (sizeof (__value) == 4)					      \
+       asm volatile ("movl %%fs:%c1(%2),%0"				      \
+		     : "=r" (__value)					      \
+		     : "i" (offsetof (struct rseq_area, member)),	      \
+		       "r" ((long long int) __rseq_offset)		      \
+		     : "memory");					      \
      else /* 8 */							      \
-       {								      \
-	 asm volatile ("movq %%fs:%P1(%q2),%q0"				      \
-		       : "=r" (__value)					      \
-		       : "i" (offsetof (struct rseq_area, member)),	      \
-		         "r" ((long long int) __rseq_offset));		      \
-       }								      \
-     __value; })
+       asm volatile ("movq %%fs:%c1(%2),%0"				      \
+		     : "=r" (__value)					      \
+		     : "i" (offsetof (struct rseq_area, member)),	      \
+		       "r" ((long long int) __rseq_offset)		      \
+		     : "memory");					      \
+     __value;								      \
+  })
 
 /* Read member of the RSEQ area directly.  */
 #define RSEQ_GETMEM(member) RSEQ_GETMEM_ONCE(member)
@@ -59,27 +62,32 @@
      _Static_assert (sizeof (RSEQ_SELF()->member) == 1			      \
 		     || sizeof (RSEQ_SELF()->member) == 4		      \
 		     || sizeof (RSEQ_SELF()->member) == 8,		      \
-		     "size of rseq data");			      \
+		     "size of rseq data");				      \
      if (sizeof (RSEQ_SELF()->member) == 1)				      \
-       asm volatile ("movb %b0,%%fs:%P1(%q2)" :				      \
-		     : "iq" (value),					      \
+       asm volatile ("movb %0,%%fs:%c1(%2)"				      \
+		     :							      \
+		     : "iq" ((uint8_t) cast_to_integer (value)),	      \
 		       "i" (offsetof (struct rseq_area, member)),	      \
-		       "r" ((long long int) __rseq_offset));		      \
+		       "r" ((long long int) __rseq_offset)		      \
+		     : "memory");					      \
      else if (sizeof (RSEQ_SELF()->member) == 4)			      \
-       asm volatile ("movl %0,%%fs:%P1(%q2)" :				      \
-		     : IMM_MODE (value),				      \
+       asm volatile ("movl %0,%%fs:%c1(%2)"				      \
+		     :							      \
+		     : IMM_MODE ((uint32_t) cast_to_integer (value)),	      \
 		       "i" (offsetof (struct rseq_area, member)),	      \
-		       "r" ((long long int) __rseq_offset));		      \
+		       "r" ((long long int) __rseq_offset)		      \
+		     : "memory");					      \
      else /* 8 */							      \
-       {								      \
-	 /* Since movq takes a signed 32-bit immediate or a register source   \
-	    operand, use "er" constraint for 32-bit signed integer constant   \
-	    or register.  */						      \
-	 asm volatile ("movq %q0,%%fs:%P1(%q2)" :			      \
-		       : "er" ((uint64_t) cast_to_integer (value)),	      \
-			 "i" (offsetof (struct rseq_area, member)),	      \
-		         "r" ((long long int) __rseq_offset));		      \
-       }})
+       /* Since movq takes a signed 32-bit immediate or a register source     \
+	  operand, use "er" constraint for 32-bit signed integer constant     \
+	  or register.  */						      \
+       asm volatile ("movq %0,%%fs:%c1(%2)"				      \
+		     :							      \
+		     : "er" ((uint64_t) cast_to_integer (value)),	      \
+		       "i" (offsetof (struct rseq_area, member)),	      \
+		       "r" ((long long int) __rseq_offset)		      \
+		     : "memory");					      \
+  })
 
 /* Set member of the RSEQ area directly.  */
 #define RSEQ_SETMEM(member, value) RSEQ_SETMEM_ONCE(member, value)
