@@ -1477,18 +1477,42 @@ tag_new_usable (void *ptr)
   return ptr;
 }
 
+/* HP page used for an mmap()'ed chunk. */
+#define MMAP_HP 0x1
+
+/* Check for HP usage from an mmap()'ed chunk. */
+static __always_inline bool
+mmap_is_hp (mchunkptr p)
+{
+  return prev_size (p) & MMAP_HP;
+}
+
+/* Set HP advised field for an mmap()'ed chunk. */
+static __always_inline void
+set_mmap_is_hp (mchunkptr p)
+{
+  prev_size (p) |= MMAP_HP;
+}
+
+/* Get an mmap()ed chunk's offset, ignoring huge page bits. */
+static __always_inline size_t
+prev_size_mmap (mchunkptr p)
+{
+  return prev_size (p) & ~MMAP_HP;
+}
+
 /* Return pointer to mmap base from a chunk with IS_MMAPPED set.  */
 static __always_inline void *
 mmap_base (mchunkptr p)
 {
-  return (char *) p - prev_size (p);
+  return (char *) p - prev_size_mmap (p);
 }
 
 /* Return total mmap size of a chunk with IS_MMAPPED set.  */
 static __always_inline size_t
 mmap_size (mchunkptr p)
 {
-  return prev_size (p) + chunksize (p) + CHUNK_HDR_SZ;
+  return prev_size_mmap (p) + chunksize (p) + CHUNK_HDR_SZ;
 }
 
 /*
@@ -2443,6 +2467,11 @@ sysmalloc_mmap (INTERNAL_SIZE_T nb, size_t pagesize, int extra_flags)
   set_prev_size (p, padding);
   set_head (p, (size - padding - CHUNK_HDR_SZ) | IS_MMAPPED);
 
+  /* Must also check whether huge pages were used in the mmap call
+     and this is not the fallback call after using huge pages failed */
+  if (__glibc_unlikely (extra_flags & mp_.hp_flags))
+    set_mmap_is_hp (p);
+
   /* update statistics */
   int new = atomic_fetch_add_relaxed (&mp_.n_mmaps, 1) + 1;
   atomic_max (&mp_.max_n_mmaps, new);
@@ -3020,8 +3049,8 @@ munmap_chunk (mchunkptr p)
 static mchunkptr
 mremap_chunk (mchunkptr p, size_t new_size)
 {
-  size_t pagesize = GLRO (dl_pagesize);
-  INTERNAL_SIZE_T offset = prev_size (p);
+  size_t pagesize = mmap_is_hp (p) ? mp_.hp_pagesize : GLRO (dl_pagesize);
+  INTERNAL_SIZE_T offset = prev_size_mmap (p);
   INTERNAL_SIZE_T size = chunksize (p);
   char *cp;
 
@@ -3053,7 +3082,7 @@ mremap_chunk (mchunkptr p, size_t new_size)
 
   assert (!misaligned_chunk (p));
 
-  assert (prev_size (p) == offset);
+  assert (prev_size_mmap (p) == offset);
   set_head (p, (new_size - offset - CHUNK_HDR_SZ) | IS_MMAPPED);
 
   INTERNAL_SIZE_T new;

@@ -114,6 +114,7 @@ tests-exclude-malloc-check = \
   tst-memalign-3 \
   tst-mxfast \
   tst-safe-linking \
+  tst-tcfree4 \
 # tests-exclude-malloc-check
 
 # Run all tests with MALLOC_CHECK_=3
