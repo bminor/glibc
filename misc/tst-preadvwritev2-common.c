@@ -40,8 +40,12 @@
 #ifndef RWF_ATOMIC
 # define RWF_ATOMIC 0
 #endif
+#ifndef RWF_DONTCACHE
+# define RWF_DONTCACHE 0
+#endif
 #define RWF_SUPPORTED	(RWF_HIPRI | RWF_DSYNC | RWF_SYNC | RWF_NOWAIT \
-			 | RWF_APPEND | RWF_NOAPPEND | RWF_ATOMIC)
+			 | RWF_APPEND | RWF_NOAPPEND | RWF_ATOMIC \
+			 | RWF_DONTCACHE)
 
 /* Generic uio_lim.h does not define IOV_MAX.  */
 #ifndef IOV_MAX

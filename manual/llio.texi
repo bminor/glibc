@@ -1414,6 +1414,10 @@ naturally-aligned with regard to total write length.
 The @code{atomic_*} values can be obtained with @code{statx} along with
 @code{STATX_WRITE_ATOMIC} flag.
 
+@item RWF_DONTCACHE
+Use uncached buffered IO.  If the file system does not support it, the
+call will fail and set @code{errno} to @code{EOPNOTSUPP}.
+
 This is a Linux-specific extension.
 @end vtable
 
