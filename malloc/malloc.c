@@ -3102,8 +3102,58 @@ typedef struct tcache_perthread_struct
   tcache_entry *entries[TCACHE_MAX_BINS];
 } tcache_perthread_struct;
 
-static __thread bool tcache_shutting_down = false;
-static __thread tcache_perthread_struct *tcache = NULL;
+static const union
+{
+  struct tcache_perthread_struct inactive;
+  struct
+  {
+    char pad;
+    struct tcache_perthread_struct disabled;
+  };
+} __tcache_dummy;
+
+/* TCACHE is never NULL; it's either "live" or points to one of the
+   above dummy entries.  The dummy entries are all zero so act like an
+   empty/unusable tcache.  */
+static __thread tcache_perthread_struct *tcache =
+  (tcache_perthread_struct *) &__tcache_dummy.inactive;
+
+/* This is the default, and means "check to see if a real tcache
+   should be allocated."  */
+static __always_inline bool
+tcache_inactive (void)
+{
+  return (tcache == &__tcache_dummy.inactive);
+}
+
+/* This means "the user has disabled the tcache but we have to point
+   to something."  */
+static __always_inline bool
+tcache_disabled (void)
+{
+  return (tcache == &__tcache_dummy.disabled);
+}
+
+/* This means the tcache is active.  */
+static __always_inline bool
+tcache_enabled (void)
+{
+  return (! tcache_inactive () && ! tcache_disabled ());
+}
+
+/* Sets the tcache to INACTIVE state.  */
+static __always_inline void
+tcache_set_inactive (void)
+{
+  tcache = (tcache_perthread_struct *) &__tcache_dummy.inactive;
+}
+
+/* Sets the tcache to DISABLED state.  */
+static __always_inline void
+tcache_set_disabled (void)
+{
+  tcache = (tcache_perthread_struct *) &__tcache_dummy.disabled;
+}
 
 /* Process-wide key to try and catch a double-free in the same thread.  */
 static uintptr_t tcache_key;
@@ -3257,19 +3307,13 @@ tcache_get_large (size_t tc_idx, size_t nb)
   return tcache_get_n (tc_idx, entry, mangled);
 }
 
-static void tcache_init (void);
+static void tcache_init (mstate av);
 
 static __always_inline void *
 tcache_get_align (size_t nb, size_t alignment)
 {
   if (nb < mp_.tcache_max_bytes)
     {
-      if (__glibc_unlikely (tcache == NULL))
-	{
-	  tcache_init ();
-	  return NULL;
-	}
-
       size_t tc_idx = csize2tidx (nb);
       if (__glibc_unlikely (tc_idx >= TCACHE_SMALL_BINS))
         tc_idx = large_csize2tidx (nb);
@@ -3338,14 +3382,12 @@ tcache_thread_shutdown (void)
 {
   int i;
   tcache_perthread_struct *tcache_tmp = tcache;
-
-  tcache_shutting_down = true;
-
-  if (!tcache)
-    return;
+  int need_free = tcache_enabled ();
 
   /* Disable the tcache and prevent it from being reinitialized.  */
-  tcache = NULL;
+  tcache_set_disabled ();
+  if (! need_free)
+    return;
 
   /* Free all of the entries and the tcache itself back to the arena
      heap for coalescing.  */
@@ -3368,34 +3410,31 @@ tcache_thread_shutdown (void)
 /* Initialize tcache.  In the rare case there isn't any memory available,
    later calls will retry initialization.  */
 static void
-tcache_init (void)
+tcache_init (mstate av)
 {
-  if (tcache_shutting_down)
+  /* Set this unconditionally to avoid infinite loops.  */
+  tcache_set_disabled ();
+  if (mp_.tcache_count == 0)
     return;
 
   size_t bytes = sizeof (tcache_perthread_struct);
-  tcache = (tcache_perthread_struct *) __libc_malloc2 (bytes);
+  if (av)
+    tcache =
+      (tcache_perthread_struct *) _int_malloc (av, request2size (bytes));
+  else
+    tcache = (tcache_perthread_struct *) __libc_malloc2 (bytes);
 
-  if (tcache != NULL)
+  if (tcache == NULL)
+    {
+      /* If the allocation failed, don't try again.  */
+      tcache_set_disabled ();
+    }
+  else
     {
       memset (tcache, 0, bytes);
       for (int i = 0; i < TCACHE_MAX_BINS; i++)
 	tcache->num_slots[i] = mp_.tcache_count;
     }
-}
-
-static void * __attribute_noinline__
-tcache_calloc_init (size_t bytes)
-{
-  tcache_init ();
-  return __libc_calloc2 (bytes);
-}
-
-static void * __attribute_noinline__
-tcache_malloc_init (size_t bytes)
-{
-  tcache_init ();
-  return __libc_malloc2 (bytes);
 }
 
 #else  /* !USE_TCACHE */
@@ -3455,8 +3494,6 @@ __libc_malloc (size_t bytes)
   if (nb < mp_.tcache_max_bytes)
     {
       size_t tc_idx = csize2tidx (nb);
-      if(__glibc_unlikely (tcache == NULL))
-	return tcache_malloc_init (bytes);
 
       if (__glibc_likely (tc_idx < TCACHE_SMALL_BINS))
         {
@@ -3476,6 +3513,13 @@ __libc_malloc (size_t bytes)
   return __libc_malloc2 (bytes);
 }
 libc_hidden_def (__libc_malloc)
+
+static void __attribute_noinline__
+tcache_free_init (void *mem)
+{
+  tcache_init (NULL);
+  __libc_free (mem);
+}
 
 void
 __libc_free (void *mem)
@@ -3501,7 +3545,7 @@ __libc_free (void *mem)
     return malloc_printerr_tail ("free(): invalid pointer");
 
 #if USE_TCACHE
-  if (__glibc_likely (size < mp_.tcache_max_bytes && tcache != NULL))
+  if (__glibc_likely (size < mp_.tcache_max_bytes))
     {
       /* Check to see if it's already in the tcache.  */
       tcache_entry *e = (tcache_entry *) chunk2mem (p);
@@ -3523,6 +3567,9 @@ __libc_free (void *mem)
               && __glibc_likely (tcache->num_slots[tc_idx] != 0))
 	    return tcache_put_large (p, tc_idx);
 	}
+
+      if (__glibc_unlikely (tcache_inactive ()))
+	return tcache_free_init (mem);
     }
 #endif
 
@@ -3883,9 +3930,6 @@ __libc_calloc (size_t n, size_t elem_size)
 
   if (nb < mp_.tcache_max_bytes)
     {
-      if (__glibc_unlikely (tcache == NULL))
-	return tcache_calloc_init (bytes);
-
       size_t tc_idx = csize2tidx (nb);
 
       if (__glibc_unlikely (tc_idx < TCACHE_SMALL_BINS))
@@ -4017,9 +4061,12 @@ _int_malloc (mstate av, size_t bytes)
 	      /* While we're here, if we see other chunks of the same size,
 		 stash them in the tcache.  */
 	      size_t tc_idx = csize2tidx (nb);
-	      if (tcache != NULL && tc_idx < mp_.tcache_small_bins)
+	      if (tc_idx < mp_.tcache_small_bins)
 		{
 		  mchunkptr tc_victim;
+
+		  if (__glibc_unlikely (tcache_inactive ()))
+		    tcache_init (av);
 
 		  /* While bin not empty and tcache not full, copy chunks.  */
 		  while (tcache->num_slots[tc_idx] != 0 && (tc_victim = *fb) != NULL)
@@ -4077,9 +4124,12 @@ _int_malloc (mstate av, size_t bytes)
 	  /* While we're here, if we see other chunks of the same size,
 	     stash them in the tcache.  */
 	  size_t tc_idx = csize2tidx (nb);
-	  if (tcache != NULL && tc_idx < mp_.tcache_small_bins)
+	  if (tc_idx < mp_.tcache_small_bins)
 	    {
 	      mchunkptr tc_victim;
+
+	      if (__glibc_unlikely (tcache_inactive ()))
+		tcache_init (av);
 
 	      /* While bin not empty and tcache not full, copy chunks over.  */
 	      while (tcache->num_slots[tc_idx] != 0
@@ -4139,7 +4189,7 @@ _int_malloc (mstate av, size_t bytes)
 #if USE_TCACHE
   INTERNAL_SIZE_T tcache_nb = 0;
   size_t tc_idx = csize2tidx (nb);
-  if (tcache != NULL && tc_idx < mp_.tcache_small_bins)
+  if (tc_idx < mp_.tcache_small_bins)
     tcache_nb = nb;
   int return_cached = 0;
 
@@ -4217,6 +4267,8 @@ _int_malloc (mstate av, size_t bytes)
               if (av != &main_arena)
 		set_non_main_arena (victim);
 #if USE_TCACHE
+	      if (__glibc_unlikely (tcache_inactive ()))
+		tcache_init (av);
 	      /* Fill cache first, return to user only if cache fills.
 		 We may return one of these chunks later.  */
 	      if (tcache_nb > 0
