@@ -137,6 +137,7 @@ tests-exclude-hugetlb1 = \
   tst-mallocfork2 \
   tst-mallocfork3 \
   tst-mallocstate \
+  tst-mxfast \
 # tests-exclude-hugetlb1
 # The tst-free-errno relies on the used malloc page size to mmap an
 # overlapping region.
