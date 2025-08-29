@@ -405,6 +405,7 @@ extern int __pthread_rwlock_wrlock (pthread_rwlock_t *__rwlock);
 libc_hidden_proto (__pthread_rwlock_wrlock)
 extern int __pthread_rwlock_trywrlock (pthread_rwlock_t *__rwlock);
 extern int __pthread_rwlock_unlock (pthread_rwlock_t *__rwlock);
+libc_hidden_proto (__pthread_rwlock_unlock)
 extern int __pthread_cond_broadcast (pthread_cond_t *cond);
 libc_hidden_proto (__pthread_cond_broadcast)
 extern int __pthread_cond_destroy (pthread_cond_t *cond);
@@ -525,11 +526,6 @@ extern int __pthread_clockjoin_ex (pthread_t, void **, clockid_t,
   attribute_hidden;
 extern int __pthread_sigmask (int, const sigset_t *, sigset_t *);
 libc_hidden_proto (__pthread_sigmask);
-
-
-#if IS_IN (libpthread)
-hidden_proto (__pthread_rwlock_unlock)
-#endif
 
 extern int __pthread_cond_broadcast_2_0 (pthread_cond_2_0_t *cond);
 extern int __pthread_cond_destroy_2_0 (pthread_cond_2_0_t *cond);
