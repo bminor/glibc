@@ -381,6 +381,8 @@ libc {
   GLIBC_2.42 {
     pthread_gettid_np;
   }
+  GLIBC_2.43 {
+  }
   GLIBC_PRIVATE {
     __libc_alloca_cutoff;
     __lll_lock_wake_private;
