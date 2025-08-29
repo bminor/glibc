@@ -256,22 +256,22 @@
 
 
 #define atomic_add_negative(mem, value) \
-  ({ unsigned char __result;						      \
+  ({ _Bool __result;							      \
      if (sizeof (*mem) == 1)						      \
-       __asm __volatile (LOCK_PREFIX "addb %b2, %0; sets %1"		      \
-			 : "=m" (*mem), "=qm" (__result)		      \
+       __asm __volatile (LOCK_PREFIX "addb %b2, %0"			      \
+			 : "=m" (*mem), "=@ccs" (__result)		      \
 			 : IBR_CONSTRAINT (value), "m" (*mem));		      \
      else if (sizeof (*mem) == 2)					      \
-       __asm __volatile (LOCK_PREFIX "addw %w2, %0; sets %1"		      \
-			 : "=m" (*mem), "=qm" (__result)		      \
+       __asm __volatile (LOCK_PREFIX "addw %w2, %0"			      \
+			 : "=m" (*mem), "=@ccs" (__result)		      \
 			 : "ir" (value), "m" (*mem));			      \
      else if (sizeof (*mem) == 4)					      \
-       __asm __volatile (LOCK_PREFIX "addl %2, %0; sets %1"		      \
-			 : "=m" (*mem), "=qm" (__result)		      \
+       __asm __volatile (LOCK_PREFIX "addl %2, %0"			      \
+			 : "=m" (*mem), "=@ccs" (__result)		      \
 			 : "ir" (value), "m" (*mem));			      \
      else if (__HAVE_64B_ATOMICS)					      \
-       __asm __volatile (LOCK_PREFIX "addq %q2, %0; sets %1"		      \
-			 : "=m" (*mem), "=qm" (__result)		      \
+       __asm __volatile (LOCK_PREFIX "addq %q2, %0"			      \
+			 : "=m" (*mem), "=@ccs" (__result)		      \
 			 : "ir" ((int64_t) cast_to_integer (value)),	      \
 			   "m" (*mem));					      \
      else								      \
@@ -280,26 +280,26 @@
 
 
 #define atomic_add_zero(mem, value) \
-  ({ unsigned char __result;						      \
+  ({ _Bool __result;							      \
      if (sizeof (*mem) == 1)						      \
-       __asm __volatile (LOCK_PREFIX "addb %b2, %0; setz %1"		      \
-			 : "=m" (*mem), "=qm" (__result)		      \
+       __asm __volatile (LOCK_PREFIX "addb %b2, %0"			      \
+			 : "=m" (*mem), "=@ccz" (__result)		      \
 			 : IBR_CONSTRAINT (value), "m" (*mem));		      \
      else if (sizeof (*mem) == 2)					      \
-       __asm __volatile (LOCK_PREFIX "addw %w2, %0; setz %1"		      \
-			 : "=m" (*mem), "=qm" (__result)		      \
+       __asm __volatile (LOCK_PREFIX "addw %w2, %0"			      \
+			 : "=m" (*mem), "=@ccz" (__result)		      \
 			 : "ir" (value), "m" (*mem));			      \
      else if (sizeof (*mem) == 4)					      \
-       __asm __volatile (LOCK_PREFIX "addl %2, %0; setz %1"		      \
-			 : "=m" (*mem), "=qm" (__result)		      \
+       __asm __volatile (LOCK_PREFIX "addl %2, %0"			      \
+			 : "=m" (*mem), "=@ccz" (__result)		      \
 			 : "ir" (value), "m" (*mem));			      \
      else if (__HAVE_64B_ATOMICS)					      \
-       __asm __volatile (LOCK_PREFIX "addq %q2, %0; setz %1"		      \
-			 : "=m" (*mem), "=qm" (__result)		      \
+       __asm __volatile (LOCK_PREFIX "addq %q2, %0"			      \
+			 : "=m" (*mem), "=@ccz" (__result)		      \
 			 : "ir" ((int64_t) cast_to_integer (value)),	      \
 			   "m" (*mem));					      \
      else								      \
-       __atomic_link_error ();					      \
+       __atomic_link_error ();						      \
      __result; })
 
 
@@ -339,25 +339,25 @@
 
 
 #define atomic_increment_and_test(mem) \
-  ({ unsigned char __result;						      \
+  ({ _Bool __result;							      \
      if (sizeof (*mem) == 1)						      \
-       __asm __volatile (LOCK_PREFIX "incb %b0; sete %b1"		      \
-			 : "=m" (*mem), "=qm" (__result)		      \
+       __asm __volatile (LOCK_PREFIX "incb %b0"				      \
+			 : "=m" (*mem), "=@cce" (__result)		      \
 			 : "m" (*mem));					      \
      else if (sizeof (*mem) == 2)					      \
-       __asm __volatile (LOCK_PREFIX "incw %w0; sete %w1"		      \
-			 : "=m" (*mem), "=qm" (__result)		      \
+       __asm __volatile (LOCK_PREFIX "incw %w0"				      \
+			 : "=m" (*mem), "=@cce" (__result)		      \
 			 : "m" (*mem));					      \
      else if (sizeof (*mem) == 4)					      \
-       __asm __volatile (LOCK_PREFIX "incl %0; sete %1"			      \
-			 : "=m" (*mem), "=qm" (__result)		      \
+       __asm __volatile (LOCK_PREFIX "incl %0"				      \
+			 : "=m" (*mem), "=@cce" (__result)		      \
 			 : "m" (*mem));					      \
      else if (__HAVE_64B_ATOMICS)					      \
-       __asm __volatile (LOCK_PREFIX "incq %q0; sete %1"		      \
-			 : "=m" (*mem), "=qm" (__result)		      \
+       __asm __volatile (LOCK_PREFIX "incq %q0"				      \
+			 : "=m" (*mem), "=@cce" (__result)		      \
 			 : "m" (*mem));					      \
      else								      \
-       __atomic_link_error ();					      \
+       __atomic_link_error ();						      \
      __result; })
 
 
@@ -397,22 +397,22 @@
 
 
 #define atomic_decrement_and_test(mem) \
-  ({ unsigned char __result;						      \
+  ({ _Bool __result;							      \
      if (sizeof (*mem) == 1)						      \
-       __asm __volatile (LOCK_PREFIX "decb %b0; sete %1"		      \
-			 : "=m" (*mem), "=qm" (__result)		      \
+       __asm __volatile (LOCK_PREFIX "decb %b0"				      \
+			 : "=m" (*mem), "=@cce" (__result)		      \
 			 : "m" (*mem));					      \
      else if (sizeof (*mem) == 2)					      \
-       __asm __volatile (LOCK_PREFIX "decw %w0; sete %1"		      \
-			 : "=m" (*mem), "=qm" (__result)		      \
+       __asm __volatile (LOCK_PREFIX "decw %w0"				      \
+			 : "=m" (*mem), "=@cce" (__result)		      \
 			 : "m" (*mem));					      \
      else if (sizeof (*mem) == 4)					      \
-       __asm __volatile (LOCK_PREFIX "decl %0; sete %1"			      \
-			 : "=m" (*mem), "=qm" (__result)		      \
+       __asm __volatile (LOCK_PREFIX "decl %0"				      \
+			 : "=m" (*mem), "=@cce" (__result)		      \
 			 : "m" (*mem));					      \
      else								      \
-       __asm __volatile (LOCK_PREFIX "decq %q0; sete %1"		      \
-			 : "=m" (*mem), "=qm" (__result)		      \
+       __asm __volatile (LOCK_PREFIX "decq %q0"				      \
+			 : "=m" (*mem), "=@cce" (__result)		      \
 			 : "m" (*mem));					      \
      __result; })
 
@@ -445,25 +445,25 @@
 
 
 #define atomic_bit_test_set(mem, bit) \
-  ({ unsigned char __result;						      \
+  ({ _Bool __result;							      \
      if (sizeof (*mem) == 1)						      \
-       __asm __volatile (LOCK_PREFIX "btsb %3, %1; setc %0"		      \
-			 : "=q" (__result), "=m" (*mem)			      \
+       __asm __volatile (LOCK_PREFIX "btsb %3, %1"			      \
+			 : "=@ccc" (__result), "=m" (*mem)		      \
 			 : "m" (*mem), IBR_CONSTRAINT (bit));		      \
      else if (sizeof (*mem) == 2)					      \
-       __asm __volatile (LOCK_PREFIX "btsw %3, %1; setc %0"		      \
-			 : "=q" (__result), "=m" (*mem)			      \
+       __asm __volatile (LOCK_PREFIX "btsw %3, %1"			      \
+			 : "=@ccc" (__result), "=m" (*mem)		      \
 			 : "m" (*mem), "ir" (bit));			      \
      else if (sizeof (*mem) == 4)					      \
-       __asm __volatile (LOCK_PREFIX "btsl %3, %1; setc %0"		      \
-			 : "=q" (__result), "=m" (*mem)			      \
+       __asm __volatile (LOCK_PREFIX "btsl %3, %1"			      \
+			 : "=@ccc" (__result), "=m" (*mem)		      \
 			 : "m" (*mem), "ir" (bit));			      \
      else if (__HAVE_64B_ATOMICS)					      \
-       __asm __volatile (LOCK_PREFIX "btsq %3, %1; setc %0"		      \
-			 : "=q" (__result), "=m" (*mem)			      \
+       __asm __volatile (LOCK_PREFIX "btsq %3, %1"			      \
+			 : "=@ccc" (__result), "=m" (*mem)		      \
 			 : "m" (*mem), "ir" (bit));			      \
      else							      	      \
-       __atomic_link_error ();					      \
+       __atomic_link_error ();						      \
      __result; })
 
 
