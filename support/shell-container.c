@@ -237,25 +237,25 @@ run_command_array (char **argv)
     {
       if (strcmp (argv[i], "<") == 0 && argv[i + 1])
 	{
-	  new_stdin = open (argv[i + 1], O_WRONLY|O_CREAT|O_TRUNC, 0777);
+	  new_stdin = open (argv[i + 1], O_WRONLY|O_CREAT|O_TRUNC, 0666);
 	  ++i;
 	  continue;
 	}
       if (strcmp (argv[i], ">") == 0 && argv[i + 1])
 	{
-	  new_stdout = open (argv[i + 1], O_WRONLY|O_CREAT|O_TRUNC, 0777);
+	  new_stdout = open (argv[i + 1], O_WRONLY|O_CREAT|O_TRUNC, 0666);
 	  ++i;
 	  continue;
 	}
       if (strcmp (argv[i], ">>") == 0 && argv[i + 1])
 	{
-	  new_stdout = open (argv[i + 1], O_WRONLY|O_CREAT|O_APPEND, 0777);
+	  new_stdout = open (argv[i + 1], O_WRONLY|O_CREAT|O_APPEND, 0666);
 	  ++i;
 	  continue;
 	}
       if (strcmp (argv[i], "2>") == 0 && argv[i + 1])
 	{
-	  new_stderr = open (argv[i + 1], O_WRONLY|O_CREAT|O_TRUNC, 0777);
+	  new_stderr = open (argv[i + 1], O_WRONLY|O_CREAT|O_TRUNC, 0666);
 	  ++i;
 	  continue;
 	}

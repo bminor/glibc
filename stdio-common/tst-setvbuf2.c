@@ -265,7 +265,7 @@ writer_thread_proc (void *closure)
   debug;
 
   if (td->fname)
-    td->fd = xopen (td->fname, O_WRONLY, 0777);
+    td->fd = xopen (td->fname, O_WRONLY, 0666);
   fd = td->fd;
 
   while (1)
@@ -292,7 +292,7 @@ reader_thread_proc (void *closure)
   debug;
 
   if (td->fname)
-    td->fd = xopen (td->fname, O_RDONLY, 0777);
+    td->fd = xopen (td->fname, O_RDONLY, 0666);
   fd = td->fd;
 
   while (1)
@@ -538,7 +538,7 @@ open_test_stream (enum test_source_case f, enum test_stream_case s)
       break;
 
     case test_stream_fdopen_w:
-      fd = xopen (fname, O_WRONLY|O_CREAT|O_TRUNC, 0777);
+      fd = xopen (fname, O_WRONLY|O_CREAT|O_TRUNC, 0666);
       fp = fdopen (fd, "w");
       break;
 
@@ -1030,4 +1030,3 @@ do_test (void)
 
 # include <support/test-driver.c>
 #endif
-

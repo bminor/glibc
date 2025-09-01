@@ -165,7 +165,7 @@ do_test (int argc, char ** argv)
 
   int has_dir = mkdir ("doesExist", 0777) == 0;
 
-  int fd = has_dir ? creat ("doesExist/someFile", 0777) : -1;
+  int fd = has_dir ? creat ("doesExist/someFile", 0666) : -1;
 
   for (i = 0; i < (int) (sizeof (tests) / sizeof (tests[0])); ++i)
     {

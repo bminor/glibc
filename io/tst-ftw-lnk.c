@@ -217,7 +217,7 @@ do_test (void)
     FAIL_EXIT1 ("symlink link1-bad failed");
   if (symlink ("link2-tgt", "link2-ok") < 0)
     FAIL_EXIT1 ("symlink link2-ok failed");
-  if (open ("link2-tgt", O_RDWR|O_CREAT, 0777) < 0)
+  if (open ("link2-tgt", O_RDWR|O_CREAT, 0666) < 0)
     FAIL_EXIT1 ("create of link2-tgt failed");
 
   /* Now we run the tests.  */
