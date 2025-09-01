@@ -75,7 +75,7 @@ typedef struct __pthread_internal_slist
 
 #include <bits/struct_mutex.h>
 
-/* Arch-sepecific read-write lock definitions.  A generic implementation is
+/* Arch-specific read-write lock definitions.  A generic implementation is
    provided by struct_rwlock.h.  If required, an architecture can override it
    by defining:
 
