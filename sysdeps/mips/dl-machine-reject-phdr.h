@@ -162,7 +162,7 @@ elf_machine_reject_phdr_p (const ElfW(Phdr) *phdr, unsigned int phnum,
   int in_abi = -1;
   struct abi_req in_req;
   Elf_MIPS_ABIFlags_v0 mips_abiflags;
-  bool perfect_match = false;
+  bool perfect_match __attribute__ ((unused)) = false;
 #if _MIPS_SIM == _ABIO32
   unsigned int cur_mode = -1;
 # if HAVE_PRCTL_FP_MODE
