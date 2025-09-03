@@ -7,6 +7,7 @@ riscv*)
     flen=`$CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null | sed -n 's/^#define __riscv_flen \(.*\)/\1/p'`
     float_abi=`$CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null | sed -n 's/^#define __riscv_float_abi_\([^ ]*\) .*/\1/p'`
     atomic=`$CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null | grep '#define __riscv_atomic' | cut -d' ' -f2`
+    vector=`$CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null | sed -n 's/^#define __riscv_v \(.*\)/\1/p'`
 
     case "$xlen" in
     64 | 32)
@@ -54,6 +55,12 @@ riscv*)
 	as_fn_error 1 "glibc requires the A extension" "$LINENO" 5
 	;;
     esac
+
+    if test -n "$vector"; then
+	version=`$CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null | sed -n 's/^#define __GNUC__ \(.*\)/\1/p'`
+	test $version -lt 15 && as_fn_error 1 "glibc requires GCC 15 or later for the V extension" "$LINENO" 5
+	test $vector -lt "1000000" && as_fn_error 1 "glibc requires at least RVV 1.0 for the V extension" "$LINENO" 5
+    fi
 
     base_machine=riscv
     machine=riscv/rv$xlen/$float_machine
