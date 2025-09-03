@@ -28,8 +28,8 @@
 	.option pic2
 #endif
 ENTRY (setjmp)
-	.set	noreorder
 #ifdef __PIC__
+	.set	noreorder
 	.cpload t9
 	.set	reorder
 	la	t9, C_SYMBOL_NAME (__sigsetjmp)
