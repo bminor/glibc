@@ -17,6 +17,10 @@ CPPFLAGS-crti.S += $(pic-ccflag)
 CPPFLAGS-crtn.S += $(pic-ccflag)
 endif
 
+ifeq ($(subdir),string)
+CFLAGS-strcmp.c += -funroll-loops
+endif
+
 ASFLAGS-.os += $(pic-ccflag)
 # libc.a and libc_p.a must be compiled with -fPIE/-fpie for static PIE.
 ASFLAGS-.o += $(pie-default)
