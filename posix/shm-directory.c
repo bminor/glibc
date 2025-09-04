@@ -58,11 +58,7 @@ __shm_get_name (struct shmdir_name *result, const char *name, bool sem_prefix)
   if (namelen == 0 || memchr (name, '/', namelen) != NULL)
     return EINVAL;
   if (alloc_buffer_has_failed (&buffer))
-    {
-      if (namelen > NAME_MAX)
-        return ENAMETOOLONG;
-      return EINVAL;
-    }
+    return ENAMETOOLONG;
   return 0;
 }
 libc_hidden_def (__shm_get_name)
