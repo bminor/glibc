@@ -15,6 +15,13 @@ endif
 
 ifeq ($(subdir),gmon)
 sysdep_routines += i386-mcount
+ifeq ($(build-pie-default)$(have-test-cc-cflags-mfentry),noyes)
+# Compile with -mfentry to avoid GCC 16 error:
+# cc1: error: ‘-pg’ without ‘-mfentry’ may be unreliable with shrink wrapping [-Werror]
+CFLAGS-tst-gmon.c += -mfentry
+CFLAGS-tst-mcleanup.c += -mfentry
+CFLAGS-tst-mcount-overflow.c += -mfentry
+endif
 endif
 
 ifeq ($(subdir),csu)
@@ -62,4 +69,10 @@ $(objpfx)check-gnu-tls.out: $(common-objpfx)libc.so
 generated += check-gnu-tls.out
 else
 CFLAGS-.os += $(if $(filter rtld-%.os,$(@F)), $(rtld-CFLAGS))
+endif
+
+ifeq ($(build-pie-default)$(build-profile)$(have-cc-cflags-mfentry),noyesyes)
+# Compile .op files with -mfentry to avoid GCC 16 error:
+# cc1: error: ‘-pg’ without ‘-mfentry’ may be unreliable with shrink wrapping [-Werror]
+CFLAGS-.op += -mfentry
 endif

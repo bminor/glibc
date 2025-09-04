@@ -95,3 +95,65 @@ if test x"$multi_arch" != xno; then
 
 fi
 
+
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking -mfentry" >&5
+printf %s "checking -mfentry... " >&6; }
+if test ${libc_cv_cc_cflags_mfentry+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) if { ac_try='${CC-cc} -Werror -mfentry -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+then :
+  libc_cv_cc_cflags_mfentry=yes
+else case e in #(
+  e) libc_cv_cc_cflags_mfentry=no ;;
+esac
+fi ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cc_cflags_mfentry" >&5
+printf "%s\n" "$libc_cv_cc_cflags_mfentry" >&6; }
+if test "$TEST_CC" = "$CC"; then
+  libc_cv_test_cc_cflags_mfentry=$libc_cv_cc_cflags_mfentry
+else
+
+saved_CC="$CC"
+CC="$TEST_CC"
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking -mfentry in testing" >&5
+printf %s "checking -mfentry in testing... " >&6; }
+if test ${libc_cv_test_cc_cflags_mfentry+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) if { ac_try='${CC-cc} -Werror -mfentry -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+then :
+  libc_cv_test_cc_cflags_mfentry=yes
+else case e in #(
+  e) libc_cv_test_cc_cflags_mfentry=no
+ ;;
+esac
+fi ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_test_cc_cflags_mfentry" >&5
+printf "%s\n" "$libc_cv_test_cc_cflags_mfentry" >&6; }
+
+CC="$saved_CC"
+
+fi
+
+config_vars="$config_vars
+have-cc-cflags-mfentry = $libc_cv_cc_cflags_mfentry"
+config_vars="$config_vars
+have-test-cc-cflags-mfentry = $libc_cv_test_cc_cflags_mfentry"
+

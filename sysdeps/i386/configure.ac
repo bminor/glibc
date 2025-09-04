@@ -63,3 +63,17 @@ dnl via PIC PLT in PIE, which requires setting up EBX register.
 if test x"$multi_arch" != xno; then
   AC_DEFINE(NO_HIDDEN_EXTERN_FUNC_IN_PIE)
 fi
+
+dnl Check if CC and TEST_CC support -mfentry.
+LIBC_TRY_CC_AND_TEST_CC_OPTION([-mfentry],
+  [-Werror -mfentry],
+  libc_cv_cc_cflags_mfentry,
+  [libc_cv_cc_cflags_mfentry=yes],
+  [libc_cv_cc_cflags_mfentry=no],
+  libc_cv_test_cc_cflags_mfentry,
+  [libc_cv_test_cc_cflags_mfentry=yes],
+  [libc_cv_test_cc_cflags_mfentry=no]
+)
+LIBC_CONFIG_VAR(have-cc-cflags-mfentry, $libc_cv_cc_cflags_mfentry)
+LIBC_CONFIG_VAR(have-test-cc-cflags-mfentry,
+		$libc_cv_test_cc_cflags_mfentry)
