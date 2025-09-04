@@ -168,8 +168,10 @@ enum
 #  define TRAP_BRANCH	TRAP_BRANCH
   TRAP_HWBKPT,			/* Hardware breakpoint/watchpoint.  */
 #  define TRAP_HWBKPT	TRAP_HWBKPT
-  TRAP_UNK			/* Undiagnosed trap.  */
+  TRAP_UNK,			/* Undiagnosed trap.  */
 #  define TRAP_UNK	TRAP_UNK
+  TRAP_PERF			/* Perf event with sigtrap=1.  */
+#  define TRAP_PERF	TRAP_PERF
 };
 # endif
 
@@ -208,6 +210,18 @@ enum
 #  define POLL_HUP	POLL_HUP
 };
 # endif
+
+/* The Linux-specific SIGSYS values are all considered GNU extensions.  */
+#ifdef __USE_GNU
+/* `si_code' values for SIGSYS signal.  */
+enum
+{
+  SYS_SECCOMP = 1,		/* Seccomp triggered.  */
+#  define SYS_SECCOMP	SYS_SECCOMP
+  SYS_USER_DISPATCH			/* Syscall user dispatch triggered.  */
+#  define SYS_USER_DISPATCH	SYS_USER_DISPATCH
+};
+#endif
 
 /* Architectures might also add architecture-specific constants.
    These are all considered GNU extensions.  */
