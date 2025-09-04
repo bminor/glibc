@@ -213,6 +213,7 @@ LDFLAGS-tst-plt-rewrite2 = -Wl,-z,now
 LDFLAGS-tst-plt-rewritemod2.so = -Wl,-z,now,-z,undefs
 tst-plt-rewrite2-ENV = GLIBC_TUNABLES=glibc.cpu.plt_rewrite=2
 $(objpfx)tst-plt-rewrite2: $(objpfx)tst-plt-rewritemod2.so
+endif
 
 tests-special += $(objpfx)check-dt-x86-64-plt.out
 
@@ -222,7 +223,6 @@ $(objpfx)check-dt-x86-64-plt.out: $(common-objpfx)libc.so
 		| grep GLIBC_ABI_DT_X86_64_PLT > $@; \
 	$(evaluate-test)
 generated += check-dt-x86-64-plt.out
-endif
 
 test-internal-extras += tst-gnu2-tls2mod1
 
