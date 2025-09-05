@@ -2,10 +2,12 @@
    https://sourceware.org/bugzilla/show_bug.cgi?id=713.  */
 #include <stdio.h>
 
+#include <support/xstdio.h>
+
 static int
 do_test (void)
 {
-  FILE *fp = fmemopen ((char *) "hello", 5, "r");
+  FILE *fp = xfmemopen ((char *) "hello", 5, "r");
   char buf[2];
   char *bp = fgets (buf, sizeof (buf), fp);
   printf ("fgets: %s\n", bp == buf ? "OK" : "ERROR");

@@ -91,8 +91,7 @@ do_one_test (int argc, char *argv[], bool pass_dlclose_flag)
   support_capture_subprocess_check (&result, "tst-audit22", 0, sc_allow_stderr);
 
   {
-    FILE *fp = fmemopen (result.err.buffer, result.err.length, "r");
-    TEST_VERIFY (fp != NULL);
+    FILE *fp = xfmemopen (result.err.buffer, result.err.length, "r");
     unsigned int line = 0;
     char *buffer = NULL;
     size_t buffer_length = 0;
@@ -132,8 +131,7 @@ do_one_test (int argc, char *argv[], bool pass_dlclose_flag)
   uintptr_t last_act_cookie = -1;
   bool seen_first_objclose = false;
 
-  FILE *out = fmemopen (result.err.buffer, result.err.length, "r");
-  TEST_VERIFY (out != NULL);
+  FILE *out = xfmemopen (result.err.buffer, result.err.length, "r");
   char *buffer = NULL;
   size_t buffer_length = 0;
   unsigned int line = 0;

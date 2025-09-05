@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <support/check.h>
+#include <support/xstdio.h>
 
 struct const_mntent
 {
@@ -54,13 +55,7 @@ do_test (void)
     {
       char buf[128];
       struct mntent *ret, curtest;
-      FILE *fp = fmemopen (buf, sizeof (buf), "w+");
-
-      if (fp == NULL)
-	{
-	  printf ("Failed to open file\n");
-	  return 1;
-	}
+      FILE *fp = xfmemopen (buf, sizeof (buf), "w+");
 
       curtest.mnt_fsname = strdupa (tests[i].mnt_fsname);
       curtest.mnt_dir = strdupa (tests[i].mnt_dir);

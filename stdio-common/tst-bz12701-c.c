@@ -45,9 +45,7 @@ do_test (void)
   memcpy (ntfi.buffer, s, sizeof (s));
 
   i = 0;
-  f = fmemopen (b, sizeof (s), "r");
-  if (f == NULL)
-    FAIL_EXIT1 ("fmemopen: %m");
+  f = xfmemopen (b, sizeof (s), "r");
 
   c = e - 1;
   TEST_VERIFY_EXIT (ftell (f) == i);
@@ -114,9 +112,7 @@ do_test (void)
   xfclose (f);
 
   i = 0;
-  f = fmemopen (b, 3, "r");
-  if (f == NULL)
-    FAIL_EXIT1 ("fmemopen: %m");
+  f = xfmemopen (b, 3, "r");
 
   c = e - 1;
   TEST_VERIFY_EXIT (ftell (f) == i);
@@ -144,9 +140,7 @@ do_test (void)
   xfclose (f);
 
   i = 0;
-  f = fmemopen (b, 3, "r");
-  if (f == NULL)
-    FAIL_EXIT1 ("fmemopen: %m");
+  f = xfmemopen (b, 3, "r");
 
   c = e - 2;
   TEST_VERIFY_EXIT (ftell (f) == i);

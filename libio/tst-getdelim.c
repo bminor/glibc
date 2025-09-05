@@ -26,6 +26,7 @@
 #include <support/check.h>
 #include <support/support.h>
 #include <support/test-driver.h>
+#include <support/xstdio.h>
 
 static int
 do_test (void)
@@ -41,8 +42,7 @@ do_test (void)
   char *lineptr = NULL;
   size_t linelen = 0;
   char membuf[] = "abc\0d\nef\0";
-  FILE *memstream = fmemopen (membuf, sizeof (membuf), "r");
-  TEST_VERIFY_EXIT (memstream != NULL);
+  FILE *memstream = xfmemopen (membuf, sizeof (membuf), "r");
   TEST_VERIFY (getdelim (&lineptr, &linelen, '\0', memstream) != -1);
   TEST_COMPARE_BLOB (lineptr, 4, "abc\0", 4);
   TEST_VERIFY (getdelim (&lineptr, &linelen, '\0', memstream) != -1);

@@ -18,6 +18,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <support/xstdio.h>
+
 int
 main (void)
 {
@@ -27,7 +29,7 @@ main (void)
   double d;
   char s[] = "+.e";
 
-  f = fmemopen (s, strlen (s), "r");
+  f = xfmemopen (s, strlen (s), "r");
   /* This should fail to parse a floating-point number, and leave 'e' in the
      input.  */
   lost |= (fscanf (f, "%lf", &d) != 0);

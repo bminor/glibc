@@ -22,6 +22,7 @@
 
 #include <libc-diag.h>
 #include <support/check.h>
+#include <support/xstdio.h>
 
 #define P1 "\xdb\xb1"
 #define P2 "\xdb\xb2"
@@ -33,9 +34,7 @@ do_test (void)
     FAIL_EXIT1 ("setlocale (LC_ALL, \"fa_IR.UTF-8\")");
 
   char s[] = P1 P2;
-  FILE *f = fmemopen (s, strlen (s), "r");
-  if (f == NULL)
-    FAIL_EXIT1 ("fmemopen: %m");
+  FILE *f = xfmemopen (s, strlen (s), "r");
 
   /* Avoid: "warning: 'I' flag used with '%f' gnu_scanf format [-Wformat=]";
      cf. GCC PR c/119514.  */

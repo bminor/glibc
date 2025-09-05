@@ -22,6 +22,7 @@
 
 #include <libc-diag.h>
 #include <support/check.h>
+#include <support/xstdio.h>
 
 #define PD "\xd9\xab"
 
@@ -32,9 +33,7 @@ do_test (void)
     FAIL_EXIT1 ("setlocale (LC_ALL, \"ps_AF.UTF-8\")");
 
   char s[] = "1" PD;
-  FILE *f = fmemopen (s, strlen (s), "r");
-  if (f == NULL)
-    FAIL_EXIT1 ("fmemopen: %m");
+  FILE *f = xfmemopen (s, strlen (s), "r");
 
   /* This should succeed parsing a floating-point number, and leave '\xd9',
      '\xab' in the input.  */
