@@ -45,6 +45,8 @@ do_test (void)
   TEST_VERIFY_EXIT (fgetc (f) == 0xd9);
   TEST_VERIFY_EXIT (fgetc (f) == 0xab);
 
+  xfclose (f);
+
   return 0;
 }
 

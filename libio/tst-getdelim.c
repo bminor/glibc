@@ -47,7 +47,7 @@ do_test (void)
   TEST_COMPARE_BLOB (lineptr, 4, "abc\0", 4);
   TEST_VERIFY (getdelim (&lineptr, &linelen, '\0', memstream) != -1);
   TEST_COMPARE_BLOB (lineptr, 5, "d\nef\0", 5);
-  fclose (memstream);
+  xfclose (memstream);
   free (lineptr);
 
   return 0;

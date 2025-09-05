@@ -34,6 +34,7 @@ main (void)
      input.  */
   lost |= (fscanf (f, "%lf", &d) != 0);
   c = fgetc (f);
+  xfclose (f);
   lost |= c != 'e';
   puts (lost ? "Test FAILED!" : "Test succeeded.");
   return lost;

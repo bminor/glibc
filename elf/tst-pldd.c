@@ -158,7 +158,7 @@ do_test (void)
     TEST_COMPARE (interpreter_found, true);
     TEST_COMPARE (libc_found, true);
 
-    fclose (out);
+    xfclose (out);
   }
 
   support_capture_subprocess_free (&pldd);

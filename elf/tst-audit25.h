@@ -44,5 +44,5 @@ compare_output (void *buffer, size_t length, const char *ref[], size_t reflen)
     TEST_COMPARE (found[i], true);
 
   free (line);
-  fclose (in);
+  xfclose (in);
 }

@@ -14,6 +14,7 @@ do_test (void)
   int res = bp != buf;
   bp = fgets_unlocked (buf, sizeof (buf), fp);
   printf ("fgets_unlocked: %s\n", bp == buf ? "OK" : "ERROR");
+  xfclose (fp);
   res |= bp != buf;
   return res;
 }

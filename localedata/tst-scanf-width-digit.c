@@ -53,6 +53,8 @@ do_test (void)
 
   DIAG_POP_NEEDS_COMMENT;
 
+  xfclose (f);
+
   return 0;
 }
 

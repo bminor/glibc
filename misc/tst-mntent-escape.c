@@ -87,7 +87,7 @@ do_test (void)
       TEST_COMPARE(tests[i].mnt_freq, ret->mnt_freq);
       TEST_COMPARE(tests[i].mnt_passno, ret->mnt_passno);
 
-      fclose (fp);
+      xfclose (fp);
     }
 
   return 0;
