@@ -28,6 +28,12 @@
 #include <support/xunistd.h>
 #include <unistd.h>
 
+/* These constants are defined with different token sequences,
+   matching the Linux definitions, to avoid preprocessor warnings.  */
+_Static_assert (RENAME_NOREPLACE == AT_RENAME_NOREPLACE, "RENAME_NOREPLACE");
+_Static_assert (RENAME_EXCHANGE == AT_RENAME_EXCHANGE, "RENAME_EXCHANGE");
+_Static_assert (RENAME_WHITEOUT == AT_RENAME_WHITEOUT, "RENAME_WHITEOUT");
+
 /* Directory with the temporary files.  */
 static char *directory;
 static int directory_fd;
