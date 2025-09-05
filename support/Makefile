@@ -134,6 +134,7 @@ libsupport-routines = \
   xfclose \
   xfdopendir \
   xfgets \
+  xfmemopen \
   xfopen \
   xfork \
   xfread \
