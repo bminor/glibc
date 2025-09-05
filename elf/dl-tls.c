@@ -537,6 +537,8 @@ _dl_allocate_tls_storage (void)
   result = allocate_dtv (result);
   if (result == NULL)
     free (allocated);
+  else if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_TLS))
+    _dl_debug_printf ("TCB allocated: 0x%lx\n", (unsigned long int) result);
 
   _dl_tls_allocate_end ();
   return result;
@@ -725,6 +727,10 @@ rtld_hidden_def (_dl_allocate_tls)
 void
 _dl_deallocate_tls (void *tcb, bool dealloc_tcb)
 {
+  if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_TLS))
+    _dl_debug_printf ("TCB deallocating: 0x%lx (dealloc_tcb=%d)\n",
+		      (unsigned long int) tcb, dealloc_tcb);
+
   dtv_t *dtv = GET_DTV (tcb);
 
   /* We need to free the memory allocated for non-static TLS.  */

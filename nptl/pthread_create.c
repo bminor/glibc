@@ -364,6 +364,10 @@ start_thread (void *arg)
 	goto out;
     }
 
+  if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_TLS))
+    GLRO (dl_debug_printf) ("Thread starting: TID=%ld, TCB=0x%lx\n",
+			    (long int) pd->tid, (unsigned long int) pd);
+
   /* Initialize resolver state pointer.  */
   __resp = &pd->res;
 

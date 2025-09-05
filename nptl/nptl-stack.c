@@ -75,6 +75,11 @@ __nptl_free_stacks (size_t limit)
 	  /* Account for the freed memory.  */
 	  GL (dl_stack_cache_actsize) -= curr->stackblock_size;
 
+	  if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_TLS))
+	    GLRO (dl_debug_printf) (
+		"TCB cache full, deallocating: TID=%ld, TCB=0x%lx\n",
+		(long int) curr->tid, (unsigned long int) curr);
+
 	  /* Free the memory associated with the ELF TLS.  */
 	  _dl_deallocate_tls (TLS_TPADJ (curr), false);
 
@@ -96,6 +101,12 @@ static inline void
 __attribute ((always_inline))
 queue_stack (struct pthread *stack)
 {
+  /* The 'stack' parameter is a pointer to the TCB (struct pthread),
+     not just the stack.  */
+  if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_TLS))
+    GLRO (dl_debug_printf) ("TCB deallocated into cache: TID=%ld, TCB=0x%lx\n",
+			    (long int) stack->tid, (unsigned long int) stack);
+
   /* We unconditionally add the stack to the list.  The memory may
      still be in use but it will not be reused until the kernel marks
      the stack as not used anymore.  */
@@ -123,8 +134,16 @@ __nptl_deallocate_stack (struct pthread *pd)
   if (__glibc_likely (pd->stack_mode != ALLOCATE_GUARD_USER))
     (void) queue_stack (pd);
   else
-    /* Free the memory associated with the ELF TLS.  */
-    _dl_deallocate_tls (TLS_TPADJ (pd), false);
+    {
+      /* User-provided stack.  We must not free it.  But we must free
+	 the TLS memory.  */
+      if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_TLS))
+	GLRO (dl_debug_printf) (
+	    "TCB for user-supplied stack deallocated: TID=%ld, TCB=0x%lx\n",
+	    (long int) pd->tid, (unsigned long int) pd);
+      /* Free the memory associated with the ELF TLS.  */
+      _dl_deallocate_tls (TLS_TPADJ (pd), false);
+    }
 
   lll_unlock (GL (dl_stack_cache_lock), LLL_PRIVATE);
 }

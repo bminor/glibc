@@ -116,6 +116,10 @@ get_cached_stack (size_t *sizep, void **memp)
   /* Release the lock early.  */
   lll_unlock (GL (dl_stack_cache_lock), LLL_PRIVATE);
 
+  if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_TLS))
+    GLRO (dl_debug_printf) ("TLS TCB reused from cache: 0x%lx\n",
+			    (unsigned long int) result);
+
   /* Report size and location of the stack to the caller.  */
   *sizep = result->stackblock_size;
   *memp = result->stackblock;
@@ -430,6 +434,12 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	 stack cache nor will the memory (except the TLS memory) be freed.  */
       pd->stack_mode = ALLOCATE_GUARD_USER;
 
+      if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_TLS))
+	GLRO (dl_debug_printf) (
+	  "TCB for user-supplied stack created: 0x%lx, stack=0x%lx, size=%lu\n",
+	  (unsigned long int) pd, (unsigned long int) pd->stackblock,
+	  (unsigned long int) pd->stackblock_size);
+
       /* This is at least the second thread.  */
       pd->header.multiple_threads = 1;
 
@@ -549,6 +559,10 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
 	  /* Don't allow setxid until cloned.  */
 	  pd->setxid_futex = -1;
+
+	  if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_TLS))
+	    GLRO (dl_debug_printf) ("TCB for new stack allocated: 0x%lx\n",
+				    (unsigned long int) pd);
 
 	  /* Allocate the DTV for this thread.  */
 	  if (_dl_allocate_tls (TLS_TPADJ (pd)) == NULL)

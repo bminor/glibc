@@ -2428,10 +2428,12 @@ process_dl_debug (struct dl_main_state *state, const char *dl_debug)
 	DL_DEBUG_VERSIONS | DL_DEBUG_IMPCALLS },
       { LEN_AND_STR ("scopes"), "display scope information",
 	DL_DEBUG_SCOPES },
+      { LEN_AND_STR ("tls"), "display TLS structures processing",
+	DL_DEBUG_TLS },
       { LEN_AND_STR ("all"), "all previous options combined",
 	DL_DEBUG_LIBS | DL_DEBUG_RELOC | DL_DEBUG_FILES | DL_DEBUG_SYMBOLS
 	| DL_DEBUG_BINDINGS | DL_DEBUG_VERSIONS | DL_DEBUG_IMPCALLS
-	| DL_DEBUG_SCOPES },
+	| DL_DEBUG_SCOPES | DL_DEBUG_TLS },
       { LEN_AND_STR ("statistics"), "display relocation statistics",
 	DL_DEBUG_STATISTICS },
       { LEN_AND_STR ("unused"), "determined unused DSOs",

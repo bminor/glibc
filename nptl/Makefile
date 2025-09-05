@@ -375,6 +375,7 @@ tests-container =  tst-pthread-getattr
 tests-internal := \
   tst-barrier5 \
   tst-cond22 \
+  tst-dl-debug-tid \
   tst-mutex8 \
   tst-mutex8-static \
   tst-mutexpi8 \
@@ -573,6 +574,7 @@ xtests-static += tst-setuid1-static
 
 ifeq ($(run-built-tests),yes)
 tests-special += \
+  $(objpfx)tst-dl-debug-tid.out \
   $(objpfx)tst-oddstacklimit.out \
   # tests-special
 ifeq ($(build-shared),yes)
@@ -710,6 +712,11 @@ tst-stackguard1-ARGS = --command "$(host-test-program-cmd) --child"
 tst-stackguard1-static-ARGS = --command "$(objpfx)tst-stackguard1-static --child"
 
 ifeq ($(run-built-tests),yes)
+$(objpfx)tst-dl-debug-tid.out: tst-dl-debug-tid.sh $(objpfx)tst-dl-debug-tid
+	$(SHELL) $< $(common-objpfx) '$(test-wrapper)' '$(rtld-prefix)' \
+	  '$(test-wrapper-env)' '$(run-program-env)' \
+	  $(objpfx)tst-dl-debug-tid > $@; $(evaluate-test)
+
 $(objpfx)tst-oddstacklimit.out: $(objpfx)tst-oddstacklimit $(objpfx)tst-basic1
 	$(test-program-prefix) $< --command '$(host-test-program-cmd)' > $@; \
 	$(evaluate-test)
