@@ -3305,10 +3305,16 @@ tcache_get_align (size_t nb, size_t alignment)
           mangled = true;
         }
 
+      /* GCC compiling for -Os warns on some architectures that csize may be
+	 uninitialized.  However, if 'te' is not NULL, csize is always
+	 initialized in the loop above.  */
+      DIAG_PUSH_NEEDS_COMMENT;
+      DIAG_IGNORE_Os_NEEDS_COMMENT (12, "-Wmaybe-uninitialized");
       if (te != NULL
 	  && csize == nb
 	  && PTR_IS_ALIGNED (te, alignment))
 	return tag_new_usable (tcache_get_n (tc_idx, tep, mangled));
+      DIAG_POP_NEEDS_COMMENT;
     }
   return NULL;
 }
