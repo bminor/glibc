@@ -240,7 +240,7 @@ setup_stack_prot (char *mem, size_t size, struct pthread *pd,
 /* Update the guard area of the thread stack MEM of size SIZE with the new
    GUARDISZE.  It uses the method defined by PD stack_mode.  */
 static inline bool
-adjust_stack_prot (char *mem, size_t size, const struct pthread *pd,
+adjust_stack_prot (char *mem, size_t size, struct pthread *pd,
 		   size_t guardsize, size_t pagesize_m1)
 {
   /* The required guard area is larger than the current one.  For
@@ -258,11 +258,23 @@ adjust_stack_prot (char *mem, size_t size, const struct pthread *pd,
      so use the new guard placement with the new size.  */
   if (guardsize > pd->guardsize)
     {
+      /* There was no need to previously setup a guard page, so we need
+	 to check whether the kernel supports guard advise.  */
       char *guard = guard_position (mem, size, guardsize, pd, pagesize_m1);
-      if (pd->stack_mode == ALLOCATE_GUARD_MADV_GUARD)
-	return __madvise (guard, guardsize, MADV_GUARD_INSTALL) == 0;
-      else if (pd->stack_mode == ALLOCATE_GUARD_PROT_NONE)
-	return __mprotect (guard, guardsize, PROT_NONE) == 0;
+      if (atomic_load_relaxed (&allocate_stack_mode)
+	  == ALLOCATE_GUARD_MADV_GUARD)
+	{
+	  if (__madvise (guard, guardsize, MADV_GUARD_INSTALL) == 0)
+	    {
+	      pd->stack_mode = ALLOCATE_GUARD_MADV_GUARD;
+	      return true;
+	    }
+	  atomic_store_relaxed (&allocate_stack_mode,
+				ALLOCATE_GUARD_PROT_NONE);
+	}
+
+      pd->stack_mode = ALLOCATE_GUARD_PROT_NONE;
+      return __mprotect (guard, guardsize, PROT_NONE) == 0;
     }
   /* The current guard area is larger than the required one.  For
      _STACK_GROWS_DOWN is means change the guard as:
