@@ -82,6 +82,36 @@
     __atg2_result;							      \
   })
 
+#if USE_ATOMIC_COMPILER_BUILTINS
+
+# undef atomic_compare_and_exchange_val_acq
+# define atomic_compare_and_exchange_val_acq(mem, newval, oldval) \
+  ({									      \
+     __typeof (*(mem)) __atg3_old = (oldval);				      \
+     atomic_compare_exchange_acquire (mem, (void*)&__atg3_old, newval);	      \
+     __atg3_old;							      \
+  })
+
+# undef atomic_compare_and_exchange_val_rel
+# define atomic_compare_and_exchange_val_rel(mem, newval, oldval)	      \
+  ({									      \
+     __typeof (*(mem)) __atg3_old = (oldval);				      \
+     atomic_compare_exchange_release (mem, (void*)&__atg3_old, newval);	      \
+     __atg3_old;							      \
+  })
+
+# undef atomic_compare_and_exchange_bool_acq
+# define atomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
+  ({									      \
+     __typeof (*(mem)) __atg3_old = (oldval);				      \
+     !atomic_compare_exchange_acquire (mem, (void*)&__atg3_old, newval);      \
+  })
+
+# undef atomic_exchange_and_add
+# define atomic_exchange_and_add(mem, val) atomic_fetch_add_relaxed(mem,val)
+
+#endif
+
 
 /* Atomically store NEWVAL in *MEM if *MEM is equal to OLDVAL.
    Return the old *MEM value.  */
@@ -601,6 +631,19 @@ void __atomic_link_error (void);
 # define atomic_compare_exchange_weak_release(mem, expected, desired) \
   ({ __atomic_check_size((mem));					      \
   __atomic_compare_exchange_n ((mem), (expected), (desired), 1,		      \
+    __ATOMIC_RELEASE, __ATOMIC_RELAXED); })
+
+# define atomic_compare_exchange_relaxed(mem, expected, desired) \
+  ({ __atomic_check_size((mem));					      \
+  __atomic_compare_exchange_n ((mem), (expected), (desired), 0,		      \
+    __ATOMIC_RELAXED, __ATOMIC_RELAXED); })
+# define atomic_compare_exchange_acquire(mem, expected, desired) \
+  ({ __atomic_check_size((mem));					      \
+  __atomic_compare_exchange_n ((mem), (expected), (desired), 0,		      \
+    __ATOMIC_ACQUIRE, __ATOMIC_RELAXED); })
+# define atomic_compare_exchange_release(mem, expected, desired) \
+  ({ __atomic_check_size((mem));					      \
+  __atomic_compare_exchange_n ((mem), (expected), (desired), 0,		      \
     __ATOMIC_RELEASE, __ATOMIC_RELAXED); })
 
 # define atomic_exchange_relaxed(mem, desired) \
