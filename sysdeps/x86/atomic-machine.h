@@ -32,7 +32,6 @@
 # define SP_REG				"rsp"
 # define SEG_REG			"fs"
 # define BR_CONSTRAINT			"q"
-# define IBR_CONSTRAINT			"iq"
 #else
 /* Since the Pentium, i386 CPUs have supported 64-bit atomics, but the
    i386 psABI supplement provides only 4-byte alignment for uint64_t
@@ -42,7 +41,6 @@
 # define SP_REG				"esp"
 # define SEG_REG			"gs"
 # define BR_CONSTRAINT			"r"
-# define IBR_CONSTRAINT			"ir"
 #endif
 #define ATOMIC_EXCHANGE_USES_CAS	0
 
@@ -98,40 +96,14 @@
 			 "0" ((int64_t) cast_to_integer (oldval)),	      \
 			 "i" (offsetof (tcbhead_t, multiple_threads)));	      \
      ret; })
-# define do_exchange_and_add_val_64_acq(pfx, mem, value) 0
 # define do_add_val_64_acq(pfx, mem, value) do { } while (0)
 #else
-/* XXX We do not really need 64-bit compare-and-exchange.  At least
-   not in the moment.  Using it would mean causing portability
-   problems since not many other 32-bit architectures have support for
-   such an operation.  So don't define any code for now.  If it is
-   really going to be used the code below can be used on Intel Pentium
-   and later, but NOT on i486.  */
 # define __arch_c_compare_and_exchange_val_64_acq(mem, newval, oldval) \
   ({ __typeof (*mem) ret = *(mem);					      \
      __atomic_link_error ();						      \
      ret = (newval);							      \
      ret = (oldval);							      \
      ret; })
-
-# define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval)	      \
-  ({ __typeof (*mem) ret = *(mem);					      \
-     __atomic_link_error ();						      \
-     ret = (newval);							      \
-     ret = (oldval);							      \
-     ret; })
-
-# define do_exchange_and_add_val_64_acq(pfx, mem, value) \
-  ({ __typeof (value) __addval = (value);				      \
-     __typeof (*mem) __result;						      \
-     __typeof (mem) __memp = (mem);					      \
-     __typeof (*mem) __tmpval;						      \
-     __result = *__memp;						      \
-     do									      \
-       __tmpval = __result;						      \
-     while ((__result = pfx##_compare_and_exchange_val_64_acq		      \
-	     (__memp, __result + __addval, __result)) == __tmpval);	      \
-     __result; })
 
 # define do_add_val_64_acq(pfx, mem, value) \
   {									      \
@@ -174,193 +146,6 @@
        }								      \
      result; })
 
-
-#define __arch_exchange_and_add_body(lock, pfx, mem, value) \
-  ({ __typeof (*mem) __result;						      \
-     __typeof (value) __addval = (value);				      \
-     if (sizeof (*mem) == 1)						      \
-       __asm __volatile (lock "xaddb %b0, %1"				      \
-			 : "=q" (__result), "=m" (*mem)			      \
-			 : "0" (__addval), "m" (*mem),			      \
-			   "i" (offsetof (tcbhead_t, multiple_threads)));     \
-     else if (sizeof (*mem) == 2)					      \
-       __asm __volatile (lock "xaddw %w0, %1"				      \
-			 : "=r" (__result), "=m" (*mem)			      \
-			 : "0" (__addval), "m" (*mem),			      \
-			   "i" (offsetof (tcbhead_t, multiple_threads)));     \
-     else if (sizeof (*mem) == 4)					      \
-       __asm __volatile (lock "xaddl %0, %1"				      \
-			 : "=r" (__result), "=m" (*mem)			      \
-			 : "0" (__addval), "m" (*mem),			      \
-			   "i" (offsetof (tcbhead_t, multiple_threads)));     \
-     else if (__HAVE_64B_ATOMICS)					      \
-       __asm __volatile (lock "xaddq %q0, %1"				      \
-			 : "=r" (__result), "=m" (*mem)			      \
-			 : "0" ((int64_t) cast_to_integer (__addval)),     \
-			   "m" (*mem),					      \
-			   "i" (offsetof (tcbhead_t, multiple_threads)));     \
-     else								      \
-       __result = do_exchange_and_add_val_64_acq (pfx, (mem), __addval);      \
-     __result; })
-
-#define atomic_exchange_and_add(mem, value) \
-  __sync_fetch_and_add (mem, value)
-
-#define __arch_exchange_and_add_cprefix \
-  "cmpl $0, %%" SEG_REG ":%P4\n\tje 0f\n\tlock\n0:\t"
-
-#define catomic_exchange_and_add(mem, value) \
-  __arch_exchange_and_add_body (__arch_exchange_and_add_cprefix, __arch_c,    \
-				mem, value)
-
-
-#define __arch_add_body(lock, pfx, apfx, mem, value) \
-  do {									      \
-    if (__builtin_constant_p (value) && (value) == 1)			      \
-      pfx##_increment (mem);						      \
-    else if (__builtin_constant_p (value) && (value) == -1)		      \
-      pfx##_decrement (mem);						      \
-    else if (sizeof (*mem) == 1)					      \
-      __asm __volatile (lock "addb %b1, %0"				      \
-			: "=m" (*mem)					      \
-			: IBR_CONSTRAINT (value), "m" (*mem),		      \
-			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
-    else if (sizeof (*mem) == 2)					      \
-      __asm __volatile (lock "addw %w1, %0"				      \
-			: "=m" (*mem)					      \
-			: "ir" (value), "m" (*mem),			      \
-			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
-    else if (sizeof (*mem) == 4)					      \
-      __asm __volatile (lock "addl %1, %0"				      \
-			: "=m" (*mem)					      \
-			: "ir" (value), "m" (*mem),			      \
-			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
-    else if (__HAVE_64B_ATOMICS)					      \
-      __asm __volatile (lock "addq %q1, %0"				      \
-			: "=m" (*mem)					      \
-			: "ir" ((int64_t) cast_to_integer (value)),	      \
-			  "m" (*mem),					      \
-			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
-    else								      \
-      do_add_val_64_acq (apfx, (mem), (value));				      \
-  } while (0)
-
-# define atomic_add(mem, value) \
-  __arch_add_body (LOCK_PREFIX, atomic, __arch, mem, value)
-
-#define __arch_add_cprefix \
-  "cmpl $0, %%" SEG_REG ":%P3\n\tje 0f\n\tlock\n0:\t"
-
-#define catomic_add(mem, value) \
-  __arch_add_body (__arch_add_cprefix, atomic, __arch_c, mem, value)
-
-
-#define atomic_add_negative(mem, value) \
-  ({ _Bool __result;							      \
-     if (sizeof (*mem) == 1)						      \
-       __asm __volatile (LOCK_PREFIX "addb %b2, %0"			      \
-			 : "=m" (*mem), "=@ccs" (__result)		      \
-			 : IBR_CONSTRAINT (value), "m" (*mem));		      \
-     else if (sizeof (*mem) == 2)					      \
-       __asm __volatile (LOCK_PREFIX "addw %w2, %0"			      \
-			 : "=m" (*mem), "=@ccs" (__result)		      \
-			 : "ir" (value), "m" (*mem));			      \
-     else if (sizeof (*mem) == 4)					      \
-       __asm __volatile (LOCK_PREFIX "addl %2, %0"			      \
-			 : "=m" (*mem), "=@ccs" (__result)		      \
-			 : "ir" (value), "m" (*mem));			      \
-     else if (__HAVE_64B_ATOMICS)					      \
-       __asm __volatile (LOCK_PREFIX "addq %q2, %0"			      \
-			 : "=m" (*mem), "=@ccs" (__result)		      \
-			 : "ir" ((int64_t) cast_to_integer (value)),	      \
-			   "m" (*mem));					      \
-     else								      \
-       __atomic_link_error ();						      \
-     __result; })
-
-
-#define atomic_add_zero(mem, value) \
-  ({ _Bool __result;							      \
-     if (sizeof (*mem) == 1)						      \
-       __asm __volatile (LOCK_PREFIX "addb %b2, %0"			      \
-			 : "=m" (*mem), "=@ccz" (__result)		      \
-			 : IBR_CONSTRAINT (value), "m" (*mem));		      \
-     else if (sizeof (*mem) == 2)					      \
-       __asm __volatile (LOCK_PREFIX "addw %w2, %0"			      \
-			 : "=m" (*mem), "=@ccz" (__result)		      \
-			 : "ir" (value), "m" (*mem));			      \
-     else if (sizeof (*mem) == 4)					      \
-       __asm __volatile (LOCK_PREFIX "addl %2, %0"			      \
-			 : "=m" (*mem), "=@ccz" (__result)		      \
-			 : "ir" (value), "m" (*mem));			      \
-     else if (__HAVE_64B_ATOMICS)					      \
-       __asm __volatile (LOCK_PREFIX "addq %q2, %0"			      \
-			 : "=m" (*mem), "=@ccz" (__result)		      \
-			 : "ir" ((int64_t) cast_to_integer (value)),	      \
-			   "m" (*mem));					      \
-     else								      \
-       __atomic_link_error ();						      \
-     __result; })
-
-
-#define __arch_increment_body(lock, pfx, mem) \
-  do {									      \
-    if (sizeof (*mem) == 1)						      \
-      __asm __volatile (lock "incb %b0"					      \
-			: "=m" (*mem)					      \
-			: "m" (*mem),					      \
-			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
-    else if (sizeof (*mem) == 2)					      \
-      __asm __volatile (lock "incw %w0"					      \
-			: "=m" (*mem)					      \
-			: "m" (*mem),					      \
-			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
-    else if (sizeof (*mem) == 4)					      \
-      __asm __volatile (lock "incl %0"					      \
-			: "=m" (*mem)					      \
-			: "m" (*mem),					      \
-			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
-    else if (__HAVE_64B_ATOMICS)					      \
-      __asm __volatile (lock "incq %q0"					      \
-			: "=m" (*mem)					      \
-			: "m" (*mem),					      \
-			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
-    else								      \
-      do_add_val_64_acq (pfx, mem, 1);					      \
-  } while (0)
-
-#define atomic_increment(mem) __arch_increment_body (LOCK_PREFIX, __arch, mem)
-
-#define __arch_increment_cprefix \
-  "cmpl $0, %%" SEG_REG ":%P2\n\tje 0f\n\tlock\n0:\t"
-
-#define catomic_increment(mem) \
-  __arch_increment_body (__arch_increment_cprefix, __arch_c, mem)
-
-
-#define atomic_increment_and_test(mem) \
-  ({ _Bool __result;							      \
-     if (sizeof (*mem) == 1)						      \
-       __asm __volatile (LOCK_PREFIX "incb %b0"				      \
-			 : "=m" (*mem), "=@cce" (__result)		      \
-			 : "m" (*mem));					      \
-     else if (sizeof (*mem) == 2)					      \
-       __asm __volatile (LOCK_PREFIX "incw %w0"				      \
-			 : "=m" (*mem), "=@cce" (__result)		      \
-			 : "m" (*mem));					      \
-     else if (sizeof (*mem) == 4)					      \
-       __asm __volatile (LOCK_PREFIX "incl %0"				      \
-			 : "=m" (*mem), "=@cce" (__result)		      \
-			 : "m" (*mem));					      \
-     else if (__HAVE_64B_ATOMICS)					      \
-       __asm __volatile (LOCK_PREFIX "incq %q0"				      \
-			 : "=m" (*mem), "=@cce" (__result)		      \
-			 : "m" (*mem));					      \
-     else								      \
-       __atomic_link_error ();						      \
-     __result; })
-
-
 #define __arch_decrement_body(lock, pfx, mem) \
   do {									      \
     if (sizeof (*mem) == 1)						      \
@@ -387,149 +172,11 @@
       do_add_val_64_acq (pfx, mem, -1);					      \
   } while (0)
 
-#define atomic_decrement(mem) __arch_decrement_body (LOCK_PREFIX, __arch, mem)
-
 #define __arch_decrement_cprefix \
   "cmpl $0, %%" SEG_REG ":%P2\n\tje 0f\n\tlock\n0:\t"
 
 #define catomic_decrement(mem) \
   __arch_decrement_body (__arch_decrement_cprefix, __arch_c, mem)
-
-
-#define atomic_decrement_and_test(mem) \
-  ({ _Bool __result;							      \
-     if (sizeof (*mem) == 1)						      \
-       __asm __volatile (LOCK_PREFIX "decb %b0"				      \
-			 : "=m" (*mem), "=@cce" (__result)		      \
-			 : "m" (*mem));					      \
-     else if (sizeof (*mem) == 2)					      \
-       __asm __volatile (LOCK_PREFIX "decw %w0"				      \
-			 : "=m" (*mem), "=@cce" (__result)		      \
-			 : "m" (*mem));					      \
-     else if (sizeof (*mem) == 4)					      \
-       __asm __volatile (LOCK_PREFIX "decl %0"				      \
-			 : "=m" (*mem), "=@cce" (__result)		      \
-			 : "m" (*mem));					      \
-     else								      \
-       __asm __volatile (LOCK_PREFIX "decq %q0"				      \
-			 : "=m" (*mem), "=@cce" (__result)		      \
-			 : "m" (*mem));					      \
-     __result; })
-
-
-#define atomic_bit_set(mem, bit) \
-  do {									      \
-    if (sizeof (*mem) == 1)						      \
-      __asm __volatile (LOCK_PREFIX "orb %b2, %0"			      \
-			: "=m" (*mem)					      \
-			: "m" (*mem), IBR_CONSTRAINT (1L << (bit)));	      \
-    else if (sizeof (*mem) == 2)					      \
-      __asm __volatile (LOCK_PREFIX "orw %w2, %0"			      \
-			: "=m" (*mem)					      \
-			: "m" (*mem), "ir" (1L << (bit)));		      \
-    else if (sizeof (*mem) == 4)					      \
-      __asm __volatile (LOCK_PREFIX "orl %2, %0"			      \
-			: "=m" (*mem)					      \
-			: "m" (*mem), "ir" (1L << (bit)));		      \
-    else if (__builtin_constant_p (bit) && (bit) < 32)			      \
-      __asm __volatile (LOCK_PREFIX "orq %2, %0"			      \
-			: "=m" (*mem)					      \
-			: "m" (*mem), "i" (1L << (bit)));		      \
-    else if (__HAVE_64B_ATOMICS)					      \
-      __asm __volatile (LOCK_PREFIX "orq %q2, %0"			      \
-			: "=m" (*mem)					      \
-			: "m" (*mem), "r" (1UL << (bit)));		      \
-    else								      \
-      __atomic_link_error ();						      \
-  } while (0)
-
-
-#define atomic_bit_test_set(mem, bit) \
-  ({ _Bool __result;							      \
-     if (sizeof (*mem) == 1)						      \
-       __asm __volatile (LOCK_PREFIX "btsb %3, %1"			      \
-			 : "=@ccc" (__result), "=m" (*mem)		      \
-			 : "m" (*mem), IBR_CONSTRAINT (bit));		      \
-     else if (sizeof (*mem) == 2)					      \
-       __asm __volatile (LOCK_PREFIX "btsw %3, %1"			      \
-			 : "=@ccc" (__result), "=m" (*mem)		      \
-			 : "m" (*mem), "ir" (bit));			      \
-     else if (sizeof (*mem) == 4)					      \
-       __asm __volatile (LOCK_PREFIX "btsl %3, %1"			      \
-			 : "=@ccc" (__result), "=m" (*mem)		      \
-			 : "m" (*mem), "ir" (bit));			      \
-     else if (__HAVE_64B_ATOMICS)					      \
-       __asm __volatile (LOCK_PREFIX "btsq %3, %1"			      \
-			 : "=@ccc" (__result), "=m" (*mem)		      \
-			 : "m" (*mem), "ir" (bit));			      \
-     else							      	      \
-       __atomic_link_error ();						      \
-     __result; })
-
-
-#define __arch_and_body(lock, mem, mask) \
-  do {									      \
-    if (sizeof (*mem) == 1)						      \
-      __asm __volatile (lock "andb %b1, %0"				      \
-			: "=m" (*mem)					      \
-			: IBR_CONSTRAINT (mask), "m" (*mem),		      \
-			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
-    else if (sizeof (*mem) == 2)					      \
-      __asm __volatile (lock "andw %w1, %0"				      \
-			: "=m" (*mem)					      \
-			: "ir" (mask), "m" (*mem),			      \
-			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
-    else if (sizeof (*mem) == 4)					      \
-      __asm __volatile (lock "andl %1, %0"				      \
-			: "=m" (*mem)					      \
-			: "ir" (mask), "m" (*mem),			      \
-			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
-    else if (__HAVE_64B_ATOMICS)					      \
-      __asm __volatile (lock "andq %q1, %0"				      \
-			: "=m" (*mem)					      \
-			: "ir" (mask), "m" (*mem),			      \
-			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
-    else								      \
-      __atomic_link_error ();						      \
-  } while (0)
-
-#define __arch_cprefix \
-  "cmpl $0, %%" SEG_REG ":%P3\n\tje 0f\n\tlock\n0:\t"
-
-#define atomic_and(mem, mask) __arch_and_body (LOCK_PREFIX, mem, mask)
-
-#define catomic_and(mem, mask) __arch_and_body (__arch_cprefix, mem, mask)
-
-
-#define __arch_or_body(lock, mem, mask) \
-  do {									      \
-    if (sizeof (*mem) == 1)						      \
-      __asm __volatile (lock "orb %b1, %0"				      \
-			: "=m" (*mem)					      \
-			: IBR_CONSTRAINT (mask), "m" (*mem),		      \
-			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
-    else if (sizeof (*mem) == 2)					      \
-      __asm __volatile (lock "orw %w1, %0"				      \
-			: "=m" (*mem)					      \
-			: "ir" (mask), "m" (*mem),			      \
-			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
-    else if (sizeof (*mem) == 4)					      \
-      __asm __volatile (lock "orl %1, %0"				      \
-			: "=m" (*mem)					      \
-			: "ir" (mask), "m" (*mem),			      \
-			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
-    else if (__HAVE_64B_ATOMICS)					      \
-      __asm __volatile (lock "orq %q1, %0"				      \
-			: "=m" (*mem)					      \
-			: "ir" (mask), "m" (*mem),			      \
-			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
-    else								      \
-      __atomic_link_error ();						      \
-  } while (0)
-
-#define atomic_or(mem, mask) __arch_or_body (LOCK_PREFIX, mem, mask)
-
-#define catomic_or(mem, mask) __arch_or_body (__arch_cprefix, mem, mask)
 
 /* We don't use mfence because it is supposedly slower due to having to
    provide stronger guarantees (e.g., regarding self-modifying code).  */
