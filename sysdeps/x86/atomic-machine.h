@@ -33,10 +33,20 @@
 
 #define ATOMIC_EXCHANGE_USES_CAS	0
 
-#define atomic_compare_and_exchange_val_acq(mem, newval, oldval) \
-  __sync_val_compare_and_swap (mem, oldval, newval)
-#define atomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
-  (! __sync_bool_compare_and_swap (mem, oldval, newval))
+#define atomic_compare_and_exchange_val_acq(mem, newval, oldval)	\
+  ({									\
+    typeof (*mem) __oldval = (oldval);					\
+    __atomic_compare_exchange_n (mem, (void *) &__oldval, newval, 0,	\
+				 __ATOMIC_ACQUIRE, __ATOMIC_RELAXED);	\
+    __oldval;								\
+  })
+
+#define atomic_compare_and_exchange_bool_acq(mem, newval, oldval)	\
+  ({									\
+    typeof (*mem) __oldval = (oldval);					\
+    !__atomic_compare_exchange_n (mem, (void *) &__oldval, newval, 0,	\
+				  __ATOMIC_ACQUIRE, __ATOMIC_RELAXED);	\
+  })
 
 #define atomic_exchange_acq(mem, newvalue) \
   __atomic_exchange_n (mem, newvalue, __ATOMIC_ACQUIRE)
