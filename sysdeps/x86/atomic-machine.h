@@ -26,15 +26,14 @@
 
 #ifdef __x86_64__
 # define __HAVE_64B_ATOMICS		1
-# define SP_REG				"rsp"
 #else
 /* Since the Pentium, i386 CPUs have supported 64-bit atomics, but the
    i386 psABI supplement provides only 4-byte alignment for uint64_t
    inside structs, so it is currently not possible to use 64-bit
    atomics on this platform.  */
 # define __HAVE_64B_ATOMICS		0
-# define SP_REG				"esp"
 #endif
+
 #define ATOMIC_EXCHANGE_USES_CAS	0
 
 #define atomic_compare_and_exchange_val_acq(mem, newval, oldval) \
@@ -74,10 +73,7 @@
 #define catomic_exchange_and_add(mem, value) \
   __atomic_fetch_add (mem, value, __ATOMIC_ACQUIRE)
 
-/* We don't use mfence because it is supposedly slower due to having to
-   provide stronger guarantees (e.g., regarding self-modifying code).  */
-#define atomic_full_barrier() \
-    __asm __volatile (LOCK_PREFIX "orl $0, (%%" SP_REG ")" ::: "memory")
+#define atomic_full_barrier() __sync_synchronize ()
 #define atomic_read_barrier() __asm ("" ::: "memory")
 #define atomic_write_barrier() __asm ("" ::: "memory")
 
