@@ -19,9 +19,6 @@
 #ifndef _X86_ATOMIC_MACHINE_H
 #define _X86_ATOMIC_MACHINE_H 1
 
-#include <stdint.h>
-#include <libc-pointer-arith.h>		/* For cast_to_integer.  */
-
 #define USE_ATOMIC_COMPILER_BUILTINS	1
 
 #ifdef __x86_64__
@@ -41,32 +38,8 @@
 #define atomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
   (! __sync_bool_compare_and_swap (mem, oldval, newval))
 
-/* Note that we need no lock prefix.  */
 #define atomic_exchange_acq(mem, newvalue) \
-  ({ __typeof (*mem) result;						      \
-     if (sizeof (*mem) == 1)						      \
-       __asm __volatile ("xchgb %b0, %1"				      \
-			 : "=q" (result), "=m" (*mem)			      \
-			 : "0" (newvalue), "m" (*mem));			      \
-     else if (sizeof (*mem) == 2)					      \
-       __asm __volatile ("xchgw %w0, %1"				      \
-			 : "=r" (result), "=m" (*mem)			      \
-			 : "0" (newvalue), "m" (*mem));			      \
-     else if (sizeof (*mem) == 4)					      \
-       __asm __volatile ("xchgl %0, %1"					      \
-			 : "=r" (result), "=m" (*mem)			      \
-			 : "0" (newvalue), "m" (*mem));			      \
-     else if (__HAVE_64B_ATOMICS)					      \
-       __asm __volatile ("xchgq %q0, %1"				      \
-			 : "=r" (result), "=m" (*mem)			      \
-			 : "0" ((int64_t) cast_to_integer (newvalue)),        \
-			   "m" (*mem));					      \
-     else								      \
-       {								      \
-	 result = 0;							      \
-	 __atomic_link_error ();					      \
-       }								      \
-     result; })
+  __atomic_exchange_n (mem, newvalue, __ATOMIC_ACQUIRE)
 
 /* ??? Remove when catomic_exchange_and_add
    fallback uses __atomic_fetch_add.  */
