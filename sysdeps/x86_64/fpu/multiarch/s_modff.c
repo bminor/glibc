@@ -38,4 +38,6 @@ libm_alias_float (__modf, modf)
 #  define __modff __modff_sse2
 # endif
 #endif
+#include <math_private.h>
+#define truncf __truncf
 #include <sysdeps/ieee754/flt-32/s_modff.c>
