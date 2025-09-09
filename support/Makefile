@@ -66,6 +66,7 @@ libsupport-routines = \
   support_format_netent \
   support_fuse \
   support_isolate_in_subprocess \
+  support_mem_access \
   support_mutex_pi_monotonic \
   support_need_proc \
   support_open_and_compare_file_bytes \

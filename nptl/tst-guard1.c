@@ -26,54 +26,22 @@
 #include <support/xsignal.h>
 #include <support/xthread.h>
 #include <support/xunistd.h>
+#include <support/check_mem_access.h>
 #include <sys/mman.h>
 #include <stdlib.h>
 
 static long int pagesz;
 
-/* To check if the guard region is inaccessible, the thread tries read/writes
-   on it and checks if a SIGSEGV is generated.  */
-
-static volatile sig_atomic_t signal_jump_set;
-static sigjmp_buf signal_jmp_buf;
-
-static void
-sigsegv_handler (int sig)
-{
-  if (signal_jump_set == 0)
-    return;
-
-  siglongjmp (signal_jmp_buf, sig);
-}
-
-static bool
-try_access_buf (char *ptr, bool write)
-{
-  signal_jump_set = true;
-
-  bool failed = sigsetjmp (signal_jmp_buf, 0) != 0;
-  if (!failed)
-    {
-      if (write)
-	*(volatile char *)(ptr) = 'x';
-      else
-	*(volatile char *)(ptr);
-    }
-
-  signal_jump_set = false;
-  return !failed;
-}
-
 static bool
 try_read_buf (char *ptr)
 {
-  return try_access_buf (ptr, false);
+  return check_mem_access (ptr, false);
 }
 
 static bool
 try_write_buf (char *ptr)
 {
-  return try_access_buf (ptr, true);
+  return check_mem_access (ptr, true);
 }
 
 static bool
@@ -331,18 +299,6 @@ static int
 do_test (void)
 {
   pagesz = sysconf (_SC_PAGESIZE);
-
-  {
-    struct sigaction sa = {
-      .sa_handler = sigsegv_handler,
-      .sa_flags = SA_NODEFER,
-    };
-    sigemptyset (&sa.sa_mask);
-    xsigaction (SIGSEGV, &sa, NULL);
-    /* Some system generates SIGBUS accessing the guard area when it is
-       setup with madvise.  */
-    xsigaction (SIGBUS, &sa, NULL);
-  }
 
   static const struct {
     const char *descr;
