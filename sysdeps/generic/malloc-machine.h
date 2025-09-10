@@ -22,10 +22,6 @@
 
 #include <atomic.h>
 
-#ifndef atomic_write_barrier
-# define atomic_write_barrier() atomic_full_barrier ()
-#endif
-
 #ifndef DEFAULT_TOP_PAD
 # define DEFAULT_TOP_PAD 131072
 #endif

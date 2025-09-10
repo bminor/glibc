@@ -99,11 +99,6 @@
 #endif
 
 
-#ifndef atomic_write_barrier
-# define atomic_write_barrier() atomic_full_barrier ()
-#endif
-
-
 #ifndef atomic_forced_read
 # define atomic_forced_read(x) \
   ({ __typeof (x) __x; __asm ("" : "=r" (__x) : "0" (x)); __x; })
@@ -256,6 +251,10 @@ void __atomic_link_error (void);
 
 #ifndef atomic_read_barrier
 # define atomic_read_barrier() atomic_thread_fence_acquire ()
+#endif
+
+#ifndef atomic_write_barrier
+# define atomic_write_barrier() atomic_thread_fence_release ()
 #endif
 
 
