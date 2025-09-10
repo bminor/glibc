@@ -99,11 +99,6 @@
 #endif
 
 
-#ifndef atomic_read_barrier
-# define atomic_read_barrier() atomic_full_barrier ()
-#endif
-
-
 #ifndef atomic_write_barrier
 # define atomic_write_barrier() atomic_full_barrier ()
 #endif
@@ -258,6 +253,11 @@ void __atomic_link_error (void);
 #ifndef atomic_full_barrier
 # define atomic_full_barrier() atomic_thread_fence_seq_cst ()
 #endif
+
+#ifndef atomic_read_barrier
+# define atomic_read_barrier() atomic_thread_fence_acquire ()
+#endif
+
 
 /* ATOMIC_EXCHANGE_USES_CAS is non-zero if atomic_exchange operations
    are implemented based on a CAS loop; otherwise, this is zero and we assume

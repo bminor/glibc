@@ -31,7 +31,6 @@
 
 #define ATOMIC_EXCHANGE_USES_CAS	0
 
-#define atomic_read_barrier() __asm ("" ::: "memory")
 #define atomic_write_barrier() __asm ("" ::: "memory")
 
 #define atomic_spin_nop() __asm ("pause")
