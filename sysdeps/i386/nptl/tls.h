@@ -255,9 +255,10 @@ tls_fill_user_desc (union user_desc_init *desc,
 #define THREAD_GSCOPE_RESET_FLAG() \
   do									      \
     { int __res;							      \
-      asm volatile ("xchgl %0, %%gs:%P1"				      \
+      asm volatile ("xchgl %1, %0"					      \
 		    : "=r" (__res)					      \
-		    : "i" (offsetof (struct pthread, header.gscope_flag)),    \
+		    : "m" (*(int __seg_gs *)				      \
+			   offsetof (struct pthread, header.gscope_flag)),    \
 		      "0" (THREAD_GSCOPE_FLAG_UNUSED));			      \
       if (__res == THREAD_GSCOPE_FLAG_WAIT)				      \
 	lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);    \
