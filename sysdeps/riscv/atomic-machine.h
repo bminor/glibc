@@ -19,8 +19,6 @@
 #ifndef _LINUX_RISCV_BITS_ATOMIC_H
 #define _LINUX_RISCV_BITS_ATOMIC_H 1
 
-#define atomic_full_barrier() __sync_synchronize ()
-
 #ifdef __riscv_atomic
 
 # define __HAVE_64B_ATOMICS (__riscv_xlen >= 64)

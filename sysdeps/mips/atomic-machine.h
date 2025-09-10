@@ -33,15 +33,6 @@
 #define __HAVE_64B_ATOMICS 1
 #endif
 
-/* See the comments in <sys/asm.h> about the use of the sync instruction.  */
-#ifndef MIPS_SYNC
-# define MIPS_SYNC	sync
-#endif
-
-#define MIPS_SYNC_STR_2(X) #X
-#define MIPS_SYNC_STR_1(X) MIPS_SYNC_STR_2(X)
-#define MIPS_SYNC_STR MIPS_SYNC_STR_1(MIPS_SYNC)
-
 /* MIPS is an LL/SC machine.  However, XLP has a direct atomic exchange
    instruction which will be used by __atomic_exchange_n.  */
 #ifdef _MIPS_ARCH_XLP
@@ -49,16 +40,5 @@
 #else
 # define ATOMIC_EXCHANGE_USES_CAS 1
 #endif
-
-#ifdef __mips16
-# define atomic_full_barrier() __sync_synchronize ()
-
-#else /* !__mips16 */
-# define atomic_full_barrier() \
-  __asm__ __volatile__ (".set push\n\t"					      \
-			MIPS_PUSH_MIPS2					      \
-			MIPS_SYNC_STR "\n\t"				      \
-			".set pop" : : : "memory")
-#endif /* !__mips16 */
 
 #endif /* atomic-machine.h */

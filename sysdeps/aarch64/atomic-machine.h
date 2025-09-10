@@ -22,7 +22,4 @@
 #define __HAVE_64B_ATOMICS 1
 #define ATOMIC_EXCHANGE_USES_CAS 0
 
-/* Barrier macro. */
-#define atomic_full_barrier() __sync_synchronize()
-
 #endif

@@ -99,11 +99,6 @@
 #endif
 
 
-#ifndef atomic_full_barrier
-# define atomic_full_barrier() __asm ("" ::: "memory")
-#endif
-
-
 #ifndef atomic_read_barrier
 # define atomic_read_barrier() atomic_full_barrier ()
 #endif
@@ -258,6 +253,10 @@ void __atomic_link_error (void);
    in the body of a spin loop to potentially improve its efficiency.  */
 #ifndef atomic_spin_nop
 # define atomic_spin_nop() do { /* nothing */ } while (0)
+#endif
+
+#ifndef atomic_full_barrier
+# define atomic_full_barrier() atomic_thread_fence_seq_cst ()
 #endif
 
 /* ATOMIC_EXCHANGE_USES_CAS is non-zero if atomic_exchange operations

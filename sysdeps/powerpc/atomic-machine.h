@@ -57,6 +57,4 @@
 # define atomic_write_barrier()	__asm ("sync" ::: "memory")
 #endif
 
-#define atomic_full_barrier()	__asm ("sync" ::: "memory")
-
 #endif

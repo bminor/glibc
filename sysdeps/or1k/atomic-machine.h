@@ -22,6 +22,4 @@
 #define __HAVE_64B_ATOMICS 0
 #define ATOMIC_EXCHANGE_USES_CAS 1
 
-#define atomic_full_barrier() ({ asm volatile ("l.msync" ::: "memory"); })
-
 #endif /* atomic-machine.h */

@@ -478,20 +478,4 @@ symbol		=	value
 # define MTC0	dmtc0
 #endif
 
-/* The MIPS architectures do not have a uniform memory model.  Particular
-   platforms may provide additional guarantees - for instance, the R4000
-   LL and SC instructions implicitly perform a SYNC, and the 4K promises
-   strong ordering.
-
-   However, in the absence of those guarantees, we must assume weak ordering
-   and SYNC explicitly where necessary.
-
-   Some obsolete MIPS processors may not support the SYNC instruction.  This
-   applies to "true" MIPS I processors; most of the processors which compile
-   using MIPS I implement parts of MIPS II.  */
-
-#ifndef MIPS_SYNC
-# define MIPS_SYNC	sync
-#endif
-
 #endif /* sys/asm.h */
