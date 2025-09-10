@@ -16,25 +16,47 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/*
- * Never include sysdeps/powerpc/atomic-machine.h directly.
- * Always use include/atomic.h which will include either
- * sysdeps/powerpc/powerpc32/atomic-machine.h
- * or
- * sysdeps/powerpc/powerpc64/atomic-machine.h
- * as appropriate and which in turn include this file.
- */
+#ifndef _POWERPC_ATOMIC_MACHINE_H
+#define _POWERPC_ATOMIC_MACHINE_H       1
 
-#define __ARCH_ACQ_INSTR	"isync"
-#ifndef __ARCH_REL_INSTR
-# define __ARCH_REL_INSTR	"sync"
+#if __WORDSIZE == 64
+# define __HAVE_64B_ATOMICS 1
+#else
+# define __HAVE_64B_ATOMICS 0
 #endif
+#define ATOMIC_EXCHANGE_USES_CAS 1
 
-#ifndef MUTEX_HINT_ACQ
+/* Used on pthread_spin_{try}lock.  */
+#define __ARCH_ACQ_INSTR        "isync"
+#if defined _ARCH_PWR6 || defined _ARCH_PWR6X
+# define MUTEX_HINT_ACQ	",1"
+# define MUTEX_HINT_REL	",0"
+#else
 # define MUTEX_HINT_ACQ
-#endif
-#ifndef MUTEX_HINT_REL
 # define MUTEX_HINT_REL
 #endif
 
+#ifdef _ARCH_PWR4
+/*
+ * Newer powerpc64 processors support the new "light weight" sync (lwsync)
+ * So if the build is using -mcpu=[power4,power5,power5+,970] we can
+ * safely use lwsync.
+ */
+# define atomic_read_barrier()	__asm ("lwsync" ::: "memory")
+/*
+ * "light weight" sync can also be used for the release barrier.
+ */
+# define atomic_write_barrier()	__asm ("lwsync" ::: "memory")
+#else
+/*
+ * Older powerpc32 processors don't support the new "light weight"
+ * sync (lwsync).  So the only safe option is to use normal sync
+ * for all powerpc32 applications.
+ */
+# define atomic_read_barrier()	__asm ("sync" ::: "memory")
+# define atomic_write_barrier()	__asm ("sync" ::: "memory")
+#endif
+
 #define atomic_full_barrier()	__asm ("sync" ::: "memory")
+
+#endif
