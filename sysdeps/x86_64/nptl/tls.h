@@ -201,9 +201,10 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
 # define THREAD_GSCOPE_RESET_FLAG() \
   do									      \
     { int __res;							      \
-      asm volatile ("xchgl %0, %%fs:%P1"				      \
+      asm volatile ("xchgl %1, %0"					      \
 		    : "=r" (__res)					      \
-		    : "i" (offsetof (struct pthread, header.gscope_flag)),    \
+		    : "m" (*(int __seg_fs *)				      \
+			   offsetof (struct pthread, header.gscope_flag)),    \
 		      "0" (THREAD_GSCOPE_FLAG_UNUSED));			      \
       if (__res == THREAD_GSCOPE_FLAG_WAIT)				      \
 	lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);    \
