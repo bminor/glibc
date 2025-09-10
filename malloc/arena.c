@@ -841,11 +841,11 @@ arena_get2 (size_t size, mstate avoid_arena)
          enough address space to create that many arenas.  */
       if (__glibc_unlikely (n <= narenas_limit - 1))
         {
-          if (catomic_compare_and_exchange_bool_acq (&narenas, n + 1, n))
+          if (atomic_compare_and_exchange_bool_acq (&narenas, n + 1, n))
             goto repeat;
           a = _int_new_arena (size);
 	  if (__glibc_unlikely (a == NULL))
-            catomic_decrement (&narenas);
+            atomic_fetch_add_relaxed (&narenas, -1);
         }
       else
         a = reused_arena (avoid_arena);

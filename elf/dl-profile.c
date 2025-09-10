@@ -553,7 +553,7 @@ _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc)
 	      froms[newfromidx].here = &data[narcs];
 	      froms[newfromidx].link = tos[to_index];
 	      tos[to_index] = newfromidx;
-	      catomic_increment (&narcs);
+	      atomic_fetch_add_relaxed (&narcs, 1);
 	    }
 
 	  /* If we still have no entry stop searching and insert.  */

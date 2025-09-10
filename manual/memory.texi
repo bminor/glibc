@@ -354,7 +354,7 @@ this function is in @file{stdlib.h}.
 @c that's protected by list_lock; next_free is only modified while
 @c list_lock is held too.  All other data members of an arena, as well
 @c as the metadata of the memory areas assigned to it, are only modified
-@c while holding the arena's mutex (fastbin pointers use catomic ops
+@c while holding the arena's mutex (fastbin pointers use atomic ops
 @c because they may be modified by free without taking the arena's
 @c lock).  Some reassurance was needed for fastbins, for it wasn't clear
 @c how they were initialized.  It turns out they are always
@@ -383,7 +383,7 @@ this function is in @file{stdlib.h}.
 @c     mutex_lock (arena lock) dup @asulock @aculock [returns locked]
 @c    __get_nprocs ext ok @acsfd
 @c    NARENAS_FROM_NCORES ok
-@c    catomic_compare_and_exchange_bool_acq ok
+@c    atomic_compare_and_exchange_bool_acq ok
 @c    _int_new_arena ok @asulock @aculock @acsmem
 @c     new_heap ok @acsmem
 @c      mmap ok @acsmem
@@ -397,7 +397,7 @@ this function is in @file{stdlib.h}.
 @c     mutex_lock (list_lock) dup @asulock @aculock
 @c     atomic_write_barrier ok
 @c     mutex_unlock (list_lock) @aculock
-@c    catomic_decrement ok
+@c    atomic_fetch_add ok
 @c    reused_arena @asulock @aculock
 @c      reads&writes next_to_use and iterates over arena next without guards
 @c      those are harmless as long as we don't drop arenas from the
@@ -414,7 +414,7 @@ this function is in @file{stdlib.h}.
 @c   get_max_fast ok
 @c   fastbin_index ok
 @c   fastbin ok
-@c   catomic_compare_and_exhange_val_acq ok
+@c   atomic_compare_and_exhange_val_acq ok
 @c   malloc_printerr dup @mtsenv
 @c     if we get to it, we're toast already, undefined behavior must have
 @c     been invoked before
@@ -521,10 +521,9 @@ this function is in @file{stdlib.h}.
 @c     chunk2mem dup ok
 @c     free_perturb ok
 @c     set_fastchunks ok
-@c      catomic_and ok
 @c     fastbin_index dup ok
 @c     fastbin dup ok
-@c     catomic_compare_and_exchange_val_rel ok
+@c     atomic_compare_and_exchange_val_rel ok
 @c     chunk_is_mmapped ok
 @c     contiguous dup ok
 @c     prev_inuse ok
@@ -706,7 +705,7 @@ The prototype for this function is in @file{stdlib.h}.
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{} @acsmem{}}}
 @c __libc_free @asulock @aculock @acsfd @acsmem
 @c   releasing memory into fastbins modifies the arena without taking
-@c   its mutex, but catomic operations ensure safety.  If two (or more)
+@c   its mutex, but atomic operations ensure safety.  If two (or more)
 @c   threads are running malloc and have their own arenas locked when
 @c   each gets a signal whose handler free()s large (non-fastbin-able)
 @c   blocks from each other's arena, we deadlock; this is a more general

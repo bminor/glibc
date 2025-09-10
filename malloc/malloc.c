@@ -4008,7 +4008,7 @@ _int_malloc (mstate av, size_t bytes)
       if (__glibc_unlikely (pp != NULL && misaligned_chunk (pp)))       \
 	malloc_printerr ("malloc(): unaligned fastbin chunk detected"); \
     }							\
-  while ((pp = catomic_compare_and_exchange_val_acq (fb, pp, victim)) \
+  while ((pp = atomic_compare_and_exchange_val_acq (fb, pp, victim)) \
 	 != victim);					\
 
   if ((unsigned long) (nb) <= (unsigned long) (get_max_fast ()))
@@ -4667,7 +4667,7 @@ _int_free_chunk (mstate av, mchunkptr p, INTERNAL_SIZE_T size, int have_lock)
 	  old2 = old;
 	  p->fd = PROTECT_PTR (&p->fd, old);
 	}
-      while ((old = catomic_compare_and_exchange_val_rel (fb, p, old2))
+      while ((old = atomic_compare_and_exchange_val_rel (fb, p, old2))
 	     != old2);
 
     /* Check that size of fastbin chunk at the top is the same as
