@@ -15,14 +15,17 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _ATOMIC_MACHINE_H
-#define _ATOMIC_MACHINE_H	1
+#ifndef _M68K_ATOMIC_MACHINE_H
+#define _M68K_ATOMIC_MACHINE_H	1
 
+#if defined __mc68020__ || defined __mcoldfire__
 /* If we have just non-atomic operations, we can as well make them wide.  */
-#define __HAVE_64B_ATOMICS 1
-#define USE_ATOMIC_COMPILER_BUILTINS 1
+# define __HAVE_64B_ATOMICS 0 
 
 /* XXX Is this actually correct?  */
-#define ATOMIC_EXCHANGE_USES_CAS 1
+# define ATOMIC_EXCHANGE_USES_CAS 1
+#else
+# error "ISAs does not support atomic operations"
+#endif
 
 #endif
