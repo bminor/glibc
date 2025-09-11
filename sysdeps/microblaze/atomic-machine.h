@@ -18,7 +18,5 @@
 
 #include <sysdep.h>
 
-#define __HAVE_64B_ATOMICS 0
-
 /* XXX Is this actually correct?  */
 #define ATOMIC_EXCHANGE_USES_CAS 1

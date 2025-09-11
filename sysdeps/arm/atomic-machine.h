@@ -16,5 +16,4 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define __HAVE_64B_ATOMICS 0
 #define ATOMIC_EXCHANGE_USES_CAS 1

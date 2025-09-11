@@ -19,11 +19,6 @@
 #ifndef _POWERPC_ATOMIC_MACHINE_H
 #define _POWERPC_ATOMIC_MACHINE_H       1
 
-#if __WORDSIZE == 64
-# define __HAVE_64B_ATOMICS 1
-#else
-# define __HAVE_64B_ATOMICS 0
-#endif
 #define ATOMIC_EXCHANGE_USES_CAS 1
 
 /* Used on pthread_spin_{try}lock.  */

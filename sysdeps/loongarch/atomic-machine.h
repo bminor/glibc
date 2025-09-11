@@ -19,7 +19,6 @@
 #ifndef _LINUX_LOONGARCH_BITS_ATOMIC_H
 #define _LINUX_LOONGARCH_BITS_ATOMIC_H 1
 
-#define __HAVE_64B_ATOMICS (__loongarch_grlen >= 64)
 #define ATOMIC_EXCHANGE_USES_CAS 0
 
 #endif /* bits/atomic.h */

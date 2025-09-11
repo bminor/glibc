@@ -17,8 +17,6 @@
 
 #include <stdint.h>
 
-#define __HAVE_64B_ATOMICS 1
-
 /* XXX Is this actually correct?  */
 #define ATOMIC_EXCHANGE_USES_CAS 1
 

@@ -19,8 +19,6 @@
 #define _M68K_ATOMIC_MACHINE_H	1
 
 #if defined __mc68020__ || defined __mcoldfire__
-# define __HAVE_64B_ATOMICS 0
-
 /* XXX Is this actually correct?  */
 # define ATOMIC_EXCHANGE_USES_CAS 1
 #else

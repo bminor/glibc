@@ -104,11 +104,6 @@
   ({ __typeof (x) __x; __asm ("" : "=r" (__x) : "0" (x)); __x; })
 #endif
 
-/* This is equal to 1 iff the architecture supports 64b atomic operations.  */
-#ifndef __HAVE_64B_ATOMICS
-#error Unable to determine if 64-bit atomics are present.
-#endif
-
 /* The following functions are a subset of the atomic operations provided by
    C11.  Usually, a function named atomic_OP_MO(args) is equivalent to C11's
    atomic_OP_explicit(args, memory_order_MO); exceptions noted below.  */

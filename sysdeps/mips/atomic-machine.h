@@ -27,12 +27,6 @@
 #define MIPS_PUSH_MIPS2
 #endif
 
-#if _MIPS_SIM == _ABIO32 || _MIPS_SIM == _ABIN32
-#define __HAVE_64B_ATOMICS 0
-#else
-#define __HAVE_64B_ATOMICS 1
-#endif
-
 /* MIPS is an LL/SC machine.  However, XLP has a direct atomic exchange
    instruction which will be used by __atomic_exchange_n.  */
 #ifdef _MIPS_ARCH_XLP
