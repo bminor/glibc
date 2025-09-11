@@ -24,33 +24,9 @@
 #else
 # define __HAVE_64B_ATOMICS          0
 #endif
-#define USE_ATOMIC_COMPILER_BUILTINS 1
 
 /* XXX Is this actually correct?  */
 #define ATOMIC_EXCHANGE_USES_CAS     __HAVE_64B_ATOMICS
-
-/* Compare and exchange.
-   For all "bool" routines, we return FALSE if exchange successful.  */
-
-#define __arch_compare_and_exchange_val_int(mem, newval, oldval, model) \
-  ({									\
-    typeof (*mem) __oldval = (oldval);					\
-    __atomic_compare_exchange_n (mem, (void *) &__oldval, newval, 0,	\
-				 model, __ATOMIC_RELAXED);		\
-    __oldval;								\
-  })
-
-#define atomic_compare_and_exchange_val_acq(mem, new, old)		      \
-  ({									      \
-    __typeof ((__typeof (*(mem))) *(mem)) __result;			      \
-    if (sizeof (*mem) == 4						      \
-        || (__HAVE_64B_ATOMICS && sizeof (*mem) == 8))			      \
-      __result = __arch_compare_and_exchange_val_int (mem, new, old,	      \
-							 __ATOMIC_ACQUIRE);   \
-    else								      \
-      abort ();								      \
-    __result;								      \
-  })
 
 #ifdef __sparc_v9__
 # define atomic_full_barrier() \
