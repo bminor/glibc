@@ -23,6 +23,7 @@
 #include <math_private.h>
 #include <nan-high-order-bit.h>
 #include <stdint.h>
+#include <stdbit.h>
 
 #ifndef WANT_ROUNDING
 /* Correct special case results in non-nearest rounding modes.  */
@@ -42,24 +43,6 @@
    the semantics documented below.  */
 # define TOINT_INTRINSICS 0
 #endif
-
-static inline int
-clz_uint64 (uint64_t x)
-{
-  if (sizeof (uint64_t) == sizeof (unsigned long))
-    return __builtin_clzl (x);
-  else
-    return __builtin_clzll (x);
-}
-
-static inline int
-ctz_uint64 (uint64_t x)
-{
-  if (sizeof (uint64_t) == sizeof (unsigned long))
-    return __builtin_ctzl (x);
-  else
-    return __builtin_ctzll (x);
-}
 
 #if TOINT_INTRINSICS
 /* Round x to nearest int in all rounding modes, ties have to be rounded
@@ -148,7 +131,7 @@ get_exponent (uint64_t x)
 static inline double
 make_double (uint64_t x, int64_t ep, uint64_t s)
 {
-  int lz = clz_uint64 (x) - EXPONENT_WIDTH;
+  int lz = stdc_leading_zeros (x) - EXPONENT_WIDTH;
   x <<= lz;
   ep -= lz;
 

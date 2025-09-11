@@ -98,7 +98,7 @@ __fmod (double x, double y)
 
       if (__glibc_unlikely (mx == 0))
 	return asdouble (sx);
-      int shift = clz_uint64 (mx);
+      int shift = stdc_leading_zeros (mx);
       ex -= shift + 1;
       mx <<= shift;
       mx = sx | (mx >> EXPONENT_WIDTH);
@@ -131,10 +131,10 @@ __fmod (double x, double y)
       my = hy;
       ey = 0;
       exp_diff--;
-      lead_zeros_my = clz_uint64 (my);
+      lead_zeros_my = stdc_leading_zeros (my);
     }
 
-  int tail_zeros_my = ctz_uint64 (my);
+  int tail_zeros_my = stdc_trailing_zeros (my);
   int sides_zeroes = lead_zeros_my + tail_zeros_my;
 
   int right_shift = exp_diff < tail_zeros_my ? exp_diff : tail_zeros_my;
