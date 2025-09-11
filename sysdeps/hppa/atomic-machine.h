@@ -21,7 +21,6 @@
 #define atomic_full_barrier() __sync_synchronize ()
 
 #define __HAVE_64B_ATOMICS 0
-#define USE_ATOMIC_COMPILER_BUILTINS 1
 
 /* XXX Is this actually correct?  */
 #define ATOMIC_EXCHANGE_USES_CAS 1
