@@ -25,6 +25,4 @@
    is not as optimal as LLOCK/SCOND specially for SMP.  */
 #define ATOMIC_EXCHANGE_USES_CAS 1
 
-#define atomic_full_barrier()  ({ asm volatile ("dmb 3":::"memory"); })
-
 #endif /* _ARC_BITS_ATOMIC_H */

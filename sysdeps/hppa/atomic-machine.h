@@ -18,8 +18,6 @@
 #ifndef _ATOMIC_MACHINE_H
 #define _ATOMIC_MACHINE_H	1
 
-#define atomic_full_barrier() __sync_synchronize ()
-
 #define __HAVE_64B_ATOMICS 0
 
 /* XXX Is this actually correct?  */

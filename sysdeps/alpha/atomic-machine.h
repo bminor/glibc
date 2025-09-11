@@ -22,6 +22,5 @@
 /* XXX Is this actually correct?  */
 #define ATOMIC_EXCHANGE_USES_CAS 1
 
-#define atomic_full_barrier()	__asm ("mb" : : : "memory");
 #define atomic_read_barrier()	__asm ("mb" : : : "memory");
 #define atomic_write_barrier()	__asm ("wmb" : : : "memory");

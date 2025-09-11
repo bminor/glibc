@@ -103,7 +103,7 @@
 
 
 #ifndef atomic_full_barrier
-# define atomic_full_barrier() __asm ("" ::: "memory")
+# define atomic_full_barrier() __atomic_thread_fence (__ATOMIC_SEQ_CST)
 #endif
 
 
