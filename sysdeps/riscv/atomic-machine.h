@@ -21,8 +21,6 @@
 
 #ifdef __riscv_atomic
 
-# define ATOMIC_EXCHANGE_USES_CAS 0
-
 /* Miscellaneous.  */
 
 # define asm_amo(which, ordering, mem, value) ({ 		\

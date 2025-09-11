@@ -17,7 +17,4 @@
 
 #include <stdint.h>
 
-/* XXX Is this actually correct?  */
-#define ATOMIC_EXCHANGE_USES_CAS 1
-
 #define atomic_write_barrier()	__asm ("wmb" : : : "memory");

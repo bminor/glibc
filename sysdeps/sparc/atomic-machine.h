@@ -19,9 +19,6 @@
 #ifndef _ATOMIC_MACHINE_H
 #define _ATOMIC_MACHINE_H	1
 
-/* XXX Is this actually correct?  */
-#define ATOMIC_EXCHANGE_USES_CAS     __HAVE_64B_ATOMICS
-
 #ifdef __sparc_v9__
 # define atomic_full_barrier() \
   __asm __volatile ("membar #LoadLoad | #LoadStore"			      \

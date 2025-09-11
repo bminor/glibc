@@ -26,29 +26,12 @@ __pthread_spin_lock (pthread_spinlock_t *lock)
   int val = 0;
 
   /* We assume that the first try mostly will be successful, thus we use
-     atomic_exchange if it is not implemented by a CAS loop (we also assume
-     that atomic_exchange can be faster if it succeeds, see
-     ATOMIC_EXCHANGE_USES_CAS).  Otherwise, we use a weak CAS and not an
-     exchange so we bail out after the first failed attempt to change the
-     state.  For the subsequent attempts we use atomic_compare_and_exchange
-     after we observe that the lock is not acquired.
-     See also comment in pthread_spin_trylock.
+     atomic_exchange.
      We use acquire MO to synchronize-with the release MO store in
      pthread_spin_unlock, and thus ensure that prior critical sections
      happen-before this critical section.  */
-#if ! ATOMIC_EXCHANGE_USES_CAS
-  /* Try to acquire the lock with an exchange instruction as this architecture
-     has such an instruction and we assume it is faster than a CAS.
-     The acquisition succeeds if the lock is not in an acquired state.  */
   if (__glibc_likely (atomic_exchange_acquire (lock, 1) == 0))
     return 0;
-#else
-  /* Try to acquire the lock with a CAS instruction as this architecture
-     has no exchange instruction.  The acquisition succeeds if the lock is not
-     acquired.  */
-  if (__glibc_likely (atomic_compare_exchange_weak_acquire (lock, &val, 1)))
-    return 0;
-#endif
 
   do
     {

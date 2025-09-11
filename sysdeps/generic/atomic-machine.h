@@ -18,24 +18,20 @@
 #ifndef _ATOMIC_MACHINE_H
 #define _ATOMIC_MACHINE_H	1
 
-/* We have by default no support for atomic operations.  So define
-   them non-atomic.  If this is a problem somebody will have to come
-   up with real definitions.  */
+/* Some macros can be overridden if the architecture requires some specific
+   atomic operations or provides extra optimizations.
 
-/* The only basic operation needed is compare and exchange.  */
-#define atomic_compare_and_exchange_val_acq(mem, newval, oldval) \
-  ({ __typeof (mem) __gmemp = (mem);				      \
-     __typeof (*mem) __gret = *__gmemp;				      \
-     __typeof (*mem) __gnewval = (newval);			      \
-								      \
-     if (__gret == (oldval))					      \
-       *__gmemp = __gnewval;					      \
-     __gret; })
+   * atomic_max (mem, value): atomically set the maximum value of *mem
+     and value to *mem.  Used on malloc statistics collection.
 
-#define atomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
-  ({ __typeof (mem) __gmemp = (mem);				      \
-     __typeof (*mem) __gnewval = (newval);			      \
-								      \
-     *__gmemp == (oldval) ? (*__gmemp = __gnewval, 0) : 1; })
+   * atomic_full_barrier: defaults to __atomic_thread_fence (__ATOMIC_SEQ_CST)
+
+   * atomic_read_barrier: defaults to __atomic_thread_fence (__ATOMIC_ACQUIRE)
+
+   * atomic_write_barrier: defaults to __atomic_thread_fence (__ATOMIC_RELEASE)
+
+   * atomic_spin_nop: arch-specific instruction used on pthread spin lock
+     and adaptive mutexes to optimize spin-wait loops.
+*/
 
 #endif	/* atomic-machine.h */

@@ -258,12 +258,4 @@ void __atomic_link_error (void);
 # define atomic_spin_nop() do { /* nothing */ } while (0)
 #endif
 
-/* ATOMIC_EXCHANGE_USES_CAS is non-zero if atomic_exchange operations
-   are implemented based on a CAS loop; otherwise, this is zero and we assume
-   that the atomic_exchange operations could provide better performance
-   than a CAS loop.  */
-#ifndef ATOMIC_EXCHANGE_USES_CAS
-# error ATOMIC_EXCHANGE_USES_CAS has to be defined.
-#endif
-
 #endif	/* atomic.h */

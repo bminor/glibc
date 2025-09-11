@@ -19,8 +19,6 @@
 #ifndef _X86_ATOMIC_MACHINE_H
 #define _X86_ATOMIC_MACHINE_H 1
 
-#define ATOMIC_EXCHANGE_USES_CAS	0
-
 #define atomic_spin_nop() __asm ("pause")
 
 #endif /* atomic-machine.h */

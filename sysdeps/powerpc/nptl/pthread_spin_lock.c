@@ -18,6 +18,15 @@
 #include "pthreadP.h"
 #include <shlib-compat.h>
 
+#define __ARCH_ACQ_INSTR        "isync"
+#if defined _ARCH_PWR6 || defined _ARCH_PWR6X
+# define MUTEX_HINT_ACQ	",1"
+# define MUTEX_HINT_REL	",0"
+#else
+# define MUTEX_HINT_ACQ
+# define MUTEX_HINT_REL
+#endif
+
 int
 __pthread_spin_lock (pthread_spinlock_t *lock)
 {
