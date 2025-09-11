@@ -668,7 +668,7 @@ defined in @file{elf.h}.  If a matching entry is found, the value is
 returned; if the entry is not found, zero is returned and @code{errno}
 is set to @code{ENOENT}.
 
-@strong{Note:} There is no relationship between the @samp{AT_} contants
+@strong{Note:} There is no relationship between the @samp{AT_} constants
 defined in @file{elf.h} and the file name lookup flags in
 @file{fcntl.h}.  @xref{Descriptor-Relative Access}.
 @end deftypefun
