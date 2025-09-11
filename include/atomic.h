@@ -108,7 +108,7 @@
 
 
 #ifndef atomic_read_barrier
-# define atomic_read_barrier() atomic_full_barrier ()
+# define atomic_read_barrier() __atomic_thread_fence (__ATOMIC_ACQUIRE);
 #endif
 
 

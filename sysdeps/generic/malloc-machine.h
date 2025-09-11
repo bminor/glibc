@@ -22,10 +22,6 @@
 
 #include <atomic.h>
 
-#ifndef atomic_read_barrier
-# define atomic_read_barrier() atomic_full_barrier ()
-#endif
-
 #ifndef atomic_write_barrier
 # define atomic_write_barrier() atomic_full_barrier ()
 #endif
