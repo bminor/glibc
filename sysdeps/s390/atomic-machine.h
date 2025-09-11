@@ -15,10 +15,4 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifdef __s390x__
-# define __HAVE_64B_ATOMICS 1
-#else
-# define __HAVE_64B_ATOMICS 0
-#endif
-
 #define ATOMIC_EXCHANGE_USES_CAS 1

@@ -16,7 +16,5 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define __HAVE_64B_ATOMICS 0
-
 /* XXX Is this actually correct?  */
 #define ATOMIC_EXCHANGE_USES_CAS 1

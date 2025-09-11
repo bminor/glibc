@@ -18,8 +18,6 @@
 #ifndef _ATOMIC_MACHINE_H
 #define _ATOMIC_MACHINE_H	1
 
-#define __HAVE_64B_ATOMICS 0
-
 /* XXX Is this actually correct?  */
 #define ATOMIC_EXCHANGE_USES_CAS 1
 

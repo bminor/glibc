@@ -19,8 +19,6 @@
 #ifndef _ARC_BITS_ATOMIC_H
 #define _ARC_BITS_ATOMIC_H 1
 
-#define __HAVE_64B_ATOMICS 0
-
 /* ARC does have legacy atomic EX reg, [mem] instruction but the micro-arch
    is not as optimal as LLOCK/SCOND specially for SMP.  */
 #define ATOMIC_EXCHANGE_USES_CAS 1

@@ -19,12 +19,6 @@
 #ifndef _ATOMIC_MACHINE_H
 #define _ATOMIC_MACHINE_H	1
 
-#ifdef __arch64__
-# define __HAVE_64B_ATOMICS          1
-#else
-# define __HAVE_64B_ATOMICS          0
-#endif
-
 /* XXX Is this actually correct?  */
 #define ATOMIC_EXCHANGE_USES_CAS     __HAVE_64B_ATOMICS
 

@@ -222,6 +222,9 @@
 /* An integer used to scale the timeout of test programs.  */
 #define TIMEOUTFACTOR 1
 
+/* Set to 1 if 64 bit atomics are supported.  */
+#undef __HAVE_64B_ATOMICS 0
+
 /*
  */
 

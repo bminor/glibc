@@ -19,7 +19,6 @@
 #ifndef __CSKY_ATOMIC_H_
 #define __CSKY_ATOMIC_H_
 
-#define __HAVE_64B_ATOMICS 0
 #define ATOMIC_EXCHANGE_USES_CAS 1
 
 #endif /* atomic-machine.h */
