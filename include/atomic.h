@@ -42,7 +42,6 @@
 #include <atomic-machine.h>
 
 
-# undef atomic_compare_and_exchange_val_acq
 # define atomic_compare_and_exchange_val_acq(mem, newval, oldval) \
   ({									      \
      __typeof (*(mem)) __atg3_old = (oldval);				      \
@@ -50,7 +49,6 @@
      __atg3_old;							      \
   })
 
-# undef atomic_compare_and_exchange_val_rel
 # define atomic_compare_and_exchange_val_rel(mem, newval, oldval)	      \
   ({									      \
      __typeof (*(mem)) __atg3_old = (oldval);				      \
@@ -58,7 +56,6 @@
      __atg3_old;							      \
   })
 
-# undef atomic_compare_and_exchange_bool_acq
 # define atomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
   ({									      \
      __typeof (*(mem)) __atg3_old = (oldval);				      \
