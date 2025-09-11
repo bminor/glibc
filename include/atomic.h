@@ -113,7 +113,7 @@
 
 
 #ifndef atomic_write_barrier
-# define atomic_write_barrier() atomic_full_barrier ()
+# define atomic_write_barrier()  __atomic_thread_fence (__ATOMIC_RELEASE)
 #endif
 
 

@@ -36,13 +36,4 @@
 # define MUTEX_HINT_REL
 #endif
 
-#ifdef _ARCH_PWR4
-/*
- * "light weight" sync can also be used for the release barrier.
- */
-# define atomic_write_barrier()	__asm ("lwsync" ::: "memory")
-#else
-# define atomic_write_barrier()	__asm ("sync" ::: "memory")
-#endif
-
 #endif
