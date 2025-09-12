@@ -30,6 +30,7 @@ RTLDLIST=@RTLD@
 warn=
 bind_now=
 verbose=
+unused=
 
 while test $# -gt 0; do
   case "$1" in
