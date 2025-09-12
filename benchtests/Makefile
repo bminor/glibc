@@ -119,6 +119,7 @@ bench-math := \
   pow \
   powf \
   powl \
+  remainder \
   rint \
   rintf \
   roundeven \
@@ -342,6 +343,7 @@ CFLAGS-bench-fmax.c += -fno-builtin
 CFLAGS-bench-fmaxf.c += -fno-builtin
 CFLAGS-bench-trunc.c += -fno-builtin
 CFLAGS-bench-truncf.c += -fno-builtin
+CFLAGS-bench-remainder.c += -fno-builtin
 CFLAGS-bench-roundeven.c += -fno-builtin
 CFLAGS-bench-roundevenf.c += -fno-builtin
 CFLAGS-bench-isnan.c += $(config-cflags-signaling-nans)
