@@ -157,19 +157,15 @@ __merge_einval (LOOKUP_TYPE *a,
 
 #define CHECK_MERGE(err, status)		\
   ({						\
-    do						\
+    if (err)					\
       {						\
-	if (err)				\
-	  {					\
-	    __set_errno (err);			\
-	    if (err == ERANGE)			\
-	      status = NSS_STATUS_TRYAGAIN;	\
-	    else				\
-	      status = NSS_STATUS_UNAVAIL;	\
-	    break;				\
-	  }					\
+	__set_errno (err);			\
+	if (err == ERANGE)			\
+	  status = NSS_STATUS_TRYAGAIN;		\
+	else					\
+	  status = NSS_STATUS_UNAVAIL;		\
+	break;					\
       }						\
-    while (0);					\
   })
 
 /* Type of the lookup function we need here.  */
