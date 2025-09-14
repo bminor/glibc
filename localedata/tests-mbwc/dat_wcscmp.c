@@ -128,6 +128,6 @@ TST_WCSCMP tst_wcscmp_loc [] = {
     }
   },
   {
-    { Twcschr, TST_LOC_end}
+    { Twcscmp, TST_LOC_end}
   }
 };
