@@ -861,15 +861,14 @@ static mstate
 arena_get_retry (mstate ar_ptr, size_t bytes)
 {
   LIBC_PROBE (memory_arena_retry, 2, bytes, ar_ptr);
+  __libc_lock_unlock (ar_ptr->mutex);
   if (ar_ptr != &main_arena)
     {
-      __libc_lock_unlock (ar_ptr->mutex);
       ar_ptr = &main_arena;
       __libc_lock_lock (ar_ptr->mutex);
     }
   else
     {
-      __libc_lock_unlock (ar_ptr->mutex);
       ar_ptr = arena_get2 (bytes, ar_ptr);
     }
 
