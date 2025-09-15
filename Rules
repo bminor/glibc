@@ -195,9 +195,10 @@ xtests:
 	  > $(objpfx)subdir-xtests.sum
 
 ifeq ($(build-programs),yes)
-binaries-all-notests = $(others) $(sysdep-others)
+binaries-all-notests = $(filter-out $(others-noinstall), \
+			 $(others) $(sysdep-others))
 binaries-all-tests = $(tests) $(tests-internal) $(xtests) $(test-srcs) \
-		     $(tests-container)
+		     $(tests-container) $(others-noinstall)
 binaries-all = $(binaries-all-notests) $(binaries-all-tests)
 binaries-static-notests = $(others-static)
 binaries-static-tests = $(tests-static) $(xtests-static)
@@ -385,7 +386,7 @@ $(objpfx)%.out: /dev/null $(objpfx)%	# Make it 2nd arg for canned sequence.
 # and pid namespaces) in which to run, should be added to
 # tests-container.
 $(tests-container:%=$(objpfx)%.out): $(objpfx)%.out : $(if $(wildcard $(objpfx)%.files),$(objpfx)%.files,/dev/null) $(objpfx)%
-	$(test-wrapper-env) $(run-program-env) $(run-via-rtld-prefix) \
+	$(test-wrapper-env) $(run-program-env) $(test-via-rtld-prefix) \
 	  $(common-objpfx)support/test-container env $(run-program-env) $($*-ENV) \
 	  $(host-test-program-cmd) $($*-ARGS) > $@; \
 	$(evaluate-test)
