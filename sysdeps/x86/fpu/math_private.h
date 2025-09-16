@@ -33,27 +33,23 @@ __NTH (__ieee754_atan2l (long double y, long double x))
 __extern_always_inline double
 __trunc (double x)
 {
-#ifdef __AVX__
-  asm ("vroundsd $11, %1, %1, %0" : "=v" (x) : "v" (x));
-#elif defined __SSE4_1__
-  asm ("roundsd $11, %1, %0" : "=x" (x) : "x" (x));
+#if HAVE_X86_INLINE_TRUNC || !defined __SSE4_1__
+  return trunc (x);
 #else
-  x = trunc (x);
-#endif
+  asm ("%vroundsd $11, %d1, %0" : "=v" (x) : "v" (x));
   return x;
+#endif
 }
 
 __extern_always_inline float
 __truncf (float x)
 {
-#ifdef __AVX__
-  asm ("vroundss $11, %1, %1, %0" : "=v" (x) : "v" (x));
-#elif defined __SSE4_1__
-  asm ("roundss $11, %1, %0" : "=x" (x) : "x" (x));
+#if HAVE_X86_INLINE_TRUNC || !defined __SSE4_1__
+  return truncf (x);
 #else
-  x = truncf (x);
-#endif
+  asm ("%vroundss $11, %d1, %0" : "=v" (x) : "v" (x));
   return x;
+#endif
 }
 
 #endif

@@ -192,6 +192,37 @@ fi
 LIBC_CONFIG_VAR(test-cc-cflags-no-direct-extern-access,
 		$libc_cv_test_cc_cflags_no_direct_extern_access)
 
+conftest_code="
+extern float truncf (float __x) __attribute__ ((__nothrow__,__const__));
+
+float
+tf (float x)
+{
+  return truncf (x);
+}
+"
+dnl Check if CC inlines trunc with -Os.
+LIBC_TRY_CC_COMMAND([if -Os inlines trunc],
+  [$conftest_code],
+  [-S -Os -msse4.1],
+  libc_cv_cc_x86_inline_trunc,
+  [
+libc_cv_cc_x86_inline_trunc=no
+if grep -E -q "roundss" conftest; then
+  libc_cv_cc_x86_inline_trunc=yes
+fi
+],
+[
+echo "failed to check if -Os inlines trunc."
+rm -f conftest*
+exit 1
+])
+if test "$libc_cv_cc_x86_inline_trunc" = yes; then
+  AC_DEFINE(HAVE_X86_INLINE_TRUNC, 1)
+else
+  AC_DEFINE(HAVE_X86_INLINE_TRUNC, 0)
+fi
+
 dnl If the building compiler enables no direct external data access by
 dnl default, access to protected data in shared libraries from executables
 dnl must be compiled with no direct external data access.  If the testing

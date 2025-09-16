@@ -308,4 +308,7 @@
 /* Define if -mapxf is enabled by default on x86.  */
 #undef HAVE_X86_APX
 
+/* Define if trunc is inlined on x86.  */
+#undef HAVE_X86_INLINE_TRUNC
+
 #endif
