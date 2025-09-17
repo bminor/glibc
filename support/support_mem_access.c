@@ -19,7 +19,10 @@
 
 #include <setjmp.h>
 #include <signal.h>
+#include <stddef.h>
 #include <support/xsignal.h>
+
+#include "check_mem_access.h"
 
 static sigjmp_buf sigsegv_jmp_buf;
 

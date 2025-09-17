@@ -19,6 +19,7 @@
 #ifndef SUPPORT_CHECK_MEM_ACCESS_H
 #define SUPPORT_CHECK_MEM_ACCESS_H
 
+#include <stdbool.h>
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
