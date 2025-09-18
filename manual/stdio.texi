@@ -5135,13 +5135,21 @@ remain valid only as long as no further output on the stream takes
 place.  If you do more output, you must flush the stream again to store
 new values before you use them again.
 
-A null character is written at the end of the buffer.  This null character
-is @emph{not} included in the size value stored at @var{sizeloc}.
+A null character is written at the end of the buffer when the stream
+is flushed, and at the current location when closed (these locations
+may be different if @code{fseek} is used).  This null character is
+@emph{not} included in the size value stored at @var{sizeloc}.
 
 You can move the stream's file position with @code{fseek} or
-@code{fseeko} (@pxref{File Positioning}).  Moving the file position past
-the end of the data already written fills the intervening space with
-zeroes.
+@code{fseeko} (@pxref{File Positioning}).  Moving the file position
+past the end of the data already written fills the intervening space
+with zeroes.  Note that seeking backwards into existing written data
+will change the effective ``end of file'' used by @code{fflush} and
+@code{SEEK_END} (and where the trailing null character is written,
+when closed).  Thus, if you wish to do ``random-access'' I/O in a
+memstream, it's important to use @code{fseek} to move the file
+position to the desired data end (using @code{SEEK_POS}) before
+closing it.
 @end deftypefun
 
 Here is an example of using @code{open_memstream}:
