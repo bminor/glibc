@@ -31,6 +31,10 @@
    failure is detected, so that even if the counter wraps around to
    zero, the failure of a test can be detected.
 
+   If the accept_oom member is not zero, the supervisor process will
+   use heuristics to suppress process termination due to OOM
+   conditions.
+
    The init constructor function below puts *state on a shared
    anonymous mapping, so that failure reports from subprocesses
    propagate to the parent process.  */
@@ -38,6 +42,7 @@ struct test_failures
 {
   unsigned int counter;
   unsigned int failed;
+  unsigned int accept_oom;
 };
 static struct test_failures *state;
 
@@ -121,4 +126,35 @@ support_record_failure_barrier (void)
       puts ("error: exiting due to previous errors");
       exit (1);
     }
+}
+
+void
+support_accept_oom (bool onoff)
+{
+  if (onoff)
+    {
+      /* One thread detects the overflow.   */
+      if (__atomic_fetch_add (&state->accept_oom, 1, __ATOMIC_RELAXED)
+          == UINT_MAX)
+        {
+          puts ("error: OOM acceptance counter overflow");
+          exit (1);
+        }
+    }
+  else
+    {
+      /* One thread detects the underflow.  */
+      if (__atomic_fetch_add (&state->accept_oom, -1, __ATOMIC_RELAXED)
+          == 0)
+        {
+          puts ("error: OOM acceptance counter underflow");
+          exit (1);
+        }
+    }
+}
+
+int
+support_is_oom_accepted (void)
+{
+  return __atomic_load_n (&state->accept_oom, __ATOMIC_RELAXED) != 0;
 }

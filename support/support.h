@@ -239,6 +239,15 @@ int support_open_dev_null_range (int num, int flags, mode_t mode);
 /* Check if kernel supports set VMA range name.  */
 extern bool support_set_vma_name_supported (void);
 
+/* If invoked with a true argument, it instructs the supervising
+   process to ignore unexpected termination of the test process,
+   likely due to an OOM error.  (This can theoretically mask other
+   test errors, so it should be used sparingly.)
+
+   If invoked with a false argument, the default behavior is restored,
+   and OOM-induced errors result in test failure.  */
+void support_accept_oom (bool);
+
 __END_DECLS
 
 #endif /* SUPPORT_H */

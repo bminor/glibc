@@ -264,6 +264,20 @@ adjust_exit_status (int status)
   return status;
 }
 
+/* Return true if the exit status looks like it may have been
+   triggered by kernel OOM handling, and support_accept_oom (true) was
+   active in the test process.  This is a very approximate check.
+   Unfortunately, the SI_KERNEL value for si_code in siginfo_t is not
+   observable via waitid (it gets translated to CLD_KILLED.  */
+static bool
+accept_oom_heuristic (int status)
+{
+  return (WIFSIGNALED (status)
+	  && WTERMSIG (status) == SIGKILL
+	  && support_is_oom_accepted != NULL
+	  && support_is_oom_accepted ());
+}
+
 int
 support_test_main (int argc, char **argv, const struct test_config *config)
 {
@@ -497,6 +511,11 @@ support_test_main (int argc, char **argv, const struct test_config *config)
   /* Process was killed by timer or other signal.  */
   else
     {
+      if (accept_oom_heuristic (status))
+	{
+	  puts ("Heuristically determined OOM termination; SIGKILL ignored");
+	  exit (adjust_exit_status (EXIT_UNSUPPORTED));
+	}
       if (config->expected_signal == 0)
         {
           printf ("Didn't expect signal from child: got `%s'\n",

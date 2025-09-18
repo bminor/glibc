@@ -334,6 +334,7 @@ tests = \
   tst-support-open-dev-null-range \
   tst-support-openpty \
   tst-support-process_state \
+  tst-support_accept_oom \
   tst-support_blob_repeat \
   tst-support_capture_subprocess \
   tst-support_descriptors \
