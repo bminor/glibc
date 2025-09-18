@@ -60,8 +60,11 @@ do_test (void)
   *(p++) = '/';
   p[path_len - (p - path) - 1] = '\0';
 
-  /* This call crashes before the fix for bz22786 on 32-bit platforms.  */
+  /* This call crashes before the fix for bz22786 on 32-bit platforms.
+     It may trigger an OOM event. */
+  support_accept_oom (true);
   p = realpath (path, NULL);
+  support_accept_oom (false);
   TEST_VERIFY (p == NULL);
   /* For 64-bit platforms readlink return ENAMETOOLONG, while for 32-bit
      realpath will try to allocate a buffer larger than PTRDIFF_MAX.  */
