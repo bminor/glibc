@@ -759,7 +759,7 @@ Linux version 5.17, although not always enabled by some kernel
 configurations), this tunable can be used to control whether
 @theglibc{} decorates the underlying memory obtained from operating
 system with a string describing its usage (for instance, on the thread
-stack created by @code{ptthread_create} or memory allocated by
+stack created by @code{pthread_create} or memory allocated by
 @code{malloc}).
 
 The process mappings can be obtained by reading the @code{/proc/<pid>maps}
