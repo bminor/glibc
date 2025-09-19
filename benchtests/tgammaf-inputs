@@ -4,6 +4,7 @@
 
 # Random inputs in [-a,a=0x1.18522ep+5)
 # where a is the smallest number such that tgammaf rounds to +Inf (to nearest)
+## name: workload-random
 0x1.714acp+2
 0x1.0f4884p+4
 -0x1.16b54p+1
