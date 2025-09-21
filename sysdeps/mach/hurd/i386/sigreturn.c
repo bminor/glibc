@@ -89,9 +89,20 @@ __sigreturn (struct sigcontext *scp)
 {
   struct hurd_sigstate *ss;
   struct hurd_userlink *link = (void *) &scp[1];
+  int *usp;
+
+  /* Stack usage while trampolining back:
+   * register dump, parameters, and rough estimation of usage in __sigreturn2
+   * before unlocking ss.  */
+  size_t tramp_usage = 18 * sizeof (uintptr_t) + 32;
 
   if (__glibc_unlikely (scp == NULL || (scp->sc_mask & _SIG_CANT_MASK)))
     return __hurd_fail (EINVAL);
+
+  usp = (int *) scp->sc_uesp;
+
+  /* If we are to segfault, do it now before locking the ss.  */
+  memset ((void*) usp - tramp_usage, 0, tramp_usage);
 
   ss = _hurd_self_sigstate ();
   _hurd_sigstate_lock (ss);
@@ -160,7 +171,7 @@ __sigreturn (struct sigcontext *scp)
        copy the registers onto the user's stack, switch there, pop and
        return.  */
 
-    int usp_arg, *usp = (int *) scp->sc_uesp;
+    int usp_arg;
 
     *--usp = scp->sc_eip;
     *--usp = scp->sc_efl;

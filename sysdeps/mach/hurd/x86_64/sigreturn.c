@@ -83,8 +83,19 @@ __sigreturn (struct sigcontext *scp)
   uintptr_t *usp;
   mach_port_t sc_reply_port;
 
+  /* Stack usage while trampolining back:
+   * register dump, 16B round-up, and rough estimation of usage in __sigreturn2
+   * before unlocking ss.  */
+  size_t tramp_usage = 17 * sizeof (uintptr_t) + 16 + 64;
+
   if (__glibc_unlikely (scp == NULL || (scp->sc_mask & _SIG_CANT_MASK)))
     return __hurd_fail (EINVAL);
+
+  /* Respect the redzone.  */
+  usp = (uintptr_t *) (scp->sc_ursp - 128);
+
+  /* If we are to segfault, do it now before locking the ss.  */
+  memset ((void*) usp - tramp_usage, 0, tramp_usage);
 
   ss = _hurd_self_sigstate ();
   _hurd_sigstate_lock (ss);
@@ -160,7 +171,6 @@ __sigreturn (struct sigcontext *scp)
      located at a larger address than the sigcontext.  */
 
   sc_reply_port = scp->sc_reply_port;
-  usp = (uintptr_t *) (scp->sc_ursp - 128);
 
   *--usp = scp->sc_rip;
   *--usp = scp->sc_rfl;
