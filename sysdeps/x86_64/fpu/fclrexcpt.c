@@ -38,13 +38,13 @@ __feclearexcept (int excepts)
   __asm__ ("fldenv %0" : : "m" (temp));
 
   /* And the same procedure for SSE.  */
-  __asm__ ("stmxcsr %0" : "=m" (mxcsr));
+  __asm__ ("%vstmxcsr %0" : "=m" (mxcsr));
 
   /* Clear the relevant bits.  */
   mxcsr &= ~excepts;
 
   /* And put them into effect.  */
-  __asm__ ("ldmxcsr %0" : : "m" (mxcsr));
+  __asm__ ("%vldmxcsr %0" : : "m" (mxcsr));
 
   /* Success.  */
   return 0;

@@ -39,10 +39,10 @@ __fesetround (int round)
     {
       unsigned int xcw;
 
-      __asm__ ("stmxcsr %0" : "=m" (xcw));
+      __asm__ ("%vstmxcsr %0" : "=m" (xcw));
       xcw &= ~0x6000;
       xcw |= round << 3;
-      __asm__ ("ldmxcsr %0" : : "m" (xcw));
+      __asm__ ("%vldmxcsr %0" : : "m" (xcw));
     }
 
   return 0;

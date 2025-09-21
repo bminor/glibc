@@ -31,7 +31,7 @@ __feupdateenv (const fenv_t *envp)
 
   /* If the CPU supports SSE we test the MXCSR as well.  */
   if (CPU_FEATURE_USABLE (SSE))
-    __asm__ ("stmxcsr %0" : "=m" (xtemp));
+    __asm__ ("%vstmxcsr %0" : "=m" (xtemp));
 
   temp = (temp | xtemp) & FE_ALL_EXCEPT;
 

@@ -44,13 +44,13 @@ __feclearexcept (int excepts)
       unsigned int xnew_exc;
 
       /* Get the current MXCSR.  */
-      __asm__ ("stmxcsr %0" : "=m" (xnew_exc));
+      __asm__ ("%vstmxcsr %0" : "=m" (xnew_exc));
 
       /* Clear the relevant bits.  */
       xnew_exc &= ~excepts;
 
       /* Put the new data in effect.  */
-      __asm__ ("ldmxcsr %0" : : "m" (xnew_exc));
+      __asm__ ("%vldmxcsr %0" : : "m" (xnew_exc));
     }
 
   /* Success.  */

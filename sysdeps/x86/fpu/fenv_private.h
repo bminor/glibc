@@ -18,22 +18,14 @@
    need not care for both the 387 and the sse unit, only the one we're
    actually using.  */
 
-#if defined __AVX__ || defined SSE2AVX
-# define STMXCSR "vstmxcsr"
-# define LDMXCSR "vldmxcsr"
-#else
-# define STMXCSR "stmxcsr"
-# define LDMXCSR "ldmxcsr"
-#endif
-
 static __always_inline void
 libc_feholdexcept_sse (fenv_t *e)
 {
   unsigned int mxcsr;
-  asm (STMXCSR " %0" : "=m" (mxcsr));
+  asm ("%vstmxcsr %0" : "=m" (mxcsr));
   e->__mxcsr = mxcsr;
   mxcsr = (mxcsr | 0x1f80) & ~0x3f;
-  asm volatile (LDMXCSR " %0" : : "m" (mxcsr));
+  asm volatile ("%vldmxcsr %0" : : "m" (mxcsr));
 }
 
 static __always_inline void
@@ -51,9 +43,9 @@ static __always_inline void
 libc_fesetround_sse (int r)
 {
   unsigned int mxcsr;
-  asm (STMXCSR " %0" : "=m" (mxcsr));
+  asm ("%vstmxcsr %0" : "=m" (mxcsr));
   mxcsr = (mxcsr & ~0x6000) | (r << 3);
-  asm volatile (LDMXCSR " %0" : : "m" (mxcsr));
+  asm volatile ("%vldmxcsr %0" : : "m" (mxcsr));
 }
 
 static __always_inline void
@@ -69,10 +61,10 @@ static __always_inline void
 libc_feholdexcept_setround_sse (fenv_t *e, int r)
 {
   unsigned int mxcsr;
-  asm (STMXCSR " %0" : "=m" (mxcsr));
+  asm ("%vstmxcsr %0" : "=m" (mxcsr));
   e->__mxcsr = mxcsr;
   mxcsr = ((mxcsr | 0x1f80) & ~0x603f) | (r << 3);
-  asm volatile (LDMXCSR " %0" : : "m" (mxcsr));
+  asm volatile ("%vldmxcsr %0" : : "m" (mxcsr));
 }
 
 /* Set both rounding mode and precision.  A convenience function for use
@@ -104,7 +96,7 @@ static __always_inline int
 libc_fetestexcept_sse (int e)
 {
   unsigned int mxcsr;
-  asm volatile (STMXCSR " %0" : "=m" (mxcsr));
+  asm volatile ("%vstmxcsr %0" : "=m" (mxcsr));
   return mxcsr & e & FE_ALL_EXCEPT;
 }
 
@@ -119,7 +111,7 @@ libc_fetestexcept_387 (int ex)
 static __always_inline void
 libc_fesetenv_sse (fenv_t *e)
 {
-  asm volatile (LDMXCSR " %0" : : "m" (e->__mxcsr));
+  asm volatile ("%vldmxcsr %0" : : "m" (e->__mxcsr));
 }
 
 static __always_inline void
@@ -137,13 +129,13 @@ static __always_inline int
 libc_feupdateenv_test_sse (fenv_t *e, int ex)
 {
   unsigned int mxcsr, old_mxcsr, cur_ex;
-  asm volatile (STMXCSR " %0" : "=m" (mxcsr));
+  asm volatile ("%vstmxcsr %0" : "=m" (mxcsr));
   cur_ex = mxcsr & FE_ALL_EXCEPT;
 
   /* Merge current exceptions with the old environment.  */
   old_mxcsr = e->__mxcsr;
   mxcsr = old_mxcsr | cur_ex;
-  asm volatile (LDMXCSR " %0" : : "m" (mxcsr));
+  asm volatile ("%vldmxcsr %0" : : "m" (mxcsr));
 
   /* Raise SIGFPE for any new exceptions since the hold.  Expect that
      the normal environment has all exceptions masked.  */
@@ -189,10 +181,10 @@ static __always_inline void
 libc_feholdsetround_sse (fenv_t *e, int r)
 {
   unsigned int mxcsr;
-  asm (STMXCSR " %0" : "=m" (mxcsr));
+  asm ("%vstmxcsr %0" : "=m" (mxcsr));
   e->__mxcsr = mxcsr;
   mxcsr = (mxcsr & ~0x6000) | (r << 3);
-  asm volatile (LDMXCSR " %0" : : "m" (mxcsr));
+  asm volatile ("%vldmxcsr %0" : : "m" (mxcsr));
 }
 
 static __always_inline void
@@ -223,9 +215,9 @@ static __always_inline void
 libc_feresetround_sse (fenv_t *e)
 {
   unsigned int mxcsr;
-  asm (STMXCSR " %0" : "=m" (mxcsr));
+  asm ("%vstmxcsr %0" : "=m" (mxcsr));
   mxcsr = (mxcsr & ~0x6000) | (e->__mxcsr & 0x6000);
-  asm volatile (LDMXCSR " %0" : : "m" (mxcsr));
+  asm volatile ("%vldmxcsr %0" : : "m" (mxcsr));
 }
 
 static __always_inline void
@@ -315,13 +307,13 @@ static __always_inline void
 libc_feholdexcept_setround_sse_ctx (struct rm_ctx *ctx, int r)
 {
   unsigned int mxcsr, new_mxcsr;
-  asm (STMXCSR " %0" : "=m" (mxcsr));
+  asm ("%vstmxcsr %0" : "=m" (mxcsr));
   new_mxcsr = ((mxcsr | 0x1f80) & ~0x603f) | (r << 3);
 
   ctx->env.__mxcsr = mxcsr;
   if (__glibc_unlikely (mxcsr != new_mxcsr))
     {
-      asm volatile (LDMXCSR " %0" : : "m" (new_mxcsr));
+      asm volatile ("%vldmxcsr %0" : : "m" (new_mxcsr));
       ctx->updated_status = true;
     }
   else
@@ -412,13 +404,13 @@ libc_feholdsetround_sse_ctx (struct rm_ctx *ctx, int r)
 {
   unsigned int mxcsr, new_mxcsr;
 
-  asm (STMXCSR " %0" : "=m" (mxcsr));
+  asm ("%vstmxcsr %0" : "=m" (mxcsr));
   new_mxcsr = (mxcsr & ~0x6000) | (r << 3);
 
   ctx->env.__mxcsr = mxcsr;
   if (__glibc_unlikely (new_mxcsr != mxcsr))
     {
-      asm volatile (LDMXCSR " %0" : : "m" (new_mxcsr));
+      asm volatile ("%vldmxcsr %0" : : "m" (new_mxcsr));
       ctx->updated_status = true;
     }
   else

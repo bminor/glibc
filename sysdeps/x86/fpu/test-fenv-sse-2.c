@@ -29,14 +29,14 @@ static uint32_t
 get_sse_mxcsr (void)
 {
   uint32_t temp;
-  __asm__ __volatile__ ("stmxcsr %0" : "=m" (temp));
+  __asm__ __volatile__ ("%vstmxcsr %0" : "=m" (temp));
   return temp;
 }
 
 static void
 set_sse_mxcsr (uint32_t val)
 {
-  __asm__ __volatile__ ("ldmxcsr %0" : : "m" (val));
+  __asm__ __volatile__ ("%vldmxcsr %0" : : "m" (val));
 }
 
 static void

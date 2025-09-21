@@ -44,13 +44,13 @@ fesetexceptflag (const fexcept_t *flagp, int excepts)
   __asm__ ("fldenv %0" : : "m" (temp));
 
   /* And now similarly for SSE.  */
-  __asm__ ("stmxcsr %0" : "=m" (mxcsr));
+  __asm__ ("%vstmxcsr %0" : "=m" (mxcsr));
 
   /* Clear or set relevant flags.  */
   mxcsr ^= (mxcsr ^ *flagp) & excepts;
 
   /* Put the new data in effect.  */
-  __asm__ ("ldmxcsr %0" : : "m" (mxcsr));
+  __asm__ ("%vldmxcsr %0" : : "m" (mxcsr));
 
   /* Success.  */
   return 0;

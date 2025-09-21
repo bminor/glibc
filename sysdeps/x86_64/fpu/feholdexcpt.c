@@ -26,13 +26,13 @@ __feholdexcept (fenv_t *envp)
   /* Store the environment.  Recall that fnstenv has a side effect of
      masking all exceptions.  Then clear all exceptions.  */
   __asm__ ("fnstenv %0\n\t"
-	   "stmxcsr %1\n\t"
+	   "%vstmxcsr %1\n\t"
 	   "fnclex"
 	   : "=m" (*envp), "=m" (envp->__mxcsr));
 
   /* Set the SSE MXCSR register.  */
   mxcsr = (envp->__mxcsr | 0x1f80) & ~0x3f;
-  __asm__ ("ldmxcsr %0" : : "m" (mxcsr));
+  __asm__ ("%vldmxcsr %0" : : "m" (mxcsr));
 
   return 0;
 }

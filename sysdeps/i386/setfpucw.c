@@ -43,11 +43,11 @@ __setfpucw (fpu_control_t set)
       unsigned int xnew_exc;
 
       /* Get the current MXCSR.  */
-      __asm__ ("stmxcsr %0" : "=m" (xnew_exc));
+      __asm__ ("%vstmxcsr %0" : "=m" (xnew_exc));
 
       xnew_exc &= ~((0xc00 << 3) | (FE_ALL_EXCEPT << 7));
       xnew_exc |= ((set & 0xc00) << 3) | ((set & FE_ALL_EXCEPT) << 7);
 
-      __asm__ ("ldmxcsr %0" : : "m" (xnew_exc));
+      __asm__ ("%vldmxcsr %0" : : "m" (xnew_exc));
     }
 }

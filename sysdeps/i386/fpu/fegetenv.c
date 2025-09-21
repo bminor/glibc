@@ -30,7 +30,7 @@ __fegetenv (fenv_t *envp)
   __asm__ ("fldenv %0" : : "m" (*envp));
 
   if (CPU_FEATURE_USABLE (SSE))
-    __asm__ ("stmxcsr %0" : "=m" (envp->__eip));
+    __asm__ ("%vstmxcsr %0" : "=m" (envp->__eip));
 
   /* Success.  */
   return 0;

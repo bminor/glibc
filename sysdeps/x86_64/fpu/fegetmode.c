@@ -23,6 +23,6 @@ int
 fegetmode (femode_t *modep)
 {
   _FPU_GETCW (modep->__control_word);
-  __asm__ ("stmxcsr %0" : "=m" (modep->__mxcsr));
+  __asm__ ("%vstmxcsr %0" : "=m" (modep->__mxcsr));
   return 0;
 }

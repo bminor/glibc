@@ -33,13 +33,13 @@ fesetexcept (int excepts)
     {
       /* Get the control word of the SSE unit.  */
       unsigned int mxcsr;
-      __asm__ ("stmxcsr %0" : "=m" (mxcsr));
+      __asm__ ("%vstmxcsr %0" : "=m" (mxcsr));
 
       /* Set relevant flags.  */
       mxcsr |= excepts;
 
       /* Put the new data in effect.  */
-      __asm__ ("ldmxcsr %0" : : "m" (mxcsr));
+      __asm__ ("%vldmxcsr %0" : : "m" (mxcsr));
     }
   else
     {
