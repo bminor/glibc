@@ -27,7 +27,7 @@ __fegetexceptflag (fexcept_t *flagp, int excepts)
   fexcept_t temp;
 
   /* Get the current exceptions.  */
-  __asm__ ("fnstsw %0" : "=m" (*&temp));
+  __asm__ ("fnstsw %0" : "=m" (temp));
 
   *flagp = temp & excepts & FE_ALL_EXCEPT;
 
@@ -37,7 +37,7 @@ __fegetexceptflag (fexcept_t *flagp, int excepts)
       unsigned int sse_exc;
 
       /* Get the current MXCSR.  */
-      __asm__ ("stmxcsr %0" : "=m" (*&sse_exc));
+      __asm__ ("stmxcsr %0" : "=m" (sse_exc));
 
       *flagp |= sse_exc & excepts & FE_ALL_EXCEPT;
     }

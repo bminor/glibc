@@ -37,7 +37,7 @@ __fesetexceptflag (const fexcept_t *flagp, int excepts)
      cannot separately set the status word.
      Note: fnstenv masks all floating-point exceptions until the fldenv
      or fldcw below.  */
-  __asm__ ("fnstenv %0" : "=m" (*&temp));
+  __asm__ ("fnstenv %0" : "=m" (temp));
 
   if (CPU_FEATURE_USABLE (SSE))
     {
@@ -47,16 +47,16 @@ __fesetexceptflag (const fexcept_t *flagp, int excepts)
       temp.__status_word &= ~(excepts & ~ *flagp);
 
       /* Store the new status word (along with the rest of the environment).  */
-      __asm__ ("fldenv %0" : : "m" (*&temp));
+      __asm__ ("fldenv %0" : : "m" (temp));
 
       /* And now similarly for SSE.  */
-      __asm__ ("stmxcsr %0" : "=m" (*&mxcsr));
+      __asm__ ("stmxcsr %0" : "=m" (mxcsr));
 
       /* Clear or set relevant flags.  */
       mxcsr ^= (mxcsr ^ *flagp) & excepts;
 
       /* Put the new data in effect.  */
-      __asm__ ("ldmxcsr %0" : : "m" (*&mxcsr));
+      __asm__ ("ldmxcsr %0" : : "m" (mxcsr));
     }
   else
     {
@@ -68,12 +68,12 @@ __fesetexceptflag (const fexcept_t *flagp, int excepts)
 	  /* Setting the exception flags may trigger a trap (at the next
 	     floating-point instruction, but that does not matter).
 	     ISO C 23 § 7.6.4.5 does not allow it.  */
-	  __asm__ volatile ("fldcw %0" : : "m" (*&temp.__control_word));
+	  __asm__ volatile ("fldcw %0" : : "m" (temp.__control_word));
 	  return -1;
 	}
 
       /* Store the new status word (along with the rest of the environment).  */
-      __asm__ ("fldenv %0" : : "m" (*&temp));
+      __asm__ ("fldenv %0" : : "m" (temp));
     }
 
   /* Success.  */

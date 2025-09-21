@@ -23,7 +23,7 @@ __fegetround (void)
 {
   int cw;
 
-  __asm__ ("fnstcw %0" : "=m" (*&cw));
+  __asm__ ("fnstcw %0" : "=m" (cw));
 
   return cw & 0xc00;
 }

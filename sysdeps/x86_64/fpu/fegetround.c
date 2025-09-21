@@ -25,7 +25,7 @@ __fegetround (void)
   /* We only check the x87 FPU unit.  The SSE unit should be the same
      - and if it's not the same there's no way to signal it.  */
 
-  __asm__ ("fnstcw %0" : "=m" (*&cw));
+  __asm__ ("fnstcw %0" : "=m" (cw));
 
   return cw & 0xc00;
 }

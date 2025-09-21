@@ -31,7 +31,7 @@ __fetestexcept (int excepts)
 
   /* If the CPU supports SSE we test the MXCSR as well.  */
   if (CPU_FEATURE_USABLE (SSE))
-    __asm__ ("stmxcsr %0" : "=m" (*&xtemp));
+    __asm__ ("stmxcsr %0" : "=m" (xtemp));
 
   return (temp | xtemp) & excepts & FE_ALL_EXCEPT;
 }

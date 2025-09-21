@@ -24,7 +24,7 @@ fegetexcept (void)
   unsigned short int exc;
 
   /* Get the current control word.  */
-  __asm__ ("fstcw %0" : "=m" (*&exc));
+  __asm__ ("fstcw %0" : "=m" (exc));
 
   return (~exc) & FE_ALL_EXCEPT;
 }

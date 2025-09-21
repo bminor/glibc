@@ -33,13 +33,13 @@ fesetexcept (int excepts)
     {
       /* Get the control word of the SSE unit.  */
       unsigned int mxcsr;
-      __asm__ ("stmxcsr %0" : "=m" (*&mxcsr));
+      __asm__ ("stmxcsr %0" : "=m" (mxcsr));
 
       /* Set relevant flags.  */
       mxcsr |= excepts;
 
       /* Put the new data in effect.  */
-      __asm__ ("ldmxcsr %0" : : "m" (*&mxcsr));
+      __asm__ ("ldmxcsr %0" : : "m" (mxcsr));
     }
   else
     {
@@ -47,7 +47,7 @@ fesetexcept (int excepts)
 
       /* Note: fnstenv masks all floating-point exceptions until the fldenv
 	 or fldcw below.  */
-      __asm__ ("fnstenv %0" : "=m" (*&temp));
+      __asm__ ("fnstenv %0" : "=m" (temp));
 
       /* Set relevant flags.  */
       temp.__status_word |= excepts;
@@ -57,12 +57,12 @@ fesetexcept (int excepts)
 	  /* Setting the exception flags may trigger a trap (at the next
 	     floating-point instruction, but that does not matter).
 	     ISO C23 (7.6.4.4) does not allow it.  */
-	  __asm__ volatile ("fldcw %0" : : "m" (*&temp.__control_word));
+	  __asm__ volatile ("fldcw %0" : : "m" (temp.__control_word));
 	  return -1;
 	}
 
       /* Store the new status word (along with the rest of the environment).  */
-      __asm__ ("fldenv %0" : : "m" (*&temp));
+      __asm__ ("fldenv %0" : : "m" (temp));
     }
 
   return 0;

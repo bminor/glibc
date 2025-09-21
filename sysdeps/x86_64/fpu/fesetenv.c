@@ -36,7 +36,7 @@ __fesetenv (const fenv_t *envp)
      Therefore, we get the current environment and replace the values
      we want to use from the environment specified by the parameter.  */
   __asm__ ("fnstenv %0\n"
-	   "stmxcsr %1" : "=m" (*&temp), "=m" (*&temp.__mxcsr));
+	   "stmxcsr %1" : "=m" (temp), "=m" (temp.__mxcsr));
 
   if (envp == FE_DFL_ENV)
     {

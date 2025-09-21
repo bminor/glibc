@@ -26,7 +26,7 @@ __fetestexcept (int excepts)
 
   /* Get current exceptions.  */
   __asm__ ("fnstsw %0\n"
-	   "stmxcsr %1" : "=m" (*&temp), "=m" (*&mxscr));
+	   "stmxcsr %1" : "=m" (temp), "=m" (mxscr));
 
   return (temp | mxscr) & excepts & FE_ALL_EXCEPT;
 }

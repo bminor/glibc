@@ -89,7 +89,7 @@
 /* Type of the control word.  */
 typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__HI__)));
 
-/* Macros for accessing the hardware control word.  "*&" is used to
+/* Macros for accessing the hardware control word.  "" is used to
    work around a bug in older versions of GCC.  __volatile__ is used
    to support combination of writing the control register and reading
    it back.  Without __volatile__, the old value may be used for reading
@@ -99,8 +99,8 @@ typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__HI__)));
    recent hardware nor on x86-64.  Some floating point operations are
    executed in the SSE/SSE2 engines which have their own control and
    status register.  */
-#define _FPU_GETCW(cw) __asm__ __volatile__ ("fnstcw %0" : "=m" (*&cw))
-#define _FPU_SETCW(cw) __asm__ __volatile__ ("fldcw %0" : : "m" (*&cw))
+#define _FPU_GETCW(cw) __asm__ __volatile__ ("fnstcw %0" : "=m" (cw))
+#define _FPU_SETCW(cw) __asm__ __volatile__ ("fldcw %0" : : "m" (cw))
 
 /* Default control word set at startup.  */
 extern fpu_control_t __fpu_control;

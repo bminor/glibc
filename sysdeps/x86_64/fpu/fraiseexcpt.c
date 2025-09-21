@@ -57,13 +57,13 @@ __feraiseexcept (int excepts)
 
       /* Bah, we have to clear selected exceptions.  Since there is no
 	 `fldsw' instruction we have to do it the hard way.  */
-      __asm__ __volatile__ ("fnstenv %0" : "=m" (*&temp));
+      __asm__ __volatile__ ("fnstenv %0" : "=m" (temp));
 
       /* Set the relevant bits.  */
       temp.__status_word |= FE_OVERFLOW;
 
       /* Put the new data in effect.  */
-      __asm__ __volatile__ ("fldenv %0" : : "m" (*&temp));
+      __asm__ __volatile__ ("fldenv %0" : : "m" (temp));
 
       /* And raise the exception.  */
       __asm__ __volatile__ ("fwait");
@@ -79,13 +79,13 @@ __feraiseexcept (int excepts)
 
       /* Bah, we have to clear selected exceptions.  Since there is no
 	 `fldsw' instruction we have to do it the hard way.  */
-      __asm__ __volatile__ ("fnstenv %0" : "=m" (*&temp));
+      __asm__ __volatile__ ("fnstenv %0" : "=m" (temp));
 
       /* Set the relevant bits.  */
       temp.__status_word |= FE_UNDERFLOW;
 
       /* Put the new data in effect.  */
-      __asm__ __volatile__ ("fldenv %0" : : "m" (*&temp));
+      __asm__ __volatile__ ("fldenv %0" : : "m" (temp));
 
       /* And raise the exception.  */
       __asm__ __volatile__ ("fwait");
@@ -101,13 +101,13 @@ __feraiseexcept (int excepts)
 
       /* Bah, we have to clear selected exceptions.  Since there is no
 	 `fldsw' instruction we have to do it the hard way.  */
-      __asm__ __volatile__ ("fnstenv %0" : "=m" (*&temp));
+      __asm__ __volatile__ ("fnstenv %0" : "=m" (temp));
 
       /* Set the relevant bits.  */
       temp.__status_word |= FE_INEXACT;
 
       /* Put the new data in effect.  */
-      __asm__ __volatile__ ("fldenv %0" : : "m" (*&temp));
+      __asm__ __volatile__ ("fldenv %0" : : "m" (temp));
 
       /* And raise the exception.  */
       __asm__ __volatile__ ("fwait");

@@ -40,7 +40,7 @@ __fesetenv (const fenv_t *envp)
      values which we do not want to come from the saved environment.
      Therefore, we get the current environment and replace the values
      we want to use from the environment specified by the parameter.  */
-  __asm__ ("fnstenv %0" : "=m" (*&temp));
+  __asm__ ("fnstenv %0" : "=m" (temp));
 
   if (envp == FE_DFL_ENV)
     {
