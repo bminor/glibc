@@ -166,11 +166,11 @@ issignalingf_inline (float x)
 #define MANTISSA_WIDTH  23
 #define EXPONENT_WIDTH  8
 #define EXPONENT_BIAS   127
-#define MANTISSA_MASK   0x007fffff
-#define EXPONENT_MASK   0x7f800000
-#define EXP_MANT_MASK   0x7fffffff
-#define QUIET_NAN_MASK  0x00400000
-#define SIGN_MASK       0x80000000
+#define MANTISSA_MASK   UINT32_C (0x007fffff)
+#define EXPONENT_MASK   UINT32_C (0x7f800000)
+#define EXP_MANT_MASK   UINT32_C (0x7fffffff)
+#define QUIET_NAN_MASK  UINT32_C (0x00400000)
+#define SIGN_MASK       UINT32_C (0x80000000)
 
 static inline bool
 is_nan (uint32_t x)
