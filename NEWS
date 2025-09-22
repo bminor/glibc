@@ -13,7 +13,8 @@ Major new features:
 
 Deprecated and removed features, and other changes affecting compatibility:
 
-  [Add deprecations, removals and changes affecting compatibility here]
+* Support for dumped heaps has been removed - malloc_set_state() now always
+  returns the error code -1.
 
 Changes to build and runtime requirements:
 
