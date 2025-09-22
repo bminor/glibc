@@ -77,7 +77,7 @@ enum __rlimit_resource
 
 /* Value to indicate that there is no limit.  */
 #ifndef __USE_FILE_OFFSET64
-# define RLIM_INFINITY 0x7fffffff
+# define RLIM_INFINITY ((__rlim_t) -1)
 #else
 # define RLIM_INFINITY 0x7fffffffffffffffLL
 #endif
