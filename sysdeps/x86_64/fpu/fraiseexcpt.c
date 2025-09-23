@@ -33,7 +33,7 @@ __feraiseexcept (int excepts)
       /* One example of an invalid operation is 0.0 / 0.0.  */
       float f = 0.0;
 
-      __asm__ __volatile__ ("%vdivss %0, %0 " : "+x" (f));
+      __asm__ __volatile__ ("%vdivss %0, %d0 " : "+x" (f));
       (void) &f;
     }
 
@@ -43,7 +43,7 @@ __feraiseexcept (int excepts)
       float f = 1.0;
       float g = 0.0;
 
-      __asm__ __volatile__ ("%vdivss %1, %0" : "+x" (f) : "x" (g));
+      __asm__ __volatile__ ("%vdivss %1, %d0" : "+x" (f) : "x" (g));
       (void) &f;
     }
 
