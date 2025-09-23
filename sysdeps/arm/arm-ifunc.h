@@ -24,6 +24,9 @@
 #define arm_libc_ifunc_redirected(redirected_name, name, expr)	\
   __ifunc (redirected_name, name, expr(hwcap), int hwcap, INIT_ARCH)
 
+#define arm_libm_ifunc(name, expr)				\
+  __ifunc (name, name, expr, int hwcap, libm_ifunc_init)
+
 #if defined SHARED
 # define arm_libc_ifunc_hidden_def(redirect_name, name) \
   __hidden_ver1 (name, __GI_##name, redirect_name) \
