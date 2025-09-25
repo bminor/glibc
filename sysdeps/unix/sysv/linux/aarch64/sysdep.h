@@ -246,6 +246,31 @@
 #undef HAVE_INTERNAL_BRK_ADDR_SYMBOL
 #define HAVE_INTERNAL_BRK_ADDR_SYMBOL 1
 
+/* Clear ZA state of SME (C version).  */
+/* The __libc_arm_za_disable function has special calling convention
+   that allows to call it without stack manipulation and preserving
+   most of the registers.  */
+#define CALL_LIBC_ARM_ZA_DISABLE()			\
+({							\
+  unsigned long int __tmp;				\
+  asm volatile (					\
+  "	mov		%0, x30\n"			\
+  "	.cfi_register	x30, %0\n"			\
+  "	bl		__libc_arm_za_disable\n"	\
+  "	mov		x30, %0\n"			\
+  "	.cfi_register	%0, x30\n"			\
+  : "=r" (__tmp)					\
+  :							\
+  : "x14", "x15", "x16", "x17", "x18", "memory" );	\
+})
+
+/* Do clear ZA state of SME before making normal clone syscall.  */
+#define INLINE_CLONE_SYSCALL(a0, a1, a2, a3, a4)	\
+({							\
+  CALL_LIBC_ARM_ZA_DISABLE ();				\
+  INLINE_SYSCALL_CALL (clone, a0, a1, a2, a3, a4);	\
+})
+
 #endif	/* __ASSEMBLER__ */
 
 #endif /* linux/aarch64/sysdep.h */
