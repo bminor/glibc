@@ -51,6 +51,9 @@ ENTRY(__clone)
 	and	x1, x1, -16
 	cbz	x1, .Lsyscall_error
 
+	/* Clear ZA state of SME.  */
+	CALL_LIBC_ARM_ZA_DISABLE
+
 	/* Do the system call.  */
 	/* X0:flags, x1:newsp, x2:parenttidptr, x3:newtls, x4:childtid.  */
 	mov	x0, x2                  /* flags  */
