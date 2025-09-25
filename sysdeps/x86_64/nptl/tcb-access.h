@@ -23,8 +23,7 @@
 		     || sizeof (descr->member) == 4			      \
 		     || sizeof (descr->member) == 8,			      \
 		     "size of per-thread data");			      \
-     (*(__typeof (descr->member) __seg_fs *)				      \
-      offsetof (struct pthread, member));				      \
+     ((__typeof (*descr) __seg_fs *)0)->member;				      \
   })
 
 #define THREAD_GETMEM_VOLATILE(descr, member) \
@@ -33,8 +32,7 @@
 		     || sizeof (descr->member) == 4			      \
 		     || sizeof (descr->member) == 8,			      \
 		     "size of per-thread data");			      \
-     (*(volatile __typeof (descr->member) __seg_fs *)			      \
-      offsetof (struct pthread, member));				      \
+     ((volatile __typeof (*descr) __seg_fs *)0)->member;		      \
   })
 
 /* Same as THREAD_GETMEM, but the member offset can be non-constant.  */
@@ -44,8 +42,7 @@
 		     || sizeof (descr->member[0]) == 4			      \
 		     || sizeof (descr->member[0]) == 8,			      \
 		     "size of per-thread data");			      \
-     (*(__typeof (descr->member[0]) __seg_fs *)				      \
-      offsetof (struct pthread, member[idx]));				      \
+     ((__typeof (*descr) __seg_fs *)0)->member[idx];			      \
   })
 
 /* Set member of the thread descriptor directly.  */
@@ -55,8 +52,7 @@
 		     || sizeof (descr->member) == 4			      \
 		     || sizeof (descr->member) == 8,			      \
 		     "size of per-thread data");			      \
-     (*(__typeof (descr->member) __seg_fs *)				      \
-      offsetof (struct pthread, member) = (value));			      \
+     ((__typeof (*descr) __seg_fs *)0)->member = (value);		      \
   })
 
 /* Same as THREAD_SETMEM, but the member offset can be non-constant.  */
@@ -66,6 +62,5 @@
 		     || sizeof (descr->member[0]) == 4			      \
 		     || sizeof (descr->member[0]) == 8,			      \
 		     "size of per-thread data");			      \
-     (*(__typeof (descr->member[0]) __seg_fs *)				      \
-      offsetof (struct pthread, member[idx]) = (value));		      \
+     ((__typeof (*descr) __seg_fs *)0)->member[idx] = (value);		      \
   })

@@ -170,7 +170,7 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
 
 /* Return the thread descriptor for the current thread.  */
 # define THREAD_SELF \
-  (*(struct pthread *__seg_fs *) offsetof (struct pthread, header.self))
+  (*(struct pthread *__seg_fs *)&((struct pthread __seg_fs *)0)->header.self)
 
 /* Magic for libthread_db to know how to do THREAD_SELF.  */
 # define DB_THREAD_SELF_INCLUDE  <sys/reg.h> /* For the FS constant.  */
@@ -203,8 +203,7 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
     { int __res;							      \
       asm volatile ("xchgl %1, %0"					      \
 		    : "=r" (__res)					      \
-		    : "m" (*(int __seg_fs *)				      \
-			   offsetof (struct pthread, header.gscope_flag)),    \
+		    : "m" (((struct pthread __seg_fs *)0)->header.gscope_flag), \
 		      "0" (THREAD_GSCOPE_FLAG_UNUSED));			      \
       if (__res == THREAD_GSCOPE_FLAG_WAIT)				      \
 	lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);    \

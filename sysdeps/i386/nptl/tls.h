@@ -223,7 +223,7 @@ tls_fill_user_desc (union user_desc_init *desc,
 
 /* Return the thread descriptor for the current thread.  */
 # define THREAD_SELF \
-  (*(struct pthread *__seg_gs *) offsetof (struct pthread, header.self))
+  (*(struct pthread *__seg_gs *)&((struct pthread __seg_gs *)0)->header.self)
 
 /* Magic for libthread_db to know how to do THREAD_SELF.  */
 # define DB_THREAD_SELF \
@@ -257,8 +257,7 @@ tls_fill_user_desc (union user_desc_init *desc,
     { int __res;							      \
       asm volatile ("xchgl %1, %0"					      \
 		    : "=r" (__res)					      \
-		    : "m" (*(int __seg_gs *)				      \
-			   offsetof (struct pthread, header.gscope_flag)),    \
+		    : "m" (((struct pthread __seg_gs *)0)->header.gscope_flag), \
 		      "0" (THREAD_GSCOPE_FLAG_UNUSED));			      \
       if (__res == THREAD_GSCOPE_FLAG_WAIT)				      \
 	lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);    \
