@@ -2317,22 +2317,23 @@ The @code{shutdown} function shuts down the connection of socket
 @var{socket}.  The argument @var{how} specifies what action to
 perform:
 
-@table @code
-@item 0
-Stop receiving data for this socket.  If further data arrives,
-reject it.
+@vtable @code
+@item SHUT_RD
+Stop receiving data on the socket.
 
-@item 1
-Stop trying to transmit data from this socket.  Discard any data
-waiting to be sent.  Stop looking for acknowledgement of data already
-sent; don't retransmit it if it is lost.
+@item SHUT_WR
+Indicate to the peer that no further data will be transmitted on the
+socket.  This indication is ordered with regard to past send
+operations on the socket, and data pending at the time of the call is
+still delivered.
 
-@item 2
-Stop both reception and transmission.
-@end table
+@item SHUT_RDWR
+Combine the actions of @code{SHUT_RD} and @code{SHUT_WR}.
+@end vtable
 
 The return value is @code{0} on success and @code{-1} on failure.  The
-following @code{errno} error conditions are defined for this function:
+following generic @code{errno} error conditions are defined for this
+function:
 
 @table @code
 @item EBADF
@@ -2345,6 +2346,27 @@ following @code{errno} error conditions are defined for this function:
 @var{socket} is not connected.
 @end table
 @end deftypefun
+
+Additional errors can be reported for specific socket types.
+
+The exact impact of the @code{shutdown} function depends on the socket
+protocol and its implementation.  In portable code, the @code{shutdown}
+function cannot be used on its own to gracefully terminate a connection
+which is operated in full-duplex mode (with both peers sending data).
+
+On Linux, when @code{SHUT_RD} is used to shut down a TCP socket, any
+pending data in the incoming socket buffer and any data that arrives
+subsequently is discarded, without reporting an error or generating a
+TCP RST segment.  Attempts to read data from this socket using
+@code{recv} and similar functions (@pxref{Receiving Data}) return zero.
+(Other systems may treat @code{SHUT_RD} with pending data as a data loss
+event and generate RST segments.  Linux @code{AF_LOCAL}/@code{AF_UNIX}
+sockets also report errors to peers.)
+
+Similarly, when @code{SHUT_WR} is used on a Linux TCP socket, a FIN
+segment is sent to the peer, ordered after any data written previously
+to the socket.  After encountering the FIN segment, the peer will
+recognize this as an end-of-stream condition.
 
 @node Socket Pairs
 @subsection Socket Pairs
