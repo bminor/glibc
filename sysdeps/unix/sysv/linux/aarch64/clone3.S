@@ -46,6 +46,9 @@ ENTRY(__clone3)
 	cbz	x10, .Lsyscall_error	/* No NULL cl_args pointer.  */
 	cbz	x2, .Lsyscall_error	/* No NULL function pointer.  */
 
+    /* Clear ZA state of SME.  */
+	CALL_LIBC_ARM_ZA_DISABLE
+
 	/* Do the system call, the kernel expects:
 	   x8: system call number
 	   x0: cl_args

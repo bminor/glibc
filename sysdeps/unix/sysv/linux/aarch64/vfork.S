@@ -27,6 +27,9 @@
 
 ENTRY (__vfork)
 
+	/* Clear ZA state of SME.  */
+	CALL_LIBC_ARM_ZA_DISABLE
+
 	mov	x0, #0x4111	/* CLONE_VM | CLONE_VFORK | SIGCHLD */
 	mov	x1, sp
 	DO_CALL (clone, 2)
