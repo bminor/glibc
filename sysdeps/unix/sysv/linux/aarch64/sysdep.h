@@ -150,6 +150,18 @@
     mov x8, SYS_ify (syscall_name);		\
     svc 0
 
+/* Clear ZA state of SME (ASM version).  */
+/* The __libc_arm_za_disable function has special calling convention
+   that allows to call it without stack manipulation and preserving
+   most of the registers.  */
+	.macro CALL_LIBC_ARM_ZA_DISABLE
+	mov		x13, x30
+	.cfi_register	x30, x13
+	bl		__libc_arm_za_disable
+	mov		x30, x13
+	.cfi_register	x13, x30
+	.endm
+
 #else /* not __ASSEMBLER__ */
 
 # define VDSO_NAME  "LINUX_2.6.39"

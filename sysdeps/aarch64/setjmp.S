@@ -37,16 +37,8 @@ ENTRY_ALIGN (__sigsetjmp, 2)
 1:
 
 #if IS_IN(libc)
-	/* Disable ZA state of SME in libc.a and libc.so, but not in ld.so.
-	   The calling convention of __libc_arm_za_disable allows to do
-	   this thus allowing to avoid saving to and reading from stack.
-	   As a result we also don't need to sign the return address and
-	   check it after returning because it is not stored to stack.  */
-	mov	x13, x30
-	cfi_register (x30, x13)
-	bl	__libc_arm_za_disable
-	mov	x30, x13
-	cfi_register (x13, x30)
+	/* Disable ZA state of SME in libc.a and libc.so, but not in ld.so.  */
+	CALL_LIBC_ARM_ZA_DISABLE
 #endif
 
 	stp	x19, x20, [x0, #JB_X19<<3]

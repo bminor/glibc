@@ -49,15 +49,7 @@ ENTRY (__setcontext)
 	b	C_SYMBOL_NAME (__syscall_error)
 1:
 	/* Clear ZA state of SME.  */
-	/* The calling convention of __libc_arm_za_disable allows to do
-	   this thus allowing to avoid saving to and reading from stack.
-	   As a result we also don't need to sign the return address and
-	   check it after returning because it is not stored to stack.  */
-	mov	x13, x30
-	cfi_register (x30, x13)
-	bl	__libc_arm_za_disable
-	mov	x30, x13
-	cfi_register (x13, x30)
+	CALL_LIBC_ARM_ZA_DISABLE
 	/* Restore the general purpose registers.  */
 	mov	x0, x9
 	cfi_def_cfa (x0, 0)
