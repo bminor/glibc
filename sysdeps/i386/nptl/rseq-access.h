@@ -23,8 +23,7 @@
 		     || sizeof (RSEQ_SELF()->member) == 4		      \
 		     || sizeof (RSEQ_SELF()->member) == 8,		      \
 		     "size of rseq data");				      \
-     (*(__typeof (RSEQ_SELF()->member) __seg_gs *)			      \
-      (__rseq_offset + offsetof (struct rseq_area, member)));		      \
+     ((struct rseq_area __seg_gs *)__rseq_offset)->member;		      \
   })
 
 /* Read member of the RSEQ area directly, with single-copy atomicity semantics.
@@ -35,8 +34,7 @@
      _Static_assert (sizeof (RSEQ_SELF()->member) == 1			      \
 		     || sizeof (RSEQ_SELF()->member) == 4,		      \
 		     "size of rseq data");				      \
-     (*(volatile __typeof (RSEQ_SELF()->member) __seg_gs *)		      \
-      (__rseq_offset + offsetof (struct rseq_area, member)));		      \
+     ((volatile struct rseq_area __seg_gs *)__rseq_offset)->member;	      \
   })
 
 /* Set member of the RSEQ area directly.  */
@@ -46,8 +44,7 @@
 		     || sizeof (RSEQ_SELF()->member) == 4		      \
 		     || sizeof (RSEQ_SELF()->member) == 8,		      \
 		     "size of rseq data");				      \
-     (*(__typeof (RSEQ_SELF()->member) __seg_gs *)			      \
-      (__rseq_offset + offsetof (struct rseq_area, member)) = (value));	      \
+     ((struct rseq_area __seg_gs *)__rseq_offset)->member = (value);	      \
   })
 
 /* Set member of the RSEQ area directly, with single-copy atomicity semantics.
@@ -58,6 +55,5 @@
      _Static_assert (sizeof (RSEQ_SELF()->member) == 1			      \
 		     || sizeof (RSEQ_SELF()->member) == 4,		      \
 		     "size of rseq data");				      \
-     (*(volatile __typeof (RSEQ_SELF()->member) __seg_gs *)		      \
-      (__rseq_offset + offsetof (struct rseq_area, member)) = (value));	      \
+     ((volatile struct rseq_area __seg_gs *)__rseq_offset)->member = (value); \
   })
