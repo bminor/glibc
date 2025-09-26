@@ -29,6 +29,9 @@
 
 #include "tst-sme-helper.h"
 
+/* Streaming SVE vector register size.  */
+static unsigned long svl;
+
 static uint8_t *za_orig;
 static uint8_t *za_dump;
 static uint8_t *za_save;
@@ -82,7 +85,7 @@ longjmp_test (void)
     FAIL_EXIT1 ("svcr != 0: %lu", svcr);
   set_tpidr2 (&blk);
   start_za ();
-  load_za (za_orig);
+  load_za (za_orig, svl);
 
   print_data ("za save space", za_save);
   p = get_tpidr2 ();
@@ -131,7 +134,7 @@ setcontext_test (void)
     FAIL_EXIT1 ("svcr != 0: %lu", svcr);
   set_tpidr2 (&blk);
   start_za ();
-  load_za (za_orig);
+  load_za (za_orig, svl);
 
   print_data ("za save space", za_save);
   p = get_tpidr2 ();
