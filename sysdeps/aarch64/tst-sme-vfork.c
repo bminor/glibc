@@ -1,4 +1,5 @@
-/* Test for SME ZA state being cleared on setjmp and longjmp.
+/* Test that ZA state of SME is cleared in both parent and child
+   when vfork() function is used.
    Copyright (C) 2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -18,35 +19,25 @@
 
 #include "tst-sme-skeleton.c"
 
-#include <setjmp.h>
-
 static void
-run (struct blk *ptr)
+run (struct blk *blk)
 {
-  jmp_buf buf;
-  int ret;
-
-  check_sme_za_state ("initial state", /* Clear.  */ true);
-
   /* Enabled ZA state so that effect of disabling be observable.  */
-  enable_sme_za_state (ptr);
-  check_sme_za_state ("before setjmp", /* Clear.  */ false);
+  enable_sme_za_state (blk);
+  check_sme_za_state ("before vfork", /* Clear.  */ false);
+  fflush (stdout);
 
-  if ((ret = setjmp (buf)) == 0)
+  pid_t pid = vfork ();
+
+  if (pid == 0)
     {
-      check_sme_za_state ("after setjmp", /* Clear.  */ true);
-
-      /* Enabled ZA state so that effect of disabling be observable.  */
-      enable_sme_za_state (ptr);
-      check_sme_za_state ("before longjmp", /* Clear.  */ false);
-
-      longjmp (buf, 42);
-
-      /* Unreachable.  */
-      TEST_VERIFY (false);
-      __builtin_unreachable ();
+      /* Check that ZA state of SME was disabled in child.  */
+      check_sme_za_state ("after vfork in child", /* Clear.  */ true);
+      _exit (0);
     }
 
-  TEST_COMPARE (ret, 42);
-  check_sme_za_state ("after longjmp", /* Clear.  */ true);
+  /* Check that ZA state of SME was disabled in parent.  */
+  check_sme_za_state ("after vfork in parent", /* Clear.  */ true);
+
+  TEST_VERIFY (xwaitpid (pid, NULL, 0) == pid);
 }
