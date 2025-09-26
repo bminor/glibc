@@ -16,9 +16,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* Streaming SVE vector register size.  */
-static unsigned long svl;
-
 struct blk {
   void *za_save_buffer;
   uint16_t num_za_save_slices;
@@ -68,10 +65,10 @@ start_za (void)
 
 /* Load data into ZA byte by byte from p.  */
 static void __attribute__ ((noinline))
-load_za (const void *p)
+load_za (const void *buf, unsigned long svl)
 {
   register unsigned long x15 asm ("x15") = 0;
-  register unsigned long x16 asm ("x16") = (unsigned long)p;
+  register unsigned long x16 asm ("x16") = (unsigned long)buf;
   register unsigned long x17 asm ("x17") = svl;
 
   asm volatile (

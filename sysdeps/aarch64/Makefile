@@ -79,8 +79,18 @@ sysdep_routines += \
 
 tests += \
   tst-sme-jmp \
+  tst-sme-signal \
   tst-sme-za-state \
   # tests
+tests-internal += \
+  tst-sme-clone \
+  tst-sme-clone3 \
+  tst-sme-fork \
+  tst-sme-vfork \
+  # tests-internal
+
+$(objpfx)tst-sme-clone3: $(objpfx)clone3.o $(objpfx)__arm_za_disable.o
+
 endif
 
 ifeq ($(subdir),malloc)

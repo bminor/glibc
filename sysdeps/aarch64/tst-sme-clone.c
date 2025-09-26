@@ -1,4 +1,5 @@
-/* Test for SME ZA state being cleared on setjmp and longjmp.
+/* Test that ZA state of SME is cleared in both parent and child
+   when clone() syscall is used.
    Copyright (C) 2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -18,35 +19,35 @@
 
 #include "tst-sme-skeleton.c"
 
-#include <setjmp.h>
+#include <support/xsched.h>
+
+static int
+fun (void * const arg)
+{
+  printf ("in child: %s\n", (const char *)arg);
+  /* Check that ZA state of SME was disabled in child.  */
+  check_sme_za_state ("after clone in child", /* Clear.  */ true);
+  return 0;
+}
+
+static char __attribute__((aligned(16)))
+stack[1024 * 1024];
 
 static void
 run (struct blk *ptr)
 {
-  jmp_buf buf;
-  int ret;
-
-  check_sme_za_state ("initial state", /* Clear.  */ true);
+  char *syscall_name = (char *)"clone";
+  printf ("in parent: before %s\n", syscall_name);
 
   /* Enabled ZA state so that effect of disabling be observable.  */
   enable_sme_za_state (ptr);
-  check_sme_za_state ("before setjmp", /* Clear.  */ false);
+  check_sme_za_state ("before clone", /* Clear.  */ false);
 
-  if ((ret = setjmp (buf)) == 0)
-    {
-      check_sme_za_state ("after setjmp", /* Clear.  */ true);
+  pid_t pid = xclone (fun, syscall_name, stack, sizeof (stack),
+		      CLONE_NEWUSER | CLONE_NEWNS | SIGCHLD);
 
-      /* Enabled ZA state so that effect of disabling be observable.  */
-      enable_sme_za_state (ptr);
-      check_sme_za_state ("before longjmp", /* Clear.  */ false);
+  /* Check that ZA state of SME was disabled in parent.  */
+  check_sme_za_state ("after clone in parent", /* Clear.  */ true);
 
-      longjmp (buf, 42);
-
-      /* Unreachable.  */
-      TEST_VERIFY (false);
-      __builtin_unreachable ();
-    }
-
-  TEST_COMPARE (ret, 42);
-  check_sme_za_state ("after longjmp", /* Clear.  */ true);
+  TEST_VERIFY (xwaitpid (pid, NULL, 0) == pid);
 }
