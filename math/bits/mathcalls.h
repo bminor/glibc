@@ -145,7 +145,7 @@ __MATHCALL_VEC (exp10m1,, (_Mdouble_ __x));
 __MATHCALL_VEC (log2p1,, (_Mdouble_ __x));
 
 /* Return log10(1 + X).  */
-__MATHCALL (log10p1,, (_Mdouble_ __x));
+__MATHCALL_VEC (log10p1,, (_Mdouble_ __x));
 
 /* Return log(1 + X).  */
 __MATHCALL_VEC (logp1,, (_Mdouble_ __x));

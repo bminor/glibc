@@ -67,6 +67,8 @@
 !GCC$ builtin (log) attributes simd (notinbranch)
 !GCC$ builtin (log10) attributes simd (notinbranch)
 !GCC$ builtin (log10f) attributes simd (notinbranch)
+!GCC$ builtin (log10p1) attributes simd (notinbranch)
+!GCC$ builtin (log10p1f) attributes simd (notinbranch)
 !GCC$ builtin (log1p) attributes simd (notinbranch)
 !GCC$ builtin (log1pf) attributes simd (notinbranch)
 !GCC$ builtin (log2) attributes simd (notinbranch)

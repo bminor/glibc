@@ -24,6 +24,7 @@ libmvec-supported-funcs = acos \
                           hypot \
                           log \
                           log10 \
+                          log10p1 \
                           log1p \
                           log2 \
                           log2p1 \
