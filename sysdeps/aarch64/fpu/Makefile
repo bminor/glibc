@@ -26,6 +26,7 @@ libmvec-supported-funcs = acos \
                           log10 \
                           log1p \
                           log2 \
+                          log2p1 \
                           pow \
                           sin \
                           sinh \

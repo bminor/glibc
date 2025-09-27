@@ -264,6 +264,17 @@
 #define __DECL_SIMD_log2f64x
 #define __DECL_SIMD_log2f128x
 
+#define __DECL_SIMD_log2p1
+#define __DECL_SIMD_log2p1f
+#define __DECL_SIMD_log2p1l
+#define __DECL_SIMD_log2p1f16
+#define __DECL_SIMD_log2p1f32
+#define __DECL_SIMD_log2p1f64
+#define __DECL_SIMD_log2p1f128
+#define __DECL_SIMD_log2p1f32x
+#define __DECL_SIMD_log2p1f64x
+#define __DECL_SIMD_log2p1f128x
+
 #define __DECL_SIMD_log1p
 #define __DECL_SIMD_log1pf
 #define __DECL_SIMD_log1pl

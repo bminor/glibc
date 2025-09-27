@@ -190,5 +190,10 @@ libmvec {
     _ZGVnN4v_exp10m1f;
     _ZGVsMxv_exp10m1;
     _ZGVsMxv_exp10m1f;
+    _ZGVnN2v_log2p1;
+    _ZGVnN2v_log2p1f;
+    _ZGVnN4v_log2p1f;
+    _ZGVsMxv_log2p1;
+    _ZGVsMxv_log2p1f;
   }
 }

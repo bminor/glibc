@@ -141,6 +141,10 @@
 # define __DECL_SIMD_log2 __DECL_SIMD_aarch64
 # undef __DECL_SIMD_log2f
 # define __DECL_SIMD_log2f __DECL_SIMD_aarch64
+# undef __DECL_SIMD_log2p1
+# define __DECL_SIMD_log2p1 __DECL_SIMD_aarch64
+# undef __DECL_SIMD_log2p1f
+# define __DECL_SIMD_log2p1f __DECL_SIMD_aarch64
 # undef __DECL_SIMD_logp1
 # define __DECL_SIMD_logp1 __DECL_SIMD_aarch64
 # undef __DECL_SIMD_logp1f
@@ -227,6 +231,7 @@ __vpcs __f32x4_t _ZGVnN4v_logf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_log10f (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_log1pf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_log2f (__f32x4_t);
+__vpcs __f32x4_t _ZGVnN4v_log2p1f (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_logp1f (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4vv_powf (__f32x4_t, __f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_sinf (__f32x4_t);
@@ -264,6 +269,7 @@ __vpcs __f64x2_t _ZGVnN2v_log (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_log10 (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_log1p (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_log2 (__f64x2_t);
+__vpcs __f64x2_t _ZGVnN2v_log2p1 (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_logp1 (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2vv_pow (__f64x2_t, __f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_sin (__f64x2_t);
@@ -306,6 +312,7 @@ __sv_f32_t _ZGVsMxv_logf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_log10f (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_log1pf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_log2f (__sv_f32_t, __sv_bool_t);
+__sv_f32_t _ZGVsMxv_log2p1f (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_logp1f (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxvv_powf (__sv_f32_t, __sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_sinf (__sv_f32_t, __sv_bool_t);
@@ -343,6 +350,7 @@ __sv_f64_t _ZGVsMxv_log (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_log10 (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_log1p (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_log2 (__sv_f64_t, __sv_bool_t);
+__sv_f64_t _ZGVsMxv_log2p1 (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_logp1 (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxvv_pow (__sv_f64_t, __sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_sin (__sv_f64_t, __sv_bool_t);
