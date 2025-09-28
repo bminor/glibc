@@ -61,7 +61,7 @@ main (int argc, char **argv)
       case 'o':
         subopts = optarg;
         while (*subopts != '\0')
-          switch (getsubopt (&subopts, mount_opts, &value))
+          switch (getsubopt (&subopts, (char * const *) mount_opts, &value))
             {
             case RO_OPTION:
               read_only = 1;
