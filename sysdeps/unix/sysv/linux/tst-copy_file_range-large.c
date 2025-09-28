@@ -170,7 +170,13 @@ test_size (struct support_fuse *f, off64_t size)
       FAIL_UNSUPPORTED ("copy_file_range not supported");
     }
 
-  TEST_COMPARE (copied, size);
+  /* To avoid the negative return value in Linux versions 6.18 the size is
+     silently clamped to UINT_MAX & PAGE_MASK.  Accept that return value
+     too.  See:
+     <https://github.com/torvalds/linux/commit/1e08938c3694f707bb165535df352ac97a8c75c9>.
+  */
+  if (copied != size)
+    TEST_COMPARE (copied, UINT_MAX & ~(getpagesize () - 1));
 
   xclose (dest_fd);
   xclose (source_fd);
