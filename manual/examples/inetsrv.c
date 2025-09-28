@@ -15,6 +15,7 @@
    along with this program; if not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <arpa/inet.h>
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
@@ -59,7 +60,7 @@ main (void)
   fd_set active_fd_set, read_fd_set;
   int i;
   struct sockaddr_in clientname;
-  size_t size;
+  socklen_t size;
 
   /* Create the socket and set it up to accept connections. */
   sock = make_socket (PORT);
