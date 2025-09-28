@@ -15,6 +15,7 @@
    along with this program; if not, see <https://www.gnu.org/licenses/>.
 */
 
+#define _GNU_SOURCE 1
 #include <paths.h>
 #include <string.h>
 #include <stdio.h>
