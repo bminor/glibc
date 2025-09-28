@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <sys/socket.h>
 #include <sys/un.h>
+#include <unistd.h>
 
 #define SERVER	"/tmp/serversocket"
 #define MAXMSG	512
@@ -30,7 +31,7 @@ main (void)
   int sock;
   char message[MAXMSG];
   struct sockaddr_un name;
-  size_t size;
+  socklen_t size;
   int nbytes;
 
   /* Remove the filename first, it's ok if the call fails */
