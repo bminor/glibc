@@ -18,6 +18,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 /* This flag controls termination of the main loop. */
 volatile sig_atomic_t keep_going = 1;
