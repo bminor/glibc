@@ -1,7 +1,9 @@
+#include <errno.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
+#include <wctype.h>
 
 /* Do not include the above headers in the example.
 */
