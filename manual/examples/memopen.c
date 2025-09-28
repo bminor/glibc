@@ -16,6 +16,7 @@
 */
 
 #include <stdio.h>
+#include <string.h>
 
 static char buffer[] = "foobar";
 
