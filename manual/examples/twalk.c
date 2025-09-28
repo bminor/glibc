@@ -15,6 +15,7 @@
    along with this program; if not, see <https://www.gnu.org/licenses/>.
 */
 
+#define _GNU_SOURCE 1
 #include <search.h>
 
 struct twalk_with_twalk_r_closure
