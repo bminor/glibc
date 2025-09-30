@@ -347,7 +347,7 @@ programs would fail.  Examples for such code include the calling
 sequences the GNU C compiler generates for calls to nested functions.
 Safe ways to allocate stacks correctly include using memory on the
 original thread's stack or explicitly allocating memory tagged for
-execution using (@pxref{Memory-mapped I/O}).
+execution using @code{mmap} (@pxref{Memory-mapped I/O}).
 
 @strong{Compatibility note}: The current Unix standard is very imprecise
 about the way the stack is allocated.  All implementations seem to agree
