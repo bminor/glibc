@@ -96,4 +96,7 @@ libc {
     strlcat;
     strlcpy;
   }
+  GLIBC_2.43 {
+    memset_explicit;
+  }
 }

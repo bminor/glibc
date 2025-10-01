@@ -201,6 +201,10 @@ do_test (void)
   if (memcmp (buf, "aabcda\0\0\0\0", 10))
     FAIL ();
 
+  memset_explicit (buf + 5, 0x1234, 3);
+  if (memcmp (buf, "aabcd444\0\0", 10))
+    FAIL ();
+
   strcpy (buf + 4, "EDCBA");
   if (memcmp (buf, "aabcEDCBA", 10))
     FAIL ();
@@ -244,6 +248,10 @@ do_test (void)
 
   explicit_bzero (buf + 6, l0 + 4);
   if (memcmp (buf, "aabcda\0\0\0\0", 10))
+    FAIL ();
+
+  memset_explicit (buf + 5, 0x1234, l0 + 3);
+  if (memcmp (buf, "aabcd444\0\0", 10))
     FAIL ();
 
   strcpy (buf + 4, str1 + 5);
@@ -304,6 +312,10 @@ do_test (void)
 
   explicit_bzero (a.buf1 + 6, l0 + 4);
   if (memcmp (a.buf1, "aabcda\0\0\0\0", 10))
+    FAIL ();
+
+  memset_explicit (a.buf1 + 5, 0x1234, l0 + 3);
+  if (memcmp (a.buf1, "aabcd444\0\0", 10))
     FAIL ();
 
 #if __USE_FORTIFY_LEVEL < 2
@@ -403,6 +415,14 @@ do_test (void)
 
   CHK_FAIL_START
   explicit_bzero (buf + 9, l0 + 2);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  memset_explicit (buf + 9, 1, 2);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  memset_explicit (buf + 9, 4, l0 + 2);
   CHK_FAIL_END
 
   CHK_FAIL_START
@@ -520,6 +540,14 @@ do_test (void)
 
   CHK_FAIL_START
   explicit_bzero (a.buf1 + 9, l0 + 2);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  memset_explicit (a.buf1 + 9, 0, 2);
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  memset_explicit (a.buf1 + 9, 128, l0 + 2);
   CHK_FAIL_END
 
 # if __USE_FORTIFY_LEVEL >= 2

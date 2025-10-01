@@ -9,7 +9,7 @@ Version 2.43
 
 Major new features:
 
-  [Add new features here]
+* The ISO C23 memset_explicit function has been added.
 
 Deprecated and removed features, and other changes affecting compatibility:
 

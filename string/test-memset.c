@@ -25,7 +25,11 @@
 # endif
 #else
 # ifndef WIDE
-#  define TEST_NAME "memset"
+#  ifdef TEST_MEMSET_EXPLICIT
+#   define TEST_NAME "memset_explicit"
+#  else
+#   define TEST_NAME "memset"
+#  endif
 # else
 #  define TEST_NAME "wmemset"
 # endif /* WIDE */
@@ -34,7 +38,11 @@
 #include "test-string.h"
 
 #ifndef WIDE
-# define MEMSET memset
+# ifdef TEST_MEMSET_EXPLICIT
+#  define MEMSET memset_explicit
+# else
+#  define MEMSET memset
+# endif
 # define CHAR char
 # define UCHAR unsigned char
 # define SIMPLE_MEMSET simple_memset

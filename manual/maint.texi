@@ -323,6 +323,8 @@ The following functions and macros are fortified in @theglibc{}:
 
 @item @code{memset}
 
+@item @code{memset_explicit}
+
 @item @code{mq_open}
 
 @item @code{obstack_printf}

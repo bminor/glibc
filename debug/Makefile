@@ -65,6 +65,7 @@ routines = \
   memmove_chk \
   mempcpy_chk \
   memset_chk \
+  memset_explicit_chk \
   noophooks \
   obprintf_chk \
   poll_chk \

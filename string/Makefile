@@ -69,6 +69,7 @@ routines := \
   mempcpy \
   memrchr \
   memset \
+  memset_explicit \
   rawmemchr \
   sigabbrev_np \
   sigdescr_np \
@@ -125,6 +126,7 @@ routines_no_fortify += \
   memmove \
   mempcpy \
   memset \
+  memset_explicit \
   stpcpy \
   stpncpy \
   strcat \
@@ -164,6 +166,7 @@ tests := \
   test-mempcpy \
   test-memrchr \
   test-memset \
+  test-memset_explicit \
   test-rawmemchr \
   test-sig_np \
   test-stpcpy \
@@ -210,6 +213,7 @@ tests := \
   tst-svc \
   tst-svc2 \
   tst-xbzero-opt \
+  tst-xmemset-opt \
 # tests
 
 tests-static-internal := \
@@ -262,6 +266,7 @@ CFLAGS-stratcliff.c += -fno-builtin
 CFLAGS-test-ffs.c += -fno-builtin
 CFLAGS-tst-inlcall.c += -fno-builtin
 CFLAGS-tst-xbzero-opt.c += -O3
+CFLAGS-tst-xmemset-opt.c += -O3
 CFLAGS-test-endian-sign-conversion.c += -Werror -Wsign-conversion
 # BZ 21006: Resolve all functions but at least explicit_bzero at startup.
 # Otherwise the test fails on s390x as the memcpy in prepare_test_buffer is
@@ -271,6 +276,7 @@ CFLAGS-test-endian-sign-conversion.c += -Werror -Wsign-conversion
 # and the call to memmem in count_test_patterns will find a hit of the
 # test_pattern on the stack.
 LDFLAGS-tst-xbzero-opt = -z now
+LDFLAGS-tst-xmemset-opt = -z now
 
 # Called during TLS initialization.
 CFLAGS-memcpy.c += $(no-stack-protector)
