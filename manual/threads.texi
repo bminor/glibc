@@ -219,6 +219,9 @@ invoked from several threads.  The completion of the function
 @code{call_once} with the same @code{flag} variable.
 @end deftypefun
 
+These definitions are from C11, where they appear in @file{threads.h}.
+In C23, they appear in @file{stdlib.h} as well as in @file{threads.h}.
+
 
 @node ISO C Mutexes
 @subsection Mutexes

@@ -37,6 +37,7 @@ headers := \
   bits/time64.h \
   bits/timesize.h \
   bits/types/error_t.h \
+  bits/types/once_flag.h \
   bits/wordsize.h \
   errno.h \
   fmtmsg.h \

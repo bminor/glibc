@@ -1158,6 +1158,14 @@ extern int getloadavg (double __loadavg[], int __nelem)
 extern int ttyslot (void) __THROW;
 #endif
 
+#if __GLIBC_USE (ISOC23)
+# include <bits/types/once_flag.h>
+
+/* Call function __FUNC exactly once, even if invoked from several threads.
+   All calls must be made with the same __FLAGS object.  */
+extern void call_once (once_flag *__flag, void (*__func)(void));
+#endif
+
 #include <bits/stdlib-float.h>
 
 /* Define some macros helping to catch buffer overflows.  */

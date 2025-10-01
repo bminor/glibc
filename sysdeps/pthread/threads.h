@@ -25,6 +25,7 @@
 __BEGIN_DECLS
 
 #include <bits/thread-shared-types.h>
+#include <bits/types/once_flag.h>
 #include <bits/types/struct_timespec.h>
 
 #if (!defined __STDC_VERSION__				\
@@ -57,9 +58,6 @@ enum
   mtx_recursive = 1,
   mtx_timed     = 2
 };
-
-typedef __once_flag once_flag;
-#define ONCE_FLAG_INIT __ONCE_FLAG_INIT
 
 typedef union
 {
