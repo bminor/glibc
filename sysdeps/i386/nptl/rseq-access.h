@@ -19,9 +19,9 @@
 /* Read member of the RSEQ area directly.  */
 #define RSEQ_GETMEM(member) \
   ({									      \
-     _Static_assert (sizeof (RSEQ_SELF()->member) == 1			      \
-		     || sizeof (RSEQ_SELF()->member) == 4		      \
-		     || sizeof (RSEQ_SELF()->member) == 8,		      \
+     _Static_assert (sizeof ((struct rseq_area) {}.member) == 1		      \
+		     || sizeof ((struct rseq_area) {}.member) == 4	      \
+		     || sizeof ((struct rseq_area) {}.member) == 8,	      \
 		     "size of rseq data");				      \
      ((struct rseq_area __seg_gs *)__rseq_offset)->member;		      \
   })
@@ -31,8 +31,8 @@
    x86-32.  */
 #define RSEQ_GETMEM_ONCE(member) \
   ({									      \
-     _Static_assert (sizeof (RSEQ_SELF()->member) == 1			      \
-		     || sizeof (RSEQ_SELF()->member) == 4,		      \
+     _Static_assert (sizeof ((struct rseq_area) {}.member) == 1		      \
+		     || sizeof ((struct rseq_area) {}.member) == 4,	      \
 		     "size of rseq data");				      \
      ((volatile struct rseq_area __seg_gs *)__rseq_offset)->member;	      \
   })
@@ -40,9 +40,9 @@
 /* Set member of the RSEQ area directly.  */
 #define RSEQ_SETMEM(member, value) \
   ({									      \
-     _Static_assert (sizeof (RSEQ_SELF()->member) == 1			      \
-		     || sizeof (RSEQ_SELF()->member) == 4		      \
-		     || sizeof (RSEQ_SELF()->member) == 8,		      \
+     _Static_assert (sizeof ((struct rseq_area) {}.member) == 1		      \
+		     || sizeof ((struct rseq_area) {}.member) == 4	      \
+		     || sizeof ((struct rseq_area) {}.member) == 8,	      \
 		     "size of rseq data");				      \
      ((struct rseq_area __seg_gs *)__rseq_offset)->member = (value);	      \
   })
@@ -52,8 +52,8 @@
    x86-32.  */
 #define RSEQ_SETMEM_ONCE(member, value) \
   ({									      \
-     _Static_assert (sizeof (RSEQ_SELF()->member) == 1			      \
-		     || sizeof (RSEQ_SELF()->member) == 4,		      \
+     _Static_assert (sizeof ((struct rseq_area) {}.member) == 1		      \
+		     || sizeof ((struct rseq_area) {}.member) == 4,	      \
 		     "size of rseq data");				      \
      ((volatile struct rseq_area __seg_gs *)__rseq_offset)->member = (value); \
   })

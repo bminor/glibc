@@ -19,7 +19,7 @@
 /* Read member of the RSEQ area directly, with single-copy atomicity semantics.  */
 #define RSEQ_GETMEM_ONCE(member) \
   ({									      \
-     __typeof (RSEQ_SELF()->member) __value;				      \
+     __typeof ((struct rseq_area) {}.member) __value;			      \
      _Static_assert (sizeof (__value) == 1				      \
 		     || sizeof (__value) == 4				      \
 		     || sizeof (__value) == 8,				      \
@@ -59,18 +59,18 @@
 /* Set member of the RSEQ area directly, with single-copy atomicity semantics.  */
 #define RSEQ_SETMEM_ONCE(member, value) \
   ({									      \
-     _Static_assert (sizeof (RSEQ_SELF()->member) == 1			      \
-		     || sizeof (RSEQ_SELF()->member) == 4		      \
-		     || sizeof (RSEQ_SELF()->member) == 8,		      \
+     _Static_assert (sizeof ((struct rseq_area) {}.member) == 1		      \
+		     || sizeof ((struct rseq_area) {}.member) == 4	      \
+		     || sizeof ((struct rseq_area) {}.member) == 8,	      \
 		     "size of rseq data");				      \
-     if (sizeof (RSEQ_SELF()->member) == 1)				      \
+     if (sizeof ((struct rseq_area) {}.member) == 1)			      \
        asm volatile ("movb %0,%%fs:%c1(%2)"				      \
 		     :							      \
 		     : "iq" ((uint8_t) cast_to_integer (value)),	      \
 		       "i" (offsetof (struct rseq_area, member)),	      \
 		       "r" ((long long int) __rseq_offset)		      \
 		     : "memory");					      \
-     else if (sizeof (RSEQ_SELF()->member) == 4)			      \
+     else if (sizeof ((struct rseq_area) {}.member) == 4)		      \
        asm volatile ("movl %0,%%fs:%c1(%2)"				      \
 		     :							      \
 		     : IMM_MODE ((uint32_t) cast_to_integer (value)),	      \
