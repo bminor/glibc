@@ -1633,6 +1633,8 @@ open_verify (const char *name, int fd,
 		 32-bit and 64-bit binaries can be run this might
 		 happen.  */
 	      *found_other_class = true;
+	      if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_LIBS))
+		_dl_debug_printf ("    (incompatible ELF class)\n");
 	      __close_nocancel (fd);
 	      __set_errno (ENOENT);
 	      return -1;
@@ -1671,6 +1673,8 @@ open_verify (const char *name, int fd,
 	}
       if (! __glibc_likely (elf_machine_matches_host (ehdr)))
 	{
+	  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_LIBS))
+	    _dl_debug_printf ("    (incompatible ELF machine)\n");
 	  __close_nocancel (fd);
 	  __set_errno (ENOENT);
 	  return -1;
@@ -1706,11 +1710,18 @@ open_verify (const char *name, int fd,
 			    (phdr, ehdr->e_phnum, fbp->buf, fbp->len,
 			     loader, fd)))
 	{
+	  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_LIBS))
+	    _dl_debug_printf ("    (incompatible ELF headers with the host)\n");
 	  __close_nocancel (fd);
 	  __set_errno (ENOENT);
 	  return -1;
 	}
 
+    }
+  else
+    {
+      if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_LIBS))
+	_dl_debug_printf ("    (no such file)\n");
     }
 
   return fd;
@@ -1822,6 +1833,11 @@ open_path (const char *name, size_t namelen, int mode,
 		  /* The shared object cannot be tested for being SUID
 		     or this bit is not set.  In this case we must not
 		     use this object.  */
+		  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_LIBS))
+		    _dl_debug_printf ("  refusing to load file=%s, the shared "
+				      "object cannot be tested for being "
+				      "SUID or the bit is not set\n",
+				      buf);
 		  __close_nocancel (fd);
 		  fd = -1;
 		  /* We simply ignore the file, signal this by setting
