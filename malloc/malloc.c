@@ -1477,26 +1477,19 @@ tag_new_usable (void *ptr)
   return ptr;
 }
 
-/* HP page used for an mmap()'ed chunk. */
+/* Huge page used for an mmap chunk.  */
 #define MMAP_HP 0x1
 
-/* Check for HP usage from an mmap()'ed chunk. */
+/* Return whether an mmap chunk uses huge pages.  */
 static __always_inline bool
 mmap_is_hp (mchunkptr p)
 {
   return prev_size (p) & MMAP_HP;
 }
 
-/* Set HP advised field for an mmap()'ed chunk. */
-static __always_inline void
-set_mmap_is_hp (mchunkptr p)
-{
-  prev_size (p) |= MMAP_HP;
-}
-
-/* Get an mmap()ed chunk's offset, ignoring huge page bits. */
+/* Return the mmap chunk's offset from mmap base.  */
 static __always_inline size_t
-prev_size_mmap (mchunkptr p)
+mmap_base_offset (mchunkptr p)
 {
   return prev_size (p) & ~MMAP_HP;
 }
@@ -1505,14 +1498,24 @@ prev_size_mmap (mchunkptr p)
 static __always_inline uintptr_t
 mmap_base (mchunkptr p)
 {
-  return (uintptr_t) p - prev_size_mmap (p);
+  return (uintptr_t) p - mmap_base_offset (p);
 }
 
 /* Return total mmap size of a chunk with IS_MMAPPED set.  */
 static __always_inline size_t
 mmap_size (mchunkptr p)
 {
-  return prev_size_mmap (p) + chunksize (p) + CHUNK_HDR_SZ;
+  return mmap_base_offset (p) + chunksize (p) + CHUNK_HDR_SZ;
+}
+
+/* Return a new chunk from an mmap.  */
+static __always_inline mchunkptr
+mmap_set_chunk (uintptr_t mmap_base, size_t mmap_size, size_t offset, bool is_hp)
+{
+  mchunkptr p = (mchunkptr) (mmap_base + offset);
+  prev_size (p) = offset | (is_hp ? MMAP_HP : 0);
+  set_head (p, (mmap_size - offset - CHUNK_HDR_SZ) | IS_MMAPPED);
+  return p;
 }
 
 /*
@@ -2458,15 +2461,7 @@ sysmalloc_mmap (INTERNAL_SIZE_T nb, size_t pagesize, int extra_flags)
 
   __set_vma_name (mm, size, " glibc: malloc");
 
-  /* Store offset to start of mmap in prev_size.  */
-  mchunkptr p = (mchunkptr) (mm + padding);
-  set_prev_size (p, padding);
-  set_head (p, (size - padding - CHUNK_HDR_SZ) | IS_MMAPPED);
-
-  /* Must also check whether huge pages were used in the mmap call
-     and this is not the fallback call after using huge pages failed */
-  if (__glibc_unlikely (extra_flags & mp_.hp_flags))
-    set_mmap_is_hp (p);
+  mchunkptr p = mmap_set_chunk ((uintptr_t)mm, size, padding, extra_flags != 0);
 
   /* update statistics */
   int new = atomic_fetch_add_relaxed (&mp_.n_mmaps, 1) + 1;
@@ -3038,8 +3033,9 @@ munmap_chunk (mchunkptr p)
 static mchunkptr
 mremap_chunk (mchunkptr p, size_t new_size)
 {
-  size_t pagesize = mmap_is_hp (p) ? mp_.hp_pagesize : GLRO (dl_pagesize);
-  INTERNAL_SIZE_T offset = prev_size_mmap (p);
+  bool is_hp = mmap_is_hp (p);
+  size_t pagesize = is_hp ? mp_.hp_pagesize : GLRO (dl_pagesize);
+  INTERNAL_SIZE_T offset = mmap_base_offset (p);
   INTERNAL_SIZE_T size = chunksize (p);
   char *cp;
 
@@ -3067,12 +3063,7 @@ mremap_chunk (mchunkptr p, size_t new_size)
 
   madvise_thp (cp, new_size);
 
-  p = (mchunkptr) (cp + offset);
-
-  assert (!misaligned_chunk (p));
-
-  assert (prev_size_mmap (p) == offset);
-  set_head (p, (new_size - offset - CHUNK_HDR_SZ) | IS_MMAPPED);
+  p = mmap_set_chunk ((uintptr_t) cp, new_size, offset, is_hp);
 
   INTERNAL_SIZE_T new;
   new = atomic_fetch_add_relaxed (&mp_.mmapped_mem, new_size - size - offset)
