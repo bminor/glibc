@@ -120,3 +120,6 @@
 #define HWCAP2_SME_SF8DP4	(1UL << 61)
 #define HWCAP2_SME_SF8DP2	(1UL << 62)
 #define HWCAP2_POE		(1UL << 63)
+
+#define HWCAP3_MTE_FAR		(1UL << 0)
+#define HWCAP3_MTE_STORE_ONLY	(1UL << 1)
