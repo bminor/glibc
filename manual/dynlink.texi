@@ -14,6 +14,8 @@ Dynamic linkers are sometimes called @dfn{dynamic loaders}.
 
 @menu
 * Dynamic Linker Invocation::   Explicit invocation of the dynamic linker.
+* Dynamic Linker Environment Variables:: Environment variables that control the
+                                          dynamic linker.
 * Dynamic Linker Introspection::    Interfaces for querying mapping information.
 * Dynamic Linker Hardening::    Avoiding unexpected issues with dynamic linking.
 @end menu
@@ -347,6 +349,70 @@ register pair after executing the XGETBV instruction with @code{%rcx}
 set to @var{query_ecx}.  Zero values and values matching the previously
 probed CPU are omitted.  Nothing is printed if the system does not
 support the XGETBV instruction.
+@end table
+
+@node Dynamic Linker Environment Variables
+@section Dynamic Linker Environment Variables
+
+The behavior of the dynamic linker can be modified through various environment
+variables.
+
+@table @code
+@item LD_DEBUG
+@cindex @code{LD_DEBUG} environment variable
+The @env{LD_DEBUG} environment variable can be set to a comma-separated list
+of keywords to enable debugging output from the dynamic linker.  Setting it to
+@code{help} will display a list of all available keywords.  The output is
+written to standard output by default.
+
+@table @code
+@item libs
+Display library search paths.
+
+@item reloc
+Display relocation processing.
+
+@item files
+Display progress for input file processing.
+
+@item symbols
+Display symbol table processing.
+
+@item bindings
+Display information about symbol binding.
+
+@item versions
+Display version dependencies.
+
+@item scopes
+Display scope information.
+
+@item tls
+Display information about Thread-Local Storage (TLS) handling, including TCB
+allocation, deallocation, and reuse. This is useful for debugging issues
+related to thread creation and lifecycle.
+
+@item all
+All previous options combined.
+
+@item statistics
+Display relocation statistics.
+
+@item unused
+Determined unused DSOs.
+
+@item help
+Display a help message with all available options and exit.
+@end table
+
+@item LD_DEBUG_OUTPUT
+@cindex @code{LD_DEBUG_OUTPUT} environment variable
+If @env{LD_DEBUG} is set, the output is written to standard output by
+default.  If @env{LD_DEBUG_OUTPUT} is set, the output is written to the
+file specified by its value, with the process ID appended. For example, if
+@env{LD_DEBUG_OUTPUT} is set to @file{/tmp/glibc.debug}, the output will be
+written to a file named @file{/tmp/glibc.debug.12345}, where @code{12345} is
+the process ID.
 @end table
 
 @node Dynamic Linker Introspection
