@@ -5101,107 +5101,64 @@ _int_realloc (mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
    ------------------------------ memalign ------------------------------
  */
 
-/* BYTES is user requested bytes, not requested chunksize bytes.  */
+/* BYTES is user requested bytes, not requested chunksize bytes.
+   ALIGNMENT is a power of 2 larger than or equal to MINSIZE.  */
 static void *
 _int_memalign (mstate av, size_t alignment, size_t bytes)
 {
-  INTERNAL_SIZE_T nb;             /* padded  request size */
-  char *m;                        /* memory returned by malloc call */
-  mchunkptr p;                    /* corresponding chunk */
-  char *brk;                      /* alignment point within p */
-  mchunkptr newp;                 /* chunk to return */
-  INTERNAL_SIZE_T newsize;        /* its size */
-  INTERNAL_SIZE_T leadsize;       /* leading space before alignment point */
-  mchunkptr remainder;            /* spare room at end to split off */
-  unsigned long remainder_size;   /* its size */
-  INTERNAL_SIZE_T size;
+  mchunkptr p, newp;
 
   if (bytes > PTRDIFF_MAX)
     {
       __set_errno (ENOMEM);
       return NULL;
     }
-  nb = checked_request2size (bytes);
+  size_t nb = checked_request2size (bytes);
 
-  /* We can't check tcache here because we hold the arena lock, which
-     tcache doesn't expect.  We expect it has been checked
-     earlier.  */
-
-  /* Strategy: search the bins looking for an existing block that
-     meets our needs.  We scan a range of bins from "exact size" to
-     "just under 2x", spanning the small/large barrier if needed.  If
-     we don't find anything in those bins, the common malloc code will
-     scan starting at 2x.  */
-
-  /* Call malloc with worst case padding to hit alignment. */
-  m = (char *) (_int_malloc (av, nb + alignment + MINSIZE));
+  /* Call malloc with worst case padding to hit alignment.  */
+  void *m = _int_malloc (av, nb + alignment + MINSIZE);
 
   if (m == NULL)
-    return NULL;           /* propagate failure */
+    return NULL;
 
   p = mem2chunk (m);
 
-  if ((((unsigned long) (m)) % alignment) != 0)   /* misaligned */
+  if (chunk_is_mmapped (p))
     {
-      /* Find an aligned spot inside chunk.  Since we need to give back
-         leading space in a chunk of at least MINSIZE, if the first
-         calculation places us at a spot with less than MINSIZE leader,
-         we can move to the next aligned spot -- we've allocated enough
-         total room so that this is always possible.  */
-      brk = (char *) mem2chunk (((unsigned long) (m + alignment - 1)) &
-                                - ((signed long) alignment));
-      if ((unsigned long) (brk - (char *) (p)) < MINSIZE)
-        brk += alignment;
-
-      newp = (mchunkptr) brk;
-      leadsize = brk - (char *) (p);
-      newsize = chunksize (p) - leadsize;
-
-      /* For mmapped chunks, just adjust offset */
-      if (chunk_is_mmapped (p))
-        {
-          set_prev_size (newp, prev_size (p) + leadsize);
-          set_head (newp, newsize | IS_MMAPPED);
-          return chunk2mem (newp);
-        }
-
-      /* Otherwise, give back leader, use the rest */
-      set_head (newp, newsize | PREV_INUSE |
-                (av != &main_arena ? NON_MAIN_ARENA : 0));
-      set_inuse_bit_at_offset (newp, newsize);
-      set_head_size (p, leadsize | (av != &main_arena ? NON_MAIN_ARENA : 0));
-      _int_free_merge_chunk (av, p, leadsize);
-      p = newp;
-
-      assert (newsize >= nb &&
-              (((unsigned long) (chunk2mem (p))) % alignment) == 0);
+      newp = mem2chunk (PTR_ALIGN_UP (m, alignment));
+      p = mmap_set_chunk (mmap_base (p), mmap_size (p),
+			  (uintptr_t)newp - mmap_base (p), mmap_is_hp (p));
+      return chunk2mem (p);
     }
 
-  /* Also give back spare room at the end */
-  if (!chunk_is_mmapped (p))
+  size_t size = chunksize (p);
+
+  /* If not already aligned, align the chunk.  Add MINSIZE before aligning
+     so we can always free the alignment padding.  */
+  if (!PTR_IS_ALIGNED (m, alignment))
     {
-      size = chunksize (p);
-      mchunkptr nextchunk = chunk_at_offset(p, size);
-      INTERNAL_SIZE_T nextsize = chunksize(nextchunk);
-      if (size > nb)
-        {
-          remainder_size = size - nb;
-	  if (remainder_size >= MINSIZE
-	      || nextchunk == av->top
-	      || !inuse_bit_at_offset (nextchunk, nextsize))
-	    {
-	      /* We can only give back the tail if it is larger than
-		 MINSIZE, or if the following chunk is unused (top
-		 chunk or unused in-heap chunk).  Otherwise we would
-		 create a chunk that is smaller than MINSIZE.  */
-	      remainder = chunk_at_offset (p, nb);
-	      set_head_size (p, nb);
-	      remainder_size = _int_free_create_chunk (av, remainder,
-						       remainder_size,
-						       nextchunk, nextsize);
-	      _int_free_maybe_consolidate (av, remainder_size);
-	    }
-	}
+      newp = mem2chunk (ALIGN_UP ((uintptr_t)m + MINSIZE, alignment));
+      size_t leadsize = PTR_DIFF (newp, p);
+      size -= leadsize;
+
+      /* Create a new chunk from the alignment padding and free it.  */
+      int arena_flag = av != &main_arena ? NON_MAIN_ARENA : 0;
+      set_head (newp, size | PREV_INUSE | arena_flag);
+      set_inuse_bit_at_offset (newp, size);
+      set_head_size (p, leadsize | arena_flag);
+      _int_free_merge_chunk (av, p, leadsize);
+      p = newp;
+    }
+
+  /* Free a chunk at the end if large enough.  */
+  if (size - nb >= MINSIZE)
+    {
+      mchunkptr nextchunk = chunk_at_offset (p, size);
+      mchunkptr remainder = chunk_at_offset (p, nb);
+      set_head_size (p, nb);
+      size = _int_free_create_chunk (av, remainder, size - nb, nextchunk,
+				     chunksize (nextchunk));
+      _int_free_maybe_consolidate (av, size);
     }
 
   check_inuse_chunk (av, p);
