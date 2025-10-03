@@ -151,7 +151,7 @@ mem2chunk_check (void *mem, unsigned char **magic_p)
            offset != 0x200 && offset != 0x400 && offset != 0x800 && offset != 0x1000 &&
            offset < 0x2000) ||
           !chunk_is_mmapped (p) || prev_inuse (p) ||
-          ((((uintptr_t) mmap_base (p)) & page_mask) != 0) ||
+          (((mmap_base (p)) & page_mask) != 0) ||
           (mmap_size (p) & page_mask) != 0)
         return NULL;
 

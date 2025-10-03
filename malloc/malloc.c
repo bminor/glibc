@@ -1502,10 +1502,10 @@ prev_size_mmap (mchunkptr p)
 }
 
 /* Return pointer to mmap base from a chunk with IS_MMAPPED set.  */
-static __always_inline void *
+static __always_inline uintptr_t
 mmap_base (mchunkptr p)
 {
-  return (char *) p - prev_size_mmap (p);
+  return (uintptr_t) p - prev_size_mmap (p);
 }
 
 /* Return total mmap size of a chunk with IS_MMAPPED set.  */
@@ -1809,7 +1809,6 @@ typedef struct malloc_chunk *mfastbinptr;
 #define NONCONTIGUOUS_BIT     (2U)
 
 #define contiguous(M)          (((M)->flags & NONCONTIGUOUS_BIT) == 0)
-#define noncontiguous(M)       (((M)->flags & NONCONTIGUOUS_BIT) != 0)
 #define set_noncontiguous(M)   ((M)->flags |= NONCONTIGUOUS_BIT)
 #define set_contiguous(M)      ((M)->flags &= ~NONCONTIGUOUS_BIT)
 
@@ -2324,9 +2323,6 @@ do_check_malloc_state (mstate av)
 
   /* properties of fastbins */
 
-  /* max_fast is in allowed range */
-  assert ((get_max_fast () & ~1) <= request2size (MAX_FAST_SIZE));
-
   max_fast_bin = fastbin_index (get_max_fast ());
 
   for (i = 0; i < NFASTBINS; ++i)
@@ -2492,23 +2488,14 @@ sysmalloc_mmap (INTERNAL_SIZE_T nb, size_t pagesize, int extra_flags)
    if MORECORE fails.
  */
 static void *
-sysmalloc_mmap_fallback (long int *s, INTERNAL_SIZE_T nb,
-			 INTERNAL_SIZE_T old_size, size_t minsize,
-			 size_t pagesize, int extra_flags, mstate av)
+sysmalloc_mmap_fallback (size_t *s, size_t size, size_t minsize,
+			  size_t pagesize, int extra_flags)
 {
-  long int size = *s;
-
-  /* Cannot merge with old top, so add its size back in */
-  if (contiguous (av))
-    size = ALIGN_UP (size + old_size, pagesize);
+  size = ALIGN_UP (size, pagesize);
 
   /* If we are relying on mmap as backup, then use larger units */
-  if ((unsigned long) (size) < minsize)
+  if (size < minsize)
     size = minsize;
-
-  /* Don't try if size wraps around 0 */
-  if ((unsigned long) (size) <= (unsigned long) (nb))
-    return MORECORE_FAILURE;
 
   char *mbrk = (char *) (MMAP (NULL, size,
 			       mtag_mmap_flags | PROT_READ | PROT_WRITE,
@@ -2518,13 +2505,6 @@ sysmalloc_mmap_fallback (long int *s, INTERNAL_SIZE_T nb,
 
   if (extra_flags == 0)
     madvise_thp (mbrk, size);
-
-  __set_vma_name (mbrk, size, " glibc: malloc");
-
-  /* Record that we no longer have a contiguous sbrk region.  After the first
-     time mmap is used as backup, we do not ever rely on contiguous space
-     since this could incorrectly bridge regions.  */
-  set_noncontiguous (av);
 
   *s = size;
   return mbrk;
@@ -2537,7 +2517,7 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
   INTERNAL_SIZE_T old_size;       /* its size */
   char *old_end;                  /* its end address */
 
-  long size;                      /* arg to first MORECORE or mmap call */
+  size_t size;                      /* arg to first MORECORE or mmap call */
   char *brk;                      /* return value from MORECORE */
 
   long correction;                /* arg to 2nd MORECORE call */
@@ -2703,9 +2683,9 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
          below even if we cannot call MORECORE.
        */
 
-      if (size > 0)
+      if ((ssize_t) size > 0)
         {
-          brk = (char *) (MORECORE (size));
+          brk = (char *) (MORECORE ((long) size));
 	  if (brk != (char *) (MORECORE_FAILURE))
 	    madvise_thp (brk, size);
           LIBC_PROBE (memory_sbrk_more, 2, brk, size);
@@ -2722,16 +2702,25 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
              segregated mmap region.
            */
 
+	  size_t fallback_size = nb + mp_.top_pad + MINSIZE;
 	  char *mbrk = MAP_FAILED;
 	  if (mp_.hp_pagesize > 0)
-	    mbrk = sysmalloc_mmap_fallback (&size, nb, old_size,
-					    mp_.hp_pagesize, mp_.hp_pagesize,
-					    mp_.hp_flags, av);
+	    mbrk = sysmalloc_mmap_fallback (&size, fallback_size,
+					    mp_.hp_pagesize,
+					    mp_.hp_pagesize, mp_.hp_flags);
 	  if (mbrk == MAP_FAILED)
-	    mbrk = sysmalloc_mmap_fallback (&size, nb, old_size, MMAP_AS_MORECORE_SIZE,
-					    pagesize, 0, av);
+	    mbrk = sysmalloc_mmap_fallback (&size, fallback_size,
+	                                    MMAP_AS_MORECORE_SIZE,
+	                                    pagesize, 0);
 	  if (mbrk != MAP_FAILED)
 	    {
+	      __set_vma_name (mbrk, fallback_size, " glibc: malloc");
+
+	      /* Record that we no longer have a contiguous sbrk region.  After the first
+		 time mmap is used as backup, we do not ever rely on contiguous space
+		 since this could incorrectly bridge regions.  */
+	      set_noncontiguous (av);
+
 	      /* We do not need, and cannot use, another sbrk call to find end */
 	      brk = mbrk;
 	      snd_brk = brk + size;
@@ -3024,7 +3013,7 @@ munmap_chunk (mchunkptr p)
   assert (chunk_is_mmapped (p));
 
   uintptr_t mem = (uintptr_t) chunk2mem (p);
-  uintptr_t block = (uintptr_t) mmap_base (p);
+  uintptr_t block = mmap_base (p);
   size_t total_size = mmap_size (p);
   /* Unfortunately we have to do the compilers job by hand here.  Normally
      we would test BLOCK and TOTAL-SIZE separately for compliance with the
@@ -3056,7 +3045,7 @@ mremap_chunk (mchunkptr p, size_t new_size)
 
   assert (chunk_is_mmapped (p));
 
-  uintptr_t block = (uintptr_t) mmap_base (p);
+  uintptr_t block = mmap_base (p);
   uintptr_t mem = (uintptr_t) chunk2mem(p);
   size_t total_size = mmap_size (p);
   if (__glibc_unlikely ((block | total_size) & (pagesize - 1)) != 0
