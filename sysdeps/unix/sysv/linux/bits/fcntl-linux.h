@@ -381,6 +381,7 @@ struct file_handle
 						open_by_handle_at.  */
 # define AT_HANDLE_MNT_ID_UNIQUE 1 /* Return the 64-bit unique mount
 				      ID.  */
+# define AT_HANDLE_CONNECTABLE 2 /* Request a connectable file handle */
 #endif
 
 __BEGIN_DECLS
