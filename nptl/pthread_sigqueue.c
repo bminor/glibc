@@ -33,7 +33,7 @@ __pthread_sigqueue (pthread_t threadid, int signo, const union sigval value)
   /* Force load of pd->tid into local variable or register.  Otherwise
      if a thread exits between ESRCH test and tgkill, we might return
      EINVAL, because pd->tid would be cleared by the kernel.  */
-  pid_t tid = atomic_forced_read (pd->tid);
+  pid_t tid = atomic_load_relaxed (&pd->tid);
   if (__glibc_unlikely (tid <= 0))
     /* Not a valid thread handle.  */
     return ESRCH;

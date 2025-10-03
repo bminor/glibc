@@ -117,11 +117,6 @@
 #endif
 
 
-#ifndef atomic_forced_read
-# define atomic_forced_read(x) \
-  ({ __typeof (x) __x; __asm ("" : "=r" (__x) : "0" (x)); __x; })
-#endif
-
 /* This is equal to 1 iff the architecture supports 64b atomic operations.  */
 #ifndef __HAVE_64B_ATOMICS
 #error Unable to determine if 64-bit atomics are present.

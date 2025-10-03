@@ -454,7 +454,6 @@ __nscd_cache_search (request_type type, const char *key, size_t keylen,
   size_t datasize = mapped->datasize;
 
   ref_t trail = mapped->head->array[hash];
-  trail = atomic_forced_read (trail);
   ref_t work = trail;
   size_t loop_cnt = datasize / (MINIMUM_HASHENTRY_SIZE
 				+ offsetof (struct datahead, data) / 2);
@@ -468,17 +467,18 @@ __nscd_cache_search (request_type type, const char *key, size_t keylen,
       /* Although during garbage collection when moving struct hashentry
 	 records around we first copy from old to new location and then
 	 adjust pointer from previous hashentry to it, there is no barrier
-	 between those memory writes.  It is very unlikely to hit it,
-	 so check alignment only if a misaligned load can crash the
-	 application.  */
+	 between those memory writes!!! This is extremely risky on any
+	 modern CPU which can reorder memory accesses very aggressively.
+	 Check alignment, both as a partial consistency check and to avoid
+	 crashes on targets which require atomic loads to be aligned.  */
       if ((uintptr_t) here & (__alignof__ (*here) - 1))
 	return NULL;
 
       if (type == here->type
 	  && keylen == here->len
-	  && (here_key = atomic_forced_read (here->key)) + keylen <= datasize
+	  && (here_key = atomic_load_relaxed (&here->key)) + keylen <= datasize
 	  && memcmp (key, mapped->data + here_key, keylen) == 0
-	  && ((here_packet = atomic_forced_read (here->packet))
+	  && ((here_packet = atomic_load_relaxed (&here->packet))
 	      + sizeof (struct datahead) <= datasize))
 	{
 	  /* We found the entry.  Increment the appropriate counter.  */
@@ -497,7 +497,7 @@ __nscd_cache_search (request_type type, const char *key, size_t keylen,
 	    return dh;
 	}
 
-      work = atomic_forced_read (here->next);
+      work = atomic_load_relaxed (&here->next);
       /* Prevent endless loops.  This should never happen but perhaps
 	 the database got corrupted, accidentally or deliberately.  */
       if (work == trail || loop_cnt-- == 0)
@@ -514,7 +514,7 @@ __nscd_cache_search (request_type type, const char *key, size_t keylen,
 	  if (trail + MINIMUM_HASHENTRY_SIZE > datasize)
 	    return NULL;
 
-	  trail = atomic_forced_read (trailelem->next);
+	  trail = atomic_load_relaxed (&trailelem->next);
 	}
       tick = 1 - tick;
     }

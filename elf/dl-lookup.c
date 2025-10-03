@@ -342,12 +342,12 @@ do_lookup_x (const char *undef_name, unsigned int new_hash,
 	     const struct r_found_version *const version, int flags,
 	     struct link_map *skip, int type_class, struct link_map *undef_map)
 {
-  size_t n = scope->r_nlist;
-  /* Make sure we read the value before proceeding.  Otherwise we
+  /* Make sure we read r_nlist before r_list, or otherwise we
      might use r_list pointing to the initial scope and r_nlist being
      the value after a resize.  That is the only path in dl-open.c not
-     protected by GSCOPE.  A read barrier here might be to expensive.  */
-  __asm volatile ("" : "+r" (n), "+m" (scope->r_list));
+     protected by GSCOPE.  This works if all updates also use a store-
+     release or release barrier.  */
+  size_t n = atomic_load_acquire (&scope->r_nlist);
   struct link_map **list = scope->r_list;
 
   do
@@ -541,15 +541,13 @@ add_dependency (struct link_map *undef_map, struct link_map *map, int flags)
   if (is_nodelete (map, flags))
     return 0;
 
-  struct link_map_reldeps *l_reldeps
-    = atomic_forced_read (undef_map->l_reldeps);
-
   /* Make sure l_reldeps is read before l_initfini.  */
-  atomic_read_barrier ();
+  struct link_map_reldeps *l_reldeps
+    = atomic_load_acquire (&undef_map->l_reldeps);
 
   /* Determine whether UNDEF_MAP already has a reference to MAP.  First
      look in the normal dependencies.  */
-  struct link_map **l_initfini = atomic_forced_read (undef_map->l_initfini);
+  struct link_map **l_initfini = undef_map->l_initfini;
   if (l_initfini != NULL)
     {
       for (i = 0; l_initfini[i] != NULL; ++i)
@@ -583,7 +581,7 @@ add_dependency (struct link_map *undef_map, struct link_map *map, int flags)
 	 it can e.g. point to unallocated memory.  So avoid the optimizer
 	 treating the above read from MAP->l_serial as ensurance it
 	 can safely dereference it.  */
-      map = atomic_forced_read (map);
+      __asm ("" : "=r" (map) : "0" (map));
 
       /* From this point on it is unsafe to dereference MAP, until it
 	 has been found in one of the lists.  */
