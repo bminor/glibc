@@ -382,6 +382,10 @@ struct file_handle
 # define AT_HANDLE_MNT_ID_UNIQUE 1 /* Return the 64-bit unique mount
 				      ID.  */
 # define AT_HANDLE_CONNECTABLE 2 /* Request a connectable file handle */
+
+/* Flags for execveat2(2). */
+# define AT_EXECVE_CHECK 0x10000 /* Only perform a check if execution
+				    would be allowed */
 #endif
 
 __BEGIN_DECLS
