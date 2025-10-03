@@ -50,7 +50,8 @@ struct statx
   __uint32_t stx_dev_major;
   __uint32_t stx_dev_minor;
   __uint64_t stx_mnt_id;
-  __uint64_t __spare2;
+  __uint32_t stx_dio_mem_align;
+  __uint32_t stx_dio_offset_align;
   __uint64_t __statx_pad2[12];
 };
 
