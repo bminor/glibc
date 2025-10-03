@@ -49,7 +49,9 @@ struct statx
   __uint32_t stx_rdev_minor;
   __uint32_t stx_dev_major;
   __uint32_t stx_dev_minor;
-  __uint64_t __statx_pad2[14];
+  __uint64_t stx_mnt_id;
+  __uint64_t __spare2;
+  __uint64_t __statx_pad2[12];
 };
 
 #endif /* __statx_defined */
