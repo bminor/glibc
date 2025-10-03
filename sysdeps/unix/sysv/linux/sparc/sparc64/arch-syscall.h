@@ -66,6 +66,8 @@
 #define __NR_fcntl 92
 #define __NR_fdatasync 253
 #define __NR_fgetxattr 177
+#define __NR_file_getattr 468
+#define __NR_file_setattr 469
 #define __NR_finit_module 342
 #define __NR_flistxattr 180
 #define __NR_flock 131

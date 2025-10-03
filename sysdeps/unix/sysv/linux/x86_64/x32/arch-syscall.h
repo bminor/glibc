@@ -61,6 +61,8 @@
 #define __NR_fcntl 1073741896
 #define __NR_fdatasync 1073741899
 #define __NR_fgetxattr 1073742017
+#define __NR_file_getattr 1073742292
+#define __NR_file_setattr 1073742293
 #define __NR_finit_module 1073742137
 #define __NR_flistxattr 1073742020
 #define __NR_flock 1073741897
