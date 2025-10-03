@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <array_length.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
@@ -41,15 +42,23 @@ static pid_t ppid;
 static uid_t puid;
 
 static void
-sighandler (int sig)
+sighandler_subprocess (int sig)
 {
+}
+
+static sig_atomic_t pidfd_self_flag;
+
+static void
+sighandler_parent (int sig)
+{
+  pidfd_self_flag = 1;
 }
 
 static void
 subprocess (void)
 {
-  xsignal (SIGUSR1, sighandler);
-  xsignal (SIGUSR2, sighandler);
+  xsignal (SIGUSR1, sighandler_subprocess);
+  xsignal (SIGUSR2, sighandler_subprocess);
 
   /* Check first pidfd_send_signal with default NULL siginfo_t argument.  */
   {
@@ -102,6 +111,7 @@ do_test (void)
       FAIL_UNSUPPORTED ("kernel does not support pidfd_getfd, skipping test");
   }
 
+
   ppid = getpid ();
   puid = getuid ();
 
@@ -113,6 +123,34 @@ do_test (void)
     pid_t pid = pidfd_getpid (STDOUT_FILENO);
     TEST_COMPARE (pid, -1);
     TEST_COMPARE (errno, EBADF);
+  }
+
+  xsignal (SIGUSR1, sighandler_parent);
+
+  {
+    sigset_t mask, oldmask;
+    sigemptyset (&mask);
+    sigaddset (&mask, SIGUSR1);
+    TEST_COMPARE (sigprocmask (SIG_BLOCK, &mask, &oldmask), 0);
+
+    /* PIDFD_SELF_{THREAD,THREAD_GROUP} were added on Linux 6.15.  On older
+       kernels pidfd_send_signal should return -1/EBADF.  */
+    const int pidfd_selfs[] = { PIDFD_SELF, PIDFD_SELF_PROCESS };
+    for (int i = 0; i < array_length (pidfd_selfs); i++)
+      {
+	pidfd_self_flag = 0;
+	int r = pidfd_send_signal (pidfd_selfs[i], SIGUSR1, NULL, 0);
+	if (r == -1)
+	  TEST_COMPARE (errno, EBADF);
+	else
+	  {
+	    while (pidfd_self_flag == 0)
+	      sigsuspend (&oldmask);
+	    TEST_COMPARE (pidfd_self_flag, 1);
+	  }
+      }
+
+    TEST_COMPARE (sigprocmask (SIG_SETMASK, &oldmask, NULL), 0);
   }
 
   /* Check if pidfd_getpid returns ESRCH for exited subprocess.  */

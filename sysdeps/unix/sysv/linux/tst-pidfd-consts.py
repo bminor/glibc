@@ -39,7 +39,7 @@ def main():
         sys.exit (77)
 
     linux_version_headers = glibcsyscalls.linux_kernel_version(args.cc)
-    linux_version_glibc = (6, 12)
+    linux_version_glibc = (6, 17)
     sys.exit(glibcextract.compare_macro_consts(
                 '#include <sys/pidfd.h>\n',
                 '#include <asm/fcntl.h>\n'

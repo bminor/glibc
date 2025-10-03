@@ -211,6 +211,7 @@ tests += \
   tst-ofdlocks \
   tst-personality \
   tst-pidfd \
+  tst-pidfd_getinfo \
   tst-pidfd_getpid \
   tst-pkey \
   tst-ppoll \
