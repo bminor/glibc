@@ -219,6 +219,9 @@
 
 /* For F_[GET|SET]FD.  */
 #define FD_CLOEXEC	1	/* Actually anything with low bit set goes */
+#ifdef __USE_GNU
+# define FD_PIDFS_ROOT	-10002	/* Root of the pidfs filesystem */
+#endif
 
 #ifndef F_RDLCK
 /* For posix fcntl() and `l_type' field of a `struct flock' for lockf().  */
