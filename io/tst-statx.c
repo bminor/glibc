@@ -37,7 +37,8 @@ _Static_assert (offsetof (struct statx, stx_nlink) == 16, "statx nlink");
 _Static_assert (offsetof (struct statx, stx_ino) == 32, "statx ino");
 _Static_assert (offsetof (struct statx, stx_atime) == 64, "statx atime");
 _Static_assert (offsetof (struct statx, stx_rdev_major) == 128, "statx rdev");
-_Static_assert (offsetof (struct statx, __statx_pad2) == 0xb8, "statx pad2");
+_Static_assert (offsetof (struct statx, __statx_pad2) == 188, "statx pad2");
+_Static_assert (offsetof (struct statx, __statx_pad3) == 192, "statx pad3");
 
 #include "statx_generic.c"
 

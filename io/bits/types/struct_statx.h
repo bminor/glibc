@@ -57,7 +57,9 @@ struct statx
   __uint32_t stx_atomic_write_unit_max;
   __uint32_t stx_atomic_write_segments_max;
   __uint32_t stx_dio_read_offset_align;
-  __uint64_t __statx_pad2[9];
+  __uint32_t stx_atomic_write_unit_max_opt;
+  __uint32_t __statx_pad2;
+  __uint64_t __statx_pad3[8];
 };
 
 #endif /* __statx_defined */
