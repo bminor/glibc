@@ -2999,7 +2999,7 @@ discard_until_mark (int socket)
       success = ioctl (socket, SIOCATMARK, &atmark);
       if (success < 0)
         perror ("ioctl");
-      if (result)
+      if (atmark)
         return;
 
       /* @r{Otherwise, read a bunch of ordinary data and discard it.}
