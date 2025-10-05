@@ -1,7 +1,7 @@
 ## args: float:float
 ## ret: float
 ## includes: math.h
-## name: subnormals
+## name: workload-subnormals
 0x1.3a3e6p-127, 0x1.8b8338p-128
 0x1.03a6cp-127, 0x1.f8b278p-128
 0x1.b8faap-127, 0x1.1c157p-129
@@ -130,7 +130,7 @@
 0x1.b4274p-128, 0x1.25ec5cp-127
 0x1.7c2bp-128, 0x1.41ea7cp-127
 0x1.90c28p-128, 0x1.379ebcp-127
-## name: normal
+## name: workload-normal
 0x1.c423f2p-11, 0x1.3bdc0cp+12
 0x1.c78066p+108, 0x1.387f98p-107
 0x1.454806p+93, 0x1.bab7f8p-92
@@ -1155,7 +1155,7 @@
 0x1.a6a72ep+32, 0x1.5958dp-31
 0x1.8cf0fcp-113, 0x1.730f02p+114
 0x1.dcbf66p-102, 0x1.234098p+103
-## name: close-exponents
+## name: workload-close-exponents
 0x1.956f8p-6, 0x1.6a908p+5
 0x1.6f04cp+2, 0x1.90fb4p-3
 0x1.1e4bcp+2, 0x1.e1b44p-3

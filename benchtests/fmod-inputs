@@ -1,7 +1,7 @@
 ## args: double:double
 ## ret: double
 ## includes: math.h
-## name: subnormals
+## name: workload-subnormals
 0x0.3212f5b8c8c16p-1022, 0x0.cded0a47373e9p-1022
 0x0.809c23acfa7ddp-1022, 0x0.7f63dc5305822p-1022
 0x0.360cedf5115cdp-1022, 0x0.c9f3120aeea32p-1022
@@ -130,7 +130,7 @@
 0x0.bc8e4bc0faeb9p-1022, 0x0.4371b43f05146p-1022
 0x0.f4f1f63404c96p-1022, 0x0.0b0e09cbfb369p-1022
 0x0.05bee37594244p-1022, 0x0.fa411c8a6bdbbp-1022
-## name: normal
+## name: workload-normal
 0x1.be99ad6933c76p-740, 0x1.41665296cc389p+741
 0x1.87b8527e7cddep+690, 0x1.7847ad8183221p-689
 0x1.1d86cb84ad5fcp-944, 0x1.e279347b52a03p+945
@@ -1155,7 +1155,7 @@
 0x1.24dace6eba432p+319, 0x1.db25319145bcdp-318
 0x1.3fc7522fb956cp+578, 0x1.c038add046a93p-577
 0x1.a96e0d311a68ep-975, 0x1.5691f2cee5971p+976
-## name: close-exponents
+## name: workload-close-exponents
 0x1.88c3696801c18p-8, 0x1.773c9697fe3e8p+7
 0x1.7c4e20fb600cp-2, 0x1.83b1df049ff4p+1
 0x1.59a3ed1a02abep-6, 0x1.a65c12e5fd542p+5
