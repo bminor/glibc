@@ -145,7 +145,7 @@ This process cannot set the host name because it is not privileged.
 @end table
 @end deftypefun
 
-@deftypefun int getdomainnname (char *@var{name}, size_t @var{length})
+@deftypefun int getdomainname (char *@var{name}, size_t @var{length})
 @standards{???, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Syscalls uname, then strlen and memcpy.

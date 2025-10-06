@@ -1476,6 +1476,7 @@ As mentioned above, the @code{error} and @code{error_at_line} functions
 can be customized by defining a variable named
 @code{error_print_progname}.
 
+@vindex error_print_progname
 @deftypevar {void (*error_print_progname)} (void)
 @standards{GNU, error.h}
 If the @code{error_print_progname} variable is defined to a non-zero
