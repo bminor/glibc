@@ -22,10 +22,10 @@
 #include <libm-alias-float.h>
 
 
-#if LIBM_SVID_COMPAT
+#if LIBM_SVID_COMPAT && SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_43)
 /* wrapper log10f(x) */
 float
-__log10f (float x)
+__log10_compatf (float x)
 {
   if (__builtin_expect (islessequal (x, 0.0f), 0) && _LIB_VERSION != _IEEE_)
     {
@@ -43,5 +43,9 @@ __log10f (float x)
 
   return  __ieee754_log10f (x);
 }
-libm_alias_float (__log10, log10)
+# ifdef NO_COMPAT_NEEDED
+libm_alias_float (__log10_compat, log10)
+# else
+compat_symbol (libm, __log10_compatf, log10f, GLIBC_2_0);
+# endif
 #endif

@@ -686,4 +686,8 @@ libm {
     rootnf64x; rootnf128;
     rsqrtf64x; rsqrtf128;
   }
+  GLIBC_2.43 {
+    # No SVID compatible error handling.
+    log10f;
+  }
 }

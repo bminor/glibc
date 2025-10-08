@@ -1444,3 +1444,4 @@ GLIBC_2.42 rsqrtf32x F
 GLIBC_2.42 rsqrtf64 F
 GLIBC_2.42 rsqrtf64x F
 GLIBC_2.42 rsqrtl F
+GLIBC_2.43 log10f F

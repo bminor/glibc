@@ -27,6 +27,8 @@ SOFTWARE.
 #include <math.h>
 #include <stdint.h>
 #include <libm-alias-finite.h>
+#include <libm-alias-float.h>
+#include <math-svid-compat.h>
 #include "math_config.h"
 
 static __attribute__ ((noinline)) float
@@ -45,7 +47,7 @@ as_special (float x)
 }
 
 float
-__ieee754_log10f (float x)
+__log10f (float x)
 {
   static const double tr[] =
     {
@@ -158,4 +160,11 @@ __ieee754_log10f (float x)
     }
   return ub;
 }
+strong_alias (__log10f, __ieee754_log10f)
+#if LIBM_SVID_COMPAT
+versioned_symbol (libm, __log10f, log10f, GLIBC_2_43);
+libm_alias_float_other (__log10, log10)
+#else
+libm_alias_float (__log10, log10)
+#endif
 libm_alias_finite (__ieee754_log10f, __log10f)
