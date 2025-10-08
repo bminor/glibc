@@ -21,10 +21,10 @@
 #include <libm-alias-float.h>
 
 
-#if LIBM_SVID_COMPAT
+#if LIBM_SVID_COMPAT && SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_43)
 /* wrapper acoshf */
 float
-__acoshf (float x)
+__acosh_compatf (float x)
 {
   if (__builtin_expect (isless (x, 1.0f), 0) && _LIB_VERSION != _IEEE_)
     /* acosh(x<1) */
@@ -32,5 +32,5 @@ __acoshf (float x)
 
   return __ieee754_acoshf (x);
 }
-libm_alias_float (__acosh, acosh)
+compat_symbol (libm, __acosh_compatf, acoshf, GLIBC_2_0);
 #endif
