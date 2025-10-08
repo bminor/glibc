@@ -986,3 +986,4 @@ GLIBC_2.42 rsqrtf32 F
 GLIBC_2.42 rsqrtf32x F
 GLIBC_2.42 rsqrtf64 F
 GLIBC_2.42 rsqrtl F
+GLIBC_2.43 fmodf F
