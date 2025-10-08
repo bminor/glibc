@@ -1449,4 +1449,6 @@ GLIBC_2.43 acoshf F
 GLIBC_2.43 asinf F
 GLIBC_2.43 atanhf F
 GLIBC_2.43 coshf F
+GLIBC_2.43 j0f F
 GLIBC_2.43 log10f F
+GLIBC_2.43 y0f F

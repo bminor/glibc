@@ -17,7 +17,10 @@
 #include <math_private.h>
 #include <fenv_private.h>
 #include <libm-alias-finite.h>
+#include <libm-alias-float.h>
+#include <math-svid-compat.h>
 #include <reduce_aux.h>
+#include "math_config.h"
 
 static float pzerof(float), qzerof(float);
 
@@ -251,7 +254,7 @@ j0f_near_root (float x, float z)
 }
 
 float
-__ieee754_j0f(float x)
+__j0f(float x)
 {
 	float z, s,c,ss,cc,r,u,v;
 	int32_t hx,ix;
@@ -306,7 +309,15 @@ __ieee754_j0f(float x)
 	    return((one+u)*(one-u)+z*(r/s));
 	}
 }
+strong_alias (__j0f, __ieee754_j0f)
+#if LIBM_SVID_COMPAT
+versioned_symbol (libm, __j0f, j0f, GLIBC_2_43);
+libm_alias_float_other (__j0, j0)
+#else
+libm_alias_float (__j0, j0)
+#endif
 libm_alias_finite (__ieee754_j0f, __j0f)
+
 
 static const float
 u00  = -7.3804296553e-02, /* 0xbd9726b5 */
@@ -535,7 +546,7 @@ y0f_near_root (float x, float z)
 }
 
 float
-__ieee754_y0f(float x)
+__y0f(float x)
 {
 	float z, s,c,ss,cc,u,v;
 	int32_t hx,ix;
@@ -543,9 +554,15 @@ __ieee754_y0f(float x)
 	GET_FLOAT_WORD(hx,x);
 	ix = 0x7fffffff&hx;
     /* Y0(NaN) is NaN, y0(-inf) is Nan, y0(inf) is 0, y0(0) is -inf.  */
-	if(ix>=0x7f800000) return  one/(x+x*x);
-	if(ix==0) return -1/zero; /* -inf and divide by zero exception.  */
-	if(hx<0) return zero/(zero*x);
+	if(ix>=0x7f800000)
+	  {
+	    if (hx==0xFF800000)
+	      return __math_invalidf (1);
+	    else
+	      return one/(x+x*x);
+	  }
+	if(ix==0) return __math_divzerof (1); /* -inf and divide by zero exception.  */
+	if(hx<0) return __math_invalidf (x);
 	if(ix >= 0x40000000 || (0x3f5340ed <= ix && ix <= 0x3f77b5e5)) {
           /* |x| >= 2.0 or
 	     0x1.a681dap-1 <= |x| <= 0x1.ef6bcap-1 (around 1st zero) */
@@ -597,6 +614,13 @@ __ieee754_y0f(float x)
 	v = one+z*(v01+z*(v02+z*(v03+z*v04)));
 	return(u/v + tpi*(__ieee754_j0f(x)*__ieee754_logf(x)));
 }
+strong_alias (__y0f, __ieee754_y0f)
+#if LIBM_SVID_COMPAT
+versioned_symbol (libm, __y0f, y0f, GLIBC_2_43);
+libm_alias_float_other (__y0, y0)
+#else
+libm_alias_float (__y0, y0)
+#endif
 libm_alias_finite (__ieee754_y0f, __y0f)
 
 /* The asymptotic expansion of pzero is

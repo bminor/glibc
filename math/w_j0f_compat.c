@@ -20,12 +20,13 @@
 #include <math_private.h>
 #include <math-svid-compat.h>
 #include <libm-alias-float.h>
+#include <shlib-compat.h>
 
 
-#if LIBM_SVID_COMPAT
+#if LIBM_SVID_COMPAT && SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_43)
 /* wrapper j0f */
 float
-__j0f (float x)
+__j0f_svid (float x)
 {
   if (__builtin_expect (isgreater (fabsf (x),
 				   AS_FLOAT_CONSTANT (X_TLOSS)), 0)
@@ -35,12 +36,12 @@ __j0f (float x)
 
   return __ieee754_j0f (x);
 }
-libm_alias_float (__j0, j0)
+compat_symbol (libm, __j0f_svid, j0f, GLIBC_2_0);
 
 
 /* wrapper y0f */
 float
-__y0f (float x)
+__y0f_svid (float x)
 {
   if (__builtin_expect (islessequal (x, 0.0f)
                         || isgreater (x, AS_FLOAT_CONSTANT (X_TLOSS)), 0)
@@ -65,5 +66,5 @@ __y0f (float x)
 
   return __ieee754_y0f (x);
 }
-libm_alias_float (__y0, y0)
+compat_symbol (libm, __y0f_svid, y0f, GLIBC_2_0);
 #endif
