@@ -48,7 +48,8 @@ nss_action_parse (const char *line, struct action_list *result)
 
       /* Read <source> identifier.  */
       const char *name = line;
-      while (line[0] != '\0' && !isspace (line[0]) && line[0] != '[')
+      while (line[0] != '\0' && !__isspace_l (line[0], _nl_C_locobj_ptr)
+	     && line[0] != '[')
         ++line;
       if (name == line)
         return true;
@@ -88,25 +89,29 @@ nss_action_parse (const char *line, struct action_list *result)
 
               /* Read status name.  */
               name = line;
-              while (line[0] != '\0' && !isspace (line[0]) && line[0] != '='
-                     && line[0] != ']')
+              while (line[0] != '\0' && !__isspace_l (line[0], _nl_C_locobj_ptr)
+		     && line[0] != '=' && line[0] != ']')
                 ++line;
 
               /* Compare with known statuses.  */
               if (line - name == 7)
                 {
-                  if (__strncasecmp (name, "SUCCESS", 7) == 0)
+                  if (__strncasecmp_l (name, "SUCCESS", 7,
+				       _nl_C_locobj_ptr) == 0)
                     status = NSS_STATUS_SUCCESS;
-                  else if (__strncasecmp (name, "UNAVAIL", 7) == 0)
+                  else if (__strncasecmp_l (name, "UNAVAIL", 7,
+					    _nl_C_locobj_ptr) == 0)
                     status = NSS_STATUS_UNAVAIL;
                   else
                     return false;
                 }
               else if (line - name == 8)
                 {
-                  if (__strncasecmp (name, "NOTFOUND", 8) == 0)
+                  if (__strncasecmp_l (name, "NOTFOUND", 8,
+				       _nl_C_locobj_ptr) == 0)
                     status = NSS_STATUS_NOTFOUND;
-                  else if (__strncasecmp (name, "TRYAGAIN", 8) == 0)
+                  else if (__strncasecmp_l (name, "TRYAGAIN", 8,
+					    _nl_C_locobj_ptr) == 0)
                     status = NSS_STATUS_TRYAGAIN;
                   else
                     return false;
@@ -122,17 +127,20 @@ nss_action_parse (const char *line, struct action_list *result)
 	      ++line;
 	      SKIP_WS ();
               name = line;
-              while (line[0] != '\0' && !isspace (line[0]) && line[0] != '='
-                     && line[0] != ']')
+              while (line[0] != '\0' && !__isspace_l (line[0], _nl_C_locobj_ptr)
+		     && line[0] != '=' && line[0] != ']')
                 ++line;
 
-              if (line - name == 6 && __strncasecmp (name, "RETURN", 6) == 0)
+              if (line - name == 6
+		  && __strncasecmp_l (name, "RETURN", 6, _nl_C_locobj_ptr) == 0)
                 action = NSS_ACTION_RETURN;
               else if (line - name == 8
-                       && __strncasecmp (name, "CONTINUE", 8) == 0)
+                       && __strncasecmp_l (name, "CONTINUE", 8,
+					   _nl_C_locobj_ptr) == 0)
                 action = NSS_ACTION_CONTINUE;
               else if (line - name == 5
-                       && __strncasecmp (name, "MERGE", 5) == 0)
+                       && __strncasecmp_l (name, "MERGE", 5,
+					   _nl_C_locobj_ptr) == 0)
                 action = NSS_ACTION_MERGE;
               else
                 return false;

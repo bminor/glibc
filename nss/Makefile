@@ -356,6 +356,7 @@ tests-container := \
   tst-nss-gai-actions \
   tst-nss-gai-hv2-canonname \
   tst-nss-test3 \
+  tst-nss-action-parse \
   tst-reload1 \
   tst-reload2 \
   # tests-container
@@ -444,6 +445,9 @@ generated += mtrace-tst-nss-gai-hv2-canonname.out \
 
 include ../Rules
 
+LOCALES := tr_TR.UTF-8
+include ../gen-locales.mk
+
 ifeq (yes,$(have-selinux))
 LDLIBS-makedb		:= -lselinux
 endif
@@ -520,6 +524,8 @@ $(objpfx)mtrace-tst-nss-gai-hv2-canonname.out: \
 	&& $(common-objpfx)malloc/mtrace \
 	$(objpfx)tst-nss-gai-hv2-canonname.mtrace; } > $@; \
 	$(evaluate-test)
+
+$(objpfx)tst-nss-action-parse.out: $(gen-locales)
 
 # Disable DT_RUNPATH on NSS tests so that the glibc internal NSS
 # functions can load testing NSS modules via DT_RPATH.
