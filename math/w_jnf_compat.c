@@ -22,10 +22,10 @@
 #include <libm-alias-float.h>
 
 
-#if LIBM_SVID_COMPAT
+#if LIBM_SVID_COMPAT && SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_43)
 /* wrapper jnf */
 float
-__jnf (int n, float x)
+__jnf_svid (int n, float x)
 {
   if (__builtin_expect (isgreater (fabsf (x),
 				   AS_FLOAT_CONSTANT (X_TLOSS)), 0)
@@ -35,12 +35,12 @@ __jnf (int n, float x)
 
   return __ieee754_jnf (n, x);
 }
-libm_alias_float (__jn, jn)
+compat_symbol (libm, __jnf_svid, jnf, GLIBC_2_0);
 
 
 /* wrapper ynf */
 float
-__ynf (int n, float x)
+__ynf_svid (int n, float x)
 {
   if (__builtin_expect (islessequal (x, 0.0f)
 			|| isgreater (x, AS_FLOAT_CONSTANT (X_TLOSS)), 0)
@@ -65,5 +65,5 @@ __ynf (int n, float x)
 
   return __ieee754_ynf (n, x);
 }
-libm_alias_float (__yn, yn)
+compat_symbol (libm, __ynf_svid, ynf, GLIBC_2_0);
 #endif

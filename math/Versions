@@ -695,8 +695,10 @@ libm {
     coshf;
     j0f;
     j1f;
+    jnf;
     log10f;
     y0f;
     y1f;
+    ynf;
   }
 }
