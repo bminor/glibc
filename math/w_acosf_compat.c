@@ -22,10 +22,10 @@
 #include <libm-alias-float.h>
 
 
-#if LIBM_SVID_COMPAT
+#if LIBM_SVID_COMPAT && SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_43)
 /* wrapper acosf */
 float
-__acosf (float x)
+__acos_compatf (float x)
 {
   if (__builtin_expect (isgreater (fabsf (x), 1.0f), 0)
       && _LIB_VERSION != _IEEE_)
@@ -37,5 +37,9 @@ __acosf (float x)
 
   return __ieee754_acosf (x);
 }
-libm_alias_float (__acos, acos)
+# ifdef NO_COMPAT_NEEDED
+libm_alias_float (__acos_compat, acos)
+# else
+compat_symbol (libm, __acos_compatf, acosf, GLIBC_2_0);
+# endif
 #endif

@@ -688,6 +688,7 @@ libm {
   }
   GLIBC_2.43 {
     # No SVID compatible error handling.
+    acosf;
     log10f;
   }
 }
