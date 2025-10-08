@@ -21,10 +21,10 @@
 #include <libm-alias-float.h>
 
 
-#if LIBM_SVID_COMPAT
+#if LIBM_SVID_COMPAT && SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_43)
 /* wrapper atanhf */
 float
-__atanhf (float x)
+__atanh_compatf (float x)
 {
   if (__builtin_expect (isgreaterequal (fabsf (x), 1.0f), 0)
       && _LIB_VERSION != _IEEE_)
@@ -35,5 +35,10 @@ __atanhf (float x)
 
   return __ieee754_atanhf (x);
 }
-libm_alias_float (__atanh, atanh)
+# ifdef NO_COMPAT_NEEDED
+strong_alias (__atanh_compatf, __atanhf)
+libm_alias_float (__atanh_compat, atanh)
+# else
+compat_symbol (libm, __atanh_compatf, atanhf, GLIBC_2_0);
+# endif
 #endif

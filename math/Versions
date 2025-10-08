@@ -691,6 +691,7 @@ libm {
     acosf;
     acoshf;
     asinf;
+    atanhf;
     log10f;
   }
 }

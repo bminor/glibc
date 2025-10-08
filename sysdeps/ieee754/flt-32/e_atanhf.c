@@ -27,6 +27,8 @@ SOFTWARE.
 #include <math.h>
 #include <stdint.h>
 #include <libm-alias-finite.h>
+#include <libm-alias-float.h>
+#include <math-svid-compat.h>
 #include "math_config.h"
 
 static __attribute__((noinline)) float
@@ -42,7 +44,7 @@ as_special (float x)
 }
 
 float
-__ieee754_atanhf (float x)
+__atanhf (float x)
 {
   /* Calculate atanh(x) using the difference of two logarithms -- atanh(x) =
      (ln(1+x) - ln(1-x))/2  */
@@ -175,4 +177,11 @@ __ieee754_atanhf (float x)
     }
   return ub;
 }
+strong_alias (__atanhf, __ieee754_atanhf)
+#if LIBM_SVID_COMPAT
+versioned_symbol (libm, __atanhf, atanhf, GLIBC_2_43);
+libm_alias_float_other (__atanh, atanh)
+#else
+libm_alias_float (__atanh, atanh)
+#endif
 libm_alias_finite (__ieee754_atanhf, __atanhf)
