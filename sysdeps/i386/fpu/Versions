@@ -3,4 +3,8 @@ libm {
     # functions used in inline functions or macros
     __expl; __expm1l;
   }
+  GLIBC_2.43 {
+    # No SVID compatible error handling.
+    fmod;
+  }
 }
