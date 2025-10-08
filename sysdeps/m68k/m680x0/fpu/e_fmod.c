@@ -15,24 +15,27 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <math.h>
-#include <math_private.h>
-#include "mathimpl.h"
+#include <libm-alias-double.h>
 #include <libm-alias-finite.h>
+#include <math.h>
+#include "mathimpl.h"
+#include "math_config.h"
 
-#ifndef FUNC
-# define FUNC __ieee754_fmod
-# define FUNC_FINITE __fmod
-#endif
-#ifndef float_type
-# define float_type double
-#endif
-
-float_type
-FUNC (float_type x, float_type y)
+double
+__fmod (double x, double y)
 {
-  return __m81_u(FUNC)(x, y);
+  uint64_t hx = asuint64 (x);
+  uint64_t hy = asuint64 (y);
+
+  /* fmod(+-Inf,y) or fmod(x,0) */
+  if (__glibc_unlikely ((is_inf (hx) || y == 0.0)
+			&& !is_nan (hy)
+			&& !is_nan (hx)))
+    return __math_invalid (x);
+
+  return __m81_u(fmod)(x, y);
 }
-#ifdef FUNC_FINITE
-libm_alias_finite (FUNC, FUNC_FINITE)
-#endif
+strong_alias (__fmod, __ieee754_fmod)
+libm_alias_finite (__ieee754_fmod, __fmod)
+versioned_symbol (libm, __fmod, fmod, GLIBC_2_43);
+libm_alias_double_other (__fmod, fmod)
