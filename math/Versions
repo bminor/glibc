@@ -694,7 +694,9 @@ libm {
     atanhf;
     coshf;
     j0f;
+    j1f;
     log10f;
     y0f;
+    y1f;
   }
 }
