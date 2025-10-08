@@ -3061,7 +3061,10 @@ mremap_chunk (mchunkptr p, size_t new_size)
   if (cp == MAP_FAILED)
     return NULL;
 
-  madvise_thp (cp, new_size);
+  /* mremap preserves the region's flags - this means that if the old chunk
+     was marked with MADV_HUGEPAGE, the new chunk will retain that.  */
+  if (total_size < mp_.thp_pagesize)
+    madvise_thp (cp, new_size);
 
   p = mmap_set_chunk ((uintptr_t) cp, new_size, offset, is_hp);
 
