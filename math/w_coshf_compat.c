@@ -20,10 +20,11 @@
 #include <math_private.h>
 #include <math-svid-compat.h>
 #include <libm-alias-float.h>
+#include <shlib-compat.h>
 
-#if LIBM_SVID_COMPAT
+#if LIBM_SVID_COMPAT && SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_43)
 float
-__coshf (float x)
+__cosh_compatf (float x)
 {
 	float z = __ieee754_coshf (x);
 	if (__builtin_expect (!isfinite (z), 0) && isfinite (x)
@@ -32,5 +33,10 @@ __coshf (float x)
 
 	return z;
 }
-libm_alias_float (__cosh, cosh)
+# ifdef NO_COMPAT_NEEDED
+strong_alias (__cosh_compatf, __coshf)
+libm_alias_float (__cosh_compat, cosh)
+# else
+compat_symbol (libm, __cosh_compatf, coshf, GLIBC_2_0);
+# endif
 #endif
