@@ -26,35 +26,46 @@
 /* We cannot use the thread descriptor because in ld.so we use setjmp
    earlier than the descriptor is initialized.  */
 # ifdef __ASSEMBLER__
-#  define PTR_MANGLE(reg)       xor __pointer_chk_guard_local(%rip), reg;    \
-                                rol $2*LP_SIZE+1, reg
-#  define PTR_DEMANGLE(reg)     ror $2*LP_SIZE+1, reg;                       \
-                                xor __pointer_chk_guard_local(%rip), reg
+#  define PTR_MANGLE(reg)	xor __pointer_chk_guard_local(%rip), reg;     \
+				rol $2*LP_SIZE+1, reg
+#  define PTR_DEMANGLE(reg)	ror $2*LP_SIZE+1, reg;			      \
+				xor __pointer_chk_guard_local(%rip), reg
 # else
-#  define PTR_MANGLE(reg)       asm ("xor __pointer_chk_guard_local(%%rip), %0\n" \
-                                     "rol $2*" LP_SIZE "+1, %0"                   \
-                                     : "=r" (reg) : "0" (reg))
-#  define PTR_DEMANGLE(reg)     asm ("ror $2*" LP_SIZE "+1, %0\n"                 \
-                                     "xor __pointer_chk_guard_local(%%rip), %0"   \
-                                     : "=r" (reg) : "0" (reg))
+#  include <stdint.h>
+extern uintptr_t __pointer_chk_guard_local attribute_relro attribute_hidden;
+#  define PTR_MANGLE(var) do						      \
+    {									      \
+      (var) = (__typeof (var)) ((uintptr_t) (var)			      \
+				^ __pointer_chk_guard_local);		      \
+      asm ("rol $2*" LP_SIZE "+1, %0" : "+r" (var));			      \
+    } while (0)
+#  define PTR_DEMANGLE(var) do						      \
+    {									      \
+      asm ("ror $2*" LP_SIZE "+1, %0" : "+r" (var));			      \
+      (var) = (__typeof (var)) ((uintptr_t) (var)			      \
+				^ __pointer_chk_guard_local);		      \
+    } while (0)
 # endif
 #else
 # ifdef __ASSEMBLER__
-#  define PTR_MANGLE(reg)       xor %fs:POINTER_GUARD, reg;                   \
-                                rol $2*LP_SIZE+1, reg
-#  define PTR_DEMANGLE(reg)     ror $2*LP_SIZE+1, reg;                        \
-                                xor %fs:POINTER_GUARD, reg
+#  define PTR_MANGLE(reg)	xor %fs:POINTER_GUARD, reg;		      \
+				rol $2*LP_SIZE+1, reg
+#  define PTR_DEMANGLE(reg)	ror $2*LP_SIZE+1, reg;			      \
+				xor %fs:POINTER_GUARD, reg
 # else
-#  define PTR_MANGLE(var)       asm ("xor %%fs:%c2, %0\n"                     \
-                                     "rol $2*" LP_SIZE "+1, %0"               \
-                                     : "=r" (var)                             \
-                                     : "0" (var),                             \
-                                       "i" (POINTER_GUARD))
-#  define PTR_DEMANGLE(var)     asm ("ror $2*" LP_SIZE "+1, %0\n"             \
-                                     "xor %%fs:%c2, %0"                       \
-                                     : "=r" (var)                             \
-                                     : "0" (var),                             \
-                                       "i" (POINTER_GUARD))
+#  include <tls.h>
+#  define PTR_MANGLE(var) do						      \
+    {									      \
+      (var) = (__typeof (var)) ((uintptr_t) (var)			      \
+				^ ((tcbhead_t __seg_fs *)0)->pointer_guard);  \
+      asm ("rol $2*" LP_SIZE "+1, %0" : "+r" (var));			      \
+    } while (0)
+#  define PTR_DEMANGLE(var) do						      \
+    {									      \
+      asm ("ror $2*" LP_SIZE "+1, %0" : "+r" (var));			      \
+      (var) = (__typeof (var)) ((uintptr_t) (var)			      \
+				^ ((tcbhead_t __seg_fs *)0)->pointer_guard);  \
+    } while (0)
 # endif
 #endif
 
