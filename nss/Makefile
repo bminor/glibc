@@ -348,6 +348,7 @@ xtests := \
 tests-container := \
   tst-initgroups1 \
   tst-initgroups2 \
+  tst-nss-action-parse \
   tst-nss-compat1 \
   tst-nss-db-endgrent \
   tst-nss-db-endpwent \
@@ -356,7 +357,6 @@ tests-container := \
   tst-nss-gai-actions \
   tst-nss-gai-hv2-canonname \
   tst-nss-test3 \
-  tst-nss-action-parse \
   tst-reload1 \
   tst-reload2 \
   # tests-container
