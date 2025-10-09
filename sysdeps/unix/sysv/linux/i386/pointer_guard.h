@@ -28,21 +28,24 @@
 # include <sysdeps/generic/pointer_guard.h>
 #else
 # ifdef __ASSEMBLER__
-#  define PTR_MANGLE(reg)       xorl %gs:POINTER_GUARD, reg;                  \
-                                roll $9, reg
-#  define PTR_DEMANGLE(reg)     rorl $9, reg;                                 \
-                                xorl %gs:POINTER_GUARD, reg
+#  define PTR_MANGLE(reg)	xorl %gs:POINTER_GUARD, reg;		      \
+				roll $9, reg
+#  define PTR_DEMANGLE(reg)	rorl $9, reg;				      \
+				xorl %gs:POINTER_GUARD, reg
 # else
-#  define PTR_MANGLE(var)       asm ("xorl %%gs:%c2, %0\n"                    \
-                                     "roll $9, %0"                            \
-                                     : "=r" (var)                             \
-                                     : "0" (var),                             \
-                                       "i" (POINTER_GUARD))
-#  define PTR_DEMANGLE(var)     asm ("rorl $9, %0\n"                          \
-                                     "xorl %%gs:%c2, %0"                      \
-                                     : "=r" (var)                             \
-                                     : "0" (var),                             \
-                                       "i" (POINTER_GUARD))
+#  include <tls.h>
+#  define PTR_MANGLE(var) do						      \
+    {									      \
+      (var) = (__typeof (var)) ((uintptr_t) (var)			      \
+				^ ((tcbhead_t __seg_gs *)0)->pointer_guard);  \
+      asm ("roll $9, %0" : "+r" (var));					      \
+    } while (0)
+#  define PTR_DEMANGLE(var) do						      \
+    {									      \
+      asm ("rorl $9, %0" : "+r" (var));					      \
+      (var) = (__typeof (var)) ((uintptr_t) (var)			      \
+				^ ((tcbhead_t __seg_gs *)0)->pointer_guard);  \
+    } while (0)
 # endif
 #endif
 
