@@ -27,6 +27,7 @@
 #include <support/support.h>
 #include <support/test-driver.h>
 #include <support/xstdio.h>
+#include <support/temp_file.h>
 
 static int
 do_test (void)
@@ -48,6 +49,22 @@ do_test (void)
   TEST_VERIFY (getdelim (&lineptr, &linelen, '\0', memstream) != -1);
   TEST_COMPARE_BLOB (lineptr, 5, "d\nef\0", 5);
   xfclose (memstream);
+  free (lineptr);
+
+  /* Test that getdelim NUL terminates upon reading an EOF from an empty
+     file (BZ #28038).  This test fails on glibc 2.42 and earlier.  */
+  lineptr = xmalloc (1);
+  lineptr[0] = 'A';
+  linelen = 1;
+  char *file_name;
+  TEST_VERIFY_EXIT (create_temp_file ("tst-getdelim.", &file_name) != -1);
+  FILE *fp = fopen (file_name, "r");
+  TEST_VERIFY_EXIT (fp != NULL);
+  TEST_VERIFY (getdelim (&lineptr, &linelen, '\n', fp) == -1);
+  TEST_VERIFY (linelen > 0);
+  TEST_VERIFY (lineptr[0] == '\0');
+  fclose (fp);
+  free (file_name);
   free (lineptr);
 
   return 0;

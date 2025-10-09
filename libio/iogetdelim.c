@@ -77,6 +77,7 @@ __getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp)
       if (__underflow (fp) == EOF)
 	{
 	  result = -1;
+	  (*lineptr)[0] = '\0';
 	  goto unlock_return;
 	}
       len = fp->_IO_read_end - fp->_IO_read_ptr;
