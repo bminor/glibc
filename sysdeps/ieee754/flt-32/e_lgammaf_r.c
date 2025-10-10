@@ -116,41 +116,34 @@ __ieee754_lgammaf_r (float x, int *signgamp)
     float f;
     float df;
   } tb[] = {
-    { -0x1.efc2a2p+14, -0x1.222dbcp+18,   -0x1p-7 },
-    { -0x1.627346p+7,  -0x1.73235ep+9,   -0x1p-16 },
-    { -0x1.08b14p+4,   -0x1.f0cbe6p+4,   -0x1p-21 },
-    { -0x1.69d628p+3,  -0x1.0eac2ap+4,   -0x1p-21 },
-    { -0x1.904902p+2,  -0x1.65532cp+2,    0x1p-23 },
-    { -0x1.9272d2p+1,  -0x1.170b98p-8,    0x1p-33 },
-    { -0x1.625edap+1,   0x1.6a6c4ap-5,   -0x1p-30 },
-    { -0x1.5fc2aep+1,   0x1.c0a484p-11,  -0x1p-36 },
-    { -0x1.5fb43ep+1,   0x1.5b697p-17,    0x1p-42 },
-    { -0x1.5fa20cp+1,  -0x1.132f7ap-10,   0x1p-35 },
-    { -0x1.580c1ep+1,  -0x1.5787c6p-4,    0x1p-29 },
-    { -0x1.3a7fcap+1,  -0x1.e4cf24p-24,  -0x1p-49 },
-    { -0x1.c2f04p-30,   0x1.43a6f6p+4,    0x1p-21 },
-    { -0x1.ade594p-30,  0x1.446ab2p+4,   -0x1p-21 },
-    { -0x1.437e74p-40,  0x1.b7dec2p+4,   -0x1p-21 },
-    { -0x1.d85bfep-43,  0x1.d31592p+4,   -0x1p-21 },
-    { -0x1.f51c8ep-49,  0x1.0a572ap+5,   -0x1p-20 },
-    { -0x1.108a5ap-66,  0x1.6d7b18p+5,   -0x1p-20 },
-    { -0x1.ecf3fep-73,  0x1.8f8e5ap+5,   -0x1p-20 },
-    { -0x1.25cb66p-123, 0x1.547a44p+6,   -0x1p-19 },
-    { 0x1.ecf3fep-73,   0x1.8f8e5ap+5,   -0x1p-20 },
-    { 0x1.108a5ap-66,   0x1.6d7b18p+5,   -0x1p-20 },
-    { 0x1.a68bbcp-42,   0x1.c9c6e8p+4,    0x1p-21 },
-    { 0x1.ddfd06p-12,   0x1.ec5ba8p+2,   -0x1p-23 },
-    { 0x1.f8a754p-9,    0x1.63acc2p+2,    0x1p-23 },
-    { 0x1.8d16b2p+5,    0x1.1e4b4ep+7,    0x1p-18 },
-    { 0x1.359e0ep+10,   0x1.d9ad02p+12,  -0x1p-13 },
-    { 0x1.a82a2cp+13,   0x1.c38036p+16,   0x1p-9 },
-    { 0x1.62c646p+14,   0x1.9075bep+17,  -0x1p-8 },
-    { 0x1.7f298p+31,    0x1.f44946p+35,  -0x1p+10 },
-    { 0x1.a45ea4p+33,   0x1.25dcbcp+38,  -0x1p+13 },
-    { 0x1.f9413ep+76,   0x1.9d5ab4p+82,  -0x1p+57 },
-    { 0x1.dcbbaap+99,   0x1.fc5772p+105,  0x1p+80 },
-    { 0x1.58ace8p+112,  0x1.9e4f66p+118, -0x1p+93 },
-    { 0x1.87bdfp+115,   0x1.e465aep+121,  0x1p+96 },
+    /* NB: the entries should be sorted by the asuint (x) value.  */
+    { 0x1.ecf3fep-73f,   0x1.8f8e5ap+5f,   -0x1p-20f },
+    { 0x1.108a5ap-66f,   0x1.6d7b18p+5f,   -0x1p-20f },
+    { 0x1.a68bbcp-42f,   0x1.c9c6e8p+4f,    0x1p-21f },
+    { 0x1.ddfd06p-12f,   0x1.ec5ba8p+2f,   -0x1p-23f },
+    { 0x1.f8a754p-9f,    0x1.63acc2p+2f,    0x1p-23f },
+    { 0x1.8d16b2p+5f,    0x1.1e4b4ep+7f,    0x1p-18f },
+    { 0x1.359e0ep+10f,   0x1.d9ad02p+12f,  -0x1p-13f },
+    { 0x1.a82a2cp+13f,   0x1.c38036p+16f,   0x1p-9f },
+    { 0x1.62c646p+14f,   0x1.9075bep+17f,  -0x1p-8f },
+    { 0x1.7f298p+31f,    0x1.f44946p+35f,  -0x1p+10f },
+    { 0x1.a45ea4p+33f,   0x1.25dcbcp+38f,  -0x1p+13f },
+    { 0x1.f9413ep+76f,   0x1.9d5ab4p+82f,  -0x1p+57f },
+    { 0x1.dcbbaap+99f,   0x1.fc5772p+105f,  0x1p+80f },
+    { 0x1.58ace8p+112f,  0x1.9e4f66p+118f, -0x1p+93f },
+    { 0x1.87bdfp+115f,   0x1.e465aep+121f,  0x1p+96f },
+    { -0x1.25cb66p-123f, 0x1.547a44p+6f,   -0x1p-19f },
+    { -0x1.ecf3fep-73f,  0x1.8f8e5ap+5f,   -0x1p-20f },
+    { -0x1.108a5ap-66f,  0x1.6d7b18p+5f,   -0x1p-20f },
+    { -0x1.f51c8ep-49f,  0x1.0a572ap+5f,   -0x1p-20f },
+    { -0x1.d85bfep-43f,  0x1.d31592p+4f,   -0x1p-21f },
+    { -0x1.437e74p-40f,  0x1.b7dec2p+4f,   -0x1p-21f },
+    { -0x1.ade594p-30f,  0x1.446ab2p+4f,   -0x1p-21f },
+    { -0x1.c2f04p-30f,   0x1.43a6f6p+4f,    0x1p-21f },
+    { -0x1.580c1ep+1f,  -0x1.5787c6p-4f,    0x1p-29f },
+    { -0x1.69d628p+3f,  -0x1.0eac2ap+4f,   -0x1p-21f },
+    { -0x1.627346p+7f,  -0x1.73235ep+9f,   -0x1p-16f },
+    { -0x1.efc2a2p+14f, -0x1.222dbcp+18f,  -0x1p-7f }
   };
 
   float fx = floor (x);
@@ -355,11 +348,18 @@ __ieee754_lgammaf_r (float x, int *signgamp)
   if (__glibc_unlikely (tl <= 31u))
     {
       t = asuint (x);
-      for (unsigned i = 0; i < array_length (tb); i++)
-	{
-	  if (t == asuint (tb[i].x))
-	    return tb[i].f + tb[i].df;
+      int a = 0, b = array_length (tb) - 1;
+      while (a < b)
+	{ /* Binary search.  */
+	  int m = (a + b) >> 1;
+	  uint32_t tbi = asuint (tb[m].x);
+	  if (t > tbi)
+	    a = m + 1;
+	  else
+	    b = m;
 	}
+      if (t == asuint (tb[a].x))
+	return tb[a].f + tb[a].df;
     }
   return r;
 }

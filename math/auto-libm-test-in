@@ -6933,6 +6933,9 @@ lgamma 0x1p-16494
 lgamma -0x1p-16494
 # the next value generates larger error bounds on x86_64 (binary32)
 lgamma -0x3.ec4298p+0
+lgamma 0x1.ecf3fep-73
+lgamma 0x1.58ace8p+112
+lgamma -0x1.efc2a2p+14
 
 # Values +/- 10ulp from overflow threshold.  (Values very close to
 # overflow threshold produce results very close of that threshold,
