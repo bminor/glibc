@@ -35,6 +35,18 @@ double: 0
 Function: "atanh_upward":
 double: 0
 
+Function: "erf":
+double: 0
+
+Function: "erf_downward":
+double: 0
+
+Function: "erf_towardzero":
+double: 0
+
+Function: "erf_upward":
+double: 0
+
 Function: "lgamma":
 double: 0
 

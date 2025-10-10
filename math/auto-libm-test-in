@@ -5620,6 +5620,9 @@ erf -0x1.c975cap+0
 erf -0x1.e6a006p+0
 erf -0x1.4d32f4p-12
 
+erf 0x1.c5bf891b4ef6ap-1023
+erf -0x1.c5bf891b4ef6ap-1023
+
 erfc 0.0
 erfc -0
 erfc 0x1p-55

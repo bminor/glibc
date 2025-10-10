@@ -249,6 +249,8 @@ core-math:
   sysdeps/ieee754/dbl-64/e_lgamma_r.c
   # src/binary64/asinh/asinh.c, revision fde815f8
   sysdeps/ieee754/dbl-64/s_asinh.c
+  # src/binary64/erf/erf.c, revision 384ed01d
+  sysdeps/ieee754/dbl-64/s_erf.c
   # src/binary32/acos/acosf.c, revision 56dd347
   sysdeps/ieee754/flt-32/e_acosf.c
   # src/binary32/acosh/acoshf.c, revision d0b9ddd
