@@ -47,6 +47,18 @@ double: 0
 Function: "erf_upward":
 double: 0
 
+Function: "erfc":
+double: 0
+
+Function: "erfc_downward":
+double: 0
+
+Function: "erfc_towardzero":
+double: 0
+
+Function: "erfc_upward":
+double: 0
+
 Function: "lgamma":
 double: 0
 

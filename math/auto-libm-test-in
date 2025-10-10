@@ -5729,6 +5729,9 @@ erfc 0x2.56af04p+0
 erfc 0x2.b7f8cb76737d2af98dead7c4c5eep+0
 erfc 0x2.dfb9b4p+0
 erfc 0x1.e33c9ep+0
+
+erfc 0x1.a8f7bfbd15495p+4
+
 # the next value generates larger error bounds on x86_64 (binary64)
 erfc 0x1.3ffcbf39febb4p+0
 
