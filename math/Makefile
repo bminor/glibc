@@ -362,6 +362,7 @@ type-double-routines := \
   k_rem_pio2 \
   math_err \
   s_asincosh_data \
+  s_atanh_data \
   sincostab \
   # type-double-routines
 
