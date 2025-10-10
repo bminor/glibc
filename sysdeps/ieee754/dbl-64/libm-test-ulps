@@ -1,0 +1,12 @@
+# Maximal error of functions:
+Function: "acosh":
+double: 0
+
+Function: "acosh_downward":
+double: 0
+
+Function: "acosh_towardzero":
+double: 0
+
+Function: "acosh_upward":
+double: 0

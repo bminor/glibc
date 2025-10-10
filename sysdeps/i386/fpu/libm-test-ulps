@@ -1,3 +1,16 @@
+# sysdeps/i386/fpu/e_acosh.S is not correctly rounded
+Function: "acosh":
+double: 1
+
+Function: "acosh_downward":
+double: 1
+
+Function: "acosh_towardzero":
+double: 1
+
+Function: "acosh_upward":
+double: 1
+
 # sysdeps/i386/fpu/s_cbrtf.S is not correctly rounded
 Function: "cbrt":
 float: 1
