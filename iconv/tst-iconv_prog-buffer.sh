@@ -127,7 +127,7 @@ ignore_failure () {
     set -e
 }
 
-# Concatentation test.
+# Concatenation test.
 run_iconv -o "$tmp/out" "$tmp/abc" "$tmp/def"
 expect_files abc def
 

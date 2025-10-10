@@ -138,7 +138,7 @@
 #include <syscall_types.h>
 
 /* Adjust both the __syscall_cancel and the SYSCALL_CANCEL macro to support
-   7 arguments instead of default 6 (curently only mip32).  It avoid add
+   7 arguments instead of default 6 (currently only mip32).  It avoid add
    the requirement to each architecture to support 7 argument macros
    {INTERNAL,INLINE}_SYSCALL.  */
 #ifdef HAVE_CANCELABLE_SYSCALL_WITH_7_ARGS

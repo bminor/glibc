@@ -1,4 +1,4 @@
-/* Symbol rediretion for loader/static initialization code.
+/* Symbol redirection for loader/static initialization code.
    Copyright (C) 2022-2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

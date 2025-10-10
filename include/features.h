@@ -156,7 +156,7 @@
 #undef	__GLIBC_USE_DEPRECATED_SCANF
 #undef	__GLIBC_USE_C23_STRTOL
 
-/* Suppress kernel-name space pollution unless user expressedly asks
+/* Suppress kernel-name space pollution unless user explicitly asks
    for it.  */
 #ifndef _LOOSE_KERNEL_NAMES
 # define __KERNEL_STRICT_NAMES
