@@ -36,3 +36,16 @@ double: 1
 
 Function: "asinh_upward":
 double: 1
+
+# sysdeps/i386/fpu/e_atanh.S is not correctly rounded
+Function: "atanh":
+double: 1
+
+Function: "atanh_downward":
+double: 1
+
+Function: "atanh_towardzero":
+double: 1
+
+Function: "atanh_upward":
+double: 1

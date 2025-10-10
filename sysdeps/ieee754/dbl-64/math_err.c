@@ -135,6 +135,11 @@ __math_check_uflow_lt (double x, double y)
   return fabs (x) < y ? with_errno (x, ERANGE) : x;
 }
 
+attribute_hidden double __math_check_uflow_zero_lt (double x, double y,
+						    double z)
+{
+  return x != 0 && fabs (x) < y ? with_errno (z, ERANGE) : z;
+}
 
 attribute_hidden double
 __math_check_oflow (double y)
