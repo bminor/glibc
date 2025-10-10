@@ -38,6 +38,33 @@
 # define WANT_ERRNO_UFLOW (WANT_ROUNDING && WANT_ERRNO)
 #endif
 
+#ifndef ROUNDEVEN_INTRINSICS
+/* When set, roundeven_finite will route to the internal roundeven function.  */
+# define ROUNDEVEN_INTRINSICS 1
+#endif
+
+/* Round x to nearest integer value in floating-point format, rounding halfway
+  cases to even.  If the input is non finite the result is unspecified.  */
+static inline double
+roundeven_finite (double x)
+{
+  if (!isfinite (x))
+    __builtin_unreachable ();
+#if ROUNDEVEN_INTRINSICS
+  return roundeven (x);
+#else
+  double y = round (x);
+  if (fabs (x - y) == 0.5)
+    {
+      union { double f; uint64_t i; } u = {y};
+      union { double f; uint64_t i; } v = {y - copysign (1.0, x)};
+      if (__builtin_ctzll (v.i) > __builtin_ctzll (u.i))
+        y = v.f;
+    }
+  return y;
+#endif
+}
+
 #ifndef TOINT_INTRINSICS
 /* When set, the roundtoint and converttoint functions are provided with
    the semantics documented below.  */

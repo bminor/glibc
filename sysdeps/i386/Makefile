@@ -11,6 +11,10 @@ ifeq ($(subdir),math)
 # the handling of MATH_SET_BOTH_ROUNDING_MODES in
 # sysdeps/i386/fpu/fenv_private.h.
 CFLAGS-e_gamma_r.c += -DMATH_SET_BOTH_ROUNDING_MODES
+
+# The CORE-MATH implementation assumes FLT_EVAL_METHOD == 0 to provide
+# correctly rounded results.
+CFLAGS-e_lgamma_r.c += -fexcess-precision=standard
 endif
 
 ifeq ($(subdir),gmon)

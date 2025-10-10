@@ -34,3 +34,15 @@ double: 0
 
 Function: "atanh_upward":
 double: 0
+
+Function: "lgamma":
+double: 0
+
+Function: "lgamma_downward":
+double: 0
+
+Function: "lgamma_towardzero":
+double: 0
+
+Function: "lgamma_upward":
+double: 0
