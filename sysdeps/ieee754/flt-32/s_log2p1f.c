@@ -231,7 +231,14 @@ __log2p1f (float x)
       int j = (m + ((int64_t) 1 << (52 - 8))) >> (52 - 7), k = j > 53;
       e += k;
       double xd = asdouble (m | (uint64_t) 0x3ff << 52);
-      z = fma (xd, ix[j], -1.0);
+#ifndef __FP_FAST_FMA
+      /* The fma is required only for x == -0x1.da285cp-5f in FE_TONEAREST
+	 to provide correctly rounded results.  */
+      if (__glibc_likely (x != -0x1.da285cp-5f))
+        z = xd * ix[j] - 1.0;
+      else
+#endif
+	z = fma (xd, ix[j], -1.0);
       static const double c[] =
 	{
 	   0x1.71547652b82fep+0, -0x1.71547652b82ffp-1,  0x1.ec709dc32988bp-2,
