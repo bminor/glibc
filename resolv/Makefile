@@ -80,7 +80,10 @@ routines_no_fortify += \
   # routines_no_fortify
 
 tests = tst-aton tst-leaks tst-inet_ntop
-tests-container = tst-leaks2
+tests-container += \
+  tst-getaddrinfo-eai-again \
+  tst-leaks2 \
+  # tests-container
 
 tests-internal += tst-inet_aton_exact
 
@@ -136,6 +139,7 @@ tests-static += tst-ns_rr_cursor
 # These tests need libdl.
 ifeq (yes,$(build-shared))
 tests += \
+  tst-getaddrinfo-eai-again-timeout \
   tst-resolv-ai_idn \
   tst-resolv-ai_idn-latin1 \
   tst-resolv-ai_idn-nolibidn2 \
@@ -280,6 +284,8 @@ $(objpfx)mtrace-tst-resolv-res_ninit.out: $(objpfx)tst-resolv-res_ninit.out
 
 $(objpfx)tst-bug18665-tcp: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-bug18665: $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-getaddrinfo-eai-again-timeout: \
+  $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-ai_idn: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-ai_idn-latin1: \
   $(objpfx)libresolv.so $(shared-thread-library)
