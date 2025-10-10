@@ -48,128 +48,8 @@ SOFTWARE.
 #include <errno.h>
 #include <libm-alias-double.h>
 #include "math_config.h"
-#include "s_erf_data.h"
+#include "s_erf_common.h"
 #include "s_erfc_data.h"
-
-static inline void
-fast_two_sum (double *hi, double *lo, double a, double b)
-{
-  double e;
-
-  *hi = a + b;
-  e = *hi - a; /* exact */
-  *lo = b - e; /* exact */
-}
-
-static inline void
-two_sum (double *hi, double *lo, double a, double b)
-{
-  *hi = a + b;
-  double aa = *hi - b;
-  double bb = *hi - aa;
-  double da = a - aa;
-  double db = b - bb;
-  *lo = da + db;
-}
-
-static inline void
-a_mul (double *hi, double *lo, double a, double b)
-{
-  *hi = a * b;
-  *lo = fma (a, b, -*hi);
-}
-
-/* Assuming 0 <= z <= 0x1.7afb48dc96626p+2, put in h+l an approximation
-   of erf(z). Return err the maximal relative error:
-   |(h + l)/erf(z) - 1| < err*|h+l| */
-static double
-cr_erf_fast (double *h, double *l, double z)
-{
-  double th, tl;
-  if (z < 0.0625) /* z < 1/16 */
-    {
-      double z2h, z2l, z4;
-      a_mul (&z2h, &z2l, z, z);
-      z4 = z2h * z2h;
-      double c9 = fma (C0[7], z2h, C0[6]);
-      double c5 = fma (C0[5], z2h, C0[4]);
-      c5 = fma (c9, z4, c5);
-      a_mul (&th, &tl, z2h, c5);
-      fast_two_sum (h, l, C0[2], th);
-      *l += tl + C0[3];
-      double h_copy = *h;
-      a_mul (&th, &tl, z2h, *h);
-      tl += fma (z2h, *l, C0[1]);
-      fast_two_sum (h, l, C0[0], th);
-      *l += fma (z2l, h_copy, tl);
-      a_mul (h, &tl, *h, z);
-      *l = fma (*l, z, tl);
-      return 0x1.78p-69;
-    }
-  double v = floor (16.0 * z);
-  uint32_t i = 16.0 * z;
-  z = (z - 0.03125) - 0.0625 * v;
-  const double *c = C[i - 1];
-  double z2 = z * z, z4 = z2 * z2;
-  double c9 = fma (c[12], z, c[11]);
-  double c7 = fma (c[10], z, c[9]);
-  double c5 = fma (c[8], z, c[7]);
-  double c3h, c3l;
-  fast_two_sum (&c3h, &c3l, c[5], z * c[6]);
-  c7 = fma (c9, z2, c7);
-  fast_two_sum (&c3h, &tl, c3h, c5 * z2);
-  c3l += tl;
-  fast_two_sum (&c3h, &tl, c3h, c7 * z4);
-  c3l += tl;
-  double c2h, c2l;
-  a_mul (&th, &tl, z, c3h);
-  fast_two_sum (&c2h, &c2l, c[4], th);
-  c2l += fma (z, c3l, tl);
-  a_mul (&th, &tl, z, c2h);
-  fast_two_sum (h, l, c[2], th);
-  *l += tl + fma (z, c2l, c[3]);
-  a_mul (&th, &tl, z, *h);
-  tl = fma (z, *l, tl); /* tl += z*l */
-  fast_two_sum (h, l, c[0], th);
-  *l += tl + c[1];
-  return 0x1.11p-69;
-}
-
-/* for |z| < 1/8, assuming z >= 2^-61, thus no underflow can occur */
-static void
-cr_erf_accurate_tiny (double *h, double *l, double z)
-{
-  double z2 = z * z, th, tl;
-  *h = P[21 / 2 + 4]; /* degree 21 */
-  for (int j = 19; j > 11; j -= 2)
-    *h = fma (*h, z2, P[j / 2 + 4]); /* degree j */
-  *l = 0;
-  for (int j = 11; j > 7; j -= 2)
-    {
-      /* multiply h+l by z^2 */
-      a_mul (&th, &tl, *h, z);
-      tl = fma (*l, z, tl);
-      a_mul (h, l, th, z);
-      *l = fma (tl, z, *l);
-      /* add P[j] to h + l */
-      fast_two_sum (h, &tl, P[j / 2 + 4], *h);
-      *l += tl;
-    }
-  for (int j = 7; j >= 1; j -= 2)
-    {
-      /* multiply h+l by z^2 */
-      a_mul (&th, &tl, *h, z);
-      tl = fma (*l, z, tl);
-      a_mul (h, l, th, z);
-      *l = fma (tl, z, *l);
-      fast_two_sum (h, &tl, P[j - 1], *h);
-      *l += P[j] + tl;
-    }
-  /* multiply by z */
-  a_mul (h, &tl, *h, z);
-  *l = fma (*l, z, tl);
-  return;
-}
 
 /* Assuming 0 <= z <= 0x1.7afb48dc96626p+2, put in h+l an accurate
    approximation of erf(z).
@@ -179,7 +59,7 @@ cr_erf_accurate (double *h, double *l, double z)
 {
   double th, tl;
   if (z < 0.125) /* z < 1/8 */
-    return cr_erf_accurate_tiny (h, l, z);
+    return __cr_erf_accurate_tiny (h, l, z, false);
   double v = floor (8.0 * z);
   uint32_t i = 8.0 * z;
   z = (z - 0.0625) - 0.125 * v;
@@ -507,7 +387,7 @@ cr_erfc_fast (double *h, double *l, double x)
      throughput is about 44 cycles */
   if (x < 0) // erfc(x) = 1 - erf(x) = 1 + erf(-x)
     {
-      double err = cr_erf_fast (h, l, -x);
+      double err = __cr_erf_fast (h, l, -x);
       /* h+l approximates erf(-x), with relative error bounded by err,
 	 where err <= 0x1.78p-69 */
       err = err * *h; /* convert into absolute error */
@@ -533,7 +413,7 @@ cr_erfc_fast (double *h, double *l, double x)
      the average reciprocal throughput is about 59 cycles */
   else if (x <= THRESHOLD1)
     {
-      double err = cr_erf_fast (h, l, x);
+      double err = __cr_erf_fast (h, l, x);
       /* h+l approximates erf(x), with relative error bounded by err,
 	 where err <= 0x1.78p-69 */
       err = err * *h; /* convert into absolute error */

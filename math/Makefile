@@ -363,6 +363,7 @@ type-double-routines := \
   math_err \
   s_asincosh_data \
   s_atanh_data \
+  s_erf_common \
   s_erf_data \
   s_erfc_data \
   sincostab \
