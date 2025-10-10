@@ -204,7 +204,6 @@ libm-calls = \
   e_remainderF \
   e_sinhF \
   e_sqrtF \
-  gamma_productF \
   k_tanF \
   s_asinhF \
   s_atanF \
@@ -341,6 +340,7 @@ test-types-basic = \
 type-ldouble-suffix := l
 type-ldouble-routines := \
   e_rem_pio2l \
+  gamma_productl \
   k_cosl \
   k_sincosl \
   k_sinl \
@@ -386,6 +386,7 @@ type-float-routines := \
 type-float128-suffix := f128
 type-float128-routines := \
   e_rem_pio2f128 \
+  gamma_productf128 \
   k_cosf128 \
   k_sincosf128 \
   k_sinf128 \

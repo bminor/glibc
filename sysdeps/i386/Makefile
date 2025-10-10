@@ -6,15 +6,10 @@ asm-CPPFLAGS += -DGAS_SYNTAX
 long-double-fcts = yes
 
 ifeq ($(subdir),math)
-# These functions change the rounding mode internally and need to
-# update both the SSE2 rounding mode and the 387 rounding mode.  See
-# the handling of MATH_SET_BOTH_ROUNDING_MODES in
-# sysdeps/i386/fpu/fenv_private.h.
-CFLAGS-e_gamma_r.c += -DMATH_SET_BOTH_ROUNDING_MODES
-
 # The CORE-MATH implementation assumes FLT_EVAL_METHOD == 0 to provide
 # correctly rounded results.
 CFLAGS-e_lgamma_r.c += -fexcess-precision=standard
+CFLAGS-e_gamma_r.c += -fexcess-precision=standard
 endif
 
 ifeq ($(subdir),gmon)

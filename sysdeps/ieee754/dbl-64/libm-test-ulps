@@ -46,3 +46,15 @@ double: 0
 
 Function: "lgamma_upward":
 double: 0
+
+Function: "tgamma":
+double: 0
+
+Function: "tgamma_downward":
+double: 0
+
+Function: "tgamma_towardzero":
+double: 0
+
+Function: "tgamma_upward":
+double: 0

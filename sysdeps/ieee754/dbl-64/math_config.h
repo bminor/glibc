@@ -180,6 +180,9 @@ attribute_hidden double __math_oflow (uint32_t);
 attribute_hidden double __math_uflow (uint32_t);
 /* The result underflows to 0 in some directed rounding mode only.  */
 attribute_hidden double __math_may_uflow (uint32_t);
+/* The result underflows, raise the exception, set errno, and returns the
+   value.  */
+attribute_hidden double __math_uflow_value (double);
 /* Division by zero.  */
 attribute_hidden double __math_divzero (uint32_t);
 
@@ -203,6 +206,8 @@ attribute_hidden double __math_check_uflow (double);
 attribute_hidden double __math_check_uflow_lt (double, double);
 /* Check if the |X| if less than Y.  */
 attribute_hidden double __math_check_uflow_zero_lt (double, double, double);
+/* Return pole error.  */
+attribute_hidden double __math_erange (double);
 
 /* Check if the result overflowed to infinity.  */
 static inline double
