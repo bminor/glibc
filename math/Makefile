@@ -361,6 +361,7 @@ type-double-routines := \
   e_pow_log_data \
   k_rem_pio2 \
   math_err \
+  s_asincosh_data \
   sincostab \
   # type-double-routines
 
