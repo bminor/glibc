@@ -241,6 +241,8 @@ tzdata:
 core-math:
   # src/binary64/acosh/acosh.c, revision 69062c4d
   sysdeps/ieee754/dbl-64/e_acosh.c
+  # src/binary64/asinh/asinh.c, revision fde815f8
+  sysdeps/ieee754/dbl-64/s_asinh.c
   # src/binary32/acos/acosf.c, revision 56dd347
   sysdeps/ieee754/flt-32/e_acosf.c
   # src/binary32/acosh/acoshf.c, revision d0b9ddd

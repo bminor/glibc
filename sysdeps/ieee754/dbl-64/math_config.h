@@ -172,6 +172,8 @@ attribute_hidden double __math_edom (double x);
 attribute_hidden double __math_check_oflow (double);
 /* Check if the result underflowed to 0.  */
 attribute_hidden double __math_check_uflow (double);
+/* Check if the |X| if less than Y.  */
+attribute_hidden double __math_check_uflow_lt (double, double);
 
 /* Check if the result overflowed to infinity.  */
 static inline double

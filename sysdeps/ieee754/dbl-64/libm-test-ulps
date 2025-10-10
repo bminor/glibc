@@ -10,3 +10,15 @@ double: 0
 
 Function: "acosh_upward":
 double: 0
+
+Function: "asinh":
+double: 0
+
+Function: "asinh_downward":
+double: 0
+
+Function: "asinh_towardzero":
+double: 0
+
+Function: "asinh_upward":
+double: 0

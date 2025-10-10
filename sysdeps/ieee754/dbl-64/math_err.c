@@ -80,6 +80,12 @@ __math_may_uflow (uint32_t sign)
 #endif
 
 attribute_hidden double
+__math_always_uflow (double x)
+{
+  return with_errno (x, ERANGE);
+}
+
+attribute_hidden double
 __math_oflow (uint32_t sign)
 {
   return xflow (sign, 0x1p769);
@@ -122,6 +128,13 @@ __math_check_uflow (double y)
 {
   return y == 0.0 ? with_errno (y, ERANGE) : y;
 }
+
+attribute_hidden double
+__math_check_uflow_lt (double x, double y)
+{
+  return fabs (x) < y ? with_errno (x, ERANGE) : x;
+}
+
 
 attribute_hidden double
 __math_check_oflow (double y)
