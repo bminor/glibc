@@ -140,7 +140,7 @@ __erfcf (float xf)
   const double iln2 = 0x1.71547652b82fep+0;
   const double ln2h = 0x1.62e42fefap-8;
   const double ln2l = 0x1.cf79abd6f5dc8p-47;
-  uint64_t jt = asuint64 (fma (x2, iln2, -(1024 + 0x1p-8)));
+  uint64_t jt = asuint64 (x2 * iln2 + -(1024 + 0x1p-8));
   int64_t j = (int64_t) (jt << 12) >> 48;
   double S = asdouble ((uint64_t)((j >> 7) + (0x3ff | sgn << 11)) << 52);
   static const double ch[] =
