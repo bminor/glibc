@@ -84,10 +84,10 @@ __asinhf (float x)
 	  const double ln2h = 0x1.62e4p-1;
 	  double Lh = ln2h * e;
 	  double Ll = ln2l * e;
-	  r = fma (z, c0, Ll + LIX[j]) + Lh;
+	  r = (z * c0 + (Ll + LIX[j])) + Lh;
 	  if (__glibc_unlikely ((asuint64 (r) & INT64_C(0xfffffff)) == 0))
 	    {
-	      double h = fma (z, c0, Ll + LIX[j]) + (Lh - r);
+	      double h = (z * c0 + (Ll + LIX[j])) + (Lh - r);
 	      r = r + 64 * h;
 	    }
 	}
