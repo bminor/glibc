@@ -524,6 +524,8 @@ asinpi 0x1.f1c012p-1
 asinpi -0x1.8805060cb885cp-3
 asinpi 0x8.14d7e32b5c44642p-4
 asinpi -0xa.7ca6c96caefe80b9d757de58a578p-4
+asinpi 0x1.6371e8p-4
+asinpi -0x1.6371e8p-4
 
 atan inf
 atan -inf
