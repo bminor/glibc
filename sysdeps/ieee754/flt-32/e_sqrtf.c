@@ -72,10 +72,10 @@ __ieee754_sqrtf(float x)
 
     /* use floating add to find out rounding direction */
 	if(ix!=0) {
-	    z = 0x1p0 - 0x1.4484cp-100; /* trigger inexact flag.  */
-	    if (z >= 0x1p0) {
-		z = 0x1p0 + 0x1.4484cp-100;
-		if (z > 0x1p0)
+	    z = 0x1p0f - 0x1.4484cp-100f; /* trigger inexact flag.  */
+	    if (z >= 0x1p0f) {  /* rounding to nearest or upward */
+		z = 0x1p0f + 0x1.4484cp-100f;
+		if (z > 0x1p0f) /* rounding upward */
 		    q += 2;
 		else
 		    q += (q&1);
