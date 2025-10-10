@@ -29,67 +29,7 @@ SOFTWARE. */
 #include <libm-alias-finite.h>
 #include "math_config.h"
 #include "s_atanh_data.h"
-
-static inline double
-fasttwosum (double x, double y, double *e)
-{
-  double s = x + y, z = s - x;
-  *e = y - z;
-  return s;
-}
-
-static inline double
-fasttwosub (double x, double y, double *e)
-{
-  double s = x - y, z = x - s;
-  *e = z - y;
-  return s;
-}
-
-static inline double
-adddd (double xh, double xl, double ch, double cl, double *l)
-{
-  double s = xh + ch, d = s - xh;
-  *l = ((ch - d) + (xh + (d - s))) + (xl + cl);
-  return s;
-}
-
-static inline double
-muldd (double xh, double xl, double ch, double cl, double *l)
-{
-  double ahlh = ch * xl, alhh = cl * xh, ahhh = ch * xh,
-	 ahhl = fma (ch, xh, -ahhh);
-  ahhl += alhh + ahlh;
-  ch = ahhh + ahhl;
-  *l = (ahhh - ch) + ahhl;
-  return ch;
-}
-
-static inline double
-mulddd (double xh, double xl, double ch, double *l)
-{
-  double ahlh = ch * xl, ahhh = ch * xh, ahhl = fma (ch, xh, -ahhh);
-  ahhl += ahlh;
-  ch = ahhh + ahhl;
-  *l = (ahhh - ch) + ahhl;
-  return ch;
-}
-
-static inline double
-polydd (double xh, double xl, int n, const double c[][2], double *l)
-{
-  int i = n - 1;
-  double ch = c[i][0] + *l, cl = ((c[i][0] - ch) + *l) + c[i][1];
-  while (--i >= 0)
-    {
-      ch = muldd (xh, xl, ch, cl, &cl);
-      double th = ch + c[i][0], tl = (c[i][0] - th) + ch;
-      ch = th;
-      cl += tl + c[i][1];
-    }
-  *l = cl;
-  return ch;
-}
+#include "ddcoremath.h"
 
 static double __attribute__ ((noinline)) as_atanh_refine (double, double,
 							  double, double);

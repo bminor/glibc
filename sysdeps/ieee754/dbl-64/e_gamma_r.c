@@ -29,110 +29,7 @@ SOFTWARE.
 #include <float.h>
 #include <libm-alias-finite.h>
 #include "math_config.h"
-
-static inline double
-fasttwosum (double x, double y, double *e)
-{
-  double s = x + y, z = s - x;
-  *e = y - z;
-  return s;
-}
-
-static inline double
-fastsum (double xh, double xl, double yh, double yl, double *e)
-{
-  double sl, sh = fasttwosum (xh, yh, &sl);
-  *e = (xl + yl) + sl;
-  return sh;
-}
-
-static inline double
-sumdd (double xh, double xl, double yh, double yl, double *e)
-{
-  double sl, sh;
-  if (__glibc_likely (fabs (xh) > fabs (yh)))
-    sh = fasttwosum (xh, yh, &sl);
-  else
-    sh = fasttwosum (yh, xh, &sl);
-  *e = (xl + yl) + sl;
-  return sh;
-}
-
-static inline double
-twosum (double x, double y, double *e)
-{
-  if (__glibc_likely (fabs (x) > fabs (y)))
-    return fasttwosum (x, y, e);
-  else
-    return fasttwosum (y, x, e);
-}
-
-static inline double
-muldd (double xh, double xl, double ch, double cl, double *l)
-{
-  double ahhh = ch * xh;
-  *l = (ch * xl + cl * xh) + fma (ch, xh, -ahhh);
-  return ahhh;
-}
-
-static inline double
-muldd3 (double xh, double xl, double yh, double yl, double *l)
-{
-  double ch = xh * yh, cl1 = fma (xh, yh, -ch);
-  double tl0 = xl * yl;
-  double tl1 = tl0 + xh * yl;
-  double cl2 = tl1 + xl * yh;
-  double cl3 = cl1 + cl2;
-  return fasttwosum (ch, cl3, l);
-}
-
-static inline double
-mulddd (double x, double ch, double cl, double *l)
-{
-  double ahhh = ch * x;
-  *l = cl * x + fma (ch, x, -ahhh);
-  return ahhh;
-}
-
-static inline double
-polydd (double xh, double xl, int n, const double c[][2], double *l)
-{
-  int i = n - 1;
-  double cl, ch = fasttwosum (c[i][0], *l, &cl);
-  cl += c[i][1];
-  while (--i >= 0)
-    {
-      ch = muldd (xh, xl, ch, cl, &cl);
-      ch = fastsum (c[i][0], c[i][1], ch, cl, &cl);
-    }
-  *l = cl;
-  return ch;
-}
-
-static inline double
-polyddd (double x, int n, const double c[][2], double *l)
-{
-  int i = n - 1;
-  double cl, ch = fasttwosum (c[i][0], *l, &cl);
-  cl += c[i][1];
-  while (--i >= 0)
-    {
-      ch = mulddd (x, ch, cl, &cl);
-      ch = sumdd (c[i][0], c[i][1], ch, cl, &cl);
-    }
-  *l = cl;
-  return ch;
-}
-
-static inline double
-polyd (double x, int n, const double c[][2])
-{
-  int i = n - 1;
-  double ch = c[i][0];
-  while (--i >= 0)
-    ch = c[i][0] + x * ch;
-  return ch;
-}
+#include "ddcoremath.h"
 
 static double __attribute__ ((noinline)) as_logd (double, double *);
 static double __attribute__ ((noinline)) as_expd (double, double *, int *);
@@ -173,7 +70,7 @@ poly3 (double d, unsigned imax, const double ch[], unsigned jmax,
     {
       t0 = sprod (d, t0, t1, t2, &t1, &t2);
       s0 += t0 * ch[i];
-      double fl, fh = mulddd (ch[i], t1, t2, &fl);
+      double fl, fh = mulddd2 (ch[i], t1, t2, &fl);
       s1 = sumdd (s1, s2, fh, fl, &s2);
     }
   double fl = 0, fh = polyddd (d, jmax, cl, &fl);
@@ -884,7 +781,7 @@ __ieee754_gamma_r (double x, int *signgamp)
 	return __math_invalid (0);
       double t0h = 1, t0l = 0, x0 = 1;
       for (int i = 1; i < k; i++, x0 += 1.0)
-	t0h = mulddd (x0, t0h, t0l, &t0l);
+	t0h = mulddd2 (x0, t0h, t0l, &t0l);
       return t0h + t0l;
     }
 
@@ -904,7 +801,7 @@ __ieee754_gamma_r (double x, int *signgamp)
       double ix = floor (x), dx = x - ix;
       int ip = ix;
       double sl, sh = as_sinpid (dx, &sl);
-      lh = muldd (sh, sl, lh, ll, &ll);
+      lh = muldd2 (sh, sl, lh, ll, &ll);
       const double pih = 0x1.921fb54442d18p+1, pil = 0x1.1a62633145c07p-53;
       double rcp = 1 / lh, rh = rcp * pih,
 	     rl = rcp * (pil - ll * rh - fma (rh, lh, -pih));
@@ -1015,11 +912,11 @@ __ieee754_gamma_r (double x, int *signgamp)
 	  else
 	    xph = fasttwosum (1, xph, &l);
 	  xpl += l;
-	  wh = muldd (xph, xpl, wh, wl, &wl);
+	  wh = muldd2 (xph, xpl, wh, wl, &wl);
 	}
     }
   double rh = 1.0 / wh, rl = (fma (rh, -wh, 1.0) - wl * rh) * rh;
-  fh = muldd (rh, rl, fh, fl, &fl);
+  fh = muldd2 (rh, rl, fh, fl, &fl);
   double eps = fh * 0x1.2e3b40a0e9b4fp-70;
   double ub = fh + (fl + eps), lb = fh + (fl - eps);
   if (ub != lb)
@@ -1242,13 +1139,13 @@ as_sinpid (double x, double *l)
   double Q = d2 * (s[1] + d2 * (s[2] + d2 * s[3]));
   double ql, qh = fasttwosum (s[0], Q, &ql);
   ql += s0;
-  ch = muldd (qh, ql, ch, cl, &cl);
+  ch = muldd2 (qh, ql, ch, cl, &cl);
   double tl, th = fasttwosum (c[0], P, &tl);
   tl += c0;
-  th = mulddd (d, th, tl, &tl);
-  double pl, ph = muldd (th, tl, sh, sl, &pl);
+  th = mulddd2 (d, th, tl, &tl);
+  double pl, ph = muldd2 (th, tl, sh, sl, &pl);
   ch = fastsum (ch, cl, ph, pl, &cl);
-  ch = mulddd (d, ch, cl, &cl);
+  ch = mulddd2 (d, ch, cl, &cl);
   sh = fastsum (sh, sl, ch, cl, l);
   return sh;
 }
@@ -1325,12 +1222,12 @@ as_expd (double x, double *l, int *e)
 {
   const double ln2h = 0x1.71547652b82fep+10, ln2l = 0x1.777d0ffda0d24p-46;
   double xh = x, xl = *l;
-  xh = muldd (xh, xl, ln2h, ln2l, &xl);
+  xh = muldd2 (xh, xl, ln2h, ln2l, &xl);
   double ix = roundeven_finite (xh);
   xh = fasttwosum (xh - ix, xl, &xl);
   int k = ix, i0 = (k >> 5) & 31, i1 = k & 31;
   *e = k >> 10;
-  double rl, rh = muldd (E0[i0][1], E0[i0][0], E1[i1][1], E1[i1][0], &rl);
+  double rl, rh = muldd2 (E0[i0][1], E0[i0][0], E1[i1][1], E1[i1][0], &rl);
   static const double c[][2]
       = { { 0x1.62e42fefa39efp-11, 0x1.abc9e3bf9d4d1p-66 },
 	  { 0x1.ebfbdff82c58ep-23, 0x1.ec07243b4e585p-77 },
@@ -1340,11 +1237,11 @@ as_expd (double x, double *l, int *e)
   const int m = 1;
   double fh, fl, el;
   fl = xh * polyd (xh, 5 - m, c + m);
-  fh = polydd (xh, xl, m, c, &fl);
-  fh = muldd (xh, xl, fh, fl, &fl);
+  fh = polydd2 (xh, xl, m, c, &fl);
+  fh = muldd2 (xh, xl, fh, fl, &fl);
   fh = fasttwosum (1, fh, &el);
   fl += el;
-  rh = muldd (rh, rl, fh, fl, &rl);
+  rh = muldd2 (rh, rl, fh, fl, &rl);
   *l = rl;
   return rh;
 }
@@ -1355,8 +1252,8 @@ as_lgamma_asym (double xh, double *xl)
   double zh = 1.0 / xh, dz = *xl * zh, zl = (fma (zh, -xh, 1.0) - dz) * zh;
   double ll, lh = as_logd (xh, &ll);
   ll += dz;
-  lh = muldd (xh - 0.5, *xl, lh - 1, ll, &ll);
-  double z2l, z2h = muldd (zh, zl, zh, zl, &z2l);
+  lh = muldd2 (xh - 0.5, *xl, lh - 1, ll, &ll);
+  double z2l, z2h = muldd2 (zh, zl, zh, zl, &z2l);
   double fh, fl;
   double x2 = z2h * z2h;
   if (xh > 11.5)
@@ -1377,7 +1274,7 @@ as_lgamma_asym (double xh, double *xl)
       double q2 = q[2][0] + z2h * q[3][0];
       double q4 = q[4][0] + z2h * q[5][0];
       fl = z2h * (q0 + x2 * (q2 + x2 * q4));
-      fh = polydd (z2h, z2l, k, b, &fl);
+      fh = polydd2 (z2h, z2l, k, b, &fl);
     }
   else
     {
@@ -1408,8 +1305,8 @@ as_lgamma_asym (double xh, double *xl)
       q0 += x2 * q2;
       q0 += x4 * q4;
       fl = z2h * q0;
-      fh = polydd (z2h, z2l, k, b, &fl);
+      fh = polydd2 (z2h, z2l, k, b, &fl);
     }
-  fh = muldd (zh, zl, fh, fl, &fl);
+  fh = muldd2 (zh, zl, fh, fl, &fl);
   return fastsum (lh, ll, fh, fl, xl);
 }

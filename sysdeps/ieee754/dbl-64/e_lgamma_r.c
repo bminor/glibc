@@ -31,101 +31,7 @@ SOFTWARE.
 #include <math.h>
 #include <libm-alias-finite.h>
 #include "math_config.h"
-
-static inline double
-fasttwosum (double x, double y, double *e)
-{
-  double s = x + y, z = s - x;
-  *e = y - z;
-  return s;
-}
-
-static inline double
-twosum (double x, double y, double *e)
-{
-  if (__glibc_likely (fabs (x) > fabs (y)))
-    return fasttwosum (x, y, e);
-  else
-    return fasttwosum (y, x, e);
-}
-
-static inline double
-fastsum (double xh, double xl, double yh, double yl, double *e)
-{
-  double sl, sh = fasttwosum (xh, yh, &sl);
-  *e = (xl + yl) + sl;
-  return sh;
-}
-
-static inline double
-sumdd (double xh, double xl, double yh, double yl, double *e)
-{
-  double sl, sh;
-  char o = fabs (xh) > fabs (yh);
-  if (__glibc_likely (o))
-    sh = fasttwosum (xh, yh, &sl);
-  else
-    sh = fasttwosum (yh, xh, &sl);
-  sl += xl + yl;
-  *e = sl;
-  return sh;
-}
-
-static inline double
-muldd (double xh, double xl, double ch, double cl, double *l)
-{
-  double ahhh = ch * xh;
-  *l = (ch * xl + cl * xh) + fma (ch, xh, -ahhh);
-  return ahhh;
-}
-
-static inline double
-mulddd (double x, double ch, double cl, double *l)
-{
-  double ahhh = ch * x;
-  *l = cl * x + fma (ch, x, -ahhh);
-  return ahhh;
-}
-
-static inline double
-polydd (double xh, double xl, int n, const double c[][2], double *l)
-{
-  int i = n - 1;
-  double cl, ch = fasttwosum (c[i][0], *l, &cl);
-  cl += c[i][1];
-  while (--i >= 0)
-    {
-      ch = muldd (xh, xl, ch, cl, &cl);
-      ch = fastsum (c[i][0], c[i][1], ch, cl, &cl);
-    }
-  *l = cl;
-  return ch;
-}
-
-static inline double
-polydddfst (double x, int n, const double c[][2], double *l)
-{
-  int i = n - 1;
-  double cl, ch = fasttwosum (c[i][0], *l, &cl);
-  cl += c[i][1];
-  while (--i >= 0)
-    {
-      ch = mulddd (x, ch, cl, &cl);
-      ch = fastsum (c[i][0], c[i][1], ch, cl, &cl);
-    }
-  *l = cl;
-  return ch;
-}
-
-static inline double
-polyd (double x, int n, const double c[][2])
-{
-  int i = n - 1;
-  double ch = c[i][0];
-  while (--i >= 0)
-    ch = c[i][0] + x * ch;
-  return ch;
-}
+#include "ddcoremath.h"
 
 static double __attribute__ ((noinline)) as_logd (double, double *);
 static double __attribute__ ((noinline)) as_logd_accurate (double, double *,
@@ -268,7 +174,7 @@ as_lgamma_accurate (double x)
   else if (x < 0x1p-2)
     {
       fh = polydddfst (sx, array_length (c0), c0, &fl);
-      fh = mulddd (sx, fh, fl, &fl);
+      fh = mulddd2 (sx, fh, fl, &fl);
       double lll, ll, lh = as_logd_accurate (x, &ll, &lll);
       fh = sumdd (fh, fl, -ll, -lll, &fl);
       fh = twosum (-lh, fh, &fll);
@@ -328,7 +234,7 @@ as_lgamma_accurate (double x)
       else if (fabs (x - 1) < 0x1p-2)
 	{
 	  fh = polydddfst (x - 1, array_length (c0), c0, &fl);
-	  fh = mulddd (x - 1, fh, fl, &fl);
+	  fh = mulddd2 (x - 1, fh, fl, &fl);
 	  if (sx < 0)
 	    {
 	      double lll, ll, lh = as_logd_accurate (x, &ll, &lll);
@@ -352,7 +258,7 @@ as_lgamma_accurate (double x)
 	{
 	  double lll, ll, lh = as_logd_accurate (x - 1, &ll, &lll);
 	  fh = polydddfst (x - 2, array_length (c0), c0, &fl);
-	  fh = mulddd (x - 2, fh, fl, &fl);
+	  fh = mulddd2 (x - 2, fh, fl, &fl);
 	  fl = sumdd (fl, 0, ll, lll, &fll);
 	  fh = twosum (fh, lh, &lh);
 	  fl = sumdd (fl, fll, lh, 0, &fll);
@@ -372,7 +278,7 @@ as_lgamma_accurate (double x)
 	  l1h = fasttwosum (l1h, l2h, &l2h);
 	  l1l = sumdd (l1l, l1ll, l2h, 0, &l1ll);
 	  fh = polydddfst (x - 3, array_length (c0), c0, &fl);
-	  fh = mulddd (x - 3, fh, fl, &fl);
+	  fh = mulddd2 (x - 3, fh, fl, &fl);
 	  fl = sumdd (fl, 0, l1l, l1ll, &fll);
 	  fh = twosum (fh, l1h, &l1h);
 	  fl = sumdd (fl, fll, l1h, 0, &fll);
@@ -458,8 +364,8 @@ as_lgamma_accurate (double x)
 	  double sh = zh * sc, sl = zl * sc;
 	  int n = array_length (c), k = 6;
 	  fl = sh * polyd (sh, k, c + n - k);
-	  fh = polydd (sh, sl, n - k, c, &fl);
-	  fh = muldd (zh, zl, fh, fl, &fl);
+	  fh = polydd2 (sh, sl, n - k, c, &fl);
+	  fh = muldd2 (zh, zl, fh, fl, &fl);
 	}
       else if (fabs (fh) < 0x1.168p-4 && sx > -3 && sx < SX_BND)
 	{
@@ -500,8 +406,8 @@ as_lgamma_accurate (double x)
 	  double sh = zh * sc, sl = zl * sc;
 	  int n = array_length (c), k = 6;
 	  fl = sh * polyd (sh, k, c + n - k);
-	  fh = polydd (sh, sl, n - k, c, &fl);
-	  fh = muldd (zh, zl, fh, fl, &fl);
+	  fh = polydd2 (sh, sl, n - k, c, &fl);
+	  fh = muldd2 (zh, zl, fh, fl, &fl);
 	}
       else if (fabs (fh) < 0x1.2d4p-4 && sx > -3.5 && sx < -3)
 	{
@@ -535,8 +441,8 @@ as_lgamma_accurate (double x)
 	  double sh = zh * sc, sl = zl * sc;
 	  int n = array_length (c), k = 7;
 	  fl = sh * polyd (sh, k, c + n - k);
-	  fh = polydd (sh, sl, n - k, c, &fl);
-	  fh = muldd (zh, zl, fh, fl, &fl);
+	  fh = polydd2 (sh, sl, n - k, c, &fl);
+	  fh = muldd2 (zh, zl, fh, fl, &fl);
 	}
       else if (fabs (fh) < 0x1.efp-5 && sx > -4 && sx < -3.5)
 	{
@@ -570,8 +476,8 @@ as_lgamma_accurate (double x)
 	  double sh = zh * sc, sl = zl * sc;
 	  int n = array_length (c), k = 7;
 	  fl = sh * polyd (sh, k, c + n - k);
-	  fh = polydd (sh, sl, n - k, c, &fl);
-	  fh = muldd (zh, zl, fh, fl, &fl);
+	  fh = polydd2 (sh, sl, n - k, c, &fl);
+	  fh = muldd2 (zh, zl, fh, fl, &fl);
 	}
       else if (fabs (fh) < 0x1p-3 && sx > -4.5 && sx < -4)
 	{
@@ -609,8 +515,8 @@ as_lgamma_accurate (double x)
 	  double sh = zh * sc, sl = zl * sc;
 	  int n = array_length (c), k = 7;
 	  fl = sh * polyd (sh, k, c + n - k);
-	  fh = polydd (sh, sl, n - k, c, &fl);
-	  fh = muldd (zh, zl, fh, fl, &fl);
+	  fh = polydd2 (sh, sl, n - k, c, &fl);
+	  fh = muldd2 (zh, zl, fh, fl, &fl);
 	}
       else if (fabs (fh) < 0x1.08p-4 && sx > -5 && sx < -4.5)
 	{
@@ -643,8 +549,8 @@ as_lgamma_accurate (double x)
 	  double sh = zh * sc, sl = zl * sc;
 	  int n = array_length (c), k = 7;
 	  fl = sh * polyd (sh, k, c + n - k);
-	  fh = polydd (sh, sl, n - k, c, &fl);
-	  fh = muldd (zh, zl, fh, fl, &fl);
+	  fh = polydd2 (sh, sl, n - k, c, &fl);
+	  fh = muldd2 (zh, zl, fh, fl, &fl);
 	}
       else if (fabs (fh) < 0x1.1p-4 && sx > -5.5 && sx < -5)
 	{
@@ -677,8 +583,8 @@ as_lgamma_accurate (double x)
 	  double sh = zh * sc, sl = zl * sc;
 	  int n = array_length (c), k = 6;
 	  fl = sh * polyd (sh, k, c + n - k);
-	  fh = polydd (sh, sl, n - k, c, &fl);
-	  fh = muldd (zh, zl, fh, fl, &fl);
+	  fh = polydd2 (sh, sl, n - k, c, &fl);
+	  fh = muldd2 (zh, zl, fh, fl, &fl);
 	}
       else if (fabs (fh) < 0x1.13p-3 && sx > -6 && sx < -5.5)
 	{
@@ -716,8 +622,8 @@ as_lgamma_accurate (double x)
 	  double sh = zh * sc, sl = zl * sc;
 	  int n = array_length (c), k = 6;
 	  fl = sh * polyd (sh, k, c + n - k);
-	  fh = polydd (sh, sl, n - k, c, &fl);
-	  fh = muldd (zh, zl, fh, fl, &fl);
+	  fh = polydd2 (sh, sl, n - k, c, &fl);
+	  fh = muldd2 (zh, zl, fh, fl, &fl);
 	}
       else if (fabs (fh) < 0x1.15p-3 && sx > -6.5 && sx < -6)
 	{
@@ -755,8 +661,8 @@ as_lgamma_accurate (double x)
 	  double sh = zh * sc, sl = zl * sc;
 	  int n = array_length (c), k = 6;
 	  fl = sh * polyd (sh, k, c + n - k);
-	  fh = polydd (sh, sl, n - k, c, &fl);
-	  fh = muldd (zh, zl, fh, fl, &fl);
+	  fh = polydd2 (sh, sl, n - k, c, &fl);
+	  fh = muldd2 (zh, zl, fh, fl, &fl);
 	}
       else if (fabs (fh) < 0x1.34p-3 && sx > -7.0 && sx < -6.5)
 	{
@@ -795,8 +701,8 @@ as_lgamma_accurate (double x)
 	  double sh = zh * sc, sl = zl * sc;
 	  int n = array_length (c), k = 6;
 	  fl = sh * polyd (sh, k, c + n - k);
-	  fh = polydd (sh, sl, n - k, c, &fl);
-	  fh = muldd (zh, zl, fh, fl, &fl);
+	  fh = polydd2 (sh, sl, n - k, c, &fl);
+	  fh = muldd2 (zh, zl, fh, fl, &fl);
 	}
       else if (fabs (fh) < 0x1.145p-3 && sx > -7.5 && sx < -7)
 	{
@@ -834,8 +740,8 @@ as_lgamma_accurate (double x)
 	  double sh = zh * sc, sl = zl * sc;
 	  int n = array_length (c), k = 6;
 	  fl = sh * polyd (sh, k, c + n - k);
-	  fh = polydd (sh, sl, n - k, c, &fl);
-	  fh = muldd (zh, zl, fh, fl, &fl);
+	  fh = polydd2 (sh, sl, n - k, c, &fl);
+	  fh = muldd2 (zh, zl, fh, fl, &fl);
 	}
       else if (fabs (fh) < 0x1.76bp-3 && sx > -8 && sx < -7.5)
 	{
@@ -876,8 +782,8 @@ as_lgamma_accurate (double x)
 	  double sh = zh * sc, sl = zl * sc;
 	  int n = array_length (c), k = 6;
 	  fl = sh * polyd (sh, k, c + n - k);
-	  fh = polydd (sh, sl, n - k, c, &fl);
-	  fh = muldd (zh, zl, fh, fl, &fl);
+	  fh = polydd2 (sh, sl, n - k, c, &fl);
+	  fh = muldd2 (zh, zl, fh, fl, &fl);
 	}
       else if (fabs (fh) < 0x1.76cp-3 && sx > -0x1.10f5c28f5c28fp+3
 	       && sx < -8)
@@ -919,8 +825,8 @@ as_lgamma_accurate (double x)
 	  double sh = zh * sc, sl = zl * sc;
 	  int n = array_length (c), k = 6;
 	  fl = sh * polyd (sh, k, c + n - k);
-	  fh = polydd (sh, sl, n - k, c, &fl);
-	  fh = muldd (zh, zl, fh, fl, &fl);
+	  fh = polydd2 (sh, sl, n - k, c, &fl);
+	  fh = muldd2 (zh, zl, fh, fl, &fl);
 	}
       else if (fabs (fh) < 0x1.99p-3 && sx > -9 && sx < -8.5)
 	{
@@ -962,8 +868,8 @@ as_lgamma_accurate (double x)
 	  double sh = zh * sc, sl = zl * sc;
 	  int n = array_length (c), k = 6;
 	  fl = sh * polyd (sh, k, c + n - k);
-	  fh = polydd (sh, sl, n - k, c, &fl);
-	  fh = muldd (zh, zl, fh, fl, &fl);
+	  fh = polydd2 (sh, sl, n - k, c, &fl);
+	  fh = muldd2 (zh, zl, fh, fl, &fl);
 	}
       else if (fabs (fh) < 0x1.99p-3 && sx > -9.5 && sx < -9)
 	{
@@ -1005,8 +911,8 @@ as_lgamma_accurate (double x)
 	  double sh = zh * sc, sl = zl * sc;
 	  int n = array_length (c), k = 6;
 	  fl = sh * polyd (sh, k, c + n - k);
-	  fh = polydd (sh, sl, n - k, c, &fl);
-	  fh = muldd (zh, zl, fh, fl, &fl);
+	  fh = polydd2 (sh, sl, n - k, c, &fl);
+	  fh = muldd2 (zh, zl, fh, fl, &fl);
 	}
       else if (fabs (fh) < 0x1.76bp-3 && sx > -10 && sx < -9.5)
 	{
@@ -1047,8 +953,8 @@ as_lgamma_accurate (double x)
 	  double sh = zh * sc, sl = zl * sc;
 	  int n = array_length (c), k = 6;
 	  fl = sh * polyd (sh, k, c + n - k);
-	  fh = polydd (sh, sl, n - k, c, &fl);
-	  fh = muldd (zh, zl, fh, fl, &fl);
+	  fh = polydd2 (sh, sl, n - k, c, &fl);
+	  fh = muldd2 (zh, zl, fh, fl, &fl);
 	}
       else if (fabs (fh) < 0x1.76bp-3 && sx > -10.5 && sx < -10)
 	{
@@ -1089,8 +995,8 @@ as_lgamma_accurate (double x)
 	  double sh = zh * sc, sl = zl * sc;
 	  int n = array_length (c), k = 6;
 	  fl = sh * polyd (sh, k, c + n - k);
-	  fh = polydd (sh, sl, n - k, c, &fl);
-	  fh = muldd (zh, zl, fh, fl, &fl);
+	  fh = polydd2 (sh, sl, n - k, c, &fl);
+	  fh = muldd2 (zh, zl, fh, fl, &fl);
 	}
     }
 
@@ -1344,7 +1250,7 @@ __ieee754_lgamma_r (double x, int *signgamp)
 		 q4 = q[4] + z * q[5], q6 = q[6] + z * q[7];
 	  fl = z * ((q0 + z2 * q2) + z4 * (q4 + z2 * q6));
 	  fh = polydddfst (z, 4, c0, &fl);
-	  fh = mulddd (x, fh, fl, &fl);
+	  fh = mulddd2 (x, fh, fl, &fl);
 	  fh = sumdd (-lh, -ll, fh, fl, &fl);
 	  eps = 1.5e-22;
 	}
@@ -1367,7 +1273,7 @@ __ieee754_lgamma_r (double x, int *signgamp)
 	  if (__glibc_unlikely (j == 4))
 	    { // treat the region around the root at 1
 	      z = -x;
-	      fh = mulddd (z, fh, fl, &fl);
+	      fh = mulddd2 (z, fh, fl, &fl);
 	    }
 	  eps = fabs (fh) * 8.3e-20;
 	  fh = sumdd (-lh, -ll, fh, fl, &fl);
@@ -1388,13 +1294,13 @@ __ieee754_lgamma_r (double x, int *signgamp)
 	      if (__glibc_unlikely (au >= 0x3fabaa6))
 		lh = fasttwosum (lh, ll, &ll); // x>=0x1.754cp+1014
 	      double hlh = lh * 0.5;
-	      lh = mulddd (ax, lh, ll, &ll);
+	      lh = mulddd2 (ax, lh, ll, &ll);
 	      ll -= hlh;
 	    }
 	  else
 	    {
 	      // for other |x| use a simple product
-	      lh = mulddd (ax - 0.5, lh, ll, &ll);
+	      lh = mulddd2 (ax - 0.5, lh, ll, &ll);
 	    }
 	  static const double c[][2]
 	      = { { 0x1.acfe390c97d6ap-2, -0x1.1d9792ced423ap-58 },
@@ -1412,7 +1318,7 @@ __ieee754_lgamma_r (double x, int *signgamp)
 	      fl = z2h * (q0 + z4h * (q2 + z4h * q4));
 	      fh = fasttwosum (c[1][0], fl, &fl);
 	      fl += c[1][1];
-	      fh = muldd (fh, fl, zh, zl, &fl);
+	      fh = muldd2 (fh, fl, zh, zl, &fl);
 	    }
 	  else
 	    {
@@ -1436,19 +1342,19 @@ __ieee754_lgamma_r (double x, int *signgamp)
 	  if (__glibc_unlikely (j == 4))
 	    { // treat the region around the root at 1
 	      z = 1 - ax;
-	      fh = mulddd (z, fh, fl, &fl);
+	      fh = mulddd2 (z, fh, fl, &fl);
 	    }
 	  if (__glibc_unlikely (j == 10))
 	    { // treat the region around the root at 2
 	      z = ax - 2;
-	      fh = mulddd (z, fh, fl, &fl);
+	      fh = mulddd2 (z, fh, fl, &fl);
 	    }
 	  eps = fabs (fh) * 8.3e-20 + 1e-24;
 	}
       if (t >> 63)
 	{ // x<0 so use reflection formula
 	  double sl, sh = as_sinpipid (x - floor (x), &sl);
-	  sh = mulddd (-x, sh, sl, &sl);
+	  sh = mulddd2 (-x, sh, sl, &sl);
 	  double ll, lh = as_logd (sh, &ll);
 	  ll += sl / sh;
 	  fh = -sumdd (fh, fl, lh, ll, &fl);
@@ -1741,8 +1647,8 @@ as_logd_accurate (double x, double *l, double *l_)
 	  { 0x1.c71e5ec7051f6p-4, 0x1.217ec3dcb2f03p-58 } };
   dxh = fasttwosum (dxh, dxl, &dxl);
   double fl = dxh * (c[6][0] + dxh * (c[7][0] + dxh * (c[8][0]))),
-	 fh = polydd (dxh, dxl, 6, c, &fl);
-  fh = muldd (dxh, dxl, fh, fl, &fl);
+	 fh = polydd2 (dxh, dxl, 6, c, &fl);
+  fh = muldd2 (dxh, dxl, fh, fl, &fl);
   double s2 = h1[i1][2] + h2[i2][2], s1 = h1[i1][1] + h2[i2][1],
 	 s0 = h1[i1][0] + h2[i2][0];
   double L0 = 0x1.62e42fefa38p-1 * ed, L1 = 0x1.ef35793c76p-45 * ed,
@@ -1845,8 +1751,8 @@ as_sinpipid (double x, double *l)
       double fl = z2 * (cl[0] + z2 * (cl[1] + z2 * (cl[2]))),
 	     fh = fasttwosum (c[0], fl, &fl), e;
       fl += c[1];
-      fh = muldd (z2, z2l, fh, fl, &fl);
-      fh = mulddd (z, fh, fl, &fl);
+      fh = muldd2 (z2, z2l, fh, fl, &fl);
+      fh = mulddd2 (z, fh, fl, &fl);
       fh = fasttwosum (z, fh, &e);
       fl += e;
       *l = fl;
@@ -1872,13 +1778,13 @@ as_sinpipid (double x, double *l)
 
   double ql, qh = fasttwosum (s[0], Q, &ql);
   ql += s0;
-  ch = muldd (qh, ql, ch, cl, &cl);
+  ch = muldd2 (qh, ql, ch, cl, &cl);
   double tl, th = fasttwosum (c[0], P, &tl);
   tl += c0;
-  th = mulddd (d, th, tl, &tl);
-  double pl, ph = muldd (th, tl, sh, sl, &pl);
+  th = mulddd2 (d, th, tl, &tl);
+  double pl, ph = muldd2 (th, tl, sh, sl, &pl);
   ch = fastsum (ch, cl, ph, pl, &cl);
-  ch = mulddd (d, ch, cl, &cl);
+  ch = mulddd2 (d, ch, cl, &cl);
   sh = fastsum (sh, sl, ch, cl, l);
   return sh;
 }
@@ -1912,15 +1818,15 @@ as_sinpipid_accurate (double x, double *l)
 	  { -0x1.e306ec8cf7c02p-85, 0x1.5d2601f85289ap-139 } };
 
   double d2h = d * d, d2l = fma (d, d, -d2h);
-  double Pl = 0, Ph = polydd (d2h, d2l, 5, c, &Pl);
-  double Ql = 0, Qh = polydd (d2h, d2l, 6, s, &Ql);
+  double Pl = 0, Ph = polydd2 (d2h, d2l, 5, c, &Pl);
+  double Ql = 0, Qh = polydd2 (d2h, d2l, 6, s, &Ql);
 
-  Ph = mulddd (d, Ph, Pl, &Pl);
-  Ph = muldd (sh, sl, Ph, Pl, &Pl);
-  Qh = muldd (ch, cl, Qh, Ql, &Ql);
+  Ph = mulddd2 (d, Ph, Pl, &Pl);
+  Ph = muldd2 (sh, sl, Ph, Pl, &Pl);
+  Qh = muldd2 (ch, cl, Qh, Ql, &Ql);
 
   ch = fastsum (Qh, Ql, Ph, Pl, &cl);
-  ch = mulddd (d, ch, cl, &cl);
+  ch = mulddd2 (d, ch, cl, &cl);
   sh = fastsum (sh, sl, ch, cl, l);
   return sh;
 }
@@ -1939,7 +1845,7 @@ as_lgamma_asym_accurate (double xh, double *xl, double *e)
 	     zl = (fma (zh, -xh, 1.0) - dz) * zh;
       if (*xl != 0)
 	{
-	  double dl2, dl1 = mulddd (*xl, zh, fma (zh, -xh, 1.0) * zh, &dl2);
+	  double dl2, dl1 = mulddd2 (*xl, zh, fma (zh, -xh, 1.0) * zh, &dl2);
 	  dl2 -= dl1 * dl1 / 2;
 	  l1 = sumdd (l1, l2, dl1, dl2, &l2);
 	}
@@ -1965,7 +1871,7 @@ as_lgamma_asym_accurate (double xh, double *xl, double *e)
 
       l1x = sumdd (l1x, l2x, l0xl, l1xl, &l2x);
       l1x = sumdd (l1x, l2x, l0 * wl, l1 * wl, &l2x);
-      double z2l, z2h = muldd (zh, zl, zh, zl, &z2l);
+      double z2l, z2h = muldd2 (zh, zl, zh, zl, &z2l);
       double fh, fl;
       if (xh >= 48)
 	{
@@ -1980,7 +1886,7 @@ as_lgamma_asym_accurate (double xh, double *xl, double *e)
 		  { 0x1.a0a6926f4992p-8, -0x1.1f355cbf82229p-63 } };
 	  l1x = sumdd (l1x, l2x, c[0][0], c[0][1], &l2x);
 	  fl = 0;
-	  fh = polydd (z2h, z2l, 7, c + 1, &fl);
+	  fh = polydd2 (z2h, z2l, 7, c + 1, &fl);
 	}
       else if (xh >= 14.5)
 	{
@@ -1999,7 +1905,7 @@ as_lgamma_asym_accurate (double xh, double *xl, double *e)
 		  { 0x1.2ea102098f818p+3, 0x1.609db97f1bc89p-51 } };
 	  l1x = sumdd (l1x, l2x, c[0][0], c[0][1], &l2x);
 	  fl = 0;
-	  fh = polydd (z2h, z2l, 11, c + 1, &fl);
+	  fh = polydd2 (z2h, z2l, 11, c + 1, &fl);
 	}
       else
 	{
@@ -2034,9 +1940,9 @@ as_lgamma_asym_accurate (double xh, double *xl, double *e)
 		  { 0x1.59bad61bd81d5p+47, 0x1.0e3f2ea42a0ep-7 } };
 	  l1x = sumdd (l1x, l2x, c[0][0], c[0][1], &l2x);
 	  fl = 0;
-	  fh = polydd (z2h, z2l, array_length (c) - 1, c + 1, &fl);
+	  fh = polydd2 (z2h, z2l, array_length (c) - 1, c + 1, &fl);
 	}
-      fh = muldd (zh, zl, fh, fl, &fl);
+      fh = muldd2 (zh, zl, fh, fl, &fl);
       l1x = sumdd (l1x, l2x, fh, fl, &l2x);
       l0x = fasttwosum (l0x, l1x, &l1x);
       l1x = fasttwosum (l1x, l2x, &l2x);
