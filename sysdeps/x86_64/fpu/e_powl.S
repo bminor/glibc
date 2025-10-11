@@ -144,39 +144,41 @@ ENTRY(__ieee754_powl)
 	fcomip	%st(1), %st	// 4 : y : x
 	fstp	%st(0)		// y : x
 	jnc	3f
-	mov	-8(%rsp),%eax
-	mov	-4(%rsp),%edx
-	orl	$0, %edx
+
+	/* Here onwards, it's just integral y in range [-3, 3].  */
+	movq	-8(%rsp),%rax
+	orq	$0, %rax
 	fstp	%st(0)		// x
 	jns	4f		// y >= 0, jump
 	fdivrl	MO(one)		// 1/x		(now referred to as x)
-	negl	%eax
-	adcl	$0, %edx
-	negl	%edx
+	negq	%rax
 4:	fldl	MO(one)		// 1 : x
-	fxch
 
-	/* If y is even, take the absolute value of x.  Otherwise,
-	   ensure all intermediate values that might overflow have the
-	   sign of x.  */
+	/* y range is further reduced to [0, 3].  Simply walk through the
+	   options.  First up, 0 and 1.  */
+	test	%eax, %eax
+	jz	6f
+	fxch			// x : 1
+	subl	$1, %eax
+	jz	6f
+
+	/* Finally, y == 2 and 3.  For y == 3 we do |x| * x * |x| because x * x
+	   and |x| * |x| decay faster towards infinity compared to x * |x|.  */
+	fld	%st		// x : x : 1
+	fabs			// |x| : x : 1
+	fxch			// x : |x| : 1
+	fld	%st(1)		// |x| : x : |x| : 1
 	testb	$1, %al
-	jnz	6f
-	fabs
+	jz	7f
+	fmulp	%st(2)		// x : |x| * |x| : 1
+	fstp	%st(0)		// |x| * |x| : 1
+	jmp	6f
+7:	fmulp			// |x| * x : |x| : 1
+	fmulp			// |x| * x * |x| : 1
 
-6:	shrdl	$1, %edx, %eax
-	jnc	5f
-	fxch
-	fabs
-	fmul	%st(1)		// x : ST*x
-	fxch
-5:	fld	%st		// x : x : ST*x
-	fabs			// |x| : x : ST*x
-	fmulp			// |x|*x : ST*x
-	shrl	$1, %edx
-	movl	%eax, %ecx
-	orl	%edx, %ecx
-	jnz	6b
-	fstp	%st(0)		// ST*x
+	/* We come here with the stack as RES : <something>, so pop off
+	   <something>.  */
+6:	fstp	%st(1)
 	LDBL_CHECK_FORCE_UFLOW_NONNAN
 	ret
 
