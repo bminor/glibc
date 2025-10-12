@@ -33,14 +33,14 @@
 # else
 #  include <stdint.h>
 extern uintptr_t __pointer_chk_guard_local attribute_relro attribute_hidden;
-#  define PTR_MANGLE(var) do						      \
-    {									      \
+#  define PTR_MANGLE(var)						      \
+    do {								      \
       (var) = (__typeof (var)) ((uintptr_t) (var)			      \
 				^ __pointer_chk_guard_local);		      \
       asm ("rol $2*" LP_SIZE "+1, %0" : "+r" (var));			      \
     } while (0)
-#  define PTR_DEMANGLE(var) do						      \
-    {									      \
+#  define PTR_DEMANGLE(var)						      \
+    do {								      \
       asm ("ror $2*" LP_SIZE "+1, %0" : "+r" (var));			      \
       (var) = (__typeof (var)) ((uintptr_t) (var)			      \
 				^ __pointer_chk_guard_local);		      \
@@ -54,14 +54,14 @@ extern uintptr_t __pointer_chk_guard_local attribute_relro attribute_hidden;
 				xor %fs:POINTER_GUARD, reg
 # else
 #  include <tls.h>
-#  define PTR_MANGLE(var) do						      \
-    {									      \
+#  define PTR_MANGLE(var)						      \
+    do {								      \
       (var) = (__typeof (var)) ((uintptr_t) (var)			      \
 				^ ((tcbhead_t __seg_fs *)0)->pointer_guard);  \
       asm ("rol $2*" LP_SIZE "+1, %0" : "+r" (var));			      \
     } while (0)
-#  define PTR_DEMANGLE(var) do						      \
-    {									      \
+#  define PTR_DEMANGLE(var)						      \
+    do {								      \
       asm ("ror $2*" LP_SIZE "+1, %0" : "+r" (var));			      \
       (var) = (__typeof (var)) ((uintptr_t) (var)			      \
 				^ ((tcbhead_t __seg_fs *)0)->pointer_guard);  \

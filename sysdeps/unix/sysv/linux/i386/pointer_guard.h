@@ -34,14 +34,14 @@
 				xorl %gs:POINTER_GUARD, reg
 # else
 #  include <tls.h>
-#  define PTR_MANGLE(var) do						      \
-    {									      \
+#  define PTR_MANGLE(var)						      \
+    do {								      \
       (var) = (__typeof (var)) ((uintptr_t) (var)			      \
 				^ ((tcbhead_t __seg_gs *)0)->pointer_guard);  \
       asm ("roll $9, %0" : "+r" (var));					      \
     } while (0)
-#  define PTR_DEMANGLE(var) do						      \
-    {									      \
+#  define PTR_DEMANGLE(var)						      \
+    do {								      \
       asm ("rorl $9, %0" : "+r" (var));					      \
       (var) = (__typeof (var)) ((uintptr_t) (var)			      \
 				^ ((tcbhead_t __seg_gs *)0)->pointer_guard);  \
