@@ -596,6 +596,10 @@ __glob (const char *pattern, int flags, int (*errfunc) (const char *, int),
                   flags &= ~(GLOB_NOCHECK | GLOB_NOMAGIC);
                 }
             }
+          /* Prevent stack overflows with many trailing '/' characters.  */
+          for (char *p = &dirname[dirlen - 1];
+               p > dirname && p[0] == '/' && p[-1] == '/'; --p)
+            p[0] = '\0';
           int val = __glob (dirname, flags | GLOB_MARK, errfunc, pglob);
           if (val == 0)
             pglob->gl_flags = ((pglob->gl_flags & ~GLOB_MARK)
