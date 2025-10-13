@@ -716,3 +716,21 @@ tests-static += \
   tst-rseq-nptl-static \
   # tests-static
 endif
+
+ifeq ($(subdir),string)
+modules-names += \
+  tst-xsi-strerror_r-mod \
+  # modules-names
+
+tests += \
+  tst-sigabbrev_np-strings \
+  tst-strerror-strings \
+  tst-strerror_l-strings \
+  tst-strerror_r-strings \
+  tst-strerrordesc_np-strings \
+  tst-strsignal-strings \
+  tst-xsi-strerror_r-strings \
+  # tests
+
+$(objpfx)tst-xsi-strerror_r-strings: $(objpfx)tst-xsi-strerror_r-mod.so
+endif # $(subdir) == string
