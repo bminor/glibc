@@ -26,7 +26,7 @@ __tgammaf(float x)
 	float y = __ieee754_gammaf_r(x, NULL);
 
 	if(__glibc_unlikely (!isfinite (y) || y == 0)
-	   && (isfinite (x) || (isinf (x) && x < 0.0))
+	   && (isfinite (x) || (isinf (x) && x < 0.0f))
 	   && _LIB_VERSION != _IEEE_) {
 	  if (x == (float)0.0)
 	    /* tgammaf pole */

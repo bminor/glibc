@@ -203,7 +203,7 @@ j0f_asympt (float x)
     return 0xf.47039p-28f;
   double y = 1.0 / (double) x;
   double y2 = y * y;
-  double beta0 = 1.0f + y2 * (-0x1p-4f + 0x1.a8p-4 * y2);
+  double beta0 = 1.0 + y2 * (-0x1p-4 + 0x1.a8p-4 * y2);
   double alpha0 = y * (0x2p-4 - 0x1.0aaaaap-4 * y2);
   double h;
   int n;
@@ -484,7 +484,7 @@ y0f_asympt (float x)
     return 0x1.a48974p-40f;
   double y = 1.0 / (double) x;
   double y2 = y * y;
-  double beta0 = 1.0f + y2 * (-0x1p-4f + 0x1.a8p-4 * y2);
+  double beta0 = 1.0 + y2 * (-0x1p-4 + 0x1.a8p-4 * y2);
   double alpha0 = y * (0x2p-4 - 0x1.0aaaaap-4 * y2);
   double h;
   int n;
@@ -529,7 +529,7 @@ y0f_near_root (float x, float z)
   /* For degree 0 use a degree-5 polynomial, where the coefficients of
      degree 4 and 5 are hard-coded.  */
   float p6 = (index > 0) ? p[6]
-    : p[6] + y * (-0x3.a46c9p-4 + y * 0x3.735478p-4);
+    : p[6] + y * (-0x3.a46c9p-4f + y * 0x3.735478p-4f);
   float res = p[3] + y * (p[4] + y * (p[5] + y * p6));
   return res;
 }

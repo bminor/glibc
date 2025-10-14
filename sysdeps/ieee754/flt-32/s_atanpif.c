@@ -48,7 +48,7 @@ __atanpif (float x)
 	}
       /* Warning: 0x1.45f306p-2f / x underflows for |x| >= 0x1.45f306p+124 */
       if (fabsf (x) >= 0x1.45f306p+124f)
-	return f - copysign (0x1p-26f, x);
+	return f - copysignf (0x1p-26f, x);
       else
 	return f - 0x1.45f306p-2f / x;
     }
@@ -63,7 +63,7 @@ __atanpif (float x)
 	    __set_errno (ERANGE);
 	  return rsx;
 	}
-      return sx - (0x1.5555555555555p-2 * sx) * (x * x);
+      return sx - (0x1.5555555555555p-2 * sx) * (z * z);
     }
   uint32_t ax = t & (~0u >> 1);
   if (__glibc_unlikely (ax == 0x3fa267ddu))

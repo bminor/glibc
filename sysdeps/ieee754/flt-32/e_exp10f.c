@@ -163,7 +163,7 @@ __exp10f (float x)
       if (x < -0x2d.278d4p0f)
         return __math_uflowf (0);
 #if WANT_ERRNO_UFLOW
-      if (x < -0x2c.da7cfp0)
+      if (x < -0x2c.da7cfp0f)
         return __math_may_uflowf (0);
 #endif
       /* the smallest value such that 10^x >= 2^-126 (normal range)

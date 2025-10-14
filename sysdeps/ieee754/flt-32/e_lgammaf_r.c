@@ -181,6 +181,7 @@ __ieee754_lgammaf_r (float x, int *signgamp)
     *signgamp = 1 - ((((int) fx) & 1) << 1);
 
   double z = ax, f;
+  double s = x;
   if (__glibc_unlikely (ax < 0x1.52p-1f))
     {
       static const double rn[] =
@@ -198,7 +199,6 @@ __ieee754_lgammaf_r (float x, int *signgamp)
 	  -0x1.7dd25af0b83d4p+0, -0x1.36bf1880125fcp+0,
 	  -0x1.1379fc8023d9cp+0, -0x1.03712e41525d2p+0
 	};
-      double s = x;
       f = (c0 * s) * as_r8 (s, rn) / as_r8 (s, rd) - as_ln (z);
     }
   else
@@ -208,7 +208,7 @@ __ieee754_lgammaf_r (float x, int *signgamp)
 	  if (__glibc_unlikely (x > 0x1.895f1cp+121f))
 	    return math_narrow_eval (0x1p127f * 0x1p127f);
 	  /* |x|>=2**23, must be -integer */
-	  if (__glibc_unlikely (x < 0.0f && ax > 0x1p+23))
+	  if (__glibc_unlikely (x < 0.0f && ax > 0x1p+23f))
 	    return ax / 0.0f;
 	  double lz = as_ln (z);
 	  f = (z - 0.5) * (lz - 1) + 0x1.acfe390c97d69p-2;
@@ -286,7 +286,7 @@ __ieee754_lgammaf_r (float x, int *signgamp)
 	    {
 	      if (__glibc_unlikely (t < 0x40301b93u && t > 0x402f95c2u))
 		{
-		  double h = (x + 0x1.5fb410a1bd901p+1)
+		  double h = (s + 0x1.5fb410a1bd901p+1)
 		    - 0x1.a19a96d2e6f85p-54;
 		  double h2 = h * h;
 		  double h4 = h2 * h2;
@@ -302,7 +302,7 @@ __ieee754_lgammaf_r (float x, int *signgamp)
 		}
 	      else if (__glibc_unlikely (t > 0x401ceccbu && t < 0x401d95cau))
 		{
-		  double h = (x + 0x1.3a7fc9600f86cp+1)
+		  double h = (s + 0x1.3a7fc9600f86cp+1)
 		    + 0x1.55f64f98af8dp-55;
 		  double h2 = h * h;
 		  double h4 = h2 * h2;
@@ -319,7 +319,7 @@ __ieee754_lgammaf_r (float x, int *signgamp)
 		}
 	      else if (__glibc_unlikely (t > 0x40492009u && t < 0x404940efu))
 		{
-		  double h = (x + 0x1.9260dbc9e59afp+1)
+		  double h = (s + 0x1.9260dbc9e59afp+1)
 		    + 0x1.f717cd335a7b3p-53;
 		  double h2 = h * h;
 		  double h4 = h2 * h2;

@@ -52,7 +52,7 @@ __ynf (int n, float x)
 	  feraiseexcept (FE_INVALID);
 	  return __kernel_standard_f (n, x, 113);
 	}
-      else if (x == 0.0)
+      else if (x == 0.0f)
 	{
 	  /* d = -one/(x-x) */
 	  feraiseexcept (FE_DIVBYZERO);

@@ -85,7 +85,7 @@ __remquof (float x, float y, int *quo)
     }
   else
     {
-      float y_half = 0.5 * y;
+      float y_half = 0.5f * y;
       if (x > y_half)
 	{
 	  x -= y;

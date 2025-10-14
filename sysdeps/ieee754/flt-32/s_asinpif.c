@@ -65,7 +65,7 @@ __asinpif (float x)
       c0 += c2 * z4;
       c4 += c6 * z4;
       c0 += c4 * (z4 * z4);
-      if (__glibc_unlikely (ax != 0.0 && ax <= 0x1.921fb4p-126f))
+      if (__glibc_unlikely (ax != 0.0f && ax <= 0x1.921fb4p-126f))
 	__set_errno (ERANGE);
       return z * c0;
     }

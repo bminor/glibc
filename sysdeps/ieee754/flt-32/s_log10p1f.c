@@ -155,7 +155,7 @@ __log10p1f (float x)
 	      0x1.63c62378fa3dbp-3, 0x1.fca4139a42374p-4
 	    };
 	  float ret = z * ((c[0] + z2 * c[1]) + z4 * (c[2] + z2 * c[3]));
-	  if (x != 0.0f && ret == 0.0)
+	  if (x != 0.0f && ret == 0.0f)
 	    __set_errno (ERANGE);
 	  return ret;
 	}

@@ -91,7 +91,7 @@ __ieee754_sinhf (float x)
   double rm = sm * (te - h * to);
   double r = rp - rm;
   float ub = r;
-  double lb = r - 1.52e-10 * r;
+  float lb = r - 1.52e-10 * r;
   if (__glibc_unlikely (ub != lb))
     {
       const double iln2h = 0x1.7154765p+5;

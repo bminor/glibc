@@ -45,7 +45,7 @@ __fmaf (float x, float y, float z)
 
   /* Ensure correct sign of an exact zero result by performing the
      addition in the original rounding mode in that case.  */
-  if (temp == -z)
+  if (temp == (double) -z)
     return (float) temp + z;
 
   union ieee754_double u;

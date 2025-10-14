@@ -46,7 +46,7 @@ __ieee754_remainderf(float x, float p)
 	    x -= p;
 	  /* Make sure x is not -0. This can occur only when x = p
 	     and rounding direction is towards negative infinity. */
-	  else if (x == 0.0)
+	  else if (x == 0.0f)
 	    x = 0.0;
 	}
     }
@@ -63,7 +63,7 @@ __ieee754_remainderf(float x, float p)
 	  x -= p;
 	  if (x >= p_half)
 	    x -= p;
-	  else if (x == 0.0)
+	  else if (x == 0.0f)
 	    x = 0.0;
 	}
     }

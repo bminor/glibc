@@ -207,7 +207,7 @@ j1f_asympt (float x)
     }
   double y = 1.0 / (double) x;
   double y2 = y * y;
-  double beta1 = 1.0f + y2 * (0x3p-4 - 0x3.18p-4 * y2);
+  double beta1 = 1.0 + y2 * (0x3p-4 - 0x3.18p-4 * y2);
   double alpha1;
   alpha1 = y * (-0x6p-4 + y2 * (0x2.ap-4 - 0x5.ef33333333334p-4 * y2));
   double h;
@@ -494,7 +494,7 @@ y1f_asympt (float x)
   float cst = 0xc.c422ap-4; /* sqrt(2/pi) rounded to nearest  */
   double y = 1.0 / (double) x;
   double y2 = y * y;
-  double beta1 = 1.0f + y2 * (0x3p-4 - 0x3.18p-4 * y2);
+  double beta1 = 1.0 + y2 * (0x3p-4 - 0x3.18p-4 * y2);
   double alpha1;
   alpha1 = y * (-0x6p-4 + y2 * (0x2.ap-4 - 0x5.ef33333333334p-4 * y2));
   double h;
@@ -537,10 +537,12 @@ y1f_near_root (float x, float z)
     return z;
   float xmid = p[1];
   float y = x - xmid, p6;
+  /* Using float rather than double in the constants below is enough to get
+     the desired accuracy (at most 9 ulps).  */
   if (index == 0)
-    p6 = p[6] + y * (-0x1.28043p-8 + y * 0x2.50e83p-8);
+    p6 = p[6] + y * (-0x1.28043p-8f + y * 0x2.50e83p-8f);
   else if (index == 1)
-    p6 = p[6] + y * -0xf.ff6b8p-12;
+    p6 = p[6] + y * -0xf.ff6b8p-12f;
   else
     p6 = p[6];
   return p[3] + y * (p[4] + y * (p[5] + y * p6));

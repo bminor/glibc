@@ -61,7 +61,8 @@ __ieee754_jnf(int n, float x)
 	    b = __ieee754_j1f(x);
 	    for(i=1;i<n;i++){
 		temp = b;
-		b = b*((double)(i+i)/x) - a; /* avoid underflow */
+                /* the following computation should be done in double precision */
+		b = (double)b*((double)(i+i)/(double)x) - (double)a; /* avoid underflow */
 		a = temp;
 	    }
 	} else {
@@ -219,7 +220,8 @@ __ieee754_ynf(int n, float x)
 	GET_FLOAT_WORD(ib,b);
 	for(i=1;i<n&&ib!=0xff800000;i++){
 	    temp = b;
-	    b = ((double)(i+i)/x)*b - a;
+            /* the following computation should be done in double precision */
+	    b = ((double)(i+i)/(double)x)*(double)b - (double)a;
 	    GET_FLOAT_WORD(ib,b);
 	    a = temp;
 	}

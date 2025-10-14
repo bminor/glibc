@@ -131,7 +131,7 @@ __erfcf (float xf)
 	  0x1.20dd750429b6dp+0, -0x1.812746b03610bp-2, 0x1.ce2f218831d2fp-4,
 	  -0x1.b82c609607dcbp-6, 0x1.553af09b8008ep-8
 	};
-      double f0 = xf
+      double f0 = (double) xf
 	    * (c[0] + x2 * (c[1] + x2 * (c[2] + x2 * (c[3] + x2 * (c[4])))));
       return 1.0 - f0;
     }
