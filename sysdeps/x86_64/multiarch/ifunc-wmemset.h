@@ -35,7 +35,7 @@ IFUNC_SELECTOR (void)
 
   if (X86_ISA_CPU_FEATURE_USABLE_P (cpu_features, AVX2)
       && X86_ISA_CPU_FEATURES_ARCH_P (cpu_features,
-				      AVX_Fast_Unaligned_Load, !))
+				      AVX_Fast_Unaligned_Load,))
     {
       if (X86_ISA_CPU_FEATURE_USABLE_P (cpu_features, AVX512VL))
 	{
