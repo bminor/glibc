@@ -41,5 +41,7 @@
 #include <math-use-builtins-llrint.h>
 #include <math-use-builtins-logb.h>
 #include <math-use-builtins-ffs.h>
+#include <math-use-builtins-lround.h>
+#include <math-use-builtins-llround.h>
 
 #endif /* MATH_USE_BUILTINS_H  */

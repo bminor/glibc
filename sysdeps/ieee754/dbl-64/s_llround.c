@@ -27,10 +27,14 @@
 #include <math_private.h>
 #include <libm-alias-double.h>
 #include <fix-fp-int-convert-overflow.h>
+#include <math-use-builtins.h>
 
 long long int
 __llround (double x)
 {
+#if USE_LLROUND_BUILTIN
+  return __builtin_llround (x);
+#else
   int32_t j0;
   int64_t i0;
   long long int result;
@@ -71,6 +75,7 @@ __llround (double x)
     }
 
   return sign * result;
+#endif /* ! USE_LLROUND_BUILTIN  */
 }
 
 libm_alias_double (__llround, llround)
