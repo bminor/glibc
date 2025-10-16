@@ -38,6 +38,7 @@
 #include <sys/mman.h>
 #include <sys/param.h>
 #include <sys/stat.h>
+#include <intprops.h>
 
 /* Get libc version number.  */
 #include "../version.h"
@@ -410,6 +411,7 @@ load_shobj (const char *name)
   int fd;
   ElfW(Shdr) *shdr;
   size_t pagesize = getpagesize ();
+  struct stat st;
 
   /* Since we use dlopen() we must be prepared to work around the sometimes
      strange lookup rules for the shared objects.  If we have a file foo.so
@@ -550,14 +552,39 @@ load_shobj (const char *name)
     error (EXIT_FAILURE, errno, _("Reopening shared object `%s' failed"),
 	   map->l_name);
 
+  if (fstat (fd, &st) < 0)
+    error (EXIT_FAILURE, errno, _("stat(%s) failure"), map->l_name);
+
+  /* We're depending on data that's being read from the file, so be a
+     bit paranoid here and make sure the requests are reasonable -
+     i.e. both size and offset are nonnegative and smaller than the
+     file size, as well as the offset of the end of the data.  PREAD
+     would have failed anyway, but this is more robust and explains
+     what happened better.  Note that SZ must be unsigned and OFF may
+     be signed or unsigned.  */
+#define PCHECK(sz1,off1) {						\
+    size_t sz = sz1, end_off;						\
+    off_t off = off1;							\
+    if (sz > st.st_size							\
+	|| off < 0 || off > st.st_size					\
+	|| INT_ADD_WRAPV (sz, off, &end_off)				\
+	|| end_off > st.st_size)					\
+      error (EXIT_FAILURE, ERANGE,					\
+	     _("read outside of file extents %zu + %zd > %zu"),		\
+	     sz, off, st.st_size);					\
+	}
+
   /* Map the section header.  */
   size_t size = ehdr->e_shnum * sizeof (ElfW(Shdr));
   shdr = (ElfW(Shdr) *) alloca (size);
+  PCHECK (size, ehdr->e_shoff);
   if (pread (fd, shdr, size, ehdr->e_shoff) != size)
     error (EXIT_FAILURE, errno, _("reading of section headers failed"));
 
   /* Get the section header string table.  */
   char *shstrtab = (char *) alloca (shdr[ehdr->e_shstrndx].sh_size);
+  PCHECK (shdr[ehdr->e_shstrndx].sh_size,
+	  shdr[ehdr->e_shstrndx].sh_offset);
   if (pread (fd, shstrtab, shdr[ehdr->e_shstrndx].sh_size,
 	     shdr[ehdr->e_shstrndx].sh_offset)
       != shdr[ehdr->e_shstrndx].sh_size)
@@ -585,6 +612,7 @@ load_shobj (const char *name)
       size_t size = debuglink_entry->sh_size;
       char *debuginfo_fname = (char *) alloca (size + 1);
       debuginfo_fname[size] = '\0';
+      PCHECK (size, debuglink_entry->sh_offset);
       if (pread (fd, debuginfo_fname, size, debuglink_entry->sh_offset)
 	  != size)
 	{
@@ -638,21 +666,32 @@ load_shobj (const char *name)
       if (fd2 != -1)
 	{
 	  ElfW(Ehdr) ehdr2;
+	  struct stat st;
+
+	  if (fstat (fd2, &st) < 0)
+	    error (EXIT_FAILURE, errno, _("stat(%s) failure"), workbuf);
 
 	  /* Read the ELF header.  */
+	  PCHECK (sizeof (ehdr2), 0);
 	  if (pread (fd2, &ehdr2, sizeof (ehdr2), 0) != sizeof (ehdr2))
 	    error (EXIT_FAILURE, errno,
 		   _("reading of ELF header failed"));
 
 	  /* Map the section header.  */
-	  size_t size = ehdr2.e_shnum * sizeof (ElfW(Shdr));
+	  size_t size;
+	  if (INT_MULTIPLY_WRAPV (ehdr2.e_shnum, sizeof (ElfW(Shdr)), &size))
+	    error (EXIT_FAILURE, errno, _("too many section headers"));
+	    
 	  ElfW(Shdr) *shdr2 = (ElfW(Shdr) *) alloca (size);
+	  PCHECK (size, ehdr2.e_shoff);
 	  if (pread (fd2, shdr2, size, ehdr2.e_shoff) != size)
 	    error (EXIT_FAILURE, errno,
 		   _("reading of section headers failed"));
 
 	  /* Get the section header string table.  */
 	  shstrtab = (char *) alloca (shdr2[ehdr2.e_shstrndx].sh_size);
+	  PCHECK (shdr2[ehdr2.e_shstrndx].sh_size,
+		  shdr2[ehdr2.e_shstrndx].sh_offset);
 	  if (pread (fd2, shstrtab, shdr2[ehdr2.e_shstrndx].sh_size,
 		     shdr2[ehdr2.e_shstrndx].sh_offset)
 	      != shdr2[ehdr2.e_shstrndx].sh_size)
