@@ -1,3 +1,4 @@
+#define NO_MATH_REDIRECT
 #include <math_private.h>
 
 #define __modf __modf_sse41
