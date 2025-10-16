@@ -20,7 +20,9 @@
 #define X86_MATH_PRIVATE_H 1
 
 #include <math.h>
+#include <math-inline-asm.h>
 #include_next <math_private.h>
+
 
 __extern_always_inline long double
 __NTH (__ieee754_atan2l (long double y, long double x))
@@ -36,8 +38,7 @@ __trunc (double x)
 #if HAVE_X86_INLINE_TRUNC || !defined __SSE4_1__
   return trunc (x);
 #else
-  asm ("%vroundsd $11, %d1, %0" : "=v" (x) : "v" (x));
-  return x;
+  return trunc_inline_asm (x);
 #endif
 }
 
@@ -47,8 +48,7 @@ __truncf (float x)
 #if HAVE_X86_INLINE_TRUNC || !defined __SSE4_1__
   return truncf (x);
 #else
-  asm ("%vroundss $11, %d1, %0" : "=v" (x) : "v" (x));
-  return x;
+  return truncf_inline_asm (x);
 #endif
 }
 

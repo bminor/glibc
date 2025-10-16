@@ -20,6 +20,7 @@
 #include <fpu_control.h>
 #include <unistd.h>
 #include <ldsodefs.h>
+#include <math-inline-asm.h>
 
 /* All exceptions, including the x86-specific "denormal operand"
    exception.  */
@@ -36,8 +37,7 @@ fesetmode (const femode_t *modep)
   _FPU_SETCW (cw);
   if (CPU_FEATURE_USABLE (SSE))
     {
-      unsigned int mxcsr;
-      __asm__ ("%vstmxcsr %0" : "=m" (mxcsr));
+      unsigned int mxcsr = stmxcsr_inline_asm ();
       /* Preserve SSE exception flags but restore other state in
 	 MXCSR.  */
       mxcsr &= FE_ALL_EXCEPT_X86;
@@ -47,7 +47,7 @@ fesetmode (const femode_t *modep)
 	mxcsr |= FE_ALL_EXCEPT_X86 << 7;
       else
 	mxcsr |= modep->__mxcsr & ~FE_ALL_EXCEPT_X86;
-      __asm__ ("%vldmxcsr %0" : : "m" (mxcsr));
+      ldmxcsr_inline_asm (mxcsr);
     }
   return 0;
 }

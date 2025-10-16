@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <fenv.h>
+#include <math-inline-asm.h>
 
 int
 __fesetround (int round)
@@ -36,10 +37,10 @@ __fesetround (int round)
 
   /* And now the MSCSR register for SSE, the precision is at different bit
      positions in the different units, we need to shift it 3 bits.  */
-  asm ("%vstmxcsr %0" : "=m" (mxcsr));
+  mxcsr = stmxcsr_inline_asm ();
   mxcsr &= ~ 0x6000;
   mxcsr |= round << 3;
-  asm ("%vldmxcsr %0" : : "m" (mxcsr));
+  ldmxcsr_inline_asm (mxcsr);
 
   return 0;
 }

@@ -19,6 +19,7 @@
 #include <fenv.h>
 #include <unistd.h>
 #include <ldsodefs.h>
+#include <math-inline-asm.h>
 
 int
 __fetestexcept (int excepts)
@@ -31,7 +32,7 @@ __fetestexcept (int excepts)
 
   /* If the CPU supports SSE we test the MXCSR as well.  */
   if (CPU_FEATURE_USABLE (SSE))
-    __asm__ ("%vstmxcsr %0" : "=m" (xtemp));
+    xtemp = stmxcsr_inline_asm ();
 
   return (temp | xtemp) & excepts & FE_ALL_EXCEPT;
 }

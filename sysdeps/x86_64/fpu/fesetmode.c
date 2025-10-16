@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <fenv.h>
+#include <math-inline-asm.h>
 #include <fpu_control.h>
 
 /* All exceptions, including the x86-specific "denormal operand"
@@ -27,8 +28,7 @@ int
 fesetmode (const femode_t *modep)
 {
   fpu_control_t cw;
-  unsigned int mxcsr;
-  __asm__ ("%vstmxcsr %0" : "=m" (mxcsr));
+  unsigned int mxcsr = stmxcsr_inline_asm ();
   /* Preserve SSE exception flags but restore other state in
      MXCSR.  */
   mxcsr &= FE_ALL_EXCEPT_X86;
@@ -45,6 +45,6 @@ fesetmode (const femode_t *modep)
       mxcsr |= modep->__mxcsr & ~FE_ALL_EXCEPT_X86;
     }
   _FPU_SETCW (cw);
-  __asm__ ("%vldmxcsr %0" : : "m" (mxcsr));
+  ldmxcsr_inline_asm (mxcsr);
   return 0;
 }
