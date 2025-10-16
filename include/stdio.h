@@ -184,18 +184,21 @@ _Noreturn void __libc_message_impl (const char *__vmaname, const char *__fmt,
 #define __libc_fatal_vma_name  "glibc: fatal"
 #define __libc_assert_vma_name "glibc: assert"
 
+#ifdef __va_arg_pack
 static inline _Noreturn void __libc_message_wrapper (const char *vmaname,
 						     const char *fmt, ...)
 {
-#ifdef __va_arg_pack_len
   if (__va_arg_pack_len () > LIBC_MESSAGE_MAX_ARGS)
     {
       __errordecl (__libc_message_error, "invalid number of arguments");
       __libc_message_error ();
     }
-#endif
   __libc_message_impl (vmaname, fmt, __va_arg_pack ());
 }
+#else
+# define __libc_message_wrapper(__vmaname, __fmt, ...) \
+  __libc_message_impl (__vmaname, __fmt, __VA_ARGS__)
+#endif
 #define __libc_message(...) \
    __libc_message_wrapper (__libc_fatal_vma_name, __VA_ARGS__)
 #define __libc_assert(...) \
