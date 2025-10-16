@@ -198,13 +198,26 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
 # define THREAD_GSCOPE_FLAG_UNUSED 0
 # define THREAD_GSCOPE_FLAG_USED   1
 # define THREAD_GSCOPE_FLAG_WAIT   2
+
+/* clang does not support __seg_fs in asm constraint.  */
+# ifdef __clang__
+#  define XCHGL_GSCOPE(__r)						      \
+   asm volatile ("xchgl %0, %%fs:%P1"					      \
+                 : "=r" (__r)						      \
+                 : "i" (offsetof (struct pthread, header.gscope_flag)),	      \
+		   "0" (THREAD_GSCOPE_FLAG_UNUSED))
+# else
+#  define XCHGL_GSCOPE(__r)						      \
+   asm volatile ("xchgl %1, %0"						      \
+		 : "=r" (__r)						      \
+		 : "m" (((struct pthread __seg_fs *)0)->header.gscope_flag),  \
+		   "0" (THREAD_GSCOPE_FLAG_UNUSED))
+# endif
+
 # define THREAD_GSCOPE_RESET_FLAG() \
   do									      \
     { int __res;							      \
-      asm volatile ("xchgl %1, %0"					      \
-		    : "=r" (__res)					      \
-		    : "m" (((struct pthread __seg_fs *)0)->header.gscope_flag), \
-		      "0" (THREAD_GSCOPE_FLAG_UNUSED));			      \
+      XCHGL_GSCOPE (__res);						      \
       if (__res == THREAD_GSCOPE_FLAG_WAIT)				      \
 	lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);    \
     }									      \
