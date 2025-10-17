@@ -66,19 +66,19 @@ $(objpfx)tst-gcs-%-abort.out: $(..)sysdeps/unix/sysv/linux/aarch64/tst-gcs-abort
 	$(SHELL) $< $(common-objpfx) $(test-name) '$(run-gcs-abort-test)'; \
 	$(evaluate-test)
 
-LDFLAGS-tst-gcs-disabled += -Wl,-z gcs=always
-LDFLAGS-tst-gcs-enforced += -Wl,-z gcs=always
-LDFLAGS-tst-gcs-enforced-abort += -Wl,-z gcs=never
-LDFLAGS-tst-gcs-optional-on += -Wl,-z gcs=always
-LDFLAGS-tst-gcs-optional-off += -Wl,-z gcs=never
-LDFLAGS-tst-gcs-override += -Wl,-z gcs=never
+LDFLAGS-tst-gcs-disabled += -Wl,-z,gcs=always
+LDFLAGS-tst-gcs-enforced += -Wl,-z,gcs=always
+LDFLAGS-tst-gcs-enforced-abort += -Wl,-z,gcs=never
+LDFLAGS-tst-gcs-optional-on += -Wl,-z,gcs=always
+LDFLAGS-tst-gcs-optional-off += -Wl,-z,gcs=never
+LDFLAGS-tst-gcs-override += -Wl,-z,gcs=never
 
-LDFLAGS-tst-gcs-disabled-static += -Wl,-z gcs=always
-LDFLAGS-tst-gcs-enforced-static += -Wl,-z gcs=always
-LDFLAGS-tst-gcs-enforced-static-abort += -Wl,-z gcs=never
-LDFLAGS-tst-gcs-optional-static-on += -Wl,-z gcs=always
-LDFLAGS-tst-gcs-optional-static-off += -Wl,-z gcs=never
-LDFLAGS-tst-gcs-override-static += -Wl,-z gcs=never
+LDFLAGS-tst-gcs-disabled-static += -Wl,-z,gcs=always
+LDFLAGS-tst-gcs-enforced-static += -Wl,-z,gcs=always
+LDFLAGS-tst-gcs-enforced-static-abort += -Wl,-z,gcs=never
+LDFLAGS-tst-gcs-optional-static-on += -Wl,-z,gcs=always
+LDFLAGS-tst-gcs-optional-static-off += -Wl,-z,gcs=never
+LDFLAGS-tst-gcs-override-static += -Wl,-z,gcs=never
 
 tst-gcs-disabled-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=0
 tst-gcs-enforced-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1
@@ -95,12 +95,12 @@ tst-gcs-optional-static-off-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=2
 tst-gcs-override-static-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=3
 
 # force one of the dependencies to be unmarked
-LDFLAGS-tst-gcs-mod2.so += -Wl,-z gcs=never
+LDFLAGS-tst-gcs-mod2.so += -Wl,-z,gcs=never
 
-LDFLAGS-tst-gcs-shared-disabled = -Wl,-z gcs=always
-LDFLAGS-tst-gcs-shared-enforced-abort = -Wl,-z gcs=always
-LDFLAGS-tst-gcs-shared-optional = -Wl,-z gcs=always
-LDFLAGS-tst-gcs-shared-override = -Wl,-z gcs=always
+LDFLAGS-tst-gcs-shared-disabled = -Wl,-z,gcs=always
+LDFLAGS-tst-gcs-shared-enforced-abort = -Wl,-z,gcs=always
+LDFLAGS-tst-gcs-shared-optional = -Wl,-z,gcs=always
+LDFLAGS-tst-gcs-shared-override = -Wl,-z,gcs=always
 
 modules-names += \
   tst-gcs-mod1 \
@@ -119,11 +119,11 @@ tst-gcs-shared-enforced-abort-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1
 tst-gcs-shared-optional-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=2
 tst-gcs-shared-override-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=3
 
-LDFLAGS-tst-gcs-dlopen-disabled = -Wl,-z gcs=always
-LDFLAGS-tst-gcs-dlopen-enforced = -Wl,-z gcs=always
-LDFLAGS-tst-gcs-dlopen-optional-on = -Wl,-z gcs=always
-LDFLAGS-tst-gcs-dlopen-optional-off = -Wl,-z gcs=never
-LDFLAGS-tst-gcs-dlopen-override = -Wl,-z gcs=always
+LDFLAGS-tst-gcs-dlopen-disabled = -Wl,-z,gcs=always
+LDFLAGS-tst-gcs-dlopen-enforced = -Wl,-z,gcs=always
+LDFLAGS-tst-gcs-dlopen-optional-on = -Wl,-z,gcs=always
+LDFLAGS-tst-gcs-dlopen-optional-off = -Wl,-z,gcs=never
+LDFLAGS-tst-gcs-dlopen-override = -Wl,-z,gcs=always
 
 tst-gcs-dlopen-disabled-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=0
 tst-gcs-dlopen-enforced-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1
@@ -137,7 +137,7 @@ $(objpfx)tst-gcs-dlopen-optional-on.out: $(objpfx)tst-gcs-mod2.so
 $(objpfx)tst-gcs-dlopen-optional-off.out: $(objpfx)tst-gcs-mod2.so
 $(objpfx)tst-gcs-dlopen-override.out: $(objpfx)tst-gcs-mod2.so
 
-LDFLAGS-tst-gcs-noreturn = -Wl,-z gcs=always
+LDFLAGS-tst-gcs-noreturn = -Wl,-z,gcs=always
 
 tst-gcs-noreturn-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=0
 
