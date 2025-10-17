@@ -28,7 +28,7 @@ dtotimespec (double sec)
 {
   if (sec <= TYPE_MINIMUM (time_t))
     return make_timespec (TYPE_MINIMUM (time_t), 0);
-  else if (sec >= 1.0 + TYPE_MAXIMUM (time_t))
+  else if (sec >= 1.0 + (double) TYPE_MAXIMUM (time_t))
     return make_timespec (TYPE_MAXIMUM (time_t), TIMESPEC_HZ - 1);
   else
     {
