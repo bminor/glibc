@@ -1337,7 +1337,12 @@ printf_positional (struct Xprintf_buffer * buf, const CHAR_T *format,
       /* Process format specifiers.  */
       do
 	{
-	  if (spec <= UCHAR_MAX
+# ifdef COMPILE_WPRINTF
+#  define CHECK_SPEC(spec) ((spec) <= UCHAR_MAX)
+# else
+#  define CHECK_SPEC(spec) (true)
+# endif
+	  if (CHECK_SPEC (spec)
 	      && __printf_function_table != NULL
 	      && __printf_function_table[(size_t) spec] != NULL)
 	    {
