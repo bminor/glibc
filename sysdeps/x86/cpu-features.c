@@ -1123,6 +1123,12 @@ disable_tsx:
        hardware.  */
       cpu_features->preferred[index_arch_Avoid_Non_Temporal_Memset]
 	    &= ~bit_arch_Avoid_Non_Temporal_Memset;
+      if (model < 0x4)
+	{
+	  /*  Unaligned AVX loads are slower.  */
+	  cpu_features->preferred[index_arch_AVX_Fast_Unaligned_Load]
+	    &= ~bit_arch_AVX_Fast_Unaligned_Load;
+	}
     }
   else
     {
