@@ -224,6 +224,7 @@
 #include <stdio.h>    /* needed for malloc_stats */
 #include <errno.h>
 #include <assert.h>
+#include <intprops.h>
 
 #include <shlib-compat.h>
 
@@ -3526,8 +3527,8 @@ __libc_free (void *mem)
 #endif
 
   /* Check size >= MINSIZE and p + size does not overflow.  */
-  if (__glibc_unlikely (__builtin_add_overflow_p ((uintptr_t) p, size - MINSIZE,
-						  (uintptr_t) 0)))
+  if (__glibc_unlikely (INT_ADD_OVERFLOW ((uintptr_t) p,
+					  size - MINSIZE)))
     return malloc_printerr_tail ("free(): invalid size");
 
   _int_free_chunk (arena_for_chunk (p), p, size, 0);
