@@ -35,7 +35,7 @@
    does not see that they are set in all cases where they are used,
    resulting in warnings that they may be used uninitialized.  */
 DIAG_PUSH_NEEDS_COMMENT;
-DIAG_IGNORE_NEEDS_COMMENT (7, "-Wmaybe-uninitialized");
+DIAG_IGNORE_NEEDS_COMMENT_GCC (7, "-Wmaybe-uninitialized");
 #include <soft-fp.h>
 #include <double.h>
 #include <quad.h>

@@ -29,7 +29,7 @@
    Since the usage is within the MERGE macro we disable the
    warning in the definition, but only in this file.  */
 DIAG_PUSH_NEEDS_COMMENT;
-DIAG_IGNORE_NEEDS_COMMENT (6, "-Wmaybe-uninitialized");
+DIAG_IGNORE_NEEDS_COMMENT_GCC (6, "-Wmaybe-uninitialized");
 #include <memcopy.h>
 DIAG_POP_NEEDS_COMMENT;
 
@@ -112,7 +112,7 @@ WORDCOPY_FWD_ALIGNED (long int dstp, long int srcp, size_t len)
 	 case. The switch case always sets 'a1' and all previous loop
 	 iterations will also have set 'a1' before the use.  */
       DIAG_PUSH_NEEDS_COMMENT;
-      DIAG_IGNORE_NEEDS_COMMENT (6, "-Wmaybe-uninitialized");
+      DIAG_IGNORE_NEEDS_COMMENT_GCC (6, "-Wmaybe-uninitialized");
       ((op_t *) dstp)[0] = a1;
       DIAG_POP_NEEDS_COMMENT;
     do7:
@@ -313,7 +313,7 @@ WORDCOPY_BWD_ALIGNED (long int dstp, long int srcp, size_t len)
       a0 = ((op_t *) srcp)[7];
       /* Check the comment on WORDCOPY_FWD_ALIGNED.  */
       DIAG_PUSH_NEEDS_COMMENT;
-      DIAG_IGNORE_NEEDS_COMMENT (6, "-Wmaybe-uninitialized");
+      DIAG_IGNORE_NEEDS_COMMENT_GCC (6, "-Wmaybe-uninitialized");
       ((op_t *) dstp)[7] = a1;
       DIAG_POP_NEEDS_COMMENT;
     do7:

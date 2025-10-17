@@ -205,7 +205,7 @@ __log1p (double x)
 	 must be 0 for c to be uninitialized and we handled that
 	 computation earlier without using c.  */
       DIAG_PUSH_NEEDS_COMMENT;
-      DIAG_IGNORE_Os_NEEDS_COMMENT (7, "-Wmaybe-uninitialized");
+      DIAG_IGNORE_Os_NEEDS_COMMENT_GCC (7, "-Wmaybe-uninitialized");
       return k * ln2_hi - ((hfsq - (s * (hfsq + R) + (k * ln2_lo + c))) - f);
       DIAG_POP_NEEDS_COMMENT;
     }

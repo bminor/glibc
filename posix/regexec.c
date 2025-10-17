@@ -3772,7 +3772,7 @@ check_node_accept_bytes (const re_dfa_t *dfa, Idx node_idx,
 		 however the loop will be executed iff ncoll_syms is larger
 		 than 0,which means extra will be already initialized.  */
 	      DIAG_PUSH_NEEDS_COMMENT;
-	      DIAG_IGNORE_Os_NEEDS_COMMENT (8, "-Wmaybe-uninitialized");
+	      DIAG_IGNORE_Os_NEEDS_COMMENT_GCC (8, "-Wmaybe-uninitialized");
 	      const unsigned char *coll_sym = extra + cset->coll_syms[i];
 	      DIAG_POP_NEEDS_COMMENT;
 	      /* Compare the length of input collating element and

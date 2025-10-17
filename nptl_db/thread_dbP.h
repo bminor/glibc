@@ -176,7 +176,7 @@ extern ps_err_e td_mod_lookup (struct ps_prochandle *ps, const char *modname,
    when DB_GET_FIELD_ADDRESS is called with a slot for ptr, the slot is
    always initialized.  */
 DIAG_PUSH_NEEDS_COMMENT;
-DIAG_IGNORE_Os_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
+DIAG_IGNORE_Os_NEEDS_COMMENT_GCC (5, "-Wmaybe-uninitialized");
 #define DB_GET_FIELD_ADDRESS(var, ta, ptr, type, field, idx) \
   ((var) = (ptr), _td_locate_field ((ta), (ta)->ta_field_##type##_##field, \
 				    SYM_##type##_FIELD_##field, \

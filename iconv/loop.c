@@ -194,7 +194,7 @@
    has a comment referencing this diagnostic disabling; updates in one
    place may require updates in the other.  */
 DIAG_PUSH_NEEDS_COMMENT;
-DIAG_IGNORE_Os_NEEDS_COMMENT (7, "-Wmaybe-uninitialized");
+DIAG_IGNORE_Os_NEEDS_COMMENT_GCC (7, "-Wmaybe-uninitialized");
 /* Handling of Unicode 3.1 TAG characters.  Unicode recommends
    "If language codes are not relevant to the particular processing
     operation, then they should be ignored."  This macro is usually
