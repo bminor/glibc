@@ -47,7 +47,7 @@
   ({                                                     \
     static Elf64_FuncDesc vdso_opd = { .fd_toc = ~0x0 }; \
     vdso_opd.fd_func = (Elf64_Addr)value;                \
-    &vdso_opd;                                           \
+    (void *) &vdso_opd;                                  \
   })
 
 #else
