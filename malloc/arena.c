@@ -482,7 +482,10 @@ grow_heap (heap_info *h, long diff)
       h->mprotect_size = new_size;
     }
 
-  madvise_thp (h, new_size);
+  /* mprotect preserves MADV_HUGEPAGE semantics - this means that if the old
+     region was marked with MADV_HUGEPAGE, the new region will retain that.  */
+  if (h->size < mp_.thp_pagesize)
+    madvise_thp (h, new_size);
 
   h->size = new_size;
   LIBC_PROBE (memory_heap_more, 2, h, h->size);
