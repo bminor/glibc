@@ -103,11 +103,13 @@ _dl_tls_allocate_end (void)
   atomic_fetch_add_relaxed (&_dl_tls_threads_in_update, -1);
 }
 
+#ifdef SHARED
 static inline bool
 _dl_tls_allocate_active (void)
 {
   return atomic_load_relaxed (&_dl_tls_threads_in_update) > 0;
 }
+#endif
 
 /* Compute the static TLS surplus based on the namespace count and the
    TLS space that can be used for optimizations.  */
