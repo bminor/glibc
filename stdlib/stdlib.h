@@ -1164,6 +1164,9 @@ extern int ttyslot (void) __THROW;
 /* Call function __FUNC exactly once, even if invoked from several threads.
    All calls must be made with the same __FLAGS object.  */
 extern void call_once (once_flag *__flag, void (*__func)(void));
+
+/* Return the alignment of P.  */
+extern size_t memalignment (const void *__p);
 #endif
 
 #include <bits/stdlib-float.h>

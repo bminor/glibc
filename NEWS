@@ -11,6 +11,8 @@ Major new features:
 
 * The ISO C23 memset_explicit function has been added.
 
+* The ISO C23 memalignment function has been added.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * Support for dumped heaps has been removed - malloc_set_state() now always

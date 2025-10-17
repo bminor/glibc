@@ -1135,6 +1135,61 @@ The @code{valloc} function is obsolete and @code{aligned_alloc} or
 @code{posix_memalign} should be used instead.
 @end deftypefun
 
+You can determine the alignment of a pointer with the
+@code{memalignment} function.
+
+@deftypefun size_t memalignment (void *@var{p})
+@standards{C23, stdlib.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+
+This function, defined in C23, returns the alignment of @var{p}, as a
+power of two.  If @var{p} is a null pointer, it returns zero.  C23
+requires @var{p} to be a valid pointer to an object or a null pointer;
+as a GNU extension, @theglibc{} supports this function on arbitrary
+bit patterns of pointer type.
+
+This function was added to the C23 standard to support unconventional
+platforms where a pointer's low-order bits are unrelated to alignment.
+For conventional platforms, one can instead cast the pointer to
+@code{uintptr_t} and then test the low order bits:
+this is portable to pre-C23 and is typically a bit faster.
+
+For example, if you want to read an @code{int}
+addressed by possibly-misaligned pointer @code{p},
+the following pre-C23 code works on all conventional platforms:
+
+@smallexample
+int i;
+if (((uintptr_t) p & (alignof (int) - 1)) != 0)
+  memcpy (&i, p, sizeof i);
+else
+  i = *p;
+@end smallexample
+
+However, it might not work on unconventional platforms, where one
+would need something like the following C23 code:
+
+@smallexample
+int i;
+if (memalignment (p) < alignof (int))
+  memcpy (&i, p, sizeof i);
+else
+  i = *p;
+@end smallexample
+
+However, for this particular case, performance does not improve if
+different code is used for aligned and unaligned pointers,
+and the following code is preferable:
+
+@smallexample
+int i;
+memcpy (&i, p, sizeof i);
+@end smallexample
+
+The compiler will generate the most efficient way to access unaligned
+data for the architecture, optimizing away the @code{memcpy} call.
+@end deftypefun
+
 @node Malloc Tunable Parameters
 @subsubsection Malloc Tunable Parameters
 

@@ -97,6 +97,7 @@ routines := \
   mblen \
   mbstowcs \
   mbtowc \
+  memalignment \
   mrand48 \
   mrand48_r \
   nrand48 \
@@ -299,6 +300,7 @@ tests := \
   tst-makecontext-align \
   tst-makecontext2 \
   tst-makecontext3 \
+  tst-memalignment \
   tst-on_exit \
   tst-qsort \
   tst-qsort2 \
@@ -440,6 +442,8 @@ CFLAGS-tst-stdc_count_ones.c += -fno-builtin
 CFLAGS-tst-stdc_bit_width.c += -fno-builtin
 CFLAGS-tst-stdc_bit_floor.c += -fno-builtin
 CFLAGS-tst-stdc_bit_ceil.c += -fno-builtin
+
+CFLAGS-tst-memalignment.c += -fno-builtin
 
 ifeq ($(have-cxx-thread_local),yes)
 CFLAGS-tst-quick_exit.o = -std=c++11
