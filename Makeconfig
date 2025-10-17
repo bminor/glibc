@@ -916,6 +916,9 @@ endif
 # disable any optimization that assume default rounding mode.
 +math-flags = -frounding-math
 
+# We have to assume that glibc functions might generate user-visible traps.
++math-flags += -ftrapping-math
+
 # Logically only "libnldbl", "nonlib" and "testsuite" should be using
 # -fno-math-errno. However due to GCC bug #88576, only "libm" and
 # "libmvec" can use -fno-math-errno.
