@@ -23,6 +23,7 @@
 #include <math.h>
 
 #include <math-barriers.h>
+#include <libc-diag.h>
 
 #define fabs_tg(x) __MATH_TG ((x), (__typeof (x)) __builtin_fabs, (x))
 
@@ -37,10 +38,17 @@
 #define min_of_type(x) __MATH_TG ((x), (__typeof (x)) min_of_type_, ())
 
 /* If X (which is not a NaN) is subnormal, force an underflow
-   exception.  */
+   exception.
+
+   clang issues a warning where _Generic is using a non expected
+   builtin which may cause truncation of value.
+
+   clang warns the value might be truncated due the use of _Generics. */
 #define math_check_force_underflow(x)				\
   do								\
     {								\
+      DIAG_PUSH_NEEDS_COMMENT_CLANG;				\
+      DIAG_IGNORE_NEEDS_COMMENT_CLANG (18, "-Wabsolute-value"); \
       __typeof (x) force_underflow_tmp = (x);			\
       if (fabs_tg (force_underflow_tmp)				\
 	  < min_of_type (force_underflow_tmp))			\
@@ -49,6 +57,7 @@
 	    = force_underflow_tmp * force_underflow_tmp;	\
 	  math_force_eval (force_underflow_tmp2);		\
 	}							\
+      DIAG_POP_NEEDS_COMMENT_CLANG;				\
     }								\
   while (0)
 /* Likewise, but X is also known to be nonnegative.  */
