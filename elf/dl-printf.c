@@ -35,6 +35,7 @@
 
 /* The function might be called before the process is self-relocated.  */
 static size_t
+__attribute_optimization_barrier__
 _dl_debug_strlen (const char *s)
 {
   const char *p = s;
