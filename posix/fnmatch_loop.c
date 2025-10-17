@@ -537,7 +537,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 				   that it was properly set in the loop
 				   above.   */
                                 DIAG_PUSH_NEEDS_COMMENT;
-                                DIAG_IGNORE_NEEDS_COMMENT (16, "-Wmaybe-uninitialized");
+                                DIAG_IGNORE_NEEDS_COMMENT_GCC (16, "-Wmaybe-uninitialized");
                                 if (! is_range
 
 # if WIDE_CHAR_VERSION
@@ -560,7 +560,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 				   above it will be properly set by the loop.
 				   */
                                 DIAG_PUSH_NEEDS_COMMENT;
-                                DIAG_IGNORE_NEEDS_COMMENT (16, "-Wmaybe-uninitialized");
+                                DIAG_IGNORE_NEEDS_COMMENT_GCC (16, "-Wmaybe-uninitialized");
                                 cold = wextra[1 + wextra[0]];
                                 DIAG_POP_NEEDS_COMMENT;
 # else
@@ -745,7 +745,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
                                        means that it was properly set in the
                                        loop above.   */
                                     DIAG_PUSH_NEEDS_COMMENT;
-                                    DIAG_IGNORE_NEEDS_COMMENT (16, "-Wmaybe-uninitialized");
+                                    DIAG_IGNORE_NEEDS_COMMENT_GCC (16, "-Wmaybe-uninitialized");
                                     cend = wextra[1 + wextra[0]];
                                     DIAG_POP_NEEDS_COMMENT;
 # else
@@ -754,7 +754,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 				       wextra above it will be properly set by
 				       the loop.   */
                                     DIAG_PUSH_NEEDS_COMMENT;
-                                    DIAG_IGNORE_NEEDS_COMMENT (16, "-Wmaybe-uninitialized");
+                                    DIAG_IGNORE_NEEDS_COMMENT_GCC (16, "-Wmaybe-uninitialized");
                                     idx += 1 + extra[idx];
                                     DIAG_POP_NEEDS_COMMENT;
                                     /* Adjust for the alignment.  */
