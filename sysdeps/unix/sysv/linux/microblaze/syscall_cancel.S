@@ -50,9 +50,8 @@ __syscall_cancel_arch_start:
 __syscall_cancel_arch_end:
 
 	nop
-	lwi	r15,r1,0
 	rtsd	r15,8
-	addik	r1,r1,28
+	nop
 
 1:
 	brlid	r15, __syscall_do_cancel
