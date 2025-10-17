@@ -88,19 +88,19 @@ static const uint32_t to_ucs4[256] =
 
 static const struct gap from_idx[] =
 {
-  { start: 0x0000, end: 0x00a0, idx:     0 },
-  { start: 0x00ad, end: 0x00ad, idx:   -12 },
-  { start: 0x0401, end: 0x045e, idx:  -863 },
-  { start: 0x0492, end: 0x0493, idx:  -914 },
-  { start: 0x049a, end: 0x049b, idx:  -920 },
-  { start: 0x04a2, end: 0x04a3, idx:  -926 },
-  { start: 0x04ae, end: 0x04b1, idx:  -936 },
-  { start: 0x04ba, end: 0x04bb, idx:  -944 },
-  { start: 0x04d8, end: 0x04d9, idx:  -972 },
-  { start: 0x04e8, end: 0x04e9, idx:  -986 },
-  { start: 0x20ac, end: 0x20ac, idx: -8092 },
-  { start: 0x2116, end: 0x2116, idx: -8197 },
-  { start: 0xffff, end: 0xffff, idx:     0 }
+  { .start = 0x0000, .end = 0x00a0, .idx =     0 },
+  { .start = 0x00ad, .end = 0x00ad, .idx =   -12 },
+  { .start = 0x0401, .end = 0x045e, .idx =  -863 },
+  { .start = 0x0492, .end = 0x0493, .idx =  -914 },
+  { .start = 0x049a, .end = 0x049b, .idx =  -920 },
+  { .start = 0x04a2, .end = 0x04a3, .idx =  -926 },
+  { .start = 0x04ae, .end = 0x04b1, .idx =  -936 },
+  { .start = 0x04ba, .end = 0x04bb, .idx =  -944 },
+  { .start = 0x04d8, .end = 0x04d9, .idx =  -972 },
+  { .start = 0x04e8, .end = 0x04e9, .idx =  -986 },
+  { .start = 0x20ac, .end = 0x20ac, .idx = -8092 },
+  { .start = 0x2116, .end = 0x2116, .idx = -8197 },
+  { .start = 0xffff, .end = 0xffff, .idx =     0 }
 };
 
 static const char from_ucs4[] =
