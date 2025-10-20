@@ -51,97 +51,97 @@ typedef wchar_t __gwchar_t;
 /* Macros for printing format specifiers.  */
 
 /* Decimal notation.  */
-# define PRId8		"d"
-# define PRId16		"d"
+# define PRId8		"hhd"
+# define PRId16		"hd"
 # define PRId32		"d"
 # define PRId64		__PRI64_PREFIX "d"
 
-# define PRIdLEAST8	"d"
-# define PRIdLEAST16	"d"
+# define PRIdLEAST8	"hhd"
+# define PRIdLEAST16	"hd"
 # define PRIdLEAST32	"d"
 # define PRIdLEAST64	__PRI64_PREFIX "d"
 
-# define PRIdFAST8	"d"
+# define PRIdFAST8	"hhd"
 # define PRIdFAST16	__PRIPTR_PREFIX "d"
 # define PRIdFAST32	__PRIPTR_PREFIX "d"
 # define PRIdFAST64	__PRI64_PREFIX "d"
 
 
-# define PRIi8		"i"
-# define PRIi16		"i"
+# define PRIi8		"hhi"
+# define PRIi16		"hi"
 # define PRIi32		"i"
 # define PRIi64		__PRI64_PREFIX "i"
 
-# define PRIiLEAST8	"i"
-# define PRIiLEAST16	"i"
+# define PRIiLEAST8	"hhi"
+# define PRIiLEAST16	"hi"
 # define PRIiLEAST32	"i"
 # define PRIiLEAST64	__PRI64_PREFIX "i"
 
-# define PRIiFAST8	"i"
+# define PRIiFAST8	"hhi"
 # define PRIiFAST16	__PRIPTR_PREFIX "i"
 # define PRIiFAST32	__PRIPTR_PREFIX "i"
 # define PRIiFAST64	__PRI64_PREFIX "i"
 
 /* Octal notation.  */
-# define PRIo8		"o"
-# define PRIo16		"o"
+# define PRIo8		"hho"
+# define PRIo16		"ho"
 # define PRIo32		"o"
 # define PRIo64		__PRI64_PREFIX "o"
 
-# define PRIoLEAST8	"o"
-# define PRIoLEAST16	"o"
+# define PRIoLEAST8	"hho"
+# define PRIoLEAST16	"ho"
 # define PRIoLEAST32	"o"
 # define PRIoLEAST64	__PRI64_PREFIX "o"
 
-# define PRIoFAST8	"o"
+# define PRIoFAST8	"hho"
 # define PRIoFAST16	__PRIPTR_PREFIX "o"
 # define PRIoFAST32	__PRIPTR_PREFIX "o"
 # define PRIoFAST64	__PRI64_PREFIX "o"
 
 /* Unsigned integers.  */
-# define PRIu8		"u"
-# define PRIu16		"u"
+# define PRIu8		"hhu"
+# define PRIu16		"hu"
 # define PRIu32		"u"
 # define PRIu64		__PRI64_PREFIX "u"
 
-# define PRIuLEAST8	"u"
-# define PRIuLEAST16	"u"
+# define PRIuLEAST8	"hhu"
+# define PRIuLEAST16	"hu"
 # define PRIuLEAST32	"u"
 # define PRIuLEAST64	__PRI64_PREFIX "u"
 
-# define PRIuFAST8	"u"
+# define PRIuFAST8	"hhu"
 # define PRIuFAST16	__PRIPTR_PREFIX "u"
 # define PRIuFAST32	__PRIPTR_PREFIX "u"
 # define PRIuFAST64	__PRI64_PREFIX "u"
 
 /* lowercase hexadecimal notation.  */
-# define PRIx8		"x"
-# define PRIx16		"x"
+# define PRIx8		"hhx"
+# define PRIx16		"hx"
 # define PRIx32		"x"
 # define PRIx64		__PRI64_PREFIX "x"
 
-# define PRIxLEAST8	"x"
-# define PRIxLEAST16	"x"
+# define PRIxLEAST8	"hhx"
+# define PRIxLEAST16	"hx"
 # define PRIxLEAST32	"x"
 # define PRIxLEAST64	__PRI64_PREFIX "x"
 
-# define PRIxFAST8	"x"
+# define PRIxFAST8	"hhx"
 # define PRIxFAST16	__PRIPTR_PREFIX "x"
 # define PRIxFAST32	__PRIPTR_PREFIX "x"
 # define PRIxFAST64	__PRI64_PREFIX "x"
 
 /* UPPERCASE hexadecimal notation.  */
-# define PRIX8		"X"
-# define PRIX16		"X"
+# define PRIX8		"hhX"
+# define PRIX16		"hX"
 # define PRIX32		"X"
 # define PRIX64		__PRI64_PREFIX "X"
 
-# define PRIXLEAST8	"X"
-# define PRIXLEAST16	"X"
+# define PRIXLEAST8	"hhX"
+# define PRIXLEAST16	"hX"
 # define PRIXLEAST32	"X"
 # define PRIXLEAST64	__PRI64_PREFIX "X"
 
-# define PRIXFAST8	"X"
+# define PRIXFAST8	"hhX"
 # define PRIXFAST16	__PRIPTR_PREFIX "X"
 # define PRIXFAST32	__PRIPTR_PREFIX "X"
 # define PRIXFAST64	__PRI64_PREFIX "X"
@@ -166,17 +166,17 @@ typedef wchar_t __gwchar_t;
 
 /* Binary notation.  */
 # if __GLIBC_USE (ISOC23)
-#  define PRIb8		"b"
-#  define PRIb16	"b"
+#  define PRIb8		"hhb"
+#  define PRIb16	"hb"
 #  define PRIb32	"b"
 #  define PRIb64	__PRI64_PREFIX "b"
 
-#  define PRIbLEAST8	"b"
-#  define PRIbLEAST16	"b"
+#  define PRIbLEAST8	"hhb"
+#  define PRIbLEAST16	"hb"
 #  define PRIbLEAST32	"b"
 #  define PRIbLEAST64	__PRI64_PREFIX "b"
 
-#  define PRIbFAST8	"b"
+#  define PRIbFAST8	"hhb"
 #  define PRIbFAST16	__PRIPTR_PREFIX "b"
 #  define PRIbFAST32	__PRIPTR_PREFIX "b"
 #  define PRIbFAST64	__PRI64_PREFIX "b"
@@ -184,17 +184,17 @@ typedef wchar_t __gwchar_t;
 #  define PRIbMAX	__PRI64_PREFIX "b"
 #  define PRIbPTR	__PRIPTR_PREFIX "b"
 
-#  define PRIB8		"B"
-#  define PRIB16	"B"
+#  define PRIB8		"hhB"
+#  define PRIB16	"hB"
 #  define PRIB32	"B"
 #  define PRIB64	__PRI64_PREFIX "B"
 
-#  define PRIBLEAST8	"B"
-#  define PRIBLEAST16	"B"
+#  define PRIBLEAST8	"hhB"
+#  define PRIBLEAST16	"hB"
 #  define PRIBLEAST32	"B"
 #  define PRIBLEAST64	__PRI64_PREFIX "B"
 
-#  define PRIBFAST8	"B"
+#  define PRIBFAST8	"hhB"
 #  define PRIBFAST16	__PRIPTR_PREFIX "B"
 #  define PRIBFAST32	__PRIPTR_PREFIX "B"
 #  define PRIBFAST64	__PRI64_PREFIX "B"

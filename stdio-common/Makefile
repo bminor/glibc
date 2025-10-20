@@ -314,6 +314,7 @@ tests := \
   tst-popen2 \
   tst-printf-binary \
   tst-printf-intn \
+  tst-printf-macro \
   tst-printf-oct \
   tst-printf-round \
   tst-printfsz \
