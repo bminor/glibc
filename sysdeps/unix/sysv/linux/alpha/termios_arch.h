@@ -17,8 +17,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef TERMIOS_INTERNALS_H
-# error "<termios_arch.h> should only be included from <termios_internals.h>"
+#ifndef K_TERMIOS_H
+# error "<termios_arch.h> should only be included from <k_termios.h>"
 #endif
 
 #define _TERMIOS2_NCCS 19
