@@ -64,7 +64,10 @@ endif
 
 # The mcount code won't work without a frame pointer nor when memcpy or
 # memset are called.
-CFLAGS-mcount.c := -fno-omit-frame-pointer -fno-tree-loop-distribute-patterns
+CFLAGS-mcount.c := -fno-omit-frame-pointer
+ifeq (yes,$(config-cflags-cc-loop-to-function))
+CFLAGS-mcount.c += -fno-tree-loop-distribute-patterns
+endif
 
 CFLAGS-tst-gmon.c := -fno-omit-frame-pointer -pg
 tst-gmon-no-pie = yes

@@ -1590,6 +1590,7 @@ if test $libc_cv_test_cc_loop_to_function = yes; then
   AC_DEFINE(HAVE_TEST_CC_INHIBIT_LOOP_TO_LIBCALL)
 fi
 AC_SUBST(libc_cv_cc_loop_to_function)
+LIBC_CONFIG_VAR(config-cflags-cc-loop-to-function,$libc_cv_cc_loop_to_function)
 
 LIBC_TRY_CC_AND_TEST_CC_OPTION([for -Wimplicit-fallthrough],
   [-Werror -Wimplicit-fallthrough],

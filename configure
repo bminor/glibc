@@ -7515,7 +7515,8 @@ $conftest_code
 EOF
 
 saved_CC="$CC"
-CC="$TEST_CC"
+saved_CFLAGS="$CFLAGS"
+CC="$TEST_CC -Wno-unused-command-line-argument"
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for traditional tls support in testing" >&5
 printf %s "checking for traditional tls support in testing... " >&6; }
 if test ${libc_cv_test_mtls_traditional+y}
@@ -7989,6 +7990,8 @@ if test $libc_cv_test_cc_loop_to_function = yes; then
 
 fi
 
+config_vars="$config_vars
+config-cflags-cc-loop-to-function = $libc_cv_cc_loop_to_function"
 
 
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for -Wimplicit-fallthrough" >&5
@@ -8081,7 +8084,8 @@ if test "$TEST_CC" = "$CC"; then
 else
 
 saved_CC="$CC"
-CC="$TEST_CC"
+saved_CFLAGS="$CFLAGS"
+CC="$TEST_CC -Wno-unused-command-line-argument"
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for -Wfree-labels in testing" >&5
 printf %s "checking for -Wfree-labels in testing... " >&6; }
 if test ${libc_cv_test_cc_wfree_labels+y}
@@ -8141,7 +8145,8 @@ if test "$TEST_CC" = "$CC"; then
 else
 
 saved_CC="$CC"
-CC="$TEST_CC"
+saved_CFLAGS="$CFLAGS"
+CC="$TEST_CC -Wno-unused-command-line-argument"
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for -Wmissing-parameter-name in testing" >&5
 printf %s "checking for -Wmissing-parameter-name in testing... " >&6; }
 if test ${libc_cv_test_cc_wmissing_parameter_name+y}
