@@ -41,16 +41,6 @@ __tcsetattr (int fd, int optional_actions, const struct termios *termios_p)
 
   copy_c_cc (k_termios.c_cc, _TERMIOS2_NCCS, termios_p->c_cc, NCCS);
 
-  /*
-   * Choose the proper ioctl number to invoke.
-   *
-   * Alpha got TCSETS2 late (Linux 4.20), but has the same structure
-   * format, and it only needs TCSETS2 if either it needs to use
-   * __BOTHER or split speed.  All other architectures have TCSETS2 as
-   * far back as the current glibc supports.  Calling TCSETS with
-   * __BOTHER causes unpredictable results on old Alpha kernels and
-   * could even crash them.
-   */
   static_assert_equal(TCSADRAIN, TCSANOW + 1);
   static_assert_equal(TCSAFLUSH, TCSANOW + 2);
   static_assert_equal(TCSETSW2,  TCSETS2 + 1);
@@ -62,17 +52,28 @@ __tcsetattr (int fd, int optional_actions, const struct termios *termios_p)
   if (cmd > 2)
     return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
 
+  /* For compatibility with broken workaround hacks for the lack
+     of arbitrary speed support in previous versions of glibc,
+     clear CIBAUD if only one speed is used.
+
+     This is also necessary for the Alpha compatibility hack below. */
+  if (k_termios.c_ospeed == k_termios.c_ispeed)
+    k_termios.c_cflag &= ~CIBAUD;
+
+  /* Choose the proper ioctl number to invoke.
+
+     Alpha got TCSETS2 late (Linux 4.20), but has the same structure
+     format, and it only needs TCSETS2 if either it needs to use
+     __BOTHER or split speed.  All other architectures have TCSETS2 as
+     far back as the current glibc supports.  Calling TCSETS with
+     __BOTHER causes unpredictable results on old Alpha kernels and
+     could even crash them. */
   if (__ASSUME_TERMIOS2 ||
       k_termios.c_ospeed != k_termios.c_ispeed ||
       cbaud (k_termios.c_cflag) == __BOTHER)
-    {
-      cmd += TCSETS2;
-    }
+    cmd += TCSETS2;
   else
-    {
-      cmd += TCSETS;
-      k_termios.c_cflag &= ~CIBAUD;
-    }
+    cmd += TCSETS;
 
   return INLINE_SYSCALL_CALL (ioctl, fd, cmd, &k_termios);
 }
