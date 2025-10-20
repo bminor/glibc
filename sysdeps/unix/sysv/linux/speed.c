@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <termios_internals.h>
+#include <libc-diag.h>
 
 /* Conversions between legacy c_cflag fields and actual baud rates */
 
@@ -60,6 +61,10 @@
 speed_t
 ___cbaud_to_speed (tcflag_t c_cflag, speed_t other)
 {
+  /* The override is explicit used to support the same initialization on
+     multiple platforms.  */
+  DIAG_PUSH_NEEDS_COMMENT_CLANG;
+  DIAG_IGNORE_NEEDS_COMMENT_CLANG (18, "-Winitializer-overrides");
   static const speed_t cbaudix_to_speed [] =
     {
       [0 ... _cbix(CBAUDMASK)] = -1,
@@ -124,6 +129,7 @@ ___cbaud_to_speed (tcflag_t c_cflag, speed_t other)
       [_cbix(__B4000000)] = 4000000,
 #endif
     };
+  DIAG_POP_NEEDS_COMMENT_CLANG;
   speed_t speed;
 
   if (c_cflag & (tcflag_t)(~CBAUDMASK))
