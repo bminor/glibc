@@ -49,25 +49,8 @@ ENTRY (__setcontext)
 	cbz	x0, 1f
 	b	C_SYMBOL_NAME (__syscall_error)
 1:
-	/* Disable ZA of SME.  */
-#if HAVE_AARCH64_PAC_RET
-	PACIASP
-	cfi_window_save
-#endif
-	stp	x29, x30, [sp, -16]!
-	cfi_adjust_cfa_offset (16)
-	cfi_rel_offset (x29, 0)
-	cfi_rel_offset (x30, 8)
-	mov	x29, sp
-	bl	__libc_arm_za_disable
-	ldp	x29, x30, [sp], 16
-	cfi_adjust_cfa_offset (-16)
-	cfi_restore (x29)
-	cfi_restore (x30)
-#if HAVE_AARCH64_PAC_RET
-	AUTIASP
-	cfi_window_save
-#endif
+	/* Clear ZA state of SME.  */
+	CALL_LIBC_ARM_ZA_DISABLE
 	/* Restore the general purpose registers.  */
 	mov	x0, x9
 	cfi_def_cfa (x0, 0)
