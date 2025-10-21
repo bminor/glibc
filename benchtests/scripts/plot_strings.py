@@ -54,7 +54,7 @@ def gmean(numbers):
     Return:
         numpy array with geometric means of numbers along each column
     """
-    a = np.array(numbers, dtype=np.complex)
+    a = np.array(numbers, dtype=complex)
     means = a.prod(0) ** (1.0 / len(a))
     return np.real(means)
 
