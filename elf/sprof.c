@@ -573,8 +573,8 @@ load_shobj (const char *name)
 	|| INT_ADD_WRAPV (sz, off, &end_off)				\
 	|| end_off > st.st_size)					\
       error (EXIT_FAILURE, ERANGE,					\
-	     _("read outside of file extents %zu + %zd > %zu"),		\
-	     sz, off, st.st_size);					\
+	     _("read outside of file extents %zu + %jd > %jd"),		\
+	     sz, (intmax_t) off, (intmax_t) st.st_size);		\
 	}
 
   /* Map the section header.  */
