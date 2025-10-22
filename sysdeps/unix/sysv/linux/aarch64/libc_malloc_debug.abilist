@@ -26,3 +26,5 @@ GLIBC_2.17 pvalloc F
 GLIBC_2.17 realloc F
 GLIBC_2.17 valloc F
 GLIBC_2.33 mallinfo2 F
+GLIBC_2.43 free_aligned_sized F
+GLIBC_2.43 free_sized F

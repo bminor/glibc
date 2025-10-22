@@ -3729,6 +3729,33 @@ aligned_alloc (size_t alignment, size_t bytes)
   return _mid_memalign (alignment, bytes);
 }
 
+/* For ISO C23.  */
+void
+weak_function
+free_sized (void *ptr, __attribute_maybe_unused__ size_t size)
+{
+  /* We do not perform validation that size is the same as the original
+     requested size at this time. We leave that to the sanitizers.  We
+     simply forward to `free`.  This allows existing malloc replacements
+     to continue to work.  */
+
+  free (ptr);
+}
+
+/* For ISO C23.  */
+void
+weak_function
+free_aligned_sized (void *ptr, __attribute_maybe_unused__ size_t alignment,
+                    __attribute_maybe_unused__ size_t size)
+{
+  /* We do not perform validation that size and alignment is the same as
+     the original requested size and alignment at this time.  We leave that
+     to the sanitizers.  We simply forward to `free`.  This allows existing
+     malloc replacements to continue to work.  */
+
+  free (ptr);
+}
+
 static void *
 _mid_memalign (size_t alignment, size_t bytes)
 {

@@ -24,3 +24,5 @@ GLIBC_2.35 posix_memalign F
 GLIBC_2.35 pvalloc F
 GLIBC_2.35 realloc F
 GLIBC_2.35 valloc F
+GLIBC_2.43 free_aligned_sized F
+GLIBC_2.43 free_sized F

@@ -26,3 +26,5 @@ GLIBC_2.2 mcheck_check_all F
 GLIBC_2.2 mcheck_pedantic F
 GLIBC_2.2 posix_memalign F
 GLIBC_2.33 mallinfo2 F
+GLIBC_2.43 free_aligned_sized F
+GLIBC_2.43 free_sized F

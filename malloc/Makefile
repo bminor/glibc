@@ -32,7 +32,11 @@ tests := \
   tst-aligned-alloc-random-thread-cross \
   tst-alloc_buffer \
   tst-calloc \
+  tst-free-aligned-sized \
+  tst-free-aligned-sized-trace \
   tst-free-errno \
+  tst-free-sized \
+  tst-free-sized-trace \
   tst-interpose-nothread \
   tst-interpose-thread \
   tst-malloc \
@@ -351,6 +355,8 @@ ifneq ($(PERL),no)
 tests-special += $(objpfx)tst-mtrace.out
 tests-special += $(objpfx)tst-dynarray-mem.out
 tests-special += $(objpfx)tst-dynarray-fail-mem.out
+tests-special += $(objpfx)tst-free-aligned-sized-mtrace.out
+tests-special += $(objpfx)tst-free-sized-mtrace.out
 endif
 endif
 endif
@@ -459,3 +465,15 @@ tst-aligned-alloc-random-ENV = LD_PRELOAD=$(objpfx)tst-aligned_alloc-lib.so
 tst-aligned-alloc-random-thread-ENV = LD_PRELOAD=$(objpfx)tst-aligned_alloc-lib.so
 tst-aligned-alloc-random-thread-cross-ENV = LD_PRELOAD=$(objpfx)tst-aligned_alloc-lib.so
 tst-malloc-random-ENV = LD_PRELOAD=$(objpfx)tst-aligned_alloc-lib.so
+
+tst-free-aligned-sized-trace-ENV = MALLOC_TRACE=$(objpfx)tst-free-aligned-sized-mem.mtrace \
+	LD_PRELOAD=$(objpfx)libc_malloc_debug.so
+$(objpfx)tst-free-aligned-sized-mtrace.out: $(objpfx)tst-free-aligned-sized-trace.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-free-aligned-sized-mem.mtrace > $@; \
+	$(evaluate-test)
+
+tst-free-sized-trace-ENV = MALLOC_TRACE=$(objpfx)tst-free-sized-mem.mtrace \
+	LD_PRELOAD=$(objpfx)libc_malloc_debug.so
+$(objpfx)tst-free-sized-mtrace.out: $(objpfx)tst-free-sized-trace.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-free-sized-mem.mtrace > $@; \
+	$(evaluate-test)

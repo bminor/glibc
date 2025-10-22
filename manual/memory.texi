@@ -763,6 +763,34 @@ There is no point in freeing blocks at the end of a program, because all
 of the program's space is given back to the system when the process
 terminates.
 
+@deftypefun void free_sized (void *@var{ptr}, size_t @var{size})
+@standards{ISO, stdlib.h}
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{} @acsmem{}}}
+The @code{free_sized} function deallocates the block of memory pointed at
+by @var{ptr} that was previously allocated by @code{malloc}, @code{calloc}
+or @code{realloc}.  The size @var{size} must match the previously requested
+total size provided to @code{malloc}, @code{calloc} or @code{realloc}.
+Attempting to deallocated memory allocated by @code{aligned_alloc},
+@code{memalign}, @code{posix_memalign}, @code{valloc} or @code{pvalloc} is
+undefined behavior.  For @code{aligned_alloc}, @code{memalign} or
+@code{posix_memalign} use @code{free_aligned_sized} instead.  Additionally
+it is also undefined behavior to call @code{free_sized} for allocations
+which the caller did not directly allocate but must still deallocate, such
+as the result of @code{strdup} or @code{strndup}.  Instead continue using
+@code{free} for these cases.
+@end deftypefun
+
+@deftypefun void free_aligned_sized (void *@var{ptr}, size_t @var{alignment}, size_t @var{size})
+@standards{ISO, stdlib.h}
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{} @acsmem{}}}
+The @code{free_aligned_sized} function deallocates the block of memory
+pointed at by @var{ptr} that was previously allocated by
+@code{aligned_alloc}, @code{memalign} or @code{posix_memalign}.
+The size @var{size} and alignment @var{alignment} must match the
+previously requested size and alignment provided to
+@code{aligned_alloc}, @code{memalign} or @code{posix_memalign}.
+@end deftypefun
+
 @node Changing Block Size
 @subsubsection Changing the Size of a Block
 @cindex changing the size of a block (@code{malloc})
@@ -1908,6 +1936,8 @@ functions, too.  Their names are listed in the following table.
 
 @table @code
 @item aligned_alloc
+@item free_aligned_sized
+@item free_sized
 @item malloc_usable_size
 @item memalign
 @item posix_memalign

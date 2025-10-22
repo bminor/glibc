@@ -26,6 +26,9 @@ Major new features:
   such as changes to protection permissions, unmapping, relocation to
   another location, or shrinking the size.
 
+* The ISO C23 functions free_sized and free_aligned_sized are now
+  supported in <stdlib.h>.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * Support for dumped heaps has been removed - malloc_set_state() now always

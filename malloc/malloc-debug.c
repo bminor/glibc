@@ -198,6 +198,21 @@ __debug_free (void *mem)
 }
 strong_alias (__debug_free, free)
 
+static void
+__debug_free_sized (void *mem, __attribute_maybe_unused__ size_t size)
+{
+  free (mem);
+}
+strong_alias (__debug_free_sized, free_sized)
+
+static void
+__debug_free_aligned_sized (void *mem, __attribute_maybe_unused__ size_t alignment,
+                            __attribute_maybe_unused__ size_t size)
+{
+  free (mem);
+}
+strong_alias (__debug_free_aligned_sized, free_aligned_sized)
+
 static void *
 __debug_realloc (void *oldmem, size_t bytes)
 {
@@ -497,6 +512,8 @@ compat_symbol (libc_malloc_debug, malloc_set_state, malloc_set_state,
 compat_symbol (libc_malloc_debug, aligned_alloc, aligned_alloc, GLIBC_2_16);
 compat_symbol (libc_malloc_debug, calloc, calloc, GLIBC_2_0);
 compat_symbol (libc_malloc_debug, free, free, GLIBC_2_0);
+compat_symbol (libc_malloc_debug, free_aligned_sized, free_aligned_sized, GLIBC_2_43);
+compat_symbol (libc_malloc_debug, free_sized, free_sized, GLIBC_2_43);
 compat_symbol (libc_malloc_debug, mallinfo2, mallinfo2, GLIBC_2_33);
 compat_symbol (libc_malloc_debug, mallinfo, mallinfo, GLIBC_2_0);
 compat_symbol (libc_malloc_debug, malloc_info, malloc_info, GLIBC_2_10);

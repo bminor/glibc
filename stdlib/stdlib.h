@@ -686,6 +686,24 @@ extern void *realloc (void *__ptr, size_t __size)
 /* Free a block allocated by `malloc', `realloc' or `calloc'.  */
 extern void free (void *__ptr) __THROW;
 
+#if __GLIBC_USE(ISOC23)
+/* Free a block allocated by `malloc', `realloc' or `calloc' but not
+   `aligned_alloc', `memalign', `posix_memalign', `valloc' or
+   `pvalloc'. SIZE must be equal to the original requested size
+   provided to `malloc', `realloc' or `calloc'. For `calloc' SIZE is
+   NMEMB elements * SIZE bytes. It is forbidden to call `free_sized'
+   for allocations which the caller did not directly allocate but
+   must still deallocate, such as `strdup' or `strndup'. Instead
+   continue using `free` for these cases.  */
+extern void free_sized (void *__ptr, size_t __size) __THROW;
+
+/* Free a block allocated by `aligned_alloc', `memalign' or
+   `posix_memalign'. ALIGNMENT and SIZE must be the same as the values
+   provided to `aligned_alloc', `memalign' or `posix_memalign'.  */
+extern void free_aligned_sized (void *__ptr, size_t __alignment, size_t __size)
+     __THROW;
+#endif
+
 #ifdef __USE_MISC
 /* Re-allocate the previously allocated block in PTR, making the new
    block large enough for NMEMB elements of SIZE bytes each.  */

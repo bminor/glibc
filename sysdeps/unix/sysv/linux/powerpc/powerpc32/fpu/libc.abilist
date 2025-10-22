@@ -3158,6 +3158,8 @@ GLIBC_2.42 uimaxabs F
 GLIBC_2.42 ulabs F
 GLIBC_2.42 ullabs F
 GLIBC_2.43 __memset_explicit_chk F
+GLIBC_2.43 free_aligned_sized F
+GLIBC_2.43 free_sized F
 GLIBC_2.43 memalignment F
 GLIBC_2.43 memset_explicit F
 GLIBC_2.43 mseal F
