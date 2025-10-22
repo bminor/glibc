@@ -886,6 +886,7 @@ __glob (const char *pattern, int flags, int (*errfunc) (const char *, int),
                   {
                     /* We have to regard it as an error if we cannot find the
                        home directory.  */
+                    scratch_buffer_free (&pwtmpbuf);
                     retval = GLOB_NOMATCH;
                     goto out;
                   }
