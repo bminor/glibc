@@ -18,48 +18,37 @@
 #include <inttypes.h>
 #include <math.h>
 #include <math_private.h>
+#include <stdbit.h>
+#include "math_config.h"
 #include <libm-alias-double.h>
-
-/*
- * for non-zero, finite x
- *	x = frexp(arg,&exp);
- * return a double fp quantity x such that 0.5 <= |x| <1.0
- * and the corresponding binary exponent "exp". That is
- *	arg = x*2^exp.
- * If arg is inf, 0.0, or NaN, then frexp(arg,&exp) returns arg
- * with *exp=0.
- */
-
 
 double
 __frexp (double x, int *eptr)
 {
-  int64_t ix;
-  EXTRACT_WORDS64 (ix, x);
-  int32_t ex = 0x7ff & (ix >> 52);
-  int e = 0;
+  uint64_t ix = asuint64 (x);
+  uint32_t ex = (ix >> MANTISSA_WIDTH) & 0x7ff;
 
-  if (__glibc_likely (ex != 0x7ff && x != 0.0))
+  /* Fast path for normal numbers.  */
+  if (__glibc_likely ((ex - 1) < 0x7fe))
     {
-      /* Not zero and finite.  */
-      e = ex - 1022;
-      if (__glibc_unlikely (ex == 0))
-	{
-	  /* Subnormal.  */
-	  x *= 0x1p54;
-	  EXTRACT_WORDS64 (ix, x);
-	  ex = 0x7ff & (ix >> 52);
-	  e = ex - 1022 - 54;
-	}
-
-      ix = (ix & INT64_C (0x800fffffffffffff)) | INT64_C (0x3fe0000000000000);
-      INSERT_WORDS64 (x, ix);
+      int e = ex - EXPONENT_BIAS + 1;
+      *eptr = e;
+      return asdouble (ix - ((uint64_t) e << MANTISSA_WIDTH));
     }
-  else
-    /* Quiet signaling NaNs.  */
-    x += x;
 
-  *eptr = e;
-  return x;
+  /* Handle zero, infinity, and NaN.  */
+  if (__glibc_likely ((int64_t) (ix << 1) <= 0))
+    {
+      *eptr = 0;
+      return x + x;
+    }
+
+  /* Subnormal.  */
+  uint64_t sign = ix & SIGN_MASK;
+  int lz = stdc_leading_zeros (ix << (64 - MANTISSA_WIDTH - 1));
+  ix <<= lz;
+  *eptr = -(EXPONENT_BIAS - 2) - lz;
+  return asdouble ((ix & MANTISSA_MASK) | sign
+		   | (((uint64_t) (EXPONENT_BIAS - 1)) << MANTISSA_WIDTH));
 }
 libm_alias_double (__frexp, frexp)
