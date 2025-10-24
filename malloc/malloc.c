@@ -3268,7 +3268,8 @@ tcache_get (size_t tc_idx)
 }
 
 static __always_inline tcache_entry **
-tcache_location_large (size_t nb, size_t tc_idx, bool *mangled)
+tcache_location_large (size_t nb, size_t tc_idx,
+		       bool *mangled, tcache_entry **demangled_ptr)
 {
   tcache_entry **tep = &(tcache->entries[tc_idx]);
   tcache_entry *te = *tep;
@@ -3280,6 +3281,7 @@ tcache_location_large (size_t nb, size_t tc_idx, bool *mangled)
       *mangled = true;
     }
 
+  *demangled_ptr = te;
   return tep;
 }
 
@@ -3288,7 +3290,8 @@ tcache_put_large (mchunkptr chunk, size_t tc_idx)
 {
   tcache_entry **entry;
   bool mangled = false;
-  entry = tcache_location_large (chunksize (chunk), tc_idx, &mangled);
+  tcache_entry *te;
+  entry = tcache_location_large (chunksize (chunk), tc_idx, &mangled, &te);
 
   return tcache_put_n (chunk, tc_idx, entry, mangled);
 }
@@ -3298,10 +3301,10 @@ tcache_get_large (size_t tc_idx, size_t nb)
 {
   tcache_entry **entry;
   bool mangled = false;
-  entry = tcache_location_large (nb, tc_idx, &mangled);
+  tcache_entry *te;
+  entry = tcache_location_large (nb, tc_idx, &mangled, &te);
 
-  if ((mangled && REVEAL_PTR (*entry) == NULL)
-      || (!mangled && *entry == NULL))
+  if (te == NULL || nb != chunksize (mem2chunk (te)))
     return NULL;
 
   return tcache_get_n (tc_idx, entry, mangled);
