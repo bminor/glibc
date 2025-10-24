@@ -346,6 +346,15 @@ struct tcp_zerocopy_receive
   uint64_t address; /* In: address of mapping.  */
   uint32_t length; /* In/out: number of bytes to map/mapped.  */
   uint32_t recv_skip_hint; /* Out: amount of bytes to skip.  */
+  uint32_t inq; /* Out: amount of bytes in read queue.  */
+  int32_t err; /* Out: socket error.  */
+  uint64_t copybuf_address; /* On: copybuf address (small reads).  */
+  int32_t copybuf_len; /* In/Out: copybuf bytes avail/used or error.  */
+  uint32_t flags; /* In: flags.  */
+  uint64_t msg_control; /* Ancillary data.  */
+  uint64_t msg_controllen;
+  uint32_t msg_flags;
+  uint32_t reserved; /* Set to 0 for now.  */
 };
 
 #endif /* Misc.  */
