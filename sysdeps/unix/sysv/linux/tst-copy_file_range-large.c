@@ -174,9 +174,11 @@ test_size (struct support_fuse *f, off64_t size)
      silently clamped to UINT_MAX & PAGE_MASK.  Accept that return value
      too.  See:
      <https://github.com/torvalds/linux/commit/1e08938c3694f707bb165535df352ac97a8c75c9>.
+     We must AND the expression with SSIZE_MAX for 32-bit platforms where
+     SSIZE_MAX is less than UINT_MAX.
   */
   if (copied != size)
-    TEST_COMPARE (copied, UINT_MAX & ~(getpagesize () - 1));
+    TEST_COMPARE (copied, (UINT_MAX & ~(getpagesize () - 1)) & SSIZE_MAX);
 
   xclose (dest_fd);
   xclose (source_fd);
