@@ -18,9 +18,15 @@ typedef long int __gcc_CMPtype;
 
 #ifdef __x86_64__
 # define _FP_W_TYPE_SIZE	64
-# define _FP_W_TYPE		unsigned long long
-# define _FP_WS_TYPE		signed long long
-# define _FP_I_TYPE		long long
+# ifndef __ILP32__
+#  define _FP_W_TYPE		unsigned long
+#  define _FP_WS_TYPE		signed long
+#  define _FP_I_TYPE		long
+# else
+#  define _FP_W_TYPE		unsigned long long
+#  define _FP_WS_TYPE		signed long long
+#  define _FP_I_TYPE		long long
+# endif
 
 typedef int TItype __attribute__ ((mode (TI)));
 typedef unsigned int UTItype __attribute__ ((mode (TI)));
@@ -55,9 +61,9 @@ typedef unsigned int UTItype __attribute__ ((mode (TI)));
   } while (0)
 #else
 # define _FP_W_TYPE_SIZE	32
-# define _FP_W_TYPE		unsigned int
-# define _FP_WS_TYPE		signed int
-# define _FP_I_TYPE		int
+# define _FP_W_TYPE		unsigned long int
+# define _FP_WS_TYPE		signed long int
+# define _FP_I_TYPE		long int
 
 # define __FP_FRAC_ADD_4(r3,r2,r1,r0,x3,x2,x1,x0,y3,y2,y1,y0)	\
   __asm__ ("add{l} {%11,%3|%3,%11}\n\t"				\
