@@ -3141,13 +3141,6 @@ tcache_enabled (void)
   return (! tcache_inactive () && ! tcache_disabled ());
 }
 
-/* Sets the tcache to INACTIVE state.  */
-static __always_inline void
-tcache_set_inactive (void)
-{
-  tcache = (tcache_perthread_struct *) &__tcache_dummy.inactive;
-}
-
 /* Sets the tcache to DISABLED state.  */
 static __always_inline void
 tcache_set_disabled (void)
