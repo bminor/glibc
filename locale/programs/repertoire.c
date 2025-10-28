@@ -206,7 +206,7 @@ argument to <%s> must be a single character"),
 
 	  /* Otherwise we start reading the character definitions.  */
 	  state = 2;
-	  /* FALLTHROUGH */
+	  [[fallthrough]]		;
 
 	case 2:
 	  /* We are now are in the body.  Each line
@@ -254,7 +254,7 @@ argument to <%s> must be a single character"),
 	      state = 4;
 	      continue;
 	    }
-	  /* FALLTHROUGH */
+	  [[fallthrough]]		;
 
 	case 5:
 	  /* We expect a value of the form <Uxxxx> or <Uxxxxxxxx> where

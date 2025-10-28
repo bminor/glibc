@@ -47,7 +47,7 @@ find_suffix (char *s)
       {
         case '/':
           slash_count++;
-          /* Fallthrough */
+	  [[fallthrough]];
         case ',':
           suffix_term = &s[i];
       }

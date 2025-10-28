@@ -334,7 +334,7 @@ readtcp (char *xprtptr, char *buf, int len)
 	case -1:
 	  if (errno == EINTR)
 	    continue;
-	  /*FALLTHROUGH*/
+	  [[fallthrough]];
 	case 0:
 	  goto fatal_err;
 	default:

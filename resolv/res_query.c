@@ -277,7 +277,7 @@ __res_context_query (struct resolv_context *ctx, const char *name,
 			    || (hp2->rcode == NOERROR
 				&& ntohs (hp2->ancount) != 0))
 				goto success;
-			/* FALLTHROUGH */
+			[[fallthrough]]		;
 		case REFUSED:
 		default:
 			RES_SET_H_ERRNO(statp, NO_RECOVERY);
@@ -477,7 +477,7 @@ __res_context_search (struct resolv_context *ctx,
 			switch (statp->res_h_errno) {
 			case NO_DATA:
 				got_nodata++;
-				/* FALLTHROUGH */
+				[[fallthrough]]		;
 			case HOST_NOT_FOUND:
 				/* keep trying */
 				break;
@@ -487,7 +487,7 @@ __res_context_search (struct resolv_context *ctx,
 					got_servfail++;
 					break;
 				}
-				/* FALLTHROUGH */
+				[[fallthrough]]		;
 			default:
 				/* anything else implies that we're done */
 				done++;

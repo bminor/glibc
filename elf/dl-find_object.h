@@ -136,7 +136,7 @@ _dl_find_object_from_map (struct link_map *l,
           atomic_store_relaxed (&result->sframe,
                                 (void *) (ph->p_vaddr + l->l_addr));
           read_seg |= 2;
-          /* Fall through.  */
+	  [[fallthrough]];
         default:
           break;
         }

@@ -2755,10 +2755,10 @@ print_statistics_item (const char *title, hp_timing_t time,
     {
     case 3:
       *wp++ = *cp++;
-      /* Fall through.  */
+      [[fallthrough]];
     case 2:
       *wp++ = *cp++;
-      /* Fall through.  */
+      [[fallthrough]];
     case 1:
       *wp++ = '.';
       *wp++ = *cp++;

@@ -104,19 +104,19 @@ hash (register const char *str, register size_t len)
   switch (hval)
     {
       default:
-        hval += asso_values[(unsigned char)str[8]];
-      /*FALLTHROUGH*/
+       hval += asso_values[(unsigned char)str[8]];
+       [[fallthrough]];
       case 8:
       case 7:
       case 6:
       case 5:
         hval += asso_values[(unsigned char)str[4]];
-      /*FALLTHROUGH*/
+	[[fallthrough]];
       case 4:
       case 3:
       case 2:
         hval += asso_values[(unsigned char)str[1]];
-      /*FALLTHROUGH*/
+	[[fallthrough]];
       case 1:
         hval += asso_values[(unsigned char)str[0]];
         break;

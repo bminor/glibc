@@ -235,7 +235,7 @@ gethostbyname3_context (struct resolv_context *ctx,
 	case EMFILE:
 	case ENFILE:
 	  h_errno = NETDB_INTERNAL;
-	  /* Fall through.  */
+	  [[fallthrough]]		;
 	case ECONNREFUSED:
 	case ETIMEDOUT:
 	  status = NSS_STATUS_UNAVAIL;
@@ -444,7 +444,7 @@ _nss_dns_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
 	case EMFILE:
 	case ENFILE:
 	  h_errno = NETDB_INTERNAL;
-	  /* Fall through.  */
+	  [[fallthrough]]		;
 	case ECONNREFUSED:
 	case ETIMEDOUT:
 	  status = NSS_STATUS_UNAVAIL;

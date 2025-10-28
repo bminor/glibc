@@ -68,7 +68,7 @@ ___pthread_mutex_trylock (pthread_mutex_t *mutex)
 
     case PTHREAD_MUTEX_TIMED_NP:
       FORCE_ELISION (mutex, goto elision);
-      /*FALL THROUGH*/
+      [[fallthrough]]		;
     case PTHREAD_MUTEX_ADAPTIVE_NP:
     case PTHREAD_MUTEX_ERRORCHECK_NP:
       if (lll_trylock (mutex->__data.__lock) != 0)

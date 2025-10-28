@@ -230,7 +230,7 @@ __nss_hostname_digits_dots_context (struct resolv_context *ctx,
 		  addr_size = IN6ADDRSZ;
 		  break;
 		}
-	      /* FALLTHROUGH */
+	      [[fallthrough]]		;
 
 	    case AF_INET:
 	      /* This is not possible.  We cannot represent an IPv6 address

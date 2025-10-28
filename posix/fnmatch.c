@@ -61,7 +61,7 @@ extern int fnmatch (const char *pattern, const char *string, int flags);
 #endif
 
 #ifdef _LIBC
-# if __GNUC__ >= 7
+# if (__GNUC__ >= 7) || (__clang_major__ >= 10)
 #  define FALLTHROUGH __attribute__ ((__fallthrough__))
 # else
 #  define FALLTHROUGH ((void) 0)

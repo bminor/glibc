@@ -134,7 +134,7 @@ _dl_exception_create_format (struct dl_exception *exception, const char *objname
 		  ++p;
 		  break;
 		}
-	      /* Fall through.  */
+	      [[fallthrough]];
 	    case 'x':
 	      length += INT_WIDTH / 4;
 	      break;
@@ -219,7 +219,7 @@ _dl_exception_create_format (struct dl_exception *exception, const char *objname
 		  ++p;
 		  break;
 		}
-	       /* FALLTHROUGH */
+	      [[fallthrough]];
             default:
               _dl_fatal_printf ("Fatal error:"
                                 " invalid format in exception string\n");
