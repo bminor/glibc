@@ -518,17 +518,13 @@ extern void *__argp_input (const struct argp *__restrict __argp,
 #  define __option_is_end _option_is_end
 # endif
 
-# ifndef ARGP_EI
-#  define ARGP_EI __extern_inline
-# endif
-
-ARGP_EI void
+__extern_inline void
 __argp_usage (const struct argp_state *__state)
 {
   __argp_state_help (__state, stderr, ARGP_HELP_STD_USAGE);
 }
 
-ARGP_EI int
+__extern_inline int
 __NTH (__option_is_short (const struct argp_option *__opt))
 {
   if (__opt->flags & OPTION_DOC)
@@ -540,7 +536,7 @@ __NTH (__option_is_short (const struct argp_option *__opt))
     }
 }
 
-ARGP_EI int
+__extern_inline int
 __NTH (__option_is_end (const struct argp_option *__opt))
 {
   return !__opt->key && !__opt->name && !__opt->doc && !__opt->group;
