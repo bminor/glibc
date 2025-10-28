@@ -21,6 +21,7 @@
 #include <ieee754.h>
 #include <float.h>
 #include <stdlib.h>
+#include <stdbit.h>
 
 /* Convert a `double' in IEEE754 standard double-precision format to a
    multi-precision integer representing the significand scaled up by its
@@ -68,7 +69,7 @@ __mpn_extract_double (mp_ptr res_ptr, mp_size_t size,
 
 	  if (res_ptr[N - 1] != 0)
 	    {
-	      count_leading_zeros (cnt, res_ptr[N - 1]);
+	      cnt = stdc_leading_zeros (res_ptr[N - 1]);
 	      cnt -= NUM_LEADING_ZEROS;
 #if N == 2
 	      res_ptr[N - 1] = res_ptr[1] << cnt
@@ -82,7 +83,7 @@ __mpn_extract_double (mp_ptr res_ptr, mp_size_t size,
 	    }
 	  else
 	    {
-	      count_leading_zeros (cnt, res_ptr[0]);
+	      cnt = stdc_leading_zeros (res_ptr[0]);
 	      if (cnt >= NUM_LEADING_ZEROS)
 		{
 		  res_ptr[N - 1] = res_ptr[0] << (cnt - NUM_LEADING_ZEROS);

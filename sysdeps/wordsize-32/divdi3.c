@@ -19,6 +19,7 @@
 #include <endian.h>
 #include <stdlib.h>
 #include <bits/wordsize.h>
+#include <stdbit.h>
 
 #if __WORDSIZE != 32
 #error This is for 32-bit targets only
@@ -113,7 +114,7 @@ __udivmoddi4 (UDWtype n, UDWtype d, UDWtype *rp)
 	{
 	  /* 0q = nn / 0D */
 
-	  count_leading_zeros (bm, d0);
+	  bm = stdc_leading_zeros (d0);
 
 	  if (bm != 0)
 	    {
@@ -137,7 +138,7 @@ __udivmoddi4 (UDWtype n, UDWtype d, UDWtype *rp)
 	  if (d0 == 0)
 	    d0 = 1 / d0;	/* Divide intentionally by zero.  */
 
-	  count_leading_zeros (bm, d0);
+	  bm = stdc_leading_zeros (d0);
 
 	  if (bm == 0)
 	    {
@@ -202,7 +203,7 @@ __udivmoddi4 (UDWtype n, UDWtype d, UDWtype *rp)
 	{
 	  /* 0q = NN / dd */
 
-	  count_leading_zeros (bm, d1);
+	  bm = stdc_leading_zeros (d1);
 	  if (bm == 0)
 	    {
 	      /* From (n1 >= d1) /\ (the most significant bit of d1 is set),

@@ -22,6 +22,7 @@ along with the GNU MP Library; see the file COPYING.LIB.  If not, see
 <https://www.gnu.org/licenses/>.  */
 
 #include <gmp.h>
+#include <stdbit.h>
 #include "gmp-impl.h"
 #include "longlong.h"
 
@@ -58,9 +59,7 @@ mpn_mod_1 (mp_srcptr dividend_ptr, mp_size_t dividend_size,
   if (UDIV_TIME > (2 * UMUL_TIME + 6)
       && (UDIV_TIME - (2 * UMUL_TIME + 6)) * dividend_size > UDIV_TIME)
     {
-      int normalization_steps;
-
-      count_leading_zeros (normalization_steps, divisor_limb);
+      int normalization_steps = stdc_leading_zeros (divisor_limb);
       if (normalization_steps != 0)
 	{
 	  mp_limb_t divisor_limb_inverted;
@@ -137,9 +136,7 @@ mpn_mod_1 (mp_srcptr dividend_ptr, mp_size_t dividend_size,
     {
       if (UDIV_NEEDS_NORMALIZATION)
 	{
-	  int normalization_steps;
-
-	  count_leading_zeros (normalization_steps, divisor_limb);
+	  int normalization_steps = stdc_leading_zeros (divisor_limb);
 	  if (normalization_steps != 0)
 	    {
 	      divisor_limb <<= normalization_steps;

@@ -72,6 +72,7 @@ extern double ____strtod_l_internal (const char *, char **, int, locale_t);
 #include <stdint.h>
 #include <rounding-mode.h>
 #include <tininess.h>
+#include <stdbit.h>
 
 /* The gmp headers need some configuration frobs.  */
 #define HAVE_ALLOCA 1
@@ -1247,7 +1248,7 @@ ____STRTOF_INTERNAL (const STRING_TYPE *nptr, STRING_TYPE **endptr, int group,
 	}
 
       /* Determine how many bits of the result we already have.  */
-      count_leading_zeros (bits, num[numsize - 1]);
+      bits = stdc_leading_zeros (num[numsize - 1]);
       bits = numsize * BITS_PER_MP_LIMB - bits;
 
       /* Now we know the exponent of the number in base two.
@@ -1465,7 +1466,8 @@ ____STRTOF_INTERNAL (const STRING_TYPE *nptr, STRING_TYPE **endptr, int group,
 				       |--- n ---|
      */
 
-    count_leading_zeros (cnt, den[densize - 1]);
+    cnt = stdc_leading_zeros (den[densize - 1]);
+
 
     if (cnt > 0)
       {
@@ -1504,11 +1506,7 @@ ____STRTOF_INTERNAL (const STRING_TYPE *nptr, STRING_TYPE **endptr, int group,
 #define got_limb							      \
 	      if (bits == 0)						      \
 		{							      \
-		  int cnt;						      \
-		  if (quot == 0)					      \
-		    cnt = BITS_PER_MP_LIMB;				      \
-		  else							      \
-		    count_leading_zeros (cnt, quot);			      \
+		  int cnt = stdc_leading_zeros (quot);			      \
 		  exponent -= cnt;					      \
 		  if (BITS_PER_MP_LIMB - cnt > MANT_DIG)		      \
 		    {							      \

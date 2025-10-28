@@ -23,6 +23,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <stdlib.h>
+#include <stdbit.h>
 
 /* Convert a `long double' in IEEE854 quad-precision format to a
    multi-precision integer representing the significand scaled up by its
@@ -76,7 +77,7 @@ __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
 #if N == 2
 	  if (res_ptr[N - 1] != 0)
 	    {
-	      count_leading_zeros (cnt, res_ptr[N - 1]);
+	      cnt = stdc_leading_zeros (res_ptr[N - 1]);
 	      cnt -= NUM_LEADING_ZEROS;
 	      res_ptr[N - 1] = res_ptr[N - 1] << cnt
 			       | (res_ptr[0] >> (BITS_PER_MP_LIMB - cnt));
@@ -85,7 +86,7 @@ __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
 	    }
 	  else
 	    {
-	      count_leading_zeros (cnt, res_ptr[0]);
+	      cnt = stdc_leading_zeros (res_ptr[0]);
 	      if (cnt >= NUM_LEADING_ZEROS)
 		{
 		  res_ptr[N - 1] = res_ptr[0] << (cnt - NUM_LEADING_ZEROS);
@@ -106,7 +107,7 @@ __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
 	    if (res_ptr[j] != 0)
 	      break;
 
-	  count_leading_zeros (cnt, res_ptr[j]);
+	  cnt = stdc_leading_zeros (res_ptr[j]);
 	  cnt -= NUM_LEADING_ZEROS;
 	  l = N - 1 - j;
 	  if (cnt < 0)
