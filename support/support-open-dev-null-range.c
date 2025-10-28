@@ -33,7 +33,7 @@ increase_nofile (void)
 
   rl.rlim_cur += 128;
 
-  if (setrlimit (RLIMIT_NOFILE, &rl) == 1)
+  if (setrlimit (RLIMIT_NOFILE, &rl) == -1)
     FAIL_EXIT1 ("setrlimit (RLIMIT_NOFILE): %m");
 }
 

@@ -62,7 +62,7 @@ do_test (void)
   max_fd = (rl.rlim_cur < max_fd ? rl.rlim_cur : max_fd);
   rl.rlim_cur = max_fd;
 
-  if (setrlimit (RLIMIT_NOFILE, &rl) == 1)
+  if (setrlimit (RLIMIT_NOFILE, &rl) == -1)
     FAIL_EXIT1 ("setrlimit (RLIMIT_NOFILE): %m");
 
   /* Exhauste the file descriptor limit with temporary files.  */

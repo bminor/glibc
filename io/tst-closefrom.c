@@ -103,7 +103,7 @@ closefrom_test_file_desc_limit (void)
     max_fd = (rl.rlim_cur < max_fd ? rl.rlim_cur : max_fd);
     rl.rlim_cur = max_fd;
 
-    if (setrlimit (RLIMIT_NOFILE, &rl) == 1)
+    if (setrlimit (RLIMIT_NOFILE, &rl) == -1)
       FAIL_EXIT1 ("setrlimit (RLIMIT_NOFILE): %m");
   }
 
