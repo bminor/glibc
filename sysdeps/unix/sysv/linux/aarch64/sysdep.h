@@ -155,11 +155,12 @@
    that allows to call it without stack manipulation and preserving
    most of the registers.  */
 	.macro CALL_LIBC_ARM_ZA_DISABLE
+	cfi_remember_state
 	mov		x13, x30
-	.cfi_register	x30, x13
+	cfi_register(x30, x13)
 	bl		__libc_arm_za_disable
 	mov		x30, x13
-	.cfi_register	x13, x30
+	cfi_restore_state
 	.endm
 
 #else /* not __ASSEMBLER__ */
@@ -254,11 +255,12 @@
 ({							\
   unsigned long int __tmp;				\
   asm volatile (					\
+  "	.cfi_remember_state\n"			\
   "	mov		%0, x30\n"			\
-  "	.cfi_register	x30, %0\n"			\
+  "	.cfi_register x30, %0\n"      \
   "	bl		__libc_arm_za_disable\n"	\
   "	mov		x30, %0\n"			\
-  "	.cfi_register	%0, x30\n"			\
+  "	.cfi_restore_state\n"			\
   : "=r" (__tmp)					\
   :							\
   : "x14", "x15", "x16", "x17", "x18", "memory" );	\
