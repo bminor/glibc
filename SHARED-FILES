@@ -29,8 +29,9 @@ gnulib:
   argp/argp.h
   dirent/alphasort.c
   dirent/scandir.c
-  # Merged from gnulib 2021-09-21
+  # Merged from gnulib 2025-10-29 (gnulib commit 1790ef25d8)
   include/intprops.h
+  include/intprops-internal.h
   # Merged from gnulib 2021-09-21
   include/regex.h
   locale/programs/3level.h
