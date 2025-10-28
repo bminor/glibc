@@ -1,44 +1,6 @@
 # This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
  # Local configure fragment for sysdeps/s390.
 
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for __builtin_tbegin" >&5
-printf %s "checking for __builtin_tbegin... " >&6; }
-if test ${libc_cv_gcc_builtin_tbegin+y}
-then :
-  printf %s "(cached) " >&6
-else case e in #(
-  e) cat > conftest.c <<\EOF
-#include <htmintrin.h>
-void testtransaction ()
-{
-  if (__builtin_tbegin (0) == _HTM_TBEGIN_STARTED)
-    {
-      __builtin_tend ();
-    }
-}
-EOF
-if { ac_try='${CC-cc} -mhtm -O2 -S conftest.c -o - | grep -w tbegin > /dev/null'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; } ;
-then
-  libc_cv_gcc_builtin_tbegin=yes
-else
-  libc_cv_gcc_builtin_tbegin=no
-fi
-rm -f conftest*  ;;
-esac
-fi
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_gcc_builtin_tbegin" >&5
-printf "%s\n" "$libc_cv_gcc_builtin_tbegin" >&6; }
-
-if test "$libc_cv_gcc_builtin_tbegin" = no ; then
-   critic_missing="$critic_missing The used GCC has no support for __builtin_tbegin, which is needed for lock-elision on target S390."
-fi
-
-
 
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for S390 vector instruction support" >&5
 printf %s "checking for S390 vector instruction support... " >&6; }

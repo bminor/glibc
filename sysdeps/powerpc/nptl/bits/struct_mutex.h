@@ -32,7 +32,7 @@ struct __pthread_mutex_s
   int __kind;
 #if __WORDSIZE == 64
   short __spins;
-  short __elision;
+  short __unused;
   __pthread_list_t __list;
 # define __PTHREAD_MUTEX_HAVE_PREV      1
 #else
@@ -41,11 +41,10 @@ struct __pthread_mutex_s
   {
     struct
     {
-      short __espins;
-      short __elision;
-# define __spins __elision_data.__espins
-# define __elision __elision_data.__elision
-    } __elision_data;
+      short __data_spins;
+      short __data_unused;
+# define __spins __data.__data_spins
+    } __data;
     __pthread_slist_t __list;
   };
 # define __PTHREAD_MUTEX_HAVE_PREV      0

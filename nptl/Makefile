@@ -42,11 +42,6 @@ routines = \
   cleanup_defer \
   cleanup_defer_compat \
   cleanup_routine \
-  elision-conf \
-  elision-lock \
-  elision-timed \
-  elision-trylock \
-  elision-unlock \
   events \
   futex-internal \
   libc-cleanup \
@@ -723,8 +718,6 @@ $(objpfx)tst-oddstacklimit.out: $(objpfx)tst-oddstacklimit $(objpfx)tst-basic1
 endif
 
 $(objpfx)tst-compat-forwarder: $(objpfx)tst-compat-forwarder-mod.so
-
-tst-mutex10-ENV = GLIBC_TUNABLES=glibc.elision.enable=1
 
 # Protect against a build using -Wl,-z,now.
 LDFLAGS-tst-audit-threads-mod1.so = -Wl,-z,lazy

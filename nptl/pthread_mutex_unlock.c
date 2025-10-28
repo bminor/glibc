@@ -48,10 +48,8 @@ __pthread_mutex_unlock_usercnt (pthread_mutex_t *mutex, int decr)
 {
   /* See concurrency notes regarding mutex type which is loaded from __kind
      in struct __pthread_mutex_s in sysdeps/nptl/bits/thread-shared-types.h.  */
-  int type = PTHREAD_MUTEX_TYPE_ELISION (mutex);
-  if (__builtin_expect (type
-			& ~(PTHREAD_MUTEX_KIND_MASK_NP
-			    |PTHREAD_MUTEX_ELISION_FLAGS_NP), 0))
+  int type = PTHREAD_MUTEX_TYPE (mutex);
+  if (__glibc_unlikely (type & ~PTHREAD_MUTEX_KIND_MASK_NP))
     return __pthread_mutex_unlock_full (mutex, decr);
 
   if (__builtin_expect (type, PTHREAD_MUTEX_TIMED_NP)
@@ -71,14 +69,7 @@ __pthread_mutex_unlock_usercnt (pthread_mutex_t *mutex, int decr)
 
       return 0;
     }
-  else if (__glibc_likely (type == PTHREAD_MUTEX_TIMED_ELISION_NP))
-    {
-      /* Don't reset the owner/users fields for elision.  */
-      return lll_unlock_elision (mutex->__data.__lock, mutex->__data.__elision,
-				      PTHREAD_MUTEX_PSHARED (mutex));
-    }
-  else if (__builtin_expect (PTHREAD_MUTEX_TYPE (mutex)
-			      == PTHREAD_MUTEX_RECURSIVE_NP, 1))
+  else if (__glibc_likely (type == PTHREAD_MUTEX_RECURSIVE_NP))
     {
       /* Recursive mutex.  */
       if (mutex->__data.__owner != THREAD_GETMEM (THREAD_SELF, tid))
@@ -89,8 +80,7 @@ __pthread_mutex_unlock_usercnt (pthread_mutex_t *mutex, int decr)
 	return 0;
       goto normal;
     }
-  else if (__builtin_expect (PTHREAD_MUTEX_TYPE (mutex)
-			      == PTHREAD_MUTEX_ADAPTIVE_NP, 1))
+  else if (__glibc_likely (type == PTHREAD_MUTEX_ADAPTIVE_NP))
     goto normal;
   else
     {

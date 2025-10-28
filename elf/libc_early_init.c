@@ -17,7 +17,6 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <ctype.h>
-#include <elision-conf.h>
 #include <libc-early-init.h>
 #include <libc-internal.h>
 #include <lowlevellock.h>
@@ -46,10 +45,6 @@ __libc_early_init (_Bool initial)
   __pthread_early_init ();
 
   __getrandom_early_init (initial);
-
-#if ENABLE_ELISION_SUPPORT
-  __lll_elision_init ();
-#endif
 
   /* Initialize system malloc (needs __libc_initial to be set).  */
   call_function_static_weak (__ptmalloc_init);

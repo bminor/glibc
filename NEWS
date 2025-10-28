@@ -42,6 +42,9 @@ Deprecated and removed features, and other changes affecting compatibility:
   definition of these functions in ISO C23.  Existing binaries that use
   the versions returning intmax_t or uintmax_t will continue to work.
 
+* The support for TX lock elision of pthread mutexes has been removed on all
+  architectures (powerpc, s390x, x86_64).
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]

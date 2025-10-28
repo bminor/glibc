@@ -30,11 +30,10 @@ ___pthread_mutex_trylock (pthread_mutex_t *mutex)
 
   /* See concurrency notes regarding mutex type which is loaded from __kind
      in struct __pthread_mutex_s in sysdeps/nptl/bits/thread-shared-types.h.  */
-  switch (__builtin_expect (PTHREAD_MUTEX_TYPE_ELISION (mutex),
+  switch (__builtin_expect (PTHREAD_MUTEX_TYPE (mutex),
 			    PTHREAD_MUTEX_TIMED_NP))
     {
       /* Recursive mutex.  */
-    case PTHREAD_MUTEX_RECURSIVE_NP|PTHREAD_MUTEX_ELISION_NP:
     case PTHREAD_MUTEX_RECURSIVE_NP:
       /* Check whether we already hold the mutex.  */
       if (mutex->__data.__owner == id)
@@ -58,17 +57,7 @@ ___pthread_mutex_trylock (pthread_mutex_t *mutex)
 	}
       break;
 
-    case PTHREAD_MUTEX_TIMED_ELISION_NP:
-    elision: __attribute__((unused))
-      if (lll_trylock_elision (mutex->__data.__lock,
-			       mutex->__data.__elision) != 0)
-	break;
-      /* Don't record the ownership.  */
-      return 0;
-
     case PTHREAD_MUTEX_TIMED_NP:
-      FORCE_ELISION (mutex, goto elision);
-      [[fallthrough]];
     case PTHREAD_MUTEX_ADAPTIVE_NP:
     case PTHREAD_MUTEX_ERRORCHECK_NP:
       if (lll_trylock (mutex->__data.__lock) != 0)

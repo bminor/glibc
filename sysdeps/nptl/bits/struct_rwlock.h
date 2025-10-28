@@ -23,8 +23,8 @@
 
 /* Generic struct for both POSIX read-write lock.  New ports are expected
    to use the default layout, however archictetures can redefine it to add
-   arch-specific extensions (such as lock-elision).  The struct have a size
-   of 32 bytes on both LP32 and LP64 architectures.  */
+   arch-specific extensions.  The struct have a size of 32 bytes on both LP32
+   and LP64 architectures.  */
 
 struct __pthread_rwlock_arch_t
 {

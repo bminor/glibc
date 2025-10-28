@@ -54,12 +54,6 @@ lll_mutex_lock_optimized (pthread_mutex_t *mutex)
 # define LLL_MUTEX_TRYLOCK(mutex) \
   lll_trylock ((mutex)->__data.__lock)
 # define LLL_ROBUST_MUTEX_LOCK_MODIFIER 0
-# define LLL_MUTEX_LOCK_ELISION(mutex) \
-  lll_lock_elision ((mutex)->__data.__lock, (mutex)->__data.__elision, \
-		   PTHREAD_MUTEX_PSHARED (mutex))
-# define LLL_MUTEX_TRYLOCK_ELISION(mutex) \
-  lll_trylock_elision((mutex)->__data.__lock, (mutex)->__data.__elision, \
-		   PTHREAD_MUTEX_PSHARED (mutex))
 # define PTHREAD_MUTEX_LOCK ___pthread_mutex_lock
 # define PTHREAD_MUTEX_VERSIONS 1
 #endif
@@ -77,39 +71,25 @@ PTHREAD_MUTEX_LOCK (pthread_mutex_t *mutex)
 {
   /* See concurrency notes regarding mutex type which is loaded from __kind
      in struct __pthread_mutex_s in sysdeps/nptl/bits/thread-shared-types.h.  */
-  unsigned int type = PTHREAD_MUTEX_TYPE_ELISION (mutex);
+  unsigned int type = PTHREAD_MUTEX_TYPE (mutex);
 
   LIBC_PROBE (mutex_entry, 1, mutex);
 
-  if (__builtin_expect (type & ~(PTHREAD_MUTEX_KIND_MASK_NP
-				 | PTHREAD_MUTEX_ELISION_FLAGS_NP), 0))
+  if (__glibc_unlikely (type & ~PTHREAD_MUTEX_KIND_MASK_NP))
     return __pthread_mutex_lock_full (mutex);
+
+  pid_t id = THREAD_GETMEM (THREAD_SELF, tid);
 
   if (__glibc_likely (type == PTHREAD_MUTEX_TIMED_NP))
     {
-      FORCE_ELISION (mutex, goto elision);
     simple:
       /* Normal mutex.  */
       LLL_MUTEX_LOCK_OPTIMIZED (mutex);
       assert (mutex->__data.__owner == 0);
     }
-#if ENABLE_ELISION_SUPPORT
-  else if (__glibc_likely (type == PTHREAD_MUTEX_TIMED_ELISION_NP))
-    {
-  elision: __attribute__((unused))
-      /* This case can never happen on a system without elision,
-         as the mutex type initialization functions will not
-	 allow to set the elision flags.  */
-      /* Don't record owner or users for elision case.  This is a
-         tail call.  */
-      return LLL_MUTEX_LOCK_ELISION (mutex);
-    }
-#endif
-  else if (__builtin_expect (PTHREAD_MUTEX_TYPE (mutex)
-			     == PTHREAD_MUTEX_RECURSIVE_NP, 1))
+  else if (__glibc_likely (type == PTHREAD_MUTEX_RECURSIVE_NP))
     {
       /* Recursive mutex.  */
-      pid_t id = THREAD_GETMEM (THREAD_SELF, tid);
 
       /* Check whether we already hold the mutex.  */
       if (mutex->__data.__owner == id)
@@ -130,8 +110,7 @@ PTHREAD_MUTEX_LOCK (pthread_mutex_t *mutex)
       assert (mutex->__data.__owner == 0);
       mutex->__data.__count = 1;
     }
-  else if (__builtin_expect (PTHREAD_MUTEX_TYPE (mutex)
-			  == PTHREAD_MUTEX_ADAPTIVE_NP, 1))
+  else if (__glibc_likely (type == PTHREAD_MUTEX_ADAPTIVE_NP))
     {
       if (LLL_MUTEX_TRYLOCK (mutex) != 0)
 	{
@@ -168,15 +147,12 @@ PTHREAD_MUTEX_LOCK (pthread_mutex_t *mutex)
     }
   else
     {
-      pid_t id = THREAD_GETMEM (THREAD_SELF, tid);
-      assert (PTHREAD_MUTEX_TYPE (mutex) == PTHREAD_MUTEX_ERRORCHECK_NP);
+      assert (type == PTHREAD_MUTEX_ERRORCHECK_NP);
       /* Check whether we already hold the mutex.  */
       if (__glibc_unlikely (mutex->__data.__owner == id))
 	return EDEADLK;
       goto simple;
     }
-
-  pid_t id = THREAD_GETMEM (THREAD_SELF, tid);
 
   /* Record the ownership.  */
   mutex->__data.__owner = id;

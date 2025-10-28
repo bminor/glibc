@@ -206,13 +206,7 @@
 
 
    POSIX allows but does not require rwlock acquisitions to be a cancellation
-   point.  We do not support cancellation.
-
-   TODO We do not try to elide any read or write lock acquisitions currently.
-   While this would be possible, it is unclear whether HTM performance is
-   currently predictable enough and our runtime tuning is good enough at
-   deciding when to use elision so that enabling it would lead to consistently
-   better performance.  */
+   point.  We do not support cancellation.  */
 
 
 static int

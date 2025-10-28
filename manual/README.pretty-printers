@@ -14,7 +14,6 @@ $1 = {
     __nusers = 0,
     __kind = 576,
     __spins = 0,
-    __elision = 0,
     __list = {
       __prev = 0x0,
       __next = 0x0

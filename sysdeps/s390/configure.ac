@@ -1,32 +1,6 @@
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/s390.
 
-AC_CACHE_CHECK(for __builtin_tbegin, libc_cv_gcc_builtin_tbegin, [dnl
-cat > conftest.c <<\EOF
-#include <htmintrin.h>
-void testtransaction ()
-{
-  if (__builtin_tbegin (0) == _HTM_TBEGIN_STARTED)
-    {
-      __builtin_tend ();
-    }
-}
-EOF
-dnl
-dnl test, if the tbegin instruction is used by __builtin_tbegin
-if AC_TRY_COMMAND([${CC-cc} -mhtm -O2 -S conftest.c -o - | grep -w tbegin > /dev/null]) ;
-then
-  libc_cv_gcc_builtin_tbegin=yes
-else
-  libc_cv_gcc_builtin_tbegin=no
-fi
-rm -f conftest* ])
-
-if test "$libc_cv_gcc_builtin_tbegin" = no ; then
-   critic_missing="$critic_missing The used GCC has no support for __builtin_tbegin, which is needed for lock-elision on target S390."
-fi
-
-
 AC_CACHE_CHECK([for S390 vector instruction support], libc_cv_asm_s390_vx, [
 AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 void testvecinsn ()

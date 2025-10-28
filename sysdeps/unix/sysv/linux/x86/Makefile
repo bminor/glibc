@@ -11,13 +11,6 @@ ifeq ($(subdir),misc)
 sysdep_headers += sys/elf.h sys/perm.h sys/reg.h sys/vm86.h sys/debugreg.h sys/io.h
 endif
 
-ifeq ($(subdir),nptl)
-CFLAGS-elision-lock.c += -mrtm
-CFLAGS-elision-unlock.c += -mrtm
-CFLAGS-elision-timed.c += -mrtm
-CFLAGS-elision-trylock.c += -mrtm
-endif
-
 ifeq ($(subdir),setjmp)
 tests += tst-saved_mask-1
 endif

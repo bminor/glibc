@@ -22,7 +22,6 @@
 #include <unistd.h>
 #include <sys/time.h>
 #include <stdint.h>
-#include <config.h>
 #include <support/check.h>
 #include <support/timespec.h>
 #include <support/xthread.h>

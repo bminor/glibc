@@ -99,12 +99,7 @@ class MutexPrinter(object):
         self.values.append(MUTEX_TYPES[int(mutex_type)])
 
     def read_status(self):
-        """Read the mutex's status.
-
-        Architectures that support lock elision might not record the mutex owner
-        ID in the __owner field.  In that case, the owner will be reported as
-        "Unknown".
-        """
+        """Read the mutex's status."""
 
         if self.kind == PTHREAD_MUTEX_DESTROYED:
             self.values.append(('Status', 'Destroyed'))
@@ -178,8 +173,6 @@ class MutexPrinter(object):
             if self.owner != 0:
                 self.values.append(('Owner ID', owner))
             else:
-                # Owner isn't recorded, probably because lock elision
-                # is enabled.
                 self.values.append(('Owner ID', 'Unknown'))
 
     def read_attributes(self):
@@ -275,8 +268,7 @@ class MutexAttributesPrinter(object):
 
         mutexattr_type = (self.mutexattr
                           & 0xffffffff
-                          & ~PTHREAD_MUTEXATTR_FLAG_BITS
-                          & ~PTHREAD_MUTEX_NO_ELISION_NP)
+                          & ~PTHREAD_MUTEXATTR_FLAG_BITS)
 
         # mutexattr_type must be casted to int because it's a gdb.Value
         self.values.append(MUTEX_TYPES[int(mutexattr_type)])

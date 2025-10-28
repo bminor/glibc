@@ -1,4 +1,4 @@
-/* Check that error checking mutexes are not subject to lock elision.
+/* Check that already locked error checking mutexes return EDEADL.
    Copyright (C) 2016-2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -37,10 +37,6 @@ do_test (void)
   TEST_COMPARE (pthread_mutex_init (&mutex, &mutexattr), 0);
   TEST_COMPARE (pthread_mutexattr_destroy (&mutexattr), 0);
 
-  /* The call to pthread_mutex_timedlock erroneously enabled lock elision
-     on the mutex, which then triggered an assertion failure in
-     pthread_mutex_unlock.  It would also defeat the error checking nature
-     of the mutex.  */
   TEST_COMPARE (pthread_mutex_timedlock (&mutex, &tms), 0);
   TEST_COMPARE (pthread_mutex_timedlock (&mutex, &tms), EDEADLK);
 

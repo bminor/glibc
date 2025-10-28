@@ -201,7 +201,6 @@ tests += \
   tst-mutex6 \
   tst-mutex7 \
   tst-mutex9 \
-  tst-mutex10 \
   tst-mutex11 \
   tst-once1 \
   tst-once2 \

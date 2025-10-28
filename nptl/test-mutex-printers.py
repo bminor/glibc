@@ -43,7 +43,6 @@ try:
     next_cmd()
     thread_id = get_current_thread_lwpid()
     # Owner ID might be reported either as the thread ID or as "Unknown"
-    # (if e.g. lock elision is enabled).
     test_printer(var, to_string,
                  {'Status': 'Acquired, possibly with no waiters',
                   'Owner ID': r'({0}|Unknown)'.format(thread_id)})

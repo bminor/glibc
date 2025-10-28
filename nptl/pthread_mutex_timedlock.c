@@ -42,11 +42,10 @@ __pthread_mutex_clocklock_common (pthread_mutex_t *mutex,
 
   /* See concurrency notes regarding mutex type which is loaded from __kind
      in struct __pthread_mutex_s in sysdeps/nptl/bits/thread-shared-types.h.  */
-  switch (__builtin_expect (PTHREAD_MUTEX_TYPE_ELISION (mutex),
+  switch (__builtin_expect (PTHREAD_MUTEX_TYPE (mutex),
 			    PTHREAD_MUTEX_TIMED_NP))
     {
       /* Recursive mutex.  */
-    case PTHREAD_MUTEX_RECURSIVE_NP|PTHREAD_MUTEX_ELISION_NP:
     case PTHREAD_MUTEX_RECURSIVE_NP:
       /* Check whether we already hold the mutex.  */
       if (mutex->__data.__owner == id)
@@ -78,25 +77,13 @@ __pthread_mutex_clocklock_common (pthread_mutex_t *mutex,
       if (__glibc_unlikely (mutex->__data.__owner == id))
 	return EDEADLK;
 
-      /* Don't do lock elision on an error checking mutex.  */
-      goto simple;
+      /* FALLTHROUGH */
 
     case PTHREAD_MUTEX_TIMED_NP:
-      FORCE_ELISION (mutex, goto elision);
-    simple:
       /* Normal mutex.  */
       result = __futex_clocklock64 (&mutex->__data.__lock, clockid, abstime,
                                     PTHREAD_MUTEX_PSHARED (mutex));
       break;
-
-    case PTHREAD_MUTEX_TIMED_ELISION_NP:
-    elision: __attribute__((unused))
-      /* Don't record ownership */
-      return lll_clocklock_elision (mutex->__data.__lock,
-				    mutex->__data.__spins,
-				    clockid, abstime,
-				    PTHREAD_MUTEX_PSHARED (mutex));
-
 
     case PTHREAD_MUTEX_ADAPTIVE_NP:
       if (lll_trylock (mutex->__data.__lock) != 0)

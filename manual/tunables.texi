@@ -35,20 +35,16 @@ tunables with minimum and maximum values:
 @example
 $ /lib64/ld-linux-x86-64.so.2 --list-tunables
 glibc.rtld.nns: 0x4 (min: 0x1, max: 0x10)
-glibc.elision.skip_lock_after_retries: 3 (min: 0, max: 2147483647)
 glibc.malloc.trim_threshold: 0x0 (min: 0x0, max: 0xffffffffffffffff)
 glibc.malloc.perturb: 0 (min: 0, max: 255)
 glibc.cpu.x86_shared_cache_size: 0x100000 (min: 0x0, max: 0xffffffffffffffff)
 glibc.pthread.rseq: 1 (min: 0, max: 1)
 glibc.cpu.prefer_map_32bit_exec: 0 (min: 0, max: 1)
 glibc.mem.tagging: 0 (min: 0, max: 255)
-glibc.elision.tries: 3 (min: 0, max: 2147483647)
-glibc.elision.enable: 0 (min: 0, max: 1)
 glibc.malloc.hugetlb: 0x0 (min: 0x0, max: 0xffffffffffffffff)
 glibc.cpu.x86_rep_movsb_threshold: 0x2000 (min: 0x100, max: 0xffffffffffffffff)
 glibc.malloc.mxfast: 0x0 (min: 0x0, max: 0xffffffffffffffff)
 glibc.rtld.dynamic_sort: 2 (min: 1, max: 2)
-glibc.elision.skip_lock_busy: 3 (min: 0, max: 2147483647)
 glibc.malloc.top_pad: 0x20000 (min: 0x0, max: 0xffffffffffffffff)
 glibc.cpu.x86_rep_stosb_threshold: 0x800 (min: 0x1, max: 0xffffffffffffffff)
 glibc.cpu.x86_non_temporal_threshold: 0xc0000 (min: 0x4040, max: 0xfffffffffffffff)
@@ -56,12 +52,10 @@ glibc.cpu.x86_memset_non_temporal_threshold: 0xc0000 (min: 0x4040, max: 0xffffff
 glibc.cpu.x86_shstk:
 glibc.pthread.stack_cache_size: 0x2800000 (min: 0x0, max: 0xffffffffffffffff)
 glibc.malloc.mmap_max: 0 (min: 0, max: 2147483647)
-glibc.elision.skip_trylock_internal_abort: 3 (min: 0, max: 2147483647)
 glibc.cpu.plt_rewrite: 0 (min: 0, max: 2)
 glibc.malloc.tcache_unsorted_limit: 0x0 (min: 0x0, max: 0xffffffffffffffff)
 glibc.cpu.x86_ibt:
 glibc.cpu.hwcaps:
-glibc.elision.skip_lock_internal_abort: 3 (min: 0, max: 2147483647)
 glibc.malloc.arena_max: 0x0 (min: 0x1, max: 0xffffffffffffffff)
 glibc.malloc.mmap_threshold: 0x0 (min: 0x0, max: 0xffffffffffffffff)
 glibc.cpu.x86_data_cache_size: 0x8000 (min: 0x0, max: 0xffffffffffffffff)
@@ -77,7 +71,6 @@ glibc.malloc.check: 0 (min: 0, max: 3)
 * Tunable names::  The structure of a tunable name
 * Memory Allocation Tunables::  Tunables in the memory allocation subsystem
 * Dynamic Linking Tunables:: Tunables in the dynamic linking subsystem
-* Elision Tunables::  Tunables in elision subsystem
 * POSIX Thread Tunables:: Tunables in the POSIX thread subsystem
 * Hardware Capability Tunables::  Tunables that modify the hardware
 				  capabilities seen by @theglibc{}
@@ -385,74 +378,6 @@ of hardware capabilities and kernel configuration.
 main program does not require an executable stack at loading time.  This
 can be worked around by setting the tunable to @code{2}, where the stack is
 always executable.
-@end deftp
-
-@node Elision Tunables
-@section Elision Tunables
-@cindex elision tunables
-@cindex tunables, elision
-
-@deftp {Tunable namespace} glibc.elision
-Contended locks are usually slow and can lead to performance and scalability
-issues in multithread code. Lock elision will use memory transactions to under
-certain conditions, to elide locks and improve performance.
-Elision behavior can be modified by setting the following tunables in
-the @code{elision} namespace:
-@end deftp
-
-@deftp Tunable glibc.elision.enable
-The @code{glibc.elision.enable} tunable enables lock elision if the feature is
-supported by the hardware.  If elision is not supported by the hardware this
-tunable has no effect.
-
-Elision tunables are supported for 64-bit Intel, IBM POWER, and z System
-architectures.
-@end deftp
-
-@deftp Tunable glibc.elision.skip_lock_busy
-The @code{glibc.elision.skip_lock_busy} tunable sets how many times to use a
-non-transactional lock after a transactional failure has occurred because the
-lock is already acquired.  Expressed in number of lock acquisition attempts.
-
-The default value of this tunable is @samp{3}.
-@end deftp
-
-@deftp Tunable glibc.elision.skip_lock_internal_abort
-The @code{glibc.elision.skip_lock_internal_abort} tunable sets how many times
-the thread should avoid using elision if a transaction aborted for any reason
-other than a different thread's memory accesses.  Expressed in number of lock
-acquisition attempts.
-
-The default value of this tunable is @samp{3}.
-@end deftp
-
-@deftp Tunable glibc.elision.skip_lock_after_retries
-The @code{glibc.elision.skip_lock_after_retries} tunable sets how many times
-to try to elide a lock with transactions, that only failed due to a different
-thread's memory accesses, before falling back to regular lock.
-Expressed in number of lock elision attempts.
-
-This tunable is supported only on IBM POWER, and z System architectures.
-
-The default value of this tunable is @samp{3}.
-@end deftp
-
-@deftp Tunable glibc.elision.tries
-The @code{glibc.elision.tries} sets how many times to retry elision if there is
-chance for the transaction to finish execution e.g., it wasn't
-aborted due to the lock being already acquired.  If elision is not supported
-by the hardware this tunable is set to @samp{0} to avoid retries.
-
-The default value of this tunable is @samp{3}.
-@end deftp
-
-@deftp Tunable glibc.elision.skip_trylock_internal_abort
-The @code{glibc.elision.skip_trylock_internal_abort} tunable sets how many
-times the thread should avoid trying the lock if a transaction aborted due to
-reasons other than a different thread's memory accesses.  Expressed in number
-of try lock attempts.
-
-The default value of this tunable is @samp{3}.
 @end deftp
 
 @node POSIX Thread Tunables

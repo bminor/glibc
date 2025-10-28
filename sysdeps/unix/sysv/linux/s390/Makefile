@@ -11,14 +11,6 @@ ifeq ($(subdir),stdlib)
 gen-as-const-headers += ucontext_i.sym
 endif
 
-ifeq ($(subdir),nptl)
-elision-CFLAGS = -mhtm -msoft-float
-CFLAGS-elision-lock.c = $(elision-CFLAGS)
-CFLAGS-elision-timed.c = $(elision-CFLAGS)
-CFLAGS-elision-trylock.c = $(elision-CFLAGS)
-CFLAGS-elision-unlock.c = $(elision-CFLAGS)
-endif
-
 ifeq ($(subdir),misc)
 tests += tst-ptrace-singleblock
 endif
