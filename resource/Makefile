@@ -32,6 +32,3 @@ tests := \
 
 
 include ../Rules
-
-CFLAGS-getrlimit64.c += $(config-cflags-wno-ignored-attributes)
-CFLAGS-getrlimit.c += $(config-cflags-wno-ignored-attributes)

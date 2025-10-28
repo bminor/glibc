@@ -33,7 +33,7 @@ weak_alias (__strnlen, strnlen);
 # ifdef SHARED
 __hidden_ver1 (__strnlen, __GI___strnlen, __redirect___strnlen)
   __attribute__((visibility ("hidden"))) __attribute_copy__ (strnlen);
-__hidden_ver1 (strnlen, __GI_strnlen, __redirect_strnlen)
+__hidden_ver1 (__strnlen, __GI_strnlen, __redirect_strnlen)
   __attribute__((weak, visibility ("hidden"))) __attribute_copy__ (strnlen);
 # endif
 #endif

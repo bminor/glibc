@@ -25,5 +25,5 @@ __basename (const char *filename)
   return p ? p + 1 : (char *) filename;
 }
 libc_hidden_def (__basename)
-weak_alias (__basename, basename)
+static_weak_alias (__basename, basename)
 libc_hidden_weak (basename)

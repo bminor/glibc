@@ -110,7 +110,6 @@ endif # $(have-GLIBC_2.33)
 include ../Rules
 
 CFLAGS-getpt.c += -fexceptions
-CFLAGS-getlogin_r.c += $(config-cflags-wno-ignored-attributes)
 
 # Exclude fortified routines from being built with _FORTIFY_SOURCE
 routines_no_fortify += \

@@ -50,9 +50,9 @@
 # undef strtof128_l
 # undef wcstof128_l
 # ifdef USE_WIDE_CHAR
-weak_alias (wcstold_l, wcstof128_l)
+weak_alias (__wcstold_l, wcstof128_l)
 # else
-weak_alias (strtold_l, strtof128_l)
+weak_alias (__strtold_l, strtof128_l)
 # endif
 #endif
 
@@ -60,8 +60,8 @@ weak_alias (strtold_l, strtof128_l)
 # undef strtof64x_l
 # undef wcstof64x_l
 # ifdef USE_WIDE_CHAR
-weak_alias (wcstold_l, wcstof64x_l)
+weak_alias (__wcstold_l, wcstof64x_l)
 # else
-weak_alias (strtold_l, strtof64x_l)
+weak_alias (__strtold_l, strtof64x_l)
 # endif
 #endif

@@ -39,5 +39,5 @@ __fputs_unlocked (const char *str, FILE *fp)
   return result;
 }
 libc_hidden_def (__fputs_unlocked)
-weak_alias (__fputs_unlocked, fputs_unlocked)
+static_weak_alias (__fputs_unlocked, fputs_unlocked)
 libc_hidden_weak (fputs_unlocked)

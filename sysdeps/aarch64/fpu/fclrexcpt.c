@@ -35,6 +35,6 @@ __feclearexcept (int excepts)
 
   return 0;
 }
-weak_alias (__feclearexcept, feclearexcept)
+static_weak_alias (__feclearexcept, feclearexcept)
 libm_hidden_def (__feclearexcept)
 libm_hidden_def (feclearexcept)

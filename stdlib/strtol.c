@@ -117,7 +117,7 @@ __strtol (const STRING_TYPE *nptr, STRING_TYPE **endptr, int base)
   return INTERNAL (__strtol_l) (nptr, endptr, base, 0, false,
 				_NL_CURRENT_LOCALE);
 }
-weak_alias (__strtol, strtol)
+static_weak_alias (__strtol, strtol)
 libc_hidden_weak (strtol)
 
 INT

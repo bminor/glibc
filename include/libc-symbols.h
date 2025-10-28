@@ -156,6 +156,16 @@
   extern __typeof (name) aliasname __attribute__ ((weak, alias (#name))) \
     __attribute_copy__ (name);
 
+/* Define a strong_alias for SHARED, or weak_alias otherwise.  It is
+   used to avoid potential compiler warnings with weak alias indirection
+   (when weak alias will always resolved to an symbol even if a weak
+   definition also exists).  */
+# ifdef SHARED
+#  define static_weak_alias(name, aliasname) strong_alias (name, aliasname)
+# else
+#  define static_weak_alias(name, aliasname) weak_alias (name, aliasname)
+# endif
+
 /* Declare SYMBOL as weak undefined symbol (resolved to 0 if not defined).  */
 # define weak_extern(symbol) _weak_extern (weak symbol)
 # define _weak_extern(expr) _Pragma (#expr)

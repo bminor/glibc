@@ -30,6 +30,6 @@ __libc_recv (int fd, void *buf, size_t len, int flags)
   return SOCKETCALL_CANCEL (recv, fd, buf, len, flags);
 #endif
 }
-weak_alias (__libc_recv, recv)
-weak_alias (__libc_recv, __recv)
+static_weak_alias (__libc_recv, recv)
+static_weak_alias (__libc_recv, __recv)
 libc_hidden_weak (__recv)

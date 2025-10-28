@@ -1785,7 +1785,7 @@ __STRTOF (const STRING_TYPE *nptr, STRING_TYPE **endptr, locale_t loc)
 libc_hidden_def (__STRTOF)
 libc_hidden_ver (__STRTOF, STRTOF)
 #endif
-weak_alias (__STRTOF, STRTOF)
+static_weak_alias (__STRTOF, STRTOF)
 
 #ifdef LONG_DOUBLE_COMPAT
 # if LONG_DOUBLE_COMPAT(libc, GLIBC_2_1)
@@ -1809,18 +1809,18 @@ compat_symbol (libc, strtod_l, strtold_l, GLIBC_2_3);
 #  undef strtof64_l
 #  undef wcstof64_l
 #  ifdef USE_WIDE_CHAR
-weak_alias (wcstod_l, wcstof64_l)
+weak_alias (__wcstod_l, wcstof64_l)
 #  else
-weak_alias (strtod_l, strtof64_l)
+weak_alias (__strtod_l, strtof64_l)
 #  endif
 # endif
 # if __HAVE_FLOAT32X && !__HAVE_DISTINCT_FLOAT32X
 #  undef strtof32x_l
 #  undef wcstof32x_l
 #  ifdef USE_WIDE_CHAR
-weak_alias (wcstod_l, wcstof32x_l)
+weak_alias (__wcstod_l, wcstof32x_l)
 #  else
-weak_alias (strtod_l, strtof32x_l)
+weak_alias (__strtod_l, strtof32x_l)
 #  endif
 # endif
 #endif

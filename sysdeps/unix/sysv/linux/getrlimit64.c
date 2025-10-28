@@ -48,8 +48,8 @@ strong_alias (__getrlimit64, __GI___getrlimit)
 strong_alias (__getrlimit64, __getrlimit)
 /* Alpha defines a versioned getrlimit{64}.  */
 # ifndef USE_VERSIONED_RLIMIT
-weak_alias (__getrlimit64, getrlimit)
-weak_alias (__getrlimit64, getrlimit64)
+static_weak_alias (__getrlimit64, getrlimit)
+static_weak_alias (__getrlimit64, getrlimit64)
 libc_hidden_weak (getrlimit64)
 # else
 weak_alias (__getrlimit64, __GI_getrlimit64)

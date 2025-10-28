@@ -51,7 +51,7 @@ __libc_fcntl64 (int fd, int cmd, ...)
   return __fcntl64_nocancel_adjusted (fd, cmd, arg);
 }
 libc_hidden_def (__libc_fcntl64)
-weak_alias (__libc_fcntl64, __fcntl64)
+strong_alias (__libc_fcntl64, __fcntl64)
 libc_hidden_weak (__fcntl64)
 weak_alias (__libc_fcntl64, fcntl64)
 #if __TIMESIZE != 64

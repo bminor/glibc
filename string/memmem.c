@@ -125,5 +125,5 @@ __memmem (const void *haystack, size_t hs_len,
   return NULL;
 }
 libc_hidden_def (__memmem)
-weak_alias (__memmem, memmem)
+static_weak_alias (__memmem, memmem)
 libc_hidden_weak (memmem)

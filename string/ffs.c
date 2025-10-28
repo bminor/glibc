@@ -47,7 +47,7 @@ __ffs (int i)
   return table[x >> a] + a;
 #endif
 }
-weak_alias (__ffs, ffs)
+static_weak_alias (__ffs, ffs)
 libc_hidden_def (__ffs)
 libc_hidden_builtin_def (ffs)
 

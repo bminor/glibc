@@ -47,7 +47,7 @@ typedef size_t (*proto_t) (const CHAR *, size_t);
 #undef STRNLEN
 #ifndef WIDE
 # define MEMCHR __memchr_default
-# define weak_alias(a, b)
+# define static_weak_alias(a, b)
 # define libc_hidden_def(a)
 # define libc_hidden_builtin_def(a)
 # include "string/memchr.c"
@@ -58,7 +58,7 @@ typedef size_t (*proto_t) (const CHAR *, size_t);
 IMPL (__strnlen_default, 1)
 #else
 # define WMEMCHR __wmemchr_default
-# define weak_alias(a, b)
+# define static_weak_alias(a, b)
 # define libc_hidden_def(a)
 # define libc_hidden_weak(a)
 # include "wcsmbs/wmemchr.c"

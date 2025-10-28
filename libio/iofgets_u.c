@@ -63,5 +63,5 @@ __fgets_unlocked (char *buf, int n, FILE *fp)
   return result;
 }
 libc_hidden_def (__fgets_unlocked)
-weak_alias (__fgets_unlocked, fgets_unlocked)
+static_weak_alias (__fgets_unlocked, fgets_unlocked)
 libc_hidden_weak (fgets_unlocked)

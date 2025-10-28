@@ -12,9 +12,9 @@
 #undef __isoc23_wcstoll
 strong_alias (__wcstol_internal, __wcstoll_internal)
 libc_hidden_ver (__wcstol_internal, __wcstoll_internal)
-weak_alias (wcstol, wcstoll)
-weak_alias (wcstol, wcstoq)
-weak_alias (wcstol, wcstoimax)
+weak_alias (__wcstol, wcstoll)
+weak_alias (__wcstol, wcstoq)
+weak_alias (__wcstol, wcstoimax)
 weak_alias (__isoc23_wcstol, __isoc23_wcstoll)
 libc_hidden_ver (__isoc23_wcstol, __isoc23_wcstoll)
 weak_alias (__isoc23_wcstol, __isoc23_wcstoimax)

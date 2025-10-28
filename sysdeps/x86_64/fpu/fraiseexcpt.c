@@ -107,5 +107,5 @@ __feraiseexcept (int excepts)
   return 0;
 }
 libm_hidden_def (__feraiseexcept)
-weak_alias (__feraiseexcept, feraiseexcept)
+static_weak_alias (__feraiseexcept, feraiseexcept)
 libm_hidden_weak (feraiseexcept)

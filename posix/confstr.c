@@ -291,4 +291,4 @@ __confstr (int name, char *buf, size_t len)
 }
 libc_hidden_def (__confstr)
 libc_hidden_def (confstr)
-weak_alias (__confstr, confstr)
+static_weak_alias (__confstr, confstr)

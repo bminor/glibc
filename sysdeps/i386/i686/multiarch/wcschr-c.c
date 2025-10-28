@@ -4,8 +4,8 @@
 # undef libc_hidden_weak
 # define libc_hidden_weak(name)
 
-# undef weak_alias
-# define weak_alias(name,alias)
+# undef static_weak_alias
+# define static_weak_alias(name,alias)
 
 # ifdef SHARED
 #  undef libc_hidden_def

@@ -33,7 +33,7 @@ weak_alias (__wcschr, wcschr);
 # ifdef SHARED
 __hidden_ver1 (__wcschr, __GI___wcschr, __redirect___wcschr)
   __attribute__((visibility ("hidden")));
-__hidden_ver1 (wcschr, __GI_wcschr, __redirect_wcschr)
+__hidden_ver1 (__wcschr, __GI_wcschr, __redirect_wcschr)
   __attribute__((weak, visibility ("hidden")));
 # endif
 #endif

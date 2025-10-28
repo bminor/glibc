@@ -1420,30 +1420,6 @@ LIBC_TRY_TEST_CC_COMMAND([for traditional tls support],
 LIBC_CONFIG_VAR([have-test-mtls-traditional],
 		[$libc_cv_test_mtls_traditional])
 
-dnl clang emits an warning for a double alias redirection, to warn the
-dnl original symbol is sed even when weak definition overrides it.
-dnl It is a usual pattern for weak_alias, where multiple alias point to
-dnl same symbol.
-conftest_code="
-void __foo (void)
-{
-}
-extern __typeof (__foo) foo __attribute__ ((weak, alias (\"__foo\")));
-extern __typeof (__foo) bar __attribute__ ((weak, alias (\"foo\")));
-"
-LIBC_TRY_CC_AND_TEST_CC_COMMAND([if -Wno-ignored-attributes is required for aliases],
-  [$conftest_code],
-  [-c -Werror -Wno-ignored-attributes],
-  libc_cv_wno_ignored_attributes,
-  [libc_cv_wno_ignored_attributes="-Wno-ignored-attributes"],
-  [libc_cv_wno_ignored_attributes=],
-  libc_cv_test_wno_ignored_attributes,
-  [libc_cv_test_wno_ignored_attributes="-Wno-ignored-attributes"],
-  [libc_cv_test_wno_ignored_attributes=])
-LIBC_CONFIG_VAR([config-cflags-wno-ignored-attributes],
-		[$libc_cv_wno_ignored_attributes])
-AC_SUBST(libc_cv_test_wno_ignored_attributes)
-
 AC_CACHE_CHECK([for -Wno-maybe-uninitialized],
                 libc_cv_wno_maybe_uninitialized, [dnl
 		LIBC_TRY_CC_OPTION([-Werror -Wno-maybe-uninitialized],

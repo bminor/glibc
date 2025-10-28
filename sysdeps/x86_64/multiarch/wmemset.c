@@ -34,7 +34,7 @@ weak_alias (__wmemset, wmemset)
 # ifdef SHARED
 __hidden_ver1 (__wmemset, __GI___wmemset, __redirect___wmemset)
   __attribute__ ((visibility ("hidden")));
-__hidden_ver1 (wmemset, __GI_wmemset, __redirect_wmemset)
+__hidden_ver1 (__wmemset, __GI_wmemset, __redirect_wmemset)
   __attribute__ ((visibility ("hidden")));
 # endif
 #endif
