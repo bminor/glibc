@@ -23,8 +23,6 @@ along with the GNU MP Library; see the file COPYING.LIB.  If not, see
 
 #include <gmp.h>
 #include "gmp-impl.h"
-#include "longlong.h"
-#include <gmp-arch.h>
 
 mp_limb_t
 mpn_addmul_1 (register mp_ptr res_ptr, register mp_srcptr s1_ptr,

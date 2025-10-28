@@ -499,7 +499,6 @@ mpn-headers = \
   gmp-impl.h \
   gmp-mparam.h \
   gmp.h \
-  longlong.h \
   # mpn-headers
 
 routines := \

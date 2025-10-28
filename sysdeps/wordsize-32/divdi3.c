@@ -33,8 +33,6 @@
 
 #include <gmp.h>
 #include <stdlib/gmp-impl.h>
-#include <stdlib/longlong.h>
-#include <gmp-arch.h>
 
 #if __BYTE_ORDER == __BIG_ENDIAN
 struct DWstruct { Wtype high, low;};

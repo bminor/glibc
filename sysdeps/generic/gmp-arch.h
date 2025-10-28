@@ -53,7 +53,6 @@ umul_ppmm_generic (mp_limb_t *w1, mp_limb_t *w0, mp_limb_t u, mp_limb_t v)
   *w0 = u128_low (r);
 #endif
 }
-#undef umul_ppmm
 #define umul_ppmm(__w1, __w0, __u, __v)			\
   ({							\
     __typeof (__w0) __w0t;				\
@@ -117,9 +116,7 @@ udiv_qrnnd_generic (mp_limb_t *q, mp_limb_t *r, mp_limb_t n1, mp_limb_t n0,
   *q = q1 * LL_B | q0;
   *r = r0;
 }
-# undef UDIV_NEEDS_NORMALIZATION
 # define UDIV_NEEDS_NORMALIZATION 1
-# undef udiv_qrnnd
 # define udiv_qrnnd(__q, __r, __n1, __n0, __d) \
   udiv_qrnnd_generic (&__q, &__r, __n1, __n0, __d)
 #endif
@@ -147,7 +144,6 @@ add_ssaaaa_generic (mp_limb_t *sh, mp_limb_t *sl, mp_limb_t ah,
   *sl = u128_low (r);
 #endif
 }
-#undef add_ssaaaa
 #define add_ssaaaa(sh, sl, ah, al, bh, bl) \
   add_ssaaaa_generic (&sh, &sl, ah, al, bh, bl)
 
@@ -174,7 +170,6 @@ sub_ddmmss_generic (mp_limb_t *sh, mp_limb_t *sl, mp_limb_t ah,
   *sl = u128_low (r);
 #endif
 }
-#undef sub_ddmmss
 #define sub_ddmmss(sh, sl, ah, al, bh, bl) \
   sub_ddmmss_generic (&sh, &sl, ah, al, bh, bl)
 
