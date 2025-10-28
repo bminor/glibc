@@ -32,6 +32,10 @@ ifeq ($(subdir),string)
 sysdep_routines += stxcpy stxncpy
 endif
 
+ifeq ($(subdir),stdlib)
+sysdep_routines += udiv_qrnnd
+endif
+
 ifeq ($(subdir),elf)
 # The ld.so startup code cannot use literals until it self-relocates.
 CFLAGS-rtld.c = -mbuild-constants

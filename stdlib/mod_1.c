@@ -25,6 +25,7 @@ along with the GNU MP Library; see the file COPYING.LIB.  If not, see
 #include <stdbit.h>
 #include "gmp-impl.h"
 #include "longlong.h"
+#include <gmp-arch.h>
 
 #ifndef UMUL_TIME
 #define UMUL_TIME 1

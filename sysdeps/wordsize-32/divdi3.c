@@ -25,20 +25,16 @@
 #error This is for 32-bit targets only
 #endif
 
-typedef unsigned int UQItype	__attribute__ ((mode (QI)));
-typedef          int SItype	__attribute__ ((mode (SI)));
-typedef unsigned int USItype	__attribute__ ((mode (SI)));
-typedef          int DItype	__attribute__ ((mode (DI)));
-typedef unsigned int UDItype	__attribute__ ((mode (DI)));
 #define Wtype SItype
 #define HWtype SItype
 #define DWtype DItype
-#define UWtype USItype
 #define UHWtype USItype
 #define UDWtype UDItype
-#define W_TYPE_SIZE 32
 
+#include <gmp.h>
+#include <stdlib/gmp-impl.h>
 #include <stdlib/longlong.h>
+#include <gmp-arch.h>
 
 #if __BYTE_ORDER == __BIG_ENDIAN
 struct DWstruct { Wtype high, low;};

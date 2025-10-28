@@ -83,6 +83,7 @@ extern double ____strtod_l_internal (const char *, char **, int, locale_t);
 #include <gmp.h>
 #include "gmp-impl.h"
 #include "longlong.h"
+#include "gmp-arch.h"
 #include "fpioconst.h"
 
 #include <assert.h>
