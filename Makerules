@@ -508,7 +508,9 @@ ifeq ($(build-shared),yes)
 map-file = $(firstword $($(@F:.so=-map)) \
 		       $(addprefix $(common-objpfx), \
 				   $(filter $(@F:.so=.map),$(version-maps))))
-load-map-file = $(map-file:%=-Wl,--version-script=%)
+# The map version is created with multiple symbols that might not be
+# exported depending of the ABI.
+load-map-file = $(map-file:%=-Wl,--version-script=%) -Wl,--undefined-version
 endif
 
 # Compiler arguments to use to link a shared object with libc and
