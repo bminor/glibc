@@ -2372,6 +2372,7 @@ GLIBC_2.43 sem_timedwait F
 GLIBC_2.43 sem_trywait F
 GLIBC_2.43 sem_unlink F
 GLIBC_2.43 sem_wait F
+GLIBC_2.43 umaxabs F
 HURD_CTHREADS_0.3 __cthread_getspecific F
 HURD_CTHREADS_0.3 __cthread_keycreate F
 HURD_CTHREADS_0.3 __cthread_setspecific F

@@ -1,4 +1,4 @@
-/* Basic tests for uimaxabs (compat symbol).
+/* Basic tests for umaxabs.
    Copyright (C) 2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -20,11 +20,7 @@
 #include <limits.h>
 #include <stdlib.h>
 
-#include <shlib-compat.h>
 #include <support/check.h>
-
-extern uintmax_t uimaxabs (intmax_t);
-compat_symbol_reference (libc, uimaxabs, uimaxabs, GLIBC_2_42);
 
 #define LARGE_PRIME 49999
 
@@ -32,22 +28,22 @@ static int do_test (void)
 {
   intmax_t i;
 
-  TEST_COMPARE (uimaxabs (INTMAX_MIN), (uintmax_t)INTMAX_MAX + 1);
-  TEST_COMPARE (uimaxabs (-1), 1);
-  TEST_COMPARE (uimaxabs (0), 0);
-  TEST_COMPARE (uimaxabs (1), 1);
+  TEST_COMPARE (umaxabs (INTMAX_MIN), (uintmax_t)INTMAX_MAX + 1);
+  TEST_COMPARE (umaxabs (-1), 1);
+  TEST_COMPARE (umaxabs (0), 0);
+  TEST_COMPARE (umaxabs (1), 1);
 
   for (i = INTMAX_MIN + 1; i < INTMAX_MIN + INT_MAX; i += LARGE_PRIME)
-    TEST_COMPARE (uimaxabs (i), -i);
+    TEST_COMPARE (umaxabs (i), -i);
 
   for (i = INTMAX_MAX - INT_MAX; i < INTMAX_MAX - LARGE_PRIME; i += LARGE_PRIME)
-    TEST_COMPARE (uimaxabs (i), i);
+    TEST_COMPARE (umaxabs (i), i);
 
   for (i = INT_MIN + 1; i < 0; i += LARGE_PRIME)
-    TEST_COMPARE (uimaxabs (i), -i);
+    TEST_COMPARE (umaxabs (i), -i);
 
   for (i = 0; i < INT_MAX; i += LARGE_PRIME)
-    TEST_COMPARE (uimaxabs (i), i);
+    TEST_COMPARE (umaxabs (i), i);
 
   return EXIT_SUCCESS;
 }

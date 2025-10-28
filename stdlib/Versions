@@ -231,6 +231,7 @@ libc {
   }
   GLIBC_2.43 {
     memalignment;
+    umaxabs;
   }
   GLIBC_PRIVATE {
     # functions which have an additional interface since they are

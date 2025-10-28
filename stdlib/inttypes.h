@@ -352,7 +352,7 @@ extern intmax_t imaxabs (intmax_t __n) __THROW __attribute__ ((__const__));
 
 
 #if __GLIBC_USE (ISOC2Y)
-extern uintmax_t uimaxabs (intmax_t __n) __THROW __attribute__ ((__const__));
+extern uintmax_t umaxabs (intmax_t __n) __THROW __attribute__ ((__const__));
 #endif
 
 /* Return the `imaxdiv_t' representation of the value of NUMER over DENOM. */

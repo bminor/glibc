@@ -17,6 +17,7 @@
 
 #include <limits.h>
 #include <stdlib.h>
+#include <shlib-compat.h>
 
 #undef	ulabs
 
@@ -29,5 +30,8 @@ ulabs (long int i)
 }
 
 #if ULONG_MAX != UINT_MAX
-weak_alias (ulabs, uimaxabs)
+weak_alias (ulabs, umaxabs)
+# if SHLIB_COMPAT (libc, GLIBC_2_42, GLIBC_2_43)
+compat_symbol (libc, ulabs, uimaxabs, GLIBC_2_42);
+# endif
 #endif

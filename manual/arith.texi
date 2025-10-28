@@ -1235,7 +1235,7 @@ whose imaginary part is @var{y}, the absolute value is @w{@code{sqrt
 @pindex stdlib.h
 Prototypes for @code{abs}, @code{labs}, @code{llabs},
 @code{uabs}, @code{ulabs} and @code{ullabs} are in @file{stdlib.h};
-@code{imaxabs} and @code{uimaxabs} are declared in @file{inttypes.h};
+@code{imaxabs} and @code{umaxabs} are declared in @file{inttypes.h};
 the @code{fabs} functions are declared in @file{math.h};
 the @code{cabs} functions are declared in @file{complex.h}.
 
@@ -1246,10 +1246,10 @@ the @code{cabs} functions are declared in @file{complex.h}.
 @deftypefunx {unsigned long int} ulabs (long int @var{number})
 @deftypefunx {unsigned long long int} ullabs (long long int @var{number})
 @deftypefunx intmax_t imaxabs (intmax_t @var{number})
-@deftypefunx uintmax_t uimaxabs (intmax_t @var{number})
+@deftypefunx uintmax_t umaxabs (intmax_t @var{number})
 @standards{ISO, stdlib.h}
 @standardsx{imaxabs, ISO, inttypes.h}
-@standardsx{uimaxabs, ISO, inttypes.h}
+@standardsx{umaxabs, ISO, inttypes.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions return the absolute value of @var{number}.
 
@@ -1259,7 +1259,7 @@ cannot be represented; thus, @w{@code{abs (INT_MIN)}} is not defined.
 Using @code{uabs} avoids this.
 
 @code{llabs} and @code{imaxdiv} are new to @w{ISO C99}.
-@code{uabs}, @code{ulabs}, @code{ullabs} and @code{uimaxabs} are new to @w{ISO C2Y}.
+@code{uabs}, @code{ulabs}, @code{ullabs} and @code{umaxabs} are new to @w{ISO C2Y}.
 
 See @ref{Integers} for a description of the @code{intmax_t} type.
 

@@ -18,6 +18,10 @@ Deprecated and removed features, and other changes affecting compatibility:
 * Support for dumped heaps has been removed - malloc_set_state() now always
   returns the error code -1.
 
+* The uimaxabs function has been renamed to umaxabs, following a change
+  to the name of that function in ISO C2Y.  The old function continues
+  to exist as a compatibility symbol for old binaries.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]

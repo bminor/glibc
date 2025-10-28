@@ -370,14 +370,20 @@ tests := \
   tst-thread-quick_exit \
   tst-tininess \
   tst-uabs \
-  tst-uimaxabs \
   tst-ulabs \
   tst-ullabs \
+  tst-umaxabs \
   tst-unsetenv1 \
   tst-width \
   tst-width-stdint \
   tst-xpg-basename \
   # tests
+
+ifeq ($(have-GLIBC_2.42)$(build-shared),yesyes)
+tests += \
+  tst-uimaxabs \
+  # tests
+endif
 
 tests-internal := \
   tst-qsort4 \
@@ -426,6 +432,7 @@ CFLAGS-tst-uabs.c += -fno-builtin
 CFLAGS-tst-uimaxabs.c += -fno-builtin
 CFLAGS-tst-ulabs.c += -fno-builtin
 CFLAGS-tst-ullabs.c += -fno-builtin
+CFLAGS-tst-umaxabs.c += -fno-builtin
 
 CFLAGS-tst-stdbit-Wconversion.c += -Wconversion -Werror
 CFLAGS-tst-stdc_trailing_zeros.c += -fno-builtin
