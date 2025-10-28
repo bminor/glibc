@@ -45,6 +45,7 @@ __NTH (inet_pton (int __af,
     __fortify_clang_warning_only_if_bos0_lt
 	(4, __dst, "inet_pton called with destination buffer size less than 4")
 {
+#if !__fortify_use_clang
   size_t __sz = 0;
   if (__af == AF_INET)
     __sz = sizeof (struct in_addr);
@@ -52,6 +53,7 @@ __NTH (inet_pton (int __af,
     __sz = sizeof (struct in6_addr);
   else
     return __inet_pton_alias (__af, __src, __dst);
+#endif
 
   return __glibc_fortify (inet_pton, __sz, sizeof (char),
 			  __glibc_objsize (__dst),

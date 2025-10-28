@@ -32,10 +32,6 @@ libc_hidden_proto (readlinkat)
 libc_hidden_proto (fsync)
 libc_hidden_proto (fdatasync)
 
-libc_hidden_proto (__read_chk)
-libc_hidden_proto (__getdomainname_chk)
-libc_hidden_proto (__getlogin_r_chk)
-
 /* Now define the internal interfaces.  */
 extern int __access (const char *__name, int __type);
 libc_hidden_proto (__access)

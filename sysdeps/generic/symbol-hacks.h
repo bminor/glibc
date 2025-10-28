@@ -6,6 +6,21 @@ asm ("memmove = __GI_memmove");
 asm ("memset = __GI_memset");
 asm ("memcpy = __GI_memcpy");
 
+/* clang might generate the internal fortfify calls when it is enabled,
+   through the buitintin.  */
+asm ("__vfprintf_chk = __GI___vfprintf_chk");
+asm ("__vsprintf_chk = __GI___vsprintf_chk");
+asm ("__vsyslog_chk = __GI___vsyslog_chk");
+asm ("__memcpy_chk = __GI___memcpy_chk");
+asm ("__memmove_chk = __GI___memmove_chk");
+asm ("__memset_chk = __GI___memset_chk");
+asm ("__mempcpy_chk = __GI___mempcpy_chk");
+asm ("__stpcpy_chk = __GI___stpcpy_chk");
+asm ("__strcpy_chk = __GI___strcpy_chk");
+asm ("strcpy = __GI_strcpy");
+asm ("strncpy = __GI_strncpy");
+asm ("strcat = __GI_strcat");
+
 /* Some targets do not use __stack_chk_fail_local.  In libc.so,
    redirect __stack_chk_fail to a hidden reference
    __stack_chk_fail_local, to avoid the PLT reference.

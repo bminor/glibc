@@ -33,3 +33,7 @@ ___ieee128_snprintf (char *s, size_t maxlen, const char *format, ...)
   return done;
 }
 strong_alias (___ieee128_snprintf, __snprintfieee128)
+ldbl_hidden_def (___ieee128_snprintf, ___ieee128_snprintf)
+#ifdef SHARED
+strong_alias (___ieee128_snprintf, __GI____ieee128___snprintf)
+#endif

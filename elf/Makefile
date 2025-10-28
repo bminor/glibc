@@ -1494,6 +1494,14 @@ rtld-stubbed-symbols += \
   # rtld-stubbed-symbols
 endif
 
+# These symbols might be emitted by the compiler when fortify is enabled
+# (through builtins).
+rtld-stubbed-symbols += \
+  __GI___vfprintf_chk \
+  __GI___vsprintf_chk \
+  __GI___vsyslog_chk \
+  # rtld-stubbed-symbols
+
 ifeq ($(have-ssp),yes)
 # rtld is not built with the stack protector, so these references will
 # go away in the rebuilds.

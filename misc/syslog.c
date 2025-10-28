@@ -114,10 +114,12 @@ ldbl_hidden_def (___syslog_chk, __syslog_chk)
 ldbl_strong_alias (___syslog_chk, __syslog_chk)
 
 void
-__vsyslog_chk (int pri, int flag, const char *fmt, va_list ap)
+___vsyslog_chk (int pri, int flag, const char *fmt, va_list ap)
 {
   __vsyslog_internal (pri, fmt, ap, (flag > 0) ? PRINTF_FORTIFY : 0);
 }
+ldbl_hidden_def (___vsyslog_chk, __vsyslog_chk)
+ldbl_strong_alias (___vsyslog_chk, __vsyslog_chk)
 
 void
 __vsyslog_internal (int pri, const char *fmt, va_list ap,
