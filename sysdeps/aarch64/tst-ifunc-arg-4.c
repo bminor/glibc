@@ -35,7 +35,7 @@ two (void)
 }
 
 /* Resolver function.  */
-static void *
+static __attribute_used__ void *
 resolver (uint64_t arg0, const uint64_t arg1[])
 {
   uint64_t hwcap2 = __ifunc_hwcap (_IFUNC_ARG_AT_HWCAP2, arg0, arg1);
