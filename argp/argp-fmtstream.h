@@ -107,19 +107,22 @@ __BEGIN_DECLS
 extern argp_fmtstream_t __argp_make_fmtstream (FILE *__stream,
 					       size_t __lmargin,
 					       size_t __rmargin,
-					       ssize_t __wmargin);
+					       ssize_t __wmargin)
+     attribute_hidden;
 extern argp_fmtstream_t argp_make_fmtstream (FILE *__stream,
 					     size_t __lmargin,
 					     size_t __rmargin,
 					     ssize_t __wmargin);
 
 /* Flush __FS to its stream, and free it (but don't close the stream).  */
-extern void __argp_fmtstream_free (argp_fmtstream_t __fs);
+extern void __argp_fmtstream_free (argp_fmtstream_t __fs)
+     attribute_hidden;
 extern void argp_fmtstream_free (argp_fmtstream_t __fs);
 
 extern ssize_t __argp_fmtstream_printf (argp_fmtstream_t __fs,
 					const char *__fmt, ...)
-     __attribute__ ((__format__ (printf, 2, 3)));
+     __attribute__ ((__format__ (printf, 2, 3)))
+     attribute_hidden;
 extern ssize_t argp_fmtstream_printf (argp_fmtstream_t __fs,
 				      const char *__fmt, ...)
      __attribute__ ((__format__ (printf, 2, 3)));
@@ -131,7 +134,8 @@ extern int __argp_fmtstream_puts (argp_fmtstream_t __fs, const char *__str);
 extern int argp_fmtstream_puts (argp_fmtstream_t __fs, const char *__str);
 
 extern size_t __argp_fmtstream_write (argp_fmtstream_t __fs,
-				      const char *__str, size_t __len);
+				      const char *__str, size_t __len)
+     attribute_hidden;
 extern size_t argp_fmtstream_write (argp_fmtstream_t __fs,
 				    const char *__str, size_t __len);
 
@@ -167,9 +171,11 @@ extern size_t __argp_fmtstream_point (argp_fmtstream_t __fs);
 
 /* Internal routines.  */
 extern void _argp_fmtstream_update (argp_fmtstream_t __fs);
-extern void __argp_fmtstream_update (argp_fmtstream_t __fs);
+extern void __argp_fmtstream_update (argp_fmtstream_t __fs)
+     attribute_hidden;
 extern int _argp_fmtstream_ensure (argp_fmtstream_t __fs, size_t __amount);
-extern int __argp_fmtstream_ensure (argp_fmtstream_t __fs, size_t __amount);
+extern int __argp_fmtstream_ensure (argp_fmtstream_t __fs, size_t __amount)
+     attribute_hidden;
 
 #ifdef __OPTIMIZE__
 /* Inline versions of above routines.  */
