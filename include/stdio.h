@@ -185,8 +185,9 @@ _Noreturn void __libc_message_impl (const char *__vmaname, const char *__fmt,
 #define __libc_assert_vma_name "glibc: assert"
 
 #ifdef __va_arg_pack
-static inline _Noreturn void __libc_message_wrapper (const char *vmaname,
-						     const char *fmt, ...)
+static inline __always_inline
+_Noreturn void __libc_message_wrapper (const char *vmaname,
+				       const char *fmt, ...)
 {
   if (__va_arg_pack_len () > LIBC_MESSAGE_MAX_ARGS)
     {
