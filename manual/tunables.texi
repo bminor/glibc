@@ -598,6 +598,23 @@ This tunable is specific to x86-64 and effective only when the lazy
 binding is disabled.
 @end deftp
 
+@deftp Tunable glibc.cpu.aarch64_bti
+This tunable controls Branch Target Identification (BTI) handling for the
+process. This handling is implemented via protecting the memory mapping
+with @code{PROT_BTI} for modules that are marked with the appropriate ELF
+property @code{GNU_PROPERTY_AARCH64_FEATURE_1_BTI} (see Program Loading in
+@url{https://github.com/ARM-software/abi-aa/blob/main/sysvabi64/sysvabi64.rst}).
+
+Accepted values are:
+
+0 = permissive: BTI protection is enabled only for modules that have BTI
+marking (default).
+
+1 = enforced: if a module that does not have BTI marking is loaded, it is
+an error (either a process abort or a @code{dlopen} error if this binary
+is loaded via @code{dlopen}).
+@end deftp
+
 @deftp Tunable glibc.cpu.aarch64_gcs
 This tunable controls Guarded Control Stack (GCS) for the process.
 

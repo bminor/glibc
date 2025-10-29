@@ -54,6 +54,11 @@
 			     || (MIDR_PARTNUM(midr) == 0x002		\
 			         && MIDR_VARIANT(midr) == 0)))
 
+enum {
+  BTI_CHECK_PERMISSIVE = 0,
+  BTI_CHECK_ENFORCED = 1,
+};
+
 struct cpu_features
 {
   uint64_t midr_el1;

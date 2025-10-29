@@ -31,6 +31,9 @@
 void
 _dl_bti_protect (struct link_map *map, int fd)
 {
+  /* If we try to enable BTI protection, MAP must be BTI marked.  */
+  map->l_mach.bti = true;
+
   const size_t pagesz = GLRO(dl_pagesize);
   const ElfW(Phdr) *phdr;
 
@@ -84,10 +87,22 @@ _dl_bti_check (struct link_map *l, const char *program)
   if (l->l_mach.bti_fail)
     bti_failed (l, program);
 
+  /* We enforce BTI if tunable is set and if this object has BTI marking.  */
+  bool enforce_bti = GLRO (dl_aarch64_bti) == BTI_CHECK_ENFORCED;
+
   for (unsigned int i = 0; i < l->l_searchlist.r_nlist; i++)
     {
       struct link_map *dep = l->l_searchlist.r_list[i];
       if (dep->l_mach.bti_fail)
+	bti_failed (dep, program);
+#ifdef SHARED
+      /* Ignore BTI marking on ld.so: its properties are not processed, and
+	 the kernel is responsible for setting up BTI protection for the
+	 loader.  */
+      if (is_rtld_link_map (dep->l_real))
+	continue;
+#endif
+      if (enforce_bti && !dep->l_mach.bti)
 	bti_failed (dep, program);
     }
 }

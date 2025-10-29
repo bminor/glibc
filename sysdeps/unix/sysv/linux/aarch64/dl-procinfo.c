@@ -56,5 +56,21 @@ PROCINFO_CLASS struct cpu_features _dl_aarch64_cpu_features
 # endif
 #endif
 
+#if !IS_IN (ldconfig)
+# if !defined PROCINFO_DECL && defined SHARED
+  ._dl_aarch64_bti
+# else
+PROCINFO_CLASS unsigned long _dl_aarch64_bti
+# endif
+# ifndef PROCINFO_DECL
+= BTI_CHECK_PERMISSIVE
+# endif
+# if !defined SHARED || defined PROCINFO_DECL
+;
+# else
+,
+# endif
+#endif
+
 #undef PROCINFO_DECL
 #undef PROCINFO_CLASS
