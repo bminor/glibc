@@ -87,8 +87,64 @@ tests-internal += \
 
 $(objpfx)tst-sme-clone3: $(objpfx)clone3.o $(objpfx)__arm_za_disable.o
 
+ifeq (yes,$(have-test-bti))
+
+tests += \
+  tst-bti-abort-imm \
+  tst-bti-abort-transitive \
+  tst-bti-abort-unprot \
+  tst-bti-dep-prot \
+  tst-bti-dlopen-imm \
+  tst-bti-dlopen-prot \
+  tst-bti-dlopen-transitive \
+  tst-bti-permissive-dlopen \
+  tst-bti-permissive-imm \
+  tst-bti-permissive-transitive \
+  # tests
+
+modules-names += \
+  tst-bti-mod \
+  tst-bti-mod-prot \
+  tst-bti-mod-unprot \
+  # modules-names
+
+$(objpfx)tst-bti-abort-imm: $(objpfx)tst-bti-mod-unprot.so
+$(objpfx)tst-bti-abort-transitive: $(objpfx)tst-bti-mod.so
+$(objpfx)tst-bti-abort-unprot: $(objpfx)tst-bti-mod-prot.so
+$(objpfx)tst-bti-dep-prot: $(objpfx)tst-bti-mod-prot.so
+$(objpfx)tst-bti-mod.so: $(objpfx)tst-bti-mod-unprot.so
+$(objpfx)tst-bti-permissive-imm: $(objpfx)tst-bti-mod-unprot.so
+$(objpfx)tst-bti-permissive-transitive: $(objpfx)tst-bti-mod.so
+
+CFLAGS-tst-bti-abort-unprot.o += -mbranch-protection=none
+CFLAGS-tst-bti-mod-unprot.os += -mbranch-protection=none
+
+tst-bti-abort-imm-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=1
+tst-bti-abort-transitive-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=1
+tst-bti-abort-unprot-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=1
+tst-bti-dep-prot-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=1
+tst-bti-dlopen-imm-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=1
+tst-bti-dlopen-prot-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=1
+tst-bti-dlopen-transitive-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=1
+
+tst-bti-permissive-imm-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=0
+tst-bti-permissive-transitive-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=0
+tst-bti-permissive-dlopen-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=0
+
+define run-bti-abort-test
+  $(test-wrapper-env) $(run-program-env) \
+  $(tst-bti-abort-$*-ENV) $(host-test-program-cmd)
+endef
+
+$(objpfx)tst-bti-abort-%.out: $(..)sysdeps/aarch64/tst-bti-abort.sh \
+	$(objpfx)tst-bti-abort-%
+	$(SHELL) $< $(common-objpfx) $(test-name) '$(run-bti-abort-test)'; \
+	$(evaluate-test)
+
+endif # ifeq (yes,$(have-test-bti))
+
 endif
 
 ifeq ($(subdir),malloc)
 sysdep_malloc_debug_routines = __mtag_tag_zero_region __mtag_tag_region
-endif
+endif # malloc directory
