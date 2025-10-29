@@ -12,6 +12,7 @@ CFLAGS-e_lgamma_r.c += -fexcess-precision=standard
 CFLAGS-e_gamma_r.c += -fexcess-precision=standard
 CFLAGS-s_erf.c += -fexcess-precision=standard
 CFLAGS-s_erfc.c += -fexcess-precision=standard
+CFLAGS-s_erf_common.c += -fexcess-precision=standard
 endif
 
 ifeq ($(subdir),gmon)
