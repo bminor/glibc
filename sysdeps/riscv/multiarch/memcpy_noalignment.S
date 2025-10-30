@@ -109,9 +109,9 @@ L(word_copy):
 	mv	a5, a1
 L(word_copy_loop):
 	REG_L	a4, 0(a5)
-	addi	a3, a3, SZREG
 	addi	a5, a5, SZREG
-	REG_S	a4, -SZREG(a3)
+	REG_S	a4, 0(a3)
+	addi	a3, a3, SZREG
 	bne	a3, a6, L(word_copy_loop)
 	add	a1, a1, a7
 	andi	a2, a2, SZREG-1
