@@ -195,10 +195,17 @@ xtests:
 	  > $(objpfx)subdir-xtests.sum
 
 ifeq ($(build-programs),yes)
-binaries-all-notests = $(filter-out $(others-noinstall), \
+ifeq (yes,$(have-libgcc_s))
+# NB: Build programs in $(others-noinstall) like tests only if libgcc_s is
+# available.  Otherwise, "build-many-glibcs.py compilers" will fail to
+# build the initial glibc with the initial limited gcc due to the missing
+# libgcc_s.
+all-notests = $(others-noinstall)
+endif
+binaries-all-notests = $(filter-out $(all-notests), \
 			 $(others) $(sysdep-others))
 binaries-all-tests = $(tests) $(tests-internal) $(xtests) $(test-srcs) \
-		     $(tests-container) $(others-noinstall)
+		     $(tests-container) $(all-notests)
 binaries-all = $(binaries-all-notests) $(binaries-all-tests)
 binaries-static-notests = $(others-static)
 binaries-static-tests = $(tests-static) $(xtests-static)
