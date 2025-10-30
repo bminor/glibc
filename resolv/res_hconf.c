@@ -146,7 +146,7 @@ arg_trimdomain_list (const char *fname, int line_num, const char *args)
 	      free (buf);
 	      return NULL;
 	    }
-	  [[fallthrough]]		;
+	  [[fallthrough]];
 	default:
 	  break;
 	}

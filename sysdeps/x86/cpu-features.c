@@ -798,7 +798,7 @@ init_cpu_features (struct cpu_features *cpu_features)
 		 processor.  */
 	      if (stepping > 0xc)
 		break;
-	      [[fallthrough]]		;
+	      [[fallthrough]];
 	    case INTEL_BIGCORE_SKYLAKE:
 	      /* Disable Intel TSX and enable RTM_ALWAYS_ABORT for
 		 processors listed in:
@@ -937,7 +937,7 @@ disable_tsx:
 	     non-temporal on all Skylake servers. */
 	  cpu_features->preferred[index_arch_Avoid_Non_Temporal_Memset]
 	    |= bit_arch_Avoid_Non_Temporal_Memset;
-	  [[fallthrough]]		;
+	  [[fallthrough]];
 	case INTEL_BIGCORE_COMETLAKE:
 	case INTEL_BIGCORE_SKYLAKE:
 	case INTEL_BIGCORE_KABYLAKE:
@@ -1091,7 +1091,7 @@ disable_tsx:
 	      /* Yongfeng and Shijidadao mircoarch tuning.  */
 	    case 0x5b:
 	      cpu_features->cachesize_non_temporal_divisor = 2;
-	      [[fallthrough]]		;
+	      [[fallthrough]];
 	    case 0x6b:
 	      cpu_features->preferred[index_arch_AVX_Fast_Unaligned_Load]
 		  &= ~bit_arch_AVX_Fast_Unaligned_Load;

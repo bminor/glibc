@@ -1258,7 +1258,7 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 		}
 	      break;
 	    }
-	  [[fallthrough]]		;
+	  [[fallthrough]];
 
 	case L_('S'):
 	  {

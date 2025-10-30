@@ -319,7 +319,7 @@ __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
       if (mutex->__data.__owner != THREAD_GETMEM (THREAD_SELF, tid)
 	  || (mutex->__data.__lock & ~ PTHREAD_MUTEX_PRIO_CEILING_MASK) == 0)
 	return EPERM;
-      [[fallthrough]]		;
+      [[fallthrough]];
 
     case PTHREAD_MUTEX_PP_NORMAL_NP:
     case PTHREAD_MUTEX_PP_ADAPTIVE_NP:

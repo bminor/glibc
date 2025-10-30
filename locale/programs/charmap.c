@@ -548,7 +548,7 @@ character sets with locking states are not supported"));
 	      state = 4;
 	      continue;
 	    }
-	  [[fallthrough]]		;
+	  [[fallthrough]];
 
 	case 5:
 	  if (nowtok != tok_charcode)
@@ -712,7 +712,7 @@ only WIDTH definitions are allowed to follow the CHARMAP definition"));
 	      state = 95;
 	      continue;
 	    }
-	  [[fallthrough]]		;
+	  [[fallthrough]];
 
 	case 96:
 	  if (nowtok != tok_number)

@@ -167,10 +167,10 @@ get_mnt_entry (FILE *stream, struct mntent *mp, char *buffer, int bufsiz)
     {
     case 0:
       mp->mnt_freq = 0;
-      [[fallthrough]]		;
+      [[fallthrough]];
     case 1:
       mp->mnt_passno = 0;
-      [[fallthrough]]		;
+      [[fallthrough]];
     case 2:
       break;
     }

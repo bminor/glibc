@@ -272,7 +272,7 @@ __parse_one_specmb (const UCHAR_T *format, size_t posn,
 	if (*format != L_('l'))
 	  break;
 	++format;
-	[[fallthrough]]		;
+	[[fallthrough]];
       case L_('L'):
 	/* doubles are long doubles, and ints are long long ints.  */
       case L_('q'):

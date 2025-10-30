@@ -44,7 +44,7 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
     case EM_386:
       if (elf_header->e_ident[EI_CLASS] == ELFCLASS32)
 	break;
-      [[fallthrough]]		;
+      [[fallthrough]];
     default:
       error (0, 0, _("%s is for unknown machine %d.\n"),
 	     file_name, elf_header->e_machine);

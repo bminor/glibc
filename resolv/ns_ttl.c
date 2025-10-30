@@ -113,13 +113,13 @@ ns_parse_ttl(const char *src, u_long *dst) {
 			ch = toupper(ch);
 		switch (ch) {
 		case 'W':  tmp *= 7;
-		   [[fallthrough]]		;
+		   [[fallthrough]];
 		case 'D':  tmp *= 24;
-		   [[fallthrough]]		;
+		   [[fallthrough]];
 		case 'H':  tmp *= 60;
-		   [[fallthrough]]		;
+		   [[fallthrough]];
 		case 'M':  tmp *= 60;
-		   [[fallthrough]]		;
+		   [[fallthrough]];
 		case 'S':  break;
 		default:   goto einval;
 		}

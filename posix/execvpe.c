@@ -149,7 +149,7 @@ __execvpe_common (const char *file, char *const argv[], char *const envp[],
 	     up finding no executable we can use, we want to diagnose
 	     that we did find one but were denied access.  */
 	    got_eacces = true;
-	    [[fallthrough]]		;
+	    [[fallthrough]];
 	  case ENOENT:
 	  case ESTALE:
 	  case ENOTDIR:
