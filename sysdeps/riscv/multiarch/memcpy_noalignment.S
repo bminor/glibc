@@ -57,9 +57,7 @@ ENTRY (__memcpy_noalignment)
 	add	a5, a0, a4
 	add	a1, a1, a4
 	bleu	a2, a3, L(word_copy_adjust)
-	addi	a7, a2, -BLOCK_SIZE
-	andi	a7, a7, -BLOCK_SIZE
-	addi	a7, a7, BLOCK_SIZE
+	andi	a7, a2, -BLOCK_SIZE
 	add	a3, a5, a7
 	mv	a4, a1
 L(block_copy):
@@ -106,9 +104,7 @@ L(word_copy):
 	li	a5, SZREG-1
 	/* if LEN < SZREG jump to tail handling.  */
 	bleu	a2, a5, L(tail_adjust)
-	addi	a7, a2, -SZREG
-	andi	a7, a7, -SZREG
-	addi	a7, a7, SZREG
+	andi	a7, a2, -SZREG
 	add	a6, a3, a7
 	mv	a5, a1
 L(word_copy_loop):
