@@ -121,10 +121,10 @@ L(word_copy_loop):
 	andi	a2, a2, SZREG-1
 
 	/* Copy the last word unaligned.  */
-	add	a3, a1, a2
-	add	a4, a6, a2
-	REG_L	t0, -SZREG(a3)
-	REG_S	t0, -SZREG(a4)
+	add	a1, a1, a2
+	add	a2, a6, a2
+	REG_L	a3, -SZREG(a1)
+	REG_S	a3, -SZREG(a2)
 	ret
 
 L(tail):
@@ -133,24 +133,24 @@ L(tail):
 	add	a3, a1, a2
 	add	a4, a6, a2
 	beq	a5, zero, L(copy_0_3)
-	lw	t0, 0(a1)
+	lw	a2, 0(a1)
 	lw	t1, -4(a3)
-	sw	t0, 0(a6)
+	sw	a2, 0(a6)
 	sw	t1, -4(a4)
 	ret
 
 	/* Copy 0-3 bytes.  */
 L(copy_0_3):
 	beq	a2, zero, L(ret)
-	srli    a2, a2, 1
-	add     t4, a1, a2
-	add     t5, a6, a2
-	lbu     t0, 0(a1)
-	lbu     t1, -1(a3)
-	lbu     t2, 0(t4)
-	sb      t0, 0(a6)
-	sb      t1, -1(a4)
-	sb      t2, 0(t5)
+	lbu	a3, -1(a3)
+	srli	a2, a2, 1
+	add	a5, a1, a2
+	lbu	a1, 0(a1)
+	sb	a3, -1(a4)
+	lbu	a4, 0(a5)
+	add 	a2, a6, a2
+	sb	a1, 0(a6)
+	sb	a4, 0(a2)
 L(ret):
 	ret
 L(tail_adjust):
