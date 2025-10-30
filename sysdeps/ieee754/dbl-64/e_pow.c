@@ -147,8 +147,14 @@ specialcase (double_t tmp, uint64_t sbits, uint64_t ki)
       /* k > 0, the exponent of scale might have overflowed by <= 460.  */
       sbits -= 1009ull << 52;
       scale = asdouble (sbits);
-      y = 0x1p1009 * (scale + scale * tmp);
-      return check_oflow (y);
+      y = scale + scale * tmp;
+#ifndef __FP_FAST_FMA
+      /* Special case pow (0x1.fffffffffffffp+1023, 1.0) when rounding up.  */
+      if (WANT_ROUNDING && y == 0x1p15
+	  && (math_opt_barrier (1.0) + 0x1p-60) != 1.0)
+	return DBL_MAX;
+#endif
+      return check_oflow (y * 0x1p1009);
     }
   /* k < 0, need special care in the subnormal range.  */
   sbits += 1022ull << 52;
