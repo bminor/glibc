@@ -27,6 +27,8 @@ SOFTWARE.
 #include <stdint.h>
 #include <errno.h>
 #include <libm-alias-finite.h>
+#include <libm-alias-float.h>
+#include <math-svid-compat.h>
 #include "math_config.h"
 #include "s_asincosf_data.h"
 
@@ -58,7 +60,7 @@ poly12 (double z, const double *c)
 }
 
 float
-__ieee754_asinf (float x)
+__asinf (float x)
 {
   const double pi2 = 0x1.921fb54442d18p+0;
   double xs = x;
@@ -115,4 +117,11 @@ __ieee754_asinf (float x)
     }
   return r;
 }
+strong_alias (__asinf, __ieee754_asinf)
+#if LIBM_SVID_COMPAT
+versioned_symbol (libm, __asinf, asinf, GLIBC_2_43);
+libm_alias_float_other (__asin, asin)
+#else
+libm_alias_float (__asin, asin)
+#endif
 libm_alias_finite (__ieee754_asinf, __asinf)

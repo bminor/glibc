@@ -22,10 +22,10 @@
 #include <libm-alias-float.h>
 
 
-#if LIBM_SVID_COMPAT
+#if LIBM_SVID_COMPAT && SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_43)
 /* wrapper asinf */
 float
-__asinf (float x)
+__asin_compatf (float x)
 {
   if (__builtin_expect (isgreater (fabsf (x), 1.0f), 0)
       && _LIB_VERSION != _IEEE_)
@@ -37,5 +37,9 @@ __asinf (float x)
 
   return __ieee754_asinf (x);
 }
-libm_alias_float (__asin, asin)
+# ifdef NO_COMPAT_NEEDED
+libm_alias_float (__asin_compat, asin)
+# else
+compat_symbol (libm, __asin_compatf, asinf, GLIBC_2_0);
+# endif
 #endif
