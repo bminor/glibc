@@ -19,12 +19,13 @@
 #include <math_private.h>
 #include <math-svid-compat.h>
 #include <libm-alias-float.h>
+#include <shlib-compat.h>
 
 
-#if LIBM_SVID_COMPAT
+#if LIBM_SVID_COMPAT && SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_43)
 /* wrapper remainderf */
 float
-__remainderf (float x, float y)
+__remainder_compatf (float x, float y)
 {
   if (((__builtin_expect (y == 0.0f, 0) && ! isnan (x))
        || (__builtin_expect (isinf (x), 0) && ! isnan (y)))
@@ -33,6 +34,6 @@ __remainderf (float x, float y)
 
   return __ieee754_remainderf (x, y);
 }
-libm_alias_float (__remainder, remainder)
-weak_alias (__remainderf, dremf)
+compat_symbol (libm, __remainder_compatf, remainderf, GLIBC_2_0);
+weak_alias (__remainder_compatf, dremf)
 #endif

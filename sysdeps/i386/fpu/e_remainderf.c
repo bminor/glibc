@@ -1,5 +1,5 @@
-/* Remainder function, m68k float version.
-   Copyright (C) 1996-2025 Free Software Foundation, Inc.
+/* Floating-point remainder function.
+   Copyright (C) 2023-2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -13,14 +13,12 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-
 #include <math.h>
-#include <libm-alias-float.h>
 #include <libm-alias-finite.h>
-#include "mathimpl.h"
+#include <libm-alias-float.h>
 #include "sysdeps/ieee754/flt-32/math_config.h"
 
 float
@@ -35,7 +33,7 @@ __remainderf (float x, float y)
 			&& !is_nan (hx)))
     return __math_invalidf (x);
 
-  return __m81_u(__ieee754_remainderf)(x, y);
+  return __builtin_remainderf (x, y);
 }
 strong_alias (__remainderf, __ieee754_remainderf)
 versioned_symbol (libm, __remainderf, remainderf, GLIBC_2_43);

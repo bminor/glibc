@@ -18,6 +18,8 @@
 
 #include <math.h>
 #include <libm-alias-finite.h>
+#include <libm-alias-float.h>
+#include <math-svid-compat.h>
 #include "math_config.h"
 
 float
@@ -34,12 +36,8 @@ __ieee754_remainderf(float x, float p)
   p = fabsf (p);
   if (__glibc_likely (hp < 0x7f000000))
     {
-      /* |x| not finite, |y| equal 0 is handled by fmod.  */
-      if (__glibc_unlikely (hx >= EXPONENT_MASK))
-	return (x * p) / (x * p);
-
-      x = fabs (__ieee754_fmodf (x, p + p)); /* now x < 2p */
-      if (x + x > p)
+      x = fabs (__fmodf (x, p + p)); /* now x < 2p */
+      if (isgreater (x + x, p))
 	{
 	  x -= p;
 	  if (x + x >= p)
@@ -52,9 +50,9 @@ __ieee754_remainderf(float x, float p)
     }
   else
     {
-      /* |x| not finite or |y| is NaN or 0 */
-      if ((hx >= EXPONENT_MASK || (hp - 1) >= EXPONENT_MASK))
-	return (x * p) / (x * p);
+      /* |x| not finite or |y| is NaN */
+      if (__glibc_unlikely (hx >= EXPONENT_MASK || hp > EXPONENT_MASK))
+	return __math_invalidf (x * p);
 
       x = fabsf (x);
       float p_half = 0.5f * p;
@@ -64,10 +62,17 @@ __ieee754_remainderf(float x, float p)
 	  if (x >= p_half)
 	    x -= p;
 	  else if (x == 0.0f)
-	    x = 0.0;
+	    x = 0.0f;
 	}
     }
 
   return sx ? -x : x;
 }
 libm_alias_finite (__ieee754_remainderf, __remainderf)
+#if LIBM_SVID_COMPAT
+versioned_symbol (libm, __ieee754_remainderf, remainderf, GLIBC_2_43);
+libm_alias_float_other (__ieee754_remainder, remainder)
+#else
+libm_alias_float (__ieee754_remainder, remainder)
+weak_alias (__ieee754_remainderf, dremf)
+#endif
