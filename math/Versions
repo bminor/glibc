@@ -700,6 +700,7 @@ libm {
     remainder;
     remainderf;
     sinhf;
+    sqrtf;
     y0f;
     y1f;
     ynf;

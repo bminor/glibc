@@ -22,15 +22,15 @@
 #include <libm-alias-float.h>
 
 
-#if LIBM_SVID_COMPAT
+#if LIBM_SVID_COMPAT && SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_43)
 /* wrapper sqrtf */
 float
-__sqrtf (float x)
+__sqrtf_svid (float x)
 {
   if (__builtin_expect (isless (x, 0.0f), 0) && _LIB_VERSION != _IEEE_)
     return __kernel_standard_f (x, x, 126); /* sqrt(negative) */
 
-  return __ieee754_sqrtf (x);
+  return __sqrtf (x);
 }
-libm_alias_float (__sqrt, sqrt)
+compat_symbol (libm, __sqrtf_svid, sqrtf, GLIBC_2_0);
 #endif
