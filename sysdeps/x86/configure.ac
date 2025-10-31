@@ -223,6 +223,24 @@ else
   AC_DEFINE(HAVE_X86_INLINE_TRUNC, 0)
 fi
 
+
+conftest_code="
+int __gcc_CMPtype_GCC __attribute__ ((mode (__libgcc_cmp_return__)));
+"
+dnl Check if CC support the __libgcc_cmp_return__ mode attribute
+LIBC_TRY_CC_COMMAND([for __libgcc_cmp_return__ mode attribute support],
+  [$conftest_code],
+  [$CFLAGS -c],
+  libc_cv_cc_x86_libgcc_cmp_return_attribute,
+  [libc_cv_cc_x86_libgcc_cmp_return_attribute=yes],
+  [libc_cv_cc_x86_libgcc_cmp_return_attribute=no])
+if test "$libc_cv_cc_x86_libgcc_cmp_return_attribute" = yes; then
+  AC_DEFINE(HAVE_X86_LIBGCC_CMP_RETURN_ATTR, 1)
+else
+  AC_DEFINE(HAVE_X86_LIBGCC_CMP_RETURN_ATTR, 0)
+fi
+
+
 dnl If the building compiler enables no direct external data access by
 dnl default, access to protected data in shared libraries from executables
 dnl must be compiled with no direct external data access.  If the testing
