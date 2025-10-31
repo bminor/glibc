@@ -24,15 +24,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include <errno.h>
 #include <math.h>
 #include <stdint.h>
 #include <libm-alias-finite.h>
+#include <libm-alias-float.h>
+#include <math-svid-compat.h>
 #include <math-narrow-eval.h>
 #include "math_config.h"
 #include "e_sincoshf_data.h"
 
 float
-__ieee754_sinhf (float x)
+__sinhf (float x)
 {
   static const struct
   {
@@ -44,15 +47,9 @@ __ieee754_sinhf (float x)
   uint32_t ux = asuint (x) << 1;
   if (__glibc_unlikely (ux > 0x8565a9f8u))
     { /* |x| >~ 89.4 */
-      float sgn = copysignf (2.0f, x);
       if (ux >= 0xff000000u)
-	{
-	  if (ux << 8)
-	    return x + x;			    /* nan */
-	  return copysignf (INFINITY, x); /* +-inf */
-	}
-      float r = math_narrow_eval (sgn * 0x1.fffffep127f);
-      return r;
+	return x + x;;
+      return __math_oflowf (x < 0);
     }
   if (__glibc_unlikely (ux < 0x7c000000u))
     { /* |x| < 0.125 */
@@ -105,4 +102,11 @@ __ieee754_sinhf (float x)
     }
   return ub;
 }
+strong_alias (__sinhf, __ieee754_sinhf)
+#if LIBM_SVID_COMPAT
+versioned_symbol (libm, __sinhf, sinhf, GLIBC_2_43);
+libm_alias_float_other (__sinh, sinh)
+#else
+libm_alias_float (__sinh, sinh)
+#endif
 libm_alias_finite (__ieee754_sinhf, __sinhf)

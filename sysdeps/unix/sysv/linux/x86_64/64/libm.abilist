@@ -1329,6 +1329,7 @@ GLIBC_2.43 jnf F
 GLIBC_2.43 log10f F
 GLIBC_2.43 remainder F
 GLIBC_2.43 remainderf F
+GLIBC_2.43 sinhf F
 GLIBC_2.43 y0f F
 GLIBC_2.43 y1f F
 GLIBC_2.43 ynf F

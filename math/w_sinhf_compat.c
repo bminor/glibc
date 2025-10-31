@@ -21,9 +21,9 @@
 #include <math-svid-compat.h>
 #include <libm-alias-float.h>
 
-#if LIBM_SVID_COMPAT
+#if LIBM_SVID_COMPAT && SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_43)
 float
-__sinhf (float x)
+__sinh_compatf (float x)
 {
 	float z = __ieee754_sinhf (x);
 	if (__builtin_expect (!isfinite (z), 0) && isfinite (x)
@@ -32,5 +32,10 @@ __sinhf (float x)
 
 	return z;
 }
-libm_alias_float (__sinh, sinh)
+# ifdef NO_COMPAT_NEEDED
+strong_alias (__sinh_compatf, __sinhf)
+libm_alias_float (__sinh_compat, sinh)
+# else
+compat_symbol (libm, __sinh_compatf, sinhf, GLIBC_2_0);
+# endif
 #endif

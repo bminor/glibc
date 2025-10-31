@@ -699,6 +699,7 @@ libm {
     log10f;
     remainder;
     remainderf;
+    sinhf;
     y0f;
     y1f;
     ynf;
