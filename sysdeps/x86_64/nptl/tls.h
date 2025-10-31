@@ -198,10 +198,18 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
 # define THREAD_GSCOPE_FLAG_UNUSED 0
 # define THREAD_GSCOPE_FLAG_USED   1
 # define THREAD_GSCOPE_FLAG_WAIT   2
+
+/* clang does not support __seg_fs in asm constraint.  */
+# ifdef __clang__
+#  define FS_ASM "%%fs:"
+# else
+#  define FS_ASM
+# endif
+
 # define THREAD_GSCOPE_RESET_FLAG() \
   do									      \
     { int __res;							      \
-      asm volatile ("xchgl %1, %0"					      \
+      asm volatile ("xchgl " FS_ASM "%1, %0"				      \
 		    : "=r" (__res)					      \
 		    : "m" (((struct pthread __seg_fs *)0)->header.gscope_flag), \
 		      "0" (THREAD_GSCOPE_FLAG_UNUSED));			      \
