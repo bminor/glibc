@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <fenv.h>
+#include <math-inline-asm.h>
 
 int
 fegetexceptflag (fexcept_t *flagp, int excepts)
@@ -25,8 +26,8 @@ fegetexceptflag (fexcept_t *flagp, int excepts)
   unsigned int mxscr;
 
   /* Get the current exceptions for the x87 FPU and SSE unit.  */
-  __asm__ ("fnstsw %0\n"
-	   "%vstmxcsr %1" : "=m" (temp), "=m" (mxscr));
+  __asm__ ("fnstsw %0" : "=m" (temp));
+  stmxcsr_inline_asm (&mxscr);
 
   *flagp = (temp | mxscr) & FE_ALL_EXCEPT & excepts;
 

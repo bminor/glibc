@@ -19,6 +19,7 @@
 #include <fenv.h>
 #include <unistd.h>
 #include <ldsodefs.h>
+#include <math-inline-asm.h>
 
 int
 __fegetenv (fenv_t *envp)
@@ -30,7 +31,7 @@ __fegetenv (fenv_t *envp)
   __asm__ ("fldenv %0" : : "m" (*envp));
 
   if (CPU_FEATURE_USABLE (SSE))
-    __asm__ ("%vstmxcsr %0" : "=m" (envp->__eip));
+    stmxcsr_inline_asm (&envp->__eip);
 
   /* Success.  */
   return 0;

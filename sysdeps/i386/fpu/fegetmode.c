@@ -20,12 +20,13 @@
 #include <fpu_control.h>
 #include <unistd.h>
 #include <ldsodefs.h>
+#include <math-inline-asm.h>
 
 int
 fegetmode (femode_t *modep)
 {
   _FPU_GETCW (modep->__control_word);
   if (CPU_FEATURE_USABLE (SSE))
-    __asm__ ("%vstmxcsr %0" : "=m" (modep->__mxcsr));
+    stmxcsr_inline_asm (&modep->__mxcsr);
   return 0;
 }

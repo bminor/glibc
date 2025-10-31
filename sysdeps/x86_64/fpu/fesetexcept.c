@@ -17,15 +17,15 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <fenv.h>
+#include <math-inline-asm.h>
 
 int
 fesetexcept (int excepts)
 {
   unsigned int mxcsr;
-
-  __asm__ ("%vstmxcsr %0" : "=m" (mxcsr));
+  stmxcsr_inline_asm (&mxcsr);
   mxcsr |= excepts & FE_ALL_EXCEPT;
-  __asm__ ("%vldmxcsr %0" : : "m" (mxcsr));
+  ldmxcsr_inline_asm (&mxcsr);
 
   return 0;
 }

@@ -24,33 +24,22 @@
 #include <stdio.h>
 #include <cpu-features.h>
 #include <support/check.h>
-
-static uint32_t
-get_sse_mxcsr (void)
-{
-  uint32_t temp;
-  __asm__ __volatile__ ("%vstmxcsr %0" : "=m" (temp));
-  return temp;
-}
-
-static void
-set_sse_mxcsr (uint32_t val)
-{
-  __asm__ __volatile__ ("%vldmxcsr %0" : : "m" (val));
-}
+#include <math-inline-asm.h>
 
 static void
 set_sse_mxcsr_bits (uint32_t mask, uint32_t bits)
 {
-  uint32_t mxcsr = get_sse_mxcsr ();
+  uint32_t mxcsr;
+  stmxcsr_inline_asm (&mxcsr);
   mxcsr = (mxcsr & ~mask) | bits;
-  set_sse_mxcsr (mxcsr);
+  ldmxcsr_inline_asm (&mxcsr);
 }
 
 static int
 test_sse_mxcsr_bits (const char *test, uint32_t mask, uint32_t bits)
 {
-  uint32_t mxcsr = get_sse_mxcsr ();
+  uint32_t mxcsr;
+  stmxcsr_inline_asm (&mxcsr);
   printf ("Testing %s: mxcsr = %x\n", test, mxcsr);
   if ((mxcsr & mask) == bits)
     {

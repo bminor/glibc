@@ -19,6 +19,7 @@
 #include <fenv.h>
 #include <unistd.h>
 #include <ldsodefs.h>
+#include <math-inline-asm.h>
 
 
 int
@@ -34,10 +35,9 @@ __fegetexceptflag (fexcept_t *flagp, int excepts)
   /* If the CPU supports SSE, we clear the MXCSR as well.  */
   if (CPU_FEATURE_USABLE (SSE))
     {
-      unsigned int sse_exc;
-
       /* Get the current MXCSR.  */
-      __asm__ ("%vstmxcsr %0" : "=m" (sse_exc));
+      unsigned int sse_exc;
+      stmxcsr_inline_asm (&sse_exc);
 
       *flagp |= sse_exc & excepts & FE_ALL_EXCEPT;
     }

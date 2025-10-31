@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <fenv.h>
+#include <math-inline-asm.h>
 
 int
 __fetestexcept (int excepts)
@@ -25,8 +26,8 @@ __fetestexcept (int excepts)
   unsigned int mxscr;
 
   /* Get current exceptions.  */
-  __asm__ ("fnstsw %0\n"
-	   "%vstmxcsr %1" : "=m" (temp), "=m" (mxscr));
+  asm volatile ("fnstsw %0" : "=m" (temp));
+  stmxcsr_inline_asm (&mxscr);
 
   return (temp | mxscr) & excepts & FE_ALL_EXCEPT;
 }

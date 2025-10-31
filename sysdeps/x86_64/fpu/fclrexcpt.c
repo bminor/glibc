@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <fenv.h>
+#include <math-inline-asm.h>
 
 int
 __feclearexcept (int excepts)
@@ -38,13 +39,13 @@ __feclearexcept (int excepts)
   __asm__ ("fldenv %0" : : "m" (temp));
 
   /* And the same procedure for SSE.  */
-  __asm__ ("%vstmxcsr %0" : "=m" (mxcsr));
+  stmxcsr_inline_asm (&mxcsr);
 
   /* Clear the relevant bits.  */
   mxcsr &= ~excepts;
 
   /* And put them into effect.  */
-  __asm__ ("%vldmxcsr %0" : : "m" (mxcsr));
+  ldmxcsr_inline_asm (&mxcsr);
 
   /* Success.  */
   return 0;

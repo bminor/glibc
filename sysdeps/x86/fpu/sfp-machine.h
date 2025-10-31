@@ -1,6 +1,8 @@
 /* Configure soft-fp for building sqrtf128.  Based on sfp-machine.h in
    libgcc, with soft-float and other irrelevant parts removed.  */
 
+#include <math-inline-asm.h>
+
 #if HAVE_X86_LIBGCC_CMP_RETURN_ATTR
 /* The type of the result of a floating point comparison.  This must
    match `__libgcc_cmp_return__' in GCC for the target.  */
@@ -49,7 +51,7 @@ typedef unsigned int UTItype __attribute__ ((mode (TI)));
 
 # define FP_INIT_ROUNDMODE					\
   do {								\
-    __asm__ __volatile__ ("%vstmxcsr\t%0" : "=m" (_fcw));	\
+    stmxcsr_inline_asm (&_fcw);					\
   } while (0)
 #else
 # define _FP_W_TYPE_SIZE	32

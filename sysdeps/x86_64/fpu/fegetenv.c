@@ -17,15 +17,17 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <fenv.h>
+#include <math-inline-asm.h>
 
 int
 __fegetenv (fenv_t *envp)
 {
-  __asm__ ("fnstenv %0\n"
-	   /* fnstenv changes the exception mask, so load back the
-	      stored environment.  */
-	   "fldenv %0\n"
-	   "%vstmxcsr %1" : "=m" (*envp), "=m" (envp->__mxcsr));
+  asm volatile ("fnstenv %0\n"
+		/* fnstenv changes the exception mask, so load back the
+		   stored environment.  */
+		"fldenv %0"
+		: "=m" (*envp));
+  stmxcsr_inline_asm (&envp->__mxcsr);
 
   /* Success.  */
   return 0;

@@ -19,6 +19,7 @@
 #include <fenv.h>
 #include <unistd.h>
 #include <ldsodefs.h>
+#include <math-inline-asm.h>
 
 int
 feenableexcept (int excepts)
@@ -41,11 +42,11 @@ feenableexcept (int excepts)
       unsigned int xnew_exc;
 
       /* Get the current control word.  */
-      __asm__ ("%vstmxcsr %0" : "=m" (xnew_exc));
+      stmxcsr_inline_asm (&xnew_exc);
 
       xnew_exc &= ~(excepts << 7);
 
-      __asm__ ("%vldmxcsr %0" : : "m" (xnew_exc));
+      ldmxcsr_inline_asm (&xnew_exc);
     }
 
   return old_exc;

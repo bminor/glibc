@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <fenv.h>
+#include <math-inline-asm.h>
 #include <fpu_control.h>
 #include <assert.h>
 
@@ -35,8 +36,8 @@ __fesetenv (const fenv_t *envp)
      values which we do not want to come from the saved environment.
      Therefore, we get the current environment and replace the values
      we want to use from the environment specified by the parameter.  */
-  __asm__ ("fnstenv %0\n"
-	   "%vstmxcsr %1" : "=m" (temp), "=m" (temp.__mxcsr));
+  asm volatile ("fnstenv %0" : "=m" (temp));
+  stmxcsr_inline_asm (&temp.__mxcsr);
 
   if (envp == FE_DFL_ENV)
     {
@@ -103,8 +104,8 @@ __fesetenv (const fenv_t *envp)
       temp.__mxcsr = envp->__mxcsr;
     }
 
-  __asm__ ("fldenv %0\n"
-	   "%vldmxcsr %1" : : "m" (temp), "m" (temp.__mxcsr));
+  asm volatile ("fldenv %0" : "=m" (temp));
+  ldmxcsr_inline_asm (&temp.__mxcsr);
 
   /* Success.  */
   return 0;

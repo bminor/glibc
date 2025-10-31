@@ -19,6 +19,7 @@
 #include <fenv.h>
 #include <unistd.h>
 #include <ldsodefs.h>
+#include <math-inline-asm.h>
 
 int
 __fesetround (int round)
@@ -38,11 +39,10 @@ __fesetround (int round)
   if (CPU_FEATURE_USABLE (SSE))
     {
       unsigned int xcw;
-
-      __asm__ ("%vstmxcsr %0" : "=m" (xcw));
+      stmxcsr_inline_asm (&xcw);
       xcw &= ~0x6000;
       xcw |= round << 3;
-      __asm__ ("%vldmxcsr %0" : : "m" (xcw));
+      ldmxcsr_inline_asm (&xcw);
     }
 
   return 0;

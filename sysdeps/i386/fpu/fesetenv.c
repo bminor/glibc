@@ -21,6 +21,7 @@
 #include <assert.h>
 #include <unistd.h>
 #include <ldsodefs.h>
+#include <math-inline-asm.h>
 
 
 /* All exceptions, including the x86-specific "denormal operand"
@@ -80,7 +81,7 @@ __fesetenv (const fenv_t *envp)
   if (CPU_FEATURE_USABLE (SSE))
     {
       unsigned int mxcsr;
-      __asm__ ("%vstmxcsr %0" : "=m" (mxcsr));
+      stmxcsr_inline_asm (&mxcsr);
 
       if (envp == FE_DFL_ENV)
 	{
@@ -111,7 +112,7 @@ __fesetenv (const fenv_t *envp)
       else
 	mxcsr = envp->__eip;
 
-      __asm__ ("%vldmxcsr %0" : : "m" (mxcsr));
+      ldmxcsr_inline_asm (&mxcsr);
     }
 
   /* Success.  */

@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <fenv.h>
+#include <math-inline-asm.h>
 
 int
 fedisableexcept (int excepts)
@@ -35,11 +36,11 @@ fedisableexcept (int excepts)
   __asm__ ("fldcw %0" : : "m" (new_exc));
 
   /* And now the same for the SSE MXCSR register.  */
-  __asm__ ("%vstmxcsr %0" : "=m" (new));
+  stmxcsr_inline_asm (&new);
 
   /* The SSE exception masks are shifted by 7 bits.  */
   new |= excepts << 7;
-  __asm__ ("%vldmxcsr %0" : : "m" (new));
+  ldmxcsr_inline_asm (&new);
 
   return old_exc;
 }

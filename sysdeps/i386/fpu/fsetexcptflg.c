@@ -18,6 +18,7 @@
 
 #include <fenv.h>
 #include <ldsodefs.h>
+#include <math-inline-asm.h>
 
 int
 __fesetexceptflag (const fexcept_t *flagp, int excepts)
@@ -50,13 +51,13 @@ __fesetexceptflag (const fexcept_t *flagp, int excepts)
       __asm__ ("fldenv %0" : : "m" (temp));
 
       /* And now similarly for SSE.  */
-      __asm__ ("%vstmxcsr %0" : "=m" (mxcsr));
+      stmxcsr_inline_asm (&mxcsr);
 
       /* Clear or set relevant flags.  */
       mxcsr ^= (mxcsr ^ *flagp) & excepts;
 
       /* Put the new data in effect.  */
-      __asm__ ("%vldmxcsr %0" : : "m" (mxcsr));
+      ldmxcsr_inline_asm (&mxcsr);
     }
   else
     {

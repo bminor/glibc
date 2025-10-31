@@ -21,6 +21,7 @@
 #include <fenv.h>
 #include <unistd.h>
 #include <ldsodefs.h>
+#include <math-inline-asm.h>
 
 void
 __setfpucw (fpu_control_t set)
@@ -40,14 +41,14 @@ __setfpucw (fpu_control_t set)
   /* If the CPU supports SSE, we set the MXCSR as well.  */
   if (CPU_FEATURE_USABLE (SSE))
     {
+      /* Get the current MXCSR.  */
       unsigned int xnew_exc;
 
-      /* Get the current MXCSR.  */
-      __asm__ ("%vstmxcsr %0" : "=m" (xnew_exc));
+      stmxcsr_inline_asm (&xnew_exc);
 
       xnew_exc &= ~((0xc00 << 3) | (FE_ALL_EXCEPT << 7));
       xnew_exc |= ((set & 0xc00) << 3) | ((set & FE_ALL_EXCEPT) << 7);
 
-      __asm__ ("%vldmxcsr %0" : : "m" (xnew_exc));
+      ldmxcsr_inline_asm (&xnew_exc);
     }
 }

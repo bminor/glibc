@@ -19,6 +19,7 @@
 #include <fenv.h>
 #include <unistd.h>
 #include <ldsodefs.h>
+#include <math-inline-asm.h>
 
 int
 __feupdateenv (const fenv_t *envp)
@@ -31,7 +32,7 @@ __feupdateenv (const fenv_t *envp)
 
   /* If the CPU supports SSE we test the MXCSR as well.  */
   if (CPU_FEATURE_USABLE (SSE))
-    __asm__ ("%vstmxcsr %0" : "=m" (xtemp));
+    stmxcsr_inline_asm (&xtemp);
 
   temp = (temp | xtemp) & FE_ALL_EXCEPT;
 

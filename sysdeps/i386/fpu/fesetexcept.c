@@ -18,6 +18,7 @@
 
 #include <fenv.h>
 #include <ldsodefs.h>
+#include <math-inline-asm.h>
 
 int
 fesetexcept (int excepts)
@@ -31,15 +32,16 @@ fesetexcept (int excepts)
 
   if (CPU_FEATURE_USABLE (SSE))
     {
-      /* Get the control word of the SSE unit.  */
       unsigned int mxcsr;
-      __asm__ ("%vstmxcsr %0" : "=m" (mxcsr));
+
+      /* Get the control word of the SSE unit.  */
+      stmxcsr_inline_asm (&mxcsr);
 
       /* Set relevant flags.  */
       mxcsr |= excepts;
 
       /* Put the new data in effect.  */
-      __asm__ ("%vldmxcsr %0" : : "m" (mxcsr));
+      ldmxcsr_inline_asm (&mxcsr);
     }
   else
     {

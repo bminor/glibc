@@ -19,6 +19,7 @@
 #include <fenv.h>
 #include <unistd.h>
 #include <ldsodefs.h>
+#include <math-inline-asm.h>
 
 int
 __feclearexcept (int excepts)
@@ -44,13 +45,13 @@ __feclearexcept (int excepts)
       unsigned int xnew_exc;
 
       /* Get the current MXCSR.  */
-      __asm__ ("%vstmxcsr %0" : "=m" (xnew_exc));
+      stmxcsr_inline_asm (&xnew_exc);
 
       /* Clear the relevant bits.  */
       xnew_exc &= ~excepts;
 
       /* Put the new data in effect.  */
-      __asm__ ("%vldmxcsr %0" : : "m" (xnew_exc));
+      ldmxcsr_inline_asm (&xnew_exc);
     }
 
   /* Success.  */

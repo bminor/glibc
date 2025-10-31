@@ -18,11 +18,12 @@
 
 #include <fenv.h>
 #include <fpu_control.h>
+#include <math-inline-asm.h>
 
 int
 fegetmode (femode_t *modep)
 {
   _FPU_GETCW (modep->__control_word);
-  __asm__ ("%vstmxcsr %0" : "=m" (modep->__mxcsr));
+  stmxcsr_inline_asm (&modep->__mxcsr);
   return 0;
 }
