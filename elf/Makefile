@@ -1487,6 +1487,13 @@ rtld-stubbed-symbols = \
   realloc \
   # rtld-stubbed-symbols
 
+ifeq (no,$(abort-in-ld))
+# clang might generate an abort call for cleanup functions.
+rtld-stubbed-symbols += \
+  __GI_abort \
+  # rtld-stubbed-symbols
+endif
+
 ifeq ($(have-ssp),yes)
 # rtld is not built with the stack protector, so these references will
 # go away in the rebuilds.

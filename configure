@@ -9027,6 +9027,7 @@ libc_cv_localstatedir=$localstatedir
 libc_cv_gcc_unwind_find_fde=no
 libc_cv_idn=no
 pthread_in_libc=yes
+abort_in_ld=no
 
 # Iterate over all the sysdep directories we will use, running their
 # configure fragments.
@@ -9608,6 +9609,9 @@ if test "$libc_cv_attr_after_func_decl" = yes; then
    printf "%s\n" "#define ATTR_AFTER_FUNC_DECL 1" >>confdefs.h
 
 fi
+
+config_vars="$config_vars
+abort-in-ld = $abort_in_ld";
 
 ac_config_files="$ac_config_files config.make Makefile"
 
