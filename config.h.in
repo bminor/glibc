@@ -320,4 +320,7 @@
 /* Define if trunc is inlined on x86.  */
 #undef HAVE_X86_INLINE_TRUNC
 
+/* Define if compiler allows add attribute after function declaration.  */
+#undef ATTR_AFTER_FUNC_DECL
+
 #endif
