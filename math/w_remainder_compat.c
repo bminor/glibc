@@ -19,23 +19,32 @@
 #include <math_private.h>
 #include <math-svid-compat.h>
 #include <libm-alias-double.h>
+#include <shlib-compat.h>
 
 
-#if LIBM_SVID_COMPAT
+#if LIBM_SVID_COMPAT && (SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_43) \
+			 || defined NO_LONG_DOUBLE \
+			 || defined LONG_DOUBLE_COMPAT)
 /* wrapper remainder */
 double
-__remainder (double x, double y)
+__remainder_compat (double x, double y)
 {
   if (((__builtin_expect (y == 0.0, 0) && ! isnan (x))
        || (__builtin_expect (isinf (x), 0) && ! isnan (y)))
       && _LIB_VERSION != _IEEE_)
     return __kernel_standard (x, y, 28); /* remainder domain */
 
-  return __ieee754_remainder (x, y);
+  return __remainder (x, y);
 }
-libm_alias_double (__remainder, remainder)
-weak_alias (__remainder, drem)
+compat_symbol (libm, __remainder_compat, remainder, GLIBC_2_0);
+weak_alias (__remainder_compat, drem)
 # ifdef NO_LONG_DOUBLE
-weak_alias (__remainder, dreml)
+weak_alias (__remainder_compat, dreml)
+weak_alias (__remainder_compat, remainderl)
+# endif
+# ifdef LONG_DOUBLE_COMPAT
+LONG_DOUBLE_COMPAT_CHOOSE_libm_remainderl (
+  compat_symbol (libm, __remainder_compat, remainderl, \
+		 FIRST_VERSION_libm_remainderl), );
 # endif
 #endif

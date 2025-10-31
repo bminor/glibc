@@ -1,5 +1,5 @@
-/* Remainder function, m68k double version.
-   Copyright (C) 1996-2025 Free Software Foundation, Inc.
+/* Floating-point remainder function.
+   Copyright (C) 2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -13,13 +13,12 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
 #include <math.h>
-#include <libm-alias-double.h>
 #include <libm-alias-finite.h>
-#include "mathimpl.h"
+#include <libm-alias-double.h>
 #include "math_config.h"
 
 double
@@ -29,12 +28,12 @@ __remainder (double x, double y)
   uint64_t hy = asuint64 (y);
 
   /* fmod(+-Inf,y) or fmod(x,0) */
-  if (__glibc_unlikely ((is_inf (hx) || y == 0.0f)
+  if (__glibc_unlikely ((is_inf (hx) || y == 0.0)
 			&& !is_nan (hy)
 			&& !is_nan (hx)))
     return __math_invalid (x);
 
-  return __m81_u(__ieee754_remainder)(x, y);
+  return __builtin_remainder (x, y);
 }
 strong_alias (__remainder, __ieee754_remainder)
 versioned_symbol (libm, __remainder, remainder, GLIBC_2_43);

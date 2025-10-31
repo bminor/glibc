@@ -18,10 +18,12 @@
 
 #include <math.h>
 #include <libm-alias-finite.h>
+#include <libm-alias-double.h>
+#include <math-svid-compat.h>
 #include "math_config.h"
 
 double
-__ieee754_remainder (double x, double y)
+__remainder (double x, double y)
 {
   uint64_t hx = asuint64 (x);
   uint64_t hy = asuint64 (y);
@@ -34,12 +36,8 @@ __ieee754_remainder (double x, double y)
   y = fabs (y);
   if (__glibc_likely (hy < UINT64_C (0x7fe0000000000000)))
     {
-      /* |x| not finite, |y| equal 0 is handled by fmod.  */
-      if (__glibc_unlikely (hx >= EXPONENT_MASK))
-	return (x * y) / (x * y);
-
-      x = fabs (__ieee754_fmod (x, y + y));
-      if (x + x > y)
+      x = fabs (__fmod (x, y + y));
+      if (isgreater (x + x, y))
 	{
 	  x -= y;
 	  if (x + x >= y)
@@ -52,9 +50,9 @@ __ieee754_remainder (double x, double y)
     }
   else
     {
-      /* |x| not finite or |y| is NaN or 0 */
-      if ((hx >= EXPONENT_MASK || (hy - 1) >= EXPONENT_MASK))
-	return (x * y) / (x * y);
+      /* |x| not finite or |y| is NaN */
+      if (__glibc_unlikely (hx >= EXPONENT_MASK || hy > EXPONENT_MASK))
+	return __math_invalid (x * y);
 
       x = fabs (x);
       double y_half = y * 0.5;
@@ -70,4 +68,14 @@ __ieee754_remainder (double x, double y)
 
   return sx ? -x : x;
 }
-libm_alias_finite (__ieee754_remainder, __remainder)
+libm_alias_finite (__remainder, __remainder)
+#if LIBM_SVID_COMPAT
+versioned_symbol (libm, __remainder, remainder, GLIBC_2_43);
+libm_alias_double_other (__remainder, remainder)
+#else
+libm_alias_double (__remainder, remainder)
+weak_alias (__remainder, drem)
+# ifdef NO_LONG_DOUBLE
+weak_alias (__remainder, dreml)
+# endif
+#endif
