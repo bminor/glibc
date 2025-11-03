@@ -13,6 +13,10 @@ Major new features:
 
 * The ISO C23 memalignment function has been added.
 
+* As specified in ISO C23, the assert macro is defined to take variable
+  arguments to support expressions with a comma inside a compound
+  literal initializer not surrounded by parentheses.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * Support for dumped heaps has been removed - malloc_set_state() now always

@@ -40,6 +40,24 @@
 # define __ASSERT_VOID_CAST (void)
 #endif
 
+/* C23 makes assert a variadic macro so that expressions with a comma
+   not between parentheses, but that would still be valid as a single
+   function argument, such as those involving compound literals with a
+   comma in the initializer list, can be passed to assert.  This
+   depends on support for variadic macros (added in C99 and GCC 2.95),
+   and on support for _Bool (added in C99 and GCC 3.0) in order to
+   validate that only a single expression is passed as an argument,
+   and is currently implemented only for C.  */
+#if (__GLIBC_USE (ISOC23)						\
+     && (defined __GNUC__						\
+	 ? __GNUC_PREREQ (3, 0)						\
+	 : defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L)	\
+     && !defined __cplusplus)
+# define __ASSERT_VARIADIC 1
+#else
+# define __ASSERT_VARIADIC 0
+#endif
+
 /* void assert (int expression);
 
    If NDEBUG is defined, do nothing.
@@ -47,7 +65,11 @@
 
 #ifdef	NDEBUG
 
-# define assert(expr)		(__ASSERT_VOID_CAST (0))
+# if __ASSERT_VARIADIC
+#  define assert(...)		(__ASSERT_VOID_CAST (0))
+# else
+#  define assert(expr)		(__ASSERT_VOID_CAST (0))
+# endif
 
 /* void assert_perror (int errnum);
 
@@ -80,6 +102,13 @@ extern void __assert (const char *__assertion, const char *__file, int __line)
      __THROW __attribute__ ((__noreturn__)) __COLD;
 
 
+# if __ASSERT_VARIADIC
+/* This function is not defined and is not called outside of an
+   unevaluated sizeof, but serves to verify that the argument to
+   assert is a single expression.  */
+extern _Bool __assert_single_arg (_Bool);
+# endif
+
 __END_DECLS
 
 /* When possible, define assert so that it does not add extra
@@ -102,23 +131,40 @@ __END_DECLS
       : __assert_fail (#expr, __ASSERT_FILE, __ASSERT_LINE,             \
                        __ASSERT_FUNCTION))
 # elif !defined __GNUC__ || defined __STRICT_ANSI__
-#  define assert(expr)							\
+#  if __ASSERT_VARIADIC
+#   define assert(...)							\
+    (((void) sizeof (__assert_single_arg (__VA_ARGS__)), __VA_ARGS__)	\
+     ? __ASSERT_VOID_CAST (0)						\
+     : __assert_fail (#__VA_ARGS__, __FILE__, __LINE__, __ASSERT_FUNCTION))
+#  else
+#   define assert(expr)							\
     ((expr)								\
      ? __ASSERT_VOID_CAST (0)						\
      : __assert_fail (#expr, __FILE__, __LINE__, __ASSERT_FUNCTION))
+#  endif
 # else
+#  if __ASSERT_VARIADIC
+#   define assert(...)							\
+    ((void) sizeof (__assert_single_arg (__VA_ARGS__)), __extension__ ({ \
+      if (__VA_ARGS__)							\
+        ; /* empty */							\
+      else								\
+        __assert_fail (#__VA_ARGS__, __FILE__, __LINE__, __ASSERT_FUNCTION); \
+    }))
+#  else
 /* The first occurrence of EXPR is not evaluated due to the sizeof,
    but will trigger any pedantic warnings masked by the __extension__
    for the second occurrence.  The ternary operator is required to
    support function pointers and bit fields in this context, and to
    suppress the evaluation of variable length arrays.  */
-#  define assert(expr)							\
+#   define assert(expr)							\
   ((void) sizeof ((expr) ? 1 : 0), __extension__ ({			\
       if (expr)								\
         ; /* empty */							\
       else								\
         __assert_fail (#expr, __FILE__, __LINE__, __ASSERT_FUNCTION);	\
     }))
+#  endif
 # endif
 
 # ifdef	__USE_GNU
