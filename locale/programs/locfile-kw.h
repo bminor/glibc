@@ -1,4 +1,4 @@
-/* ANSI-C code produced by gperf version 3.1 */
+/* ANSI-C code produced by gperf version 3.3 */
 /* Command-line: gperf -acCgopt -k'1,2,5,9,$' -L ANSI-C -N locfile_hash locfile-kw.gperf  */
 
 #if !((' ' == 32) && ('!' == 33) && ('"' == 34) && ('#' == 35) \
@@ -105,18 +105,33 @@ hash (register const char *str, register size_t len)
     {
       default:
         hval += asso_values[(unsigned char)str[8]];
+#if (defined __cplusplus && (__cplusplus >= 201703L || (__cplusplus >= 201103L && defined __clang__ && __clang_major__ + (__clang_minor__ >= 9) > 3))) || (defined __STDC_VERSION__ && __STDC_VERSION__ >= 202000L && ((defined __GNUC__ && __GNUC__ >= 10) || (defined __clang__ && __clang_major__ >= 9)))
       [[fallthrough]];
+#elif (defined __GNUC__ && __GNUC__ >= 7) || (defined __clang__ && __clang_major__ >= 10)
+      __attribute__ ((__fallthrough__));
+#endif
+      /*FALLTHROUGH*/
       case 8:
       case 7:
       case 6:
       case 5:
         hval += asso_values[(unsigned char)str[4]];
+#if (defined __cplusplus && (__cplusplus >= 201703L || (__cplusplus >= 201103L && defined __clang__ && __clang_major__ + (__clang_minor__ >= 9) > 3))) || (defined __STDC_VERSION__ && __STDC_VERSION__ >= 202000L && ((defined __GNUC__ && __GNUC__ >= 10) || (defined __clang__ && __clang_major__ >= 9)))
       [[fallthrough]];
+#elif (defined __GNUC__ && __GNUC__ >= 7) || (defined __clang__ && __clang_major__ >= 10)
+      __attribute__ ((__fallthrough__));
+#endif
+      /*FALLTHROUGH*/
       case 4:
       case 3:
       case 2:
         hval += asso_values[(unsigned char)str[1]];
+#if (defined __cplusplus && (__cplusplus >= 201703L || (__cplusplus >= 201103L && defined __clang__ && __clang_major__ + (__clang_minor__ >= 9) > 3))) || (defined __STDC_VERSION__ && __STDC_VERSION__ >= 202000L && ((defined __GNUC__ && __GNUC__ >= 10) || (defined __clang__ && __clang_major__ >= 9)))
       [[fallthrough]];
+#elif (defined __GNUC__ && __GNUC__ >= 7) || (defined __clang__ && __clang_major__ >= 10)
+      __attribute__ ((__fallthrough__));
+#endif
+      /*FALLTHROUGH*/
       case 1:
         hval += asso_values[(unsigned char)str[0]];
         break;
@@ -127,6 +142,10 @@ hash (register const char *str, register size_t len)
 const struct keyword_t *
 locfile_hash (register const char *str, register size_t len)
 {
+#if (defined __GNUC__ && __GNUC__ + (__GNUC_MINOR__ >= 6) > 4) || (defined __clang__ && __clang_major__ >= 3)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+#endif
   static const struct keyword_t wordlist[] =
     {
       {""}, {""}, {""},
@@ -602,6 +621,9 @@ locfile_hash (register const char *str, register size_t len)
 #line 138 "locfile-kw.gperf"
       {"am_pm",                  tok_am_pm,                  0}
     };
+#if (defined __GNUC__ && __GNUC__ + (__GNUC_MINOR__ >= 6) > 4) || (defined __clang__ && __clang_major__ >= 3)
+#pragma GCC diagnostic pop
+#endif
 
   if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
     {
@@ -615,5 +637,5 @@ locfile_hash (register const char *str, register size_t len)
             return &wordlist[key];
         }
     }
-  return 0;
+  return (struct keyword_t *) 0;
 }
