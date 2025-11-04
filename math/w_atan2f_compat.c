@@ -26,9 +26,9 @@
 #include <libm-alias-float.h>
 
 
-#if LIBM_SVID_COMPAT
+#if LIBM_SVID_COMPAT && SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_43)
 float
-__atan2f (float y, float x)
+__atan2_compatf (float y, float x)
 {
   float z;
 
@@ -40,5 +40,10 @@ __atan2f (float y, float x)
     __set_errno (ERANGE);
   return z;
 }
-libm_alias_float (__atan2, atan2)
+# ifdef NO_COMPAT_NEEDED
+strong_alias (__atan2_compatf, __atan2f)
+libm_alias_float (__atan2_compat, atan2)
+# else
+compat_symbol (libm, __atan2_compatf, atan2f, GLIBC_2_0);
+# endif
 #endif

@@ -3,7 +3,7 @@
 Copyright (c) 2022-2024 Alexei Sibidanov and Paul Zimmermann.
 
 The original version of this file was copied from the CORE-MATH
-project (file src/binary32/atan2/atan2f.c, revision 7835c5d).
+project (file src/binary32/atan2/atan2f.c, revision 9b28a4a).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,8 @@ SOFTWARE.
 #include <math.h>
 #include <stdint.h>
 #include <libm-alias-finite.h>
+#include <libm-alias-float.h>
+#include <math-svid-compat.h>
 #include "math_config.h"
 
 static inline double
@@ -85,11 +87,15 @@ cr_atan2f_tiny (float y, float x)
       else
 	t -= 1;
     }
-  return asdouble (t);
+  double r = asdouble (t);
+  float rf = r;
+  if (__glibc_unlikely (rf == 0.0f))
+    return __math_uflowf (t >> 63);
+  return rf;
 }
 
 float
-__ieee754_atan2f (float y, float x)
+__atan2f (float y, float x)
 {
   static const double cn[] =
     {
@@ -269,6 +275,16 @@ __ieee754_atan2f (float y, float x)
 	}
       r = th + tm;
     }
-  return r;
+  float rf = r;
+  if (__glibc_unlikely (rf == 0.0f))
+    return __math_uflowf (asuint (rf) >> 1);
+  return rf;
 }
+strong_alias (__atan2f, __ieee754_atan2f)
+#if LIBM_SVID_COMPAT
+versioned_symbol (libm, __atan2f, atan2f, GLIBC_2_43);
+libm_alias_float_other (__atan2, atan2)
+#else
+libm_alias_float (__atan2, atan2)
+#endif
 libm_alias_finite (__ieee754_atan2f, __atan2f)
