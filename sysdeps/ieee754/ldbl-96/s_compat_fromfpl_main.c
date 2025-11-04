@@ -1,4 +1,4 @@
-/* Round to integer type.  flt-32 version.
+/* Round to integer type.  ldbl-96 version.
    Copyright (C) 2016-2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -20,12 +20,12 @@
 #include <fenv.h>
 #include <math.h>
 #include <math_private.h>
-#include <libm-alias-float.h>
+#include <libm-alias-ldouble.h>
 #include <stdbool.h>
 #include <stdint.h>
 
-#define BIAS 0x7f
-#define MANT_DIG 24
+#define BIAS 0x3fff
+#define MANT_DIG 64
 
 #if UNSIGNED
 # define RET_TYPE uintmax_t
@@ -33,44 +33,46 @@
 # define RET_TYPE intmax_t
 #endif
 
-#include <fromfp.h>
+#include <compat_fromfp.h>
 
 RET_TYPE
-FUNC (float x, int round, unsigned int width)
+FUNC (long double x, int round, unsigned int width)
 {
   if (width > INTMAX_WIDTH)
     width = INTMAX_WIDTH;
-  uint32_t ix;
-  GET_FLOAT_WORD (ix, x);
-  bool negative = (ix & 0x80000000) != 0;
+  uint16_t se;
+  uint32_t hx, lx;
+  GET_LDOUBLE_WORDS (se, hx, lx, x);
+  bool negative = (se & 0x8000) != 0;
   if (width == 0)
     return fromfp_domain_error (negative, width);
-  ix &= 0x7fffffff;
-  if (ix == 0)
+  if ((hx | lx) == 0)
     return 0;
-  int exponent = ix >> (MANT_DIG - 1);
+  int exponent = se & 0x7fff;
   exponent -= BIAS;
   int max_exponent = fromfp_max_exponent (negative, width);
   if (exponent > max_exponent)
     return fromfp_domain_error (negative, width);
 
-  ix &= ((1U << (MANT_DIG - 1)) - 1);
-  ix |= 1U << (MANT_DIG - 1);
+  uint64_t ix = (((uint64_t) hx) << 32) | lx;
   uintmax_t uret;
   bool half_bit, more_bits;
   if (exponent >= MANT_DIG - 1)
     {
       uret = ix;
-      uret <<= exponent - (MANT_DIG - 1);
+      /* Exponent 63; no shifting required.  */
       half_bit = false;
       more_bits = false;
     }
   else if (exponent >= -1)
     {
-      uint32_t h = 1U << (MANT_DIG - 2 - exponent);
+      uint64_t h = 1ULL << (MANT_DIG - 2 - exponent);
       half_bit = (ix & h) != 0;
       more_bits = (ix & (h - 1)) != 0;
-      uret = ix >> (MANT_DIG - 1 - exponent);
+      if (exponent == -1)
+	uret = 0;
+      else
+	uret = ix >> (MANT_DIG - 1 - exponent);
     }
   else
     {

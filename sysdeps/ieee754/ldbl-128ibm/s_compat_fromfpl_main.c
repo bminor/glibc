@@ -32,7 +32,7 @@
 # define RET_TYPE intmax_t
 #endif
 
-#include <fromfp.h>
+#include <compat_fromfp.h>
 
 RET_TYPE
 FUNC (long double x, int round, unsigned int width)
