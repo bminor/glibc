@@ -82,6 +82,9 @@ bench-math := \
   fminf \
   fmod \
   fmodf \
+  frexp \
+  frexpf \
+  frexpl \
   hypot \
   hypotf \
   ilogb \
@@ -347,6 +350,9 @@ CFLAGS-bench-trunc.c += -fno-builtin
 CFLAGS-bench-truncf.c += -fno-builtin
 CFLAGS-bench-fmod.c += -fno-builtin
 CFLAGS-bench-fmodf.c += -fno-builtin
+CFLAGS-bench-frexp.c += -fno-builtin
+CFLAGS-bench-frexpf.c += -fno-builtin
+CFLAGS-bench-frexpl.c += -fno-builtin
 CFLAGS-bench-remainder.c += -fno-builtin
 CFLAGS-bench-remainderf.c += -fno-builtin
 CFLAGS-bench-roundeven.c += -fno-builtin
