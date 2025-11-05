@@ -34,10 +34,17 @@
    old glibc.
 
    Users of this file define USE_AS_COMPAT to 0 when building the main
-   version of lgamma, 1 when building the compatibility version.  */
+   version of lgamma, 1 when building the compatibility version that
+   handles signgam visibility, and 2 when building the compatibility
+   that handles SVID support).  */
 
+#if USE_AS_COMPAT <= 1
 #define LGAMMA_OLD_VER GLIBC_2_0
 #define LGAMMA_NEW_VER GLIBC_2_23
+#elif USE_AS_COMPAT == 2
+#define LGAMMA_OLD_VER    GLIBC_2_23
+#define LGAMMA_NEW_VER    GLIBC_2_43
+#endif
 #define HAVE_LGAMMA_COMPAT SHLIB_COMPAT (libm, LGAMMA_OLD_VER, LGAMMA_NEW_VER)
 
 /* Whether to build this version at all.  */
@@ -45,8 +52,10 @@
   (LIBM_SVID_COMPAT && (HAVE_LGAMMA_COMPAT || !USE_AS_COMPAT))
 
 /* The name to use for this version.  */
-#if USE_AS_COMPAT
+#if USE_AS_COMPAT == 1
 # define LGFUNC(FUNC) FUNC ## _compat
+#elif USE_AS_COMPAT == 2
+# define LGFUNC(FUNC) FUNC ## _compat2
 #else
 # define LGFUNC(FUNC) FUNC
 #endif
@@ -54,7 +63,7 @@
 /* If there is a compatibility version, gamma (not an ISO C function,
    so never a problem for it to set signgam) points directly to it
    rather than having separate versions.  */
-#define GAMMA_ALIAS (USE_AS_COMPAT ? HAVE_LGAMMA_COMPAT : !HAVE_LGAMMA_COMPAT)
+#define GAMMA_ALIAS (USE_AS_COMPAT == 1 ? HAVE_LGAMMA_COMPAT : !HAVE_LGAMMA_COMPAT)
 
 /* How to call the underlying lgamma_r function.  */
 #define CALL_LGAMMA(TYPE, FUNC, ARG)			\

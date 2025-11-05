@@ -1335,6 +1335,8 @@ GLIBC_2.43 fmodf F
 GLIBC_2.43 j0f F
 GLIBC_2.43 j1f F
 GLIBC_2.43 jnf F
+GLIBC_2.43 lgammaf F
+GLIBC_2.43 lgammaf_r F
 GLIBC_2.43 log10f F
 GLIBC_2.43 remainder F
 GLIBC_2.43 remainderf F

@@ -697,6 +697,8 @@ libm {
     j0f;
     j1f;
     jnf;
+    lgammaf;
+    lgammaf_r;
     log10f;
     remainder;
     remainderf;

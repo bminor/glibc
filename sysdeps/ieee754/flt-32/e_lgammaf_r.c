@@ -36,6 +36,8 @@ SOFTWARE.
 #include <math.h>
 #include <libm-alias-finite.h>
 #include <limits.h>
+#include <libm-alias-float.h>
+#include <math-svid-compat.h>
 #include <math-narrow-eval.h>
 #include "math_config.h"
 
@@ -108,7 +110,7 @@ as_ln (double x)
 }
 
 float
-__ieee754_lgammaf_r (float x, int *signgamp)
+__lgammaf_r (float x, int *signgamp)
 {
   static const struct
   {
@@ -161,7 +163,7 @@ __ieee754_lgammaf_r (float x, int *signgamp)
       if (x <= 0.0f)
 	{
 	  *signgamp = asuint (x) >> 31 ? -1 : 1;
-	  return 1.0f / 0.0f;
+	  return __math_divzerof (0);
 	}
       if (x == 1.0f || x == 2.0f)
 	{
@@ -206,10 +208,11 @@ __ieee754_lgammaf_r (float x, int *signgamp)
       if (ax > 0x1.afc1ap+1f)
 	{
 	  if (__glibc_unlikely (x > 0x1.895f1cp+121f))
-	    return math_narrow_eval (0x1p127f * 0x1p127f);
+	    return __math_oflowf (0);
+
 	  /* |x|>=2**23, must be -integer */
 	  if (__glibc_unlikely (x < 0.0f && ax > 0x1p+23f))
-	    return ax / 0.0f;
+	    return __math_divzerof (0);
 	  double lz = as_ln (z);
 	  f = (z - 0.5) * (lz - 1) + 0x1.acfe390c97d69p-2;
 	  if (ax < 0x1.0p+20f)
@@ -271,7 +274,7 @@ __ieee754_lgammaf_r (float x, int *signgamp)
 	    {
 	      int ni = floorf (-2 * x);
 	      if ((ni & 1) == 0 && ni == -2 * x)
-		return 1.0f / 0.0f;
+		return __math_divzerof (0);
 	    }
 	  const double c0 = 0x1.3cc0e6a0106b3p+2;
 	  static const double rd[] =
@@ -363,4 +366,13 @@ __ieee754_lgammaf_r (float x, int *signgamp)
     }
   return r;
 }
-libm_alias_finite (__ieee754_lgammaf_r, __lgammaf_r)
+strong_alias (__lgammaf_r, __ieee754_lgammaf_r)
+libm_alias_finite (__lgammaf_r, __lgammaf_r)
+#if LIBM_SVID_COMPAT
+versioned_symbol (libm, __lgammaf_r, lgammaf_r, GLIBC_2_43);
+# if __HAVE_FLOAT32 && !__HAVE_DISTINCT_FLOAT32
+weak_alias (__lgammaf_r, lgammaf32_r)
+# endif
+#else
+libm_alias_float_r (__lgamma, lgamma, _r)
+#endif

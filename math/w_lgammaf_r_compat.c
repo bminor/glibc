@@ -20,11 +20,12 @@
 #include <math_private.h>
 #include <math-svid-compat.h>
 #include <libm-alias-float.h>
+#include <shlib-compat.h>
 
 
 #if LIBM_SVID_COMPAT
 float
-__lgammaf_r(float x, int *signgamp)
+__lgammaf_r_svidf(float x, int *signgamp)
 {
 	float y = __ieee754_lgammaf_r(x,signgamp);
 	if(__builtin_expect(!isfinite(y), 0)
@@ -36,5 +37,5 @@ __lgammaf_r(float x, int *signgamp)
 
 	return y;
 }
-libm_alias_float_r (__lgamma, lgamma, _r)
+compat_symbol (libm, __lgammaf_r_svidf, lgammaf_r, GLIBC_2_0);
 #endif
