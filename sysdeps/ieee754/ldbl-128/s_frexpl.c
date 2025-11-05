@@ -1,54 +1,61 @@
-/* s_frexpl.c -- long double version of s_frexp.c.
- */
+/* Optimized frexp implementation for binary128 (IEEE quad precision).
+   Copyright (C) 2025 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: $";
-#endif
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-/*
- * for non-zero x
- *	x = frexpl(arg,&exp);
- * return a long double fp quantity x such that 0.5 <= |x| <1.0
- * and the corresponding binary exponent "exp". That is
- *	arg = x*2^exp.
- * If arg is inf, 0.0, or NaN, then frexpl(arg,&exp) returns arg
- * with *exp=0.
- */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
 
 #include <math.h>
 #include <math_private.h>
 #include <libm-alias-ldouble.h>
 
-static const _Float128
-two114 = L(2.0769187434139310514121985316880384E+34); /* 0x4071000000000000, 0 */
+#define EXPONENT_BIAS 16383
 
-_Float128 __frexpl(_Float128 x, int *eptr)
+static const _Float128 two114 = 0x1p114L;
+
+_Float128
+__frexpl (_Float128 x, int *eptr)
 {
-	uint64_t hx, lx, ix;
-	GET_LDOUBLE_WORDS64(hx,lx,x);
-	ix = 0x7fffffffffffffffULL&hx;
-	*eptr = 0;
-	if(ix>=0x7fff000000000000ULL||((ix|lx)==0)) return x + x;/* 0,inf,nan */
-	if (ix<0x0001000000000000ULL) {		/* subnormal */
-	    x *= two114;
-	    GET_LDOUBLE_MSW64(hx,x);
-	    ix = hx&0x7fffffffffffffffULL;
-	    *eptr = -114;
-	}
-	*eptr += (ix>>48)-16382;
-	hx = (hx&0x8000ffffffffffffULL) | 0x3ffe000000000000ULL;
-	SET_LDOUBLE_MSW64(x,hx);
-	return x;
+  uint64_t hx, lx;
+  GET_LDOUBLE_WORDS64 (hx, lx, x);
+  uint64_t ex = (hx >> 48) & 0x7fff;
+
+  /* Fast path for normal numbers.  */
+  if (__glibc_likely ((ex - 1U) < 0x7ffe))
+    {
+      ex -= EXPONENT_BIAS - 1;
+      *eptr = ex;
+      hx = hx - (ex << 48);
+      SET_LDOUBLE_MSW64 (x, hx);
+      return x;
+    }
+
+  /* Handle zero, infinity, and NaN.  */
+  if (__glibc_likely (ex == 0x7fff || ((hx << 1) | lx) == 0))
+    {
+      *eptr = 0;
+      return x + x;
+    }
+
+  /* Subnormal.  */
+  x *= two114;
+  GET_LDOUBLE_MSW64 (hx, x);
+  ex = (hx >> 48) & 0x7fff;
+  ex -= EXPONENT_BIAS - 1;
+  *eptr = ex - 114;
+  hx = hx - (ex << 48);
+  SET_LDOUBLE_MSW64 (x, hx);
+  return x;
 }
 libm_alias_ldouble (__frexp, frexp)
