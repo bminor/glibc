@@ -707,5 +707,6 @@ libm {
     y0f;
     y1f;
     ynf;
+    tgammaf;
   }
 }

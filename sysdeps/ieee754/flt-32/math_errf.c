@@ -54,6 +54,12 @@ __math_edomf (float y)
   return with_errnof (y, EDOM);
 }
 
+attribute_hidden float
+__math_erangef (float y)
+{
+  return with_errnof (y, ERANGE);
+}
+
 /* NOINLINE prevents fenv semantics breaking optimizations.  */
 NOINLINE static float
 xflowf (uint32_t sign, float y)

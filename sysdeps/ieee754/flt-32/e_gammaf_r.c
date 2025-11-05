@@ -25,31 +25,23 @@ SOFTWARE.
  */
 
 /* Changes with respect to the original CORE-MATH code:
-   - removed the dealing with errno
-     (this is done in the wrapper math/w_tgammaf_compat.c)
    - usage of math_narrow_eval to deal with underflow/overflow
-   - deal with signgamp
  */
 
+#include <array_length.h>
 #include <math.h>
 #include <float.h>
 #include <stdint.h>
 #include <stddef.h>
+#include <libm-alias-float.h>
+#include <math-svid-compat.h>
 #include <libm-alias-finite.h>
 #include <math-narrow-eval.h>
 #include "math_config.h"
 
 float
-__ieee754_gammaf_r (float x, int *signgamp)
+__tgammaf (float x)
 {
-  /* The wrapper in math/w_tgamma_template.c expects *signgamp to be set to a
-     non-negative value if the returned value is gamma(x), and to a negative
-     value if it is -gamma(x).
-     Since the code here directly computes gamma(x), we set it to 1.
-  */
-  if (signgamp != NULL)
-    *signgamp = 1;
-
   /* List of exceptional cases. Each entry contains the 32-bit encoding u of x,
      a binary32 approximation f of gamma(x), and a correction term df.  */
   static const struct
@@ -92,27 +84,22 @@ __ieee754_gammaf_r (float x, int *signgamp)
       uint64_t rt = asuint64 (f);
       if (((rt + 2) & 0xfffffff) < 4)
 	{
-	  for (unsigned i = 0; i < sizeof (tb) / sizeof (tb[0]); i++)
+	  for (unsigned i = 0; i < array_length (tb); i++)
 	    if (t == tb[i].u)
 	      return tb[i].f + tb[i].df;
 	}
+      if (isinf (r))
+	return __math_erangef (r);
       return r;
     }
   float fx = floorf (x);
   if (__glibc_unlikely (x >= 0x1.18522p+5f))
-    {
-      /* Overflow case.  The original CORE-MATH code returns
-	 0x1p127f * 0x1p127f, but apparently some compilers replace this
-	 by +Inf.  */
-      return math_narrow_eval (x * 0x1p127f);
-    }
+    return __math_oflowf (0);
   /* compute k only after the overflow check, otherwise the case to integer
      might overflow */
   int k = fx;
   if (__glibc_unlikely (fx == x))
     { /* x is integer */
-      if (x == 0.0f)
-	return 1.0f / x;
       if (x < 0.0f)
 	return __math_invalidf (0.0f);
       double t0 = 1, x0 = 1;
@@ -121,12 +108,10 @@ __ieee754_gammaf_r (float x, int *signgamp)
       return t0;
     }
   if (__glibc_unlikely (x < -42.0f))
-    { /* negative non-integer */
-      /* For x < -42, x non-integer, |gamma(x)| < 2^-151.  */
-      static const float sgn[2] = { 0x1p-127f, -0x1p-127f };
-      /* Underflows always happens */
-      return math_narrow_eval (0x1p-127f * sgn[k & 1]);
-    }
+    /* negative non-integer */
+    /* For x < -42, x non-integer, |gamma(x)| < 2^-151.  */
+    /* Underflows always happens */
+    return __math_uflowf (k & 1);
   /* The array c[] stores a degree-15 polynomial approximation for
      gamma(x).  */
   static const double c[] =
@@ -164,13 +149,22 @@ __ieee754_gammaf_r (float x, int *signgamp)
   f *= w;
   uint64_t rt = asuint64 (f);
   float r = f;
+  if (__glibc_unlikely (r == 0))
+    return __math_uflowf (rt >> 63);
   /* Deal with exceptional cases.  */
   if (__glibc_unlikely (((rt + 2) & 0xfffffff) < 8))
     {
-      for (unsigned j = 0; j < sizeof (tb) / sizeof (tb[0]); j++)
+      for (unsigned j = 0; j < array_length (tb); j++)
 	if (t == tb[j].u)
 	  return tb[j].f + tb[j].df;
     }
   return r;
 }
-libm_alias_finite (__ieee754_gammaf_r, __gammaf_r)
+
+#if LIBM_SVID_COMPAT
+versioned_symbol (libm, __tgammaf, tgammaf, GLIBC_2_43);
+libm_alias_float_other (__tgamma, tgamma)
+#else
+libm_alias_float (__tgamma, tgamma)
+#endif
+libm_alias_finite (__tgammaf, __gammaf_r)

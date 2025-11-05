@@ -225,6 +225,7 @@ attribute_hidden float __math_invalidf (float);
 attribute_hidden int __math_invalidf_i (int);
 attribute_hidden long int __math_invalidf_li (long int);
 attribute_hidden float __math_edomf (float x);
+attribute_hidden float __math_erangef (float x);
 
 /* Shared between expf, exp2f, exp10f, and powf.  */
 #define EXP2F_TABLE_BITS 5

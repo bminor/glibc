@@ -18,12 +18,13 @@
 #include <math_private.h>
 #include <math-svid-compat.h>
 #include <libm-alias-float.h>
+#include <shlib-compat.h>
 
-#if LIBM_SVID_COMPAT
+#if LIBM_SVID_COMPAT && SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_43)
 float
-__tgammaf(float x)
+__tgammaf_svid(float x)
 {
-	float y = __ieee754_gammaf_r(x, NULL);
+	float y = __tgammaf(x);
 
 	if(__glibc_unlikely (!isfinite (y) || y == 0)
 	   && (isfinite (x) || (isinf (x) && x < 0.0f))
@@ -43,5 +44,5 @@ __tgammaf(float x)
 	}
 	return y;
 }
-libm_alias_float (__tgamma, tgamma)
+compat_symbol (libm, __tgammaf_svid, tgammaf, GLIBC_2_1);
 #endif
