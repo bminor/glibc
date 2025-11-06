@@ -113,9 +113,8 @@ do_test_with_invalid_iov (void)
 static void
 do_test_with_invalid_flags (void)
 {
-  /* Set the next bit from the mask of all supported flags.  */
-  int invalid_flag = RWF_SUPPORTED != 0 ? __builtin_clz (RWF_SUPPORTED) : 2;
-  invalid_flag = 0x1 << ((sizeof (int) * CHAR_BIT) - invalid_flag);
+  /* Set all the bits that are not used by the supported flags.  */
+  int invalid_flag = ~RWF_SUPPORTED;
 
   char buf[32];
   const struct iovec vec = { .iov_base = buf, .iov_len = sizeof (buf) };
