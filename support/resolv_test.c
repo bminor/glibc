@@ -326,7 +326,7 @@ resolv_response_add_name (struct resolv_response_builder *b,
               crname_target = *ptr;
             else
               crname_target = NULL;
-            TEST_VERIFY (crname_target != crname);
+            TEST_VERIFY_EXIT (crname_target != crname);
             /* Not added to the tree.  */
             free (crname);
           }
