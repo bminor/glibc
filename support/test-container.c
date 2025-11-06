@@ -705,6 +705,7 @@ check_for_unshare_hints (int require_pidns)
 
       val = -1; /* Sentinel.  */
       int cnt = fscanf (f, "%d", &val);
+      fclose (f);
       if (cnt == 1 && val != files[i].bad_value)
 	continue;
 
