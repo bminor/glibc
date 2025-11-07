@@ -1,13 +1,5 @@
 long-double-fcts = yes
 
-ifeq (yes,$(aarch64-bti))
-# Mark linker output BTI compatible, it warns on non-BTI inputs.
-sysdep-LDFLAGS += -Wl,-z,force-bti
-# Make warnings fatal outside the test system.
-LDFLAGS-lib.so += -Wl,--fatal-warnings
-LDFLAGS-rtld += -Wl,-z,force-bti,--fatal-warnings
-endif
-
 ifeq ($(subdir),elf)
 sysdep-dl-routines += \
   dl-bti \
