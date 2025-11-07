@@ -27,6 +27,7 @@
 #include <sys/asm.h>
 #include <dl-tlsdesc.h>
 #include <dl-static-tls.h>
+#include <dl-irel.h>
 #include <dl-machine-rel.h>
 
 #include <cpu-features.c>
@@ -179,7 +180,7 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
       && __glibc_unlikely (ELFW (ST_TYPE) (sym->st_info) == STT_GNU_IFUNC)
       && __glibc_likely (sym->st_shndx != SHN_UNDEF)
       && __glibc_likely (!skip_ifunc))
-    value = ((ElfW (Addr) (*) (int)) value) (GLRO (dl_hwcap));
+    value = elf_ifunc_invoke (value);
 
   switch (r_type)
     {
@@ -273,7 +274,7 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
     case R_LARCH_IRELATIVE:
       value = map->l_addr + reloc->r_addend;
       if (__glibc_likely (!skip_ifunc))
-	value = ((ElfW (Addr) (*) (void)) value) ();
+	value = elf_ifunc_invoke (value);
       *addr_field = value;
       break;
 
