@@ -180,7 +180,8 @@ lib := locale-programs
 include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
 
 $(objpfx)tst-locale-locpath.out : tst-locale-locpath.sh $(objpfx)locale
-	$(SHELL) $< '$(common-objpfx)' '$(test-wrapper-env)' '$(run-program-env)' > $@; \
+	$(SHELL) $< '$(common-objpfx)' '$(test-wrapper-env)' \
+		'$(run-program-env)' '$(rpath-link)' > $@; \
 	$(evaluate-test)
 
 $(objpfx)tst-localedef-path-norm: $(shared-thread-library)

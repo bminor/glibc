@@ -340,7 +340,7 @@ $(objpfx)iconv-test.out: run-iconv-test.sh \
 			 $(common-objdir)/iconv/iconv_prog TESTS
 	iconv_modules="$(modules)" \
 	$(SHELL) $< $(common-objdir) '$(test-wrapper-env)' \
-		 '$(run-program-env)' > $@; \
+		 '$(run-program-env)' '$(rpath-link)' > $@; \
 	$(evaluate-test)
 
 $(objpfx)tst-tables.out: tst-tables.sh \

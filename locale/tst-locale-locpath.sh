@@ -22,6 +22,8 @@ set -ex
 common_objpfx=$1
 test_wrapper_env=$2
 run_program_env=$3
+# Remove the last space to allow concatenate extra paths.
+library_path="$(echo $4)"
 
 LIBPATH="$common_objpfx"
 
@@ -36,7 +38,7 @@ mkdir -p $testroot
 
 ${test_wrapper_env} \
 ${run_program_env} LANG= LC_ALL=invalid-locale LOCPATH=does-not-exist \
-${common_objpfx}elf/ld.so --library-path "$LIBPATH" \
+${common_objpfx}elf/ld.so --library-path "$library_path:$LIBPATH" \
   "${common_objpfx}locale/locale" \
   > "$testroot/stdout" 2> "$testroot/stderr"
 

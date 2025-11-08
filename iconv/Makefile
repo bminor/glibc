@@ -141,7 +141,7 @@ $(objpfx)test-iconvconfig.out: $(objpfx)iconvconfig
 
 $(objpfx)tst-iconv_prog.out: tst-iconv_prog.sh $(objpfx)iconv_prog
 	$(BASH) $< $(common-objdir) '$(test-wrapper-env)' \
-		 '$(run-program-env)' > $@; \
+		 '$(run-program-env)' '$(rpath-link)' > $@; \
 	$(evaluate-test)
 
 $(objpfx)tst-translit-mchar.out: tst-translit-mchar.sh \
@@ -168,5 +168,5 @@ $(objpfx)tst-iconv_prog-buffer-large.out: \
 
 $(objpfx)tst-iconvconfig.out: tst-iconvconfig.sh $(objpfx)iconvconfig
 	$(BASH) $< $(common-objdir) '$(test-wrapper-env)' \
-		'$(run-program-env)' > $@; \
+		'$(run-program-env)' '$(rpath-link)' > $@; \
     $(evaluate-test)

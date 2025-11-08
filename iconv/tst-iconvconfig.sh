@@ -22,12 +22,14 @@ set -e
 build_dir=$1
 test_wrapper_env="$2"
 run_program_env="$3"
+# Remove the last space to allow concatenate extra paths.
+library_path="$(echo $4)"
 
 # We have to have some directories in the library path.
 LIBPATH=$build_dir:$build_dir/iconvdata
 
 ICONVCONFIG="
-$build_dir/elf/ld.so --library-path $LIBPATH $build_dir/iconv/iconvconfig
+$build_dir/elf/ld.so --library-path $library_path:$LIBPATH $build_dir/iconv/iconvconfig
 "
 
 ICONVCONFIG="$test_wrapper_env $run_program_env $ICONVCONFIG"

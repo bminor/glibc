@@ -21,13 +21,15 @@
 codir=$1
 test_wrapper_env="$2"
 run_program_env="$3"
+# Remove the last space to allow concatenate extra paths.
+library_path="$(echo $4)"
 
 # We have to have some directories in the library path.
 LIBPATH=$codir:$codir/iconvdata
 
 # How the start the iconv(1) program.  $from is not defined/expanded yet.
 ICONV='
-$codir/elf/ld.so --library-path $LIBPATH --inhibit-rpath ${from}.so
+$codir/elf/ld.so --library-path $library_path:$LIBPATH --inhibit-rpath ${from}.so
 $codir/iconv/iconv_prog
 '
 ICONV="$test_wrapper_env $run_program_env $ICONV"
