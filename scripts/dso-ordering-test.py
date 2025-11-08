@@ -748,7 +748,7 @@ def process_testcase(t):
                     ("${test_wrapper_env} ${run_program_env} %s\\\n"
                      "${common_objpfx}support/test-run-command \\\n"
                      "${common_objpfx}elf/ld.so \\\n"
-                     "--library-path ${common_objpfx}elf/%s:"
+                     "--library-path $library_path:${common_objpfx}elf/%s:"
                      "${common_objpfx}elf:${common_objpfx}.:"
                      "${common_objpfx}dlfcn \\\n"
                      "${common_objpfx}elf/%s/%s > \\\n"
@@ -1021,6 +1021,8 @@ def process_testcase(t):
     t.sh.write("common_objpfx=$1\n")
     t.sh.write("test_wrapper_env=$2\n")
     t.sh.write("run_program_env=$3\n")
+    # Remove the last space to allow concatenate extra paths.
+    t.sh.write("library_path=$(echo $4)\n")
     t.sh.write("something_failed=false\n")
 
     # Starting part of Makefile fragment
@@ -1050,7 +1052,7 @@ def process_testcase(t):
      % (t.test_name, test_srcdir, t.test_name,
         expected_output_files))
     makefile.write("\t$(SHELL) $< $(common-objpfx) '$(test-wrapper-env)' "
-                    "'$(run-program-env)' > $@; $(evaluate-test)\n")
+                    "'$(run-program-env)' '$(rpath-link)' > $@; $(evaluate-test)\n")
     makefile.write("ifeq ($(run-built-tests),yes)\n")
     if t.xtest:
         makefile.write("xtests-special += $(objpfx)%s.out\n" % (t.test_name))

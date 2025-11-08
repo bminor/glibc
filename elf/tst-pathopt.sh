@@ -22,6 +22,8 @@ set -e
 common_objpfx=$1
 test_wrapper_env=$2
 run_program_env=$3
+# Remove the last space to allow concatenate extra paths.
+library_path=$(echo $4)
 
 test -e ${common_objpfx}elf/will-be-empty &&
   rm -fr ${common_objpfx}elf/will-be-empty
@@ -32,7 +34,7 @@ cp ${common_objpfx}elf/pathoptobj.so ${common_objpfx}elf/for-renamed/renamed.so
 
 ${test_wrapper_env} \
 ${run_program_env} \
-LD_LIBRARY_PATH=${common_objpfx}elf/will-be-empty:${common_objpfx}elf/for-renamed:${common_objpfx}.:${common_objpfx}dlfcn \
+LD_LIBRARY_PATH=$library_path:${common_objpfx}elf/will-be-empty:${common_objpfx}elf/for-renamed:${common_objpfx}.:${common_objpfx}dlfcn \
   ${common_objpfx}elf/ld.so ${common_objpfx}elf/tst-pathopt \
     > ${common_objpfx}elf/tst-pathopt.out
 
