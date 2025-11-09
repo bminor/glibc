@@ -17,6 +17,7 @@
 
 #include <hurd.h>
 #include <hurd/resource.h>
+#include <sys/param.h>
 
 /* Set the priority of all processes specified by WHICH and WHO
    to PRIO.  Returns 0 on success, -1 on errors.  */
@@ -26,6 +27,8 @@ __setpriority (enum __priority_which which, id_t who, int prio)
   error_t err;
   error_t pidloser, priloser;
   unsigned int npids, ntasks, nwin, nperm, nacces;
+
+  prio = MAX (0, MIN (2 * NZERO - 1, prio));
 
   error_t setonepriority (pid_t pid, struct procinfo *pi)
     {
