@@ -114,9 +114,11 @@ __issignalingf (float x)
 
 # if __HAVE_DISTINCT_FLOAT128
 
+#  ifdef __USE_EXTERN_INLINES
+
 /* __builtin_isinf_sign is broken in GCC < 7 for float128.  */
-#  if ! __GNUC_PREREQ (7, 0)
-#   include <ieee754_float128.h>
+#   if ! __GNUC_PREREQ (7, 0)
+#    include <ieee754_float128.h>
 extern inline int
 __isinff128 (_Float128 x)
 {
@@ -126,13 +128,16 @@ __isinff128 (_Float128 x)
   lx |= -lx;
   return ~(lx >> 63) & (hx >> 62);
 }
-#  endif
+#   endif
 
 extern inline _Float128
 fabsf128 (_Float128 x)
 {
   return __builtin_fabsf128 (x);
 }
+#  else
+libm_hidden_proto (fabsf128)
+#  endif
 # endif
 
 
