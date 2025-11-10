@@ -150,13 +150,13 @@ CFLAGS-s_sin-fma4.c = -mfma4
 CFLAGS-s_tan-fma4.c = -mfma4
 CFLAGS-s_sincos-fma4.c = -mfma4
 
-CFLAGS-e_atan2-avx.c = -msse2avx -DSSE2AVX
-CFLAGS-e_exp-avx.c = -msse2avx -DSSE2AVX
-CFLAGS-e_log-avx.c = -msse2avx -DSSE2AVX
-CFLAGS-s_atan-avx.c = -msse2avx -DSSE2AVX
-CFLAGS-s_sin-avx.c = -msse2avx -DSSE2AVX
-CFLAGS-s_tan-avx.c = -msse2avx -DSSE2AVX
-CFLAGS-s_sincos-avx.c = -msse2avx -DSSE2AVX
+CFLAGS-e_atan2-avx.c = -mavx
+CFLAGS-e_exp-avx.c = -mavx
+CFLAGS-e_log-avx.c = -mavx
+CFLAGS-s_atan-avx.c = -mavx
+CFLAGS-s_sin-avx.c = -mavx
+CFLAGS-s_tan-avx.c = -mavx
+CFLAGS-s_sincos-avx.c = -mavx
 
 CFLAGS-s_modf-sse4_1.c = -msse4.1 -fno-builtin-modff32x -fno-builtin-modff64
 CFLAGS-s_modff-sse4_1.c = -msse4.1 -fno-builtin-modff32
