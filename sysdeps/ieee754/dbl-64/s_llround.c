@@ -27,7 +27,6 @@
 #include <math_private.h>
 #include <libm-alias-double.h>
 #include <fix-fp-int-convert-overflow.h>
-#include <math-use-builtins.h>
 
 long long int
 __llround (double x)

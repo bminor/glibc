@@ -22,8 +22,6 @@
 #include <math_private.h>
 #include <libm-alias-double.h>
 #include <stdint.h>
-#include <math-use-builtins.h>
-
 
 double
 __round (double x)

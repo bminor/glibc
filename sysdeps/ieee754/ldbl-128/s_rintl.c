@@ -30,7 +30,6 @@ static char rcsid[] = "$NetBSD: $";
 #include <math.h>
 #include <math_private.h>
 #include <libm-alias-ldouble.h>
-#include <math-use-builtins.h>
 
 _Float128
 __rintl (_Float128 x)

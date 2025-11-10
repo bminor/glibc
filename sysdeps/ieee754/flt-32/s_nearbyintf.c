@@ -19,7 +19,6 @@
 #include <math_private.h>
 #include <fenv_private.h>
 #include <libm-alias-float.h>
-#include <math-use-builtins.h>
 
 float
 __nearbyintf (float x)

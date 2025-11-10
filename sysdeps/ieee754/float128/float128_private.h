@@ -142,7 +142,6 @@
 #define libm_alias_ldouble_narrow(from, to)	\
   libm_alias_float128_narrow (from, to)
 
-#include <math-use-builtins.h>
 #undef USE_NEARBYINTL_BUILTIN
 #define USE_NEARBYINTL_BUILTIN USE_NEARBYINTF128_BUILTIN
 #undef USE_RINTL_BUILTIN

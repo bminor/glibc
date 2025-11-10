@@ -17,8 +17,6 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <math.h>
-#include <math-use-builtins.h>
-
 
 FLOAT
 M_DECL_FUNC (__fmin) (FLOAT x, FLOAT y)

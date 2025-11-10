@@ -21,7 +21,6 @@
 
 #include <math_private.h>
 #include <libm-alias-ldouble.h>
-#include <math-use-builtins.h>
 
 
 _Float128

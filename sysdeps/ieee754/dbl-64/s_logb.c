@@ -17,11 +17,9 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <math.h>
-
 #include <math_private.h>
 #include <libm-alias-double.h>
 #include <fix-int-fp-convert-zero.h>
-#include <math-use-builtins.h>
 
 double
 __logb (double x)

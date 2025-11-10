@@ -25,7 +25,6 @@
 #include <math_private.h>
 #include <libm-alias-float.h>
 #include <fix-fp-int-convert-overflow.h>
-#include <math-use-builtins.h>
 
 
 long int

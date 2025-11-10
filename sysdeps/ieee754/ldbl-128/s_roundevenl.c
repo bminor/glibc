@@ -21,7 +21,6 @@
 #include <math.h>
 #include <math_private.h>
 #include <libm-alias-ldouble.h>
-#include <math-use-builtins.h>
 #include <stdint.h>
 
 #define BIAS 0x3fff

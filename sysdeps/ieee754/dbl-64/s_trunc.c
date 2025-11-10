@@ -21,8 +21,6 @@
 
 #include <math_private.h>
 #include <libm-alias-double.h>
-#include <math-use-builtins.h>
-
 
 double
 __trunc (double x)

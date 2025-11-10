@@ -15,12 +15,10 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <isarev.h>
 #include <sgidefs.h>
 #include <sysdeps/unix/sysdep.h>
 
-#ifndef __mips_isa_rev
-# define __mips_isa_rev 0
-#endif
 
 #ifdef __ASSEMBLER__
 

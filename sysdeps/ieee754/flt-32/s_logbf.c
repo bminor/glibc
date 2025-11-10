@@ -16,7 +16,6 @@
 #include <math_private.h>
 #include <libm-alias-float.h>
 #include <fix-int-fp-convert-zero.h>
-#include <math-use-builtins.h>
 
 float
 __logbf (float x)

@@ -24,7 +24,6 @@ static char rcsid[] = "$NetBSD: $";
 #include <math.h>
 #include <math_private.h>
 #include <math_ldbl_opt.h>
-#include <math-use-builtins.h>
 
 long double __fabsl(long double x)
 {

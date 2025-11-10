@@ -34,7 +34,6 @@
 #include <math_private.h>
 #include <stdint.h>
 #include <libm-alias-double.h>
-#include <math-use-builtins.h>
 
 /*
  * floor(x)

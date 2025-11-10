@@ -26,7 +26,6 @@ static char rcsid[] = "$NetBSD: $";
 #include <math.h>
 #include <math_private.h>
 #include <libm-alias-ldouble.h>
-#include <math-use-builtins.h>
 
 _Float128
 __copysignl (_Float128 x, _Float128 y)

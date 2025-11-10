@@ -21,7 +21,6 @@
 #include <math.h>
 #include <math_private.h>
 #include <libm-alias-float.h>
-#include <math-use-builtins.h>
 #include <stdint.h>
 
 #define BIAS 0x7f

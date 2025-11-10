@@ -39,7 +39,6 @@
 #include <math_private.h>
 #include <math-underflow.h>
 #include <math-narrow-eval.h>
-#include <math-use-builtins.h>
 #include <math-svid-compat.h>
 #include <libm-alias-finite.h>
 #include <libm-alias-double.h>

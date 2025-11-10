@@ -19,7 +19,7 @@
    ISA, double support can be subsetted.  Only FMAF is enabled for this
    case.  */
 
-#include <sysdep.h>
+#include <isarev.h>
 
 #if __mips_isa_rev >= 6
 # ifdef __mips_single_float

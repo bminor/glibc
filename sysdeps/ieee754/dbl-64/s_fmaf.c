@@ -23,7 +23,6 @@
 #include <math-barriers.h>
 #include <fenv_private.h>
 #include <libm-alias-float.h>
-#include <math-use-builtins.h>
 
 /* This implementation relies on double being more than twice as
    precise as float and uses rounding to odd in order to avoid problems

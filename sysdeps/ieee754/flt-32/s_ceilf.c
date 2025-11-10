@@ -16,7 +16,6 @@
 #include <math.h>
 #include <math_private.h>
 #include <libm-alias-float.h>
-#include <math-use-builtins.h>
 
 float
 __ceilf (float x)

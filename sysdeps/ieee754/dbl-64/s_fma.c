@@ -30,7 +30,6 @@
 #include <libm-alias-double.h>
 #include <math-narrow-alias.h>
 #include <tininess.h>
-#include <math-use-builtins.h>
 
 /* This implementation uses rounding to odd to avoid problems with
    double rounding.  See a paper by Boldo and Melquiond:

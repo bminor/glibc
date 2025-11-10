@@ -23,7 +23,6 @@
 #include <math_private.h>
 #include <libm-alias-double.h>
 #include <fix-fp-int-convert-overflow.h>
-#include <math-use-builtins.h>
 
 /* For LP64, lround is an alias for llround.  */
 #ifndef _LP64

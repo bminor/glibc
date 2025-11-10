@@ -139,25 +139,35 @@ fabsf128 (_Float128 x)
 /* NB: Internal tests don't have access to internal symbols.  */
 # if !IS_IN (testsuite_internal) \
      && !(defined __FINITE_MATH_ONLY__ && __FINITE_MATH_ONLY__ > 0)
+/* NO_MATH_REDIRECT must be defined in the source implementing function,
+   FUNC, if FUNC is implemented as an alias of __FUNC or vice versa to
+   avoid redirecting FUNC to __FUNC.  */
+# include <math-use-builtins.h>
+/* NB: Do not redirect math builtin functions when they are inlined.  */
 #  ifndef NO_MATH_REDIRECT
 /* Declare some functions for use within GLIBC.  Compilers typically
    inline those functions as a single instruction.  Use an asm to
    avoid use of PLTs if it doesn't.  */
 #   define MATH_REDIRECT(FUNC, PREFIX, ARGS)			\
-  float (FUNC ## f) (ARGS (float)) asm (PREFIX #FUNC "f");	\
-  double (FUNC) (ARGS (double)) asm (PREFIX #FUNC );		\
+  float (NO_ ## FUNC ## f ## _BUILTIN) (ARGS (float))		\
+    asm (PREFIX #FUNC "f");					\
+  double (NO_ ## FUNC ## _BUILTIN) (ARGS (double))		\
+    asm (PREFIX #FUNC );					\
   MATH_REDIRECT_LDBL (FUNC, PREFIX, ARGS)			\
   MATH_REDIRECT_F128 (FUNC, PREFIX, ARGS)
+
 #   if defined __NO_LONG_DOUBLE_MATH 				\
        || __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 #    define MATH_REDIRECT_LDBL(FUNC, PREFIX, ARGS)
 #   else
-#    define MATH_REDIRECT_LDBL(FUNC, PREFIX, ARGS)			\
-  long double (FUNC ## l) (ARGS (long double)) asm (PREFIX #FUNC "l");
+#    define MATH_REDIRECT_LDBL(FUNC, PREFIX, ARGS)		  \
+  long double (NO_ ## FUNC ## l ## _BUILTIN) (ARGS (long double)) \
+    asm (PREFIX #FUNC "l");
 #   endif
 #   if __HAVE_DISTINCT_FLOAT128
-#    define MATH_REDIRECT_F128(FUNC, PREFIX, ARGS)			\
-  _Float128 (FUNC ## f128) (ARGS (_Float128)) asm (PREFIX #FUNC "f128");
+#    define MATH_REDIRECT_F128(FUNC, PREFIX, ARGS)		 \
+  _Float128 (NO_ ## FUNC ## f128 ## _BUILTIN) (ARGS (_Float128)) \
+    asm (PREFIX #FUNC "f128");
 #   else
 #    define MATH_REDIRECT_F128(FUNC, PREFIX, ARGS)
 #   endif

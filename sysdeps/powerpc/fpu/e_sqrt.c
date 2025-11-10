@@ -20,7 +20,6 @@
 #include <math_private.h>
 #include <fenv_libc.h>
 #include <libm-alias-finite.h>
-#include <math-use-builtins.h>
 
 double
 __ieee754_sqrt (double x)

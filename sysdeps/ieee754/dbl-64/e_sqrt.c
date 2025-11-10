@@ -40,7 +40,6 @@
 #include <math_private.h>
 #include <fenv_private.h>
 #include <libm-alias-finite.h>
-#include <math-use-builtins.h>
 
 /*********************************************************************/
 /* An ultimate sqrt routine. Given an IEEE double machine number x   */

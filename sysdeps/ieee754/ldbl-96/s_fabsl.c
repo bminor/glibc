@@ -18,7 +18,6 @@
 
 #include <math.h>
 #include <libm-alias-ldouble.h>
-#include <math-use-builtins.h>
 
 long double
 __fabsl (long double x)

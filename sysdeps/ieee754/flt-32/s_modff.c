@@ -19,7 +19,6 @@
 #include <math.h>
 #include <libm-alias-float.h>
 #include "math_config.h"
-#include <math-use-builtins-trunc.h>
 
 float
 __modff (float x, float *iptr)

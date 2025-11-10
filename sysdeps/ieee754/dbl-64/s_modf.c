@@ -19,7 +19,6 @@
 #include <math.h>
 #include <libm-alias-double.h>
 #include "math_config.h"
-#include <math-use-builtins-trunc.h>
 
 double
 __modf (double x, double *iptr)
