@@ -21,6 +21,11 @@ Major new features:
   platforms supporting _Float128) _Float128_t, introduced in TS
   18661-3:2015, have been added to <math.h>.
 
+* On Linux, the mseal function has been added.  It allows for sealing
+  memory mappings to prevent further changes during process execution,
+  such as changes to protection permissions, unmapping, relocation to
+  another location, or shrinking the size.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * Support for dumped heaps has been removed - malloc_set_state() now always

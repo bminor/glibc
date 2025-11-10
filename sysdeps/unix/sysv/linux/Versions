@@ -339,6 +339,9 @@ libc {
     cfsetispeed;
     cfsetspeed;
   }
+  GLIBC_2.43 {
+    mseal;
+  }
   GLIBC_PRIVATE {
     # functions used in other libraries
     __syscall_rt_sigqueueinfo;
