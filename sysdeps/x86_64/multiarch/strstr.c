@@ -31,19 +31,24 @@
   __hidden_ver1 (__strstr_generic, __GI_strstr, __strstr_generic);
 #endif
 
-#include "string/strstr.c"
-
 extern __typeof (__redirect_strstr) __strstr_sse2_unaligned attribute_hidden;
 extern __typeof (__redirect_strstr) __strstr_generic attribute_hidden;
 
+#include "string/strstr.c"
+
 #include "init-arch.h"
 
-/* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
-   ifunc symbol properly.  */
-extern __typeof (__redirect_strstr) __libc_strstr;
-libc_ifunc (__libc_strstr,
-	    HAS_ARCH_FEATURE (Fast_Unaligned_Load)
-	    ? __strstr_sse2_unaligned
-	    : __strstr_generic)
+static inline void *
+IFUNC_SELECTOR (void)
+{
+  const struct cpu_features *cpu_features = __get_cpu_features ();
+
+  if (CPU_FEATURES_ARCH_P (cpu_features, Fast_Unaligned_Load))
+    return __strstr_sse2_unaligned;
+
+  return __strstr_generic;
+}
+
+libc_ifunc_redirected (__redirect_strstr, __libc_strstr, IFUNC_SELECTOR ());
 #undef strstr
 strong_alias (__libc_strstr, strstr)
