@@ -36,6 +36,18 @@ do_test_1 (const char *name, unsigned int loop, int (*prepare) (void),
   unsigned int i;
   unsigned int naborts = 0;
   unsigned int failed = 0;
+
+  /* Iterate LOOP number of times, calling the same function over
+     and over again in an attempt to detect the following failure
+     modes:
+
+     1. Aborting instruction on the hot path.
+     2. Number of instructions executed exceeds maximum.
+     3. Memory reads or writes exceed maximum.
+
+     The function getting bigger may increase the abort rate due
+     to external events, despite not triggering #2 above, and may
+     need adjusting the abort rate failure test below.  */
   for (i = 0; i < loop; i++)
     {
       failed |= function ();
@@ -56,10 +68,12 @@ do_test_1 (const char *name, unsigned int loop, int (*prepare) (void),
 
   if (naborts)
     {
-      /* NB: Low single digit (<= 5%) noise-level aborts are normal for
-	 TSX.  */
+      /* Low single digit (<= 5%) noise-level aborts are normal for TSX
+	 for reasons that are outside of the library's control.
+	 In pre-commit CI on an E5-2698 v4 we sometimes see ~5% aborts.
+	 Set the trip point to 6%.  */
       double rate = 100 * ((double) naborts) / ((double) loop);
-      if (rate > 5)
+      if (rate > 6)
 	FAIL_EXIT1 ("TSX abort rate: %.2f%% (%d out of %d)",
 		    rate, naborts, loop);
     }
