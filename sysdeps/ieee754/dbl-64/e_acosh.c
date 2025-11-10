@@ -119,7 +119,7 @@ __ieee754_acosh (double x)
 			      + z4
 				    * ((cl[5] + z * cl[6])
 				       + z2 * (cl[7] + z * cl[8]))));
-      double eps = ds * 0x1.04p-50 - 0x1p-104 * sh;
+      double eps = ds * 0x1.22p-50 - 0x1p-104 * sh;
       ds += sl;
       double lb = sh + (ds - eps), ub = sh + (ds + eps);
       if (lb == ub)

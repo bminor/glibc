@@ -219,6 +219,7 @@ acosh 0x1.1b836p+0
 acosh 0x1.07c956p+0
 acosh 0x1.1808eep+0
 acosh 0x1.1052c4p+0
+acosh 0x1.0800751d9facbp+0
 # the next value generates larger error bounds on x86_64 (ldbl-96)
 acosh 0x1.1ecbdf374bce01cap+0
 # the next value generates larger error bounds on x86_64 (binary128)
