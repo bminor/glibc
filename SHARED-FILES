@@ -17,6 +17,7 @@ gnulib:
   COPYINGv2
   COPYINGv3
   COPYING.LESSERv2
+  doc/fdl-1.3.texi
   argp/argp-ba.c
   argp/argp-ba.c
   argp/argp-eexst.c
