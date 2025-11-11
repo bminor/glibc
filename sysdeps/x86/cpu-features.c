@@ -1129,6 +1129,13 @@ disable_tsx:
 	  cpu_features->preferred[index_arch_AVX_Fast_Unaligned_Load]
 	    &= ~bit_arch_AVX_Fast_Unaligned_Load;
 	}
+      else if (model == 0x7)
+	{
+	  /* Benchmarks indicate evex can be more profitable on Hygon
+	     hardware than AVX512.  */
+	  cpu_features->preferred[index_arch_Prefer_No_AVX512]
+	    |= bit_arch_Prefer_No_AVX512;
+	}
     }
   else
     {
