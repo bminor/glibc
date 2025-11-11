@@ -38,8 +38,7 @@ Relative error: 1.9 * 2^-26 (before rounding.)
 float
 __log2f (float x)
 {
-  /* double_t for better performance on targets with FLT_EVAL_METHOD==2.  */
-  double_t z, r, r2, p, y, y0, invc, logc;
+  double z, r, r2, p, y, y0, invc, logc;
   uint32_t ix, iz, top, tmp;
   int k, i;
 
@@ -73,11 +72,11 @@ __log2f (float x)
   k = (int32_t) tmp >> 23; /* arithmetic shift */
   invc = T[i].invc;
   logc = T[i].logc;
-  z = (double_t) asfloat (iz);
+  z = asfloat (iz);
 
   /* log2(x) = log1p(z/c-1)/ln2 + log2(c) + k */
   r = z * invc - 1;
-  y0 = logc + (double_t) k;
+  y0 = logc + (double) k;
 
   /* Pipelined polynomial evaluation to approximate log1p(r)/ln2.  */
   r2 = r * r;

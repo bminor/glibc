@@ -34,9 +34,9 @@
 #define C(i) __exp_data.exp10_poly[i]
 
 static double
-special_case (uint64_t sbits, double_t tmp, uint64_t ki)
+special_case (uint64_t sbits, double tmp, uint64_t ki)
 {
-  double_t scale, y;
+  double scale, y;
 
   if ((ki & 0x80000000) == 0)
     {
@@ -58,8 +58,8 @@ special_case (uint64_t sbits, double_t tmp, uint64_t ki)
 	 range to avoid double rounding that can cause 0.5+E/2 ulp error where
 	 E is the worst-case ulp error outside the subnormal range.  So this
 	 is only useful if the goal is better than 1 ulp worst-case error.  */
-      double_t lo = scale - y + scale * tmp;
-      double_t hi = 1.0 + y;
+      double lo = scale - y + scale * tmp;
+      double hi = 1.0 + y;
       lo = 1.0 - hi + y + lo;
       y = math_narrow_eval (hi + lo) - 1.0;
       /* Avoid -0.0 with downward rounding.  */
@@ -98,8 +98,8 @@ __exp10 (double x)
     }
 
   /* Reduce x: z = x * N / log10(2), k = round(z).  */
-  double_t z = __exp_data.invlog10_2N * x;
-  double_t kd;
+  double z = __exp_data.invlog10_2N * x;
+  double kd;
   uint64_t ki;
 #if TOINT_INTRINSICS
   kd = roundtoint (z);
@@ -111,7 +111,7 @@ __exp10 (double x)
 #endif
 
   /* r = x - k * log10(2), r in [-0.5, 0.5].  */
-  double_t r = x;
+  double r = x;
   r = __exp_data.neglog10_2hiN * kd + r;
   r = __exp_data.neglog10_2loN * kd + r;
 
@@ -124,12 +124,12 @@ __exp10 (double x)
   uint64_t u = __exp_data.tab[i + 1];
   uint64_t sbits = u + e;
 
-  double_t tail = asdouble (__exp_data.tab[i]);
+  double tail = asdouble (__exp_data.tab[i]);
 
   /* 2^(r/N) ~= 1 + r * Poly(r).  */
-  double_t r2 = r * r;
-  double_t p = C (0) + r * C (1);
-  double_t y = C (2) + r * C (3);
+  double r2 = r * r;
+  double p = C (0) + r * C (1);
+  double y = C (2) + r * C (3);
   y = y + r2 * C (4);
   y = p + r2 * y;
   y = tail + y * r;
@@ -140,7 +140,7 @@ __exp10 (double x)
   /* Assemble components:
      y  = 2^(r/N) * 2^(k/N)
        ~= (y + 1) * s.  */
-  double_t s = asdouble (sbits);
+  double s = asdouble (sbits);
   return s * y + s;
 }
 

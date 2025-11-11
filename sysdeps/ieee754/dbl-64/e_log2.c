@@ -42,8 +42,7 @@ top16 (double x)
 double
 __log2 (double x)
 {
-  /* double_t for better performance on targets with FLT_EVAL_METHOD==2.  */
-  double_t z, r, r2, r4, y, invc, logc, kd, hi, lo, t1, t2, t3, p;
+  double z, r, r2, r4, y, invc, logc, kd, hi, lo, t1, t2, t3, p;
   uint64_t ix, iz, tmp;
   uint32_t top;
   int k, i;
@@ -64,7 +63,7 @@ __log2 (double x)
       hi = r * InvLn2hi;
       lo = r * InvLn2lo + __builtin_fma (r, InvLn2hi, -hi);
 #else
-      double_t rhi, rlo;
+      double rhi, rlo;
       rhi = asdouble (asuint64 (r) & -1ULL << 32);
       rlo = r - rhi;
       hi = rhi * InvLn2hi;
@@ -105,7 +104,7 @@ __log2 (double x)
   invc = T[i].invc;
   logc = T[i].logc;
   z = asdouble (iz);
-  kd = (double_t) k;
+  kd = (double) k;
 
   /* log2(x) = log2(z/c) + log2(c) + k.  */
   /* r ~= z/c - 1, |r| < 1/(2*N).  */
@@ -115,7 +114,7 @@ __log2 (double x)
   t1 = r * InvLn2hi;
   t2 = r * InvLn2lo + __builtin_fma (r, InvLn2hi, -t1);
 #else
-  double_t rhi, rlo;
+  double rhi, rlo;
   /* rounding error: 0x1p-55/N + 0x1p-65.  */
   r = (z - T2[i].chi - T2[i].clo) * invc;
   rhi = asdouble (asuint64 (r) & -1ULL << 32);

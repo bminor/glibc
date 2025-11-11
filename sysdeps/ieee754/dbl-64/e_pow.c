@@ -48,11 +48,10 @@ top12 (double x)
 /* Compute y+TAIL = log(x) where the rounded result is y and TAIL has about
    additional 15 bits precision.  IX is the bit representation of x, but
    normalized in the subnormal range using the sign bit for the exponent.  */
-static inline double_t
-log_inline (uint64_t ix, double_t *tail)
+static inline double
+log_inline (uint64_t ix, double *tail)
 {
-  /* double_t for better performance on targets with FLT_EVAL_METHOD==2.  */
-  double_t z, r, y, invc, logc, logctail, kd, hi, t1, t2, lo, lo1, lo2, p;
+  double z, r, y, invc, logc, logctail, kd, hi, t1, t2, lo, lo1, lo2, p;
   uint64_t iz, tmp;
   int k, i;
 
@@ -64,7 +63,7 @@ log_inline (uint64_t ix, double_t *tail)
   k = (int64_t) tmp >> 52; /* arithmetic shift */
   iz = ix - (tmp & 0xfffULL << 52);
   z = asdouble (iz);
-  kd = (double_t) k;
+  kd = (double) k;
 
   /* log(x) = k*Ln2 + log(c) + log1p(z/c-1).  */
   invc = T[i].invc;
@@ -77,10 +76,10 @@ log_inline (uint64_t ix, double_t *tail)
   r = __builtin_fma (z, invc, -1.0);
 #else
   /* Split z such that rhi, rlo and rhi*rhi are exact and |rlo| <= |r|.  */
-  double_t zhi = asdouble ((iz + (1ULL << 31)) & (-1ULL << 32));
-  double_t zlo = z - zhi;
-  double_t rhi = zhi * invc - 1.0;
-  double_t rlo = zlo * invc;
+  double zhi = asdouble ((iz + (1ULL << 31)) & (-1ULL << 32));
+  double zlo = z - zhi;
+  double rhi = zhi * invc - 1.0;
+  double rlo = zlo * invc;
   r = rhi + rlo;
 #endif
 
@@ -91,7 +90,7 @@ log_inline (uint64_t ix, double_t *tail)
   lo2 = t1 - t2 + r;
 
   /* Evaluation is optimized assuming superscalar pipelined execution.  */
-  double_t ar, ar2, ar3, lo3, lo4;
+  double ar, ar2, ar3, lo3, lo4;
   ar = A[0] * r; /* A[0] = -0.5.  */
   ar2 = r * ar;
   ar3 = r * ar2;
@@ -101,8 +100,8 @@ log_inline (uint64_t ix, double_t *tail)
   lo3 = __builtin_fma (ar, r, -ar2);
   lo4 = t2 - hi + ar2;
 #else
-  double_t arhi = A[0] * rhi;
-  double_t arhi2 = rhi * arhi;
+  double arhi = A[0] * rhi;
+  double arhi2 = rhi * arhi;
   hi = t2 + arhi2;
   lo3 = rlo * (ar + arhi);
   lo4 = t2 - hi + arhi2;
@@ -138,9 +137,9 @@ log_inline (uint64_t ix, double_t *tail)
    adjustment of scale, positive k here means the result may overflow and
    negative k means the result may underflow.  */
 static inline double
-specialcase (double_t tmp, uint64_t sbits, uint64_t ki)
+specialcase (double tmp, uint64_t sbits, uint64_t ki)
 {
-  double_t scale, y;
+  double scale, y;
 
   if ((ki & 0x80000000) == 0)
     {
@@ -167,7 +166,7 @@ specialcase (double_t tmp, uint64_t sbits, uint64_t ki)
 	 range to avoid double rounding that can cause 0.5+E/2 ulp error where
 	 E is the worst-case ulp error outside the subnormal range.  So this
 	 is only useful if the goal is better than 1 ulp worst-case error.  */
-      double_t hi, lo, one = 1.0;
+      double hi, lo, one = 1.0;
       if (y < 0.0)
 	one = -1.0;
       lo = scale - y + scale * tmp;
@@ -193,8 +192,7 @@ exp_inline (double x, double xtail, uint32_t sign_bias)
 {
   uint32_t abstop;
   uint64_t ki, idx, top, sbits;
-  /* double_t for better performance on targets with FLT_EVAL_METHOD==2.  */
-  double_t kd, z, r, r2, scale, tail, tmp;
+  double kd, z, r, r2, scale, tail, tmp;
 
   abstop = top12 (x) & 0x7ff;
   if (__glibc_unlikely (abstop - top12 (0x1p-54)
@@ -204,7 +202,7 @@ exp_inline (double x, double xtail, uint32_t sign_bias)
 	{
 	  /* Avoid spurious underflow for tiny x.  */
 	  /* Note: 0 is common input.  */
-	  double_t one = WANT_ROUNDING ? 1.0 + x : 1.0;
+	  double one = WANT_ROUNDING ? 1.0 + x : 1.0;
 	  return sign_bias ? -one : one;
 	}
       if (abstop >= top12 (1024.0))
@@ -319,7 +317,7 @@ __pow (double x, double y)
 	}
       if (__glibc_unlikely (zeroinfnan (ix)))
 	{
-	  double_t x2 = x * x;
+	  double x2 = x * x;
 	  if (ix >> 63 && checkint (iy) == 1)
 	    {
 	      x2 = -x2;
@@ -368,17 +366,17 @@ __pow (double x, double y)
 	}
     }
 
-  double_t lo;
-  double_t hi = log_inline (ix, &lo);
-  double_t ehi, elo;
+  double lo;
+  double hi = log_inline (ix, &lo);
+  double ehi, elo;
 #ifdef __FP_FAST_FMA
   ehi = y * hi;
   elo = y * lo + __builtin_fma (y, hi, -ehi);
 #else
-  double_t yhi = asdouble (iy & -1ULL << 27);
-  double_t ylo = y - yhi;
-  double_t lhi = asdouble (asuint64 (hi) & -1ULL << 27);
-  double_t llo = hi - lhi + lo;
+  double yhi = asdouble (iy & -1ULL << 27);
+  double ylo = y - yhi;
+  double lhi = asdouble (asuint64 (hi) & -1ULL << 27);
+  double llo = hi - lhi + lo;
   ehi = yhi * lhi;
   elo = ylo * lhi + y * llo; /* |elo| < |ehi| * 2^-25.  */
 #endif

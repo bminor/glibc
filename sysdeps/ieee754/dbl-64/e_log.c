@@ -47,8 +47,7 @@ double
 SECTION
 __log (double x)
 {
-  /* double_t for better performance on targets with FLT_EVAL_METHOD==2.  */
-  double_t w, z, r, r2, r3, y, invc, logc, kd, hi, lo;
+  double w, z, r, r2, r3, y, invc, logc, kd, hi, lo;
   uint64_t ix, iz, tmp;
   uint32_t top;
   int k, i;
@@ -72,8 +71,8 @@ __log (double x)
 			+ r3 * (B[7] + r * B[8] + r2 * B[9] + r3 * B[10])));
       /* Worst-case error is around 0.507 ULP.  */
       w = r * 0x1p27;
-      double_t rhi = r + w - w;
-      double_t rlo = r - rhi;
+      double rhi = r + w - w;
+      double rlo = r - rhi;
       w = rhi * rhi * B[0]; /* B[0] == -0.5.  */
       hi = r + w;
       lo = r - hi + w;
@@ -116,7 +115,7 @@ __log (double x)
   /* rounding error: 0x1p-55/N + 0x1p-66.  */
   r = (z - T2[i].chi - T2[i].clo) * invc;
 #endif
-  kd = (double_t) k;
+  kd = (double) k;
 
   /* hi + lo = r + log(c) + k*Ln2.  */
   w = kd * Ln2hi + logc;

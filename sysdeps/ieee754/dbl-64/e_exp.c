@@ -44,9 +44,9 @@
    adjustment of scale, positive k here means the result may overflow and
    negative k means the result may underflow.  */
 static inline double
-specialcase (double_t tmp, uint64_t sbits, uint64_t ki)
+specialcase (double tmp, uint64_t sbits, uint64_t ki)
 {
-  double_t scale, y;
+  double scale, y;
 
   if ((ki & 0x80000000) == 0)
     {
@@ -66,7 +66,7 @@ specialcase (double_t tmp, uint64_t sbits, uint64_t ki)
 	 range to avoid double rounding that can cause 0.5+E/2 ulp error where
 	 E is the worst-case ulp error outside the subnormal range.  So this
 	 is only useful if the goal is better than 1 ulp worst-case error.  */
-      double_t hi, lo;
+      double hi, lo;
       lo = scale - y + scale * tmp;
       hi = 1.0 + y;
       lo = 1.0 - hi + y + lo;
@@ -98,8 +98,7 @@ __exp (double x)
 {
   uint32_t abstop;
   uint64_t ki, idx, top, sbits;
-  /* double_t for better performance on targets with FLT_EVAL_METHOD==2.  */
-  double_t kd, z, r, r2, scale, tail, tmp;
+  double kd, z, r, r2, scale, tail, tmp;
 
   abstop = top12 (x) & 0x7ff;
   if (__glibc_unlikely (abstop - top12 (0x1p-54)

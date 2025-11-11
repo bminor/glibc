@@ -48,14 +48,14 @@
 /* Round x to nearest int in all rounding modes, ties have to be rounded
    consistently with converttoint so the results match.  If the result
    would be outside of [-2^31, 2^31-1] then the semantics is unspecified.  */
-static inline double_t
-roundtoint (double_t x);
+static inline double
+roundtoint (double x);
 
 /* Convert x to nearest int in all rounding modes, ties have to be rounded
    consistently with roundtoint.  If the result is not representible in an
    int32_t then the semantics is unspecified.  */
 static inline int32_t
-converttoint (double_t x);
+converttoint (double x);
 #endif
 
 #ifndef ROUNDEVEN_INTRINSICS

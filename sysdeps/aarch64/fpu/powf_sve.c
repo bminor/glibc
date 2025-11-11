@@ -137,7 +137,7 @@ powf_specialcase (float x, float y, float z)
     }
   if (__glibc_unlikely (zeroinfnan (ix)))
     {
-      float_t x2 = x * x;
+      float x2 = x * x;
       if (ix & 0x80000000 && checkint (iy) == 1)
 	x2 = -x2;
       return iy & 0x80000000 ? 1 / x2 : x2;

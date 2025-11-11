@@ -54,10 +54,9 @@ __expf (float x)
 {
   uint32_t abstop;
   uint64_t ki, t;
-  /* double_t for better performance on targets with FLT_EVAL_METHOD==2.  */
-  double_t kd, xd, z, r, r2, y, s;
+  double kd, xd, z, r, r2, y, s;
 
-  xd = (double_t) x;
+  xd = x;
   abstop = top12 (x) & 0x7ff;
   if (__glibc_unlikely (abstop >= top12 (88.0f)))
     {
