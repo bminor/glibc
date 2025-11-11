@@ -199,10 +199,6 @@ $(objpfx)rcrt0.o: $(objpfx)static-start.o $(objpfx)abi-note.o $(objpfx)init.o
 
 endif
 
-ifeq (hurd, $(subdir))
-sysdep_routines += cthreads
-endif
-
 ifeq (elf, $(subdir))
 sysdep-dl-routines += dl-tls-initialized
 endif

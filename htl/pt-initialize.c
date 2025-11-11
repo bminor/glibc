@@ -21,15 +21,16 @@
 
 #include <pt-internal.h>
 #include <set-hooks.h>
+#include <libio/libio.h>
 
 #include <pthread.h>
 #include <pthread-functions.h>
 
 #if IS_IN (libpthread)
 static const struct pthread_functions pthread_functions = {
-  .ptr__IO_flockfile = _cthreads_flockfile,
-  .ptr__IO_funlockfile = _cthreads_funlockfile,
-  .ptr__IO_ftrylockfile = _cthreads_ftrylockfile,
+  .ptr__IO_flockfile = _IO_flockfile,
+  .ptr__IO_funlockfile = _IO_funlockfile,
+  .ptr__IO_ftrylockfile = _IO_ftrylockfile,
 };
 #endif /* IS_IN (libpthread) */
 

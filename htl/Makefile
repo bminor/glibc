@@ -35,7 +35,6 @@ libpthread-routines := \
   pt-getname-np \
   pt-setname-np \
   cancellation \
-  cthreads-compat \
   herrno \
   $(SYSDEPS) \
   # libpthread-routine

@@ -21,10 +21,6 @@
 
 #include <pthread.h>
 
-void _cthreads_flockfile (FILE *);
-void _cthreads_funlockfile (FILE *);
-int _cthreads_ftrylockfile (FILE *);
-
 /* Data type shared with libc.  The libc uses it to pass on calls to
    the thread functions.  Wine pokes directly into this structure,
    so if possible avoid breaking it and append new hooks to the end.  */

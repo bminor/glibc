@@ -2748,15 +2748,10 @@ GLIBC_2.9 ns_name_skip F
 GLIBC_2.9 ns_name_uncompress F
 GLIBC_2.9 ns_name_unpack F
 GLIBC_2.9 pipe2 F
-HURD_CTHREADS_0.3 __cthread_getspecific F
-HURD_CTHREADS_0.3 __cthread_keycreate F
-HURD_CTHREADS_0.3 __cthread_setspecific F
 HURD_CTHREADS_0.3 __mutex_init F
 HURD_CTHREADS_0.3 __mutex_lock F
-HURD_CTHREADS_0.3 __mutex_lock_solid F
 HURD_CTHREADS_0.3 __mutex_trylock F
 HURD_CTHREADS_0.3 __mutex_unlock F
-HURD_CTHREADS_0.3 __mutex_unlock_solid F
 HURD_CTHREADS_0.3 __pthread_detach F
 HURD_CTHREADS_0.3 __pthread_getattr_np F
 HURD_CTHREADS_0.3 __spin_lock F

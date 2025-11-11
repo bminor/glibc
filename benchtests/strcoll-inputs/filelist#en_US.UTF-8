@@ -11696,7 +11696,6 @@ spin-lock.h
 spin-lock.c
 mig-dealloc.c
 errsystems.awk
-mutex-solid.c
 Machrules
 lock-intern.h
 errorlib.h

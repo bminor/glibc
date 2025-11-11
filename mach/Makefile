@@ -22,7 +22,7 @@ include ../Makeconfig
 headers = mach_init.h mach.h mach_error.h mach-shortcuts.h mach/mach_traps.h \
 	  $(interface-headers) mach/mach.h mach/mig_support.h mach/error.h \
 	  $(lock-headers) machine-sp.h bits/mach/param.h
-lock = spin-solid spin-lock mutex-init mutex-solid
+lock = spin-solid spin-lock mutex-init
 lock-headers = lock-intern.h spin-lock.h
 routines = $(mach-syscalls) $(mach-shortcuts) \
 	   mach_init mig_strncpy mig_strlen mig_memcpy msg \

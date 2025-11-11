@@ -169,16 +169,10 @@ libc_hidden_proto (__pthread_setcanceltype);
 extern int __pthread_sigmask (int, const sigset_t *, sigset_t *);
 libc_hidden_proto (__pthread_sigmask);
 
-typedef struct __cthread *__cthread_t;
-typedef int __cthread_key_t;
-typedef void *	(*__cthread_fn_t)(void *__arg);
-
-__cthread_t __cthread_fork (__cthread_fn_t, void *);
 int __pthread_create (pthread_t *newthread,
 		      const pthread_attr_t *attr,
 		      void *(*start_routine) (void *), void *arg);
 
-void __cthread_detach (__cthread_t);
 int __pthread_detach (pthread_t __threadp);
 libc_hidden_proto (__pthread_detach)
 void __pthread_exit (void *value) __attribute__ ((__noreturn__));
@@ -194,9 +188,6 @@ int __pthread_clockjoin_np (pthread_t __th, void **__thread_return,
                                  clockid_t __clockid,
 				 const struct timespec *__abstime);
 libc_hidden_proto (__pthread_clockjoin_np)
-int __cthread_keycreate (__cthread_key_t *);
-int __cthread_getspecific (__cthread_key_t, void **);
-int __cthread_setspecific (__cthread_key_t, void *);
 int __pthread_key_create (pthread_key_t *key, void (*destr) (void *));
 libc_hidden_proto (__pthread_key_create)
 void *__pthread_getspecific (pthread_key_t key);

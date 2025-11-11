@@ -317,17 +317,6 @@ libpthread {
     __errno_location; __h_errno_location;
   }
   GLIBC_2.12 {
-    cthread_detach;
-    cthread_fork;
-    cthread_keycreate;
-    cthread_getspecific;
-    cthread_setspecific;
-    __mutex_lock_solid;
-    __mutex_unlock_solid;
-    _cthreads_flockfile;
-    _cthreads_ftrylockfile;
-    _cthreads_funlockfile;
-
     flockfile; ftrylockfile; funlockfile;
 
     pthread_atfork;
@@ -362,12 +351,7 @@ libpthread {
   GLIBC_PRIVATE {
     __pthread_initialize_minimal;
 
-    __cthread_detach;
-    __cthread_fork;
     __pthread_create;
-    __cthread_keycreate;
-    __cthread_getspecific;
-    __cthread_setspecific;
     __pthread_enable_asynccancel;
     __pthread_disable_asynccancel;
   }
