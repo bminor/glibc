@@ -19,6 +19,7 @@
 
 #include "tst-sme-skeleton.c"
 
+#include <signal.h>
 #include <support/xsched.h>
 
 static int
