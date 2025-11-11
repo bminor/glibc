@@ -22,7 +22,7 @@
 #include <clone3.h>
 
 #include <errno.h>
-#include <sys/wait.h>
+#include <signal.h>
 #include <support/xsched.h>
 
 /* Since clone3 is not a public symbol, we link this test explicitly
