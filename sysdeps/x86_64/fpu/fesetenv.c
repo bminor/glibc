@@ -104,7 +104,7 @@ __fesetenv (const fenv_t *envp)
       temp.__mxcsr = envp->__mxcsr;
     }
 
-  asm volatile ("fldenv %0" : "=m" (temp));
+  asm volatile ("fldenv %0" : : "m" (temp));
   ldmxcsr_inline_asm (&temp.__mxcsr);
 
   /* Success.  */
