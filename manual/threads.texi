@@ -23,8 +23,15 @@ POSIX threads.
 This section describes the @glibcadj{} ISO C threads implementation.
 To have a deeper understanding of this API, it is strongly recommended
 to read ISO/IEC 9899:2011, section 7.26, in which ISO C threads were
-originally specified.  All types and function prototypes are declared
-in the header file @file{threads.h}.
+originally specified.
+
+All types and function prototypes are declared in the header file
+@file{threads.h}.  When compiling for C, some functionality is also
+available in @file{stdlib.h}.
+
+It is recommended that GNU systems use the functionality in
+@file{pthread.h} instead of @file{thread.h}, as they are more portable
+between C and C++.
 
 @menu
 * ISO C Threads Return Values:: Symbolic constants that represent a
@@ -203,11 +210,17 @@ called once in the presence of multiple, potentially calling threads.
 @deftp {Data Type} once_flag
 @standards{C11, threads.h}
 A complete object type capable of holding a flag used by @code{call_once}.
+
+As of C23, @code{once_flag} is also defined in @file{stdlib.h},
+but only for C, not for C++.
 @end deftp
 
 @defvr Macro ONCE_FLAG_INIT
 @standards{C11, threads.h}
 This value is used to initialize an object of type @code{once_flag}.
+
+As of C23, @code{ONCE_FLAG_INIT} is also defined in @file{stdlib.h},
+but only for C, not for C++.
 @end defvr
 
 @deftypefun void call_once (once_flag *@var{flag}, void (*@var{func}) (void))
