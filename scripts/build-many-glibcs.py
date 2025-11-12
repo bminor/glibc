@@ -33,6 +33,10 @@ check out (<component>-<version), for 'checkout', or, for actions
 other than 'checkout' and 'bot-cycle', name configurations for which
 compilers or glibc are to be built.
 
+It is possible to override the URL used to download tarballs during
+the checkout process using environment variable FTP_GNU_ORG_MIRROR
+that will replace default URL 'https://ftp.gnu.org'.
+
 The 'list-compilers' command prints the name of each available
 compiler configuration, without building anything.  The 'list-glibcs'
 command prints the name of each glibc compiler configuration, followed
@@ -1019,20 +1023,23 @@ class Context(object):
         tarball."""
         if update:
             return
-        url_map = {'binutils': 'https://ftp.gnu.org/gnu/binutils/binutils-%(version)s.tar.bz2',
-                   'gcc': 'https://ftp.gnu.org/gnu/gcc/gcc-%(version)s/gcc-%(version)s.tar.gz',
-                   'gmp': 'https://ftp.gnu.org/gnu/gmp/gmp-%(version)s.tar.xz',
-                   'linux': 'https://www.kernel.org/pub/linux/kernel/v%(major)s.x/linux-%(version)s.tar.xz',
-                   'mpc': 'https://ftp.gnu.org/gnu/mpc/mpc-%(version)s.tar.gz',
-                   'mpfr': 'https://ftp.gnu.org/gnu/mpfr/mpfr-%(version)s.tar.xz',
-                   'mig': 'https://ftp.gnu.org/gnu/mig/mig-%(version)s.tar.bz2',
-                   'gnumach': 'https://ftp.gnu.org/gnu/gnumach/gnumach-%(version)s.tar.bz2',
-                   'hurd': 'https://ftp.gnu.org/gnu/hurd/hurd-%(version)s.tar.bz2'}
+        url_map = {
+            'binutils': '%(baseurl)s/gnu/binutils/binutils-%(version)s.tar.bz2',
+            'gcc': '%(baseurl)s/gnu/gcc/gcc-%(version)s/gcc-%(version)s.tar.gz',
+            'gmp': '%(baseurl)s/gnu/gmp/gmp-%(version)s.tar.xz',
+            'linux': 'https://www.kernel.org/pub/linux/kernel/v%(major)s.x/linux-%(version)s.tar.xz',
+            'mpc': '%(baseurl)s/gnu/mpc/mpc-%(version)s.tar.gz',
+            'mpfr': '%(baseurl)s/gnu/mpfr/mpfr-%(version)s.tar.xz',
+            'mig': '%(baseurl)s/gnu/mig/mig-%(version)s.tar.bz2',
+            'gnumach': '%(baseurl)s/gnu/gnumach/gnumach-%(version)s.tar.bz2',
+            'hurd': '%(baseurl)s/gnu/hurd/hurd-%(version)s.tar.bz2',
+        }
         if component not in url_map:
             print('error: component %s coming from tarball' % component)
             exit(1)
         version_major = version.split('.')[0]
-        url = url_map[component] % {'version': version, 'major': version_major}
+        baseurl = os.environ.get('FTP_GNU_ORG_MIRROR' , 'https://ftp.gnu.org').rstrip('/')
+        url = url_map[component] % {'version': version, 'major': version_major, 'baseurl': baseurl}
         filename = os.path.join(self.srcdir, url.split('/')[-1])
         response = urllib.request.urlopen(url)
         data = response.read()
