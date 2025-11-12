@@ -37,6 +37,10 @@ It is possible to override the URL used to download tarballs during
 the checkout process using environment variable FTP_GNU_ORG_MIRROR
 that will replace default URL 'https://ftp.gnu.org'.
 
+It is also possible to use different Git URL for cloning sources
+from a Git repository using a <component>_GIT_MIRROR environment
+variable (<component> should be upper case, e.g. GLIBC).
+
 The 'list-compilers' command prints the name of each available
 compiler configuration, without building anything.  The 'list-glibcs'
 command prints the name of each glibc compiler configuration, followed
@@ -108,6 +112,23 @@ except:
 
     subprocess.run = _run
 
+def get_git_url(component):
+    """Return Git URL for the given component. Allow overrides via env var."""
+    git_urls = {
+        'binutils': 'https://sourceware.org/git/binutils-gdb.git',
+        'glibc': 'https://sourceware.org/git/glibc.git',
+        'gcc': 'https://gcc.gnu.org/git/gcc.git',
+        'gnumach': 'git://git.savannah.gnu.org/hurd/gnumach.git',
+        'mig': 'git://git.savannah.gnu.org/hurd/mig.git',
+        'hurd': 'git://git.savannah.gnu.org/hurd/hurd.git',
+    }
+    env_var = '%s_GIT_MIRROR' % component.upper()
+    if env_var in os.environ:
+        return os.environ[env_var]
+    if component in git_urls:
+        return git_urls[component]
+    else:
+        raise RuntimeError('unknown component')
 
 class Context(object):
     """The global state associated with builds in a given directory."""
@@ -905,7 +926,7 @@ class Context(object):
         """Check out the given version of the given component from version
         control.  Return a revision identifier."""
         if component == 'binutils':
-            git_url = 'https://sourceware.org/git/binutils-gdb.git'
+            git_url = get_git_url(component)
             if version == 'mainline':
                 git_branch = 'master'
             else:
@@ -919,7 +940,7 @@ class Context(object):
                 branch = 'releases/gcc-%s' % version
             return self.gcc_checkout(branch, update)
         elif component == 'glibc':
-            git_url = 'https://sourceware.org/git/glibc.git'
+            git_url = get_git_url(component)
             if version == 'mainline':
                 git_branch = 'master'
             else:
@@ -928,21 +949,21 @@ class Context(object):
             self.fix_glibc_timestamps()
             return r
         elif component == 'gnumach':
-            git_url = 'git://git.savannah.gnu.org/hurd/gnumach.git'
+            git_url = get_git_url(component)
             git_branch = 'master'
             r = self.git_checkout(component, git_url, git_branch, update)
             subprocess.run(['autoreconf', '-i'],
                            cwd=self.component_srcdir(component), check=True)
             return r
         elif component == 'mig':
-            git_url = 'git://git.savannah.gnu.org/hurd/mig.git'
+            git_url = get_git_url(component)
             git_branch = 'master'
             r = self.git_checkout(component, git_url, git_branch, update)
             subprocess.run(['autoreconf', '-i'],
                            cwd=self.component_srcdir(component), check=True)
             return r
         elif component == 'hurd':
-            git_url = 'git://git.savannah.gnu.org/hurd/hurd.git'
+            git_url = get_git_url(component)
             git_branch = 'master'
             r = self.git_checkout(component, git_url, git_branch, update)
             subprocess.run(['autoconf'],
@@ -958,8 +979,20 @@ class Context(object):
             subprocess.run(['git', 'remote', 'prune', 'origin'],
                            cwd=self.component_srcdir(component), check=True)
             if self.replace_sources:
+                subprocess.run(['git', 'remote', 'set-url', 'origin', git_url],
+                               cwd=self.component_srcdir(component), check=True)
                 subprocess.run(['git', 'clean', '-dxfq'],
                                cwd=self.component_srcdir(component), check=True)
+            else:
+                r = subprocess.run(['git', 'remote', 'get-url', 'origin'],
+                                   cwd=self.component_srcdir(component),
+                                   stdout=subprocess.PIPE,
+                                   check=True, universal_newlines=True).stdout
+                if r.rstrip() != git_url:
+                    print('error: origin url has changed from %s to %s, '
+                          'use --replace-sources to check out again' %
+                          (r.rstrip(), git_url))
+                    exit(1)
             subprocess.run(['git', 'pull', '-q'],
                            cwd=self.component_srcdir(component), check=True)
         else:
@@ -1008,7 +1041,7 @@ class Context(object):
             shutil.rmtree(self.component_srcdir('gcc'))
             update = False
         if not update:
-            self.git_checkout('gcc', 'https://gcc.gnu.org/git/gcc.git',
+            self.git_checkout('gcc', get_git_url('gcc'),
                               branch, update)
         subprocess.run(['contrib/gcc_update', '--silent'],
                        cwd=self.component_srcdir('gcc'), check=True)
