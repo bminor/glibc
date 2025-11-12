@@ -56,9 +56,11 @@ import sys
 import time
 import urllib.request
 
+REQUIRED_TOOLS = {}
+
 # This is a list of system utilities that are expected to be available
 # to this script, and, if a non-zero version is included, the minimum
-# version required to work with this sccript.
+# version required to work with this script.
 def get_list_of_required_tools():
     global REQUIRED_TOOLS
     REQUIRED_TOOLS = {
@@ -109,6 +111,9 @@ class Context(object):
     def __init__(self, topdir, parallelism, keep, replace_sources, strip,
                  full_gcc, action, exclude, shallow=False):
         """Initialize the context."""
+        self.bot_config = None
+        self.build_state = None
+        self.versions = None
         self.topdir = topdir
         self.parallelism = parallelism
         self.keep = keep
@@ -766,7 +771,7 @@ class Context(object):
                    '--prefix=%s' % installdir,
                    '--disable-shared']
         if extra_opts:
-            cfg_cmd.extend (extra_opts)
+            cfg_cmd.extend(extra_opts)
         cmdlist.add_command('configure', cfg_cmd)
         cmdlist.add_command('build', ['make'])
         cmdlist.add_command('check', ['make', 'check'])
@@ -1918,7 +1923,7 @@ def get_version_common(progname,line,word,arg1):
         v = re.match(r'[0-9]+(.[0-9]+)*', v).group()
         return [int(x) for x in v.split('.')]
     except:
-        return 'missing';
+        return 'missing'
 
 def get_version_common_stderr(progname,line,word,arg1):
     try:
@@ -1931,16 +1936,16 @@ def get_version_common_stderr(progname,line,word,arg1):
         v = re.match(r'[0-9]+(.[0-9]+)*', v).group()
         return [int(x) for x in v.split('.')]
     except:
-        return 'missing';
+        return 'missing'
 
 def get_version(progname):
-    return get_version_common(progname, 0, -1, '--version');
+    return get_version_common(progname, 0, -1, '--version')
 
 def get_version_awk(progname):
-    return get_version_common(progname, 0, 2, '--version');
+    return get_version_common(progname, 0, 2, '--version')
 
 def get_version_bzip2(progname):
-    return get_version_common_stderr(progname, 0, 6, '-h');
+    return get_version_common_stderr(progname, 0, 6, '-h')
 
 def check_version(ver, req):
     for v, r in zip(ver, req):
@@ -1951,7 +1956,7 @@ def check_version(ver, req):
     return True
 
 def version_str(ver):
-    return '.'.join([str (x) for x in ver])
+    return '.'.join([str(x) for x in ver])
 
 def check_for_required_tools():
     get_list_of_required_tools()
@@ -1963,7 +1968,7 @@ def check_for_required_tools():
         if version == 'missing':
             ok = 'missing'
         else:
-            ok = 'ok' if check_version (version, v[1]) else 'old'
+            ok = 'ok' if check_version(version, v[1]) else 'old'
         if ok == 'old':
             if count_old_tools == 0:
                 print("One or more required tools are too old:")
@@ -1978,11 +1983,11 @@ def check_for_required_tools():
                     version_str(v[1])))
 
     if count_old_tools > 0 or count_missing_tools > 0:
-        exit (1);
+        exit(1)
 
 def main(argv):
     """The main entry point."""
-    check_for_required_tools();
+    check_for_required_tools()
     parser = get_parser()
     opts = parser.parse_args(argv)
     topdir = os.path.abspath(opts.topdir)
