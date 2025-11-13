@@ -1,4 +1,4 @@
-/* Round to integer type.  flt-32 version.
+/* Round to integer type (pre-C23 compat version).  flt-32 version.
    Copyright (C) 2016-2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -23,6 +23,8 @@
 #include <libm-alias-float.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <shlib-compat.h>
+#include <first-versions.h>
 
 #define BIAS 0x7f
 #define MANT_DIG 24
@@ -33,9 +35,11 @@
 # define RET_TYPE intmax_t
 #endif
 
-#include <compat_fromfp.h>
+#if SHLIB_COMPAT (libm, GLIBC_2_25, GLIBC_2_43)
+# include <compat_fromfp.h>
 
 RET_TYPE
+attribute_compat_text_section
 FUNC (float x, int round, unsigned int width)
 {
   if (width > INTMAX_WIDTH)
@@ -81,3 +85,4 @@ FUNC (float x, int round, unsigned int width)
   return fromfp_round_and_return (negative, uret, half_bit, more_bits, round,
 				  exponent, max_exponent, width);
 }
+#endif

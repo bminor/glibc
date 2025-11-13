@@ -1,4 +1,4 @@
-/* Test fromfp.
+/* Test fromfp (pre-C23 compat version).
    Copyright (C) 1997-2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,9 +16,23 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <shlib-compat.h>
+#include <first-versions.h>
 #include "libm-test-driver.c"
 
-static const struct test_fiu_M_data fromfp_test_data[] =
+#define CONCATX(x, y) x ## y
+#define CONCAT(x, y) CONCATX (x, y)
+#define COMPAT_VER CONCAT (FIRST_VERSION_libm_, FUNC_TEST (fromfp))
+
+#if TEST_COMPAT (libm, COMPAT_VER, GLIBC_2_43)
+
+intmax_t FUNC_TEST (compat_fromfp) (FLOAT, int, unsigned int);
+compat_symbol_reference (libm,
+			 FUNC_TEST (compat_fromfp),
+			 FUNC_TEST (fromfp),
+			 COMPAT_VER);
+
+static const struct test_fiu_M_data compat_fromfp_test_data[] =
   {
     /* Infinity, NaN and values that are definitely out of range
        (large values of width count as the width of the return
@@ -11928,15 +11942,19 @@ static const struct test_fiu_M_data fromfp_test_data[] =
   };
 
 static void
-fromfp_test (void)
+compat_fromfp_test (void)
 {
-  ALL_RM_TEST (fromfp, 1, fromfp_test_data, RUN_TEST_LOOP_fiu_M, END);
+  ALL_RM_TEST (compat_fromfp, 1, compat_fromfp_test_data, RUN_TEST_LOOP_fiu_M, END);
 }
+
+#endif
 
 static void
 do_test (void)
 {
-  fromfp_test ();
+#if TEST_COMPAT (libm, COMPAT_VER, GLIBC_2_43)
+  compat_fromfp_test ();
+#endif
 }
 
 /*

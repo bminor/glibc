@@ -228,8 +228,6 @@ F(compile_test) (void)
   int saved_count;
   long int j;
   long long int k = 2;
-  intmax_t m;
-  uintmax_t um;
 
   a = cos (cos (x));
   a = cospi (cospi (x));
@@ -287,8 +285,8 @@ F(compile_test) (void)
   b = remquo (remquo (a, b, &i), remquo (c, x, &i), &i);
   j = lrint (x) + lround (a);
   k = llrint (b) + llround (c);
-  m = fromfp (a, FP_INT_UPWARD, 2) + fromfpx (b, FP_INT_DOWNWARD, 3);
-  um = ufromfp (c, FP_INT_TONEAREST, 4) + ufromfpx (a, FP_INT_TOWARDZERO, 5);
+  c = fromfp (a, FP_INT_UPWARD, 2) + fromfpx (b, FP_INT_DOWNWARD, 3);
+  c = ufromfp (c, FP_INT_TONEAREST, 4) + ufromfpx (a, FP_INT_TOWARDZERO, 5);
   a = erf (erf (x));
   b = erfc (erfc (a));
   a = tgamma (tgamma (x));
@@ -324,7 +322,7 @@ F(compile_test) (void)
   c = fma (i, b, i);
   a = pow (i, c);
 #endif
-  x = a + b + c + i + j + k + m + um;
+  x = a + b + c + i + j + k;
 
   saved_count = count;
   if (ccount != 0)
@@ -417,9 +415,9 @@ F(compile_test) (void)
       a = remquo (y, y, &i);
       j = lrint (y) + lround (y);
       k = llrint (y) + llround (y);
-      m = fromfp (y, FP_INT_UPWARD, 6) + fromfpx (y, FP_INT_DOWNWARD, 7);
-      um = (ufromfp (y, FP_INT_TONEAREST, 8)
-	    + ufromfpx (y, FP_INT_TOWARDZERO, 9));
+      b = fromfp (y, FP_INT_UPWARD, 6) + fromfpx (y, FP_INT_DOWNWARD, 7);
+      b = (ufromfp (y, FP_INT_TONEAREST, 8)
+	   + ufromfpx (y, FP_INT_TOWARDZERO, 9));
       a = erf (y);
       a = erfc (y);
       a = tgamma (y);
@@ -947,7 +945,7 @@ long long int
   return x;
 }
 
-intmax_t
+TYPE
 (F(fromfp)) (TYPE x, int round, unsigned int width)
 {
   ++count;
@@ -955,7 +953,7 @@ intmax_t
   return x;
 }
 
-intmax_t
+TYPE
 (F(fromfpx)) (TYPE x, int round, unsigned int width)
 {
   ++count;
@@ -963,7 +961,7 @@ intmax_t
   return x;
 }
 
-uintmax_t
+TYPE
 (F(ufromfp)) (TYPE x, int round, unsigned int width)
 {
   ++count;
@@ -971,7 +969,7 @@ uintmax_t
   return x;
 }
 
-uintmax_t
+TYPE
 (F(ufromfpx)) (TYPE x, int round, unsigned int width)
 {
   ++count;

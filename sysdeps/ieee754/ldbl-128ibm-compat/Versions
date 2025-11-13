@@ -160,6 +160,12 @@ libm {
     __rootnieee128;
     __rsqrtieee128;
   }
+  GLIBC_2.43 {
+    __fromfpieee128;
+    __fromfpxieee128;
+    __ufromfpieee128;
+    __ufromfpxieee128;
+  }
 }
 libc {
   LDBL_IBM128_VERSION {

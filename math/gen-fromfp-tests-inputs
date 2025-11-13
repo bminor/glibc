@@ -96,76 +96,76 @@ i 0xfffffffffffff800ULL:64
 
     /* Inputs with absolute value between 0 and 1.  */
 t min_subnorm_value a 0:1 1:1
-t -min_subnorm_value a 0:1 -1:1
+t -min_subnorm_value a -0:1 -1:1
 t min_value a 0:1 1:1
-t -min_value a 0:1 -1:1
+t -min_value a -0:1 -1:1
 t 0.1 a 0:1 1:1
-t -0.1 a 0:1 -1:1
+t -0.1 a -0:1 -1:1
 t 0.25 a 0:1 1:1
-t -0.25 a 0:1 -1:1
+t -0.25 a -0:1 -1:1
 t 0.499 a 0:1 1:1
-t -0.499 a 0:1 -1:1
+t -0.499 a -0:1 -1:1
 t 0x0.ffffffp-1 a 0:1 1:1
-t -0x0.ffffffp-1 a 0:1 -1:1
+t -0x0.ffffffp-1 a -0:1 -1:1
 #if MANT_DIG >= 53
 t 0x0.fffffffffffff8p-1 a 0:1 1:1
-t -0x0.fffffffffffff8p-1 a 0:1 -1:1
+t -0x0.fffffffffffff8p-1 a -0:1 -1:1
 #endif
 #if MANT_DIG >= 64
 t 0x0.ffffffffffffffffp-1 a 0:1 1:1
-t -0x0.ffffffffffffffffp-1 a 0:1 -1:1
+t -0x0.ffffffffffffffffp-1 a -0:1 -1:1
 #endif
 #if MANT_DIG >= 106
 t 0x0.ffffffffffffffffffffffffffcp-1 a 0:1 1:1
-t -0x0.ffffffffffffffffffffffffffcp-1 a 0:1 -1:1
+t -0x0.ffffffffffffffffffffffffffcp-1 a -0:1 -1:1
 #endif
 #if MANT_DIG >= 113
 t 0x0.ffffffffffffffffffffffffffff8p-1 a 0:1 1:1
-t -0x0.ffffffffffffffffffffffffffff8p-1 a 0:1 -1:1
+t -0x0.ffffffffffffffffffffffffffff8p-1 a -0:1 -1:1
 #endif
 t 0.5 be 0:1 1:1
-t -0.5 be 0:1 -1:1
+t -0.5 be -0:1 -1:1
 t 0x1.000002p-1 c 0:1 1:1
-t -0x1.000002p-1 c 0:1 -1:1
+t -0x1.000002p-1 c -0:1 -1:1
 #if MANT_DIG >= 53
 t 0x1.0000000000001p-1 c 0:1 1:1
-t -0x1.0000000000001p-1 c 0:1 -1:1
+t -0x1.0000000000001p-1 c -0:1 -1:1
 #endif
 #if MANT_DIG >= 64
 t 0x1.0000000000000002p-1 c 0:1 1:1
-t -0x1.0000000000000002p-1 c 0:1 -1:1
+t -0x1.0000000000000002p-1 c -0:1 -1:1
 #endif
 #if MANT_DIG >= 106
 t 0x1.000000000000000000000000008p-1 c 0:1 1:1
-t -0x1.000000000000000000000000008p-1 c 0:1 -1:1
+t -0x1.000000000000000000000000008p-1 c -0:1 -1:1
 #endif
 #if MANT_DIG >= 113
 t 0x1.0000000000000000000000000001p-1 c 0:1 1:1
-t -0x1.0000000000000000000000000001p-1 c 0:1 -1:1
+t -0x1.0000000000000000000000000001p-1 c -0:1 -1:1
 #endif
 t 0.501 c 0:1 1:1
-t -0.501 c 0:1 -1:1
+t -0.501 c -0:1 -1:1
 t 0.75 c 0:1 1:1
-t -0.75 c 0:1 -1:1
+t -0.75 c -0:1 -1:1
 t 0.9 c 0:1 1:1
-t -0.9 c 0:1 -1:1
+t -0.9 c -0:1 -1:1
 t 0x0.ffffffp0 c 0:1 1:1
-t -0x0.ffffffp0 c 0:1 -1:1
+t -0x0.ffffffp0 c -0:1 -1:1
 #if MANT_DIG >= 53
 t 0x0.fffffffffffff8p0 c 0:1 1:1
-t -0x0.fffffffffffff8p0 c 0:1 -1:1
+t -0x0.fffffffffffff8p0 c -0:1 -1:1
 #endif
 #if MANT_DIG >= 64
 t 0x0.ffffffffffffffffp0 c 0:1 1:1
-t -0x0.ffffffffffffffffp0 c 0:1 -1:1
+t -0x0.ffffffffffffffffp0 c -0:1 -1:1
 #endif
 #if MANT_DIG >= 106
 t 0x0.ffffffffffffffffffffffffffcp0 c 0:1 1:1
-t -0x0.ffffffffffffffffffffffffffcp0 c 0:1 -1:1
+t -0x0.ffffffffffffffffffffffffffcp0 c -0:1 -1:1
 #endif
 #if MANT_DIG >= 113
 t 0x0.ffffffffffffffffffffffffffff8p0 c 0:1 1:1
-t -0x0.ffffffffffffffffffffffffffff8p0 c 0:1 -1:1
+t -0x0.ffffffffffffffffffffffffffff8p0 c -0:1 -1:1
 #endif
 
     /* Various non-integer inputs.  */
@@ -417,10 +417,43 @@ t 0x7fffffffffffffff.8p0 bo 0x7fffffffffffffffLL:63 0x8000000000000000ULL:64
 #if MANT_DIG >= 72
 t 0x7fffffffffffffff.7fp0 a 0x7fffffffffffffffLL:63 0x8000000000000000ULL:64
 t 0x7fffffffffffffff.81p0 c 0x7fffffffffffffffLL:63 0x8000000000000000ULL:64
-t 0xffffffffffffffff.7fp0 a 0xffffffffffffffffULL:64 0x10000000000000000ULL:65
-t 0xffffffffffffffff.8p0 bo 0xffffffffffffffffULL:64 0x10000000000000000ULL:65
-t 0xffffffffffffffff.81p0 c 0xffffffffffffffffULL:64 0x10000000000000000ULL:65
-t -0x8000000000000000.7fp0 a -INT64_MAX-1:64 -0x8000000000000001LL:65
-t -0x8000000000000000.8p0 be -INT64_MAX-1:64 -0x8000000000000001LL:65
-t -0x8000000000000000.81p0 c -INT64_MAX-1:64 -0x8000000000000001LL:65
+t 0xffffffffffffffff.7fp0 a 0xffffffffffffffffULL:64 0x1p64:65
+t 0xffffffffffffffff.8p0 bo 0xffffffffffffffffULL:64 0x1p64:65
+t 0xffffffffffffffff.81p0 c 0xffffffffffffffffULL:64 0x1p64:65
+t -0x8000000000000000.7fp0 a -INT64_MAX-1:64 -0x8000000000000001p0:65
+t -0x8000000000000000.8p0 be -INT64_MAX-1:64 -0x8000000000000001p0:65
+t -0x8000000000000000.81p0 c -INT64_MAX-1:64 -0x8000000000000001p0:65
+#endif
+c23
+
+    /* Tests that are out of range for compat functions, OK for C23.  */
+i 0x1p64:65
+i -0x1p64:65
+i 0x1.fp64:65
+i -0x1.fp64:66
+i 0x1p127:128
+i -0x1p127:128
+i 0x1.fp127:128
+i -0x1.fp127:129
+#if MAX_EXP >= 1024
+i 0x1p1023:1024
+i -0x1p1023:1024
+i 0x1.fp1023:1024
+i -0x1.fp1023:1025
+#endif
+#if MAX_EXP >= 16384
+i 0x1p16383:16384
+i -0x1p16383:16384
+i 0x1.fp16383:16384
+i -0x1.fp16383:16385
+#endif
+#if MANT_DIG >= 80
+t 0x7fffffffffffffffff.7fp0 a 0x7fffffffffffffffffp0:71 0x1p71:72
+t 0x7fffffffffffffffff.81p0 c 0x7fffffffffffffffffp0:71 0x1p71:72
+t 0xffffffffffffffffff.7fp0 a 0xffffffffffffffffffp0:72 0x1p72:73
+t 0xffffffffffffffffff.8p0 bo 0xffffffffffffffffffp0:72 0x1p72:73
+t 0xffffffffffffffffff.81p0 c 0xffffffffffffffffffp0:72 0x1p72:73
+t -0x800000000000000000.7fp0 a -0x1p71:72 -0x800000000000000001p0:73
+t -0x800000000000000000.8p0 be -0x1p71:72 -0x800000000000000001p0:73
+t -0x800000000000000000.81p0 c -0x1p71:72 -0x800000000000000001p0:73
 #endif

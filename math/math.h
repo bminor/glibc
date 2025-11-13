@@ -33,9 +33,6 @@
 
 __BEGIN_DECLS
 
-/* Get definitions of __intmax_t and __uintmax_t.  */
-#include <bits/types.h>
-
 /* Get machine-dependent vector math functions declarations.  */
 #include <bits/math-vector.h>
 

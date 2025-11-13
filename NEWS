@@ -35,6 +35,13 @@ Deprecated and removed features, and other changes affecting compatibility:
   to the name of that function in ISO C2Y.  The old function continues
   to exist as a compatibility symbol for old binaries.
 
+* The fromfp, fromfpx, ufromfp and ufromfpx functions, and the
+  corresponding functions for other floating-point types, now return
+  their result in the same type as their floating-point argument, rather
+  than intmax_t or uintmax_t, in accordance with a change to the
+  definition of these functions in ISO C23.  Existing binaries that use
+  the versions returning intmax_t or uintmax_t will continue to work.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]

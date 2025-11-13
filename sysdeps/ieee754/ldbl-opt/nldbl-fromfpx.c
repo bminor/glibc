@@ -18,7 +18,7 @@
 
 #include "nldbl-compat.h"
 
-intmax_t
+double
 attribute_hidden
 fromfpxl (double x, int round, unsigned int width)
 {

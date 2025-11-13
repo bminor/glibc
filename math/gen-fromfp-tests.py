@@ -33,8 +33,10 @@
 # the smallest type that can hold the value; for positive values, this
 # is an unsigned type.
 #
-# Command-line argument is function to generate tests for.  Any input
-# lines not of the above form are just passed through unchanged.
+# Command-line argument is function to generate tests for.  A line
+# starting "c23" terminates processing for the compat functions, and
+# is otherwise ignored.  Any other input lines not of the above form
+# are just passed through unchanged.
 #
 # Note that the output of this script forms the largest part of the
 # tests for the fromfp functions, but not the whole of those tests.
@@ -43,7 +45,15 @@ import sys
 
 func = sys.argv[1]
 
-invalid_res = 'IGNORE, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM'
+if func.startswith('compat_'):
+    compat = True
+    func = func[len('compat_'):]
+    invalid_value = 'IGNORE'
+else:
+    compat = False
+    invalid_value = 'qnan_value'
+invalid_res = (invalid_value
+               + ', NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM')
 exact_res = 'NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED'
 if func == 'fromfpx' or func == 'ufromfpx':
     inexact_res = 'INEXACT_EXCEPTION|ERRNO_UNCHANGED'
@@ -62,13 +72,19 @@ rm_away_neg = {'FP_INT_UPWARD': 'z',
                'FP_INT_TOWARDZERO': 'z',
                'FP_INT_TONEARESTFROMZERO': 'be',
                'FP_INT_TONEAREST': 'bo'}
-if unsigned:
-    test_macro = 'TEST_fiu_U'
+if compat:
+    if unsigned:
+        test_macro = 'TEST_fiu_U'
+    else:
+        test_macro = 'TEST_fiu_M'
 else:
-    test_macro = 'TEST_fiu_M'
+    test_macro = 'TEST_fiu_f'
 
 for line in sys.stdin:
-    if line.startswith('i'):
+    if line.startswith('c23'):
+        if compat:
+            break
+    elif line.startswith('i'):
         data = line.split()
         val_width = data[1]
         val, width = val_width.split(':')
@@ -81,14 +97,17 @@ for line in sys.stdin:
         width_list = [0, 1]
         if width > 2:
             width_list.append(width - 1)
-        if width > 1 and width <= 64:
+        if width > 1 and (width <= 64 or not compat):
             width_list.append(width)
-        if width < 64:
+        if width < 64 or not compat:
             width_list.append(width + 1)
         if width < 63:
             width_list.append(64)
         width_list = [(w, str(w)) for w in width_list]
-        width_list.append((64, 'UINT_MAX'))
+        if compat:
+            width_list.append((64, 'UINT_MAX'))
+        else:
+            width_list.append((1000000, 'UINT_MAX'))
         for rm in rm_list:
             for we in width_list:
                 w, ws = we
@@ -106,7 +125,7 @@ for line in sys.stdin:
         z_width = int(z_width)
         a, a_width = data[4].split(':')
         a_width = int(a_width)
-        if unsigned and z.startswith('-'):
+        if unsigned and z.startswith('-') and z != '-0':
             continue
         negative = val.startswith('-')
         if negative:
@@ -123,14 +142,19 @@ for line in sys.stdin:
             width_list = [0, 1]
             if width > 2:
                 width_list.append(width - 1)
-            if width > 1 and width <= 64:
+            if width > 1 and (width <= 64 or not compat):
                 width_list.append(width)
-            if width < 64:
+            if width < 64 or not compat:
                 width_list.append(width + 1)
             if width < 63:
                 width_list.append(64)
             width_list = [(w, str(w)) for w in width_list]
-            width_list.append((64, 'UINT_MAX'))
+            if compat:
+                width_list.append((64, 'UINT_MAX'))
+            else:
+                width_list.append((1000000, 'UINT_MAX'))
+            if res == '-0':
+                res = '0' if compat else 'minus_zero'
             for we in width_list:
                 w, ws = we
                 if w < width or (unsigned and res.startswith('-')):

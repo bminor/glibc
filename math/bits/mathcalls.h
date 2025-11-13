@@ -400,25 +400,21 @@ __MATHCALLX (roundeven,, (_Mdouble_ __x), (__const__));
 
 /* Round X to nearest signed integer value, not raising inexact, with
    control of rounding direction and width of result.  */
-__MATHDECL (__intmax_t, fromfp,, (_Mdouble_ __x, int __round,
-				  unsigned int __width));
+__MATHCALL (fromfp,, (_Mdouble_ __x, int __round, unsigned int __width));
 
 /* Round X to nearest unsigned integer value, not raising inexact,
    with control of rounding direction and width of result.  */
-__MATHDECL (__uintmax_t, ufromfp,, (_Mdouble_ __x, int __round,
-				    unsigned int __width));
+__MATHCALL (ufromfp,, (_Mdouble_ __x, int __round, unsigned int __width));
 
 /* Round X to nearest signed integer value, raising inexact for
    non-integers, with control of rounding direction and width of
    result.  */
-__MATHDECL (__intmax_t, fromfpx,, (_Mdouble_ __x, int __round,
-				   unsigned int __width));
+__MATHCALL (fromfpx,, (_Mdouble_ __x, int __round, unsigned int __width));
 
 /* Round X to nearest unsigned integer value, raising inexact for
    non-integers, with control of rounding direction and width of
    result.  */
-__MATHDECL (__uintmax_t, ufromfpx,, (_Mdouble_ __x, int __round,
-				     unsigned int __width));
+__MATHCALL (ufromfpx,, (_Mdouble_ __x, int __round, unsigned int __width));
 
 /* Canonicalize floating-point representation.  */
 __MATHDECL_1 (int, canonicalize,, (_Mdouble_ *__cx, const _Mdouble_ *__x));

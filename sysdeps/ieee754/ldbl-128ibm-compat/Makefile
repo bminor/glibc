@@ -391,6 +391,15 @@ ifeq ($(subdir),math)
 # support.  Thus, they can only correctly be used with ibm128.
 CFLAGS-test-ldouble-compat_totalorder.c += -mabi=ibmlongdouble
 CFLAGS-test-ldouble-compat_totalordermag.c += -mabi=ibmlongdouble
+
+# The compatibility tests for fromfp functions access particular
+# versioned symbols by name, and those symbols are for the ibm128
+# format.  (It would also be possible to test the *ieee128 compat
+# symbols, but these tests don't do so.)
+CFLAGS-test-ldouble-compat_fromfp.c += -mabi=ibmlongdouble
+CFLAGS-test-ldouble-compat_fromfpx.c += -mabi=ibmlongdouble
+CFLAGS-test-ldouble-compat_ufromfp.c += -mabi=ibmlongdouble
+CFLAGS-test-ldouble-compat_ufromfpx.c += -mabi=ibmlongdouble
 endif
 
 ifeq ($(subdir), stdio-common)

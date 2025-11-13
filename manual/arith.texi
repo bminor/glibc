@@ -1608,26 +1608,26 @@ These functions are just like @code{round}, but they return a
 @code{long long int} instead of a floating-point number.
 @end deftypefun
 
-@deftypefun intmax_t fromfp (double @var{x}, int @var{round}, unsigned int @var{width})
-@deftypefunx intmax_t fromfpf (float @var{x}, int @var{round}, unsigned int @var{width})
-@deftypefunx intmax_t fromfpl (long double @var{x}, int @var{round}, unsigned int @var{width})
-@deftypefunx intmax_t fromfpfN (_Float@var{N} @var{x}, int @var{round}, unsigned int @var{width})
-@deftypefunx intmax_t fromfpfNx (_Float@var{N}x @var{x}, int @var{round}, unsigned int @var{width})
-@deftypefunx uintmax_t ufromfp (double @var{x}, int @var{round}, unsigned int @var{width})
-@deftypefunx uintmax_t ufromfpf (float @var{x}, int @var{round}, unsigned int @var{width})
-@deftypefunx uintmax_t ufromfpl (long double @var{x}, int @var{round}, unsigned int @var{width})
-@deftypefunx uintmax_t ufromfpfN (_Float@var{N} @var{x}, int @var{round}, unsigned int @var{width})
-@deftypefunx uintmax_t ufromfpfNx (_Float@var{N}x @var{x}, int @var{round}, unsigned int @var{width})
-@deftypefunx intmax_t fromfpx (double @var{x}, int @var{round}, unsigned int @var{width})
-@deftypefunx intmax_t fromfpxf (float @var{x}, int @var{round}, unsigned int @var{width})
-@deftypefunx intmax_t fromfpxl (long double @var{x}, int @var{round}, unsigned int @var{width})
-@deftypefunx intmax_t fromfpxfN (_Float@var{N} @var{x}, int @var{round}, unsigned int @var{width})
-@deftypefunx intmax_t fromfpxfNx (_Float@var{N}x @var{x}, int @var{round}, unsigned int @var{width})
-@deftypefunx uintmax_t ufromfpx (double @var{x}, int @var{round}, unsigned int @var{width})
-@deftypefunx uintmax_t ufromfpxf (float @var{x}, int @var{round}, unsigned int @var{width})
-@deftypefunx uintmax_t ufromfpxl (long double @var{x}, int @var{round}, unsigned int @var{width})
-@deftypefunx uintmax_t ufromfpxfN (_Float@var{N} @var{x}, int @var{round}, unsigned int @var{width})
-@deftypefunx uintmax_t ufromfpxfNx (_Float@var{N}x @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefun double fromfp (double @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx float fromfpf (float @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx {long double} fromfpl (long double @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx _FloatN fromfpfN (_Float@var{N} @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx _FloatNx fromfpfNx (_Float@var{N}x @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx double ufromfp (double @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx float ufromfpf (float @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx {long double} ufromfpl (long double @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx _FloatN ufromfpfN (_Float@var{N} @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx _FloatNx ufromfpfNx (_Float@var{N}x @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx double fromfpx (double @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx float fromfpxf (float @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx {long double} fromfpxl (long double @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx _FloatN fromfpxfN (_Float@var{N} @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx _FloatNx fromfpxfNx (_Float@var{N}x @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx double ufromfpx (double @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx float ufromfpxf (float @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx {long double} ufromfpxl (long double @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx _FloatN ufromfpxfN (_Float@var{N} @var{x}, int @var{round}, unsigned int @var{width})
+@deftypefunx _FloatNx ufromfpxfNx (_Float@var{N}x @var{x}, int @var{round}, unsigned int @var{width})
 @standards{ISO, math.h}
 @standardsx{fromfpfN, TS 18661-3:2015, math.h}
 @standardsx{fromfpfNx, TS 18661-3:2015, math.h}
@@ -1638,17 +1638,22 @@ These functions are just like @code{round}, but they return a
 @standardsx{ufromfpxfN, TS 18661-3:2015, math.h}
 @standardsx{ufromfpxfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+
 These functions, from TS 18661-1:2014 and TS 18661-3:2015, convert a
-floating-point number to an integer according to the rounding direction
-@var{round} (one of the @code{FP_INT_*} macros).  If the integer is
-outside the range of a signed or unsigned (depending on the return type
-of the function) type of width @var{width} bits (or outside the range of
-the return type, if @var{width} is larger), or if @var{x} is infinite or
-NaN, or if @var{width} is zero, a domain error occurs and an unspecified
-value is returned.  The functions with an @samp{x} in their names raise
-the inexact exception when a domain error does not occur and the
-argument is not an integer; the other functions do not raise the inexact
-exception.
+floating-point number to an integer according to the rounding
+direction @var{round} (one of the @code{FP_INT_*} macros).  If the
+integer is outside the range of a two's complement signed or unsigned
+(depending on the return type of the function) integer of width
+@var{width} bits, or if @var{x} is infinite or NaN, or if @var{width}
+is zero, a domain error occurs and a NaN is returned.  The functions
+with an @samp{x} in their names raise the inexact exception when a
+domain error does not occur and the argument is not an integer; the
+other functions do not raise the inexact exception.
+
+Following ISO C23, in @theglibc{} these functions return their result
+in the floating-point argument type.  In TS 18661-1:2014 and TS
+18661-3:2015, they were originally defined to return @code{intmax_t}
+and @code{uintmax_t}.
 @end deftypefun
 
 

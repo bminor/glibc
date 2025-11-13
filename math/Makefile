@@ -221,6 +221,8 @@ libm-calls = \
   s_floorF \
   s_fmaF \
   s_fpclassifyF \
+  s_fromfpF \
+  s_fromfpxF \
   s_getpayloadF \
   s_issignalingF \
   s_llrintF \
@@ -247,6 +249,8 @@ libm-calls = \
   s_totalorderF \
   s_totalordermagF \
   s_truncF \
+  s_ufromfpF \
+  s_ufromfpxF \
   x2y2m1F \
   # libm-calls
 
@@ -719,10 +723,6 @@ libm-test-funcs-noauto-base = \
   canonicalize \
   ceil \
   cimag \
-  compat_fromfp \
-  compat_fromfpx \
-  compat_ufromfp \
-  compat_ufromfpx \
   conj \
   copysign \
   cproj \
@@ -745,6 +745,8 @@ libm-test-funcs-noauto-base = \
   fmod \
   fpclassify \
   frexp \
+  fromfp \
+  fromfpx \
   getpayload \
   ilogb \
   iscanonical \
@@ -789,15 +791,25 @@ libm-test-funcs-noauto-base = \
   totalorder \
   totalordermag \
   trunc \
+  ufromfp \
+  ufromfpx \
   # libm-test-funcs-noauto-base
 libm-test-funcs-noauto = \
   $(libm-test-funcs-noauto-base) \
+  compat_fromfp \
+  compat_fromfpx \
   compat_totalorder \
   compat_totalordermag \
+  compat_ufromfp \
+  compat_ufromfpx \
   # libm-test-funcs-noauto
 libm-test-funcs-compat = \
+  compat_fromfp \
+  compat_fromfpx \
   compat_totalorder \
   compat_totalordermag \
+  compat_ufromfp \
+  compat_ufromfpx \
   # libm-test-funcs-compat
 libm-test-funcs-narrow = \
   add \
@@ -1459,6 +1471,8 @@ CFLAGS-s_fmul.c += -fno-builtin-fmull
 CFLAGS-s_frexp.c += -fno-builtin-frexpl
 CFLAGS-s_compat_fromfp.c += -fno-builtin-fromfpl
 CFLAGS-s_compat_fromfpx.c += -fno-builtin-fromfpxl
+CFLAGS-s_fromfp.c += -fno-builtin-fromfpl
+CFLAGS-s_fromfpx.c += -fno-builtin-fromfpxl
 CFLAGS-s_fsqrt.c += -fno-builtin-fsqrtl
 CFLAGS-s_fsub.c += -fno-builtin-fsubl
 CFLAGS-s_getpayload.c += -fno-builtin-getpayloadl
@@ -1522,6 +1536,8 @@ CFLAGS-s_totalordermag.c += -fno-builtin-totalordermagl
 CFLAGS-s_trunc.c += -fno-builtin-truncl
 CFLAGS-s_compat_ufromfp.c += -fno-builtin-ufromfpl
 CFLAGS-s_compat_ufromfpx.c += -fno-builtin-ufromfpxl
+CFLAGS-s_ufromfp.c += -fno-builtin-ufromfpl
+CFLAGS-s_ufromfpx.c += -fno-builtin-ufromfpxl
 CFLAGS-s_y0.c += -fno-builtin-y0l
 CFLAGS-s_y1.c += -fno-builtin-y1l
 CFLAGS-s_yn.c += -fno-builtin-ynl
@@ -1602,6 +1618,8 @@ CFLAGS-s_fmul.c += -fno-builtin-f32mulf32x -fno-builtin-f32mulf64
 CFLAGS-s_frexp.c += -fno-builtin-frexpf32x -fno-builtin-frexpf64
 CFLAGS-s_compat_fromfp.c += -fno-builtin-fromfpf32x -fno-builtin-fromfpf64
 CFLAGS-s_compat_fromfpx.c += -fno-builtin-fromfpxf32x -fno-builtin-fromfpxf64
+CFLAGS-s_fromfp.c += -fno-builtin-fromfpf32x -fno-builtin-fromfpf64
+CFLAGS-s_fromfpx.c += -fno-builtin-fromfpxf32x -fno-builtin-fromfpxf64
 CFLAGS-s_fsqrt.c += -fno-builtin-f32sqrtf32x -fno-builtin-f32sqrtf64
 CFLAGS-s_fsub.c += -fno-builtin-f32subf32x -fno-builtin-f32subf64
 CFLAGS-s_getpayload.c += -fno-builtin-getpayloadf32x -fno-builtin-getpayloadf64
@@ -1659,6 +1677,8 @@ CFLAGS-s_totalordermag.c += -fno-builtin-totalordermagf32x -fno-builtin-totalord
 CFLAGS-s_trunc.c += -fno-builtin-truncf32x -fno-builtin-truncf64
 CFLAGS-s_compat_ufromfp.c += -fno-builtin-ufromfpf32x -fno-builtin-ufromfpf64
 CFLAGS-s_compat_ufromfpx.c += -fno-builtin-ufromfpxf32x -fno-builtin-ufromfpxf64
+CFLAGS-s_ufromfp.c += -fno-builtin-ufromfpf32x -fno-builtin-ufromfpf64
+CFLAGS-s_ufromfpx.c += -fno-builtin-ufromfpxf32x -fno-builtin-ufromfpxf64
 CFLAGS-s_y0.c += -fno-builtin-y0f32x -fno-builtin-y0f64
 CFLAGS-s_y1.c += -fno-builtin-y1f32x -fno-builtin-y1f64
 CFLAGS-s_yn.c += -fno-builtin-ynf32x -fno-builtin-ynf64
@@ -1734,6 +1754,8 @@ CFLAGS-w_fmodf.c += -fno-builtin-fmodf32
 CFLAGS-s_frexpf.c += -fno-builtin-frexpf32
 CFLAGS-s_compat_fromfpf.c += -fno-builtin-fromfpf32
 CFLAGS-s_compat_fromfpxf.c += -fno-builtin-fromfpxf32
+CFLAGS-s_fromfpf.c += -fno-builtin-fromfpf32
+CFLAGS-s_fromfpxf.c += -fno-builtin-fromfpxf32
 CFLAGS-s_getpayloadf.c += -fno-builtin-getpayloadf32
 CFLAGS-w_hypotf.c += -fno-builtin-hypotf32
 CFLAGS-w_ilogbf.c += -fno-builtin-ilogbf32
@@ -1789,6 +1811,8 @@ CFLAGS-s_totalordermagf.c += -fno-builtin-totalordermagf32
 CFLAGS-s_truncf.c += -fno-builtin-truncf32
 CFLAGS-s_compat_ufromfpf.c += -fno-builtin-ufromfpf32
 CFLAGS-s_compat_ufromfpxf.c += -fno-builtin-ufromfpxf32
+CFLAGS-s_ufromfpf.c += -fno-builtin-ufromfpf32
+CFLAGS-s_ufromfpxf.c += -fno-builtin-ufromfpxf32
 CFLAGS-s_y0f.c += -fno-builtin-y0f32
 CFLAGS-s_y1f.c += -fno-builtin-y1f32
 CFLAGS-s_ynf.c += -fno-builtin-ynf32
@@ -1799,6 +1823,26 @@ CFLAGS-s_modf.c += $(config-cflags-signaling-nans)
 CFLAGS-s_modff.c += $(config-cflags-signaling-nans)
 CFLAGS-s_modfl.c += $(config-cflags-signaling-nans)
 CFLAGS-s_modff128.c += $(config-cflags-signaling-nans)
+
+# These files rely on C23 semantics for avoiding "inexact" exceptions
+# from rounding functions.  These settings can be removed when glibc
+# builds with -std=gnu23 or later.
+CFLAGS-s_fromfp.c += -fno-fp-int-builtin-inexact
+CFLAGS-s_fromfpx.c += -fno-fp-int-builtin-inexact
+CFLAGS-s_ufromfp.c += -fno-fp-int-builtin-inexact
+CFLAGS-s_ufromfpx.c += -fno-fp-int-builtin-inexact
+CFLAGS-s_fromfpf.c += -fno-fp-int-builtin-inexact
+CFLAGS-s_fromfpxf.c += -fno-fp-int-builtin-inexact
+CFLAGS-s_ufromfpf.c += -fno-fp-int-builtin-inexact
+CFLAGS-s_ufromfpxf.c += -fno-fp-int-builtin-inexact
+CFLAGS-s_fromfpl.c += -fno-fp-int-builtin-inexact
+CFLAGS-s_fromfpxl.c += -fno-fp-int-builtin-inexact
+CFLAGS-s_ufromfpl.c += -fno-fp-int-builtin-inexact
+CFLAGS-s_ufromfpxl.c += -fno-fp-int-builtin-inexact
+CFLAGS-s_fromfpf128.c += -fno-fp-int-builtin-inexact
+CFLAGS-s_fromfpxf128.c += -fno-fp-int-builtin-inexact
+CFLAGS-s_ufromfpf128.c += -fno-fp-int-builtin-inexact
+CFLAGS-s_ufromfpxf128.c += -fno-fp-int-builtin-inexact
 
 $(addprefix $(objpfx),\
 	    $(filter-out $(tests-static) $(libm-tests-vector),\

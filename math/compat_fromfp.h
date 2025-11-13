@@ -1,4 +1,4 @@
-/* Round to integer type.  Common helper functions.
+/* Round to integer type (pre-C23 version).  Common helper functions.
    Copyright (C) 2016-2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

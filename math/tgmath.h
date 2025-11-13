@@ -386,7 +386,7 @@
 #   define __TGMATH_TERNARY_REAL_ONLY(Val1, Val2, Val3, Fct)	\
   __TGMATH_3 (Fct, (Val1), (Val2), (Val3))
 #  endif
-#  define __TGMATH_TERNARY_FIRST_REAL_RET_ONLY(Val1, Val2, Val3, Fct)	\
+#  define __TGMATH_TERNARY_FIRST_REAL_ONLY(Val1, Val2, Val3, Fct)	\
   __TGMATH_3 (Fct, (Val1), (Val2), (Val3))
 #  define __TGMATH_UNARY_REAL_IMAG(Val, Fct, Cfct)	\
   __TGMATH_1C (Fct, Cfct, (Val))
@@ -520,14 +520,17 @@
 # endif
 
 # if !__HAVE_BUILTIN_TGMATH
-#  define __TGMATH_TERNARY_FIRST_REAL_RET_ONLY(Val1, Val2, Val3, Fct) \
-     (__extension__ ((sizeof (+(Val1)) == sizeof (double)		\
-		      || __builtin_classify_type (Val1) != 8)		\
-		     ? Fct (Val1, Val2, Val3)				\
-		     : (sizeof (+(Val1)) == sizeof (float))		\
-		     ? Fct##f (Val1, Val2, Val3)			\
-		     : __TGMATH_F128 ((Val1), Fct, (Val1, Val2, Val3))	\
-		     __tgml(Fct) (Val1, Val2, Val3)))
+#  define __TGMATH_TERNARY_FIRST_REAL_ONLY(Val1, Val2, Val3, Fct)	      \
+     (__extension__ ((sizeof (+(Val1)) == sizeof (double)		      \
+		      || __builtin_classify_type (Val1) != 8)		      \
+		     ? (__tgmath_real_type (Val1)) Fct (Val1, Val2, Val3)     \
+		     : (sizeof (+(Val1)) == sizeof (float))		      \
+		     ? (__tgmath_real_type (Val1)) Fct##f (Val1, Val2, Val3)  \
+		     : __TGMATH_F128 ((Val1),				      \
+				      (__tgmath_real_type (Val1)) Fct,	      \
+				      (Val1, Val2, Val3))		      \
+		     (__tgmath_real_type (Val1)) __tgml(Fct) (Val1, Val2,     \
+							      Val3)))
 
 /* XXX This definition has to be changed as soon as the compiler understands
    the imaginary keyword.  */
@@ -1056,17 +1059,17 @@
 /* Round X to nearest integer value, rounding halfway cases to even.  */
 # define roundeven(Val) __TGMATH_UNARY_REAL_ONLY (Val, roundeven)
 
-# define fromfp(Val1, Val2, Val3)					\
-  __TGMATH_TERNARY_FIRST_REAL_RET_ONLY (Val1, Val2, Val3, fromfp)
+# define fromfp(Val1, Val2, Val3)				\
+  __TGMATH_TERNARY_FIRST_REAL_ONLY (Val1, Val2, Val3, fromfp)
 
-# define ufromfp(Val1, Val2, Val3)					\
-  __TGMATH_TERNARY_FIRST_REAL_RET_ONLY (Val1, Val2, Val3, ufromfp)
+# define ufromfp(Val1, Val2, Val3)				\
+  __TGMATH_TERNARY_FIRST_REAL_ONLY (Val1, Val2, Val3, ufromfp)
 
-# define fromfpx(Val1, Val2, Val3)					\
-  __TGMATH_TERNARY_FIRST_REAL_RET_ONLY (Val1, Val2, Val3, fromfpx)
+# define fromfpx(Val1, Val2, Val3)				\
+  __TGMATH_TERNARY_FIRST_REAL_ONLY (Val1, Val2, Val3, fromfpx)
 
-# define ufromfpx(Val1, Val2, Val3)					\
-  __TGMATH_TERNARY_FIRST_REAL_RET_ONLY (Val1, Val2, Val3, ufromfpx)
+# define ufromfpx(Val1, Val2, Val3)				\
+  __TGMATH_TERNARY_FIRST_REAL_ONLY (Val1, Val2, Val3, ufromfpx)
 
 /* Like ilogb, but returning long int.  */
 # define llogb(Val) __TGMATH_UNARY_REAL_RET_ONLY (Val, llogb)

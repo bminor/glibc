@@ -1,4 +1,4 @@
-/* Round to integer type.  ldbl-128ibm version.
+/* Round to integer type (pre-C23 compat version).  ldbl-128ibm version.
    Copyright (C) 2016-2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -22,6 +22,8 @@
 #include <math_private.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <shlib-compat.h>
+#include <first-versions.h>
 
 #define BIAS 0x3ff
 #define MANT_DIG 53
@@ -32,9 +34,11 @@
 # define RET_TYPE intmax_t
 #endif
 
-#include <compat_fromfp.h>
+#if SHLIB_COMPAT (libm, GLIBC_2_25, GLIBC_2_43)
+# include <compat_fromfp.h>
 
 RET_TYPE
+attribute_compat_text_section
 FUNC (long double x, int round, unsigned int width)
 {
   double hi, lo;
@@ -145,3 +149,4 @@ FUNC (long double x, int round, unsigned int width)
   return fromfp_round_and_return (negative, uret, half_bit, more_bits, round,
 				  exponent, max_exponent, width);
 }
+#endif
