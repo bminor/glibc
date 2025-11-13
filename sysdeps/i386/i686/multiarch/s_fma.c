@@ -38,4 +38,4 @@ libm_alias_double_narrow (__fma, fma)
 
 #define __fma __fma_ia32
 
-#include <sysdeps/ieee754/ldbl-96/s_fma.c>
+#include <sysdeps/ieee754/dbl-64/s_fma.c>
