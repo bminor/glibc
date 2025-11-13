@@ -311,9 +311,6 @@ libc {
 }
 
 libpthread {
-  GLIBC_2.2.6 {
-    __errno_location; __h_errno_location;
-  }
   GLIBC_2.12 {
     pthread_atfork;
 

@@ -1,5 +1,3 @@
-GLIBC_2.38 __errno_location F
-GLIBC_2.38 __h_errno_location F
 GLIBC_2.38 __pthread_spin_destroy F
 GLIBC_2.38 __pthread_spin_init F
 GLIBC_2.38 __pthread_spin_lock F

@@ -34,7 +34,6 @@ libpthread-routines := \
   pt-getname-np \
   pt-setname-np \
   cancellation \
-  herrno \
   # libpthread-routine
 
 headers := \
