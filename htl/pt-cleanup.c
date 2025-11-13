@@ -21,6 +21,8 @@
 #include <pt-internal.h>
 #include <shlib-compat.h>
 
+static __thread struct __pthread_cancelation_handler *__pthread_cleanup_stack;
+
 struct __pthread_cancelation_handler **
 ___pthread_get_cleanup_stack (void)
 {

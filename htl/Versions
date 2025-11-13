@@ -248,7 +248,6 @@ libc {
   GLIBC_PRIVATE {
     __libc_alloca_cutoff;
     __libc_pthread_init;
-    __pthread_cleanup_stack;
     __pthread_total;
     ___pthread_self;
     __pthread_alloc;
