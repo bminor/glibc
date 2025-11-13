@@ -24,5 +24,6 @@ __flockfile (FILE *stream)
 {
   _IO_lock_lock (*stream->_lock);
 }
+libc_hidden_def(__flockfile)
 weak_alias (__flockfile, flockfile);
 weak_alias (__flockfile, _IO_flockfile)

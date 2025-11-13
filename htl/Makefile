@@ -20,7 +20,7 @@ subdir := htl
 srcdir = .
 
 MICROKERNEL := mach
-SYSDEPS := lockfile
+SYSDEPS :=
 
 LCLHDRS :=
 
@@ -36,7 +36,6 @@ libpthread-routines := \
   pt-setname-np \
   cancellation \
   herrno \
-  $(SYSDEPS) \
   # libpthread-routine
 
 headers := \
@@ -219,8 +218,6 @@ install-lib := libpthread.so
 install-lib-ldscripts := libpthread_syms.a
 
 include ../Makeconfig
-
-CFLAGS-lockfile.c = -D_IO_MTSAFE_IO
 
 all: # Make this the default target; it will be defined in Rules.
 

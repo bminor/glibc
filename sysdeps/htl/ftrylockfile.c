@@ -17,17 +17,20 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <stdio.h>
-#include <libc-lockP.h>
+#include <stdio-lock.h>
 
 
 int
 __ftrylockfile (FILE *stream)
 {
-#ifdef SHARED
-  return __libc_ptf_call (_IO_ftrylockfile, (stream), 0);
-#else
-  return 0;
-#endif
+  return _IO_lock_trylock (*stream->_lock);
 }
-weak_alias (__ftrylockfile, _IO_ftrylockfile)
-weak_alias (__ftrylockfile, ftrylockfile)
+weak_alias (__ftrylockfile, _IO_ftrylockfile);
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2_6, GLIBC_2_12)
+versioned_symbol (libc, __ftrylockfile, ftrylockfile, GLIBC_2_0);
+# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_43)
+compat_symbol (libpthread, __ftrylockfile, ftrylockfile, GLIBC_2_12);
+# endif
+#else
+weak_alias (__ftrylockfile, ftrylockfile);
+#endif

@@ -1,6 +1,7 @@
 libc {
 
   GLIBC_2.12 {
+    flockfile; ftrylockfile; funlockfile;
     pthread_self;
     __pthread_get_cleanup_stack;
     __pthread_key_create;
@@ -313,12 +314,9 @@ libc {
 
 libpthread {
   GLIBC_2.2.6 {
-    _IO_flockfile; _IO_ftrylockfile; _IO_funlockfile;
     __errno_location; __h_errno_location;
   }
   GLIBC_2.12 {
-    flockfile; ftrylockfile; funlockfile;
-
     pthread_atfork;
 
     pthread_create;

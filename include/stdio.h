@@ -206,10 +206,12 @@ _Noreturn void __libc_message_wrapper (const char *vmaname,
    __libc_message_wrapper (__libc_assert_vma_name, __VA_ARGS__)
 
 /* Acquire ownership of STREAM.  */
-extern void __flockfile (FILE *__stream) attribute_hidden;
+extern void __flockfile (FILE *__stream);
+libc_hidden_proto (__flockfile)
 
 /* Relinquish the ownership granted for STREAM.  */
-extern void __funlockfile (FILE *__stream) attribute_hidden;
+extern void __funlockfile (FILE *__stream);
+libc_hidden_proto (__funlockfile)
 
 /* Try to acquire ownership of STREAM but do not block if it is not
    possible.  */

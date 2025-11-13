@@ -25,5 +25,6 @@ __funlockfile (FILE *stream)
 {
   _IO_lock_unlock (*stream->_lock);
 }
+libc_hidden_def(__funlockfile)
 weak_alias (__funlockfile, _IO_funlockfile)
 weak_alias (__funlockfile, funlockfile);

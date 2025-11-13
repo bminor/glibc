@@ -23,9 +23,15 @@
 void
 __funlockfile (FILE *stream)
 {
-#ifdef SHARED
-  __libc_ptf_call (_IO_funlockfile, (stream), 0);
-#endif
+  _IO_lock_unlock (*stream->_lock);
 }
-weak_alias (__funlockfile, _IO_funlockfile)
-weak_alias (__funlockfile, funlockfile)
+libc_hidden_def(__funlockfile)
+weak_alias (__funlockfile, _IO_funlockfile);
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2_6, GLIBC_2_12)
+versioned_symbol (libc, __funlockfile, funlockfile, GLIBC_2_0);
+# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_43)
+compat_symbol (libpthread, __funlockfile, funlockfile, GLIBC_2_12);
+# endif
+#else
+weak_alias (__funlockfile, funlockfile);
+#endif

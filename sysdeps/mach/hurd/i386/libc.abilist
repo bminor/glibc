@@ -33,6 +33,9 @@ GLIBC_2.12 __pthread_key_create F
 GLIBC_2.12 __pthread_kill F
 GLIBC_2.12 __pthread_mutex_transfer_np F
 GLIBC_2.12 __pthread_self F
+GLIBC_2.12 flockfile F
+GLIBC_2.12 ftrylockfile F
+GLIBC_2.12 funlockfile F
 GLIBC_2.12 pthread_attr_destroy F
 GLIBC_2.12 pthread_attr_getdetachstate F
 GLIBC_2.12 pthread_attr_getguardsize F

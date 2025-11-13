@@ -4,9 +4,6 @@ GLIBC_2.12 __pthread_spin_lock F
 GLIBC_2.12 __pthread_spin_trylock F
 GLIBC_2.12 __pthread_spin_unlock F
 GLIBC_2.12 _pthread_spin_lock F
-GLIBC_2.12 flockfile F
-GLIBC_2.12 ftrylockfile F
-GLIBC_2.12 funlockfile F
 GLIBC_2.12 pthread_atfork F
 GLIBC_2.12 pthread_create F
 GLIBC_2.12 pthread_spin_destroy F
@@ -14,9 +11,6 @@ GLIBC_2.12 pthread_spin_init F
 GLIBC_2.12 pthread_spin_lock F
 GLIBC_2.12 pthread_spin_trylock F
 GLIBC_2.12 pthread_spin_unlock F
-GLIBC_2.2.6 _IO_flockfile F
-GLIBC_2.2.6 _IO_ftrylockfile F
-GLIBC_2.2.6 _IO_funlockfile F
 GLIBC_2.2.6 __errno_location F
 GLIBC_2.2.6 __h_errno_location F
 GLIBC_2.21 pthread_hurd_cond_timedwait_np F

@@ -26,9 +26,6 @@
    so if possible avoid breaking it and append new hooks to the end.  */
 struct pthread_functions
 {
-  void (*ptr__IO_flockfile) (FILE *);
-  void (*ptr__IO_funlockfile) (FILE *);
-  int (*ptr__IO_ftrylockfile) (FILE *);
 };
 
 /* Variable in libc.so.  */

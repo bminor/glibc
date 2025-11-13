@@ -17,15 +17,21 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <stdio.h>
-#include <libc-lockP.h>
+#include <stdio-lock.h>
 
 
 void
 __flockfile (FILE *stream)
 {
-#ifdef SHARED
-  __libc_ptf_call (_IO_flockfile, (stream), 0);
-#endif
+  _IO_lock_lock (*stream->_lock);
 }
-weak_alias (__flockfile, _IO_flockfile)
-weak_alias (__flockfile, flockfile)
+libc_hidden_def(__flockfile)
+weak_alias (__flockfile, _IO_flockfile);
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2_6, GLIBC_2_12)
+versioned_symbol (libc, __flockfile, flockfile, GLIBC_2_0);
+# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_43)
+compat_symbol (libpthread, __flockfile, flockfile, GLIBC_2_12);
+# endif
+#else
+weak_alias (__flockfile, flockfile);
+#endif
