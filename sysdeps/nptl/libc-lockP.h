@@ -90,13 +90,6 @@ _Static_assert (LLL_LOCK_INITIALIZER == 0, "LLL_LOCK_INITIALIZER != 0");
   (FUNC != NULL ? FUNC ARGS : ELSE)
 #endif
 
-/* All previously forwarded functions are now called directly (either
-   via local call in libc, or through a __export), but __libc_ptf_call
-   is still used in generic code shared with Hurd.  */
-#define PTFAVAIL(NAME) 1
-#define __libc_ptf_call(FUNC, ARGS, ELSE) FUNC ARGS
-#define __libc_ptf_call_always(FUNC, ARGS) FUNC ARGS
-
 /* Initialize the named lock variable, leaving it in a consistent, unlocked
    state.  */
 #define __libc_lock_init(NAME) ((void) ((NAME) = LLL_LOCK_INITIALIZER))

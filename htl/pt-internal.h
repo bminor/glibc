@@ -194,9 +194,6 @@ extern struct __pthread *_pthread_self (void);
 #endif
 
 
-/* Initialize the pthreads library.  */
-extern void ___pthread_init (void);
-
 /* Internal version of pthread_create.  Rather than return the new
    tid, we return the whole __pthread structure in *PTHREAD.  */
 extern int __pthread_create_internal (struct __pthread **__restrict pthread,

@@ -20,7 +20,6 @@
 #define _BITS_LIBC_LOCKP_H 1
 
 #include <pthread.h>
-#include <pthread-functions.h>
 
 /* If we check for a weakly referenced symbol and then perform a
    normal jump to it te code generated for some platforms in case of
@@ -35,40 +34,6 @@
 # define __libc_maybe_call(FUNC, ARGS, ELSE) \
   (FUNC != NULL ? FUNC ARGS : ELSE)
 #endif
-
-/* Call thread functions through the function pointer table.  */
-#if defined SHARED && IS_IN (libc)
-# define PTFAVAIL(NAME) __libc_pthread_functions_init
-# define __libc_ptf_call(FUNC, ARGS, ELSE) \
-  (__libc_pthread_functions_init ? PTHFCT_CALL (ptr_##FUNC, ARGS) : ELSE)
-# define __libc_ptf_call_always(FUNC, ARGS) \
-  PTHFCT_CALL (ptr_##FUNC, ARGS)
-#elif IS_IN (libpthread)
-# define PTFAVAIL(NAME) 1
-# define __libc_ptf_call(FUNC, ARGS, ELSE) \
-  FUNC ARGS
-# define __libc_ptf_call_always(FUNC, ARGS) \
-  FUNC ARGS
-#else
-# define PTFAVAIL(NAME) (NAME != NULL)
-# define __libc_ptf_call(FUNC, ARGS, ELSE) \
-  __libc_maybe_call (FUNC, ARGS, ELSE)
-# define __libc_ptf_call_always(FUNC, ARGS) \
-  FUNC ARGS
-#endif
-
-/* Create thread-specific key.  */
-#define __libc_key_create(KEY, DESTRUCTOR) \
-  __libc_ptf_call (__pthread_key_create, (KEY, DESTRUCTOR), 1)
-
-/* Get thread-specific data.  */
-#define __libc_getspecific(KEY) \
-  __libc_ptf_call (__pthread_getspecific, (KEY), NULL)
-
-/* Set thread-specific data.  */
-#define __libc_setspecific(KEY, VALUE) \
-  __libc_ptf_call (__pthread_setspecific, (KEY, VALUE), 0)
-
 
 /* Functions that are used by this file and are internal to the GNU C
    library.  */

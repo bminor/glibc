@@ -48,9 +48,6 @@ _init_routine (void *stack)
     /* Already initialized */
     return;
 
-  /* Initialize the library.  */
-  ___pthread_init ();
-
   if (stack != NULL)
     {
       /* We are given a stack, use it.  */

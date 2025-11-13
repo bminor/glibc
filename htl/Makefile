@@ -26,7 +26,6 @@ LCLHDRS :=
 
 libpthread-routines := \
   pt-create \
-  pt-initialize \
   pt-spin-inlines \
   pt-hurd-cond-wait \
   pt-hurd-cond-timedwait \
@@ -69,9 +68,7 @@ distribute :=
 
 routines := \
   alloca_cutoff \
-  forward \
   htlfreeres \
-  libc_pthread_init \
   pt-alloc \
   pt-attr \
   pt-attr-destroy \
@@ -210,7 +207,6 @@ routines := \
   sem_routines \
   sem_unlink \
   # routines
-shared-only-routines = forward
 
 extra-libs := libpthread
 extra-libs-others := $(extra-libs)
