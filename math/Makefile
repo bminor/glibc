@@ -1827,22 +1827,22 @@ CFLAGS-s_modff128.c += $(config-cflags-signaling-nans)
 # These files rely on C23 semantics for avoiding "inexact" exceptions
 # from rounding functions.  These settings can be removed when glibc
 # builds with -std=gnu23 or later.
-CFLAGS-s_fromfp.c += -fno-fp-int-builtin-inexact
-CFLAGS-s_fromfpx.c += -fno-fp-int-builtin-inexact
-CFLAGS-s_ufromfp.c += -fno-fp-int-builtin-inexact
-CFLAGS-s_ufromfpx.c += -fno-fp-int-builtin-inexact
-CFLAGS-s_fromfpf.c += -fno-fp-int-builtin-inexact
-CFLAGS-s_fromfpxf.c += -fno-fp-int-builtin-inexact
-CFLAGS-s_ufromfpf.c += -fno-fp-int-builtin-inexact
-CFLAGS-s_ufromfpxf.c += -fno-fp-int-builtin-inexact
-CFLAGS-s_fromfpl.c += -fno-fp-int-builtin-inexact
-CFLAGS-s_fromfpxl.c += -fno-fp-int-builtin-inexact
-CFLAGS-s_ufromfpl.c += -fno-fp-int-builtin-inexact
-CFLAGS-s_ufromfpxl.c += -fno-fp-int-builtin-inexact
-CFLAGS-s_fromfpf128.c += -fno-fp-int-builtin-inexact
-CFLAGS-s_fromfpxf128.c += -fno-fp-int-builtin-inexact
-CFLAGS-s_ufromfpf128.c += -fno-fp-int-builtin-inexact
-CFLAGS-s_ufromfpxf128.c += -fno-fp-int-builtin-inexact
+CFLAGS-s_fromfp.c += $(config-cflags-no-fp-builtin-inexact)
+CFLAGS-s_fromfpx.c += $(config-cflags-no-fp-builtin-inexact)
+CFLAGS-s_ufromfp.c += $(config-cflags-no-fp-builtin-inexact)
+CFLAGS-s_ufromfpx.c += $(config-cflags-no-fp-builtin-inexact)
+CFLAGS-s_fromfpf.c += $(config-cflags-no-fp-builtin-inexact)
+CFLAGS-s_fromfpxf.c += $(config-cflags-no-fp-builtin-inexact)
+CFLAGS-s_ufromfpf.c += $(config-cflags-no-fp-builtin-inexact)
+CFLAGS-s_ufromfpxf.c += $(config-cflags-no-fp-builtin-inexact)
+CFLAGS-s_fromfpl.c += $(config-cflags-no-fp-builtin-inexact)
+CFLAGS-s_fromfpxl.c += $(config-cflags-no-fp-builtin-inexact)
+CFLAGS-s_ufromfpl.c += $(config-cflags-no-fp-builtin-inexact)
+CFLAGS-s_ufromfpxl.c += $(config-cflags-no-fp-builtin-inexact)
+CFLAGS-s_fromfpf128.c += $(config-cflags-no-fp-builtin-inexact)
+CFLAGS-s_fromfpxf128.c += $(config-cflags-no-fp-builtin-inexact)
+CFLAGS-s_ufromfpf128.c += $(config-cflags-no-fp-builtin-inexact)
+CFLAGS-s_ufromfpxf128.c += $(config-cflags-no-fp-builtin-inexact)
 
 $(addprefix $(objpfx),\
 	    $(filter-out $(tests-static) $(libm-tests-vector),\
