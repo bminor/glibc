@@ -23,11 +23,11 @@
 #include <fcntl.h>
 #include <stdint.h>
 #include <string.h>
+#include <stdio.h>
 #include <sys/mman.h>
 #include <support/check.h>
 #include <support/support.h>
 #include <support/temp_file.h>
-#include <support/xunistd.h>
 
 /* The __attribute__ ((weak)) prevents a GCC optimization.  Without
    it, GCC would "know" that errno is unchanged by calling free (ptr),
@@ -67,63 +67,51 @@ do_test (void)
        - it has to unmap the middle part of a VMA, and
        - the number of VMAs of a process is limited and the limit is
          already reached.
-     The latter condition is fulfilled on Linux, when the file
-     /proc/sys/vm/max_map_count exists.  For all known Linux versions
-     the default limit is at most 65536.
-   */
-  #if defined __linux__
-  if (xopen ("/proc/sys/vm/max_map_count", O_RDONLY, 0) >= 0)
-    {
-      /* Preparations.  */
-      size_t pagesize = getpagesize ();
-      void *firstpage_backup = xmalloc (pagesize);
-      void *lastpage_backup = xmalloc (pagesize);
-      /* Allocate a large memory area, as a bumper, so that the MAP_FIXED
-         allocation later will not overwrite parts of the memory areas
-         allocated to ld.so or libc.so.  */
-      xmmap (NULL, 0x1000000, PROT_READ, MAP_ANONYMOUS | MAP_PRIVATE, -1);
-      /* A file descriptor pointing to a regular file.  */
-      int fd = create_temp_file ("tst-free-errno", NULL);
-      if (fd < 0)
-	FAIL_EXIT1 ("cannot create temporary file");
+     On Linux, the default VMA count limit is 65536 although many systems
+     might override this.  For this test, irrespective of the system, we
+     try to create up to 65536 mappings in order to attempt to hit the
+     limit.  */
+  {
+    /* We expect the kernel to coalesce the VMAs for these large mallocs
+       (which will be mmap'd by malloc due to their size).  */
+    size_t big_size = 0x3000000;
+    void * volatile block1 = xmalloc (big_size - 100);
+    void * volatile block2 = xmalloc (big_size - 100);
+    void * volatile block3 = xmalloc (big_size - 100);
 
-      /* Do a large memory allocation.  */
-      size_t big_size = 0x3000000;
-      void * volatile ptr = xmalloc (big_size - 0x100);
-      char *ptr_aligned = (char *) ((uintptr_t) ptr & ~(pagesize - 1));
-      /* This large memory allocation allocated a memory area
-	 from ptr_aligned to ptr_aligned + big_size.
-	 Enlarge this memory area by adding a page before and a page
-	 after it.  */
-      memcpy (firstpage_backup, ptr_aligned, pagesize);
-      memcpy (lastpage_backup, ptr_aligned + big_size - pagesize,
-	      pagesize);
-      xmmap (ptr_aligned - pagesize, pagesize + big_size + pagesize,
-	     PROT_READ | PROT_WRITE,
-	     MAP_ANONYMOUS | MAP_PRIVATE | MAP_FIXED, -1);
-      memcpy (ptr_aligned, firstpage_backup, pagesize);
-      memcpy (ptr_aligned + big_size - pagesize, lastpage_backup,
-	      pagesize);
+    /* If block2 lands between block1 and block3, we can continue the test
+       since it depends on being able to free block2 to cause an munmap
+       failure.  */
+    if (((block2 > block1) && (block2 > block3))
+        || ((block2 < block1) && (block2 < block3)))
+      printf
+        ("warning: block2 was not allocated between block1 and block3\n");
 
-      /* Now add as many mappings as we can.
-	 Stop at 65536, in order not to crash the machine (in case the
-	 limit has been increased by the system administrator).  */
-      for (int i = 0; i < 65536; i++)
-	if (mmap (NULL, pagesize, PROT_READ, MAP_FILE | MAP_PRIVATE, fd, 0)
-	    == MAP_FAILED)
-	  break;
-      /* Now the number of VMAs of this process has hopefully attained
-	 its limit.  */
+    /* We will map this fd repeatedly to consume VMA mappings.  */
+    int fd = create_temp_file ("tst-free-errno", NULL);
+    if (fd < 0)
+      FAIL_EXIT1 ("cannot create temporary file for mmap'ing");
 
-      errno = 1789;
-      /* This call to free() is supposed to call
-	   munmap (ptr_aligned, big_size);
-	 which increases the number of VMAs by 1, which is supposed
-	 to fail.  */
-      free (ptr);
-      TEST_VERIFY (get_errno () == 1789);
-    }
-  #endif
+    /* Now add as many mappings as we can.
+       Stop at 65536, in order not to crash the machine (in case the
+       limit has been increased by the system administrator).  */
+    size_t pagesize = getpagesize ();
+    for (int i = 0; i < 65536; i++)
+      if (mmap (NULL, pagesize, PROT_READ, MAP_FILE | MAP_PRIVATE,
+                fd, 0)
+          == MAP_FAILED)
+        break;
+    /* Now the number of VMAs of this process has hopefully attained
+       its limit.  */
+
+    errno = 1789;
+    /* This call to free() is supposed to call munmap, which should
+       fail because the fragmentation of a bigger coalesced VMA will
+       lead to an increase in the number of VMAs which we already
+       maxed out.  */
+    free (block2);
+    TEST_VERIFY (get_errno () == 1789);
+  }
 
   return 0;
 }
