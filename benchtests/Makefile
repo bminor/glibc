@@ -75,6 +75,7 @@ bench-math := \
   expm1f \
   floor \
   floorf \
+  fma \
   fmal \
   fmax \
   fmaxf \
@@ -344,6 +345,7 @@ CFLAGS-bench-ffsll.c += -fno-builtin
 CFLAGS-bench-sqrt.c += -fno-builtin
 CFLAGS-bench-fmin.c += -fno-builtin
 CFLAGS-bench-fminf.c += -fno-builtin
+CFLAGS-bench-fma.c += -fno-builtin
 CFLAGS-bench-fmax.c += -fno-builtin
 CFLAGS-bench-fmaxf.c += -fno-builtin
 CFLAGS-bench-trunc.c += -fno-builtin
