@@ -85,6 +85,24 @@ static inline int32_t
 converttoint (double x);
 #endif
 
+#ifndef TOINT64_INTRINSICS
+# define TOINT64_INTRINSICS 1
+#endif
+
+static inline double convertfromint64 (int64_t a)
+{
+#if !TOINT64_INTRINSICS
+  union { int64_t x; double d; } low = {.d = 0x1.0p52};
+
+  double high = (int32_t)(a >> 32) * 0x1.0p32;
+  low.x |= a & INT64_C(0x00000000ffffffff);
+
+  return (high - 0x1.0p52) + low.d;
+#else
+  return a;
+#endif
+}
+
 static inline uint64_t
 asuint64 (double f)
 {
