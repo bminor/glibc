@@ -16,8 +16,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _ATOMIC_MACHINE_H
-#define _ATOMIC_MACHINE_H	1
+#ifndef _SPARC_ATOMIC_MACHINE_H
+#define _SPARC_ATOMIC_MACHINE_H	1
+
+#include_next <atomic-machine.h>
 
 #ifdef __sparc_v9__
 # define atomic_full_barrier() \

@@ -28,7 +28,7 @@ __sem_destroy (sem_t *sem)
 {
   struct new_sem *isem = (struct new_sem *) sem;
   if (
-#if __HAVE_64B_ATOMICS
+#if USE_64B_ATOMICS
       atomic_load_relaxed (&isem->data) >> SEM_NWAITERS_SHIFT
 #else
       atomic_load_relaxed (&isem->value) & SEM_NWAITERS_MASK

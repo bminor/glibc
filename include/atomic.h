@@ -117,11 +117,6 @@
 #endif
 
 
-/* This is equal to 1 iff the architecture supports 64b atomic operations.  */
-#ifndef __HAVE_64B_ATOMICS
-#error Unable to determine if 64-bit atomics are present.
-#endif
-
 /* The following functions are a subset of the atomic operations provided by
    C11.  Usually, a function named atomic_OP_MO(args) is equivalent to C11's
    atomic_OP_explicit(args, memory_order_MO); exceptions noted below.  */
@@ -129,7 +124,7 @@
 /* We require 32b atomic operations; some archs also support 64b atomic
    operations.  */
 void __atomic_link_error (void);
-# if __HAVE_64B_ATOMICS == 1
+# if USE_64B_ATOMICS == 1
 #  define __atomic_check_size(mem) \
    if ((sizeof (*mem) != 4) && (sizeof (*mem) != 8))			      \
      __atomic_link_error ();
@@ -142,7 +137,7 @@ void __atomic_link_error (void);
    need other atomic operations of such sizes, and restricting the support to
    loads and stores makes this easier for archs that do not have native
    support for atomic operations to less-than-word-sized data.  */
-# if __HAVE_64B_ATOMICS == 1
+# if USE_64B_ATOMICS == 1
 #  define __atomic_check_size_ls(mem) \
    if ((sizeof (*mem) != 1) && (sizeof (*mem) != 2) && (sizeof (*mem) != 4)   \
        && (sizeof (*mem) != 8))						      \

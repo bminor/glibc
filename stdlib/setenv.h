@@ -61,7 +61,7 @@ __environ_is_from_array_list (char **ep)
    but given that counter wrapround is probably impossible to hit
    (2**32 operations in unsetenv concurrently with getenv), using
    <atomic_wide_counter.h> seems unnecessary.  */
-#if __HAVE_64B_ATOMICS
+#if USE_64B_ATOMICS
 typedef uint64_t environ_counter;
 #else
 typedef uint32_t environ_counter;

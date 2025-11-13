@@ -159,7 +159,7 @@ struct pthread_key_struct
 /* Semaphore variable structure.  */
 struct new_sem
 {
-#if __HAVE_64B_ATOMICS
+#if USE_64B_ATOMICS
   /* The data field holds both value (in the least-significant 32 bits) and
      nwaiters.  */
 # if __BYTE_ORDER == __LITTLE_ENDIAN

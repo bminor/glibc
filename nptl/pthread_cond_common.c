@@ -52,7 +52,7 @@ __condvar_add_g1_start_relaxed (pthread_cond_t *cond, unsigned int val)
   __atomic_wide_counter_add_relaxed (&cond->__data.__g1_start, val);
 }
 
-#if __HAVE_64B_ATOMICS == 1
+#if USE_64B_ATOMICS == 1
 
 static inline uint64_t
 __condvar_fetch_xor_wseq_release (pthread_cond_t *cond, unsigned int val)
@@ -60,7 +60,7 @@ __condvar_fetch_xor_wseq_release (pthread_cond_t *cond, unsigned int val)
   return atomic_fetch_xor_release (&cond->__data.__wseq.__value64, val);
 }
 
-#else /* !__HAVE_64B_ATOMICS */
+#else /* !USE_64B_ATOMICS */
 
 /* The xor operation needs to be an atomic read-modify-write.  The write
    itself is not an issue as it affects just the lower-order half but not bits
@@ -103,7 +103,7 @@ __condvar_fetch_xor_wseq_release (pthread_cond_t *cond, unsigned int val)
   return ((uint64_t) h << 31) + l2;
 }
 
-#endif /* !__HAVE_64B_ATOMICS */
+#endif /* !USE_64B_ATOMICS */
 
 /* The lock that signalers use.  See pthread_cond_wait_common for uses.
    The lock is our normal three-state lock: not acquired (0) / acquired (1) /

@@ -52,7 +52,7 @@ do_test (void)
       puts ("sem_init failed");
       return 1;
     }
-#if __HAVE_64B_ATOMICS
+#if USE_64B_ATOMICS
   if ((u.ns.data >> SEM_NWAITERS_SHIFT) != 0)
 #else
   if (u.ns.nwaiters != 0)
@@ -89,7 +89,7 @@ do_test (void)
       goto again;
     }
 
-#if __HAVE_64B_ATOMICS
+#if USE_64B_ATOMICS
   if ((u.ns.data >> SEM_NWAITERS_SHIFT) != 0)
 #else
   if (u.ns.nwaiters != 0)

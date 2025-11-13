@@ -24,7 +24,7 @@
 int
 __sem_waitfast (struct new_sem *isem, int definitive_result)
 {
-#if __HAVE_64B_ATOMICS
+#if USE_64B_ATOMICS
   uint64_t d = atomic_load_relaxed (&isem->data);
 
   do

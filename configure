@@ -7702,48 +7702,6 @@ if test "$libc_cv_gcc_builtin_memset" = yes ; then
 
 fi
 
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for 64-bit atomic support" >&5
-printf %s "checking for 64-bit atomic support... " >&6; }
-if test ${libc_cv_gcc_has_64b_atomics+y}
-then :
-  printf %s "(cached) " >&6
-else case e in #(
-  e) cat > conftest.c <<\EOF
-typedef struct { long long t; } X;
-extern void has_64b_atomics(void);
-void f(void)
-{
-  X x;
-  /* Use address of structure with 64-bit type.  This avoids incorrect
-     implementations which return true even if long long is not 64-bit aligned.
-     This works on GCC and LLVM - other cases have bugs and they disagree.  */
-  _Static_assert (__atomic_always_lock_free (sizeof (x), &x), "no_64b_atomics");
-}
-EOF
-if { ac_try='${CC-cc} -O2 -S conftest.c'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; };
-then
-  libc_cv_gcc_has_64b_atomics=yes
-else
-  libc_cv_gcc_has_64b_atomics=no
-fi
-rm -f conftest*  ;;
-esac
-fi
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_gcc_has_64b_atomics" >&5
-printf "%s\n" "$libc_cv_gcc_has_64b_atomics" >&6; }
-if test "$libc_cv_gcc_has_64b_atomics" = yes; then
-  printf "%s\n" "#define __HAVE_64B_ATOMICS 1" >>confdefs.h
-
-else
-  printf "%s\n" "#define __HAVE_64B_ATOMICS 0" >>confdefs.h
-
- fi
-
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for redirection of built-in functions" >&5
 printf %s "checking for redirection of built-in functions... " >&6; }
 if test ${libc_cv_gcc_builtin_redirection+y}

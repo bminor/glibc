@@ -19,6 +19,12 @@
 #ifndef _X86_ATOMIC_MACHINE_H
 #define _X86_ATOMIC_MACHINE_H 1
 
+#ifdef __x86_64__
+# define USE_64B_ATOMICS		1
+#else
+# define USE_64B_ATOMICS		0
+#endif
+
 #define atomic_spin_nop() __asm ("pause")
 
 #endif /* atomic-machine.h */

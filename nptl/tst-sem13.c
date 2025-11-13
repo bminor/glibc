@@ -30,7 +30,7 @@ do_test_wait (waitfn_t waitfn, const char *fnname)
   TEST_VERIFY_EXIT (waitfn (&u.s, &ts) < 0);
   TEST_COMPARE (errno, EINVAL);
 
-#if __HAVE_64B_ATOMICS
+#if USE_64B_ATOMICS
   unsigned int nwaiters = (u.ns.data >> SEM_NWAITERS_SHIFT);
 #else
   unsigned int nwaiters = u.ns.nwaiters;
@@ -42,7 +42,7 @@ do_test_wait (waitfn_t waitfn, const char *fnname)
   errno = 0;
   TEST_VERIFY_EXIT (waitfn (&u.s, &ts) < 0);
   TEST_COMPARE (errno, ETIMEDOUT);
-#if __HAVE_64B_ATOMICS
+#if USE_64B_ATOMICS
   nwaiters = (u.ns.data >> SEM_NWAITERS_SHIFT);
 #else
   nwaiters = u.ns.nwaiters;

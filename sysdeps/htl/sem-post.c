@@ -31,7 +31,7 @@ __sem_post (sem_t *sem)
   struct new_sem *isem = (struct new_sem *) sem;
   int flags = isem->pshared ? GSYNC_SHARED : 0;
 
-#if __HAVE_64B_ATOMICS
+#if USE_64B_ATOMICS
   uint64_t d = atomic_load_relaxed (&isem->data);
 
   do

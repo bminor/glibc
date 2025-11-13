@@ -15,6 +15,11 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <stdint.h>
+#ifndef _ALPHA_ATOMIC_MACHINE_H
+#define _ALPHA_ATOMIC_MACHINE_H
+
+#include_next <atomic-machine.h>
 
 #define atomic_write_barrier()	__asm ("wmb" : : : "memory");
+
+#endif

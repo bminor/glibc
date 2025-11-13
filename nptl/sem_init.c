@@ -38,7 +38,7 @@ __new_sem_init (sem_t *sem, int pshared, unsigned int value)
   struct new_sem *isem = (struct new_sem *) sem;
 
   /* Use the values the caller provided.  */
-#if __HAVE_64B_ATOMICS
+#if USE_64B_ATOMICS
   isem->data = value;
 #else
   isem->value = value << SEM_VALUE_SHIFT;

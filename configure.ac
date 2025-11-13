@@ -1493,33 +1493,6 @@ if test "$libc_cv_gcc_builtin_memset" = yes ; then
   AC_DEFINE(HAVE_BUILTIN_MEMSET)
 fi
 
-AC_CACHE_CHECK(for 64-bit atomic support, libc_cv_gcc_has_64b_atomics, [dnl
-cat > conftest.c <<\EOF
-typedef struct { long long t; } X;
-extern void has_64b_atomics(void);
-void f(void)
-{
-  X x;
-  /* Use address of structure with 64-bit type.  This avoids incorrect
-     implementations which return true even if long long is not 64-bit aligned.
-     This works on GCC and LLVM - other cases have bugs and they disagree.  */
-  _Static_assert (__atomic_always_lock_free (sizeof (x), &x), "no_64b_atomics");
-}
-EOF
-dnl
-if AC_TRY_COMMAND([${CC-cc} -O2 -S conftest.c]);
-then
-  libc_cv_gcc_has_64b_atomics=yes
-else
-  libc_cv_gcc_has_64b_atomics=no
-fi
-rm -f conftest* ])
-if test "$libc_cv_gcc_has_64b_atomics" = yes; then
-  AC_DEFINE(__HAVE_64B_ATOMICS, 1)
-else
-  AC_DEFINE(__HAVE_64B_ATOMICS, 0)
- fi
-
 AC_CACHE_CHECK(for redirection of built-in functions, libc_cv_gcc_builtin_redirection, [dnl
 cat > conftest.c <<\EOF
 extern char *strstr (const char *, const char *) __asm ("my_strstr");

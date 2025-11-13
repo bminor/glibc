@@ -21,6 +21,8 @@
 
 #ifdef __riscv_atomic
 
+#include_next <atomic-machine.h>
+
 /* Miscellaneous.  */
 
 # define asm_amo(which, ordering, mem, value) ({ 		\

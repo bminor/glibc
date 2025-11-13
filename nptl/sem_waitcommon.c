@@ -77,7 +77,7 @@
    requirement because the semaphore must not be destructed while any sem_wait
    is still executing.  */
 
-#if !__HAVE_64B_ATOMICS
+#if !USE_64B_ATOMICS
 static void
 __sem_wait_32_finish (struct new_sem *sem);
 #endif
@@ -87,7 +87,7 @@ __sem_wait_cleanup (void *arg)
 {
   struct new_sem *sem = (struct new_sem *) arg;
 
-#if __HAVE_64B_ATOMICS
+#if USE_64B_ATOMICS
   /* Stop being registered as a waiter.  See below for MO.  */
   atomic_fetch_add_relaxed (&sem->data, -((uint64_t) 1 << SEM_NWAITERS_SHIFT));
 #else
@@ -107,7 +107,7 @@ do_futex_wait (struct new_sem *sem, clockid_t clockid,
 {
   int err;
 
-#if __HAVE_64B_ATOMICS
+#if USE_64B_ATOMICS
   err = __futex_abstimed_wait_cancelable64 (
       (unsigned int *) &sem->data + SEM_VALUE_OFFSET, 0,
       clockid, abstime,
@@ -132,7 +132,7 @@ __new_sem_wait_fast (struct new_sem *sem, int definitive_result)
      synchronize memory); thus, relaxed MO is sufficient for the initial load
      and the failure path of the CAS.  If the weak CAS fails and we need a
      definitive result, retry.  */
-#if __HAVE_64B_ATOMICS
+#if USE_64B_ATOMICS
   uint64_t d = atomic_load_relaxed (&sem->data);
   do
     {
@@ -166,7 +166,7 @@ __new_sem_wait_slow64 (struct new_sem *sem, clockid_t clockid,
 {
   int err = 0;
 
-#if __HAVE_64B_ATOMICS
+#if USE_64B_ATOMICS
   /* Add a waiter.  Relaxed MO is sufficient because we can rely on the
      ordering provided by the RMW operations we use.  */
   uint64_t d = atomic_fetch_add_relaxed (&sem->data,
@@ -280,7 +280,7 @@ __new_sem_wait_slow64 (struct new_sem *sem, clockid_t clockid,
 	  /* If there is no token, wait.  */
 	  if ((v >> SEM_VALUE_SHIFT) == 0)
 	    {
-	      /* See __HAVE_64B_ATOMICS variant.  */
+	      /* See USE_64B_ATOMICS variant.  */
 	      err = do_futex_wait (sem, clockid, abstime);
 	      if (err == ETIMEDOUT || err == EINTR)
 		{
@@ -313,7 +313,7 @@ error:
 }
 
 /* Stop being a registered waiter (non-64b-atomics code only).  */
-#if !__HAVE_64B_ATOMICS
+#if !USE_64B_ATOMICS
 static void
 __sem_wait_32_finish (struct new_sem *sem)
 {

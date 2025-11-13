@@ -24,7 +24,7 @@
 
 static inline void __new_sem_open_init (struct new_sem *sem, unsigned value)
 {
-#if __HAVE_64B_ATOMICS
+#if USE_64B_ATOMICS
   sem->data = value;
 #else
   sem->value = value << SEM_VALUE_SHIFT;

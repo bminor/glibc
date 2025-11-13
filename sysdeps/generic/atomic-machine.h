@@ -34,4 +34,16 @@
      and adaptive mutexes to optimize spin-wait loops.
 */
 
+#include <bits/wordsize.h>
+
+/* NB: The NPTL semaphore code casts a sem_t to a new_sem and issues a 64-bit
+   atomic operation for USE_64B_ATOMICS.  However, the sem_t has 32-bit
+   alignment on 32-bit architectures, which prevents using 64-bit atomics even
+   if the ABI supports it.  */
+#if __WORDSIZE == 64
+# define USE_64B_ATOMICS 1
+#else
+# define USE_64B_ATOMICS 0
+#endif
+
 #endif	/* atomic-machine.h */

@@ -27,7 +27,7 @@
 #include <pt-internal.h>
 #include <shlib-compat.h>
 
-#if !__HAVE_64B_ATOMICS
+#if !USE_64B_ATOMICS
 static void
 __sem_wait_32_finish (struct new_sem *isem);
 #endif
@@ -37,7 +37,7 @@ __sem_wait_cleanup (void *arg)
 {
   struct new_sem *isem = arg;
 
-#if __HAVE_64B_ATOMICS
+#if USE_64B_ATOMICS
   atomic_fetch_add_relaxed (&isem->data, -((uint64_t) 1 << SEM_NWAITERS_SHIFT));
 #else
   __sem_wait_32_finish (isem);
@@ -60,7 +60,7 @@ __sem_timedwait_internal (sem_t *restrict sem,
 
   int cancel_oldtype = LIBC_CANCEL_ASYNC();
 
-#if __HAVE_64B_ATOMICS
+#if USE_64B_ATOMICS
   uint64_t d = atomic_fetch_add_relaxed (&isem->data,
 		 (uint64_t) 1 << SEM_NWAITERS_SHIFT);
 
@@ -170,7 +170,7 @@ error:
   return ret;
 }
 
-#if !__HAVE_64B_ATOMICS
+#if !USE_64B_ATOMICS
 /* Stop being a registered waiter (non-64b-atomics code only).  */
 static void
 __sem_wait_32_finish (struct new_sem *isem)
