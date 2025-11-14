@@ -297,9 +297,56 @@ $(addprefix $(objpfx), $(tests-link-with-libpthread)): $(shared-thread-library)
 $(tests-link-with-libpthread:%=$(objpfx)%-malloc-largetcache): \
   $(shared-thread-library)
 
+# tests-threaded-{main,worker} are variants of base malloc tests that are
+# run in a multi-threaded program.  The main variant is run in the main
+# thread while an alternate thread exists, and the worker variant is run in
+# a worker thread while the main thread waits on it.
+
+# List of tests which don't have threaded-{main,worker} copies:
+# already multithreaded tests,
+# static copies of some regular tests,
+# tst-compathooks-on: hook/call counts mismatch due to threading allocations
+# tst-interpose-nothread: interposes malloc without locking
+tests-exclude-threaded = \
+  $(tests-link-with-libpthread) \
+  $(tests-static) \
+  tst-compathooks-on \
+  tst-interpose-nothread \
+# tests-exclude-threaded
+
+tests-threaded-main = $(addsuffix -threaded-main, \
+				  $(filter-out $(tests-exclude-threaded), \
+					       $(tests)))
+$(addprefix $(objpfx), $(tests-threaded-main)): $(shared-thread-library)
+
+tests-threaded-worker = $(addsuffix -threaded-worker, \
+				    $(filter-out $(tests-exclude-threaded), \
+						 $(tests)))
+$(addprefix $(objpfx), $(tests-threaded-worker)): $(shared-thread-library)
+
+tests += $(tests-threaded-main) $(tests-threaded-worker)
+
+# This avoids a test combination explosion with two threaded copies of each
+# of these variants:
+tests-exclude-malloc-check += $(tests-threaded-main) $(tests-threaded-worker)
+tests-exclude-mcheck += $(tests-threaded-main) $(tests-threaded-worker)
+tests-exclude-hugetlb1 += $(tests-threaded-main) $(tests-threaded-worker)
+tests-exclude-hugetlb2 += $(tests-threaded-main) $(tests-threaded-worker)
+tests-exclude-largetcache += $(tests-threaded-main) $(tests-threaded-worker)
+
 # These should be removed by `make clean'.
 extra-objs = mcheck-init.o libmcheck.a
 others-extras = mcheck-init.o
+
+# Compile threaded-{main,worker} tests from their corresponding base
+# sources, but with -DTEST_IN_THREAD appropriately defined so that support
+# infrastructure runs them in a multi-threaded program.
+$(objpfx)%-threaded-main.o: CPPFLAGS += -DTEST_IN_THREAD=TEST_THREAD_MAIN
+$(objpfx)%-threaded-main.o: %.c $(before-compile)
+	$(compile-command.c)
+$(objpfx)%-threaded-worker.o: CPPFLAGS += -DTEST_IN_THREAD=TEST_THREAD_WORKER
+$(objpfx)%-threaded-worker.o: %.c $(before-compile)
+	$(compile-command.c)
 
 # Include the cleanup handler.
 aux := set-freeres thread-freeres
@@ -384,12 +431,21 @@ endif
 endif
 endif
 
-tst-malloc-check-ENV = MALLOC_CHECK_=3 \
-		       LD_PRELOAD=$(objpfx)/libc_malloc_debug.so
-tst-malloc-usable-ENV = MALLOC_CHECK_=3 \
-		       LD_PRELOAD=$(objpfx)/libc_malloc_debug.so
-tst-malloc-usable-tunables-ENV = GLIBC_TUNABLES=glibc.malloc.check=3 \
-				 LD_PRELOAD=$(objpfx)/libc_malloc_debug.so
+malloc-check-env = \
+  MALLOC_CHECK_=3 \
+  LD_PRELOAD=$(objpfx)/libc_malloc_debug.so
+
+malloc-check-tunables-env = \
+  GLIBC_TUNABLES=glibc.malloc.check=3 \
+  LD_PRELOAD=$(objpfx)/libc_malloc_debug.so
+
+tst-malloc-check-ENV = $(malloc-check-env)
+tst-malloc-usable-ENV = $(malloc-check-env)
+tst-malloc-usable-threaded-main-ENV = $(malloc-check-env)
+tst-malloc-usable-threaded-worker-ENV = $(malloc-check-env)
+tst-malloc-usable-tunables-ENV = $(malloc-check-tunables-env)
+tst-malloc-usable-tunables-threaded-main-ENV = $(malloc-check-tunables-env)
+tst-malloc-usable-tunables-threaded-worker-ENV = $(malloc-check-tunables-env)
 
 tst-mxfast-ENV = GLIBC_TUNABLES=glibc.malloc.tcache_count=0:glibc.malloc.mxfast=0
 
@@ -455,6 +511,10 @@ tst-mallocstate-malloc-check-ENV = LD_PRELOAD=$(objpfx)libc_malloc_debug.so
 # libc_malloc_debug.so.
 $(objpfx)tst-mallocstate: $(objpfx)libc_malloc_debug.so
 $(objpfx)tst-mallocstate-malloc-check: $(objpfx)libc_malloc_debug.so
+tst-mallocstate-threaded-main-ENV = LD_PRELOAD=$(objpfx)libc_malloc_debug.so
+$(objpfx)tst-mallocstate-threaded-main: $(objpfx)libc_malloc_debug.so
+tst-mallocstate-threaded-worker-ENV = LD_PRELOAD=$(objpfx)libc_malloc_debug.so
+$(objpfx)tst-mallocstate-threaded-worker: $(objpfx)libc_malloc_debug.so
 
 $(objpfx)tst-aligned-alloc-random.out: $(objpfx)tst-aligned_alloc-lib.so
 $(objpfx)tst-aligned-alloc-random-thread.out: $(objpfx)tst-aligned_alloc-lib.so
