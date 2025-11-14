@@ -98,8 +98,9 @@ __execvpe_common (const char *file, char *const argv[], char *const envp[],
   size_t file_len = __strnlen (file, NAME_MAX) + 1;
   size_t path_len = __strnlen (path, PATH_MAX - 1) + 1;
 
-  /* NAME_MAX does not include the terminating null character.  */
-  if ((file_len - 1 > NAME_MAX)
+  /* NAME_MAX does not include the terminating NUL character.
+     The following check ensures FILE is NUL terminated.  */
+  if ((file_len - 1 == NAME_MAX && file[NAME_MAX] != '\0')
       || !__libc_alloca_cutoff (path_len + file_len + 1))
     {
       errno = ENAMETOOLONG;
