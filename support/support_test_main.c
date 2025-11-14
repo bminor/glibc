@@ -238,14 +238,27 @@ run_test_function (int argc, char **argv, const struct test_config *config)
       exit (1);
     }
 
-  if (config->test_function != NULL)
-    return config->test_function ();
-  else if (config->test_function_argv != NULL)
-    return config->test_function_argv (argc, argv);
+  if (config->test_in_thread == 0)
+    {
+      if (config->test_function != NULL)
+        return config->test_function ();
+      else if (config->test_function_argv != NULL)
+        return config->test_function_argv (argc, argv);
+      else
+        {
+          printf ("error: no test function defined\n");
+          exit (1);
+        }
+    }
   else
     {
-      printf ("error: no test function defined\n");
-      exit (1);
+      if (config->test_in_thread_wrapper != NULL)
+        return config->test_in_thread_wrapper (argc, argv, config);
+      else
+        {
+          printf ("error: no test-in-thread wrapper defined\n");
+          exit (1);
+        }
     }
 }
 

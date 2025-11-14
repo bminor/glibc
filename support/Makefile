@@ -98,6 +98,7 @@ libsupport-routines = \
   support_test_compare_failure \
   support_test_compare_string \
   support_test_compare_string_wide \
+  support_test_in_thread_wrapper \
   support_test_main \
   support_test_verify_impl \
   support_wait_for_thread_exit \

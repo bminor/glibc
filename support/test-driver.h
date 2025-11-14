@@ -38,6 +38,8 @@ struct test_config
   char no_setvbuf;       /* Boolean flag to disable setvbuf.  */
   char run_command_mode; /* Boolean flag to indicate run-command-mode.  */
   const char *optstring; /* Short command line options.  */
+  int test_in_thread;    /* 0 => no threading, MAIN, WORKER.  */
+  int (*test_in_thread_wrapper) (int, char **, const struct test_config *);
 };
 
 enum
@@ -54,6 +56,11 @@ enum
     /* Used for command line argument parsing.  */
     OPT_DIRECT = 1000,
     OPT_TESTDIR,
+
+    /* Used for TEST_IN_THREAD to run single-threaded tests in a
+       multi-threaded environment.  */
+    TEST_THREAD_MAIN = 1,
+    TEST_THREAD_WORKER = 2,
   };
 
 /* Options provided by the test driver.  */
@@ -77,6 +84,11 @@ extern unsigned int test_verbose;
     if (test_verbose > 0)                        \
       printf (__VA_ARGS__);                      \
   } while (0);
+
+/* Tests that define -DTEST_IN_THREAD are run in a thread while an alternate
+   thread exists and waits on it.  */
+extern int support_test_in_thread_wrapper (int argc, char **argv,
+                                           const struct test_config *config);
 
 int support_test_main (int argc, char **argv, const struct test_config *);
 

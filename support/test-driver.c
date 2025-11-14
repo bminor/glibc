@@ -168,5 +168,13 @@ main (int argc, char **argv)
   test_config.optstring = "+";
 #endif
 
+#ifdef TEST_IN_THREAD
+  test_config.test_in_thread = TEST_IN_THREAD;
+  test_config.test_in_thread_wrapper = support_test_in_thread_wrapper;
+#else
+  test_config.test_in_thread = 0;
+  test_config.test_in_thread_wrapper = NULL;
+#endif
+
   return support_test_main (argc, argv, &test_config);
 }
