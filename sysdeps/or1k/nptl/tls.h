@@ -65,10 +65,7 @@ register tcbhead_t *__thread_self __asm__("r10");
 
 /* Requirements for the TCB.  */
 # define TLS_INIT_TCB_SIZE    sizeof (tcbhead_t)
-# define TLS_INIT_TCB_ALIGN   __alignof__ (struct pthread)
-
 # define TLS_TCB_SIZE         sizeof (tcbhead_t)
-# define TLS_TCB_ALIGN        __alignof__ (struct pthread)
 
 /* This is the size of the TCB.  */
 
