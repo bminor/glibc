@@ -33,7 +33,6 @@ libpthread-routines := \
   pt-spin \
   pt-getname-np \
   pt-setname-np \
-  cancellation \
   # libpthread-routine
 
 headers := \
@@ -67,6 +66,7 @@ distribute :=
 
 routines := \
   alloca_cutoff \
+  cancellation \
   htlfreeres \
   pt-alloc \
   pt-attr \

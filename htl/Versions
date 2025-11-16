@@ -265,6 +265,8 @@ libc {
     __pthread_dealloc;
     __pthread_dealloc_finish;
     __pthread_setcancelstate;
+    __pthread_enable_asynccancel;
+    __pthread_disable_asynccancel;
     __pthread_cond_broadcast;
     __pthread_cond_destroy;
     __pthread_cond_init;
@@ -345,7 +347,5 @@ libpthread {
     __pthread_initialize_minimal;
 
     __pthread_create;
-    __pthread_enable_asynccancel;
-    __pthread_disable_asynccancel;
   }
 }
