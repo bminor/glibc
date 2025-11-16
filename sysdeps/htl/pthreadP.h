@@ -24,7 +24,6 @@
 #include <pthread.h>
 #include <link.h>
 #include <bits/cancelation.h>
-#include <libc-symbols.h>
 
 /* Attribute to indicate thread creation was issued from C11 thrd_create.  */
 #define ATTR_C11_THREAD ((void*)(uintptr_t)-1)
@@ -170,6 +169,8 @@ libc_hidden_proto (__pthread_setcanceltype);
 extern int __pthread_sigmask (int, const sigset_t *, sigset_t *);
 libc_hidden_proto (__pthread_sigmask);
 
+int __libc_pthread_create (pthread_t * thread, const pthread_attr_t * attr,
+			   void *(*start_routine) (void *), void *arg);
 int __pthread_create (pthread_t *newthread,
 		      const pthread_attr_t *attr,
 		      void *(*start_routine) (void *), void *arg);
@@ -232,9 +233,7 @@ libc_hidden_proto (__pthread_attr_init)
 libc_hidden_proto (__pthread_condattr_init)
 libc_hidden_proto (__pthread_get_cleanup_stack)
 
-#if IS_IN (libpthread)
-hidden_proto (__pthread_create)
-#endif
+libc_hidden_proto (__pthread_create)
 
 #define ASSERT_TYPE_SIZE(type, size) 					\
   _Static_assert (sizeof (type) == size,				\

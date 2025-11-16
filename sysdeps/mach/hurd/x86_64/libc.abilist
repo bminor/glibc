@@ -1556,6 +1556,7 @@ GLIBC_2.38 pthread_condattr_getpshared F
 GLIBC_2.38 pthread_condattr_init F
 GLIBC_2.38 pthread_condattr_setclock F
 GLIBC_2.38 pthread_condattr_setpshared F
+GLIBC_2.38 pthread_create F
 GLIBC_2.38 pthread_detach F
 GLIBC_2.38 pthread_equal F
 GLIBC_2.38 pthread_exit F
@@ -2348,6 +2349,7 @@ GLIBC_2.43 memalignment F
 GLIBC_2.43 memset_explicit F
 GLIBC_2.43 pthread_cancel F
 GLIBC_2.43 pthread_clockjoin_np F
+GLIBC_2.43 pthread_create F
 GLIBC_2.43 pthread_detach F
 GLIBC_2.43 pthread_getattr_np F
 GLIBC_2.43 pthread_getconcurrency F

@@ -1519,8 +1519,8 @@ _hurdsig_init (const int *intarray, size_t intarraysize)
 
   /* Start the signal thread listening on the message port.  */
 
-#pragma weak __pthread_create
-  if (!__pthread_create)
+#pragma weak __libc_pthread_create
+  if (!__libc_pthread_create)
     {
       err = __thread_create (__mach_task_self (), &_hurd_msgport_thread);
       assert_perror (err);
@@ -1564,7 +1564,7 @@ _hurdsig_init (const int *intarray, size_t intarraysize)
 #pragma weak __pthread_detach
 #pragma weak __pthread_getattr_np
 #pragma weak __pthread_attr_getstack
-      __pthread_create(&thread, NULL, &_hurd_msgport_receive, NULL);
+      __libc_pthread_create (&thread, NULL, &_hurd_msgport_receive, NULL);
 
       /* Record signal thread stack layout for fork() */
       __pthread_getattr_np (thread, &attr);

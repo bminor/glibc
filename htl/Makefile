@@ -25,11 +25,9 @@ SYSDEPS :=
 LCLHDRS :=
 
 libpthread-routines := \
-  pt-create \
   pt-spin-inlines \
   pt-hurd-cond-wait \
   pt-hurd-cond-timedwait \
-  pt-sysdep \
   pt-spin \
   pt-getname-np \
   pt-setname-np \
@@ -115,6 +113,7 @@ routines := \
   pt-condattr-init \
   pt-condattr-setclock \
   pt-condattr-setpshared \
+  pt-create \
   pt-dealloc \
   pt-destroy-specific \
   pt-detach \
@@ -185,6 +184,7 @@ routines := \
   pt-sigstate-init \
   pt-stack-alloc \
   pt-startup \
+  pt-sysdep \
   pt-testcancel \
   pt-thread-alloc \
   pt-thread-start \

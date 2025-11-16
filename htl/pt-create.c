@@ -25,13 +25,14 @@
 #include <atomic.h>
 #include <hurd/resource.h>
 #include <sys/single_threaded.h>
+#include <shlib-compat.h>
+#include <ldsodefs.h>
 
 #include <pt-internal.h>
 #include <pthreadP.h>
 
-#if IS_IN (libpthread)
-# include <ctype.h>
-#endif
+#include <ctype.h>
+
 #ifdef HAVE_USELOCALE
 # include <locale.h>
 #endif
@@ -45,10 +46,9 @@ entry_point (struct __pthread *self, void *(*start_routine) (void *), void *arg)
   ___pthread_self = self;
   __resp = &self->res_state;
 
-#if IS_IN (libpthread)
   /* Initialize pointers to locale data.  */
   __ctype_init ();
-#endif
+
 #ifdef HAVE_USELOCALE
   /* A fresh thread needs to be bound to the global locale.  */
   uselocale (LC_GLOBAL_LOCALE);
@@ -79,6 +79,24 @@ int
 __pthread_create (pthread_t * thread, const pthread_attr_t * attr,
 		  void *(*start_routine) (void *), void *arg)
 {
+  /* Avoid a data race in the multi-threaded case.  */
+  if (__libc_single_threaded)
+    __libc_single_threaded = 0;
+
+  return __libc_pthread_create (thread, attr, start_routine, arg);
+}
+versioned_symbol (libc, __pthread_create, pthread_create, GLIBC_2_43);
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_43)
+compat_symbol (libpthread, __pthread_create, pthread_create, GLIBC_2_12);
+#endif
+hidden_def (__pthread_create)
+
+/* Version of pthread_create which does not make __libc_single_threaded zero.
+   This is notably useful for the signal thread.  */
+int
+__libc_pthread_create (pthread_t * thread, const pthread_attr_t * attr,
+		       void *(*start_routine) (void *), void *arg)
+{
   int err;
   struct __pthread *pthread;
 
@@ -90,8 +108,6 @@ __pthread_create (pthread_t * thread, const pthread_attr_t * attr,
 
   return err;
 }
-weak_alias (__pthread_create, pthread_create)
-hidden_def (__pthread_create)
 
 /* Internal version of pthread_create.  See comment in
    pt-internal.h.  */
@@ -105,10 +121,6 @@ __pthread_create_internal (struct __pthread **thread,
   const struct __pthread_attr *setup;
   sigset_t sigset;
   size_t stacksize;
-
-  /* Avoid a data race in the multi-threaded case.  */
-  if (__libc_single_threaded)
-    __libc_single_threaded = 0;
 
   /* Allocate a new thread structure.  */
   err = __pthread_alloc (&pthread);
