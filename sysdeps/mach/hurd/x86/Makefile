@@ -14,3 +14,8 @@ endif
 ifeq ($(subdir),stdlib)
 gen-as-const-headers += ucontext_i.sym
 endif
+
+ifeq ($(subdir),mach)
+# Avoid SSE&MMX to avoid __sigreturn2 thrashing it
+CFLAGS-RPC_mach_port_mod_refs.c = -mno-sse -mno-mmx
+endif
