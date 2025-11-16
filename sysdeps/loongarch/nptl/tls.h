@@ -54,6 +54,9 @@ typedef struct
    pointer, we don't need this.  */
 #define TLS_TCB_SIZE 0
 
+/* Alignment requirements for the TCB.  */
+#define TLS_TCB_ALIGN __alignof__(struct pthread)
+
 /* This is the size we need before TCB - actually, it includes the TCB.  */
 #define TLS_PRE_TCB_SIZE \
   (sizeof (struct pthread) \
