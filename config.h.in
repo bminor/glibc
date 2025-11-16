@@ -296,6 +296,9 @@
 /* Define if SFrame v2 is enabled.  */
 #define ENABLE_SFRAME 0
 
+/* Define if unaligned 64-bit atomic operations are supported.  */
+#undef	HAVE_UNALIGNED_64B_ATOMICS
+
 /* The default value of x86 CET control.  */
 #define DEFAULT_DL_X86_CET_CONTROL cet_elf_property
 

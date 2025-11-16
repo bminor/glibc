@@ -33,7 +33,7 @@ __new_sem_getvalue (sem_t *sem, int *sval)
      necessary, use a stronger MO here and elsewhere (e.g., potentially
      release MO in all places where we consume a token).  */
 
-#if USE_64B_ATOMICS
+#if USE_64B_ATOMICS_ON_SEM_T
   *sval = atomic_load_relaxed (&isem->data) & SEM_VALUE_MASK;
 #else
   *sval = atomic_load_relaxed (&isem->value) >> SEM_VALUE_SHIFT;

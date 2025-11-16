@@ -137,7 +137,7 @@ before-compile += $(objpfx)abi-tag.h
 generated += abi-tag.h
 
 # Put it here to generate it earlier.
-gen-as-const-headers += rtld-sizes.sym
+gen-as-const-headers += rtld-sizes.sym sem_t-align.sym
 
 # These are the special initializer/finalizer files.  They are always the
 # first and last file in the link.  crti.o ... crtn.o define the global

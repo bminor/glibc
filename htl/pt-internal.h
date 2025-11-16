@@ -38,6 +38,8 @@
 #endif
 
 #include <tls.h>
+#include <semaphore.h>
+#include <atomic-sem_t.h>
 
 /* Thread state.  */
 enum pthread_state
@@ -343,7 +345,7 @@ libc_hidden_proto (__pthread_default_condattr)
    See nptl implementation for the details.  */
 struct new_sem
 {
-#if USE_64B_ATOMICS
+#if USE_64B_ATOMICS_ON_SEM_T
   /* The data field holds both value (in the least-significant 32 bits) and
      nwaiters.  */
 # if __BYTE_ORDER == __LITTLE_ENDIAN
@@ -369,6 +371,12 @@ struct new_sem
   { (value) << SEM_VALUE_SHIFT, 0, (pshared) }
 #endif
 };
+
+_Static_assert (sizeof (sem_t) >= sizeof (struct new_sem),
+		"sizeof (sem_t) >= sizeof (struct new_sem)");
+
+_Static_assert (__alignof (sem_t) >= __alignof (struct new_sem),
+		"__alignof (sem_t) >= __alignof (struct new_sem)");
 
 extern int __sem_waitfast (struct new_sem *isem, int definitive_result);
 

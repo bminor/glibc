@@ -25,7 +25,7 @@ __sem_getvalue (sem_t *restrict sem, int *restrict value)
 {
   struct new_sem *isem = (struct new_sem *) sem;
 
-#if USE_64B_ATOMICS
+#if USE_64B_ATOMICS_ON_SEM_T
   *value = atomic_load_relaxed (&isem->data) & SEM_VALUE_MASK;
 #else
   *value = atomic_load_relaxed (&isem->value) >> SEM_VALUE_SHIFT;
