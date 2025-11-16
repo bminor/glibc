@@ -24,6 +24,7 @@
 #include <pthread.h>
 #include <link.h>
 #include <bits/cancelation.h>
+#include <libc-symbols.h>
 
 /* Attribute to indicate thread creation was issued from C11 thrd_create.  */
 #define ATTR_C11_THREAD ((void*)(uintptr_t)-1)
