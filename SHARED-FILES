@@ -14,7 +14,9 @@
 # has to be compared manually so this list is likely incomplete or may contain
 # errors.
 gnulib:
+  COPYINGv2
   COPYINGv3
+  COPYING.LESSERv2
   argp/argp-ba.c
   argp/argp-ba.c
   argp/argp-eexst.c
