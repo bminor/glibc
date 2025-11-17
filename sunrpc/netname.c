@@ -157,21 +157,18 @@ netname2user (const char *netname, uid_t * uidp, gid_t * gidp,
 	      int *gidlenp, gid_t * gidlist)
 {
   nss_action_list nip;
-  union
-  {
-    netname2user_function f;
-    void *ptr;
-  } fct;
+  void *fct;
   enum nss_status status = NSS_STATUS_UNAVAIL;
   int no_more;
 
-  no_more = __nss_publickey_lookup2 (&nip, "netname2user", NULL, &fct.ptr);
+  no_more = __nss_publickey_lookup2 (&nip, "netname2user", NULL, &fct);
 
   while (!no_more)
     {
-      status = (*fct.f) (netname, uidp, gidp, gidlenp, gidlist);
+      status = ((netname2user_function) fct) (netname, uidp, gidp, gidlenp,
+					      gidlist);
 
-      no_more = __nss_next2 (&nip, "netname2user", NULL, &fct.ptr, status, 0);
+      no_more = __nss_next2 (&nip, "netname2user", NULL, &fct, status, 0);
     }
 
   return status == NSS_STATUS_SUCCESS;

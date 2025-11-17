@@ -189,11 +189,7 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
   LOOKUP_TYPE mergegrp;
   char *mergebuf = NULL;
   char *endptr = NULL;
-  union
-  {
-    lookup_function l;
-    void *ptr;
-  } fct;
+  void *fct;
   int no_more, err;
   enum nss_status status = NSS_STATUS_UNAVAIL;
 #ifdef USE_NSCD
@@ -258,7 +254,7 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 #endif
 
   no_more = DB_LOOKUP_FCT (&nip, REENTRANT_NAME_STRING,
-			   REENTRANT2_NAME_STRING, &fct.ptr);
+			   REENTRANT2_NAME_STRING, &fct);
 
   while (no_more == 0)
     {
@@ -266,8 +262,9 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
       any_service = true;
 #endif
 
-      status = DL_CALL_FCT (fct.l, (ADD_VARIABLES, resbuf, buffer, buflen,
-				    &errno H_ERRNO_VAR EXTRA_VARIABLES));
+      status = DL_CALL_FCT (((lookup_function) fct),
+			    (ADD_VARIABLES, resbuf, buffer, buflen,
+			     &errno H_ERRNO_VAR EXTRA_VARIABLES));
 
       /* The status is NSS_STATUS_TRYAGAIN and errno is ERANGE the
 	 provided buffer is too small.  In this case we should give
@@ -337,7 +334,7 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 	}
 
       no_more = __nss_next2 (&nip, REENTRANT_NAME_STRING,
-			     REENTRANT2_NAME_STRING, &fct.ptr, status, 0);
+			     REENTRANT2_NAME_STRING, &fct, status, 0);
     }
   free (mergebuf);
   mergebuf = NULL;

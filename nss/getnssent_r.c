@@ -53,11 +53,7 @@ __nss_setent (const char *func_name, db_lookup_function lookup_fct,
 	      nss_action_list *last_nip, int stayopen, int *stayopen_tmp,
 	      int res)
 {
-  union
-  {
-    setent_function f;
-    void *ptr;
-  } fct;
+  void *fct;
   int no_more;
 
   struct resolv_context *res_ctx = NULL;
@@ -73,7 +69,7 @@ __nss_setent (const char *func_name, db_lookup_function lookup_fct,
 
   /* Cycle through the services and run their `setXXent' functions until
      we find an available service.  */
-  no_more = setup (func_name, lookup_fct, &fct.ptr, nip,
+  no_more = setup (func_name, lookup_fct, &fct, nip,
 		   startp, 1);
   while (! no_more)
     {
@@ -81,9 +77,9 @@ __nss_setent (const char *func_name, db_lookup_function lookup_fct,
       enum nss_status status;
 
       if (stayopen_tmp)
-	status = DL_CALL_FCT (fct.f, (*stayopen_tmp));
+	status = DL_CALL_FCT (((setent_function) fct), (*stayopen_tmp));
       else
-	status = DL_CALL_FCT (fct.f, (0));
+	status = DL_CALL_FCT (((setent_function) fct), (0));
 
 
       /* This is a special-case.  When [SUCCESS=merge] is in play,
@@ -95,7 +91,7 @@ __nss_setent (const char *func_name, db_lookup_function lookup_fct,
       if (nss_next_action (*nip, status) == NSS_ACTION_MERGE)
 	no_more = 1;
       else
-	no_more = __nss_next2 (nip, func_name, NULL, &fct.ptr, status, 0);
+	no_more = __nss_next2 (nip, func_name, NULL, &fct, status, 0);
 
       if (is_last_nip)
 	*last_nip = *nip;
@@ -113,11 +109,7 @@ __nss_endent (const char *func_name, db_lookup_function lookup_fct,
 	      nss_action_list *nip, nss_action_list *startp,
 	      nss_action_list *last_nip, int res)
 {
-  union
-  {
-    endent_function f;
-    void *ptr;
-  } fct;
+  void *fct;
   int no_more;
 
   struct resolv_context *res_ctx = NULL;
@@ -132,17 +124,17 @@ __nss_endent (const char *func_name, db_lookup_function lookup_fct,
     }
 
   /* Cycle through all the services and run their endXXent functions.  */
-  no_more = setup (func_name, lookup_fct, &fct.ptr, nip, startp, 1);
+  no_more = setup (func_name, lookup_fct, &fct, nip, startp, 1);
   while (! no_more)
     {
       /* Ignore status, we force check in __NSS_NEXT.  */
-      DL_CALL_FCT (fct.f, ());
+      DL_CALL_FCT (((endent_function) fct), ());
 
       if (*nip == *last_nip)
 	/* We have processed all services which were used.  */
 	break;
 
-      no_more = __nss_next2 (nip, func_name, NULL, &fct.ptr, 0, 1);
+      no_more = __nss_next2 (nip, func_name, NULL, &fct, 0, 1);
     }
   *last_nip = *nip = NULL;
 
@@ -159,11 +151,7 @@ __nss_getent_r (const char *getent_func_name,
 		void *resbuf, char *buffer, size_t buflen,
 		void **result, int *h_errnop)
 {
-  union
-  {
-    getent_function f;
-    void *ptr;
-  } fct;
+  void *fct;
   int no_more;
   enum nss_status status;
 
@@ -185,13 +173,13 @@ __nss_getent_r (const char *getent_func_name,
   /* Run through available functions, starting with the same function last
      run.  We will repeat each function as long as it succeeds, and then go
      on to the next service action.  */
-  no_more = setup (getent_func_name, lookup_fct, &fct.ptr, nip,
+  no_more = setup (getent_func_name, lookup_fct, &fct, nip,
 		   startp, 0);
   while (! no_more)
     {
       int is_last_nip = *nip == *last_nip;
 
-      status = DL_CALL_FCT (fct.f,
+      status = DL_CALL_FCT (((getent_function) fct),
 			    (resbuf, buffer, buflen, &errno, &h_errno));
 
       /* The status is NSS_STATUS_TRYAGAIN and errno is ERANGE the
@@ -216,7 +204,7 @@ __nss_getent_r (const char *getent_func_name,
 	      && nss_next_action (*nip, status) == NSS_ACTION_MERGE)
 	    no_more = 1;
 	  else
-	    no_more = __nss_next2 (nip, getent_func_name, NULL, &fct.ptr,
+	    no_more = __nss_next2 (nip, getent_func_name, NULL, &fct,
 				   status, 0);
 
 	  if (is_last_nip)
@@ -225,20 +213,16 @@ __nss_getent_r (const char *getent_func_name,
 	  if (! no_more)
 	    {
 	      /* Call the `setXXent' function.  This wasn't done before.  */
-	      union
-	      {
-		setent_function f;
-		void *ptr;
-	      } sfct;
+	      void *sfct;
 
-	      no_more = __nss_lookup (nip, setent_func_name, NULL, &sfct.ptr);
+	      no_more = __nss_lookup (nip, setent_func_name, NULL, &sfct);
 
 	      if (! no_more)
 	        {
 		  if (stayopen_tmp)
-		    status = DL_CALL_FCT (sfct.f, (*stayopen_tmp));
+		    status = DL_CALL_FCT (((setent_function) sfct), (*stayopen_tmp));
 		  else
-		    status = DL_CALL_FCT (sfct.f, (0));
+		    status = DL_CALL_FCT (((setent_function) sfct), (0));
 		}
 	      else
 		status = NSS_STATUS_NOTFOUND;

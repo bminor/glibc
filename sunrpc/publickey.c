@@ -34,21 +34,17 @@ int
 getpublickey (const char *name, char *key)
 {
   nss_action_list nip;
-  union
-  {
-    public_function f;
-    void *ptr;
-  } fct;
+  void *fct;
   enum nss_status status = NSS_STATUS_UNAVAIL;
   int no_more;
 
-  no_more = __nss_publickey_lookup2 (&nip, "getpublickey", NULL, &fct.ptr);
+  no_more = __nss_publickey_lookup2 (&nip, "getpublickey", NULL, &fct);
 
   while (! no_more)
     {
-      status = (*fct.f) (name, key, &errno);
+      status = ((public_function) fct) (name, key, &errno);
 
-      no_more = __nss_next2 (&nip, "getpublickey", NULL, &fct.ptr, status, 0);
+      no_more = __nss_next2 (&nip, "getpublickey", NULL, &fct, status, 0);
     }
 
   return status == NSS_STATUS_SUCCESS;
@@ -60,21 +56,17 @@ int
 getsecretkey (const char *name, char *key, const char *passwd)
 {
   nss_action_list nip;
-  union
-  {
-    secret_function f;
-    void *ptr;
-  } fct;
+  void *fct;
   enum nss_status status = NSS_STATUS_UNAVAIL;
   int no_more;
 
-  no_more = __nss_publickey_lookup2 (&nip, "getsecretkey", NULL, &fct.ptr);
+  no_more = __nss_publickey_lookup2 (&nip, "getsecretkey", NULL, &fct);
 
   while (! no_more)
     {
-      status = (*fct.f) (name, key, passwd, &errno);
+      status = ((secret_function) fct) (name, key, passwd, &errno);
 
-      no_more = __nss_next2 (&nip, "getsecretkey", NULL, &fct.ptr, status, 0);
+      no_more = __nss_next2 (&nip, "getsecretkey", NULL, &fct, status, 0);
     }
 
   return status == NSS_STATUS_SUCCESS;

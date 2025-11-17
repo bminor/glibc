@@ -85,11 +85,7 @@ static int
 __internal_setnetgrent_reuse (const char *group, struct __netgrent *datap,
 			      int *errnop)
 {
-  union
-  {
-    enum nss_status (*f) (const char *, struct __netgrent *);
-    void *ptr;
-  } fct;
+  void *fct;
   enum nss_status status = NSS_STATUS_UNAVAIL;
   struct name_list *new_elem;
 
@@ -97,16 +93,18 @@ __internal_setnetgrent_reuse (const char *group, struct __netgrent *datap,
   endnetgrent_hook (datap);
 
   /* Cycle through all the services and run their setnetgrent functions.  */
-  int no_more = setup (&fct.ptr, &datap->nip);
+  int no_more = setup (&fct, &datap->nip);
   while (! no_more)
     {
       assert (datap->data == NULL);
 
       /* Ignore status, we force check in `__nss_next2'.  */
-      status = DL_CALL_FCT (*fct.f, (group, datap));
+      status = DL_CALL_FCT (((enum nss_status (*) (const char *,
+						   struct __netgrent *)) fct),
+			    (group, datap));
 
       nss_action_list old_nip = datap->nip;
-      no_more = __nss_next2 (&datap->nip, "setnetgrent", NULL, &fct.ptr,
+      no_more = __nss_next2 (&datap->nip, "setnetgrent", NULL, &fct,
 			     status, 0);
 
       if (status == NSS_STATUS_SUCCESS && ! no_more)
@@ -372,11 +370,7 @@ innetgr (const char *netgroup, const char *host, const char *user,
     }
 #endif
 
-  union
-  {
-    enum nss_status (*f) (const char *, struct __netgrent *);
-    void *ptr;
-  } setfct;
+  void *setfct;
   void (*endfct) (struct __netgrent *);
   int (*getfct) (struct __netgrent *, char *, size_t, int *);
   struct __netgrent entry;
@@ -391,14 +385,16 @@ innetgr (const char *netgroup, const char *host, const char *user,
      the work during one walk through the service list.  */
   while (1)
     {
-      int no_more = setup (&setfct.ptr, &entry.nip);
+      int no_more = setup (&setfct, &entry.nip);
       while (! no_more)
 	{
 	  assert (entry.data == NULL);
 
 	  /* Open netgroup.  */
-	  enum nss_status status = DL_CALL_FCT (*setfct.f,
-						(current_group, &entry));
+	  enum nss_status status
+	    = DL_CALL_FCT (((enum nss_status (*) (const char *,
+						  struct __netgrent *))
+			    setfct), (current_group, &entry));
 
 	  if (status == NSS_STATUS_SUCCESS
 	      && (getfct = __nss_lookup_function (entry.nip, "getnetgrent_r"))
@@ -474,7 +470,7 @@ innetgr (const char *netgroup, const char *host, const char *user,
 
 	  /* Look for the next service.  */
 	  no_more = __nss_next2 (&entry.nip, "setnetgrent", NULL,
-				 &setfct.ptr, status, 0);
+				 &setfct, status, 0);
 	}
 
       if (result == 0 && entry.needed_groups != NULL)
