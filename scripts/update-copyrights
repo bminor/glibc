@@ -44,7 +44,7 @@ files=$(find . -type f | sed 's|^\./||' | grep -v '^\.git/')
 
 for f in $files; do
   case $f in
-    COPYING | COPYING.LIB | manual/fdl-1.3.texi | manual/lgpl-2.1.texi)
+    COPYING* | manual/fdl-1.3.texi | manual/lgpl-2.1.texi)
       # Licenses imported verbatim from FSF sources.
       ;;
     manual/texinfo.tex | scripts/config.guess | scripts/config.sub \

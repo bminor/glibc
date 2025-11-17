@@ -14,6 +14,7 @@
 # has to be compared manually so this list is likely incomplete or may contain
 # errors.
 gnulib:
+  COPYINGv3
   argp/argp-ba.c
   argp/argp-ba.c
   argp/argp-eexst.c
