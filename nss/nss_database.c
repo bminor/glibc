@@ -105,19 +105,10 @@ static const char per_database_defaults[NSS_DATABASE_COUNT] =
    [nss_database_shadow_compat] = nss_database_default_nis,
   };
 
-struct nss_database_default_cache
-{
-  nss_action_list caches[NSS_DATABASE_DEFAULT_COUNT];
-};
-
 static bool
-nss_database_select_default (struct nss_database_default_cache *cache,
-                             enum nss_database db, nss_action_list *result)
+nss_database_select_default (enum nss_database db, nss_action_list *result)
 {
   enum nss_database_default def = per_database_defaults[db];
-  *result = cache->caches[def];
-  if (*result != NULL)
-    return true;
 
   /* Determine the default line string.  */
   const char *line;
@@ -337,8 +328,6 @@ nss_database_reload (struct nss_database_data *staging,
   /* Apply defaults.  */
   if (ok)
     {
-      struct nss_database_default_cache cache = { };
-
       /* These three default to other services if the user listed the
 	 other service.  */
 
@@ -365,8 +354,7 @@ nss_database_reload (struct nss_database_data *staging,
       for (int i = 0; i < NSS_DATABASE_COUNT; ++i)
         if (staging->services[i] == NULL)
           {
-            ok = nss_database_select_default (&cache, i,
-                                              &staging->services[i]);
+            ok = nss_database_select_default (i, &staging->services[i]);
             if (!ok)
               break;
           }
