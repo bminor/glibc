@@ -41,19 +41,15 @@
 #define CONCAT2_1(Pre, Name) CONCAT2_2 (Pre, Name)
 #define CONCAT2_2(Pre, Name) Pre##Name
 
-#define DATABASE_NAME_SYMBOL CONCAT3_1 (__nss_, DATABASE_NAME, _database)
-#define DATABASE_NAME_STRING STRINGIFY1 (DATABASE_NAME)
-#define STRINGIFY1(Name) STRINGIFY2 (Name)
-#define STRINGIFY2(Name) #Name
-
 int
 DB_LOOKUP_FCT (nss_action_list *ni, const char *fct_name, const char *fct2_name,
 	       void **fctp)
 {
-  if (! __nss_database_get (DATABASE_NAME_ID, &DATABASE_NAME_SYMBOL))
+  nss_action_list actions;
+  if (! __nss_database_get (DATABASE_NAME_ID, &actions))
     return -1;
 
-  *ni = DATABASE_NAME_SYMBOL;
+  *ni = actions;
 
   /* We want to know about it if we've somehow got a NULL action list;
    in the past, we had bad state if seccomp interfered with setup. */

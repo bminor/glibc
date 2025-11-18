@@ -42,14 +42,6 @@
 #include <sysdep.h>
 #include <config.h>
 
-/* Declare external database variables.  */
-#define DEFINE_DATABASE(name)						      \
-  nss_action_list __nss_##name##_database attribute_hidden;		      \
-  weak_extern (__nss_##name##_database)
-#include "databases.def"
-#undef DEFINE_DATABASE
-
-
 #ifdef USE_NSCD
 /* Flags whether custom rules for database is set.  */
 bool __nss_database_custom[NSS_DBSIDX_max];
