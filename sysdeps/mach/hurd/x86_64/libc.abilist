@@ -1565,6 +1565,8 @@ GLIBC_2.38 pthread_getconcurrency F
 GLIBC_2.38 pthread_getcpuclockid F
 GLIBC_2.38 pthread_getschedparam F
 GLIBC_2.38 pthread_getspecific F
+GLIBC_2.38 pthread_hurd_cond_timedwait_np F
+GLIBC_2.38 pthread_hurd_cond_wait_np F
 GLIBC_2.38 pthread_join F
 GLIBC_2.38 pthread_key_create F
 GLIBC_2.38 pthread_key_delete F
@@ -2357,6 +2359,8 @@ GLIBC_2.43 pthread_getattr_np F
 GLIBC_2.43 pthread_getconcurrency F
 GLIBC_2.43 pthread_getcpuclockid F
 GLIBC_2.43 pthread_getname_np F
+GLIBC_2.43 pthread_hurd_cond_timedwait_np F
+GLIBC_2.43 pthread_hurd_cond_wait_np F
 GLIBC_2.43 pthread_join F
 GLIBC_2.43 pthread_kill F
 GLIBC_2.43 pthread_mutex_transfer_np F

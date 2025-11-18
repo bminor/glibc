@@ -26,8 +26,6 @@ LCLHDRS :=
 
 libpthread-routines := \
   pt-spin-inlines \
-  pt-hurd-cond-wait \
-  pt-hurd-cond-timedwait \
   pt-spin \
   # libpthread-routine
 
@@ -123,6 +121,8 @@ routines := \
   pt-getname-np \
   pt-getschedparam \
   pt-getspecific \
+  pt-hurd-cond-timedwait \
+  pt-hurd-cond-wait \
   pt-init-specific \
   pt-join \
   pt-key-create \

@@ -22,6 +22,7 @@
 #include <time.h>
 
 #include <pt-internal.h>
+#include <shlib-compat.h>
 
 extern int __pthread_hurd_cond_timedwait_internal (pthread_cond_t *cond,
 						   pthread_mutex_t *mutex,
@@ -36,7 +37,11 @@ __pthread_hurd_cond_timedwait_np (pthread_cond_t *cond,
   return __pthread_hurd_cond_timedwait_internal (cond, mutex, abstime);
 }
 
-strong_alias (__pthread_hurd_cond_timedwait_np, pthread_hurd_cond_timedwait_np);
+versioned_symbol (libc, __pthread_hurd_cond_timedwait_np, pthread_hurd_cond_timedwait_np, GLIBC_2_43);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_21, GLIBC_2_43)
+compat_symbol (libpthread, __pthread_hurd_cond_timedwait_np, pthread_hurd_cond_timedwait_np, GLIBC_2_21);
+#endif
 
 int
 __pthread_hurd_cond_timedwait_internal (pthread_cond_t *cond,

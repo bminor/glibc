@@ -10,8 +10,6 @@ GLIBC_2.12 pthread_spin_init F
 GLIBC_2.12 pthread_spin_lock F
 GLIBC_2.12 pthread_spin_trylock F
 GLIBC_2.12 pthread_spin_unlock F
-GLIBC_2.21 pthread_hurd_cond_timedwait_np F
-GLIBC_2.21 pthread_hurd_cond_wait_np F
 GLIBC_2.32 call_once F
 GLIBC_2.32 cnd_broadcast F
 GLIBC_2.32 cnd_destroy F

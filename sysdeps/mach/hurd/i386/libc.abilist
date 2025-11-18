@@ -2110,6 +2110,8 @@ GLIBC_2.21 pthread_condattr_init F
 GLIBC_2.21 pthread_equal F
 GLIBC_2.21 pthread_exit F
 GLIBC_2.21 pthread_getschedparam F
+GLIBC_2.21 pthread_hurd_cond_timedwait_np F
+GLIBC_2.21 pthread_hurd_cond_wait_np F
 GLIBC_2.21 pthread_mutex_destroy F
 GLIBC_2.21 pthread_mutex_init F
 GLIBC_2.21 pthread_mutex_lock F
@@ -2679,6 +2681,8 @@ GLIBC_2.43 pthread_getattr_np F
 GLIBC_2.43 pthread_getconcurrency F
 GLIBC_2.43 pthread_getcpuclockid F
 GLIBC_2.43 pthread_getname_np F
+GLIBC_2.43 pthread_hurd_cond_timedwait_np F
+GLIBC_2.43 pthread_hurd_cond_wait_np F
 GLIBC_2.43 pthread_join F
 GLIBC_2.43 pthread_kill F
 GLIBC_2.43 pthread_mutex_transfer_np F
