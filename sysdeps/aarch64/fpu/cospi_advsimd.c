@@ -51,24 +51,11 @@ float64x2_t VPCS_ATTR V_NAME_D1 (cospi) (float64x2_t x)
 {
   const struct data *d = ptr_barrier (&data);
 
-#if WANT_SIMD_EXCEPT
-  float64x2_t r = vabsq_f64 (x);
-  uint64x2_t cmp = vcaleq_f64 (v_f64 (0x1p64), x);
-
-  /* When WANT_SIMD_EXCEPT = 1, special lanes should be zero'd
-     to avoid them overflowing and throwing exceptions.  */
-  r = v_zerofy_f64 (r, cmp);
-  uint64x2_t odd = vshlq_n_u64 (vcvtnq_u64_f64 (r), 63);
-
-#else
-  float64x2_t r = x;
-  uint64x2_t cmp = vcageq_f64 (r, d->range_val);
+  uint64x2_t cmp = vcageq_f64 (x, d->range_val);
   uint64x2_t odd
-      = vshlq_n_u64 (vreinterpretq_u64_s64 (vcvtaq_s64_f64 (r)), 63);
+      = vshlq_n_u64 (vreinterpretq_u64_s64 (vcvtaq_s64_f64 (x)), 63);
 
-#endif
-
-  r = vsubq_f64 (r, vrndaq_f64 (r));
+  float64x2_t r = vsubq_f64 (x, vrndaq_f64 (x));
 
   /* cospi(x) = sinpi(0.5 - abs(x)) for values -1/2 .. 1/2.  */
   r = vsubq_f64 (v_f64 (0.5), vabsq_f64 (r));

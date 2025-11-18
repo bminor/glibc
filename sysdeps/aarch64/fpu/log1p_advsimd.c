@@ -35,8 +35,7 @@ special_case (float64x2_t x, uint64x2_t cmp, const struct data *d)
 {
   /* Side-step special lanes so fenv exceptions are not triggered
      inadvertently.  */
-  float64x2_t x_nospecial = v_zerofy_f64 (x, cmp);
-  return v_call_f64 (log1p, x, log1p_inline (x_nospecial, &d->d), cmp);
+  return v_call_f64 (log1p, x, log1p_inline (x, &d->d), cmp);
 }
 
 /* Vector log1p approximation using polynomial on reduced interval. Routine is

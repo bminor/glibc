@@ -48,21 +48,12 @@ float64x2_t VPCS_ATTR V_NAME_D1 (tanh) (float64x2_t x)
 
   uint64x2_t ia = vreinterpretq_u64_f64 (vabsq_f64 (x));
 
-  float64x2_t u = x;
-
   /* Trigger special-cases for tiny, boring and infinity/NaN.  */
   uint64x2_t special = vcgtq_u64 (vsubq_u64 (ia, d->tiny_bound), d->thresh);
-#if WANT_SIMD_EXCEPT
-  /* To trigger fp exceptions correctly, set special lanes to a neutral value.
-     They will be fixed up later by the special-case handler.  */
-  if (__glibc_unlikely (v_any_u64 (special)))
-    u = v_zerofy_f64 (u, special);
-#endif
-
-  u = vaddq_f64 (u, u);
 
   /* tanh(x) = (e^2x - 1) / (e^2x + 1).  */
-  float64x2_t q = expm1_inline (u, &d->d);
+  float64x2_t twox = vaddq_f64 (x, x);
+  float64x2_t q = expm1_inline (twox, &d->d);
   float64x2_t qp2 = vaddq_f64 (q, v_f64 (2.0));
 
   if (__glibc_unlikely (v_any_u64 (special)))

@@ -25,9 +25,7 @@ static const struct data
   float32x4_t poly[6];
   float pi_consts[4];
   float32x4_t shift;
-#if !WANT_SIMD_EXCEPT
   float32x4_t range_val;
-#endif
 } data = {
   /* Coefficients generated using FPMinimax.  */
   .poly = { V4 (0x1.55555p-2f), V4 (0x1.11166p-3f), V4 (0x1.b88a78p-5f),
@@ -36,14 +34,8 @@ static const struct data
   .pi_consts
   = { -0x1.921fb6p+0f, 0x1.777a5cp-25f, 0x1.ee59dap-50f, 0x1.45f306p-1f },
   .shift = V4 (0x1.8p+23f),
-#if !WANT_SIMD_EXCEPT
   .range_val = V4 (0x1p15f),
-#endif
 };
-
-#define RangeVal v_u32 (0x47000000)  /* asuint32(0x1p15f).  */
-#define TinyBound v_u32 (0x30000000) /* asuint32 (0x1p-31f).  */
-#define Thresh v_u32 (0x16000000)    /* asuint32(RangeVal) - TinyBound.  */
 
 /* Special cases (fall back to scalar calls).  */
 static float32x4_t VPCS_ATTR NOINLINE
@@ -57,15 +49,6 @@ static inline float32x4_t
 eval_poly (float32x4_t z, const struct data *d)
 {
   float32x4_t z2 = vmulq_f32 (z, z);
-#if WANT_SIMD_EXCEPT
-  /* Tiny z (<= 0x1p-31) will underflow when calculating z^4.
-     If fp exceptions are to be triggered correctly,
-     sidestep this by fixing such lanes to 0.  */
-  uint32x4_t will_uflow
-      = vcleq_u32 (vreinterpretq_u32_f32 (vabsq_f32 (z)), TinyBound);
-  if (__glibc_unlikely (v_any_u32 (will_uflow)))
-    z2 = vbslq_f32 (will_uflow, v_f32 (0), z2);
-#endif
   float32x4_t z4 = vmulq_f32 (z2, z2);
   return v_estrin_5_f32 (z, z2, z4, d->poly);
 }
@@ -79,20 +62,8 @@ float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (tan) (float32x4_t x)
   const struct data *d = ptr_barrier (&data);
   float32x4_t special_arg = x;
 
-  /* iax >= RangeVal means x, if not inf or NaN, is too large to perform fast
-     regression.  */
-#if WANT_SIMD_EXCEPT
-  uint32x4_t iax = vreinterpretq_u32_f32 (vabsq_f32 (x));
-  /* If fp exceptions are to be triggered correctly, also special-case tiny
-     input, as this will load to overflow later. Fix any special lanes to 1 to
-     prevent any exceptions being triggered.  */
-  uint32x4_t special = vcgeq_u32 (vsubq_u32 (iax, TinyBound), Thresh);
-  if (__glibc_unlikely (v_any_u32 (special)))
-    x = vbslq_f32 (special, v_f32 (1.0f), x);
-#else
-  /* Otherwise, special-case large and special values.  */
+  /* Special-case large and special values.  */
   uint32x4_t special = vcageq_f32 (x, d->range_val);
-#endif
 
   /* n = rint(x/(pi/2)).  */
   float32x4_t pi_consts = vld1q_f32 (d->pi_consts);

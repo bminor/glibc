@@ -52,27 +52,15 @@ float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (cos) (float32x4_t x)
   float32x4_t n, r, r2, r3, y;
   uint32x4_t odd, cmp;
 
-#if WANT_SIMD_EXCEPT
-  r = vabsq_f32 (x);
-  cmp = vcgeq_u32 (vreinterpretq_u32_f32 (r),
-		   vreinterpretq_u32_f32 (d->range_val));
-  if (__glibc_unlikely (v_any_u32 (cmp)))
-    /* If fenv exceptions are to be triggered correctly, set any special lanes
-       to 1 (which is neutral w.r.t. fenv). These lanes will be fixed by
-       special-case handler later.  */
-    r = vbslq_f32 (cmp, v_f32 (1.0f), r);
-#else
   cmp = vcageq_f32 (x, d->range_val);
-  r = x;
-#endif
 
   /* n = rint((|x|+pi/2)/pi) - 0.5.  */
-  n = vrndaq_f32 (vfmaq_f32 (v_f32 (0.5), r, d->inv_pi));
+  n = vrndaq_f32 (vfmaq_f32 (v_f32 (0.5), x, d->inv_pi));
   odd = vshlq_n_u32 (vreinterpretq_u32_s32 (vcvtq_s32_f32 (n)), 31);
   n = vsubq_f32 (n, v_f32 (0.5f));
 
   /* r = |x| - n*pi  (range reduction into -pi/2 .. pi/2).  */
-  r = vfmsq_f32 (r, d->pi_1, n);
+  r = vfmsq_f32 (x, d->pi_1, n);
   r = vfmsq_f32 (r, d->pi_2, n);
   r = vfmsq_f32 (r, d->pi_3, n);
 

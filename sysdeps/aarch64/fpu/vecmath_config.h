@@ -21,11 +21,6 @@
 
 #include <math_private.h>
 
-/* Deprecated config option from Arm Optimized Routines which ensures
-   fp exceptions are correctly triggered. This is not intended to be
-   supported in GLIBC, however we keep it for ease of development.  */
-#define WANT_SIMD_EXCEPT 0
-
 /* Return ptr but hide its value from the compiler so accesses through it
    cannot be optimized based on the contents.  */
 #define ptr_barrier(ptr)                                                      \

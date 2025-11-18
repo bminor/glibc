@@ -22,17 +22,10 @@
 static const struct data
 {
   float32x4_t max, shift, third;
-#if WANT_SIMD_EXCEPT
-  float32x4_t tiny_bound, scale_minus_one;
-#endif
 } data = {
   .max = V4 (3.9375), /* 4 - 8/128.  */
   .shift = V4 (0x1p16f),
   .third = V4 (0x1.555556p-2f), /* 1/3.  */
-#if WANT_SIMD_EXCEPT
-  .tiny_bound = V4 (0x1p-62f),
-  .scale_minus_one = V4 (0x1.06eba8p-3f), /* scale - 1.0.  */
-#endif
 };
 
 #define AbsMask 0x7fffffff
@@ -75,17 +68,6 @@ float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (erf) (float32x4_t x)
 {
   const struct data *dat = ptr_barrier (&data);
 
-#if WANT_SIMD_EXCEPT
-  /* |x| < 2^-62.  */
-  uint32x4_t cmp = vcaltq_f32 (x, dat->tiny_bound);
-  float32x4_t xm = x;
-  /* If any lanes are special, mask them with 1 and retain a copy of x to allow
-     special case handler to fix special lanes later. This is only necessary if
-     fenv exceptions are to be triggered correctly.  */
-  if (__glibc_unlikely (v_any_u32 (cmp)))
-    x = vbslq_f32 (cmp, v_f32 (1), x);
-#endif
-
   float32x4_t a = vabsq_f32 (x);
   uint32x4_t a_gt_max = vcgtq_f32 (a, dat->max);
 
@@ -111,13 +93,7 @@ float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (erf) (float32x4_t x)
   y = vbslq_f32 (a_gt_max, v_f32 (1.0f), y);
 
   /* Copy sign.  */
-  y = vbslq_f32 (v_u32 (AbsMask), y, x);
-
-#if WANT_SIMD_EXCEPT
-  if (__glibc_unlikely (v_any_u32 (cmp)))
-    return vbslq_f32 (cmp, vfmaq_f32 (xm, dat->scale_minus_one, xm), y);
-#endif
-  return y;
+  return vbslq_f32 (v_u32 (AbsMask), y, x);
 }
 libmvec_hidden_def (V_NAME_F1 (erf))
 HALF_WIDTH_ALIAS_F1 (erf)

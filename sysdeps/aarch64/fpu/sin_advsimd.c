@@ -36,13 +36,6 @@ static const struct data
   .pi_3 = V2 (0x1.c1cd129024e09p-106),
 };
 
-#if WANT_SIMD_EXCEPT
-/* asuint64(0x1p-253)), below which multiply by inv_pi underflows.  */
-# define TinyBound v_u64 (0x3020000000000000)
-/* RangeVal - TinyBound.  */
-# define Thresh v_u64 (0x1160000000000000)
-#endif
-
 #define C(i) d->poly[i]
 
 static float64x2_t VPCS_ATTR NOINLINE
@@ -67,24 +60,14 @@ float64x2_t VPCS_ATTR V_NAME_D1 (sin) (float64x2_t x)
   float64x2_t n, r, r2, r3, r4, y, t1, t2, t3;
   uint64x2_t odd, cmp;
 
-#if WANT_SIMD_EXCEPT
-  /* Detect |x| <= TinyBound or |x| >= RangeVal. If fenv exceptions are to be
-     triggered correctly, set any special lanes to 1 (which is neutral w.r.t.
-     fenv). These lanes will be fixed by special-case handler later.  */
-  uint64x2_t ir = vreinterpretq_u64_f64 (vabsq_f64 (x));
-  cmp = vcgeq_u64 (vsubq_u64 (ir, TinyBound), Thresh);
-  r = vreinterpretq_f64_u64 (vbicq_u64 (vreinterpretq_u64_f64 (x), cmp));
-#else
-  r = x;
   cmp = vcageq_f64 (x, d->range_val);
-#endif
 
   /* n = rint(|x|/pi).  */
-  n = vrndaq_f64 (vmulq_f64 (r, d->inv_pi));
+  n = vrndaq_f64 (vmulq_f64 (x, d->inv_pi));
   odd = vshlq_n_u64 (vreinterpretq_u64_s64 (vcvtq_s64_f64 (n)), 63);
 
   /* r = |x| - n*pi  (range reduction into -pi/2 .. pi/2).  */
-  r = vfmsq_f64 (r, d->pi_1, n);
+  r = vfmsq_f64 (x, d->pi_1, n);
   r = vfmsq_f64 (r, d->pi_2, n);
   r = vfmsq_f64 (r, d->pi_3, n);
 

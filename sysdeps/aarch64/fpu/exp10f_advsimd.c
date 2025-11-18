@@ -27,9 +27,7 @@ static const struct data
   float log10_2_high, log10_2_low, c2, c4;
   float32x4_t inv_log10_2, special_bound;
   uint32x4_t exponent_bias, special_offset, special_bias;
-#if !WANT_SIMD_EXCEPT
   float32x4_t scale_thresh;
-#endif
 } data = {
   /* Coefficients generated using Remez algorithm with minimisation of relative
      error.
@@ -49,27 +47,8 @@ static const struct data
   .exponent_bias = V4 (0x3f800000),
   .special_offset = V4 (0x82000000),
   .special_bias = V4 (0x7f000000),
-#if !WANT_SIMD_EXCEPT
   .scale_thresh = V4 (ScaleBound)
-#endif
 };
-
-#if WANT_SIMD_EXCEPT
-
-# define SpecialBound 38.0f	       /* rint(log10(2^127)).  */
-# define TinyBound v_u32 (0x20000000) /* asuint (0x1p-63).  */
-# define BigBound v_u32 (0x42180000)  /* asuint (SpecialBound).  */
-# define Thres v_u32 (0x22180000)     /* BigBound - TinyBound.  */
-
-static float32x4_t VPCS_ATTR NOINLINE
-special_case (float32x4_t x, float32x4_t y, uint32x4_t cmp)
-{
-  /* If fenv exceptions are to be triggered correctly, fall back to the scalar
-     routine to special lanes.  */
-  return v_call_f32 (exp10f, x, y, cmp);
-}
-
-#else
 
 # define SpecialBound 126.0f
 
@@ -90,8 +69,6 @@ special_case (float32x4_t poly, float32x4_t n, uint32x4_t e, uint32x4_t cmp1,
   return vbslq_f32 (cmp2, r2, r);
 }
 
-#endif
-
 /* Fast vector implementation of single-precision exp10.
    Algorithm is accurate to 2.36 ULP.
    _ZGVnN4v_exp10f(0x1.be2b36p+1) got 0x1.7e79c4p+11
@@ -99,17 +76,6 @@ special_case (float32x4_t poly, float32x4_t n, uint32x4_t e, uint32x4_t cmp1,
 float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (exp10) (float32x4_t x)
 {
   const struct data *d = ptr_barrier (&data);
-#if WANT_SIMD_EXCEPT
-  /* asuint(x) - TinyBound >= BigBound - TinyBound.  */
-  uint32x4_t cmp = vcgeq_u32 (
-      vsubq_u32 (vreinterpretq_u32_f32 (vabsq_f32 (x)), TinyBound), Thres);
-  float32x4_t xm = x;
-  /* If any lanes are special, mask them with 1 and retain a copy of x to allow
-     special case handler to fix special lanes later. This is only necessary if
-     fenv exceptions are to be triggered correctly.  */
-  if (__glibc_unlikely (v_any_u32 (cmp)))
-    x = v_zerofy_f32 (x, cmp);
-#endif
 
   /* exp10(x) = 2^n * 10^r = 2^n * (1 + poly (r)),
      with poly(r) in [1/sqrt(2), sqrt(2)] and
@@ -122,9 +88,7 @@ float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (exp10) (float32x4_t x)
 
   float32x4_t scale = vreinterpretq_f32_u32 (vaddq_u32 (e, d->exponent_bias));
 
-#if !WANT_SIMD_EXCEPT
   uint32x4_t cmp = vcagtq_f32 (n, d->special_bound);
-#endif
 
   float32x4_t r2 = vmulq_f32 (r, r);
   float32x4_t p12 = vfmaq_laneq_f32 (d->c1, r, log10_2_c24, 2);
@@ -133,12 +97,7 @@ float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (exp10) (float32x4_t x)
   float32x4_t poly = vfmaq_f32 (vmulq_f32 (r, d->c0), p14, r2);
 
   if (__glibc_unlikely (v_any_u32 (cmp)))
-#if WANT_SIMD_EXCEPT
-    return special_case (xm, vfmaq_f32 (scale, poly, scale), cmp);
-#else
     return special_case (poly, n, e, cmp, scale, d);
-#endif
-
   return vfmaq_f32 (scale, poly, scale);
 }
 libmvec_hidden_def (V_NAME_F1 (exp10))

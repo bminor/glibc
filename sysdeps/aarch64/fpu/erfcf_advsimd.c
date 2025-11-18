@@ -25,10 +25,6 @@ static const struct data
   float32x4_t max, shift;
   float coeffs[4];
   float32x4_t third, two_over_five, tenth;
-#if WANT_SIMD_EXCEPT
-  float32x4_t uflow_bound;
-#endif
-
 } data = {
   /* Set an offset so the range of the index used for lookup is 644, and it can
      be clamped using a saturated add.  */
@@ -42,13 +38,8 @@ static const struct data
   .third = V4 (0x1.555556p-2f),
   .two_over_five = V4 (-0x1.99999ap-2f),
   .tenth = V4 (-0x1.99999ap-4f),
-#if WANT_SIMD_EXCEPT
-  .uflow_bound = V4 (0x1.2639cp+3f),
-#endif
 };
 
-#define TinyBound 0x41000000 /* 0x1p-62f << 1.  */
-#define Thres 0xbe000000     /* asuint(infinity) << 1 - TinyBound.  */
 #define Off 0xfffffd7b	     /* 0xffffffff - 644.  */
 
 struct entry
@@ -76,14 +67,6 @@ lookup (uint32x4_t i)
   return e;
 }
 
-#if WANT_SIMD_EXCEPT
-static float32x4_t VPCS_ATTR NOINLINE
-special_case (float32x4_t x, float32x4_t y, uint32x4_t cmp)
-{
-  return v_call_f32 (erfcf, x, y, cmp);
-}
-#endif
-
 /* Optimized single-precision vector erfcf(x).
    Approximation based on series expansion near x rounded to
    nearest multiple of 1/64.
@@ -105,23 +88,6 @@ VPCS_ATTR
 float32x4_t NOINLINE V_NAME_F1 (erfc) (float32x4_t x)
 {
   const struct data *dat = ptr_barrier (&data);
-
-#if WANT_SIMD_EXCEPT
-  /* |x| < 2^-62. Avoid fabs by left-shifting by 1.  */
-  uint32x4_t ix = vreinterpretq_u32_f32 (x);
-  uint32x4_t cmp = vcltq_u32 (vaddq_u32 (ix, ix), v_u32 (TinyBound));
-  /* x >= ~9.19 (into subnormal case and uflow case). Comparison is done in
-     integer domain to avoid raising exceptions in presence of nans.  */
-  uint32x4_t uflow = vcgeq_s32 (vreinterpretq_s32_f32 (x),
-				vreinterpretq_s32_f32 (dat->uflow_bound));
-  cmp = vorrq_u32 (cmp, uflow);
-  float32x4_t xm = x;
-  /* If any lanes are special, mask them with 0 and retain a copy of x to allow
-     special case handler to fix special lanes later. This is only necessary if
-     fenv exceptions are to be triggered correctly.  */
-  if (__glibc_unlikely (v_any_u32 (cmp)))
-    x = v_zerofy_f32 (x, cmp);
-#endif
 
   float32x4_t a = vabsq_f32 (x);
   a = vminq_f32 (a, dat->max);
@@ -164,11 +130,6 @@ float32x4_t NOINLINE V_NAME_F1 (erfc) (float32x4_t x)
      overlap, then logical or and addition are equivalent here.  */
   float32x4_t fac = vreinterpretq_f32_u32 (
       vsraq_n_u32 (vshlq_n_u32 (sign, 31), dat->table_scale, 1));
-
-#if WANT_SIMD_EXCEPT
-  if (__glibc_unlikely (v_any_u32 (cmp)))
-    return special_case (xm, vfmaq_f32 (off, fac, y), cmp);
-#endif
 
   return vfmaq_f32 (off, fac, y);
 }

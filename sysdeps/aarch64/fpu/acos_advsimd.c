@@ -38,26 +38,9 @@ static const struct data
   .abs_mask = V2 (0x7fffffffffffffff),
 };
 
-#define AllMask v_u64 (0xffffffffffffffff)
-#define Oneu 0x3ff0000000000000
-#define Small 0x3e50000000000000 /* 2^-53.  */
-
-#if WANT_SIMD_EXCEPT
-static float64x2_t VPCS_ATTR NOINLINE
-special_case (float64x2_t x, float64x2_t y, uint64x2_t special)
-{
-  return v_call_f64 (acos, x, y, special);
-}
-#endif
-
 /* Double-precision implementation of vector acos(x).
 
-   For |x| < Small, approximate acos(x) by pi/2 - x. Small = 2^-53 for correct
-   rounding.
-   If WANT_SIMD_EXCEPT = 0, Small = 0 and we proceed with the following
-   approximation.
-
-   For |x| in [Small, 0.5], use an order 11 polynomial P such that the final
+   For |x| in [0, 0.5], use an order 11 polynomial P such that the final
    approximation of asin is an odd polynomial:
 
      acos(x) ~ pi/2 - (x + x^3 P(x^2)).
@@ -78,16 +61,6 @@ float64x2_t VPCS_ATTR V_NAME_D1 (acos) (float64x2_t x)
   const struct data *d = ptr_barrier (&data);
 
   float64x2_t ax = vabsq_f64 (x);
-
-#if WANT_SIMD_EXCEPT
-  /* A single comparison for One, Small and QNaN.  */
-  uint64x2_t special
-      = vcgtq_u64 (vsubq_u64 (vreinterpretq_u64_f64 (ax), v_u64 (Small)),
-		   v_u64 (Oneu - Small));
-  if (__glibc_unlikely (v_any_u64 (special)))
-    return special_case (x, x, AllMask);
-#endif
-
   uint64x2_t a_le_half = vcleq_f64 (ax, v_f64 (0.5));
 
   /* Evaluate polynomial Q(x) = z + z * z2 * P(z2) with
@@ -129,7 +102,6 @@ float64x2_t VPCS_ATTR V_NAME_D1 (acos) (float64x2_t x)
 	       = 2 Q(|x|)               , for  0.5 < x < 1.0
 	       = pi - 2 Q(|x|)          , for -1.0 < x < -0.5.  */
   float64x2_t y = vbslq_f64 (d->abs_mask, p, x);
-
   uint64x2_t is_neg = vcltzq_f64 (x);
   float64x2_t off = vreinterpretq_f64_u64 (
       vandq_u64 (is_neg, vreinterpretq_u64_f64 (d->pi)));

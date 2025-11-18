@@ -23,12 +23,9 @@ static const struct data
 {
   float64x2_t third;
   float64x2_t tenth, two_over_five, two_over_nine;
-  double two_over_fifteen, two_over_fortyfive;
+  double two_over_fifteen;
   float64x2_t max, shift;
   uint64x2_t max_idx;
-#if WANT_SIMD_EXCEPT
-  float64x2_t tiny_bound, huge_bound, scale_minus_one;
-#endif
 } data = {
   .max_idx = V2 (768),
   .third = V2 (0x1.5555555555556p-2), /* used to compute 2/3 and 1/6 too.  */
@@ -36,14 +33,8 @@ static const struct data
   .tenth = V2 (-0x1.999999999999ap-4),
   .two_over_five = V2 (-0x1.999999999999ap-2),
   .two_over_nine = V2 (-0x1.c71c71c71c71cp-3),
-  .two_over_fortyfive = 0x1.6c16c16c16c17p-5,
   .max = V2 (5.9921875), /* 6 - 1/128.  */
   .shift = V2 (0x1p45),
-#if WANT_SIMD_EXCEPT
-  .huge_bound = V2 (0x1p205),
-  .tiny_bound = V2 (0x1p-226),
-  .scale_minus_one = V2 (0x1.06eba8214db69p-3), /* 2/sqrt(pi) - 1.0.  */
-#endif
 };
 
 #define AbsMask 0x7fffffffffffffff
@@ -92,22 +83,6 @@ float64x2_t VPCS_ATTR V_NAME_D1 (erf) (float64x2_t x)
   uint64x2_t a_le_max = vcaleq_f64 (x, dat->max);
   uint64x2_t a_gt_max = vcagtq_f64 (x, dat->max);
 
-#if WANT_SIMD_EXCEPT
-  /* |x| huge or tiny.  */
-  uint64x2_t cmp1 = vcgtq_f64 (a, dat->huge_bound);
-  uint64x2_t cmp2 = vcltq_f64 (a, dat->tiny_bound);
-  uint64x2_t cmp = vorrq_u64 (cmp1, cmp2);
-  /* If any lanes are special, mask them with 1 for small x or 8 for large
-     values and retain a copy of a to allow special case handler to fix special
-     lanes later. This is only necessary if fenv exceptions are to be triggered
-     correctly.  */
-  if (__glibc_unlikely (v_any_u64 (cmp)))
-    {
-      a = vbslq_f64 (cmp1, v_f64 (8.0), a);
-      a = vbslq_f64 (cmp2, v_f64 (1.0), a);
-    }
-#endif
-
   /* Set r to multiple of 1/128 nearest to |x|.  */
   float64x2_t shift = dat->shift;
   float64x2_t z = vaddq_f64 (a, shift);
@@ -153,16 +128,5 @@ float64x2_t VPCS_ATTR V_NAME_D1 (erf) (float64x2_t x)
   y = vbslq_f64 (a_gt_max, v_f64 (1.0), y);
 
   /* Copy sign.  */
-  y = vbslq_f64 (v_u64 (AbsMask), y, x);
-
-#if WANT_SIMD_EXCEPT
-  if (__glibc_unlikely (v_any_u64 (cmp2)))
-    {
-      /* Neutralise huge values of x before fixing small values.  */
-      x = vbslq_f64 (cmp1, v_f64 (1.0), x);
-      /* Fix tiny values that trigger spurious underflow.  */
-      return vbslq_f64 (cmp2, vfmaq_f64 (x, dat->scale_minus_one, x), y);
-    }
-#endif
-  return y;
+  return vbslq_f64 (v_u64 (AbsMask), y, x);
 }

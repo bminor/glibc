@@ -33,21 +33,10 @@ static const struct data
 };
 
 #define AbsMask 0x7fffffff
-#define One 0x3f800000
-#define Small 0x39800000 /* 2^-12.  */
-
-#if WANT_SIMD_EXCEPT
-static float32x4_t VPCS_ATTR NOINLINE
-special_case (float32x4_t x, float32x4_t y, uint32x4_t special)
-{
-  return v_call_f32 (asinf, x, y, special);
-}
-#endif
 
 /* Single-precision implementation of vector asin(x).
 
-
-   For |x| <0.5, use order 4 polynomial P such that the final
+   For |x| in [0, 0.5), use order 4 polynomial P such that the final
    approximation is an odd polynomial: asin(x) ~ x + x^3 P(x^2).
 
     The largest observed error in this region is 0.83 ulps,
@@ -65,16 +54,6 @@ float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (asin) (float32x4_t x)
 
   uint32x4_t ix = vreinterpretq_u32_f32 (x);
   uint32x4_t ia = vandq_u32 (ix, v_u32 (AbsMask));
-
-#if WANT_SIMD_EXCEPT
-  /* Special values need to be computed with scalar fallbacks so
-     that appropriate fp exceptions are raised.  */
-  uint32x4_t special
-      = vcgtq_u32 (vsubq_u32 (ia, v_u32 (Small)), v_u32 (One - Small));
-  if (__glibc_unlikely (v_any_u32 (special)))
-    return special_case (x, x, v_u32 (0xffffffff));
-#endif
-
   float32x4_t ax = vreinterpretq_f32_u32 (ia);
   uint32x4_t a_lt_half = vcaltq_f32 (x, v_f32 (0.5f));
 

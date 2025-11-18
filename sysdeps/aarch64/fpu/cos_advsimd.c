@@ -51,27 +51,15 @@ float64x2_t VPCS_ATTR V_NAME_D1 (cos) (float64x2_t x)
   float64x2_t n, r, r2, r3, r4, t1, t2, t3, y;
   uint64x2_t odd, cmp;
 
-#if WANT_SIMD_EXCEPT
-  r = vabsq_f64 (x);
-  cmp = vcgeq_u64 (vreinterpretq_u64_f64 (r),
-		   vreinterpretq_u64_f64 (d->range_val));
-  if (__glibc_unlikely (v_any_u64 (cmp)))
-    /* If fenv exceptions are to be triggered correctly, set any special lanes
-       to 1 (which is neutral w.r.t. fenv). These lanes will be fixed by
-       special-case handler later.  */
-    r = vbslq_f64 (cmp, v_f64 (1.0), r);
-#else
   cmp = vcageq_f64 (x, d->range_val);
-  r = x;
-#endif
 
   /* n = rint((|x|+pi/2)/pi) - 0.5.  */
-  n = vrndaq_f64 (vfmaq_f64 (v_f64 (0.5), r, d->inv_pi));
+  n = vrndaq_f64 (vfmaq_f64 (v_f64 (0.5), x, d->inv_pi));
   odd = vshlq_n_u64 (vreinterpretq_u64_s64 (vcvtq_s64_f64 (n)), 63);
   n = vsubq_f64 (n, v_f64 (0.5f));
 
   /* r = |x| - n*pi  (range reduction into -pi/2 .. pi/2).  */
-  r = vfmsq_f64 (r, d->pi_1, n);
+  r = vfmsq_f64 (x, d->pi_1, n);
   r = vfmsq_f64 (r, d->pi_2, n);
   r = vfmsq_f64 (r, d->pi_3, n);
 

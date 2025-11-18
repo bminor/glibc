@@ -24,16 +24,9 @@ const static struct data
 {
   struct v_log1pf_data log1pf_consts;
   uint32x4_t one;
-#if WANT_SIMD_EXCEPT
-  uint32x4_t tiny_bound;
-#endif
 } data = {
   .log1pf_consts = V_LOG1PF_CONSTANTS_TABLE,
   .one = V4 (0x3f800000),
-#if WANT_SIMD_EXCEPT
-  /* 0x1p-12, below which atanhf(x) rounds to x.  */
-  .tiny_bound = V4 (0x39800000),
-#endif
 };
 
 #define AbsMask v_u32 (0x7fffffff)
@@ -59,16 +52,7 @@ VPCS_ATTR float32x4_t NOINLINE V_NAME_F1 (atanh) (float32x4_t x)
   float32x4_t ax = vabsq_f32 (x);
   uint32x4_t iax = vreinterpretq_u32_f32 (ax);
 
-#if WANT_SIMD_EXCEPT
-  uint32x4_t special
-      = vorrq_u32 (vcgeq_u32 (iax, d->one), vcltq_u32 (iax, d->tiny_bound));
-  /* Side-step special cases by setting those lanes to 0, which will trigger no
-     exceptions. These will be fixed up later.  */
-  if (__glibc_unlikely (v_any_u32 (special)))
-    ax = v_zerofy_f32 (ax, special);
-#else
   uint32x4_t special = vcgeq_u32 (iax, d->one);
-#endif
 
   float32x4_t y = vdivq_f32 (vaddq_f32 (ax, ax),
 			     vsubq_f32 (vreinterpretq_f32_u32 (d->one), ax));
@@ -78,11 +62,7 @@ VPCS_ATTR float32x4_t NOINLINE V_NAME_F1 (atanh) (float32x4_t x)
      chain. If exceptions are required ax will have been zerofied, so have to
      pass x.  */
   if (__glibc_unlikely (v_any_u32 (special)))
-#if WANT_SIMD_EXCEPT
-    return special_case (x, halfsign, y, special);
-#else
     return special_case (ax, halfsign, y, special);
-#endif
   return vmulq_f32 (halfsign, y);
 }
 libmvec_hidden_def (V_NAME_F1 (atanh))

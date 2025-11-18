@@ -127,27 +127,6 @@ special_case (double tmp, uint64_t sbits, uint64_t ki)
   /* Note: sbits is signed scale.  */
   scale = asdouble (sbits);
   y = scale + scale * tmp;
-#if WANT_SIMD_EXCEPT
-  if (fabs (y) < 1.0)
-    {
-      /* Round y to the right precision before scaling it into the subnormal
-	 range to avoid double rounding that can cause 0.5+E/2 ulp error where
-	 E is the worst-case ulp error outside the subnormal range.  So this
-	 is only useful if the goal is better than 1 ulp worst-case error.  */
-      double hi, lo, one = 1.0;
-      if (y < 0.0)
-	one = -1.0;
-      lo = scale - y + scale * tmp;
-      hi = one + y;
-      lo = one - hi + y + lo;
-      y = (hi + lo) - one;
-      /* Fix the sign of 0.  */
-      if (y == 0.0)
-	y = asdouble (sbits & 0x8000000000000000);
-      /* The underflow exception needs to be signaled explicitly.  */
-      force_eval_double (opt_barrier_double (0x1p-1022) * 0x1p-1022);
-    }
-#endif
   y = 0x1p-1022 * y;
   return y;
 }
@@ -170,13 +149,8 @@ exp_inline (double x, double xtail, uint32_t sign_bias)
 	{
 	  /* Note: inf and nan are already handled.  */
 	  /* Skip errno handling.  */
-#if WANT_SIMD_EXCEPT
-	  return asuint64 (x) >> 63 ? __math_uflow (sign_bias)
-				    : __math_oflow (sign_bias);
-#else
 	  double res_uoflow = asuint64 (x) >> 63 ? 0.0 : INFINITY;
 	  return sign_bias ? -res_uoflow : res_uoflow;
-#endif
 	}
       /* Large x is special cased below.  */
       abstop = 0;
@@ -221,11 +195,7 @@ exp_nosignbias (double x, double xtail)
 	return 1.0;
       /* Note: inf and nan are already handled.  */
       if (abstop >= top12 (1024.0))
-#if WANT_SIMD_EXCEPT
-	return asuint64 (x) >> 63 ? __math_uflow (0) : __math_oflow (0);
-#else
 	return asuint64 (x) >> 63 ? 0.0 : INFINITY;
-#endif
       /* Large x is special cased below.  */
       abstop = 0;
     }
@@ -319,10 +289,6 @@ pow_scalar_special_case (double x, double y)
 	      x2 = -x2;
 	      sign_bias = 1;
 	    }
-#if WANT_SIMD_EXCEPT
-	  if (2 * ix == 0 && iy >> 63)
-	    return __math_divzero (sign_bias);
-#endif
 	  return iy >> 63 ? 1 / x2 : x2;
 	}
       /* Here x and y are non-zero finite.  */
@@ -331,11 +297,7 @@ pow_scalar_special_case (double x, double y)
 	  /* Finite x < 0.  */
 	  int yint = checkint (iy);
 	  if (yint == 0)
-#if WANT_SIMD_EXCEPT
-	    return __math_invalid (x);
-#else
 	    return __builtin_nan ("");
-#endif
 	  if (yint == 1)
 	    sign_bias = SignBias;
 	  ix &= 0x7fffffffffffffff;
@@ -349,12 +311,7 @@ pow_scalar_special_case (double x, double y)
 	  /* |y| < 2^-65, x^y ~= 1 + y*log(x).  */
 	  if ((topy & 0x7ff) < SmallPowY)
 	    return 1.0;
-#if WANT_SIMD_EXCEPT
-	  return (ix > asuint64 (1.0)) == (topy < 0x800) ? __math_oflow (0)
-							 : __math_uflow (0);
-#else
 	  return (ix > asuint64 (1.0)) == (topy < 0x800) ? INFINITY : 0;
-#endif
 	}
       if (topx == 0)
 	{

@@ -25,16 +25,10 @@ const static struct data
   struct v_log1pf_data log1pf_consts;
   float32x4_t one;
   uint32x4_t big_bound;
-#if WANT_SIMD_EXCEPT
-  uint32x4_t tiny_bound;
-#endif
 } data = {
   .one = V4 (1),
   .log1pf_consts = V_LOG1PF_CONSTANTS_TABLE,
   .big_bound = V4 (0x5f800000), /* asuint(0x1p64).  */
-#if WANT_SIMD_EXCEPT
-  .tiny_bound = V4 (0x30800000) /* asuint(0x1p-30).  */
-#endif
 };
 
 static float32x4_t NOINLINE VPCS_ATTR
@@ -59,18 +53,6 @@ VPCS_ATTR float32x4_t NOINLINE V_NAME_F1 (asinh) (float32x4_t x)
   uint32x4_t iax = vreinterpretq_u32_f32 (ax);
   uint32x4_t special = vcgeq_u32 (iax, dat->big_bound);
   uint32x4_t sign = veorq_u32 (vreinterpretq_u32_f32 (x), iax);
-  float32x4_t special_arg = x;
-
-#if WANT_SIMD_EXCEPT
-  /* Sidestep tiny and large values to avoid inadvertently triggering
-     under/overflow.  */
-  special = vorrq_u32 (special, vcltq_u32 (iax, dat->tiny_bound));
-  if (__glibc_unlikely (v_any_u32 (special)))
-    {
-      ax = v_zerofy_f32 (ax, special);
-      x = v_zerofy_f32 (x, special);
-    }
-#endif
 
   /* asinh(x) = log(x + sqrt(x * x + 1)).
      For positive x, asinh(x) = log1p(x + x * x / (1 + sqrt(x * x + 1))).  */
@@ -79,7 +61,7 @@ VPCS_ATTR float32x4_t NOINLINE V_NAME_F1 (asinh) (float32x4_t x)
   float32x4_t y = vaddq_f32 (ax, vdivq_f32 (vmulq_f32 (ax, ax), d));
 
   if (__glibc_unlikely (v_any_u32 (special)))
-    return special_case (special_arg, sign, y, special, dat);
+    return special_case (x, sign, y, special, dat);
   return vreinterpretq_f32_u32 (veorq_u32 (
       sign, vreinterpretq_u32_f32 (log1pf_inline (y, &dat->log1pf_consts))));
 }

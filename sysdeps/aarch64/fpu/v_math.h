@@ -108,11 +108,6 @@ v_call2_f32 (float (*f) (float, float), float32x4_t x1, float32x4_t x2,
 			p[2] ? f (x1[2], x2[2]) : y[2],
 			p[3] ? f (x1[3], x2[3]) : y[3] };
 }
-static inline float32x4_t
-v_zerofy_f32 (float32x4_t x, uint32x4_t mask)
-{
-  return vreinterpretq_f32_u32 (vbicq_u32 (vreinterpretq_u32_f32 (x), mask));
-}
 
 static inline float64x2_t
 v_f64 (double x)
@@ -171,11 +166,6 @@ v_call2_f64 (double (*f) (double, double), float64x2_t x1, float64x2_t x2,
 {
   return (float64x2_t){ p[0] ? f (x1[0], x2[0]) : y[0],
 			p[1] ? f (x1[1], x2[1]) : y[1] };
-}
-static inline float64x2_t
-v_zerofy_f64 (float64x2_t x, uint64x2_t mask)
-{
-  return vreinterpretq_f64_u64 (vbicq_u64 (vreinterpretq_u64_f64 (x), mask));
 }
 
 #endif

@@ -208,23 +208,13 @@ float64x2_t VPCS_ATTR V_NAME_D2 (pow) (float64x2_t x, float64x2_t y)
   uint64x2_t viy = vreinterpretq_u64_f64 (y);
   uint64x2_t iay = vandq_u64 (viy, d->inf);
 
-  /* Special cases of x or y.  */
-#if WANT_SIMD_EXCEPT
-  /* Small or large.  */
-  uint64x2_t vtopx = vshrq_n_u64 (vix, 52);
-  uint64x2_t vabstopy = vshrq_n_u64 (iay, 52);
-  uint64x2_t specialx
-      = vcgeq_u64 (vsubq_u64 (vtopx, VecSmallPowX), VecThresPowX);
-  uint64x2_t specialy
-      = vcgeq_u64 (vsubq_u64 (vabstopy, VecSmallPowY), VecThresPowY);
-#else
-  /* The case y==0 does not trigger a special case, since in this case it is
+  /* Special cases of x or y.
+     The case y==0 does not trigger a special case, since in this case it is
      necessary to fix the result only if x is a signalling nan, which already
      triggers a special case. We test y==0 directly in the scalar fallback.  */
   uint64x2_t iax = vandq_u64 (vix, d->inf);
   uint64x2_t specialx = vcgeq_u64 (iax, d->inf);
   uint64x2_t specialy = vcgeq_u64 (iay, d->inf);
-#endif
   uint64x2_t special = vorrq_u64 (specialx, specialy);
   /* Fallback to scalar on all lanes if any lane is inf or nan.  */
   if (__glibc_unlikely (v_any_u64 (special)))

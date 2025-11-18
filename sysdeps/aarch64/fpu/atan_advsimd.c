@@ -64,15 +64,6 @@ float64x2_t VPCS_ATTR V_NAME_D1 (atan) (float64x2_t x)
   uint64x2_t ix = vreinterpretq_u64_f64 (x);
   uint64x2_t sign = vandq_u64 (ix, SignMask);
 
-#if WANT_SIMD_EXCEPT
-  uint64x2_t ia12 = vandq_u64 (ix, v_u64 (0x7ff0000000000000));
-  uint64x2_t special = vcgtq_u64 (vsubq_u64 (ia12, v_u64 (TinyBound)),
-				  v_u64 (BigBound - TinyBound));
-  /* If any lane is special, fall back to the scalar routine for all lanes.  */
-  if (__glibc_unlikely (v_any_u64 (special)))
-    return v_call_f64 (atan, x, v_f64 (0), v_u64 (-1));
-#endif
-
   /* Argument reduction:
      y := arctan(x) for x < 1
      y := pi/2 + arctan(-1/x) for x > 1
