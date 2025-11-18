@@ -38,6 +38,8 @@
 #include <support/test-driver.h>
 #include <support/tty.h>
 
+#include <k_termios.h>	       /* Definitions for the raw ioctl interface */
+
 /* Evaluate an expression and make sure errno did not get set; return
    the value of the expression */
 #define CHECKERR(expr)				\
@@ -226,13 +228,66 @@ static void check_speeds_cf (const struct termios *tio_p,
 	       CHECKERR (cfgetibaud (tio_p)), 'i');
 }
 
-/* Use this after tc[gs]etattr () */
+/* Access the raw kernel interface and verify that the result is
+   canonicalized properly; this should be run after tcsetattr (). */
+static void
+check_speeds_kernel (int fd, speed_t ospeed, speed_t ispeed)
+{
+  struct termios2 k_termios;
+  tcflag_t expect_cbaud = speed_to_cbaud (ospeed);
+  tcflag_t expect_cibaud;
+
+  if (!ispeed)
+    ispeed = ospeed;
+
+  /* If ospeed == ispeed, tcsetattr() should set the kernel CIBAUD to 0,
+     for compatibility with programs that use the direct ioctl interface
+     but fail to account for CIBAUD. c_ispeed should still be correct. */
+  if (ospeed == ispeed)
+    expect_cibaud = 0;
+  else
+    expect_cibaud = speed_to_cbaud (ispeed);
+
+  memset (&k_termios, 0xed, sizeof k_termios); /* Fill with nonsense */
+  CHECKZERO (ioctl(fd, TCGETS2, &k_termios));
+
+  tcflag_t k_cbaud  = k_termios.c_cflag & CBAUD;
+  tcflag_t k_cibaud = (k_termios.c_cflag >> IBSHIFT) & CBAUD;
+
+  if (k_termios.c_ospeed != ospeed)
+    FAIL ("opeed %u ispeed %u: kernel c_ospeed = %u, expected %u",
+	  ospeed, ispeed,
+	  k_termios.c_ospeed, ospeed);
+
+  if (k_cbaud != expect_cbaud)
+    FAIL ("ospeed %u ispeed %u: kernel CBAUD = %s (%06o), expected %s (%06o)",
+	  ospeed, ispeed,
+	  cbaud_name (k_cbaud), k_cbaud,
+	  cbaud_name (expect_cbaud), expect_cbaud);
+
+  if (k_termios.c_ispeed != ispeed)
+    FAIL ("ospeed %u ispeed %u: kernel c_ispeed == %u, expected %u",
+	  ospeed, ispeed,
+	  k_termios.c_ispeed, ispeed);
+
+  if (k_cibaud != expect_cibaud)
+    FAIL ("ospeed %u ispeed %u: kernel CIBAUD = %s (%06o), expected %s (%06o)",
+	  ospeed, ispeed,
+	  cbaud_name (k_cibaud), k_cibaud,
+	  cbaud_name (expect_cibaud), expect_cibaud);
+}
+
+/* Use this after tcsetattr () */
 static void check_speeds_tc (int fd, speed_t ospeed, speed_t ispeed)
 {
   struct termios tio;
 
+  if (!ispeed)
+    ispeed = ospeed;
+
   CHECKZERO (tcgetattr (fd, &tio));
-  check_speeds_cf (&tio, ospeed, ispeed ? ispeed : ospeed);
+  check_speeds_cf (&tio, ospeed, ispeed);
+  check_speeds_kernel (fd, ospeed, ispeed);
 }
 
 /* For search and replace convenience */
@@ -250,7 +305,7 @@ set_speeds (int fd, speed_t ospeed, speed_t ispeed)
   CHECKZERO (cfsetispeed (&tio, ispeed));
   check_speeds_cf (&tio, ospeed, ispeed);
   CHECKZERO (tcsetattr (fd, TCSANOW, &tio));
-  check_speeds_tc (fd, ospeed, ispeed ? ispeed : ospeed);
+  check_speeds_tc (fd, ospeed, ispeed);
 }
 
 /* Actual tests */
