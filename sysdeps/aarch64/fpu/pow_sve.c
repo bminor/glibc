@@ -31,8 +31,8 @@
    The SVE algorithm drops the tail in the exp computation at the price of
    a lower accuracy, slightly above 1ULP.
    The SVE algorithm also drops the special treatement of small (< 2^-65) and
-   large (> 2^63) finite values of |y|, as they only affect non-round to nearest
-   modes.
+   large (> 2^63) finite values of |y|, as they only affect non-round to
+   nearest modes.
 
    Maximum measured error is 1.04 ULPs:
    SV_NAME_D2 (pow) (0x1.3d2d45bc848acp+63, -0x1.a48a38b40cd43p-12)
@@ -156,42 +156,22 @@ sv_zeroinfnan (svbool_t pg, svuint64_t i)
    a double.  (int32_t)KI is the k used in the argument reduction and exponent
    adjustment of scale, positive k here means the result may overflow and
    negative k means the result may underflow.  */
-static inline double
-specialcase (double tmp, uint64_t sbits, uint64_t ki)
-{
-  double scale;
-  if ((ki & 0x80000000) == 0)
-    {
-      /* k > 0, the exponent of scale might have overflowed by <= 460.  */
-      sbits -= 1009ull << 52;
-      scale = asdouble (sbits);
-      return 0x1p1009 * (scale + scale * tmp);
-    }
-  /* k < 0, need special care in the subnormal range.  */
-  sbits += 1022ull << 52;
-  /* Note: sbits is signed scale.  */
-  scale = asdouble (sbits);
-  double y = scale + scale * tmp;
-  return 0x1p-1022 * y;
-}
-
-/* Scalar fallback for special cases of SVE pow's exp.  */
 static inline svfloat64_t
-sv_call_specialcase (svfloat64_t x1, svuint64_t u1, svuint64_t u2,
-		     svfloat64_t y, svbool_t cmp)
+specialcase (svfloat64_t tmp, svuint64_t sbits, svuint64_t ki, svbool_t cmp)
 {
-  svbool_t p = svpfirst (cmp, svpfalse ());
-  while (svptest_any (cmp, p))
-    {
-      double sx1 = svclastb (p, 0, x1);
-      uint64_t su1 = svclastb (p, 0, u1);
-      uint64_t su2 = svclastb (p, 0, u2);
-      double elem = specialcase (sx1, su1, su2);
-      svfloat64_t y2 = sv_f64 (elem);
-      y = svsel (p, y2, y);
-      p = svpnext_b64 (cmp, p);
-    }
-  return y;
+  svbool_t p_pos = svcmpge_n_f64 (cmp, svreinterpret_f64_u64 (ki), 0.0);
+
+  /* Scale up or down depending on sign of k.  */
+  svint64_t offset
+      = svsel_s64 (p_pos, sv_s64 (1009ull << 52), sv_s64 (-1022ull << 52));
+  svfloat64_t factor
+      = svsel_f64 (p_pos, sv_f64 (0x1p1009), sv_f64 (0x1p-1022));
+
+  svuint64_t offset_sbits
+      = svsub_u64_x (cmp, sbits, svreinterpret_u64_s64 (offset));
+  svfloat64_t scale = svreinterpret_f64_u64 (offset_sbits);
+  svfloat64_t res = svmad_f64_x (cmp, scale, tmp, scale);
+  return svmul_f64_x (cmp, res, factor);
 }
 
 /* Compute y+TAIL = log(x) where the rounded result is y and TAIL has about
@@ -214,8 +194,8 @@ sv_log_inline (svbool_t pg, svuint64_t ix, svfloat64_t *tail,
 
   /* log(x) = k*Ln2 + log(c) + log1p(z/c-1).  */
   /* SVE lookup requires 3 separate lookup tables, as opposed to scalar version
-     that uses array of structures. We also do the lookup earlier in the code to
-     make sure it finishes as early as possible.  */
+     that uses array of structures. We also do the lookup earlier in the code
+     to make sure it finishes as early as possible.  */
   svfloat64_t invc = svld1_gather_index (pg, __v_pow_log_data.invc, i);
   svfloat64_t logc = svld1_gather_index (pg, __v_pow_log_data.logc, i);
   svfloat64_t logctail = svld1_gather_index (pg, __v_pow_log_data.logctail, i);
@@ -325,14 +305,14 @@ sv_exp_inline (svbool_t pg, svfloat64_t x, svfloat64_t xtail,
       svbool_t oflow = svcmpge (pg, abstop, HugeExp);
       oflow = svand_z (pg, uoflow, svbic_z (pg, oflow, uflow));
 
-      /* For large |x| values (512 < |x| < 1024) scale * (1 + TMP) can overflow
-    or underflow.  */
+      /* Handle underflow and overlow in scale.
+	 For large |x| values (512 < |x| < 1024), scale * (1 + TMP) can
+	 overflow or underflow.  */
       svbool_t special = svbic_z (pg, uoflow, svorr_z (pg, uflow, oflow));
+      if (__glibc_unlikely (svptest_any (pg, special)))
+	z = svsel (special, specialcase (tmp, sbits, ki, special), z);
 
-      /* Update result with special and large cases.  */
-      z = sv_call_specialcase (tmp, sbits, ki, z, special);
-
-      /* Handle underflow and overflow.  */
+      /* Handle underflow and overflow in exp.  */
       svbool_t x_is_neg = svcmplt (pg, x, 0);
       svuint64_t sign_mask
 	  = svlsl_x (pg, sign_bias, 52 - V_POW_EXP_TABLE_BITS);
@@ -353,7 +333,7 @@ sv_exp_inline (svbool_t pg, svfloat64_t x, svfloat64_t xtail,
 }
 
 static inline double
-pow_sc (double x, double y)
+pow_specialcase (double x, double y)
 {
   uint64_t ix = asuint64 (x);
   uint64_t iy = asuint64 (y);
@@ -380,6 +360,14 @@ pow_sc (double x, double y)
       return (iy >> 63) ? 1 / x2 : x2;
     }
   return x;
+}
+
+/* Scalar fallback for special case routines with custom signature.  */
+static svfloat64_t NOINLINE
+sv_pow_specialcase (svfloat64_t x1, svfloat64_t x2, svfloat64_t y,
+		    svbool_t cmp)
+{
+  return sv_call2_f64 (pow_specialcase, x1, x2, y, cmp);
 }
 
 svfloat64_t SV_NAME_D2 (pow) (svfloat64_t x, svfloat64_t y, const svbool_t pg)
@@ -444,7 +432,7 @@ svfloat64_t SV_NAME_D2 (pow) (svfloat64_t x, svfloat64_t y, const svbool_t pg)
 
   /* Cases of zero/inf/nan x or y.  */
   if (__glibc_unlikely (svptest_any (svptrue_b64 (), special)))
-    vz = sv_call2_f64 (pow_sc, x, y, vz, special);
+    vz = sv_pow_specialcase (x, y, vz, special);
 
   return vz;
 }
