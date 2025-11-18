@@ -317,6 +317,10 @@ libc {
 }
 
 libpthread {
+  GLIBC_2.2.6 {
+    __libpthread_version_placeholder;
+  }
+
   GLIBC_2.12 {
     pthread_atfork;
 
