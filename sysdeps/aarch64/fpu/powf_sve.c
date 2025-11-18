@@ -116,11 +116,10 @@ zeroinfnan (uint32_t ix)
    preamble of scalar powf except that we do not update ix and sign_bias. This
    is done in the preamble of the SVE powf.  */
 static inline float
-powf_specialcase (float x, float y, float z)
+powf_specialcase (float x, float y)
 {
   uint32_t ix = asuint (x);
   uint32_t iy = asuint (y);
-  /* Either (x < 0x1p-126 or inf or nan) or (y is 0 or inf or nan).  */
   if (__glibc_unlikely (zeroinfnan (iy)))
     {
       if (2 * iy == 0)
@@ -142,32 +141,15 @@ powf_specialcase (float x, float y, float z)
 	x2 = -x2;
       return iy & 0x80000000 ? 1 / x2 : x2;
     }
-  /* We need a return here in case x<0 and y is integer, but all other tests
-   need to be run.  */
-  return z;
+  /* Return x for convenience, but make sure result is never used.  */
+  return x;
 }
 
 /* Scalar fallback for special case routines with custom signature.  */
 static svfloat32_t NOINLINE
-sv_call_powf_sc (svfloat32_t x1, svfloat32_t x2, svfloat32_t y)
+sv_call_powf_sc (svfloat32_t x1, svfloat32_t x2, svfloat32_t y, svbool_t cmp)
 {
-  /* Special cases of x or y: zero, inf and nan.  */
-  svbool_t xspecial = sv_zeroinfnan (svptrue_b32 (), svreinterpret_u32 (x1));
-  svbool_t yspecial = sv_zeroinfnan (svptrue_b32 (), svreinterpret_u32 (x2));
-  svbool_t cmp = svorr_z (svptrue_b32 (), xspecial, yspecial);
-
-  svbool_t p = svpfirst (cmp, svpfalse ());
-  while (svptest_any (cmp, p))
-    {
-      float sx1 = svclastb (p, 0, x1);
-      float sx2 = svclastb (p, 0, x2);
-      float elem = svclastb (p, 0, y);
-      elem = powf_specialcase (sx1, sx2, elem);
-      svfloat32_t y2 = sv_f32 (elem);
-      y = svsel (p, y2, y);
-      p = svpnext_b32 (cmp, p);
-    }
-  return y;
+  return sv_call2_f32 (powf_specialcase, x1, x2, y, cmp);
 }
 
 /* Compute core for half of the lanes in double precision.  */
@@ -330,7 +312,7 @@ svfloat32_t SV_NAME_F2 (pow) (svfloat32_t x, svfloat32_t y, const svbool_t pg)
   ret = svsel (yint_or_xpos, ret, sv_f32 (__builtin_nanf ("")));
 
   if (__glibc_unlikely (svptest_any (cmp, cmp)))
-    return sv_call_powf_sc (x, y, ret);
+    return sv_call_powf_sc (x, y, ret, cmp);
 
   return ret;
 }
