@@ -32,5 +32,3 @@ GLIBC_2.38 tss_create F
 GLIBC_2.38 tss_delete F
 GLIBC_2.38 tss_get F
 GLIBC_2.38 tss_set F
-GLIBC_2.40 pthread_getname_np F
-GLIBC_2.40 pthread_setname_np F

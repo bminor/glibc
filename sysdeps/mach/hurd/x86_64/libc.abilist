@@ -2276,6 +2276,8 @@ GLIBC_2.39 stdc_trailing_zeros_ui F
 GLIBC_2.39 stdc_trailing_zeros_ul F
 GLIBC_2.39 stdc_trailing_zeros_ull F
 GLIBC_2.39 stdc_trailing_zeros_us F
+GLIBC_2.40 pthread_getname_np F
+GLIBC_2.40 pthread_setname_np F
 GLIBC_2.41 pthread_attr_getguardsize F
 GLIBC_2.41 pthread_attr_getstack F
 GLIBC_2.41 pthread_attr_getstackaddr F
@@ -2354,10 +2356,12 @@ GLIBC_2.43 pthread_detach F
 GLIBC_2.43 pthread_getattr_np F
 GLIBC_2.43 pthread_getconcurrency F
 GLIBC_2.43 pthread_getcpuclockid F
+GLIBC_2.43 pthread_getname_np F
 GLIBC_2.43 pthread_join F
 GLIBC_2.43 pthread_kill F
 GLIBC_2.43 pthread_mutex_transfer_np F
 GLIBC_2.43 pthread_setconcurrency F
+GLIBC_2.43 pthread_setname_np F
 GLIBC_2.43 pthread_setschedprio F
 GLIBC_2.43 pthread_testcancel F
 GLIBC_2.43 pthread_timedjoin_np F

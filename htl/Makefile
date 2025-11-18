@@ -29,8 +29,6 @@ libpthread-routines := \
   pt-hurd-cond-wait \
   pt-hurd-cond-timedwait \
   pt-spin \
-  pt-getname-np \
-  pt-setname-np \
   # libpthread-routine
 
 headers := \
@@ -122,6 +120,7 @@ routines := \
   pt-getattr \
   pt-getconcurrency \
   pt-getcpuclockid \
+  pt-getname-np \
   pt-getschedparam \
   pt-getspecific \
   pt-init-specific \
@@ -174,6 +173,7 @@ routines := \
   pt-setcancelstate \
   pt-setcanceltype \
   pt-setconcurrency \
+  pt-setname-np \
   pt-setschedparam \
   pt-setschedprio \
   pt-setspecific \

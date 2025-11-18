@@ -225,6 +225,11 @@ int __pthread_setconcurrency (int __new_level);
 libc_hidden_proto (__pthread_setconcurrency)
 int __pthread_getconcurrency (void);
 libc_hidden_proto (__pthread_getconcurrency)
+int __pthread_getname_np (pthread_t __target_thread, char *__buf,
+			       size_t __buflen);
+libc_hidden_proto (__pthread_getname_np)
+int __pthread_setname_np (pthread_t __target_thread, const char *__name);
+libc_hidden_proto (__pthread_setname_np)
 
 #define __pthread_raise_internal(__sig) raise (__sig)
 

@@ -157,6 +157,11 @@ libc {
     sem_clockwait;
   }
 
+  GLIBC_2.40 {
+    pthread_getname_np;
+    pthread_setname_np;
+  }
+
   GLIBC_2.41 {
     pthread_attr_getguardsize;
     pthread_attr_getstacksize;
@@ -225,10 +230,12 @@ libc {
     pthread_getattr_np;
     pthread_getconcurrency;
     pthread_getcpuclockid;
+    pthread_getname_np;
     pthread_join;
     pthread_kill;
     pthread_mutex_transfer_np;
     pthread_setconcurrency;
+    pthread_setname_np;
     pthread_setschedprio;
     pthread_testcancel;
     pthread_timedjoin_np;
@@ -345,7 +352,6 @@ libpthread {
   }
 
   GLIBC_2.40 {
-    pthread_getname_np;
-    pthread_setname_np;
+    __libpthread_version_placeholder;
   }
 }

@@ -22,6 +22,8 @@
 #include <string.h>
 
 #include <pt-internal.h>
+#include <shlib-compat.h>
+#include <ldsodefs.h>
 
 int
 __pthread_setname_np (pthread_t thread, const char *name)
@@ -49,4 +51,9 @@ __pthread_setname_np (pthread_t thread, const char *name)
 #endif
 }
 
-weak_alias (__pthread_setname_np, pthread_setname_np)
+libc_hidden_def (__pthread_setname_np)
+versioned_symbol (libc, __pthread_setname_np, pthread_setname_np, GLIBC_2_43);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_40, GLIBC_2_43)
+compat_symbol (libpthread, __pthread_setname_np, pthread_setname_np, GLIBC_2_40);
+#endif
