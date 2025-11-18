@@ -76,8 +76,7 @@ __pthread_mutex_clocklock_common (pthread_mutex_t *mutex,
       /* Check whether we already hold the mutex.  */
       if (__glibc_unlikely (mutex->__data.__owner == id))
 	return EDEADLK;
-
-      /* FALLTHROUGH */
+      [[fallthrough]];
 
     case PTHREAD_MUTEX_TIMED_NP:
       /* Normal mutex.  */
