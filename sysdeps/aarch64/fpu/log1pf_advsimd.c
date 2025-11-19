@@ -20,28 +20,50 @@
 #include "v_math.h"
 #include "v_log1pf_inline.h"
 
-const static struct v_log1pf_data data = V_LOG1PF_CONSTANTS_TABLE;
-
-static float32x4_t NOINLINE VPCS_ATTR
-special_case (float32x4_t x, uint32x4_t cmp)
+static const struct data
 {
-  return v_call_f32 (log1pf, x, log1pf_inline (x, ptr_barrier (&data)), cmp);
+  struct v_log1pf_data d;
+  float32x4_t nan, pinf, minf;
+} data = {
+  .d = V_LOG1PF_CONSTANTS_TABLE,
+  .nan = V4 (NAN),
+  .pinf = V4 (INFINITY),
+  .minf = V4 (-INFINITY),
+};
+
+static inline float32x4_t
+special_case (float32x4_t x, uint32x4_t cmp, const struct data *d)
+{
+  float32x4_t y = log1pf_inline (x, ptr_barrier (&d->d));
+  y = vbslq_f32 (cmp, d->nan, y);
+  uint32x4_t ret_pinf = vceqq_f32 (x, d->pinf);
+  uint32x4_t ret_minf = vceqq_f32 (x, v_f32 (-1.0));
+
+  y = vbslq_f32 (ret_pinf, d->pinf, y);
+  return vbslq_f32 (ret_minf, d->minf, y);
 }
 
-/* Vector log1pf approximation using polynomial on reduced interval. Worst-case
-   error is 1.63 ULP:
-   _ZGVnN4v_log1pf(0x1.216d12p-2) got 0x1.fdcb12p-3
-				 want 0x1.fdcb16p-3.  */
+/* Single-precision implementation of vector log1pf(x).
+  Maximum observed error: 1.20 + 0.5
+  _ZGVnN4v_log1pf(0x1.04418ap-2) got 0x1.cfcbd8p-3
+				want 0x1.cfcbdcp-3.  */
 float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (log1p) (float32x4_t x)
 {
-  uint32x4_t special_cases = vornq_u32 (vcleq_f32 (x, v_f32 (-1)),
-					vcaleq_f32 (x, v_f32 (0x1p127f)));
+  const struct data *d = ptr_barrier (&data);
 
-  if (__glibc_unlikely (v_any_u32 (special_cases)))
-    return special_case (x, special_cases);
+  /* Use signed integers here to ensure that negative numbers between 0 and -1
+    don't make this expression true.  */
+  uint32x4_t is_infnan
+      = vcgeq_s32 (vreinterpretq_s32_f32 (x), vreinterpretq_s32_f32 (d->pinf));
+  /* The OR-NOT is needed to catch -NaN.  */
+  uint32x4_t special = vornq_u32 (is_infnan, vcgtq_f32 (x, v_f32 (-1)));
 
-  return log1pf_inline (x, ptr_barrier (&data));
+  if (__glibc_unlikely (v_any_u32 (special)))
+    return special_case (x, special, d);
+
+  return log1pf_inline (x, &d->d);
 }
+
 libmvec_hidden_def (V_NAME_F1 (log1p))
 HALF_WIDTH_ALIAS_F1 (log1p)
 strong_alias (V_NAME_F1 (log1p), V_NAME_F1 (logp1))
