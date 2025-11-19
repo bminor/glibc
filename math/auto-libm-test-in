@@ -896,6 +896,7 @@ atanh -0x3.98eaf4p-4
 atanh 0x2.c1085p-4
 atanh 0x1p-500
 atanh 0x1p-5000
+atanh 0x1.658802e5e2da7p-2
 # the next value generates larger error bounds in libmvec/avx512 on x86_64
 # (binary32)
 atanh 0x1.f80094p-8

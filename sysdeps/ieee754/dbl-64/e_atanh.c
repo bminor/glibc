@@ -3,7 +3,7 @@
 Copyright (c) 2023-2025 Alexei Sibidanov.
 
 The original version of this file was copied from the CORE-MATH
-project (file src/binary64/atanh/atanh.c, revision 4da7f241).
+project (file src/binary64/atanh/atanh.c, revision 703d7487).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -147,7 +147,7 @@ __ieee754_atanh (double x)
   ll += f;
   lh *= copysign (1, x);
   ll *= copysign (1, x);
-  double eps = 31e-24 + dx2 * 0x1p-49;
+  double eps = 34e-24 + dx2 * 0x1p-49;
   double lb = lh + (ll - eps), ub = lh + (ll + eps);
   if (__glibc_likely (lb == ub))
     return lb;
