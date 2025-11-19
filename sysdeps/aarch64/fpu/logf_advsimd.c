@@ -22,9 +22,12 @@
 static const struct data
 {
   float32x4_t c2, c4, c6, ln2;
-  uint32x4_t off, offset_lower_bound, mantissa_mask;
-  uint16x8_t special_bound;
+  uint32x4_t off, offset_lower_bound;
+  uint32x4_t special_bound;
+  uint16x8_t special_bound_u16;
+  uint32x4_t mantissa_mask;
   float c1, c3, c5, c0;
+  float32x4_t pinf, minf, nan;
 } data = {
   /* 3.34 ulp error.  */
   .c0 = -0x1.3e737cp-3f,
@@ -38,37 +41,20 @@ static const struct data
   /* Lower bound is the smallest positive normal float 0x00800000. For
      optimised register use subnormals are detected after offset has been
      subtracted, so lower bound is 0x0080000 - offset (which wraps around).  */
+  .off = V4 (0x3f2aaaab), /* 0.666667.  */
   .offset_lower_bound = V4 (0x00800000 - 0x3f2aaaab),
-  .special_bound = V8 (0x7f00), /* top16(asuint32(inf) - 0x00800000).  */
-  .off = V4 (0x3f2aaaab),	/* 0.666667.  */
-  .mantissa_mask = V4 (0x007fffff)
+  .special_bound = V4 (0x7f000000), /* asuint32(inf) - 0x00800000.  */
+  .special_bound_u16 = V8 (0x7f00),
+  .mantissa_mask = V4 (0x007fffff),
+  .pinf = V4 (INFINITY),
+  .minf = V4 (-INFINITY),
+  .nan = V4 (NAN),
 };
 
-static float32x4_t VPCS_ATTR NOINLINE
-special_case (float32x4_t p, uint32x4_t u_off, float32x4_t y, float32x4_t r2,
-	      uint16x4_t cmp, const struct data *d)
+static inline float32x4_t VPCS_ATTR
+inline_logf (uint32x4_t u_off, float32x4_t n, const struct data *d)
 {
-  /* Fall back to scalar code.  */
-  return v_call_f32 (logf, vreinterpretq_f32_u32 (vaddq_u32 (u_off, d->off)),
-		     vfmaq_f32 (p, y, r2), vmovl_u16 (cmp));
-}
-
-float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (log) (float32x4_t x)
-{
-  const struct data *d = ptr_barrier (&data);
   float32x4_t c1350 = vld1q_f32 (&d->c1);
-
-  /* To avoid having to mov x out of the way, keep u after offset has been
-     applied, and recover x by adding the offset back in the special-case
-     handler.  */
-  uint32x4_t u_off = vsubq_u32 (vreinterpretq_u32_f32 (x), d->off);
-
-  /* x = 2^n * (1+r), where 2/3 < 1+r < 4/3.  */
-  float32x4_t n = vcvtq_f32_s32 (
-      vshrq_n_s32 (vreinterpretq_s32_u32 (u_off), 23)); /* signextend.  */
-  uint16x4_t cmp = vcge_u16 (vsubhn_u32 (u_off, d->offset_lower_bound),
-			     vget_low_u16 (d->special_bound));
-
   uint32x4_t u = vaddq_u32 (vandq_u32 (u_off, d->mantissa_mask), d->off);
   float32x4_t r = vsubq_f32 (vreinterpretq_f32_u32 (u), v_f32 (1.0f));
 
@@ -84,9 +70,64 @@ float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (log) (float32x4_t x)
   y = vfmaq_f32 (y, q, r2);
   p = vfmaq_f32 (r, d->ln2, n);
 
-  if (__glibc_unlikely (v_any_u16h (cmp)))
-    return special_case (p, u_off, y, r2, cmp, d);
   return vfmaq_f32 (p, y, r2);
 }
+
+static inline float32x4_t VPCS_ATTR
+special_case (float32x4_t x, const struct data *d)
+{
+  float32x4_t x_sqrt = vsqrtq_f32 (x);
+
+  uint32x4_t u_off = vsubq_u32 (vreinterpretq_u32_f32 (x_sqrt), d->off);
+  float32x4_t n = vcvtq_f32_s32 (
+      vshrq_n_s32 (vreinterpretq_s32_u32 (u_off), 23)); /* signextend.  */
+
+  float32x4_t y = inline_logf (u_off, n, d);
+
+  /* Scale down by multiplying output by two.
+	  Because log(x) = 2log(sqrt(x)).  */
+  y = vmulq_f32 (y, v_f32 (2.0f));
+
+  /* Is true for +/- inf, +/- nan as well as all negative numbers.  */
+  uint32x4_t is_infnan
+      = vcgeq_u32 (vreinterpretq_u32_f32 (x), vreinterpretq_u32_f32 (d->pinf));
+  uint32x4_t infnan_or_zero = vorrq_u32 (is_infnan, vceqzq_f32 (x));
+
+  y = vbslq_f32 (infnan_or_zero, d->nan, y);
+  uint32x4_t ret_pinf = vceqq_f32 (x, d->pinf);
+  uint32x4_t ret_minf = vceqzq_f32 (x);
+  y = vbslq_f32 (ret_pinf, d->pinf, y);
+  y = vbslq_f32 (ret_minf, d->minf, y);
+  return y;
+}
+
+/* Single-precision implementation of logf(x).
+  Maximum observed error: 2.85 + 0.5
+  _ZGVnN4v_logf(0x1.557298p+0) got 0x1.26edecp-2
+			      want 0x1.26ede6p-2.  */
+float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (log) (float32x4_t x)
+{
+  const struct data *d = ptr_barrier (&data);
+
+  /* To avoid having to mov x out of the way, keep u after offset has been
+     applied, and recover x by adding the offset back in the special-case
+     handler.  */
+  uint32x4_t u_off = vsubq_u32 (vreinterpretq_u32_f32 (x), d->off);
+
+  /* x = 2^n * (1+r), where 2/3 < 1+r < 4/3.  */
+  float32x4_t n = vcvtq_f32_s32 (
+      vshrq_n_s32 (vreinterpretq_s32_u32 (u_off), 23)); /* signextend.  */
+
+  uint32x4_t special
+      = vcgeq_u32 (vsubq_u32 (u_off, d->offset_lower_bound), d->special_bound);
+  uint16x4_t special_u16 = vcge_u16 (vsubhn_u32 (u_off, d->offset_lower_bound),
+				     vget_low_u16 (d->special_bound_u16));
+
+  /* Doing the check on the u16 version makes the fast pass faster.  */
+  if (__glibc_unlikely (v_any_u16h (special_u16)))
+    return vbslq_f32 (special, special_case (x, d), inline_logf (u_off, n, d));
+  return inline_logf (u_off, n, d);
+}
+
 libmvec_hidden_def (V_NAME_F1 (log))
 HALF_WIDTH_ALIAS_F1 (log)
