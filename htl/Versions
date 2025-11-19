@@ -8,6 +8,7 @@ libc {
     __pthread_kill;
     __pthread_mutex_transfer_np;
     __pthread_self;
+    pthread_atfork;
     pthread_attr_getdetachstate;
     pthread_attr_getinheritsched;
     pthread_attr_getschedparam;
@@ -342,9 +343,8 @@ libpthread {
   GLIBC_2.2.6 {
     __libpthread_version_placeholder;
   }
-
   GLIBC_2.12 {
-    pthread_atfork;
+    __libpthread_version_placeholder;
   }
   GLIBC_2.21 {
     __libpthread_version_placeholder;

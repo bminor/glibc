@@ -27,6 +27,7 @@ headers += \
 
 routines += \
   pthread_atfork \
+  pthread_atfork_compat \
   thrd_current \
   thrd_equal \
   thrd_sleep \
@@ -47,7 +48,6 @@ $(libpthread-routines-var) += \
   mtx_timedlock \
   mtx_trylock \
   mtx_unlock \
-  pthread_atfork_compat \
   thrd_create \
   thrd_detach \
   thrd_exit \

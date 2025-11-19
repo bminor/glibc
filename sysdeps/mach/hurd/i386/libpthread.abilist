@@ -1,4 +1,3 @@
-GLIBC_2.12 pthread_atfork F
 GLIBC_2.32 call_once F
 GLIBC_2.32 cnd_broadcast F
 GLIBC_2.32 cnd_destroy F
