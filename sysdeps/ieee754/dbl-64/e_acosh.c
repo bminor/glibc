@@ -4,7 +4,7 @@
 Copyright (c) 2023-2025 Alexei Sibidanov.
 
 The original version of this file was copied from the CORE-MATH
-project (file src/binary64/acosh/acosh.c, revision 69062c4d).
+project (file src/binary64/acosh/acosh.c, revision 6736002f).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -112,15 +112,16 @@ __ieee754_acosh (double x)
 	-0x1.c9045534e6d9ep-14, 0x1.71fedae26a76bp-15,	-0x1.f1f4f8cc65342p-17
       };
       double z2 = z * z, z4 = z2 * z2,
-	     ds = (sh * z)
-		  * (cl[0]
+	     ds = fma (
+		 sh * z,
+		 cl[0]
 		     + z
 			   * (((cl[1] + z * cl[2]) + z2 * (cl[3] + z * cl[4]))
 			      + z4
 				    * ((cl[5] + z * cl[6])
-				       + z2 * (cl[7] + z * cl[8]))));
-      double eps = ds * 0x1.22p-50 - 0x1p-104 * sh;
-      ds += sl;
+				       + z2 * (cl[7] + z * cl[8]))),
+		 sl);
+      double eps = ds * 0x1.fcp-51 - 0x1p-104 * sh;
       double lb = sh + (ds - eps), ub = sh + (ds + eps);
       if (lb == ub)
 	return lb;
