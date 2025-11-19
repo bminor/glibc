@@ -463,6 +463,33 @@ extern int name_to_handle_at (int __dfd, const char *__name,
 extern int open_by_handle_at (int __mountdirfd, struct file_handle *__handle,
 			      int __flags);
 
+#ifdef __has_include
+# if __has_include ("linux/openat2.h")
+#  include "linux/openat2.h"
+#  define __glibc_has_open_how 1
+# endif
+#endif
+
+#include <bits/openat2.h>
+
+/* Similar to `openat' but the arguments are packed on HOW with the size
+   USIZE.  If flags and mode from HOW are non-zero, then openat2 operates
+   like openat.
+
+   Unlike openat, unknown or invalid flags result in an error (EINVAL),
+   rather than being ignored.  The mode must be zero unless one of O_CREAT
+   or O_TMPFILE are set.
+
+   The kernel does not support legacy non-LFS interface.  */
+extern int openat2 (int __dfd, const char * __filename,
+		    const struct open_how * __how,
+		    __SIZE_TYPE__ __usize)
+     __nonnull ((2, 3));
+
 #endif	/* use GNU */
+
+#if __USE_FORTIFY_LEVEL > 0 && defined __fortify_function
+# include <bits/fcntl-linux-fortify.h>
+#endif
 
 __END_DECLS

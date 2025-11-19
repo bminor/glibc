@@ -341,6 +341,7 @@ libc {
   }
   GLIBC_2.43 {
     mseal;
+    openat2;
   }
   GLIBC_PRIVATE {
     # functions used in other libraries

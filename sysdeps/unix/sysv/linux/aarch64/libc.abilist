@@ -2773,4 +2773,5 @@ GLIBC_2.43 free_sized F
 GLIBC_2.43 memalignment F
 GLIBC_2.43 memset_explicit F
 GLIBC_2.43 mseal F
+GLIBC_2.43 openat2 F
 GLIBC_2.43 umaxabs F

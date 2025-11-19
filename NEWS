@@ -54,6 +54,10 @@ Major new features:
   targets, and libgcc compatible runtime (including libgcc_s.so for
   pthread cancellation and backtrace runtime support).
 
+* On Linux, the openat2 function has been added.  It is an extension of
+  openat and provides a superset of its functionality.  It is supported only
+  in LFS mode and it is a cancellable entrypoint.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * Support for dumped heaps has been removed - malloc_set_state() now always

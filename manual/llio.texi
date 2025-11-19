@@ -218,6 +218,104 @@ new, extended API using 64 bit file sizes and offsets transparently
 replaces the old API.
 @end deftypefun
 
+@deftp {Data Type} {struct open_how}
+@standards{Linux, fcntl.h}
+The @code{open_how} structure describes how to open a file using @code{openat2}.
+
+@strong{Portability note:} In the future, additional fields can be added
+to @code{struct open_how}, so that the size of this data type increases.
+Do not use it in places where this matters, such as structure fields in
+installed header files, where such a change could affect the application
+binary interface (ABI).
+
+The following generic fields are available.
+
+@table @code
+@item flags
+This field specifies the file creation and file status flags to use when
+opening the file.
+All of the @code{O_*} flags defined for @code{openat} are valid.
+The @code{openat2} is stricter than @code{openat} in rejecting unknown or
+conflicting values. For example, @code{openat2} rejects a mode that
+exceeds 07777, whereas @code{openat} silently ignores
+excess high-order bits.
+
+@item mode
+This field specifies the mode for the new file, similar to @code{mode}
+argument of @code{openat}. It should be in the range 0..07777.
+
+@item resolve
+This is a bitmask of flags that affect the resolution of file name components.
+Unlike @code{O_NOFOLLOW}, it affects all file name components, not just the
+last one. The following flags are available.
+
+@table @code
+@item RESOLVE_NO_XDEV
+Disallow traversal of mount points during path resolution (including all
+bind mounts).
+
+@item RESOLVE_NO_MAGICLINKS
+Disallow all @strong{magic-link} resolution during path resolution. Magic
+links are symbolic link-like objects that are found in @strong{procfs};
+for example the @code{/proc/pid/exe}.
+
+@item RESOLVE_NO_SYMLINKS
+Disallow resolution of symbolic links during path resolution.
+This option implies @code{RESOLVE_NO_MAGICLINKS}.
+
+@item RESOLVE_BENEATH
+This rejects absolute pathnames, pathnames containing @file{..}@:
+components that would be resolved relative to @var{dfd},
+and symbolic links that resolve to pathnames that would be rejected.
+The rejection occurs even if @var{dfd} is the root directory.
+
+@item RESOLVE_IN_ROOT
+Treat absolute pathnames as being relative to @var{dfd},
+treat a @file{..}@: component as being equivalent to @file{.}@:
+if it is resolved relative to @var{dfd},
+and treat symbolic link contents consistently with this.
+@end table
+
+@end table
+
+@end deftp
+
+
+@deftypefun int openat2 (int @var{dirfd}, const char *@var{pathname}, const struct open_how *@var{how}, size_t @var{size})
+@standards{Linux, fcntl.h}
+@safety{@mtsafe{}@assafe{}@acsafe{}}
+This function is an extension of the @code{openat} and provides a superset of its
+functionality.  @xref{Descriptor-Relative Access}.
+
+The @var{size} argument must equal @code{sizeof *@var{how}}. For portability
+to future API versions that may extend @code{struct open_how}, @code{*@var{how}}
+should be fully initialized e.g., by a struct initializer, by @code{memset} to zero,
+or by having static storage duration.
+
+On failure, @code{openat2} returns @math{-1} and sets @code{errno}. It can
+fail for any of the reasons @code{openat} fails, plus the following reasons:
+
+@table @code
+@item E2BIG
+@var{size} is too large for any future extension, @code{*@var{how}} contains
+non-zero members that are future extensions not supported by this kernel
+
+@item EINVAL
+An unknown flag or invalid value was used on @code{*@var{how}}; or
+@code{@var{how}->mode} is non-zero, but @code{@var{how}->flags} does not contain
+@code{O_CREAT} or @code{O_TMPFILE}, or @var{size} is smaller than the ones supported
+by the kernel.
+@end table
+
+It can also return all the errors @code{openat} returns.
+
+Similar to @code{openat}, @code{openat2} is a cancellation point.
+
+Unlike other @code{open}-like functions, this function ignores
+@code{_FILE_OFFSET_BITS} and always operates in large file mode.
+@end deftypefun
+
+
 @deftypefn {Obsolete function} int creat (const char *@var{filename}, mode_t @var{mode})
 @standards{POSIX.1, fcntl.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{@acsfd{}}}
