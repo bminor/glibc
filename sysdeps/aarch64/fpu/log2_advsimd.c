@@ -22,9 +22,11 @@
 static const struct data
 {
   uint64x2_t off, sign_exp_mask, offset_lower_bound;
-  uint32x4_t special_bound;
+  uint64x2_t special_bound;
+  uint32x4_t special_bound_u32;
   float64x2_t c0, c2;
   double c1, c3, invln2, c4;
+  float64x2_t pinf, minf, nan;
 } data = {
   /* Each coefficient was generated to approximate log(r) for |r| < 0x1.fp-9
      and N = 128, then scaled by log2(e) in extended precision and rounded back
@@ -41,7 +43,12 @@ static const struct data
      optimised register use subnormals are detected after offset has been
      subtracted, so lower bound - offset (which wraps around).  */
   .offset_lower_bound = V2 (0x0010000000000000 - 0x3fe6900900000000),
-  .special_bound = V4 (0x7fe00000), /* asuint64(inf) - asuint64(0x1p-1022).  */
+  .special_bound = V2 (0x7ffe000000000000),
+  .special_bound_u32
+  = V4 (0x7fe00000), /* asuint64(inf) - asuint64(0x1p-1022).  */
+  .pinf = V2 (INFINITY),
+  .minf = V2 (-INFINITY),
+  .nan = V2 (NAN),
 };
 
 #define N (1 << V_LOG2_TABLE_BITS)
@@ -68,29 +75,9 @@ lookup (uint64x2_t i)
   return e;
 }
 
-static float64x2_t VPCS_ATTR NOINLINE
-special_case (float64x2_t hi, uint64x2_t u_off, float64x2_t y, float64x2_t r2,
-	      uint32x2_t special, const struct data *d)
+static inline float64x2_t VPCS_ATTR
+inline_log2 (uint64x2_t u, uint64x2_t u_off, const struct data *d)
 {
-  float64x2_t x = vreinterpretq_f64_u64 (vaddq_u64 (u_off, d->off));
-  return v_call_f64 (log2, x, vfmaq_f64 (hi, y, r2), vmovl_u32 (special));
-}
-
-/* Double-precision vector log2 routine. Implements the same algorithm as
-   vector log10, with coefficients and table entries scaled in extended
-   precision. The maximum observed error is 2.58 ULP:
-   _ZGVnN2v_log2(0x1.0b556b093869bp+0) got 0x1.fffb34198d9dap-5
-				      want 0x1.fffb34198d9ddp-5.  */
-float64x2_t VPCS_ATTR V_NAME_D1 (log2) (float64x2_t x)
-{
-  const struct data *d = ptr_barrier (&data);
-
-  /* To avoid having to mov x out of the way, keep u after offset has been
-     applied, and recover x by adding the offset back in the special-case
-     handler.  */
-  uint64x2_t u = vreinterpretq_u64_f64 (x);
-  uint64x2_t u_off = vsubq_u64 (u, d->off);
-
   /* x = 2^k z; where z is in range [Off,2*Off) and exact.
      The range is split into N subintervals.
      The ith subinterval contains z and c is near its center.  */
@@ -99,9 +86,6 @@ float64x2_t VPCS_ATTR V_NAME_D1 (log2) (float64x2_t x)
   float64x2_t z = vreinterpretq_f64_u64 (iz);
 
   struct entry e = lookup (u_off);
-
-  uint32x2_t special = vcge_u32 (vsubhn_u64 (u_off, d->offset_lower_bound),
-				 vget_low_u32 (d->special_bound));
 
   /* log2(x) = log1p(z/c-1)/log(2) + log2(c) + k.  */
   float64x2_t r = vfmaq_f64 (v_f64 (-1.0), z, e.invc);
@@ -118,7 +102,59 @@ float64x2_t VPCS_ATTR V_NAME_D1 (log2) (float64x2_t x)
   y = vfmaq_laneq_f64 (y, r2, invln2_and_c4, 1);
   y = vfmaq_f64 (p, r2, y);
 
-  if (__glibc_unlikely (v_any_u32h (special)))
-    return special_case (hi, u_off, y, r2, special, d);
   return vfmaq_f64 (hi, y, r2);
+}
+
+static inline float64x2_t VPCS_ATTR
+special_case (uint64x2_t u_off, const struct data *d)
+{
+  float64x2_t x = vreinterpretq_f64_u64 (vaddq_u64 (u_off, d->off));
+  /* If x is special, compute 2log(sqrt(x)), else compute log(x).
+     x might be subnormal, and sqrting it makes it larger.
+     And the above two expressions are equivalent.  */
+  uint64x2_t special
+      = vcgeq_u64 (vsubq_u64 (u_off, d->offset_lower_bound), d->special_bound);
+  float64x2_t x_sqrt = vbslq_f64 (special, vsqrtq_f64 (x), x);
+
+  u_off = vsubq_u64 (vreinterpretq_u64_f64 (x_sqrt), d->off);
+
+  /* Don't pass u into this, it isn't using x_sqrt.  */
+  float64x2_t y = inline_log2 (vreinterpretq_u64_f64 (x_sqrt), u_off, d);
+
+  y = vbslq_f64 (special, vmulq_f64 (y, v_f64 (2.0f)), y);
+
+  /* Is true for +/- inf, +/- nan as well as all negative numbers.  */
+  uint64x2_t is_infnan
+      = vcgeq_u64 (vreinterpretq_u64_f64 (x), vreinterpretq_u64_f64 (d->pinf));
+  uint64x2_t infnan_or_zero = vorrq_u64 (is_infnan, vceqzq_f64 (x));
+
+  y = vbslq_f64 (infnan_or_zero, d->nan, y);
+  uint64x2_t ret_pinf = vceqq_f64 (x, d->pinf);
+  uint64x2_t ret_minf = vceqzq_f64 (x);
+  y = vbslq_f64 (ret_pinf, d->pinf, y);
+  y = vbslq_f64 (ret_minf, d->minf, y);
+  return y;
+}
+
+/* Double-precision vector log2 routine. Implements the same algorithm as
+   vector log10, with coefficients and table entries scaled in extended
+   precision. The maximum observed error is 2.09 + 0.5 ULP:
+   _ZGVnN2v_log2(0x1.0b556b093869bp+0) got 0x1.fffb34198d9dap-5
+				      want 0x1.fffb34198d9ddp-5.  */
+float64x2_t VPCS_ATTR V_NAME_D1 (log2) (float64x2_t x)
+{
+  const struct data *d = ptr_barrier (&data);
+
+  /* To avoid having to mov x out of the way, keep u after offset has been
+     applied, and recover x by adding the offset back in the special-case
+     handler.  */
+  uint64x2_t u = vreinterpretq_u64_f64 (x);
+  uint64x2_t u_off = vsubq_u64 (u, d->off);
+
+  uint32x2_t special_u32 = vcge_u32 (vsubhn_u64 (u_off, d->offset_lower_bound),
+				     vget_low_u32 (d->special_bound_u32));
+
+  if (__glibc_unlikely (v_any_u32h (special_u32)))
+    return special_case (u_off, d);
+  return inline_log2 (u, u_off, d);
 }
