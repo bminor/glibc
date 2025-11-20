@@ -397,6 +397,8 @@ $(addprefix $(objpfx)bench-,$(bench-pthread)): $(thread-library-benchtests)
 $(addprefix $(objpfx)bench-,$(bench-malloc)): $(thread-library-benchtests)
 $(addprefix $(objpfx)bench-,pthread-locks): $(libm-benchtests)
 $(addprefix $(objpfx)bench-,pthread-mutex-locks): $(libm-benchtests)
+$(addprefix $(objpfx)bench-,malloc-thread): $(libm-benchtests)
+$(addprefix $(objpfx)bench-,calloc-thread): $(libm-benchtests)
 
 
 
