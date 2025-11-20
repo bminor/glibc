@@ -494,7 +494,6 @@ mpn-routines := \
   rshift \
   sub_n \
   submul_1 \
-  udiv_qrnnd \
   # mpn-routines
 mpn-headers = \
   asm-syntax.h \

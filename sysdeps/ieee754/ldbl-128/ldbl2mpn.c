@@ -18,6 +18,7 @@
 #include "gmp.h"
 #include "gmp-impl.h"
 #include "longlong.h"
+#include <gmp-arch.h>
 #include <ieee754.h>
 #include <float.h>
 #include <math.h>

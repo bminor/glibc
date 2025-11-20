@@ -316,22 +316,6 @@
 #include "op-8.h"
 #include "op-common.h"
 
-/* Sigh.  Silly things longlong.h needs.  */
-#define UWtype		_FP_W_TYPE
-#define W_TYPE_SIZE	_FP_W_TYPE_SIZE
-
-typedef int QItype __attribute__ ((mode (QI)));
-typedef int SItype __attribute__ ((mode (SI)));
-typedef int DItype __attribute__ ((mode (DI)));
-typedef unsigned int UQItype __attribute__ ((mode (QI)));
-typedef unsigned int USItype __attribute__ ((mode (SI)));
-typedef unsigned int UDItype __attribute__ ((mode (DI)));
-#if _FP_W_TYPE_SIZE == 32
-typedef unsigned int UHWtype __attribute__ ((mode (HI)));
-#elif _FP_W_TYPE_SIZE == 64
-typedef USItype UHWtype;
-#endif
-
 #ifndef CMPtype
 # define CMPtype	int
 #endif
@@ -341,7 +325,10 @@ typedef USItype UHWtype;
 
 #ifndef umul_ppmm
 # ifdef _LIBC
+#  include <gmp.h>
+#  include <stdlib/gmp-impl.h>
 #  include <stdlib/longlong.h>
+#  include <gmp-arch.h>
 # else
 #  include "longlong.h"
 # endif
