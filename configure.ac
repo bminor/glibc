@@ -2061,6 +2061,17 @@ LIBC_TRY_CC_AND_TEST_CC_OPTION([if compiler supports -mbranch-protection=gcs],
 LIBC_CONFIG_VAR([have-cc-gcs], [$libc_cv_cc_gcs])
 LIBC_CONFIG_VAR([have-test-cc-gcs], [$libc_cv_test_cc_gcs])
 
+# Check if compiler supports -fno-fp-int-builtin-inexact
+LIBC_TRY_CC_AND_TEST_CC_OPTION([if compiler supports -fno-fp-int-builtin-inexact],
+  [-Werror -fno-fp-int-builtin-inexact],
+  libc_cv_cc_no_fp_builtin_inexact,
+  [libc_cv_cc_no_fp_builtin_inexact=-fno-fp-int-builtin-inexact],
+  [libc_cv_cc_no_fp_builtin_inexact=],
+  libc_cv_test_cc_no_fp_builtin_inexact,
+  [libc_cv_test_cc_no_fp_builtin_inexact=-fno-fp-int-builtin-inexact],
+  [libc_cv_test_cc_no_fp_builtin_inexact=])
+LIBC_CONFIG_VAR([config-cflags-no-fp-builtin-inexact], [$libc_cv_cc_no_fp_builtin_inexact])
+
 # Check if linker supports GCS marking
 LIBC_LINKER_FEATURE([-z gcs=always], [-Wl,-z,gcs=always],
 		    [libc_cv_ld_gcs=yes], [libc_cv_ld_gcs=no])
