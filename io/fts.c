@@ -85,6 +85,7 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 # define STRUCT_STAT stat
 # define STAT __stat
 # define LSTAT __lstat
+# define FSTAT __fstat
 #endif
 
 static FTSENTRY	*fts_alloc (FTSOBJ *, const char *, size_t);
@@ -1111,14 +1112,14 @@ static int
 fts_safe_changedir (FTSOBJ *sp, FTSENTRY *p, int fd, const char *path)
 {
 	int ret, oerrno, newfd;
-	struct stat64 sb;
+	struct STRUCT_STAT sb;
 
 	newfd = fd;
 	if (ISSET(FTS_NOCHDIR))
 		return (0);
 	if (fd < 0 && (newfd = __open(path, O_RDONLY, 0)) < 0)
 		return (-1);
-	if (__fstat64(newfd, &sb)) {
+	if (FSTAT (newfd, &sb)) {
 		ret = -1;
 		goto bail;
 	}

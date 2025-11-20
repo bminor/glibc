@@ -30,6 +30,7 @@
 # define STRUCT_STAT __stat64_t64
 # define STAT __stat64_time64
 # define LSTAT __lstat64_time64
+# define FSTAT __fstat64_time64
 
 # include "fts.c"
 #endif

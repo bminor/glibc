@@ -27,5 +27,6 @@
 #define STRUCT_STAT stat64
 #define STAT __stat64
 #define LSTAT __lstat64
+#define FSTAT __fstat64
 
 #include "fts.c"

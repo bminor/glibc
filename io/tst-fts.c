@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <utime.h>
 
 static void prepare (void);
 static int do_test (void);
@@ -53,6 +54,28 @@ make_dir (const char *dirname)
 
   add_temp_file (name);
 }
+
+#ifdef TST_FTS_Y2038
+static void
+set_time_y2038 (const char *dirname)
+{
+  char *name;
+  if (asprintf (&name, "%s/%s", fts_test_dir, dirname) < 0)
+    {
+      puts ("out of memory");
+      exit (1);
+    }
+
+  struct utimbuf ut = { 0x100000000, 0x100000000 };
+  if (utime (name, &ut) < 0)
+    {
+      printf ("cannot set time on dir \"%s\": %m\n", name);
+      exit (1);
+    }
+
+  free (name);
+}
+#endif
 
 static void
 make_file (const char *filename)
@@ -108,6 +131,10 @@ prepare (void)
   make_file ("bbb/1234");
   make_file ("bbb/5678");
   make_file ("bbb/90ab");
+
+#ifdef TST_FTS_Y2038
+  set_time_y2038 ("bbb");
+#endif
 }
 
 /* Largest name wins, otherwise strcmp.  */
@@ -160,7 +187,13 @@ do_test (void)
 {
   char *paths[2] = { fts_test_dir, NULL };
   FTS *fts;
-  fts = fts_open (paths, FTS_LOGICAL, &compare_ents);
+  int flags = 0;
+  /* FTS_LOGICAL implies FTS_NOCHDIR, thus when testing for bug 33653,
+     don't use FTS_LOGICAL.  */
+#ifndef TST_FTS_Y2038
+  flags |= FTS_LOGICAL;
+#endif
+  fts = fts_open (paths, flags, &compare_ents);
   if (fts == NULL)
     {
       printf ("FAIL: fts_open: %m\n");

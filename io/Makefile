@@ -235,6 +235,7 @@ tests := \
 tests-time64 := \
   tst-fcntl-time64 \
   tst-fts-time64 \
+  tst-fts-time64-y2038 \
   tst-futimens-time64 \
   tst-futimes-time64\
   tst-futimesat-time64 \
