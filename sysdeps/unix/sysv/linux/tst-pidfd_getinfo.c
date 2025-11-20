@@ -46,7 +46,7 @@ do_test (void)
   };
   if (ioctl (pidfd, PIDFD_GET_INFO, &info) != 0)
     {
-      if (errno == ENOTTY)
+      if (errno == ENOTTY || errno == EINVAL)
 	FAIL_UNSUPPORTED ("kernel does not support PIDFD_GET_INFO");
       else
 	FAIL_EXIT1 ("ioctl (PIDFD_GET_INFO) failed: %m");
