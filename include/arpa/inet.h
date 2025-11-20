@@ -14,12 +14,10 @@ libc_hidden_proto (__inet_aton_exact)
 
 extern __typeof (inet_ntop) __inet_ntop;
 libc_hidden_proto (__inet_ntop)
-libc_hidden_proto (__inet_ntop_chk)
 
 libc_hidden_proto (inet_pton)
 extern __typeof (inet_pton) __inet_pton;
 libc_hidden_proto (__inet_pton)
-libc_hidden_proto (__inet_pton_chk)
 
 extern __typeof (inet_makeaddr) __inet_makeaddr;
 libc_hidden_proto (__inet_makeaddr)
