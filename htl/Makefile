@@ -24,10 +24,7 @@ SYSDEPS :=
 
 LCLHDRS :=
 
-libpthread-routines := \
-  pt-spin-inlines \
-  pt-spin \
-  # libpthread-routine
+libpthread-routines :=
 
 headers := \
   bits/cancelation.h \
@@ -36,7 +33,6 @@ headers := \
   bits/pthreadtypes-arch.h \
   bits/pthreadtypes.h \
   bits/semaphore.h \
-  bits/spin-lock-inline.h \
   bits/thread-shared-types.h \
   bits/types/__pthread_key.h \
   bits/types/__pthread_spinlock_t.h \
@@ -182,6 +178,7 @@ routines := \
   pt-sigstate \
   pt-sigstate-destroy \
   pt-sigstate-init \
+  pt-spin-inlines \
   pt-stack-alloc \
   pt-startup \
   pt-sysdep \

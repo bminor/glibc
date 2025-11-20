@@ -1621,6 +1621,11 @@ GLIBC_2.38 pthread_setschedparam F
 GLIBC_2.38 pthread_setschedprio F
 GLIBC_2.38 pthread_setspecific F
 GLIBC_2.38 pthread_sigmask F
+GLIBC_2.38 pthread_spin_destroy F
+GLIBC_2.38 pthread_spin_init F
+GLIBC_2.38 pthread_spin_lock F
+GLIBC_2.38 pthread_spin_trylock F
+GLIBC_2.38 pthread_spin_unlock F
 GLIBC_2.38 pthread_testcancel F
 GLIBC_2.38 pthread_timedjoin_np F
 GLIBC_2.38 pthread_tryjoin_np F
@@ -2369,6 +2374,11 @@ GLIBC_2.43 pthread_mutex_transfer_np F
 GLIBC_2.43 pthread_setconcurrency F
 GLIBC_2.43 pthread_setname_np F
 GLIBC_2.43 pthread_setschedprio F
+GLIBC_2.43 pthread_spin_destroy F
+GLIBC_2.43 pthread_spin_init F
+GLIBC_2.43 pthread_spin_lock F
+GLIBC_2.43 pthread_spin_trylock F
+GLIBC_2.43 pthread_spin_unlock F
 GLIBC_2.43 pthread_testcancel F
 GLIBC_2.43 pthread_timedjoin_np F
 GLIBC_2.43 pthread_tryjoin_np F

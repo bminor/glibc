@@ -231,6 +231,17 @@ libc_hidden_proto (__pthread_getname_np)
 int __pthread_setname_np (pthread_t __target_thread, const char *__name);
 libc_hidden_proto (__pthread_setname_np)
 
+int __pthread_spin_destroy (pthread_spinlock_t *__lock);
+libc_hidden_proto (__pthread_spin_destroy)
+int __pthread_spin_init (pthread_spinlock_t *__lock, int __pshared);
+libc_hidden_proto (__pthread_spin_init)
+int __pthread_spin_lock (pthread_spinlock_t *__lock);
+libc_hidden_proto (__pthread_spin_lock)
+int __pthread_spin_trylock (pthread_spinlock_t *__lock);
+libc_hidden_proto (__pthread_spin_trylock)
+int __pthread_spin_unlock (pthread_spinlock_t *__lock);
+libc_hidden_proto (__pthread_spin_unlock)
+
 #define __pthread_raise_internal(__sig) raise (__sig)
 
 libc_hidden_proto (__pthread_self)

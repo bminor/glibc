@@ -1,9 +1,3 @@
-GLIBC_2.38 __pthread_spin_destroy F
-GLIBC_2.38 __pthread_spin_init F
-GLIBC_2.38 __pthread_spin_lock F
-GLIBC_2.38 __pthread_spin_trylock F
-GLIBC_2.38 __pthread_spin_unlock F
-GLIBC_2.38 _pthread_spin_lock F
 GLIBC_2.38 call_once F
 GLIBC_2.38 cnd_broadcast F
 GLIBC_2.38 cnd_destroy F
@@ -17,11 +11,6 @@ GLIBC_2.38 mtx_lock F
 GLIBC_2.38 mtx_timedlock F
 GLIBC_2.38 mtx_trylock F
 GLIBC_2.38 mtx_unlock F
-GLIBC_2.38 pthread_spin_destroy F
-GLIBC_2.38 pthread_spin_init F
-GLIBC_2.38 pthread_spin_lock F
-GLIBC_2.38 pthread_spin_trylock F
-GLIBC_2.38 pthread_spin_unlock F
 GLIBC_2.38 thrd_create F
 GLIBC_2.38 thrd_detach F
 GLIBC_2.38 thrd_exit F

@@ -16,4 +16,4 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define HAVE_CMOV	1
-#include <sysdeps/i386/pthread_spin_trylock.S>
+#include <sysdeps/i386/nptl/pthread_spin_trylock.S>

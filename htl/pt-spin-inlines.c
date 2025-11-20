@@ -24,10 +24,39 @@
 #define __PT_SPIN_INLINE	/* empty */
 
 #include <pthread.h>
+#include <shlib-compat.h>
 
-/* Weak aliases for the spin lock functions.  */
-weak_alias (__pthread_spin_destroy, pthread_spin_destroy);
-weak_alias (__pthread_spin_init, pthread_spin_init);
-weak_alias (__pthread_spin_trylock, pthread_spin_trylock);
-weak_alias (__pthread_spin_lock, pthread_spin_lock);
-weak_alias (__pthread_spin_unlock, pthread_spin_unlock);
+libc_hidden_def (__pthread_spin_destroy)
+versioned_symbol (libc, __pthread_spin_destroy, pthread_spin_destroy, GLIBC_2_43);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_43)
+compat_symbol (libc, __pthread_spin_destroy, pthread_spin_destroy, GLIBC_2_12);
+#endif
+
+libc_hidden_def (__pthread_spin_init)
+versioned_symbol (libc, __pthread_spin_init, pthread_spin_init, GLIBC_2_43);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_43)
+compat_symbol (libc, __pthread_spin_init, pthread_spin_init, GLIBC_2_12);
+#endif
+
+libc_hidden_def (__pthread_spin_trylock)
+versioned_symbol (libc, __pthread_spin_trylock, pthread_spin_trylock, GLIBC_2_43);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_43)
+compat_symbol (libc, __pthread_spin_trylock, pthread_spin_trylock, GLIBC_2_12);
+#endif
+
+libc_hidden_def (__pthread_spin_lock)
+versioned_symbol (libc, __pthread_spin_lock, pthread_spin_lock, GLIBC_2_43);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_43)
+compat_symbol (libc, __pthread_spin_lock, pthread_spin_lock, GLIBC_2_12);
+#endif
+
+libc_hidden_def (__pthread_spin_unlock)
+versioned_symbol (libc, __pthread_spin_unlock, pthread_spin_unlock, GLIBC_2_43);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_43)
+compat_symbol (libc, __pthread_spin_unlock, pthread_spin_unlock, GLIBC_2_12);
+#endif
