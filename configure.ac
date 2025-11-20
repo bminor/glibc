@@ -2066,6 +2066,12 @@ LIBC_LINKER_FEATURE([-z gcs=always], [-Wl,-z,gcs=always],
 		    [libc_cv_ld_gcs=yes], [libc_cv_ld_gcs=no])
 LIBC_CONFIG_VAR([have-ld-gcs], [$libc_cv_ld_gcs])
 
+
+LIBC_LINKER_FEATURE([--undefined-version], [-Wl,--undefined-version],
+		    [libc_cv_ld_undefined_version=-Wl,--undefined-version],
+		    [libc_cv_ld_undefined_version=])
+LIBC_CONFIG_VAR([have-undefined-version], [$libc_cv_ld_undefined_version])
+
 AC_MSG_CHECKING(if we can build programs as PIE)
 AC_COMPILE_IFELSE([AC_LANG_SOURCE([[#ifdef PIE_UNSUPPORTED
 # error PIE is not supported

@@ -510,7 +510,7 @@ map-file = $(firstword $($(@F:.so=-map)) \
 				   $(filter $(@F:.so=.map),$(version-maps))))
 # The map version is created with multiple symbols that might not be
 # exported depending of the ABI.
-load-map-file = $(map-file:%=-Wl,--version-script=%) -Wl,--undefined-version
+load-map-file = $(map-file:%=-Wl,--version-script=%) $(have-undefined-version)
 endif
 
 # Compiler arguments to use to link a shared object with libc and
