@@ -21,6 +21,7 @@
 
 #include <stdint.h>
 #include <gmp.h>
+#include <math_uint128.h>
 
 #define LL_B ((mp_limb_t) 1 << (BITS_PER_MP_LIMB / 2))
 
@@ -96,5 +97,59 @@ udiv_qrnnd_generic (mp_limb_t *q, mp_limb_t *r, mp_limb_t n1, mp_limb_t n0,
 # define udiv_qrnnd(__q, __r, __n1, __n0, __d) \
   udiv_qrnnd_generic (&__q, &__r, __n1, __n0, __d)
 #endif
+
+
+/* add_ssaaaa(high_sum, low_sum, high_addend_1, low_addend_1,
+   high_addend_2, low_addend_2) adds two UWtype integers, composed by
+   HIGH_ADDEND_1 and LOW_ADDEND_1, and HIGH_ADDEND_2 and LOW_ADDEND_2
+   respectively.  The result is placed in HIGH_SUM and LOW_SUM.  Overflow
+   (i.e. carry out) is not stored anywhere, and is lost.  */
+static __always_inline void
+add_ssaaaa_generic (mp_limb_t *sh, mp_limb_t *sl, mp_limb_t ah,
+		    mp_limb_t al,  mp_limb_t bh,  mp_limb_t bl)
+{
+#if __WORDSIZE == 32
+  uint64_t a = (uint64_t)ah << 32 | al;
+  uint64_t b = (uint64_t)bh << 32 | bl;
+  uint64_t r = a + b;
+  *sh = r >> 32;
+  *sl = r & 0xFFFFFFFF;
+#else
+  u128 r = u128_add (u128_from_hl (ah, al),
+                     u128_from_hl (bh, bl));
+  *sh = u128_high (r);
+  *sl = u128_low (r);
+#endif
+}
+#undef add_ssaaaa
+#define add_ssaaaa(sh, sl, ah, al, bh, bl) \
+  add_ssaaaa_generic (&sh, &sl, ah, al, bh, bl)
+
+/* sub_ddmmss(high_difference, low_difference, high_minuend, low_minuend,
+   high_subtrahend, low_subtrahend) subtracts two two-word UWtype integers,
+   composed by HIGH_MINUEND_1 and LOW_MINUEND_1, and HIGH_SUBTRAHEND_2 and
+   LOW_SUBTRAHEND_2 respectively.  The result is placed in HIGH_DIFFERENCE
+   and LOW_DIFFERENCE.  Overflow (i.e. carry out) is not stored anywhere,
+   and is lost.  */
+static __always_inline void
+sub_ddmmss_generic (mp_limb_t *sh, mp_limb_t *sl, mp_limb_t ah,
+		    mp_limb_t al,  mp_limb_t bh,  mp_limb_t bl)
+{
+#if __WORDSIZE == 32
+  uint64_t a = (uint64_t)ah << 32 | al;
+  uint64_t b = (uint64_t)bh << 32 | bl;
+  uint64_t r = a - b;
+  *sh = r >> 32;
+  *sl = r & 0xFFFFFFFF;
+#else
+  u128 r = u128_sub (u128_from_hl (ah, al),
+                     u128_from_hl (bh, bl));
+  *sh = u128_high (r);
+  *sl = u128_low (r);
+#endif
+}
+#undef sub_ddmmss
+#define sub_ddmmss(sh, sl, ah, al, bh, bl) \
+  sub_ddmmss_generic (&sh, &sl, ah, al, bh, bl)
 
 #endif /* __GMP_ARCH_H */

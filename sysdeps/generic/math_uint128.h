@@ -19,6 +19,8 @@
 #ifndef _MATH_INT128_H
 #define _MATH_INT128_H
 
+#include <stdbool.h>
+
 /* Limited support for internal 128 bit integer, used on some math
    implementations.  It uses compiler builtin type if supported, otherwise
    it is emulated.  Only unsigned and some operations are currently supported:
@@ -27,8 +29,11 @@
    - u128_high:      return the high part of the number.
    - u128_low:       return the low part of the number.
    - u128_from_u64:  create a 128 bit number from a 64 bit one.
+   - u128_from_hl:   create a 128 bit number from two 64 bit numbers.
    - u128_mul:       multiply two 128 bit numbers.
    - u128_add:       add two 128 bit numbers.
+   - u128_sub:       subtract two 128 bit numbers.
+   - u128_neg:       negate a 128 bit number.
    - u128_lshift:    left shift a number.
    - u128_rshift:    right shift a number.
  */
@@ -47,8 +52,10 @@ typedef unsigned __int128 u128;
 # define u128_high(__x)         (uint64_t)((__x) >> 64)
 # define u128_low(__x)          (uint64_t)(__x)
 # define u128_from_u64(__x)     (u128)(__x)
+# define u128_from_hl(__h, __l) (((u128)(__h) << 64) | (__l))
 # define u128_mul(__x, __y)     (__x) * (__y)
 # define u128_add(__x, __y)     (__x) + (__y)
+# define u128_sub(__x, __y)     (__x) - (__y)
 # define u128_lshift(__x, __y)  (__x) << (__y)
 # define u128_rshift(__x, __y)  (__x) >> (__y)
 #else
@@ -61,16 +68,28 @@ typedef struct
 # define u128_high(__x)         (__x).high
 # define u128_low(__x)          (__x).low
 # define u128_from_u64(__x)     (u128){.low = (__x), .high = 0}
+# define u128_from_hl(__h, __l) (u128){.low = (__l), .high = (__h)}
 
 # define MASK32                 (UINT64_C(0xffffffff))
 
-static u128 u128_add (u128 x, u128 y)
+static inline u128 u128_add (u128 x, u128 y)
 {
   bool carry = x.low + y.low < x.low;
   return (u128) { .high = x.high + y.high + carry, .low = x.low + y.low };
 }
 
-static u128 u128_lshift (u128 x, unsigned int n)
+static inline u128 u128_neg (u128 x)
+{
+  u128 xbitnot = u128_from_hl (~x.high, ~x.low);
+  return u128_add (xbitnot, u128_from_u64 (1));
+}
+
+static inline u128 u128_sub (u128 x, u128 y)
+{
+  return u128_add (x, u128_neg (y));
+}
+
+static inline u128 u128_lshift (u128 x, unsigned int n)
 {
   switch (n)
     {
@@ -82,7 +101,7 @@ static u128 u128_lshift (u128 x, unsigned int n)
     }
 }
 
-static u128 u128_rshift (u128 x, unsigned int n)
+static inline u128 u128_rshift (u128 x, unsigned int n)
 {
   switch (n)
     {
@@ -94,7 +113,7 @@ static u128 u128_rshift (u128 x, unsigned int n)
     }
 }
 
-static u128 u128_mul (u128 x, u128 y)
+static inline u128 u128_mul (u128 x, u128 y)
 {
   if (x.high == 0 && y.high == 0)
     {
