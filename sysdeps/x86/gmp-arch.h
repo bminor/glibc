@@ -41,9 +41,7 @@ udiv_qrnnd_x86 (mp_limb_t *q, mp_limb_t *r, mp_limb_t n1, mp_limb_t n0,
 	 "rm" (d));
 #endif
 }
-#undef UDIV_NEEDS_NORMALIZATION
 #define UDIV_NEEDS_NORMALIZATION 0
-#undef udiv_qrnnd
 #define udiv_qrnnd(__q, __r, __n1, __n0, __d) \
   udiv_qrnnd_x86 (&__q, &__r, __n1, __n0, __d)
 

@@ -21,7 +21,6 @@ along with the GNU MP Library; see the file COPYING.LIB.  If not, see
 
 #include <gmp.h>
 #include "gmp-impl.h"
-#include "longlong.h"
 
 /* Divide num (NP/NSIZE) by den (DP/DSIZE) and write
    the NSIZE-DSIZE least significant quotient limbs at QP

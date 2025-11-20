@@ -298,6 +298,8 @@ typedef unsigned int UHWtype;
 #define impn_sqr_n_basecase	__MPN(impn_sqr_n_basecase)
 #define impn_sqr_n		__MPN(impn_sqr_n)
 
+#include <gmp-arch.h>
+
 #ifndef _PROTO
 #if defined (__STDC__) || defined (__cplusplus)
 #define _PROTO(x) x

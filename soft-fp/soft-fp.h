@@ -327,8 +327,6 @@
 # ifdef _LIBC
 #  include <gmp.h>
 #  include <stdlib/gmp-impl.h>
-#  include <stdlib/longlong.h>
-#  include <gmp-arch.h>
 # else
 #  include "longlong.h"
 # endif

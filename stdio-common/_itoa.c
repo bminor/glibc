@@ -25,8 +25,6 @@
 #include <gmp.h>
 #include <limits.h>
 #include <stdlib/gmp-impl.h>
-#include <stdlib/longlong.h>
-#include <gmp-arch.h>
 
 #include <_itoa.h>
 
