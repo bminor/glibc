@@ -172,6 +172,7 @@ tests := \
   tst-c16-surrogate \
   tst-c16c32-1 \
   tst-c32-state \
+  tst-const \
   tst-fgetwc-after-eof \
   tst-mbrtowc \
   tst-mbrtowc2 \

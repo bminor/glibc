@@ -63,6 +63,7 @@ IMPL (__strnlen_default, 1)
 # define libc_hidden_weak(a)
 # include "wcsmbs/wmemchr.c"
 # define WCSNLEN __wcsnlen_default
+# undef wmemchr
 # define wmemchr __wmemchr_default
 # include "wcsmbs/wcsnlen.c"
 IMPL (__wcsnlen_default, 1)

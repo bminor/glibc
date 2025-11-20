@@ -17,6 +17,12 @@ Major new features:
   arguments to support expressions with a comma inside a compound
   literal initializer not surrounded by parentheses.
 
+* For ISO C23, the functions bsearch, memchr, strchr, strpbrk, strrchr,
+  strstr, wcschr, wcspbrk, wcsrchr, wcsstr and wmemchr that return
+  pointers into their input arrays now have definitions as macros that
+  return a pointer to a const-qualified type when the input argument is
+  a pointer to a const-qualified type.
+
 * The C23 typedef names long_double_t, _Float32_t, _Float64_t, and (on
   platforms supporting _Float128) _Float128_t, introduced in TS
   18661-3:2015, have been added to <math.h>.

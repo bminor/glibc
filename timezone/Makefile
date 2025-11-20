@@ -73,8 +73,10 @@ tz-cflags = -DTZDIR='"$(zonedir)"' \
 # The -Wno-unused-variable flag is used to prevent GCC 6
 # from warning about time_t_min and time_t_max which are
 # defined in private.h but not used.
+# -Wno-discarded-qualifiers is because zic is not prepared for C23
+# -qualifier-generic strchr.
 CFLAGS-zdump.c += $(tz-cflags)
-CFLAGS-zic.c += $(tz-cflags) -Wno-unused-variable
+CFLAGS-zic.c += $(tz-cflags) -Wno-unused-variable -Wno-discarded-qualifiers
 
 # We have to make sure the data for testing the tz functions is available.
 # Don't add leapseconds here since test-tz made checks that work only without

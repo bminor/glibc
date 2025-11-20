@@ -828,6 +828,18 @@ _Static_assert (0, "IEEE 128-bits long double requires redirection on this platf
 # define __HAVE_GENERIC_SELECTION 0
 #endif
 
+#if __HAVE_GENERIC_SELECTION
+/* If PTR is a pointer to const, return CALL cast to type CTYPE,
+   otherwise return CALL.  Pointers to types with non-const qualifiers
+   are not valid.  This should not be defined for C++, as macros are
+   not an appropriate way of implementing such qualifier-generic
+   operations for C++.  */
+# define __glibc_const_generic(PTR, CTYPE, CALL)	\
+  _Generic (0 ? (PTR) : (void *) 1,			\
+	    const void *: (CTYPE) (CALL),		\
+	    default: CALL)
+#endif
+
 #if __GNUC_PREREQ (10, 0)
 /* Designates a 1-based positional argument ref-index of pointer type
    that can be used to access size-index elements of the pointed-to

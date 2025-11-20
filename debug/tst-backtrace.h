@@ -43,6 +43,6 @@ volatile int x;
 static inline bool
 match (const char *sym, const char *name)
 {
-  char *p = strchr (sym, '(');
+  const char *p = strchr (sym, '(');
   return p != NULL && strstr (p, name) != NULL;
 }

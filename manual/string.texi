@@ -1802,6 +1802,15 @@ This function finds the first occurrence of the byte @var{c} (converted
 to an @code{unsigned char}) in the initial @var{size} bytes of the
 object beginning at @var{block}.  The return value is a pointer to the
 located byte, or a null pointer if no match was found.
+
+In ISO C23 and later, this function is qualifier-generic:
+that is, it is also implemented as a function-like macro,
+and when the macro is used and @var{block} has a type
+that is a pointer to a @code{const}-qualified object type,
+@code{memchr} returns @code{const void *}.
+As an obsolescent feature, if the macro is suppressed
+the external function returns @code{void *} regardless.
+The function is also qualifier-generic in C++.
 @end deftypefun
 
 @deftypefun {wchar_t *} wmemchr (const wchar_t *@var{block}, wchar_t @var{wc}, size_t @var{size})
@@ -1811,6 +1820,15 @@ This function finds the first occurrence of the wide character @var{wc}
 in the initial @var{size} wide characters of the object beginning at
 @var{block}.  The return value is a pointer to the located wide
 character, or a null pointer if no match was found.
+
+In ISO C23 and later, this function is qualifier-generic:
+that is, it is also implemented as a function-like macro,
+and when the macro is used and @var{block} has a type
+that is a pointer to a @code{const}-qualified object type,
+@code{wmemchr} returns @code{const wchar_t *}.
+As an obsolescent feature, if the macro is suppressed
+the external function returns @code{wchar_t *} regardless.
+The function is also qualifier-generic in C++.
 @end deftypefun
 
 @deftypefun {void *} rawmemchr (const void *@var{block}, int @var{c})
@@ -1869,6 +1887,15 @@ When @code{strchr} returns a null pointer, it does not let you know
 the position of the terminating null byte it has found.  If you
 need that information, it is better (but less portable) to use
 @code{strchrnul} than to search for it a second time.
+
+In ISO C23 and later, this function is qualifier-generic:
+that is, it is also implemented as a function-like macro,
+and when the macro is used and @var{string} has a type
+that is a pointer to a @code{const}-qualified object type,
+@code{strchr} returns @code{const char *}.
+As an obsolescent feature, if the macro is suppressed
+the external function returns @code{char *} regardless.
+The function is also qualifier-generic in C++.
 @end deftypefun
 
 @deftypefun {wchar_t *} wcschr (const wchar_t *@var{wstring}, wchar_t @var{wc})
@@ -1884,6 +1911,15 @@ string, so you can use this function get a pointer to the end
 of a wide string by specifying a null wide character as the
 value of the @var{wc} argument.  It would be better (but less portable)
 to use @code{wcschrnul} in this case, though.
+
+In ISO C23 and later, this function is qualifier-generic:
+that is, it is also implemented as a function-like macro,
+and when the macro is used and @var{wstring} has a type
+that is a pointer to a @code{const}-qualified object type,
+@code{wcschr} returns @code{const wchar_t *}.
+As an obsolescent feature, if the macro is suppressed
+the external function returns @code{wchar_t *} regardless.
+The function is also qualifier-generic in C++.
 @end deftypefun
 
 @deftypefun {char *} strchrnul (const char *@var{string}, int @var{c})
@@ -1943,6 +1979,15 @@ For example,
 strrchr ("hello, world", 'l')
     @result{} "ld"
 @end smallexample
+
+In ISO C23 and later, this function is qualifier-generic:
+that is, it is also implemented as a function-like macro,
+and when the macro is used and @var{string} has a type
+that is a pointer to a @code{const}-qualified object type,
+@code{strrchr} returns @code{const char *}.
+As an obsolescent feature, if the macro is suppressed
+the external function returns @code{char *} regardless.
+The function is also qualifier-generic in C++.
 @end deftypefun
 
 @deftypefun {wchar_t *} wcsrchr (const wchar_t *@var{wstring}, wchar_t @var{wc})
@@ -1951,6 +1996,15 @@ strrchr ("hello, world", 'l')
 The function @code{wcsrchr} is like @code{wcschr}, except that it searches
 backwards from the end of the string @var{wstring} (instead of forwards
 from the front).
+
+In ISO C23 and later, this function is qualifier-generic:
+that is, it is also implemented as a function-like macro,
+and when the macro is used and @var{wstring} has a type
+that is a pointer to a @code{const}-qualified object type,
+@code{wcsrchr} returns @code{const wchar_t *}.
+As an obsolescent feature, if the macro is suppressed
+the external function returns @code{wchar_t *} regardless.
+The function is also qualifier-generic in C++.
 @end deftypefun
 
 @deftypefun {char *} strstr (const char *@var{haystack}, const char *@var{needle})
@@ -1969,6 +2023,15 @@ strstr ("hello, world", "l")
 strstr ("hello, world", "wo")
     @result{} "world"
 @end smallexample
+
+In ISO C23 and later, this function is qualifier-generic:
+that is, it is also implemented as a function-like macro,
+and when the macro is used and @var{haystack} has a type
+that is a pointer to a @code{const}-qualified object type,
+@code{strstr} returns @code{const char *}.
+As an obsolescent feature, if the macro is suppressed
+the external function returns @code{char *} regardless.
+The function is also qualifier-generic in C++.
 @end deftypefun
 
 @deftypefun {wchar_t *} wcsstr (const wchar_t *@var{haystack}, const wchar_t *@var{needle})
@@ -1979,6 +2042,15 @@ substring @var{needle} rather than just a single wide character.  It
 returns a pointer into the string @var{haystack} that is the first wide
 character of the substring, or a null pointer if no match was found.  If
 @var{needle} is an empty string, the function returns @var{haystack}.
+
+In ISO C23 and later, this function is qualifier-generic:
+that is, it is also implemented as a function-like macro,
+and when the macro is used and @var{haystack} has a type
+that is a pointer to a @code{const}-qualified object type,
+@code{wcsstr} returns @code{const wchar_t *}.
+As an obsolescent feature, if the macro is suppressed
+the external function returns @code{wchar_t *} regardless.
+The function is also qualifier-generic in C++.
 @end deftypefun
 
 @deftypefun {wchar_t *} wcswcs (const wchar_t *@var{haystack}, const wchar_t *@var{needle})
@@ -2104,6 +2176,15 @@ strpbrk ("hello, world", " \t\n,.;!?")
 In a multibyte string, characters consisting of
 more than one byte are not treated as single entities.  Each byte is treated
 separately.  The function is not locale-dependent.
+
+In ISO C23 and later, this function is qualifier-generic:
+that is, it is also implemented as a function-like macro,
+and when the macro is used and @var{string} has a type
+that is a pointer to a @code{const}-qualified object type,
+@code{strpbrk} returns @code{const char *}.
+As an obsolescent feature, if the macro is suppressed
+the external function returns @code{char *} regardless.
+The function is also qualifier-generic in C++.
 @end deftypefun
 
 @deftypefun {wchar_t *} wcspbrk (const wchar_t *@var{wstring}, const wchar_t *@var{stopset})
@@ -2114,6 +2195,15 @@ related to @code{wcscspn}, except that it returns a pointer to the first
 wide character in @var{wstring} that is a member of the set
 @var{stopset} instead of the length of the initial substring.  It
 returns a null pointer if no such wide character from @var{stopset} is found.
+
+In ISO C23 and later, this function is qualifier-generic:
+that is, it is also implemented as a function-like macro,
+and when the macro is used and @var{wstring} has a type
+that is a pointer to a @code{const}-qualified object type,
+@code{wcspbrk} returns @code{const wchar_t *}.
+As an obsolescent feature, if the macro is suppressed
+the external function returns @code{wchar_t *} regardless.
+The function is also qualifier-generic in C++.
 @end deftypefun
 
 

@@ -188,6 +188,10 @@ extern "C++" const wchar_t *wcschr (const wchar_t *__wcs, wchar_t __wc)
 #else
 extern wchar_t *wcschr (const wchar_t *__wcs, wchar_t __wc)
      __THROW __attribute_pure__;
+# if __GLIBC_USE (ISOC23) && defined __glibc_const_generic && !defined _LIBC
+#  define wcschr(WCS, WC)						\
+  __glibc_const_generic (WCS, const wchar_t *, wcschr (WCS, WC))
+# endif
 #endif
 /* Find the last occurrence of WC in WCS.  */
 #ifdef __CORRECT_ISO_CPP_WCHAR_H_PROTO
@@ -198,6 +202,10 @@ extern "C++" const wchar_t *wcsrchr (const wchar_t *__wcs, wchar_t __wc)
 #else
 extern wchar_t *wcsrchr (const wchar_t *__wcs, wchar_t __wc)
      __THROW __attribute_pure__;
+# if __GLIBC_USE (ISOC23) && defined __glibc_const_generic && !defined _LIBC
+#  define wcsrchr(WCS, WC)						\
+  __glibc_const_generic (WCS, const wchar_t *, wcsrchr (WCS, WC))
+# endif
 #endif
 
 #ifdef __USE_GNU
@@ -225,6 +233,10 @@ extern "C++" const wchar_t *wcspbrk (const wchar_t *__wcs,
 #else
 extern wchar_t *wcspbrk (const wchar_t *__wcs, const wchar_t *__accept)
      __THROW __attribute_pure__;
+# if __GLIBC_USE (ISOC23) && defined __glibc_const_generic && !defined _LIBC
+#  define wcspbrk(WCS, ACCEPT)						\
+  __glibc_const_generic (WCS, const wchar_t *, wcspbrk (WCS, ACCEPT))
+# endif
 #endif
 /* Find the first occurrence of NEEDLE in HAYSTACK.  */
 #ifdef __CORRECT_ISO_CPP_WCHAR_H_PROTO
@@ -236,6 +248,11 @@ extern "C++" const wchar_t *wcsstr (const wchar_t *__haystack,
 #else
 extern wchar_t *wcsstr (const wchar_t *__haystack, const wchar_t *__needle)
      __THROW __attribute_pure__;
+# if __GLIBC_USE (ISOC23) && defined __glibc_const_generic && !defined _LIBC
+#  define wcsstr(HAYSTACK, NEEDLE)			\
+  __glibc_const_generic (HAYSTACK, const wchar_t *,	\
+			 wcsstr (HAYSTACK, NEEDLE))
+# endif
 #endif
 
 /* Divide WCS into tokens separated by characters in DELIM.  */
@@ -277,6 +294,10 @@ extern "C++" const wchar_t *wmemchr (const wchar_t *__s, wchar_t __c,
 #else
 extern wchar_t *wmemchr (const wchar_t *__s, wchar_t __c, size_t __n)
      __THROW __attribute_pure__;
+# if __GLIBC_USE (ISOC23) && defined __glibc_const_generic && !defined _LIBC
+#  define wmemchr(S, C, N)					\
+  __glibc_const_generic (S, const wchar_t *, wmemchr (S, C, N))
+# endif
 #endif
 
 /* Compare N wide characters of S1 and S2.  */

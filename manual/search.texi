@@ -156,6 +156,14 @@ that matches, the one that is returned is unspecified.
 
 This function derives its name from the fact that it is implemented
 using the binary search algorithm.
+
+In ISO C23 and later, this function is qualifier-generic:
+that is, it is also implemented as a function-like macro,
+and when the macro is used and @var{array} has a type
+that is a pointer to a @code{const}-qualified object type,
+@code{bsearch} returns @code{const void *}.
+As an obsolescent feature, if the macro is suppressed
+the external function returns @code{void *} regardless.
 @end deftypefun
 
 @node Array Sort Function

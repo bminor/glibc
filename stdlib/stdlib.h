@@ -983,6 +983,12 @@ extern void *bsearch (const void *__key, const void *__base,
 # include <bits/stdlib-bsearch.h>
 #endif
 
+#if __GLIBC_USE (ISOC23) && defined __glibc_const_generic && !defined _LIBC
+# define bsearch(KEY, BASE, NMEMB, SIZE, COMPAR)			\
+  __glibc_const_generic (BASE, const void *,				\
+			 bsearch (KEY, BASE, NMEMB, SIZE, COMPAR))
+#endif
+
 /* Sort NMEMB elements of BASE, of SIZE bytes each,
    using COMPAR to perform the comparisons.  */
 extern void qsort (void *__base, size_t __nmemb, size_t __size,

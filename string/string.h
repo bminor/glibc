@@ -113,6 +113,10 @@ memchr (const void *__s, int __c, size_t __n) __THROW
 #else
 extern void *memchr (const void *__s, int __c, size_t __n)
       __THROW __attribute_pure__ __nonnull ((1));
+# if __GLIBC_USE (ISOC23) && defined __glibc_const_generic && !defined _LIBC
+#  define memchr(S, C, N)					\
+  __glibc_const_generic (S, const void *, memchr (S, C, N))
+# endif
 #endif
 
 #ifdef __USE_GNU
@@ -252,6 +256,10 @@ strchr (const char *__s, int __c) __THROW
 #else
 extern char *strchr (const char *__s, int __c)
      __THROW __attribute_pure__ __nonnull ((1));
+# if __GLIBC_USE (ISOC23) && defined __glibc_const_generic && !defined _LIBC
+#  define strchr(S, C)						\
+  __glibc_const_generic (S, const char *, strchr (S, C))
+# endif
 #endif
 /* Find the last occurrence of C in S.  */
 #ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
@@ -279,6 +287,10 @@ strrchr (const char *__s, int __c) __THROW
 #else
 extern char *strrchr (const char *__s, int __c)
      __THROW __attribute_pure__ __nonnull ((1));
+# if __GLIBC_USE (ISOC23) && defined __glibc_const_generic && !defined _LIBC
+#  define strrchr(S, C)						\
+  __glibc_const_generic (S, const char *, strrchr (S, C))
+# endif
 #endif
 
 #ifdef __USE_MISC
@@ -329,6 +341,10 @@ strpbrk (const char *__s, const char *__accept) __THROW
 #else
 extern char *strpbrk (const char *__s, const char *__accept)
      __THROW __attribute_pure__ __nonnull ((1, 2));
+# if __GLIBC_USE (ISOC23) && defined __glibc_const_generic && !defined _LIBC
+#  define strpbrk(S, ACCEPT)					\
+  __glibc_const_generic (S, const char *, strpbrk (S, ACCEPT))
+# endif
 #endif
 /* Find the first occurrence of NEEDLE in HAYSTACK.  */
 #ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
@@ -356,6 +372,11 @@ strstr (const char *__haystack, const char *__needle) __THROW
 #else
 extern char *strstr (const char *__haystack, const char *__needle)
      __THROW __attribute_pure__ __nonnull ((1, 2));
+# if __GLIBC_USE (ISOC23) && defined __glibc_const_generic && !defined _LIBC
+#  define strstr(HAYSTACK, NEEDLE)			\
+  __glibc_const_generic (HAYSTACK, const char *,	\
+			 strstr (HAYSTACK, NEEDLE))
+# endif
 #endif
 
 

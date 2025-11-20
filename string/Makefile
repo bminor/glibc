@@ -196,6 +196,7 @@ tests := \
   tester \
   tst-bswap \
   tst-cmp \
+  tst-const \
   tst-endian \
   tst-inlcall \
   tst-memmove-overflow \

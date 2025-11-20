@@ -280,6 +280,7 @@ tests := \
   tst-canon-bz26341 \
   tst-concurrent-exit \
   tst-concurrent-quick_exit \
+  tst-const \
   tst-cxa_atexit \
   tst-environ \
   tst-environ-change-1 \
