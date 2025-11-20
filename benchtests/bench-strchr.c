@@ -100,7 +100,7 @@ do_one_rand_plus_branch_test (json_ctx_t *json_ctx, impl_t *impl,
                               const CHAR *s, const CHAR *c)
 {
   size_t i, iters = INNER_LOOP_ITERS8;
-  int must_execute = 0;
+  volatile int must_execute = 0;
   timing_t start, stop, cur;
   TIMING_NOW (start);
   for (i = 0; i < iters; ++i)
@@ -166,7 +166,7 @@ do_rand_test (json_ctx_t *json_ctx, size_t align, size_t pos, size_t len,
   buf[align + len] = 0;
   buf[align + pos] = 1;
 
-  perc_zero_int = perc_zero * RAND_MAX;
+  perc_zero_int = perc_zero * (float) RAND_MAX;
   for (i = 0; i < NUM_SEARCH_CHARS; ++i)
     {
       if (rand () > perc_zero_int)
