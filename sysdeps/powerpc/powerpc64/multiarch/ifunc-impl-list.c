@@ -367,6 +367,10 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   IFUNC_IMPL (i, name, strcmp,
 #ifdef __LITTLE_ENDIAN__
 	      IFUNC_IMPL_ADD (array, i, strcmp,
+			      (hwcap2 & PPC_FEATURE2_ARCH_3_1)
+			      && (hwcap & PPC_FEATURE_HAS_VSX),
+			      __strcmp_power10)
+	      IFUNC_IMPL_ADD (array, i, strcmp,
 			      hwcap2 & PPC_FEATURE2_ARCH_3_00
 			      && hwcap & PPC_FEATURE_HAS_ALTIVEC,
 			      __strcmp_power9)
