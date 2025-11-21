@@ -23,7 +23,7 @@
 void *
 generic_memccpy (void *dst, const void *src, int c, size_t n)
 {
-  void *p = memchr (src, c, n);
+  const void *p = memchr (src, c, n);
 
   if (p != NULL)
     return mempcpy (dst, src, p - src + 1);

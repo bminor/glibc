@@ -245,7 +245,7 @@ main (void)
   result_t result = OK;
   for (i = 0; i < (sizeof (input_files) / sizeof (input_files[0])); i++)
     {
-      char *locale = strchr (input_files[i], '#');
+      const char *locale = strchr (input_files[i], '#');
       if (locale == NULL)
 	{
 	  printf ("Failed to get locale from filename %s, aborting!\n",

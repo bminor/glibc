@@ -31,7 +31,7 @@ char *
 generic_rawmemchr (const char *s, int c)
 {
   if ((unsigned char) c != 0)
-    return memchr (s, c, PTRDIFF_MAX);
+    return (char*) memchr (s, c, PTRDIFF_MAX);
   return (char *)s + strlen (s);
 }
 
