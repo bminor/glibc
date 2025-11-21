@@ -26,15 +26,6 @@ headers += \
   # headers
 
 routines += \
-  pthread_atfork \
-  pthread_atfork_compat \
-  thrd_current \
-  thrd_equal \
-  thrd_sleep \
-  thrd_yield \
-  # routines
-
-$(libpthread-routines-var) += \
   call_once \
   cnd_broadcast \
   cnd_destroy \
@@ -48,15 +39,21 @@ $(libpthread-routines-var) += \
   mtx_timedlock \
   mtx_trylock \
   mtx_unlock \
+  pthread_atfork \
+  pthread_atfork_compat \
   thrd_create \
+  thrd_current \
   thrd_detach \
+  thrd_equal \
   thrd_exit \
   thrd_join \
+  thrd_sleep \
+  thrd_yield \
   tss_create \
   tss_delete \
   tss_get \
   tss_set \
-  # $(libpthread-routines-var)
+  # routines
 
 tests += \
   tst-abstime \

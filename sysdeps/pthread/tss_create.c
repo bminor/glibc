@@ -18,6 +18,7 @@
 
 #include <shlib-compat.h>
 #include "thrd_priv.h"
+#include <c11-thread.h>
 
 int
 __tss_create (tss_t *tss_id, tss_dtor_t destructor)
@@ -32,11 +33,7 @@ __tss_create (tss_t *tss_id, tss_dtor_t destructor)
   int err_code = __pthread_key_create (tss_id, destructor);
   return thrd_err_map (err_code);
 }
-#if PTHREAD_IN_LIBC
-versioned_symbol (libc, __tss_create, tss_create, GLIBC_2_34);
-# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_28, GLIBC_2_34)
-compat_symbol (libpthread, __tss_create, tss_create, GLIBC_2_28);
-# endif
-#else /* !PTHREAD_IN_LIBC */
-strong_alias (__tss_create, tss_create)
+versioned_symbol (libc, __tss_create, tss_create, C11_THREADS_IN_LIBC);
+#if OTHER_SHLIB_COMPAT (libpthread, C11_THREADS_INTRODUCED, C11_THREADS_IN_LIBC)
+compat_symbol (libpthread, __tss_create, tss_create, C11_THREADS_INTRODUCED);
 #endif

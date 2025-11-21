@@ -18,6 +18,7 @@
 
 #include "thrd_priv.h"
 #include <shlib-compat.h>
+#include <c11-thread.h>
 
 int
 __cnd_wait (cnd_t *cond, mtx_t *mutex)
@@ -26,11 +27,7 @@ __cnd_wait (cnd_t *cond, mtx_t *mutex)
 				      (pthread_mutex_t *) mutex);
   return thrd_err_map (err_code);
 }
-#if PTHREAD_IN_LIBC
-versioned_symbol (libc, __cnd_wait, cnd_wait, GLIBC_2_34);
-# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_28, GLIBC_2_34)
-compat_symbol (libpthread, __cnd_wait, cnd_wait, GLIBC_2_28);
-# endif
-#else /* !PTHREAD_IN_LIBC */
-strong_alias (__cnd_wait, cnd_wait)
+versioned_symbol (libc, __cnd_wait, cnd_wait, C11_THREADS_IN_LIBC);
+#if OTHER_SHLIB_COMPAT (libpthread, C11_THREADS_INTRODUCED, C11_THREADS_IN_LIBC)
+compat_symbol (libpthread, __cnd_wait, cnd_wait, C11_THREADS_INTRODUCED);
 #endif

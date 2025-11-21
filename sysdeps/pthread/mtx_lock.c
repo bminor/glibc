@@ -18,6 +18,7 @@
 
 #include "thrd_priv.h"
 #include <shlib-compat.h>
+#include <c11-thread.h>
 
 int
 __mtx_lock (mtx_t *mutex)
@@ -25,11 +26,7 @@ __mtx_lock (mtx_t *mutex)
   int err_code = __pthread_mutex_lock ((pthread_mutex_t *) mutex);
   return thrd_err_map (err_code);
 }
-#if PTHREAD_IN_LIBC
-versioned_symbol (libc, __mtx_lock, mtx_lock, GLIBC_2_34);
-# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_28, GLIBC_2_34)
-compat_symbol (libpthread, __mtx_lock, mtx_lock, GLIBC_2_28);
-# endif
-#else /* !PTHREAD_IN_LIBC */
-strong_alias (__mtx_lock, mtx_lock)
+versioned_symbol (libc, __mtx_lock, mtx_lock, C11_THREADS_IN_LIBC);
+#if OTHER_SHLIB_COMPAT (libpthread, C11_THREADS_INTRODUCED, C11_THREADS_IN_LIBC)
+compat_symbol (libpthread, __mtx_lock, mtx_lock, C11_THREADS_INTRODUCED);
 #endif

@@ -16,13 +16,19 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <shlib-compat.h>
 #include "thrd_priv.h"
+#include <c11-thread.h>
 
 int
-mtx_timedlock (mtx_t *restrict mutex,
+__mtx_timedlock (mtx_t *restrict mutex,
 	       const struct timespec *restrict time_point)
 {
   int err_code = __pthread_mutex_timedlock ((pthread_mutex_t *)mutex,
 					    time_point);
   return thrd_err_map (err_code);
 }
+versioned_symbol (libc, __mtx_timedlock, mtx_timedlock, C11_THREADS_IN_LIBC);
+#if OTHER_SHLIB_COMPAT (libpthread, C11_THREADS_INTRODUCED, C11_THREADS_IN_LIBC)
+compat_symbol (libpthread, __mtx_timedlock, mtx_timedlock, C11_THREADS_INTRODUCED);
+#endif

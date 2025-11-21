@@ -20,6 +20,7 @@
 #include <shlib-compat.h>
 
 #include "thrd_priv.h"
+#include <c11-thread.h>
 
 int
 __cnd_init (cnd_t *cond)
@@ -32,11 +33,7 @@ __cnd_init (cnd_t *cond)
   int err_code = __pthread_cond_init ((pthread_cond_t *)cond, NULL);
   return thrd_err_map (err_code);
 }
-#if PTHREAD_IN_LIBC
-versioned_symbol (libc, __cnd_init, cnd_init, GLIBC_2_34);
-# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_28, GLIBC_2_34)
-compat_symbol (libpthread, __cnd_init, cnd_init, GLIBC_2_28);
-# endif
-#else /* !PTHREAD_IN_LIBC */
-strong_alias (__cnd_init, cnd_init)
+versioned_symbol (libc, __cnd_init, cnd_init, C11_THREADS_IN_LIBC);
+#if OTHER_SHLIB_COMPAT (libpthread, C11_THREADS_INTRODUCED, C11_THREADS_IN_LIBC)
+compat_symbol (libpthread, __cnd_init, cnd_init, C11_THREADS_INTRODUCED);
 #endif

@@ -18,6 +18,7 @@
 
 #include "thrd_priv.h"
 #include <shlib-compat.h>
+#include <c11-thread.h>
 
 int
 __thrd_join (thrd_t thr, int *res)
@@ -29,11 +30,7 @@ __thrd_join (thrd_t thr, int *res)
 
   return thrd_err_map (err_code);
 }
-#if PTHREAD_IN_LIBC
-versioned_symbol (libc, __thrd_join, thrd_join, GLIBC_2_34);
-# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_28, GLIBC_2_34)
-compat_symbol (libc, __thrd_join, thrd_join, GLIBC_2_28);
-# endif
-#else /* !PTHREAD_IN_LIBC */
-strong_alias (__thrd_join, thrd_join)
+versioned_symbol (libc, __thrd_join, thrd_join, C11_THREADS_IN_LIBC);
+#if OTHER_SHLIB_COMPAT (libpthread, C11_THREADS_INTRODUCED, C11_THREADS_IN_LIBC)
+compat_symbol (libpthread, __thrd_join, thrd_join, C11_THREADS_INTRODUCED);
 #endif

@@ -16,10 +16,12 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <shlib-compat.h>
 #include "thrd_priv.h"
+#include <c11-thread.h>
 
 int
-cnd_timedwait (cnd_t *restrict cond, mtx_t *restrict mutex,
+__cnd_timedwait (cnd_t *restrict cond, mtx_t *restrict mutex,
 	       const struct timespec* restrict time_point)
 {
   int err_code = __pthread_cond_timedwait ((pthread_cond_t *) cond,
@@ -27,3 +29,7 @@ cnd_timedwait (cnd_t *restrict cond, mtx_t *restrict mutex,
 					   time_point);
   return thrd_err_map (err_code);
 }
+versioned_symbol (libc, __cnd_timedwait, cnd_timedwait, C11_THREADS_IN_LIBC);
+#if OTHER_SHLIB_COMPAT (libpthread, C11_THREADS_INTRODUCED, C11_THREADS_IN_LIBC)
+compat_symbol (libpthread, __cnd_timedwait, cnd_timedwait, C11_THREADS_INTRODUCED);
+#endif

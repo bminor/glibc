@@ -19,17 +19,14 @@
 #include "thrd_priv.h"
 #include "pthreadP.h"
 #include <shlib-compat.h>
+#include <c11-thread.h>
 
 void
 __mtx_destroy (mtx_t *mutex)
 {
   __pthread_mutex_destroy ((pthread_mutex_t *) mutex);
 }
-#if PTHREAD_IN_LIBC
-versioned_symbol (libc, __mtx_destroy, mtx_destroy, GLIBC_2_34);
-# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_28, GLIBC_2_34)
-compat_symbol (libpthread, __mtx_destroy, mtx_destroy, GLIBC_2_28);
-# endif
-#else /* !PTHREAD_IN_LIBC */
-strong_alias (__mtx_destroy, mtx_destroy)
+versioned_symbol (libc, __mtx_destroy, mtx_destroy, C11_THREADS_IN_LIBC);
+#if OTHER_SHLIB_COMPAT (libpthread, C11_THREADS_INTRODUCED, C11_THREADS_IN_LIBC)
+compat_symbol (libpthread, __mtx_destroy, mtx_destroy, C11_THREADS_INTRODUCED);
 #endif

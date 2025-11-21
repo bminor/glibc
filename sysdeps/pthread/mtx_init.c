@@ -20,6 +20,7 @@
 #include <shlib-compat.h>
 
 #include "thrd_priv.h"
+#include <c11-thread.h>
 
 int
 __mtx_init (mtx_t *mutex, int type)
@@ -52,11 +53,7 @@ __mtx_init (mtx_t *mutex, int type)
   /* pthread_mutexattr_destroy implementation is a noop.  */
   return thrd_err_map (err_code);
 }
-#if PTHREAD_IN_LIBC
-versioned_symbol (libc, __mtx_init, mtx_init, GLIBC_2_34);
-# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_28, GLIBC_2_34)
-compat_symbol (libpthread, __mtx_init, mtx_init, GLIBC_2_28);
-# endif
-#else /* !PTHREAD_IN_LIBC */
-strong_alias (__mtx_init, mtx_init)
+versioned_symbol (libc, __mtx_init, mtx_init, C11_THREADS_IN_LIBC);
+#if OTHER_SHLIB_COMPAT (libpthread, C11_THREADS_INTRODUCED, C11_THREADS_IN_LIBC)
+compat_symbol (libpthread, __mtx_init, mtx_init, C11_THREADS_INTRODUCED);
 #endif
