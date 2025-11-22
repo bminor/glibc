@@ -169,14 +169,15 @@ fpu_control_t _dl_fpu_control = _FPU_DEFAULT;
 /* Required flags used for stack allocation.  */
 int _dl_stack_prot_flags = DEFAULT_STACK_PROT_PERMS;
 
-#if PTHREAD_IN_LIBC
+#if !defined (__PTHREAD_HTL)
 list_t _dl_stack_used;
 list_t _dl_stack_user;
 list_t _dl_stack_cache;
 size_t _dl_stack_cache_actsize;
 uintptr_t _dl_in_flight_stack;
 int _dl_stack_cache_lock;
-#else
+#endif
+#if !PTHREAD_IN_LIBC
 void (*_dl_init_static_tls) (struct link_map *) = &_dl_nothread_init_static_tls;
 #endif
 struct dl_scope_free_list *_dl_scope_free_list;

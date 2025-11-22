@@ -451,7 +451,7 @@ struct rtld_global
     size_t count;
     void *list[50];
   } *_dl_scope_free_list;
-#if PTHREAD_IN_LIBC
+#if !defined __PTHREAD_HTL
   /* List of active thread stacks, with memory managed by glibc.  */
   EXTERN list_t _dl_stack_used;
 
