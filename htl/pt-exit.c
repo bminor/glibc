@@ -26,6 +26,7 @@
 
 #include <atomic.h>
 #include <shlib-compat.h>
+#include <libc-internal.h>
 
 /* Terminate the current thread and make STATUS available to any
    thread that might join it.  */
@@ -48,6 +49,9 @@ __pthread_exit (void *status)
 
   /* Call destructors for the thread_local TLS variables.  */
   call_function_static_weak (__call_tls_dtors);
+
+  /* Clean up any state libc stored in thread-local variables.  */
+  __libc_thread_freeres ();
 
   __pthread_setcancelstate (oldstate, &oldstate);
 
