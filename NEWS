@@ -35,6 +35,17 @@ Major new features:
 * The ISO C23 functions free_sized and free_aligned_sized are now
   supported in <stdlib.h>.
 
+* Additional optimized and correctly rounded mathematical functions have
+  been imported from the CORE-MATH project, in particular acosh, asinh,
+  atanh, erf, erfc, lgamma, and tgamma.
+
+* Optimized implementations for remainder, remaindef, frexpf, frexp,
+  frexpl (binary128), and frexpl (intel96) have been added.
+
+* The SVID handling for acosf, acoshf, asinhf, atan2f, atanhf, coshf,
+  lgammaf/lgammaf_r, log10f, sinhf, sqrtf, tgammaf, y0/j0, y1/j1, and yn/jn
+  were moved to compat symbols, allowing improvements in performance.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * Support for dumped heaps has been removed - malloc_set_state() now always
