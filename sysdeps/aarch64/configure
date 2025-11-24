@@ -196,3 +196,147 @@ fi
 
 libc_cv_support_sframe=yes
 
+# Check if compilers support GCS in branch protection:
+
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking if compiler supports -mbranch-protection=gcs" >&5
+printf %s "checking if compiler supports -mbranch-protection=gcs... " >&6; }
+if test ${libc_cv_cc_gcs+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) if { ac_try='${CC-cc} -Werror -mbranch-protection=gcs -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+then :
+  libc_cv_cc_gcs=yes
+else case e in #(
+  e) libc_cv_cc_gcs=no ;;
+esac
+fi ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cc_gcs" >&5
+printf "%s\n" "$libc_cv_cc_gcs" >&6; }
+if test "$TEST_CC" = "$CC"; then
+  libc_cv_test_cc_gcs=$libc_cv_cc_gcs
+else
+
+saved_CC="$CC"
+CC="$TEST_CC"
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking if compiler supports -mbranch-protection=gcs in testing" >&5
+printf %s "checking if compiler supports -mbranch-protection=gcs in testing... " >&6; }
+if test ${libc_cv_test_cc_gcs+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) if { ac_try='${CC-cc} -Werror -mbranch-protection=gcs -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+then :
+  libc_cv_test_cc_gcs=yes
+else case e in #(
+  e) libc_cv_test_cc_gcs=no
+ ;;
+esac
+fi ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_test_cc_gcs" >&5
+printf "%s\n" "$libc_cv_test_cc_gcs" >&6; }
+
+CC="$saved_CC"
+
+fi
+
+
+# Check if linker supports GCS marking
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for linker that supports -z gcs=always" >&5
+printf %s "checking for linker that supports -z gcs=always... " >&6; }
+libc_linker_feature=no
+cat > conftest.c <<EOF
+int _start (void) { return 42; }
+EOF
+if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp
+		  -Wl,-z,gcs=always -nostdlib -nostartfiles
+		  -fPIC -shared -o conftest.so conftest.c
+		  1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+then
+  if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp -Wl,-z,gcs=always -nostdlib \
+      -nostartfiles -fPIC -shared -o conftest.so conftest.c 2>&1 \
+      | grep "warning: -z gcs=always ignored" > /dev/null 2>&1; then
+    true
+  else
+    libc_linker_feature=yes
+  fi
+fi
+rm -f conftest*
+if test $libc_linker_feature = yes; then
+  libc_cv_ld_gcs=yes
+else
+  libc_cv_ld_gcs=no
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_linker_feature" >&5
+printf "%s\n" "$libc_linker_feature" >&6; }
+
+# Check if toolchain is enabled to support GCS
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking if toolchain is enabled to support GCS" >&5
+printf %s "checking if toolchain is enabled to support GCS... " >&6; }
+libc_elf_property=no
+cat > conftest.c <<EOF
+int foo (void) { return 42; }
+EOF
+if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
+		  -fPIC -shared -o conftest.so conftest.c
+		  1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+then
+  if { ac_try='LC_ALL=C $READELF -n --wide conftest.so | grep "AArch64 feature: .*GCS" 1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+  then
+    libc_elf_property=yes
+  else
+    libc_elf_property=no
+  fi
+fi
+rm -f conftest*
+if test $libc_elf_property = yes; then
+  libc_cv_gcs_supported=yes
+else
+  libc_cv_gcs_supported=no
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_elf_property" >&5
+printf "%s\n" "$libc_elf_property" >&6; }
+
+if test $libc_cv_cc_gcs = yes && \
+  test $libc_cv_test_cc_gcs = yes && \
+  test $libc_cv_ld_gcs = yes && \
+  test $libc_cv_gcs_supported = yes
+then
+  config_vars="$config_vars
+have-test-gcs = yes"
+else
+  config_vars="$config_vars
+have-test-gcs = no"
+fi
+

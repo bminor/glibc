@@ -17,7 +17,7 @@ tests += \
   tst-aarch64-pkey \
   # tests
 
-ifneq (no,$(findstring no,$(have-cc-gcs) $(have-test-cc-gcs) $(have-ld-gcs)))
+ifeq (yes,$(have-test-gcs))
 
 gcs-tests-dynamic = \
   tst-gcs-disabled \
@@ -141,7 +141,7 @@ LDFLAGS-tst-gcs-noreturn = -Wl,-z,gcs=always
 
 tst-gcs-noreturn-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=0
 
-endif # ifeq ($(have-test-cc-gcs),yes)
+endif # ifeq ($(have-test-gcs),yes)
 
 endif # ifeq ($(subdir),misc)
 

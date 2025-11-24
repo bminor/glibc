@@ -497,3 +497,31 @@ LIBC_CHECK_TEST_CXX(
     [LIBC_TRY_CXX_OPTION([$2], [$4], [$5])])
   )
 ])
+
+dnl Check if toolchain supports generating binaries with the required
+dnl ELF marking as checked by readelf.
+dnl LIBC_CHECK_ELF_PROPERTY([message], [pattern], [action-if-true], [action-if-false])
+AC_DEFUN([LIBC_CHECK_ELF_PROPERTY],
+[AC_MSG_CHECKING([$1])
+libc_elf_property=no
+cat > conftest.c <<EOF
+int foo (void) { return 42; }
+EOF
+if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
+		  -fPIC -shared -o conftest.so conftest.c
+		  1>&AS_MESSAGE_LOG_FD])
+then
+  if AC_TRY_COMMAND([LC_ALL=C $READELF -n --wide conftest.so | grep "$2" 1>&AS_MESSAGE_LOG_FD])
+  then
+    libc_elf_property=yes
+  else
+    libc_elf_property=no
+  fi
+fi
+rm -f conftest*
+if test $libc_elf_property = yes; then
+  $3
+else
+  $4
+fi
+AC_MSG_RESULT($libc_elf_property)])
