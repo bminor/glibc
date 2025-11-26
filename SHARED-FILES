@@ -246,7 +246,7 @@ tzdata:
 core-math:
   # src/binary64/acosh/acosh.c, revision 6736002f
   sysdeps/ieee754/dbl-64/e_acosh.c
-  # src/binary64/atanh/atanh.c, revision 703d7487
+  # src/binary64/atanh/atanh.c, revision dc9465e7
   sysdeps/ieee754/dbl-64/e_atanh.c
   # src/binary64/tgamma/tgamma.c, revision 0f185e23
   sysdeps/ieee754/dbl-64/e_gamma_r.c
