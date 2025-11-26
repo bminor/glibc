@@ -19,16 +19,9 @@
 #define NO_MATH_REDIRECT
 #include <math.h>
 #include <fenv.h>
-#include <ieee754.h>
-#include <math-barriers.h>
-#include <fenv_private.h>
 #include <libm-alias-float.h>
-
-/* This implementation relies on double being more than twice as
-   precise as float and uses rounding to odd in order to avoid problems
-   with double rounding.
-   See a paper by Boldo and Melquiond:
-   http://www.lri.fr/~melquion/doc/08-tc.pdf  */
+#include <math-use-builtins.h>
+#include "math_config.h"
 
 float
 __fmaf (float x, float y, float z)
@@ -36,34 +29,40 @@ __fmaf (float x, float y, float z)
 #if USE_FMAF_BUILTIN
   return __builtin_fmaf (x, y, z);
 #else
-  /* Use generic implementation.  */
-  fenv_t env;
-
   /* Multiplication is always exact.  */
-  double temp = (double) x * (double) y;
+  double xy = (double) x * (double) y;
+  double result = xy + z;
 
-  /* Ensure correct sign of an exact zero result by performing the
-     addition in the original rounding mode in that case.  */
-  if (temp == (double) -z)
-    return (float) temp + z;
+  uint64_t u = asuint64 (result);
+  /* If not exact or at round to even boundary, the result is correct in
+     all rounding modes.  */
+  if (__glibc_likely ((u & 0xfffffff) != 0))
+    return result;
 
-  union ieee754_double u;
+  /* Also check if the double result appears exact when it might not be and
+     thus it will not set the underflow flag if denormal.  */
+  if ((u & 0x10000000) == 0
+      && ((u >> MANTISSA_WIDTH) & 0x7ff) > EXPONENT_BIAS - 126)
+    return result;
 
-  libc_feholdexcept_setround (&env, FE_TOWARDZERO);
+  /* Return if result is exact in all rounding modes.  */
+  if (result - xy == z && result - z == xy)
+    return result;
 
-  /* Perform addition with round to odd.  */
-  u.d = temp + (double) z;
-  /* Ensure the addition is not scheduled after fetestexcept call.  */
-  math_force_eval (u.d);
+  /* This is where 'double-rouding' might return a wrong value, and thus
+     needs adjusting the low-order bits in the direction of the error.  */
+  double err;
+  int neg = u >> 63;
+  if (neg == (z > xy))
+    err = xy - result + z;
+  else
+    err = z - result + xy;
 
-  /* Reset rounding mode and test for inexact simultaneously.  */
-  int j = libc_feupdateenv_test (&env, FE_INEXACT) != 0;
-
-  if ((u.ieee.mantissa1 & 1) == 0 && u.ieee.exponent != 0x7ff)
-    u.ieee.mantissa1 |= j;
-
-  /* And finally truncation with round to nearest.  */
-  return (float) u.d;
+  if (neg == (err < 0))
+    u++;
+  else
+    u--;
+  return asdouble (u);
 #endif /* ! USE_FMAF_BUILTIN  */
 }
 #ifndef __fmaf
