@@ -31,7 +31,7 @@
 #  define FUNCNAME RAWMEMCHR
 # endif
 # define MCOUNT_NARGS 2
-# define VREG_ZERO v20
+# define VREG_ZERO v17
 # define OFF_START_LOOP 256
 # define RAWMEMCHR_SUBTRACT_VECTORS \
 	vsububm   v4,v4,v18;	    \
