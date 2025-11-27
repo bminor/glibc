@@ -30,6 +30,10 @@
 #include <math.h>
 #include <complex.h>
 
+#if __GLIBC_USE (ISOC23)
+# define __STDC_VERSION_TGMATH_H__ 202311L
+#endif
+
 
 /* There are two variant implementations of type-generic macros in
    this file: one for GCC 8 and later, using __builtin_tgmath and

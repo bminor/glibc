@@ -35,6 +35,10 @@ __BEGIN_DECLS
 
 #define	_STDLIB_H	1
 
+#if __GLIBC_USE (ISOC23)
+# define __STDC_VERSION_STDLIB_H__ 202311L
+#endif
+
 #if (defined __USE_XOPEN || defined __USE_XOPEN2K8) && !defined _SYS_WAIT_H
 /* XPG requires a few symbols from <sys/wait.h> being defined.  */
 # include <bits/waitflags.h>

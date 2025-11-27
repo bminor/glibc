@@ -39,6 +39,10 @@ __BEGIN_DECLS
 /* Gather machine dependent type support.  */
 #include <bits/floatn.h>
 
+#if __GLIBC_USE (ISOC23)
+# define __STDC_VERSION_MATH_H__ 202311L
+#endif
+
 /* Value returned on overflow.  With IEEE 754 floating point, this is
    +Infinity, otherwise the largest representable positive value.  */
 #if __GNUC_PREREQ (3, 3)

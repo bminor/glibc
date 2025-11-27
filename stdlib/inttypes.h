@@ -23,6 +23,11 @@
 #define _INTTYPES_H	1
 
 #include <features.h>
+
+#if __GLIBC_USE (ISOC23)
+# define __STDC_VERSION_INTTYPES_H__ 202311L
+#endif
+
 /* Get the type definitions.  */
 #include <stdint.h>
 

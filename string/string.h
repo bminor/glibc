@@ -27,6 +27,10 @@
 
 __BEGIN_DECLS
 
+#if __GLIBC_USE (ISOC23)
+# define __STDC_VERSION_STRING_H__ 202311L
+#endif
+
 /* Get size_t and NULL from <stddef.h>.  */
 #define	__need_size_t
 #define	__need_NULL

@@ -28,6 +28,10 @@
 #include <bits/wchar.h>
 #include <bits/wordsize.h>
 
+#if __GLIBC_USE (ISOC23)
+# define __STDC_VERSION_STDINT_H__ 202311L
+#endif
+
 /* Exact integral types.  */
 
 /* Signed.  */

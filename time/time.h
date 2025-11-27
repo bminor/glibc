@@ -28,6 +28,10 @@
 #define __need_NULL
 #include <stddef.h>
 
+#if __GLIBC_USE (ISOC23)
+# define __STDC_VERSION_TIME_H__ 202311L
+#endif
+
 /* This defines CLOCKS_PER_SEC, which is the number of processor clock
    ticks per second, and possibly a number of other constants.   */
 #include <bits/time.h>

@@ -65,6 +65,10 @@
 
 __BEGIN_DECLS
 
+#if __GLIBC_USE (ISOC23)
+# define __STDC_VERSION_FENV_H__ 202311L
+#endif
+
 /* Floating-point exception handling.  */
 
 /* Clear the supported exceptions represented by EXCEPTS.  */

@@ -180,13 +180,16 @@
 
 /* The macros for _Bool are not defined by GCC's <limits.h> before GCC
    11, or if _GNU_SOURCE is defined rather than enabling C23 support
-   with -std.  */
+   with -std; likewise for the version macro before GCC 13.  */
 #if __GLIBC_USE (ISOC23)
 # ifndef BOOL_MAX
 #  define BOOL_MAX 1
 # endif
 # ifndef BOOL_WIDTH
 #  define BOOL_WIDTH 1
+# endif
+# ifndef __STDC_VERSION_LIMITS_H__
+#  define __STDC_VERSION_LIMITS_H__ 202311L
 # endif
 #endif
 

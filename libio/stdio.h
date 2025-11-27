@@ -29,6 +29,10 @@
 
 __BEGIN_DECLS
 
+#if __GLIBC_USE (ISOC23)
+# define __STDC_VERSION_STDIO_H__ 202311L
+#endif
+
 #define __need_size_t
 #define __need_NULL
 #include <stddef.h>

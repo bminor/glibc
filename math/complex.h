@@ -33,6 +33,10 @@
 
 __BEGIN_DECLS
 
+#if __GLIBC_USE (ISOC23)
+# define __STDC_VERSION_COMPLEX_H__ 202311L
+#endif
+
 /* We might need to add support for more compilers here.  But since ISO
    C99 is out hopefully all maintained compilers will soon provide the data
    types `float complex' and `double complex'.  */

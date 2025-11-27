@@ -34,6 +34,12 @@
 #define	_ASSERT_H	1
 #include <features.h>
 
+#if __GLIBC_USE (ISOC23)
+# ifndef __STDC_VERSION_ASSERT_H__
+#  define __STDC_VERSION_ASSERT_H__ 202311L
+# endif
+#endif
+
 #if defined __cplusplus && __GNUC_PREREQ (2,95)
 # define __ASSERT_VOID_CAST static_cast<void>
 #else

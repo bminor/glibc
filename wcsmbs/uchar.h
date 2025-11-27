@@ -31,6 +31,10 @@
 #include <bits/types.h>
 #include <bits/types/mbstate_t.h>
 
+#if __GLIBC_USE (ISOC23)
+# define __STDC_VERSION_UCHAR_H__ 202311L
+#endif
+
 /* Declare the C23 char8_t typedef in C23 modes, but only if the C++
   __cpp_char8_t feature test macro is not defined.  */
 #if __GLIBC_USE (ISOC23) && !defined __cpp_char8_t

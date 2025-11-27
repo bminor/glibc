@@ -60,6 +60,10 @@ typedef __gnuc_va_list va_list;
 # include <bits/types/locale_t.h>
 #endif
 
+#if __GLIBC_USE (ISOC23)
+# define __STDC_VERSION_WCHAR_H__ 202311L
+#endif
+
 /* Tell the caller that we provide correct C++ prototypes.  */
 #if defined __cplusplus && __GNUC_PREREQ (4, 4)
 # define __CORRECT_ISO_CPP_WCHAR_H_PROTO

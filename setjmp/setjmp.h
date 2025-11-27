@@ -26,6 +26,10 @@
 
 __BEGIN_DECLS
 
+#if __GLIBC_USE (ISOC23)
+# define __STDC_VERSION_SETJMP_H__ 202311L
+#endif
+
 #include <bits/setjmp.h>		/* Get `__jmp_buf'.  */
 #include <bits/types/struct___jmp_buf_tag.h>
 
