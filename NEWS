@@ -39,8 +39,8 @@ Major new features:
   been imported from the CORE-MATH project, in particular acosh, asinh,
   atanh, erf, erfc, lgamma, and tgamma.
 
-* Optimized implementations for remainder, remaindef, frexpf, frexp,
-  frexpl (binary128), and frexpl (intel96) have been added.
+* Optimized implementations for fma, fmaf, remainder, remaindef, frexpf,
+  frexp, frexpl (binary128), and frexpl (intel96) have been added.
 
 * The SVID handling for acosf, acoshf, asinhf, atan2f, atanhf, coshf,
   lgammaf/lgammaf_r, log10f, sinhf, sqrtf, tgammaf, y0/j0, y1/j1, and yn/jn
