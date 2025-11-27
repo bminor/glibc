@@ -46,7 +46,13 @@ def main():
                 '#include <linux/pidfd.h>\n',
                 args.cc,
                 'PIDFD_.*',
-                None,
+                # Until at least Linux 6.17, the value of this
+                # constant depends on the size of struct pidfd_info,
+                # which is expected to get extended in future kernel
+                # versions.  As a result, the constant embedded in the
+                # glibc headers is expected not to match the UAPI
+                # constant.
+                '^PIDFD_GET_INFO$',
                 linux_version_glibc > linux_version_headers,
                 linux_version_headers > linux_version_glibc))
 
