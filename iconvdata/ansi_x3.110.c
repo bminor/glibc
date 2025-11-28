@@ -407,7 +407,7 @@ static const char from_ucs4[][2] =
 	   is also available.  */					      \
 	uint32_t ch2;							      \
 									      \
-	if (inptr + 1 >= inend)						      \
+	if (inend - inptr <= 1)						      \
 	  {								      \
 	    /* The second character is not available.  */		      \
 	    result = __GCONV_INCOMPLETE_INPUT;				      \
