@@ -43,7 +43,7 @@ ll_highpart (mp_limb_t t)
 static __always_inline void
 umul_ppmm_generic (mp_limb_t *w1, mp_limb_t *w0, mp_limb_t u, mp_limb_t v)
 {
-#if __WORDSIZE == 32
+#if BITS_PER_MP_LIMB == 32
   uint64_t t0 = (uint64_t)u * v;
   *w1 = t0 >> 32;
   *w0 = t0;
@@ -131,7 +131,7 @@ static __always_inline void
 add_ssaaaa_generic (mp_limb_t *sh, mp_limb_t *sl, mp_limb_t ah,
 		    mp_limb_t al,  mp_limb_t bh,  mp_limb_t bl)
 {
-#if __WORDSIZE == 32
+#if BITS_PER_MP_LIMB == 32
   uint64_t a = (uint64_t)ah << 32 | al;
   uint64_t b = (uint64_t)bh << 32 | bl;
   uint64_t r = a + b;
@@ -157,7 +157,7 @@ static __always_inline void
 sub_ddmmss_generic (mp_limb_t *sh, mp_limb_t *sl, mp_limb_t ah,
 		    mp_limb_t al,  mp_limb_t bh,  mp_limb_t bl)
 {
-#if __WORDSIZE == 32
+#if BITS_PER_MP_LIMB == 32
   uint64_t a = (uint64_t)ah << 32 | al;
   uint64_t b = (uint64_t)bh << 32 | bl;
   uint64_t r = a - b;
