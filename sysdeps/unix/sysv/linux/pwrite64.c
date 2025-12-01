@@ -25,7 +25,7 @@ __libc_pwrite64 (int fd, const void *buf, size_t count, off64_t offset)
   return SYSCALL_CANCEL (pwrite64, fd, buf, count, SYSCALL_LL64_PRW (offset));
 }
 
-weak_alias (__libc_pwrite64, __pwrite64)
+strong_alias (__libc_pwrite64, __pwrite64)
 libc_hidden_weak (__pwrite64)
 weak_alias (__libc_pwrite64, pwrite64)
 

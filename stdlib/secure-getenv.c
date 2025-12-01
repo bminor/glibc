@@ -29,7 +29,7 @@ __libc_secure_getenv (const char *name)
   return __libc_enable_secure ? NULL : getenv (name);
 }
 weak_alias (__libc_secure_getenv, secure_getenv)
-libc_hidden_weak (__libc_secure_getenv)
+libc_hidden_def (__libc_secure_getenv)
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_17)
 compat_symbol (libc, __libc_secure_getenv, __secure_getenv, GLIBC_2_0);

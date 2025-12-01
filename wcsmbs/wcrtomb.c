@@ -123,5 +123,5 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
 {
   return __wcrtomb_internal (s, wc, ps, (size_t) -1);
 }
-weak_alias (__wcrtomb, wcrtomb)
+static_weak_alias (__wcrtomb, wcrtomb)
 libc_hidden_weak (wcrtomb)

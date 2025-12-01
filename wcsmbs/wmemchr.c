@@ -60,5 +60,5 @@ __wmemchr (const wchar_t *s, wchar_t c, size_t n)
   return NULL;
 }
 libc_hidden_def (__wmemchr)
-weak_alias (__wmemchr, wmemchr)
+static_weak_alias (__wmemchr, wmemchr)
 libc_hidden_weak (wmemchr)

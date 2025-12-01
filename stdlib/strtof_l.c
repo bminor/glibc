@@ -47,8 +47,8 @@ extern float ____strtof_l_internal (const char *, char **, int, locale_t);
 # undef strtof32_l
 # undef wcstof32_l
 # ifdef USE_WIDE_CHAR
-weak_alias (wcstof_l, wcstof32_l)
+weak_alias (__wcstof_l, wcstof32_l)
 # else
-weak_alias (strtof_l, strtof32_l)
+weak_alias (__strtof_l, strtof32_l)
 # endif
 #endif

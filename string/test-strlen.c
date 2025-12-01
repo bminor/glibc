@@ -41,8 +41,8 @@ IMPL (STRLEN, 1)
 
 /* Also check the generic implementation.  */
 #undef STRLEN
-#undef weak_alias
-#define weak_alias(a, b)
+#undef static_weak_alias
+#define static_weak_alias(a, b)
 #undef libc_hidden_builtin_def
 #define libc_hidden_builtin_def(a)
 #ifndef WIDE

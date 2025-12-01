@@ -44,7 +44,7 @@ _IO_fflush (FILE *fp)
 }
 libc_hidden_def (_IO_fflush)
 
-weak_alias (_IO_fflush, fflush)
+static_weak_alias (_IO_fflush, fflush)
 libc_hidden_weak (fflush)
 
 #ifndef _IO_MTSAFE_IO

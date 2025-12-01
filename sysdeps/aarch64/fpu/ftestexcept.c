@@ -25,5 +25,5 @@ __fetestexcept (int excepts)
   return libc_fetestexcept_aarch64 (excepts);
 }
 libm_hidden_def (__fetestexcept)
-weak_alias (__fetestexcept, fetestexcept)
+static_weak_alias (__fetestexcept, fetestexcept)
 libm_hidden_def (fetestexcept)

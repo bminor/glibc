@@ -36,7 +36,7 @@ weak_alias (__mempcpy, mempcpy)
 # ifdef SHARED
 __hidden_ver1 (__mempcpy, __GI___mempcpy, __redirect___mempcpy)
   __attribute__ ((visibility ("hidden"))) __attribute_copy__ (mempcpy);
-__hidden_ver1 (mempcpy, __GI_mempcpy, __redirect_mempcpy)
+__hidden_ver1 (__mempcpy, __GI_mempcpy, __redirect_mempcpy)
   __attribute__ ((visibility ("hidden"))) __attribute_copy__ (mempcpy);
 # endif
 #endif

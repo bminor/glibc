@@ -43,7 +43,7 @@ __lseek64 (int fd, off64_t offset, int whence)
 
 #ifdef  __OFF_T_MATCHES_OFF64_T
 weak_alias (__lseek64, lseek)
-weak_alias (__lseek64, __lseek)
+strong_alias (__lseek64, __lseek)
 strong_alias (__lseek64, __libc_lseek)
 libc_hidden_def (__lseek)
 #endif

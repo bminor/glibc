@@ -30,5 +30,5 @@ __libc_accept (int fd, __SOCKADDR_ARG addr, socklen_t *len)
   return SOCKETCALL_CANCEL (accept, fd, addr.__sockaddr__, len);
 #endif
 }
-weak_alias (__libc_accept, accept)
+static_weak_alias (__libc_accept, accept)
 libc_hidden_def (accept)

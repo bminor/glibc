@@ -45,5 +45,5 @@ WCSCHR (const wchar_t *wcs, const wchar_t wc)
   return dest;
 }
 libc_hidden_def (__wcschr)
-weak_alias (__wcschr, wcschr)
+static_weak_alias (__wcschr, wcschr)
 libc_hidden_weak (wcschr)

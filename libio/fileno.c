@@ -41,7 +41,7 @@ __fileno (FILE *fp)
   return _IO_fileno (fp);
 }
 libc_hidden_def (__fileno)
-weak_alias (__fileno, fileno)
+static_weak_alias (__fileno, fileno)
 libc_hidden_weak (fileno)
 
 /* The fileno implementation for libio does not require locking because

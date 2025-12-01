@@ -79,7 +79,7 @@ _IO_fwrite (const void *buf, size_t size, size_t count, FILE *fp)
 libc_hidden_def (_IO_fwrite)
 
 # include <stdio.h>
-weak_alias (_IO_fwrite, fwrite)
+static_weak_alias (_IO_fwrite, fwrite)
 libc_hidden_weak (fwrite)
 # ifndef _IO_MTSAFE_IO
 weak_alias (_IO_fwrite, fwrite_unlocked)

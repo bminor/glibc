@@ -568,9 +568,9 @@ $(objpfx)config-name.h: $(..)scripts/config-uname.sh $(common-objpfx)config.make
 
 CFLAGS-pause.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pread.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pread64.c += -fexceptions -fasynchronous-unwind-tables $(config-cflags-wno-ignored-attributes)
+CFLAGS-pread64.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pwrite.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pwrite64.c += -fexceptions -fasynchronous-unwind-tables $(config-cflags-wno-ignored-attributes)
+CFLAGS-pwrite64.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sleep.c += -fexceptions
 CFLAGS-wait.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-waitid.c += -fexceptions -fasynchronous-unwind-tables
@@ -599,7 +599,7 @@ CFLAGS-execl.os = -fomit-frame-pointer
 CFLAGS-execvp.os = -fomit-frame-pointer
 CFLAGS-execlp.os = -fomit-frame-pointer
 CFLAGS-nanosleep.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-fork.c = $(libio-mtsafe) $(config-cflags-wno-ignored-attributes)
+CFLAGS-fork.c = $(libio-mtsafe)
 
 tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
 		--none random --col --color --colour

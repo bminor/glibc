@@ -37,9 +37,9 @@ __ffsll (long long int i)
     return 32 + ffs (i >> 32);
 #endif
 }
-weak_alias (__ffsll, ffsll)
+static_weak_alias (__ffsll, ffsll)
 
 #if ULONG_MAX != UINT_MAX
 #undef ffsl
-weak_alias (ffsll, ffsl)
+static_weak_alias (__ffsll, ffsl)
 #endif

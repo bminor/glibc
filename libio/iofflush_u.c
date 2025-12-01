@@ -39,5 +39,5 @@ __fflush_unlocked (FILE *fp)
     }
 }
 libc_hidden_def (__fflush_unlocked)
-weak_alias (__fflush_unlocked, fflush_unlocked)
+static_weak_alias (__fflush_unlocked, fflush_unlocked)
 libc_hidden_weak (fflush_unlocked)

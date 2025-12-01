@@ -34,7 +34,7 @@
     const char *desc = _NL_CURRENT (LC_CTYPE, i);			      \
     return wctype_table_lookup (desc, wc);				      \
   }									      \
-  weak_alias (__isw##name, isw##name)
+  static_weak_alias (__isw##name, isw##name)
 
 #undef iswalnum
 func (alnum, __ISwalnum)
@@ -78,7 +78,7 @@ __towlower (wint_t wc)
   return wctrans_table_lookup (desc, wc);
 }
 libc_hidden_def (__towlower)
-weak_alias (__towlower, towlower)
+static_weak_alias (__towlower, towlower)
 libc_hidden_weak (towlower)
 
 #undef towupper
@@ -90,5 +90,5 @@ __towupper (wint_t wc)
   return wctrans_table_lookup (desc, wc);
 }
 libc_hidden_def (__towupper)
-weak_alias (__towupper, towupper)
+static_weak_alias (__towupper, towupper)
 libc_hidden_weak (towupper)

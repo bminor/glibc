@@ -35,5 +35,5 @@ __ferror_unlocked (FILE *fp)
   CHECK_FILE (fp, EOF);
   return _IO_ferror_unlocked (fp);
 }
-weak_alias (__ferror_unlocked, ferror_unlocked)
+static_weak_alias (__ferror_unlocked, ferror_unlocked)
 libc_hidden_weak (ferror_unlocked)

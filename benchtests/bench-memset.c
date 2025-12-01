@@ -148,6 +148,7 @@ test_main (void)
 #define libc_hidden_def(X)
 #define libc_hidden_weak(X)
 #define weak_alias(X,Y)
+#define static_weak_alias(X,Y)
 #ifndef WIDE
 # undef MEMSET
 # define MEMSET generic_memset

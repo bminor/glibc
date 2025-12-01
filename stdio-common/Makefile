@@ -717,8 +717,6 @@ CFLAGS-isoc23_vscanf.c += -fexceptions
 CFLAGS-isoc23_fscanf.c += -fexceptions
 CFLAGS-isoc23_scanf.c += -fexceptions
 
-CFLAGS-dprintf.c += $(config-cflags-wno-ignored-attributes)
-
 # Called during static library initialization, so turn stack-protection
 # off for non-shared builds.
 CFLAGS-_itoa.o = $(no-stack-protector)

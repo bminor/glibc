@@ -62,7 +62,7 @@ weak_alias (__mmap64, mmap64)
 libc_hidden_def (__mmap64)
 
 #ifdef __OFF_T_MATCHES_OFF64_T
-weak_alias (__mmap64, mmap)
-weak_alias (__mmap64, __mmap)
+static_weak_alias (__mmap64, mmap)
+strong_alias (__mmap64, __mmap)
 libc_hidden_def (__mmap)
 #endif

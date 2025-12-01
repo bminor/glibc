@@ -45,8 +45,8 @@
 # undef strtof64x_l
 # undef wcstof64x_l
 # ifdef USE_WIDE_CHAR
-weak_alias (wcstold_l, wcstof64x_l)
+static_weak_alias (__wcstold_l, wcstof64x_l)
 # else
-weak_alias (strtold_l, strtof64x_l)
+static_weak_alias (__strtold_l, strtof64x_l)
 # endif
 #endif

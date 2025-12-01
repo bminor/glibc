@@ -51,7 +51,7 @@ __if_nametoindex (const char *ifname)
   return status < 0 ? 0 : ifr.ifr_ifindex;
 }
 libc_hidden_def (__if_nametoindex)
-weak_alias (__if_nametoindex, if_nametoindex)
+static_weak_alias (__if_nametoindex, if_nametoindex)
 libc_hidden_weak (if_nametoindex)
 
 
@@ -67,7 +67,7 @@ __if_freenameindex (struct if_nameindex *ifn)
   free (ifn);
 }
 libc_hidden_def (__if_freenameindex)
-weak_alias (__if_freenameindex, if_freenameindex)
+static_weak_alias (__if_freenameindex, if_freenameindex)
 libc_hidden_weak (if_freenameindex)
 
 
@@ -184,7 +184,7 @@ __if_nameindex (void)
 
   return idx;
 }
-weak_alias (__if_nameindex, if_nameindex)
+static_weak_alias (__if_nameindex, if_nameindex)
 libc_hidden_weak (if_nameindex)
 
 
@@ -218,5 +218,5 @@ __if_indextoname (unsigned int ifindex, char ifname[IF_NAMESIZE])
   else
     return strncpy (ifname, ifr.ifr_name, IFNAMSIZ);
 }
-weak_alias (__if_indextoname, if_indextoname)
+static_weak_alias (__if_indextoname, if_indextoname)
 libc_hidden_weak (if_indextoname)

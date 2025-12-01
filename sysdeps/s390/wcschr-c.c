@@ -22,8 +22,8 @@
 # if HAVE_WCSCHR_IFUNC || HAVE_WCSCHR_Z13
 #  define WCSCHR WCSCHR_C
 
-#  undef weak_alias
-#  define weak_alias(name, alias)
+#  undef static_weak_alias
+#  define static_weak_alias(name, alias)
 
 #  if defined SHARED && IS_IN (libc)
 #   undef libc_hidden_weak

@@ -30,5 +30,5 @@ __fegetround (void)
   return cw & 0xc00;
 }
 libm_hidden_def (__fegetround)
-weak_alias (__fegetround, fegetround)
+static_weak_alias (__fegetround, fegetround)
 libm_hidden_weak (fegetround)

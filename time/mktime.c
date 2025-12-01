@@ -573,6 +573,6 @@ mktime (struct tm *tp)
 
 #endif
 
-weak_alias (mktime, timelocal)
+static_weak_alias (mktime, timelocal)
 libc_hidden_def (mktime)
 libc_hidden_weak (timelocal)

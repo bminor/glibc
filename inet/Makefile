@@ -124,9 +124,6 @@ ifeq ($(have-thread-library),yes)
 CFLAGS-rcmd.c += -fexceptions
 CFLAGS-either_ntoh.c += -fexceptions
 CFLAGS-either_hton.c += -fexceptions
-CFLAGS-in6_addr.c += $(config-cflags-wno-ignored-attributes)
-CFLAGS-if_index.c += $(config-cflags-wno-ignored-attributes)
-CFLAGS-ifaddrs.c += $(config-cflags-wno-ignored-attributes)
 
 CFLAGS-tst-checks-posix.c += -std=c99
 CFLAGS-tst-sockaddr.c += -fno-strict-aliasing

@@ -28,6 +28,6 @@ __libc_connect (int fd, __CONST_SOCKADDR_ARG addr, socklen_t len)
   return SOCKETCALL_CANCEL (connect, fd, addr.__sockaddr__, len);
 #endif
 }
-weak_alias (__libc_connect, connect)
-weak_alias (__libc_connect, __connect)
+static_weak_alias (__libc_connect, connect)
+static_weak_alias (__libc_connect, __connect)
 libc_hidden_weak (__connect)

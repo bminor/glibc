@@ -42,7 +42,7 @@ _IO_fputs (const char *str, FILE *fp)
 }
 libc_hidden_def (_IO_fputs)
 
-weak_alias (_IO_fputs, fputs)
+static_weak_alias (_IO_fputs, fputs)
 libc_hidden_weak (fputs)
 
 # ifndef _IO_MTSAFE_IO

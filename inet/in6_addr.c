@@ -20,10 +20,10 @@
 const struct in6_addr __in6addr_any =
 { { { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } } };
 libc_hidden_data_def (__in6addr_any)
-weak_alias (__in6addr_any, in6addr_any)
+static_weak_alias (__in6addr_any, in6addr_any)
 libc_hidden_data_weak (in6addr_any)
 const struct in6_addr __in6addr_loopback =
 { { { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1 } } };
 libc_hidden_data_def (__in6addr_loopback)
-weak_alias (__in6addr_loopback, in6addr_loopback)
+static_weak_alias (__in6addr_loopback, in6addr_loopback)
 libc_hidden_data_weak (in6addr_loopback)

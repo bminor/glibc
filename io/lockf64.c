@@ -58,5 +58,5 @@ __lockf64 (int fd, int cmd, off64_t len64)
 }
 weak_alias (__lockf64, lockf64)
 #ifdef __OFF_T_MATCHES_OFF64_T
-weak_alias (lockf64, lockf)
+weak_alias (__lockf64, lockf)
 #endif
