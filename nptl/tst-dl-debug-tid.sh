@@ -25,18 +25,17 @@ set -e
 
 # Arguments are from Makefile.
 common_objpfx="$1"
-test_wrapper="$2"
+test_wrapper_env="$2"
 rtld_prefix="$3"
-test_wrapper_env="$4"
-run_program_env="$5"
-test_program="$6"
+run_program_env="$4"
+test_program="$5"
 
 debug_output="${common_objpfx}elf/tst-dl-debug-tid.debug"
 rm -f "${debug_output}".*
 
 # Run the test program with LD_DEBUG=tls.
 eval "${test_wrapper_env}" LD_DEBUG=tls LD_DEBUG_OUTPUT="${debug_output}" \
-    "${test_wrapper}" "${rtld_prefix}" "${test_program}"
+    "${rtld_prefix}" "${test_program}"
 
 debug_output=$(ls "${debug_output}".*)
 # Check for the "Thread starting" message.
@@ -49,9 +48,9 @@ fi
 # Check that we have a message where the PID (from prefix) is different
 # from the TID (in the message). This indicates a worker thread log.
 if ! grep 'Thread starting: TID=' "${debug_output}" | awk -F '[ \t:]+' '{
-  sub(/,/, "", $5);
-  sub(/TID=/, "", $5);
-  if ($1 != $5)
+  sub(/,/, "", $4);
+  sub(/TID=/, "", $4);
+  if ($1 != $4)
     exit 0;
   exit 1
 }'; then

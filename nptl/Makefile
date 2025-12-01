@@ -708,8 +708,8 @@ tst-stackguard1-static-ARGS = --command "$(objpfx)tst-stackguard1-static --child
 
 ifeq ($(run-built-tests),yes)
 $(objpfx)tst-dl-debug-tid.out: tst-dl-debug-tid.sh $(objpfx)tst-dl-debug-tid
-	$(SHELL) $< $(common-objpfx) '$(test-wrapper)' '$(rtld-prefix)' \
-	  '$(test-wrapper-env)' '$(run-program-env)' \
+	$(SHELL) $< $(common-objpfx) '$(test-wrapper-env)' '$(rtld-prefix)' \
+	  '$(run-program-env)' \
 	  $(objpfx)tst-dl-debug-tid > $@; $(evaluate-test)
 
 $(objpfx)tst-oddstacklimit.out: $(objpfx)tst-oddstacklimit $(objpfx)tst-basic1
