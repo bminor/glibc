@@ -49,6 +49,11 @@ Major new features:
 * The ISO C23 optional time base TIME_MONOTONIC, TIME_ACTIVE, and
   TIME_THREAD_ACTIVE have been added.
 
+* Experimental support for building with clang has been added.  It requires
+  at least clang version 18, aarch64-linux-gnu or x86_64-linux-gnu
+  targets, and libgcc compatible runtime (including libgcc_s.so for
+  pthread cancellation and backtrace runtime support).
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * Support for dumped heaps has been removed - malloc_set_state() now always

@@ -585,7 +585,7 @@ AC_CHECK_PROG_VER(BISON, bison, --version,
 # Require GCC 12.1 to build.
 AC_CACHE_CHECK([if $CC is sufficient to build libc], libc_cv_compiler_ok, [
 AC_PREPROC_IFELSE([AC_LANG_PROGRAM([[]], [[
-#if !defined __GNUC__ || __GNUC__ < 12 || (__GNUC__ == 12 && __GNUC_MINOR__ < 1)
+#if (!defined __GNUC__ || __GNUC__ < 12 || (__GNUC__ == 12 && __GNUC_MINOR__ < 1)) && (!defined __clang__ || __clang_major__ < 18)
 #error insufficient compiler
 #endif]])],
 	       [libc_cv_compiler_ok=yes],
