@@ -157,11 +157,11 @@ malloc_internal (size_t size)
       return NULL;
     }
 
-  size_t index = allocation_index++;
   void *result = mmap (NULL, allocation_size, PROT_READ | PROT_WRITE,
                        MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   if (result == MAP_FAILED)
     return NULL;
+  size_t index = allocation_index++;
   allocations[index] = result;
   *allocations[index] = (struct allocation_header)
     {
