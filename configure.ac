@@ -1370,6 +1370,22 @@ LIBC_TRY_CC_OPTION([-fpie], [libc_cv_fpie=yes], [libc_cv_fpie=no])
 
 AC_SUBST(libc_cv_fpie)
 
+dnl Check how to suppress C23-qualifier-generic const warnings.  GCC has
+dnl -Wno-discarded-qualifiers, while clang -Wno-incompatible-pointer-types-discards-qualifiers
+AC_CACHE_CHECK(for -Wno-discarded-qualifiers, libc_cv_cflags_wno_discarded_qualifiers, [dnl
+LIBC_TRY_CC_OPTION([-Werror -Wno-discarded-qualifiers],
+		   [libc_cv_cflags_wno_discarded_qualifiers=-Wno-discarded-qualifiers],
+		   [libc_cv_cflags_wno_discarded_qualifiers=])
+if test -z "$libc_cv_cflags_wno_discarded_qualifiers"; then
+  LIBC_TRY_CC_OPTION([-Werror -Wno-incompatible-pointer-types-discards-qualifiers],
+		     [libc_cv_cflags_wno_incompatible_pointer_type_discards_qualifiers=-Wno-incompatible-pointer-types-discards-qualifiers],
+		     [libc_cv_cflags_wno_incompatible_pointer_type_discards_qualifiers=])
+  libc_cv_cflags_wno_discarded_qualifiers=$libc_cv_cflags_wno_incompatible_pointer_type_discards_qualifiers
+fi
+])
+LIBC_CONFIG_VAR([config-cflags-wno-discarded-qualifiers],
+		[$libc_cv_cflags_wno_discarded_qualifiers])
+
 AC_CACHE_CHECK(for GLOB_DAT reloc,
 	       libc_cv_has_glob_dat, [dnl
 cat > conftest.c <<EOF

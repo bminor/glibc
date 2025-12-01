@@ -7431,6 +7431,47 @@ printf "%s\n" "$libc_cv_fpie" >&6; }
 
 
 
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for -Wno-discarded-qualifiers" >&5
+printf %s "checking for -Wno-discarded-qualifiers... " >&6; }
+if test ${libc_cv_cflags_wno_discarded_qualifiers+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) if { ac_try='${CC-cc} -Werror -Wno-discarded-qualifiers -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+then :
+  libc_cv_cflags_wno_discarded_qualifiers=-Wno-discarded-qualifiers
+else case e in #(
+  e) libc_cv_cflags_wno_discarded_qualifiers= ;;
+esac
+fi
+if test -z "$libc_cv_cflags_wno_discarded_qualifiers"; then
+  if { ac_try='${CC-cc} -Werror -Wno-incompatible-pointer-types-discards-qualifiers -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+then :
+  libc_cv_cflags_wno_incompatible_pointer_type_discards_qualifiers=-Wno-incompatible-pointer-types-discards-qualifiers
+else case e in #(
+  e) libc_cv_cflags_wno_incompatible_pointer_type_discards_qualifiers= ;;
+esac
+fi
+  libc_cv_cflags_wno_discarded_qualifiers=$libc_cv_cflags_wno_incompatible_pointer_type_discards_qualifiers
+fi
+ ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cflags_wno_discarded_qualifiers" >&5
+printf "%s\n" "$libc_cv_cflags_wno_discarded_qualifiers" >&6; }
+config_vars="$config_vars
+config-cflags-wno-discarded-qualifiers = $libc_cv_cflags_wno_discarded_qualifiers"
+
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for GLOB_DAT reloc" >&5
 printf %s "checking for GLOB_DAT reloc... " >&6; }
 if test ${libc_cv_has_glob_dat+y}
