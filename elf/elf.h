@@ -924,7 +924,7 @@ typedef struct
 #define DT_SYMTAB_SHNDX	34		/* Address of SYMTAB_SHNDX section */
 #define DT_RELRSZ	35		/* Total size of RELR relative relocations */
 #define DT_RELR		36		/* Address of RELR relative relocations */
-#define DT_RELRENT	37		/* Size of one RELR relative relocaction */
+#define DT_RELRENT	37		/* Size of one RELR relative relocation */
 #define	DT_NUM		38		/* Number used */
 #define DT_LOOS		0x6000000d	/* Start of OS-specific */
 #define DT_HIOS		0x6ffff000	/* End of OS-specific */

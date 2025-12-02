@@ -272,7 +272,7 @@ These are additional items for the i386 and x86-64 architectures, as
 described below.  They mostly contain raw data from the CPUID
 instruction.  The probes are performed for each active CPU for the
 @code{ld.so} process, and data for different probed CPUs receives a
-uniqe @var{index} value.  Some CPUID data is expected to differ from CPU
+unique @var{index} value.  Some CPUID data is expected to differ from CPU
 core to CPU core.  In some cases, CPUs are not correctly initialized and
 indicate the presence of different feature sets.
 
@@ -337,7 +337,7 @@ and @var{ecx_limit} (inclusive).
 
 @item x86.processor[@var{index}].cpuid.subleaf_eax[@var{query_eax}].ecx[@var{query_ecx}].ecx_query_mask=0xff
 This line indicates that in an @samp{.until_ecx} range, the CPUID
-instruction preserved the lowested 8 bits of the input @code{%rcx} in
+instruction preserved the lowest 8 bits of the input @code{%rcx} in
 the output @code{%rcx} registers.  Otherwise, the subleaves in the range
 have identical values.  This special treatment is necessary to report
 compact range information in case such copying occurs (because the
@@ -1216,7 +1216,7 @@ If the dynamic segment contains a (deprecated) @code{HASH} tag, it
 must also contain a @code{GNU_HASH} tag.
 
 @item
-The @code{INITFIRST} flag (undeer @code{FLAGS_1}) should not be used.
+The @code{INITFIRST} flag (under @code{FLAGS_1}) should not be used.
 
 @item
 The program header must not have @code{LOAD} segments that are writable

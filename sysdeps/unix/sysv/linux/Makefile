@@ -313,7 +313,7 @@ $(objpfx)bits/syscall.h: \
 before-compile += $(objpfx)bits/syscall.h
 
 # All macros defined by <sys/syscall.h>.  Include <bits/syscall.h>
-# explicitly because <sys/sycall.h> skips it if _LIBC is defined.
+# explicitly because <sys/syscall.h> skips it if _LIBC is defined.
 $(objpfx)tst-syscall-list-macros.list: \
   $(objpfx)bits/syscall.h ../sysdeps/unix/sysv/linux/sys/syscall.h
 	printf '#include <linux/version.h>\n\

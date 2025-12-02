@@ -323,7 +323,7 @@
 /* Define if compiler allows add attribute after function declaration.  */
 #undef ATTR_AFTER_FUNC_DECL
 
-/* Define if compiler suport __attribute__ ((mode (__libgcc_cmp_return__))).  */
+/* Define if compiler support __attribute__ ((mode (__libgcc_cmp_return__))).  */
 #undef HAVE_X86_LIBGCC_CMP_RETURN_ATTR
 
 #endif

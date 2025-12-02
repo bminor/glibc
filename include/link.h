@@ -200,7 +200,7 @@ struct link_map
     unsigned int l_auditing:1;	/* Nonzero if the DSO is used in auditing.  */
     unsigned int l_audit_any_plt:1; /* Nonzero if at least one audit module
 				       is interested in the PLT interception.*/
-    unsigned int l_removed:1;	/* Nozero if the object cannot be used anymore
+    unsigned int l_removed:1;	/* Non-zero if the object cannot be used anymore
 				   since it is removed.  */
     unsigned int l_contiguous:1; /* Nonzero if inter-segment holes are
 				    mprotected or if no holes are present at
