@@ -35,7 +35,6 @@
 
 #include <sysdep.h>
 
-#define FRAME_SIZE 104
 
 	.section ".text"
 	.align 4
@@ -49,12 +48,12 @@ _start:
   /* Terminate the stack frame, and reserve space for functions to
      drop their arguments.  */
 	mov	%g0, %fp
-	sub	%sp, FRAME_SIZE, %sp
+	sub	%sp, 6*4, %sp
 
   /* Extract the arguments and environment as encoded on the stack.  The
      argument info starts after one register window (16 words) past the SP.  */
-	ld	[%sp+168], %o1
-	add	%sp, 172, %o2
+	ld	[%sp+22*4], %o1
+	add	%sp, 23*4, %o2
 
   /* Load the addresses of the user entry points.  */
 #ifndef PIC
