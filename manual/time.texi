@@ -629,6 +629,19 @@ Systems may support more than just this @w{ISO C} clock.
 Store into @code{*@var{ts}} the current time according to the @w{ISO
 C} time @var{base}.
 
+The base @code{TIME_UTC} returns the time since the epoch.  It corresponds
+to @code{CLOCK_REALTIME}.
+
+The base @code{TIME_MONOTONIC} returns a monotonically nondecreasing time since
+an unspecified point in the past that may change if the system is rebooted or
+suspended.  It corresponds to @code{CLOCK_MONOTONIC}.
+
+The base @code{TIME_ACTIVE} returns the CPU time consumed by the process
+(including all threads).  It corresponds to @code{CLOCK_PROCESS_CPUTIME_ID}.
+
+The base @code{TIME_THREAD_ACTIVE} returns the CPU time consumed by the
+calling thread.  It corresponds to @code{CLOCK_THREAD_CPUTIME_ID}.
+
 The return value is @var{base} on success and @code{0} on failure.
 @end deftypefun
 

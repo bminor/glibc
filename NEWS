@@ -46,6 +46,9 @@ Major new features:
   lgammaf/lgammaf_r, log10f, sinhf, sqrtf, tgammaf, y0/j0, y1/j1, and yn/jn
   were moved to compat symbols, allowing improvements in performance.
 
+* The ISO C23 optional time base TIME_MONOTONIC, TIME_ACTIVE, and
+  TIME_THREAD_ACTIVE have been added.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * Support for dumped heaps has been removed - malloc_set_state() now always

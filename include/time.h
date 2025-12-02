@@ -12,6 +12,7 @@
 # include <time-clockid.h>
 # include <sys/time.h>
 # include <stdint.h>
+# include <verify.h>
 
 extern __typeof (strftime_l) __strftime_l;
 libc_hidden_proto (__strftime_l)
@@ -534,6 +535,17 @@ time64_now (void)
   struct __timespec64 ts;
   __clock_gettime64 (TIME_CLOCK_GETTIME_CLOCKID, &ts);
   return ts.tv_sec;
+}
+
+/* Helper that converts from C timebase to POSIX clockid_t.  */
+static inline clockid_t
+clock_from_timebase (int timebase)
+{
+  verify (TIME_UTC - 1 == CLOCK_REALTIME);
+  verify (TIME_MONOTONIC - 1 == CLOCK_MONOTONIC);
+  verify (TIME_ACTIVE - 1 == CLOCK_PROCESS_CPUTIME_ID);
+  verify (TIME_THREAD_ACTIVE - 1 == CLOCK_THREAD_CPUTIME_ID);
+  return timebase - 1;
 }
 
 #define NSEC_PER_SEC    1000000000L  /* Nanoseconds per second.  */

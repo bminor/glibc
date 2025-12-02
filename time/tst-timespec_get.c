@@ -19,20 +19,22 @@
 #include <time.h>
 #include <support/check.h>
 
+static void
+test_timespec_get (int timebase)
+{
+  struct timespec ts;
+  TEST_COMPARE (timespec_get (&ts, timebase), timebase);
+  TEST_VERIFY (ts.tv_nsec >= 0);
+  TEST_VERIFY (ts.tv_nsec < 1000000000);
+}
+
 static int
 do_test (void)
 {
-  {
-    struct timespec ts;
-    TEST_COMPARE (timespec_get (&ts, 0), 0);
-  }
-
-  {
-    struct timespec ts;
-    TEST_COMPARE (timespec_get (&ts, TIME_UTC), TIME_UTC);
-    TEST_VERIFY (ts.tv_nsec >= 0);
-    TEST_VERIFY (ts.tv_nsec < 1000000000);
-  }
+  test_timespec_get (TIME_UTC);
+  test_timespec_get (TIME_MONOTONIC);
+  test_timespec_get (TIME_ACTIVE);
+  test_timespec_get (TIME_THREAD_ACTIVE);
 
   return 0;
 }

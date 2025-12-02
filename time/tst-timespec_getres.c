@@ -19,31 +19,39 @@
 #include <time.h>
 #include <support/check.h>
 
+static void
+test_timespec_getres (int clockid, int timebase)
+{
+  struct timespec ts;
+  TEST_COMPARE (timespec_getres (&ts, TIME_UTC), TIME_UTC);
+  /* Expect all supported systems to support 'timebase' with
+     resolution better than one second.  */
+  TEST_VERIFY (ts.tv_sec == 0);
+  TEST_VERIFY (ts.tv_nsec > 0);
+  TEST_VERIFY (ts.tv_nsec < 1000000000);
+  /* Expect the resolution to be the same as that reported for
+     'clockid' with clock_getres.  */
+  struct timespec cts;
+  TEST_COMPARE (clock_getres (CLOCK_REALTIME, &cts), 0);
+  TEST_COMPARE (ts.tv_sec, cts.tv_sec);
+  TEST_COMPARE (ts.tv_nsec, cts.tv_nsec);
+}
+
 static int
 do_test (void)
 {
   {
     struct timespec ts;
+    /* Invalid timebase.  */
     TEST_COMPARE (timespec_getres (&ts, 0), 0);
+    /* Invalid timespec.  */
     TEST_COMPARE (timespec_getres (NULL, 0), 0);
   }
 
-  {
-    struct timespec ts;
-    TEST_COMPARE (timespec_getres (&ts, TIME_UTC), TIME_UTC);
-    /* Expect all supported systems to support TIME_UTC with
-       resolution better than one second.  */
-    TEST_VERIFY (ts.tv_sec == 0);
-    TEST_VERIFY (ts.tv_nsec > 0);
-    TEST_VERIFY (ts.tv_nsec < 1000000000);
-    TEST_COMPARE (timespec_getres (NULL, TIME_UTC), TIME_UTC);
-    /* Expect the resolution to be the same as that reported for
-       CLOCK_REALTIME with clock_getres.  */
-    struct timespec cts;
-    TEST_COMPARE (clock_getres (CLOCK_REALTIME, &cts), 0);
-    TEST_COMPARE (ts.tv_sec, cts.tv_sec);
-    TEST_COMPARE (ts.tv_nsec, cts.tv_nsec);
-  }
+  test_timespec_getres (CLOCK_REALTIME, TIME_UTC);
+  test_timespec_getres (CLOCK_MONOTONIC, TIME_MONOTONIC);
+  test_timespec_getres (CLOCK_PROCESS_CPUTIME_ID, TIME_ACTIVE);
+  test_timespec_getres (CLOCK_THREAD_CPUTIME_ID, TIME_THREAD_ACTIVE);
 
   return 0;
 }

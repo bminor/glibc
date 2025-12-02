@@ -22,10 +22,5 @@
 int
 timespec_get (struct timespec *ts, int base)
 {
-  if (base == TIME_UTC)
-    {
-      __clock_gettime (CLOCK_REALTIME, ts);
-      return base;
-    }
-  return 0;
+  return __clock_gettime (clock_from_timebase (base), ts) == 0 ? base : 0;
 }

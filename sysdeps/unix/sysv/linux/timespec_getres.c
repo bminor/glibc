@@ -22,12 +22,7 @@
 int
 __timespec_getres64 (struct __timespec64 *ts, int base)
 {
-  if (base == TIME_UTC)
-    {
-      __clock_getres64 (CLOCK_REALTIME, ts);
-      return base;
-    }
-  return 0;
+  return __clock_getres64 (clock_from_timebase (base), ts) == 0 ? base : 0;
 }
 
 #if __TIMESIZE != 64
@@ -40,8 +35,7 @@ __timespec_getres (struct timespec *ts, int base)
   struct __timespec64 tp64;
 
   ret = __timespec_getres64 (&tp64, base);
-
-  if (ret == TIME_UTC && ts != NULL)
+  if (ret != 0 && ts != NULL)
     *ts = valid_timespec64_to_timespec (tp64);
 
   return ret;
