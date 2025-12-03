@@ -63,7 +63,11 @@ __getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp)
     {
       *n = 120;
       *lineptr = (char *) malloc (*n);
-      if (*lineptr == NULL)
+      /* Null terminate the buffer upon allocation otherwise it will not be
+         null-terminated upon reading from an empty file.  */
+      if (*lineptr != NULL)
+        (*lineptr)[0] = '\0';
+      else
 	{
 	  fseterr_unlocked (fp);
 	  result = -1;
@@ -77,7 +81,6 @@ __getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp)
       if (__underflow (fp) == EOF)
 	{
 	  result = -1;
-	  (*lineptr)[0] = '\0';
 	  goto unlock_return;
 	}
       len = fp->_IO_read_end - fp->_IO_read_ptr;

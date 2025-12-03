@@ -1279,7 +1279,12 @@ This function was originally a GNU extension, but was added in
 POSIX.1-2008.
 
 If an error occurs or end of file is reached without any bytes read,
-@code{getline} returns @code{-1}.
+@code{getline} returns @code{-1}.  POSIX leaves the contents of
+@code{*@var{lineptr}} undefined when @code{getline} returns @code{-1}.
+If the @glibcadj{} implementation of @code{getline} allocates the
+initial buffer it will null terminate it to prevent the caller from
+reading uninitialized memory if no characters can be read from
+@code{stream}.
 @end deftypefun
 
 @deftypefun ssize_t getdelim (char **restrict @var{lineptr}, size_t *restrict @var{n}, int @var{delimiter}, FILE *restrict @var{stream})

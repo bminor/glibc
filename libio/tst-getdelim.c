@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <string.h>
 
 #include <support/check.h>
 #include <support/support.h>
@@ -51,20 +52,53 @@ do_test (void)
   xfclose (memstream);
   free (lineptr);
 
-  /* Test that getdelim NUL terminates upon reading an EOF from an empty
-     file (BZ #28038).  This test fails on glibc 2.42 and earlier.  */
-  lineptr = xmalloc (1);
-  lineptr[0] = 'A';
-  linelen = 1;
+  /* Test that we null-terminate the buffer upon allocating it (BZ #28038).  */
+  lineptr = NULL;
+  linelen = 0;
   char *file_name;
   TEST_VERIFY_EXIT (create_temp_file ("tst-getdelim.", &file_name) != -1);
-  FILE *fp = fopen (file_name, "r");
+  FILE *fp = fopen (file_name, "w+");
+  free (file_name);
   TEST_VERIFY_EXIT (fp != NULL);
   TEST_VERIFY (getdelim (&lineptr, &linelen, '\n', fp) == -1);
+  TEST_VERIFY (feof (fp));
   TEST_VERIFY (linelen > 0);
   TEST_VERIFY (lineptr[0] == '\0');
+  free (lineptr);
+
+  /* Test that we can read until -1 is returned and then access the last line
+     of the file.  This behavior was broken by commit
+     33eff78c8b28adc4963987880e10d96761f2a167 and later fixed.  */
+  lineptr = NULL;
+  linelen = 0;
+  char input[] = "a\nb\nc\n";
+  TEST_VERIFY_EXIT (fwrite (input, 1, sizeof input - 1, fp)
+                    == sizeof input - 1);
+  TEST_VERIFY_EXIT (fseeko (fp, 0, SEEK_SET) == 0);
+  char expect[] = { 'a' - 1, '\n', '\0' };
+  for (int i = 0; i < 3; ++i)
+    {
+      ++expect[0];
+      TEST_VERIFY (getdelim (&lineptr, &linelen, '\n', fp) == 2);
+      TEST_VERIFY (linelen > 2);
+      TEST_VERIFY (strcmp (lineptr, expect) == 0);
+    }
+  TEST_VERIFY (getdelim (&lineptr, &linelen, '\n', fp) == -1);
+  TEST_VERIFY (feof (fp));
+  TEST_VERIFY (linelen > 2);
+  TEST_VERIFY (strcmp (lineptr, expect) == 0);
+
+  /* Test the same thing without a newline.  */
+  TEST_VERIFY_EXIT (fwrite ("d", 1, 1, fp) == 1);
+  TEST_VERIFY_EXIT (fseeko (fp, -1, SEEK_CUR) == 0);
+  TEST_VERIFY (getdelim (&lineptr, &linelen, '\n', fp) == 1);
+  TEST_VERIFY (linelen > 2);
+  TEST_VERIFY (strcmp (lineptr, "d") == 0);
+  TEST_VERIFY (getdelim (&lineptr, &linelen, '\n', fp) == -1);
+  TEST_VERIFY (feof (fp));
+  TEST_VERIFY (linelen > 2);
+  TEST_VERIFY (strcmp (lineptr, "d") == 0);
   fclose (fp);
-  free (file_name);
   free (lineptr);
 
   return 0;
