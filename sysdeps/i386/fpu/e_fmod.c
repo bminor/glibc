@@ -33,7 +33,7 @@ __fmod (double x, double y)
 			&& !is_nan (hx)))
     return __math_invalid (x);
 
-  return __builtin_fmod (x, y);
+  return fmod_inline (x, y);
 }
 strong_alias (__fmod, __ieee754_fmod)
 libm_alias_finite (__ieee754_fmod, __fmod)

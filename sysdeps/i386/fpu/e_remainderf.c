@@ -33,7 +33,7 @@ __remainderf (float x, float y)
 			&& !is_nan (hx)))
     return __math_invalidf (x);
 
-  return __builtin_remainderf (x, y);
+  return remainderf_inline (x, y);
 }
 strong_alias (__remainderf, __ieee754_remainderf)
 versioned_symbol (libm, __remainderf, remainderf, GLIBC_2_43);

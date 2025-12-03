@@ -430,6 +430,54 @@ else
 
 fi
 
+conftest_code="
+double foo (double x, double y)
+{
+  return __builtin_fmod (x, y);
+}
+"
+
+cat > conftest.c <<EOF
+$conftest_code
+EOF
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking if compiler inlines __builtin_fmod/__builtin_remainder" >&5
+printf %s "checking if compiler inlines __builtin_fmod/__builtin_remainder... " >&6; }
+if test ${libc_cv_cc_x86_inline_fmod+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e)   if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $CFLAGS -fno-math-errno -S conftest.c -o conftest 1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+  then
+
+libc_cv_cc_x86_inline_fmod=no
+if grep -E -q "fprem" conftest; then
+  libc_cv_cc_x86_inline_fmod=yes
+fi
+
+  else
+
+echo "failed to check if CC inlines fmod."
+rm -f conftest*
+exit 1
+
+  fi ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cc_x86_inline_fmod" >&5
+printf "%s\n" "$libc_cv_cc_x86_inline_fmod" >&6; }
+rm -f conftest*
+if test "$libc_cv_cc_x86_inline_fmod" = yes; then
+  printf "%s\n" "#define HAVE_X86_INLINE_FMOD 1" >>confdefs.h
+
+else
+  printf "%s\n" "#define HAVE_X86_INLINE_FMOD 0" >>confdefs.h
+
+fi
 
 if test "${libc_cv_cc_no_direct_extern_access}${libc_cv_test_cc_cflags_no_direct_extern_access}" = yes; then
   libc_cv_protected_data=no

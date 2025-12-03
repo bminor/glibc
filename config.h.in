@@ -222,6 +222,9 @@
 /* An integer used to scale the timeout of test programs.  */
 #define TIMEOUTFACTOR 1
 
+/* Define if __builtin_fmod/__builtin_remainder is inlined on x86.  */
+#undef HAVE_X86_INLINE_FMOD
+
 /*
  */
 

@@ -74,4 +74,84 @@ divss_inline_asm (float x, float y)
   return x;
 }
 
+static __always_inline double
+fmod_inline (double x, double y)
+{
+#if HAVE_X86_INLINE_FMOD
+  return __builtin_fmod (x, y);
+#else
+  double result;
+  asm ("1:\n"
+       "fprem\n"
+       "fnstsw	%%ax\n"
+       "sahf\n"
+       "jp	1b\n"
+       : "=t" (result)
+       : "0" (x), "u" (y)
+       : "ax", "cc"
+    );
+  return result;
+#endif
+}
+
+static __always_inline float
+fmodf_inline (float x, float y)
+{
+#if HAVE_X86_INLINE_FMOD
+  return __builtin_fmodf (x, y);
+#else
+  float result;
+  asm ("1:\n"
+       "fprem\n"
+       "fnstsw	%%ax\n"
+       "sahf\n"
+       "jp	1b\n"
+       : "=t" (result)
+       : "0" (x), "u" (y)
+       : "ax", "cc"
+    );
+  return result;
+#endif
+}
+
+static __always_inline double
+remainder_inline (double x, double y)
+{
+#if HAVE_X86_INLINE_FMOD
+   return __builtin_remainder (x, y);
+#else
+  double result;
+  asm ("1:\n"
+       "fprem1\n"
+       "fnstsw	%%ax\n"
+       "sahf\n"
+       "jp	1b\n"
+       : "=t" (result)
+       : "0" (x), "u" (y)
+       : "ax", "cc"
+    );
+  return result;
+#endif
+}
+
+static __always_inline float
+remainderf_inline (float x, float y)
+{
+#if HAVE_X86_INLINE_FMOD
+   return __builtin_remainderf (x, y);
+#else
+  float result;
+  asm ("1:\n"
+       "fprem1\n"
+       "fnstsw	%%ax\n"
+       "sahf\n"
+       "jp	1b\n"
+       : "=t" (result)
+       : "0" (x), "u" (y)
+       : "ax", "cc"
+    );
+  return result;
+#endif
+}
+
 #endif

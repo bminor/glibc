@@ -33,7 +33,7 @@ __remainder (double x, double y)
 			&& !is_nan (hx)))
     return __math_invalid (x);
 
-  return __builtin_remainder (x, y);
+  return remainder_inline (x, y);
 }
 strong_alias (__remainder, __ieee754_remainder)
 versioned_symbol (libm, __remainder, remainder, GLIBC_2_43);

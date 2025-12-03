@@ -240,6 +240,33 @@ else
   AC_DEFINE(HAVE_X86_LIBGCC_CMP_RETURN_ATTR, 0)
 fi
 
+conftest_code="
+double foo (double x, double y)
+{
+  return __builtin_fmod (x, y);
+}
+"
+dnl Check if CC inlines __builtin_fmod/__builtin_remainder
+LIBC_TRY_CC_COMMAND([if compiler inlines __builtin_fmod/__builtin_remainder],
+  [$conftest_code],
+  [$CFLAGS -fno-math-errno -S],
+  libc_cv_cc_x86_inline_fmod,
+  [
+libc_cv_cc_x86_inline_fmod=no
+if grep -E -q "fprem" conftest; then
+  libc_cv_cc_x86_inline_fmod=yes
+fi
+],
+[
+echo "failed to check if CC inlines fmod."
+rm -f conftest*
+exit 1
+])
+if test "$libc_cv_cc_x86_inline_fmod" = yes; then
+  AC_DEFINE(HAVE_X86_INLINE_FMOD, 1)
+else
+  AC_DEFINE(HAVE_X86_INLINE_FMOD, 0)
+fi
 
 dnl If the building compiler enables no direct external data access by
 dnl default, access to protected data in shared libraries from executables
