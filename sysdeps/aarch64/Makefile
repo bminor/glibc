@@ -3,16 +3,20 @@ long-double-fcts = yes
 ifeq ($(subdir),elf)
 sysdep-dl-routines += \
   dl-bti \
-  dl-gcs
+  dl-gcs \
+  # sysdep-dl-routines
 
-tests += tst-audit26 \
-	 tst-audit27
+tests += \
+  tst-audit26 \
+  tst-audit27 \
+  # tests
 
 modules-names += \
-    tst-audit26mod \
-    tst-auditmod26 \
-    tst-audit27mod \
-    tst-auditmod27
+  tst-audit26mod \
+  tst-audit27mod \
+  tst-auditmod26 \
+  tst-auditmod27 \
+  # modules-names
 
 $(objpfx)tst-audit26: $(objpfx)tst-audit26mod.so \
 		      $(objpfx)tst-auditmod26.so
