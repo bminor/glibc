@@ -22,6 +22,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <libc-diag.h>
+#include "tst-malloc-aux.h"
 
 static int errors = 0;
 
