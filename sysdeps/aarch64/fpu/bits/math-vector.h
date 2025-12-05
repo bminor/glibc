@@ -157,6 +157,10 @@
 # define __DECL_SIMD_pow __DECL_SIMD_aarch64
 # undef __DECL_SIMD_powf
 # define __DECL_SIMD_powf __DECL_SIMD_aarch64
+# undef __DECL_SIMD_rsqrt
+# define __DECL_SIMD_rsqrt __DECL_SIMD_aarch64
+# undef __DECL_SIMD_rsqrtf
+# define __DECL_SIMD_rsqrtf __DECL_SIMD_aarch64
 # undef __DECL_SIMD_sin
 # define __DECL_SIMD_sin __DECL_SIMD_aarch64
 # undef __DECL_SIMD_sinf
@@ -239,6 +243,7 @@ __vpcs __f32x4_t _ZGVnN4v_log2f (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_log2p1f (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_logp1f (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4vv_powf (__f32x4_t, __f32x4_t);
+__vpcs __f32x4_t _ZGVnN4v_rsqrtf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_sinf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_sinhf (__f32x4_t);
 __vpcs __f32x4_t _ZGVnN4v_sinpif (__f32x4_t);
@@ -278,6 +283,7 @@ __vpcs __f64x2_t _ZGVnN2v_log2 (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_log2p1 (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_logp1 (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2vv_pow (__f64x2_t, __f64x2_t);
+__vpcs __f64x2_t _ZGVnN2v_rsqrt (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_sin (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_sinh (__f64x2_t);
 __vpcs __f64x2_t _ZGVnN2v_sinpi (__f64x2_t);
@@ -322,6 +328,7 @@ __sv_f32_t _ZGVsMxv_log2f (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_log2p1f (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_logp1f (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxvv_powf (__sv_f32_t, __sv_f32_t, __sv_bool_t);
+__sv_f32_t _ZGVsMxv_rsqrtf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_sinf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_sinhf (__sv_f32_t, __sv_bool_t);
 __sv_f32_t _ZGVsMxv_sinpif (__sv_f32_t, __sv_bool_t);
@@ -361,6 +368,7 @@ __sv_f64_t _ZGVsMxv_log2 (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_log2p1 (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_logp1 (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxvv_pow (__sv_f64_t, __sv_f64_t, __sv_bool_t);
+__sv_f64_t _ZGVsMxv_rsqrt (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_sin (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_sinh (__sv_f64_t, __sv_bool_t);
 __sv_f64_t _ZGVsMxv_sinpi (__sv_f64_t, __sv_bool_t);

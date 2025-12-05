@@ -176,10 +176,13 @@ GLIBC_2.43 _ZGVnN2v_log10p1 F
 GLIBC_2.43 _ZGVnN2v_log10p1f F
 GLIBC_2.43 _ZGVnN2v_log2p1 F
 GLIBC_2.43 _ZGVnN2v_log2p1f F
+GLIBC_2.43 _ZGVnN2v_rsqrt F
+GLIBC_2.43 _ZGVnN2v_rsqrtf F
 GLIBC_2.43 _ZGVnN4v_exp10m1f F
 GLIBC_2.43 _ZGVnN4v_exp2m1f F
 GLIBC_2.43 _ZGVnN4v_log10p1f F
 GLIBC_2.43 _ZGVnN4v_log2p1f F
+GLIBC_2.43 _ZGVnN4v_rsqrtf F
 GLIBC_2.43 _ZGVsMxv_exp10m1 F
 GLIBC_2.43 _ZGVsMxv_exp10m1f F
 GLIBC_2.43 _ZGVsMxv_exp2m1 F
@@ -188,3 +191,5 @@ GLIBC_2.43 _ZGVsMxv_log10p1 F
 GLIBC_2.43 _ZGVsMxv_log10p1f F
 GLIBC_2.43 _ZGVsMxv_log2p1 F
 GLIBC_2.43 _ZGVsMxv_log2p1f F
+GLIBC_2.43 _ZGVsMxv_rsqrt F
+GLIBC_2.43 _ZGVsMxv_rsqrtf F

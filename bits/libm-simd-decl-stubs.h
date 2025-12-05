@@ -242,6 +242,17 @@
 #define __DECL_SIMD_atan2f64x
 #define __DECL_SIMD_atan2f128x
 
+#define __DECL_SIMD_rsqrt
+#define __DECL_SIMD_rsqrtf
+#define __DECL_SIMD_rsqrtl
+#define __DECL_SIMD_rsqrtf16
+#define __DECL_SIMD_rsqrtf32
+#define __DECL_SIMD_rsqrtf64
+#define __DECL_SIMD_rsqrtf128
+#define __DECL_SIMD_rsqrtf32x
+#define __DECL_SIMD_rsqrtf64x
+#define __DECL_SIMD_rsqrtf128x
+
 #define __DECL_SIMD_log10
 #define __DECL_SIMD_log10f
 #define __DECL_SIMD_log10l

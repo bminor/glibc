@@ -80,6 +80,8 @@
 !GCC$ builtin (logp1f) attributes simd (notinbranch)
 !GCC$ builtin (pow) attributes simd (notinbranch)
 !GCC$ builtin (powf) attributes simd (notinbranch)
+!GCC$ builtin (rsqrt) attributes simd (notinbranch)
+!GCC$ builtin (rsqrtf) attributes simd (notinbranch)
 !GCC$ builtin (sin) attributes simd (notinbranch)
 !GCC$ builtin (sinf) attributes simd (notinbranch)
 !GCC$ builtin (sinh) attributes simd (notinbranch)
