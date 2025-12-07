@@ -3,6 +3,12 @@ default-abi := x32
 
 ifeq ($(subdir),misc)
 sysdep_routines += arch_prctl
+
+tests += \
+  tst-prctl-x32 \
+# tests
+
+CFLAGS-tst-prctl-x32.c += $(no-stack-protector)
 endif
 
 ifeq ($(subdir),conform)

@@ -1,5 +1,5 @@
-/* prctl - Linux specific syscall.  x86-64 x32 version.
-   Copyright (C) 2020-2025 Free Software Foundation, Inc.
+/* The prctl system call.  Linux/x32 version.
+   Copyright (C) 2025 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,26 +17,21 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <stdarg.h>
-#include <sys/prctl.h>
 
-/* Unconditionally read all potential arguments.  This may pass
-   garbage values to the kernel, but avoids the need for teaching
-   glibc the argument counts of individual options (including ones
-   that are added to the kernel in the future).  */
+/* Clear upper 32-bits in the last 4 arguments.  Since the first argument
+   of prctl is int, leave it alone.  */
+#undef	DO_CALL
+#define DO_CALL(syscall_name, args, ulong_arg_1, ulong_arg_2) \
+  movl %esi, %esi;			\
+  movl %edx, %edx;			\
+  movl %ecx, %r10d;			\
+  movl %r8d, %r8d;			\
+  movl $SYS_ify (syscall_name), %eax;	\
+  syscall;
 
-int
-__prctl (int option, ...)
-{
-  va_list arg;
-  va_start (arg, option);
-  unsigned long int arg2 = va_arg (arg, unsigned long int);
-  unsigned long int arg3 = va_arg (arg, unsigned long int);
-  unsigned long int arg4 = va_arg (arg, unsigned long int);
-  unsigned long int arg5 = va_arg (arg, unsigned long int);
-  va_end (arg);
-  return INLINE_SYSCALL_CALL (prctl, option, arg2, arg3, arg4, arg5);
-}
+PSEUDO (__prctl, prctl, 5)
+	ret
+PSEUDO_END (__prctl)
 
 libc_hidden_def (__prctl)
 weak_alias (__prctl, prctl)
