@@ -1074,8 +1074,11 @@ class Context(object):
         baseurl = os.environ.get('FTP_GNU_ORG_MIRROR' , 'https://ftp.gnu.org').rstrip('/')
         url = url_map[component] % {'version': version, 'major': version_major, 'baseurl': baseurl}
         filename = os.path.join(self.srcdir, url.split('/')[-1])
-        response = urllib.request.urlopen(url)
-        data = response.read()
+        try:
+            with urllib.request.urlopen(url) as response:
+                data = response.read()
+        except:
+            raise IOError('downloading ' + repr(url))
         with open(filename, 'wb') as f:
             f.write(data)
         subprocess.run(['tar', '-C', self.srcdir, '-x', '-f', filename],
