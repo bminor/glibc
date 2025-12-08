@@ -118,9 +118,9 @@ def get_git_url(component):
         'binutils': 'https://sourceware.org/git/binutils-gdb.git',
         'glibc': 'https://sourceware.org/git/glibc.git',
         'gcc': 'https://gcc.gnu.org/git/gcc.git',
-        'gnumach': 'git://git.savannah.gnu.org/hurd/gnumach.git',
-        'mig': 'git://git.savannah.gnu.org/hurd/mig.git',
-        'hurd': 'git://git.savannah.gnu.org/hurd/hurd.git',
+        'gnumach': 'https://git.savannah.gnu.org/git/hurd/gnumach.git',
+        'mig': 'https://git.savannah.gnu.org/git/hurd/mig.git',
+        'hurd': 'https://git.savannah.gnu.org/git/hurd/hurd.git',
     }
     env_var = '%s_GIT_MIRROR' % component.upper()
     if env_var in os.environ:
