@@ -57,7 +57,8 @@ __pthread_mutex_trylock (pthread_mutex_t *mutex)
 	  return 0;
 	}
 
-      if (lll_trylock (mutex->__data.__lock) == 0)
+      if (atomic_load_relaxed (&(mutex->__data.__lock)) == 0
+	  && lll_trylock (mutex->__data.__lock) == 0)
 	{
 	  /* Record the ownership.  */
 	  mutex->__data.__owner = id;
@@ -80,7 +81,10 @@ __pthread_mutex_trylock (pthread_mutex_t *mutex)
       /*FALL THROUGH*/
     case PTHREAD_MUTEX_ADAPTIVE_NP:
     case PTHREAD_MUTEX_ERRORCHECK_NP:
-      if (lll_trylock (mutex->__data.__lock) != 0)
+      /* Mutex type is already loaded, lock check overhead should
+         be minimal.  */
+      if (atomic_load_relaxed (&(mutex->__data.__lock)) != 0
+	  || lll_trylock (mutex->__data.__lock) != 0)
 	break;
 
       /* Record the ownership.  */
