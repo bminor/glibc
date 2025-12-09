@@ -31,6 +31,7 @@ setup_vdso (struct link_map *main_map __attribute__ ((unused)),
      mapped and relocated it normally.  */
   struct link_map *l = _dl_new_object ((char *) "", "", lt_library, NULL,
 				       __RTLD_VDSO, LM_ID_BASE);
+  bool l_addr_set = false;
   if (__glibc_likely (l != NULL))
     {
       l->l_phdr = ((const void *) GLRO(dl_sysinfo_dso)
@@ -47,8 +48,11 @@ setup_vdso (struct link_map *main_map __attribute__ ((unused)),
 	    }
 	  else if (ph->p_type == PT_LOAD)
 	    {
-	      if (! l->l_addr)
-		l->l_addr = ph->p_vaddr;
+	      if (!l_addr_set)
+		{
+		  l->l_addr = ph->p_vaddr;
+		  l_addr_set = true;
+		}
 	      if (ph->p_vaddr + ph->p_memsz >= l->l_map_end)
 		l->l_map_end = ph->p_vaddr + ph->p_memsz;
 	    }
