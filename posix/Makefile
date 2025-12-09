@@ -476,7 +476,10 @@ endif
 # XXX Please note that for now we ignore the result of this test.
 tests-special += $(objpfx)annexc.out
 ifeq ($(run-built-tests),yes)
-tests-special += $(objpfx)tst-getconf.out
+tests-special += \
+  $(objpfx)tst-getconf-limits.out \
+  $(objpfx)tst-getconf.out \
+  # tests-special
 ifeq (yes,$(build-shared))
 ifneq ($(PERL),no)
 tests-special += \
@@ -728,6 +731,16 @@ $(objpfx)tst-boost-mem.out: $(objpfx)tst-boost.out
 $(objpfx)tst-getconf.out: tst-getconf.sh $(objpfx)getconf
 	$(SHELL) $< $(common-objpfx) '$(built-program-cmd)'; \
 	$(evaluate-test)
+
+$(objpfx)tst-getconf-limits.out: tst-getconf-limits.py $(objpfx)getconf
+	PYTHONPATH=../scripts \
+	$(PYTHON) tst-getconf-limits.py \
+		   --cc="$(CC) $(patsubst -DMODULE_NAME=%, \
+					  -DMODULE_NAME=testsuite, \
+					  $(CPPFLAGS)) -D_ISOMAC" \
+		   '$(built-program-cmd)' \
+	< /dev/null > $@ 2>&1; $(evaluate-test)
+
 
 $(objpfx)bug-ga2-mem.out: $(objpfx)bug-ga2.out
 	{ test -r $(objpfx)bug-ga2.mtrace \

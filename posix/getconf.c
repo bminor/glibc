@@ -49,24 +49,18 @@
 struct conf
   {
     const char *name;
-    const int call_name;
-    const enum { SYSCONF, CONFSTR, PATHCONF } call;
+    const long int call_name;
+    const enum { SYSCONF, CONFSTR, PATHCONF, LIMITS_H } call;
   };
 
 static const struct conf vars[] =
   {
     { "LINK_MAX", _PC_LINK_MAX, PATHCONF },
-    { "_POSIX_LINK_MAX", _PC_LINK_MAX, PATHCONF },
     { "MAX_CANON", _PC_MAX_CANON, PATHCONF },
-    { "_POSIX_MAX_CANON", _PC_MAX_CANON, PATHCONF },
     { "MAX_INPUT", _PC_MAX_INPUT, PATHCONF },
-    { "_POSIX_MAX_INPUT", _PC_MAX_INPUT, PATHCONF },
     { "NAME_MAX", _PC_NAME_MAX, PATHCONF },
-    { "_POSIX_NAME_MAX", _PC_NAME_MAX, PATHCONF },
     { "PATH_MAX", _PC_PATH_MAX, PATHCONF },
-    { "_POSIX_PATH_MAX", _PC_PATH_MAX, PATHCONF },
     { "PIPE_BUF", _PC_PIPE_BUF, PATHCONF },
-    { "_POSIX_PIPE_BUF", _PC_PIPE_BUF, PATHCONF },
     { "SOCK_MAXBUF", _PC_SOCK_MAXBUF, PATHCONF },
     { "_POSIX_ASYNC_IO", _PC_ASYNC_IO, PATHCONF },
     { "_POSIX_CHOWN_RESTRICTED", _PC_CHOWN_RESTRICTED, PATHCONF },
@@ -125,9 +119,7 @@ static const struct conf vars[] =
     { "_NPROCESSORS_ONLN", _SC_NPROCESSORS_ONLN, SYSCONF },
     { "NPROCESSORS_ONLN", _SC_NPROCESSORS_ONLN, SYSCONF },
     { "_PHYS_PAGES", _SC_PHYS_PAGES, SYSCONF },
-    { "_POSIX_ARG_MAX", _SC_ARG_MAX, SYSCONF },
     { "_POSIX_ASYNCHRONOUS_IO", _SC_ASYNCHRONOUS_IO, SYSCONF },
-    { "_POSIX_CHILD_MAX", _SC_CHILD_MAX, SYSCONF },
     { "_POSIX_FSYNC", _SC_FSYNC, SYSCONF },
     { "_POSIX_JOB_CONTROL", _SC_JOB_CONTROL, SYSCONF },
     { "_POSIX_MAPPED_FILES", _SC_MAPPED_FILES, SYSCONF },
@@ -135,8 +127,6 @@ static const struct conf vars[] =
     { "_POSIX_MEMLOCK_RANGE", _SC_MEMLOCK_RANGE, SYSCONF },
     { "_POSIX_MEMORY_PROTECTION", _SC_MEMORY_PROTECTION, SYSCONF },
     { "_POSIX_MESSAGE_PASSING", _SC_MESSAGE_PASSING, SYSCONF },
-    { "_POSIX_NGROUPS_MAX", _SC_NGROUPS_MAX, SYSCONF },
-    { "_POSIX_OPEN_MAX", _SC_OPEN_MAX, SYSCONF },
     { "_POSIX_PII", _SC_PII, SYSCONF },
     { "_POSIX_PII_INTERNET", _SC_PII_INTERNET, SYSCONF },
     { "_POSIX_PII_INTERNET_DGRAM", _SC_PII_INTERNET_DGRAM, SYSCONF },
@@ -155,8 +145,6 @@ static const struct conf vars[] =
     { "_POSIX_SELECT", _SC_SELECT, SYSCONF },
     { "_POSIX_SEMAPHORES", _SC_SEMAPHORES, SYSCONF },
     { "_POSIX_SHARED_MEMORY_OBJECTS", _SC_SHARED_MEMORY_OBJECTS, SYSCONF },
-    { "_POSIX_SSIZE_MAX", _SC_SSIZE_MAX, SYSCONF },
-    { "_POSIX_STREAM_MAX", _SC_STREAM_MAX, SYSCONF },
     { "_POSIX_SYNCHRONIZED_IO", _SC_SYNCHRONIZED_IO, SYSCONF },
     { "_POSIX_THREADS", _SC_THREADS, SYSCONF },
     { "_POSIX_THREAD_ATTR_STACKADDR", _SC_THREAD_ATTR_STACKADDR, SYSCONF },
@@ -172,7 +160,6 @@ static const struct conf vars[] =
     { "_POSIX_THREAD_SAFE_FUNCTIONS", _SC_THREAD_SAFE_FUNCTIONS, SYSCONF },
     { "_POSIX_TIMERS", _SC_TIMERS, SYSCONF },
     { "TIMER_MAX", _SC_TIMER_MAX, SYSCONF },
-    { "_POSIX_TZNAME_MAX", _SC_TZNAME_MAX, SYSCONF },
     { "_POSIX_VERSION", _SC_VERSION, SYSCONF },
     { "_T_IOV_MAX", _SC_T_IOV_MAX, SYSCONF },
     { "_XOPEN_CRYPT", _SC_XOPEN_CRYPT, SYSCONF },
@@ -209,7 +196,6 @@ static const struct conf vars[] =
     { "POSIX2_EXPR_NEST_MAX", _SC_EXPR_NEST_MAX, SYSCONF },
     { "POSIX2_FORT_DEV", _SC_2_FORT_DEV, SYSCONF },
     { "POSIX2_FORT_RUN", _SC_2_FORT_RUN, SYSCONF },
-    { "_POSIX2_LINE_MAX", _SC_LINE_MAX, SYSCONF },
     { "POSIX2_LINE_MAX", _SC_LINE_MAX, SYSCONF },
     { "POSIX2_LOCALEDEF", _SC_2_LOCALEDEF, SYSCONF },
     { "POSIX2_RE_DUP_MAX", _SC_RE_DUP_MAX, SYSCONF },
@@ -405,6 +391,63 @@ static const struct conf vars[] =
     { "_POSIX_IPV6", _SC_IPV6, SYSCONF },
     { "_POSIX_RAW_SOCKETS", _SC_RAW_SOCKETS, SYSCONF },
 
+    /* limits.h symbolic constants.  */
+#define DEF_LIMIT_H(name) { #name, name, LIMITS_H }
+    /* Maximum Values.  */
+    DEF_LIMIT_H (_POSIX_CLOCKRES_MIN),
+
+    /* Minimum Values.  */
+    DEF_LIMIT_H (_POSIX_AIO_LISTIO_MAX),
+    DEF_LIMIT_H (_POSIX_AIO_MAX),
+    DEF_LIMIT_H (_POSIX_ARG_MAX),
+    DEF_LIMIT_H (_POSIX_CHILD_MAX),
+    DEF_LIMIT_H (_POSIX_DELAYTIMER_MAX),
+    DEF_LIMIT_H (_POSIX_HOST_NAME_MAX),
+    DEF_LIMIT_H (_POSIX_LINK_MAX),
+    DEF_LIMIT_H (_POSIX_LOGIN_NAME_MAX),
+    DEF_LIMIT_H (_POSIX_MAX_CANON),
+    DEF_LIMIT_H (_POSIX_MAX_INPUT),
+    DEF_LIMIT_H (_POSIX_MQ_OPEN_MAX),
+    DEF_LIMIT_H (_POSIX_MQ_PRIO_MAX),
+    DEF_LIMIT_H (_POSIX_NAME_MAX),
+    DEF_LIMIT_H (_POSIX_NGROUPS_MAX),
+    DEF_LIMIT_H (_POSIX_OPEN_MAX),
+    DEF_LIMIT_H (_POSIX_PATH_MAX),
+    DEF_LIMIT_H (_POSIX_PIPE_BUF),
+    DEF_LIMIT_H (_POSIX_RE_DUP_MAX),
+    DEF_LIMIT_H (_POSIX_RTSIG_MAX),
+    DEF_LIMIT_H (_POSIX_SEM_NSEMS_MAX),
+    DEF_LIMIT_H (_POSIX_SEM_VALUE_MAX),
+    DEF_LIMIT_H (_POSIX_SIGQUEUE_MAX),
+    DEF_LIMIT_H (_POSIX_SSIZE_MAX),
+    DEF_LIMIT_H (_POSIX_STREAM_MAX),
+    DEF_LIMIT_H (_POSIX_SYMLINK_MAX),
+    DEF_LIMIT_H (_POSIX_SYMLOOP_MAX),
+    DEF_LIMIT_H (_POSIX_THREAD_DESTRUCTOR_ITERATIONS),
+    DEF_LIMIT_H (_POSIX_THREAD_KEYS_MAX),
+    DEF_LIMIT_H (_POSIX_THREAD_THREADS_MAX),
+    DEF_LIMIT_H (_POSIX_TIMER_MAX),
+    DEF_LIMIT_H (_POSIX_TTY_NAME_MAX),
+    DEF_LIMIT_H (_POSIX_TZNAME_MAX),
+
+    DEF_LIMIT_H (_POSIX2_BC_BASE_MAX),
+    DEF_LIMIT_H (_POSIX2_BC_DIM_MAX),
+    DEF_LIMIT_H (_POSIX2_BC_SCALE_MAX),
+    DEF_LIMIT_H (_POSIX2_BC_STRING_MAX),
+    DEF_LIMIT_H (_POSIX2_CHARCLASS_NAME_MAX),
+    DEF_LIMIT_H (_POSIX2_COLL_WEIGHTS_MAX),
+    DEF_LIMIT_H (_POSIX2_EXPR_NEST_MAX),
+    DEF_LIMIT_H (_POSIX2_LINE_MAX),
+    DEF_LIMIT_H (_POSIX2_RE_DUP_MAX),
+
+    DEF_LIMIT_H (_XOPEN_IOV_MAX),
+
+    /* GNU extensions.  */
+    DEF_LIMIT_H (_POSIX_FD_SETSIZE),
+    DEF_LIMIT_H (_POSIX_HIWAT),
+    DEF_LIMIT_H (_POSIX_QLIMIT),
+    DEF_LIMIT_H (_POSIX_UIO_MAXIOV),
+
     { NULL, 0, SYSCONF }
   };
 
@@ -432,7 +475,7 @@ print_all (const char *path)
   long int value;
   char *cvalue;
   for (c = vars; c->name != NULL; ++c) {
-    printf("%-35s", c->name);
+    printf("%-36s", c->name);
     switch (c->call) {
       case PATHCONF:
 	value = pathconf (path, c->call_name);
@@ -462,6 +505,9 @@ print_all (const char *path)
 	  error (3, errno, "confstr");
 	printf ("%.*s\n", (int) clen, cvalue);
 	free (cvalue);
+	break;
+      case LIMITS_H:
+	printf ("%ld\n", c->call_name);
 	break;
     }
   }
@@ -702,6 +748,12 @@ environment SPEC.\n\n"));
 	      error (3, errno, "confstr");
 
 	    printf ("%.*s\n", (int) clen, cvalue);
+	    exit (0);
+
+	  case LIMITS_H:
+	    if (argc - ai > 1)
+	      usage ();
+	    printf ("%ld\n", c->call_name);
 	    exit (0);
 	  }
       }
