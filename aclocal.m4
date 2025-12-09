@@ -268,6 +268,38 @@ else
 fi
 AC_MSG_RESULT($libc_linker_feature)])
 
+dnl Check linker option support.
+dnl LIBC_TEST_LINKER_FEATURE([ld_option], [cc_option], [action-if-true], [action-if-false])
+AC_DEFUN([LIBC_TEST_LINKER_FEATURE],
+[AC_MSG_CHECKING([for linker that supports $1])
+libc_linker_feature=no
+cat > conftest.c <<EOF
+int _start (void) { return 42; }
+EOF
+saved_CC="$CC"
+CC="$TEST_CC"
+if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp
+		  $2 -nostdlib -nostartfiles
+		  -fPIC -shared -o conftest.so conftest.c
+		  1>&AS_MESSAGE_LOG_FD])
+then
+  if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp $2 -nostdlib \
+      -nostartfiles -fPIC -shared -o conftest.so conftest.c 2>&1 \
+      | grep "warning: $1 ignored" > /dev/null 2>&1; then
+    true
+  else
+    libc_linker_feature=yes
+  fi
+fi
+rm -f conftest*
+if test $libc_linker_feature = yes; then
+  $3
+else
+  $4
+fi
+CC="$saved_CC"
+AC_MSG_RESULT($libc_linker_feature)])
+
 dnl Add a makefile variable, with value set from a shell string
 dnl (expanded by the shell inside double quotes), to config.make.
 dnl LIBC_CONFIG_VAR(make-variable, shell-value)

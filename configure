@@ -659,7 +659,7 @@ libc_cv_has_glob_dat
 libc_cv_fpie
 libc_cv_test_static_pie
 libc_cv_z_execstack
-libc_cv_no_error_execstack
+libc_cv_test_no_error_execstack
 ASFLAGS_config
 libc_cv_cc_with_libunwind
 libc_cv_insert
@@ -7142,6 +7142,8 @@ libc_linker_feature=no
 cat > conftest.c <<EOF
 int _start (void) { return 42; }
 EOF
+saved_CC="$CC"
+CC="$TEST_CC"
 if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp
 		  -Wl,--no-error-execstack -nostdlib -nostartfiles
 		  -fPIC -shared -o conftest.so conftest.c
@@ -7162,10 +7164,11 @@ then
 fi
 rm -f conftest*
 if test $libc_linker_feature = yes; then
-  libc_cv_no_error_execstack=yes
+  libc_cv_test_no_error_execstack=yes
 else
-  libc_cv_no_error_execstack=no
+  libc_cv_test_no_error_execstack=no
 fi
+CC="$saved_CC"
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_linker_feature" >&5
 printf "%s\n" "$libc_linker_feature" >&6; }
 
