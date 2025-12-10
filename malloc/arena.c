@@ -240,7 +240,6 @@ TUNABLE_CALLBACK_FNDECL (set_tcache_max, size_t)
 TUNABLE_CALLBACK_FNDECL (set_tcache_count, size_t)
 TUNABLE_CALLBACK_FNDECL (set_tcache_unsorted_limit, size_t)
 #endif
-TUNABLE_CALLBACK_FNDECL (set_mxfast, size_t)
 TUNABLE_CALLBACK_FNDECL (set_hugetlb, size_t)
 
 #if USE_TCACHE
@@ -294,7 +293,6 @@ __ptmalloc_init (void)
   TUNABLE_GET (tcache_unsorted_limit, size_t,
 	       TUNABLE_CALLBACK (set_tcache_unsorted_limit));
 # endif
-  TUNABLE_GET (mxfast, size_t, TUNABLE_CALLBACK (set_mxfast));
   TUNABLE_GET (hugetlb, size_t, TUNABLE_CALLBACK (set_hugetlb));
 
   if (mp_.hp_pagesize > 0 && mp_.hp_pagesize <= heap_max_size ())

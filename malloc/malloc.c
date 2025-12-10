@@ -190,7 +190,6 @@
 
     Tuning options that are also dynamically changeable via mallopt:
 
-    DEFAULT_MXFAST             64 (for 32bit), 128 (for 64bit)
     DEFAULT_TRIM_THRESHOLD     128 * 1024
     DEFAULT_TOP_PAD            0
     DEFAULT_MMAP_THRESHOLD     128 * 1024
@@ -766,15 +765,14 @@ int      __posix_memalign(void **, size_t, size_t);
   corresponding parameter to the argument value if it can (i.e., so
   long as the value is meaningful), and returns 1 if successful else
   0.  SVID/XPG/ANSI defines four standard param numbers for mallopt,
-  normally defined in malloc.h.  Only one of these (M_MXFAST) is used
-  in this malloc. The others (M_NLBLKS, M_GRAIN, M_KEEP) don't apply,
-  so setting them has no effect. But this malloc also supports four
-  other options in mallopt. See below for details.  Briefly, supported
-  parameters are as follows (listed defaults are for "typical"
-  configurations).
+  normally defined in malloc.h. These params (M_MXFAST, M_NLBLKS, M_GRAIN,
+  M_KEEP) don't apply to our malloc, so setting them has no effect. But this
+  malloc also supports four other options in mallopt. See below for details.
+  Briefly, supported parameters are as follows (listed defaults are for
+  "typical" configurations).
 
   Symbol            param #   default    allowed param values
-  M_MXFAST          1         64         0-80  (0 disables fastbins)
+  M_MXFAST          1         64         0-80  (deprecated)
   M_TRIM_THRESHOLD -1         128*1024   any   (-1U disables trimming)
   M_TOP_PAD        -2         0          any
   M_MMAP_THRESHOLD -3         128*1024   any   (or 0 if no MMAP support)
@@ -786,41 +784,6 @@ libc_hidden_proto (__libc_mallopt)
 #endif
 
 /* mallopt tuning options */
-
-/*
-  M_MXFAST is the maximum request size used for "fastbins", special bins
-  that hold returned chunks without consolidating their spaces. This
-  enables future requests for chunks of the same size to be handled
-  very quickly, but can increase fragmentation, and thus increase the
-  overall memory footprint of a program.
-
-  This malloc manages fastbins very conservatively yet still
-  efficiently, so fragmentation is rarely a problem for values less
-  than or equal to the default.  The maximum supported value of MXFAST
-  is 80. You wouldn't want it any higher than this anyway.  Fastbins
-  are designed especially for use with many small structs, objects or
-  strings -- the default handles structs/objects/arrays with sizes up
-  to 8 4byte fields, or small strings representing words, tokens,
-  etc. Using fastbins for larger objects normally worsens
-  fragmentation without improving speed.
-
-  M_MXFAST is set in REQUEST size units. It is internally used in
-  chunksize units, which adds padding and alignment.  You can reduce
-  M_MXFAST to 0 to disable all use of fastbins.  This causes the malloc
-  algorithm to be a closer approximation of fifo-best-fit in all cases,
-  not just for larger requests, but will generally cause it to be
-  slower.
-*/
-
-
-/* M_MXFAST is a standard SVID/XPG tuning option, usually listed in malloc.h */
-#ifndef M_MXFAST
-#define M_MXFAST            1
-#endif
-
-#ifndef DEFAULT_MXFAST
-#define DEFAULT_MXFAST     (64 * SIZE_SZ / 4)
-#endif
 
 
 /*
@@ -1729,33 +1692,6 @@ unlink_chunk (mstate av, mchunkptr p)
 #define unmark_bin(m, i)  ((m)->binmap[idx2block (i)] &= ~(idx2bit (i)))
 #define get_binmap(m, i)  ((m)->binmap[idx2block (i)] & idx2bit (i))
 
-/*
-   Fastbins
-
-    An array of lists holding recently freed small chunks.  Fastbins
-    are not doubly linked.  It is faster to single-link them, and
-    since chunks are never removed from the middles of these lists,
-    double linking is not necessary. Also, unlike regular bins, they
-    are not even processed in FIFO order (they use faster LIFO) since
-    ordering doesn't much matter in the transient contexts in which
-    fastbins are normally used.
-
-    Chunks in fastbins keep their inuse bit set, so they cannot
-    be consolidated with other free chunks.
- */
-
-typedef struct malloc_chunk *mfastbinptr;
-#define fastbin(ar_ptr, idx) ((ar_ptr)->fastbinsY[idx])
-
-/* offset 2 to use otherwise unindexable first 2 bins */
-#define fastbin_index(sz) \
-  ((((unsigned int) (sz)) >> (SIZE_SZ == 8 ? 4 : 3)) - 2)
-
-
-/* The maximum fastbin request size we support */
-#define MAX_FAST_SIZE     (80 * SIZE_SZ / 4)
-
-#define NFASTBINS  (fastbin_index (request2size (MAX_FAST_SIZE)) + 1)
 
 /*
    ATTEMPT_TRIMMING_THRESHOLD is the size of a chunk in free()
@@ -1782,35 +1718,6 @@ typedef struct malloc_chunk *mfastbinptr;
 #define set_noncontiguous(M)   ((M)->flags |= NONCONTIGUOUS_BIT)
 #define set_contiguous(M)      ((M)->flags &= ~NONCONTIGUOUS_BIT)
 
-/* Maximum size of memory handled in fastbins.  */
-static uint8_t global_max_fast;
-
-/*
-   Set value of max_fast.
-   Use impossibly small value if 0.
-   Precondition: there are no existing fastbin chunks in the main arena.
-   Since do_check_malloc_state () checks this, we call malloc_consolidate ()
-   before changing max_fast.  Note other arenas will leak their fast bin
-   entries if max_fast is reduced.
- */
-
-#define set_max_fast(s) \
-  global_max_fast = (((size_t) (s) <= MALLOC_ALIGN_MASK - SIZE_SZ)	\
-                     ? MIN_CHUNK_SIZE / 2 : ((s + SIZE_SZ) & ~MALLOC_ALIGN_MASK))
-
-static __always_inline INTERNAL_SIZE_T
-get_max_fast (void)
-{
-  /* Tell the GCC optimizers that global_max_fast is never larger
-     than MAX_FAST_SIZE.  This avoids out-of-bounds array accesses in
-     _int_malloc after constant propagation of the size parameter.
-     (The code never executes because malloc preserves the
-     global_max_fast invariant, but the optimizers may not recognize
-     this.)  */
-  if (global_max_fast > MAX_FAST_SIZE)
-    __builtin_unreachable ();
-  return global_max_fast;
-}
 
 /*
    ----------- Internal state representation and initialization -----------
@@ -1832,11 +1739,8 @@ struct malloc_state
   /* Serialize access.  */
   __libc_lock_define (, mutex);
 
-  /* Flags (formerly in max_fast).  */
+  /* Flags  */
   int flags;
-
-  /* Fastbins */
-  mfastbinptr fastbinsY[NFASTBINS];
 
   /* Base of the topmost chunk -- not otherwise kept in a bin */
   mchunkptr top;
@@ -1969,8 +1873,6 @@ malloc_init_state (mstate av)
   if (av != &main_arena)
 #endif
   set_noncontiguous (av);
-  if (av == &main_arena)
-    set_max_fast (DEFAULT_MXFAST);
 
   av->top = initial_top (av);
 }
@@ -5232,13 +5134,7 @@ do_set_tcache_unsorted_limit (size_t value)
 static __always_inline int
 do_set_mxfast (size_t value)
 {
-  if (value <= MAX_FAST_SIZE)
-    {
-      LIBC_PROBE (memory_mallopt_mxfast, 2, value, get_max_fast ());
-      set_max_fast (value);
-      return 1;
-    }
-  return 0;
+  return 1;
 }
 
 static __always_inline int
