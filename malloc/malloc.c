@@ -2065,7 +2065,6 @@ madvise_thp (void *p, INTERNAL_SIZE_T size)
 # define check_chunk(A, P)
 # define check_free_chunk(A, P)
 # define check_inuse_chunk(A, P)
-# define check_remalloced_chunk(A, P, N)
 # define check_malloced_chunk(A, P, N)
 # define check_malloc_state(A)
 
@@ -2074,7 +2073,6 @@ madvise_thp (void *p, INTERNAL_SIZE_T size)
 # define check_chunk(A, P)              do_check_chunk (A, P)
 # define check_free_chunk(A, P)         do_check_free_chunk (A, P)
 # define check_inuse_chunk(A, P)        do_check_inuse_chunk (A, P)
-# define check_remalloced_chunk(A, P, N) do_check_remalloced_chunk (A, P, N)
 # define check_malloced_chunk(A, P, N)   do_check_malloced_chunk (A, P, N)
 # define check_malloc_state(A)         do_check_malloc_state (A)
 
@@ -2195,11 +2193,11 @@ do_check_inuse_chunk (mstate av, mchunkptr p)
 }
 
 /*
-   Properties of chunks recycled from fastbins
+   Properties of chunks at the point they are malloced
  */
 
 static void
-do_check_remalloced_chunk (mstate av, mchunkptr p, INTERNAL_SIZE_T s)
+do_check_malloced_chunk (mstate av, mchunkptr p, INTERNAL_SIZE_T s)
 {
   INTERNAL_SIZE_T sz = chunksize_nomask (p) & ~(PREV_INUSE | NON_MAIN_ARENA);
 
@@ -2222,17 +2220,6 @@ do_check_remalloced_chunk (mstate av, mchunkptr p, INTERNAL_SIZE_T s)
   /* chunk is less than MINSIZE more than request */
   assert ((long) (sz) - (long) (s) >= 0);
   assert ((long) (sz) - (long) (s + MINSIZE) < 0);
-}
-
-/*
-   Properties of nonrecycled chunks at the point they are malloced
- */
-
-static void
-do_check_malloced_chunk (mstate av, mchunkptr p, INTERNAL_SIZE_T s)
-{
-  /* same as recycled case ... */
-  do_check_remalloced_chunk (av, p, s);
 
   /*
      ... plus,  must obey implementation invariant that prev_inuse is
