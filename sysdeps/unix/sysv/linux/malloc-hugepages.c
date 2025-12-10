@@ -25,6 +25,9 @@
 unsigned long int
 __malloc_default_thp_pagesize (void)
 {
+  if (DEFAULT_THP_PAGESIZE != 0)
+    return DEFAULT_THP_PAGESIZE;
+
   int fd = __open64_nocancel (
     "/sys/kernel/mm/transparent_hugepage/hpage_pmd_size", O_RDONLY);
   if (fd == -1)
