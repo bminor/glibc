@@ -314,7 +314,7 @@
 
 /* This is another arbitrary limit, which tunables can change.  Each
    tcache bin will hold at most this number of chunks.  */
-# define TCACHE_FILL_COUNT 7
+# define TCACHE_FILL_COUNT 16
 
 /* Maximum chunks in tcache bins for tunables.  This value must fit the range
    of tcache->num_slots[] entries, else they may overflow.  */
