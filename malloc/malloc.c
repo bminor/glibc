@@ -2053,10 +2053,17 @@ free_perturb (char *p, size_t n)
 
 /* ----------- Routines dealing with transparent huge pages ----------- */
 
+static void thp_init (void);
+
 static inline void
 madvise_thp (void *p, INTERNAL_SIZE_T size)
 {
 #ifdef MADV_HUGEPAGE
+
+  /* Ensure thp_init () is invoked only once */
+  if (mp_.thp_pagesize < DEFAULT_THP_PAGESIZE)
+    thp_init ();
+
   /* Only use __madvise if the system is using 'madvise' mode.
      Otherwise the call is wasteful. */
   if (mp_.thp_mode != malloc_thp_mode_madvise)
@@ -2663,6 +2670,10 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
          this is not first time through, this preserves page-alignment of
          previous calls. Otherwise, we correct to page-align below.
        */
+
+      /* Ensure thp_init () is invoked only once */
+      if (mp_.thp_pagesize < DEFAULT_THP_PAGESIZE)
+        thp_init ();
 
       if (__glibc_unlikely (mp_.thp_pagesize != 0))
 	{
@@ -5658,6 +5669,15 @@ do_set_hugetlb (size_t value)
     __malloc_hugepage_config (value == 2 ? 0 : value, &mp_.hp_pagesize,
 			      &mp_.hp_flags);
   return 0;
+}
+
+static __always_inline void
+thp_init (void)
+{
+  /* thp_pagesize is set even if thp_mode is never. This reduces frequency
+     of MORECORE () invocation.  */
+  mp_.thp_pagesize = DEFAULT_THP_PAGESIZE;
+  mp_.thp_mode = __malloc_thp_mode ();
 }
 
 int
