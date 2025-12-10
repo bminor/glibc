@@ -178,7 +178,6 @@
     USE_MALLOC_LOCK            NOT defined
     MALLOC_DEBUG               NOT defined
     REALLOC_ZERO_BYTES_FREES   1
-    TRIM_FASTBINS              0
 
     Options for customizing MORECORE:
 
@@ -349,26 +348,6 @@
 
 #ifndef REALLOC_ZERO_BYTES_FREES
 #define REALLOC_ZERO_BYTES_FREES 1
-#endif
-
-/*
-  TRIM_FASTBINS controls whether free() of a very small chunk can
-  immediately lead to trimming. Setting to true (1) can reduce memory
-  footprint, but will almost always slow down programs that use a lot
-  of small chunks.
-
-  Define this only if you are willing to give up some speed to more
-  aggressively reduce system-level memory footprint when releasing
-  memory in programs that use many small chunks.  You can get
-  essentially the same effect by setting MXFAST to 0, but this can
-  lead to even greater slowdowns in programs using many small chunks.
-  TRIM_FASTBINS is an in-between compile-time option, that disables
-  only those chunks bordering topmost memory from being placed in
-  fastbins.
-*/
-
-#ifndef TRIM_FASTBINS
-#define TRIM_FASTBINS  0
 #endif
 
 /* Definition for getting more memory from the OS.  */
@@ -892,11 +871,7 @@ libc_hidden_proto (__libc_mallopt)
   effect.  To disable trimming completely, you can set to
   (unsigned long)(-1)
 
-  Trim settings interact with fastbin (MXFAST) settings: Unless
-  TRIM_FASTBINS is defined, automatic trimming never takes place upon
-  freeing a chunk with size less than or equal to MXFAST. Trimming is
-  instead delayed until subsequent freeing of larger chunks. However,
-  you can still force an attempted trim by calling malloc_trim.
+  You can force an attempted trim by calling malloc_trim.
 
   Also, trimming is not generally possible in cases where
   the main arena is obtained via mmap.
@@ -4043,85 +4018,6 @@ _int_malloc (mstate av, size_t bytes)
     }
 
   /*
-     If the size qualifies as a fastbin, first check corresponding bin.
-     This code is safe to execute even if av is not yet initialized, so we
-     can try it without checking, which saves some time on this fast path.
-   */
-
-#define REMOVE_FB(fb, victim, pp)			\
-  do							\
-    {							\
-      victim = pp;					\
-      if (victim == NULL)				\
-	break;						\
-      pp = REVEAL_PTR (victim->fd);                                     \
-      if (__glibc_unlikely (pp != NULL && misaligned_chunk (pp)))       \
-	malloc_printerr ("malloc(): unaligned fastbin chunk detected"); \
-    }							\
-  while ((pp = atomic_compare_and_exchange_val_acq (fb, pp, victim)) \
-	 != victim);					\
-
-  if ((unsigned long) (nb) <= (unsigned long) (get_max_fast ()))
-    {
-      idx = fastbin_index (nb);
-      mfastbinptr *fb = &fastbin (av, idx);
-      mchunkptr pp;
-      victim = *fb;
-
-      if (victim != NULL)
-	{
-	  if (__glibc_unlikely (misaligned_chunk (victim)))
-	    malloc_printerr ("malloc(): unaligned fastbin chunk detected 2");
-
-	  if (SINGLE_THREAD_P)
-	    *fb = REVEAL_PTR (victim->fd);
-	  else
-	    REMOVE_FB (fb, pp, victim);
-	  if (__glibc_likely (victim != NULL))
-	    {
-	      size_t victim_idx = fastbin_index (chunksize (victim));
-	      if (__glibc_unlikely (victim_idx != idx))
-		malloc_printerr ("malloc(): memory corruption (fast)");
-	      check_remalloced_chunk (av, victim, nb);
-#if USE_TCACHE
-	      /* While we're here, if we see other chunks of the same size,
-		 stash them in the tcache.  */
-	      size_t tc_idx = csize2tidx (nb);
-	      if (tc_idx < mp_.tcache_small_bins)
-		{
-		  mchunkptr tc_victim;
-
-		  if (__glibc_unlikely (tcache_inactive ()))
-		    tcache_init (av);
-
-		  /* While bin not empty and tcache not full, copy chunks.  */
-		  while (tcache->num_slots[tc_idx] != 0 && (tc_victim = *fb) != NULL)
-		    {
-		      if (__glibc_unlikely (misaligned_chunk (tc_victim)))
-			malloc_printerr ("malloc(): unaligned fastbin chunk detected 3");
-		      size_t victim_tc_idx = csize2tidx (chunksize (tc_victim));
-		      if (__glibc_unlikely (tc_idx != victim_tc_idx))
-			malloc_printerr ("malloc(): chunk size mismatch in fastbin");
-		      if (SINGLE_THREAD_P)
-			*fb = REVEAL_PTR (tc_victim->fd);
-		      else
-			{
-			  REMOVE_FB (fb, pp, tc_victim);
-			  if (__glibc_unlikely (tc_victim == NULL))
-			    break;
-			}
-		      tcache_put (tc_victim, tc_idx);
-		    }
-		}
-#endif
-	      void *p = chunk2mem (victim);
-	      alloc_perturb (p, bytes);
-	      return p;
-	    }
-	}
-    }
-
-  /*
      If a small request, check regular bin.  Since these "smallbins"
      hold one size each, no searching within bins is necessary.
      (For a large request, we need to wait until unsorted chunks are
@@ -4634,88 +4530,11 @@ _int_malloc (mstate av, size_t bytes)
 static void
 _int_free_chunk (mstate av, mchunkptr p, INTERNAL_SIZE_T size, int have_lock)
 {
-  mfastbinptr *fb;             /* associated fastbin */
-
-  /*
-    If eligible, place chunk on a fastbin so it can be found
-    and used quickly in malloc.
-  */
-
-  if ((unsigned long)(size) <= (unsigned long)(get_max_fast ())
-
-#if TRIM_FASTBINS
-      /*
-	If TRIM_FASTBINS set, don't place chunks
-	bordering top into fastbins
-      */
-      && (chunk_at_offset(p, size) != av->top)
-#endif
-      ) {
-
-    if (__glibc_unlikely (
-          chunksize_nomask (chunk_at_offset(p, size)) <= CHUNK_HDR_SZ
-          || chunksize (chunk_at_offset(p, size)) >= av->system_mem))
-      {
-	bool fail = true;
-	/* We might not have a lock at this point and concurrent modifications
-	   of system_mem might result in a false positive.  Redo the test after
-	   getting the lock.  */
-	if (!have_lock)
-	  {
-	    __libc_lock_lock (av->mutex);
-	    fail = (chunksize_nomask (chunk_at_offset (p, size)) <= CHUNK_HDR_SZ
-		    || chunksize (chunk_at_offset (p, size)) >= av->system_mem);
-	    __libc_lock_unlock (av->mutex);
-	  }
-
-	if (fail)
-	  malloc_printerr ("free(): invalid next size (fast)");
-      }
-
-    free_perturb (chunk2mem(p), size - CHUNK_HDR_SZ);
-
-    unsigned int idx = fastbin_index(size);
-    fb = &fastbin (av, idx);
-
-    /* Atomically link P to its fastbin: P->FD = *FB; *FB = P;  */
-    mchunkptr old = *fb, old2;
-
-    if (SINGLE_THREAD_P)
-      {
-	/* Check that the top of the bin is not the record we are going to
-	   add (i.e., double free).  */
-	if (__glibc_unlikely (old == p))
-	  malloc_printerr ("double free or corruption (fasttop)");
-	p->fd = PROTECT_PTR (&p->fd, old);
-	*fb = p;
-      }
-    else
-      do
-	{
-	  /* Check that the top of the bin is not the record we are going to
-	     add (i.e., double free).  */
-	  if (__glibc_unlikely (old == p))
-	    malloc_printerr ("double free or corruption (fasttop)");
-	  old2 = old;
-	  p->fd = PROTECT_PTR (&p->fd, old);
-	}
-      while ((old = atomic_compare_and_exchange_val_rel (fb, p, old2))
-	     != old2);
-
-    /* Check that size of fastbin chunk at the top is the same as
-       size of the chunk that we are adding.  We can dereference OLD
-       only if we have the lock, otherwise it might have already been
-       allocated again.  */
-    if (have_lock && old != NULL
-	&& __glibc_unlikely (fastbin_index (chunksize (old)) != idx))
-      malloc_printerr ("invalid fastbin entry (free)");
-  }
-
   /*
     Consolidate other non-mmapped chunks as they arrive.
   */
 
-  else if (!chunk_is_mmapped(p)) {
+  if (!chunk_is_mmapped(p)) {
 
     /* Preserve errno in case block merging results in munmap.  */
     int err = errno;
