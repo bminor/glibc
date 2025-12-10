@@ -2071,8 +2071,8 @@ madvise_thp (void *p, INTERNAL_SIZE_T size)
      inputs happens only for initial data segment.  */
   if (__glibc_unlikely (!PTR_IS_ALIGNED (p, GLRO (dl_pagesize))))
     {
-      void *q = PTR_ALIGN_DOWN (p, GLRO (dl_pagesize));
-      size += PTR_DIFF (p, q);
+      void *q = PTR_ALIGN_UP (p, GLRO (dl_pagesize));
+      size -= PTR_DIFF (q, p);
       p = q;
     }
 
