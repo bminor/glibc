@@ -30,7 +30,7 @@
 #include "json-lib.h"
 
 /* Benchmark the malloc/free performance of a varying number of blocks of a
-   given size.  This enables performance tracking of the t-cache and fastbins.
+   given size.  This enables performance tracking of the t-cache.
    It tests 3 different scenarios: single-threaded using main arena,
    multi-threaded using thread-arena, and main arena with SINGLE_THREAD_P
    false.  */

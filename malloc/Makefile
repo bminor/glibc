@@ -98,7 +98,6 @@ tests-internal += \
 
 tests += \
   tst-malloc-usable-tunables \
-  tst-mxfast \
 # tests
 
 tests += $(tests-static)
@@ -116,7 +115,6 @@ tests-exclude-malloc-check = \
   tst-mallocfork3 \
   tst-memalign-2 \
   tst-memalign-3 \
-  tst-mxfast \
   tst-safe-linking \
   tst-tcfree4 \
 # tests-exclude-malloc-check
@@ -141,7 +139,6 @@ tests-exclude-hugetlb1 = \
   tst-mallocfork2 \
   tst-mallocfork3 \
   tst-mallocstate \
-  tst-mxfast \
 # tests-exclude-hugetlb1
 # The tst-free-errno relies on the used malloc page size to mmap an
 # overlapping region.
@@ -192,7 +189,6 @@ tests-exclude-mcheck = \
   tst-mallocstate \
   tst-memalign-2 \
   tst-memalign-3 \
-  tst-mxfast \
   tst-safe-linking \
 # tests-exclude-mcheck
 
@@ -446,8 +442,6 @@ tst-malloc-usable-threaded-worker-ENV = $(malloc-check-env)
 tst-malloc-usable-tunables-ENV = $(malloc-check-tunables-env)
 tst-malloc-usable-tunables-threaded-main-ENV = $(malloc-check-tunables-env)
 tst-malloc-usable-tunables-threaded-worker-ENV = $(malloc-check-tunables-env)
-
-tst-mxfast-ENV = GLIBC_TUNABLES=glibc.malloc.tcache_count=0:glibc.malloc.mxfast=0
 
 CPPFLAGS-malloc-debug.c += -DUSE_TCACHE=0
 CPPFLAGS-malloc.c += -DUSE_TCACHE=1

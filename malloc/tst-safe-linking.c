@@ -74,7 +74,6 @@ check (const char *test, void (*callback) (void *),
 /* Implementation details must be kept in sync with malloc.  */
 #define TCACHE_FILL_COUNT               7
 #define TCACHE_ALLOC_SIZE               0x20
-#define MALLOC_CONSOLIDATE_SIZE         256*1024
 
 /* Try corrupting the tcache list.  */
 static void
@@ -106,136 +105,6 @@ test_tcache (void *closure)
   printf ("b=%p\n", b);
 }
 
-/* Try corrupting the fastbin list.  */
-static void
-test_fastbin (void *closure)
-{
-  int i;
-  int mask = ((int *)closure)[0];
-  size_t size = TCACHE_ALLOC_SIZE;
-  void * ps[TCACHE_FILL_COUNT];
-  void * pps[TCACHE_FILL_COUNT];
-
-  printf ("++ fastbin ++\n");
-
-  /* Populate the fastbin list.  */
-  void * volatile a = calloc (1, size);
-  void * volatile b = calloc (1, size);
-  void * volatile c = calloc (1, size);
-  printf ("a=%p, b=%p, c=%p\n", a, b, c);
-
-  /* Chunks for later tcache filling from fastbins.  */
-  for (i = 0; i < TCACHE_FILL_COUNT; ++i)
-    {
-      void * volatile p = calloc (1, size);
-      pps[i] = p;
-    }
-
-  /* Take the tcache out of the game.  */
-  for (i = 0; i < TCACHE_FILL_COUNT; ++i)
-    {
-      void * volatile p = calloc (1, size);
-      ps[i] = p;
-    }
-
-  for (i = 0; i < TCACHE_FILL_COUNT; ++i)
-    {
-      free (ps[i]);
-    }
-
-  /* Free abc will return to fastbin in FIFO order.  */
-  free (a);
-  free (b);
-  free (c);
-
-  /* Corrupt the pointer with a random value, and avoid optimizations.  */
-  printf ("Before: c=%p, c[0]=%p\n", c, ((void **)c)[0]);
-  memset (c, mask & 0xFF, size);
-  printf ("After: c=%p, c[0]=%p\n", c, ((void **)c)[0]);
-
-  /* Filling fastbins, will be copied to tcache later.  */
-  for (i = 0; i < TCACHE_FILL_COUNT; ++i)
-    {
-      free (pps[i]);
-    }
-
-  /* Drain out tcache to make sure later alloc from fastbins.  */
-  for (i = 0; i < TCACHE_FILL_COUNT; ++i)
-    {
-      void * volatile p = calloc (1, size);
-      ps[i] = p;
-    }
-
-  /* This line will also filling tcache with remain pps and c.  */
-  pps[TCACHE_FILL_COUNT - 1] = calloc (1, size);
-
-  /* Tcache is FILO, now the first one is c, take it out.  */
-  c = calloc (1, size);
-  printf ("Allocated: c=%p\n", c);
-
-  /* Drain out remain pps from tcache.  */
-  for (i = 0; i < TCACHE_FILL_COUNT - 1; ++i)
-    {
-      void * volatile p = calloc (1, size);
-      pps[i] = p;
-    }
-
-  /* This line will trigger the Safe-Linking check.  */
-  b = calloc (1, size);
-  printf ("b=%p\n", b);
-
-  /* Free previous pointers. */
-  for (i = 0; i < TCACHE_FILL_COUNT; ++i)
-    {
-      free (ps[i]);
-      free (pps[i]);
-    }
-}
-
-/* Try corrupting the fastbin list and trigger a consolidate.  */
-static void
-test_fastbin_consolidate (void *closure)
-{
-  int i;
-  int mask = ((int*)closure)[0];
-  size_t size = TCACHE_ALLOC_SIZE;
-  void * ps[TCACHE_FILL_COUNT];
-
-  printf ("++ fastbin consolidate ++\n");
-
-  /* Populate the fastbin list.  */
-  void * volatile a = calloc (1, size);
-  void * volatile b = calloc (1, size);
-  void * volatile c = calloc (1, size);
-  printf ("a=%p, b=%p, c=%p\n", a, b, c);
-
-  /* Take the tcache out of the game.  */
-  for (i = 0; i < TCACHE_FILL_COUNT; ++i)
-    {
-      void * volatile p = calloc (1, size);
-      ps[i] = p;
-    }
-
-  for (i = 0; i < TCACHE_FILL_COUNT; ++i)
-    {
-      free (ps[i]);
-    }
-
-  /* Free abc will return to fastbin.  */
-  free (a);
-  free (b);
-  free (c);
-
-  /* Corrupt the pointer with a random value, and avoid optimizations.  */
-  printf ("Before: c=%p, c[0]=%p\n", c, ((void **)c)[0]);
-  memset (c, mask & 0xFF, size);
-  printf ("After: c=%p, c[0]=%p\n", c, ((void **)c)[0]);
-
-  /* This line will trigger the Safe-Linking check.  */
-  b = malloc (MALLOC_CONSOLIDATE_SIZE);
-  printf ("b=%p\n", b);
-}
-
 static int
 do_test (void)
 {
@@ -244,10 +113,6 @@ do_test (void)
 
   check ("test_tcache", test_tcache,
          "malloc(): unaligned tcache chunk detected\n");
-  check ("test_fastbin", test_fastbin,
-         "malloc(): unaligned fastbin chunk detected 2\n");
-  check ("test_fastbin_consolidate", test_fastbin_consolidate,
-         "malloc_consolidate(): unaligned fastbin chunk detected\n");
 
   return 0;
 }
