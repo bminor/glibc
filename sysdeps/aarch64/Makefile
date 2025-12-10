@@ -140,6 +140,13 @@ $(objpfx)tst-bti-abort-%.out: $(..)sysdeps/aarch64/tst-bti-abort.sh \
 	$(SHELL) $< $(common-objpfx) $(test-name) '$(run-bti-abort-test)'; \
 	$(evaluate-test)
 
+tests-static += \
+  tst-bti-abort-static \
+  # tests-static
+
+tst-bti-abort-static-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=1
+CFLAGS-tst-bti-abort-static.o += -mbranch-protection=none
+
 endif # ifeq (yes,$(have-test-bti))
 
 endif

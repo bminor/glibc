@@ -73,9 +73,10 @@ LDFLAGS-tst-gcs-optional-on += -Wl,-z,gcs=always
 LDFLAGS-tst-gcs-optional-off += -Wl,-z,gcs=never
 LDFLAGS-tst-gcs-override += -Wl,-z,gcs=never
 
+CFLAGS-tst-gcs-enforced-static-abort.o += -mbranch-protection=none
+
 LDFLAGS-tst-gcs-disabled-static += -Wl,-z,gcs=always
 LDFLAGS-tst-gcs-enforced-static += -Wl,-z,gcs=always
-LDFLAGS-tst-gcs-enforced-static-abort += -Wl,-z,gcs=never
 LDFLAGS-tst-gcs-optional-static-on += -Wl,-z,gcs=always
 LDFLAGS-tst-gcs-optional-static-off += -Wl,-z,gcs=never
 LDFLAGS-tst-gcs-override-static += -Wl,-z,gcs=never
@@ -89,7 +90,7 @@ tst-gcs-override-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=3
 
 tst-gcs-disabled-static-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=0
 tst-gcs-enforced-static-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1
-tst-gcs-enforced-static-abort-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1
+tst-gcs-enforced-static-abort-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1:glibc.cpu.aarch64_bti=0
 tst-gcs-optional-static-on-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=2
 tst-gcs-optional-static-off-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=2
 tst-gcs-override-static-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=3
