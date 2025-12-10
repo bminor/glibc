@@ -90,6 +90,7 @@ ifeq (yes,$(have-test-bti))
 
 tests += \
   tst-bti-abort-imm \
+  tst-bti-abort-static \
   tst-bti-abort-transitive \
   tst-bti-abort-unprot \
   tst-bti-dep-prot \

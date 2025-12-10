@@ -22,6 +22,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
+#include <sys/auxv.h>
 
 #include <support/check.h>
 #include <support/support.h>
@@ -30,6 +31,9 @@
 static int
 do_test (void)
 {
+  unsigned long hwcap2 = getauxval (AT_HWCAP2);
+  if ((hwcap2 & HWCAP2_BTI) == 0)
+    FAIL_UNSUPPORTED ("BTI is not supported by this system");
   return 0;
 }
 

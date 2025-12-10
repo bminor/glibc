@@ -33,18 +33,27 @@
 static void
 fail (struct link_map *l, const char *program)
 {
-  if (program && program[0])
-    _dl_fatal_printf ("%s: %s: %s\n", program, l->l_name, "not GCS compatible");
-  else if (program)
-    _dl_fatal_printf ("%s\n", "not GCS compatible");
+    if (program != NULL)
+    {
+      if (program[0] != '\0' && l->l_name[0] != '\0')
+	/* A program's dependency is not GCS compatible.  */
+	_dl_fatal_printf ("%s: %s: not GCS compatible\n", program, l->l_name);
+      if (program[0] != '\0')
+	/* The program itself is not GCS compatible.  */
+	_dl_fatal_printf ("%s: not GCS compatible\n", program);
+      /* For static binaries, program will be an empty string.  */
+      _dl_fatal_printf ("error: not GCS compatible\n");
+    }
   else
+    /* If program is NULL, we are processing a dlopen operation.
+       Note: the errno value is not available any more.  */
     _dl_signal_error (0, l->l_name, "dlopen", "not GCS compatible");
 }
 
 static void
 unsupported (void)
 {
-  _dl_fatal_printf ("%s\n", "unsupported GCS policy");
+  _dl_fatal_printf ("unsupported GCS policy\n");
 }
 
 /* This function is called only when binary markings are not

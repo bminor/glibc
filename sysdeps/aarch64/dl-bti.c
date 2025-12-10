@@ -66,13 +66,23 @@ _dl_bti_protect (struct link_map *map, int fd)
 static void
 bti_failed (struct link_map *l, const char *program)
 {
-  if (program)
-    _dl_fatal_printf ("%s: %s: failed to turn on BTI protection\n",
-		      program, l->l_name);
+  if (program != NULL)
+    {
+      if (program[0] != '\0' && l->l_name[0] != '\0')
+	/* A program's dependency is not BTI compatible.  */
+	_dl_fatal_printf ("%s: %s: failed to turn on BTI protection\n",
+			  program, l->l_name);
+      if (program[0] != '\0')
+	/* The program itself is not BTI compatible.  */
+	_dl_fatal_printf ("%s: failed to turn on BTI protection\n", program);
+      /* For static binaries, program will be an empty string.  */
+      _dl_fatal_printf ("error: failed to turn on BTI protection\n");
+    }
   else
-    /* Note: the errno value is not available any more.  */
+    /* If program is NULL, we are processing a dlopen operation.
+       Note: the errno value is not available any more.  */
     _dl_signal_error (0, l->l_name, "dlopen",
-		      N_("failed to turn on BTI protection"));
+		      "failed to turn on BTI protection");
 }
 
 
