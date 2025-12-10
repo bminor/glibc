@@ -323,7 +323,7 @@
 
 /* Safe-Linking:
    Use randomness from ASLR (mmap_base) to protect single-linked lists
-   of Fast-Bins and TCache.  That is, mask the "next" pointers of the
+   of TCache.  That is, mask the "next" pointers of the
    lists' chunks, and also perform allocation alignment checks on them.
    This mechanism reduces the risk of pointer hijacking, as was done with
    Safe-Unlinking in the double-linked lists of Small-Bins.
@@ -1179,7 +1179,7 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     deal with alignments etc but can be very confusing when trying
     to extend or adapt this code.
 
-    The three exceptions to all this are:
+    The two exceptions to all this are:
 
      1. The special chunk `top' doesn't bother using the
 	trailing size field since there is no next contiguous chunk
@@ -1195,9 +1195,6 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 	to a freed chunk).  The M bit is also used for chunks which
 	originally came from a dumped heap via malloc_set_state in
 	hooks.c.
-
-     3. Chunks in fastbins are treated as allocated chunks from the
-	point of view of the chunk allocator.
 */
 
 /*
@@ -1723,16 +1720,6 @@ unlink_chunk (mstate av, mchunkptr p)
    ----------- Internal state representation and initialization -----------
  */
 
-/*
-   have_fastchunks indicates that there are probably some fastbin chunks.
-   It is set true on entering a chunk into any fastbin, and cleared early in
-   malloc_consolidate.  The value is approximate since it may be set when there
-   are no fastbin chunks, or it may be clear even if there are fastbin chunks
-   available.  Given it's sole purpose is to reduce number of redundant calls to
-   malloc_consolidate, it does not affect correctness.  As a result we can safely
-   use relaxed atomic accesses.
- */
-
 
 struct malloc_state
 {
@@ -2129,8 +2116,7 @@ do_check_malloced_chunk (mstate av, mchunkptr p, INTERNAL_SIZE_T s)
      chunk borders either a previously allocated and still in-use
      chunk, or the base of its memory arena. This is ensured
      by making all allocations from the `lowest' part of any found
-     chunk.  This does not necessarily hold however for chunks
-     recycled via fastbins.
+     chunk.
    */
 
   assert (prev_inuse (p));
@@ -4047,7 +4033,7 @@ _int_malloc (mstate av, size_t bytes)
 #endif
             }
 
-          /* Place chunk in bin.  Only malloc_consolidate() and splitting can put
+          /* Place chunk in bin.  Only splitting can put
              small chunks into the unsorted bin. */
           if (__glibc_unlikely (in_smallbin_range (size)))
             {
