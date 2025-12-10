@@ -1100,7 +1100,7 @@ static void _int_free_merge_chunk (mstate, mchunkptr, INTERNAL_SIZE_T);
 static INTERNAL_SIZE_T _int_free_create_chunk (mstate,
 					       mchunkptr, INTERNAL_SIZE_T,
 					       mchunkptr, INTERNAL_SIZE_T);
-static void _int_free_maybe_consolidate (mstate, INTERNAL_SIZE_T);
+static void _int_free_maybe_trim (mstate, INTERNAL_SIZE_T);
 static void*  _int_realloc(mstate, mchunkptr, INTERNAL_SIZE_T,
 			   INTERNAL_SIZE_T);
 static void*  _int_memalign(mstate, size_t, size_t);
@@ -1262,8 +1262,7 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 	hooks.c.
 
      3. Chunks in fastbins are treated as allocated chunks from the
-	point of view of the chunk allocator.  They are consolidated
-	with their neighbors only in bulk, in malloc_consolidate.
+	point of view of the chunk allocator.
 */
 
 /*
@@ -1704,7 +1703,7 @@ unlink_chunk (mstate av, mchunkptr p)
     are first placed in the "unsorted" bin. They are then placed
     in regular bins after malloc gives them ONE chance to be used before
     binning. So, basically, the unsorted_chunks list acts as a queue,
-    with chunks being placed on it in free (and malloc_consolidate),
+    with chunks being placed on it in free,
     and taken off (to be either used or placed in bins) in malloc.
 
     The NON_MAIN_ARENA flag is never set for unsorted chunks, so it
@@ -1770,9 +1769,7 @@ unlink_chunk (mstate av, mchunkptr p)
     fastbins are normally used.
 
     Chunks in fastbins keep their inuse bit set, so they cannot
-    be consolidated with other free chunks. malloc_consolidate
-    releases all chunks in fastbins and consolidates them with
-    other free chunks.
+    be consolidated with other free chunks.
  */
 
 typedef struct malloc_chunk *mfastbinptr;
@@ -1789,17 +1786,14 @@ typedef struct malloc_chunk *mfastbinptr;
 #define NFASTBINS  (fastbin_index (request2size (MAX_FAST_SIZE)) + 1)
 
 /*
-   FASTBIN_CONSOLIDATION_THRESHOLD is the size of a chunk in free()
-   that triggers automatic consolidation of possibly-surrounding
-   fastbin chunks. This is a heuristic, so the exact value should not
-   matter too much. It is defined at half the default trim threshold as a
-   compromise heuristic to only attempt consolidation if it is likely
-   to lead to trimming. However, it is not dynamically tunable, since
-   consolidation reduces fragmentation surrounding large chunks even
-   if trimming is not used.
+   ATTEMPT_TRIMMING_THRESHOLD is the size of a chunk in free()
+   that may attempt trimming of an arena's heap. This is a heuristic, so the
+   exact value should not matter too much. It is defined at half the default
+   trim threshold as a compromise heuristic to only attempt trimming if it is
+   likely to release a significant amount of memory.
  */
 
-#define FASTBIN_CONSOLIDATION_THRESHOLD  (65536UL)
+#define ATTEMPT_TRIMMING_THRESHOLD  (65536UL)
 
 /*
    NONCONTIGUOUS_BIT indicates that MORECORE does not return contiguous
@@ -1868,10 +1862,6 @@ struct malloc_state
 
   /* Flags (formerly in max_fast).  */
   int flags;
-
-  /* Set if the fastbin chunks contain recently inserted free blocks.  */
-  /* Note this is a bool but not all targets support atomics on booleans.  */
-  int have_fastchunks;
 
   /* Fastbins */
   mfastbinptr fastbinsY[NFASTBINS];
@@ -2009,7 +1999,6 @@ malloc_init_state (mstate av)
   set_noncontiguous (av);
   if (av == &main_arena)
     set_max_fast (DEFAULT_MXFAST);
-  atomic_store_relaxed (&av->have_fastchunks, false);
 
   av->top = initial_top (av);
 }
@@ -2020,7 +2009,6 @@ malloc_init_state (mstate av)
 
 static void *sysmalloc (INTERNAL_SIZE_T, mstate);
 static int      systrim (size_t, mstate);
-static void     malloc_consolidate (mstate);
 
 
 /* -------------- Early definitions for debugging hooks ---------------- */
@@ -4193,22 +4181,9 @@ _int_malloc (mstate av, size_t bytes)
         }
     }
 
-  /*
-     If this is a large request, consolidate fastbins before continuing.
-     While it might look excessive to kill all fastbins before
-     even seeing if there is space available, this avoids
-     fragmentation problems normally associated with fastbins.
-     Also, in practice, programs tend to have runs of either small or
-     large requests, but less often mixtures, so consolidation is not
-     invoked all that often in most programs. And the programs that
-     it is called frequently in otherwise tend to fragment.
-   */
-
   else
     {
       idx = largebin_index (nb);
-      if (atomic_load_relaxed (&av->have_fastchunks))
-        malloc_consolidate (av);
     }
 
   /*
@@ -4636,18 +4611,6 @@ _int_malloc (mstate av, size_t bytes)
           return p;
         }
 
-      /* When we are using atomic ops to free fast chunks we can get
-         here for all block sizes.  */
-      else if (atomic_load_relaxed (&av->have_fastchunks))
-        {
-          malloc_consolidate (av);
-          /* restore original bin index */
-          if (in_smallbin_range (nb))
-            idx = smallbin_index (nb);
-          else
-            idx = largebin_index (nb);
-        }
-
       /*
          Otherwise, relay to handle system-dependent cases
        */
@@ -4711,7 +4674,6 @@ _int_free_chunk (mstate av, mchunkptr p, INTERNAL_SIZE_T size, int have_lock)
 
     free_perturb (chunk2mem(p), size - CHUNK_HDR_SZ);
 
-    atomic_store_relaxed (&av->have_fastchunks, true);
     unsigned int idx = fastbin_index(size);
     fb = &fastbin (av, idx);
 
@@ -4842,7 +4804,7 @@ _int_free_merge_chunk (mstate av, mchunkptr p, INTERNAL_SIZE_T size)
 
   /* Write the chunk header, maybe after merging with the following chunk.  */
   size = _int_free_create_chunk (av, p, size, nextchunk, nextsize);
-  _int_free_maybe_consolidate (av, size);
+  _int_free_maybe_trim (av, size);
 }
 
 /* Create a chunk at P of SIZE bytes, with SIZE potentially increased
@@ -4921,22 +4883,15 @@ _int_free_create_chunk (mstate av, mchunkptr p, INTERNAL_SIZE_T size,
   return size;
 }
 
-/* If freeing a large space, consolidate possibly-surrounding
-   chunks.  Then, if the total unused topmost memory exceeds trim
-   threshold, ask malloc_trim to reduce top.  */
+/* If the total unused topmost memory exceeds trim threshold, ask malloc_trim
+   to reduce top.  */
 static void
-_int_free_maybe_consolidate (mstate av, INTERNAL_SIZE_T size)
+_int_free_maybe_trim (mstate av, INTERNAL_SIZE_T size)
 {
-  /* Unless max_fast is 0, we don't know if there are fastbins
-     bordering top, so we cannot tell for sure whether threshold has
-     been reached unless fastbins are consolidated.  But we don't want
-     to consolidate on each free.  As a compromise, consolidation is
-     performed if FASTBIN_CONSOLIDATION_THRESHOLD is reached.  */
-  if (size >= FASTBIN_CONSOLIDATION_THRESHOLD)
+  /* We don't want to trim on each free.  As a compromise, trimming is attempted
+     if ATTEMPT_TRIMMING_THRESHOLD is reached.  */
+  if (size >= ATTEMPT_TRIMMING_THRESHOLD)
     {
-      if (atomic_load_relaxed (&av->have_fastchunks))
-	malloc_consolidate(av);
-
       if (av == &main_arena)
 	{
 #ifndef MORECORE_CANNOT_TRIM
@@ -4954,113 +4909,6 @@ _int_free_maybe_consolidate (mstate av, INTERNAL_SIZE_T size)
 	  heap_trim (heap, mp_.top_pad);
 	}
     }
-}
-
-/*
-  ------------------------- malloc_consolidate -------------------------
-
-  malloc_consolidate is a specialized version of free() that tears
-  down chunks held in fastbins.  Free itself cannot be used for this
-  purpose since, among other things, it might place chunks back onto
-  fastbins.  So, instead, we need to use a minor variant of the same
-  code.
-*/
-
-static void malloc_consolidate(mstate av)
-{
-  mfastbinptr*    fb;                 /* current fastbin being consolidated */
-  mfastbinptr*    maxfb;              /* last fastbin (for loop control) */
-  mchunkptr       p;                  /* current chunk being consolidated */
-  mchunkptr       nextp;              /* next chunk to consolidate */
-  mchunkptr       unsorted_bin;       /* bin header */
-  mchunkptr       first_unsorted;     /* chunk to link to */
-
-  /* These have same use as in free() */
-  mchunkptr       nextchunk;
-  INTERNAL_SIZE_T size;
-  INTERNAL_SIZE_T nextsize;
-  INTERNAL_SIZE_T prevsize;
-  int             nextinuse;
-
-  atomic_store_relaxed (&av->have_fastchunks, false);
-
-  unsorted_bin = unsorted_chunks(av);
-
-  /*
-    Remove each chunk from fast bin and consolidate it, placing it
-    then in unsorted bin. Among other reasons for doing this,
-    placing in unsorted bin avoids needing to calculate actual bins
-    until malloc is sure that chunks aren't immediately going to be
-    reused anyway.
-  */
-
-  maxfb = &fastbin (av, NFASTBINS - 1);
-  fb = &fastbin (av, 0);
-  do {
-    p = atomic_exchange_acquire (fb, NULL);
-    if (p != NULL) {
-      do {
-	{
-	  if (__glibc_unlikely (misaligned_chunk (p)))
-	    malloc_printerr ("malloc_consolidate(): "
-			     "unaligned fastbin chunk detected");
-
-	  unsigned int idx = fastbin_index (chunksize (p));
-	  if ((&fastbin (av, idx)) != fb)
-	    malloc_printerr ("malloc_consolidate(): invalid chunk size");
-	}
-
-	check_inuse_chunk(av, p);
-	nextp = REVEAL_PTR (p->fd);
-
-	/* Slightly streamlined version of consolidation code in free() */
-	size = chunksize (p);
-	nextchunk = chunk_at_offset(p, size);
-	nextsize = chunksize(nextchunk);
-
-	if (!prev_inuse(p)) {
-	  prevsize = prev_size (p);
-	  size += prevsize;
-	  p = chunk_at_offset(p, -((long) prevsize));
-	  if (__glibc_unlikely (chunksize(p) != prevsize))
-	    malloc_printerr ("corrupted size vs. prev_size in fastbins");
-	  unlink_chunk (av, p);
-	}
-
-	if (nextchunk != av->top) {
-	  nextinuse = inuse_bit_at_offset(nextchunk, nextsize);
-
-	  if (!nextinuse) {
-	    size += nextsize;
-	    unlink_chunk (av, nextchunk);
-	  } else
-	    clear_inuse_bit_at_offset(nextchunk, 0);
-
-	  first_unsorted = unsorted_bin->fd;
-	  unsorted_bin->fd = p;
-	  first_unsorted->bk = p;
-
-	  if (!in_smallbin_range (size)) {
-	    p->fd_nextsize = NULL;
-	    p->bk_nextsize = NULL;
-	  }
-
-	  set_head(p, size | PREV_INUSE);
-	  p->bk = unsorted_bin;
-	  p->fd = first_unsorted;
-	  set_foot(p, size);
-	}
-
-	else {
-	  size += nextsize;
-	  set_head(p, size | PREV_INUSE);
-	  av->top = p;
-	}
-
-      } while ( (p = nextp) != NULL);
-
-    }
-  } while (fb++ != maxfb);
 }
 
 /*
@@ -5249,7 +5097,7 @@ _int_memalign (mstate av, size_t alignment, size_t bytes)
       set_head_size (p, nb);
       size = _int_free_create_chunk (av, remainder, size - nb, nextchunk,
 				     chunksize (nextchunk));
-      _int_free_maybe_consolidate (av, size);
+      _int_free_maybe_trim (av, size);
     }
 
   check_inuse_chunk (av, p);
@@ -5264,9 +5112,6 @@ _int_memalign (mstate av, size_t alignment, size_t bytes)
 static int
 mtrim (mstate av, size_t pad)
 {
-  /* Ensure all blocks are consolidated.  */
-  malloc_consolidate (av);
-
   const size_t ps = GLRO (dl_pagesize);
   int psindex = bin_index (ps);
   const size_t psm1 = ps - 1;
@@ -5689,10 +5534,6 @@ __libc_mallopt (int param_number, int value)
   __libc_lock_lock (av->mutex);
 
   LIBC_PROBE (memory_mallopt, 2, param_number, value);
-
-  /* We must consolidate main arena before changing max_fast
-     (see definition of set_max_fast).  */
-  malloc_consolidate (av);
 
   /* Many of these helper functions take a size_t.  We do not worry
      about overflow here, because negative int values will wrap to
