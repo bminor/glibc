@@ -2269,7 +2269,6 @@ do_check_malloc_state (mstate av)
   unsigned int idx;
   INTERNAL_SIZE_T size;
   unsigned long total = 0;
-  int max_fast_bin;
 
   /* internal size_t must be no wider than pointer type */
   assert (sizeof (INTERNAL_SIZE_T) <= sizeof (char *));
@@ -2291,43 +2290,6 @@ do_check_malloc_state (mstate av)
   if (av == &main_arena && contiguous (av))
     assert ((char *) mp_.sbrk_base + av->system_mem ==
             (char *) av->top + chunksize (av->top));
-
-  /* properties of fastbins */
-
-  max_fast_bin = fastbin_index (get_max_fast ());
-
-  for (i = 0; i < NFASTBINS; ++i)
-    {
-      p = fastbin (av, i);
-
-      /* The following test can only be performed for the main arena.
-         While mallopt calls malloc_consolidate to get rid of all fast
-         bins (especially those larger than the new maximum) this does
-         only happen for the main arena.  Trying to do this for any
-         other arena would mean those arenas have to be locked and
-         malloc_consolidate be called for them.  This is excessive.  And
-         even if this is acceptable to somebody it still cannot solve
-         the problem completely since if the arena is locked a
-         concurrent malloc call might create a new arena which then
-         could use the newly invalid fast bins.  */
-
-      /* all bins past max_fast are empty */
-      if (av == &main_arena && i > max_fast_bin)
-        assert (p == 0);
-
-      while (p != 0)
-        {
-	  if (__glibc_unlikely (misaligned_chunk (p)))
-	    malloc_printerr ("do_check_malloc_state(): "
-			     "unaligned fastbin chunk detected");
-          /* each chunk claims to be inuse */
-          do_check_inuse_chunk (av, p);
-          total += chunksize (p);
-          /* chunk belongs in this bin */
-          assert (fastbin_index (chunksize (p)) == i);
-	  p = REVEAL_PTR (p->fd);
-        }
-    }
 
   /* check normal bins */
   for (i = 1; i < NBINS; ++i)
