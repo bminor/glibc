@@ -660,12 +660,9 @@ void*  __libc_valloc(size_t);
 
   arena:     current total non-mmapped bytes allocated from system
   ordblks:   the number of free chunks
-  smblks:    the number of fastbin blocks (i.e., small chunks that
-	       have been freed but not reused or consolidated)
   hblks:     current number of mmapped regions
   hblkhd:    total bytes held in mmapped regions
   usmblks:   always 0
-  fsmblks:   total bytes held in fastbin blocks
   uordblks:  current total allocated space (normal or mmapped)
   fordblks:  total free space
   keepcost:  the maximum number of bytes that could ideally be released
@@ -5041,35 +5038,13 @@ int_mallinfo (mstate av, struct mallinfo2 *m)
   mbinptr b;
   mchunkptr p;
   INTERNAL_SIZE_T avail;
-  INTERNAL_SIZE_T fastavail;
   int nblocks;
-  int nfastblocks;
 
   check_malloc_state (av);
 
   /* Account for top */
   avail = chunksize (av->top);
   nblocks = 1;  /* top always exists */
-
-  /* traverse fastbins */
-  nfastblocks = 0;
-  fastavail = 0;
-
-  for (i = 0; i < NFASTBINS; ++i)
-    {
-      for (p = fastbin (av, i);
-	   p != NULL;
-	   p = REVEAL_PTR (p->fd))
-        {
-	  if (__glibc_unlikely (misaligned_chunk (p)))
-	    malloc_printerr ("int_mallinfo(): "
-			     "unaligned fastbin chunk detected");
-          ++nfastblocks;
-          fastavail += chunksize (p);
-        }
-    }
-
-  avail += fastavail;
 
   /* traverse regular bins */
   for (i = 1; i < NBINS; ++i)
@@ -5082,12 +5057,10 @@ int_mallinfo (mstate av, struct mallinfo2 *m)
         }
     }
 
-  m->smblks += nfastblocks;
   m->ordblks += nblocks;
   m->fordblks += avail;
   m->uordblks += av->system_mem - avail;
   m->arena += av->system_mem;
-  m->fsmblks += fastavail;
   if (av == &main_arena)
     {
       m->hblks = mp_.n_mmaps;
@@ -5128,11 +5101,11 @@ __libc_mallinfo (void)
 
   m.arena = m2.arena;
   m.ordblks = m2.ordblks;
-  m.smblks = m2.smblks;
+  m.smblks = 0;
   m.hblks = m2.hblks;
   m.hblkhd = m2.hblkhd;
   m.usmblks = m2.usmblks;
-  m.fsmblks = m2.fsmblks;
+  m.fsmblks = 0;
   m.uordblks = m2.uordblks;
   m.fordblks = m2.fordblks;
   m.keepcost = m2.keepcost;
