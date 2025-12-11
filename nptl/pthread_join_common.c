@@ -28,6 +28,9 @@ __pthread_clockjoin_ex (pthread_t threadid, void **thread_return,
                         const struct __timespec64 *abstime,
                         bool cancel)
 {
+  if (cancel)
+    __pthread_testcancel ();
+
   struct pthread *pd = (struct pthread *) threadid;
 
   /* Make sure the clock and time specified are valid.  */
