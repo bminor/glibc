@@ -21,15 +21,24 @@
 int
 __pthread_tryjoin_np (pthread_t threadid, void **thread_return)
 {
-  /* Return right away if the thread hasn't terminated yet.  */
-  struct pthread *pd = (struct pthread *) threadid;
-  if (pd->tid != 0)
-    return EBUSY;
+  /* The joinable state (THREAD_STATE_JOINABLE) is straightforward: the thread
+     hasn't finished yet, so trying to join might block.
 
-  /* If pd->tid == 0 then lll_wait_tid will not block on futex
-     operation.  */
-  return __pthread_clockjoin_ex (threadid, thread_return, 0 /* Ignored */,
-				 NULL, false);
+     The exiting thread (THREAD_STATE_EXITING) also might result in a blocking
+     call: a detached thread might change its state to exiting, and an exiting
+     thread might take some time to exit (and thus let the kernel set the
+     state to THREAD_STATE_EXITED).
+
+     The ‘joinstate’ does not change during the thread lifetime once the
+     kernel sets it to THREAD_STATE_EXITED.  The __pthread_clockjoin_ex will
+     only call the cancellable futex if state is not THREAD_STATE_EXITED, so
+     calling it should be safe wrt not making pthread_tryjoin_np a
+     cancellable entrypoint (since it is marked as __THROW).  */
+
+  struct pthread *pd = (struct pthread *) threadid;
+  return atomic_load_acquire (&pd->joinstate) != THREAD_STATE_EXITED
+	 ? EBUSY
+	 : __pthread_clockjoin_ex (threadid, thread_return, 0, NULL, false);
 }
 versioned_symbol (libc, __pthread_tryjoin_np, pthread_tryjoin_np, GLIBC_2_34);
 

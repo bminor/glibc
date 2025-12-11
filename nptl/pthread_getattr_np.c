@@ -52,7 +52,7 @@ __pthread_getattr_np (pthread_t thread_id, pthread_attr_t *attr)
   iattr->flags = thread->flags;
 
   /* The thread might be detached by now.  */
-  if (IS_DETACHED (thread))
+  if (atomic_load_relaxed (&thread->joinstate) == THREAD_STATE_DETACHED)
     iattr->flags |= ATTR_FLAG_DETACHSTATE;
 
   /* This is the guardsize after adjusting it.  */

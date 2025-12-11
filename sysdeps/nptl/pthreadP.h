@@ -217,7 +217,6 @@ libc_hidden_proto (__pthread_current_priority)
    nothing.  And if the test triggers the thread descriptor is
    guaranteed to be invalid.  */
 #define INVALID_TD_P(pd) __builtin_expect ((pd)->tid <= 0, 0)
-#define INVALID_NOT_TERMINATED_TD_P(pd) __builtin_expect ((pd)->tid < 0, 0)
 
 extern void __pthread_unwind (__pthread_unwind_buf_t *__buf)
      __cleanup_fct_attribute __attribute ((__noreturn__))
