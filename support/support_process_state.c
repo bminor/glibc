@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <errno.h>
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
@@ -27,8 +28,9 @@
 #include <support/xstdio.h>
 #include <support/check.h>
 
-enum support_process_state
-support_process_state_wait (pid_t pid, enum support_process_state state)
+static enum support_process_state
+support_process_state_wait_common (FILE *fstatus,
+				   enum support_process_state state)
 {
 #ifdef __linux__
   /* For Linux it does a polling check on /proc/<pid>/status checking on
@@ -50,22 +52,29 @@ support_process_state_wait (pid_t pid, enum support_process_state state)
     { support_process_state_parked,       'P' },
   };
 
-  char spath[sizeof ("/proc/") + INT_STRLEN_BOUND (pid_t) + sizeof ("/status") + 1];
-  snprintf (spath, sizeof (spath), "/proc/%i/status", pid);
-
-  FILE *fstatus = xfopen (spath, "r");
   char *line = NULL;
   size_t linesiz = 0;
 
   for (;;)
     {
       char cur_state = CHAR_MAX;
-      while (xgetline (&line, &linesiz, fstatus) > 0)
+      ssize_t r;
+      while ((r = getline (&line, &linesiz, fstatus)) > 0)
 	if (strncmp (line, "State:", strlen ("State:")) == 0)
 	  {
 	    TEST_COMPARE (sscanf (line, "%*s %c", &cur_state), 1);
 	    break;
 	  }
+      /* The procfs file for the /proc/self/task/tid might be removed by the
+	 kernel if the thread exits before the getline call.  In this case
+	 returns that the thread is dead.  */
+      if (r == -1 && errno == ESRCH)
+	{
+	  free (line);
+	  fclose (fstatus);
+	  return support_process_state_dead;
+	}
+      TEST_VERIFY (ferror (fstatus) == 0);
       /* Fallback to nanosleep for invalid state.  */
       if (cur_state == CHAR_MAX)
 	break;
@@ -74,7 +83,7 @@ support_process_state_wait (pid_t pid, enum support_process_state state)
 	if (state & process_states[i].s && cur_state == process_states[i].v)
 	  {
 	    free (line);
-	    xfclose (fstatus);
+	    fclose (fstatus);
 	    return process_states[i].s;
 	  }
 
@@ -86,10 +95,54 @@ support_process_state_wait (pid_t pid, enum support_process_state state)
     }
 
   free (line);
-  xfclose (fstatus);
+  fclose (fstatus);
   /* Fallback to nanosleep if an invalid state is found.  */
 #endif
   nanosleep (&(struct timespec) { 1, 0 }, NULL);
 
   return support_process_state_invalid;
+}
+
+enum support_process_state
+support_process_state_wait (pid_t pid, enum support_process_state state)
+{
+  FILE *fstatus = NULL;
+
+#ifdef __linux__
+  /* For Linux it does a polling check on /proc/<pid>/status checking on
+     third field.  */
+
+  char path[sizeof ("/proc/")
+	    + INT_STRLEN_BOUND (pid_t)
+	    + sizeof ("/status") + 1];
+  snprintf (path, sizeof (path), "/proc/%i/status", pid);
+  fstatus = xfopen (path, "r");
+#endif
+
+  return support_process_state_wait_common (fstatus, state);
+}
+
+enum support_process_state
+support_thread_state_wait (pid_t tid, enum support_process_state state)
+{
+  FILE *fstatus = NULL;
+
+#ifdef __linux__
+  /* For Linux it does a polling check on /proc/<getpid()>/task/<tid>/status
+     checking on third field.  */
+
+  char path[sizeof ("/proc/")
+	    + INT_STRLEN_BOUND (pid_t) + 1 /* <getpid()>/ */
+	    + sizeof ("task/")
+	    + INT_STRLEN_BOUND (pid_t) + 1 /* <tid>/ */
+	    + sizeof ("/status") + 1];
+  snprintf (path, sizeof (path), "/proc/%i/task/%i/status", getpid (), tid);
+  fstatus = fopen (path, "r");
+  /* The thread might already being terminated and there is no check whether
+     tid is a valid descriptior.  */
+  if (fstatus == NULL)
+    return support_process_state_dead;
+#endif
+
+  return support_process_state_wait_common (fstatus, state);
 }
