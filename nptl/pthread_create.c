@@ -867,8 +867,8 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
 	     startup there is no need to handle all the steps.  */
 	  pid_t tid;
 	  while ((tid = atomic_load_acquire (&pd->tid)) != 0)
-	    __futex_abstimed_wait_cancelable64 ((unsigned int *) &pd->tid,
-						tid, 0, NULL, LLL_SHARED);
+	    __futex_abstimed_wait64 ((unsigned int *) &pd->tid, tid, 0, NULL,
+				     LLL_SHARED);
         }
 
       /* State (c) or (d) and we have ownership of PD (see CONCURRENCY
