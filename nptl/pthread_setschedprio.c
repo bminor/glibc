@@ -29,7 +29,7 @@ __pthread_setschedprio (pthread_t threadid, int prio)
   struct pthread *pd = (struct pthread *) threadid;
 
   /* Make sure the descriptor is valid.  */
-  if (INVALID_TD_P (pd))
+  if (!__pthread_descriptor_valid (pd))
     /* Not a valid thread handle.  */
     return ESRCH;
 
