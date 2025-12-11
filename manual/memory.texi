@@ -3185,7 +3185,7 @@ for certain destructive @code{madvise} behaviours (@code{MADV_DONTNEED},
 the memory denies write.
 
 @item
-Destructive behaviors on anonymous memory, such as @code{madvice} with
+Destructive behaviors on anonymous memory, such as @code{madvise} with
 @code{MADV_DONTNEED}.
 @end itemize
 
