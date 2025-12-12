@@ -1902,25 +1902,29 @@ free_perturb (char *p, size_t n)
 
 /* ----------- Routines dealing with transparent huge pages ----------- */
 
-static void thp_init (void);
+static __always_inline void
+thp_init (void)
+{
+  /* Initialize only once if DEFAULT_THP_PAGESIZE is defined.  */
+  if (!DEFAULT_THP_PAGESIZE || mp_.thp_mode != malloc_thp_mode_not_supported)
+    return;
+
+  /* Set thp_pagesize even if thp_mode is never.  This reduces frequency
+     of MORECORE () invocation.  */
+  mp_.thp_mode = __malloc_thp_mode ();
+  mp_.thp_pagesize = DEFAULT_THP_PAGESIZE;
+}
 
 static inline void
 madvise_thp (void *p, INTERNAL_SIZE_T size)
 {
 #ifdef MADV_HUGEPAGE
 
-  /* Ensure thp_init () is invoked only once */
-  if (mp_.thp_pagesize < DEFAULT_THP_PAGESIZE)
-    thp_init ();
+  thp_init ();
 
-  /* Only use __madvise if the system is using 'madvise' mode.
-     Otherwise the call is wasteful. */
-  if (mp_.thp_mode != malloc_thp_mode_madvise)
-    return;
-
-  /* Do not consider areas smaller than a huge page or if the tunable is
-     not active.  */
-  if (mp_.thp_pagesize == 0 || size < mp_.thp_pagesize)
+  /* Only use __madvise if the system is using 'madvise' mode and the size
+     is at least a huge page, otherwise the call is wasteful. */
+  if (mp_.thp_mode != malloc_thp_mode_madvise || size < mp_.thp_pagesize)
     return;
 
   /* Linux requires the input address to be page-aligned, and unaligned
@@ -2468,9 +2472,8 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
          previous calls. Otherwise, we correct to page-align below.
        */
 
-      /* Ensure thp_init () is invoked only once */
-      if (mp_.thp_pagesize < DEFAULT_THP_PAGESIZE)
-        thp_init ();
+      /* Ensure thp_pagesize is initialized.  */
+      thp_init ();
 
       if (__glibc_unlikely (mp_.thp_pagesize != 0))
 	{
@@ -5126,7 +5129,9 @@ do_set_mxfast (size_t value)
 static __always_inline int
 do_set_hugetlb (size_t value)
 {
-  if (value == 1)
+  if (value == 0)
+    mp_.thp_mode = malloc_thp_mode_never;
+  else if (value == 1)
     {
       mp_.thp_mode = __malloc_thp_mode ();
       if (mp_.thp_mode == malloc_thp_mode_madvise
@@ -5137,15 +5142,6 @@ do_set_hugetlb (size_t value)
     __malloc_hugepage_config (value == 2 ? 0 : value, &mp_.hp_pagesize,
 			      &mp_.hp_flags);
   return 0;
-}
-
-static __always_inline void
-thp_init (void)
-{
-  /* thp_pagesize is set even if thp_mode is never. This reduces frequency
-     of MORECORE () invocation.  */
-  mp_.thp_pagesize = DEFAULT_THP_PAGESIZE;
-  mp_.thp_mode = __malloc_thp_mode ();
 }
 
 int

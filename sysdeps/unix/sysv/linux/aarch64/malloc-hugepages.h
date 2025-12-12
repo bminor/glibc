@@ -16,6 +16,6 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If
    not, see <https://www.gnu.org/licenses/>.  */
 
-# define DEFAULT_THP_PAGESIZE	1UL << 21
+#define DEFAULT_THP_PAGESIZE	(1UL << 21)
 
 #include_next <malloc-hugepages.h>
