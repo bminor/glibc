@@ -140,6 +140,7 @@ tests-static += tst-ns_rr_cursor
 ifeq (yes,$(build-shared))
 tests += \
   tst-getaddrinfo-eai-again-timeout \
+  tst-resolv-af-unspec-noerror-nodata \
   tst-resolv-ai_idn \
   tst-resolv-ai_idn-latin1 \
   tst-resolv-ai_idn-nolibidn2 \
@@ -283,6 +284,8 @@ $(objpfx)mtrace-tst-resolv-res_ninit.out: $(objpfx)tst-resolv-res_ninit.out
 
 $(objpfx)tst-bug18665-tcp: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-bug18665: $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-af-unspec-noerror-nodata: \
+  $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-getaddrinfo-eai-again-timeout: \
   $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-ai_idn: $(objpfx)libresolv.so $(shared-thread-library)
