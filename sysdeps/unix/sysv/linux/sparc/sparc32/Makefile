@@ -9,12 +9,6 @@ ifeq ($(subdir),stdlib)
 gen-as-const-headers += ucontext_i.sym
 endif
 
-# When I get this to work, this is the right thing
-ifeq ($(subdir),elf)
-CFLAGS-rtld.c += -mcpu=v8
-#rtld-routines += dl-sysdepsparc
-endif   # elf
-
 ifeq ($(subdir),math)
 # These 2 routines are normally in libgcc{.a,_s.so.1}.
 # However, sparc32 -mlong-double-128 libgcc relies on

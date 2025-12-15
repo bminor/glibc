@@ -28,7 +28,7 @@
 
 /* Static assert for types that can't be loaded/stored atomically on the
    current architecture.  */
-#if USE_64B_ATOMICS
+#if HAVE_64B_ATOMICS
 #define __RSEQ_ASSERT_ATOMIC(member) \
    _Static_assert (sizeof (RSEQ_SELF()->member) == 1			      \
 		   || sizeof (RSEQ_SELF()->member) == 4			      \

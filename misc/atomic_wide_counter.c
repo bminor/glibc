@@ -18,7 +18,7 @@
 
 #include <atomic_wide_counter.h>
 
-#if !USE_64B_ATOMICS
+#if !HAVE_64B_ATOMICS
 
 /* Values we add or xor are less than or equal to 1<<31, so we only
    have to make overflow-and-addition atomic wrt. to concurrent load
@@ -124,4 +124,4 @@ __atomic_wide_counter_load_relaxed (__atomic_wide_counter *c)
   return ((uint64_t) (h & ~((unsigned int) 1 << 31)) << 31) + l;
 }
 
-#endif /* !USE_64B_ATOMICS */
+#endif /* !HAVE_64B_ATOMICS */

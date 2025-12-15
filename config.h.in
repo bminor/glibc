@@ -225,6 +225,9 @@
 /* Define if __builtin_fmod/__builtin_remainder is inlined on x86.  */
 #undef HAVE_X86_INLINE_FMOD
 
+/* Set to 1 if 64 bit atomics are supported.  */
+#undef HAVE_64B_ATOMICS
+
 /*
  */
 

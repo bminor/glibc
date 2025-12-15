@@ -18,8 +18,8 @@
 #include <atomic-machine.h>
 #include <sem_t-align.h>
 
-#if USE_64B_ATOMICS && (SEM_T_ALIGN >= 8 \
-			|| defined HAVE_UNALIGNED_64B_ATOMICS)
+#if HAVE_64B_ATOMICS && (SEM_T_ALIGN >= 8 \
+			 || defined HAVE_UNALIGNED_64B_ATOMICS)
 # define USE_64B_ATOMICS_ON_SEM_T 1
 #else
 # define USE_64B_ATOMICS_ON_SEM_T 0

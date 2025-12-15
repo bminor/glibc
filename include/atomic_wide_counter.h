@@ -22,7 +22,7 @@
 #include <atomic.h>
 #include <bits/atomic_wide_counter.h>
 
-#if USE_64B_ATOMICS
+#if HAVE_64B_ATOMICS
 
 static inline uint64_t
 __atomic_wide_counter_load_relaxed (__atomic_wide_counter *c)
@@ -65,7 +65,7 @@ __atomic_wide_counter_fetch_xor_release (__atomic_wide_counter *c,
   return atomic_fetch_xor_release (&c->__value64, val);
 }
 
-#else /* !USE_64B_ATOMICS */
+#else /* !HAVE_64B_ATOMICS */
 
 uint64_t __atomic_wide_counter_load_relaxed (__atomic_wide_counter *c)
   attribute_hidden;
@@ -98,6 +98,6 @@ __atomic_wide_counter_add_relaxed (__atomic_wide_counter *c,
   __atomic_wide_counter_fetch_add_relaxed (c, val);
 }
 
-#endif /* !USE_64B_ATOMICS */
+#endif /* !HAVE_64B_ATOMICS */
 
 #endif /* _ATOMIC_WIDE_COUNTER_H */

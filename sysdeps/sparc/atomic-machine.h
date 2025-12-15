@@ -17,9 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _SPARC_ATOMIC_MACHINE_H
-#define _SPARC_ATOMIC_MACHINE_H	1
-
-#include_next <atomic-machine.h>
+#define _SPARC_ATOMIC_MACHINE_H
 
 #ifdef __sparc_v9__
 # define atomic_full_barrier() \
@@ -34,4 +32,4 @@ extern void __cpu_relax (void);
 # define atomic_spin_nop() __cpu_relax ()
 #endif
 
-#endif /* _ATOMIC_MACHINE_H  */
+#endif

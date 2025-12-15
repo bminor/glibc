@@ -27,11 +27,6 @@
    - support functions like barriers.  They also have the prefix
      "atomic_".
 
-   Architectures must provide a few lowlevel macros (the compare
-   and exchange definitions).  All others are optional.  They
-   should only be provided if the architecture has specific
-   support for the operation.
-
    As <atomic.h> macros are usually heavily nested and often use local
    variables to make sure side-effects are evaluated properly, use for
    macro local variables a per-macro unique prefix.  This file uses
@@ -42,7 +37,6 @@
 #include <atomic-machine.h>
 
 
-# undef atomic_compare_and_exchange_val_acq
 # define atomic_compare_and_exchange_val_acq(mem, newval, oldval) \
   ({									      \
      __typeof (*(mem)) __atg3_old = (oldval);				      \
@@ -50,7 +44,6 @@
      __atg3_old;							      \
   })
 
-# undef atomic_compare_and_exchange_val_rel
 # define atomic_compare_and_exchange_val_rel(mem, newval, oldval)	      \
   ({									      \
      __typeof (*(mem)) __atg3_old = (oldval);				      \
@@ -58,7 +51,6 @@
      __atg3_old;							      \
   })
 
-# undef atomic_compare_and_exchange_bool_acq
 # define atomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
   ({									      \
      __typeof (*(mem)) __atg3_old = (oldval);				      \
@@ -121,55 +113,33 @@
    C11.  Usually, a function named atomic_OP_MO(args) is equivalent to C11's
    atomic_OP_explicit(args, memory_order_MO); exceptions noted below.  */
 
-/* We require 32b atomic operations; some archs also support 64b atomic
-   operations.  */
-void __atomic_link_error (void);
-# if USE_64B_ATOMICS == 1
-#  define __atomic_check_size(mem) \
-   if ((sizeof (*mem) != 4) && (sizeof (*mem) != 8))			      \
-     __atomic_link_error ();
-# else
-#  define __atomic_check_size(mem) \
-   if (sizeof (*mem) != 4)						      \
-     __atomic_link_error ();
-# endif
-/* We additionally provide 8b and 16b atomic loads and stores; we do not yet
-   need other atomic operations of such sizes, and restricting the support to
-   loads and stores makes this easier for archs that do not have native
-   support for atomic operations to less-than-word-sized data.  */
-# if USE_64B_ATOMICS == 1
-#  define __atomic_check_size_ls(mem) \
-   if ((sizeof (*mem) != 1) && (sizeof (*mem) != 2) && (sizeof (*mem) != 4)   \
-       && (sizeof (*mem) != 8))						      \
-     __atomic_link_error ();
-# else
-#  define __atomic_check_size_ls(mem) \
-   if ((sizeof (*mem) != 1) && (sizeof (*mem) != 2) && sizeof (*mem) != 4)    \
-     __atomic_link_error ();
-# endif
+/* Check atomic operations are lock free.  Since this doesn't work correctly
+   on all targets (eg. if uint64_t is 4-byte aligned), use__HAVE_64B_ATOMICS
+   for 64-bit types.  */
+#define __atomic_check_size(mem) \
+  _Static_assert (__atomic_always_lock_free (sizeof (*(mem)), 0) &&	      \
+		  !(sizeof (*(mem)) == 8 && HAVE_64B_ATOMICS == 0),	      \
+		  "atomic not lock free!")
 
-# define atomic_thread_fence_acquire() \
-  __atomic_thread_fence (__ATOMIC_ACQUIRE)
-# define atomic_thread_fence_release() \
-  __atomic_thread_fence (__ATOMIC_RELEASE)
-# define atomic_thread_fence_seq_cst() \
-  __atomic_thread_fence (__ATOMIC_SEQ_CST)
+#define atomic_thread_fence_acquire() __atomic_thread_fence (__ATOMIC_ACQUIRE)
+#define atomic_thread_fence_release() __atomic_thread_fence (__ATOMIC_RELEASE)
+#define atomic_thread_fence_seq_cst() __atomic_thread_fence (__ATOMIC_SEQ_CST)
 
 # define atomic_load_relaxed(mem) \
-  ({ __atomic_check_size_ls((mem));					      \
+  ({ __atomic_check_size((mem));					      \
      __atomic_load_n ((mem), __ATOMIC_RELAXED); })
 # define atomic_load_acquire(mem) \
-  ({ __atomic_check_size_ls((mem));					      \
+  ({ __atomic_check_size((mem));					      \
      __atomic_load_n ((mem), __ATOMIC_ACQUIRE); })
 
 # define atomic_store_relaxed(mem, val) \
   do {									      \
-    __atomic_check_size_ls((mem));					      \
+    __atomic_check_size((mem));						      \
     __atomic_store_n ((mem), (val), __ATOMIC_RELAXED);			      \
   } while (0)
 # define atomic_store_release(mem, val) \
   do {									      \
-    __atomic_check_size_ls((mem));					      \
+    __atomic_check_size((mem));						      \
     __atomic_store_n ((mem), (val), __ATOMIC_RELEASE);			      \
   } while (0)
 

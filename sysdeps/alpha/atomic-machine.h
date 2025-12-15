@@ -18,7 +18,7 @@
 #ifndef _ALPHA_ATOMIC_MACHINE_H
 #define _ALPHA_ATOMIC_MACHINE_H
 
-#include_next <atomic-machine.h>
+#include <stdint.h>
 
 #define atomic_write_barrier()	__asm ("wmb" : : : "memory");
 
