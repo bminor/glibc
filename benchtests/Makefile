@@ -175,6 +175,7 @@ bench-pthread := \
   pthread-locks \
   pthread-mutex-lock \
   pthread-mutex-trylock \
+  pthread-mutex-trylock-recursive-throughput \
   pthread-mutex-trylock-throughput \
   pthread-spin-lock \
   pthread-spin-trylock \
@@ -189,6 +190,7 @@ bench-resolv := \
 
 LDLIBS-bench-pthread-mutex-lock += -lm
 LDLIBS-bench-pthread-mutex-trylock += -lm
+LDLIBS-bench-pthread-mutex-trylock-recursive-throughput += -lm
 LDLIBS-bench-pthread-mutex-trylock-throughput += -lm
 LDLIBS-bench-pthread-spin-lock += -lm
 LDLIBS-bench-pthread-spin-trylock += -lm
