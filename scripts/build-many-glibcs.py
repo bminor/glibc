@@ -439,8 +439,6 @@ class Context(object):
                                  '--disable-multilib'])
         self.add_config(arch='s390x',
                         os_name='linux-gnu',
-                        glibcs=[{},
-                                {'arch': 's390', 'ccopts': '-m31'}],
                         extra_glibcs=[{'variant': 'O3',
                                        'cflags': '-O3'},
                                       {'variant': 'zEC12',

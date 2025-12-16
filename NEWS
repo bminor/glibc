@@ -77,6 +77,11 @@ Deprecated and removed features, and other changes affecting compatibility:
 * The support for TX lock elision of pthread mutexes has been removed on all
   architectures (powerpc, s390x, x86_64).
 
+* The next linux 6.19 release will remove support for compat syscalls on s390x.
+  Therefore the s390-linux-gnu (31bit) configuration is deprecated in the
+  glibc 2.43 release and will then be removed with glibc 2.44 release.
+  Note that s390x-linux-gnu (64bit) remains supported.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]
