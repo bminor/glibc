@@ -1433,7 +1433,7 @@ iszero (__T __val)
 #endif
 
 #ifdef __USE_ISOC99
-# if __GNUC_PREREQ (3, 1)
+# if __GNUC_PREREQ (3, 1) && !defined __clang__
 /* ISO C99 defines some macros to compare number while taking care for
    unordered numbers.  Many FPUs provide special instructions to support
    these operations.  Generic support in GCC for these as builtins went
