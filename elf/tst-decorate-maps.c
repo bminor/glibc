@@ -109,7 +109,7 @@ do_test_threads (bool set_guard)
   xpthread_barrier_init (&b, NULL, num_threads + 1);
 
   /* Issue a large malloc to trigger a mmap call.  */
-  void *p = xmalloc (256 * 1024);
+  void *p = xmalloc (2 * 1024 * 1024);
 
   pthread_t thr[num_threads];
   {
