@@ -194,137 +194,20 @@ out:
 # define __LIBC_NO_TLS() 0
 #endif
 
-# if __GNUC_PREREQ (6, 0)
 
-#  define THREAD_SELF							      \
+# define THREAD_SELF					\
   (*(tcbhead_t * __seg_gs *) offsetof (tcbhead_t, tcb))
-#  define THREAD_GETMEM(descr, member)					      \
+# define THREAD_GETMEM(descr, member)					      \
   (*(__typeof (descr->member) __seg_gs *) offsetof (tcbhead_t, member))
-#  define THREAD_GETMEM_NC(descr, member, idx)				      \
+# define THREAD_GETMEM_NC(descr, member, idx)				      \
   (*(__typeof (descr->member[0]) __seg_gs *)				      \
    (offsetof (tcbhead_t, member) + (idx) * sizeof (descr->member[0])))
-#  define THREAD_SETMEM(descr, member, value)				      \
+# define THREAD_SETMEM(descr, member, value)				      \
   (*(__typeof (descr->member) __seg_gs *) offsetof (tcbhead_t, member) = value)
-#  define THREAD_SETMEM_NC(descr, member, index, value)			      \
+# define THREAD_SETMEM_NC(descr, member, index, value)			      \
   (*(__typeof (descr->member[0]) __seg_gs *)				      \
    (offsetof (tcbhead_t, member) + (idx) * sizeof (descr->member[0])))
 
-# else
-
-/* Return the TCB address of the current thread.  */
-#  define THREAD_SELF							      \
-  ({ tcbhead_t *__tcb;							      \
-     __asm__ ("movl %%gs:%c1,%0" : "=r" (__tcb)				      \
-	      : "i" (offsetof (tcbhead_t, tcb)));			      \
-     __tcb;})
-
-/* Read member of the thread descriptor directly.  */
-# define THREAD_GETMEM(descr, member) \
-  ({ __typeof (descr->member) __value;					      \
-     _Static_assert (sizeof (__value) == 1				      \
-		     || sizeof (__value) == 4				      \
-		     || sizeof (__value) == 8,				      \
-		     "size of per-thread data");			      \
-     if (sizeof (__value) == 1)						      \
-       asm volatile ("movb %%gs:%P2,%b0"				      \
-		     : "=q" (__value)					      \
-		     : "0" (0), "i" (offsetof (tcbhead_t, member)));	      \
-     else if (sizeof (__value) == 4)					      \
-       asm volatile ("movl %%gs:%P1,%0"					      \
-		     : "=r" (__value)					      \
-		     : "i" (offsetof (tcbhead_t, member)));		      \
-     else /* 8 */							      \
-       {								      \
-	 asm volatile ("movl %%gs:%P1,%%eax\n\t"			      \
-		       "movl %%gs:%P2,%%edx"				      \
-		       : "=A" (__value)					      \
-		       : "i" (offsetof (tcbhead_t, member)),		      \
-			 "i" (offsetof (tcbhead_t, member) + 4));	      \
-       }								      \
-     __value; })
-
-
-/* Same as THREAD_GETMEM, but the member offset can be non-constant.  */
-#  define THREAD_GETMEM_NC(descr, member, idx) \
-  ({ __typeof (descr->member[0]) __value;				      \
-     _Static_assert (sizeof (__value) == 1				      \
-		     || sizeof (__value) == 4				      \
-		     || sizeof (__value) == 8,				      \
-		     "size of per-thread data");			      \
-     if (sizeof (__value) == 1)						      \
-       asm volatile ("movb %%gs:%P2(%3),%b0"				      \
-		     : "=q" (__value)					      \
-		     : "0" (0), "i" (offsetof (tcbhead_t, member[0])),	      \
-		     "r" (idx));					      \
-     else if (sizeof (__value) == 4)					      \
-       asm volatile ("movl %%gs:%P1(,%2,4),%0"				      \
-		     : "=r" (__value)					      \
-		     : "i" (offsetof (tcbhead_t, member[0])),		      \
-		       "r" (idx));					      \
-     else /* 8 */							      \
-       {								      \
-	 asm volatile  ("movl %%gs:%P1(,%2,8),%%eax\n\t"		      \
-			"movl %%gs:4+%P1(,%2,8),%%edx"			      \
-			: "=&A" (__value)				      \
-			: "i" (offsetof (tcbhead_t, member[0])),	      \
-			  "r" (idx));					      \
-       }								      \
-     __value; })
-
-
-
-/* Set member of the thread descriptor directly.  */
-#  define THREAD_SETMEM(descr, member, value) \
-  ({									      \
-     _Static_assert (sizeof (descr->member) == 1			      \
-		     || sizeof (descr->member) == 4			      \
-		     || sizeof (descr->member) == 8,			      \
-		     "size of per-thread data");			      \
-     if (sizeof (descr->member) == 1)					      \
-       asm volatile ("movb %b0,%%gs:%P1" :				      \
-		     : "iq" (value),					      \
-		       "i" (offsetof (tcbhead_t, member)));		      \
-     else if (sizeof (descr->member) == 4)				      \
-       asm volatile ("movl %0,%%gs:%P1" :				      \
-		     : "ir" (value),					      \
-		       "i" (offsetof (tcbhead_t, member)));		      \
-     else /* 8 */							      \
-       {								      \
-	 asm volatile ("movl %%eax,%%gs:%P1\n\t"			      \
-		       "movl %%edx,%%gs:%P2" :				      \
-		       : "A" ((uint64_t) cast_to_integer (value)),	      \
-			 "i" (offsetof (tcbhead_t, member)),		      \
-			 "i" (offsetof (tcbhead_t, member) + 4));	      \
-       }})
-
-
-/* Same as THREAD_SETMEM, but the member offset can be non-constant.  */
-#  define THREAD_SETMEM_NC(descr, member, idx, value) \
-  ({									      \
-     _Static_assert (sizeof (descr->member[0]) == 1			      \
-		     || sizeof (descr->member[0]) == 4			      \
-		     || sizeof (descr->member[0]) == 8,			      \
-		     "size of per-thread data");			      \
-     if (sizeof (descr->member[0]) == 1)				      \
-       asm volatile ("movb %b0,%%gs:%P1(%2)" :				      \
-		     : "iq" (value),					      \
-		       "i" (offsetof (tcbhead_t, member)),		      \
-		       "r" (idx));					      \
-     else if (sizeof (descr->member[0]) == 4)				      \
-       asm volatile ("movl %0,%%gs:%P1(,%2,4)" :			      \
-		     : "ir" (value),					      \
-		       "i" (offsetof (tcbhead_t, member)),		      \
-		       "r" (idx));					      \
-     else /* 8 */							      \
-       {								      \
-	 asm volatile ("movl %%eax,%%gs:%P1(,%2,8)\n\t"			      \
-		       "movl %%edx,%%gs:4+%P1(,%2,8)" :			      \
-		       : "A" ((uint64_t) cast_to_integer (value)),	      \
-			 "i" (offsetof (tcbhead_t, member)),		      \
-			 "r" (idx));					      \
-       }})
-
-# endif /* __GNUC_PREREQ (6, 0) */
 
 /* Return the TCB address of a thread given its state.
    Note: this is expensive.  */
