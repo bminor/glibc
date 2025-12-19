@@ -45,6 +45,10 @@ do_test (void)
       TEST_COMPARE (feclearexcept (FE_INVALID), 0);
       TEST_COMPARE (fpclassify (inputs[i].value), FP_NAN);
       TEST_COMPARE (fetestexcept (FE_INVALID), 0);
+
+      TEST_COMPARE (feclearexcept (FE_INVALID), 0);
+      TEST_COMPARE (isinf (inputs[i].value), 0);
+      TEST_COMPARE (fetestexcept (FE_INVALID), 0);
     }
 
   return 0;

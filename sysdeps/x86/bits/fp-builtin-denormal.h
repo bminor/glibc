@@ -23,3 +23,7 @@
 /* Neither GCC (bug 123161) nor clang (issue 172533) handles pseudo-normal
    numbers correctly with fpclassify builtin.  */
 #define __FP_BUILTIN_FPCLASSIFY_DENORMAL 0
+
+/* Neither GCC (bug 123173) nor clang (issue 172651) handles pseudo-normal
+   numbers correctly with isinf_sign builtin.  */
+#define __FP_BUILTIN_ISINF_SIGN_DENORMAL 0

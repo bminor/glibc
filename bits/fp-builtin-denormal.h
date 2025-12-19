@@ -26,3 +26,7 @@
     Intel double extended-precision (long double).  By default assume 1 to
     enable the usage of compiler builtin on math.h.  */
 #define __FP_BUILTIN_FPCLASSIFY_DENORMAL 1
+
+/* __FP_BUILTIN_ISINF_SIGN_DENORMAL is defined to 1 if compiler supports
+   handling pseudo-dernormal numbers with isinf_sign builtin.  */
+#define __FP_BUILTIN_ISINF_SIGN_DENORMAL 1
