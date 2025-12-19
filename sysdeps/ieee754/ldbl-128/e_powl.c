@@ -279,9 +279,11 @@ __ieee754_powl (_Float128 x, _Float128 y)
       if (iy > 0x407d654b)
 	{
 	  if (ix <= 0x3ffeffff)
-	    return (hy < 0) ? huge * huge : tiny * tiny;
+	    return (hy < 0) ? math_opt_barrier (huge * huge)
+	      : math_opt_barrier (tiny * tiny);
 	  if (ix >= 0x3fff0000)
-	    return (hy > 0) ? huge * huge : tiny * tiny;
+	    return (hy > 0) ? math_opt_barrier (huge * huge)
+	      : math_opt_barrier (tiny * tiny);
 	}
       /* over/underflow if x is not close to one */
       if (ix < 0x3ffeffff)
