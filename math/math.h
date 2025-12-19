@@ -1064,6 +1064,86 @@ extern int signgam;
    : FUNC ## l ARGS)
 #endif
 
+
+/* Depending on the type of TG_ARG and extra DEFINE to check, either call the
+   BUILTIN with ARGS_B or an appropriately suffixed version of FUNC with
+   arguments (including parentheses) ARGS_B.  The function call is used for
+   long double and/or  _Float64x is the builtin can not be safely used on all
+   arguments (defined by DEFINE).  */
+
+#include <bits/fp-builtin-denormal.h>
+
+#ifdef __NO_LONG_DOUBLE_MATH
+# define __MATH_TG_BUILTIN_CLASSIFY(TG_ARG, BUILTIN, ARGS_B, FUNC, ARGS_F,    \
+				    DEFINE)    \
+  BUILTIN ARGS_B
+#elif __HAVE_DISTINCT_FLOAT128
+# if __HAVE_GENERIC_SELECTION
+#  if __HAVE_FLOATN_NOT_TYPEDEF && __HAVE_FLOAT32
+#   define __MATH_TG_BUILTIN_CLASSIFY_F32(BUILTIN, ARGS_B, FUNC, ARGS_F,      \
+					  DEFINE)			      \
+  _Float32: BUILTIN ARGS_B,
+#  else
+#   define __MATH_TG_BUILTIN_CLASSIFY_F32(BUILTIN, ARGS_B, FUNC, ARGS_F,      \
+					  DEFINE)
+#  endif
+#  define __MATH_TG_BUILTIN_CLASSIFY_LDOUBLE(BUILTIN, ARGS_B, FUNC, ARGS_F,   \
+					     DEFINE)			      \
+  long double: DEFINE ? BUILTIN ARGS_B : __ ## FUNC ## l ARGS_F,
+#  if __HAVE_FLOATN_NOT_TYPEDEF && __HAVE_FLOAT64X
+#   if __HAVE_FLOAT64X_LONG_DOUBLE
+#    define __MATH_TG_BUILTIN_CLASSIFY_F64X(BUILTIN, ARGS_B, FUNC, ARGS_F,    \
+					    DEFINE)			      \
+  _Float64x: DEFINE ? BUILTIN ARGS_B : __ ## FUNC ## l ARGS_F,
+#   else
+#    define __MATH_TG_BUILTIN_CLASSIFY_F64X(BUILTIN, ARGS_B, FUNC, ARGS_F,    \
+					    DEFINE)			      \
+  _Float64x: DEFINE ? BUILTIN ARGS_B : __ ## FUNC ## f128 ARGS_F,
+#   endif
+#  else
+#   define __MATH_TG_BUILTIN_CLASSIFY_F64X(BUILTIN, ARGS_B, FUNC, ARGS_F,     \
+					   DEFINE)
+#  endif
+#  define __MATH_TG_BUILTIN_CLASSIFY_F128(BUILTIN, ARGS_B, FUNC, ARGS_F,      \
+					  DEFINE)			      \
+  _Float128: BUILTIN ARGS_B
+#  define __MATH_TG_BUILTIN_CLASSIFY(TG_ARG, BUILTIN, ARGS_B, FUNC, ARGS_F,   \
+				     DEFINE)				      \
+     _Generic ((TG_ARG),						      \
+	       float: BUILTIN ARGS_B,					      \
+	       __MATH_TG_BUILTIN_CLASSIFY_F32 (BUILTIN, ARGS_B, FUNC, ARGS_F, \
+					       DEFINE)			      \
+	       default: BUILTIN ARGS_B,					      \
+	       __MATH_TG_BUILTIN_CLASSIFY_LDOUBLE (BUILTIN, ARGS_B, FUNC,     \
+						   ARGS_F, DEFINE)	      \
+	       __MATH_TG_BUILTIN_CLASSIFY_F64X (BUILTIN, ARGS_B, FUNC, ARGS_F,\
+						DEFINE)			      \
+	       __MATH_TG_BUILTIN_CLASSIFY_F128 (BUILTIN, ARGS_B, FUNC, ARGS_F,\
+						DEFINE))
+# else
+#  define __MATH_TG_BUILTIN_CLASSIFY(TG_ARG, BUILTIN, ARGS_B, FUNC, ARGS_F,   \
+				     DEFINE)				      \
+     __builtin_choose_expr						      \
+     (__builtin_types_compatible_p (__typeof (TG_ARG), float),		      \
+      __builtin ## BUILTIN ARGS_B,					      \
+      __builtin_choose_expr						      \
+      (__builtin_types_compatible_p (__typeof (TG_ARG), double),	      \
+       __builtin ## BUILTIN ARGS_B,					      \
+       __builtin_choose_expr						      \
+       (__builtin_types_compatible_p (__typeof (TG_ARG), long double),	      \
+	DEFINE ? BUILTIN ARGS_B : __ ## FUNC ## l ARGS_F,		      \
+	BUILTIN ARGS_B)))
+# endif
+#else
+# define __MATH_TG_BUILTIN_CLASSIFY(TG_ARG, BUILTIN, ARGS_B, FUNC, ARGS_F,    \
+				    DEFINE)				      \
+  (sizeof (TG_ARG) == sizeof (float)				              \
+   ? BUILTIN ARGS_B					      		      \
+   : sizeof (TG_ARG) == sizeof (double)					      \
+   ? BUILTIN ARGS_B					      		      \
+   : DEFINE ? BUILTIN ARGS_B : __ ## FUNC ## l ARGS_F)
+#endif
+
 /* ISO C99 defines some generic macros which work on any data type.  */
 #ifdef __USE_ISOC99
 
@@ -1101,8 +1181,13 @@ enum
 	with -Os.  No further use of this definition of fpclassify is
 	expected in C++ mode, since libstdc++ provides its own version
 	of fpclassify in cmath (which undefines fpclassify).  */
-#  define fpclassify(x) __builtin_fpclassify (FP_NAN, FP_INFINITE,	      \
-     FP_NORMAL, FP_SUBNORMAL, FP_ZERO, x)
+#  define fpclassify(x)							      \
+  __MATH_TG_BUILTIN_CLASSIFY ((x),					      \
+			      __builtin_fpclassify, (FP_NAN, FP_INFINITE,     \
+						     FP_NORMAL, FP_SUBNORMAL, \
+						     FP_ZERO, x),	      \
+			      fpclassify, (x),				      \
+			      __FP_BUILTIN_FPCLASSIFY_DENORMAL)
 # else
 #  define fpclassify(x) __MATH_TG ((x), __fpclassify, (x))
 # endif

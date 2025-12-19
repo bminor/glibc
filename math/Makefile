@@ -28,6 +28,7 @@ headers := \
   bits/floatn-common.h \
   bits/floatn.h \
   bits/flt-eval-method.h \
+  bits/fp-builtin-denormal.h \
   bits/fp-fast.h \
   bits/fp-logb.h \
   bits/iscanonical.h \
