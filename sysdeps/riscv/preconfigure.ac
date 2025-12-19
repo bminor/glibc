@@ -60,6 +60,7 @@ riscv*)
 	version=`$CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null | sed -n 's/^#define __GNUC__ \(.*\)/\1/p'`
 	test $version -lt 15 && AC_MSG_ERROR([glibc requires GCC 15 or later for the V extension], [1])
 	test $vector -lt "1000000" && AC_MSG_ERROR([glibc requires at least RVV 1.0 for the V extension], [1])
+	float_machine=rvv
     fi
 
     base_machine=riscv

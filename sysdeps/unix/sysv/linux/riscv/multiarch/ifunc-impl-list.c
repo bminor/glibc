@@ -27,17 +27,31 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   size_t i = max;
 
   bool fast_unaligned = false;
+  bool rvv_enabled = false;
 
-  struct riscv_hwprobe pair = { .key = RISCV_HWPROBE_KEY_CPUPERF_0 };
-  if (__riscv_hwprobe (&pair, 1, 0, NULL, 0) == 0
-      && (pair.value & RISCV_HWPROBE_MISALIGNED_MASK)
+  struct riscv_hwprobe pairs[2] = {
+    {.key = RISCV_HWPROBE_KEY_CPUPERF_0},
+    {.key = RISCV_HWPROBE_KEY_IMA_EXT_0}
+  };
+
+  if (__riscv_hwprobe (pairs, 2, 0, NULL, 0) == 0) {
+    if ((pairs[0].value & RISCV_HWPROBE_MISALIGNED_MASK)
           == RISCV_HWPROBE_MISALIGNED_FAST)
-    fast_unaligned = true;
+      fast_unaligned = true;
+
+    if (pairs[1].value & RISCV_HWPROBE_IMA_V)
+      rvv_enabled = true;
+  }
 
   IFUNC_IMPL (i, name, memcpy,
 	      IFUNC_IMPL_ADD (array, i, memcpy, fast_unaligned,
 			      __memcpy_noalignment)
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_generic))
+
+  IFUNC_IMPL (i, name, memset,
+	      IFUNC_IMPL_ADD (array, i, memset, rvv_enabled,
+			      __memset_vector)
+	      IFUNC_IMPL_ADD (array, i, memset, 1, __memset_generic))
 
   return 0;
 }
