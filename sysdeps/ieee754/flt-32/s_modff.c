@@ -25,12 +25,15 @@ __modff (float x, float *iptr)
 {
   uint32_t t = asuint (x);
 #if USE_TRUNCF_BUILTIN
+# ifndef TRUNCF
+#  define TRUNCF truncf
+# endif
   if (is_inf (t))
     {
       *iptr = x;
       return copysignf (0.0, x);
     }
-  *iptr = truncf (x);
+  *iptr = TRUNCF (x);
   return copysignf (x - *iptr, x);
 #else
   int e = get_exponent (t);

@@ -25,12 +25,15 @@ __modf (double x, double *iptr)
 {
   uint64_t t = asuint64 (x);
 #if USE_TRUNC_BUILTIN
+# ifndef TRUNC
+#  define TRUNC trunc
+# endif
   if (is_inf (t))
     {
       *iptr = x;
       return copysign (0.0, x);
     }
-  *iptr = trunc (x);
+  *iptr = TRUNC (x);
   return copysign (x - *iptr, x);
 #else
   int e = get_exponent (t);
