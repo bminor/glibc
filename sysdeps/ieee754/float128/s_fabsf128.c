@@ -1,5 +1,5 @@
 #include <float128_private.h>
-#ifndef __USE_EXTERN_INLINES
+#if !defined __USE_EXTERN_INLINES && !defined(__OPTIMIZE_SIZE__)
 # undef libm_alias_float128_r
 # define libm_alias_float128_r(from, to, r)			\
   static_weak_alias (from ## f128 ## r, to ## f128 ## r);	\
