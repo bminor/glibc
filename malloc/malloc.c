@@ -5514,7 +5514,7 @@ __malloc_info (int options, FILE *fp)
       total_max_system += ar_ptr->max_system_mem;
 
       fprintf (fp,
-	       "<sizes>\n"
+	       "</sizes>\n"
 	       "<total type=\"rest\" count=\"%zu\" size=\"%zu\"/>\n"
 	       "<system type=\"current\" size=\"%zu\"/>\n"
 	       "<system type=\"max\" size=\"%zu\"/>\n",
