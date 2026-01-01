@@ -1,7 +1,7 @@
 /* Check if popen return a correct error code if the default shell does not
    exists (BZ#29016).
 
-   Copyright (C) 2022-2025 Free Software Foundation, Inc.
+   Copyright (C) 2022-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

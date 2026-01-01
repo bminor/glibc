@@ -1,5 +1,5 @@
 /* Test the mlock2 function.
-   Copyright (C) 2017-2025 Free Software Foundation, Inc.
+   Copyright (C) 2017-2026 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

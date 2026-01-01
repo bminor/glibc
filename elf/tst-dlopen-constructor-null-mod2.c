@@ -1,5 +1,5 @@
 /* Module whose constructor should not be invoked by dlopen (NULL, RTLD_LAZY).
-   Copyright (C) 2024 Free Software Foundation, Inc.
+   Copyright (C) 2024-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

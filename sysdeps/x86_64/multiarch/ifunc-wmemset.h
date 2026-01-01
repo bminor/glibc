@@ -1,5 +1,5 @@
 /* Common definition for wmemset/wmemset_chk ifunc selections.
-   Copyright (C) 2017-2025 Free Software Foundation, Inc.
+   Copyright (C) 2017-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

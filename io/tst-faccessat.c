@@ -1,5 +1,5 @@
 /* Test for faccessat function.
-   Copyright (C) 2006-2025 Free Software Foundation, Inc.
+   Copyright (C) 2006-2026 Free Software Foundation, Inc.
    Copyright The GNU Toolchain Authors.
    This file is part of the GNU C Library.
 

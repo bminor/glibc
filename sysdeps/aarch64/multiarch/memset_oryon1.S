@@ -1,5 +1,5 @@
 /* Optimized memset for Qualcomm's oyron-1 core.
-   Copyright (C) 2018-2025 Free Software Foundation, Inc.
+   Copyright (C) 2018-2026 Free Software Foundation, Inc.
    Copyright The GNU Toolchain Authors.
 
    This file is part of the GNU C Library.

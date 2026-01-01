@@ -1,7 +1,7 @@
 /* Test pthread interface which should return ESRCH when issued
    with a terminated pthread_t.
 
-   Copyright (C) 2025 Free Software Foundation, Inc.
+   Copyright (C) 2025-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

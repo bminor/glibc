@@ -1,6 +1,6 @@
 /* Machine-dependent ELF dynamic relocation inline functions.
    64 bit S/390 Version.
-   Copyright (C) 2001-2025 Free Software Foundation, Inc.
+   Copyright (C) 2001-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

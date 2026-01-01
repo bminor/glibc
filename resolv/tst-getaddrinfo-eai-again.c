@@ -1,7 +1,7 @@
 /* Test for BZ #16849. Verify that getaddrinfo correctly returns
    EAI_AGAIN error code if DNS query fails due to a network failure.
 
-   Copyright (C) 2025 Free Software Foundation, Inc.
+   Copyright (C) 2025-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

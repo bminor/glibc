@@ -1,7 +1,7 @@
 /* Test pthread_mutexattr_gettype and pthread_mutexattr_settype with
    valid and invalid kinds.
 
-   Copyright (C) 2024-2025 Free Software Foundation, Inc.
+   Copyright (C) 2024-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

@@ -1,7 +1,7 @@
 #!/bin/sh
 # Test that ldconfig creates symlinks according to the library's soname
 # (and in particular, does not create symlinks for libraries without a soname)
-# Copyright (C) 2000-2025 Free Software Foundation, Inc.
+# Copyright (C) 2000-2026 Free Software Foundation, Inc.
 # Copyright The GNU Toolchain Authors.
 # This file is part of the GNU C Library.
 

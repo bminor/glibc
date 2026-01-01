@@ -1,5 +1,5 @@
 /* Regression test for 20632.
-   Copyright (C) 2024-2025 Free Software Foundation, Inc.
+   Copyright (C) 2024-2026 Free Software Foundation, Inc.
    Copyright The GNU Toolchain Authors.
    This file is part of the GNU C Library.
 

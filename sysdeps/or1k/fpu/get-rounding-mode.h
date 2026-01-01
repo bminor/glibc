@@ -1,6 +1,6 @@
 /* Determine floating-point rounding mode within libc.  OpenRISC version.
 
-   Copyright (C) 2024-2025 Free Software Foundation, Inc.
+   Copyright (C) 2024-2026 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 

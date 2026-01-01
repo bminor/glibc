@@ -1,5 +1,5 @@
 /* Check compile-time definition of TLS_TP_OFFSET against run-time value.
-   Copyright (C) 2025 Free Software Foundation, Inc.
+   Copyright (C) 2025-2026 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 

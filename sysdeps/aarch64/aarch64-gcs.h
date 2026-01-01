@@ -1,6 +1,6 @@
 /* AArch64 GCS (Guarded Control Stack) declarations.
    This file is part of the GNU C Library.
-   Copyright (C) 2024-2025 Free Software Foundation, Inc.
+   Copyright (C) 2024-2026 Free Software Foundation, Inc.
    Copyright The GNU Toolchain Authors.
 
    The GNU C Library is free software; you can redistribute it and/or

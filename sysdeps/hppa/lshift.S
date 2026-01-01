@@ -1,6 +1,6 @@
 ;! HP-PA  __mpn_lshift --
 
-;! Copyright (C) 1992-2025 Free Software Foundation, Inc.
+;! Copyright (C) 1992-2026 Free Software Foundation, Inc.
 
 ;! This file is part of the GNU MP Library.
 

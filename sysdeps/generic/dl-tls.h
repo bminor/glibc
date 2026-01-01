@@ -1,5 +1,5 @@
 /* TLS definitions for the ELF dynamic linker.  Generic version.
-   Copyright (C) 2002-2025 Free Software Foundation, Inc.
+   Copyright (C) 2002-2026 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 

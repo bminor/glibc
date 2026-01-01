@@ -1,7 +1,7 @@
 #!/bin/sh
 # Check that legacy shadow stack code in init_array will trigger
 # segfault.
-# Copyright (C) 2023-2025 Free Software Foundation, Inc.
+# Copyright (C) 2023-2026 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or

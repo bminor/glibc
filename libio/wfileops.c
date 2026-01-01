@@ -1,4 +1,4 @@
-/* Copyright (C) 1993-2025 Free Software Foundation, Inc.
+/* Copyright (C) 1993-2026 Free Software Foundation, Inc.
    Copyright The GNU Toolchain Authors.
    This file is part of the GNU C Library.
 

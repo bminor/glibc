@@ -1,6 +1,6 @@
 /* Test lookup of IPv4 mapped addresses in files database (bug 25457)
 
-   Copyright (C) 2023-2025 Free Software Foundation, Inc.
+   Copyright (C) 2023-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

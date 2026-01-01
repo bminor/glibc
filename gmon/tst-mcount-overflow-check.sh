@@ -1,6 +1,6 @@
 #!/bin/sh
 # Test expected messages generated when mcount overflows
-# Copyright (C) 2017-2025 Free Software Foundation, Inc.
+# Copyright (C) 2017-2026 Free Software Foundation, Inc.
 # Copyright The GNU Toolchain Authors.
 # This file is part of the GNU C Library.
 

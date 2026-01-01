@@ -1,6 +1,6 @@
 /* Test for the long double redirections in error* functions
    when they are returned as function pointer BZ #29033.
-   Copyright (C) 2023-2025 Free Software Foundation, Inc.
+   Copyright (C) 2023-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

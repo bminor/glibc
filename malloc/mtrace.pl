@@ -7,7 +7,7 @@ q {
     exec perl -e '$_ = shift; $_ = "./$_" unless m,^/,; do $_' "$0" "$@"
 }
 ;
-# Copyright (C) 1997-2025 Free Software Foundation, Inc.
+# Copyright (C) 1997-2026 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Based on the mtrace.awk script.
 

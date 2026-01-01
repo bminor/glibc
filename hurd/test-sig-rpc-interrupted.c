@@ -1,7 +1,7 @@
 /* Test the state save/restore procedures during signal handling when an
    interruptible RPC is restarted.
 
-   Copyright (C) 2024 Free Software Foundation, Inc.
+   Copyright (C) 2024-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

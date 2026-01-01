@@ -1,6 +1,6 @@
 /* Check if realpath does not consume extra stack space based on symlink
    existence in the path (BZ #26341)
-   Copyright (C) 2021-2025 Free Software Foundation, Inc.
+   Copyright (C) 2021-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
