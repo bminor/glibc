@@ -252,4 +252,3 @@ do_test (void)
 }
 
 #include <support/test-driver.c>
-

@@ -51,7 +51,7 @@ do_test (void)
       else
 	FAIL_EXIT1 ("ioctl (PIDFD_GET_INFO) failed: %m");
     }
-  
+
   TEST_COMPARE (info.pid, pid);
   TEST_COMPARE (info.ppid, getppid ());
   TEST_COMPARE (info.ruid, getuid ());
