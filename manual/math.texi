@@ -48,10 +48,10 @@ versions are from the numeric extensions to C included in @w{ISO C99}.
 Which of the three versions of a function should be used depends on the
 situation.  For most calculations, the @code{float} functions are the
 fastest.  On the other hand, the @code{long double} functions have the
-highest precision.  @code{double} is somewhere in between.  It is
-usually wise to pick the narrowest type that can accommodate your data.
-Not all machines have a distinct @code{long double} type; it may be the
-same as @code{double}.
+most precision and exponent range.  @code{double} is somewhere in between.
+It is usually wise to pick the smallest type that can accommodate your data.
+On some machines @code{long double} has no more precision or exponent
+range than @code{double}, though the types remain distinct for type checking.
 
 @Theglibc{} also provides @code{_Float@var{N}} and
 @code{_Float@var{N}x} types.  These types are defined in @w{ISO/IEC TS
