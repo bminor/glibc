@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdatomic.h>
 
 #include <mach/message.h>
 #include <mach/gnumach.h>
@@ -40,15 +41,19 @@
 
 #include "test-xstate.h"
 
-static volatile bool loopflag = true;
+static volatile atomic_bool startflag = ATOMIC_VAR_INIT (false);
+static volatile atomic_bool loopflag = ATOMIC_VAR_INIT (true);
 
 void handler (int signum, siginfo_t *info, void *context)
 {
-  char buf3[XSTATE_BUFFER_SIZE];
-  memset (buf3, 0x77, XSTATE_BUFFER_SIZE);
-  SET_XSTATE (buf3);
+  char mmxbuf3[MMXSTATE_BUFFER_SIZE];
+  char xbuf3[XSTATE_BUFFER_SIZE];
+  memset (mmxbuf3, 0x77, MMXSTATE_BUFFER_SIZE);
+  memset (xbuf3, 0x77, XSTATE_BUFFER_SIZE);
+  SET_MMXSTATE (mmxbuf3);
+  SET_XSTATE (xbuf3);
   printf ("signal %d setting a different CPU state\n", signum);
-  loopflag = false;
+  atomic_store_explicit (&loopflag, false, memory_order_release);
 }
 
 /* Helper thread to send a signal to the main thread  */
@@ -59,6 +64,8 @@ void* signal_sender (void *arg)
   assert (! sigaddset (&ss, SIGUSR1));
   assert (! sigprocmask (SIG_BLOCK, &ss, NULL));
 
+  while (!atomic_load_explicit (&startflag, memory_order_acquire))
+    ;
   TEST_COMPARE (kill (getpid (), SIGUSR1), 0);
 
   return NULL;
@@ -76,16 +83,22 @@ static int do_test (void)
 
   pthread_t thsender = xpthread_create (NULL, signal_sender, NULL);
 
-  char buf1[XSTATE_BUFFER_SIZE], buf2[XSTATE_BUFFER_SIZE];
-  memset (buf1, 0x33, XSTATE_BUFFER_SIZE);
+  char mmxbuf1[MMXSTATE_BUFFER_SIZE], mmxbuf2[MMXSTATE_BUFFER_SIZE];
+  char xbuf1[XSTATE_BUFFER_SIZE], xbuf2[XSTATE_BUFFER_SIZE];
+  memset (mmxbuf1, 0x33, MMXSTATE_BUFFER_SIZE);
+  memset (xbuf1, 0x33, XSTATE_BUFFER_SIZE);
 
-  SET_XSTATE (buf1);
+  SET_MMXSTATE (mmxbuf1);
+  SET_XSTATE (xbuf1);
 
-  while (loopflag)
+  atomic_store_explicit (&startflag, true, memory_order_release);
+  while (atomic_load_explicit (&loopflag, memory_order_acquire))
     ;
 
-  GET_XSTATE (buf2);
-  TEST_COMPARE_BLOB (buf1, sizeof (buf1), buf2, sizeof (buf2));
+  GET_MMXSTATE (mmxbuf2);
+  GET_XSTATE (xbuf2);
+  TEST_COMPARE_BLOB (mmxbuf1, sizeof (mmxbuf1), mmxbuf2, sizeof (mmxbuf2));
+  TEST_COMPARE_BLOB (xbuf1, sizeof (xbuf1), xbuf2, sizeof (xbuf2));
 
   xpthread_join (thsender);
   return EXIT_SUCCESS;
