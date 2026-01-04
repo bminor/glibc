@@ -81,7 +81,11 @@ static int do_test (void)
 }
 
 asm (
+".text\n"
+".align 16\n"
+".type check_redzone, @function\n"
 "check_redzone:\n"
+"	.cfi_startproc\n"
 
 "	movabs	$0x3333333333333333, %rax\n"
 "	mov	$(128/8), %ecx\n"
@@ -104,6 +108,10 @@ asm (
 "fail:\n"
 "	movq	$1,%rax\n"
 "	ret\n"
+
+"	.cfi_endproc\n"
+"	.size	check_redzone, .-check_redzone\n"
+".previous\n"
 );
 
 #include <support/test-driver.c>
