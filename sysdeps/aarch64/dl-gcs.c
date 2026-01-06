@@ -51,6 +51,17 @@ fail (struct link_map *l, const char *program)
 }
 
 static void
+warn (struct link_map *l, const char *program)
+{
+  if (l->l_name[0] != '\0')
+    _dl_debug_printf ("security: not compatible with AArch64 GCS: %s\n",
+		      l->l_name);
+  else if (__glibc_likely (program != NULL))
+    _dl_debug_printf ("security: not compatible with AArch64 GCS: %s\n",
+		      program);
+}
+
+static void
 unsupported (void)
 {
   _dl_fatal_printf ("unsupported GCS policy\n");
@@ -58,7 +69,7 @@ unsupported (void)
 
 /* This function is called only when binary markings are not
    ignored and GCS is supposed to be enabled.  This occurs
-   for the GCS_POLICY_ENFORCED and GCS_POLICY_ENFORCED policies.  */
+   for the GCS_POLICY_ENFORCED and GCS_POLICY_OPTIONAL policies.  */
 static bool
 check_gcs (struct link_map *l, const char *program, bool enforced)
 {
@@ -70,6 +81,9 @@ check_gcs (struct link_map *l, const char *program, bool enforced)
   /* Binary is marked, all good.  */
   if (l->l_mach.gcs)
     return true;
+  /* Extra logging requested, print path to failed binary.  */
+  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_SECURITY))
+    warn (l, program);
   /* Binary is not marked and loaded via dlopen: abort.  */
   if (program == NULL)
     fail (l, program);

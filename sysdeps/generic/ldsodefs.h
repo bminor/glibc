@@ -526,6 +526,7 @@ struct rtld_global_ro
 /* DL_DEBUG_HELP is only used internally.  */
 #define DL_DEBUG_HELP       (1 << 10)
 #define DL_DEBUG_TLS        (1 << 11)
+#define DL_DEBUG_SECURITY   (1 << 12)
 
   /* Platform name.  */
   EXTERN const char *_dl_platform;

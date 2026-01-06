@@ -392,6 +392,11 @@ Display information about Thread-Local Storage (TLS) handling, including TCB
 allocation, deallocation, and reuse. This is useful for debugging issues
 related to thread creation and lifecycle.
 
+@item security
+Display security warnings that are related to loading binaries that lack
+certain target-dependent hardening features.  This may be useful for audit
+purposes.
+
 @item all
 All previous options combined.
 

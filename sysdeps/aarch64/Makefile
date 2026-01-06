@@ -97,6 +97,10 @@ tests += \
   tst-bti-dlopen-imm \
   tst-bti-dlopen-prot \
   tst-bti-dlopen-transitive \
+  tst-bti-ld-debug-both \
+  tst-bti-ld-debug-dlopen \
+  tst-bti-ld-debug-exe \
+  tst-bti-ld-debug-shared \
   tst-bti-permissive-dlopen \
   tst-bti-permissive-imm \
   tst-bti-permissive-transitive \
@@ -115,8 +119,12 @@ $(objpfx)tst-bti-dep-prot: $(objpfx)tst-bti-mod-prot.so
 $(objpfx)tst-bti-mod.so: $(objpfx)tst-bti-mod-unprot.so
 $(objpfx)tst-bti-permissive-imm: $(objpfx)tst-bti-mod-unprot.so
 $(objpfx)tst-bti-permissive-transitive: $(objpfx)tst-bti-mod.so
+$(objpfx)tst-bti-ld-debug-shared: $(objpfx)tst-bti-mod.so
+$(objpfx)tst-bti-ld-debug-both: $(objpfx)tst-bti-mod-unprot.so
 
 CFLAGS-tst-bti-abort-unprot.o += -mbranch-protection=none
+CFLAGS-tst-bti-ld-debug-exe.o += -mbranch-protection=none
+CFLAGS-tst-bti-ld-debug-both.o += -mbranch-protection=none
 CFLAGS-tst-bti-mod-unprot.os += -mbranch-protection=none
 
 tst-bti-abort-imm-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=1
@@ -147,6 +155,12 @@ tests-static += \
 
 tst-bti-abort-static-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=1
 CFLAGS-tst-bti-abort-static.o += -mbranch-protection=none
+
+$(objpfx)tst-bti-ld-debug-%.out: $(..)elf/tst-dl-debug-protect.sh $(objpfx)tst-bti-ld-debug-%
+	$(SHELL) $< $(objpfx) '$(test-wrapper-env)' '$(rtld-prefix)' \
+	  '$(run-program-env) GLIBC_TUNABLES=glibc.cpu.aarch64_bti=0' \
+	  'security: not compatible with AArch64 BTI: $(objpfx)' \
+	  $(objpfx)tst-bti-ld-debug-$* > $@; $(evaluate-test)
 
 endif # ifeq (yes,$(have-test-bti))
 

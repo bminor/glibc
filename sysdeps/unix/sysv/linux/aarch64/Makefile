@@ -28,6 +28,10 @@ gcs-tests-dynamic = \
   tst-gcs-dlopen-override \
   tst-gcs-enforced \
   tst-gcs-enforced-abort \
+  tst-gcs-ld-debug-both \
+  tst-gcs-ld-debug-dlopen \
+  tst-gcs-ld-debug-exe \
+  tst-gcs-ld-debug-shared \
   tst-gcs-noreturn \
   tst-gcs-optional-off \
   tst-gcs-optional-on \
@@ -73,10 +77,9 @@ LDFLAGS-tst-gcs-optional-on += -Wl,-z,gcs=always
 LDFLAGS-tst-gcs-optional-off += -Wl,-z,gcs=never
 LDFLAGS-tst-gcs-override += -Wl,-z,gcs=never
 
-CFLAGS-tst-gcs-enforced-static-abort.o += -mbranch-protection=none
-
 LDFLAGS-tst-gcs-disabled-static += -Wl,-z,gcs=always
 LDFLAGS-tst-gcs-enforced-static += -Wl,-z,gcs=always
+LDFLAGS-tst-gcs-enforced-static-abort += -Wl,-z,gcs=never
 LDFLAGS-tst-gcs-optional-static-on += -Wl,-z,gcs=always
 LDFLAGS-tst-gcs-optional-static-off += -Wl,-z,gcs=never
 LDFLAGS-tst-gcs-override-static += -Wl,-z,gcs=never
@@ -90,7 +93,7 @@ tst-gcs-override-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=3
 
 tst-gcs-disabled-static-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=0
 tst-gcs-enforced-static-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1
-tst-gcs-enforced-static-abort-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1:glibc.cpu.aarch64_bti=0
+tst-gcs-enforced-static-abort-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1
 tst-gcs-optional-static-on-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=2
 tst-gcs-optional-static-off-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=2
 tst-gcs-override-static-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=3
@@ -103,6 +106,9 @@ LDFLAGS-tst-gcs-shared-enforced-abort = -Wl,-z,gcs=always
 LDFLAGS-tst-gcs-shared-optional = -Wl,-z,gcs=always
 LDFLAGS-tst-gcs-shared-override = -Wl,-z,gcs=always
 
+LDFLAGS-tst-gcs-ld-debug-shared = -Wl,-z,gcs=always
+LDFLAGS-tst-gcs-ld-debug-dlopen = -Wl,-z,gcs=always
+
 modules-names += \
   tst-gcs-mod1 \
   tst-gcs-mod2 \
@@ -114,6 +120,8 @@ $(objpfx)tst-gcs-shared-enforced-abort: $(objpfx)tst-gcs-mod1.so $(objpfx)tst-gc
 $(objpfx)tst-gcs-shared-optional: $(objpfx)tst-gcs-mod1.so $(objpfx)tst-gcs-mod3.so
 $(objpfx)tst-gcs-shared-override: $(objpfx)tst-gcs-mod1.so $(objpfx)tst-gcs-mod3.so
 $(objpfx)tst-gcs-mod1.so: $(objpfx)tst-gcs-mod2.so
+$(objpfx)tst-gcs-ld-debug-both: $(objpfx)tst-gcs-mod2.so
+$(objpfx)tst-gcs-ld-debug-shared: $(objpfx)tst-gcs-mod1.so $(objpfx)tst-gcs-mod3.so
 
 tst-gcs-shared-disabled-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=0
 tst-gcs-shared-enforced-abort-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1
@@ -125,6 +133,8 @@ LDFLAGS-tst-gcs-dlopen-enforced = -Wl,-z,gcs=always
 LDFLAGS-tst-gcs-dlopen-optional-on = -Wl,-z,gcs=always
 LDFLAGS-tst-gcs-dlopen-optional-off = -Wl,-z,gcs=never
 LDFLAGS-tst-gcs-dlopen-override = -Wl,-z,gcs=always
+LDFLAGS-tst-gcs-ld-debug-exe = -Wl,-z,gcs=never
+LDFLAGS-tst-gcs-ld-debug-both = -Wl,-z,gcs=never
 
 tst-gcs-dlopen-disabled-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=0
 tst-gcs-dlopen-enforced-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1
@@ -137,10 +147,17 @@ $(objpfx)tst-gcs-dlopen-enforced.out: $(objpfx)tst-gcs-mod2.so
 $(objpfx)tst-gcs-dlopen-optional-on.out: $(objpfx)tst-gcs-mod2.so
 $(objpfx)tst-gcs-dlopen-optional-off.out: $(objpfx)tst-gcs-mod2.so
 $(objpfx)tst-gcs-dlopen-override.out: $(objpfx)tst-gcs-mod2.so
+$(objpfx)tst-gcs-ld-debug-dlopen.out: $(objpfx)tst-gcs-mod2.so
 
 LDFLAGS-tst-gcs-noreturn = -Wl,-z,gcs=always
 
 tst-gcs-noreturn-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=0
+
+$(objpfx)tst-gcs-ld-debug-%.out: $(..)elf/tst-dl-debug-protect.sh $(objpfx)tst-gcs-ld-debug-%
+	$(SHELL) $< $(objpfx) '$(test-wrapper-env)' '$(rtld-prefix)' \
+	  '$(run-program-env) GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=2' \
+	  'security: not compatible with AArch64 GCS: $(objpfx)' \
+	  $(objpfx)tst-gcs-ld-debug-$* > $@; $(evaluate-test)
 
 endif # ifeq ($(have-test-gcs),yes)
 
