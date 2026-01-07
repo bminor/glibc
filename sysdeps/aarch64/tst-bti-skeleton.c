@@ -24,8 +24,12 @@
 #include <support/check.h>
 #include <support/test-driver.h>
 
+#ifndef FUN_ATTRIBUTE
+# define FUN_ATTRIBUTE
+#endif
+
 /* Defined in tst-bti-mod.c file.  */
-extern int fun (void);
+extern int fun (void) FUN_ATTRIBUTE;
 
 typedef int (*fun_t) (void);
 

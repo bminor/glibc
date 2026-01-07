@@ -93,7 +93,9 @@ tests += \
   tst-bti-abort-static \
   tst-bti-abort-transitive \
   tst-bti-abort-unprot \
+  tst-bti-abort-unprot-preload \
   tst-bti-dep-prot \
+  tst-bti-dep-prot-preload \
   tst-bti-dlopen-imm \
   tst-bti-dlopen-prot \
   tst-bti-dlopen-transitive \
@@ -103,13 +105,16 @@ tests += \
   tst-bti-ld-debug-shared \
   tst-bti-permissive-dlopen \
   tst-bti-permissive-imm \
+  tst-bti-permissive-preload \
   tst-bti-permissive-transitive \
   # tests
 
 modules-names += \
   tst-bti-mod \
   tst-bti-mod-prot \
+  tst-bti-mod-prot-preload \
   tst-bti-mod-unprot \
+  tst-bti-mod-unprot-preload \
   # modules-names
 
 $(objpfx)tst-bti-abort-imm: $(objpfx)tst-bti-mod-unprot.so
@@ -122,10 +127,28 @@ $(objpfx)tst-bti-permissive-transitive: $(objpfx)tst-bti-mod.so
 $(objpfx)tst-bti-ld-debug-shared: $(objpfx)tst-bti-mod.so
 $(objpfx)tst-bti-ld-debug-both: $(objpfx)tst-bti-mod-unprot.so
 
+$(objpfx)tst-bti-abort-unprot-preload.out: $(objpfx)tst-bti-mod-unprot-preload.so
+tst-bti-abort-unprot-preload-ENV = \
+  GLIBC_TUNABLES=glibc.cpu.aarch64_bti=1 \
+  LD_PRELOAD=$(objpfx)tst-bti-mod-unprot-preload.so
+
+$(objpfx)tst-bti-dep-prot-preload.out: $(objpfx)tst-bti-mod-prot-preload.so
+# The 'fun' function will be provided by the preload library
+LDFLAGS-tst-bti-dep-prot-preload = -Wl,--unresolved-symbols=ignore-all
+tst-bti-dep-prot-preload-ENV = \
+  GLIBC_TUNABLES=glibc.cpu.aarch64_bti=0 \
+  LD_PRELOAD=$(objpfx)tst-bti-mod-prot-preload.so
+
+$(objpfx)tst-bti-permissive-preload.out: $(objpfx)tst-bti-mod-unprot-preload.so
+tst-bti-permissive-preload-ENV = \
+  GLIBC_TUNABLES=glibc.cpu.aarch64_bti=0 \
+  LD_PRELOAD=$(objpfx)tst-bti-mod-unprot-preload.so
+
 CFLAGS-tst-bti-abort-unprot.o += -mbranch-protection=none
 CFLAGS-tst-bti-ld-debug-exe.o += -mbranch-protection=none
 CFLAGS-tst-bti-ld-debug-both.o += -mbranch-protection=none
 CFLAGS-tst-bti-mod-unprot.os += -mbranch-protection=none
+CFLAGS-tst-bti-mod-unprot-preload.os += -mbranch-protection=none
 
 tst-bti-abort-imm-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=1
 tst-bti-abort-transitive-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=1
