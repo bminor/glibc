@@ -35,6 +35,10 @@ gcs-tests-dynamic = \
   tst-gcs-noreturn \
   tst-gcs-optional-off \
   tst-gcs-optional-on \
+  tst-gcs-preload-disabled \
+  tst-gcs-preload-enforced-abort \
+  tst-gcs-preload-optional \
+  tst-gcs-preload-override \
   tst-gcs-override \
   tst-gcs-shared-disabled \
   tst-gcs-shared-enforced-abort \
@@ -158,6 +162,29 @@ $(objpfx)tst-gcs-ld-debug-%.out: $(..)elf/tst-dl-debug-protect.sh $(objpfx)tst-g
 	  '$(run-program-env) GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=2' \
 	  'security: not compatible with AArch64 GCS: $(objpfx)' \
 	  $(objpfx)tst-gcs-ld-debug-$* > $@; $(evaluate-test)
+
+LDFLAGS-tst-gcs-preload-disabled += -Wl,-z,gcs=always
+LDFLAGS-tst-gcs-preload-enforced-abort = -Wl,-z,gcs=always
+LDFLAGS-tst-gcs-preload-optional = -Wl,-z,gcs=always
+LDFLAGS-tst-gcs-preload-override = -Wl,-z,gcs=always
+
+$(objpfx)tst-gcs-preload-disable: $(objpfx)tst-gcs-mod1.so
+$(objpfx)tst-gcs-preload-enforced-abort: $(objpfx)tst-gcs-mod1.so
+$(objpfx)tst-gcs-preload-optional: $(objpfx)tst-gcs-mod1.so
+$(objpfx)tst-gcs-preload-override: $(objpfx)tst-gcs-mod1.so
+
+tst-gcs-preload-disabled-ENV = \
+  GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=0 \
+  LD_PRELOAD=$(objpfx)tst-gcs-mod1.so
+tst-gcs-preload-enforced-abort-ENV = \
+  GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1 \
+  LD_PRELOAD=$(objpfx)tst-gcs-mod1.so
+tst-gcs-preload-optional-ENV = \
+  GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=2 \
+  LD_PRELOAD=$(objpfx)tst-gcs-mod1.so
+tst-gcs-preload-override-ENV = \
+  GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=3 \
+  LD_PRELOAD=$(objpfx)tst-gcs-mod1.so
 
 endif # ifeq ($(have-test-gcs),yes)
 
