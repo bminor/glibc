@@ -103,17 +103,22 @@ tests += \
   tst-bti-ld-debug-dlopen \
   tst-bti-ld-debug-exe \
   tst-bti-ld-debug-shared \
+  tst-bti-permissive-audit \
   tst-bti-permissive-dlopen \
   tst-bti-permissive-imm \
   tst-bti-permissive-preload \
   tst-bti-permissive-transitive \
+  tst-bti-prot-audit \
+  tst-bti-unprot-audit \
   # tests
 
 modules-names += \
   tst-bti-mod \
   tst-bti-mod-prot \
+  tst-bti-mod-prot-audit \
   tst-bti-mod-prot-preload \
   tst-bti-mod-unprot \
+  tst-bti-mod-unprot-audit \
   tst-bti-mod-unprot-preload \
   # modules-names
 
@@ -149,6 +154,7 @@ CFLAGS-tst-bti-ld-debug-exe.o += -mbranch-protection=none
 CFLAGS-tst-bti-ld-debug-both.o += -mbranch-protection=none
 CFLAGS-tst-bti-mod-unprot.os += -mbranch-protection=none
 CFLAGS-tst-bti-mod-unprot-preload.os += -mbranch-protection=none
+CFLAGS-tst-bti-mod-unprot-audit.os += -mbranch-protection=none
 
 tst-bti-abort-imm-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=1
 tst-bti-abort-transitive-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=1
@@ -161,6 +167,18 @@ tst-bti-dlopen-transitive-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=1
 tst-bti-permissive-imm-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=0
 tst-bti-permissive-transitive-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=0
 tst-bti-permissive-dlopen-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=0
+
+$(objpfx)tst-bti-unprot-audit.out: $(objpfx)tst-bti-mod-unprot-audit.so
+tst-bti-unprot-audit-ARGS = -- $(host-test-program-cmd)
+
+$(objpfx)tst-bti-prot-audit.out: $(objpfx)tst-bti-mod-prot-audit.so
+$(objpfx)tst-bti-prot-audit: $(objpfx)tst-bti-mod-prot.so
+tst-bti-prot-audit-ARGS = -- $(host-test-program-cmd)
+
+tst-bti-permissive-audit-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=0
+$(objpfx)tst-bti-permissive-audit.out: $(objpfx)tst-bti-mod-unprot-audit.so
+$(objpfx)tst-bti-permissive-audit: $(objpfx)tst-bti-mod.so
+tst-bti-permissive-audit-ARGS = -- $(host-test-program-cmd)
 
 define run-bti-abort-test
   $(test-wrapper-env) $(run-program-env) \
