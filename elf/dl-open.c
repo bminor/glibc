@@ -625,7 +625,7 @@ dl_open_worker_begin (void *a)
 #endif
       }
 
-  _dl_open_check (new);
+  _dl_open_check (new, mode);
 
   /* Print scope information.  */
   if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_SCOPES))

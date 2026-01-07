@@ -20,6 +20,10 @@ tests += \
 ifeq (yes,$(have-test-gcs))
 
 gcs-tests-dynamic = \
+  tst-gcs-audit-disabled \
+  tst-gcs-audit-enforced \
+  tst-gcs-audit-optional \
+  tst-gcs-audit-override \
   tst-gcs-disabled \
   tst-gcs-dlopen-disabled \
   tst-gcs-dlopen-enforced \
@@ -35,11 +39,11 @@ gcs-tests-dynamic = \
   tst-gcs-noreturn \
   tst-gcs-optional-off \
   tst-gcs-optional-on \
+  tst-gcs-override \
   tst-gcs-preload-disabled \
   tst-gcs-preload-enforced-abort \
   tst-gcs-preload-optional \
   tst-gcs-preload-override \
-  tst-gcs-override \
   tst-gcs-shared-disabled \
   tst-gcs-shared-enforced-abort \
   tst-gcs-shared-optional \
@@ -114,9 +118,11 @@ LDFLAGS-tst-gcs-ld-debug-shared = -Wl,-z,gcs=always
 LDFLAGS-tst-gcs-ld-debug-dlopen = -Wl,-z,gcs=always
 
 modules-names += \
+  tst-gcs-audit1 \
   tst-gcs-mod1 \
   tst-gcs-mod2 \
   tst-gcs-mod3 \
+  tst-gcs-mod4 \
   # modules-names
 
 $(objpfx)tst-gcs-shared-disabled: $(objpfx)tst-gcs-mod1.so $(objpfx)tst-gcs-mod3.so
@@ -185,6 +191,26 @@ tst-gcs-preload-optional-ENV = \
 tst-gcs-preload-override-ENV = \
   GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=3 \
   LD_PRELOAD=$(objpfx)tst-gcs-mod1.so
+
+LDFLAGS-tst-gcs-audit1.so += -Wl,-z,gcs=never
+
+LDFLAGS-tst-gcs-audit-disabled += -Wl,-z,gcs=always
+LDFLAGS-tst-gcs-audit-enforced += -Wl,-z,gcs=always
+LDFLAGS-tst-gcs-audit-optional += -Wl,-z,gcs=always
+
+$(objpfx)tst-gcs-audit-disabled.out: $(objpfx)tst-gcs-audit1.so
+$(objpfx)tst-gcs-audit-disabled: $(objpfx)tst-gcs-mod4.so
+$(objpfx)tst-gcs-audit-enforced.out: $(objpfx)tst-gcs-audit1.so
+$(objpfx)tst-gcs-audit-enforced: $(objpfx)tst-gcs-mod4.so
+$(objpfx)tst-gcs-audit-optional.out: $(objpfx)tst-gcs-audit1.so
+$(objpfx)tst-gcs-audit-optional: $(objpfx)tst-gcs-mod4.so
+$(objpfx)tst-gcs-audit-override.out: $(objpfx)tst-gcs-audit1.so
+$(objpfx)tst-gcs-audit-override: $(objpfx)tst-gcs-mod4.so
+
+tst-gcs-audit-disabled-ARGS = -- $(host-test-program-cmd)
+tst-gcs-audit-enforced-ARGS = -- $(host-test-program-cmd)
+tst-gcs-audit-optional-ARGS = -- $(host-test-program-cmd)
+tst-gcs-audit-override-ARGS = -- $(host-test-program-cmd)
 
 endif # ifeq ($(have-test-gcs),yes)
 

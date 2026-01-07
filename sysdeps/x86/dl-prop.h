@@ -73,7 +73,7 @@ _rtld_main_check (struct link_map *m, const char *program)
 }
 
 static inline void __attribute__ ((always_inline))
-_dl_open_check (struct link_map *m)
+_dl_open_check (struct link_map *m, int dlopne_mode)
 {
   dl_isa_level_check (m, NULL);
 #if CET_ENABLED

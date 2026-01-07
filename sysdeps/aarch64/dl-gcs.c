@@ -71,7 +71,8 @@ unsupported (void)
    ignored and GCS is supposed to be enabled.  This occurs
    for the GCS_POLICY_ENFORCED and GCS_POLICY_OPTIONAL policies.  */
 static bool
-check_gcs (struct link_map *l, const char *program, bool enforced)
+check_gcs (struct link_map *l, const char *program, bool enforced,
+	   int dlopen_mode)
 {
 #ifdef SHARED
   /* Ignore GCS marking on ld.so: its properties are not processed.  */
@@ -84,8 +85,10 @@ check_gcs (struct link_map *l, const char *program, bool enforced)
   /* Extra logging requested, print path to failed binary.  */
   if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_SECURITY))
     warn (l, program);
-  /* Binary is not marked and loaded via dlopen: abort.  */
-  if (program == NULL)
+  /* Binary is not marked and loaded via dlopen: abort.  Also, do not
+     fail is optional dlopne_mode is being used with audit modules without
+     GCS support.  */
+  if (program == NULL && (dlopen_mode & __RTLD_AUDIT) == 0)
     fail (l, program);
   /* Binary is not marked and we enforce GCS: abort.  */
   if (enforced)
@@ -106,18 +109,20 @@ check_gcs (struct link_map *l, const char *program, bool enforced)
    We interrupt checking if GCS is optional and we already know
    it is going to be disabled. */
 static void
-check_gcs_depends (struct link_map *l, const char *program, bool enforced)
+check_gcs_depends (struct link_map *l, const char *program, bool enforced,
+		   int dlopen_mode)
 {
-  if (check_gcs (l, program, enforced))
+  if (check_gcs (l, program, enforced, dlopen_mode))
     for (unsigned int i = 0; i < l->l_searchlist.r_nlist; i++)
-      if (!check_gcs (l->l_searchlist.r_list[i], program, enforced))
+      if (!check_gcs (l->l_searchlist.r_list[i], program, enforced,
+		      dlopen_mode))
 	break;
 }
 
 /* Apply GCS policy for L and its dependencies.
    PROGRAM is NULL when this check is invoked for dl_open.  */
 void
-_dl_gcs_check (struct link_map *l, const char *program)
+_dl_gcs_check (struct link_map *l, const char *program, int dlopen_mode)
 {
   unsigned long policy = GL (dl_aarch64_gcs);
   switch (policy)
@@ -126,10 +131,10 @@ _dl_gcs_check (struct link_map *l, const char *program)
     case GCS_POLICY_OVERRIDE:
       return;
     case GCS_POLICY_ENFORCED:
-      check_gcs_depends (l, program, true);
+      check_gcs_depends (l, program, true, dlopen_mode);
       return;
     case GCS_POLICY_OPTIONAL:
-      check_gcs_depends (l, program, false);
+      check_gcs_depends (l, program, false, dlopen_mode);
       return;
     default:
       /* All other policy values are not supported: abort.  */
