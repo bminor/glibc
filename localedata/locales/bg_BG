@@ -248,8 +248,8 @@ reorder-end
 END LC_COLLATE
 
 LC_MONETARY
-int_curr_symbol           "BGN "
-currency_symbol           "лв."
+int_curr_symbol           "EUR "
+currency_symbol           "€"
 mon_decimal_point         ","
 mon_thousands_sep         " "
 mon_grouping              3
