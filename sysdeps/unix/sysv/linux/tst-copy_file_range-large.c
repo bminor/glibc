@@ -25,6 +25,7 @@
 #include <fcntl.h>
 #include <limits.h>
 #include <stdio.h>
+#include <stdatomic.h>
 #include <string.h>
 #include <support/check.h>
 #include <support/fuse.h>
@@ -35,16 +36,32 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+static _Atomic bool fuse_has_copy_file_range_64 = false;
+static const uint64_t file_size = 1LLU << 61;
+
+/* Node IDs for our test files.  */
+enum { NODE_SOURCE = 2, NODE_DEST = 3 };
+
+/* Verify this is a copy from source to dest, starting at
+   offset 0.  */
+static void
+verify_fuse_request (struct fuse_copy_file_range_in *p)
+{
+  TEST_COMPARE (p->fh_in, NODE_SOURCE);
+  TEST_COMPARE (p->nodeid_out, NODE_DEST);
+  TEST_COMPARE (p->off_in, 0);
+  TEST_COMPARE (p->off_out, 0);
+  TEST_VERIFY (p->len > 0);
+  TEST_VERIFY (p->len <= file_size);
+}
+
 static void
 fuse_thread (struct support_fuse *f, void *closure)
 {
-  /* Node IDs for our test files.  */
-  enum { NODE_SOURCE = 2, NODE_DEST = 3 };
   /* A large size, so that the kernel does not fail the
      copy_file_range attempt before performing the FUSE callback.
      Only the source file size matters to the kernel, but both files
      use the same size for simplicity.  */
-  const uint64_t file_size = 1LLU << 61;
 
   struct fuse_in_header *inh;
   while ((inh = support_fuse_next (f)) != NULL)
@@ -108,17 +125,27 @@ fuse_thread (struct support_fuse *f, void *closure)
             struct fuse_copy_file_range_in *p
               = support_fuse_cast (COPY_FILE_RANGE, inh);
 
-            /* Verify this is a copy from source to dest, starting at
-               offset 0.  */
-            TEST_COMPARE (p->fh_in, NODE_SOURCE);
-            TEST_COMPARE (p->nodeid_out, NODE_DEST);
-            TEST_COMPARE (p->off_in, 0);
-            TEST_COMPARE (p->off_out, 0);
-            TEST_VERIFY (p->len > 0);
-            TEST_VERIFY (p->len <= file_size);
+            verify_fuse_request (p);
 
             /* Pretend the copy succeeded.  */
             struct fuse_write_out out = { .size = p->len };
+            support_fuse_reply (f, &out, sizeof (out));
+          }
+          break;
+
+        case FUSE_COPY_FILE_RANGE_64:
+          {
+            atomic_store (&fuse_has_copy_file_range_64, true);
+
+            struct fuse_copy_file_range_in *p
+              = support_fuse_cast (COPY_FILE_RANGE_64, inh);
+
+            verify_fuse_request (p);
+
+            /* Pretend the copy succeeded.  */
+            struct fuse_copy_file_range_out out = {
+              .bytes_copied = p->len,
+            };
             support_fuse_reply (f, &out, sizeof (out));
           }
           break;
@@ -170,10 +197,14 @@ test_size (struct support_fuse *f, off64_t size)
       FAIL_UNSUPPORTED ("copy_file_range not supported");
     }
 
+  if (atomic_load (&fuse_has_copy_file_range_64))
+    TEST_COMPARE (copied, size);
+
   /* To avoid the negative return value in Linux versions 6.18 the size is
-     silently clamped to UINT_MAX & PAGE_MASK.  Accept that return value
+     silently clamped to UINT_MAX & PAGE_MASK and the change has been
+     backported to stable kernel release series.  Accept that return value
      too.  See:
-     <https://github.com/torvalds/linux/commit/1e08938c3694f707bb165535df352ac97a8c75c9>.
+     <https://git.kernel.org/torvalds/c/1e08938c3694>.
      We must AND the expression with SSIZE_MAX for 32-bit platforms where
      SSIZE_MAX is less than UINT_MAX.
   */
@@ -201,8 +232,11 @@ test_all_sizes (struct support_fuse *f)
     test_size (f, UINT_MAX + i);
 
   /* We would like to test larger values than UINT_MAX here, but they
-     do not work because the FUSE protocol uses uint32_t for the
-     copy_file_range result in struct fuse_write_out.  */
+     do not work if the FUSE protocol still uses uint32_t for the
+     copy_file_range result in struct fuse_write_out (on Linux < 6.18).  */
+  if (atomic_load (&fuse_has_copy_file_range_64))
+    for (int i = -10; i <= 0; ++i)
+      test_size (f, file_size + i);
 }
 
 static void *
