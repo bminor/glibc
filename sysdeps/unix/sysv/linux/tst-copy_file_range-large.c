@@ -128,7 +128,7 @@ fuse_thread (struct support_fuse *f, void *closure)
           break;
 
         default:
-          support_fuse_reply_error (f, EIO);
+          support_fuse_reply_error (f, ENOSYS);
         }
     }
 }
