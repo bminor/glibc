@@ -92,7 +92,7 @@ adddd (double xh, double xl, double ch, double cl, double *l)
    assuming xh = RN(xh + xl), which implies |xl| <= 1/2 ulp(xh),
    and similarly for ch, cl. */
 static inline double
-muldd (double xh, double xl, double ch, double cl, double *l)
+muldd_acc (double xh, double xl, double ch, double cl, double *l)
 {
   double ahlh = ch * xl, alhh = cl * xh, ahhh = ch * xh,
 	 ahhl = fma (ch, xh, -ahhh);
@@ -146,7 +146,7 @@ polydd (double xh, double xl, int n, const double c[][2], double *l)
   double ch = c[i][0] + *l, cl = ((c[i][0] - ch) + *l) + c[i][1];
   while (--i >= 0)
     {
-      ch = muldd (xh, xl, ch, cl, &cl);
+      ch = muldd_acc (xh, xl, ch, cl, &cl);
       double th = ch + c[i][0], tl = (c[i][0] - th) + ch;
       ch = th;
       cl += tl + c[i][1];

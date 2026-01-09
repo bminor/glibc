@@ -1,9 +1,9 @@
 /* Correctly-rounded inverse hyperbolic sine function.  Binary64 version.
 
-Copyright (c) 2023-2025 Alexei Sibidanov.
+Copyright (c) 2023-2026 Alexei Sibidanov.
 
 The original version of this file was copied from the CORE-MATH
-project (file src/binary64/asinh/asinh.c, revision fde815f8).
+project (file src/binary64/asinh/asinh.c, revision cd653cf7).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -59,7 +59,7 @@ as_asinh_zero (double x, double x2h, double x2l)
 	   + x2h * (cl[1] + x2h * (cl[2] + x2h * (cl[3] + x2h * (cl[4])))));
   double y1 = polydd (x2h, x2l, 12, ch, &y2);
 
-  y1 = muldd (y1, y2, x2h, x2l, &y2);
+  y1 = muldd_acc (y1, y2, x2h, x2l, &y2);
   y1 = mulddd (y1, y2, x, &y2);
   double y0 = fasttwosum (x, y1, &y1);
   y1 = fasttwosum (y1, y2, &y2);
@@ -120,8 +120,13 @@ __asinh (double x)
 	      sl = x3h * (cl[0] + x2h * (cl[1] + x2h * (cl[2] + x2h * cl[3])));
 	    }
 	}
-      else
+      else // 0x1.3p-6 <= |x| < 0x1.bp-4
 	{
+	  /* p = x + cl[0]*x^3 + ... + cl[6]*x^15 is a minimax polynomial
+	     with relative error < 2^-63.091 on [0x1.3p-6, 0x1.bp-4].
+	     This branch (0x1.3p-6 <= x < 0x1.bp-4) was tested exhaustively
+	     by Vincenzo Innocente (both with/without FMA).
+	     All found failures were added to asinh.wc.  */
 	  static const double cl[]
 	      = { -0x1.5555555555555p-3, 0x1.333333333331p-4,
 		  -0x1.6db6db6da466cp-5, 0x1.f1c71c2ea7be4p-6,
@@ -133,7 +138,7 @@ __asinh (double x)
 	  double x4 = x2h * x2h;
 	  sl = x3h * (cl[0] + x2h * (c1 + x4 * (c3 + x4 * c5)));
 	}
-      double eps = 0x1.6p-53 * x3h;
+      double eps = 0x1.79p-53 * x3h;
       double lb = x + (sl - eps), ub = x + (sl + eps);
       if (lb == ub)
 	return lb;
@@ -144,7 +149,7 @@ __asinh (double x)
   double ah, al;
   int off = 0x3ff;
   if (__glibc_likely (u < UINT64_C (0x4190000000000000)))
-    { // x < 0x1p+26
+    { // |x| < 0x1p+26
       double th, tl;
       x2h = x * x;
       x2l = fma (x, x, -x2h);
@@ -160,12 +165,12 @@ __asinh (double x)
       al += tl;
     }
   else if (u < UINT64_C (0x4330000000000000))
-    {
+    { // |x| < 0x1p+52
       ah = 2 * ax;
       al = 0.5 / ax;
     }
   else
-    {
+    { // |x| >= 0x1p+52
       if (__glibc_unlikely (u >= UINT64_C (0x7ff0000000000000)))
 	return x + x; // +-inf or nan
       off = 0x3fe;
@@ -405,11 +410,13 @@ as_asinh_refine (double x, double zh, double zl, double a)
   xh = adddd (xh, xl, sh, sl, &xl);
   sl = xh * (cl[0] + xh * (cl[1] + xh * cl[2]));
   sh = polydd (xh, xl, 3, ch, &sl);
-  sh = muldd (xh, xl, sh, sl, &sl);
+  sh = muldd_acc (xh, xl, sh, sl, &sl);
   sh = adddd (sh, sl, el1, el2, &sl);
   sh = adddd (sh, sl, L[1], L[2], &sl);
   double v2, v0 = fasttwosum (L[0], sh, &v2);
   double v1 = fasttwosum (v2, sl, &v2);
+  v0 = fasttwosum (v0, v1, &v1);
+  v1 = fasttwosum (v1, v2, &v2);
   v0 *= copysign (2, x);
   v1 *= copysign (2, x);
   v2 *= copysign (2, x);
@@ -424,10 +431,10 @@ as_asinh_refine (double x, double zh, double zl, double a)
       v1 = asdouble (t);
     }
   uint64_t t0 = asuint64 (v0);
-  uint64_t er = ((t + 33) & (~UINT64_C (0) >> 12)),
+  uint64_t er = ((t + 41) & (~UINT64_C (0) >> 12)),
 	   de = ((t0 >> 52) & 0x7ff) - ((t >> 52) & 0x7ff);
   double res = v0 + v1;
-  if (__glibc_unlikely (de > 99 || er < 66))
+  if (__glibc_unlikely (de > 99 || er < 80))
     return as_asinh_database (x, res);
   return res;
 }

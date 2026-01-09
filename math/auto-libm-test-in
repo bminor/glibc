@@ -465,6 +465,16 @@ asinh 0xf.96c69p-8
 asinh 0x1.023cfeab10a13p-2
 # the next value generates larger error bounds on x86_64 (binary128)
 asinh -0x5.a95683e302a71be88a35649b24ep-4
+asinh 0x1.07888cc76eb3cp-4
+asinh 0x1.07888e17d0fep-4
+asinh 0x1.07888e344d64ep-4
+asinh 0x1.07888e45219adp-4
+asinh 0x1.078891348e5b1p-4
+asinh 0x1.0788946685afp-4
+asinh 0x1.0788974a74f16p-4
+asinh 0x1.07889a0cffe1fp-4
+asinh 0x1.07889cddeccf9p-4
+asinh 0x1.07889efd3a82bp-4
 asinh min
 asinh -min
 asinh min_subnorm

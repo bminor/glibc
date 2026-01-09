@@ -1,7 +1,7 @@
 /* Correctly-rounded inverse hyperbolic cosine function for the
    binary64 floating point format.
 
-Copyright (c) 2023-2025 Alexei Sibidanov.
+Copyright (c) 2023-2026 Alexei Sibidanov.
 
 The original version of this file was copied from the CORE-MATH
 project (file src/binary64/acosh/acosh.c, revision 6736002f).
@@ -74,7 +74,7 @@ as_acosh_one (double x, double sh, double sl)
   y1 = mulddd (y1, y2, x, &y2);
   double y0 = fasttwosum (1, y1, &y1);
   y1 += y2;
-  y0 = muldd (y0, y1, sh, sl, &y1);
+  y0 = muldd_acc (y0, y1, sh, sl, &y1);
   return y0 + y1;
 }
 
@@ -387,7 +387,7 @@ as_acosh_refine (double x, double a)
   xh = adddd (xh, xl, sh, sl, &xl);
   sl = xh * (cl[0] + xh * (cl[1] + xh * cl[2]));
   sh = polydd (xh, xl, 3, ch, &sl);
-  sh = muldd (xh, xl, sh, sl, &sl);
+  sh = muldd_acc (xh, xl, sh, sl, &sl);
   sh = adddd (sh, sl, el1, el2, &sl);
   sh = adddd (sh, sl, L[1], L[2], &sl);
   double v2, v0 = fasttwosum (L[0], sh, &v2), v1 = fasttwosum (v2, sl, &v2);
