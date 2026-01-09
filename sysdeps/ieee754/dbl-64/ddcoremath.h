@@ -102,6 +102,33 @@ muldd_acc (double xh, double xl, double ch, double cl, double *l)
   return ch;
 }
 
+/* Note: in revision 085972b, we replaced the last two lines
+   ch = ahhh + ahhl and *l = (ahhh - ch) + ahhl by fasttwosum (ahhh, ahhl, l).
+   Indeed, these last two lines did emulate a FastTwoSum.
+   However, they did emulate another variant of fasttwosum, with
+   z = x - s and e = z + y.
+   Note that these two variants differ when the fasttwosum condition
+   |x| >= |y| is not satisfied.
+   Take for example with precision 3 and rounding upwards, x=-7 and
+   y=28. Then s = RU(x + y) = 24. With the first variant, z = RU(s-x) = 32
+   and e = RU(y - z) = -4, thus s + e = 20. With the second variant,
+   z = RU(x-s) = -28 and e = RU(z + y) = 0, thus s + e = 24. In this case,
+   the first variant is closer to the sum x + y = 21.
+   Still with precision 3 and rounding upwards, now take x=7 and
+   y=-28. Then s = RU(x + y) = -20. With the first variant, z = RU(s-x) = -24
+   and e = RU(y - z) = -4, thus s + e = -28. With the second variant,
+   z = RU(x-s) = 28 and e = RU(z + y) = 0, thus s + e = -20. In this case,
+   the second variant is closer to the sum x + y = -21.
+*/
+static inline double
+muldd_acc2 (double xh, double xl, double ch, double cl, double *l)
+{
+ double ahlh = ch * xl, alhh = cl * xh, ahhh = ch * xh,
+	ahhl = fma (ch, xh, -ahhh);
+ ahhl += alhh + ahlh;
+ return fasttwosum (ahhh, ahhl, l);
+}
+
 static inline double
 muldd2 (double xh, double xl, double ch, double cl, double *l)
 {
@@ -139,11 +166,20 @@ mulddd2 (double x, double ch, double cl, double *l)
   return ahhh;
 }
 
+static inline double mulddd3 (double xh, double xl, double ch, double *l)
+{
+  double hh = xh * ch;
+  *l = fma (ch, xh, -hh) + xl * ch;
+  return hh;
+}
+
 static inline double
 polydd (double xh, double xl, int n, const double c[][2], double *l)
 {
   int i = n - 1;
-  double ch = c[i][0] + *l, cl = ((c[i][0] - ch) + *l) + c[i][1];
+  double ch, cl;
+  ch = fasttwosum (c[i][0], *l, &cl);
+  cl += c[i][1];
   while (--i >= 0)
     {
       ch = muldd_acc (xh, xl, ch, cl, &cl);
@@ -166,6 +202,24 @@ polydd2 (double xh, double xl, int n, const double c[][2], double *l)
       ch = muldd2 (xh, xl, ch, cl, &cl);
       ch = fastsum (c[i][0], c[i][1], ch, cl, &cl);
     }
+  *l = cl;
+  return ch;
+}
+
+static inline double
+polydd3 (double xh, double xl, int n, const double c[][2], double *l)
+{
+  int i = n - 1;
+  double ch, cl;
+  ch = fasttwosum (c[i][0], *l, &cl);
+  cl += c[i][1];
+  while(--i>=0){
+    ch = muldd_acc2 (xh, xl, ch, cl, &cl);
+    double th, tl;
+    th = fasttwosum (c[i][0], ch, &tl);
+    ch = th;
+    cl += tl + c[i][1];
+  }
   *l = cl;
   return ch;
 }

@@ -26,23 +26,26 @@ SOFTWARE. */
 #include "s_atanh_data.h"
 
 const double __atanh_ch[][2]
-    = { { 0x1.5555555555555p-2, 0x1.5555555555555p-56 },
-	{ 0x1.999999999999ap-3, -0x1.999999999611cp-57 },
-	{ 0x1.2492492492492p-3, 0x1.2492490f76b25p-57 },
-	{ 0x1.c71c71c71c71cp-4, 0x1.c71cd5c38a112p-58 },
-	{ 0x1.745d1745d1746p-4, -0x1.7556c4165f4cap-59 },
-	{ 0x1.3b13b13b13b14p-4, -0x1.b893c3b36052ep-59 },
-	{ 0x1.1111111111105p-4, 0x1.4e1afd723ed1fp-59 },
-	{ 0x1.e1e1e1e1e2678p-5, -0x1.f86ea96fb1435p-59 },
-	{ 0x1.af286bc9f90ccp-5, 0x1.1e51a6e54fde9p-60 },
-	{ 0x1.8618618c779b6p-5, -0x1.ab913de95c3bfp-61 },
-	{ 0x1.642c84aa383ebp-5, 0x1.632e747641b12p-59 },
-	{ 0x1.47ae2d205013cp-5, -0x1.0c9617e7bcff2p-60 },
-	{ 0x1.2f664d60473f9p-5, 0x1.3adb3e2b7f35ep-61 } };
+    = { { 0x1.5555555555555p-2, 0x1.5555555555555p-56 },   /* degree 3 */
+	{ 0x1.999999999999ap-3, -0x1.999999999611cp-57 },  /* degree 5 */
+	{ 0x1.2492492492492p-3, 0x1.2492490f76b25p-57 },   /* degree 7 */
+	{ 0x1.c71c71c71c71cp-4, 0x1.c71cd5c38a112p-58 },   /* degree 9 */
+	{ 0x1.745d1745d1746p-4, -0x1.7556c4165f4cap-59 },  /* degree 11 */
+	{ 0x1.3b13b13b13b14p-4, -0x1.b893c3b36052ep-59 },  /* degree 13 */
+	{ 0x1.1111111111105p-4, 0x1.4e1afd723ed1fp-59 },   /* degree 15 */
+	{ 0x1.e1e1e1e1e2678p-5, -0x1.f86ea96fb1435p-59 },  /* degree 17 */
+	{ 0x1.af286bc9f90ccp-5, 0x1.1e51a6e54fde9p-60 },   /* degree 19 */
+	{ 0x1.8618618c779b6p-5, -0x1.ab913de95c3bfp-61 },  /* degree 21 */
+	{ 0x1.642c84aa383ebp-5, 0x1.632e747641b12p-59 },   /* degree 23 */
+	{ 0x1.47ae2d205013cp-5, -0x1.0c9617e7bcff2p-60 },  /* degree 25 */
+	{ 0x1.2f664d60473f9p-5, 0x1.3adb3e2b7f35ep-61 } }; /* degree 27 */
 
 const double __atanh_cl[]
-    = { 0x1.1a9a91fd692afp-5, 0x1.06dfbb35e7f44p-5, 0x1.037bed4d7588fp-5,
-	0x1.5aca6d6d720d6p-6, 0x1.99ea5700d53a5p-5 };
+    = { 0x1.1a9a91fd692afp-5, /* degree 29 */
+	0x1.06dfbb35e7f44p-5, /* degree 31 */
+	0x1.037bed4d7588fp-5, /* degree 33 */
+	0x1.5aca6d6d720d6p-6, /* degree 35 */
+	0x1.99ea5700d53a5p-5  /* degree 37 */ };
 
 const struct __atanh_B_t __atanh_B[] = {
   { 301, 27565 },    { 7189, 24786 },	{ 13383, 22167 },  { 18923, 19696 },

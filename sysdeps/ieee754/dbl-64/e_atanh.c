@@ -3,7 +3,7 @@
 Copyright (c) 2023-2026 Alexei Sibidanov.
 
 The original version of this file was copied from the CORE-MATH
-project (file src/binary64/atanh/atanh.c, revision dc9465e7).
+project (file src/binary64/atanh/atanh.c, revision c423b9a3).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -40,11 +40,15 @@ as_atanh_zero (double x)
   double y2
       = x2
 	* (CL[0] + x2 * (CL[1] + x2 * (CL[2] + x2 * (CL[3] + x2 * (CL[4])))));
-  double y1 = polydd (x2, x2l, 13, CH, &y2);
-  y1 = mulddd (y1, y2, x, &y2);
-  y1 = muldd_acc (y1, y2, x2, x2l, &y2);
+  double y1 = polydd3 (x2, x2l, 13, CH, &y2);
+  y1 = mulddd3 (y1, y2, x, &y2);
+  y1 = muldd_acc2 (x2, x2l, y1, y2, &y2);
   double y0 = fasttwosum (x, y1, &y1);
   y1 = fasttwosum (y1, y2, &y2);
+  /* We have 22 failures (only for RNDN, 11 up to sign) if we disable this
+     check, all with 53 or 54 identical bits after the round bit.
+     For example x=0x1.cc7092205cfafp-10 we have y0=0x1.cc70b12857108p-10
+     and y1=-0x1p-63.  */
   uint64_t t = asuint64 (y1);
   if (__glibc_unlikely (!(t & (~UINT64_C(0) >> 12))))
     {
