@@ -3,7 +3,7 @@
 Copyright (c) 2023-2025 Alexei Sibidanov.
 
 The original version of this file was copied from the CORE-MATH
-project (file src/binary64/acosh/acosh.c, revision 6d87ca23).
+project (file src/binary64/acosh/acosh.c, revision 1bd85b89).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

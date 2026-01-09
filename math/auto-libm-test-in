@@ -226,6 +226,16 @@ acosh 0x1.080016353964ep+0
 acosh 0x1.1ecbdf374bce01cap+0
 # the next value generates larger error bounds on x86_64 (binary128)
 acosh 0x1.0f97586eba090200118df0902f99p+0
+acosh 0x1.00b31045e07dp+0
+acosh 0x1.00b310c7237f5p+0
+acosh 0x1.00b3119dd9422p+0
+acosh 0x1.00b3130595404p+0
+acosh 0x1.00b3138ed8a79p+0
+acosh 0x1.00b313c20c809p+0
+acosh 0x1.00b3140f6b582p+0
+acosh 0x1.00b31560e5422p+0
+acosh 0x1.00b3156dfbb59p+0
+acosh 0x1.00b319a514ad9p+0
 acosh max
 
 add 0 0

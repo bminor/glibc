@@ -244,7 +244,7 @@ tzdata:
 # The project is distribute here:
 #       https://gitlab.inria.fr/core-math/core-math/
 core-math:
-  # src/binary64/acosh/acosh.c, revision 6736002f
+  # src/binary64/acosh/acosh.c, revision 1bd85b89
   sysdeps/ieee754/dbl-64/e_acosh.c
   # src/binary64/atanh/atanh.c, revision c423b9a3
   sysdeps/ieee754/dbl-64/e_atanh.c

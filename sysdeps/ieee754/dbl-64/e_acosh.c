@@ -70,11 +70,11 @@ as_acosh_one (double x, double sh, double sl)
 	   + x
 		 * (cl[1]
 		    + x * (cl[2] + x * (cl[3] + x * (cl[4] + x * (cl[5]))))));
-  double y1 = polydd (x, 0, 10, ch, &y2);
+  double y1 = polydd3 (x, 0, 10, ch, &y2);
   y1 = mulddd (y1, y2, x, &y2);
   double y0 = fasttwosum (1, y1, &y1);
   y1 += y2;
-  y0 = muldd_acc (y0, y1, sh, sl, &y1);
+  y0 = muldd_acc2 (y0, y1, sh, sl, &y1);
   return y0 + y1;
 }
 
@@ -83,7 +83,7 @@ __ieee754_acosh (double x)
 {
   uint64_t ix = asuint64 (x);
   if (__glibc_unlikely (ix >= UINT64_C (0x7ff0000000000000)))
-    {
+    { // x<0 or NaN/Inf
       uint64_t aix = ix << 1;
       if (ix == UINT64_C (0x7ff0000000000000)
 	  || aix > (UINT64_C (0x7ff) << 53))
@@ -100,7 +100,7 @@ __ieee754_acosh (double x)
   double g;
   int off = 0x3fe;
   uint64_t t = ix;
-  if (ix < UINT64_C (0x3ff1e83e425aee63))
+  if (ix < UINT64_C (0x3ff1e83e425aee63)) // 0 <= x < 0x1.1e83e425aee63p+0
     {
       double z = x - 1;
       double iz = (-0.25) / z, zt = 2 * z;
@@ -129,6 +129,7 @@ __ieee754_acosh (double x)
     }
   else if (__glibc_likely (ix < UINT64_C (0x405bf00000000000)))
     {
+      // 0x1.1e83e425aee63p+0 <= x < 0x1.bfp+6
       off = 0x3ff;
       double x2h = x * x, wh = x2h - 1, wl = fma (x, x, -x2h);
       double sh = sqrt (wh), ish = 0.5 / wh,
@@ -140,6 +141,7 @@ __ieee754_acosh (double x)
     }
   else if (ix < UINT64_C (0x4087100000000000))
     {
+      // 0x1.bfp+6 <= x < 0x1.71p+9
       static const double cl[]
 	  = { 0x1.5c4b6148816e2p-66, -0x1.000000000005cp-2,
 	      -0x1.7fffffebf3e6cp-4, -0x1.aab6691f2bae7p-5 };
@@ -148,6 +150,7 @@ __ieee754_acosh (double x)
     }
   else if (ix < UINT64_C (0x40e0100000000000))
     {
+      // 0x1.71p+9 <= x < 0x1.01p+15
       static const double cl[]
 	  = { -0x1.7f77c8429c6c6p-67, -0x1.ffffffffff214p-3,
 	      -0x1.8000268641bfep-4 };
@@ -156,6 +159,7 @@ __ieee754_acosh (double x)
     }
   else if (ix < UINT64_C (0x41ea000000000000))
     {
+      // 0x1.01p+15 <= x < 0x1.ap+31
       static const double cl[]
 	  = { 0x1.7a0ed2effdd1p-67, -0x1.000000017d048p-2 };
       double z = 1 / (x * x);
@@ -163,6 +167,7 @@ __ieee754_acosh (double x)
     }
   else
     {
+      // 0x1.ap+31 <= x
       g = 0;
     }
   int ex = t >> 52, e = ex - off;
@@ -386,8 +391,8 @@ as_acosh_refine (double x, double a)
     }
   xh = adddd (xh, xl, sh, sl, &xl);
   sl = xh * (cl[0] + xh * (cl[1] + xh * cl[2]));
-  sh = polydd (xh, xl, 3, ch, &sl);
-  sh = muldd_acc (xh, xl, sh, sl, &sl);
+  sh = polydd3 (xh, xl, 3, ch, &sl);
+  sh = muldd_acc2 (xh, xl, sh, sl, &sl);
   sh = adddd (sh, sl, el1, el2, &sl);
   sh = adddd (sh, sl, L[1], L[2], &sl);
   double v2, v0 = fasttwosum (L[0], sh, &v2), v1 = fasttwosum (v2, sl, &v2);
