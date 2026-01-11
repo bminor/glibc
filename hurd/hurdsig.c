@@ -168,6 +168,7 @@ _hurd_sigstate_delete (thread_t thread)
       free (ss);
     }
 }
+libc_hidden_def (_hurd_sigstate_delete)
 
 /* Make SS a global receiver, with pthread signal semantics.  */
 void
@@ -178,42 +179,13 @@ _hurd_sigstate_set_global_rcv (struct hurd_sigstate *ss)
 }
 libc_hidden_def (_hurd_sigstate_set_global_rcv)
 
-/* Check whether SS is a global receiver.  */
-static int
-sigstate_is_global_rcv (const struct hurd_sigstate *ss)
-{
-  return (_hurd_global_sigstate != NULL)
-	 && (ss->actions[0].sa_handler == SIG_IGN);
-}
-libc_hidden_def (_hurd_sigstate_delete)
-
-/* Lock/unlock a hurd_sigstate structure.  If the accessors below require
-   it, the global sigstate will be locked as well.  */
-void
-_hurd_sigstate_lock (struct hurd_sigstate *ss)
-{
-  if (sigstate_is_global_rcv (ss))
-    __spin_lock (&_hurd_global_sigstate->lock);
-  __spin_lock (&ss->lock);
-}
-libc_hidden_def (_hurd_sigstate_lock)
-
-void
-_hurd_sigstate_unlock (struct hurd_sigstate *ss)
-{
-  __spin_unlock (&ss->lock);
-  if (sigstate_is_global_rcv (ss))
-    __spin_unlock (&_hurd_global_sigstate->lock);
-}
-libc_hidden_def (_hurd_sigstate_unlock)
-
 /* Retrieve a thread's full set of pending signals, including the global
    ones if appropriate.  SS must be locked.  */
 sigset_t
 _hurd_sigstate_pending (const struct hurd_sigstate *ss)
 {
   sigset_t pending = ss->pending;
-  if (sigstate_is_global_rcv (ss))
+  if (_hurd_sigstate_is_global_rcv (ss))
     __sigorset (&pending, &pending, &_hurd_global_sigstate->pending);
   return pending;
 }
@@ -225,7 +197,7 @@ libc_hidden_def (_hurd_sigstate_pending)
 static struct hurd_signal_detail
 sigstate_clear_pending (struct hurd_sigstate *ss, int signo)
 {
-  if (sigstate_is_global_rcv (ss)
+  if (_hurd_sigstate_is_global_rcv (ss)
       && __sigismember (&_hurd_global_sigstate->pending, signo))
     {
       __sigdelset (&_hurd_global_sigstate->pending, signo);
@@ -241,7 +213,7 @@ sigstate_clear_pending (struct hurd_sigstate *ss, int signo)
 struct sigaction *
 _hurd_sigstate_actions (struct hurd_sigstate *ss)
 {
-  if (sigstate_is_global_rcv (ss))
+  if (_hurd_sigstate_is_global_rcv (ss))
     return _hurd_global_sigstate->actions;
   else
     return ss->actions;
@@ -746,7 +718,7 @@ post_signal (struct hurd_sigstate *ss,
     __mutex_lock (&_hurd_siglock);
     for (rss = _hurd_sigstates; rss != NULL; rss = rss->next)
       {
-	if (! sigstate_is_global_rcv (rss))
+	if (! _hurd_sigstate_is_global_rcv (rss))
 	  continue;
 
 	/* The global sigstate is already locked.  */

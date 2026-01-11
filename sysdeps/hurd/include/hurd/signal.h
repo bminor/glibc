@@ -6,6 +6,8 @@ extern struct hurd_sigstate *_hurd_self_sigstate (void) __attribute__ ((__const_
 libc_hidden_proto (_hurd_self_sigstate)
 #endif
 
+extern int _hurd_sigstate_is_global_rcv (const struct hurd_sigstate *ss);
+
 #include_next <hurd/signal.h>
 
 #ifndef _ISOMAC
@@ -66,6 +68,16 @@ _hurd_critical_section_lock (void)
   return ss;
 }
 
+/* Check whether SS is a global receiver.  */
+_HURD_SIGNAL_H_EXTERN_INLINE int
+_hurd_sigstate_is_global_rcv (const struct hurd_sigstate *ss)
+{
+  extern struct hurd_sigstate *_hurd_global_sigstate;
+
+  return (_hurd_global_sigstate != NULL)
+	 && (ss->actions[0].sa_handler == SIG_IGN);
+}
+
 _HURD_SIGNAL_H_EXTERN_INLINE void
 _hurd_critical_section_unlock (void *our_lock)
 {
@@ -88,6 +100,24 @@ _hurd_critical_section_unlock (void *our_lock)
 	__msg_sig_post (_hurd_msgport, 0, 0, __mach_task_self ());
     }
 }
+
+/* Lock/unlock a hurd_sigstate structure.  If the accessors below require
+   it, the global sigstate will be locked as well.  */
+_HURD_SIGNAL_H_EXTERN_INLINE void
+_hurd_sigstate_lock (struct hurd_sigstate *ss)
+{
+  if (_hurd_sigstate_is_global_rcv (ss))
+    __spin_lock (&_hurd_global_sigstate->lock);
+  __spin_lock (&ss->lock);
+}
+
+_HURD_SIGNAL_H_EXTERN_INLINE void
+_hurd_sigstate_unlock (struct hurd_sigstate *ss)
+{
+  __spin_unlock (&ss->lock);
+  if (_hurd_sigstate_is_global_rcv (ss))
+    __spin_unlock (&_hurd_global_sigstate->lock);
+}
 #endif /* defined __USE_EXTERN_INLINES && IS_IN (libc) */
 
 
@@ -96,6 +126,7 @@ libc_hidden_proto (_hurd_intr_rpc_mach_msg)
 libc_hidden_proto (_hurd_thread_sigstate)
 libc_hidden_proto (_hurd_raise_signal)
 libc_hidden_proto (_hurd_sigstate_set_global_rcv)
+libc_hidden_proto (_hurd_sigstate_is_global_rcv)
 libc_hidden_proto (_hurd_sigstate_lock)
 libc_hidden_proto (_hurd_sigstate_pending)
 libc_hidden_proto (_hurd_sigstate_unlock)
@@ -103,5 +134,8 @@ libc_hidden_proto (_hurd_sigstate_delete)
 #endif
 #ifdef _HURD_SIGNAL_H_HIDDEN_DEF
 libc_hidden_def (_hurd_self_sigstate)
+libc_hidden_def (_hurd_sigstate_is_global_rcv)
+libc_hidden_def (_hurd_sigstate_lock)
+libc_hidden_def (_hurd_sigstate_unlock)
 #endif
 #endif
