@@ -33,3 +33,4 @@ ___ieee128_printf (const char *format, ...)
   return done;
 }
 strong_alias (___ieee128_printf, __printfieee128)
+asm (".local printf\n" ".set printf, __printfieee128");

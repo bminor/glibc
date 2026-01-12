@@ -34,3 +34,4 @@ ___ieee128_sprintf (char *s, const char *format, ...)
 }
 strong_alias (___ieee128_sprintf, __sprintfieee128)
 hidden_def (___ieee128_sprintf)
+asm (".local sprintf\n" ".set sprintf, __sprintfieee128");

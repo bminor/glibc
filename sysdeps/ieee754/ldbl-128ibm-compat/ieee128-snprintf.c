@@ -37,3 +37,4 @@ ldbl_hidden_def (___ieee128_snprintf, ___ieee128_snprintf)
 #ifdef SHARED
 strong_alias (___ieee128_snprintf, __GI____ieee128___snprintf)
 #endif
+asm (".local snprintf\n" ".set snprintf, __snprintfieee128");
