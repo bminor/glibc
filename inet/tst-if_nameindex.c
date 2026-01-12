@@ -72,6 +72,8 @@ do_test (void)
       if (strlen (ifp->if_name) + 1 > buflen)
 	buflen = strlen (ifp->if_name) + 1;
     }
+  if (buflen < IF_NAMESIZE)
+    buflen = IF_NAMESIZE;
   buffer = (char *) xmalloc (buflen);
 
   /* Check normal operation.  */
