@@ -58,6 +58,22 @@ Major new features:
   openat and provides a superset of its functionality.  It is supported only
   in LFS mode and it is a cancellable entrypoint.
 
+* On AArch64, support for 2MB transparent huge pages is enabled by default
+  in malloc (similar to setting glibc.malloc.hugetlb=1 tunable).
+
+* On AArch64 Linux targets supporting the Scalable Matrix Extension
+  (SME), the clone() system call wrapper will disable the ZA state of SME.
+
+* On AArch64 targets supporting the Branch Target Identification (BTI)
+  extension, it is possible to enforce that all binaries in the process
+  support BTI using the glibc.cpu.aarch64_bti tunable.
+
+* On AArch64 Linux targets supporting at least one of the branch protection
+  extensions (e.g. Branch Target Identification or Guarded Control Stack), it
+  is possible to use LD_DEBUG=security to make dynamic linker show warning
+  messages about loaded binaries that do not support the corresponding
+  security feature.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * Support for dumped heaps has been removed - malloc_set_state() now always
