@@ -303,11 +303,14 @@ $(tests-link-with-libpthread:%=$(objpfx)%-malloc-largetcache): \
 # static copies of some regular tests,
 # tst-compathooks-on: hook/call counts mismatch due to threading allocations
 # tst-interpose-nothread: interposes malloc without locking
+# tst-mallocfork: calls fork from a signal handler
+#   (tst-mallocfork{2,3} already excluded via tests-link-with-libpthread)
 tests-exclude-threaded = \
   $(tests-link-with-libpthread) \
   $(tests-static) \
   tst-compathooks-on \
   tst-interpose-nothread \
+  tst-mallocfork \
 # tests-exclude-threaded
 
 tests-threaded-main = $(addsuffix -threaded-main, \
