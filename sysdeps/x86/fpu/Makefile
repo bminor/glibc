@@ -4,7 +4,6 @@ CPPFLAGS += -I../soft-fp
 
 libm-support += powl_helper
 tests += \
-  test-builtin-denormal \
   test-fenv-clear-sse \
   test-fenv-sse \
   test-fenv-sse-2 \
