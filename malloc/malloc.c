@@ -4705,7 +4705,7 @@ _int_memalign (mstate av, size_t alignment, size_t bytes)
 
 
 
-  if (!checked_request2size (bytes, &nb))
+  if (!checked_request2size (bytes, &nb) || alignment > PTRDIFF_MAX)
     {
       __set_errno (ENOMEM);
       return NULL;
@@ -4716,8 +4716,10 @@ _int_memalign (mstate av, size_t alignment, size_t bytes)
      request, and then possibly free the leading and trailing space.
    */
 
-  /* Call malloc with worst case padding to hit alignment. */
-
+  /* Call malloc with worst case padding to hit alignment.  ALIGNMENT is a
+     power of 2, so it tops out at (PTRDIFF_MAX >> 1) + 1, leaving plenty of
+     space to add MINSIZE and whatever checked_request2size adds to BYTES to
+     get NB.  Consequently, total below also does not overflow.  */
   m = (char *) (_int_malloc (av, nb + alignment + MINSIZE));
 
   if (m == 0)
