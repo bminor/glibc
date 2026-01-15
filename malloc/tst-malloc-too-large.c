@@ -152,7 +152,6 @@ test_large_allocations (size_t size)
 }
 
 
-static long pagesize;
 
 /* This function tests the following aligned memory allocation functions
    using several valid alignments and precedes each allocation test with a
@@ -171,8 +170,8 @@ test_large_aligned_allocations (size_t size)
 
   /* All aligned memory allocation functions expect an alignment that is a
      power of 2.  Given this, we test each of them with every valid
-     alignment from 1 thru PAGESIZE.  */
-  for (align = 1; align <= pagesize; align *= 2)
+     alignment for the type of ALIGN, i.e. until it wraps to 0.  */
+  for (align = 1; align > 0; align <<= 1)
     {
       test_setup ();
 #if __GNUC_PREREQ (7, 0)
@@ -264,11 +263,6 @@ do_test (void)
      that they fail.  */
   DIAG_IGNORE_NEEDS_COMMENT (7, "-Walloc-size-larger-than=");
 #endif
-
-  /* Aligned memory allocation functions need to be tested up to alignment
-     size equivalent to page size, which should be a power of 2.  */
-  pagesize = sysconf (_SC_PAGESIZE);
-  TEST_VERIFY_EXIT (powerof2 (pagesize));
 
   /* Loop 1: Ensure that all allocations with SIZE close to SIZE_MAX, i.e.
      in the range (SIZE_MAX - 2^14, SIZE_MAX], fail.
