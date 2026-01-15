@@ -197,17 +197,22 @@ test_size (struct support_fuse *f, off64_t size)
       FAIL_UNSUPPORTED ("copy_file_range not supported");
     }
 
-  if (atomic_load (&fuse_has_copy_file_range_64))
+  /* To avoid the negative return value in Linux versions 6.18 the size is
+     silently clamped to UINT_MAX & PAGE_MASK for FUSE
+     (without COPY_FILE_RANGE_64) and for compat syscall on a 64-bit kernel.
+     The FUSE change also has been backported to stable kernel release
+     series.  So accept that return value if the kernel lacks
+     COPY_FILE_RANGE_64 and/or if we are building and testing a 32-bit glibc
+     (as maybe the test is running on a 64-bit kernel and invoking the
+     compat syscall).  See:
+     <https://git.kernel.org/torvalds/c/1e08938c3694>,
+     <https://git.kernel.org/torvalds/c/f8f59a2c05dc>, and
+     <https://lore.kernel.org/7b964b35e86d73816a395e72bac7e2e73ff8dd6d.camel@xry111.site/>.  */
+  if (__WORDSIZE >= 64 && atomic_load (&fuse_has_copy_file_range_64))
     TEST_COMPARE (copied, size);
 
-  /* To avoid the negative return value in Linux versions 6.18 the size is
-     silently clamped to UINT_MAX & PAGE_MASK and the change has been
-     backported to stable kernel release series.  Accept that return value
-     too.  See:
-     <https://git.kernel.org/torvalds/c/1e08938c3694>.
-     We must AND the expression with SSIZE_MAX for 32-bit platforms where
-     SSIZE_MAX is less than UINT_MAX.
-  */
+  /* We must AND the expression with SSIZE_MAX for 32-bit platforms where
+     SSIZE_MAX is less than UINT_MAX.  */
   if (copied != size)
     TEST_COMPARE (copied, (UINT_MAX & ~(getpagesize () - 1)) & SSIZE_MAX);
 
