@@ -4703,14 +4703,17 @@ _int_memalign (mstate av, size_t alignment, size_t bytes)
 {
   mchunkptr p, newp;
 
-  if (bytes > PTRDIFF_MAX)
+  if (bytes > PTRDIFF_MAX || alignment > PTRDIFF_MAX)
     {
       __set_errno (ENOMEM);
       return NULL;
     }
   size_t nb = checked_request2size (bytes);
 
-  /* Call malloc with worst case padding to hit alignment.  */
+  /* Call malloc with worst case padding to hit alignment.  ALIGNMENT is a
+     power of 2, so it tops out at (PTRDIFF_MAX >> 1) + 1, leaving plenty of
+     space to add MINSIZE and whatever checked_request2size adds to BYTES to
+     get NB.  Consequently, total below also does not overflow.  */
   void *m = _int_malloc (av, nb + alignment + MINSIZE);
 
   if (m == NULL)
