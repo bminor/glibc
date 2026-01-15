@@ -2219,7 +2219,9 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
     {
       /* Minimal implementation of WRDE_REUSE for now */
       wordfree (pwordexp);
+      old_word.we_wordc = 0;
       old_word.we_wordv = NULL;
+      pwordexp->we_wordc = 0;
     }
 
   if ((flags & WRDE_APPEND) == 0)
