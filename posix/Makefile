@@ -108,7 +108,8 @@ tests		:= test-errno tstgetopt testfnm runtests runptests \
 		   tst-glob-tilde test-ssize-max tst-spawn4 bug-regex37 \
 		   bug-regex38 tst-regcomp-truncated tst-spawn-chdir \
 		   tst-wordexp-nocmd tst-execveat tst-spawn5 \
-		   tst-sched_getaffinity tst-regcomp-bracket-free
+		   tst-sched_getaffinity tst-regcomp-bracket-free \
+		   tst-wordexp-reuse
 
 # Test for the glob symbol version that was replaced in glibc 2.27.
 ifeq ($(have-GLIBC_2.26)$(build-shared),yesyes)
@@ -155,11 +156,13 @@ generated += $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
 	     bug-glob2.mtrace bug-glob2-mem.out tst-vfork3-mem.out \
 	     tst-vfork3.mtrace getconf.speclist tst-fnmatch-mem.out \
 	     tst-fnmatch.mtrace bug-regex36.mtrace \
-	     testcases.h ptestcases.h
+	     testcases.h ptestcases.h tst-wordexp-reuse-mem.out \
+	     tst-wordexp-reuse.mtrace
 
 ifeq ($(run-built-tests),yes)
 ifeq (yes,$(build-shared))
-tests-special += $(objpfx)globtest.out $(objpfx)wordexp-tst.out
+tests-special += $(objpfx)globtest.out $(objpfx)wordexp-tst.out \
+		 $(objpfx)wordexp-tst.out
 endif
 endif
 
@@ -173,7 +176,8 @@ tests-special += $(objpfx)bug-regex2-mem.out $(objpfx)bug-regex14-mem.out \
 		 $(objpfx)tst-boost-mem.out $(objpfx)tst-getconf.out \
 		 $(objpfx)bug-glob2-mem.out $(objpfx)tst-vfork3-mem.out \
 		 $(objpfx)tst-fnmatch-mem.out $(objpfx)bug-regex36-mem.out \
-		 $(objpfx)tst-glob-tilde-mem.out $(objpfx)bug-ga2-mem.out
+		 $(objpfx)tst-glob-tilde-mem.out $(objpfx)bug-ga2-mem.out \
+		 $(objpfx)tst-wordexp-reuse.out
 endif
 
 include ../Rules
@@ -439,3 +443,10 @@ $(objpfx)posix-conf-vars-def.h: $(..)scripts/gen-posix-conf-vars.awk \
 	$(make-target-directory)
 	$(AWK) -f $(filter-out Makefile, $^) > $@.tmp
 	mv -f $@.tmp $@
+
+tst-wordexp-reuse-ENV += MALLOC_TRACE=$(objpfx)tst-wordexp-reuse.mtrace \
+			 LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
+
+$(objpfx)tst-wordexp-reuse-mem.out: $(objpfx)tst-wordexp-reuse.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-wordexp-reuse.mtrace > $@; \
+	$(evaluate-test)
