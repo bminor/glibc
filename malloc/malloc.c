@@ -5167,7 +5167,7 @@ _int_memalign (mstate av, size_t alignment, size_t bytes)
   INTERNAL_SIZE_T size;
 
   nb = checked_request2size (bytes);
-  if (nb == 0)
+  if (nb == 0 || alignment > PTRDIFF_MAX)
     {
       __set_errno (ENOMEM);
       return NULL;
@@ -5183,7 +5183,10 @@ _int_memalign (mstate av, size_t alignment, size_t bytes)
      we don't find anything in those bins, the common malloc code will
      scan starting at 2x.  */
 
-  /* Call malloc with worst case padding to hit alignment. */
+  /* Call malloc with worst case padding to hit alignment.  ALIGNMENT is a
+     power of 2, so it tops out at (PTRDIFF_MAX >> 1) + 1, leaving plenty of
+     space to add MINSIZE and whatever checked_request2size adds to BYTES to
+     get NB.  Consequently, total below also does not overflow.  */
   m = (char *) (_int_malloc (av, nb + alignment + MINSIZE));
 
   if (m == NULL)
