@@ -16,6 +16,8 @@ The following bugs were resolved with this release:
   [33356] nptl: creating thread stack with guardsize 0 can erroneously
     conclude MADV_GUARD_INSTALL is available
   [33361] nss: Group merge does not react to ERANGE during merge
+  [33814] glob: wordexp with WRDE_REUSE and WRDE_APPEND may return
+    uninitialized memory
 
 Version 2.42
 
