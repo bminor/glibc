@@ -209,6 +209,10 @@ _nss_dns_getnetbyaddr_r (uint32_t net, int type, struct netent *result,
       sprintf (qbuf, "%u.%u.%u.%u.in-addr.arpa", net_bytes[3], net_bytes[2],
 	       net_bytes[1], net_bytes[0]);
       break;
+    default:
+      /* Default network (net is originally zero).  */
+      strcpy (qbuf, "0.0.0.0.in-addr.arpa");
+      break;
     }
 
   net_buffer.buf = orig_net_buffer = (querybuf *) alloca (1024);
