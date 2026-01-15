@@ -359,7 +359,6 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
     ._dl_fpu_control = _FPU_DEFAULT,
     ._dl_pagesize = EXEC_PAGESIZE,
     ._dl_inhibit_cache = 0,
-    ._dl_profile_output = "/var/tmp",
 
     /* Function pointers.  */
     ._dl_debug_printf = _dl_debug_printf,
@@ -2706,6 +2705,15 @@ process_envvars_default (struct dl_main_state *state)
 	    }
 	  break;
 	}
+    }
+
+  /* There is no fixed, safe directory to store profiling data, so
+     activate LD_PROFILE only if LD_PROFILE_OUTPUT is set as well.  */
+  if (GLRO(dl_profile) != NULL && GLRO(dl_profile_output) == NULL)
+    {
+      _dl_error_printf ("\
+warning: LD_PROFILE ignored because LD_PROFILE_OUTPUT not specified\n");
+      GLRO(dl_profile) = NULL;
     }
 
   /* If we have to run the dynamic linker in debugging mode and the

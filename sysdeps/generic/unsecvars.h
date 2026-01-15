@@ -16,6 +16,7 @@
   "LD_ORIGIN_PATH\0"							      \
   "LD_PRELOAD\0"							      \
   "LD_PROFILE\0"							      \
+  "LD_PROFILE_OUTPUT\0"						              \
   "LD_SHOW_AUXV\0"							      \
   "LD_VERBOSE\0"							      \
   "LD_WARN\0"								      \

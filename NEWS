@@ -100,7 +100,11 @@ Deprecated and removed features, and other changes affecting compatibility:
 
 Changes to build and runtime requirements:
 
-  [Add changes to build and runtime requirements here]
+* The LD_PROFILE functionality no longer has a default directory for the
+  profile data it writes.  Instead, developers are required to set a
+  directory explicitly using the LD_PROFILE_OUTPUT environment variable.
+  To restore the previous, insecure behavior, processes can be run with
+  LD_PROFILE_OUTPUT=/var/tmp.
 
 Security related changes:
 
