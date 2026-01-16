@@ -1,0 +1,25 @@
+getnetbyaddr and getnetbyaddr_r leak stack contents to DNS resovler
+
+Calling getnetbyaddr or getnetbyaddr_r with a configured nsswitch.conf
+that specifies the library's DNS backend for networks and queries for a
+zero-valued network in the GNU C Library version 2.0 to version 2.42
+can leak stack contents to the configured DNS resolver.
+
+A defect in the _nss_dns_getnetbyaddr_r function which implements
+getnetbyaddr and getnetbyaddr_r in the dns-based network database can
+pass stack contents unmodified to the configured DNS resolver as part of
+the network DNS query when the network queried is the default network
+i.e. net == 0x0.  This stack contents leaking in the query is considered
+a loss of confidentiality for the host making the query.  Typically it
+is rare to call these APIs with a net value of zero, and if an attacker
+can control the net value it can only leak adjacent stack, and so loss
+of confidentiality is spatially limited.  The leak might be used to
+accelerate an ASLR bypass by knowing pointer values, but also requires
+network adjacent access to snoop between the application and the
+DNS server; making the attack complexity higher.
+
+CVE-Id: CVE-2026-0915
+Public-Date: 2026-01-15
+Vulnerable-Commit: 5f0e6fc702296840d2daa39f83f6cb1e40073d58 (1.92-1)
+Fix-Commit: e56ff82d5034ec66c6a78f517af6faa427f65b0b (2.43)
+Reported-by: Igor Morgenstern, Aisle Research
