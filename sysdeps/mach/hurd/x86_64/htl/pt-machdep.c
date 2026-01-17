@@ -24,6 +24,7 @@
 #include <mach/x86_64/mach_i386.h>
 #include <mach/mig_errors.h>
 #include <mach/thread_status.h>
+#include <thread_state.h>
 #include <pt-sysdep.h>
 
 int
@@ -48,7 +49,11 @@ __thread_set_pcsptp (thread_t thread,
   if (set_sp)
     state.ursp = (uintptr_t) sp;
   if (set_ip)
-    state.rip = (uintptr_t) ip;
+    {
+      /* Making it call something else, we have to re-align the stack for SSE.  */
+      state.ursp = PTR_ALIGN_DOWN_8_16 (state.ursp);
+      state.rip = (uintptr_t) ip;
+    }
 
   err = __thread_set_state (thread, i386_REGS_SEGS_STATE,
                             (thread_state_t) &state, i386_THREAD_STATE_COUNT);
